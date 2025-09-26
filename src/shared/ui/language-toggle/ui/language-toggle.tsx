@@ -9,16 +9,22 @@ import {
 	SelectValue
 } from "@/shared/ui";
 
-import { LANGUAGES_LIST, changeLanguage } from "../model";
-import { i18n } from "../model";
+import {
+	ENUM_LANGUAGES,
+	type ENUM_LANGUAGES_TYPE,
+	LANGUAGES_LIST,
+	changeLanguage,
+	i18n
+} from "../model";
 
 export const LanguageToggle: FC = () => {
 	const id = useId();
+
 	return (
 		<Select
-			defaultValue={i18n.language}
+			defaultValue={i18n?.language?.split("-")?.[0] || ENUM_LANGUAGES.EN}
 			onValueChange={(value) => {
-				changeLanguage(value);
+				changeLanguage(value as ENUM_LANGUAGES_TYPE);
 			}}
 		>
 			<SelectTrigger

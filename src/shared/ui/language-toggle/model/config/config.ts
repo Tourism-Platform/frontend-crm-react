@@ -1,4 +1,6 @@
+import { ENUM_LANGUAGES } from "./types";
+
 export const LANGUAGES_LIST = [
-	{ value: "en", label: "En" },
-	{ value: "ru", label: "Ru" }
+	{ value: ENUM_LANGUAGES.EN, label: "En" },
+	{ value: ENUM_LANGUAGES.RU, label: "Ru" }
 ];

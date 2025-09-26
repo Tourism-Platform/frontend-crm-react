@@ -88,10 +88,14 @@ export default defineConfig([
           prefix: ['I']
         },
 
-        // Типы: T<PascalCase>  
+        // Типы: ENUM<PascalCase>  
         {
           selector: 'typeAlias',
           format: ['PascalCase'],
+          filter: {
+            regex: '^ENUM_[A-Z]',
+            match: false
+          },
           prefix: ['T']
         },
 
