@@ -7,7 +7,7 @@ function App() {
 		<div className="min-h-screen min-w-screen bg-background text-foreground">
 			<div className="flex gap-5 items-center">
 				<div>
-					<h1 className="text-9xl bg-accent">Большой текст</h1>
+					<h1 className="text-9xl bg-accent">ТЕСТ ДЕПЛОЙ на ДЕВ</h1>
 					<p className="text-xs">Мелкий текст</p>
 				</div>
 				<ThemeToggle />
