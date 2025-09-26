@@ -213,6 +213,14 @@ export default defineConfig([
     },
   },
 
+  // ⚡ Исключение для .d.ts файлов (декларации типов)
+  {
+    files: ['**/*.d.ts'],
+    rules: {
+      '@typescript-eslint/naming-convention': 'off',
+    },
+  },
+
   // Отдельная конфигурация для конфигурационных файлов
   {
     files: ['**/*.config.{ts,js}', 'vite.config.ts', 'tailwind.config.ts'],

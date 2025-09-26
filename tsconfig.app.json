@@ -29,7 +29,12 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+
+    /* JSON imports + interop for default imports from JSON */
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
   },
-  "include": ["src"]
+  "include": ["src",  "public", "src/shared/types/i18n.d.ts"]
 }

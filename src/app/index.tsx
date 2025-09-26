@@ -1,17 +1,16 @@
-// import { ThemeToggle } from "@/shared/ui";
-import {
-	Separator,
-	SidebarInset,
-	SidebarProvider,
-	SidebarTrigger
-} from "@/shared/ui";
+import { useTranslation } from "react-i18next";
+
 import {
 	Breadcrumb,
 	BreadcrumbItem,
 	BreadcrumbLink,
 	BreadcrumbList,
 	BreadcrumbPage,
-	BreadcrumbSeparator
+	BreadcrumbSeparator,
+	Separator,
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger
 } from "@/shared/ui";
 import { AppSidebar } from "@/shared/ui/app-sidebar";
 
@@ -20,6 +19,7 @@ import { HeaderOwner } from "@/widgets/layouts";
 import { withProviders } from "./providers";
 
 function App() {
+	const { t } = useTranslation("home");
 	return (
 		<>
 			<div className=" bg-background text-foreground">
@@ -56,9 +56,11 @@ function App() {
 								<div className="flex gap-5 items-center">
 									<div>
 										<h1 className="text-9xl bg-accent">
-											ТЕСТ ДЕПЛОЙ на ДЕВ
+											{t("text")}
 										</h1>
-										<p className="text-xs">Мелкий текст</p>
+										<p className="text-xs">
+											{t("welcome")}
+										</p>
 									</div>
 								</div>
 								<div className="grid auto-rows-min gap-4 md:grid-cols-3">
