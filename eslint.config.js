@@ -9,7 +9,8 @@ import unicorn from 'eslint-plugin-unicorn'
 
 export default defineConfig([
   globalIgnores(['dist', 'node_modules']),
-  
+
+
   // Основная конфигурация для исходного кода
   {
     files: ['**/*.{ts,tsx}'],
@@ -203,7 +204,15 @@ export default defineConfig([
       },
     },
   },
-  
+
+  // ⚡ Здесь добавляем исключение для shadcn-ui
+  {
+    files: ['src/shared/ui/shadcn-ui/**/*.ts', 'src/shared/ui/shadcn-ui/**/*.tsx'],
+    rules: {
+      '@typescript-eslint/naming-convention': 'off',
+    },
+  },
+
   // Отдельная конфигурация для конфигурационных файлов
   {
     files: ['**/*.config.{ts,js}', 'vite.config.ts', 'tailwind.config.ts'],
