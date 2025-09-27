@@ -2,20 +2,19 @@ import { GlobeIcon } from "lucide-react";
 import { type FC, useId } from "react";
 
 import {
+	ENUM_LANGUAGES,
+	type ENUM_LANGUAGES_TYPE,
+	LANGUAGES_LIST,
+	changeLanguage,
+	i18n
+} from "@/shared/config";
+import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue
 } from "@/shared/ui";
-
-import {
-	ENUM_LANGUAGES,
-	type ENUM_LANGUAGES_TYPE,
-	LANGUAGES_LIST,
-	changeLanguage,
-	i18n
-} from "../model";
 
 export const LanguageToggle: FC = () => {
 	const id = useId();

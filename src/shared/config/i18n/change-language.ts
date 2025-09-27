@@ -1,6 +1,6 @@
-import type { ENUM_LANGUAGES_TYPE } from "../config";
+import type { ENUM_LANGUAGES_TYPE } from "../languages";
 
-import { default as i18n } from "./i18n";
+import { default as i18n } from "./init";
 
 export const changeLanguage = (lng: ENUM_LANGUAGES_TYPE) => {
 	i18n.changeLanguage(lng);

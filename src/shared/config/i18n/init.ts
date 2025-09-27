@@ -3,10 +3,9 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import HttpBackend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 
-import { ENUM_LANGUAGES } from "../config";
+import { ENUM_LANGUAGES } from "../languages";
 
-// namespaces, которые у вас лежат в public/languages/{lng}/{ns}.json
-const ns = ["header", "footer", "home"] as const;
+import { NS } from "./config";
 
 // Явный объект ресурсов (тип выводится автоматически от импортов)
 i18n.use(HttpBackend) // для загрузки JSON с public при runtime (не мешает явным resources)
@@ -15,13 +14,13 @@ i18n.use(HttpBackend) // для загрузки JSON с public при runtime (
 	.init({
 		fallbackLng: ENUM_LANGUAGES.EN,
 		debug: true,
-		ns: [...ns],
-		defaultNS: "header", // установите тот же defaultNS, что и в вашей декларации types (.d.ts)
+		ns: [...NS],
+		defaultNS: NS?.[0], // установите тот же defaultNS, что и в вашей декларации types (.d.ts)
 		interpolation: {
 			escapeValue: false
 		},
 		backend: {
-			loadPath: "/languages/{{lng}}/{{ns}}.json"
+			loadPath: "/locales/{{lng}}/{{ns}}.json"
 		},
 		detection: {
 			order: ["localStorage", "navigator"],

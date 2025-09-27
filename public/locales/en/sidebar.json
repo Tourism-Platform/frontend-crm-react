@@ -1,0 +1,26 @@
+{
+
+    "owner": {
+        "settings": {
+            "title": "Settings",
+            "personal": {
+                "title": "Personal",
+                "menu": {
+                    "account": "Account Settings",
+                    "security": "Security",
+                    "notifications": "Notifications"
+                }
+            },
+            "business": {
+                "title": "Business",
+                "menu": {
+                    "business": "Business information",
+                    "staff": "Staff information",
+                    "financial": "Financial information",
+                    "tour": "Tour settings",
+                    "tags": "Tags"
+                }
+            }
+        }
+    }
+}
