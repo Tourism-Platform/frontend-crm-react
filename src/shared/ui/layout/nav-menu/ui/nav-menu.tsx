@@ -1,5 +1,6 @@
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import { cn } from "@/shared/lib";
 import {
@@ -37,22 +38,21 @@ export const NavMenu: FC<INavMenuProps> = ({ navItems }) => {
 												: "min-w-48"
 										)}
 									>
-										{link?.items?.map((item, itemIndex) => (
-											<li key={itemIndex}>
-												<NavigationMenuLink
-													href={item.href}
-													className="py-1.5"
+										{link?.items?.map((item) => (
+											<NavigationMenuItem
+												key={item?.href}
+												asChild
+											>
+												<Link
+													to={item.href}
+													className="p-1.5 text-muted-foreground hover:text-foreground flex items-center gap-2 hover:bg-accent rounded-sm text-sm"
 												>
-													<div className="flex items-center gap-2">
-														{item?.icon && (
-															<item.icon />
-														)}
-														<span>
-															{t(item.label)}
-														</span>
-													</div>
-												</NavigationMenuLink>
-											</li>
+													{item?.icon && (
+														<item.icon className="w-3 h-3" />
+													)}
+													<span>{t(item.label)}</span>
+												</Link>
+											</NavigationMenuItem>
 										))}
 									</ul>
 								</NavigationMenuContent>

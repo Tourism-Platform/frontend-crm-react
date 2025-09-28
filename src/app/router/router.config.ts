@@ -1,9 +1,10 @@
-import {
+﻿import {
 	ENUM_AUTH,
 	ENUM_LAYOUT,
 	ENUM_PATH,
 	type IRouting,
-	SETTINGS_SIDEBAR_LIST
+	SETTINGS_SIDEBAR_LIST,
+	TOURS_SIDEBAR_LIST
 } from "@/shared/config";
 
 import { NotFoundPage } from "@/pages/not-found-page";
@@ -17,6 +18,15 @@ import {
 	TagsPage,
 	TourSettingsPage
 } from "@/pages/settings";
+import {
+	ActivityLogPage,
+	ItineraryPage,
+	MessagesPage,
+	OrderHistoryPage,
+	OverviewPage,
+	PricingReviewPage,
+	SchedulePage
+} from "@/pages/tours";
 
 export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	// only public
@@ -77,6 +87,58 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST
 	},
+
+	// tours
+	{
+		path: ENUM_PATH.TOURS.OVERVIEW,
+		component: OverviewPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+	{
+		path: ENUM_PATH.TOURS.ITINERARY,
+		component: ItineraryPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+	{
+		path: ENUM_PATH.TOURS.SCHEDULE,
+		component: SchedulePage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+	{
+		path: ENUM_PATH.TOURS.PRICING_REVIEW,
+		component: PricingReviewPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+	{
+		path: ENUM_PATH.TOURS.ORDER_HISTORY,
+		component: OrderHistoryPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+	{
+		path: ENUM_PATH.TOURS.MESSAGES,
+		component: MessagesPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+	{
+		path: ENUM_PATH.TOURS.ACTIVITY_LOG,
+		component: ActivityLogPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+
 	// 404
 	{
 		path: ENUM_PATH.NOT_FOUND,

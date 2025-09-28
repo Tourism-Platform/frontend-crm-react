@@ -12,5 +12,5 @@ export interface INavSubItem {
 	label: THeaderKeys;
 	href: string;
 	description?: THeaderKeys;
-	icon?: string;
+	icon?: React.FC<React.SVGProps<SVGSVGElement>>;
 }

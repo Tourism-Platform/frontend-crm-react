@@ -35,6 +35,7 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 								<Link
 									to={subItem.path}
 									className={cn(
+										"text-muted-foreground",
 										location?.pathname === subItem?.path &&
 											"bg-sidebar-primary text-white hover:bg-sidebar-primary hover:text-white"
 									)}

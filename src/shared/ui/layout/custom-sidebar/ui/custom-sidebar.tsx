@@ -2,17 +2,15 @@ import type { FC } from "react";
 
 import { Sidebar, SidebarContent, SidebarRail } from "@/shared/ui";
 
-import { type ISidebarMenu, SIDEBAR_LIST } from "../model";
+import { type ISidebarMenu } from "../model";
 
 import { NavMain } from "./nav-main";
 
 export interface ICustomSidebarProps {
-	items?: ISidebarMenu[];
+	items: ISidebarMenu[];
 }
 
-export const CustomSidebar: FC<ICustomSidebarProps> = ({
-	items = SIDEBAR_LIST
-}) => {
+export const CustomSidebar: FC<ICustomSidebarProps> = ({ items }) => {
 	return (
 		<Sidebar collapsible="icon">
 			<SidebarContent>

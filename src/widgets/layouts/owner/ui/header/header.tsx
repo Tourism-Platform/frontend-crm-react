@@ -4,7 +4,6 @@ import {
 	LanguageToggle,
 	Logo,
 	NavMenu,
-	NavMenuMobile,
 	ThemeToggle,
 	UserMenu
 } from "@/shared/ui";
@@ -18,7 +17,7 @@ export const HeaderOwner: FC = () => {
 				{/* Left side */}
 				<div className="flex items-center gap-2">
 					{/* Mobile menu trigger */}
-					<NavMenuMobile navItems={NAV_ITEMS_LIST} />
+					{/* <NavMenuMobile navItems={NAV_ITEMS_LIST} /> */}
 					{/* Main nav */}
 					<div className="flex items-center gap-6">
 						<a

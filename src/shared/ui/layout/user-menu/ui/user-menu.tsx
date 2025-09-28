@@ -48,8 +48,13 @@ export const UserMenu: FC = () => {
 					<DropdownMenuGroup key={index}>
 						{menuGroup.menu?.map((menuItem) => (
 							<DropdownMenuItem key={menuItem.label} asChild>
-								<Link to={menuItem.path}>
-									{menuItem.icon && <menuItem.icon />}
+								<Link
+									to={menuItem.path}
+									className="text-muted-foreground hover:text-foreground"
+								>
+									{menuItem.icon && (
+										<menuItem.icon className="w-3 h-3" />
+									)}
 									<span>{t(menuItem.label)}</span>
 								</Link>
 							</DropdownMenuItem>
