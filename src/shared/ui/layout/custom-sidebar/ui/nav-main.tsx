@@ -41,7 +41,7 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 									)}
 								>
 									{subItem?.icon && <subItem.icon />}
-									<span className="text-xs">
+									<span className="text-sm">
 										{t(subItem?.label)}
 									</span>
 								</Link>

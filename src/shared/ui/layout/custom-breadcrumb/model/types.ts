@@ -1,3 +1,11 @@
-import type { TSettingsPath, TSidebarKeys, TToursPath } from "@/shared/config";
+import type {
+	TBookingPath,
+	TSettingsPath,
+	TSidebarKeys,
+	TToursPath
+} from "@/shared/config";
 
-export type TBreadcrumbList = Record<TSettingsPath | TToursPath, TSidebarKeys>;
+export type TBreadcrumbList = Record<
+	TSettingsPath | TToursPath | TBookingPath,
+	TSidebarKeys
+>;

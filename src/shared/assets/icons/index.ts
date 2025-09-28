@@ -12,4 +12,5 @@ export * from "./notification-bing";
 export * from "./percent-circle";
 export * from "./settings";
 export * from "./tag";
+export * from "./task-square";
 export * from "./users";

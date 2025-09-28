@@ -5,7 +5,8 @@ import {
 	HealthIcon,
 	MapPinIcon,
 	MessagesCircleIcon,
-	PercentCircleIcon
+	PercentCircleIcon,
+	TaskSquareIcon
 } from "@/shared/assets";
 import { ENUM_PATH } from "@/shared/config";
 import type { INavItemBase } from "@/shared/ui";
@@ -58,11 +59,13 @@ export const NAV_ITEMS_LIST: INavItemBase[] = [
 		items: [
 			{
 				href: ENUM_PATH.BOOKING.BOOKING_REQUESTS,
-				label: "owner.booking.menu.booking_requests"
+				label: "owner.booking.menu.booking_requests",
+				icon: TaskSquareIcon
 			},
 			{
 				href: ENUM_PATH.BOOKING.APPEALS,
-				label: "owner.booking.menu.appeals"
+				label: "owner.booking.menu.appeals",
+				icon: CalendarDaysIcon
 			}
 		]
 	},

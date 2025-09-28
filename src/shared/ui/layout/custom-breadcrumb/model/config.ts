@@ -3,6 +3,7 @@ import { ENUM_PATH } from "@/shared/config";
 import type { TBreadcrumbList } from "./types";
 
 export const BREADCRUMB_LIST: TBreadcrumbList = {
+	// Settings
 	[ENUM_PATH.SETTINGS.ROOT]: "owner.settings.title",
 	[ENUM_PATH.SETTINGS.ACCOUNT_SETTINGS]:
 		"owner.settings.personal.menu.account",
@@ -18,6 +19,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.SETTINGS.TOUR_SETTINGS]: "owner.settings.business.menu.tour",
 	[ENUM_PATH.SETTINGS.TAGS]: "owner.settings.business.menu.tags",
 
+	// Tours
 	[ENUM_PATH.TOURS.ROOT]: "owner.tours.general.title",
 	[ENUM_PATH.TOURS.OVERVIEW]: "owner.tours.general.menu.overview",
 	[ENUM_PATH.TOURS.ITINERARY]: "owner.tours.general.menu.itinerary",
@@ -25,5 +27,11 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.TOURS.PRICING_REVIEW]: "owner.tours.general.menu.pricing_review",
 	[ENUM_PATH.TOURS.ORDER_HISTORY]: "owner.tours.more.menu.order_history",
 	[ENUM_PATH.TOURS.MESSAGES]: "owner.tours.more.menu.messages",
-	[ENUM_PATH.TOURS.ACTIVITY_LOG]: "owner.tours.more.menu.activity_log"
+	[ENUM_PATH.TOURS.ACTIVITY_LOG]: "owner.tours.more.menu.activity_log",
+
+	// Booking
+	[ENUM_PATH.BOOKING.ROOT]: "owner.booking.title",
+	[ENUM_PATH.BOOKING.BOOKING_REQUESTS]:
+		"owner.booking.general.menu.booking_requests",
+	[ENUM_PATH.BOOKING.APPEALS]: "owner.booking.general.menu.appeals"
 };

@@ -1,4 +1,5 @@
 ﻿import {
+	BOOKING_SIDEBAR_LIST,
 	ENUM_AUTH,
 	ENUM_LAYOUT,
 	ENUM_PATH,
@@ -7,6 +8,7 @@
 	TOURS_SIDEBAR_LIST
 } from "@/shared/config";
 
+import { AppealsPage, BookingRequestsPage } from "@/pages/booking";
 import { NotFoundPage } from "@/pages/not-found-page";
 import {
 	AccountSettingsPage,
@@ -137,6 +139,22 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+
+	// booking
+	{
+		path: ENUM_PATH.BOOKING.APPEALS,
+		component: AppealsPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: BOOKING_SIDEBAR_LIST
+	},
+	{
+		path: ENUM_PATH.BOOKING.BOOKING_REQUESTS,
+		component: BookingRequestsPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: BOOKING_SIDEBAR_LIST
 	},
 
 	// 404

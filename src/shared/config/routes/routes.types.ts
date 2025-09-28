@@ -21,3 +21,6 @@ export type TSettingsPath =
 	(typeof ENUM_PATH.SETTINGS)[keyof typeof ENUM_PATH.SETTINGS];
 
 export type TToursPath = (typeof ENUM_PATH.TOURS)[keyof typeof ENUM_PATH.TOURS];
+
+export type TBookingPath =
+	(typeof ENUM_PATH.BOOKING)[keyof typeof ENUM_PATH.BOOKING];
