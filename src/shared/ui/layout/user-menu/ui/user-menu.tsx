@@ -1,12 +1,7 @@
-import {
-	BoltIcon,
-	BookOpenIcon,
-	Layers2Icon,
-	LogOutIcon,
-	PinIcon,
-	UserPenIcon
-} from "lucide-react";
+import { LogOutIcon } from "lucide-react";
 import type { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import {
 	Avatar,
@@ -22,7 +17,10 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
+import { USER_MENU_LIST } from "../model";
+
 export const UserMenu: FC = () => {
+	const { t } = useTranslation("sidebar");
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -30,7 +28,7 @@ export const UserMenu: FC = () => {
 					variant="ghost"
 					className="h-auto p-0 hover:bg-transparent"
 				>
-					<Avatar>
+					<Avatar className="cursor-pointer">
 						<AvatarImage src="./avatar.jpg" alt="Profile image" />
 						<AvatarFallback>KK</AvatarFallback>
 					</Avatar>
@@ -46,52 +44,19 @@ export const UserMenu: FC = () => {
 					</span>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuGroup>
-					<DropdownMenuItem>
-						<BoltIcon
-							size={16}
-							className="opacity-60"
-							aria-hidden="true"
-						/>
-						<span>Option 1</span>
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<Layers2Icon
-							size={16}
-							className="opacity-60"
-							aria-hidden="true"
-						/>
-						<span>Option 2</span>
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<BookOpenIcon
-							size={16}
-							className="opacity-60"
-							aria-hidden="true"
-						/>
-						<span>Option 3</span>
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
-				<DropdownMenuGroup>
-					<DropdownMenuItem>
-						<PinIcon
-							size={16}
-							className="opacity-60"
-							aria-hidden="true"
-						/>
-						<span>Option 4</span>
-					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<UserPenIcon
-							size={16}
-							className="opacity-60"
-							aria-hidden="true"
-						/>
-						<span>Option 5</span>
-					</DropdownMenuItem>
-				</DropdownMenuGroup>
-				<DropdownMenuSeparator />
+				{USER_MENU_LIST.map((menuGroup, index) => (
+					<DropdownMenuGroup key={index}>
+						{menuGroup.menu?.map((menuItem) => (
+							<DropdownMenuItem key={menuItem.label} asChild>
+								<Link to={menuItem.path}>
+									{menuItem.icon && <menuItem.icon />}
+									<span>{t(menuItem.label)}</span>
+								</Link>
+							</DropdownMenuItem>
+						))}
+						<DropdownMenuSeparator />
+					</DropdownMenuGroup>
+				))}
 				<DropdownMenuItem>
 					<LogOutIcon
 						size={16}
