@@ -19,3 +19,4 @@ export type TResources = {
 export const NS = ["header", "footer", "home", "sidebar"] as const;
 
 export type TSidebarKeys = TNestedKeyOf<TSidebar>;
+export type THeaderKeys = TNestedKeyOf<THeader>;

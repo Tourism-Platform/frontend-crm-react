@@ -1,25 +1,56 @@
 {
-  "owner": {
-    "settings": {
-        "title": "Настройки",
-        "personal": {
-            "title": "Личные",
-            "menu": {
-            "account": "Настройки аккаунта",
-            "security": "Безопасность",
-            "notifications": "Уведомления"
-            }
-        },
-        "business": {
-            "title": "Бизнес",
-            "menu": {
-            "business": "Информация о бизнесе",
-            "staff": "Информация о сотрудниках",
-            "financial": "Финансовая информация",
-            "tour": "Настройки тура",
-            "tags": "Теги"
-            }
-        }
-    }
-  }
+	"owner": {
+		"settings": {
+			"title": "Настройки",
+			"personal": {
+				"title": "Личные",
+				"menu": {
+					"account": "Настройки аккаунта",
+					"security": "Безопасность",
+					"notifications": "Уведомления"
+				}
+			},
+			"business": {
+				"title": "Бизнес",
+				"menu": {
+					"business": "Информация о бизнесе",
+					"staff": "Информация о сотрудниках",
+					"financial": "Финансовая информация",
+					"tour": "Настройки тура",
+					"tags": "Теги"
+				}
+			}
+		},
+
+		"tours": {
+			"general": {
+				"title": "Основное",
+				"menu": {
+					"overview": "Обзор",
+					"itinerary": "Маршрут",
+					"schedule": "Расписание",
+					"pricing_review": "Цены и отзывы"
+				}
+			},
+			"more": {
+				"title": "Дополнительно",
+				"menu": {
+					"order_history": "История заказов",
+					"messages": "Сообщения",
+					"activity_log": "Журнал активности"
+				}
+			}
+		},
+
+		"booking": {
+			"title": "Бронирование",
+			"general": {
+				"title": "Основное",
+				"menu": {
+					"booking_requests": "Запросы на бронирование",
+					"appeals": "Обращения"
+				}
+			}
+		}
+	}
 }

@@ -1,3 +1,31 @@
 {
-    "menu": "Меню"
+	"owner": {
+		"tours": {
+			"title": "Туры",
+			"menu": {
+				"overview": "Обзор",
+				"itinerary": "Маршрут",
+				"schedule": "Расписание",
+				"pricing_review": "Цены и отзывы",
+				"order_history": "История заказов",
+				"messages": "Сообщения",
+				"activity_log": "Журнал активности"
+			}
+		},
+		"booking": {
+			"title": "Бронирование",
+			"menu": {
+				"booking_requests": "Запросы на бронирование",
+				"appeals": "Обращения"
+			}
+		},
+		"library": {
+			"title": "Библиотека",
+			"menu": {
+				"overview": "Обзор",
+				"analytics": "Аналитика",
+				"reports": "Отчёты"
+			}
+		}
+	}
 }

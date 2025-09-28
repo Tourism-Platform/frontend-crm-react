@@ -1,15 +1,16 @@
+import type { THeaderKeys } from "@/shared/config";
+
 export interface INavItemBase {
-	label: string;
+	label: THeaderKeys;
 	href?: string;
 	submenu?: boolean;
-	//   type?: "description" | "simple" | "icon"
 	type?: string;
 	items?: INavSubItem[];
 }
 
 export interface INavSubItem {
-	label: string;
+	label: THeaderKeys;
 	href: string;
-	description?: string;
+	description?: THeaderKeys;
 	icon?: string;
 }

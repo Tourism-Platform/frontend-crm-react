@@ -1,48 +1,58 @@
+import { ENUM_PATH } from "@/shared/config";
 import type { INavItemBase } from "@/shared/ui";
 
 export const NAV_ITEMS_LIST: INavItemBase[] = [
-	{ href: "#", label: "Home" },
 	{
-		label: "Features",
+		label: "owner.tours.title",
 		submenu: true,
-		type: "description",
 		items: [
 			{
-				href: "#",
-				label: "Components",
-				description: "Browse all components in the library."
+				href: ENUM_PATH.TOURS.OVERVIEW,
+				label: "owner.tours.menu.overview"
 			},
 			{
-				href: "#",
-				label: "Documentation",
-				description: "Learn how to use the library."
+				href: ENUM_PATH.TOURS.ITINERARY,
+				label: "owner.tours.menu.itinerary"
 			},
 			{
-				href: "#",
-				label: "Templates",
-				description: "Pre-built layouts for common use cases."
+				href: ENUM_PATH.TOURS.SCHEDULE,
+				label: "owner.tours.menu.schedule"
+			},
+			{
+				href: ENUM_PATH.TOURS.PRICING_REVIEW,
+				label: "owner.tours.menu.pricing_review"
+			},
+			{
+				href: ENUM_PATH.TOURS.ORDER_HISTORY,
+				label: "owner.tours.menu.order_history"
+			},
+			{
+				href: ENUM_PATH.TOURS.MESSAGES,
+				label: "owner.tours.menu.messages"
+			},
+			{
+				href: ENUM_PATH.TOURS.ACTIVITY_LOG,
+				label: "owner.tours.menu.activity_log"
 			}
 		]
 	},
 	{
-		label: "Pricing",
+		label: "owner.booking.title",
 		submenu: true,
-		type: "simple",
 		items: [
-			{ href: "#", label: "Product A" },
-			{ href: "#", label: "Product B" },
-			{ href: "#", label: "Product C" },
-			{ href: "#", label: "Product D" }
+			{
+				href: ENUM_PATH.BOOKING.BOOKING_REQUESTS,
+				label: "owner.booking.menu.booking_requests"
+			},
+			{
+				href: ENUM_PATH.BOOKING.APPEALS,
+				label: "owner.booking.menu.appeals"
+			}
 		]
 	},
 	{
-		label: "About",
+		label: "owner.library.title",
 		submenu: true,
-		type: "icon",
-		items: [
-			{ href: "#", label: "Getting Started", icon: "BookOpenIcon" },
-			{ href: "#", label: "Tutorials", icon: "LifeBuoyIcon" },
-			{ href: "#", label: "About Us", icon: "InfoIcon" }
-		]
+		items: [{ href: "#", label: "owner.library.menu.analytics" }]
 	}
 ];

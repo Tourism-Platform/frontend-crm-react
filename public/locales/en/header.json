@@ -1,3 +1,31 @@
 {
-    "menu": "Menu"
+	"owner": {
+		"tours": {
+			"title": "Tours",
+			"menu": {
+				"overview": "Overview",
+				"itinerary": "Itinerary",
+				"schedule": "Schedule",
+				"pricing_review": "Pricing & review",
+				"order_history": "Order history",
+				"messages": "Messages",
+				"activity_log": "Activity log"
+			}
+		},
+		"booking": {
+			"title": "Booking",
+			"menu": {
+				"booking_requests": "Booking requests",
+				"appeals": "Appeals"
+			}
+		},
+		"library": {
+			"title": "Library",
+			"menu": {
+				"overview": "Overview",
+				"analytics": "Analytics",
+				"reports": "Reports"
+			}
+		}
+	}
 }

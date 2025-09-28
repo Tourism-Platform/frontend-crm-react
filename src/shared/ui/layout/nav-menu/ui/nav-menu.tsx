@@ -1,5 +1,5 @@
-import { BookOpenIcon, InfoIcon, LifeBuoyIcon } from "lucide-react";
 import type { FC } from "react";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import {
@@ -18,6 +18,7 @@ interface INavMenuProps {
 }
 
 export const NavMenu: FC<INavMenuProps> = ({ navItems }) => {
+	const { t } = useTranslation("header");
 	return (
 		<NavigationMenu viewport={false} className="max-md:hidden">
 			<NavigationMenuList className="gap-2">
@@ -26,7 +27,7 @@ export const NavMenu: FC<INavMenuProps> = ({ navItems }) => {
 						{link.submenu ? (
 							<>
 								<NavigationMenuTrigger className="text-muted-foreground hover:text-primary bg-transparent px-2 py-1.5 font-medium *:[svg]:-me-0.5 *:[svg]:size-3.5">
-									{link.label}
+									{t(link.label)}
 								</NavigationMenuTrigger>
 								<NavigationMenuContent className="data-[motion=from-end]:slide-in-from-right-16! data-[motion=from-start]:slide-in-from-left-16! data-[motion=to-end]:slide-out-to-right-16! data-[motion=to-start]:slide-out-to-left-16! z-50 p-1">
 									<ul
@@ -42,71 +43,14 @@ export const NavMenu: FC<INavMenuProps> = ({ navItems }) => {
 													href={item.href}
 													className="py-1.5"
 												>
-													{/* Display icon if present */}
-													{link.type === "icon" &&
-														"icon" in item && (
-															<div className="flex items-center gap-2">
-																{item.icon ===
-																	"BookOpenIcon" && (
-																	<BookOpenIcon
-																		size={
-																			16
-																		}
-																		className="text-foreground opacity-60"
-																		aria-hidden="true"
-																	/>
-																)}
-																{item.icon ===
-																	"LifeBuoyIcon" && (
-																	<LifeBuoyIcon
-																		size={
-																			16
-																		}
-																		className="text-foreground opacity-60"
-																		aria-hidden="true"
-																	/>
-																)}
-																{item.icon ===
-																	"InfoIcon" && (
-																	<InfoIcon
-																		size={
-																			16
-																		}
-																		className="text-foreground opacity-60"
-																		aria-hidden="true"
-																	/>
-																)}
-																<span>
-																	{item.label}
-																</span>
-															</div>
+													<div className="flex items-center gap-2">
+														{item?.icon && (
+															<item.icon />
 														)}
-
-													{/* Display label with description if present */}
-													{link.type ===
-														"description" &&
-													"description" in item ? (
-														<div className="space-y-1">
-															<div className="font-medium">
-																{item.label}
-															</div>
-															<p className="text-muted-foreground line-clamp-2 text-xs">
-																{
-																	item.description
-																}
-															</p>
-														</div>
-													) : (
-														// Display simple label if not icon or description type
-														!link.type ||
-														(link.type !== "icon" &&
-															link.type !==
-																"description" && (
-																<span>
-																	{item.label}
-																</span>
-															))
-													)}
+														<span>
+															{t(item.label)}
+														</span>
+													</div>
 												</NavigationMenuLink>
 											</li>
 										))}

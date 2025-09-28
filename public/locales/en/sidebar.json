@@ -1,26 +1,56 @@
 {
+	"owner": {
+		"settings": {
+			"title": "Settings",
+			"personal": {
+				"title": "Personal",
+				"menu": {
+					"account": "Account Settings",
+					"security": "Security",
+					"notifications": "Notifications"
+				}
+			},
+			"business": {
+				"title": "Business",
+				"menu": {
+					"business": "Business information",
+					"staff": "Staff information",
+					"financial": "Financial information",
+					"tour": "Tour settings",
+					"tags": "Tags"
+				}
+			}
+		},
 
-    "owner": {
-        "settings": {
-            "title": "Settings",
-            "personal": {
-                "title": "Personal",
-                "menu": {
-                    "account": "Account Settings",
-                    "security": "Security",
-                    "notifications": "Notifications"
-                }
-            },
-            "business": {
-                "title": "Business",
-                "menu": {
-                    "business": "Business information",
-                    "staff": "Staff information",
-                    "financial": "Financial information",
-                    "tour": "Tour settings",
-                    "tags": "Tags"
-                }
-            }
-        }
-    }
+		"tours": {
+			"general": {
+				"title": "General",
+				"menu": {
+					"overview": "Overview",
+					"itinerary": "Itinerary",
+					"schedule": "Schedule",
+					"pricing_review": "Pricing & review"
+				}
+			},
+			"more": {
+				"title": "More",
+				"menu": {
+					"order_history": "Order history",
+					"messages": "Messages",
+					"activity_log": "Activity log"
+				}
+			}
+		},
+
+		"booking": {
+			"title": "Booking",
+			"general": {
+				"title": "General",
+				"menu": {
+					"booking_requests": "Booking requests",
+					"appeals": "Appeals"
+				}
+			}
+		}
+	}
 }
