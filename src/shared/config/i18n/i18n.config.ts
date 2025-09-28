@@ -4,7 +4,7 @@ import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
 import sidebar from "../../../../public/locales/en/sidebar.json";
 
-import type { TNestedKeyOf } from "./types";
+import type { TNestedKeyOf } from "./i18n.types";
 
 export type THeader = typeof header;
 export type THome = typeof home;

@@ -1,2 +1,2 @@
-export * from "./config";
-export * from "./types";
+export * from "./languages.config";
+export * from "./languages.types";

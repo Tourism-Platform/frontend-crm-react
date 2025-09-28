@@ -5,7 +5,7 @@ import { initReactI18next } from "react-i18next";
 
 import { ENUM_LANGUAGES } from "../languages";
 
-import { NS } from "./config";
+import { NS } from "./i18n.config";
 
 // Явный объект ресурсов (тип выводится автоматически от импортов)
 i18n.use(HttpBackend) // для загрузки JSON с public при runtime (не мешает явным resources)

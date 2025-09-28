@@ -1,4 +1,6 @@
 export const ENUM_PATH = {
+	MAIN: "/",
+	NOT_FOUND: "/*",
 	SETTINGS: {
 		ROOT: "/settings",
 		ACCOUNT_SETTINGS: "/settings/account-settings",
