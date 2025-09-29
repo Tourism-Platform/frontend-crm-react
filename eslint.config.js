@@ -211,7 +211,7 @@ export default defineConfig([
 
   // ⚡ Здесь добавляем исключение для shadcn-ui
   {
-    files: ['src/shared/ui/shadcn-ui/**/*.ts', 'src/shared/ui/shadcn-ui/**/*.tsx'],
+    files: ['src/shared/ui/shadcn-ui/**/*.ts', 'src/shared/ui/shadcn-ui/**/*.tsx',  'src/shared/ui/custom/**/*.tsx'],
     rules: {
       '@typescript-eslint/naming-convention': 'off',
       '@typescript-eslint/no-explicit-any': 'off', 

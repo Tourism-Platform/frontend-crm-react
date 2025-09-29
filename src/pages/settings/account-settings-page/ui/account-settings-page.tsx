@@ -1,5 +1,7 @@
 import type { FC } from "react";
 
+import { AccountSettings } from "@/widgets/settings";
+
 export const AccountSettingsPage: FC = () => {
-	return <div>AccountSettings</div>;
+	return <AccountSettings />;
 };

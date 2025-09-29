@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import {
 	Button,
+	CustomField,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -15,25 +16,15 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-	PasswordInput,
 	Separator
 } from "@/shared/ui";
 
-import {
-	CHANGE_PASSWORD_SCHEMA,
-	FORM_CHANGE_PASSWORD_LIST
-} from "../model/config";
+import { CHANGE_PASSWORD_SCHEMA, FORM_CHANGE_PASSWORD_LIST } from "../model";
 
 export const ChangePassword: FC = () => {
 	const { t } = useTranslation("security_page");
-	const schema = CHANGE_PASSWORD_SCHEMA;
-	const form = useForm<z.infer<typeof schema>>({
-		resolver: zodResolver(schema),
+	const form = useForm<z.infer<typeof CHANGE_PASSWORD_SCHEMA>>({
+		resolver: zodResolver(CHANGE_PASSWORD_SCHEMA),
 		defaultValues: {
 			current_password: "",
 			new_password: "",
@@ -41,7 +32,7 @@ export const ChangePassword: FC = () => {
 		},
 		mode: "onSubmit"
 	});
-	function onSubmit(data: z.infer<typeof schema>) {
+	function onSubmit(data: z.infer<typeof CHANGE_PASSWORD_SCHEMA>) {
 		console.log("Form submitted:", data);
 	}
 	return (
@@ -63,24 +54,13 @@ export const ChangePassword: FC = () => {
 						className="space-y-6"
 					>
 						{FORM_CHANGE_PASSWORD_LIST.map((item) => (
-							<FormField
-								key={item?.key}
-								control={form.control}
+							<CustomField
+								control={form?.control}
 								name={item?.key}
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>{t(item?.label)}:</FormLabel>
-										<FormControl>
-											<PasswordInput
-												placeholder={t(
-													item?.placeholder
-												)}
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage t={t} />
-									</FormItem>
-								)}
+								label={item?.label}
+								placeholder={item?.placeholder}
+								t={t}
+								type="password"
 							/>
 						))}
 						<DialogFooter>

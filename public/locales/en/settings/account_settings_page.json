@@ -1,0 +1,78 @@
+{
+	"page_name": "Account settings",
+	"avatar": {
+		"title": "Profile photo",
+		"buttons": {
+			"change": "Change photo",
+			"add": "Add photo"
+		}
+	},
+	"form": {
+		"personal": {
+			"title": "Personal information",
+			"fields": {
+				"login": {
+					"label": "Login",
+					"placeholder": "Enter your login",
+					"errors": {
+						"min": "Login must contain at least 3 characters",
+						"max": "Login is too long"
+					}
+				},
+				"first_name": {
+					"label": "First name",
+					"placeholder": "Enter your first name",
+					"errors": {
+						"min": "First name is too short",
+						"max": "First name is too long"
+					}
+				},
+				"last_name": {
+					"label": "Last name",
+					"placeholder": "Enter your last name",
+					"errors": {
+						"min": "Last name is too short",
+						"max": "Last name is too long"
+					}
+				},
+				"title": {
+					"label": "Title",
+					"placeholder": "Enter your title",
+					"errors": {
+						"max": "Title is too long"
+					}
+				},
+				"phone_number": {
+					"label": "Phone number",
+					"placeholder": "Enter your phone number",
+					"errors": {
+						"pattern": "Enter a valid phone number"
+					}
+				}
+			}
+		},
+		"general": {
+			"title": "General information",
+			"fields": {
+				"location": {
+					"label": "Location",
+					"placeholder": "Uzbekistan",
+					"errors": {
+						"min": "Location is too short",
+						"max": "Location is too long"
+					}
+				},
+				"currency": {
+					"label": "Default currency",
+					"placeholder": "USD",
+					"errors": {
+						"required": "Currency selection is required"
+					}
+				}
+			}
+		},
+		"buttons": {
+			"save": "Save"
+		}
+	}
+}

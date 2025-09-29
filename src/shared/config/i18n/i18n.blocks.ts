@@ -7,7 +7,7 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 	// Блок настроек
 	settings: {
 		folder: "settings",
-		namespaces: ["security_page"]
+		namespaces: ["security_page", "account_settings_page"]
 	},
 
 	shared: {

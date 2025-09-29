@@ -4,19 +4,20 @@
 	"change_password": "Change Password",
 	"form": {
 		"title": "Update Password",
-		"current_password": {
-			"label": "Current Password",
-			"placeholder": "Enter your current password"
+		"fields": {
+			"current_password": {
+				"label": "Current Password",
+				"placeholder": "Enter your current password"
+			},
+			"new_password": {
+				"label": "New Password",
+				"placeholder": "Enter your new password"
+			},
+			"confirm_new_password": {
+				"label": "Confirm New Password",
+				"placeholder": "Confirm your new password"
+			}
 		},
-		"new_password": {
-			"label": "New Password",
-			"placeholder": "Enter your new password"
-		},
-		"confirm_new_password": {
-			"label": "Confirm New Password",
-			"placeholder": "Confirm your new password"
-		},
-
 		"errors": {
 			"current_password": {
 				"min": "The current password must be at least 6 characters long"
