@@ -6,11 +6,11 @@ import { CustomField } from "@/shared/ui";
 
 import { GENERAL_ACCOUNT_DATA_LIST, type TChangeAccountSchema } from "../model";
 
-interface IGeneralSettingsProps {
+interface IGeneralInfoProps {
 	form: UseFormReturn<TChangeAccountSchema>;
 }
 
-export const GeneralSettings: FC<IGeneralSettingsProps> = ({ form }) => {
+export const GeneralInfo: FC<IGeneralInfoProps> = ({ form }) => {
 	const { t } = useTranslation("account_settings_page");
 	return (
 		<div className="flex gap-5 flex-col">

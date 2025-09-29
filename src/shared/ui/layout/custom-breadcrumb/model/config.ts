@@ -10,7 +10,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.SETTINGS.SECURITY]: "owner.settings.personal.menu.security",
 	[ENUM_PATH.SETTINGS.NOTIFICATIONS]:
 		"owner.settings.personal.menu.notifications",
-	[ENUM_PATH.SETTINGS.BUSINESS_INFORMATION]:
+	[ENUM_PATH.SETTINGS.BUSINESS_SETTINGS]:
 		"owner.settings.business.menu.business",
 	[ENUM_PATH.SETTINGS.STAFF_INFORMATION]:
 		"owner.settings.business.menu.staff",

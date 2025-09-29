@@ -7,9 +7,9 @@ import { Button, Card, CardContent, Form, Separator } from "@/shared/ui";
 
 import { CHANGE_ACCOUNT_SCHEMA, type TChangeAccountSchema } from "../model";
 
-import { AvatarSettings } from "./avatar-settings";
-import { GeneralSettings } from "./general-settings";
-import { PersonalSettings } from "./personal-settings";
+import { AvatarInfo } from "./avatar-info";
+import { GeneralInfo } from "./general-info";
+import { PersonalInfo } from "./personal-info";
 
 export const AccountSettings: FC = () => {
 	const { t } = useTranslation("account_settings_page");
@@ -34,16 +34,16 @@ export const AccountSettings: FC = () => {
 			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex gap-5 flex-col max-w-5xl">
-					<AvatarSettings />
+					<AvatarInfo />
 					<Separator />
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}
 							className="space-y-5"
 						>
-							<PersonalSettings form={form} />
+							<PersonalInfo form={form} />
 							<Separator />
-							<GeneralSettings form={form} />
+							<GeneralInfo form={form} />
 							<div>
 								<Button>{t("form.buttons.save")}</Button>
 							</div>

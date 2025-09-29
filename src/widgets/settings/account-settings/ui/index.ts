@@ -1,4 +1,4 @@
 export * from "./account-settings";
-export * from "./avatar-settings";
-export * from "./general-settings";
-export * from "./personal-settings";
+export * from "./avatar-info";
+export * from "./general-info";
+export * from "./personal-info";

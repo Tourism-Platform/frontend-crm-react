@@ -2,6 +2,7 @@ import type { TFunction } from "i18next";
 import { type FC } from "react";
 import type { Control } from "react-hook-form";
 
+import { cn } from "@/shared/lib";
 import {
 	FormControl,
 	FormField,
@@ -9,16 +10,17 @@ import {
 	FormLabel,
 	FormMessage,
 	Input,
-	PasswordInput
+	PasswordInput,
+	Textarea
 } from "@/shared/ui";
 
-interface ICustomFieldProps {
+interface ICustomFieldProps extends React.HTMLAttributes<HTMLDivElement> {
 	control: Control<any>;
 	name: string;
 	label: string;
 	placeholder: string;
 	t: TFunction<any>;
-	type?: "password" | "input";
+	type?: "password" | "input" | "textarea";
 }
 
 export const CustomField: FC<ICustomFieldProps> = ({
@@ -27,16 +29,31 @@ export const CustomField: FC<ICustomFieldProps> = ({
 	label,
 	placeholder,
 	t,
-	type = "input"
+	type = "input",
+	...props
 }) => {
-	const Component = type === "password" ? PasswordInput : Input;
-
+	let Component;
+	switch (type) {
+		case "password":
+			Component = PasswordInput;
+			break;
+		case "input":
+			Component = Input;
+			break;
+		case "textarea":
+			Component = Textarea;
+			break;
+		default:
+			Component = Input;
+			break;
+	}
+	const { className, ...rest } = props;
 	return (
 		<FormField
 			control={control}
 			name={name}
 			render={({ field }) => (
-				<FormItem className="relative mb-5">
+				<FormItem className={cn("relative mb-5", className)} {...rest}>
 					<FormLabel>{t(label)}:</FormLabel>
 					<FormControl>
 						<Component placeholder={t(placeholder)} {...field} />

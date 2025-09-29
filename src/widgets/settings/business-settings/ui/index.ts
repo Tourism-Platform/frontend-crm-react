@@ -1,2 +1,1 @@
-export * from "./account-settings";
 export * from "./business-settings";

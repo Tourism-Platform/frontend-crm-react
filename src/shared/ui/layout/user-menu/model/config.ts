@@ -36,7 +36,7 @@ export const USER_MENU_LIST: IUserMenu[] = [
 		menu: [
 			{
 				label: "owner.settings.business.menu.business",
-				path: ENUM_PATH.SETTINGS.BUSINESS_INFORMATION,
+				path: ENUM_PATH.SETTINGS.BUSINESS_SETTINGS,
 				icon: HouseIcon
 			},
 			{

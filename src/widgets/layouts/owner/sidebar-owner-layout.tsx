@@ -20,10 +20,10 @@ export const SideBarOwnerLayout = ({
 		<SidebarProvider>
 			<CustomSidebar items={items} />
 			<SidebarInset>
-				<div className="mt-3 flex h-10 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sticky top-16 bg-background z-10">
+				<div className="py-3 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sticky top-16 bg-background z-10">
 					<CustomBreadcrumb />
 				</div>
-				<div className="px-5">{children}</div>
+				<div className="px-5 mb-30">{children}</div>
 			</SidebarInset>
 		</SidebarProvider>
 	);

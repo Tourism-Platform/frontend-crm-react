@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useFileUpload } from "@/shared/hooks/useFileUpload";
 import { Avatar, AvatarFallback, AvatarImage, Button } from "@/shared/ui";
 
-export const AvatarSettings: FC = () => {
+export const AvatarInfo: FC = () => {
 	const { t } = useTranslation("account_settings_page");
 
 	const [{ files }, { removeFile, openFileDialog, getInputProps }] =

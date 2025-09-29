@@ -1,0 +1,12 @@
+{
+	"upload_files": {
+		"title": "Загрузить файлы",
+		"description": "Максимум {{maxFiles}} файлов ∙ До {{maxSize}} МБ",
+		"uploaded": "Загружено",
+		"buttons": {
+			"add": "Добавить файл",
+			"remove": "Удалить все",
+			"select": "Выбрать файлы"
+		}
+	}
+}

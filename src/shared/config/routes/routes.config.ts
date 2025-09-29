@@ -6,7 +6,7 @@ export const ENUM_PATH = {
 		ACCOUNT_SETTINGS: "/settings/account-settings",
 		SECURITY: "/settings/security",
 		NOTIFICATIONS: "/settings/notifications",
-		BUSINESS_INFORMATION: "/settings/business-information",
+		BUSINESS_SETTINGS: "/settings/business-settings",
 		STAFF_INFORMATION: "/settings/staff-information",
 		FINANCIAL_SETTINGS: "/settings/financial-settings",
 		TOUR_SETTINGS: "/settings/tour-settings",

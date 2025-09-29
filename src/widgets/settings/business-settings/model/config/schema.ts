@@ -1,0 +1,109 @@
+import { z } from "zod";
+
+export const CHANGE_BUSINESS_SCHEMA = z.object({
+	business: z.object({
+		business_description: z
+			.string()
+			.min(10, {
+				message: "form.business.fields.business_description.errors.min"
+			})
+			.max(1000, {
+				message: "form.business.fields.business_description.errors.max"
+			}),
+		business_name: z
+			.string()
+			.min(2, {
+				message: "form.business.fields.business_name.errors.min"
+			})
+			.max(100, {
+				message: "form.business.fields.business_name.errors.max"
+			}),
+		business_website: z
+			.string()
+			.min(2, {
+				message: "form.business.fields.business_website.errors.min"
+			})
+			.max(100, {
+				message: "form.business.fields.business_website.errors.max"
+			})
+			.optional()
+	}),
+	legal: z.object({
+		legal_company_name: z
+			.string()
+			.min(2, {
+				message: "form.legal.fields.legal_company_name.errors.min"
+			})
+			.max(200, {
+				message: "form.legal.fields.legal_company_name.errors.max"
+			}),
+		director: z
+			.string()
+			.min(2, { message: "form.legal.fields.director.errors.min" })
+			.max(100, { message: "form.legal.fields.director.errors.max" }),
+		tin: z.string().regex(/^\d{9}$/, {
+			message: "form.legal.fields.tin.errors.pattern"
+		}),
+		type_of_business: z
+			.string()
+			.min(2, {
+				message: "form.legal.fields.type_of_business.errors.min"
+			})
+			.max(100, {
+				message: "form.legal.fields.type_of_business.errors.max"
+			}),
+		business_name: z
+			.string()
+			.min(2, { message: "form.legal.fields.business_name.errors.min" })
+			.max(100, {
+				message: "form.legal.fields.business_name.errors.max"
+			}),
+		business_website: z
+			.string()
+			.min(2, {
+				message: "form.legal.fields.business_website.errors.min"
+			})
+			.max(100, {
+				message: "form.legal.fields.business_website.errors.max"
+			})
+			.optional()
+	}),
+	address: z.object({
+		address_line: z
+			.string()
+			.min(5, { message: "form.address.fields.address_line.errors.min" })
+			.max(300, {
+				message: "form.address.fields.address_line.errors.max"
+			}),
+		country: z
+			.string()
+			.min(2, { message: "form.address.fields.country.errors.min" })
+			.max(100, { message: "form.address.fields.country.errors.max" }),
+		city: z
+			.string()
+			.min(2, { message: "form.address.fields.city.errors.min" })
+			.max(100, { message: "form.address.fields.city.errors.max" })
+	}),
+	contact: z.object({
+		contact_person: z
+			.string()
+			.min(2, {
+				message: "form.contact.fields.contact_person.errors.min"
+			})
+			.max(100, {
+				message: "form.contact.fields.contact_person.errors.max"
+			}),
+		position: z
+			.string()
+			.min(2, { message: "form.contact.fields.position.errors.min" })
+			.max(100, { message: "form.contact.fields.position.errors.max" }),
+		phone_number: z
+			.string()
+			.regex(/^\+998\s?\d{2}\s?\d{3}\s?\d{2}\s?\d{2}$/, {
+				message: "form.contact.fields.phone_number.errors.pattern"
+			}),
+		email: z
+			.string()
+			.email({ message: "form.contact.fields.email.errors.email" })
+	})
+});

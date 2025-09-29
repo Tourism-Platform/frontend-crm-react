@@ -12,7 +12,7 @@ import { AppealsPage, BookingRequestsPage } from "@/pages/booking";
 import { NotFoundPage } from "@/pages/not-found-page";
 import {
 	AccountSettingsPage,
-	BusinessInformationPage,
+	BusinessSettingsPage,
 	FinancialSettingsPage,
 	NotificationsPage,
 	SecurityPage,
@@ -41,8 +41,8 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		sidebarMenu: SETTINGS_SIDEBAR_LIST
 	},
 	{
-		path: ENUM_PATH.SETTINGS.BUSINESS_INFORMATION,
-		component: BusinessInformationPage,
+		path: ENUM_PATH.SETTINGS.BUSINESS_SETTINGS,
+		component: BusinessSettingsPage,
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST

@@ -1,0 +1,163 @@
+{
+	"page_name": "Business settings",
+	"avatar": {
+		"title": "Business logo",
+		"buttons": {
+			"change": "Change photo",
+			"add": "Add photo"
+		}
+	},
+	"form": {
+		"business": {
+			"title": "Business Information",
+			"fields": {
+				"business_description": {
+					"label": "Company description",
+					"placeholder": "Enter company description",
+					"errors": {
+						"min": "Description is too short",
+						"max": "Description is too long"
+					}
+				},
+				"business_name": {
+					"label": "Business name",
+					"placeholder": "Orient Star",
+					"errors": {
+						"min": "Business name is too short",
+						"max": "Business name is too long"
+					}
+				},
+				"business_website": {
+					"label": "Business website",
+					"placeholder": "Orient Star",
+					"errors": {
+						"min": "Website is too short",
+						"max": "Website is too long"
+					}
+				}
+			}
+		},
+		"legal": {
+			"title": "Legal information",
+			"fields": {
+				"legal_company_name": {
+					"label": "Legal company name",
+					"placeholder": "Enter legal company name",
+					"errors": {
+						"min": "Company name is too short",
+						"max": "Company name is too long"
+					}
+				},
+				"director": {
+					"label": "Director",
+					"placeholder": "Enter director name",
+					"errors": {
+						"min": "Director name is too short",
+						"max": "Director name is too long"
+					}
+				},
+				"tin": {
+					"label": "TIN",
+					"placeholder": "Enter TIN",
+					"errors": {
+						"pattern": "TIN must be 9 digits"
+					}
+				},
+				"type_of_business": {
+					"label": "Type of business",
+					"placeholder": "Enter type of business",
+					"errors": {
+						"min": "Business type is too short",
+						"max": "Business type is too long"
+					}
+				},
+				"business_name": {
+					"label": "Business name",
+					"placeholder": "Enter business name",
+					"errors": {
+						"min": "Business name is too short",
+						"max": "Business name is too long"
+					}
+				},
+				"business_website": {
+					"label": "Business website",
+					"placeholder": "Enter business website",
+					"errors": {
+						"min": "Website is too short",
+						"max": "Website is too long"
+					}
+				}
+			}
+		},
+		"address": {
+			"title": "Address",
+			"fields": {
+				"address_line": {
+					"label": "Address line",
+					"placeholder": "15 Buyuk Ipak Yuli Street, Office 23, 100007",
+					"errors": {
+						"min": "Address is too short",
+						"max": "Address is too long"
+					}
+				},
+				"country": {
+					"label": "Country",
+					"placeholder": "Uzbekistan",
+					"errors": {
+						"min": "Country is too short",
+						"max": "Country is too long"
+					}
+				},
+				"city": {
+					"label": "City",
+					"placeholder": "Tashkent",
+					"errors": {
+						"min": "City is too short",
+						"max": "City is too long"
+					}
+				}
+			}
+		},
+		"contact": {
+			"title": "Contact information",
+			"fields": {
+				"contact_person": {
+					"label": "Contact person",
+					"placeholder": "Emma Watson",
+					"errors": {
+						"min": "Contact person is too short",
+						"max": "Contact person is too long"
+					}
+				},
+				"position": {
+					"label": "Position",
+					"placeholder": "Manager",
+					"errors": {
+						"min": "Position is too short",
+						"max": "Position is too long"
+					}
+				},
+				"phone_number": {
+					"label": "Phone number",
+					"placeholder": "+998 90 123 45 67",
+					"errors": {
+						"pattern": "Enter a valid Uzbekistan phone number"
+					}
+				},
+				"email": {
+					"label": "Email",
+					"placeholder": "Contact@gmail.com",
+					"errors": {
+						"email": "Enter a valid email address"
+					}
+				}
+			}
+		},
+		"documents": {
+			"title": "Documents"
+		},
+		"buttons": {
+			"save": "Save"
+		}
+	}
+}

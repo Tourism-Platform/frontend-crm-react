@@ -9,11 +9,11 @@ import {
 	type TChangeAccountSchema
 } from "../model";
 
-interface IPersonalSettingsProps {
+interface IPersonalInfoProps {
 	form: UseFormReturn<TChangeAccountSchema>;
 }
 
-export const PersonalSettings: FC<IPersonalSettingsProps> = ({ form }) => {
+export const PersonalInfo: FC<IPersonalInfoProps> = ({ form }) => {
 	const { t } = useTranslation("account_settings_page");
 	return (
 		<div className="flex gap-5 flex-col">
