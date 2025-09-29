@@ -214,6 +214,7 @@ export default defineConfig([
     files: ['src/shared/ui/shadcn-ui/**/*.ts', 'src/shared/ui/shadcn-ui/**/*.tsx'],
     rules: {
       '@typescript-eslint/naming-convention': 'off',
+      '@typescript-eslint/no-explicit-any': 'off', 
     },
   },
 

@@ -1,3 +1,7 @@
+@import '@fontsource/exo-2/400.css';
+@import '@fontsource/exo-2/500.css';
+@import '@fontsource/exo-2/700.css';
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -28,6 +32,7 @@
   }
   body {
     @apply bg-background text-foreground;
+     font-family: 'Exo 2', system-ui, sans-serif;
   }
 }
 
