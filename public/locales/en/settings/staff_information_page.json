@@ -1,0 +1,11 @@
+{
+	"page_name": "Staff information",
+	"table": {
+		"firstName": "First name",
+		"lastName": "Last name",
+		"email": "Email",
+		"role": "Role",
+		"status": "Status",
+		"split": "Split, %"
+	}
+}

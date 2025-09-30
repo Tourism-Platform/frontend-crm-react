@@ -1,0 +1,11 @@
+{
+	"page_name": "Информация о сотрудниках",
+	"table": {
+		"firstName": "Имя",
+		"lastName": "Фамилия",
+		"email": "Email",
+		"role": "Роль",
+		"status": "Статус",
+		"split": "Доля, %"
+	}
+}

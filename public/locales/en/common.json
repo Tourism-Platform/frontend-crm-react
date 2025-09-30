@@ -8,5 +8,14 @@
 			"remove": "Remove all",
 			"select": "Select files"
 		}
+	},
+	"table": {
+		"search": "Search ...",
+		"status": "Status",
+		"view": {
+			"title": "View",
+			"toggle": "Toggle columns"
+		},
+		"pagination": "Rows per page"
 	}
 }

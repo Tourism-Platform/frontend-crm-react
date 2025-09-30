@@ -6,6 +6,7 @@ import home from "../../../../public/locales/en/home.json";
 import account_settings_page from "../../../../public/locales/en/settings/account_settings_page.json";
 import business_settings_page from "../../../../public/locales/en/settings/business_settings_page.json";
 import security_page from "../../../../public/locales/en/settings/security_page.json";
+import staff_information_page from "../../../../public/locales/en/settings/staff_information_page.json";
 import sidebar from "../../../../public/locales/en/sidebar.json";
 
 import type { TNestedKeyOf } from "./i18n.types";
@@ -17,6 +18,7 @@ export type TSidebar = typeof sidebar;
 export type TSecurityPage = typeof security_page;
 export type TAccountSettingsPage = typeof account_settings_page;
 export type TBusinessSettingsPage = typeof business_settings_page;
+export type TStaffInformationPage = typeof staff_information_page;
 
 export type TResources = {
 	header: THeader;
@@ -26,6 +28,7 @@ export type TResources = {
 	security_page: TSecurityPage;
 	account_settings_page: TAccountSettingsPage;
 	business_settings_page: TBusinessSettingsPage;
+	staff_information_page: TStaffInformationPage;
 };
 
 export const NS = [
@@ -35,7 +38,8 @@ export const NS = [
 	"sidebar",
 	"security_page",
 	"account_settings_page",
-	"business_settings_page"
+	"business_settings_page",
+	"staff_information_page"
 ] as const;
 export type TNS = (typeof NS)[number];
 

@@ -10,7 +10,8 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 		namespaces: [
 			"security_page",
 			"account_settings_page",
-			"business_settings_page"
+			"business_settings_page",
+			"staff_information_page"
 		]
 	},
 
