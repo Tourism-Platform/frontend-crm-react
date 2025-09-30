@@ -1,0 +1,25 @@
+{
+	"page_name": "Financial settings",
+	"commission_type": {
+		"title": "Commission types",
+		"description": "Create global commission types for agents to select from when logging bookings.",
+		"table": {
+			"name": "Name",
+			"description": "Description",
+			"rate": "Rate, %",
+			"status": "Status"
+		}
+	},
+	"commission_rate": {
+		"agent": {
+			"title": "Default Agent Commission Rate",
+			"description": "Create global commission types for agents to select from when logging bookings.",
+			"rate": "Rate, %"
+		},
+		"tour": {
+			"title": "Default Tour Markup",
+			"description": "Create global commission type of your markup",
+			"rate": "Rate, %"
+		}
+	}
+}
