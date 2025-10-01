@@ -9,7 +9,10 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 
 	if (route?.sidebarMenu?.length) {
 		Component = (
-			<SideBarOwnerLayout items={route?.sidebarMenu}>
+			<SideBarOwnerLayout
+				items={route?.sidebarMenu}
+				useBreadcrumb={route.useBreadcrumb}
+			>
 				{Component}
 			</SideBarOwnerLayout>
 		);

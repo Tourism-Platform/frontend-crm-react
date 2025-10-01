@@ -16,6 +16,7 @@ export const CustomTabsList = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof TabsList>
 >(({ className, children, ...props }, ref) => {
 	const count = React.Children.count(children);
+	console.log(count);
 	return (
 		<TabsList
 			ref={ref}

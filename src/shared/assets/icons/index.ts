@@ -1,5 +1,7 @@
+export * from "./box-outline";
 export * from "./calendar-days";
 export * from "./check";
+export * from "./clock-outline";
 export * from "./clock";
 export * from "./dollar-square";
 export * from "./flag";

@@ -3,7 +3,7 @@
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 import * as React from "react";
 
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/lib/class-merge";
 import { buttonVariants } from "@/shared/ui/shadcn-ui/button";
 
 function AlertDialog({

@@ -1,0 +1,27 @@
+{
+	"info": {
+		"total": "Total",
+		"completed": "Completed",
+		"in_progress": "In progress",
+		"tourists": "Tourists",
+		"confirmed_revenue": "Confirmed revenue",
+		"potential_revenue": "Potential revenue"
+	},
+
+	"recent_orders": {
+		"title": "Resent orders",
+
+		"table": {
+			"order_id": "Order ID",
+			"client": "Client",
+			"type": "Type",
+			"pax": "Pax",
+			"dates": "Dates",
+			"status": "Status"
+		}
+	},
+
+	"managers": {
+		"title": "Managers"
+	}
+}

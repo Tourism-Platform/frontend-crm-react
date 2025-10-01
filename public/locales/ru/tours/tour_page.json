@@ -1,0 +1,27 @@
+{
+	"info": {
+		"total": "Всего",
+		"completed": "Завершено",
+		"in_progress": "В процессе",
+		"tourists": "Туристы",
+		"confirmed_revenue": "Подтверждённый доход",
+		"potential_revenue": "Потенциальный доход"
+	},
+
+	"recent_orders": {
+		"title": "Последние заказы",
+
+		"table": {
+			"order_id": "ID заказа",
+			"client": "Клиент",
+			"type": "Тип",
+			"pax": "Туристов",
+			"dates": "Даты",
+			"status": "Статус"
+		}
+	},
+
+	"managers": {
+		"title": "Менеджеры"
+	}
+}

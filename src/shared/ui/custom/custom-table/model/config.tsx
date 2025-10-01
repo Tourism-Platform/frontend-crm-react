@@ -1,6 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table";
 
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/lib/class-merge";
 import { Badge } from "@/shared/ui/shadcn-ui/badge";
 import { Checkbox } from "@/shared/ui/shadcn-ui/checkbox";
 

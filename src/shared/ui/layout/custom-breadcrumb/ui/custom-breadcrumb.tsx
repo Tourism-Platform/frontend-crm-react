@@ -7,9 +7,7 @@ import {
 	BreadcrumbItem,
 	BreadcrumbList,
 	BreadcrumbPage,
-	BreadcrumbSeparator,
-	Separator,
-	SidebarTrigger
+	BreadcrumbSeparator
 } from "@/shared/ui";
 
 import { BREADCRUMB_LIST } from "../model";
@@ -21,11 +19,6 @@ export const CustomBreadcrumb: FC = () => {
 	const base = ("/" + pathname.split("/")[1]) as keyof typeof BREADCRUMB_LIST;
 	return (
 		<div className="flex items-center gap-2 px-4">
-			<SidebarTrigger className="-ml-1" />
-			<Separator
-				orientation="vertical"
-				className="mr-2 data-[orientation=vertical]:h-4"
-			/>
 			<Breadcrumb>
 				<BreadcrumbList>
 					<BreadcrumbItem className="hidden md:block">

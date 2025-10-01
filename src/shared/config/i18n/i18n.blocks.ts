@@ -18,7 +18,7 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 	// Блок туров
 	tours: {
 		folder: "tours",
-		namespaces: ["tours_page"]
+		namespaces: ["tours_page", "tour_page"]
 	},
 
 	shared: {

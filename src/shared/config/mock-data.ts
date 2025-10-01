@@ -180,3 +180,269 @@ export const TOUR_CARDS = [
 		price_to: 280
 	}
 ];
+
+export const RECENT_ORDERS_MOCK = [
+	{
+		order_id: "RQA-123341",
+		client: "Bender",
+		type: "Agency",
+		pax: 24,
+		date_from: "24.08.2025",
+		date_to: "2.09.2025",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123342",
+		client: "Smith Travel",
+		type: "Direct",
+		pax: 12,
+		date_from: "15.09.2025",
+		date_to: "22.09.2025",
+		status: "pending"
+	},
+	{
+		order_id: "RQA-123343",
+		client: "Adventure Co",
+		type: "Agency",
+		pax: 8,
+		date_from: "01.10.2025",
+		date_to: "08.10.2025",
+		status: "completed"
+	},
+	{
+		order_id: "RQA-123344",
+		client: "Global Tours",
+		type: "Partner",
+		pax: 16,
+		date_from: "10.10.2025",
+		date_to: "18.10.2025",
+		status: "pending"
+	},
+	{
+		order_id: "RQA-123345",
+		client: "Johnson Group",
+		type: "Direct",
+		pax: 6,
+		date_from: "05.11.2025",
+		date_to: "12.11.2025",
+		status: "cancelled"
+	},
+	{
+		order_id: "RQA-123346",
+		client: "Wanderlust Agency",
+		type: "Agency",
+		pax: 18,
+		date_from: "20.11.2025",
+		date_to: "28.11.2025",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123347",
+		client: "Explorer's Paradise",
+		type: "Direct",
+		pax: 10,
+		date_from: "03.12.2025",
+		date_to: "11.12.2025",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123348",
+		client: "Heritage Travel",
+		type: "Agency",
+		pax: 22,
+		date_from: "15.12.2025",
+		date_to: "23.12.2025",
+		status: "pending"
+	},
+	{
+		order_id: "RQA-123349",
+		client: "Cultural Journeys Ltd",
+		type: "Partner",
+		pax: 14,
+		date_from: "05.01.2026",
+		date_to: "13.01.2026",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123350",
+		client: "Discovery Tours",
+		type: "Agency",
+		pax: 20,
+		date_from: "18.01.2026",
+		date_to: "26.01.2026",
+		status: "completed"
+	},
+	{
+		order_id: "RQA-123351",
+		client: "Nomad Expeditions",
+		type: "Direct",
+		pax: 4,
+		date_from: "01.02.2026",
+		date_to: "08.02.2026",
+		status: "pending"
+	},
+	{
+		order_id: "RQA-123352",
+		client: "Ancient Routes",
+		type: "Agency",
+		pax: 26,
+		date_from: "14.02.2026",
+		date_to: "22.02.2026",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123353",
+		client: "Odyssey Travel Group",
+		type: "Partner",
+		pax: 11,
+		date_from: "28.02.2026",
+		date_to: "08.03.2026",
+		status: "cancelled"
+	},
+	{
+		order_id: "RQA-123354",
+		client: "Thompson & Associates",
+		type: "Direct",
+		pax: 8,
+		date_from: "15.03.2026",
+		date_to: "22.03.2026",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123355",
+		client: "Historic Trails Inc",
+		type: "Agency",
+		pax: 30,
+		date_from: "01.04.2026",
+		date_to: "10.04.2026",
+		status: "pending"
+	},
+	{
+		order_id: "RQA-123356",
+		client: "Meridian Voyages",
+		type: "Partner",
+		pax: 15,
+		date_from: "20.04.2026",
+		date_to: "28.04.2026",
+		status: "completed"
+	},
+	{
+		order_id: "RQA-123357",
+		client: "Renaissance Tours",
+		type: "Agency",
+		pax: 9,
+		date_from: "05.05.2026",
+		date_to: "13.05.2026",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123358",
+		client: "Wilson Travel Bureau",
+		type: "Direct",
+		pax: 17,
+		date_from: "22.05.2026",
+		date_to: "30.05.2026",
+		status: "pending"
+	},
+	{
+		order_id: "RQA-123359",
+		client: "Legacy Adventures",
+		type: "Agency",
+		pax: 13,
+		date_from: "10.06.2026",
+		date_to: "18.06.2026",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123360",
+		client: "Martinez Expeditions",
+		type: "Partner",
+		pax: 7,
+		date_from: "25.06.2026",
+		date_to: "03.07.2026",
+		status: "completed"
+	},
+	{
+		order_id: "RQA-123361",
+		client: "Timeless Travels",
+		type: "Agency",
+		pax: 21,
+		date_from: "15.07.2026",
+		date_to: "23.07.2026",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123362",
+		client: "Anderson Global",
+		type: "Direct",
+		pax: 5,
+		date_from: "01.08.2026",
+		date_to: "09.08.2026",
+		status: "cancelled"
+	},
+	{
+		order_id: "RQA-123363",
+		client: "Archaeology Tours Co",
+		type: "Partner",
+		pax: 19,
+		date_from: "18.08.2026",
+		date_to: "26.08.2026",
+		status: "pending"
+	},
+	{
+		order_id: "RQA-123364",
+		client: "Eternal Journeys",
+		type: "Agency",
+		pax: 28,
+		date_from: "05.09.2026",
+		date_to: "13.09.2026",
+		status: "confirmed"
+	},
+	{
+		order_id: "RQA-123365",
+		client: "Peterson Travel Network",
+		type: "Direct",
+		pax: 12,
+		date_from: "20.09.2026",
+		date_to: "28.09.2026",
+		status: "completed"
+	}
+];
+
+export const MANAGERS_MOCK = [
+	{
+		first_name: "Vladimir",
+		last_name: "Petrov",
+		email: "vladimir.petrov@example.com",
+		image_url: "https://randomuser.me/api/portraits/men/11.jpg",
+		role: "Sales Manager"
+	},
+	{
+		first_name: "Anna",
+		last_name: "Ivanova",
+		email: "anna.ivanova@example.com",
+		image_url: "https://randomuser.me/api/portraits/women/21.jpg",
+		role: "Marketing Manager"
+	},
+	{
+		first_name: "Dmitry",
+		last_name: "Sokolov",
+		email: "dmitry.sokolov@example.com",
+		image_url: "https://randomuser.me/api/portraits/men/31.jpg",
+		role: "Product Manager"
+	},
+	{
+		first_name: "Elena",
+		last_name: "Smirnova",
+		email: "elena.smirnova@example.com",
+		image_url: "https://randomuser.me/api/portraits/women/41.jpg",
+		role: "HR Manager"
+	},
+	{
+		first_name: "Sergey",
+		last_name: "Kuznetsov",
+		email: "sergey.kuznetsov@example.com",
+		image_url: "https://randomuser.me/api/portraits/men/51.jpg",
+		role: "Operations Manager"
+	}
+];

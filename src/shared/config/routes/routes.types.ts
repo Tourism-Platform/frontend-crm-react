@@ -14,6 +14,7 @@ export interface IRouting {
 	// nonAuthSidebar?: boolean;
 	// adminSidebar?: boolean;
 	sidebarMenu?: ISidebarMenu[];
+	useBreadcrumb?: boolean;
 	layout: ENUM_LAYOUT_TYPE;
 }
 
