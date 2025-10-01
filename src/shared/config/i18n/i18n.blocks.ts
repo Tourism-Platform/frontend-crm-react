@@ -15,6 +15,11 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"financial_settings_page"
 		]
 	},
+	// Блок туров
+	tours: {
+		folder: "tours",
+		namespaces: ["tours_page"]
+	},
 
 	shared: {
 		folder: "", // пустая строка = корень

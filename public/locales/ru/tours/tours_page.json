@@ -1,0 +1,12 @@
+{
+	"page_name": "Туры",
+
+	"tabs": {
+		"all": "Все",
+		"active": "Активные",
+		"moderate": "На модерации",
+		"planning": "В планах",
+		"cancelled": "Отменённые",
+		"archived": "Архив"
+	}
+}

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { z } from "zod";
 
 import {
 	Button,
@@ -19,11 +18,15 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { CHANGE_PASSWORD_SCHEMA, FORM_CHANGE_PASSWORD_LIST } from "../model";
+import {
+	CHANGE_PASSWORD_SCHEMA,
+	FORM_CHANGE_PASSWORD_LIST,
+	type TChangePasswordSchema
+} from "../model";
 
 export const ChangePassword: FC = () => {
 	const { t } = useTranslation("security_page");
-	const form = useForm<z.infer<typeof CHANGE_PASSWORD_SCHEMA>>({
+	const form = useForm<TChangePasswordSchema>({
 		resolver: zodResolver(CHANGE_PASSWORD_SCHEMA),
 		defaultValues: {
 			current_password: "",
@@ -32,7 +35,7 @@ export const ChangePassword: FC = () => {
 		},
 		mode: "onSubmit"
 	});
-	function onSubmit(data: z.infer<typeof CHANGE_PASSWORD_SCHEMA>) {
+	function onSubmit(data: TChangePasswordSchema) {
 		console.log("Form submitted:", data);
 	}
 	return (

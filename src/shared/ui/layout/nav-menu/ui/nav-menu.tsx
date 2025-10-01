@@ -7,7 +7,6 @@ import {
 	NavigationMenu,
 	NavigationMenuContent,
 	NavigationMenuItem,
-	NavigationMenuLink,
 	NavigationMenuList,
 	NavigationMenuTrigger
 } from "@/shared/ui";
@@ -58,12 +57,14 @@ export const NavMenu: FC<INavMenuProps> = ({ navItems }) => {
 								</NavigationMenuContent>
 							</>
 						) : (
-							<NavigationMenuLink
-								href={link.href}
-								className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-							>
-								{link.label}
-							</NavigationMenuLink>
+							<NavigationMenuItem asChild>
+								<Link
+									to={link?.href || "#"}
+									className="p-1.5 text-muted-foreground hover:text-foreground flex items-center gap-2 hover:bg-accent rounded-sm text-sm"
+								>
+									{t(link.label)}
+								</Link>
+							</NavigationMenuItem>
 						)}
 					</NavigationMenuItem>
 				))}

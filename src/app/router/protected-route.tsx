@@ -1,6 +1,6 @@
 import type { IRouting } from "@/shared/config";
 
-import { SideBarOwnerLayout } from "@/widgets/layouts";
+import { ContainerOwnerLayout, SideBarOwnerLayout } from "@/widgets/layouts";
 
 // Компонент защиты маршрутов
 export const ProtectedRoute = ({ route }: { route: IRouting }) => {
@@ -13,6 +13,8 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 				{Component}
 			</SideBarOwnerLayout>
 		);
+	} else {
+		Component = <ContainerOwnerLayout>{Component}</ContainerOwnerLayout>;
 	}
 	// if (route.authSidebar && isAuth) {
 	//   Component = <SideBarLayout>{Component}</SideBarLayout>;

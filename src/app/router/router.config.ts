@@ -27,7 +27,8 @@ import {
 	OrderHistoryPage,
 	OverviewPage,
 	PricingReviewPage,
-	SchedulePage
+	SchedulePage,
+	ToursPage
 } from "@/pages/tours";
 
 export const ALL_APP_ROUTES_LIST: IRouting[] = [
@@ -91,6 +92,12 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	},
 
 	// tours
+	{
+		path: ENUM_PATH.TOURS.ROOT,
+		component: ToursPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT
+	},
 	{
 		path: ENUM_PATH.TOURS.OVERVIEW,
 		component: OverviewPage,

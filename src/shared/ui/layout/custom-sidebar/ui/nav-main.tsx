@@ -37,7 +37,7 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 									className={cn(
 										"text-muted-foreground",
 										location?.pathname === subItem?.path &&
-											"bg-sidebar-primary text-white hover:bg-sidebar-primary hover:text-white"
+											"bg-sidebar-primary text-primary-foreground hover:bg-sidebar-primary hover:text-primary-foreground"
 									)}
 								>
 									{subItem?.icon && <subItem.icon />}

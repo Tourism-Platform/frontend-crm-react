@@ -14,13 +14,13 @@ export const ENUM_PATH = {
 	},
 	TOURS: {
 		ROOT: "/tours",
-		OVERVIEW: "/tours/overview",
-		ITINERARY: "/tours/itinerary",
-		SCHEDULE: "/tours/schedule",
-		PRICING_REVIEW: "/tours/pricing-review",
-		ORDER_HISTORY: "/tours/order-history",
-		MESSAGES: "/tours/messages",
-		ACTIVITY_LOG: "/tours/activity-log"
+		OVERVIEW: "/tours/:tourId/overview",
+		ITINERARY: "/tours/:tourId/itinerary",
+		SCHEDULE: "/tours/:tourId/schedule",
+		PRICING_REVIEW: "/tours/:tourId/pricing-review",
+		ORDER_HISTORY: "/tours/:tourId/order-history",
+		MESSAGES: "/tours/:tourId/messages",
+		ACTIVITY_LOG: "/tours/:tourId/activity-log"
 	},
 	BOOKING: {
 		ROOT: "/booking",
