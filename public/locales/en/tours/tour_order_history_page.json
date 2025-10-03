@@ -1,0 +1,12 @@
+{
+	"page_name": "Order history",
+
+	"table": {
+		"order_id": "Order ID",
+		"client": "Client",
+		"type": "Type",
+		"pax": "Pax",
+		"dates": "Dates",
+		"status": "Status"
+	}
+}

@@ -9,7 +9,7 @@ interface ISwitcherProps {
 }
 
 export const Switcher: FC<ISwitcherProps> = ({ checked, toggleSwitch }) => {
-	const { t } = useTranslation("tour_itinerary_page");
+	const { t } = useTranslation("tour_schedule_page");
 	return (
 		<div
 			className="group inline-flex items-center gap-2"

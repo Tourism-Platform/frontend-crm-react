@@ -10,7 +10,7 @@ interface ISelectedDatesProps {
 }
 
 export const SelectedDates: FC<ISelectedDatesProps> = ({ date, onDelete }) => {
-	const { t } = useTranslation("tour_itinerary_page");
+	const { t } = useTranslation("tour_schedule_page");
 	return (
 		<div className="grid gap-2">
 			<h2>{t("selected_dates.title")}</h2>

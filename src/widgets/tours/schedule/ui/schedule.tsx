@@ -17,8 +17,8 @@ import { SeasonalityInfo } from "./seasonality-info";
 import { SelectedDates } from "./selected-dates";
 import { Switcher } from "./switcher";
 
-export const Itinerary: FC = () => {
-	const { t } = useTranslation("tour_itinerary_page");
+export const Schedule: FC = () => {
+	const { t } = useTranslation("tour_schedule_page");
 	const today = new Date();
 	const [date, setDate] = useState<Date[] | undefined>([
 		subDays(today, 17),

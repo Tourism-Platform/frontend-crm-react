@@ -7,7 +7,7 @@ import { Button, Form, Input } from "@/shared/ui";
 import DatePickerDemo from "@/shared/ui/range";
 
 export const SeasonalityInfo: FC = () => {
-	const { t } = useTranslation("tour_itinerary_page");
+	const { t } = useTranslation("tour_schedule_page");
 
 	const form = useForm<{
 		seasonality: {

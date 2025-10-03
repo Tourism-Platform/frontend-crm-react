@@ -1,7 +1,7 @@
-import type { TTourItineraryPageKeys } from "@/shared/config";
+import type { TTourSchedulePageKeys } from "@/shared/config";
 
 export interface IDatesType {
-	label: TTourItineraryPageKeys;
+	label: TTourSchedulePageKeys;
 	value: ENUM_DATES_TYPE_TYPE;
 }
 
