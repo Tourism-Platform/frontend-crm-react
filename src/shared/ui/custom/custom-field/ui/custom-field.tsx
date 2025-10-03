@@ -1,5 +1,5 @@
 import type { TFunction } from "i18next";
-import { type FC } from "react";
+import { type FC, type HTMLInputTypeAttribute } from "react";
 import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
@@ -21,6 +21,7 @@ interface ICustomFieldProps extends React.HTMLAttributes<HTMLDivElement> {
 	placeholder: string;
 	t: TFunction<any>;
 	type?: "password" | "input" | "textarea";
+	inputType?: HTMLInputTypeAttribute;
 }
 
 export const CustomField: FC<ICustomFieldProps> = ({
@@ -30,6 +31,7 @@ export const CustomField: FC<ICustomFieldProps> = ({
 	placeholder,
 	t,
 	type = "input",
+	inputType,
 	...props
 }) => {
 	let Component;
@@ -56,7 +58,11 @@ export const CustomField: FC<ICustomFieldProps> = ({
 				<FormItem className={cn("relative mb-5", className)} {...rest}>
 					<FormLabel>{t(label)}:</FormLabel>
 					<FormControl>
-						<Component placeholder={t(placeholder)} {...field} />
+						<Component
+							placeholder={t(placeholder)}
+							type={inputType}
+							{...field}
+						/>
 					</FormControl>
 					<FormMessage t={t} className="absolute bottom-[-20px]" />
 				</FormItem>

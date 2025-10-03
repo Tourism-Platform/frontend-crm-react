@@ -1,16 +1,16 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import type { TTourPageKeys } from "@/shared/config";
+import type { TTourOverviewPageKeys } from "@/shared/config";
 import { Card, CardContent, CardTitle } from "@/shared/ui";
 
 interface IInfoCardProps {
-	label: TTourPageKeys;
+	label: TTourOverviewPageKeys;
 	value: string | number;
 }
 
 export const InfoCard: FC<IInfoCardProps> = ({ label, value }) => {
-	const { t } = useTranslation("tour_page");
+	const { t } = useTranslation("tour_overview_page");
 	return (
 		<Card>
 			<CardContent className="grid gap-3">

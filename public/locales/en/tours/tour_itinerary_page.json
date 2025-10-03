@@ -1,0 +1,26 @@
+{
+	"page_name": "Tour Itinerary",
+
+	"tabs": {
+		"fixed_dates": "Fixed Dates",
+		"recurring_dates": "Recurring Dates"
+	},
+
+	"selected_dates": {
+		"title": "Selected Dates"
+	},
+
+	"seasonality": {
+		"period": {
+			"label": "Period of Seasonality"
+		},
+		"percent": {
+			"label": "Seasonal commission, %",
+			"placeholder": "Enter seasonal commission, %"
+		},
+
+		"buttons": {
+			"add": "Add new rule"
+		}
+	}
+}

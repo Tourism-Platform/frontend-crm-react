@@ -7,7 +7,7 @@ import { Badge, Checkbox, RowActions } from "@/shared/ui";
 import type { IRecentOrder } from "@/entities/tour";
 
 export const RECENT_ORDERS_COLUMNS = (): ColumnDef<IRecentOrder>[] => {
-	const { t } = useTranslation("tour_page");
+	const { t } = useTranslation("tour_overview_page");
 
 	return [
 		{

@@ -9,7 +9,8 @@ import financial_settings_page from "../../../../public/locales/en/settings/fina
 import security_page from "../../../../public/locales/en/settings/security_page.json";
 import staff_information_page from "../../../../public/locales/en/settings/staff_information_page.json";
 import sidebar from "../../../../public/locales/en/sidebar.json";
-import tour_page from "../../../../public/locales/en/tours/tour_page.json";
+import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
+import tour_overview_page from "../../../../public/locales/en/tours/tour_overview_page.json";
 import tours_page from "../../../../public/locales/en/tours/tours_page.json";
 
 import type { TNestedKeyOf } from "./i18n.types";
@@ -24,7 +25,8 @@ export type TBusinessSettingsPage = typeof business_settings_page;
 export type TStaffInformationPage = typeof staff_information_page;
 export type TFinancialSettingsPage = typeof financial_settings_page;
 export type TToursPage = typeof tours_page;
-export type TTourPage = typeof tour_page;
+export type TTourOverviewPage = typeof tour_overview_page;
+export type TTourItineraryPage = typeof tour_itinerary_page;
 
 export type TResources = {
 	header: THeader;
@@ -37,7 +39,8 @@ export type TResources = {
 	staff_information_page: TStaffInformationPage;
 	financial_settings_page: TFinancialSettingsPage;
 	tours_page: TToursPage;
-	tour_page: TTourPage;
+	tour_overview_page: TTourOverviewPage;
+	tour_itinerary_page: TTourItineraryPage;
 };
 
 export const NS = [
@@ -51,7 +54,8 @@ export const NS = [
 	"staff_information_page",
 	"financial_settings_page",
 	"tours_page",
-	"tour_page"
+	"tour_overview_page",
+	"tour_itinerary_page"
 ] as const;
 export type TNS = (typeof NS)[number];
 
@@ -62,4 +66,5 @@ export type TSecurityPageKeys = TNestedKeyOf<TSecurityPage>;
 export type TAccountSettingsPageKeys = TNestedKeyOf<TAccountSettingsPage>;
 export type TBusinessSettingsPageKeys = TNestedKeyOf<TBusinessSettingsPage>;
 export type TToursPageKeys = TNestedKeyOf<TToursPage>;
-export type TTourPageKeys = TNestedKeyOf<TTourPage>;
+export type TTourOverviewPageKeys = TNestedKeyOf<TTourOverviewPage>;
+export type TTourItineraryPageKeys = TNestedKeyOf<TTourItineraryPage>;

@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/shared/ui";
 import { ManagerCard } from "@/entities/tour";
 
 export const Managers: FC = () => {
-	const { t } = useTranslation("tour_page");
+	const { t } = useTranslation("tour_overview_page");
 	return (
 		<Card>
 			<CardContent className="grid gap-3">

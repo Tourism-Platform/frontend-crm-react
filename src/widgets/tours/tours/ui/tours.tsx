@@ -40,7 +40,7 @@ export const Tours: FC = () => {
 							setActiveTab(val as ENUM_TOUR_STATUS_TYPE)
 						}
 					>
-						<CustomTabsList>
+						<CustomTabsList className="grid grid-cols-6">
 							{TOUR_TABS_LIST.map((tab) => (
 								<CustomTabsTrigger
 									key={tab.value}

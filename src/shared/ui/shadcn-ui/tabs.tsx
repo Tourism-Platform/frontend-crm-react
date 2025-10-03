@@ -1,7 +1,7 @@
 import { Tabs as TabsPrimitive } from "radix-ui";
 import * as React from "react";
 
-import { cn } from "@/shared/lib/class-merge";
+import { cn } from "@/shared/lib";
 
 function Tabs({
 	className,

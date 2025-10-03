@@ -15,16 +15,10 @@ export const CustomTabsList = React.forwardRef<
 	React.ComponentRef<typeof TabsList>,
 	React.ComponentPropsWithoutRef<typeof TabsList>
 >(({ className, children, ...props }, ref) => {
-	const count = React.Children.count(children);
-	console.log(count);
 	return (
 		<TabsList
 			ref={ref}
-			className={cn(
-				"grid bg-transparent",
-				`grid-cols-${count}`,
-				className
-			)}
+			className={cn("grid bg-transparent", className)}
 			{...props}
 		>
 			{children}

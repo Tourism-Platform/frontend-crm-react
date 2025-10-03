@@ -7,7 +7,7 @@ import { Card, CardContent, CustomTable } from "@/shared/ui";
 import { RECENT_ORDERS_COLUMNS } from "../model";
 
 export const LastOrders: FC = () => {
-	const { t } = useTranslation("tour_page");
+	const { t } = useTranslation("tour_overview_page");
 	return (
 		<Card>
 			<CardContent>
