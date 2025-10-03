@@ -4,12 +4,14 @@ import { addDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { type DateRange } from "react-day-picker";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui";
 import { Calendar } from "@/shared/ui";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui";
 
 export default function DatePickerDemo() {
+	const { t } = useTranslation("common");
 	const today = new Date();
 	const defaultDate: DateRange = {
 		from: today,
@@ -54,7 +56,7 @@ export default function DatePickerDemo() {
 							date?.from.toLocaleDateString()
 						)
 					) : (
-						<span>Pick a date range</span>
+						<span>{t("date_picker.placeholder")}</span>
 					)}
 				</Button>
 			</PopoverTrigger>
@@ -70,9 +72,11 @@ export default function DatePickerDemo() {
 				/>
 				<div className="flex items-center justify-end gap-1.5 border-t border-border p-3">
 					<Button variant="outline" onClick={handleReset}>
-						Reset
+						{t("date_picker.buttons.reset")}
 					</Button>
-					<Button onClick={handleApply}>Apply</Button>
+					<Button onClick={handleApply}>
+						{t("date_picker.buttons.apply")}
+					</Button>
 				</div>
 			</PopoverContent>
 		</Popover>

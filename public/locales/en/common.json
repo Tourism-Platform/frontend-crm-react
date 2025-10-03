@@ -17,5 +17,12 @@
 			"toggle": "Toggle columns"
 		},
 		"pagination": "Rows per page"
+	},
+	"date_picker": {
+		"placeholder": "Select date",
+		"buttons": {
+			"apply": "Apply",
+			"reset": "Reset"
+		}
 	}
 }
