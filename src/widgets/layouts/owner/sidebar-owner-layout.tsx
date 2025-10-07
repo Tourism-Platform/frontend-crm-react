@@ -22,7 +22,7 @@ export const SideBarOwnerLayout = ({
 	return (
 		<SidebarProvider>
 			<CustomSidebar items={items} />
-			<SidebarInset>
+			<SidebarInset className="!w-[calc(100vw-var(--sidebar-width))]">
 				<div
 					className={cn(
 						"py-3 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sticky top-16 bg-background z-10",
@@ -31,7 +31,12 @@ export const SideBarOwnerLayout = ({
 				>
 					<CustomBreadcrumb />
 				</div>
-				<div className={cn("px-5 mb-30", !useBreadcrumb && "mt-10")}>
+				<div
+					className={cn(
+						"px-5 mb-30 h-full",
+						!useBreadcrumb && "mt-10"
+					)}
+				>
 					{children}
 				</div>
 			</SidebarInset>

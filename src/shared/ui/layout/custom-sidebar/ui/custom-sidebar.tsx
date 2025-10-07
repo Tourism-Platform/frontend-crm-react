@@ -18,7 +18,7 @@ export interface ICustomSidebarProps {
 
 export const CustomSidebar: FC<ICustomSidebarProps> = ({ items }) => {
 	return (
-		<Sidebar collapsible="icon" className="">
+		<Sidebar collapsible="icon">
 			<SidebarTrigger
 				className="absolute  top-2 right-2 z-30"
 				icon={
