@@ -20,7 +20,19 @@ export const ENUM_PATH = {
 		PRICING_REVIEW: "/tours/:tourId/pricing-review",
 		ORDER_HISTORY: "/tours/:tourId/order-history",
 		MESSAGES: "/tours/:tourId/messages",
-		ACTIVITY_LOG: "/tours/:tourId/activity-log"
+		ACTIVITY_LOG: "/tours/:tourId/activity-log",
+		EVENTS: {
+			FLIGHT: "/tours/:tourId/itinerary/events/:eventId/flight",
+			EVENT: "/tours/:tourId/itinerary/events/:eventId/event",
+			TRANSFER: "/tours/:tourId/itinerary/events/:eventId/transfer",
+			ACCOMMODATION:
+				"/tours/:tourId/itinerary/events/:eventId/accommodation",
+			MULTIPLY_OPTION:
+				"/tours/:tourId/itinerary/events/:eventId/multiply-option",
+			TOUR_DETAILS:
+				"/tours/:tourId/itinerary/events/:eventId/tour-details",
+			INFO: "/tours/:tourId/itinerary/events/:eventId/info"
+		}
 	},
 	BOOKING: {
 		ROOT: "/booking",

@@ -14,14 +14,21 @@ export interface IRouting {
 	// nonAuthSidebar?: boolean;
 	// adminSidebar?: boolean;
 	sidebarMenu?: ISidebarMenu[];
-	useBreadcrumb?: boolean;
+	useMainBreadcrumb?: boolean;
+	useTourEventBreadcrumb?: boolean;
 	layout: ENUM_LAYOUT_TYPE;
 }
 
 export type TSettingsPath =
 	(typeof ENUM_PATH.SETTINGS)[keyof typeof ENUM_PATH.SETTINGS];
 
-export type TToursPath = (typeof ENUM_PATH.TOURS)[keyof typeof ENUM_PATH.TOURS];
+export type TToursPath = Omit<typeof ENUM_PATH.TOURS, "EVENTS">[keyof Omit<
+	typeof ENUM_PATH.TOURS,
+	"EVENTS"
+>];
 
 export type TBookingPath =
 	(typeof ENUM_PATH.BOOKING)[keyof typeof ENUM_PATH.BOOKING];
+
+export type TTourEventPath =
+	(typeof ENUM_PATH.TOURS.EVENTS)[keyof typeof ENUM_PATH.TOURS.EVENTS];

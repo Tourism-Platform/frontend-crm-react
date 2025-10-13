@@ -1,0 +1,23 @@
+{
+	"page_name": "Itinerary",
+
+	"trip_details": {
+		"title": "Trip details",
+		"container": {
+			"empty": "Drag & drop Event here"
+		}
+	},
+
+	"day_details": {
+		"title": "Day {{day}}",
+		"container": {
+			"empty": "Drag & drop Event here"
+		}
+	},
+
+	"sidebar": {
+		"title": "Let's build your tour",
+		"library": "Library",
+		"components": "Components"
+	}
+}

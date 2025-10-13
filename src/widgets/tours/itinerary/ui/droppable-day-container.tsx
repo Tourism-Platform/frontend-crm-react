@@ -5,6 +5,7 @@ import {
 } from "@dnd-kit/sortable";
 import { GripVertical } from "lucide-react";
 import { type FC } from "react";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { Button, Card, CardContent, CardHeader, Separator } from "@/shared/ui";
@@ -18,6 +19,7 @@ export const DroppableDayContainer: FC<{
 	day: number;
 	containerId: string;
 }> = ({ items, containerId }) => {
+	const { t } = useTranslation("tour_itinerary_page");
 	const { setNodeRef, isOver } = useDroppable({ id: containerId });
 	return (
 		<Card
@@ -35,16 +37,16 @@ export const DroppableDayContainer: FC<{
 			<Separator />
 			<CardContent className="px-3">
 				<SortableContext
-					items={items.map((it) => itemId(it.id))}
+					items={items.map((it) => itemId(it.block_id))}
 					strategy={verticalListSortingStrategy}
 				>
 					{items.length === 0 ? (
 						<div className="h-32 flex items-center justify-center text-gray-400 text-sm">
-							Drag & drop Event here
+							{t("day_details.container.empty")}
 						</div>
 					) : (
 						items.map((item) => (
-							<div key={item.id} className="mb-2">
+							<div key={item.block_id} className="mb-2">
 								<DraggableDayItem item={item} />
 							</div>
 						))

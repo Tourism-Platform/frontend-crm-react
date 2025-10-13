@@ -4,6 +4,7 @@ import { type FC, useRef, useState } from "react";
 import { cn } from "@/shared/lib";
 import {
 	Button,
+	CustomOptionTab,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -140,14 +141,12 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 							className="px-4 py-2 border-2 border-primary rounded-t-lg outline-none"
 						/>
 					) : (
-						<div
+						<CustomOptionTab
 							onClick={() => setActiveOption(option.id)}
 							onDoubleClick={() => startEditingOption(option)}
+							isActive={activeOption === option.id}
 							className={cn(
-								"pl-4 py-2 rounded-t-lg border-b-2 transition-all flex gap-2 items-center min-w-[120px] max-w-[200px] cursor-pointer",
-								activeOption === option.id
-									? "border-primary text-primary bg-accent/50"
-									: "border-transparent text-muted-foreground  hover:bg-accent hover:text-accent-foreground hover:border-primary",
+								"flex gap-2 items-center min-w-[120px] max-w-[200px]",
 								dragOverTab === option.id &&
 									draggedTab !== option.id &&
 									"bg-blue-50"
@@ -167,7 +166,7 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 									</DropdownMenuItem>
 								</DropdownMenuContent>
 							</DropdownMenu>
-						</div>
+						</CustomOptionTab>
 					)}
 				</div>
 			))}

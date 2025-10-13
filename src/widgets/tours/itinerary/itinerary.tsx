@@ -7,12 +7,15 @@ import {
 	useSensor,
 	useSensors
 } from "@dnd-kit/core";
-import { Calendar, Car, Hotel, Info, List, MapPin, Plane } from "lucide-react";
+import { Plane } from "lucide-react";
 import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { Separator } from "@/shared/ui";
 
 import {
+	ENUM_EVENT_TYPE,
+	EVENT_TEMPLATES_LIST,
 	type IDayItem,
 	type ITemplateItem,
 	type TOptionsData,
@@ -38,7 +41,9 @@ function findItemLocation(
 	for (const key of Object.keys(optionsData)) {
 		const optionKey = Number(key);
 		const data = optionsData[optionKey];
-		const tdIndex = data.tripDetails.findIndex((it) => it.id === itemIdRaw);
+		const tdIndex = data.tripDetails.findIndex(
+			(it) => it.block_id === itemIdRaw
+		);
 		if (tdIndex !== -1)
 			return {
 				optionId: optionKey,
@@ -47,7 +52,9 @@ function findItemLocation(
 			};
 		for (const dayKey of Object.keys(data.days)) {
 			const day = Number(dayKey);
-			const idx = data.days[day].findIndex((it) => it.id === itemIdRaw);
+			const idx = data.days[day].findIndex(
+				(it) => it.block_id === itemIdRaw
+			);
 			if (idx !== -1)
 				return {
 					optionId: optionKey,
@@ -60,68 +67,6 @@ function findItemLocation(
 	return null;
 }
 
-// ==========================================
-// Template data (same as original)
-// ==========================================
-
-const COMPONENT_TEMPLATES: {
-	library: ITemplateItem[];
-	components: ITemplateItem[];
-} = {
-	library: [
-		{
-			id: "event-library",
-			title: "Event library",
-			icon: Calendar,
-			color: "bg-blue-500"
-		},
-		{
-			id: "itinerary-library",
-			title: "Itinerary library",
-			icon: MapPin,
-			color: "bg-blue-500"
-		}
-	],
-	components: [
-		{
-			id: "trip-details",
-			title: "Trip details",
-			icon: List,
-			color: "bg-red-500"
-		},
-		{ id: "flight", title: "Flight", icon: Plane, color: "bg-blue-500" },
-		{
-			id: "activity",
-			title: "Activity",
-			icon: Calendar,
-			color: "bg-blue-500"
-		},
-		{
-			id: "accommodation",
-			title: "Accommodation",
-			icon: Hotel,
-			color: "bg-blue-500"
-		},
-		{
-			id: "transportation",
-			title: "Transportation",
-			icon: Car,
-			color: "bg-green-500"
-		},
-		{
-			id: "multiply-option",
-			title: "Multiply-option",
-			icon: List,
-			color: "bg-gray-700"
-		},
-		{ id: "info", title: "Info", icon: Info, color: "bg-gray-900" }
-	]
-};
-
-// ==========================================
-// Draggable template (sidebar) — use useSortable so it's drag-enabled
-// ==========================================
-
 export const Itinerary: React.FC = () => {
 	const [activeOption, setActiveOption] = useState<number>(1);
 
@@ -132,8 +77,9 @@ export const Itinerary: React.FC = () => {
 			days: {
 				1: [
 					{
-						id: "day1-1",
-						type: "flight",
+						id: uuidv4(),
+						block_id: "day1-1",
+						event_type: ENUM_EVENT_TYPE.FLIGHT,
 						title: "DOM - TAS",
 						subtitle: "7:30 AM (UTC +5) - 12:30 AM (UTC +5)",
 						icon: Plane,
@@ -208,9 +154,9 @@ export const Itinerary: React.FC = () => {
 		} else if (id.startsWith("template:")) {
 			const raw = id.replace("template:", "");
 			const found = [
-				...COMPONENT_TEMPLATES.library,
-				...COMPONENT_TEMPLATES.components
-			].find((t) => t.id === raw);
+				...EVENT_TEMPLATES_LIST.library,
+				...EVENT_TEMPLATES_LIST.components
+			].find((t) => t.event_type === raw);
 			if (found) {
 				setActiveTemplateItem(found);
 			}
@@ -262,14 +208,15 @@ export const Itinerary: React.FC = () => {
 		if (activeIdStr.startsWith("template:")) {
 			const tplId = activeIdStr.replace("template:", "");
 			const tpl = [
-				...COMPONENT_TEMPLATES.library,
-				...COMPONENT_TEMPLATES.components
-			].find((t) => t.id === tplId);
+				...EVENT_TEMPLATES_LIST.library,
+				...EVENT_TEMPLATES_LIST.components
+			].find((t) => t.event_type === tplId);
 			if (!tpl) return;
 
 			const newItem: IDayItem = {
-				id: `${tpl.id}-${Date.now()}`,
-				type: tpl.id,
+				id: uuidv4(),
+				block_id: `${tpl.event_type}-${Date.now()}`,
+				event_type: tpl.event_type,
 				title: tpl.title,
 				subtitle: "Information",
 				icon: tpl.icon,

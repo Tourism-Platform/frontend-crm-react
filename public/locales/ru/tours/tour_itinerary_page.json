@@ -1,0 +1,23 @@
+{
+	"page_name": "Маршрут",
+
+	"trip_details": {
+		"title": "Детали поездки",
+		"container": {
+			"empty": "Перетащи событие сюда"
+		}
+	},
+
+	"day_details": {
+		"title": "День {{day}}",
+		"container": {
+			"empty": "Перетащи событие сюда"
+		}
+	},
+
+	"sidebar": {
+		"title": "Давай составим твой тур",
+		"library": "Библиотека",
+		"components": "Компоненты"
+	}
+}

@@ -28,7 +28,7 @@ export const DraggableTemplateItem: FC<{
 		transform,
 		transition,
 		isDragging
-	} = useSortable({ id: templateId(template.id) });
+	} = useSortable({ id: templateId(template.event_type) });
 	const style: CSSProperties = {
 		transform: CSS.Transform.toString(transform),
 		transition

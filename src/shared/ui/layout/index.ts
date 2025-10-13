@@ -1,4 +1,5 @@
 export * from "./custom-breadcrumb";
+export * from "./custom-option-tab";
 export * from "./custom-sidebar";
 export * from "./language-toggle";
 export * from "./nav-menu-mobile";

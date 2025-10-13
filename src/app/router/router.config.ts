@@ -21,14 +21,21 @@ import {
 	TourSettingsPage
 } from "@/pages/settings";
 import {
+	AccommodationEditPage,
 	ActivityLogPage,
+	EventEditPage,
+	FlightEditPage,
+	InformationEditPage,
 	ItineraryPage,
 	MessagesPage,
+	MultiplyOptionEditPage,
 	OrderHistoryPage,
 	OverviewPage,
 	PricingReviewPage,
 	SchedulePage,
-	ToursPage
+	TourDetailsEditPage,
+	ToursPage,
+	TransportationEditPage
 } from "@/pages/tours";
 
 export const ALL_APP_ROUTES_LIST: IRouting[] = [
@@ -40,7 +47,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 	{
 		path: ENUM_PATH.SETTINGS.BUSINESS_SETTINGS,
@@ -48,7 +55,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 	{
 		path: ENUM_PATH.SETTINGS.FINANCIAL_SETTINGS,
@@ -56,7 +63,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 	{
 		path: ENUM_PATH.SETTINGS.NOTIFICATIONS,
@@ -64,7 +71,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 	{
 		path: ENUM_PATH.SETTINGS.SECURITY,
@@ -72,7 +79,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 	{
 		path: ENUM_PATH.SETTINGS.STAFF_INFORMATION,
@@ -80,7 +87,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 	{
 		path: ENUM_PATH.SETTINGS.TAGS,
@@ -88,7 +95,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 	{
 		path: ENUM_PATH.SETTINGS.TOUR_SETTINGS,
@@ -96,7 +103,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: SETTINGS_SIDEBAR_LIST,
-		useBreadcrumb: true
+		useMainBreadcrumb: true
 	},
 
 	// tours
@@ -154,6 +161,64 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.ONLY_PUBLIC,
 		layout: ENUM_LAYOUT.ROOT,
 		sidebarMenu: TOURS_SIDEBAR_LIST
+	},
+
+	// events
+	{
+		path: ENUM_PATH.TOURS.EVENTS.FLIGHT,
+		component: FlightEditPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST,
+		useTourEventBreadcrumb: true
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.EVENT,
+		component: EventEditPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST,
+		useTourEventBreadcrumb: true
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.TRANSFER,
+		component: TransportationEditPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST,
+		useTourEventBreadcrumb: true
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION,
+		component: AccommodationEditPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST,
+		useTourEventBreadcrumb: true
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.MULTIPLY_OPTION,
+		component: MultiplyOptionEditPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST,
+		useTourEventBreadcrumb: true
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.INFO,
+		component: InformationEditPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST,
+		useTourEventBreadcrumb: true
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.TOUR_DETAILS,
+		component: TourDetailsEditPage,
+		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.ROOT,
+		sidebarMenu: TOURS_SIDEBAR_LIST,
+		useTourEventBreadcrumb: true
 	},
 
 	// booking

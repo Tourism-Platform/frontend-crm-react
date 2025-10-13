@@ -11,11 +11,13 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 		Component = (
 			<SideBarOwnerLayout
 				items={route?.sidebarMenu}
-				useBreadcrumb={route.useBreadcrumb}
+				useBreadcrumb={route.useMainBreadcrumb}
 			>
 				{Component}
 			</SideBarOwnerLayout>
 		);
+	} else if (route?.useTourEventBreadcrumb) {
+		Component = <ContainerOwnerLayout>{Component}</ContainerOwnerLayout>;
 	} else {
 		Component = <ContainerOwnerLayout>{Component}</ContainerOwnerLayout>;
 	}
