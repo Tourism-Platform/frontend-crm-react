@@ -1,0 +1,221 @@
+{
+	"tabs": {
+		"general": "General info",
+		"media": "Media",
+		"pricing": "Pricing & booking"
+	},
+
+	"general": {
+		"flights": {
+			"title": "Flights",
+			"form": {
+				"title": "New flight",
+				"fields": {
+					"airline_code": {
+						"label": "Airline code",
+						"placeholder": "Enter airline code",
+						"errors": {
+							"required": "Airline code is required",
+							"min": "Airline code is too short",
+							"max": "Airline code is too long"
+						}
+					},
+					"flight_number": {
+						"label": "Flight number",
+						"placeholder": "Enter flight number",
+						"errors": {
+							"required": "Flight number is required",
+							"min": "Flight number is too short",
+							"max": "Flight number is too long",
+							"invalid": "Invalid flight number format"
+						}
+					},
+					"departure_airport_code": {
+						"label": "Departure airport code",
+						"placeholder": "Enter departure airport code",
+						"errors": {
+							"required": "Departure airport code is required",
+							"length": "Departure airport code must be 3 characters",
+							"invalid": "Invalid IATA airport code"
+						}
+					},
+					"arrival_airport_code": {
+						"label": "Arrival airport code",
+						"placeholder": "Enter arrival airport code",
+						"errors": {
+							"required": "Arrival airport code is required",
+							"length": "Arrival airport code must be 3 characters",
+							"invalid": "Invalid IATA airport code"
+						}
+					},
+					"departure_date": {
+						"label": "Departure date",
+						"errors": {
+							"required": "Departure date is required",
+							"invalid": "Invalid date format"
+						}
+					},
+					"arrival_date": {
+						"label": "Arrival date",
+						"errors": {
+							"required": "Arrival date is required",
+							"invalid": "Invalid date format"
+						}
+					},
+					"departure_time": {
+						"label": "Departure time",
+						"errors": {
+							"required": "Departure time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"arrival_time": {
+						"label": "Arrival time",
+						"errors": {
+							"required": "Arrival time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"departure_timezone": {
+						"label": "Timezone",
+						"placeholder": "Choose timezone",
+						"errors": {
+							"required": "Departure timezone is required"
+						}
+					},
+					"arrival_timezone": {
+						"label": "Timezone",
+						"placeholder": "Choose timezone",
+						"errors": {
+							"required": "Arrival timezone is required"
+						}
+					},
+					"departure_terminal": {
+						"label": "Departure terminal",
+						"placeholder": "Enter departure terminal",
+						"errors": {
+							"required": "Departure terminal is required",
+							"max": "Terminal name is too long"
+						}
+					},
+					"departure_gate": {
+						"label": "Departure gate",
+						"placeholder": "Enter departure gate",
+						"errors": {
+							"required": "Departure gate is required",
+							"max": "Gate name is too long"
+						}
+					},
+					"arrival_terminal": {
+						"label": "Arrival terminal",
+						"placeholder": "Enter arrival terminal",
+						"errors": {
+							"required": "Arrival terminal is required",
+							"max": "Terminal name is too long"
+						}
+					},
+					"arrival_gate": {
+						"label": "Arrival gate",
+						"placeholder": "Enter arrival gate",
+						"errors": {
+							"required": "Arrival gate is required",
+							"max": "Gate name is too long"
+						}
+					}
+				}
+			},
+			"buttons": {
+				"add": "Add flight"
+			}
+		},
+
+		"description": {
+			"title": "Description",
+			"description": {
+				"label": "Flight description",
+				"placeholder": "Enter description",
+				"errors": {
+					"min": "Description is too short",
+					"max": "Description is too long"
+				}
+			}
+		}
+	},
+
+	"media": {
+		"title": "Displayed photos"
+	},
+
+	"pricing": {
+		"title": "Pricing",
+		"invoicing": {
+			"title": "How will this activity be invoiced?",
+			"tabs": {
+				"individual": "Individual",
+				"part_of_package": "Part of package"
+			}
+		},
+		"pricing_type": {
+			"title": "How is this activity priced?",
+			"tabs": {
+				"flat_rate": "Flat rate",
+				"per_person": "Per person"
+			}
+		},
+
+		"form": {
+			"pricing_details": {
+				"title": "Pricing details",
+				"fields": {
+					"total_price": {
+						"label": "Total price",
+						"placeholder": "Enter..."
+					},
+					"taxes_and_fees": {
+						"label": "Taxes & fees",
+						"placeholder": "Enter..."
+					},
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Choose"
+					}
+				}
+			},
+
+			"booking_details": {
+				"title": "Booking details",
+				"fields": {
+					"supplier": {
+						"label": "Select the supplier you'll book through",
+						"placeholder": "Enter..."
+					},
+					"client_selection": {
+						"label": "Client selection",
+						"description": "Propose as an optional add-on to allow your clients to opt-in to this activity."
+					}
+				},
+				"buttons": {
+					"make_optional": "Make optional"
+				}
+			},
+			"commissions": {
+				"title": "Commissions",
+				"description": "Commissions are not visible for clients",
+				"fields": {
+					"total_expected": {
+						"label": "Total expected",
+						"placeholder": "Automatically calculated..."
+					},
+					"commission_type": {
+						"label": "Commission type",
+						"placeholder": "Choose..."
+					},
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Choose..."
+					}
+				}
+			}
+		}
+	}
+}

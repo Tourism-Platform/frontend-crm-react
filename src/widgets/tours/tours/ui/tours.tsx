@@ -5,9 +5,9 @@ import { TOUR_CARDS } from "@/shared/config";
 import {
 	Card,
 	CardContent,
-	CustomTabs,
-	CustomTabsList,
-	CustomTabsTrigger
+	CustomOptionTabs,
+	CustomOptionTabsList,
+	CustomOptionTabsTrigger
 } from "@/shared/ui";
 
 import { TourCard } from "@/entities/tour";
@@ -33,24 +33,24 @@ export const Tours: FC = () => {
 			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="grid gap-6">
-					<CustomTabs
+					<CustomOptionTabs
 						defaultValue={TOUR_TABS_LIST[0].value}
 						value={activeTab}
 						onValueChange={(val) =>
 							setActiveTab(val as ENUM_TOUR_STATUS_TYPE)
 						}
 					>
-						<CustomTabsList className="grid grid-cols-6">
+						<CustomOptionTabsList className="grid grid-cols-6">
 							{TOUR_TABS_LIST.map((tab) => (
-								<CustomTabsTrigger
+								<CustomOptionTabsTrigger
 									key={tab.value}
 									value={tab.value}
 								>
 									{t(tab.label)}
-								</CustomTabsTrigger>
+								</CustomOptionTabsTrigger>
 							))}
-						</CustomTabsList>
-					</CustomTabs>
+						</CustomOptionTabsList>
+					</CustomOptionTabs>
 					<div className="grid grid-cols-3 gap-5">
 						{filteredData.map((card) => (
 							<TourCard key={card.title} card={card} />

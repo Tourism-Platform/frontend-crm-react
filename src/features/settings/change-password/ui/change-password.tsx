@@ -63,7 +63,7 @@ export const ChangePassword: FC = () => {
 								label={item?.label}
 								placeholder={item?.placeholder}
 								t={t}
-								type="password"
+								fieldType="password"
 							/>
 						))}
 						<DialogFooter>

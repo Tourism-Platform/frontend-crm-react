@@ -17,7 +17,7 @@ export const BusinessInfo: FC<IBusinessInfoProps> = ({ form }) => {
 			<h2 className="text-xl">{t("form.business.title")}</h2>
 			<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 				<CustomField
-					type="textarea"
+					fieldType="textarea"
 					className="col-span-2"
 					control={form?.control}
 					name={BUSINESS_DATA_LIST?.[0]?.key}

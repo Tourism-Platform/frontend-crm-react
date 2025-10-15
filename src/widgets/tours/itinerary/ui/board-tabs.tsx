@@ -1,10 +1,11 @@
 import { MoreVertical, Plus } from "lucide-react";
 import { type FC, useRef, useState } from "react";
 
-import { cn } from "@/shared/lib";
 import {
 	Button,
-	CustomOptionTab,
+	CustomOptionTabs,
+	CustomOptionTabsList,
+	CustomOptionTabsTrigger,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -35,7 +36,7 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 	const [editingOption, setEditingOption] = useState<number | null>(null);
 	const [editingName, setEditingName] = useState("");
 	const [draggedTab, setDraggedTab] = useState<number | null>(null);
-	const [dragOverTab, setDragOverTab] = useState<number | null>(null);
+	// const [_, setDragOverTab] = useState<number | null>(null);
 	// Tabs logic (add/delete/edit) — preserved from original
 	const addOption = () => {
 		const newId = options.length
@@ -92,10 +93,10 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 		e.dataTransfer.effectAllowed = "move";
 	};
 
-	const handleTabDragOver = (e: React.DragEvent, optionId: number) => {
-		e.preventDefault();
-		if (draggedTab !== optionId) setDragOverTab(optionId);
-	};
+	// const handleTabDragOver = (e: React.DragEvent, optionId: number) => {
+	// 	e.preventDefault();
+	// 	// if (draggedTab !== optionId) setDragOverTab(optionId);
+	// };
 
 	const handleTabDrop = (e: React.DragEvent, targetOptionId: number) => {
 		e.preventDefault();
@@ -110,66 +111,113 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 			return newOptions;
 		});
 		setDraggedTab(null);
-		setDragOverTab(null);
+		// setDragOverTab(null);
 	};
 	return (
 		<div className="px-4 py-2 flex items-center gap-2">
-			{options.map((option) => (
-				<div
-					key={option.id}
-					className="relative"
-					draggable={editingOption !== option.id}
-					onDragStart={(e) => handleTabDragStart(e, option.id)}
-					onDragOver={(e) => handleTabDragOver(e, option.id)}
-					onDrop={(e) => handleTabDrop(e, option.id)}
-					onDragEnd={() => {
-						setDraggedTab(null);
-						setDragOverTab(null);
-					}}
-				>
-					{editingOption === option.id ? (
-						<input
-							ref={inputRef}
-							type="text"
-							value={editingName}
-							onChange={(e) => setEditingName(e.target.value)}
-							onBlur={saveOptionName}
-							onKeyDown={(e) => {
-								if (e.key === "Enter") saveOptionName();
-								if (e.key === "Escape") cancelEditingOption();
+			<CustomOptionTabs
+				defaultValue={`${activeOption}`}
+				value={`${activeOption}`}
+				onValueChange={(val) => setActiveOption(parseInt(val))}
+			>
+				<CustomOptionTabsList className="flex items-center gap-2">
+					{options.map((option) => (
+						<div
+							key={option.id}
+							className="relative"
+							draggable={editingOption !== option.id}
+							onDragStart={(e) =>
+								handleTabDragStart(e, option.id)
+							}
+							// onDragOver={(e) => handleTabDragOver(e, option.id)}
+							onDrop={(e) => handleTabDrop(e, option.id)}
+							onDragEnd={() => {
+								setDraggedTab(null);
+								// setDragOverTab(null);
 							}}
-							className="px-4 py-2 border-2 border-primary rounded-t-lg outline-none"
-						/>
-					) : (
-						<CustomOptionTab
-							onClick={() => setActiveOption(option.id)}
-							onDoubleClick={() => startEditingOption(option)}
-							isActive={activeOption === option.id}
-							className={cn(
-								"flex gap-2 items-center min-w-[120px] max-w-[200px]",
-								dragOverTab === option.id &&
-									draggedTab !== option.id &&
-									"bg-blue-50"
-							)}
 						>
-							<p className="truncate">{option.name}</p>
-							<DropdownMenu>
-								<DropdownMenuTrigger className="cursor-pointer py-1 px-2">
-									<MoreVertical className="w-4 h-4" />
-								</DropdownMenuTrigger>
-								<DropdownMenuContent align="end">
-									<DropdownMenuItem
-										onClick={() => deleteOption(option.id)}
-										className=" !text-red-400"
-									>
-										Delete
-									</DropdownMenuItem>
-								</DropdownMenuContent>
-							</DropdownMenu>
-						</CustomOptionTab>
-					)}
-				</div>
-			))}
+							{editingOption === option.id ? (
+								<input
+									ref={inputRef}
+									type="text"
+									value={editingName}
+									onChange={(e) =>
+										setEditingName(e.target.value)
+									}
+									onBlur={saveOptionName}
+									onKeyDown={(e) => {
+										if (e.key === "Enter") saveOptionName();
+										if (e.key === "Escape")
+											cancelEditingOption();
+									}}
+									className="px-4 py-2 border-2 border-primary rounded-t-lg outline-none"
+								/>
+							) : (
+								<CustomOptionTabsTrigger
+									key={`${option.id}`}
+									value={`${option.id}`}
+									onDoubleClick={() =>
+										startEditingOption(option)
+									}
+									className={
+										"flex gap-2 items-center min-w-[120px] max-w-[200px] pr-0"
+									}
+									variant={"tongue"}
+									asChild
+								>
+									<div>
+										<p className="truncate">
+											{option.name}
+										</p>
+										<DropdownMenu>
+											<DropdownMenuTrigger className="cursor-pointer py-1 px-2">
+												<MoreVertical className="w-4 h-4" />
+											</DropdownMenuTrigger>
+											<DropdownMenuContent align="end">
+												<DropdownMenuItem
+													onClick={() =>
+														deleteOption(option.id)
+													}
+													className=" !text-red-400"
+												>
+													Delete
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</div>
+								</CustomOptionTabsTrigger>
+
+								// <CustomOptionTab
+								// 	onClick={() => setActiveOption(option.id)}
+								// 	onDoubleClick={() => startEditingOption(option)}
+								// 	isActive={activeOption === option.id}
+								// 	className={cn(
+								// 		"flex gap-2 items-center min-w-[120px] max-w-[200px]",
+								// 		dragOverTab === option.id &&
+								// 			draggedTab !== option.id &&
+								// 			"bg-blue-50"
+								// 	)}
+								// >
+								// 	<p className="truncate">{option.name}</p>
+								// 	<DropdownMenu>
+								// 		<DropdownMenuTrigger className="cursor-pointer py-1 px-2">
+								// 			<MoreVertical className="w-4 h-4" />
+								// 		</DropdownMenuTrigger>
+								// 		<DropdownMenuContent align="end">
+								// 			<DropdownMenuItem
+								// 				onClick={() => deleteOption(option.id)}
+								// 				className=" !text-red-400"
+								// 			>
+								// 				Delete
+								// 			</DropdownMenuItem>
+								// 		</DropdownMenuContent>
+								// 	</DropdownMenu>
+								// </CustomOptionTab>
+							)}
+						</div>
+					))}
+				</CustomOptionTabsList>
+			</CustomOptionTabs>
 
 			<Button onClick={addOption} size={"icon"} variant={"ghost"}>
 				<Plus className="w-5 h-5 text-muted-foreground" />

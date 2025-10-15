@@ -26,6 +26,11 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"tour_itinerary_page"
 		]
 	},
+	// Блок событий тура
+	events: {
+		folder: "tours/events",
+		namespaces: ["flight_edit_page"]
+	},
 
 	shared: {
 		folder: "", // пустая строка = корень
@@ -33,14 +38,8 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 	}
 };
 
-// Утилитарные функции
-export const getAllNamespaces = (): string[] => {
-	return Object.values(TRANSLATION_BLOCKS).flatMap(
-		(block) => block.namespaces
-	);
-};
-
 export const getNamespacePath = (lng: string, ns: string): string => {
+	console.log("NSSS", ns);
 	for (const block of Object.values(TRANSLATION_BLOCKS)) {
 		if (block.namespaces.includes(ns)) {
 			return block.folder

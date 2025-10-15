@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Separator } from "@/shared/ui";
 
 import {
-	ENUM_EVENT_TYPE,
+	ENUM_EVENT,
 	EVENT_TEMPLATES_LIST,
 	type IDayItem,
 	type ITemplateItem,
@@ -79,7 +79,7 @@ export const Itinerary: React.FC = () => {
 					{
 						id: uuidv4(),
 						block_id: "day1-1",
-						event_type: ENUM_EVENT_TYPE.FLIGHT,
+						event_type: ENUM_EVENT.FLIGHT,
 						title: "DOM - TAS",
 						subtitle: "7:30 AM (UTC +5) - 12:30 AM (UTC +5)",
 						icon: Plane,

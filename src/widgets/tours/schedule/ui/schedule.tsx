@@ -5,9 +5,9 @@ import { useTranslation } from "react-i18next";
 import {
 	Card,
 	CardContent,
-	CustomTabs,
-	CustomTabsList,
-	CustomTabsTrigger
+	CustomOptionTabs,
+	CustomOptionTabsList,
+	CustomOptionTabsTrigger
 } from "@/shared/ui";
 
 import { DATES_TYPE_LIST, type ENUM_DATES_TYPE_TYPE } from "../model";
@@ -41,24 +41,24 @@ export const Schedule: FC = () => {
 			<Card>
 				<CardContent className="grid gap-12">
 					<div className="flex justify-between gap-6 items-center">
-						<CustomTabs
+						<CustomOptionTabs
 							defaultValue={DATES_TYPE_LIST[0].value}
 							value={activeTab}
 							onValueChange={(val) =>
 								setActiveTab(val as ENUM_DATES_TYPE_TYPE)
 							}
 						>
-							<CustomTabsList className="grid grid-cols-2">
+							<CustomOptionTabsList className="grid grid-cols-2">
 								{DATES_TYPE_LIST.map((tab) => (
-									<CustomTabsTrigger
+									<CustomOptionTabsTrigger
 										key={tab.value}
 										value={tab.value}
 									>
 										{t(tab.label)}
-									</CustomTabsTrigger>
+									</CustomOptionTabsTrigger>
 								))}
-							</CustomTabsList>
-						</CustomTabs>
+							</CustomOptionTabsList>
+						</CustomOptionTabs>
 						<Switcher
 							checked={seasonality}
 							toggleSwitch={() => setSeasonality(!seasonality)}

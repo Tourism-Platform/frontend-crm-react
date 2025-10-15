@@ -9,6 +9,7 @@ import financial_settings_page from "../../../../public/locales/en/settings/fina
 import security_page from "../../../../public/locales/en/settings/security_page.json";
 import staff_information_page from "../../../../public/locales/en/settings/staff_information_page.json";
 import sidebar from "../../../../public/locales/en/sidebar.json";
+import flight_edit_page from "../../../../public/locales/en/tours/events/flight_edit_page.json";
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
 import tour_order_history_page from "../../../../public/locales/en/tours/tour_order_history_page.json";
 import tour_overview_page from "../../../../public/locales/en/tours/tour_overview_page.json";
@@ -30,6 +31,7 @@ export type TToursPage = typeof tours_page;
 export type TTourOverviewPage = typeof tour_overview_page;
 export type TTourSchedulePage = typeof tour_schedule_page;
 export type TTourOrderHistoryPage = typeof tour_order_history_page;
+export type TTourEventFlightEditPage = typeof flight_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
 
 export type TResources = {
@@ -47,6 +49,7 @@ export type TResources = {
 	tour_schedule_page: TTourSchedulePage;
 	tour_order_history_page: TTourOrderHistoryPage;
 	tour_itinerary_page: TTourItineraryPage;
+	flight_edit_page: TTourEventFlightEditPage;
 };
 
 export const NS = [
@@ -63,7 +66,8 @@ export const NS = [
 	"tour_overview_page",
 	"tour_schedule_page",
 	"tour_order_history_page",
-	"tour_itinerary_page"
+	"tour_itinerary_page",
+	"flight_edit_page"
 ] as const;
 export type TNS = (typeof NS)[number];
 
@@ -76,3 +80,5 @@ export type TBusinessSettingsPageKeys = TNestedKeyOf<TBusinessSettingsPage>;
 export type TToursPageKeys = TNestedKeyOf<TToursPage>;
 export type TTourOverviewPageKeys = TNestedKeyOf<TTourOverviewPage>;
 export type TTourSchedulePageKeys = TNestedKeyOf<TTourSchedulePage>;
+export type TTourEventFlightEditPageKeys =
+	TNestedKeyOf<TTourEventFlightEditPage>;

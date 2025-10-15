@@ -1,4 +1,4 @@
-export const ENUM_EVENT_TYPE = {
+export const ENUM_EVENT = {
 	ACCOMMODATION: "accommodation",
 	FLIGHT: "flight",
 	INFORMATION: "information",
@@ -11,11 +11,11 @@ export const ENUM_EVENT_TYPE = {
 	ITINERARY_LIBRARY: "itinerary-library"
 } as const;
 
-export type TEventType = (typeof ENUM_EVENT_TYPE)[keyof typeof ENUM_EVENT_TYPE];
+export type ENUM_EVENT_TYPE = (typeof ENUM_EVENT)[keyof typeof ENUM_EVENT];
 
 export interface ITemplateItem {
 	id?: string;
-	event_type: TEventType;
+	event_type: ENUM_EVENT_TYPE;
 	title: string;
 	icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 	color: string;
