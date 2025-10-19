@@ -23,12 +23,12 @@ const DEFAULT_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
 export const router = createBrowserRouter(
 	[
 		{
-			path: ENUM_PATH.TOURS.ROOT,
+			path: ENUM_PATH.MAIN,
 			element: <RootOwnerLayout />,
 			children: ROOT_ROUTES_LIST
 		},
 		{
-			path: ENUM_PATH.TOURS.ROOT,
+			path: ENUM_PATH.MAIN,
 			children: DEFAULT_ROUTES_LIST
 		}
 	],

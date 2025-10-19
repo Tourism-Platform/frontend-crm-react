@@ -1,5 +1,5 @@
 export const ENUM_PATH = {
-	// MAIN: "/",
+	MAIN: "/",
 	LOGIN: "/login",
 	NOT_FOUND: "/*",
 	SETTINGS: {
