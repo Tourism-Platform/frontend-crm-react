@@ -13,13 +13,23 @@ const ROOT_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
 	path: route.path,
 	element: <ProtectedRoute route={route} />
 }));
+const DEFAULT_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
+	(route) => route.layout === ENUM_LAYOUT.DEFAULT
+).map((route) => ({
+	path: route.path,
+	element: <ProtectedRoute route={route} />
+}));
 
 export const router = createBrowserRouter(
 	[
 		{
-			path: ENUM_PATH.MAIN,
+			path: ENUM_PATH.TOURS.ROOT,
 			element: <RootOwnerLayout />,
 			children: ROOT_ROUTES_LIST
+		},
+		{
+			path: ENUM_PATH.TOURS.ROOT,
+			children: DEFAULT_ROUTES_LIST
 		}
 	],
 	{

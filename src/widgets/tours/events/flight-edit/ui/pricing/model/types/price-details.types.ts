@@ -14,7 +14,7 @@ interface IFormPriceDetailsBase {
 type TFormPriceDetailsBaseRequired = IFormPriceDetailsBase & {
 	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
 	placeholder: string;
-	inputType?: HTMLInputTypeAttribute;
+	type?: HTMLInputTypeAttribute;
 };
 
 type TFormPriceDetailsBaseOptional = IFormPriceDetailsBase & {

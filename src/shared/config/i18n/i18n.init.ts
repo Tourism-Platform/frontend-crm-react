@@ -13,7 +13,7 @@ i18n.use(HttpBackend)
 	.use(initReactI18next)
 	.init({
 		fallbackLng: ENUM_LANGUAGES.EN,
-		debug: true,
+		debug: false,
 		ns: [...NS], // используем ваш существующий массив
 		defaultNS: NS[0], // первый элемент как default
 		interpolation: {
@@ -36,8 +36,8 @@ i18n.on("failedLoading", (lng, ns, msg) => {
 	console.error("❌ Failed to load translation:", { lng, ns, msg });
 });
 
-i18n.on("loaded", (loaded) => {
-	console.log("✅ Translations loaded:", loaded);
-});
+// i18n.on("loaded", (loaded) => {
+// 	console.log("✅ Translations loaded:", loaded);
+// });
 
 export default i18n;

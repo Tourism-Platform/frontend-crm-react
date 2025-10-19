@@ -1,0 +1,40 @@
+{
+	"form": {
+		"sign_in": {
+			"title": "Login to your account",
+			"description": "Enter your email and password below to login to your account",
+			"continue": "Or continue with",
+			"sign_up": "Don't have an account?"
+		},
+
+		"sign_up": {
+			"title": "Create your account",
+			"description": "Enter your email and password below to create your account",
+			"continue": "Or continue with",
+			"sign_in": "Already have an account?"
+		},
+		"fields": {
+			"email": {
+				"label": "Email",
+				"placeholder": "Enter email address",
+				"errors": {
+					"min": "Email is too short",
+					"max": "Email is too long"
+				}
+			},
+			"password": {
+				"label": "Password",
+				"placeholder": "Enter password",
+				"errors": {
+					"min": "Password is too short",
+					"max": "Password is too long"
+				}
+			}
+		},
+		"buttons": {
+			"sign_in": "Sign In",
+			"sign_up": "Sign Up",
+			"google": "Google"
+		}
+	}
+}

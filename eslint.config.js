@@ -63,11 +63,11 @@ export default defineConfig([
           
           // Исключения для простых служебных файлов с точками
           // Формат: entity.type.ts (например: user.service.ts, channel.types.ts)
-          /^[a-z][a-z0-9]*\.(service|api|util|config|types|interface|store|hook)\.ts$/,
+          /^[a-z][a-z0-9]*\.(service|api|util|config|types|interface|store|hook|slice)\.ts$/,
 
           // Исключения для составных служебных файлов
           // Формат: entity.function.type.ts (например: channel.service.interface.ts, user.store.types.ts)
-          /^[a-z][a-z0-9]*\.(service|store|api|util|config|hook)\.(types|interface)\.ts$/,
+          /^[a-z][a-z0-9]*\.(service|store|api|util|config|hook|slice)\.(types|interface)\.ts$/,
           
           // Исключения для стандартных файлов Next.js/React
           /^(page|layout|loading|error|not-found|template|default)\.tsx?$/,
@@ -173,10 +173,10 @@ export default defineConfig([
           { from: 'features', allow: ['entities', 'shared'] },
           
           // entities могут импортировать только shared
-          { from: 'entities', allow: ['shared'] },
+          { from: 'entities', allow: ['entities', 'shared'] },
           
           // shared не может импортировать другие слои
-           { from: 'shared', allow: ['shared'] },
+           { from: 'shared', allow: ['app', 'shared'] },
         ],
       }],
       

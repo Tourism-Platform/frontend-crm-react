@@ -3,6 +3,7 @@
 import common from "../../../../public/locales/en/common.json";
 import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
+import login_page from "../../../../public/locales/en/login_page.json";
 import account_settings_page from "../../../../public/locales/en/settings/account_settings_page.json";
 import business_settings_page from "../../../../public/locales/en/settings/business_settings_page.json";
 import financial_settings_page from "../../../../public/locales/en/settings/financial_settings_page.json";
@@ -33,6 +34,7 @@ export type TTourSchedulePage = typeof tour_schedule_page;
 export type TTourOrderHistoryPage = typeof tour_order_history_page;
 export type TTourEventFlightEditPage = typeof flight_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
+export type TLoginPage = typeof login_page;
 
 export type TResources = {
 	header: THeader;
@@ -50,6 +52,7 @@ export type TResources = {
 	tour_order_history_page: TTourOrderHistoryPage;
 	tour_itinerary_page: TTourItineraryPage;
 	flight_edit_page: TTourEventFlightEditPage;
+	login_page: TLoginPage;
 };
 
 export const NS = [
@@ -67,7 +70,8 @@ export const NS = [
 	"tour_schedule_page",
 	"tour_order_history_page",
 	"tour_itinerary_page",
-	"flight_edit_page"
+	"flight_edit_page",
+	"login_page"
 ] as const;
 export type TNS = (typeof NS)[number];
 
@@ -82,3 +86,5 @@ export type TTourOverviewPageKeys = TNestedKeyOf<TTourOverviewPage>;
 export type TTourSchedulePageKeys = TNestedKeyOf<TTourSchedulePage>;
 export type TTourEventFlightEditPageKeys =
 	TNestedKeyOf<TTourEventFlightEditPage>;
+
+export type TLoginPageKeys = TNestedKeyOf<TLoginPage>;

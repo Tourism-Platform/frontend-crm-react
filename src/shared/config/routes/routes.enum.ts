@@ -7,6 +7,7 @@ export const ENUM_AUTH = {
 export type ENUM_AUTH_TYPE = (typeof ENUM_AUTH)[keyof typeof ENUM_AUTH];
 
 export const ENUM_LAYOUT = {
+	DEFAULT: "default",
 	ROOT: "root",
 	ADMIN: "admin"
 } as const;

@@ -8,7 +8,7 @@ export const PRICE_DETAILS_DATA_LIST: TFormPriceDetails[] = [
 		placeholder:
 			"pricing.form.pricing_details.fields.total_price.placeholder",
 		key: ENUM_FORM_PRICE_DETAILS.TOTAL_PRICE,
-		inputType: "number",
+		type: "number",
 		fieldType: "input"
 	},
 	{
@@ -16,7 +16,7 @@ export const PRICE_DETAILS_DATA_LIST: TFormPriceDetails[] = [
 		placeholder:
 			"pricing.form.pricing_details.fields.taxes_and_fees.placeholder",
 		key: ENUM_FORM_PRICE_DETAILS.TAXES,
-		inputType: "number",
+		type: "number",
 		fieldType: "input"
 	},
 	{

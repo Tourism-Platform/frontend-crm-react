@@ -1,5 +1,5 @@
 import type { TFunction } from "i18next";
-import type { FC, HTMLInputTypeAttribute } from "react";
+import type { ComponentProps, FC } from "react";
 import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
@@ -38,14 +38,11 @@ type BaseFieldProps = {
 
 type TextFieldVariant = BaseFieldProps & {
 	fieldType?: Extract<CustomFieldVariant, "input">;
-	placeholder: string;
-	inputType?: HTMLInputTypeAttribute;
-};
+} & React.ComponentProps<"input">;
 
 type PasswordFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "password">;
-	placeholder: string;
-};
+} & Omit<ComponentProps<typeof Input>, "type">;
 
 type TextareaFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "textarea">;
@@ -81,16 +78,16 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 			case "input":
 				return (
 					<Input
+						{...rest}
 						placeholder={t(props.placeholder)}
-						type={props.inputType}
 						{...field}
 					/>
 				);
 			case "password":
 				return (
 					<PasswordInput
-						placeholder={t(props.placeholder)}
 						{...rest}
+						placeholder={t(props.placeholder)}
 						{...field}
 					/>
 				);
@@ -105,33 +102,33 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 			case "time":
 				return (
 					<TimePickerInput
+						{...rest}
 						aria-label={t(label)}
 						hourCycle={24}
-						{...rest}
 						{...field}
 					/>
 				);
 			case "date":
 				return (
 					<DatePickerInput
-						aria-label={t(label)}
 						{...rest}
+						aria-label={t(label)}
 						{...field}
 					/>
 				);
 			case "select":
 				return (
 					<SelectPicker
-						placeholder={t(props.placeholder)}
 						{...rest}
+						placeholder={t(props.placeholder)}
 						{...field}
 					/>
 				);
 			default:
 				return (
 					<Input
+						{...rest}
 						placeholder={t(props.placeholder)}
-						type={props.inputType}
 						{...field}
 					/>
 				);
