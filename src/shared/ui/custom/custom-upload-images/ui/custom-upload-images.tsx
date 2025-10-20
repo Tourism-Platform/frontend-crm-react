@@ -8,6 +8,7 @@ import {
 	ZoomInIcon
 } from "lucide-react";
 import { type FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
 	type TFileMetadata,
@@ -43,6 +44,7 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 	className,
 	onFilesChange
 }) => {
+	const { t } = useTranslation("common");
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
 	// Create default images using FileMetadata type
@@ -125,20 +127,25 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 
 					<div className="space-y-2">
 						<h3 className="text-lg font-semibold">
-							Upload images to gallery
+							{t("upload_images.title")}
 						</h3>
 						<p className="text-sm text-muted-foreground">
-							Drag and drop images here or click to browse
+							{t("upload_images.description")}
 						</p>
 						<p className="text-xs text-muted-foreground">
-							PNG, JPG, GIF up to {formatBytes(maxSize)} each (max{" "}
-							{maxFiles} files)
+							{t("upload_images.formats", {
+								maxSize: formatBytes(maxSize),
+								maxFiles
+							})}
 						</p>
 					</div>
 
-					<Button onClick={openFileDialog}>
+					<Button
+						onClick={openFileDialog}
+						className="flex gap-1 items-center"
+					>
 						<Upload className="h-4 w-4" />
-						Select images
+						<p>{t("upload_images.buttons.select")}</p>
 					</Button>
 				</div>
 			</div>
@@ -148,10 +155,11 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 				<div className="mt-6 flex items-center justify-between">
 					<div className="flex items-center gap-4">
 						<h4 className="text-sm font-medium">
-							Gallery ({files.length}/{maxFiles})
+							{t("upload_images.uploaded")} ({files.length}/
+							{maxFiles})
 						</h4>
 						<div className="text-xs text-muted-foreground">
-							Total:{" "}
+							{t("upload_images.total")}:{" "}
 							{formatBytes(
 								files.reduce(
 									(acc, file) => acc + file.file.size,
@@ -161,7 +169,7 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 						</div>
 					</div>
 					<Button onClick={clearFiles} variant="outline" size="sm">
-						Clear all
+						{t("upload_images.buttons.clear")}
 					</Button>
 				</div>
 			)}

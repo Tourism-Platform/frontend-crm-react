@@ -53,9 +53,8 @@ export const SignUpForm: FC<ISignUpFormProps> = ({ form, isLoading }) => {
 			</Button>
 			<div className="text-center">
 				{t("form.sign_up.sign_in")}{" "}
-				<a
-					href="#"
-					className="underline underline-offset-4 hover:text-primary"
+				<span
+					className="underline underline-offset-4 hover:text-primary cursor-pointer"
 					onClick={() => {
 						form?.setValue(
 							ENUM_FORM_LOGIN.LOGIN_TYPE,
@@ -64,7 +63,7 @@ export const SignUpForm: FC<ISignUpFormProps> = ({ form, isLoading }) => {
 					}}
 				>
 					{t("form.buttons.sign_in")}
-				</a>
+				</span>
 			</div>
 		</div>
 	);

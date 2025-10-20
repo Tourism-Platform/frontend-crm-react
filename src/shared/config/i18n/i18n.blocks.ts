@@ -29,7 +29,7 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 	// Блок событий тура
 	events: {
 		folder: "tours/events",
-		namespaces: ["flight_edit_page"]
+		namespaces: ["flight_edit_page", "transportation_edit_page"]
 	},
 
 	shared: {

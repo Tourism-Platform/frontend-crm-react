@@ -24,5 +24,17 @@
 			"apply": "Apply",
 			"reset": "Reset"
 		}
+	},
+	"upload_images": {
+		"title": "Upload images to gallery",
+		"description": "Drag and drop images here or click to browse",
+		"uploaded": "Uploaded",
+		"total": "Total",
+		"formats": "PNG, JPG, GIF up to {{maxSize}} each (max {{maxFiles}} files)",
+		"buttons": {
+			"add": "Add image",
+			"clear": "Clear all",
+			"select": "Select images"
+		}
 	}
 }

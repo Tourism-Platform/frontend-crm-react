@@ -3,18 +3,17 @@ import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
-	CustomField,
 	CustomOptionTabs,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
 	Separator
 } from "@/shared/ui";
 
-import {
-	PRICE_DETAILS_DATA_LIST,
-	PRICING_INDIVIDUAL_TABS_LIST,
-	type TPricingSchema
-} from "../model";
+import { PRICING_INDIVIDUAL_TABS_LIST, type TPricingSchema } from "../model";
+
+import { BookingDetails } from "./booking-details";
+import { CommissionDetails } from "./commission-details";
+import { PricingDetails } from "./pricing-details";
 
 export interface IInvoicingIndividualProps {
 	form: UseFormReturn<TPricingSchema>;
@@ -48,23 +47,13 @@ export const InvoicingIndividual: FC<IInvoicingIndividualProps> = ({
 					</CustomOptionTabsList>
 				</CustomOptionTabs>
 			</div>
-			<div className="grid gap-1">
-				<h3 className="text-lg">
-					{t("pricing.form.pricing_details.title")}
-				</h3>
-				<div className="grid grid-cols-3 gap-5">
-					{PRICE_DETAILS_DATA_LIST.map(({ key, ...item }) => (
-						<CustomField
-							key={key}
-							control={form?.control}
-							name={key}
-							t={t}
-							{...item}
-						/>
-					))}
-				</div>
+			<div>
+				<PricingDetails form={form} className="mb-8" />
+				<Separator className="mb-12" />
+				<BookingDetails form={form} className="mb-12" />
+				<Separator className="mb-12" />
+				<CommissionDetails form={form} />
 			</div>
-			<Separator />
 		</div>
 	);
 };

@@ -1,4 +1,15 @@
 {
+	"input": {
+		"title": {
+			"placeholder": "Enter flight title or it will automatically generated",
+			"errors": {
+				"required": "Title is required",
+				"min": "Title is too short",
+				"max": "Title is too long"
+			}
+		}
+	},
+
 	"tabs": {
 		"general": "General info",
 		"media": "Media",
@@ -213,6 +224,14 @@
 					"currency": {
 						"label": "Currency",
 						"placeholder": "Choose..."
+					}
+				}
+			},
+
+			"package": {
+				"fields": {
+					"package": {
+						"label": "Package type"
 					}
 				}
 			}

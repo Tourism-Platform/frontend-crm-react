@@ -11,14 +11,21 @@ export const AuthService = baseApi.injectEndpoints({
 				body: BodyParams
 			})
 		}),
-		signIn: build.mutation<{ email: string }, IAuthUser>({
+		signIn: build.mutation<string, IAuthUser>({
 			query: (BodyParams) => ({
 				url: `/auth/signin`,
 				method: `POST`,
 				body: BodyParams
 			})
+		}),
+		signOut: build.mutation<string, void>({
+			query: () => ({
+				url: `/auth/signout`,
+				method: `POST`
+			})
 		})
 	})
 });
 
-export const { useSignUpMutation, useSignInMutation } = AuthService;
+export const { useSignUpMutation, useSignInMutation, useSignOutMutation } =
+	AuthService;

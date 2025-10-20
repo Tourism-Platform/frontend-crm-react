@@ -11,6 +11,7 @@ import security_page from "../../../../public/locales/en/settings/security_page.
 import staff_information_page from "../../../../public/locales/en/settings/staff_information_page.json";
 import sidebar from "../../../../public/locales/en/sidebar.json";
 import flight_edit_page from "../../../../public/locales/en/tours/events/flight_edit_page.json";
+import transportation_edit_page from "../../../../public/locales/en/tours/events/transportation_edit_page.json";
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
 import tour_order_history_page from "../../../../public/locales/en/tours/tour_order_history_page.json";
 import tour_overview_page from "../../../../public/locales/en/tours/tour_overview_page.json";
@@ -33,6 +34,7 @@ export type TTourOverviewPage = typeof tour_overview_page;
 export type TTourSchedulePage = typeof tour_schedule_page;
 export type TTourOrderHistoryPage = typeof tour_order_history_page;
 export type TTourEventFlightEditPage = typeof flight_edit_page;
+export type TTourEventTransportationEditPage = typeof transportation_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
 export type TLoginPage = typeof login_page;
 
@@ -52,6 +54,7 @@ export type TResources = {
 	tour_order_history_page: TTourOrderHistoryPage;
 	tour_itinerary_page: TTourItineraryPage;
 	flight_edit_page: TTourEventFlightEditPage;
+	transportation_edit_page: TTourEventTransportationEditPage;
 	login_page: TLoginPage;
 };
 
@@ -71,6 +74,7 @@ export const NS = [
 	"tour_order_history_page",
 	"tour_itinerary_page",
 	"flight_edit_page",
+	"transportation_edit_page",
 	"login_page"
 ] as const;
 export type TNS = (typeof NS)[number];
@@ -86,5 +90,8 @@ export type TTourOverviewPageKeys = TNestedKeyOf<TTourOverviewPage>;
 export type TTourSchedulePageKeys = TNestedKeyOf<TTourSchedulePage>;
 export type TTourEventFlightEditPageKeys =
 	TNestedKeyOf<TTourEventFlightEditPage>;
+
+export type TTourEventTransportationEditPageKeys =
+	TNestedKeyOf<TTourEventTransportationEditPage>;
 
 export type TLoginPageKeys = TNestedKeyOf<TLoginPage>;

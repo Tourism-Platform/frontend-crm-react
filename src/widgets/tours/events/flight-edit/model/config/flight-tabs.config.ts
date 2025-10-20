@@ -1,4 +1,5 @@
-import { GeneralInfo, Media, Pricing } from "../../ui";
+import { Media, Pricing } from "../../../ui";
+import { GeneralInfo } from "../../ui";
 import { ENUM_FLIGHT_EDIT_TAB, type IFlightEditTabs } from "../types";
 
 export const FLIGHT_EDIT_TABS_LIST: IFlightEditTabs[] = [

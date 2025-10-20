@@ -1,0 +1,211 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Enter transfer title or it will automatically generated",
+			"errors": {
+				"required": "Title is required",
+				"min": "Title is too short",
+				"max": "Title is too long"
+			}
+		}
+	},
+
+	"tabs": {
+		"general": "General info",
+		"media": "Media",
+		"pricing": "Pricing & booking"
+	},
+
+	"general": {
+		"subtype": {
+			"title": "Transportation subtype",
+			"tabs": {
+				"train": "Train",
+				"bus": "Bus",
+				"transfer": "Transfer"
+			},
+
+			"form": {
+				"fields": {
+					"supplier": {
+						"label": "Supplier",
+						"placeholder": "Enter supplier",
+						"errors": {
+							"required": "Supplier is required",
+							"max": "Supplier name is too long",
+							"min": "Supplier name is too short"
+						}
+					}
+				}
+			}
+		},
+
+		"transportation": {
+			"form": {
+				"title": "New flight",
+				"fields": {
+					"departure_location": {
+						"label": "Departure location",
+						"placeholder": "Enter departure location",
+						"errors": {
+							"required": "Departure location is required",
+							"max": "Location name is too long",
+							"min": "Location name is too short"
+						}
+					},
+					"arrival_location": {
+						"label": "Arrival location",
+						"placeholder": "Enter arrival number",
+						"errors": {
+							"required": "Arrival location is required",
+							"max": "Location name is too long",
+							"min": "Location name is too short"
+						}
+					},
+					"departure_date": {
+						"label": "Departure date",
+						"errors": {
+							"required": "Departure date is required",
+							"invalid": "Invalid date format"
+						}
+					},
+					"arrival_date": {
+						"label": "Arrival date",
+						"errors": {
+							"required": "Arrival date is required",
+							"invalid": "Invalid date format"
+						}
+					},
+					"departure_time": {
+						"label": "Departure time",
+						"errors": {
+							"required": "Departure time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"arrival_time": {
+						"label": "Arrival time",
+						"errors": {
+							"required": "Arrival time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"departure_timezone": {
+						"label": "Timezone",
+						"placeholder": "Choose timezone",
+						"errors": {
+							"required": "Departure timezone is required"
+						}
+					},
+					"arrival_timezone": {
+						"label": "Timezone",
+						"placeholder": "Choose timezone",
+						"errors": {
+							"required": "Arrival timezone is required"
+						}
+					}
+				}
+			},
+			"buttons": {
+				"add": "Add ride"
+			}
+		},
+
+		"description": {
+			"title": "Description",
+			"description": {
+				"label": "Transportation description",
+				"placeholder": "Enter description",
+				"errors": {
+					"min": "Description is too short",
+					"max": "Description is too long"
+				}
+			}
+		}
+	},
+
+	"media": {
+		"title": "Displayed photos"
+	},
+
+	"pricing": {
+		"title": "Pricing",
+		"invoicing": {
+			"title": "How will this activity be invoiced?",
+			"tabs": {
+				"individual": "Individual",
+				"part_of_package": "Part of package"
+			}
+		},
+		"pricing_type": {
+			"title": "How is this activity priced?",
+			"tabs": {
+				"flat_rate": "Flat rate",
+				"per_person": "Per person"
+			}
+		},
+
+		"form": {
+			"pricing_details": {
+				"title": "Pricing details",
+				"fields": {
+					"total_price": {
+						"label": "Total price",
+						"placeholder": "Enter..."
+					},
+					"taxes_and_fees": {
+						"label": "Taxes & fees",
+						"placeholder": "Enter..."
+					},
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Choose"
+					}
+				}
+			},
+
+			"booking_details": {
+				"title": "Booking details",
+				"fields": {
+					"supplier": {
+						"label": "Select the supplier you'll book through",
+						"placeholder": "Enter..."
+					},
+					"client_selection": {
+						"label": "Client selection",
+						"description": "Propose as an optional add-on to allow your clients to opt-in to this activity."
+					}
+				},
+				"buttons": {
+					"make_optional": "Make optional"
+				}
+			},
+			"commissions": {
+				"title": "Commissions",
+				"description": "Commissions are not visible for clients",
+				"fields": {
+					"total_expected": {
+						"label": "Total expected",
+						"placeholder": "Automatically calculated..."
+					},
+					"commission_type": {
+						"label": "Commission type",
+						"placeholder": "Choose..."
+					},
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Choose..."
+					}
+				}
+			},
+
+			"package": {
+				"fields": {
+					"package": {
+						"label": "Package type"
+					}
+				}
+			}
+		}
+	}
+}
