@@ -1,0 +1,221 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Enter accommodation title or it will automatically generated",
+			"errors": {
+				"required": "Title is required",
+				"min": "Title is too short",
+				"max": "Title is too long"
+			}
+		}
+	},
+
+	"tabs": {
+		"general": "General info",
+		"rooms": "Rooms",
+		"media": "Media",
+		"pricing": "Pricing & booking"
+	},
+
+	"general": {
+		"properties": {
+			"title": "Property",
+			"form": {
+				"fields": {
+					"property": {
+						"label": "Property",
+						"placeholder": "Enter...",
+						"errors": {
+							"required": "Property is required",
+							"min": "Property name is too short",
+							"max": "Property name is too long"
+						}
+					}
+				}
+			}
+		},
+		"accommodation": {
+			"title": "Accommodation details",
+			"form": {
+				"fields": {
+					"amenities": {
+						"label": "Accommodation amenities",
+						"placeholder": "Choose",
+						"errors": {
+							"required": "Accommodation amenities are required"
+						}
+					},
+					"description": {
+						"label": "Accommodation description",
+						"placeholder": "Enter...",
+						"errors": {
+							"required": "Accommodation description is required",
+							"min": "Description is too short",
+							"max": "Description is too long"
+						}
+					}
+				}
+			}
+		},
+		"schedule": {
+			"title": "Schedule",
+			"form": {
+				"fields": {
+					"length_of_stay": {
+						"label": "Length of stay",
+						"placeholder": "Choose number of days...",
+						"errors": {
+							"required": "Length of stay is required",
+							"invalid": "Invalid length of stay"
+						}
+					},
+					"check_in_time": {
+						"label": "Check in Time",
+						"placeholder": "Enter check-in time",
+						"errors": {
+							"required": "Check-in time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"check_in_timezone": {
+						"label": "Timezone",
+						"placeholder": "Choose timezone",
+						"errors": {
+							"required": "Check-in timezone is required"
+						}
+					},
+					"check_out_time": {
+						"label": "Check out Time",
+						"placeholder": "Enter check-out time",
+						"errors": {
+							"required": "Check-out time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"check_out_timezone": {
+						"label": "Timezone",
+						"placeholder": "Choose timezone",
+						"errors": {
+							"required": "Check-out timezone is required"
+						}
+					}
+				}
+			}
+		}
+	},
+
+	"rooms": {
+		"title": "Rooms",
+		"form": {
+			"fields": {
+				"title": "Room {{number}}",
+				"name": {
+					"label": "Room name",
+					"placeholder": "Enter...",
+					"errors": {
+						"required": "Room name is required",
+						"min": "Room name is too short",
+						"max": "Room name is too long"
+					}
+				},
+				"details": {
+					"label": "Details",
+					"placeholder": "Enter...",
+					"errors": {
+						"required": "Details is required",
+						"min": "Details is too short",
+						"max": "Details is too long"
+					}
+				}
+			}
+		},
+		"buttons": {
+			"add": "Add room"
+		}
+	},
+
+	"media": {
+		"title": "Displayed photos"
+	},
+
+	"pricing": {
+		"title": "Pricing",
+		"invoicing": {
+			"title": "How will this activity be invoiced?",
+			"tabs": {
+				"individual": "Individual",
+				"part_of_package": "Part of package"
+			}
+		},
+		"pricing_type": {
+			"title": "How is this activity priced?",
+			"tabs": {
+				"flat_rate": "Flat rate",
+				"per_person": "Per person"
+			}
+		},
+
+		"form": {
+			"pricing_details": {
+				"title": "Pricing details",
+				"fields": {
+					"total_price": {
+						"label": "Total price",
+						"placeholder": "Enter..."
+					},
+					"taxes_and_fees": {
+						"label": "Taxes & fees",
+						"placeholder": "Enter..."
+					},
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Choose"
+					}
+				}
+			},
+
+			"booking_details": {
+				"title": "Booking details",
+				"fields": {
+					"supplier": {
+						"label": "Select the supplier you'll book through",
+						"placeholder": "Enter..."
+					},
+					"client_selection": {
+						"label": "Client selection",
+						"description": "Propose as an optional add-on to allow your clients to opt-in to this activity."
+					}
+				},
+				"buttons": {
+					"make_optional": "Make optional"
+				}
+			},
+			"commissions": {
+				"title": "Commissions",
+				"description": "Commissions are not visible for clients",
+				"fields": {
+					"total_expected": {
+						"label": "Total expected",
+						"placeholder": "Automatically calculated..."
+					},
+					"commission_type": {
+						"label": "Commission type",
+						"placeholder": "Choose..."
+					},
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Choose..."
+					}
+				}
+			},
+
+			"package": {
+				"fields": {
+					"package": {
+						"label": "Package type"
+					}
+				}
+			}
+		}
+	}
+}

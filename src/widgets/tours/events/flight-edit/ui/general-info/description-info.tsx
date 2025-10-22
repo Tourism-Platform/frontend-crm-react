@@ -12,11 +12,17 @@ interface IDescriptionInfoProps {
 
 export const DescriptionInfo: FC<IDescriptionInfoProps> = ({ form }) => {
 	const { t } = useTranslation("flight_edit_page");
-	const { key, ...rest } = FLIGHT_DESCRIPTION;
 	return (
 		<div className="grid gap-6">
 			<h2 className="text-xl">{t("general.description.title")}</h2>
-			<CustomField control={form?.control} name={key} {...rest} t={t} />
+			{FLIGHT_DESCRIPTION.map(({ key, ...item }) => (
+				<CustomField
+					control={form?.control}
+					name={key}
+					{...item}
+					t={t}
+				/>
+			))}
 		</div>
 	);
 };

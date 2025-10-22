@@ -12,17 +12,17 @@ interface IFormTransportationBase {
 
 type TFormTransportationBaseRequired = IFormTransportationBase & {
 	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
-	placeholder: string;
+	placeholder: TTourEventTransportationEditPageKeys;
 };
 
 type TFormTransportationBaseOptional = IFormTransportationBase & {
 	fieldType: "date" | "time";
-	placeholder?: string;
+	placeholder?: TTourEventTransportationEditPageKeys;
 };
 type TFormTransportationBaseSelect = IFormTransportationBase & {
 	fieldType: "select";
 	options: SelectPickerOption[];
-	placeholder?: string;
+	placeholder?: TTourEventTransportationEditPageKeys;
 	defaultValue: string;
 };
 

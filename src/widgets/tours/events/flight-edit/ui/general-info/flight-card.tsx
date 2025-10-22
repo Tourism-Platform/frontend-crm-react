@@ -12,12 +12,12 @@ import {
 
 import { FlightMenu } from "./flight-menu";
 
-interface IFlightFormProps {
+interface IFlightCardProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
 	onRemove: () => void;
 }
 
-export const FlightForm: FC<IFlightFormProps> = ({ form, onRemove }) => {
+export const FlightCard: FC<IFlightCardProps> = ({ form, onRemove }) => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
 		<Card className="relative">

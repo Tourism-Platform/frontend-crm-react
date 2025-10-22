@@ -7,7 +7,7 @@ import { Button } from "@/shared/ui";
 
 import type { TGeneralInfoSchema } from "../../model";
 
-import { FlightForm } from "./flight-form";
+import { FlightCard } from "./flight-card";
 import { FlightPreview } from "./flight-preview";
 
 interface IFlightInfoProps {
@@ -49,7 +49,7 @@ export const FlightInfo: FC<IFlightInfoProps> = ({ form }) => {
 			<div className="grid gap-4">
 				{!!fields.length && <FlightPreview />}
 				{fields.map((field, index) => (
-					<FlightForm
+					<FlightCard
 						key={field.id}
 						form={form}
 						onRemove={() => remove(index)} // если нужно убирать сегмент

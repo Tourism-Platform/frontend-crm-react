@@ -12,17 +12,17 @@ interface IFormFlightBase {
 
 type TFormFlightBaseRequired = IFormFlightBase & {
 	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
-	placeholder: string;
+	placeholder: TTourEventFlightEditPageKeys;
 };
 
 type TFormFlightBaseOptional = IFormFlightBase & {
 	fieldType: "date" | "time";
-	placeholder?: string;
+	placeholder?: TTourEventFlightEditPageKeys;
 };
 type TFormFlightBaseSelect = IFormFlightBase & {
 	fieldType: "select";
 	options: SelectPickerOption[];
-	placeholder?: string;
+	placeholder?: TTourEventFlightEditPageKeys;
 	defaultValue: string;
 };
 

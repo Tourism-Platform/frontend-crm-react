@@ -95,6 +95,7 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				return (
 					<Textarea
 						{...rest}
+						className="resize-none h-32"
 						placeholder={t(props.placeholder)}
 						{...field}
 					/>

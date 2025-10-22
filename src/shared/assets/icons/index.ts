@@ -20,6 +20,7 @@ export * from "./plane";
 export * from "./settings";
 export * from "./tag";
 export * from "./task-square";
+export * from "./ticket-star";
 export * from "./train";
 export * from "./users-outline";
 export * from "./users";
