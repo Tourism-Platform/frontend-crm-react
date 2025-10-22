@@ -19,7 +19,7 @@ import { EVENT_EDIT_TABS_LIST } from "./model";
 export const EventEdit: FC = () => {
 	const { t } = useTranslation("event_edit_page");
 	return (
-		<section className="flex flex-col gap-6 max-w-5xl mx-auto">
+		<section className="flex flex-col gap-6">
 			<EventTitleInput
 				icon={TicketStarIcon}
 				placeholder={t("input.title.placeholder")}

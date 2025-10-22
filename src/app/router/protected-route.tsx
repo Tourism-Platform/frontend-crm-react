@@ -3,8 +3,6 @@ import { Navigate } from "react-router-dom";
 import { ENUM_AUTH, ENUM_PATH, type IRouting } from "@/shared/config";
 import { useAppSelector } from "@/shared/hooks";
 
-import { ContainerOwnerLayout, SideBarOwnerLayout } from "@/widgets/layouts";
-
 // Компонент защиты маршрутов
 export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 	// Оборачиваем в нужный layout
@@ -16,22 +14,31 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 		return <Navigate to={ENUM_PATH.TOURS.ROOT} replace />;
 	}
 
-	if (route?.sidebarMenu?.length) {
-		Component = (
-			<SideBarOwnerLayout
-				items={route?.sidebarMenu}
-				useBreadcrumb={route.useMainBreadcrumb}
-			>
-				{Component}
-			</SideBarOwnerLayout>
-		);
-	} else if (route?.useTourEventBreadcrumb) {
-		Component = <ContainerOwnerLayout>{Component}</ContainerOwnerLayout>;
-	} else if (route?.path === ENUM_PATH.LOGIN) {
-		Component = <>{Component}</>;
-	} else {
-		Component = <ContainerOwnerLayout>{Component}</ContainerOwnerLayout>;
+	if (route?.layout_cascade?.length) {
+		Component = [...route.layout_cascade]
+			.reverse()
+			.reduce((acc, Layout) => {
+				return <Layout>{acc}</Layout>;
+			}, Component);
 	}
+
+	// if (route?.sidebarMenu?.length) {
+	// 	Component = (
+	// 		<SideBarOwnerLayout
+	// 			items={route?.sidebarMenu}
+	// 			useBreadcrumb={route.useMainBreadcrumb}
+	// 		>
+	// 			{Component}
+	// 		</SideBarOwnerLayout>
+	// 	);
+	// } else if (route?.useTourEventBreadcrumb) {
+	// 	Component = <ContainerOwnerLayout>{Component}</ContainerOwnerLayout>;
+	// } else if (route?.path === ENUM_PATH.LOGIN) {
+	// 	Component = <>{Component}</>;
+	// } else {
+	// 	Component = <ContainerOwnerLayout>{Component}</ContainerOwnerLayout>;
+	// }
+
 	// if (route.authSidebar && isAuth) {
 	//   Component = <SideBarLayout>{Component}</SideBarLayout>;
 	// }

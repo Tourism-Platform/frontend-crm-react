@@ -1,6 +1,9 @@
 @import '@fontsource/exo-2/400.css';
+@import '@fontsource/exo-2/400-italic.css';
 @import '@fontsource/exo-2/500.css';
+@import '@fontsource/exo-2/500-italic.css';
 @import '@fontsource/exo-2/700.css';
+@import '@fontsource/exo-2/700-italic.css';
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -35,4 +38,3 @@
      font-family: 'Exo 2', system-ui, sans-serif;
   }
 }
-

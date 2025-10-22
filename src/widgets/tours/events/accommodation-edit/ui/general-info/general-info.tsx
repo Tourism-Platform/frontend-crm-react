@@ -30,6 +30,7 @@ export const GeneralInfo: FC = () => {
 				<div className="grid grid-cols-2">
 					{PROPERTIES_LIST.map(({ key, ...item }) => (
 						<CustomField
+							key={key}
 							control={form?.control}
 							name={key}
 							t={t}

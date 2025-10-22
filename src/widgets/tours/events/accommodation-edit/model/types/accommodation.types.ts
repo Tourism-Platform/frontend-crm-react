@@ -1,35 +1,14 @@
 import { z } from "zod";
 
 import type { TTourAccommodationEditPageKeys } from "@/shared/config";
-import type { CustomFieldVariant, SelectPickerOption } from "@/shared/ui";
+import type { TFormField } from "@/shared/types";
 
 import type { GENERAL_INFO_SCHEMA, ROOMS_SCHEMA } from "../config";
 
-interface IFormAccommodationBase {
-	label: TTourAccommodationEditPageKeys;
-	key: ENUM_FORM_ACCOMMODATION_TYPE | ENUM_FORM_ROOM_TYPE;
-}
-
-type TFormAccommodationBaseRequired = IFormAccommodationBase & {
-	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
-	placeholder: TTourAccommodationEditPageKeys;
-};
-
-type TFormAccommodationBaseOptional = IFormAccommodationBase & {
-	fieldType: "date" | "time";
-	placeholder?: TTourAccommodationEditPageKeys;
-};
-type TFormAccommodationBaseSelect = IFormAccommodationBase & {
-	fieldType: "select";
-	options: SelectPickerOption[];
-	placeholder?: TTourAccommodationEditPageKeys;
-	defaultValue?: string;
-};
-
-export type TFormAccommodation =
-	| TFormAccommodationBaseRequired
-	| TFormAccommodationBaseOptional
-	| TFormAccommodationBaseSelect;
+export type TForm = TFormField<
+	TTourAccommodationEditPageKeys,
+	ENUM_FORM_ACCOMMODATION_TYPE | ENUM_FORM_ROOM_TYPE
+>;
 
 export const ENUM_FORM_ACCOMMODATION = {
 	PROPERTY: "property",

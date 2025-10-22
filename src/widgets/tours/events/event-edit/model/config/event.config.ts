@@ -1,8 +1,8 @@
 import { EVENT_SUBTYPE_OPTIONS, UTC_OPTIONS } from "@/shared/config";
 
-import { ENUM_FORM_EVENT, type TFormEvent } from "../types";
+import { ENUM_FORM_EVENT, type TForm } from "../types";
 
-export const EVENT_DATA_LIST: TFormEvent[] = [
+export const EVENT_DATA_LIST: TForm[] = [
 	{
 		label: "general.events.form.fields.event_subtype.label",
 		key: ENUM_FORM_EVENT.EVENT_SUBTYPE,

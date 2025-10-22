@@ -1,35 +1,14 @@
 import { z } from "zod";
 
 import type { TTourEventTransportationEditPageKeys } from "@/shared/config";
-import type { CustomFieldVariant, SelectPickerOption } from "@/shared/ui";
+import type { TFormField } from "@/shared/types";
 
 import type { GENERAL_INFO_SCHEMA } from "../config";
 
-interface IFormTransportationBase {
-	label: TTourEventTransportationEditPageKeys;
-	key: ENUM_FORM_TRANSPORTATION_TYPE;
-}
-
-type TFormTransportationBaseRequired = IFormTransportationBase & {
-	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
-	placeholder: TTourEventTransportationEditPageKeys;
-};
-
-type TFormTransportationBaseOptional = IFormTransportationBase & {
-	fieldType: "date" | "time";
-	placeholder?: TTourEventTransportationEditPageKeys;
-};
-type TFormTransportationBaseSelect = IFormTransportationBase & {
-	fieldType: "select";
-	options: SelectPickerOption[];
-	placeholder?: TTourEventTransportationEditPageKeys;
-	defaultValue: string;
-};
-
-export type TFormTransportation =
-	| TFormTransportationBaseRequired
-	| TFormTransportationBaseOptional
-	| TFormTransportationBaseSelect;
+export type TForm = TFormField<
+	TTourEventTransportationEditPageKeys,
+	ENUM_FORM_TRANSPORTATION_TYPE
+>;
 
 export const ENUM_FORM_TRANSPORTATION = {
 	DEPARTURE_LOCATION: "departure_location",

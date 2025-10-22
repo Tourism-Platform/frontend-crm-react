@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import type { ISidebarMenu } from "@/shared/ui";
-
 import type { ENUM_PATH } from "./routes.config";
 import { type ENUM_AUTH_TYPE, type ENUM_LAYOUT_TYPE } from "./routes.enum";
 
@@ -13,9 +11,9 @@ export interface IRouting {
 	// authSidebar?: boolean;
 	// nonAuthSidebar?: boolean;
 	// adminSidebar?: boolean;
-	sidebarMenu?: ISidebarMenu[];
-	useMainBreadcrumb?: boolean;
-	useTourEventBreadcrumb?: boolean;
+	// useMainBreadcrumb?: boolean;
+	// useTourEventBreadcrumb?: boolean;
+	layout_cascade?: React.ComponentType<{ children: React.ReactNode }>[];
 	layout: ENUM_LAYOUT_TYPE;
 }
 
@@ -26,6 +24,9 @@ export type TToursPath = Omit<typeof ENUM_PATH.TOURS, "EVENTS">[keyof Omit<
 	typeof ENUM_PATH.TOURS,
 	"EVENTS"
 >];
+
+export type TTourEventsPath =
+	(typeof ENUM_PATH.TOURS.EVENTS)[keyof typeof ENUM_PATH.TOURS.EVENTS];
 
 export type TBookingPath =
 	(typeof ENUM_PATH.BOOKING)[keyof typeof ENUM_PATH.BOOKING];

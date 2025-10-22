@@ -33,7 +33,10 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"flight_edit_page",
 			"transportation_edit_page",
 			"event_edit_page",
-			"accommodation_edit_page"
+			"accommodation_edit_page",
+			"information_edit_page",
+			"tour_details_edit_page",
+			"common_events"
 		]
 	},
 

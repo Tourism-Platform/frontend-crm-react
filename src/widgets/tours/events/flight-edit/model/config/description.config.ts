@@ -1,6 +1,6 @@
-import { ENUM_FORM_FLIGHT, type TFormFlight } from "../types";
+import { ENUM_FORM_FLIGHT, type TForm } from "../types";
 
-export const FLIGHT_DESCRIPTION: TFormFlight[] = [
+export const FLIGHT_DESCRIPTION: TForm[] = [
 	{
 		label: "general.description.description.label",
 		placeholder: "general.description.description.placeholder",

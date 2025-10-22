@@ -1,35 +1,14 @@
 import { z } from "zod";
 
 import type { TTourEventFlightEditPageKeys } from "@/shared/config";
-import type { CustomFieldVariant, SelectPickerOption } from "@/shared/ui";
+import type { TFormField } from "@/shared/types";
 
 import type { GENERAL_INFO_SCHEMA } from "../config";
 
-interface IFormFlightBase {
-	label: TTourEventFlightEditPageKeys;
-	key: ENUM_FORM_FLIGHT_TYPE;
-}
-
-type TFormFlightBaseRequired = IFormFlightBase & {
-	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
-	placeholder: TTourEventFlightEditPageKeys;
-};
-
-type TFormFlightBaseOptional = IFormFlightBase & {
-	fieldType: "date" | "time";
-	placeholder?: TTourEventFlightEditPageKeys;
-};
-type TFormFlightBaseSelect = IFormFlightBase & {
-	fieldType: "select";
-	options: SelectPickerOption[];
-	placeholder?: TTourEventFlightEditPageKeys;
-	defaultValue: string;
-};
-
-export type TFormFlight =
-	| TFormFlightBaseRequired
-	| TFormFlightBaseOptional
-	| TFormFlightBaseSelect;
+export type TForm = TFormField<
+	TTourEventFlightEditPageKeys,
+	ENUM_FORM_FLIGHT_TYPE
+>;
 
 export const ENUM_FORM_FLIGHT = {
 	AIRLINE_CODE: "airline_code",

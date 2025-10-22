@@ -1,8 +1,8 @@
 import { UTC_OPTIONS } from "@/shared/config";
 
-import { ENUM_FORM_TRANSPORTATION, type TFormTransportation } from "../types";
+import { ENUM_FORM_TRANSPORTATION, type TForm } from "../types";
 
-export const TRANSPORTATION_DATA_LIST: TFormTransportation[] = [
+export const TRANSPORTATION_DATA_LIST: TForm[] = [
 	{
 		label: "general.transportation.form.fields.departure_location.label",
 		placeholder:
@@ -30,7 +30,7 @@ export const TRANSPORTATION_DATA_LIST: TFormTransportation[] = [
 	}
 ];
 
-export const TRANSPORTATION_TIME_LIST: TFormTransportation[] = [
+export const TRANSPORTATION_TIME_LIST: TForm[] = [
 	{
 		label: "general.transportation.form.fields.arrival_time.label",
 		key: ENUM_FORM_TRANSPORTATION.ARRIVAL_TIME,

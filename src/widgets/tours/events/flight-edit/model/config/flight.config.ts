@@ -1,8 +1,8 @@
 import { UTC_OPTIONS } from "@/shared/config";
 
-import { ENUM_FORM_FLIGHT, type TFormFlight } from "../types";
+import { ENUM_FORM_FLIGHT, type TForm } from "../types";
 
-export const FLIGHT_DATA_LIST: TFormFlight[] = [
+export const FLIGHT_DATA_LIST: TForm[] = [
 	{
 		label: "general.flights.form.fields.airline_code.label",
 		placeholder: "general.flights.form.fields.airline_code.placeholder",
@@ -41,7 +41,7 @@ export const FLIGHT_DATA_LIST: TFormFlight[] = [
 	}
 ];
 
-export const FLIGHT_AIRPORT_LIST: TFormFlight[] = [
+export const FLIGHT_AIRPORT_LIST: TForm[] = [
 	{
 		label: "general.flights.form.fields.arrival_time.label",
 		key: ENUM_FORM_FLIGHT.ARRIVAL_TIME,

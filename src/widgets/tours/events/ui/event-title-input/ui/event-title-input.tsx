@@ -24,7 +24,7 @@ export const EventTitleInput: FC<IEventTitleInputProps> = ({
 			>
 				<Icon className="h-4 text-white" />
 			</div>
-			<Input placeholder={placeholder} />
+			<Input placeholder={placeholder} className="bg-card" />
 		</div>
 	);
 };

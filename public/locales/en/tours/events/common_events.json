@@ -1,0 +1,14 @@
+{
+	"breadcrumb": {
+		"itinerary": "Full Itinerary",
+		"events": {
+			"flight": "Flight edit",
+			"activity": "Activity edit",
+			"accommodation": "Accommodation edit",
+			"transportation": "Transportation edit",
+			"multiply_option": "Multiply option edit",
+			"tour_details": "Tour details edit",
+			"info": "Info edit"
+		}
+	}
+}

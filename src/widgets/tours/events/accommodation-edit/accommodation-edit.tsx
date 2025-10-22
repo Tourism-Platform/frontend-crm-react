@@ -19,7 +19,7 @@ import { ACCOMMODATION_EDIT_TABS_LIST } from "./model";
 export const AccommodationEdit: FC = () => {
 	const { t } = useTranslation("accommodation_edit_page");
 	return (
-		<section className="flex flex-col gap-6 max-w-5xl mx-auto">
+		<section className="flex flex-col gap-6">
 			<EventTitleInput
 				icon={HouseIcon}
 				placeholder={t("input.title.placeholder")}

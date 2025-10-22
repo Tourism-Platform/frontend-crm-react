@@ -1,8 +1,8 @@
 import { LENGTH_OF_STAY_OPTIONS, UTC_OPTIONS } from "@/shared/config";
 
-import { ENUM_FORM_ACCOMMODATION, type TFormAccommodation } from "../types";
+import { ENUM_FORM_ACCOMMODATION, type TForm } from "../types";
 
-export const SCHEDULE_LIST: TFormAccommodation[] = [
+export const SCHEDULE_LIST: TForm[] = [
 	{
 		label: "general.schedule.form.fields.length_of_stay.label",
 		placeholder: "general.schedule.form.fields.length_of_stay.placeholder",

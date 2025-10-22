@@ -1,6 +1,6 @@
-import { ENUM_FORM_ROOM, type TFormAccommodation } from "../types";
+import { ENUM_FORM_ROOM, type TForm } from "../types";
 
-export const ROOM_DATA_LIST: TFormAccommodation[] = [
+export const ROOM_DATA_LIST: TForm[] = [
 	{
 		label: "rooms.form.fields.name.label",
 		placeholder: "rooms.form.fields.name.placeholder",

@@ -19,7 +19,7 @@ import { FLIGHT_EDIT_TABS_LIST } from "./model";
 export const FlightEdit: FC = () => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
-		<section className="flex flex-col gap-6 max-w-5xl mx-auto">
+		<section className="flex flex-col gap-6">
 			<EventTitleInput
 				icon={PlaneIcon}
 				placeholder={t("input.title.placeholder")}

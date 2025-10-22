@@ -1,0 +1,38 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Enter Trip details",
+			"errors": {
+				"required": "Title is required",
+				"min": "Title is too short",
+				"max": "Title is too long"
+			}
+		}
+	},
+
+	"tabs": {
+		"general": "General info",
+		"media": "Media"
+	},
+
+	"general": {
+		"info": {
+			"form": {
+				"fields": {
+					"description": {
+						"label": "Info description",
+						"placeholder": "Enter info description",
+						"errors": {
+							"required": "Info description is required",
+							"max": "Description is too long"
+						}
+					}
+				}
+			}
+		}
+	},
+
+	"media": {
+		"title": "Displayed photos"
+	}
+}

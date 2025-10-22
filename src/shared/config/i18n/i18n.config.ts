@@ -11,8 +11,11 @@ import security_page from "../../../../public/locales/en/settings/security_page.
 import staff_information_page from "../../../../public/locales/en/settings/staff_information_page.json";
 import sidebar from "../../../../public/locales/en/sidebar.json";
 import accommodation_edit_page from "../../../../public/locales/en/tours/events/accommodation_edit_page.json";
+import common_events from "../../../../public/locales/en/tours/events/common_events.json";
 import event_edit_page from "../../../../public/locales/en/tours/events/event_edit_page.json";
 import flight_edit_page from "../../../../public/locales/en/tours/events/flight_edit_page.json";
+import information_edit_page from "../../../../public/locales/en/tours/events/information_edit_page.json";
+import tour_details_edit_page from "../../../../public/locales/en/tours/events/tour_details_edit_page.json";
 import transportation_edit_page from "../../../../public/locales/en/tours/events/transportation_edit_page.json";
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
 import tour_order_history_page from "../../../../public/locales/en/tours/tour_order_history_page.json";
@@ -38,8 +41,11 @@ export type TTourOrderHistoryPage = typeof tour_order_history_page;
 export type TTourEventFlightEditPage = typeof flight_edit_page;
 export type TTourEventTransportationEditPage = typeof transportation_edit_page;
 export type TTourEventEditPage = typeof event_edit_page;
+export type TTourInformationEditPage = typeof information_edit_page;
+export type TTourDetailsEditPage = typeof tour_details_edit_page;
 export type TTourAccommodationEditPage = typeof accommodation_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
+export type TCommonEvents = typeof common_events;
 export type TLoginPage = typeof login_page;
 
 export type TResources = {
@@ -61,6 +67,9 @@ export type TResources = {
 	transportation_edit_page: TTourEventTransportationEditPage;
 	event_edit_page: TTourEventEditPage;
 	accommodation_edit_page: TTourAccommodationEditPage;
+	information_edit_page: TTourInformationEditPage;
+	tour_details_edit_page: TTourDetailsEditPage;
+	common_events: TCommonEvents;
 	login_page: TLoginPage;
 };
 
@@ -83,6 +92,9 @@ export const NS = [
 	"transportation_edit_page",
 	"event_edit_page",
 	"accommodation_edit_page",
+	"information_edit_page",
+	"tour_details_edit_page",
+	"common_events",
 	"login_page"
 ] as const;
 export type TNS = (typeof NS)[number];
@@ -106,5 +118,12 @@ export type TTourEventEditPageKeys = TNestedKeyOf<TTourEventEditPage>;
 
 export type TTourAccommodationEditPageKeys =
 	TNestedKeyOf<TTourAccommodationEditPage>;
+
+export type TTourInformationEditPageKeys =
+	TNestedKeyOf<TTourInformationEditPage>;
+
+export type TTourDetailsEditPageKeys = TNestedKeyOf<TTourDetailsEditPage>;
+
+export type TTourCommonEventsKeys = TNestedKeyOf<TCommonEvents>;
 
 export type TLoginPageKeys = TNestedKeyOf<TLoginPage>;

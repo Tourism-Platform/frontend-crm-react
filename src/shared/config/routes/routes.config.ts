@@ -23,6 +23,7 @@ export const ENUM_PATH = {
 		MESSAGES: "/tours/:tourId/messages",
 		ACTIVITY_LOG: "/tours/:tourId/activity-log",
 		EVENTS: {
+			ROOT: "/tours/:tourId/itinerary/events",
 			FLIGHT: "/tours/:tourId/itinerary/events/:eventId/flight",
 			EVENT: "/tours/:tourId/itinerary/events/:eventId/event",
 			TRANSFER: "/tours/:tourId/itinerary/events/:eventId/transfer",

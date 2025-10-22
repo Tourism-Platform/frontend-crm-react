@@ -17,6 +17,7 @@ export const DescriptionInfo: FC<IDescriptionInfoProps> = ({ form }) => {
 			<h2 className="text-xl">{t("general.description.title")}</h2>
 			{FLIGHT_DESCRIPTION.map(({ key, ...item }) => (
 				<CustomField
+					key={key}
 					control={form?.control}
 					name={key}
 					{...item}

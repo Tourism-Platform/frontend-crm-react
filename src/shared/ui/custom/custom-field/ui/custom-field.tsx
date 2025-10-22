@@ -4,6 +4,7 @@ import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
 import {
+	CustomEditor,
 	DatePickerInput,
 	type DatePickerInputProps,
 	FormControl,
@@ -26,7 +27,8 @@ export type CustomFieldVariant =
 	| "textarea"
 	| "time"
 	| "date"
-	| "select";
+	| "select"
+	| "editor";
 
 type BaseFieldProps = {
 	control: Control<any>;
@@ -62,13 +64,19 @@ type SelectFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "select">;
 } & SelectPickerProps;
 
+type EditorFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "editor">;
+	defaultValue?: string;
+};
+
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
 	| TextareaFieldVariant
 	| TimeFieldVariant
 	| DateFieldVariant
-	| SelectFieldVariant;
+	| SelectFieldVariant
+	| EditorFieldVariant;
 
 export const CustomField: FC<CustomFieldProps> = (props) => {
 	const { control, name, label, t, className, fieldType, ...rest } = props;
@@ -125,6 +133,14 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...field}
 					/>
 				);
+			case "editor":
+				return (
+					<CustomEditor
+						field={field}
+						defaultValue={props?.defaultValue}
+					/>
+				);
+
 			default:
 				return (
 					<Input
