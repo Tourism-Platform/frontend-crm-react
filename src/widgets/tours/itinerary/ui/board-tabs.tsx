@@ -16,12 +16,13 @@ import type { IOption, TOptionsData } from "../model";
 
 interface IBoardTabsProps {
 	optionsData: TOptionsData;
-	setOptionsData: React.Dispatch<React.SetStateAction<TOptionsData>>;
+	setOptionsData: (v: TOptionsData) => void;
 	activeOption: number;
 	setActiveOption: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export const BoardTabs: FC<IBoardTabsProps> = ({
+	optionsData,
 	setOptionsData,
 	activeOption,
 	setActiveOption
@@ -43,21 +44,19 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 			? Math.max(...options.map((o) => o.id)) + 1
 			: 1;
 		setOptions((prev) => [...prev, { id: newId, name: `Option ${newId}` }]);
-		setOptionsData((prev) => ({
-			...prev,
+		setOptionsData({
+			...optionsData,
 			[newId]: { tripDetails: [], days: { 1: [], 2: [], 3: [], 4: [] } }
-		}));
+		});
 		setActiveOption(newId);
 	};
 
 	const deleteOption = (id: number) => {
 		if (options.length === 1) return;
 		setOptions((prev) => prev.filter((o) => o.id !== id));
-		setOptionsData((prev) => {
-			const copy = { ...prev };
-			delete copy[id];
-			return copy;
-		});
+		const newOptionData = { ...optionsData };
+		delete newOptionData[id];
+		setOptionsData(newOptionData);
 		if (activeOption === id) {
 			const remaining = options.filter((o) => o.id !== id);
 			setActiveOption(remaining[0].id);

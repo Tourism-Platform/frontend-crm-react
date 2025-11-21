@@ -47,9 +47,9 @@ export const DraggableTemplateItem: FC<{
 						: undefined
 			})}
 		>
-			<CardContent className="grid grid-cols-[auto_1fr_auto] items-center gap-3 pr-1">
-				<div className={`${template.color} rounded p-1.5`}>
-					<Icon className="w-4 h-4 text-white" />
+			<CardContent className="grid grid-cols-[auto_1fr_auto] items-center gap-3 pr-1 relative">
+				<div className="flex items-center justify-center">
+					<Icon className={`text-${template.color} size-4`} />
 				</div>
 				<span className="text-sm font-medium truncate">
 					{template.title}

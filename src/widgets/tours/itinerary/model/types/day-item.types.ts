@@ -4,6 +4,4 @@ export interface IDayItem {
 	event_type: string; // template key like 'flight'
 	title: string;
 	subtitle?: string;
-	icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	color: string;
 }

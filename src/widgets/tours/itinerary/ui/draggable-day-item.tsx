@@ -5,9 +5,17 @@ import { GripVertical } from "lucide-react";
 import type { FC } from "react";
 import { Link, useParams } from "react-router-dom";
 
+import { InfoCircleIcon } from "@/shared/assets";
 import { Button, Card, CardContent } from "@/shared/ui";
 
-import { EVENT_TYPE_TO_PATH, type IDayItem, itemId } from "../model";
+import {
+	EVENT_TEMPLATES_LIST,
+	EVENT_TYPE_TO_PATH,
+	type IDayItem,
+	itemId
+} from "../model";
+
+import { DraggableDayItemMenu } from "./draggable-day-item-menu";
 
 const variants = cva(" p-3 bg-background hover:text-primary", {
 	variants: {
@@ -21,7 +29,8 @@ const variants = cva(" p-3 bg-background hover:text-primary", {
 export const DraggableDayItem: FC<{
 	item: IDayItem;
 	isOverlay?: boolean;
-}> = ({ item, isOverlay }) => {
+	onRemove?: () => void;
+}> = ({ item, isOverlay, onRemove }) => {
 	const {
 		attributes,
 		listeners,
@@ -34,7 +43,12 @@ export const DraggableDayItem: FC<{
 		transform: CSS.Transform.toString(transform),
 		transition
 	};
-	const Icon = item.icon;
+	const template = EVENT_TEMPLATES_LIST.components.find(
+		(tpl) => tpl.event_type === item.event_type
+	);
+	const Icon = template?.icon || InfoCircleIcon;
+	const color = template?.color || "gray-500";
+
 	const { tourId } = useParams<{ tourId: string }>();
 	const href = EVENT_TYPE_TO_PATH[item.event_type]
 		.replace(":tourId", tourId || "")
@@ -53,14 +67,14 @@ export const DraggableDayItem: FC<{
 							: undefined
 				})}
 			>
-				<CardContent className="flex items-start gap-3 p-0 justify-between">
+				<CardContent className="flex items-start gap-3 p-0 justify-between relative">
 					<div
-						className={`${item.color} rounded-full p-2 flex items-center`}
+						className={`bg-${color} rounded-full p-2.5 flex items-center`}
 					>
-						<Icon className="size-6 text-white" />
+						<Icon className="size-4 text-white" />
 					</div>
 					<div className="flex-1">
-						<h4 className="font-medium">{item.title}</h4>
+						<p className="text-sm font-medium">{item.title}</p>
 						{item.subtitle && (
 							<p className="text-xs text-muted-foreground">
 								{item.subtitle}
@@ -72,10 +86,13 @@ export const DraggableDayItem: FC<{
 						size="icon"
 						{...attributes}
 						{...listeners}
-						className="cursor-grab"
+						className="cursor-grab mt-2"
 					>
 						<GripVertical className="w-5 h-5 text-muted-foreground" />
 					</Button>
+					<div className="absolute -right-3 -top-4">
+						<DraggableDayItemMenu onRemove={onRemove} />
+					</div>
 				</CardContent>
 			</Card>
 		</Link>

@@ -7,8 +7,8 @@ import {
 	useSensor,
 	useSensors
 } from "@dnd-kit/core";
-import { Plane } from "lucide-react";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 
 import { Separator } from "@/shared/ui";
@@ -71,28 +71,57 @@ export const Itinerary: React.FC = () => {
 	const [activeOption, setActiveOption] = useState<number>(1);
 
 	// options data
-	const [optionsData, setOptionsData] = useState<TOptionsData>({
-		1: {
-			tripDetails: [],
-			days: {
-				1: [
-					{
-						id: uuidv4(),
-						block_id: "day1-1",
-						event_type: ENUM_EVENT.FLIGHT,
-						title: "DOM - TAS",
-						subtitle: "7:30 AM (UTC +5) - 12:30 AM (UTC +5)",
-						icon: Plane,
-						color: "bg-blue-500"
-					}
-				],
-				2: [],
-				3: [],
-				4: []
+	// const [optionsData, setOptionsData] = useState<TOptionsData>({
+	// 	1: {
+	// 		tripDetails: [],
+	// 		days: {
+	// 			1: [
+	// 				{
+	// 					id: uuidv4(),
+	// 					block_id: "day1-1",
+	// 					event_type: ENUM_EVENT.FLIGHT,
+	// 					title: "DOM - TAS",
+	// 					subtitle: "7:30 AM (UTC +5) - 12:30 AM (UTC +5)",
+	// 				}
+	// 			],
+	// 			2: [],
+	// 			3: [],
+	// 			4: []
+	// 		}
+	// 	},
+	// 	2: { tripDetails: [], days: { 1: [], 2: [], 3: [], 4: [] } }
+	// });
+
+	const { control, watch, setValue } = useForm<{ optionsData: TOptionsData }>(
+		{
+			defaultValues: {
+				optionsData: {
+					1: {
+						tripDetails: [],
+						days: {
+							1: [
+								{
+									id: uuidv4(),
+									block_id: "day1-1",
+									event_type: ENUM_EVENT.FLIGHT,
+									title: "DOM - TAS",
+									subtitle:
+										"7:30 AM (UTC +5) - 12:30 AM (UTC +5)"
+								}
+							],
+							2: [],
+							3: [],
+							4: []
+						}
+					},
+					2: { tripDetails: [], days: { 1: [], 2: [], 3: [], 4: [] } }
+				}
 			}
-		},
-		2: { tripDetails: [], days: { 1: [], 2: [], 3: [], 4: [] } }
-	});
+		}
+	);
+
+	const optionsData = watch("optionsData");
+
 	console.log("optionsData", optionsData);
 	// dnd-kit sensors
 	const sensors = useSensors(useSensor(PointerSensor));
@@ -121,17 +150,26 @@ export const Itinerary: React.FC = () => {
 		items: IDayItem[],
 		day?: number
 	) => {
-		setOptionsData((prev) => {
-			const copy = { ...prev };
-			const current = copy[optId] ?? {
-				tripDetails: [],
-				days: { 1: [], 2: [], 3: [], 4: [] }
-			};
-			if (container === "tripDetails") current.tripDetails = items;
-			else current.days = { ...current.days, [day as number]: items };
-			copy[optId] = current;
-			return copy;
-		});
+		const copy = { ...optionsData };
+		const current = copy[optId] ?? {
+			tripDetails: [],
+			days: { 1: [], 2: [], 3: [], 4: [] }
+		};
+		if (container === "tripDetails") current.tripDetails = items;
+		else current.days = { ...current.days, [day as number]: items };
+		copy[optId] = current;
+		setValue("optionsData", copy);
+		// setOptionsData((prev) => {
+		// 	const copy = { ...prev };
+		// 	const current = copy[optId] ?? {
+		// 		tripDetails: [],
+		// 		days: { 1: [], 2: [], 3: [], 4: [] }
+		// 	};
+		// 	if (container === "tripDetails") current.tripDetails = items;
+		// 	else current.days = { ...current.days, [day as number]: items };
+		// 	copy[optId] = current;
+		// 	return copy;
+		// });
 	};
 
 	// onDragStart — capture active id and snapshot (for overlay)
@@ -218,9 +256,9 @@ export const Itinerary: React.FC = () => {
 				block_id: `${tpl.event_type}-${Date.now()}`,
 				event_type: tpl.event_type,
 				title: tpl.title,
-				subtitle: "Information",
-				icon: tpl.icon,
-				color: tpl.color
+				subtitle: "Information"
+				// icon: tpl.icon,
+				// color: tpl.color
 			};
 
 			const container = targetContainer ?? { type: "tripDetails" };
@@ -375,7 +413,9 @@ export const Itinerary: React.FC = () => {
 			<div className="h-full flex flex-col">
 				<BoardTabs
 					optionsData={optionsData}
-					setOptionsData={setOptionsData}
+					setOptionsData={(v: TOptionsData) =>
+						setValue("optionsData", v as TOptionsData)
+					}
 					activeOption={activeOption}
 					setActiveOption={setActiveOption}
 				/>
@@ -384,7 +424,7 @@ export const Itinerary: React.FC = () => {
 
 				{/* board + sidebar */}
 				<div className="flex-1 flex overflow-hidden">
-					<BoardColumns data={currentData} />
+					<BoardColumns data={currentData} control={control} />
 					<ItinerarySidebar />
 				</div>
 

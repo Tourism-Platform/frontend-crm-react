@@ -5,22 +5,32 @@ import {
 } from "@dnd-kit/sortable";
 import { GripVertical } from "lucide-react";
 import { type FC } from "react";
+import { type Control, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { Button, Card, CardContent, CardHeader, Separator } from "@/shared/ui";
 
-import { type IDayItem, itemId } from "../model";
+import { type IDayItem, type TOptionsData, itemId } from "../model";
 
 import { DraggableDayItem } from "./draggable-day-item";
 
 export const DroppableDayContainer: FC<{
 	items: IDayItem[];
 	day: number;
+	control: Control<{ optionsData: TOptionsData }>;
 	containerId: string;
-}> = ({ items, containerId }) => {
+}> = ({ items, day, containerId, control }) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const { setNodeRef, isOver } = useDroppable({ id: containerId });
+
+	const { fields, remove } = useFieldArray({
+		control,
+		// name: `days.${day}`
+		name: `optionsData.1.days.${day}` as never // --- hardcoded optionId = 1 for testing ---
+	});
+
+	console.log("DroppableDayContainer items:", `days.${day}`, fields);
 	return (
 		<Card
 			ref={setNodeRef}
@@ -45,9 +55,12 @@ export const DroppableDayContainer: FC<{
 							{t("day_details.container.empty")}
 						</div>
 					) : (
-						items.map((item) => (
+						items.map((item, index) => (
 							<div key={item.block_id} className="mb-2">
-								<DraggableDayItem item={item} />
+								<DraggableDayItem
+									item={item}
+									onRemove={() => remove(index)}
+								/>
 							</div>
 						))
 					)}

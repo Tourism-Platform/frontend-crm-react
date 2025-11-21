@@ -1,5 +1,13 @@
-import { Calendar, Car, Hotel, Info, List, MapPin, Plane } from "lucide-react";
+import { Calendar, List, MapPin } from "lucide-react";
 
+import {
+	DrivingIcon,
+	HouseIcon,
+	InfoCircleIcon,
+	MapIcon,
+	PlaneIcon,
+	TicketStarIcon
+} from "@/shared/assets";
 import { ENUM_PATH, type TTourEventPath } from "@/shared/config";
 
 import { ENUM_EVENT, type IEventTemplate } from "../types";
@@ -10,57 +18,57 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 			event_type: ENUM_EVENT.EVENT_LIBRARY,
 			title: "Event library",
 			icon: Calendar,
-			color: "bg-blue-500"
+			color: "blue-500"
 		},
 		{
 			event_type: ENUM_EVENT.ITINERARY_LIBRARY,
 			title: "Itinerary library",
 			icon: MapPin,
-			color: "bg-blue-500"
+			color: "blue-500"
 		}
 	],
 	components: [
 		{
 			event_type: ENUM_EVENT.TOUR_DETAILS,
 			title: "Trip details",
-			icon: List,
-			color: "bg-red-500"
+			icon: MapIcon,
+			color: "red-500"
 		},
 		{
 			event_type: ENUM_EVENT.FLIGHT,
 			title: "Flight",
-			icon: Plane,
-			color: "bg-blue-500"
+			icon: PlaneIcon,
+			color: "primary"
 		},
 		{
 			event_type: ENUM_EVENT.ACTIVITY,
 			title: "Activity",
-			icon: Calendar,
-			color: "bg-blue-500"
+			icon: TicketStarIcon,
+			color: "sky-500"
 		},
 		{
 			event_type: ENUM_EVENT.ACCOMMODATION,
 			title: "Accommodation",
-			icon: Hotel,
-			color: "bg-blue-500"
+			icon: HouseIcon,
+			color: "cyan-600"
 		},
 		{
 			event_type: ENUM_EVENT.TRANSPORTATION,
 			title: "Transportation",
-			icon: Car,
-			color: "bg-green-500"
+			icon: DrivingIcon,
+			color: "emerald-600"
 		},
 		{
 			event_type: ENUM_EVENT.MULTIPLY_OPTION,
 			title: "Multiply-option",
 			icon: List,
-			color: "bg-gray-700"
+			color: "gray-700"
 		},
 		{
 			event_type: ENUM_EVENT.INFO,
 			title: "Info",
-			icon: Info,
-			color: "bg-gray-900"
+			icon: InfoCircleIcon,
+			color: "gray-700"
 		}
 	]
 };
