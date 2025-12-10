@@ -51,22 +51,7 @@ export const CHANGE_BUSINESS_SCHEMA = z.object({
 			})
 			.max(100, {
 				message: "form.legal.fields.type_of_business.errors.max"
-			}),
-		business_name: z
-			.string()
-			.min(2, { message: "form.legal.fields.business_name.errors.min" })
-			.max(100, {
-				message: "form.legal.fields.business_name.errors.max"
-			}),
-		business_website: z
-			.string()
-			.min(2, {
-				message: "form.legal.fields.business_website.errors.min"
 			})
-			.max(100, {
-				message: "form.legal.fields.business_website.errors.max"
-			})
-			.optional()
 	}),
 	address: z.object({
 		address_line: z

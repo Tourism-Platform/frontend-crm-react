@@ -16,14 +16,13 @@ export const LegalInfo: FC<ILegalInfoProps> = ({ form }) => {
 		<div className="flex gap-5 flex-col">
 			<h2 className="text-xl">{t("form.legal.title")}</h2>
 			<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-				{LEGAL_BUSINESS_DATA_LIST.map((item) => (
+				{LEGAL_BUSINESS_DATA_LIST.map(({ key, ...item }) => (
 					<CustomField
-						key={item?.key}
+						key={key}
 						control={form?.control}
-						name={item?.key}
-						label={item?.label}
-						placeholder={item?.placeholder}
+						name={key}
 						t={t}
+						{...item}
 					/>
 				))}
 			</div>

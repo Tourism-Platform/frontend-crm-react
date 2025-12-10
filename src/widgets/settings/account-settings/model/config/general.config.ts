@@ -1,8 +1,8 @@
 import { CURRENCY_OPTIONS } from "@/shared/config";
 
-import { ENUM_FORM_CHANGE_ACCOUNT, type TFormChangeAccount } from "../types";
+import { ENUM_FORM_CHANGE_ACCOUNT, type TForm } from "../types";
 
-export const GENERAL_ACCOUNT_DATA_LIST: TFormChangeAccount[] = [
+export const GENERAL_ACCOUNT_DATA_LIST: TForm[] = [
 	{
 		label: "form.general.fields.location.label",
 		placeholder: "form.general.fields.location.placeholder",

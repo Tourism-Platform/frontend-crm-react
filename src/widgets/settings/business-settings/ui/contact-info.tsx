@@ -19,14 +19,13 @@ export const ContactInfo: FC<IContactInfoProps> = ({ form }) => {
 		<div className="flex gap-5 flex-col">
 			<h2 className="text-xl">{t("form.contact.title")}</h2>
 			<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-				{CONTACT_BUSINESS_DATA_LIST.map((item) => (
+				{CONTACT_BUSINESS_DATA_LIST.map(({ key, ...item }) => (
 					<CustomField
-						key={item?.key}
+						key={key}
 						control={form?.control}
-						name={item?.key}
-						label={item?.label}
-						placeholder={item?.placeholder}
+						name={key}
 						t={t}
+						{...item}
 					/>
 				))}
 			</div>

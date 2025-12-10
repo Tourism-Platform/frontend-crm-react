@@ -17,17 +17,16 @@ export const AddressInfo: FC<IAddressInfoProps> = ({ form }) => {
 	const { t } = useTranslation("business_settings_page");
 	return (
 		<div className="flex gap-5 flex-col">
-			<h2 className="text-xl">{t("form.legal.title")}</h2>
+			<h2 className="text-xl">{t("form.address.title")}</h2>
 			<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-				{ADDRESS_BUSINESS_DATA_LIST.map((item, index) => (
+				{ADDRESS_BUSINESS_DATA_LIST.map(({ key, ...item }, index) => (
 					<CustomField
 						className={index === 0 ? "col-span-2" : ""}
-						key={item?.key}
+						key={key}
 						control={form?.control}
-						name={item?.key}
-						label={item?.label}
-						placeholder={item?.placeholder}
+						name={key}
 						t={t}
+						{...item}
 					/>
 				))}
 			</div>

@@ -1,6 +1,6 @@
-import { ENUM_FORM_CHANGE_ACCOUNT, type TFormChangeAccount } from "../types";
+import { ENUM_FORM_CHANGE_ACCOUNT, type TForm } from "../types";
 
-export const PERSONAL_CHANGE_ACCOUNT_LIST: TFormChangeAccount[] = [
+export const PERSONAL_CHANGE_ACCOUNT_LIST: TForm[] = [
 	{
 		label: "form.personal.fields.login.label",
 		placeholder: "form.personal.fields.login.placeholder",

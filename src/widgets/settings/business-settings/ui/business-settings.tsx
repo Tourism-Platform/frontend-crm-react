@@ -28,9 +28,7 @@ export const BusinessSettings: FC = () => {
 				legal_company_name: "",
 				director: "",
 				tin: "",
-				type_of_business: "",
-				business_name: "",
-				business_website: ""
+				type_of_business: ""
 			},
 			address: {
 				address_line: "",
@@ -59,16 +57,16 @@ export const BusinessSettings: FC = () => {
 					<Form {...form}>
 						<form
 							onSubmit={form.handleSubmit(onSubmit)}
-							className="space-y-5"
+							className="grid gap-3"
 						>
 							<BusinessInfo form={form} />
-							<Separator />
+							<Separator className="mb-2" />
 							<LegalInfo form={form} />
-							<Separator />
+							<Separator className="mb-2" />
 							<AddressInfo form={form} />
-							<Separator />
+							<Separator className="mb-2" />
 							<ContactInfo form={form} />
-							<Separator />
+							<Separator className="mb-2" />
 							<DocumentsInfo />
 							<div>
 								<Button>{t("form.buttons.save")}</Button>
