@@ -1,12 +1,8 @@
 import { type FC } from "react";
 
-import {
-	LanguageToggle,
-	Logo,
-	NavMenu,
-	ThemeToggle,
-	UserMenu
-} from "@/shared/ui";
+import { LanguageToggle, Logo, NavMenu, ThemeToggle } from "@/shared/ui";
+
+import { UserMenu } from "@/features/layout";
 
 import { NAV_ITEMS_LIST } from "./model";
 

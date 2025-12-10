@@ -170,7 +170,7 @@ export default defineConfig([
           { from: 'widgets', allow: ['features', 'entities', 'shared'] },
           
           // features могут импортировать entities, shared
-          { from: 'features', allow: ['entities', 'shared'] },
+          { from: 'features', allow: ['entities', 'shared', 'features'] },
           
           // entities могут импортировать только shared
           { from: 'entities', allow: ['entities', 'shared'] },

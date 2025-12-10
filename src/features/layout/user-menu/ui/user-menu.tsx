@@ -1,4 +1,5 @@
 // import { Loader, LogOutIcon } from "lucide-react";
+import { Loader, LogOutIcon } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -17,13 +18,15 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
+import { useSignOutAction } from "@/features/auth";
+
 // import { useSignOutAction } from "@/features/auth";
 
 import { USER_MENU_LIST } from "../model";
 
 export const UserMenu: FC = () => {
 	const { t } = useTranslation("sidebar");
-	// const { handleSignOut, isLoading } = useSignOutAction();
+	const { handleSignOut, isLoading } = useSignOutAction();
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -65,7 +68,7 @@ export const UserMenu: FC = () => {
 						<DropdownMenuSeparator />
 					</DropdownMenuGroup>
 				))}
-				{/* <DropdownMenuItem onClick={handleSignOut}>
+				<DropdownMenuItem onClick={handleSignOut}>
 					{isLoading ? (
 						<Loader className="size-4 animate-spin text-muted-foreground" />
 					) : (
@@ -75,7 +78,7 @@ export const UserMenu: FC = () => {
 						/>
 					)}
 					<span>Logout</span>
-				</DropdownMenuItem> */}
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
