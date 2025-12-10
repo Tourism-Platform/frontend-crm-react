@@ -1,0 +1,1 @@
+export { DeleteStaff } from "./ui";

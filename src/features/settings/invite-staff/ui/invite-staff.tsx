@@ -3,6 +3,7 @@ import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { STAFF_OPTIONS } from "@/shared/config";
 import {
 	Button,
 	CustomField,
@@ -19,35 +20,34 @@ import {
 } from "@/shared/ui";
 
 import {
-	CHANGE_PASSWORD_SCHEMA,
-	FORM_CHANGE_PASSWORD_LIST,
-	type TChangePasswordSchema
+	FORM_INVITE_STAFF_LIST,
+	INVITE_STAFF_SCHEMA,
+	type TAddStaffSchema
 } from "../model";
 
-export const ChangePassword: FC = () => {
-	const { t } = useTranslation("security_page");
-	const form = useForm<TChangePasswordSchema>({
-		resolver: zodResolver(CHANGE_PASSWORD_SCHEMA),
+export const InviteStaff: FC = () => {
+	const { t } = useTranslation("staff_information_page");
+	const form = useForm<TAddStaffSchema>({
+		resolver: zodResolver(INVITE_STAFF_SCHEMA),
 		defaultValues: {
-			current_password: "",
-			new_password: "",
-			confirm_password: ""
+			email: "",
+			role: STAFF_OPTIONS?.[0]?.value || ""
 		},
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TChangePasswordSchema) {
+	function onSubmit(data: TAddStaffSchema) {
 		console.log("Form submitted:", data);
 	}
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button>{t("change_password")}</Button>
+				<Button>{t("invite.button")}</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>{t("form.title")}</DialogTitle>
+					<DialogTitle>{t("invite.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
-						{t("form.title")}
+						{t("invite.form.title")}
 					</DialogDescription>
 				</DialogHeader>
 				<Separator />
@@ -56,15 +56,17 @@ export const ChangePassword: FC = () => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="space-y-6"
 					>
-						{FORM_CHANGE_PASSWORD_LIST.map(({ key, ...item }) => (
-							<CustomField
-								key={key}
-								control={form?.control}
-								name={key}
-								t={t}
-								{...item}
-							/>
-						))}
+						<div>
+							{FORM_INVITE_STAFF_LIST.map(({ key, ...item }) => (
+								<CustomField
+									key={key}
+									control={form?.control}
+									name={key}
+									t={t}
+									{...item}
+								/>
+							))}
+						</div>
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button
@@ -72,11 +74,11 @@ export const ChangePassword: FC = () => {
 									variant="outline"
 									onClick={() => form.reset()}
 								>
-									{t("form.buttons.decline")}
+									{t("invite.form.buttons.decline")}
 								</Button>
 							</DialogClose>
 							<Button type="submit">
-								{t("form.buttons.save")}
+								{t("invite.form.buttons.save")}
 							</Button>
 						</DialogFooter>
 					</form>

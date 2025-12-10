@@ -2,9 +2,9 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Badge } from "@/shared/ui";
-import { Checkbox } from "@/shared/ui";
-import { RowActions } from "@/shared/ui/custom/custom-table";
+import { Badge, Checkbox } from "@/shared/ui";
+
+import { StaffActions } from "../ui/staff-actions";
 
 import type { IUser } from "./types";
 
@@ -88,7 +88,7 @@ export const COLUMNS = (): ColumnDef<IUser>[] => {
 		{
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,
-			cell: () => <RowActions />,
+			cell: () => <StaffActions />,
 			size: 60,
 			enableHiding: false
 		}

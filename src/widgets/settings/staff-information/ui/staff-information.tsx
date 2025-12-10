@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, CustomTable } from "@/shared/ui";
 
+import { InviteStaff } from "@/features/settings";
+
 import { COLUMNS, USERS } from "../model";
 
 export const StaffInformation: FC = () => {
@@ -12,7 +14,11 @@ export const StaffInformation: FC = () => {
 			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent>
-					<CustomTable data={USERS} columns={COLUMNS()} />
+					<CustomTable
+						data={USERS}
+						columns={COLUMNS()}
+						actions={<InviteStaff />}
+					/>
 				</CardContent>
 			</Card>
 		</section>

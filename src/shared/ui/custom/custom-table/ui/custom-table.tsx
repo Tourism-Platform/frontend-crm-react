@@ -11,8 +11,8 @@ import {
 	getSortedRowModel,
 	useReactTable
 } from "@tanstack/react-table";
-import { CircleAlertIcon, PlusIcon, TrashIcon } from "lucide-react";
-import { type FC, useId, useMemo, useRef, useState } from "react";
+import { CircleAlertIcon, TrashIcon } from "lucide-react";
+import React, { type FC, useId, useMemo, useRef, useState } from "react";
 
 import {
 	AlertDialog,
@@ -36,11 +36,13 @@ import { TableData } from "./table-data";
 interface ICustomTableProps {
 	columns?: ColumnDef<any>[];
 	data?: any[];
+	actions?: React.ReactNode;
 }
 
 export const CustomTable: FC<ICustomTableProps> = ({
 	columns = COLUMNS,
-	data
+	data,
+	actions
 }) => {
 	const id = useId();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -208,15 +210,8 @@ export const CustomTable: FC<ICustomTableProps> = ({
 							</AlertDialogContent>
 						</AlertDialog>
 					)}
-					{/* Add user button */}
-					<Button className="ml-auto" variant="outline">
-						<PlusIcon
-							className="-ms-1 opacity-60"
-							size={16}
-							aria-hidden="true"
-						/>
-						Add user
-					</Button>
+
+					{actions}
 				</div>
 			</div>
 

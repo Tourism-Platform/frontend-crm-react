@@ -1,11 +1,119 @@
 {
 	"page_name": "Staff information",
+	"invite": {
+		"button": "Invite staff",
+		"form": {
+			"title": "Invite new staff",
+			"fields": {
+				"email": {
+					"label": "Email",
+					"placeholder": "Enter staff email address"
+				},
+				"role": {
+					"label": "Role",
+					"placeholder": "Select staff role"
+				}
+			},
+			"errors": {
+				"email": {
+					"min": "Email is required",
+					"max": "Email is too long",
+					"invalid": "Invalid email format"
+				}
+			},
+			"buttons": {
+				"decline": "Cancel",
+				"save": "Send invite"
+			}
+		}
+	},
+	"menu": {
+		"edit": {
+			"button": "Edit",
+			"form": {
+				"title": "Edit staff member",
+				"details": {
+					"title": "Personal details",
+					"description": "Information about the staff member",
+					"fields": {
+						"name": {
+							"label": "Name",
+							"placeholder": "Enter staff name"
+						},
+						"email": {
+							"label": "Email",
+							"placeholder": "Enter staff email address"
+						},
+						"role": {
+							"label": "Role",
+							"placeholder": "Select staff role"
+						},
+						"status": {
+							"label": "Status",
+							"placeholder": "Select staff status"
+						}
+					},
+					"errors": {
+						"name": {
+							"min": "Name is too short",
+							"max": "Name is too long"
+						},
+						"email": {
+							"min": "Email is required",
+							"max": "Email is too long",
+							"invalid": "Invalid email format"
+						}
+					}
+				},
+				"commission": {
+					"title": "Standard commission rate",
+					"description": "Latest rate will apply to this agent's items with a booking date",
+					"fields": {
+						"type": {
+							"label": "Commission type",
+							"placeholder": "Select commission type"
+						},
+						"split": {
+							"label": "Split, %",
+							"placeholder": "Enter split, %"
+						}
+					},
+					"errors": {
+						"split": {
+							"min": "Split is too small",
+							"max": "Split is too big"
+						}
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Save changes"
+				}
+			}
+		},
+		"delete": {
+			"button": "Delete",
+			"form": {
+				"title": "Delete staff member",
+				"warning": "This action is irreversible. The staff member will be permanently removed from the system.",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete"
+				}
+			}
+		}
+	},
 	"table": {
 		"firstName": "First name",
 		"lastName": "Last name",
 		"email": "Email",
 		"role": "Role",
 		"status": "Status",
-		"split": "Split, %"
+		"split": "Split, %",
+		"menu": {
+			"edit": "Edit",
+			"delete": "Delete",
+			"resend_invite": "Resend invite"
+		}
 	}
 }

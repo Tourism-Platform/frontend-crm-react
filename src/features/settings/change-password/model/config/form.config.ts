@@ -1,19 +1,22 @@
-import { ENUM_FORM_CHANGE_PASSWORD, type IFormChangePassword } from "../types";
+import { ENUM_FORM_CHANGE_PASSWORD, type TForm } from "../types";
 
-export const FORM_CHANGE_PASSWORD_LIST: IFormChangePassword[] = [
+export const FORM_CHANGE_PASSWORD_LIST: TForm[] = [
 	{
 		label: "form.fields.current_password.label",
 		placeholder: "form.fields.current_password.placeholder",
-		key: ENUM_FORM_CHANGE_PASSWORD.CURRENT_PASSWORD
+		key: ENUM_FORM_CHANGE_PASSWORD.CURRENT_PASSWORD,
+		fieldType: "password"
 	},
 	{
 		label: "form.fields.new_password.label",
 		placeholder: "form.fields.new_password.placeholder",
-		key: ENUM_FORM_CHANGE_PASSWORD.NEW_PASSWORD
+		key: ENUM_FORM_CHANGE_PASSWORD.NEW_PASSWORD,
+		fieldType: "password"
 	},
 	{
 		label: "form.fields.confirm_new_password.label",
 		placeholder: "form.fields.confirm_new_password.placeholder",
-		key: ENUM_FORM_CHANGE_PASSWORD.CONFIRM_PASSWORD
+		key: ENUM_FORM_CHANGE_PASSWORD.CONFIRM_PASSWORD,
+		fieldType: "password"
 	}
 ];

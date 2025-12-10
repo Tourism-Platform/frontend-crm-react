@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 import type { TSecurityPageKeys } from "@/shared/config";
+import type { TFormField } from "@/shared/types";
 
 import type { CHANGE_PASSWORD_SCHEMA } from "../config";
 
-export interface IFormChangePassword {
-	label: TSecurityPageKeys;
-	placeholder: TSecurityPageKeys;
-	key: ENUM_FORM_CHANGE_PASSWORD_TYPE;
-}
+export type TForm = TFormField<
+	TSecurityPageKeys,
+	ENUM_FORM_CHANGE_PASSWORD_TYPE
+>;
 
 export const ENUM_FORM_CHANGE_PASSWORD = {
 	CURRENT_PASSWORD: "current_password",

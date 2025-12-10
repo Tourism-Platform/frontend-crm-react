@@ -14,6 +14,7 @@ interface IFormBase<L = TGenericLabel, K = TGenericKey> {
 type TFormRequired<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
 	placeholder: L;
+	type?: string;
 };
 
 type TFormOptional<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {

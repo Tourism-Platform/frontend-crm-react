@@ -6,4 +6,6 @@ export * from "./event-options";
 export * from "./length-of-stay-options";
 export * from "./local-storage.config";
 export * from "./package-options";
+export * from "./staff-options";
+export * from "./staff-status-options";
 export * from "./utc-options";
