@@ -1,6 +1,6 @@
-import { STAFF_OPTIONS, STAFF_STATUS_OPTIONS } from "@/shared/config";
+import { STAFF_ROLE_OPTIONS, STAFF_STATUS_OPTIONS } from "@/entities/staff";
 
-import { ENUM_FORM_EDIT_STAFF, type TForm } from "../types/form.types";
+import { ENUM_FORM_EDIT_STAFF, type TForm } from "../types";
 
 export const PERSONAL_DETAILS_LIST: TForm[] = [
 	{
@@ -20,7 +20,7 @@ export const PERSONAL_DETAILS_LIST: TForm[] = [
 		placeholder: "menu.edit.form.details.fields.role.placeholder",
 		key: ENUM_FORM_EDIT_STAFF.ROLE,
 		fieldType: "select",
-		options: STAFF_OPTIONS
+		options: STAFF_ROLE_OPTIONS
 	},
 	{
 		label: "menu.edit.form.details.fields.status.label",

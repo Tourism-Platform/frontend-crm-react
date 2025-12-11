@@ -17,13 +17,23 @@ import {
 interface IDeleteStaffProps {
 	trigger: ReactNode;
 	className?: string;
+	id?: string;
+	onDelete?: (id: string) => void;
 }
 
-export const DeleteStaff: FC<IDeleteStaffProps> = ({ trigger, className }) => {
+export const DeleteStaff: FC<IDeleteStaffProps> = ({
+	trigger,
+	className,
+	id,
+	onDelete
+}) => {
 	const { t } = useTranslation("staff_information_page");
 
-	function onDelete() {
-		console.log("Staff member deleted");
+	function handleDelete() {
+		console.log("Staff deleted");
+		if (onDelete && id) {
+			onDelete(id);
+		}
 	}
 
 	return (
@@ -54,7 +64,7 @@ export const DeleteStaff: FC<IDeleteStaffProps> = ({ trigger, className }) => {
 						<Button
 							type="button"
 							variant="destructive"
-							onClick={onDelete}
+							onClick={handleDelete}
 						>
 							{t("menu.delete.form.buttons.confirm")}
 						</Button>

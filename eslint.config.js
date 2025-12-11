@@ -176,7 +176,7 @@ export default defineConfig([
           { from: 'entities', allow: ['entities', 'shared'] },
           
           // shared не может импортировать другие слои
-           { from: 'shared', allow: ['app', 'shared'] },
+           { from: 'shared', allow: ['app', 'shared', 'entities'] },
         ],
       }],
       

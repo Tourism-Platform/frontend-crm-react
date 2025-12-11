@@ -10,10 +10,25 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
+import type { IStaffUser } from "@/entities/staff";
+
 import { DeleteStaff, EditStaff } from "@/features/settings";
 
-export const StaffActions: FC = () => {
+interface IStaffActionsProps {
+	user?: IStaffUser;
+	onEdit?: (id: string, data: Partial<IStaffUser>) => void;
+	onDelete?: (id: string) => void;
+}
+
+export const StaffActions: FC<IStaffActionsProps> = ({
+	user,
+	onEdit,
+	onDelete
+}) => {
 	const { t } = useTranslation("staff_information_page");
+
+	if (!user) return null;
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -29,19 +44,27 @@ export const StaffActions: FC = () => {
 				</div>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				<DropdownMenuItem asChild>
+				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
 					<EditStaff
 						trigger={
-							<div className=" hover:bg-accent">
+							<div className="w-full h-full cursor-pointer hover:bg-accent px-2 py-1.5 text-sm">
 								{t("menu.edit.button")}
 							</div>
 						}
+						user={user}
+						onEdit={onEdit}
 					/>
 				</DropdownMenuItem>
-				<DropdownMenuItem asChild>
+				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
 					<DeleteStaff
-						trigger={<div>{t("menu.delete.button")}</div>}
-						className="text-destructive focus:text-destructive hover:bg-accent"
+						trigger={
+							<div className="w-full h-full cursor-pointer text-destructive focus:text-destructive hover:bg-accent px-2 py-1.5 text-sm">
+								{t("menu.delete.button")}
+							</div>
+						}
+						className="w-full justify-start px-2 py-1.5"
+						id={user.id}
+						onDelete={onDelete}
 					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

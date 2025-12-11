@@ -1,8 +1,11 @@
 import { z } from "zod";
 
-import { STAFF_OPTIONS } from "@/shared/config";
+import { STAFF_ROLE_OPTIONS } from "@/entities/staff";
 
-const STAFF_VALUES = STAFF_OPTIONS.map((o) => o.value) as [string, ...string[]];
+const STAFF_VALUES = STAFF_ROLE_OPTIONS.map((o) => o.value) as [
+	string,
+	...string[]
+];
 
 export const INVITE_STAFF_SCHEMA = z.object({
 	email: z

@@ -12,7 +12,14 @@ import {
 	useReactTable
 } from "@tanstack/react-table";
 import { CircleAlertIcon, TrashIcon } from "lucide-react";
-import React, { type FC, useId, useMemo, useRef, useState } from "react";
+import React, {
+	type FC,
+	useEffect,
+	useId,
+	useMemo,
+	useRef,
+	useState
+} from "react";
 
 import {
 	AlertDialog,
@@ -29,11 +36,11 @@ import {
 
 import { COLUMNS } from "../model";
 
-import { Filters } from "./filters";
+import { Filters, type IShowFilters } from "./filters";
 import { PaginationFilter } from "./pagination-filter";
 import { TableData } from "./table-data";
 
-interface ICustomTableProps {
+interface ICustomTableProps extends IShowFilters {
 	columns?: ColumnDef<any>[];
 	data?: any[];
 	actions?: React.ReactNode;
@@ -42,7 +49,10 @@ interface ICustomTableProps {
 export const CustomTable: FC<ICustomTableProps> = ({
 	columns = COLUMNS,
 	data,
-	actions
+	actions,
+	showSearchFilter = true,
+	showStatusFilter = true,
+	showVisibilityFilter = true
 }) => {
 	const id = useId();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -63,6 +73,10 @@ export const CustomTable: FC<ICustomTableProps> = ({
 	]);
 
 	const [tableData, setTableData] = useState<any[]>(data || []);
+
+	useEffect(() => {
+		setTableData(data || []);
+	}, [data]);
 
 	const handleDeleteRows = () => {
 		const selectedRows = table.getSelectedRowModel().rows;
@@ -145,6 +159,9 @@ export const CustomTable: FC<ICustomTableProps> = ({
 					selectedStatuses={selectedStatuses}
 					uniqueStatusValues={uniqueStatusValues}
 					handleStatusChange={handleStatusChange}
+					showSearchFilter={showSearchFilter}
+					showStatusFilter={showStatusFilter}
+					showVisibilityFilter={showVisibilityFilter}
 				/>
 				<div className="flex items-center gap-3">
 					{/* Delete button */}

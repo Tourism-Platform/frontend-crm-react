@@ -4,11 +4,20 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Badge, Checkbox } from "@/shared/ui";
 
+import {
+	type ENUM_STAFF_ROLE_OPTIONS_TYPE,
+	ENUM_STAFF_STATUS_OPTIONS,
+	type ENUM_STAFF_STATUS_OPTIONS_TYPE,
+	type IStaffUser
+} from "@/entities/staff";
+import { STAFF_ROLE_LABELS, STAFF_STATUS_LABELS } from "@/entities/staff";
+
 import { StaffActions } from "../ui/staff-actions";
 
-import type { IUser } from "./types";
-
-export const COLUMNS = (): ColumnDef<IUser>[] => {
+export const COLUMNS = (
+	onEdit?: (id: string, data: Partial<IStaffUser>) => void,
+	onDelete?: (id: string) => void
+): ColumnDef<IStaffUser>[] => {
 	const { t } = useTranslation("staff_information_page");
 	return [
 		{
@@ -57,123 +66,69 @@ export const COLUMNS = (): ColumnDef<IUser>[] => {
 		{
 			header: t("table.role"),
 			accessorKey: "role",
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{
+						STAFF_ROLE_LABELS[
+							row.getValue("role") as ENUM_STAFF_ROLE_OPTIONS_TYPE
+						]
+					}
+				</div>
+			),
 			size: 180
 		},
 		{
 			header: t("table.status"),
 			accessorKey: "status",
-			cell: ({ row }) => (
-				<Badge
-					className={cn(
-						row.getValue("status") === "Inactive" &&
-							"bg-muted-foreground/60 text-primary-foreground"
-					)}
-				>
-					{row.getValue("status")}
-				</Badge>
-			),
+			cell: ({ row }) => {
+				const status = row.getValue(
+					"status"
+				) as ENUM_STAFF_STATUS_OPTIONS_TYPE;
+
+				let badgeClasses = "";
+				switch (status) {
+					case ENUM_STAFF_STATUS_OPTIONS.ACTIVE:
+						badgeClasses = " ";
+						break;
+					case ENUM_STAFF_STATUS_OPTIONS.INACTIVE:
+						badgeClasses = "bg-red-400/60 ";
+						break;
+					case ENUM_STAFF_STATUS_OPTIONS.PENDING:
+						badgeClasses =
+							"bg-muted-foreground/60 text-primary-foreground";
+						break;
+					default:
+						badgeClasses = "";
+				}
+
+				return (
+					<Badge className={cn(badgeClasses)}>
+						{STAFF_STATUS_LABELS[status]}
+					</Badge>
+				);
+			},
 			size: 120
 		},
 		{
 			header: t("table.split"),
 			accessorKey: "split",
-			cell: ({ row }) => {
-				const value = row.getValue("split");
-				return value === null
-					? "-"
-					: `${((value as number) * 100).toFixed(2)}%`;
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">{row.getValue("split")}</div>
+			),
 			size: 120
 		},
 		{
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,
-			cell: () => <StaffActions />,
+			cell: ({ row }) => (
+				<StaffActions
+					user={row.original}
+					onEdit={onEdit}
+					onDelete={onDelete}
+				/>
+			),
 			size: 60,
 			enableHiding: false
 		}
 	];
 };
-
-export const USERS: IUser[] = [
-	{
-		firstName: "Samantha",
-		lastName: "Luis",
-		email: "samantha.luis@travelhub.com",
-		role: "Admin",
-		status: "Active",
-		split: null
-	},
-	{
-		firstName: "Alex",
-		lastName: "Benford",
-		email: "alex.benford@travelhub.com",
-		role: "Sales Manager",
-		status: "Active",
-		split: 0.0005
-	},
-	{
-		firstName: "John",
-		lastName: "Doe",
-		email: "john.doe@travelhub.com",
-		role: "Travel Agent",
-		status: "Inactive",
-		split: 0.001
-	},
-	{
-		firstName: "Emily",
-		lastName: "Clark",
-		email: "emily.clark@travelhub.com",
-		role: "Tour Guide",
-		status: "Active",
-		split: null
-	},
-	{
-		firstName: "Michael",
-		lastName: "Brown",
-		email: "michael.brown@travelhub.com",
-		role: "Marketing Manager",
-		status: "Active",
-		split: 0.02
-	},
-	{
-		firstName: "Olivia",
-		lastName: "Martinez",
-		email: "olivia.martinez@travelhub.com",
-		role: "Customer Support",
-		status: "Inactive",
-		split: null
-	},
-	{
-		firstName: "Daniel",
-		lastName: "Smith",
-		email: "daniel.smith@travelhub.com",
-		role: "Finance Manager",
-		status: "Active",
-		split: 0.005
-	},
-	{
-		firstName: "Sophia",
-		lastName: "Taylor",
-		email: "sophia.taylor@travelhub.com",
-		role: "Partner Manager",
-		status: "Active",
-		split: null
-	},
-	{
-		firstName: "James",
-		lastName: "Wilson",
-		email: "james.wilson@travelhub.com",
-		role: "Regional Manager",
-		status: "Inactive",
-		split: 0.01
-	},
-	{
-		firstName: "Isabella",
-		lastName: "Davis",
-		email: "isabella.davis@travelhub.com",
-		role: "Super Admin",
-		status: "Active",
-		split: 0.015
-	}
-];

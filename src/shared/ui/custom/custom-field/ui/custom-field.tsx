@@ -89,6 +89,13 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...rest}
 						placeholder={t(props.placeholder)}
 						{...field}
+						onChange={(event) => {
+							if (props.type === "number") {
+								field.onChange(event.target.valueAsNumber);
+							} else {
+								field.onChange(event);
+							}
+						}}
 					/>
 				);
 			case "password":
@@ -147,6 +154,13 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...rest}
 						placeholder={t(props.placeholder)}
 						{...field}
+						onChange={(event) => {
+							if (props.type === "number") {
+								field.onChange(event.target.valueAsNumber);
+							} else {
+								field.onChange(event);
+							}
+						}}
 					/>
 				);
 		}

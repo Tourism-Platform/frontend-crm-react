@@ -1,4 +1,4 @@
-import { STAFF_OPTIONS } from "@/shared/config";
+import { STAFF_ROLE_OPTIONS } from "@/entities/staff";
 
 import { ENUM_FORM_INVITE_STAFF, type TForm } from "../types";
 
@@ -14,6 +14,6 @@ export const FORM_INVITE_STAFF_LIST: TForm[] = [
 		placeholder: "invite.form.fields.role.placeholder",
 		key: ENUM_FORM_INVITE_STAFF.ROLE,
 		fieldType: "select",
-		options: STAFF_OPTIONS
+		options: STAFF_ROLE_OPTIONS
 	}
 ];

@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-import {
-	COMMISSION_OPTIONS,
-	STAFF_OPTIONS,
-	STAFF_STATUS_OPTIONS
-} from "@/shared/config";
+import { COMMISSION_OPTIONS } from "@/shared/config";
 
-const STAFF_VALUES = STAFF_OPTIONS.map((o) => o.value) as [string, ...string[]];
+import { STAFF_ROLE_OPTIONS, STAFF_STATUS_OPTIONS } from "@/entities/staff";
+
+const STAFF_VALUES = STAFF_ROLE_OPTIONS.map((o) => o.value) as [
+	string,
+	...string[]
+];
 const STATUS_VALUES = STAFF_STATUS_OPTIONS.map((o) => o.value) as [
 	string,
 	...string[]
