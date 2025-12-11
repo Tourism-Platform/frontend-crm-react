@@ -18,17 +18,23 @@ const COMMISSION_VALUES = COMMISSION_OPTIONS.map((o) => o.value) as [
 
 export const EDIT_STAFF_SCHEMA = z.object({
 	name: z
-		.string()
+		.string({ message: "menu.edit.form.details.errors.name.required" })
 		.min(2, "menu.edit.form.details.errors.name.min")
 		.max(100, "menu.edit.form.details.errors.name.max"),
 	email: z
-		.email("invite.form.errors.email.invalid")
-		.min(1, "invite.form.errors.email.min"),
-	role: z.enum(STAFF_VALUES),
-	status: z.enum(STATUS_VALUES),
-	type: z.enum(COMMISSION_VALUES),
+		.email("menu.edit.form.details.errors.email.invalid")
+		.min(1, "menu.edit.form.details.errors.email.min"),
+	role: z.enum(STAFF_VALUES, {
+		message: "menu.edit.form.details.errors.role.required"
+	}),
+	status: z.enum(STATUS_VALUES, {
+		message: "menu.edit.form.details.errors.status.required"
+	}),
+	type: z.enum(COMMISSION_VALUES, {
+		message: "menu.edit.form.commission.errors.type.required"
+	}),
 	split: z
-		.number()
+		.number({ message: "menu.edit.form.commission.errors.split.required" })
 		.min(0, "menu.edit.form.commission.errors.split.min")
 		.max(100, "menu.edit.form.commission.errors.split.max")
 });

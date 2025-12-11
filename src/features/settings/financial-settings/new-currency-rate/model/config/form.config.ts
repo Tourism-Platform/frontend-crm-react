@@ -1,0 +1,22 @@
+import { CURRENCY_OPTIONS } from "@/shared/config";
+
+import { ENUM_FORM_NEW_CURRENCY_RATE, type TForm } from "../types";
+
+export const FORM_NEW_CURRENCY_RATE_LIST: TForm[] = [
+	{
+		label: "commission_type.new_currency.form.fields.name.label",
+		placeholder:
+			"commission_type.new_currency.form.fields.name.placeholder",
+		key: ENUM_FORM_NEW_CURRENCY_RATE.NAME,
+		fieldType: "select",
+		options: CURRENCY_OPTIONS
+	},
+	{
+		label: "commission_type.new_currency.form.fields.rate.label",
+		placeholder:
+			"commission_type.new_currency.form.fields.rate.placeholder",
+		key: ENUM_FORM_NEW_CURRENCY_RATE.RATE,
+		fieldType: "input",
+		type: "number"
+	}
+];

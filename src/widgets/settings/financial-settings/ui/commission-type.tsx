@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 
 import { CustomTable } from "@/shared/ui";
 
+import { NewCurrencyRate } from "@/features/settings";
+
 import { COLUMNS, MARKUPS } from "../model";
 
 export const CommissionType: FC = () => {
@@ -15,7 +17,11 @@ export const CommissionType: FC = () => {
 					{t("commission_type.description")}
 				</p>
 			</div>
-			<CustomTable data={MARKUPS} columns={COLUMNS()} />
+			<CustomTable
+				data={MARKUPS}
+				columns={COLUMNS()}
+				actions={<NewCurrencyRate />}
+			/>
 		</div>
 	);
 };

@@ -4,11 +4,6 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
-	COMMISSION_OPTIONS,
-	STAFF_OPTIONS,
-	STAFF_STATUS_OPTIONS
-} from "@/shared/config";
-import {
 	Button,
 	Dialog,
 	DialogClose,
@@ -37,12 +32,12 @@ export const EditStaff: FC<IEditStaffProps> = ({ trigger, className }) => {
 	const form = useForm<TEditStaffSchema>({
 		resolver: zodResolver(EDIT_STAFF_SCHEMA),
 		defaultValues: {
-			name: "",
-			email: "",
-			role: STAFF_OPTIONS?.[0]?.value || "",
-			status: STAFF_STATUS_OPTIONS?.[0]?.value || "",
-			type: COMMISSION_OPTIONS?.[0]?.value || "",
-			split: 0
+			// name: "",
+			// email: "",
+			// role: STAFF_OPTIONS?.[0]?.value || "",
+			// status: STAFF_STATUS_OPTIONS?.[0]?.value || "",
+			// type: COMMISSION_OPTIONS?.[0]?.value || "",
+			// split: 0
 		},
 		mode: "onSubmit"
 	});

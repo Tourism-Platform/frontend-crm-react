@@ -3,6 +3,79 @@
 	"commission_type": {
 		"title": "Commission types",
 		"description": "Create global commission types for agents to select from when logging bookings.",
+		"new_currency": {
+			"button": "New type",
+			"form": {
+				"title": "Add New Type",
+				"fields": {
+					"name": {
+						"label": "Type Name",
+						"placeholder": "Select currency"
+					},
+					"rate": {
+						"label": "Exchange Rate",
+						"placeholder": "Enter exchange rate"
+					}
+				},
+				"errors": {
+					"name": {
+						"required": "Currency name is required"
+					},
+					"rate": {
+						"required": "Exchange rate is required",
+						"min": "Exchange rate must be greater than 0",
+						"max": "Exchange rate is too high"
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Add"
+				}
+			}
+		},
+		"menu": {
+			"edit": {
+				"button": "Edit",
+				"form": {
+					"title": "Edit commission type",
+					"fields": {
+						"name": {
+							"label": "Currency",
+							"placeholder": "Select currency"
+						},
+						"rate": {
+							"label": "Exchange Rate",
+							"placeholder": "Enter exchange rate"
+						}
+					},
+					"errors": {
+						"name": {
+							"required": "Currency name is required"
+						},
+						"rate": {
+							"required": "Exchange rate is required",
+							"min": "Exchange rate must be greater than 0",
+							"max": "Exchange rate is too high"
+						}
+					},
+					"buttons": {
+						"decline": "Cancel",
+						"save": "Save"
+					}
+				}
+			},
+			"delete": {
+				"button": "Delete",
+				"form": {
+					"title": "Delete commission type",
+					"warning": "This action is irreversible. The commission type will be permanently removed from the system.",
+					"buttons": {
+						"decline": "Cancel",
+						"confirm": "Delete"
+					}
+				}
+			}
+		},
 		"table": {
 			"name": "Name",
 			"description": "Description",

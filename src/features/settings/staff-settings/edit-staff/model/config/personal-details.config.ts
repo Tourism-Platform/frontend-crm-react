@@ -20,15 +20,13 @@ export const PERSONAL_DETAILS_LIST: TForm[] = [
 		placeholder: "menu.edit.form.details.fields.role.placeholder",
 		key: ENUM_FORM_EDIT_STAFF.ROLE,
 		fieldType: "select",
-		options: STAFF_OPTIONS,
-		defaultValue: STAFF_OPTIONS?.[0]?.value
+		options: STAFF_OPTIONS
 	},
 	{
 		label: "menu.edit.form.details.fields.status.label",
 		placeholder: "menu.edit.form.details.fields.status.placeholder",
 		key: ENUM_FORM_EDIT_STAFF.STATUS,
 		fieldType: "select",
-		options: STAFF_STATUS_OPTIONS,
-		defaultValue: STAFF_STATUS_OPTIONS?.[0]?.value
+		options: STAFF_STATUS_OPTIONS
 	}
 ];

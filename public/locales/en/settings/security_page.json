@@ -20,16 +20,19 @@
 		},
 		"errors": {
 			"current_password": {
-				"min": "The current password must be at least 6 characters long"
+				"required": "Current password is required",
+				"min": "Password must be at least 6 characters"
 			},
 			"new_password": {
-				"min": "The password must be at least 8 characters long",
-				"uppercase": "The password must contain at least one uppercase letter",
-				"lowercase": "The password must contain at least one lowercase letter",
-				"number": "The password must contain at least one number",
-				"special": "The password must contain at least one special character"
+				"required": "New password is required",
+				"min": "Password must be at least 8 characters",
+				"uppercase": "Password must contain at least one uppercase letter",
+				"lowercase": "Password must contain at least one lowercase letter",
+				"number": "Password must contain at least one number",
+				"special": "Password must contain at least one special character (@$!%*?&#)"
 			},
 			"confirm_password": {
+				"required": "Password confirmation is required",
 				"mismatch": "Passwords do not match"
 			}
 		},

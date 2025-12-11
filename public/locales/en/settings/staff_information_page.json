@@ -16,9 +16,13 @@
 			},
 			"errors": {
 				"email": {
+					"required": "Email is required",
 					"min": "Email is required",
 					"max": "Email is too long",
 					"invalid": "Invalid email format"
+				},
+				"role": {
+					"required": "Role is required"
 				}
 			},
 			"buttons": {
@@ -55,13 +59,21 @@
 					},
 					"errors": {
 						"name": {
+							"required": "Name is required",
 							"min": "Name is too short",
 							"max": "Name is too long"
 						},
 						"email": {
+							"required": "Email is required",
 							"min": "Email is required",
 							"max": "Email is too long",
 							"invalid": "Invalid email format"
+						},
+						"role": {
+							"required": "Role is required"
+						},
+						"status": {
+							"required": "Status is required"
 						}
 					}
 				},
@@ -79,7 +91,11 @@
 						}
 					},
 					"errors": {
+						"type": {
+							"required": "Commission type is required"
+						},
 						"split": {
+							"required": "Split is required",
 							"min": "Split is too small",
 							"max": "Split is too big"
 						}

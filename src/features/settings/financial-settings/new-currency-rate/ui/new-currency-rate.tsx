@@ -3,7 +3,6 @@ import type { FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { STAFF_OPTIONS } from "@/shared/config";
 import {
 	Button,
 	CustomField,
@@ -20,34 +19,32 @@ import {
 } from "@/shared/ui";
 
 import {
-	FORM_INVITE_STAFF_LIST,
-	INVITE_STAFF_SCHEMA,
-	type TAddStaffSchema
+	FORM_NEW_CURRENCY_RATE_LIST,
+	NEW_CURRENCY_RATE_SCHEMA,
+	type TNewCurrencyRateSchema
 } from "../model";
 
-export const InviteStaff: FC = () => {
-	const { t } = useTranslation("staff_information_page");
-	const form = useForm<TAddStaffSchema>({
-		resolver: zodResolver(INVITE_STAFF_SCHEMA),
-		defaultValues: {
-			email: "",
-			role: STAFF_OPTIONS?.[0]?.value || ""
-		},
+export const NewCurrencyRate: FC = () => {
+	const { t } = useTranslation("financial_settings_page");
+	const form = useForm<TNewCurrencyRateSchema>({
+		resolver: zodResolver(NEW_CURRENCY_RATE_SCHEMA),
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TAddStaffSchema) {
+	function onSubmit(data: TNewCurrencyRateSchema) {
 		console.log("Form submitted:", data);
 	}
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button>{t("invite.button")}</Button>
+				<Button>{t("commission_type.new_currency.button")}</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>{t("invite.form.title")}</DialogTitle>
+					<DialogTitle>
+						{t("commission_type.new_currency.form.title")}
+					</DialogTitle>
 					<DialogDescription className="sr-only">
-						{t("invite.form.title")}
+						{t("commission_type.new_currency.form.title")}
 					</DialogDescription>
 				</DialogHeader>
 				<Separator />
@@ -57,15 +54,17 @@ export const InviteStaff: FC = () => {
 						className="space-y-6"
 					>
 						<div>
-							{FORM_INVITE_STAFF_LIST.map(({ key, ...item }) => (
-								<CustomField
-									key={key}
-									control={form?.control}
-									name={key}
-									t={t}
-									{...item}
-								/>
-							))}
+							{FORM_NEW_CURRENCY_RATE_LIST.map(
+								({ key, ...item }) => (
+									<CustomField
+										key={key}
+										control={form?.control}
+										name={key}
+										t={t}
+										{...item}
+									/>
+								)
+							)}
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>
@@ -74,11 +73,15 @@ export const InviteStaff: FC = () => {
 									variant="outline"
 									onClick={() => form.reset()}
 								>
-									{t("invite.form.buttons.decline")}
+									{t(
+										"commission_type.new_currency.form.buttons.decline"
+									)}
 								</Button>
 							</DialogClose>
 							<Button type="submit">
-								{t("invite.form.buttons.save")}
+								{t(
+									"commission_type.new_currency.form.buttons.save"
+								)}
 							</Button>
 						</DialogFooter>
 					</form>

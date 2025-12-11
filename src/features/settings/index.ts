@@ -1,4 +1,3 @@
 export * from "./change-password";
-export * from "./delete-staff";
-export * from "./edit-staff";
-export * from "./invite-staff";
+export * from "./financial-settings";
+export * from "./staff-settings";

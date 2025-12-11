@@ -2,7 +2,9 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Badge, Checkbox, RowActions } from "@/shared/ui";
+import { Badge, Checkbox } from "@/shared/ui";
+
+import { FinancialActions } from "../ui/financial-actions";
 
 import type { IMarkup } from "./types";
 
@@ -72,7 +74,7 @@ export const COLUMNS = (): ColumnDef<IMarkup>[] => {
 		{
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,
-			cell: () => <RowActions />,
+			cell: () => <FinancialActions />,
 			size: 60,
 			enableHiding: false
 		}

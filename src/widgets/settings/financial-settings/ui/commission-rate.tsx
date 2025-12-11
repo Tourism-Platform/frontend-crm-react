@@ -1,12 +1,12 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CustomInput } from "@/shared/ui";
+import { CustomInput, Separator } from "@/shared/ui";
 
 export const CommissionRate: FC = () => {
 	const { t } = useTranslation("financial_settings_page");
 	return (
-		<div className="flex gap-5 flex-col">
+		<div className="flex gap-8 flex-col">
 			<div className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
 					<h2 className="text-xl">
@@ -22,6 +22,7 @@ export const CommissionRate: FC = () => {
 					defaultValue={5}
 				/>
 			</div>
+			<Separator />
 			<div className="flex flex-col gap-6">
 				<div className="flex flex-col gap-2">
 					<h2 className="text-xl">

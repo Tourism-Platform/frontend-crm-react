@@ -104,6 +104,7 @@ export type THeaderKeys = TNestedKeyOf<THeader>;
 export type THomeKeys = TNestedKeyOf<THome>;
 export type TSecurityPageKeys = TNestedKeyOf<TSecurityPage>;
 export type TStaffInformationPageKeys = TNestedKeyOf<TStaffInformationPage>;
+export type TFinancialSettingsPageKeys = TNestedKeyOf<TFinancialSettingsPage>;
 export type TAccountSettingsPageKeys = TNestedKeyOf<TAccountSettingsPage>;
 export type TBusinessSettingsPageKeys = TNestedKeyOf<TBusinessSettingsPage>;
 export type TToursPageKeys = TNestedKeyOf<TToursPage>;

@@ -14,7 +14,6 @@ export const FORM_INVITE_STAFF_LIST: TForm[] = [
 		placeholder: "invite.form.fields.role.placeholder",
 		key: ENUM_FORM_INVITE_STAFF.ROLE,
 		fieldType: "select",
-		options: STAFF_OPTIONS,
-		defaultValue: STAFF_OPTIONS?.[0]?.value
+		options: STAFF_OPTIONS
 	}
 ];
