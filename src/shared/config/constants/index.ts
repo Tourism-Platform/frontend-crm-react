@@ -1,6 +1,5 @@
 export * from "./accommodation-amenities-options";
 export * from "./commission-options";
-export * from "./currency-options";
 export * from "./env.config";
 export * from "./event-options";
 export * from "./length-of-stay-options";

@@ -24,14 +24,19 @@ import {
 	type TNewCurrencyRateSchema
 } from "../model";
 
-export const NewCurrencyRate: FC = () => {
+interface INewCommissionTypeProps {
+	onAdd: (data: TNewCurrencyRateSchema) => void;
+}
+
+export const NewCurrencyRate: FC<INewCommissionTypeProps> = ({ onAdd }) => {
 	const { t } = useTranslation("financial_settings_page");
 	const form = useForm<TNewCurrencyRateSchema>({
 		resolver: zodResolver(NEW_CURRENCY_RATE_SCHEMA),
 		mode: "onSubmit"
 	});
 	function onSubmit(data: TNewCurrencyRateSchema) {
-		console.log("Form submitted:", data);
+		onAdd(data);
+		form.reset();
 	}
 	return (
 		<Dialog>
@@ -78,11 +83,13 @@ export const NewCurrencyRate: FC = () => {
 									)}
 								</Button>
 							</DialogClose>
-							<Button type="submit">
-								{t(
-									"commission_type.new_currency.form.buttons.save"
-								)}
-							</Button>
+							<DialogClose asChild>
+								<Button type="submit">
+									{t(
+										"commission_type.new_currency.form.buttons.save"
+									)}
+								</Button>
+							</DialogClose>
 						</DialogFooter>
 					</form>
 				</Form>

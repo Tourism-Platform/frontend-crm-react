@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { CURRENCY_OPTIONS } from "@/shared/config";
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 
 const CURRENCY_VALUES = CURRENCY_OPTIONS.map((o) => o.value) as [
 	string,

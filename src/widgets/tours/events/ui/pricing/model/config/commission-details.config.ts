@@ -1,4 +1,6 @@
-import { COMMISSION_OPTIONS, CURRENCY_OPTIONS } from "@/shared/config";
+import { COMMISSION_OPTIONS } from "@/shared/config";
+
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 
 import { ENUM_FORM_PRICE_DETAILS, type TFormPriceDetails } from "../types";
 

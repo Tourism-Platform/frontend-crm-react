@@ -27,23 +27,24 @@ import {
 interface IEditCommissionTypeProps {
 	trigger: ReactNode;
 	className?: string;
+	onEdit: (data: TEditCommissionTypeSchema) => void;
+	data: TEditCommissionTypeSchema;
 }
 
 export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 	trigger,
-	className
+	className,
+	onEdit,
+	data
 }) => {
 	const { t } = useTranslation("financial_settings_page");
 	const form = useForm<TEditCommissionTypeSchema>({
 		resolver: zodResolver(EDIT_COMMISSION_TYPE_SCHEMA),
-		// defaultValues: {
-		// name: CURRENCY_OPTIONS?.[0]?.value || "",
-		// rate: 0
-		// },
+		defaultValues: data,
 		mode: "onSubmit"
 	});
 	function onSubmit(data: TEditCommissionTypeSchema) {
-		console.log("Form submitted:", data);
+		onEdit(data);
 	}
 	return (
 		<Dialog>
@@ -90,11 +91,13 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 									)}
 								</Button>
 							</DialogClose>
-							<Button type="submit">
-								{t(
-									"commission_type.menu.edit.form.buttons.save"
-								)}
-							</Button>
+							<DialogClose asChild>
+								<Button type="submit">
+									{t(
+										"commission_type.menu.edit.form.buttons.save"
+									)}
+								</Button>
+							</DialogClose>
 						</DialogFooter>
 					</form>
 				</Form>

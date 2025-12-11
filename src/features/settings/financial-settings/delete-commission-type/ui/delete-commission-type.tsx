@@ -17,17 +17,15 @@ import {
 interface IDeleteCommissionTypeProps {
 	trigger: ReactNode;
 	className?: string;
+	onDelete: () => void;
 }
 
 export const DeleteCommissionType: FC<IDeleteCommissionTypeProps> = ({
 	trigger,
-	className
+	className,
+	onDelete
 }) => {
 	const { t } = useTranslation("financial_settings_page");
-
-	function onDelete() {
-		console.log("Commission type deleted");
-	}
 
 	return (
 		<Dialog>

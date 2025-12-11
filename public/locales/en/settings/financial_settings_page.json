@@ -1,7 +1,7 @@
 {
 	"page_name": "Financial settings",
 	"commission_type": {
-		"title": "Commission types",
+		"title": "Default Currency rate",
 		"description": "Create global commission types for agents to select from when logging bookings.",
 		"new_currency": {
 			"button": "New type",

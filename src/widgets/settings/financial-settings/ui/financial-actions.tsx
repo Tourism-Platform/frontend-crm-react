@@ -10,9 +10,22 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import { DeleteCommissionType, EditCommissionType } from "@/features/settings";
+import type { ICommission } from "@/entities/commission";
 
-export const FinancialActions: FC = () => {
+import { DeleteCommissionType, EditCommissionType } from "@/features/settings";
+import type { TEditCommissionTypeSchema } from "@/features/settings";
+
+interface IFinancialActionsProps {
+	row: ICommission;
+	onEdit: (id: string, data: TEditCommissionTypeSchema) => void;
+	onDelete: (id: string) => void;
+}
+
+export const FinancialActions: FC<IFinancialActionsProps> = ({
+	row,
+	onEdit,
+	onDelete
+}) => {
 	const { t } = useTranslation("financial_settings_page");
 	return (
 		<DropdownMenu>
@@ -31,8 +44,10 @@ export const FinancialActions: FC = () => {
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem asChild>
 					<EditCommissionType
+						data={row}
+						onEdit={(data) => onEdit(row.id, data)}
 						trigger={
-							<div className=" hover:bg-accent">
+							<div className="w-full hover:bg-accent cursor-pointer">
 								{t("commission_type.menu.edit.button")}
 							</div>
 						}
@@ -40,8 +55,11 @@ export const FinancialActions: FC = () => {
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild>
 					<DeleteCommissionType
+						onDelete={() => onDelete(row.id)}
 						trigger={
-							<div>{t("commission_type.menu.delete.button")}</div>
+							<div className="w-full cursor-pointer">
+								{t("commission_type.menu.delete.button")}
+							</div>
 						}
 						className="text-destructive focus:text-destructive hover:bg-accent"
 					/>

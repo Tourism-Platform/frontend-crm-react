@@ -44,6 +44,8 @@ interface ICustomTableProps extends IShowFilters {
 	columns?: ColumnDef<any>[];
 	data?: any[];
 	actions?: React.ReactNode;
+	showTopFilters?: boolean;
+	topChildren?: React.ReactNode;
 }
 
 export const CustomTable: FC<ICustomTableProps> = ({
@@ -52,7 +54,9 @@ export const CustomTable: FC<ICustomTableProps> = ({
 	actions,
 	showSearchFilter = true,
 	showStatusFilter = true,
-	showVisibilityFilter = true
+	showVisibilityFilter = true,
+	showTopFilters = true,
+	topChildren
 }) => {
 	const id = useId();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -152,17 +156,20 @@ export const CustomTable: FC<ICustomTableProps> = ({
 		<div className="space-y-4">
 			{/* Filters */}
 			<div className="flex flex-wrap items-center justify-between gap-3">
-				<Filters
-					id={id}
-					inputRef={inputRef}
-					table={table}
-					selectedStatuses={selectedStatuses}
-					uniqueStatusValues={uniqueStatusValues}
-					handleStatusChange={handleStatusChange}
-					showSearchFilter={showSearchFilter}
-					showStatusFilter={showStatusFilter}
-					showVisibilityFilter={showVisibilityFilter}
-				/>
+				{topChildren}
+				{showTopFilters && (
+					<Filters
+						id={id}
+						inputRef={inputRef}
+						table={table}
+						selectedStatuses={selectedStatuses}
+						uniqueStatusValues={uniqueStatusValues}
+						handleStatusChange={handleStatusChange}
+						showSearchFilter={showSearchFilter}
+						showStatusFilter={showStatusFilter}
+						showVisibilityFilter={showVisibilityFilter}
+					/>
+				)}
 				<div className="flex items-center gap-3">
 					{/* Delete button */}
 					{table.getSelectedRowModel().rows.length > 0 && (

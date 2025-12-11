@@ -1,4 +1,4 @@
-import { CURRENCY_OPTIONS } from "@/shared/config";
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 
 import { ENUM_FORM_NEW_CURRENCY_RATE, type TForm } from "../types";
 
