@@ -19,6 +19,7 @@ import {
 
 import { AppealsPage, BookingRequestsPage } from "@/pages/booking";
 import { LoginPage } from "@/pages/login";
+import { MainPage } from "@/pages/main";
 import { NotFoundPage } from "@/pages/not-found-page";
 import {
 	AccountSettingsPage,
@@ -56,6 +57,12 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.LOGIN,
 		component: LoginPage,
 		auth: ENUM_AUTH.ONLY_PUBLIC,
+		layout: ENUM_LAYOUT.DEFAULT
+	},
+	{
+		path: ENUM_PATH.MAIN,
+		component: MainPage,
+		auth: ENUM_AUTH.PUBLIC,
 		layout: ENUM_LAYOUT.DEFAULT
 	},
 

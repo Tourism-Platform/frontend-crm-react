@@ -1,5 +1,6 @@
 import { type FC } from "react";
 
+import { ENUM_PATH } from "@/shared/config";
 import { LanguageToggle, NavMenu, ThemeToggle } from "@/shared/ui";
 
 import { UserMenu } from "@/features/layout";
@@ -18,7 +19,7 @@ export const HeaderOwner: FC = () => {
 					{/* Main nav */}
 					<div className="flex items-center gap-4">
 						<a
-							href="#"
+							href={ENUM_PATH.MAIN}
 							className="text-primary hover:text-primary/90"
 						>
 							<img src={logo} className="w-12 h-12" alt="logo" />
