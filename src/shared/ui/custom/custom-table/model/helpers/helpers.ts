@@ -1,6 +1,6 @@
 import type { FilterFn } from "@tanstack/react-table";
 
-import type { IItem } from "./types";
+import type { IItem } from "../item.types";
 
 export const multiColumnFilterFn: FilterFn<IItem> = (row, filterValue) => {
 	const searchableRowContent =

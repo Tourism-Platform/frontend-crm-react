@@ -1,4 +1,4 @@
-import { ENUM_TOUR_STATUS, type ITourTabs } from "./types";
+import { ENUM_TOUR_STATUS, type ITourTabs } from "../types";
 
 export const TOUR_TABS_LIST: ITourTabs[] = [
 	{

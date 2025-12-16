@@ -16,10 +16,10 @@ import {
 import type { ITourCard } from "../types";
 
 interface ITourCardProps {
-	card: ITourCard;
+	data: ITourCard;
 }
 
-export const TourCard: FC<ITourCardProps> = ({ card }) => {
+export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 	return (
 		<Card className="relative pt-10">
 			<MoreHorizontal className="absolute top-2 right-4" />

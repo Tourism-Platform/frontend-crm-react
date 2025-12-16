@@ -1,6 +1,5 @@
 {
 	"page_name": "Туры",
-
 	"tabs": {
 		"all": "Все",
 		"active": "Активные",
@@ -8,5 +7,12 @@
 		"planning": "В планах",
 		"cancelled": "Отменённые",
 		"archived": "Архив"
+	},
+	"table": {
+		"title": "Название",
+		"route": "Маршрут",
+		"type": "Тип",
+		"price": "Цена",
+		"status": "Статус"
 	}
 }

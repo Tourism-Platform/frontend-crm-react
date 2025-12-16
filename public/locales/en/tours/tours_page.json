@@ -1,6 +1,5 @@
 {
 	"page_name": "Tours",
-
 	"tabs": {
 		"all": "All",
 		"active": "Active",
@@ -8,5 +7,12 @@
 		"planning": "Planning",
 		"cancelled": "Cancelled",
 		"archived": "Archived"
+	},
+	"table": {
+		"title": "Title",
+		"route": "Route",
+		"type": "Type",
+		"price": "Price",
+		"status": "Status"
 	}
 }

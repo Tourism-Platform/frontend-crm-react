@@ -4,8 +4,8 @@ import { cn } from "@/shared/lib/class-merge";
 import { Badge } from "@/shared/ui/shadcn-ui/badge";
 import { Checkbox } from "@/shared/ui/shadcn-ui/checkbox";
 
-import { multiColumnFilterFn, statusFilterFn } from "./helpers";
-import type { IItem } from "./types";
+import { multiColumnFilterFn, statusFilterFn } from "./helpers/helpers";
+import type { IItem } from "./item.types";
 
 export const COLUMNS: ColumnDef<IItem>[] = [
 	{
