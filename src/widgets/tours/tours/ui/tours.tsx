@@ -6,6 +6,8 @@ import { Card, CardContent, CustomTable } from "@/shared/ui";
 
 import { TourCard } from "@/entities/tour";
 
+import { CreateTour } from "@/features/tours/create-tour";
+
 import {
 	COLUMNS,
 	ENUM_TOUR_STATUS,
@@ -50,6 +52,7 @@ export const Tours: FC = () => {
 						onStatusTabChange={(val) =>
 							setActiveTab(val as ENUM_TOUR_STATUS_TYPE)
 						}
+						actions={<CreateTour />}
 					/>
 				</CardContent>
 			</Card>

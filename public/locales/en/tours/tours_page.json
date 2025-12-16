@@ -14,5 +14,69 @@
 		"type": "Type",
 		"price": "Price",
 		"status": "Status"
+	},
+	"create": {
+		"button": "Create tour",
+		"form": {
+			"title": "Create Tour",
+			"fields": {
+				"tourTitle": {
+					"label": "Tour Title",
+					"placeholder": "Enter..."
+				},
+				"tourType": {
+					"label": "Tour type",
+					"placeholder": "Select..."
+				},
+				"groupSize": {
+					"label": "Group size",
+					"placeholder": "Enter..."
+				},
+				"duration": {
+					"label": "Duration",
+					"placeholder_left": "Days",
+					"placeholder_right": "Nights"
+				},
+				"ageRequires": {
+					"label": "Age requires",
+					"placeholder_left": "From",
+					"placeholder_right": "To"
+				}
+			},
+			"buttons": {
+				"decline": "Cancel",
+				"save": "Create"
+			},
+			"errors": {
+				"tourTitle": {
+					"min": "Minimum 3 characters",
+					"max": "Maximum 100 characters"
+				},
+				"tourType": {
+					"required": "Select tour type"
+				},
+				"groupSize": {
+					"required": "Specify group size",
+					"invalid": "Invalid value",
+					"min": "Minimum 1 person"
+				},
+				"duration": {
+					"from": {
+						"required": "Required"
+					},
+					"to": {
+						"required": "Required"
+					}
+				},
+				"ageRequires": {
+					"from": {
+						"required": "Required"
+					},
+					"to": {
+						"required": "Required"
+					}
+				}
+			}
+		}
 	}
 }

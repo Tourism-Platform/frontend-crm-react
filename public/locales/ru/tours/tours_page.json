@@ -14,5 +14,69 @@
 		"type": "Тип",
 		"price": "Цена",
 		"status": "Статус"
+	},
+	"create": {
+		"button": "Создать тур",
+		"form": {
+			"title": "Создание тура",
+			"fields": {
+				"tourTitle": {
+					"label": "Название тура",
+					"placeholder": "Введите..."
+				},
+				"tourType": {
+					"label": "Тип тура",
+					"placeholder": "Выберите..."
+				},
+				"groupSize": {
+					"label": "Размер группы",
+					"placeholder": "Введите..."
+				},
+				"duration": {
+					"label": "Продолжительность",
+					"placeholder_left": "Дни",
+					"placeholder_right": "Ночи"
+				},
+				"ageRequires": {
+					"label": "Возрастные требования",
+					"placeholder_left": "От",
+					"placeholder_right": "До"
+				}
+			},
+			"buttons": {
+				"decline": "Отмена",
+				"save": "Создать"
+			},
+			"errors": {
+				"tourTitle": {
+					"min": "Минимум 3 символа",
+					"max": "Максимум 100 символов"
+				},
+				"tourType": {
+					"required": "Выберите тип тура"
+				},
+				"groupSize": {
+					"required": "Укажите размер группы",
+					"invalid": "Некорректное значение",
+					"min": "Минимум 1 человек"
+				},
+				"duration": {
+					"from": {
+						"required": "Обязательно"
+					},
+					"to": {
+						"required": "Обязательно"
+					}
+				},
+				"ageRequires": {
+					"from": {
+						"required": "Обязательно"
+					},
+					"to": {
+						"required": "Обязательно"
+					}
+				}
+			}
+		}
 	}
 }
