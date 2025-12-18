@@ -57,7 +57,7 @@ describe("Itinerary DnD Scenarios", () => {
 			};
 			const result = addItemToData(
 				initialData,
-				{ type: "day", day: 2 },
+				{ location: "day", day: 2 },
 				0,
 				newItem,
 				1
@@ -76,7 +76,7 @@ describe("Itinerary DnD Scenarios", () => {
 			// group-1 is at index 1 in Day 1
 			const result = addItemToData(
 				initialData,
-				{ type: "day", day: 1, nestedIn: 1 },
+				{ location: "day", day: 1, nestedIndex: 1 },
 				1,
 				newItem,
 				1
@@ -95,7 +95,7 @@ describe("Itinerary DnD Scenarios", () => {
 			const result = moveItemInData(
 				initialData,
 				{ optionId: 1, location: "day", day: 1, index: 0 },
-				{ type: "day", day: 1 },
+				{ location: "day", day: 1 },
 				2, // Insert at position 2 (after group-1)
 				item0,
 				1
@@ -109,7 +109,7 @@ describe("Itinerary DnD Scenarios", () => {
 			const result = moveItemInData(
 				initialData,
 				{ optionId: 1, location: "day", day: 1, index: 0 },
-				{ type: "day", day: 2 },
+				{ location: "day", day: 2 },
 				0,
 				item0,
 				1
@@ -126,7 +126,7 @@ describe("Itinerary DnD Scenarios", () => {
 			const result = moveItemInData(
 				initialData,
 				{ optionId: 1, location: "day", day: 1, index: 0 },
-				{ type: "day", day: 1, nestedIn: 1 }, // into group-1 (index 1)
+				{ location: "day", day: 1, nestedIndex: 1 }, // into group-1 (index 1)
 				1,
 				item0,
 				1
@@ -150,7 +150,7 @@ describe("Itinerary DnD Scenarios", () => {
 					index: 1,
 					nestedIndex: 0
 				},
-				{ type: "day", day: 1 },
+				{ location: "day", day: 1 },
 				0,
 				nestedItem,
 				1
@@ -173,7 +173,7 @@ describe("Itinerary DnD Scenarios", () => {
 			const result = moveItemInData(
 				initialData,
 				{ optionId: 1, location: "tripDetails", index: 0 },
-				{ type: "day", day: 1 },
+				{ location: "day", day: 1 },
 				0,
 				tripItem,
 				1

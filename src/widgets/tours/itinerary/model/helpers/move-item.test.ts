@@ -45,7 +45,7 @@ describe("moveItemInData", () => {
 		const result = moveItemInData(
 			initialData,
 			{ optionId: 1, location: "tripDetails", index: 0, nestedIndex: 0 },
-			{ type: "tripDetails" },
+			{ location: "tripDetails" },
 			1,
 			nestedItem,
 			1
@@ -89,7 +89,7 @@ describe("moveItemInData", () => {
 		const result = moveItemInData(
 			dayData,
 			{ optionId: 1, location: "day", day: 1, index: 0 }, // day-item-1
-			{ type: "day", day: 1, nestedIn: 1 }, // into group-day-1
+			{ location: "day", day: 1, nestedIndex: 1 }, // into group-day-1
 			0,
 			dayItem,
 			1

@@ -152,18 +152,18 @@ export const Itinerary: React.FC = () => {
 
 		// Determine target container and insertion index
 		let targetContainer: {
-			type: "tripDetails" | "day";
+			location: "tripDetails" | "day";
 			day?: number;
-			nestedIn?: number;
+			nestedIndex?: number;
 		} | null = null;
 		let toIndex = 0;
 
 		if (overIdStr === containerIdTrip()) {
-			targetContainer = { type: "tripDetails" };
+			targetContainer = { location: "tripDetails" };
 			toIndex = optionsData[activeOption].tripDetails.length;
 		} else if (overIdStr.startsWith("container:day-")) {
 			const day = Number(overIdStr.replace("container:day-", ""));
-			targetContainer = { type: "day", day };
+			targetContainer = { location: "day", day };
 			toIndex = (optionsData[activeOption].days[day] || []).length;
 		} else if (overIdStr.startsWith("item:")) {
 			const rawOver = overIdStr.replace("item:", "");
@@ -173,13 +173,13 @@ export const Itinerary: React.FC = () => {
 				targetContainer =
 					loc.location === "tripDetails"
 						? {
-								type: "tripDetails",
-								nestedIn: isNested ? loc.index : undefined
+								location: "tripDetails",
+								nestedIndex: isNested ? loc.index : undefined
 							}
 						: {
-								type: "day",
+								location: "day",
 								day: loc.day,
-								nestedIn: isNested ? loc.index : undefined
+								nestedIndex: isNested ? loc.index : undefined
 							};
 				toIndex = isNested ? loc.nestedIndex! : loc.index;
 			}
@@ -189,8 +189,12 @@ export const Itinerary: React.FC = () => {
 			if (loc) {
 				targetContainer =
 					loc.location === "tripDetails"
-						? { type: "tripDetails", nestedIn: loc.index }
-						: { type: "day", day: loc.day, nestedIn: loc.index };
+						? { location: "tripDetails", nestedIndex: loc.index }
+						: {
+								location: "day",
+								day: loc.day,
+								nestedIndex: loc.index
+							};
 				const parent =
 					loc.location === "tripDetails"
 						? optionsData[loc.optionId].tripDetails[loc.index]
@@ -227,7 +231,7 @@ export const Itinerary: React.FC = () => {
 
 			if (
 				newItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
-				targetContainer.nestedIn !== undefined
+				targetContainer.nestedIndex !== undefined
 			) {
 				setActiveDayItem(null);
 				setActiveTemplateItem(null);
@@ -281,7 +285,7 @@ export const Itinerary: React.FC = () => {
 			// 0. Prevent nesting MULTIPLY_OPTION into another MULTIPLY_OPTION
 			if (
 				movedItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
-				targetContainer.nestedIn !== undefined
+				targetContainer.nestedIndex !== undefined
 			) {
 				setActiveDayItem(null);
 				setActiveTemplateItem(null);

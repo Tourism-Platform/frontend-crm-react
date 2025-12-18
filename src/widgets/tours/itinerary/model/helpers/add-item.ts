@@ -1,9 +1,9 @@
 import type { IDayItem, TOptionsData } from "../types";
 
 interface ITargetContainer {
-	type: "tripDetails" | "day";
+	location: "tripDetails" | "day";
 	day?: number;
-	nestedIn?: number;
+	nestedIndex?: number;
 }
 
 export function addItemToData(
@@ -16,14 +16,14 @@ export function addItemToData(
 	const resultData = { ...optionsData };
 	const targetOpt = { ...resultData[targetOptionId] };
 
-	if (target.type === "tripDetails") {
+	if (target.location === "tripDetails") {
 		const trg = [...targetOpt.tripDetails];
-		if (target.nestedIn !== undefined) {
-			const parent = { ...trg[target.nestedIn] };
+		if (target.nestedIndex !== undefined) {
+			const parent = { ...trg[target.nestedIndex] };
 			const nested = [...(parent.items || [])];
 			nested.splice(toIndex, 0, item);
 			parent.items = nested;
-			trg[target.nestedIn] = parent;
+			trg[target.nestedIndex] = parent;
 		} else {
 			trg.splice(toIndex, 0, item);
 		}
@@ -31,12 +31,12 @@ export function addItemToData(
 	} else {
 		const dayNum = target.day as number;
 		const trg = [...(targetOpt.days[dayNum] || [])];
-		if (target.nestedIn !== undefined) {
-			const parent = { ...trg[target.nestedIn] };
+		if (target.nestedIndex !== undefined) {
+			const parent = { ...trg[target.nestedIndex] };
 			const nested = [...(parent.items || [])];
 			nested.splice(toIndex, 0, item);
 			parent.items = nested;
-			trg[target.nestedIn] = parent;
+			trg[target.nestedIndex] = parent;
 		} else {
 			trg.splice(toIndex, 0, item);
 		}

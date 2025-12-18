@@ -12,9 +12,9 @@ interface IItemLocation {
 }
 
 interface ITargetContainer {
-	type: "tripDetails" | "day";
+	location: "tripDetails" | "day";
 	day?: number;
-	nestedIn?: number;
+	nestedIndex?: number;
 }
 
 export function moveItemInData(
@@ -29,10 +29,10 @@ export function moveItemInData(
 	const isSameOption = from.optionId === targetOptionId;
 	const isSameDay =
 		from.location === "day" &&
-		target.type === "day" &&
+		target.location === "day" &&
 		from.day === target.day;
 	const isSameTripDetails =
-		from.location === "tripDetails" && target.type === "tripDetails";
+		from.location === "tripDetails" && target.location === "tripDetails";
 	const isSameContainer = isSameOption && (isSameTripDetails || isSameDay);
 
 	// Adjust target indices if moving within the same container
@@ -42,7 +42,7 @@ export function moveItemInData(
 	if (
 		isSameContainer &&
 		from.nestedIndex === undefined &&
-		target.nestedIn === undefined
+		target.nestedIndex === undefined
 	) {
 		// Moving within the same top-level array
 		if (from.index < toIndex) {
@@ -51,12 +51,12 @@ export function moveItemInData(
 	} else if (
 		isSameContainer &&
 		from.nestedIndex === undefined &&
-		target.nestedIn !== undefined
+		target.nestedIndex !== undefined
 	) {
 		// Moving from top-level to nested in the same array
 		// If the item we're removing is before the parent container, adjust parent index
-		if (from.index < target.nestedIn) {
-			adjustedTarget = { ...target, nestedIn: target.nestedIn - 1 };
+		if (from.index < target.nestedIndex) {
+			adjustedTarget = { ...target, nestedIndex: target.nestedIndex - 1 };
 		}
 	}
 

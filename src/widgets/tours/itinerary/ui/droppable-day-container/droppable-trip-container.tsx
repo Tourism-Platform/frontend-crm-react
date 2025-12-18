@@ -56,12 +56,12 @@ export const DroppableTripContainer: FC<IDroppableTripContainerProps> = ({
 										index
 									})
 								}
-								onRemoveNested={(nestedIdx) =>
+								onRemoveNested={(nestedIndex) =>
 									onRemoveItem({
 										optionId,
 										location: "tripDetails",
 										index,
-										nestedIndex: nestedIdx
+										nestedIndex
 									})
 								}
 							/>

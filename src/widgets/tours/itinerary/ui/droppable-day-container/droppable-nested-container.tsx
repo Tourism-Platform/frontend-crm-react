@@ -56,14 +56,10 @@ export const DroppableNestedContainer: FC<IDroppableNestedContainerProps> = ({
 					{/* Always visible drop zone */}
 					<div
 						className={cn(
-							"flex items-center justify-center rounded border border-dashed border-muted-foreground/40 text-muted-foreground text-xs transition-all",
-							items.length === 0 ? "h-32" : "h-24"
+							"flex h-20 items-center justify-center rounded border border-dashed border-muted-foreground/40 text-muted-foreground text-xs transition-all"
 						)}
 					>
-						{t(
-							"day_details.container.drop_here",
-							"Drop items here"
-						)}
+						{t("trip_details.container.empty")}
 					</div>
 				</div>
 			</SortableContext>
