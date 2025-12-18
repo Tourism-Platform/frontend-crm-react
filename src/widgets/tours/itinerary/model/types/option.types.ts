@@ -10,5 +10,6 @@ export type TOptionsData = Record<
 	{
 		tripDetails: IDayItem[];
 		days: Record<number, IDayItem[]>;
+		dayOrder: number[];
 	}
 >;

@@ -1,4 +1,5 @@
-import { useDroppable } from "@dnd-kit/core";
+import { type DraggableAttributes, useDroppable } from "@dnd-kit/core";
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import {
 	SortableContext,
 	verticalListSortingStrategy
@@ -20,17 +21,20 @@ export const DroppableDayContainer: FC<{
 	day: number;
 	control: Control<{ optionsData: TOptionsData }>;
 	containerId: string;
-}> = ({ items, day, containerId, control }) => {
+	sortableProps?: {
+		attributes: DraggableAttributes | undefined;
+		listeners: SyntheticListenerMap | undefined;
+	};
+	optionId: number;
+}> = ({ items, day, containerId, control, sortableProps, optionId }) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const { setNodeRef, isOver } = useDroppable({ id: containerId });
 
-	const { fields, remove } = useFieldArray({
+	const { remove } = useFieldArray({
 		control,
-		// name: `days.${day}`
-		name: `optionsData.1.days.${day}` as never // --- hardcoded optionId = 1 for testing ---
+		name: `optionsData.${optionId}.days.${day}` as never
 	});
 
-	console.log("DroppableDayContainer items:", `days.${day}`, fields);
 	return (
 		<Card
 			ref={setNodeRef}
@@ -40,7 +44,13 @@ export const DroppableDayContainer: FC<{
 			)}
 		>
 			<CardHeader className="flex justify-end pr-2">
-				<Button variant={"ghost"} size={"icon"} className="cursor-grab">
+				<Button
+					variant={"ghost"}
+					size={"icon"}
+					className="cursor-grab"
+					{...sortableProps?.attributes}
+					{...sortableProps?.listeners}
+				>
 					<GripVertical />
 				</Button>
 			</CardHeader>

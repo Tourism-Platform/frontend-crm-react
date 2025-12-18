@@ -3,20 +3,25 @@ import {
 	type DragEndEvent,
 	DragOverlay,
 	PointerSensor,
-	closestCenter,
+	closestCorners,
 	useSensor,
 	useSensors
 } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 
+import {
+	ITINERARY_ROUTES_MOCK,
+	ITINERARY_TABS_MOCK
+} from "@/shared/config/mocks";
 import { Separator } from "@/shared/ui";
 
 import {
-	ENUM_EVENT,
 	EVENT_TEMPLATES_LIST,
 	type IDayItem,
+	type IOption,
 	type ITemplateItem,
 	type TOptionsData,
 	containerIdTrip
@@ -24,6 +29,7 @@ import {
 import {
 	BoardColumns,
 	BoardTabs,
+	DayColumn,
 	DraggableDayItem,
 	DraggableTemplateItem,
 	ItinerarySidebar
@@ -68,54 +74,16 @@ function findItemLocation(
 }
 
 export const Itinerary: React.FC = () => {
-	const [activeOption, setActiveOption] = useState<number>(1);
-
-	// options data
-	// const [optionsData, setOptionsData] = useState<TOptionsData>({
-	// 	1: {
-	// 		tripDetails: [],
-	// 		days: {
-	// 			1: [
-	// 				{
-	// 					id: uuidv4(),
-	// 					block_id: "day1-1",
-	// 					event_type: ENUM_EVENT.FLIGHT,
-	// 					title: "DOM - TAS",
-	// 					subtitle: "7:30 AM (UTC +5) - 12:30 AM (UTC +5)",
-	// 				}
-	// 			],
-	// 			2: [],
-	// 			3: [],
-	// 			4: []
-	// 		}
-	// 	},
-	// 	2: { tripDetails: [], days: { 1: [], 2: [], 3: [], 4: [] } }
-	// });
+	// tabs state (mocks "loading" tabs list)
+	const [options, setOptions] = useState<IOption[]>(ITINERARY_TABS_MOCK);
+	const [activeOption, setActiveOption] = useState<number>(
+		options[0]?.id || 1
+	);
 
 	const { control, watch, setValue } = useForm<{ optionsData: TOptionsData }>(
 		{
 			defaultValues: {
-				optionsData: {
-					1: {
-						tripDetails: [],
-						days: {
-							1: [
-								{
-									id: uuidv4(),
-									block_id: "day1-1",
-									event_type: ENUM_EVENT.FLIGHT,
-									title: "DOM - TAS",
-									subtitle:
-										"7:30 AM (UTC +5) - 12:30 AM (UTC +5)"
-								}
-							],
-							2: [],
-							3: [],
-							4: []
-						}
-					},
-					2: { tripDetails: [], days: { 1: [], 2: [], 3: [], 4: [] } }
-				}
+				optionsData: ITINERARY_ROUTES_MOCK
 			}
 		}
 	);
@@ -130,6 +98,7 @@ export const Itinerary: React.FC = () => {
 	const [activeDayItem, setActiveDayItem] = useState<IDayItem | null>(null);
 	const [activeTemplateItem, setActiveTemplateItem] =
 		useState<ITemplateItem | null>(null);
+	const [activeColumn, setActiveColumn] = useState<number | null>(null);
 
 	// helpers to read/write containers
 	const getContainerItems = (
@@ -159,23 +128,11 @@ export const Itinerary: React.FC = () => {
 		else current.days = { ...current.days, [day as number]: items };
 		copy[optId] = current;
 		setValue("optionsData", copy);
-		// setOptionsData((prev) => {
-		// 	const copy = { ...prev };
-		// 	const current = copy[optId] ?? {
-		// 		tripDetails: [],
-		// 		days: { 1: [], 2: [], 3: [], 4: [] }
-		// 	};
-		// 	if (container === "tripDetails") current.tripDetails = items;
-		// 	else current.days = { ...current.days, [day as number]: items };
-		// 	copy[optId] = current;
-		// 	return copy;
-		// });
 	};
 
 	// onDragStart — capture active id and snapshot (for overlay)
 	const handleDragStart = (event: DragEndEvent) => {
 		const id = event.active.id as string;
-		// setActiveId(id);
 
 		if (id.startsWith("item:")) {
 			const rawId = id.replace("item:", "");
@@ -198,29 +155,58 @@ export const Itinerary: React.FC = () => {
 			if (found) {
 				setActiveTemplateItem(found);
 			}
+		} else if (id.startsWith("column:")) {
+			const day = Number(id.replace("column:", ""));
+			setActiveColumn(day);
 		}
 	};
 
 	// onDragEnd — main logic: move existing item or create from template
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
-		// setActiveId(null);
 
 		if (!over) {
 			setActiveDayItem(null);
 			setActiveTemplateItem(null);
+			setActiveColumn(null);
 			return;
 		}
 
 		const activeIdStr = active.id as string;
 		const overIdStr = over.id as string;
 
+		// Column reordering
+		if (
+			activeIdStr.startsWith("column:") &&
+			overIdStr.startsWith("column:")
+		) {
+			const activeDay = Number(activeIdStr.replace("column:", ""));
+			const overDay = Number(overIdStr.replace("column:", ""));
+
+			if (activeDay !== overDay) {
+				const copy = { ...optionsData };
+				const current = copy[activeOption];
+				if (current) {
+					const oldIndex = current.dayOrder.indexOf(activeDay);
+					const newIndex = current.dayOrder.indexOf(overDay);
+					current.dayOrder = arrayMove(
+						current.dayOrder,
+						oldIndex,
+						newIndex
+					);
+					copy[activeOption] = { ...current };
+					setValue("optionsData", copy);
+				}
+			}
+			setActiveColumn(null);
+			return;
+		}
+
 		// Determine target container
 		let targetContainer: {
 			type: "tripDetails" | "day";
 			day?: number;
 		} | null = null;
-		console.log(overIdStr);
 		if (overIdStr === containerIdTrip())
 			targetContainer = { type: "tripDetails" };
 		else if (overIdStr.startsWith("container:day-")) {
@@ -240,6 +226,7 @@ export const Itinerary: React.FC = () => {
 		if (!targetContainer) {
 			setActiveDayItem(null);
 			setActiveTemplateItem(null);
+			setActiveColumn(null);
 			return;
 		}
 		// Template -> create new item
@@ -257,8 +244,6 @@ export const Itinerary: React.FC = () => {
 				event_type: tpl.event_type,
 				title: tpl.title,
 				subtitle: "Information"
-				// icon: tpl.icon,
-				// color: tpl.color
 			};
 
 			const container = targetContainer ?? { type: "tripDetails" };
@@ -398,16 +383,67 @@ export const Itinerary: React.FC = () => {
 		}
 	};
 
+	// onDragOver handles visual swapping during drag
+	const handleDragOver = (event: DragEndEvent) => {
+		const { active, over } = event;
+		if (!over) return;
+
+		const activeIdStr = active.id as string;
+		const overIdStr = over.id as string;
+
+		// Column reordering during drag
+		if (activeIdStr.startsWith("column:")) {
+			let overDay: number | null = null;
+			if (overIdStr.startsWith("column:")) {
+				overDay = Number(overIdStr.replace("column:", ""));
+			} else if (overIdStr.startsWith("container:day-")) {
+				overDay = Number(overIdStr.replace("container:day-", ""));
+			} else if (overIdStr.startsWith("item:")) {
+				const loc = findItemLocation(
+					optionsData,
+					overIdStr.replace("item:", "")
+				);
+				if (loc && loc.location === "day") overDay = loc.day!;
+			}
+
+			if (overDay !== null) {
+				const activeDay = Number(activeIdStr.replace("column:", ""));
+				if (activeDay !== overDay) {
+					const copy = { ...optionsData };
+					const current = copy[activeOption];
+					if (current) {
+						const oldIndex = current.dayOrder.indexOf(activeDay);
+						const newIndex = current.dayOrder.indexOf(overDay);
+						if (oldIndex !== -1 && newIndex !== -1) {
+							current.dayOrder = arrayMove(
+								current.dayOrder,
+								oldIndex,
+								newIndex
+							);
+							copy[activeOption] = { ...current };
+							setValue("optionsData", copy, {
+								shouldValidate: false
+							});
+						}
+					}
+				}
+			}
+			return;
+		}
+	};
+
 	const currentData = optionsData[activeOption] ?? {
 		tripDetails: [],
-		days: { 1: [], 2: [], 3: [], 4: [] }
+		days: { 1: [], 2: [], 3: [], 4: [] },
+		dayOrder: []
 	};
 
 	return (
 		<DndContext
 			sensors={sensors}
-			collisionDetection={closestCenter}
+			collisionDetection={closestCorners}
 			onDragStart={handleDragStart}
+			onDragOver={handleDragOver}
 			onDragEnd={handleDragEnd}
 		>
 			<div className="h-full flex flex-col">
@@ -418,29 +454,42 @@ export const Itinerary: React.FC = () => {
 					}
 					activeOption={activeOption}
 					setActiveOption={setActiveOption}
+					options={options}
+					setOptions={setOptions}
 				/>
 
 				<Separator />
 
 				{/* board + sidebar */}
 				<div className="flex-1 flex overflow-hidden">
-					<BoardColumns data={currentData} control={control} />
+					<BoardColumns
+						data={currentData}
+						control={control}
+						optionId={activeOption}
+					/>
 					<ItinerarySidebar />
 				</div>
 
 				{/* Drag overlay - visual floating card while dragging */}
-				<DragOverlay>
-					{(!!activeDayItem || !!activeTemplateItem) &&
-						(activeDayItem ? (
-							<DraggableDayItem item={activeDayItem} isOverlay />
-						) : (
-							!!activeTemplateItem && (
-								<DraggableTemplateItem
-									template={activeTemplateItem}
-									isOverlay
-								/>
-							)
-						))}
+				<DragOverlay adjustScale={false}>
+					{!!activeDayItem && (
+						<DraggableDayItem item={activeDayItem} isOverlay />
+					)}
+					{!!activeTemplateItem && (
+						<DraggableTemplateItem
+							template={activeTemplateItem}
+							isOverlay
+						/>
+					)}
+					{!!activeColumn && (
+						<DayColumn
+							day={activeColumn}
+							items={currentData.days[activeColumn]}
+							control={control}
+							isOverlay
+							optionId={activeOption}
+						/>
+					)}
 				</DragOverlay>
 			</div>
 		</DndContext>

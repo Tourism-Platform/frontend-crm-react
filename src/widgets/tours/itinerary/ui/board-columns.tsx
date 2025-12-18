@@ -1,4 +1,8 @@
-import { type FC } from "react";
+import {
+	SortableContext,
+	horizontalListSortingStrategy
+} from "@dnd-kit/sortable";
+import { type FC, useMemo } from "react";
 import type { Control } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -7,34 +11,43 @@ import { ScrollArea, ScrollBar } from "@/shared/ui";
 import {
 	type IDayItem,
 	type TOptionsData,
-	containerIdDay,
+	columnId,
 	containerIdTrip
 } from "../model";
 
-import { DroppableDayContainer } from "./droppable-day-container";
 import { DroppableTripContainer } from "./droppable-trip-container";
+import { SortableDayColumn } from "./sortable-day-column";
 
 interface IBoardColumnsProps {
 	data: {
 		tripDetails: IDayItem[];
 		days: { [day: number]: IDayItem[] };
+		dayOrder: number[];
 	};
 	control: Control<{ optionsData: TOptionsData }>;
+	optionId: number;
 }
 
-export const BoardColumns: FC<IBoardColumnsProps> = ({ data, control }) => {
+export const BoardColumns: FC<IBoardColumnsProps> = ({
+	data,
+	control,
+	optionId
+}) => {
 	const { t } = useTranslation("tour_itinerary_page");
+
+	const dayIds = useMemo(
+		() => data.dayOrder.map((day) => columnId(day)),
+		[data.dayOrder]
+	);
 
 	return (
 		<ScrollArea className="flex-1 overflow-x-auto p-4">
 			<div className="flex gap-4 min-w-max ">
 				{/* Trip details */}
 				<div className="w-100 flex-shrink-0">
-					<h3 className="font-semibold mb-3  ">
+					<h3 className="font-semibold px-1 mb-3">
 						{t("trip_details.title")}
 					</h3>
-
-					{/* droppable tripDetails container */}
 					<DroppableTripContainer
 						items={data.tripDetails}
 						containerId={containerIdTrip()}
@@ -43,26 +56,34 @@ export const BoardColumns: FC<IBoardColumnsProps> = ({ data, control }) => {
 				</div>
 
 				{/* days */}
-				{Object.keys(data.days).map((key, index) => {
-					const day = Number(key);
-					return (
-						<div key={key} className="w-100 flex-shrink-0">
-							<h3 className="font-semibold mb-3">
-								{t("day_details.title", { day: day })}
-								<span className="text-sm text-muted-foreground font-normal ml-2">
-									• Uzbekistan, Tashkent
-								</span>
-							</h3>
-
-							<DroppableDayContainer
-								items={data.days[day]}
-								day={index + 1}
-								control={control}
-								containerId={containerIdDay(day)}
-							/>
-						</div>
-					);
-				})}
+				<SortableContext
+					items={dayIds}
+					strategy={horizontalListSortingStrategy}
+				>
+					{data.dayOrder.map((day, index) => {
+						return (
+							<div
+								key={day}
+								className="w-100 flex-shrink-0 flex flex-col"
+							>
+								<h3 className="font-semibold mb-3">
+									{t("day_details.title", {
+										day: index + 1
+									})}
+									<span className="text-sm text-muted-foreground font-normal ml-2">
+										• Uzbekistan, Tashkent
+									</span>
+								</h3>
+								<SortableDayColumn
+									day={day}
+									items={data.days[day]}
+									control={control}
+									optionId={optionId}
+								/>
+							</div>
+						);
+					})}
+				</SortableContext>
 			</div>
 			<ScrollBar orientation="horizontal" />
 		</ScrollArea>

@@ -19,26 +19,26 @@ interface IBoardTabsProps {
 	setOptionsData: (v: TOptionsData) => void;
 	activeOption: number;
 	setActiveOption: React.Dispatch<React.SetStateAction<number>>;
+	options: IOption[];
+	setOptions: React.Dispatch<React.SetStateAction<IOption[]>>;
 }
 
 export const BoardTabs: FC<IBoardTabsProps> = ({
 	optionsData,
 	setOptionsData,
 	activeOption,
-	setActiveOption
+	setActiveOption,
+	options,
+	setOptions
 }) => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
-	// tabs
-	const [options, setOptions] = useState<IOption[]>([
-		{ id: 1, name: "Option 1" },
-		{ id: 2, name: "Option 2" }
-	]);
+	// tabs states
 	const [editingOption, setEditingOption] = useState<number | null>(null);
 	const [editingName, setEditingName] = useState("");
 	const [draggedTab, setDraggedTab] = useState<number | null>(null);
-	// const [_, setDragOverTab] = useState<number | null>(null);
-	// Tabs logic (add/delete/edit) — preserved from original
+
+	// Tabs logic (add/delete/edit)
 	const addOption = () => {
 		const newId = options.length
 			? Math.max(...options.map((o) => o.id)) + 1
@@ -46,7 +46,11 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 		setOptions((prev) => [...prev, { id: newId, name: `Option ${newId}` }]);
 		setOptionsData({
 			...optionsData,
-			[newId]: { tripDetails: [], days: { 1: [], 2: [], 3: [], 4: [] } }
+			[newId]: {
+				tripDetails: [],
+				days: { 1: [], 2: [], 3: [], 4: [] },
+				dayOrder: [1, 2, 3, 4]
+			}
 		});
 		setActiveOption(newId);
 	};
@@ -92,11 +96,6 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 		e.dataTransfer.effectAllowed = "move";
 	};
 
-	// const handleTabDragOver = (e: React.DragEvent, optionId: number) => {
-	// 	e.preventDefault();
-	// 	// if (draggedTab !== optionId) setDragOverTab(optionId);
-	// };
-
 	const handleTabDrop = (e: React.DragEvent, targetOptionId: number) => {
 		e.preventDefault();
 		if (draggedTab === targetOptionId || draggedTab === null) return;
@@ -110,7 +109,6 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 			return newOptions;
 		});
 		setDraggedTab(null);
-		// setDragOverTab(null);
 	};
 	return (
 		<div className="px-4 py-2 flex items-center gap-2">
