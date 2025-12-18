@@ -2,21 +2,13 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { type FC } from "react";
 
-import { type IDayItem, columnId } from "../../model";
+import { type IBaseDnDProps, type IDayItem, columnId } from "../../model";
 
 import { DayColumn } from "./day-column";
 
-interface ISortableDayColumnProps {
+interface ISortableDayColumnProps extends IBaseDnDProps {
 	day: number;
 	items: IDayItem[];
-	optionId: number;
-	onRemoveItem: (loc: {
-		optionId: number;
-		location: "tripDetails" | "day";
-		day?: number;
-		index: number;
-		nestedIndex?: number;
-	}) => void;
 }
 
 export const SortableDayColumn: FC<ISortableDayColumnProps> = ({

@@ -7,21 +7,18 @@ import { useTranslation } from "react-i18next";
 
 import { ScrollArea, ScrollBar } from "@/shared/ui";
 
-import { type IOptionData, columnId, containerIdTrip } from "../../model";
+import {
+	type IBaseDnDProps,
+	type IOptionData,
+	columnId,
+	containerIdTrip
+} from "../../model";
 import { DroppableTripContainer } from "../droppable-day-container";
 
 import { SortableDayColumn } from "./sortable-day-column";
 
-interface IBoardColumnsProps {
+interface IBoardColumnsProps extends IBaseDnDProps {
 	data: IOptionData;
-	optionId: number;
-	onRemoveItem: (loc: {
-		optionId: number;
-		location: "tripDetails" | "day";
-		day?: number;
-		index: number;
-		nestedIndex?: number;
-	}) => void;
 }
 
 export const BoardColumns: FC<IBoardColumnsProps> = ({

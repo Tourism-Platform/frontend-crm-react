@@ -4,24 +4,16 @@ import { type FC } from "react";
 
 import { cn } from "@/shared/lib";
 
-import { type IDayItem, containerIdDay } from "../../model";
+import { type IBaseDnDProps, type IDayItem, containerIdDay } from "../../model";
 import { DroppableDayContainer } from "../droppable-day-container";
 
-export interface IDayColumnProps {
+export interface IDayColumnProps extends IBaseDnDProps {
 	day: number;
 	items: IDayItem[];
 	isDragging?: boolean;
 	isOverlay?: boolean;
 	attributes?: DraggableAttributes;
 	listeners?: SyntheticListenerMap;
-	optionId: number;
-	onRemoveItem: (loc: {
-		optionId: number;
-		location: "tripDetails" | "day";
-		day?: number;
-		index: number;
-		nestedIndex?: number;
-	}) => void;
 }
 
 export const DayColumn: FC<IDayColumnProps> = ({

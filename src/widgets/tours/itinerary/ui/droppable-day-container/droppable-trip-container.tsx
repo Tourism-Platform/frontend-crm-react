@@ -9,22 +9,14 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Card } from "@/shared/ui";
 
-import { type IDayItem, itemId } from "../../model";
+import { type IBaseDnDProps, type IDayItem, itemId } from "../../model";
 
 import { DraggableDayItem } from "./draggable-day-item";
 
-interface IDroppableTripContainerProps {
+interface IDroppableTripContainerProps extends IBaseDnDProps {
 	items: IDayItem[];
 	containerId: string;
 	showEmptyPlaceholder?: boolean;
-	optionId: number;
-	onRemoveItem: (loc: {
-		optionId: number;
-		location: "tripDetails" | "day";
-		day?: number;
-		index: number;
-		nestedIndex?: number;
-	}) => void;
 }
 
 export const DroppableTripContainer: FC<IDroppableTripContainerProps> = ({

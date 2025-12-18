@@ -11,11 +11,11 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Button, Card, CardContent, CardHeader, Separator } from "@/shared/ui";
 
-import { type IDayItem, itemId } from "../../model";
+import { type IBaseDnDProps, type IDayItem, itemId } from "../../model";
 
 import { DraggableDayItem } from "./draggable-day-item";
 
-interface IDroppableDayContainerProps {
+interface IDroppableDayContainerProps extends IBaseDnDProps {
 	items: IDayItem[];
 	day: number;
 	containerId: string;
@@ -23,14 +23,6 @@ interface IDroppableDayContainerProps {
 		attributes: DraggableAttributes | undefined;
 		listeners: SyntheticListenerMap | undefined;
 	};
-	optionId: number;
-	onRemoveItem: (loc: {
-		optionId: number;
-		location: "tripDetails" | "day";
-		day?: number;
-		index: number;
-		nestedIndex?: number;
-	}) => void;
 }
 
 export const DroppableDayContainer: FC<IDroppableDayContainerProps> = ({
