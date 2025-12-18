@@ -20,16 +20,16 @@ import { Separator } from "@/shared/ui";
 import {
 	ENUM_EVENT,
 	EVENT_TEMPLATES_LIST,
+	type IDayItem,
+	type IOption,
+	type ITemplateItem,
+	type TOptionsData,
 	addItemToData,
 	containerIdTrip,
 	findItemLocation,
 	moveItemInData,
 	removeItemFromData,
-	reorderDaysInData,
-	type IDayItem,
-	type IOption,
-	type ITemplateItem,
-	type TOptionsData
+	reorderDaysInData
 } from "./model";
 import {
 	BoardColumns,
@@ -63,7 +63,6 @@ export const Itinerary: React.FC = () => {
 	const [activeTemplateItem, setActiveTemplateItem] =
 		useState<ITemplateItem | null>(null);
 	const [activeColumn, setActiveColumn] = useState<number | null>(null);
-
 
 	const handleRemoveItem = (loc: {
 		optionId: number;
@@ -173,8 +172,15 @@ export const Itinerary: React.FC = () => {
 				const isNested = loc.nestedIndex !== undefined;
 				targetContainer =
 					loc.location === "tripDetails"
-						? { type: "tripDetails", nestedIn: isNested ? loc.index : undefined }
-						: { type: "day", day: loc.day, nestedIn: isNested ? loc.index : undefined };
+						? {
+								type: "tripDetails",
+								nestedIn: isNested ? loc.index : undefined
+							}
+						: {
+								type: "day",
+								day: loc.day,
+								nestedIn: isNested ? loc.index : undefined
+							};
 				toIndex = isNested ? loc.nestedIndex! : loc.index;
 			}
 		} else if (overIdStr.startsWith("container:nested:")) {
@@ -185,9 +191,12 @@ export const Itinerary: React.FC = () => {
 					loc.location === "tripDetails"
 						? { type: "tripDetails", nestedIn: loc.index }
 						: { type: "day", day: loc.day, nestedIn: loc.index };
-				const parent = loc.location === "tripDetails" 
-					? optionsData[loc.optionId].tripDetails[loc.index]
-					: optionsData[loc.optionId].days[loc.day as number][loc.index];
+				const parent =
+					loc.location === "tripDetails"
+						? optionsData[loc.optionId].tripDetails[loc.index]
+						: optionsData[loc.optionId].days[loc.day as number][
+								loc.index
+							];
 				toIndex = (parent.items || []).length;
 			}
 		}
@@ -216,13 +225,22 @@ export const Itinerary: React.FC = () => {
 				subtitle: "Information"
 			};
 
-			if (newItem.event_type === ENUM_EVENT.MULTIPLY_OPTION && targetContainer.nestedIn !== undefined) {
+			if (
+				newItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
+				targetContainer.nestedIn !== undefined
+			) {
 				setActiveDayItem(null);
 				setActiveTemplateItem(null);
 				return;
 			}
 
-			const resultData = addItemToData(optionsData, targetContainer, toIndex, newItem, activeOption);
+			const resultData = addItemToData(
+				optionsData,
+				targetContainer,
+				toIndex,
+				newItem,
+				activeOption
+			);
 			setValue("optionsData", resultData);
 			setActiveDayItem(null);
 			setActiveTemplateItem(null);
@@ -243,22 +261,42 @@ export const Itinerary: React.FC = () => {
 			// capture moved item before mutating
 			let movedItem: IDayItem;
 			if (from.location === "tripDetails") {
-				const parent = optionsData[from.optionId].tripDetails[from.index];
-				movedItem = from.nestedIndex !== undefined ? parent.items![from.nestedIndex] : parent;
+				const parent =
+					optionsData[from.optionId].tripDetails[from.index];
+				movedItem =
+					from.nestedIndex !== undefined
+						? parent.items![from.nestedIndex]
+						: parent;
 			} else {
-				const parent = optionsData[from.optionId].days[from.day as number][from.index];
-				movedItem = from.nestedIndex !== undefined ? parent.items![from.nestedIndex] : parent;
+				const parent =
+					optionsData[from.optionId].days[from.day as number][
+						from.index
+					];
+				movedItem =
+					from.nestedIndex !== undefined
+						? parent.items![from.nestedIndex]
+						: parent;
 			}
 
 			// 0. Prevent nesting MULTIPLY_OPTION into another MULTIPLY_OPTION
-			if (movedItem.event_type === ENUM_EVENT.MULTIPLY_OPTION && targetContainer.nestedIn !== undefined) {
+			if (
+				movedItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
+				targetContainer.nestedIn !== undefined
+			) {
 				setActiveDayItem(null);
 				setActiveTemplateItem(null);
 				setActiveColumn(null);
 				return;
 			}
 
-			const resultData = moveItemInData(optionsData, from, targetContainer, toIndex, movedItem, activeOption);
+			const resultData = moveItemInData(
+				optionsData,
+				from,
+				targetContainer,
+				toIndex,
+				movedItem,
+				activeOption
+			);
 			setValue("optionsData", resultData);
 			setActiveDayItem(null);
 			setActiveTemplateItem(null);
