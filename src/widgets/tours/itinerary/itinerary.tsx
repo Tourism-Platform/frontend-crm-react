@@ -3,7 +3,6 @@ import {
 	type DragEndEvent,
 	DragOverlay,
 	PointerSensor,
-	closestCorners,
 	useSensor,
 	useSensors
 } from "@dnd-kit/core";
@@ -22,6 +21,7 @@ import {
 	type IOption,
 	type ITemplateItem,
 	type TOptionsData,
+	customCollisionDetection,
 	handleDragEnd,
 	handleDragOver,
 	handleDragStart,
@@ -102,7 +102,7 @@ export const Itinerary: React.FC = () => {
 	return (
 		<DndContext
 			sensors={sensors}
-			collisionDetection={closestCorners}
+			collisionDetection={customCollisionDetection}
 			onDragStart={onDragStart}
 			onDragOver={onDragOver}
 			onDragEnd={onDragEnd}

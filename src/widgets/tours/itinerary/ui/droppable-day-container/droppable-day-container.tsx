@@ -64,7 +64,7 @@ export const DroppableDayContainer: FC<IDroppableDayContainerProps> = ({
 				</Button>
 			</CardHeader>
 			<Separator />
-			<CardContent className={cn("px-3")}>
+			<CardContent className={cn("px-3 pb-24")}>
 				<SortableContext
 					items={items.map((it) => itemId(it.block_id))}
 					strategy={verticalListSortingStrategy}
