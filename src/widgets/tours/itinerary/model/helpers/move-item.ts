@@ -27,8 +27,8 @@ export function moveItemInData(
 	const isSameContainer = isSameOption && (isSameTripDetails || isSameDay);
 
 	// Adjust target indices if moving within the same container
+	const adjustedToIndex = toIndex;
 	let adjustedTarget = { ...target };
-	let adjustedToIndex = toIndex;
 
 	if (
 		isSameContainer &&
@@ -36,9 +36,8 @@ export function moveItemInData(
 		target.nestedIndex === undefined
 	) {
 		// Moving within the same top-level array
-		if (from.index < toIndex) {
-			adjustedToIndex = toIndex - 1;
-		}
+		// No adjustment needed for indices ideally if we mimic arrayMove logic correctly
+		// previously we subtracted 1 if from.index < toIndex, but that causes off-by-one error
 	} else if (
 		isSameContainer &&
 		from.nestedIndex === undefined &&
