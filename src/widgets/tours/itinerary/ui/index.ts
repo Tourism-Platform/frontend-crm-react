@@ -1,9 +1,3 @@
-export { BoardColumns } from "./board-columns";
-export { BoardTabs } from "./board-tabs";
-export { DayColumn } from "./day-column";
-export { DraggableDayItem } from "./draggable-day-item";
-export { DraggableTemplateItem } from "./draggable-template-item";
-export { DroppableDayContainer } from "./droppable-day-container";
-export { DroppableTripContainer } from "./droppable-trip-container";
-export { ItinerarySidebar } from "./itinerary-sidebar";
-export { SortableDayColumn } from "./sortable-day-column";
+export * from "./board";
+export * from "./itinerary-sidebar";
+export * from "./droppable-day-container";

@@ -9,21 +9,17 @@ import { useTranslation } from "react-i18next";
 import { ScrollArea, ScrollBar } from "@/shared/ui";
 
 import {
-	type IDayItem,
+	type IOptionData,
 	type TOptionsData,
 	columnId,
 	containerIdTrip
-} from "../model";
+} from "../../model";
+import { DroppableTripContainer } from "../droppable-day-container/droppable-trip-container";
 
-import { DroppableTripContainer } from "./droppable-trip-container";
 import { SortableDayColumn } from "./sortable-day-column";
 
 interface IBoardColumnsProps {
-	data: {
-		tripDetails: IDayItem[];
-		days: { [day: number]: IDayItem[] };
-		dayOrder: number[];
-	};
+	data: IOptionData;
 	control: Control<{ optionsData: TOptionsData }>;
 	optionId: number;
 }

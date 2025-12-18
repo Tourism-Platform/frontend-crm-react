@@ -5,9 +5,8 @@ import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
 
-import { type IDayItem, type TOptionsData, containerIdDay } from "../model";
-
-import { DroppableDayContainer } from "./droppable-day-container";
+import { type IDayItem, type TOptionsData, containerIdDay } from "../../model";
+import { DroppableDayContainer } from "../droppable-day-container/droppable-day-container";
 
 export interface IDayColumnProps {
 	day: number;

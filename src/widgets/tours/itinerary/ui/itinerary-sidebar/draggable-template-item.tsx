@@ -6,7 +6,7 @@ import { type CSSProperties, type FC } from "react";
 
 import { Button, Card, CardContent } from "@/shared/ui";
 
-import { type ITemplateItem, templateId } from "../model";
+import { type ITemplateItem, templateId } from "../../model";
 
 const variants = cva("py-2 bg-background", {
 	variants: {

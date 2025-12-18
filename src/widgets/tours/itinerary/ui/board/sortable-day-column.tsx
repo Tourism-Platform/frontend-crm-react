@@ -3,7 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { type FC } from "react";
 import type { Control } from "react-hook-form";
 
-import { type IDayItem, type TOptionsData, columnId } from "../model";
+import { type IDayItem, type TOptionsData, columnId } from "../../model";
 
 import { DayColumn } from "./day-column";
 

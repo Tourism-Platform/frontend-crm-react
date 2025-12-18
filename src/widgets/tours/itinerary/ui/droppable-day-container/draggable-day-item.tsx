@@ -13,7 +13,7 @@ import {
 	EVENT_TYPE_TO_PATH,
 	type IDayItem,
 	itemId
-} from "../model";
+} from "../../model";
 
 import { DraggableDayItemMenu } from "./draggable-day-item-menu";
 

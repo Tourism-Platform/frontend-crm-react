@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Button, Card, CardContent, CardHeader, Separator } from "@/shared/ui";
 
-import { type IDayItem, type TOptionsData, itemId } from "../model";
+import { type IDayItem, type TOptionsData, itemId } from "../../model";
 
 import { DraggableDayItem } from "./draggable-day-item";
 

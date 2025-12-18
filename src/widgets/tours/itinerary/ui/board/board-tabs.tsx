@@ -12,7 +12,7 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import type { IOption, TOptionsData } from "../model";
+import type { IOption, TOptionsData } from "../../model";
 
 interface IBoardTabsProps {
 	optionsData: TOptionsData;
@@ -183,33 +183,6 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 										</DropdownMenu>
 									</div>
 								</CustomOptionTabsTrigger>
-
-								// <CustomOptionTab
-								// 	onClick={() => setActiveOption(option.id)}
-								// 	onDoubleClick={() => startEditingOption(option)}
-								// 	isActive={activeOption === option.id}
-								// 	className={cn(
-								// 		"flex gap-2 items-center min-w-[120px] max-w-[200px]",
-								// 		dragOverTab === option.id &&
-								// 			draggedTab !== option.id &&
-								// 			"bg-blue-50"
-								// 	)}
-								// >
-								// 	<p className="truncate">{option.name}</p>
-								// 	<DropdownMenu>
-								// 		<DropdownMenuTrigger className="cursor-pointer py-1 px-2">
-								// 			<MoreVertical className="w-4 h-4" />
-								// 		</DropdownMenuTrigger>
-								// 		<DropdownMenuContent align="end">
-								// 			<DropdownMenuItem
-								// 				onClick={() => deleteOption(option.id)}
-								// 				className=" !text-red-400"
-								// 			>
-								// 				Delete
-								// 			</DropdownMenuItem>
-								// 		</DropdownMenuContent>
-								// 	</DropdownMenu>
-								// </CustomOptionTab>
 							)}
 						</div>
 					))}

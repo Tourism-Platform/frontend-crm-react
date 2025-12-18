@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Card } from "@/shared/ui";
 
-import { EVENT_TEMPLATES_LIST } from "../model";
+import { EVENT_TEMPLATES_LIST } from "../../model";
 
 import { DraggableTemplateItem } from "./draggable-template-item";
 

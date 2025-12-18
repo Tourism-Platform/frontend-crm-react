@@ -5,11 +5,10 @@ export interface IOption {
 	name: string;
 }
 
-export type TOptionsData = Record<
-	number,
-	{
-		tripDetails: IDayItem[];
-		days: Record<number, IDayItem[]>;
-		dayOrder: number[];
-	}
->;
+export interface IOptionData {
+	tripDetails: IDayItem[];
+	days: Record<number, IDayItem[]>;
+	dayOrder: number[];
+}
+
+export type TOptionsData = Record<number, IOptionData>;
