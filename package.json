@@ -7,6 +7,7 @@
     "dev": "vite",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss}\" \"public/locales/**/*.json\"",
     "lint": "eslint .",
+    "test": "vitest run",
     "build": "tsc -b && npm run format && npm run lint && vite build",
     "preview": "vite preview"
   },
@@ -31,6 +32,9 @@
     "@reduxjs/toolkit": "^2.9.0",
     "@tailwindcss/vite": "^4.1.13",
     "@tanstack/react-table": "^8.21.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "@tiptap/extension-text-align": "^3.7.2",
     "@tiptap/html": "^3.7.2",
     "@tiptap/react": "^3.7.2",
@@ -62,6 +66,7 @@
     "tailwindcss": "^4.1.13",
     "tunnel-rat": "^0.1.2",
     "uuid": "^13.0.0",
+    "vitest": "^4.0.16",
     "zod": "^4.1.11"
   },
   "devDependencies": {

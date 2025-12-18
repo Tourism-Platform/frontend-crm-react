@@ -77,7 +77,7 @@ export const DraggableDayItem: FC<{
 						: undefined
 			})}
 		>
-			<CardContent className="flex flex-col gap-3 p-3 relative">
+			<CardContent className="flex flex-col gap-3 p-0 relative">
 				<div className="flex items-start gap-3 justify-between w-full">
 					<div
 						className={cn(
@@ -99,7 +99,7 @@ export const DraggableDayItem: FC<{
 						size="icon"
 						{...attributes}
 						{...listeners}
-						className="cursor-grab"
+						className="cursor-grab mr-3"
 					>
 						<GripVertical className="w-5 h-5 text-muted-foreground" />
 					</Button>
