@@ -13,11 +13,27 @@ import { type IDayItem, itemId } from "../../model";
 
 import { DraggableDayItem } from "./draggable-day-item";
 
-export const DroppableTripContainer: FC<{
+interface IDroppableTripContainerProps {
 	items: IDayItem[];
 	containerId: string;
 	showEmptyPlaceholder?: boolean;
-}> = ({ items, containerId, showEmptyPlaceholder = false }) => {
+	optionId: number;
+	onRemoveItem: (loc: {
+		optionId: number;
+		location: "tripDetails" | "day";
+		day?: number;
+		index: number;
+		nestedIndex?: number;
+	}) => void;
+}
+
+export const DroppableTripContainer: FC<IDroppableTripContainerProps> = ({
+	items,
+	containerId,
+	showEmptyPlaceholder = false,
+	optionId,
+	onRemoveItem
+}) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const { setNodeRef, isOver } = useDroppable({ id: containerId });
 	return (
@@ -37,9 +53,26 @@ export const DroppableTripContainer: FC<{
 						{t("trip_details.container.empty")}
 					</div>
 				) : (
-					items.map((item) => (
+					items.map((item, index) => (
 						<div key={item.block_id} className="mb-2">
-							<DraggableDayItem item={item} />
+							<DraggableDayItem
+								item={item}
+								onRemove={() =>
+									onRemoveItem({
+										optionId,
+										location: "tripDetails",
+										index
+									})
+								}
+								onRemoveNested={(nestedIdx) =>
+									onRemoveItem({
+										optionId,
+										location: "tripDetails",
+										index,
+										nestedIndex: nestedIdx
+									})
+								}
+							/>
 						</div>
 					))
 				)}

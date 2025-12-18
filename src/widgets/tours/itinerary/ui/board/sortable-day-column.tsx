@@ -1,24 +1,29 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { type FC } from "react";
-import type { Control } from "react-hook-form";
 
-import { type IDayItem, type TOptionsData, columnId } from "../../model";
+import { type IDayItem, columnId } from "../../model";
 
 import { DayColumn } from "./day-column";
 
 interface ISortableDayColumnProps {
 	day: number;
 	items: IDayItem[];
-	control: Control<{ optionsData: TOptionsData }>;
 	optionId: number;
+	onRemoveItem: (loc: {
+		optionId: number;
+		location: "tripDetails" | "day";
+		day?: number;
+		index: number;
+		nestedIndex?: number;
+	}) => void;
 }
 
 export const SortableDayColumn: FC<ISortableDayColumnProps> = ({
 	day,
 	items,
-	control,
-	optionId
+	optionId,
+	onRemoveItem
 }) => {
 	const id = columnId(day);
 
@@ -41,11 +46,11 @@ export const SortableDayColumn: FC<ISortableDayColumnProps> = ({
 			<DayColumn
 				day={day}
 				items={items}
-				control={control}
 				isDragging={isDragging}
 				attributes={attributes}
 				listeners={listeners}
 				optionId={optionId}
+				onRemoveItem={onRemoveItem}
 			/>
 		</div>
 	);

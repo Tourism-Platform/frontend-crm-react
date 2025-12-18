@@ -6,34 +6,43 @@ import {
 } from "@dnd-kit/sortable";
 import { GripVertical } from "lucide-react";
 import { type FC } from "react";
-import { type Control, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { Button, Card, CardContent, CardHeader, Separator } from "@/shared/ui";
 
-import { type IDayItem, type TOptionsData, itemId } from "../../model";
+import { type IDayItem, itemId } from "../../model";
 
 import { DraggableDayItem } from "./draggable-day-item";
 
-export const DroppableDayContainer: FC<{
+interface IDroppableDayContainerProps {
 	items: IDayItem[];
 	day: number;
-	control: Control<{ optionsData: TOptionsData }>;
 	containerId: string;
 	sortableProps?: {
 		attributes: DraggableAttributes | undefined;
 		listeners: SyntheticListenerMap | undefined;
 	};
 	optionId: number;
-}> = ({ items, day, containerId, control, sortableProps, optionId }) => {
+	onRemoveItem: (loc: {
+		optionId: number;
+		location: "tripDetails" | "day";
+		day?: number;
+		index: number;
+		nestedIndex?: number;
+	}) => void;
+}
+
+export const DroppableDayContainer: FC<IDroppableDayContainerProps> = ({
+	items,
+	day,
+	containerId,
+	sortableProps,
+	optionId,
+	onRemoveItem
+}) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const { setNodeRef, isOver } = useDroppable({ id: containerId });
-
-	const { remove } = useFieldArray({
-		control,
-		name: `optionsData.${optionId}.days.${day}` as never
-	});
 
 	return (
 		<Card
@@ -69,7 +78,23 @@ export const DroppableDayContainer: FC<{
 							<div key={item.block_id} className="mb-2">
 								<DraggableDayItem
 									item={item}
-									onRemove={() => remove(index)}
+									onRemove={() =>
+										onRemoveItem({
+											optionId,
+											location: "day",
+											day,
+											index
+										})
+									}
+									onRemoveNested={(nestedIdx) =>
+										onRemoveItem({
+											optionId,
+											location: "day",
+											day,
+											index,
+											nestedIndex: nestedIdx
+										})
+									}
 								/>
 							</div>
 						))

@@ -19,7 +19,16 @@ export const ITINERARY_ROUTES_MOCK = {
 					subtitle: "7:30 AM (UTC +5) - 12:30 AM (UTC +5)"
 				}
 			],
-			2: [],
+			2: [
+				{
+					id: uuidv4(),
+					block_id: "day1-2",
+					event_type: "multiply-option",
+					title: "Multiplex Option",
+					subtitle: "Drop items here",
+					items: []
+				}
+			],
 			3: [],
 			4: []
 		},

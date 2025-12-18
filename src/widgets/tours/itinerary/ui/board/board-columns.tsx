@@ -3,31 +3,31 @@ import {
 	horizontalListSortingStrategy
 } from "@dnd-kit/sortable";
 import { type FC, useMemo } from "react";
-import type { Control } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ScrollArea, ScrollBar } from "@/shared/ui";
 
-import {
-	type IOptionData,
-	type TOptionsData,
-	columnId,
-	containerIdTrip
-} from "../../model";
-import { DroppableTripContainer } from "../droppable-day-container/droppable-trip-container";
+import { type IOptionData, columnId, containerIdTrip } from "../../model";
+import { DroppableTripContainer } from "../droppable-day-container";
 
 import { SortableDayColumn } from "./sortable-day-column";
 
 interface IBoardColumnsProps {
 	data: IOptionData;
-	control: Control<{ optionsData: TOptionsData }>;
 	optionId: number;
+	onRemoveItem: (loc: {
+		optionId: number;
+		location: "tripDetails" | "day";
+		day?: number;
+		index: number;
+		nestedIndex?: number;
+	}) => void;
 }
 
 export const BoardColumns: FC<IBoardColumnsProps> = ({
 	data,
-	control,
-	optionId
+	optionId,
+	onRemoveItem
 }) => {
 	const { t } = useTranslation("tour_itinerary_page");
 
@@ -48,6 +48,8 @@ export const BoardColumns: FC<IBoardColumnsProps> = ({
 						items={data.tripDetails}
 						containerId={containerIdTrip()}
 						showEmptyPlaceholder={true}
+						optionId={optionId}
+						onRemoveItem={onRemoveItem}
 					/>
 				</div>
 
@@ -73,8 +75,8 @@ export const BoardColumns: FC<IBoardColumnsProps> = ({
 								<SortableDayColumn
 									day={day}
 									items={data.days[day]}
-									control={control}
 									optionId={optionId}
+									onRemoveItem={onRemoveItem}
 								/>
 							</div>
 						);

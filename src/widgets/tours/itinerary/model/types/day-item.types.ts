@@ -4,4 +4,5 @@ export interface IDayItem {
 	event_type: string; // template key like 'flight'
 	title: string;
 	subtitle?: string;
+	items?: IDayItem[];
 }

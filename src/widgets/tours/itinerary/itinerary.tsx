@@ -43,31 +43,66 @@ function findItemLocation(
 	location: "tripDetails" | "day";
 	day?: number;
 	index: number;
+	nestedIndex?: number;
 } | null {
 	for (const key of Object.keys(optionsData)) {
 		const optionKey = Number(key);
 		const data = optionsData[optionKey];
-		const tdIndex = data.tripDetails.findIndex(
-			(it) => it.block_id === itemIdRaw
-		);
-		if (tdIndex !== -1)
-			return {
-				optionId: optionKey,
-				location: "tripDetails",
-				index: tdIndex
-			};
-		for (const dayKey of Object.keys(data.days)) {
-			const day = Number(dayKey);
-			const idx = data.days[day].findIndex(
-				(it) => it.block_id === itemIdRaw
-			);
-			if (idx !== -1)
+
+		// tripDetails
+		for (let i = 0; i < data.tripDetails.length; i++) {
+			const item = data.tripDetails[i];
+			if (item.block_id === itemIdRaw) {
 				return {
 					optionId: optionKey,
-					location: "day",
-					day,
-					index: idx
+					location: "tripDetails",
+					index: i
 				};
+			}
+			if (item.items) {
+				const nIdx = item.items.findIndex(
+					(it) => it.block_id === itemIdRaw
+				);
+				if (nIdx !== -1) {
+					return {
+						optionId: optionKey,
+						location: "tripDetails",
+						index: i,
+						nestedIndex: nIdx
+					};
+				}
+			}
+		}
+
+		// days
+		for (const dayKey of Object.keys(data.days)) {
+			const day = Number(dayKey);
+			const dayItems = data.days[day];
+			for (let i = 0; i < dayItems.length; i++) {
+				const item = dayItems[i];
+				if (item.block_id === itemIdRaw) {
+					return {
+						optionId: optionKey,
+						location: "day",
+						day,
+						index: i
+					};
+				}
+				if (item.items) {
+					const nIdx = item.items.findIndex(
+						(it) => it.block_id === itemIdRaw
+					);
+					if (nIdx !== -1) {
+						return {
+							optionId: optionKey,
+							location: "day",
+							day,
+							index: i,
+							nestedIndex: nIdx
+						};
+					}
+				}
+			}
 		}
 	}
 	return null;
@@ -80,13 +115,11 @@ export const Itinerary: React.FC = () => {
 		options[0]?.id || 1
 	);
 
-	const { control, watch, setValue } = useForm<{ optionsData: TOptionsData }>(
-		{
-			defaultValues: {
-				optionsData: ITINERARY_ROUTES_MOCK
-			}
+	const { watch, setValue } = useForm<{ optionsData: TOptionsData }>({
+		defaultValues: {
+			optionsData: ITINERARY_ROUTES_MOCK
 		}
-	);
+	});
 
 	const optionsData = watch("optionsData");
 
@@ -117,17 +150,56 @@ export const Itinerary: React.FC = () => {
 		optId: number,
 		container: "tripDetails" | "day",
 		items: IDayItem[],
-		day?: number
+		day?: number,
+		nestedIn?: number
 	) => {
 		const copy = { ...optionsData };
 		const current = copy[optId] ?? {
 			tripDetails: [],
-			days: { 1: [], 2: [], 3: [], 4: [] }
+			days: { 1: [], 2: [], 3: [], 4: [] },
+			dayOrder: []
 		};
-		if (container === "tripDetails") current.tripDetails = items;
-		else current.days = { ...current.days, [day as number]: items };
+		if (container === "tripDetails") {
+			if (nestedIn !== undefined) {
+				current.tripDetails[nestedIn].items = items;
+			} else {
+				current.tripDetails = items;
+			}
+		} else {
+			if (nestedIn !== undefined) {
+				current.days[day as number][nestedIn].items = items;
+			} else {
+				current.days = { ...current.days, [day as number]: items };
+			}
+		}
 		copy[optId] = current;
 		setValue("optionsData", copy);
+	};
+
+	const handleRemoveItem = (loc: {
+		optionId: number;
+		location: "tripDetails" | "day";
+		day?: number;
+		index: number;
+		nestedIndex?: number;
+	}) => {
+		const items = getContainerItems(loc.optionId, loc.location, loc.day);
+		if (loc.nestedIndex !== undefined) {
+			const parent = items[loc.index];
+			const nested = [...(parent.items || [])];
+			nested.splice(loc.nestedIndex, 1);
+			setContainerItems(
+				loc.optionId,
+				loc.location,
+				nested,
+				loc.day,
+				loc.index
+			);
+		} else {
+			const copy = [...items];
+			copy.splice(loc.index, 1);
+			setContainerItems(loc.optionId, loc.location, copy, loc.day);
+		}
 	};
 
 	// onDragStart — capture active id and snapshot (for overlay)
@@ -138,12 +210,21 @@ export const Itinerary: React.FC = () => {
 			const rawId = id.replace("item:", "");
 			const loc = findItemLocation(optionsData, rawId);
 			if (loc) {
-				const item =
-					loc.location === "tripDetails"
-						? optionsData[loc.optionId].tripDetails[loc.index]
-						: optionsData[loc.optionId].days[loc.day as number][
-								loc.index
-							];
+				let item: IDayItem;
+				if (loc.location === "tripDetails") {
+					item = optionsData[loc.optionId].tripDetails[loc.index];
+					if (loc.nestedIndex !== undefined) {
+						item = item.items![loc.nestedIndex];
+					}
+				} else {
+					item =
+						optionsData[loc.optionId].days[loc.day as number][
+							loc.index
+						];
+					if (loc.nestedIndex !== undefined) {
+						item = item.items![loc.nestedIndex];
+					}
+				}
 				setActiveDayItem(item);
 			}
 		} else if (id.startsWith("template:")) {
@@ -206,6 +287,7 @@ export const Itinerary: React.FC = () => {
 		let targetContainer: {
 			type: "tripDetails" | "day";
 			day?: number;
+			nestedIn?: number;
 		} | null = null;
 		if (overIdStr === containerIdTrip())
 			targetContainer = { type: "tripDetails" };
@@ -218,8 +300,30 @@ export const Itinerary: React.FC = () => {
 			if (loc) {
 				targetContainer =
 					loc.location === "tripDetails"
-						? { type: "tripDetails" }
-						: { type: "day", day: loc.day };
+						? {
+								type: "tripDetails",
+								nestedIn:
+									loc.nestedIndex !== undefined
+										? loc.index
+										: undefined
+							}
+						: {
+								type: "day",
+								day: loc.day,
+								nestedIn:
+									loc.nestedIndex !== undefined
+										? loc.index
+										: undefined
+							};
+			}
+		} else if (overIdStr.startsWith("container:nested:")) {
+			const parentBlockId = overIdStr.replace("container:nested:", "");
+			const loc = findItemLocation(optionsData, parentBlockId);
+			if (loc) {
+				targetContainer =
+					loc.location === "tripDetails"
+						? { type: "tripDetails", nestedIn: loc.index }
+						: { type: "day", day: loc.day, nestedIn: loc.index };
 			}
 		}
 
@@ -249,22 +353,46 @@ export const Itinerary: React.FC = () => {
 			const container = targetContainer ?? { type: "tripDetails" };
 			if (container.type === "tripDetails") {
 				const arr = getContainerItems(activeOption, "tripDetails");
-				setContainerItems(activeOption, "tripDetails", [
-					...arr,
-					newItem
-				]);
+				if (container.nestedIn !== undefined) {
+					const parent = arr[container.nestedIn];
+					const nestedArr = parent.items || [];
+					setContainerItems(
+						activeOption as number,
+						"tripDetails",
+						[...nestedArr, newItem],
+						undefined,
+						container.nestedIn
+					);
+				} else {
+					setContainerItems(activeOption as number, "tripDetails", [
+						...arr,
+						newItem
+					]);
+				}
 			} else {
 				const arr = getContainerItems(
-					activeOption,
+					activeOption as number,
 					"day",
 					container.day
 				);
-				setContainerItems(
-					activeOption,
-					"day",
-					[...arr, newItem],
-					container.day
-				);
+				if (container.nestedIn !== undefined) {
+					const parent = arr[container.nestedIn];
+					const nestedArr = parent.items || [];
+					setContainerItems(
+						activeOption as number,
+						"day",
+						[...nestedArr, newItem],
+						container.day,
+						container.nestedIn
+					);
+				} else {
+					setContainerItems(
+						activeOption as number,
+						"day",
+						[...arr, newItem],
+						container.day
+					);
+				}
 			}
 
 			setActiveDayItem(null);
@@ -298,8 +426,44 @@ export const Itinerary: React.FC = () => {
 					from.optionId === overLoc.optionId &&
 					from.location === overLoc.location &&
 					(from.location === "tripDetails" ||
-						from.day === overLoc.day)
+						from.day === overLoc.day) &&
+					from.index === overLoc.index &&
+					from.nestedIndex !== undefined &&
+					overLoc.nestedIndex !== undefined
 				) {
+					// reorder WITHIN the same MULTIPLY_OPTION
+					const list = [
+						...getContainerItems(
+							from.optionId,
+							from.location,
+							from.day
+						)
+					];
+					const parent = list[from.index];
+					const nested = [...(parent.items || [])];
+					const [removed] = nested.splice(from.nestedIndex, 1);
+					nested.splice(overLoc.nestedIndex, 0, removed);
+					setContainerItems(
+						from.optionId,
+						from.location,
+						nested,
+						from.day,
+						from.index
+					);
+					setActiveDayItem(null);
+					setActiveTemplateItem(null);
+					return;
+				}
+
+				if (
+					from.optionId === overLoc.optionId &&
+					from.location === overLoc.location &&
+					(from.location === "tripDetails" ||
+						from.day === overLoc.day) &&
+					from.nestedIndex === undefined &&
+					overLoc.nestedIndex === undefined
+				) {
+					// existing top-level reorder logic
 					if (from.location === "tripDetails") {
 						const list = [
 							...optionsData[from.optionId].tripDetails
@@ -325,12 +489,28 @@ export const Itinerary: React.FC = () => {
 					}
 				}
 
-				// different container: insert before overLoc.index
+				// different container: insert before overLoc.index or overLoc.nestedIndex
 				targetContainer =
 					overLoc.location === "tripDetails"
-						? { type: "tripDetails" }
-						: { type: "day", day: overLoc.day };
-				toIndex = overLoc.index;
+						? {
+								type: "tripDetails",
+								nestedIn:
+									overLoc.nestedIndex !== undefined
+										? overLoc.index
+										: undefined
+							}
+						: {
+								type: "day",
+								day: overLoc.day,
+								nestedIn:
+									overLoc.nestedIndex !== undefined
+										? overLoc.index
+										: undefined
+							};
+				toIndex =
+					overLoc.nestedIndex !== undefined
+						? overLoc.nestedIndex
+						: overLoc.index;
 			} else if (overIdStr === containerIdTrip()) {
 				targetContainer = { type: "tripDetails" };
 				toIndex = getContainerItems(activeOption, "tripDetails").length;
@@ -342,39 +522,97 @@ export const Itinerary: React.FC = () => {
 
 			if (!targetContainer) return;
 
-			// remove from source
+			// 2. remove item from source
 			if (from.location === "tripDetails") {
 				const src = [...optionsData[from.optionId].tripDetails];
-				src.splice(from.index, 1);
-				setContainerItems(from.optionId, "tripDetails", src);
+				if (from.nestedIndex !== undefined) {
+					const parent = src[from.index];
+					const nested = [...(parent.items || [])];
+					nested.splice(from.nestedIndex, 1);
+					setContainerItems(
+						from.optionId,
+						"tripDetails",
+						nested,
+						undefined,
+						from.index
+					);
+				} else {
+					src.splice(from.index, 1);
+					setContainerItems(from.optionId, "tripDetails", src);
+				}
 			} else {
 				const src = [
 					...optionsData[from.optionId].days[from.day as number]
 				];
-				src.splice(from.index, 1);
-				setContainerItems(from.optionId, "day", src, from.day);
+				if (from.nestedIndex !== undefined) {
+					const parent = src[from.index];
+					const nested = [...(parent.items || [])];
+					nested.splice(from.nestedIndex, 1);
+					setContainerItems(
+						from.optionId,
+						"day",
+						nested,
+						from.day,
+						from.index
+					);
+				} else {
+					src.splice(from.index, 1);
+					setContainerItems(from.optionId, "day", src, from.day);
+				}
 			}
 
-			// insert into target (we insert movedItem captured earlier)
+			// 3. insert into target
 			if (targetContainer.type === "tripDetails") {
-				const trg = [...getContainerItems(activeOption, "tripDetails")];
-				trg.splice(toIndex, 0, movedItem);
-				setContainerItems(activeOption, "tripDetails", trg);
+				const trg = [
+					...getContainerItems(activeOption as number, "tripDetails")
+				];
+				if (targetContainer.nestedIn !== undefined) {
+					const parent = trg[targetContainer.nestedIn];
+					const nested = [...(parent.items || [])];
+					nested.splice(toIndex, 0, movedItem);
+					setContainerItems(
+						activeOption as number,
+						"tripDetails",
+						nested,
+						undefined,
+						targetContainer.nestedIn
+					);
+				} else {
+					trg.splice(toIndex, 0, movedItem);
+					setContainerItems(
+						activeOption as number,
+						"tripDetails",
+						trg
+					);
+				}
 			} else {
 				const trg = [
 					...getContainerItems(
-						activeOption,
+						activeOption as number,
 						"day",
 						targetContainer.day
 					)
 				];
-				trg.splice(toIndex, 0, movedItem);
-				setContainerItems(
-					activeOption,
-					"day",
-					trg,
-					targetContainer.day
-				);
+				if (targetContainer.nestedIn !== undefined) {
+					const parent = trg[targetContainer.nestedIn];
+					const nested = [...(parent.items || [])];
+					nested.splice(toIndex, 0, movedItem);
+					setContainerItems(
+						activeOption as number,
+						"day",
+						nested,
+						targetContainer.day,
+						targetContainer.nestedIn
+					);
+				} else {
+					trg.splice(toIndex, 0, movedItem);
+					setContainerItems(
+						activeOption as number,
+						"day",
+						trg,
+						targetContainer.day
+					);
+				}
 			}
 
 			setActiveDayItem(null);
@@ -464,8 +702,8 @@ export const Itinerary: React.FC = () => {
 				<div className="flex-1 flex overflow-hidden">
 					<BoardColumns
 						data={currentData}
-						control={control}
 						optionId={activeOption}
+						onRemoveItem={handleRemoveItem}
 					/>
 					<ItinerarySidebar />
 				</div>
@@ -485,9 +723,9 @@ export const Itinerary: React.FC = () => {
 						<DayColumn
 							day={activeColumn}
 							items={currentData.days[activeColumn]}
-							control={control}
 							isOverlay
 							optionId={activeOption}
+							onRemoveItem={handleRemoveItem}
 						/>
 					)}
 				</DragOverlay>

@@ -1,33 +1,38 @@
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { type FC } from "react";
-import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
 
-import { type IDayItem, type TOptionsData, containerIdDay } from "../../model";
-import { DroppableDayContainer } from "../droppable-day-container/droppable-day-container";
+import { type IDayItem, containerIdDay } from "../../model";
+import { DroppableDayContainer } from "../droppable-day-container";
 
 export interface IDayColumnProps {
 	day: number;
 	items: IDayItem[];
-	control: Control<{ optionsData: TOptionsData }>;
 	isDragging?: boolean;
 	isOverlay?: boolean;
 	attributes?: DraggableAttributes;
 	listeners?: SyntheticListenerMap;
 	optionId: number;
+	onRemoveItem: (loc: {
+		optionId: number;
+		location: "tripDetails" | "day";
+		day?: number;
+		index: number;
+		nestedIndex?: number;
+	}) => void;
 }
 
 export const DayColumn: FC<IDayColumnProps> = ({
 	day,
 	items,
-	control,
 	isDragging,
 	isOverlay,
 	attributes,
 	listeners,
-	optionId
+	optionId,
+	onRemoveItem
 }) => {
 	return (
 		<div
@@ -41,10 +46,10 @@ export const DayColumn: FC<IDayColumnProps> = ({
 			<DroppableDayContainer
 				items={items}
 				day={day}
-				control={control}
 				containerId={containerIdDay(day)}
 				sortableProps={{ attributes, listeners }}
 				optionId={optionId}
+				onRemoveItem={onRemoveItem}
 			/>
 		</div>
 	);

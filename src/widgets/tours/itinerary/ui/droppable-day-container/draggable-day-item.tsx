@@ -6,16 +6,20 @@ import type { FC } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { InfoCircleIcon } from "@/shared/assets";
+import { cn } from "@/shared/lib";
 import { Button, Card, CardContent } from "@/shared/ui";
 
 import {
+	ENUM_EVENT,
 	EVENT_TEMPLATES_LIST,
 	EVENT_TYPE_TO_PATH,
 	type IDayItem,
+	type ITemplateItem,
 	itemId
 } from "../../model";
 
 import { DraggableDayItemMenu } from "./draggable-day-item-menu";
+import { DroppableNestedContainer } from "./droppable-nested-container";
 
 const variants = cva(" p-3 bg-background hover:text-primary", {
 	variants: {
@@ -30,7 +34,8 @@ export const DraggableDayItem: FC<{
 	item: IDayItem;
 	isOverlay?: boolean;
 	onRemove?: () => void;
-}> = ({ item, isOverlay, onRemove }) => {
+	onRemoveNested?: (nestedIndex: number) => void;
+}> = ({ item, isOverlay, onRemove, onRemoveNested }) => {
 	const {
 		attributes,
 		listeners,
@@ -43,33 +48,41 @@ export const DraggableDayItem: FC<{
 		transform: CSS.Transform.toString(transform),
 		transition
 	};
-	const template = EVENT_TEMPLATES_LIST.components.find(
-		(tpl) => tpl.event_type === item.event_type
-	);
+	const template =
+		EVENT_TEMPLATES_LIST.components.find(
+			(tpl: ITemplateItem) => tpl.event_type === item.event_type
+		) ||
+		EVENT_TEMPLATES_LIST.library.find(
+			(tpl: ITemplateItem) => tpl.event_type === item.event_type
+		);
 	const Icon = template?.icon || InfoCircleIcon;
 	const color = template?.color || "gray-500";
 
+	const isMultiplyOption = item.event_type === ENUM_EVENT.MULTIPLY_OPTION;
+
 	const { tourId } = useParams<{ tourId: string }>();
-	const href = EVENT_TYPE_TO_PATH[item.event_type]
+	const href = (EVENT_TYPE_TO_PATH[item.event_type] || "")
 		.replace(":tourId", tourId || "")
 		.replace(":eventId", item.id);
 
-	return (
-		<Link to={href}>
-			<Card
-				ref={setNodeRef}
-				style={style}
-				className={variants({
-					dragging: isOverlay
-						? "overlay"
-						: isDragging
-							? "over"
-							: undefined
-				})}
-			>
-				<CardContent className="flex items-start gap-3 p-0 justify-between relative">
+	const content = (
+		<Card
+			ref={setNodeRef}
+			style={style}
+			className={variants({
+				dragging: isOverlay
+					? "overlay"
+					: isDragging
+						? "over"
+						: undefined
+			})}
+		>
+			<CardContent className="flex flex-col gap-3 p-3 relative">
+				<div className="flex items-start gap-3 justify-between w-full">
 					<div
-						className={`bg-${color} rounded-full p-2.5 flex items-center`}
+						className={cn(
+							`bg-${color} rounded-full p-2.5 flex items-center`
+						)}
 					>
 						<Icon className="size-4 text-white" />
 					</div>
@@ -86,15 +99,29 @@ export const DraggableDayItem: FC<{
 						size="icon"
 						{...attributes}
 						{...listeners}
-						className="cursor-grab mt-2"
+						className="cursor-grab"
 					>
 						<GripVertical className="w-5 h-5 text-muted-foreground" />
 					</Button>
 					<div className="absolute -right-3 -top-4">
 						<DraggableDayItemMenu onRemove={onRemove} />
 					</div>
-				</CardContent>
-			</Card>
-		</Link>
+				</div>
+
+				{isMultiplyOption && (
+					<DroppableNestedContainer
+						items={item.items || []}
+						parentBlockId={item.block_id}
+						onRemoveNested={onRemoveNested || (() => {})}
+					/>
+				)}
+			</CardContent>
+		</Card>
 	);
+
+	if (isMultiplyOption) {
+		return content;
+	}
+
+	return <Link to={href}>{content}</Link>;
 };
