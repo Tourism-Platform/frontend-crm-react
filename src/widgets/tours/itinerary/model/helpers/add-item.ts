@@ -1,14 +1,8 @@
-import type { IDayItem, TOptionsData } from "../types";
-
-interface ITargetContainer {
-	location: "tripDetails" | "day";
-	day?: number;
-	nestedIndex?: number;
-}
+import type { IDayItem, IItemBaseLocation, TOptionsData } from "../types";
 
 export function addItemToData(
 	optionsData: TOptionsData,
-	target: ITargetContainer,
+	target: IItemBaseLocation,
 	toIndex: number,
 	item: IDayItem,
 	targetOptionId: number

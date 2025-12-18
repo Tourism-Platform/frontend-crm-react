@@ -1,26 +1,17 @@
-import type { IDayItem, TOptionsData } from "../types";
+import type {
+	IDayItem,
+	IItemBaseLocation,
+	IItemLocation,
+	TOptionsData
+} from "../types";
 
 import { addItemToData } from "./add-item";
 import { removeItemFromData } from "./remove-item";
 
-interface IItemLocation {
-	optionId: number;
-	location: "tripDetails" | "day";
-	day?: number;
-	index: number;
-	nestedIndex?: number;
-}
-
-interface ITargetContainer {
-	location: "tripDetails" | "day";
-	day?: number;
-	nestedIndex?: number;
-}
-
 export function moveItemInData(
 	optionsData: TOptionsData,
 	from: IItemLocation,
-	target: ITargetContainer,
+	target: IItemBaseLocation,
 	toIndex: number,
 	movedItem: IDayItem,
 	targetOptionId: number

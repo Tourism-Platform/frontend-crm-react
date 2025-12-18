@@ -21,6 +21,7 @@ import {
 	ENUM_EVENT,
 	EVENT_TEMPLATES_LIST,
 	type IDayItem,
+	type IItemLocation,
 	type IOption,
 	type ITemplateItem,
 	type TOptionsData,
@@ -64,13 +65,7 @@ export const Itinerary: React.FC = () => {
 		useState<ITemplateItem | null>(null);
 	const [activeColumn, setActiveColumn] = useState<number | null>(null);
 
-	const handleRemoveItem = (loc: {
-		optionId: number;
-		location: "tripDetails" | "day";
-		day?: number;
-		index: number;
-		nestedIndex?: number;
-	}) => {
+	const handleRemoveItem = (loc: IItemLocation) => {
 		const resultData = removeItemFromData(optionsData, loc);
 		setValue("optionsData", resultData);
 	};

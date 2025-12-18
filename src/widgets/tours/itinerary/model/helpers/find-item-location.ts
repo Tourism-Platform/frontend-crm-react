@@ -1,15 +1,9 @@
-import type { TOptionsData } from "../types";
+import type { IItemLocation, TOptionsData } from "../types";
 
 export function findItemLocation(
 	optionsData: TOptionsData,
 	itemIdRaw: string
-): {
-	optionId: number;
-	location: "tripDetails" | "day";
-	day?: number;
-	index: number;
-	nestedIndex?: number;
-} | null {
+): IItemLocation | null {
 	for (const key of Object.keys(optionsData)) {
 		const optionKey = Number(key);
 		const data = optionsData[optionKey];

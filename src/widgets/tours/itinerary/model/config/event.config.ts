@@ -20,12 +20,6 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 			icon: Calendar,
 			color: "blue-500"
 		}
-		// {
-		// 	event_type: ENUM_EVENT.ITINERARY_LIBRARY,
-		// 	title: "Itinerary library",
-		// 	icon: MapPin,
-		// 	color: "blue-500"
-		// }
 	],
 	components: [
 		{

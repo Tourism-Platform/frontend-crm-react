@@ -1,12 +1,4 @@
-import type { TOptionsData } from "../types";
-
-interface IItemLocation {
-	optionId: number;
-	location: "tripDetails" | "day";
-	day?: number;
-	index: number;
-	nestedIndex?: number;
-}
+import type { IItemLocation, TOptionsData } from "../types";
 
 export function removeItemFromData(
 	optionsData: TOptionsData,
