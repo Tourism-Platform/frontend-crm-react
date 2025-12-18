@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 
+import {
+	addItemToData,
+	moveItemInData,
+	removeItemFromData,
+	reorderDaysInData
+} from "../helpers";
 import { ENUM_EVENT, type IDayItem } from "../types";
-
-import { addItemToData } from "./add-item";
-import { moveItemInData } from "./move-item";
-import { removeItemFromData } from "./remove-item";
-import { reorderDaysInData } from "./reorder-days";
 
 describe("Itinerary DnD Scenarios", () => {
 	const initialData = {

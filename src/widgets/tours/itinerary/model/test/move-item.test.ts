@@ -1,9 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { moveItemInData } from "../helpers";
 import { ENUM_EVENT } from "../types";
-import type { TOptionsData } from "../types/option.types";
-
-import { moveItemInData } from "./move-item";
+import type { TOptionsData } from "../types";
 
 describe("moveItemInData", () => {
 	const initialData: TOptionsData = {

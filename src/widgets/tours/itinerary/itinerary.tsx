@@ -9,7 +9,6 @@ import {
 } from "@dnd-kit/core";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { v4 as uuidv4 } from "uuid";
 
 import {
 	ITINERARY_ROUTES_MOCK,
@@ -18,19 +17,15 @@ import {
 import { Separator } from "@/shared/ui";
 
 import {
-	ENUM_EVENT,
-	EVENT_TEMPLATES_LIST,
 	type IDayItem,
 	type IItemLocation,
 	type IOption,
 	type ITemplateItem,
 	type TOptionsData,
-	addItemToData,
-	containerIdTrip,
-	findItemLocation,
-	moveItemInData,
-	removeItemFromData,
-	reorderDaysInData
+	handleDragEnd,
+	handleDragOver,
+	handleDragStart,
+	removeItemFromData
 } from "./model";
 import {
 	BoardColumns,
@@ -70,277 +65,31 @@ export const Itinerary: React.FC = () => {
 		setValue("optionsData", resultData);
 	};
 
-	// onDragStart — capture active id and snapshot (for overlay)
-	const handleDragStart = (event: DragEndEvent) => {
-		const id = event.active.id as string;
+	const onDragStart = (event: DragEndEvent) => {
+		const state = handleDragStart(event, optionsData);
+		setActiveDayItem(state.activeDayItem);
+		setActiveTemplateItem(state.activeTemplateItem);
+		setActiveColumn(state.activeColumn);
+	};
 
-		if (id.startsWith("item:")) {
-			const rawId = id.replace("item:", "");
-			const loc = findItemLocation(optionsData, rawId);
-			if (loc) {
-				let item: IDayItem;
-				if (loc.location === "tripDetails") {
-					item = optionsData[loc.optionId].tripDetails[loc.index];
-					if (loc.nestedIndex !== undefined) {
-						item = item.items![loc.nestedIndex];
-					}
-				} else {
-					item =
-						optionsData[loc.optionId].days[loc.day as number][
-							loc.index
-						];
-					if (loc.nestedIndex !== undefined) {
-						item = item.items![loc.nestedIndex];
-					}
-				}
-				setActiveDayItem(item);
-			}
-		} else if (id.startsWith("template:")) {
-			const raw = id.replace("template:", "");
-			const found = [
-				...EVENT_TEMPLATES_LIST.library,
-				...EVENT_TEMPLATES_LIST.components
-			].find((t) => t.event_type === raw);
-			if (found) {
-				setActiveTemplateItem(found);
-			}
-		} else if (id.startsWith("column:")) {
-			const day = Number(id.replace("column:", ""));
-			setActiveColumn(day);
+	const onDragEnd = (event: DragEndEvent) => {
+		const result = handleDragEnd(event, optionsData, activeOption);
+
+		if (result.shouldUpdate && result.newData) {
+			setValue("optionsData", result.newData);
+		}
+
+		if (result.clearState) {
+			setActiveDayItem(null);
+			setActiveTemplateItem(null);
+			setActiveColumn(null);
 		}
 	};
 
-	// onDragEnd — main logic: move existing item or create from template
-	const handleDragEnd = (event: DragEndEvent) => {
-		const { active, over } = event;
-
-		if (!over) {
-			setActiveDayItem(null);
-			setActiveTemplateItem(null);
-			setActiveColumn(null);
-			return;
-		}
-
-		const activeIdStr = active.id as string;
-		const overIdStr = over.id as string;
-
-		// Column reordering
-		if (
-			activeIdStr.startsWith("column:") &&
-			overIdStr.startsWith("column:")
-		) {
-			const activeDay = Number(activeIdStr.replace("column:", ""));
-			const overDay = Number(overIdStr.replace("column:", ""));
-
-			if (activeDay !== overDay) {
-				const resultData = reorderDaysInData(
-					optionsData,
-					activeOption,
-					activeDay,
-					overDay
-				);
-				setValue("optionsData", resultData);
-			}
-			setActiveColumn(null);
-			return;
-		}
-
-		// Determine target container and insertion index
-		let targetContainer: {
-			location: "tripDetails" | "day";
-			day?: number;
-			nestedIndex?: number;
-		} | null = null;
-		let toIndex = 0;
-
-		if (overIdStr === containerIdTrip()) {
-			targetContainer = { location: "tripDetails" };
-			toIndex = optionsData[activeOption].tripDetails.length;
-		} else if (overIdStr.startsWith("container:day-")) {
-			const day = Number(overIdStr.replace("container:day-", ""));
-			targetContainer = { location: "day", day };
-			toIndex = (optionsData[activeOption].days[day] || []).length;
-		} else if (overIdStr.startsWith("item:")) {
-			const rawOver = overIdStr.replace("item:", "");
-			const loc = findItemLocation(optionsData, rawOver);
-			if (loc) {
-				const isNested = loc.nestedIndex !== undefined;
-				targetContainer =
-					loc.location === "tripDetails"
-						? {
-								location: "tripDetails",
-								nestedIndex: isNested ? loc.index : undefined
-							}
-						: {
-								location: "day",
-								day: loc.day,
-								nestedIndex: isNested ? loc.index : undefined
-							};
-				toIndex = isNested ? loc.nestedIndex! : loc.index;
-			}
-		} else if (overIdStr.startsWith("container:nested:")) {
-			const parentBlockId = overIdStr.replace("container:nested:", "");
-			const loc = findItemLocation(optionsData, parentBlockId);
-			if (loc) {
-				targetContainer =
-					loc.location === "tripDetails"
-						? { location: "tripDetails", nestedIndex: loc.index }
-						: {
-								location: "day",
-								day: loc.day,
-								nestedIndex: loc.index
-							};
-				const parent =
-					loc.location === "tripDetails"
-						? optionsData[loc.optionId].tripDetails[loc.index]
-						: optionsData[loc.optionId].days[loc.day as number][
-								loc.index
-							];
-				toIndex = (parent.items || []).length;
-			}
-		}
-
-		if (!targetContainer) {
-			setActiveDayItem(null);
-			setActiveTemplateItem(null);
-			setActiveColumn(null);
-			return;
-		}
-
-		// Template -> create new item
-		if (activeIdStr.startsWith("template:")) {
-			const tplId = activeIdStr.replace("template:", "");
-			const tpl = [
-				...EVENT_TEMPLATES_LIST.library,
-				...EVENT_TEMPLATES_LIST.components
-			].find((t) => t.event_type === tplId);
-			if (!tpl) return;
-
-			const newItem: IDayItem = {
-				id: uuidv4(),
-				block_id: `${tpl.event_type}-${Date.now()}`,
-				event_type: tpl.event_type,
-				title: tpl.title,
-				subtitle: "Information"
-			};
-
-			if (
-				newItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
-				targetContainer.nestedIndex !== undefined
-			) {
-				setActiveDayItem(null);
-				setActiveTemplateItem(null);
-				return;
-			}
-
-			const resultData = addItemToData(
-				optionsData,
-				targetContainer,
-				toIndex,
-				newItem,
-				activeOption
-			);
-			setValue("optionsData", resultData);
-			setActiveDayItem(null);
-			setActiveTemplateItem(null);
-			return;
-		}
-
-		// Existing item move
-		if (activeIdStr.startsWith("item:")) {
-			const rawActive = activeIdStr.replace("item:", "");
-			const from = findItemLocation(optionsData, rawActive);
-			if (!from) {
-				setActiveDayItem(null);
-				setActiveTemplateItem(null);
-				setActiveColumn(null);
-				return;
-			}
-
-			// capture moved item before mutating
-			let movedItem: IDayItem;
-			if (from.location === "tripDetails") {
-				const parent =
-					optionsData[from.optionId].tripDetails[from.index];
-				movedItem =
-					from.nestedIndex !== undefined
-						? parent.items![from.nestedIndex]
-						: parent;
-			} else {
-				const parent =
-					optionsData[from.optionId].days[from.day as number][
-						from.index
-					];
-				movedItem =
-					from.nestedIndex !== undefined
-						? parent.items![from.nestedIndex]
-						: parent;
-			}
-
-			// 0. Prevent nesting MULTIPLY_OPTION into another MULTIPLY_OPTION
-			if (
-				movedItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
-				targetContainer.nestedIndex !== undefined
-			) {
-				setActiveDayItem(null);
-				setActiveTemplateItem(null);
-				setActiveColumn(null);
-				return;
-			}
-
-			const resultData = moveItemInData(
-				optionsData,
-				from,
-				targetContainer,
-				toIndex,
-				movedItem,
-				activeOption
-			);
-			setValue("optionsData", resultData);
-			setActiveDayItem(null);
-			setActiveTemplateItem(null);
-			return;
-		}
-	};
-
-	// onDragOver handles visual swapping during drag
-	const handleDragOver = (event: DragEndEvent) => {
-		const { active, over } = event;
-		if (!over) return;
-
-		const activeIdStr = active.id as string;
-		const overIdStr = over.id as string;
-
-		// Column reordering during drag
-		if (activeIdStr.startsWith("column:")) {
-			let overDay: number | null = null;
-			if (overIdStr.startsWith("column:")) {
-				overDay = Number(overIdStr.replace("column:", ""));
-			} else if (overIdStr.startsWith("container:day-")) {
-				overDay = Number(overIdStr.replace("container:day-", ""));
-			} else if (overIdStr.startsWith("item:")) {
-				const loc = findItemLocation(
-					optionsData,
-					overIdStr.replace("item:", "")
-				);
-				if (loc && loc.location === "day") overDay = loc.day!;
-			}
-
-			if (overDay !== null) {
-				const activeDay = Number(activeIdStr.replace("column:", ""));
-				if (activeDay !== overDay) {
-					const resultData = reorderDaysInData(
-						optionsData,
-						activeOption,
-						activeDay,
-						overDay
-					);
-					setValue("optionsData", resultData, {
-						shouldValidate: false
-					});
-				}
-			}
-			return;
+	const onDragOver = (event: DragEndEvent) => {
+		const newData = handleDragOver(event, optionsData, activeOption);
+		if (newData) {
+			setValue("optionsData", newData, { shouldValidate: false });
 		}
 	};
 
@@ -354,9 +103,9 @@ export const Itinerary: React.FC = () => {
 		<DndContext
 			sensors={sensors}
 			collisionDetection={closestCorners}
-			onDragStart={handleDragStart}
-			onDragOver={handleDragOver}
-			onDragEnd={handleDragEnd}
+			onDragStart={onDragStart}
+			onDragOver={onDragOver}
+			onDragEnd={onDragEnd}
 		>
 			<div className="h-full flex flex-col">
 				<BoardTabs
