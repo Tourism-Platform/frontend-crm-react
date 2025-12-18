@@ -1,4 +1,4 @@
-import { useDroppable } from "@dnd-kit/core";
+import { useDndContext, useDroppable } from "@dnd-kit/core";
 import {
 	SortableContext,
 	verticalListSortingStrategy
@@ -28,13 +28,17 @@ export const DroppableNestedContainer: FC<IDroppableNestedContainerProps> = ({
 	const { setNodeRef, isOver } = useDroppable({
 		id: containerId
 	});
+	const { over } = useDndContext();
+
+	const isOverItem = items.some((item) => itemId(item.block_id) === over?.id);
+	const isOverContainer = isOver || isOverItem;
 
 	return (
 		<div
 			ref={setNodeRef}
 			className={cn(
 				"mt-3 p-2 rounded-md border-2 border-dashed transition-colors",
-				isOver
+				isOverContainer
 					? "bg-primary/10 border-primary"
 					: "bg-muted/30 border-muted-foreground/20"
 			)}

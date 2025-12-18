@@ -1,4 +1,8 @@
-import { type DraggableAttributes, useDroppable } from "@dnd-kit/core";
+import {
+	type DraggableAttributes,
+	useDndContext,
+	useDroppable
+} from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import {
 	SortableContext,
@@ -35,13 +39,17 @@ export const DroppableDayContainer: FC<IDroppableDayContainerProps> = ({
 }) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const { setNodeRef, isOver } = useDroppable({ id: containerId });
+	const { over } = useDndContext();
+
+	const isOverItem = items.some((item) => itemId(item.block_id) === over?.id);
+	const isOverContainer = isOver || isOverItem;
 
 	return (
 		<Card
 			ref={setNodeRef}
 			className={cn(
 				"min-h-[400px] rounded-lg border-2 border-dashed gap-3 pt-2",
-				isOver ? "ring-2 ring-primary" : ""
+				isOverContainer ? "ring-2 ring-primary" : ""
 			)}
 		>
 			<CardHeader className="flex justify-end pr-2">
