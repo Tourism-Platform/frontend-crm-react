@@ -9,137 +9,322 @@
 			}
 		}
 	},
-
 	"tabs": {
 		"general": "General info",
 		"media": "Media",
 		"pricing": "Pricing & booking"
 	},
-
 	"general": {
 		"flights": {
-			"title": "Flights",
+			"title": "Transportation subtype",
+			"tabs": {
+				"fly": "Fly",
+				"train": "Train",
+				"bus": "Bus"
+			},
 			"form": {
 				"title": "New flight",
-				"fields": {
-					"airline_code": {
-						"label": "Airline code",
-						"placeholder": "Enter airline code",
-						"errors": {
-							"required": "Airline code is required",
-							"min": "Airline code is too short",
-							"max": "Airline code is too long"
-						}
-					},
-					"flight_number": {
-						"label": "Flight number",
-						"placeholder": "Enter flight number",
-						"errors": {
-							"required": "Flight number is required",
-							"min": "Flight number is too short",
-							"max": "Flight number is too long",
-							"invalid": "Invalid flight number format"
-						}
-					},
-					"departure_airport_code": {
-						"label": "Departure airport code",
-						"placeholder": "Enter departure airport code",
-						"errors": {
-							"required": "Departure airport code is required",
-							"length": "Departure airport code must be 3 characters",
-							"invalid": "Invalid IATA airport code"
-						}
-					},
-					"arrival_airport_code": {
-						"label": "Arrival airport code",
-						"placeholder": "Enter arrival airport code",
-						"errors": {
-							"required": "Arrival airport code is required",
-							"length": "Arrival airport code must be 3 characters",
-							"invalid": "Invalid IATA airport code"
-						}
-					},
-					"departure_date": {
-						"label": "Departure date",
-						"errors": {
-							"required": "Departure date is required",
-							"invalid": "Invalid date format"
-						}
-					},
-					"arrival_date": {
-						"label": "Arrival date",
-						"errors": {
-							"required": "Arrival date is required",
-							"invalid": "Invalid date format"
-						}
-					},
-					"departure_time": {
-						"label": "Departure time",
-						"errors": {
-							"required": "Departure time is required",
-							"invalid": "Invalid time format"
-						}
-					},
-					"arrival_time": {
-						"label": "Arrival time",
-						"errors": {
-							"required": "Arrival time is required",
-							"invalid": "Invalid time format"
-						}
-					},
-					"departure_timezone": {
-						"label": "Timezone",
-						"placeholder": "Choose timezone",
-						"errors": {
-							"required": "Departure timezone is required"
-						}
-					},
-					"arrival_timezone": {
-						"label": "Timezone",
-						"placeholder": "Choose timezone",
-						"errors": {
-							"required": "Arrival timezone is required"
-						}
-					},
-					"departure_terminal": {
-						"label": "Departure terminal",
-						"placeholder": "Enter departure terminal",
-						"errors": {
-							"required": "Departure terminal is required",
-							"max": "Terminal name is too long"
-						}
-					},
-					"departure_gate": {
-						"label": "Departure gate",
-						"placeholder": "Enter departure gate",
-						"errors": {
-							"required": "Departure gate is required",
-							"max": "Gate name is too long"
-						}
-					},
-					"arrival_terminal": {
-						"label": "Arrival terminal",
-						"placeholder": "Enter arrival terminal",
-						"errors": {
-							"required": "Arrival terminal is required",
-							"max": "Terminal name is too long"
-						}
-					},
-					"arrival_gate": {
-						"label": "Arrival gate",
-						"placeholder": "Enter arrival gate",
-						"errors": {
-							"required": "Arrival gate is required",
-							"max": "Gate name is too long"
+				"fly": {
+					"fields": {
+						"airline_code": {
+							"label": "Airline code",
+							"placeholder": "Enter airline code",
+							"errors": {
+								"required": "Airline code is required",
+								"min": "Airline code is too short",
+								"max": "Airline code is too long"
+							}
+						},
+						"flight_number": {
+							"label": "Flight number",
+							"placeholder": "Enter flight number",
+							"errors": {
+								"required": "Flight number is required",
+								"min": "Flight number is too short",
+								"max": "Flight number is too long",
+								"invalid": "Invalid flight number format"
+							}
+						},
+						"departure_airport_code": {
+							"label": "Departure airport code",
+							"placeholder": "Enter departure airport code",
+							"errors": {
+								"required": "Departure airport code is required",
+								"length": "Departure airport code must be 3 characters",
+								"invalid": "Invalid IATA airport code"
+							}
+						},
+						"arrival_airport_code": {
+							"label": "Arrival airport code",
+							"placeholder": "Enter arrival airport code",
+							"errors": {
+								"required": "Arrival airport code is required",
+								"length": "Arrival airport code must be 3 characters",
+								"invalid": "Invalid IATA airport code"
+							}
+						},
+						"departure_date": {
+							"label": "Departure date",
+							"placeholder": "Select date",
+							"errors": {
+								"required": "Departure date is required",
+								"invalid": "Invalid date format"
+							}
+						},
+						"arrival_date": {
+							"label": "Arrival date",
+							"placeholder": "Select date",
+							"errors": {
+								"required": "Arrival date is required",
+								"invalid": "Invalid date format"
+							}
+						},
+						"departure_time": {
+							"label": "Departure time",
+							"placeholder": "Select time",
+							"errors": {
+								"required": "Departure time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"arrival_time": {
+							"label": "Arrival time",
+							"placeholder": "Select time",
+							"errors": {
+								"required": "Arrival time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"departure_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "Departure timezone is required"
+							}
+						},
+						"arrival_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "Arrival timezone is required"
+							}
+						},
+						"departure_terminal": {
+							"label": "Departure terminal",
+							"placeholder": "Enter departure terminal",
+							"errors": {
+								"required": "Departure terminal is required",
+								"max": "Terminal name is too long"
+							}
+						},
+						"departure_gate": {
+							"label": "Departure gate",
+							"placeholder": "Enter departure gate",
+							"errors": {
+								"required": "Departure gate is required",
+								"max": "Gate name is too long"
+							}
+						},
+						"arrival_terminal": {
+							"label": "Arrival terminal",
+							"placeholder": "Enter arrival terminal",
+							"errors": {
+								"required": "Arrival terminal is required",
+								"max": "Terminal name is too long"
+							}
+						},
+						"arrival_gate": {
+							"label": "Arrival gate",
+							"placeholder": "Enter arrival gate",
+							"errors": {
+								"required": "Arrival gate is required",
+								"max": "Gate name is too long"
+							}
 						}
 					}
+				},
+				"train": {
+					"fields": {
+						"airline_code": {
+							"label": "Carrier",
+							"placeholder": "Enter carrier",
+							"errors": {
+								"required": "Carrier is required",
+								"min": "Carrier is too short",
+								"max": "Carrier is too long"
+							}
+						},
+						"flight_number": {
+							"label": "Train number",
+							"placeholder": "Enter train number",
+							"errors": {
+								"required": "Train number is required",
+								"min": "Train number is too short",
+								"max": "Train number is too long",
+								"invalid": "Invalid format"
+							}
+						},
+						"departure_airport_code": {
+							"label": "Departure station",
+							"placeholder": "Enter departure station",
+							"errors": {
+								"required": "Departure station is required",
+								"length": "Station code must be 3 characters",
+								"invalid": "Invalid station code"
+							}
+						},
+						"arrival_airport_code": {
+							"label": "Arrival station",
+							"placeholder": "Enter arrival station",
+							"errors": {
+								"required": "Arrival station is required",
+								"length": "Station code must be 3 characters",
+								"invalid": "Invalid station code"
+							}
+						},
+						"departure_date": {
+							"label": "Departure date",
+							"placeholder": "Select date",
+							"errors": {
+								"required": "Departure date is required",
+								"invalid": "Invalid date format"
+							}
+						},
+						"arrival_date": {
+							"label": "Arrival date",
+							"placeholder": "Select date",
+							"errors": {
+								"required": "Arrival date is required",
+								"invalid": "Invalid date format"
+							}
+						},
+						"departure_time": {
+							"label": "Departure time",
+							"placeholder": "Select time",
+							"errors": {
+								"required": "Departure time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"arrival_time": {
+							"label": "Arrival time",
+							"placeholder": "Select time",
+							"errors": {
+								"required": "Arrival time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"departure_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "Departure timezone is required"
+							}
+						},
+						"arrival_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "Arrival timezone is required"
+							}
+						}
+					}
+				},
+				"bus": {
+					"fields": {
+						"airline_code": {
+							"label": "Bus company",
+							"placeholder": "Enter bus company",
+							"errors": {
+								"required": "Company name is required",
+								"min": "Company name is too short",
+								"max": "Company name is too long"
+							}
+						},
+						"flight_number": {
+							"label": "Bus number",
+							"placeholder": "Enter bus number",
+							"errors": {
+								"required": "Bus number is required",
+								"min": "Bus number is too short",
+								"max": "Bus number is too long",
+								"invalid": "Invalid format"
+							}
+						},
+						"departure_airport_code": {
+							"label": "Departure point",
+							"placeholder": "Enter departure point",
+							"errors": {
+								"required": "Departure point is required",
+								"length": "Point code must be 3 characters",
+								"invalid": "Invalid point code"
+							}
+						},
+						"arrival_airport_code": {
+							"label": "Arrival point",
+							"placeholder": "Enter arrival point",
+							"errors": {
+								"required": "Arrival point is required",
+								"length": "Point code must be 3 characters",
+								"invalid": "Invalid point code"
+							}
+						},
+						"departure_date": {
+							"label": "Departure date",
+							"placeholder": "Select date",
+							"errors": {
+								"required": "Departure date is required",
+								"invalid": "Invalid date format"
+							}
+						},
+						"arrival_date": {
+							"label": "Arrival date",
+							"placeholder": "Select date",
+							"errors": {
+								"required": "Arrival date is required",
+								"invalid": "Invalid date format"
+							}
+						},
+						"departure_time": {
+							"label": "Departure time",
+							"placeholder": "Select time",
+							"errors": {
+								"required": "Departure time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"arrival_time": {
+							"label": "Arrival time",
+							"placeholder": "Select time",
+							"errors": {
+								"required": "Arrival time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"departure_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "Departure timezone is required"
+							}
+						},
+						"arrival_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "Arrival timezone is required"
+							}
+						}
+					}
+				},
+				"errors": {
+					"min_segments": "At least one route segment is required"
 				}
 			},
 			"buttons": {
 				"add": "Add flight"
 			}
 		},
-
 		"description": {
 			"title": "Description",
 			"description": {
@@ -152,11 +337,9 @@
 			}
 		}
 	},
-
 	"media": {
 		"title": "Displayed photos"
 	},
-
 	"pricing": {
 		"title": "Pricing",
 		"invoicing": {
@@ -173,7 +356,6 @@
 				"per_person": "Per person"
 			}
 		},
-
 		"form": {
 			"pricing_details": {
 				"title": "Pricing details",
@@ -192,7 +374,6 @@
 					}
 				}
 			},
-
 			"booking_details": {
 				"title": "Booking details",
 				"fields": {
@@ -227,7 +408,6 @@
 					}
 				}
 			},
-
 			"package": {
 				"fields": {
 					"package": {

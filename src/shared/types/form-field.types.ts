@@ -8,6 +8,7 @@ type TGenericKey = string;
 interface IFormBase<L = TGenericLabel, K = TGenericKey> {
 	label: L;
 	key: K;
+	className?: string;
 }
 
 // Универсальные поля

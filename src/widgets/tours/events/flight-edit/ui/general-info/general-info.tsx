@@ -4,16 +4,39 @@ import { useForm } from "react-hook-form";
 
 import { Button, Form, Separator } from "@/shared/ui";
 
-import { GENERAL_INFO_SCHEMA, type TGeneralInfoSchema } from "../../model";
+import {
+	BASE_FLIGHT_SCHEMA,
+	ENUM_FLIGHT_TRANSPORT_TYPE,
+	type TGeneralInfoSchema
+} from "../../model";
 
 import { DescriptionInfo } from "./description-info";
 import { FlightInfo } from "./flight-info";
 
 export const GeneralInfo: FC = () => {
 	const form = useForm<TGeneralInfoSchema>({
-		resolver: zodResolver(GENERAL_INFO_SCHEMA),
+		resolver: zodResolver(BASE_FLIGHT_SCHEMA),
 		defaultValues: {
-			flights: [],
+			transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
+			route: [
+				{
+					transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
+					airline_code: "",
+					flight_number: "",
+					departure_airport_code: "",
+					arrival_airport_code: "",
+					departure_date: null,
+					arrival_date: null,
+					departure_time: null,
+					arrival_time: null,
+					departure_timezone: "",
+					arrival_timezone: "",
+					departure_terminal: "",
+					departure_gate: "",
+					arrival_terminal: "",
+					arrival_gate: ""
+				}
+			],
 			description: ""
 		},
 		mode: "onSubmit"

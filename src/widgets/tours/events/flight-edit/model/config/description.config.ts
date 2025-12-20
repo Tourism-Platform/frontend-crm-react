@@ -5,6 +5,6 @@ export const FLIGHT_DESCRIPTION: TForm[] = [
 		label: "general.description.description.label",
 		placeholder: "general.description.description.placeholder",
 		key: ENUM_FORM_FLIGHT.DESCRIPTION,
-		fieldType: "textarea"
+		fieldType: "editor"
 	}
 ];
