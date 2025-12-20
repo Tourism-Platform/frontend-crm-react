@@ -25,29 +25,23 @@ export const GENERAL_INFO_SCHEMA = z.object({
 			message: "general.accommodation.form.fields.description.errors.max"
 		}),
 
-	[ENUM_FORM_ACCOMMODATION.LENGTH_OF_STAY]: z
-		.number()
-		.int({
-			message:
-				"general.schedule.form.fields.length_of_stay.errors.invalid"
-		})
-		.min(1, {
-			message:
-				"general.schedule.form.fields.length_of_stay.errors.required"
-		})
-		.max(365, {
-			message: "general.schedule.form.fields.length_of_stay.errors.max"
-		}),
-
+	[ENUM_FORM_ACCOMMODATION.LENGTH_OF_STAY]: z.string().min(1, {
+		message: "general.schedule.form.fields.length_of_stay.errors.required"
+	}),
 	[ENUM_FORM_ACCOMMODATION.CHECK_IN_TIME]: z
 		.string()
-		.min(1, {
+		.nullable()
+		.refine((val) => val !== null, {
 			message:
 				"general.schedule.form.fields.check_in_time.errors.required"
 		})
-		.regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
-			message: "general.schedule.form.fields.check_in_time.errors.invalid"
-		}),
+		.refine(
+			(val) => val === null || /^([01]\d|2[0-3]):([0-5]\d)$/.test(val),
+			{
+				message:
+					"general.schedule.form.fields.check_in_time.errors.invalid"
+			}
+		),
 
 	[ENUM_FORM_ACCOMMODATION.CHECK_IN_TIMEZONE]: z.string().min(1, {
 		message:
@@ -56,14 +50,18 @@ export const GENERAL_INFO_SCHEMA = z.object({
 
 	[ENUM_FORM_ACCOMMODATION.CHECK_OUT_TIME]: z
 		.string()
-		.min(1, {
+		.nullable()
+		.refine((val) => val !== null, {
 			message:
 				"general.schedule.form.fields.check_out_time.errors.required"
 		})
-		.regex(/^([01]\d|2[0-3]):([0-5]\d)$/, {
-			message:
-				"general.schedule.form.fields.check_out_time.errors.invalid"
-		}),
+		.refine(
+			(val) => val === null || /^([01]\d|2[0-3]):([0-5]\d)$/.test(val),
+			{
+				message:
+					"general.schedule.form.fields.check_out_time.errors.invalid"
+			}
+		),
 
 	[ENUM_FORM_ACCOMMODATION.CHECK_OUT_TIMEZONE]: z.string().min(1, {
 		message:

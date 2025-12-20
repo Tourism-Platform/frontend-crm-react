@@ -18,7 +18,16 @@ export const GeneralInfo: FC = () => {
 	const { t } = useTranslation("accommodation_edit_page");
 	const form = useForm<TGeneralInfoSchema>({
 		resolver: zodResolver(GENERAL_INFO_SCHEMA),
-		defaultValues: {},
+		defaultValues: {
+			property: "",
+			amenities: "",
+			description: "",
+			length_of_stay: "",
+			check_in_time: null,
+			check_in_timezone: "",
+			check_out_time: null,
+			check_out_timezone: ""
+		},
 		mode: "onSubmit"
 	});
 	function onSubmit(data: TGeneralInfoSchema) {

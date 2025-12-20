@@ -8,7 +8,8 @@ export const SCHEDULE_LIST: TForm[] = [
 		placeholder: "general.schedule.form.fields.length_of_stay.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.LENGTH_OF_STAY,
 		fieldType: "select",
-		options: LENGTH_OF_STAY_OPTIONS
+		options: LENGTH_OF_STAY_OPTIONS,
+		className: "col-span-2"
 	},
 	{
 		label: "general.schedule.form.fields.check_in_time.label",
@@ -18,10 +19,11 @@ export const SCHEDULE_LIST: TForm[] = [
 	},
 	{
 		label: "general.schedule.form.fields.check_in_timezone.label",
+		placeholder:
+			"general.schedule.form.fields.check_in_timezone.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.CHECK_IN_TIMEZONE,
 		fieldType: "select",
-		options: UTC_OPTIONS,
-		defaultValue: UTC_OPTIONS?.[13]?.value
+		options: UTC_OPTIONS
 	},
 	{
 		label: "general.schedule.form.fields.check_out_time.label",
@@ -31,9 +33,10 @@ export const SCHEDULE_LIST: TForm[] = [
 	},
 	{
 		label: "general.schedule.form.fields.check_out_timezone.label",
+		placeholder:
+			"general.schedule.form.fields.check_out_timezone.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.CHECK_OUT_TIMEZONE,
 		fieldType: "select",
-		options: UTC_OPTIONS,
-		defaultValue: UTC_OPTIONS?.[13]?.value
+		options: UTC_OPTIONS
 	}
 ];

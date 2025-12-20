@@ -22,9 +22,6 @@ export const Schedule: FC<IScheduleProps> = ({ form }) => {
 							control={form?.control}
 							name={key}
 							t={t}
-							className={
-								index === 0 ? "col-span-2" : "col-span-1"
-							}
 							{...item}
 						/>
 						{index === 0 && <div className="col-span-2" />}

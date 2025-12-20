@@ -26,15 +26,12 @@ export const RoomCard: FC<IRoomCardProps> = ({ form, onRemove, index }) => {
 					<RoomMenu onRemove={onRemove} />
 				</div>
 				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-					{ROOM_DATA_LIST.map(({ key, ...item }, index) => (
+					{ROOM_DATA_LIST.map(({ key, ...item }) => (
 						<CustomField
 							key={key}
 							control={form?.control}
-							name={key}
+							name={`rooms.${index}.${key}`}
 							t={t}
-							className={
-								index === 0 ? "col-span-1" : "col-span-2"
-							}
 							{...item}
 						/>
 					))}
