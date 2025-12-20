@@ -1,7 +1,7 @@
 {
 	"input": {
 		"title": {
-			"placeholder": "Enter transfer title or it will automatically generated",
+			"placeholder": "Enter transfer title or it will be automatically generated",
 			"errors": {
 				"required": "Title is required",
 				"min": "Title is too short",
@@ -9,112 +9,86 @@
 			}
 		}
 	},
-
 	"tabs": {
 		"general": "General info",
 		"media": "Media",
 		"pricing": "Pricing & booking"
 	},
-
 	"general": {
-		"subtype": {
-			"title": "Transportation subtype",
-			"tabs": {
-				"train": "Train",
-				"bus": "Bus",
-				"transfer": "Transfer"
-			},
-
+		"details": {
+			"title": "Transfer details",
 			"form": {
 				"fields": {
-					"supplier": {
-						"label": "Supplier",
-						"placeholder": "Enter supplier",
+					"transfer_type": {
+						"label": "Type of transfer",
+						"placeholder": "Select type",
 						"errors": {
-							"required": "Supplier is required",
-							"max": "Supplier name is too long",
-							"min": "Supplier name is too short"
-						}
-					}
-				}
-			}
-		},
-
-		"transportation": {
-			"form": {
-				"title": "New flight",
-				"fields": {
-					"departure_location": {
-						"label": "Departure location",
-						"placeholder": "Enter departure location",
-						"errors": {
-							"required": "Departure location is required",
-							"max": "Location name is too long",
-							"min": "Location name is too short"
+							"required": "Transfer type is required"
 						}
 					},
-					"arrival_location": {
-						"label": "Arrival location",
-						"placeholder": "Enter arrival number",
+					"meet_point": {
+						"label": "Meet point",
+						"placeholder": "Enter meet point",
 						"errors": {
-							"required": "Arrival location is required",
-							"max": "Location name is too long",
-							"min": "Location name is too short"
+							"required": "Meet point is required"
+						}
+					},
+					"end_point": {
+						"label": "End point",
+						"placeholder": "Enter end point",
+						"errors": {
+							"required": "End point is required"
 						}
 					},
 					"departure_date": {
 						"label": "Departure date",
+						"placeholder": "Select date",
 						"errors": {
-							"required": "Departure date is required",
-							"invalid": "Invalid date format"
+							"required": "Departure date is required"
 						}
 					},
 					"arrival_date": {
 						"label": "Arrival date",
+						"placeholder": "Select date",
 						"errors": {
-							"required": "Arrival date is required",
-							"invalid": "Invalid date format"
+							"required": "Arrival date is required"
 						}
 					},
 					"departure_time": {
 						"label": "Departure time",
+						"placeholder": "Select time",
 						"errors": {
-							"required": "Departure time is required",
-							"invalid": "Invalid time format"
+							"required": "Departure time is required"
 						}
 					},
 					"arrival_time": {
 						"label": "Arrival time",
+						"placeholder": "Select time",
 						"errors": {
-							"required": "Arrival time is required",
-							"invalid": "Invalid time format"
+							"required": "Arrival time is required"
 						}
 					},
 					"departure_timezone": {
 						"label": "Timezone",
-						"placeholder": "Choose timezone",
+						"placeholder": "Select timezone",
 						"errors": {
-							"required": "Departure timezone is required"
+							"required": "Timezone is required"
 						}
 					},
 					"arrival_timezone": {
 						"label": "Timezone",
-						"placeholder": "Choose timezone",
+						"placeholder": "Select timezone",
 						"errors": {
-							"required": "Arrival timezone is required"
+							"required": "Timezone is required"
 						}
 					}
 				}
-			},
-			"buttons": {
-				"add": "Add ride"
 			}
 		},
-
 		"description": {
 			"title": "Description",
 			"description": {
-				"label": "Transportation description",
+				"label": "Travel description",
 				"placeholder": "Enter description",
 				"errors": {
 					"min": "Description is too short",
@@ -123,11 +97,9 @@
 			}
 		}
 	},
-
 	"media": {
 		"title": "Displayed photos"
 	},
-
 	"pricing": {
 		"title": "Pricing",
 		"invoicing": {
@@ -144,7 +116,6 @@
 				"per_person": "Per person"
 			}
 		},
-
 		"form": {
 			"pricing_details": {
 				"title": "Pricing details",
@@ -163,7 +134,6 @@
 					}
 				}
 			},
-
 			"booking_details": {
 				"title": "Booking details",
 				"fields": {
@@ -198,7 +168,6 @@
 					}
 				}
 			},
-
 			"package": {
 				"fields": {
 					"package": {

@@ -11,15 +11,15 @@ export type TForm = TFormField<
 >;
 
 export const ENUM_FORM_TRANSPORTATION = {
-	DEPARTURE_LOCATION: "departure_location",
-	ARRIVAL_LOCATION: "arrival_location",
+	TRANSFER_TYPE: "transfer_type",
+	MEET_POINT: "meet_point",
+	END_POINT: "end_point",
 	DEPARTURE_DATE: "departure_date",
 	ARRIVAL_DATE: "arrival_date",
 	DEPARTURE_TIME: "departure_time",
 	DEPARTURE_TIMEZONE: "departure_timezone",
 	ARRIVAL_TIME: "arrival_time",
 	ARRIVAL_TIMEZONE: "arrival_timezone",
-	DEPARTURE_TERMINAL: "departure_terminal",
 	DESCRIPTION: "description"
 } as const;
 

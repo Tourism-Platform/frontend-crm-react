@@ -13,8 +13,16 @@ export const GeneralInfo: FC = () => {
 	const form = useForm<TGeneralInfoSchema>({
 		resolver: zodResolver(GENERAL_INFO_SCHEMA),
 		defaultValues: {
-			transportation: [],
-			description: ""
+			description: "",
+			transfer_type: "",
+			meet_point: "",
+			end_point: "",
+			departure_date: null,
+			arrival_date: null,
+			departure_time: null,
+			arrival_time: null,
+			departure_timezone: "",
+			arrival_timezone: ""
 		},
 		mode: "onSubmit"
 	});

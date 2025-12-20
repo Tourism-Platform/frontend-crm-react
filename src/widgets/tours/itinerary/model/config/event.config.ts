@@ -30,7 +30,7 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 		},
 		{
 			event_type: ENUM_EVENT.FLIGHT,
-			title: "Flight",
+			title: "Transportation",
 			icon: PlaneIcon,
 			color: "primary"
 		},
@@ -48,7 +48,7 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 		},
 		{
 			event_type: ENUM_EVENT.TRANSPORTATION,
-			title: "Transportation",
+			title: "Transfer",
 			icon: DrivingIcon,
 			color: "emerald-600"
 		},
