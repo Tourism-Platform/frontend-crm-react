@@ -17,7 +17,6 @@ import {
 } from "../../model";
 
 import { FlightCard } from "./flight-card";
-import { FlightPreview } from "./flight-preview";
 
 interface IFlightInfoProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
@@ -106,7 +105,7 @@ export const FlightInfo: FC<IFlightInfoProps> = ({ form }) => {
 			</div>
 
 			<div className="grid gap-4">
-				{!!fields.length && <FlightPreview />}
+				{/* {!!fields.length && <FlightPreview />} */}
 				{fields.map((field, index) => (
 					<FlightCard
 						key={field.id}

@@ -12,7 +12,6 @@ import {
 import { PRICING_INDIVIDUAL_TABS_LIST, type TPricingSchema } from "../model";
 
 import { BookingDetails } from "./booking-details";
-import { CommissionDetails } from "./commission-details";
 import { PricingDetails } from "./pricing-details";
 
 export interface IInvoicingIndividualProps {
@@ -51,8 +50,8 @@ export const InvoicingIndividual: FC<IInvoicingIndividualProps> = ({
 				<PricingDetails form={form} className="mb-8" />
 				<Separator className="mb-12" />
 				<BookingDetails form={form} className="mb-12" />
-				<Separator className="mb-12" />
-				<CommissionDetails form={form} />
+				{/* <Separator className="mb-12" />
+				<CommissionDetails form={form} /> */}
 			</div>
 		</div>
 	);
