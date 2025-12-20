@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, Fragment } from "react";
+import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -16,9 +16,12 @@ export const GeneralInfo: FC = () => {
 	const form = useForm<TGeneralInfoSchema>({
 		resolver: zodResolver(GENERAL_INFO_SCHEMA),
 		defaultValues: {
+			event_subtype: "",
 			location: "",
-			event_start_time: "",
-			event_end_time: "",
+			event_start_time: null,
+			start_timezone: "",
+			event_end_time: null,
+			end_timezone: "",
 			description: ""
 		},
 		mode: "onSubmit"
@@ -31,43 +34,16 @@ export const GeneralInfo: FC = () => {
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
 				<h2 className="text-xl">{t("general.events.title")}</h2>
-				<div className="grid gap-y-1">
-					<div className="grid grid-cols-2 gap-x-4">
-						{EVENT_DATA_LIST.slice(0, 2).map(({ key, ...item }) => (
-							<Fragment key={key}>
-								<CustomField
-									key={key}
-									name={key}
-									control={form?.control}
-									t={t}
-									{...item}
-								/>
-								<div />
-							</Fragment>
-						))}
-					</div>
-					<div className="grid grid-cols-4 gap-x-4">
-						{EVENT_DATA_LIST.slice(2, 6).map(({ key, ...item }) => (
-							<CustomField
-								key={key}
-								name={key}
-								control={form?.control}
-								t={t}
-								{...item}
-							/>
-						))}
-					</div>
-					<div>
-						{EVENT_DATA_LIST.slice(6, 7).map(({ key, ...item }) => (
-							<CustomField
-								key={key}
-								name={key}
-								control={form?.control}
-								t={t}
-								{...item}
-							/>
-						))}
-					</div>
+				<div className="grid grid-cols-4 gap-x-4 gap-y-1">
+					{EVENT_DATA_LIST.map(({ key, ...item }) => (
+						<CustomField
+							key={key}
+							name={key}
+							control={form?.control}
+							t={t}
+							{...item}
+						/>
+					))}
 				</div>
 
 				<Button>SUBMIT</Button>

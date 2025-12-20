@@ -27,7 +27,7 @@ export const CarsCard: FC<ICarsCardProps> = ({ form, index, onRemove }) => {
 					<CarsMenu onRemove={onRemove} />
 				</div>
 
-				<div className="grid grid-cols-4 gap-x-4 gap-y-1">
+				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 					{CARS_DATA_LIST.map(({ key, ...item }) => (
 						<CustomField
 							key={key}
