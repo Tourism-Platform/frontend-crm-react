@@ -11,6 +11,7 @@
 	},
 	"tabs": {
 		"general": "General info",
+		"cars": "Cars",
 		"media": "Media",
 		"pricing": "Pricing & booking"
 	},
@@ -90,6 +91,44 @@
 			"description": {
 				"label": "Travel description",
 				"placeholder": "Enter description",
+				"errors": {
+					"min": "Description is too short",
+					"max": "Description is too long"
+				}
+			}
+		}
+	},
+	"cars": {
+		"details": {
+			"title": "Car details",
+			"car_item": "Car {{index}}",
+			"form": {
+				"fields": {
+					"car_name": {
+						"label": "Car brand",
+						"placeholder": "Select brand",
+						"errors": {
+							"required": "Car brand is required"
+						}
+					},
+					"pax": {
+						"label": "Capacity (pax)",
+						"placeholder": "Number of people",
+						"errors": {
+							"required": "Capacity is required"
+						}
+					}
+				},
+				"buttons": {
+					"add": "Add car"
+				}
+			}
+		},
+		"description": {
+			"title": "Description",
+			"description": {
+				"label": "Additional information",
+				"placeholder": "Enter details...",
 				"errors": {
 					"min": "Description is too short",
 					"max": "Description is too long"

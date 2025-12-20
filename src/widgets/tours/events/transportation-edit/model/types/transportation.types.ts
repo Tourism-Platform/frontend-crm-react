@@ -5,9 +5,11 @@ import type { TFormField } from "@/shared/types";
 
 import type { GENERAL_INFO_SCHEMA } from "../config";
 
+import type { ENUM_FORM_CARS_TYPE } from "./cars.types";
+
 export type TForm = TFormField<
 	TTourEventTransportationEditPageKeys,
-	ENUM_FORM_TRANSPORTATION_TYPE
+	ENUM_FORM_TRANSPORTATION_TYPE | ENUM_FORM_CARS_TYPE
 >;
 
 export const ENUM_FORM_TRANSPORTATION = {

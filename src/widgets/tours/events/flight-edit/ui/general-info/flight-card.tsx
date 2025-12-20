@@ -34,7 +34,7 @@ export const FlightCard: FC<IFlightCardProps> = ({ form, onRemove, index }) => {
 
 	return (
 		<Card className="relative">
-			<CardContent className="grid gap-1">
+			<CardContent>
 				<div className="absolute top-0 right-0">
 					<FlightMenu onRemove={onRemove} />
 				</div>

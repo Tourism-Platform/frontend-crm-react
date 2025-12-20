@@ -30,7 +30,7 @@ export const TransportationEdit: FC = () => {
 					<CustomOptionTabs
 						defaultValue={TRANSPORTATION_EDIT_TABS_LIST[0]?.type}
 					>
-						<CustomOptionTabsList className="grid-cols-3">
+						<CustomOptionTabsList className="grid-cols-4">
 							{TRANSPORTATION_EDIT_TABS_LIST.map((item) => (
 								<CustomOptionTabsTrigger
 									key={item.type}
