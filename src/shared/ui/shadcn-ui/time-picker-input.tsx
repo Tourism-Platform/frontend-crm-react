@@ -8,12 +8,30 @@ import {
 
 import { DateInput } from "@/shared/ui";
 
-export type TimePickerInputProps = TimeFieldProps<TimeValue>;
+export type TimePickerInputProps = TimeFieldProps<TimeValue> & {
+	"aria-invalid"?: boolean | "true" | "false";
+};
 
 export const TimePickerInput = forwardRef<HTMLDivElement, TimePickerInputProps>(
-	({ "aria-label": ariaLabel, value, ...props }, ref) => {
+	(
+		{
+			"aria-label": ariaLabel,
+			value,
+			"aria-invalid": ariaInvalid,
+			...props
+		},
+		ref
+	) => {
+		const isInvalid =
+			props.isInvalid || ariaInvalid === true || ariaInvalid === "true";
+
 		return (
-			<TimeField ref={ref} {...props} value={value ?? null}>
+			<TimeField
+				ref={ref}
+				{...props}
+				value={value ?? null}
+				isInvalid={isInvalid}
+			>
 				<Label className="sr-only">{ariaLabel || "Time"}</Label>
 				<DateInput />
 			</TimeField>

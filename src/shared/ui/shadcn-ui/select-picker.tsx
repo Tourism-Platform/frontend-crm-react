@@ -46,9 +46,12 @@ export const SelectPicker = React.forwardRef<
 				onValueChange={onChange}
 				defaultValue={defaultValue}
 				disabled={disabled}
-				{...props}
 			>
-				<SelectTrigger ref={ref} className={cn("w-full", className)}>
+				<SelectTrigger
+					ref={ref}
+					className={cn("w-full", className)}
+					{...props}
+				>
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent>

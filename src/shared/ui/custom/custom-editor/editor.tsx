@@ -5,16 +5,21 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { type ControllerRenderProps, type FieldValues } from "react-hook-form";
 
+import { cn } from "@/shared/lib";
+
 import { MenuBar } from "./ui";
 
-export interface ICustomEditorProps<T extends FieldValues> {
+export interface ICustomEditorProps<T extends FieldValues>
+	extends React.HTMLAttributes<HTMLDivElement> {
 	field: ControllerRenderProps<T>;
 	defaultValue?: string;
 }
 
 export const CustomEditor = <T extends FieldValues>({
 	field,
-	defaultValue
+	defaultValue,
+	className,
+	...props
 }: ICustomEditorProps<T>) => {
 	const editor = useEditor({
 		extensions: [
@@ -39,8 +44,20 @@ export const CustomEditor = <T extends FieldValues>({
 		immediatelyRender: false
 	});
 
+	const isInvalid =
+		props["aria-invalid"] === true || props["aria-invalid"] === "true";
+
 	return (
-		<div className="w-full border border-input rounded-lg overflow-hidden dark:bg-input/30 min-h-[340px] flex flex-col  h-full">
+		<div
+			className={cn(
+				"border-input dark:bg-input/30 flex h-full min-h-[340px] w-full flex-col overflow-hidden rounded-lg border transition-[color,box-shadow]",
+				"focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
+				isInvalid &&
+					"border-destructive ring-destructive/20 dark:ring-destructive/40 ring-1",
+				className
+			)}
+			{...props}
+		>
 			<div className="flex-1 overflow-auto">
 				<EditorContent editor={editor} />
 			</div>

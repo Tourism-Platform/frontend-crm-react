@@ -14,12 +14,30 @@ import {
 import { Calendar } from "@/shared/ui/shadcn-ui/calendar-rac";
 import { DateInput } from "@/shared/ui/shadcn-ui/datefield-rac";
 
-export type DatePickerInputProps = DatePickerProps<DateValue>;
+export type DatePickerInputProps = DatePickerProps<DateValue> & {
+	"aria-invalid"?: boolean | "true" | "false";
+};
 
 export const DatePickerInput = forwardRef<HTMLDivElement, DatePickerInputProps>(
-	({ "aria-label": ariaLabel, value, ...props }, ref) => {
+	(
+		{
+			"aria-label": ariaLabel,
+			value,
+			"aria-invalid": ariaInvalid,
+			...props
+		},
+		ref
+	) => {
+		const isInvalid =
+			props.isInvalid || ariaInvalid === true || ariaInvalid === "true";
+
 		return (
-			<DatePicker {...props} ref={ref} value={value ?? null}>
+			<DatePicker
+				{...props}
+				ref={ref}
+				value={value ?? null}
+				isInvalid={isInvalid}
+			>
 				<Label className="sr-only">{ariaLabel || "DatePicker"}</Label>
 
 				<div className="flex">
