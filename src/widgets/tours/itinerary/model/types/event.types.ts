@@ -18,7 +18,8 @@ export interface ITemplateItem {
 	event_type: ENUM_EVENT_TYPE;
 	title: string;
 	icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-	color: string;
+	color_text: string;
+	color_bg: string;
 }
 
 export interface IEventTemplate {

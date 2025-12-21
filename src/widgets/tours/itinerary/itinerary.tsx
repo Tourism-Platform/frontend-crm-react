@@ -48,7 +48,6 @@ export const Itinerary: React.FC = () => {
 
 	const optionsData = watch("optionsData");
 
-	console.log("optionsData", optionsData);
 	// dnd-kit sensors
 	const sensors = useSensors(useSensor(PointerSensor));
 

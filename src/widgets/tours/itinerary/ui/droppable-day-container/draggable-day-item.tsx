@@ -56,7 +56,7 @@ export const DraggableDayItem: FC<{
 			(tpl: ITemplateItem) => tpl.event_type === item.event_type
 		);
 	const Icon = template?.icon || InfoCircleIcon;
-	const color = template?.color || "gray-500";
+	const colorBg = template?.color_bg || "bg-gray-500";
 
 	const isMultiplyOption = item.event_type === ENUM_EVENT.MULTIPLY_OPTION;
 
@@ -81,7 +81,8 @@ export const DraggableDayItem: FC<{
 				<div className="flex items-start gap-3 justify-between w-full">
 					<div
 						className={cn(
-							`bg-${color} rounded-full p-2.5 flex items-center`
+							"rounded-full p-2.5 flex items-center shadow-sm",
+							colorBg
 						)}
 					>
 						<Icon className="size-4 text-white" />

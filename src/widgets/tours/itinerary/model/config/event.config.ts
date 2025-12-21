@@ -17,51 +17,52 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 			event_type: ENUM_EVENT.EVENT_LIBRARY,
 			title: "Event library",
 			icon: Calendar,
-			color: "blue-500"
+			color_text: "text-blue-500",
+			color_bg: "bg-blue-500"
 		}
 	],
 	components: [
-		// {
-		// 	event_type: ENUM_EVENT.TOUR_DETAILS,
-		// 	title: "Trip details",
-		// 	icon: MapIcon,
-		// 	color: "red-500"
-		// },
 		{
 			event_type: ENUM_EVENT.FLIGHT,
 			title: "Transportation",
 			icon: PlaneIcon,
-			color: "primary"
+			color_text: "text-blue-500",
+			color_bg: "bg-blue-500"
 		},
 		{
 			event_type: ENUM_EVENT.ACTIVITY,
 			title: "Activity",
 			icon: TicketStarIcon,
-			color: "sky-500"
+			color_text: "text-sky-500",
+			color_bg: "bg-sky-500"
 		},
 		{
 			event_type: ENUM_EVENT.ACCOMMODATION,
 			title: "Accommodation",
 			icon: HouseIcon,
-			color: "cyan-600"
+			color_text: "text-cyan-600",
+			color_bg: "bg-cyan-600"
 		},
 		{
 			event_type: ENUM_EVENT.TRANSPORTATION,
 			title: "Transfer",
 			icon: DrivingIcon,
-			color: "emerald-600"
+			color_text: "text-emerald-600",
+			color_bg: "bg-emerald-600"
 		},
 		{
 			event_type: ENUM_EVENT.MULTIPLY_OPTION,
 			title: "Multiply-option",
 			icon: List,
-			color: "gray-700"
+			color_text: "text-slate-500",
+			color_bg: "bg-slate-500"
 		},
 		{
 			event_type: ENUM_EVENT.INFO,
 			title: "Info",
 			icon: InfoCircleIcon,
-			color: "gray-700"
+			color_text: "text-slate-400",
+			color_bg: "bg-slate-400"
 		}
 	]
 };

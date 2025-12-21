@@ -32,7 +32,6 @@ export const DraggableDayItemMenu: FC<IDraggableDayItemMenuProps> = ({
 				<DropdownMenuItem
 					onClick={(e) => {
 						e.preventDefault();
-						console.log("Remove DraggableDayItemMenu");
 						onRemove?.();
 					}}
 				>

@@ -4,6 +4,7 @@ import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
 import { type CSSProperties, type FC } from "react";
 
+import { cn } from "@/shared/lib";
 import { Button, Card, CardContent } from "@/shared/ui";
 
 import { type ITemplateItem, templateId } from "../../model";
@@ -49,7 +50,7 @@ export const DraggableTemplateItem: FC<{
 		>
 			<CardContent className="grid grid-cols-[auto_1fr_auto] items-center gap-3 pr-1 relative">
 				<div className="flex items-center justify-center">
-					<Icon className={`text-${template.color} size-4`} />
+					<Icon className={cn(`size-4`, template.color_text)} />
 				</div>
 				<span className="text-sm font-medium truncate">
 					{template.title}

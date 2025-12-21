@@ -23,7 +23,7 @@ export const InformationEdit: FC = () => {
 			<EventTitleInput
 				icon={InfoCircleIcon}
 				placeholder={t("input.title.placeholder")}
-				className="bg-gray-700"
+				className="bg-amber-600"
 			/>
 			<Card>
 				<CardContent>
