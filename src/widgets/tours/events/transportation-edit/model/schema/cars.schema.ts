@@ -10,13 +10,17 @@ export const CARS_SCHEMA = z.object({
 			}),
 			[ENUM_FORM_CARS.PAX]: z.string().min(1, {
 				message: "cars.details.form.fields.pax.errors.required"
-			})
+			}),
+			[ENUM_FORM_CARS.DESCRIPTION]: z
+				.string()
+				.min(1, {
+					message: "cars.description.description.errors.required"
+				})
+				.max(100, {
+					message: "cars.description.description.errors.max"
+				})
 		})
-	),
-	[ENUM_FORM_CARS.DESCRIPTION]: z
-		.string()
-		.min(2, { message: "cars.description.description.errors.min" })
-		.max(50, { message: "cars.description.description.errors.max" })
+	)
 });
 
 export type TCarsSchema = z.infer<typeof CARS_SCHEMA>;

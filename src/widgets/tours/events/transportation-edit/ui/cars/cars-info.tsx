@@ -2,12 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
 
-import { Button, Form, Separator } from "@/shared/ui";
+import { Button, Form } from "@/shared/ui";
 
 import { CARS_SCHEMA, type TCarsSchema } from "../../model";
 
 import { CarsDetails } from "./cars-details";
-import { DescriptionInfo } from "./description-info";
 
 export const CarsInfo: FC = () => {
 	const form = useForm<TCarsSchema>({
@@ -16,10 +15,10 @@ export const CarsInfo: FC = () => {
 			cars: [
 				{
 					car_name: "",
-					pax: ""
+					pax: "",
+					description: ""
 				}
-			],
-			description: ""
+			]
 		},
 		mode: "onSubmit"
 	});
@@ -35,8 +34,6 @@ export const CarsInfo: FC = () => {
 				className="grid gap-12"
 			>
 				<CarsDetails form={form} />
-				<Separator />
-				<DescriptionInfo form={form} />
 
 				<Button type="submit">SUBMIT</Button>
 			</form>

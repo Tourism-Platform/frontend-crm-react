@@ -24,7 +24,8 @@ export const CarsDetails: FC<ICarsDetailsProps> = ({ form }) => {
 	const handleAddCar = () => {
 		append({
 			car_name: "",
-			pax: ""
+			pax: "",
+			description: ""
 		});
 	};
 

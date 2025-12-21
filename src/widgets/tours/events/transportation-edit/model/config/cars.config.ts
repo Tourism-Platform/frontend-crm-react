@@ -16,5 +16,12 @@ export const CARS_DATA_LIST: TForm[] = [
 		key: ENUM_FORM_CARS.PAX,
 		fieldType: "select",
 		options: PAX_OPTIONS
+	},
+	{
+		label: "cars.description.description.label",
+		placeholder: "cars.description.description.placeholder",
+		key: ENUM_FORM_CARS.DESCRIPTION,
+		fieldType: "editor",
+		className: "col-span-2"
 	}
 ];
