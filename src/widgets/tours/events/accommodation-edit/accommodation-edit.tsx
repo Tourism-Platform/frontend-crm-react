@@ -23,7 +23,7 @@ export const AccommodationEdit: FC = () => {
 			<EventTitleInput
 				icon={HouseIcon}
 				placeholder={t("input.title.placeholder")}
-				className="bg-cyan-600"
+				className="bg-cyan-700"
 			/>
 			<Card>
 				<CardContent>

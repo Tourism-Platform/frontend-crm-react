@@ -1,10 +1,11 @@
-import { Calendar, List } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 import {
 	DrivingIcon,
 	HouseIcon,
 	InfoCircleIcon,
 	PlaneIcon,
+	TaskSquareIcon,
 	TicketStarIcon
 } from "@/shared/assets";
 import { ENUM_PATH, type TTourEventPath } from "@/shared/config";
@@ -40,8 +41,8 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 			event_type: ENUM_EVENT.ACCOMMODATION,
 			title: "Accommodation",
 			icon: HouseIcon,
-			color_text: "text-cyan-600",
-			color_bg: "bg-cyan-600"
+			color_text: "text-cyan-700",
+			color_bg: "bg-cyan-700"
 		},
 		{
 			event_type: ENUM_EVENT.TRANSPORTATION,
@@ -53,16 +54,16 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 		{
 			event_type: ENUM_EVENT.MULTIPLY_OPTION,
 			title: "Multiply-option",
-			icon: List,
-			color_text: "text-slate-500",
-			color_bg: "bg-slate-500"
+			icon: TaskSquareIcon,
+			color_text: "text-zinc-700",
+			color_bg: "bg-zinc-700"
 		},
 		{
 			event_type: ENUM_EVENT.INFO,
 			title: "Info",
 			icon: InfoCircleIcon,
-			color_text: "text-slate-400",
-			color_bg: "bg-slate-400"
+			color_text: "text-amber-600",
+			color_bg: "bg-amber-600"
 		}
 	]
 };

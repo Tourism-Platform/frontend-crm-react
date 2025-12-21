@@ -24,6 +24,7 @@ export const MultiplyOptionEdit: FC = () => {
 			<EventTitleInput
 				icon={TaskSquareIcon}
 				placeholder={t("general.form.fields.title.placeholder")}
+				className="bg-zinc-700"
 			/>
 			<Card>
 				<CardContent>
