@@ -9,14 +9,15 @@
 			}
 		}
 	},
-
 	"tabs": {
 		"general": "General info",
 		"media": "Media",
 		"pricing": "Pricing & booking"
 	},
-
 	"general": {
+		"buttons": {
+			"save": "Save"
+		},
 		"events": {
 			"title": "Event details",
 			"form": {
@@ -79,12 +80,13 @@
 			}
 		}
 	},
-
 	"media": {
 		"title": "Displayed photos"
 	},
-
 	"pricing": {
+		"buttons": {
+			"save": "Save"
+		},
 		"title": "Pricing",
 		"invoicing": {
 			"title": "How will this activity be invoiced?",
@@ -100,7 +102,6 @@
 				"per_person": "Per person"
 			}
 		},
-
 		"form": {
 			"pricing_details": {
 				"title": "Pricing details",
@@ -119,7 +120,6 @@
 					}
 				}
 			},
-
 			"booking_details": {
 				"title": "Booking details",
 				"fields": {
@@ -154,7 +154,6 @@
 					}
 				}
 			},
-
 			"package": {
 				"fields": {
 					"package": {

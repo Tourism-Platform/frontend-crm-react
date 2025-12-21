@@ -15,6 +15,9 @@
 		"pricing": "Pricing & booking"
 	},
 	"general": {
+		"buttons": {
+			"save": "Save"
+		},
 		"flights": {
 			"title": "Transportation subtype",
 			"tabs": {
@@ -342,6 +345,9 @@
 		"title": "Displayed photos"
 	},
 	"pricing": {
+		"buttons": {
+			"save": "Save"
+		},
 		"title": "Pricing",
 		"invoicing": {
 			"title": "How will this activity be invoiced?",

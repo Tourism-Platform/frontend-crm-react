@@ -9,13 +9,14 @@
 			}
 		}
 	},
-
 	"tabs": {
 		"general": "General info",
 		"media": "Media"
 	},
-
 	"general": {
+		"buttons": {
+			"save": "Save"
+		},
 		"info": {
 			"form": {
 				"fields": {
@@ -31,7 +32,6 @@
 			}
 		}
 	},
-
 	"media": {
 		"title": "Displayed photos"
 	}

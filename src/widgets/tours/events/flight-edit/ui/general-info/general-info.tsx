@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Button, Form, Separator } from "@/shared/ui";
 
@@ -14,6 +15,7 @@ import { DescriptionInfo } from "./description-info";
 import { FlightInfo } from "./flight-info";
 
 export const GeneralInfo: FC = () => {
+	const { t } = useTranslation("flight_edit_page");
 	const form = useForm<TGeneralInfoSchema>({
 		resolver: zodResolver(BASE_FLIGHT_SCHEMA),
 		defaultValues: {
@@ -53,7 +55,9 @@ export const GeneralInfo: FC = () => {
 				<Separator />
 				<DescriptionInfo form={form} />
 
-				<Button>SUBMIT</Button>
+				<div className="flex justify-end mt-6">
+					<Button>{t("general.buttons.save")}</Button>
+				</div>
 			</form>
 		</Form>
 	);

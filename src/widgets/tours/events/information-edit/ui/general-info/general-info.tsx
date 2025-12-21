@@ -36,7 +36,9 @@ export const GeneralInfo: FC = () => {
 						{...item}
 					/>
 				))}
-				<Button>SUBMIT</Button>
+				<div className="flex justify-end mt-6">
+					<Button>{t("general.buttons.save")}</Button>
+				</div>
 			</form>
 		</Form>
 	);

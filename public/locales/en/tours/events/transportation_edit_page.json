@@ -16,6 +16,9 @@
 		"pricing": "Pricing & booking"
 	},
 	"general": {
+		"buttons": {
+			"save": "Save"
+		},
 		"details": {
 			"title": "Transfer details",
 			"form": {
@@ -100,6 +103,9 @@
 		}
 	},
 	"cars": {
+		"buttons": {
+			"save": "Save"
+		},
 		"details": {
 			"title": "Car details",
 			"car_item": "Car {{index}}",
@@ -142,6 +148,9 @@
 		"title": "Displayed photos"
 	},
 	"pricing": {
+		"buttons": {
+			"save": "Save"
+		},
 		"title": "Pricing",
 		"invoicing": {
 			"title": "How will this activity be invoiced?",

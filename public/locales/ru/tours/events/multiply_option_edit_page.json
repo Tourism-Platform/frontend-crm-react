@@ -4,6 +4,9 @@
 		"media": "Медиа"
 	},
 	"general": {
+		"buttons": {
+			"save": "Сохранить"
+		},
 		"description": {
 			"description": {
 				"errors": {

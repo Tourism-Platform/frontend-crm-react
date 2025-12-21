@@ -4,6 +4,9 @@
 		"media": "Media"
 	},
 	"general": {
+		"buttons": {
+			"save": "Save"
+		},
 		"description": {
 			"description": {
 				"errors": {
