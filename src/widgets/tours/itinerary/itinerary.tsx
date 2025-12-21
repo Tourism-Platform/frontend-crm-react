@@ -9,10 +9,7 @@ import {
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import {
-	ITINERARY_ROUTES_MOCK,
-	ITINERARY_TABS_MOCK
-} from "@/shared/config/mocks";
+import { ITINERARY_ROUTES_MOCK, ITINERARY_TABS_MOCK } from "@/shared/config";
 import { Separator } from "@/shared/ui";
 
 import {

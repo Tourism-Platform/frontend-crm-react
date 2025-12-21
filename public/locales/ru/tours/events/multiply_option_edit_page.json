@@ -1,0 +1,39 @@
+{
+	"tabs": {
+		"general": "Общая информация",
+		"media": "Медиа"
+	},
+	"general": {
+		"description": {
+			"description": {
+				"errors": {
+					"required": "Описание обязательно",
+					"max": "Описание не должно превышать 50 символов"
+				}
+			}
+		},
+		"form": {
+			"fields": {
+				"title": {
+					"label": "Название",
+					"placeholder": "Введите название...",
+					"errors": {
+						"required": "Название обязательно"
+					}
+				},
+				"description": {
+					"title": "Описание",
+					"label": "Описание опции",
+					"placeholder": "Введите описание..."
+				}
+			}
+		},
+		"options": {
+			"title": "Опции",
+			"placeholder": "Название опции",
+			"errors": {
+				"name_required": "Название опции обязательно"
+			}
+		}
+	}
+}

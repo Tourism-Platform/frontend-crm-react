@@ -119,9 +119,5 @@ export const DraggableDayItem: FC<{
 		</Card>
 	);
 
-	if (isMultiplyOption) {
-		return content;
-	}
-
 	return <Link to={href}>{content}</Link>;
 };

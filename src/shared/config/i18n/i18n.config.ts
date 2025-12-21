@@ -15,6 +15,7 @@ import common_events from "../../../../public/locales/en/tours/events/common_eve
 import event_edit_page from "../../../../public/locales/en/tours/events/event_edit_page.json";
 import flight_edit_page from "../../../../public/locales/en/tours/events/flight_edit_page.json";
 import information_edit_page from "../../../../public/locales/en/tours/events/information_edit_page.json";
+import multiply_option_edit_page from "../../../../public/locales/en/tours/events/multiply_option_edit_page.json";
 import tour_details_edit_page from "../../../../public/locales/en/tours/events/tour_details_edit_page.json";
 import transportation_edit_page from "../../../../public/locales/en/tours/events/transportation_edit_page.json";
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
@@ -43,6 +44,7 @@ export type TTourEventTransportationEditPage = typeof transportation_edit_page;
 export type TTourEventEditPage = typeof event_edit_page;
 export type TTourInformationEditPage = typeof information_edit_page;
 export type TTourDetailsEditPage = typeof tour_details_edit_page;
+export type TTourEventMultiplyOptionEditPage = typeof multiply_option_edit_page;
 export type TTourAccommodationEditPage = typeof accommodation_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
 export type TCommonEvents = typeof common_events;
@@ -69,6 +71,7 @@ export type TResources = {
 	accommodation_edit_page: TTourAccommodationEditPage;
 	information_edit_page: TTourInformationEditPage;
 	tour_details_edit_page: TTourDetailsEditPage;
+	multiply_option_edit_page: TTourEventMultiplyOptionEditPage;
 	common_events: TCommonEvents;
 	login_page: TLoginPage;
 };
@@ -94,6 +97,7 @@ export const NS = [
 	"accommodation_edit_page",
 	"information_edit_page",
 	"tour_details_edit_page",
+	"multiply_option_edit_page",
 	"common_events",
 	"login_page"
 ] as const;
@@ -125,6 +129,9 @@ export type TTourInformationEditPageKeys =
 	TNestedKeyOf<TTourInformationEditPage>;
 
 export type TTourDetailsEditPageKeys = TNestedKeyOf<TTourDetailsEditPage>;
+
+export type TTourEventMultiplyOptionEditPageKeys =
+	TNestedKeyOf<TTourEventMultiplyOptionEditPage>;
 
 export type TTourCommonEventsKeys = TNestedKeyOf<TCommonEvents>;
 

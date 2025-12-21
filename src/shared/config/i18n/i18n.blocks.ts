@@ -36,6 +36,7 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"accommodation_edit_page",
 			"information_edit_page",
 			"tour_details_edit_page",
+			"multiply_option_edit_page",
 			"common_events"
 		]
 	},

@@ -1,0 +1,39 @@
+{
+	"tabs": {
+		"general": "General",
+		"media": "Media"
+	},
+	"general": {
+		"description": {
+			"description": {
+				"errors": {
+					"required": "Description is required",
+					"max": "Description must not exceed 50 characters"
+				}
+			}
+		},
+		"form": {
+			"fields": {
+				"title": {
+					"label": "Title",
+					"placeholder": "Enter title...",
+					"errors": {
+						"required": "Title is required"
+					}
+				},
+				"description": {
+					"title": "Description",
+					"label": "Multiple options description",
+					"placeholder": "Enter description..."
+				}
+			}
+		},
+		"options": {
+			"title": "Options",
+			"placeholder": "Option name",
+			"errors": {
+				"name_required": "Option name is required"
+			}
+		}
+	}
+}
