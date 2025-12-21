@@ -19,6 +19,15 @@
 				"appeals": "Обращения"
 			}
 		},
+		"finance": {
+			"title": "Финансы",
+			"menu": {
+				"invoices": "Счета",
+				"client_payments": "Платежи клиентов",
+				"supplier_payments": "Платежи поставщикам",
+				"reconciliation": "Сверка"
+			}
+		},
 		"library": {
 			"title": "Библиотека",
 			"menu": {

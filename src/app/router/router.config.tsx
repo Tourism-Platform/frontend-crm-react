@@ -3,6 +3,7 @@
 	ENUM_AUTH,
 	ENUM_LAYOUT,
 	ENUM_PATH,
+	FINANCE_SIDEBAR_LIST,
 	type IRouting,
 	SETTINGS_SIDEBAR_LIST,
 	TOURS_SIDEBAR_LIST
@@ -11,6 +12,7 @@
 import {
 	BookingOwnerLayout,
 	EventOwnerLayout,
+	FinanceOwnerLayout,
 	SettingsOwnerLayout,
 	SideBarOwnerLayout,
 	TourOwnerLayout,
@@ -18,6 +20,12 @@ import {
 } from "@/widgets/layouts";
 
 import { AppealsPage, BookingRequestsPage } from "@/pages/booking";
+import {
+	ClientPaymentsPage,
+	InvoicesPage,
+	ReconciliationPage,
+	SupplierPaymentsPage
+} from "@/pages/finance";
 import { LoginPage } from "@/pages/login";
 import { MainPage } from "@/pages/main";
 import { NotFoundPage } from "@/pages/not-found-page";
@@ -415,6 +423,64 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 				</SideBarOwnerLayout>
 			),
 			BookingOwnerLayout
+		]
+	},
+
+	// finance
+	{
+		path: ENUM_PATH.FINANCE.INVOICES,
+		component: InvoicesPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			FinanceOwnerLayout
+		]
+	},
+	{
+		path: ENUM_PATH.FINANCE.CLIENT_PAYMENTS,
+		component: ClientPaymentsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			FinanceOwnerLayout
+		]
+	},
+	{
+		path: ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS,
+		component: SupplierPaymentsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			FinanceOwnerLayout
+		]
+	},
+	{
+		path: ENUM_PATH.FINANCE.RECONCILIATION,
+		component: ReconciliationPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			FinanceOwnerLayout
 		]
 	},
 

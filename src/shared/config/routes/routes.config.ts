@@ -40,5 +40,12 @@ export const ENUM_PATH = {
 		ROOT: "/booking",
 		BOOKING_REQUESTS: "/booking/booking-requests",
 		APPEALS: "/booking/appeals"
+	},
+	FINANCE: {
+		ROOT: "/finance",
+		INVOICES: "/finance/invoices",
+		CLIENT_PAYMENTS: "/finance/client-payments",
+		SUPPLIER_PAYMENTS: "/finance/supplier-payments",
+		RECONCILIATION: "/finance/reconciliation"
 	}
 } as const;

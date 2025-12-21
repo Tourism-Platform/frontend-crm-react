@@ -19,6 +19,15 @@
 				"appeals": "Appeals"
 			}
 		},
+		"finance": {
+			"title": "Finance",
+			"menu": {
+				"invoices": "Invoices",
+				"client_payments": "Client payments",
+				"supplier_payments": "Supplier payments",
+				"reconciliation": "Reconciliation"
+			}
+		},
 		"library": {
 			"title": "Library",
 			"menu": {

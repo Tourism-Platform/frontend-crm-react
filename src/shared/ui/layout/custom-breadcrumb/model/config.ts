@@ -33,5 +33,15 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.BOOKING.ROOT]: "owner.booking.title",
 	[ENUM_PATH.BOOKING.BOOKING_REQUESTS]:
 		"owner.booking.general.menu.booking_requests",
-	[ENUM_PATH.BOOKING.APPEALS]: "owner.booking.general.menu.appeals"
+	[ENUM_PATH.BOOKING.APPEALS]: "owner.booking.general.menu.appeals",
+
+	// Finance
+	[ENUM_PATH.FINANCE.ROOT]: "owner.finance.title",
+	[ENUM_PATH.FINANCE.INVOICES]: "owner.finance.general.menu.invoices",
+	[ENUM_PATH.FINANCE.CLIENT_PAYMENTS]:
+		"owner.finance.general.menu.client_payments",
+	[ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS]:
+		"owner.finance.general.menu.supplier_payments",
+	[ENUM_PATH.FINANCE.RECONCILIATION]:
+		"owner.finance.general.menu.reconciliation"
 };

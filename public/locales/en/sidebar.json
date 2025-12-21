@@ -21,7 +21,6 @@
 				}
 			}
 		},
-
 		"tours": {
 			"general": {
 				"title": "General",
@@ -41,7 +40,6 @@
 				}
 			}
 		},
-
 		"booking": {
 			"title": "Booking",
 			"general": {
@@ -49,6 +47,18 @@
 				"menu": {
 					"booking_requests": "Booking requests",
 					"appeals": "Appeals"
+				}
+			}
+		},
+		"finance": {
+			"title": "Finance",
+			"general": {
+				"title": "General",
+				"menu": {
+					"invoices": "Invoices",
+					"client_payments": "Client payments",
+					"supplier_payments": "Supplier payments",
+					"reconciliation": "Reconciliation"
 				}
 			}
 		}
