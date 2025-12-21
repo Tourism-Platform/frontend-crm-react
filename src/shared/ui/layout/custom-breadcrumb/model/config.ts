@@ -38,6 +38,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	// Finance
 	[ENUM_PATH.FINANCE.ROOT]: "owner.finance.title",
 	[ENUM_PATH.FINANCE.INVOICES]: "owner.finance.general.menu.invoices",
+	[ENUM_PATH.FINANCE.INVOICE_ID]: "owner.finance.general.menu.invoices",
 	[ENUM_PATH.FINANCE.CLIENT_PAYMENTS]:
 		"owner.finance.general.menu.client_payments",
 	[ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS]:

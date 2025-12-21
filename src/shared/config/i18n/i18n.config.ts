@@ -2,6 +2,7 @@
 // путь: src/types -> ../../public/...
 import common from "../../../../public/locales/en/common.json";
 import client_payments_page from "../../../../public/locales/en/finance/client_payments_page.json";
+import invoice_id_page from "../../../../public/locales/en/finance/invoice_id_page.json";
 import invoices_page from "../../../../public/locales/en/finance/invoices_page.json";
 import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
@@ -38,6 +39,7 @@ export type TBusinessSettingsPage = typeof business_settings_page;
 export type TStaffInformationPage = typeof staff_information_page;
 export type TClientPaymentsPage = typeof client_payments_page;
 export type TInvoicesPage = typeof invoices_page;
+export type TInvoiceIdPage = typeof invoice_id_page;
 export type TFinancialSettingsPage = typeof financial_settings_page;
 export type TToursPage = typeof tours_page;
 export type TTourOverviewPage = typeof tour_overview_page;
@@ -65,6 +67,7 @@ export type TResources = {
 	staff_information_page: TStaffInformationPage;
 	client_payments_page: TClientPaymentsPage;
 	invoices_page: TInvoicesPage;
+	invoice_id_page: TInvoiceIdPage;
 	financial_settings_page: TFinancialSettingsPage;
 	tours_page: TToursPage;
 	tour_overview_page: TTourOverviewPage;
@@ -93,6 +96,7 @@ export const NS = [
 	"staff_information_page",
 	"client_payments_page",
 	"invoices_page",
+	"invoice_id_page",
 	"financial_settings_page",
 	"tours_page",
 	"tour_overview_page",
@@ -118,6 +122,7 @@ export type TSecurityPageKeys = TNestedKeyOf<TSecurityPage>;
 export type TStaffInformationPageKeys = TNestedKeyOf<TStaffInformationPage>;
 export type TClientPaymentsPageKeys = TNestedKeyOf<TClientPaymentsPage>;
 export type TInvoicesPageKeys = TNestedKeyOf<TInvoicesPage>;
+export type TInvoiceIdPageKeys = TNestedKeyOf<TInvoiceIdPage>;
 export type TFinancialSettingsPageKeys = TNestedKeyOf<TFinancialSettingsPage>;
 export type TAccountSettingsPageKeys = TNestedKeyOf<TAccountSettingsPage>;
 export type TBusinessSettingsPageKeys = TNestedKeyOf<TBusinessSettingsPage>;

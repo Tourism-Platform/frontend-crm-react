@@ -15,6 +15,7 @@ export const Invoices: FC = () => {
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="text-3xl">{t("page_name")}</h1>
+
 			<Card>
 				<CardContent>
 					<CustomTable data={invoices} columns={COLUMNS()} />

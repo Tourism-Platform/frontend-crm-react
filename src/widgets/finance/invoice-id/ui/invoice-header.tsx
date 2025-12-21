@@ -1,0 +1,87 @@
+import { ChevronLeft } from "lucide-react";
+import { type FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+
+import { ENUM_PATH, type TInvoiceIdPageKeys } from "@/shared/config";
+import { cn } from "@/shared/lib";
+import { Badge, Button } from "@/shared/ui";
+
+import {
+	ENUM_INVOICE_STATUS,
+	type ENUM_INVOICE_STATUS_TYPE,
+	INVOICE_STATUS_LABELS
+} from "@/entities/finance";
+
+interface IInvoiceHeaderProps {
+	paymentId: string;
+	status: ENUM_INVOICE_STATUS_TYPE;
+	issueDate: string;
+	dueDate: string;
+}
+
+export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
+	paymentId,
+	status,
+	issueDate,
+	dueDate
+}) => {
+	const { t } = useTranslation("invoice_id_page");
+
+	const getStatusClasses = (status: ENUM_INVOICE_STATUS_TYPE) => {
+		switch (status) {
+			case ENUM_INVOICE_STATUS.PAID:
+				return "bg-cyan-200 text-cyan-600 ";
+			case ENUM_INVOICE_STATUS.UNPAID:
+				return "bg-red-200 text-red-600 ";
+			case ENUM_INVOICE_STATUS.PARTIALLY_PAID:
+				return "bg-yellow-200 text-yellow-600 ";
+			default:
+				return "";
+		}
+	};
+
+	return (
+		<div className="grid gap-5">
+			<div>
+				<Button
+					variant="ghost"
+					size="sm"
+					asChild
+					className="text-primary"
+				>
+					<Link to={ENUM_PATH.FINANCE.INVOICES}>
+						<ChevronLeft className="mr-2 h-4 w-4" />
+						{t("buttons.back")}
+					</Link>
+				</Button>
+			</div>
+			<div className="grid gap-2">
+				<div className="flex items-center justify-between">
+					<div className="flex gap-3">
+						<h1 className="text-3xl">{paymentId}</h1>
+						<Badge
+							className={cn(
+								getStatusClasses(status),
+								"px-3 py-2 text-xs font-bold uppercase rounded-md"
+							)}
+						>
+							{t(
+								`payment_table.table.statuses.${INVOICE_STATUS_LABELS[status].replace("table.statuses.", "")}` as TInvoiceIdPageKeys
+							)}
+						</Badge>
+					</div>
+					<Button>{t("buttons.export")}</Button>
+				</div>
+				<div className="flex gap-4 text-sm text-muted-foreground font-medium">
+					<span>
+						{t("header.issue_date")}: {issueDate}
+					</span>
+					<span>
+						{t("header.due_date")}: {dueDate}
+					</span>
+				</div>
+			</div>
+		</div>
+	);
+};

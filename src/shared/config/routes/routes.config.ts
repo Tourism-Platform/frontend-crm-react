@@ -44,6 +44,7 @@ export const ENUM_PATH = {
 	FINANCE: {
 		ROOT: "/finance",
 		INVOICES: "/finance/invoices",
+		INVOICE_ID: "/finance/invoices/:invoiceId",
 		CLIENT_PAYMENTS: "/finance/client-payments",
 		SUPPLIER_PAYMENTS: "/finance/supplier-payments",
 		RECONCILIATION: "/finance/reconciliation"

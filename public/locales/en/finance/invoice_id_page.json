@@ -1,0 +1,55 @@
+{
+	"page_name": "Invoice",
+	"invoice_not_found": "Invoice not found",
+	"buttons": {
+		"back": "Back to invoices",
+		"export": "Export"
+	},
+	"header": {
+		"issue_date": "Issue date",
+		"due_date": "Due date"
+	},
+	"payment_table": {
+		"summary": {
+			"total_invoiced": "Total invoiced",
+			"paid": "Paid",
+			"remaining": "Remaining"
+		},
+		"table": {
+			"title": "Confirmed payment",
+			"fields": {
+				"no": "No",
+				"amount": "Amount",
+				"date": "Date",
+				"document": "Document",
+				"open": "Open",
+				"empty": "No payments recorded"
+			},
+			"statuses": {
+				"paid": "Paid",
+				"unpaid": "Unpaid",
+				"partially_paid": "Partially paid"
+			}
+		}
+	},
+	"billing": {
+		"title": "Billing information",
+		"fields": {
+			"company": "Company",
+			"address": "Address",
+			"contact": "Contact",
+			"email": "Email",
+			"phone": "Phone"
+		}
+	},
+	"booking": {
+		"title": "Booking information",
+		"fields": {
+			"order": "Order",
+			"tour": "Tour",
+			"pax": "PAX",
+			"dates": "Dates",
+			"duration": "Duration"
+		}
+	}
+}

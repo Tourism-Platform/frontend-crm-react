@@ -1,6 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
+import { ENUM_PATH } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import { Badge, Checkbox } from "@/shared/ui";
 
@@ -43,18 +45,32 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 			header: t("table.paymentId"),
 			accessorKey: "paymentId",
 			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("paymentId")}</div>
+				<Link
+					to={ENUM_PATH.FINANCE.INVOICE_ID.replace(
+						":invoiceId",
+						row.getValue("paymentId")
+					)}
+					className="font-medium text-primary hover:underline"
+				>
+					{row.getValue("paymentId")}
+				</Link>
 			),
 			size: 160
 		},
 		{
 			header: t("table.orderId"),
 			accessorKey: "orderId",
+			cell: ({ row }) => (
+				<div className="font-medium">{row.getValue("orderId")}</div>
+			),
 			size: 160
 		},
 		{
 			header: t("table.issueDate"),
 			accessorKey: "issueDate",
+			cell: ({ row }) => (
+				<div className="font-medium">{row.getValue("issueDate")}</div>
+			),
 			size: 160
 		},
 		{

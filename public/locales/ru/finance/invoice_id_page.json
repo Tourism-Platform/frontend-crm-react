@@ -1,0 +1,55 @@
+{
+	"page_name": "Счет",
+	"invoice_not_found": "Счет не найден",
+	"buttons": {
+		"back": "Назад к списку",
+		"export": "Экспорт"
+	},
+	"header": {
+		"issue_date": "Дата выставления",
+		"due_date": "Срок оплаты"
+	},
+	"payment_table": {
+		"summary": {
+			"total_invoiced": "Всего выставлено",
+			"paid": "Оплачено",
+			"remaining": "Остаток"
+		},
+		"table": {
+			"title": "Подтвержденный платеж",
+			"fields": {
+				"no": "No",
+				"amount": "Сумма",
+				"date": "Дата",
+				"document": "Документ",
+				"open": "Открыть",
+				"empty": "Платежи не найдены"
+			},
+			"statuses": {
+				"paid": "Оплачено",
+				"unpaid": "Не оплачено",
+				"partially_paid": "Частично оплачено"
+			}
+		}
+	},
+	"billing": {
+		"title": "Информация об оплате",
+		"fields": {
+			"company": "Компания",
+			"address": "Адрес",
+			"contact": "Контакт",
+			"email": "Email",
+			"phone": "Телефон"
+		}
+	},
+	"booking": {
+		"title": "Информация о бронировании",
+		"fields": {
+			"order": "Заказ",
+			"tour": "Тур",
+			"pax": "PAX",
+			"dates": "Даты",
+			"duration": "Продолжительность"
+		}
+	}
+}

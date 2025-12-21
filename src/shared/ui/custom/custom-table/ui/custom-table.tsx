@@ -91,17 +91,18 @@ type TCustomTableProps = TShowFilters & {
 	columns?: ColumnDef<any>[];
 	data?: any[];
 	actions?: React.ReactNode;
-	showTopFilters?: boolean;
 	topChildren?: React.ReactNode;
 	statusTabs?: { label: string; value: string }[];
 	activeStatusTab?: string;
 	onStatusTabChange?: (value: string) => void;
+	showPagination?: boolean;
 } & TViewMode;
 
 export const CustomTable: FC<TCustomTableProps> = ({
 	columns = COLUMNS,
 	data,
 	actions,
+	showPagination = true,
 	showSearchFilter = true,
 	showStatusFilter = true,
 	showVisibilityFilter = true,
@@ -358,7 +359,7 @@ export const CustomTable: FC<TCustomTableProps> = ({
 				))}
 
 				{/* Pagination */}
-				<PaginationFilter id={id} table={table} />
+				{showPagination && <PaginationFilter id={id} table={table} />}
 			</div>
 		</CustomOptionTabs>
 	);

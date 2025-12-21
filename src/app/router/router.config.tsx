@@ -22,6 +22,7 @@ import {
 import { AppealsPage, BookingRequestsPage } from "@/pages/booking";
 import {
 	ClientPaymentsPage,
+	InvoiceIdPage,
 	InvoicesPage,
 	ReconciliationPage,
 	SupplierPaymentsPage
@@ -430,6 +431,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.FINANCE.INVOICES,
 		component: InvoicesPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			FinanceOwnerLayout
+		]
+	},
+	{
+		path: ENUM_PATH.FINANCE.INVOICE_ID,
+		component: InvoiceIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [
