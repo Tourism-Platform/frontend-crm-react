@@ -41,6 +41,11 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 		]
 	},
 
+	finance: {
+		folder: "finance",
+		namespaces: ["client_payments_page"]
+	},
+
 	shared: {
 		folder: "", // пустая строка = корень
 		namespaces: ["header", "sidebar", "home", "common", "login_page"]

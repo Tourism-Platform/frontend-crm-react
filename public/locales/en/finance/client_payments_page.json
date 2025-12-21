@@ -1,0 +1,16 @@
+{
+	"page_name": "Client payments",
+	"table": {
+		"paymentId": "Payment ID",
+		"orderId": "Order ID",
+		"issueDate": "Issue date",
+		"amount": "Amount",
+		"paidAmount": "Paid amount",
+		"status": "Status",
+		"statuses": {
+			"paid": "Paid",
+			"unpaid": "Unpaid",
+			"partially_paid": "Partially paid"
+		}
+	}
+}

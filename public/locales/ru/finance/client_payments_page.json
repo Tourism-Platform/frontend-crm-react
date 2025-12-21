@@ -1,0 +1,16 @@
+{
+	"page_name": "Платежи клиентов",
+	"table": {
+		"paymentId": "ID платежа",
+		"orderId": "ID заказа",
+		"issueDate": "Дата выставления",
+		"amount": "Сумма",
+		"paidAmount": "Оплачено",
+		"status": "Статус",
+		"statuses": {
+			"paid": "Оплачен",
+			"unpaid": "Не оплачен",
+			"partially_paid": "Оплачен частично"
+		}
+	}
+}
