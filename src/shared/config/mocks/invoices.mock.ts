@@ -1,6 +1,6 @@
-import { ENUM_PAYMENT_STATUS, type IPayment } from "@/entities/finance";
+import { ENUM_INVOICE_STATUS, type IInvoice } from "@/entities/finance";
 
-export const INVOICES_MOCK: IPayment[] = [
+export const INVOICES_MOCK: IInvoice[] = [
 	{
 		paymentId: "INV-1234",
 		orderId: "RQA00001",
@@ -8,7 +8,7 @@ export const INVOICES_MOCK: IPayment[] = [
 		amount: 10000.0,
 		paidAmount: 10000.0,
 		currency: "USD",
-		status: ENUM_PAYMENT_STATUS.PAID
+		status: ENUM_INVOICE_STATUS.PAID
 	},
 	{
 		paymentId: "INV-1235",
@@ -17,7 +17,7 @@ export const INVOICES_MOCK: IPayment[] = [
 		amount: 5000.0,
 		paidAmount: 2500.0,
 		currency: "USD",
-		status: ENUM_PAYMENT_STATUS.PARTIALLY_PAID
+		status: ENUM_INVOICE_STATUS.PARTIALLY_PAID
 	},
 	{
 		paymentId: "INV-1236",
@@ -26,6 +26,6 @@ export const INVOICES_MOCK: IPayment[] = [
 		amount: 3000.0,
 		paidAmount: 0.0,
 		currency: "USD",
-		status: ENUM_PAYMENT_STATUS.UNPAID
+		status: ENUM_INVOICE_STATUS.UNPAID
 	}
 ];

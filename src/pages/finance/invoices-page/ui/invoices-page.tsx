@@ -1,5 +1,7 @@
 import type { FC } from "react";
 
+import { Invoices } from "@/widgets/finance";
+
 export const InvoicesPage: FC = () => {
-	return <div>InvoicesPage</div>;
+	return <Invoices />;
 };

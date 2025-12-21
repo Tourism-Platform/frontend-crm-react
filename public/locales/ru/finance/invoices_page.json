@@ -1,0 +1,16 @@
+{
+	"page_name": "Счета",
+	"table": {
+		"paymentId": "Номер счета",
+		"orderId": "Номер заказа",
+		"issueDate": "Дата выставления",
+		"amount": "Общая сумма",
+		"paidAmount": "Оплачено",
+		"status": "Статус",
+		"statuses": {
+			"paid": "Оплачен",
+			"unpaid": "Не оплачен",
+			"partially_paid": "Оплачен частично"
+		}
+	}
+}

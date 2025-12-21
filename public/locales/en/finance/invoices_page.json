@@ -1,0 +1,16 @@
+{
+	"page_name": "Invoices",
+	"table": {
+		"paymentId": "Invoice #",
+		"orderId": "Order #",
+		"issueDate": "Issue Date",
+		"amount": "Total Amount",
+		"paidAmount": "Paid Amount",
+		"status": "Status",
+		"statuses": {
+			"paid": "Paid",
+			"unpaid": "Unpaid",
+			"partially_paid": "Partially paid"
+		}
+	}
+}

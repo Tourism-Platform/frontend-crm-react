@@ -43,7 +43,7 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 
 	finance: {
 		folder: "finance",
-		namespaces: ["client_payments_page"]
+		namespaces: ["client_payments_page", "invoices_page"]
 	},
 
 	shared: {
