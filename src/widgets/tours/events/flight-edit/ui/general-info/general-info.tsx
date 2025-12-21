@@ -41,9 +41,7 @@ export const GeneralInfo: FC = () => {
 		},
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TGeneralInfoSchema) {
-		console.log("Form submitted:", data);
-	}
+	function onSubmit() {}
 
 	return (
 		<Form {...form}>

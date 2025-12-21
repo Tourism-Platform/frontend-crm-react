@@ -4,7 +4,7 @@ import { z } from "zod";
 import type { TTourEventFlightEditPageKeys } from "@/shared/config";
 import type { CustomFieldVariant, SelectPickerOption } from "@/shared/ui";
 
-import type { PRICING_SCHEMA } from "../config";
+import type { PRICING_SCHEMA } from "../schema";
 
 interface IFormPriceDetailsBase {
 	label: TTourEventFlightEditPageKeys;

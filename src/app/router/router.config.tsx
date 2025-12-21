@@ -44,7 +44,6 @@ import {
 	OverviewPage,
 	PricingReviewPage,
 	SchedulePage,
-	TourDetailsEditPage,
 	ToursPage,
 	TransportationEditPage
 } from "@/pages/tours";
@@ -374,20 +373,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 			EventOwnerLayout
 		]
 	},
-	{
-		path: ENUM_PATH.TOURS.EVENTS.TOUR_DETAILS,
-		component: TourDetailsEditPage,
-		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOwnerLayout>
-			),
-			EventOwnerLayout
-		]
-	},
+	// {
+	// 	path: ENUM_PATH.TOURS.EVENTS.TOUR_DETAILS,
+	// 	component: TourDetailsEditPage,
+	// 	auth: ENUM_AUTH.PRIVATE,
+	// 	layout: ENUM_LAYOUT.ROOT,
+	// 	layout_cascade: [
+	// 		({ children }: { children: React.ReactNode }) => (
+	// 			<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+	// 				{children}
+	// 			</SideBarOwnerLayout>
+	// 		),
+	// 		EventOwnerLayout
+	// 	]
+	// },
 
 	// booking
 	{

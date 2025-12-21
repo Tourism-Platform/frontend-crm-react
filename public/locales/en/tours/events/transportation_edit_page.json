@@ -93,7 +93,8 @@
 				"placeholder": "Enter description",
 				"errors": {
 					"min": "Description is too short",
-					"max": "Description is too long"
+					"max": "Description is too long",
+					"required": "Description is required"
 				}
 			}
 		}

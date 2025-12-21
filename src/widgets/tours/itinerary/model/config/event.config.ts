@@ -4,7 +4,6 @@ import {
 	DrivingIcon,
 	HouseIcon,
 	InfoCircleIcon,
-	MapIcon,
 	PlaneIcon,
 	TicketStarIcon
 } from "@/shared/assets";
@@ -22,12 +21,12 @@ export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 		}
 	],
 	components: [
-		{
-			event_type: ENUM_EVENT.TOUR_DETAILS,
-			title: "Trip details",
-			icon: MapIcon,
-			color: "red-500"
-		},
+		// {
+		// 	event_type: ENUM_EVENT.TOUR_DETAILS,
+		// 	title: "Trip details",
+		// 	icon: MapIcon,
+		// 	color: "red-500"
+		// },
 		{
 			event_type: ENUM_EVENT.FLIGHT,
 			title: "Transportation",

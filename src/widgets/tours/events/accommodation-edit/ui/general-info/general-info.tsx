@@ -30,9 +30,7 @@ export const GeneralInfo: FC = () => {
 		},
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TGeneralInfoSchema) {
-		console.log("Form submitted:", data);
-	}
+	function onSubmit() {}
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">

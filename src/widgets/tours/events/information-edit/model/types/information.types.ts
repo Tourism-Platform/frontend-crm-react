@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { TTourInformationEditPageKeys } from "@/shared/config";
 import type { TFormField } from "@/shared/types";
 
-import type { GENERAL_INFO_SCHEMA } from "../config";
+import type { GENERAL_INFO_SCHEMA } from "../schema";
 
 export type TForm = TFormField<
 	TTourInformationEditPageKeys,

@@ -16,7 +16,7 @@ export const CARS_SCHEMA = z.object({
 				.min(1, {
 					message: "cars.description.description.errors.required"
 				})
-				.max(100, {
+				.max(1000, {
 					message: "cars.description.description.errors.max"
 				})
 		})

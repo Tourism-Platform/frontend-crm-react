@@ -10,9 +10,8 @@ export const BASE_FLIGHT_SCHEMA = z.object({
 	[ENUM_FORM_FLIGHT.TRANSPORT_TYPE]: z.string(),
 	[ENUM_FORM_FLIGHT.DESCRIPTION]: z
 		.string()
-		.min(2, { message: "general.description.description.errors.min" })
-		.max(50, { message: "general.description.description.errors.max" })
-		.optional(),
+		.min(1, { message: "general.description.description.errors.required" })
+		.max(1000, { message: "general.description.description.errors.max" }),
 
 	route: z
 		.array(

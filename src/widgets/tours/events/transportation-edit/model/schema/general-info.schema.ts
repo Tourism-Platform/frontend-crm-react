@@ -5,8 +5,8 @@ import { ENUM_FORM_TRANSPORTATION } from "../types";
 export const GENERAL_INFO_SCHEMA = z.object({
 	[ENUM_FORM_TRANSPORTATION.DESCRIPTION]: z
 		.string()
-		.min(2, { message: "general.description.description.errors.min" })
-		.max(50, { message: "general.description.description.errors.max" }),
+		.min(1, { message: "general.description.description.errors.required" })
+		.max(1000, { message: "general.description.description.errors.max" }),
 
 	[ENUM_FORM_TRANSPORTATION.TRANSFER_TYPE]: z.string().min(1, {
 		message: "general.details.form.fields.transfer_type.errors.required"
