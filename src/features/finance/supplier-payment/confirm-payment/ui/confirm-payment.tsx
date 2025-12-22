@@ -98,6 +98,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({
 										control={form?.control}
 										name={key}
 										t={t}
+										disabled={isConfirmed}
 										{...item}
 									/>
 								)

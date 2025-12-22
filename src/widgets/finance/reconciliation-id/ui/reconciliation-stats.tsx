@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent } from "@/shared/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import { type IReconciliationDetail } from "@/entities/finance";
@@ -22,16 +22,16 @@ export const ReconciliationStats: FC<IReconciliationStatsProps> = ({
 	return (
 		<div className="grid grid-cols-3 gap-6">
 			{stats.map((stat, index) => (
-				<Card key={index}>
+				<Card key={index} className="gap-3">
+					<CardHeader className="block">
+						<CardTitle className="text-lg font-medium text-muted-foreground">
+							{stat.label}
+						</CardTitle>
+					</CardHeader>
 					<CardContent>
-						<div className="flex flex-col gap-2">
-							<span className="text-sm text-gray-500">
-								{stat.label}
-							</span>
-							<span className="text-4xl">
-								{formatToDollars(stat.value)}
-							</span>
-						</div>
+						<span className="text-4xl">
+							{formatToDollars(stat.value)}
+						</span>
 					</CardContent>
 				</Card>
 			))}

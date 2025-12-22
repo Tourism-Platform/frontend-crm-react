@@ -33,7 +33,7 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 
 	return (
 		<div className="flex justify-between items-center w-full">
-			<h1 className="text-2xl font-semibold">
+			<h1 className="text-3xl">
 				{orderId} - {client}
 			</h1>
 			<Badge

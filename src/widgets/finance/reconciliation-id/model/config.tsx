@@ -75,20 +75,17 @@ export const COLUMNS = (): ColumnDef<IReconciliationSupplierPayment>[] => {
 			accessorKey: "variance",
 			cell: ({ row }) => {
 				const variance = parseFloat(row.getValue("variance"));
-				const isNegative = variance < 0;
-				const isPositive = variance > 0;
 				return (
 					<div
 						className={cn(
 							"font-medium",
-							isNegative
+							variance < 0
 								? "text-red-500"
-								: isPositive
+								: variance > 0
 									? "text-green-500"
 									: "text-[#71717A]"
 						)}
 					>
-						{isNegative ? "-$" : isPositive ? "+" : ""}
 						{formatToDollars(variance)}
 					</div>
 				);
