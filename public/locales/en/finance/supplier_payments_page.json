@@ -1,0 +1,53 @@
+{
+	"page_name": "Supplier payments",
+	"form": {
+		"title": "Payment details",
+		"fields": {
+			"order_id": {
+				"label": "Order ID",
+				"placeholder": "Enter order ID"
+			},
+			"amount": {
+				"label": "Amount",
+				"placeholder": "Enter amount"
+			},
+			"note": {
+				"label": "Note",
+				"placeholder": "Enter note"
+			}
+		},
+		"errors": {
+			"order_id": {
+				"required": "Order ID is required",
+				"min": "Order ID cannot be empty"
+			},
+			"amount": {
+				"required": "Amount is required",
+				"min": "Amount must be greater than 0"
+			}
+		},
+		"buttons": {
+			"close": "Close",
+			"save": "Confirm"
+		}
+	},
+	"table": {
+		"id": "ID",
+		"orderId": "Order id",
+		"component": "Component",
+		"type": "Type",
+		"supplier": "Supplier",
+		"dateCreated": "Date created",
+		"amount": "Amount",
+		"manager": "Manager",
+		"status": "Status",
+		"statuses": {
+			"recorded": "Recorded",
+			"confirmed": "Confirmed"
+		},
+		"menu": {
+			"open": "Open",
+			"confirm": "Confirm"
+		}
+	}
+}

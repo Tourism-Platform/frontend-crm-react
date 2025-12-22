@@ -1,0 +1,53 @@
+{
+	"page_name": "Платежи поставщикам",
+	"form": {
+		"title": "Детали платежа",
+		"fields": {
+			"order_id": {
+				"label": "ID заказа",
+				"placeholder": "Введите ID заказа"
+			},
+			"amount": {
+				"label": "Сумма",
+				"placeholder": "Введите сумму"
+			},
+			"note": {
+				"label": "Примечание",
+				"placeholder": "Введите примечание"
+			}
+		},
+		"errors": {
+			"order_id": {
+				"required": "ID заказа обязателен",
+				"min": "ID заказа не может быть пустым"
+			},
+			"amount": {
+				"required": "Сумма обязательна",
+				"min": "Сумма должна быть больше 0"
+			}
+		},
+		"buttons": {
+			"close": "Закрыть",
+			"save": "Подтвердить"
+		}
+	},
+	"table": {
+		"id": "ID",
+		"orderId": "ID заказа",
+		"component": "Компонент",
+		"type": "Тип",
+		"supplier": "Поставщик",
+		"dateCreated": "Дата создания",
+		"amount": "Сумма",
+		"manager": "Менеджер",
+		"status": "Статус",
+		"statuses": {
+			"recorded": "Записано",
+			"confirmed": "Подтверждено"
+		},
+		"menu": {
+			"open": "Открыть",
+			"confirm": "Подтвердить"
+		}
+	}
+}

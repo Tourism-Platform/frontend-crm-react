@@ -6,3 +6,4 @@ export * from "./cars.mock";
 export * from "./multiply-option.mock";
 export * from "./payments.mock";
 export * from "./invoices.mock";
+export * from "./supplier-payments.mock";
