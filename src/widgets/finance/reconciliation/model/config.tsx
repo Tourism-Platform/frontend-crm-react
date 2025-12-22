@@ -62,69 +62,41 @@ export const COLUMNS = (): ColumnDef<IReconciliation>[] => {
 		{
 			header: t("table.plannedRevenue"),
 			accessorKey: "plannedRevenue",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("plannedRevenue"));
-				return (
-					<div className="font-medium">
-						$
-						{amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2,
-							maximumFractionDigits: 2
-						})}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("plannedRevenue"))}
+				</div>
+			),
 			size: 140
 		},
 		{
 			header: t("table.actualRevenue"),
 			accessorKey: "actualRevenue",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("actualRevenue"));
-				return (
-					<div className="font-medium">
-						$
-						{amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2,
-							maximumFractionDigits: 2
-						})}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("actualRevenue"))}
+				</div>
+			),
 			size: 140
 		},
 		{
 			header: t("table.plannedCost"),
 			accessorKey: "plannedCost",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("plannedCost"));
-				return (
-					<div className="font-medium">
-						$
-						{amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2,
-							maximumFractionDigits: 2
-						})}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("plannedCost"))}
+				</div>
+			),
 			size: 140
 		},
 		{
 			header: t("table.actualCost"),
 			accessorKey: "actualCost",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("actualCost"));
-				return (
-					<div className="font-medium">
-						$
-						{amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2,
-							maximumFractionDigits: 2
-						})}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("actualCost"))}
+				</div>
+			),
 			size: 140
 		},
 		{
@@ -132,15 +104,13 @@ export const COLUMNS = (): ColumnDef<IReconciliation>[] => {
 			accessorKey: "variance",
 			cell: ({ row }) => {
 				const variance = parseFloat(row.getValue("variance"));
-				const isNegative = variance < 0;
 				return (
 					<div
 						className={cn(
 							"font-medium",
-							isNegative ? "text-red-500" : "text-green-500"
+							variance < 0 ? "text-red-500" : "text-green-500"
 						)}
 					>
-						{isNegative ? "-" : ""}
 						{formatToDollars(variance)}
 					</div>
 				);

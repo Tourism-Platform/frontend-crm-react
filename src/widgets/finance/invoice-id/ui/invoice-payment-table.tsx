@@ -8,6 +8,7 @@ import {
 	CustomTable,
 	Separator
 } from "@/shared/ui";
+import { formatToDollars } from "@/shared/utils";
 
 import type { IInvoice } from "@/entities/finance";
 
@@ -29,34 +30,19 @@ export const InvoicePaymentTable: FC<IInvoicePaymentTableProps> = ({
 					<span className="font-semibold">
 						{t("payment_table.summary.total_invoiced")}:
 					</span>
-					<span>
-						$
-						{invoice.amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2
-						})}
-					</span>
+					<span>{formatToDollars(invoice.amount)}</span>
 				</div>
 				<div className="flex gap-2">
 					<span className="font-semibold">
 						{t("payment_table.summary.paid")}:
 					</span>
-					<span>
-						$
-						{invoice.paidAmount.toLocaleString(undefined, {
-							minimumFractionDigits: 2
-						})}
-					</span>
+					<span>{formatToDollars(invoice.paidAmount)}</span>
 				</div>
 				<div className="flex gap-2">
 					<span className="font-semibold">
 						{t("payment_table.summary.remaining")}:
 					</span>
-					<span>
-						$
-						{invoice.remainingAmount.toLocaleString(undefined, {
-							minimumFractionDigits: 2
-						})}
-					</span>
+					<span>{formatToDollars(invoice.remainingAmount)}</span>
 				</div>
 			</CardHeader>
 			<Separator />

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
 import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { formatToDollars } from "@/shared/utils";
 
 import {
 	ENUM_INVOICE_STATUS,
@@ -75,29 +76,21 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 		{
 			header: t("table.amount"),
 			accessorKey: "amount",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("amount"));
-				const currency = row.original.currency;
-				return (
-					<div className="font-medium">
-						{amount.toLocaleString()} {currency}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("amount"))}
+				</div>
+			),
 			size: 140
 		},
 		{
 			header: t("table.paidAmount"),
 			accessorKey: "paidAmount",
-			cell: ({ row }) => {
-				const paidAmount = parseFloat(row.getValue("paidAmount"));
-				const currency = row.original.currency;
-				return (
-					<div className="font-medium">
-						{paidAmount.toLocaleString()} {currency}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("paidAmount"))}
+				</div>
+			),
 			size: 140
 		},
 		{

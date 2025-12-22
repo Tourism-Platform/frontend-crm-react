@@ -53,35 +53,21 @@ export const COLUMNS = (): ColumnDef<IReconciliationSupplierPayment>[] => {
 		{
 			header: t("table.plannedAmount"),
 			accessorKey: "plannedAmount",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("plannedAmount"));
-				return (
-					<div className="font-medium">
-						$
-						{amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2,
-							maximumFractionDigits: 2
-						})}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("plannedAmount"))}
+				</div>
+			),
 			size: 140
 		},
 		{
 			header: t("table.actualAmount"),
 			accessorKey: "actualAmount",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("actualAmount"));
-				return (
-					<div className="font-medium">
-						$
-						{amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2,
-							maximumFractionDigits: 2
-						})}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("actualAmount"))}
+				</div>
+			),
 			size: 140
 		},
 		{

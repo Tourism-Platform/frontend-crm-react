@@ -2,6 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { formatToDollars } from "@/shared/utils";
 
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
@@ -78,14 +79,11 @@ export const COLUMNS = (
 		{
 			header: t("table.amount"),
 			accessorKey: "amount",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("amount"));
-				return (
-					<div className="font-medium">
-						${amount.toLocaleString()}
-					</div>
-				);
-			},
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("amount"))}
+				</div>
+			),
 			size: 120
 		},
 		{

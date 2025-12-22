@@ -2,6 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui";
+import { formatToDollars } from "@/shared/utils";
 
 import { type IInvoice } from "@/entities/finance";
 
@@ -19,18 +20,12 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 		{
 			header: t("payment_table.table.fields.amount"),
 			accessorKey: "amount",
-			cell: ({ row }) => {
-				const amount = parseFloat(row.getValue("amount"));
-				return (
-					<div className="font-medium">
-						$
-						{amount.toLocaleString(undefined, {
-							minimumFractionDigits: 2
-						})}
-					</div>
-				);
-			},
-			size: 160
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.getValue("amount"))}
+				</div>
+			),
+			size: 300
 		},
 		{
 			header: t("payment_table.table.fields.date"),
@@ -38,7 +33,7 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("date")}</div>
 			),
-			size: 160
+			size: 300
 		},
 		{
 			id: "actions",
@@ -58,7 +53,7 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 					</Button>
 				</div>
 			),
-			size: 120,
+			size: 60,
 			enableHiding: false
 		}
 	];
