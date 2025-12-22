@@ -1,18 +1,20 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, type BadgeVariant, Button, Checkbox } from "@/shared/ui";
+import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
 
 import {
 	ENUM_PAYMENT_STATUS,
 	type ENUM_PAYMENT_STATUS_TYPE,
-	type IPayment,
-	PAYMENT_STATUS_LABELS
+	type IPayment
 } from "@/entities/finance";
 
-import { AssignClientPayment, OpenClientPayment } from "@/features/finance";
+import { ClientPaymentActions } from "../ui";
 
-export const COLUMNS = (): ColumnDef<IPayment>[] => {
+export const COLUMNS = (
+	onAssign?: (id: string, data: Partial<IPayment>) => void,
+	onDelete?: (id: string) => void
+): ColumnDef<IPayment>[] => {
 	const { t } = useTranslation("client_payments_page");
 	return [
 		{
@@ -94,7 +96,7 @@ export const COLUMNS = (): ColumnDef<IPayment>[] => {
 
 				return (
 					<Badge variant={variant}>
-						{t(PAYMENT_STATUS_LABELS[status])}
+						{t(`table.statuses.${status}`)}
 					</Badge>
 				);
 			},
@@ -102,56 +104,17 @@ export const COLUMNS = (): ColumnDef<IPayment>[] => {
 		},
 		{
 			id: "actions",
-			header: () => <div className="text-right">Actions</div>,
 			cell: ({ row }) => {
 				const payment = row.original;
-				const status = payment.status;
-
-				const handleAssign = (data: { orderId: string }) => {
-					console.log("Assigning payment to order:", data.orderId);
-					// TODO: Implement actual assignment logic
-				};
-
 				return (
-					<div className="text-right">
-						{status === ENUM_PAYMENT_STATUS.ASSIGNED ? (
-							<OpenClientPayment
-								trigger={
-									<Button
-										variant="outline"
-										size="sm"
-										className="h-8 py-0 rounded px-4 text-xs font-medium border-gray-200"
-									>
-										Open
-									</Button>
-								}
-								data={{
-									paymentId: payment.paymentId,
-									orderId: payment.orderId,
-									dateCreated: payment.dateCreated,
-									amount: payment.amount,
-									currency: payment.currency,
-									status: payment.status
-								}}
-							/>
-						) : (
-							<AssignClientPayment
-								trigger={
-									<Button
-										variant="outline"
-										size="sm"
-										className="h-8 py-0 rounded px-4 text-xs font-medium border-gray-200"
-									>
-										Assign
-									</Button>
-								}
-								onAssign={handleAssign}
-							/>
-						)}
-					</div>
+					<ClientPaymentActions
+						payment={payment}
+						onAssign={onAssign}
+						onDelete={onDelete}
+					/>
 				);
 			},
-			size: 120,
+			size: 100,
 			enableHiding: false
 		}
 	];

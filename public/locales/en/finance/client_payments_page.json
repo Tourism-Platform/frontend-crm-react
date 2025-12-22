@@ -1,7 +1,95 @@
 {
 	"page_name": "Client payments",
+	"new_payment": {
+		"button": "New Payment",
+		"form": {
+			"title": "Create New Payment",
+			"fields": {
+				"payment_id": {
+					"label": "Payment ID",
+					"placeholder": "Enter payment ID (e.g., INV-1234)"
+				},
+				"amount": {
+					"label": "Amount",
+					"placeholder": "Enter amount"
+				},
+				"order_id": {
+					"label": "Order ID",
+					"placeholder": "Enter order ID (e.g., RQA00001)"
+				},
+				"note": {
+					"label": "Note",
+					"placeholder": "Enter note"
+				}
+			},
+			"errors": {
+				"payment_id": {
+					"required": "Payment ID is required",
+					"min": "Payment ID cannot be empty"
+				},
+				"amount": {
+					"required": "Amount is required",
+					"min": "Amount must be greater than 0"
+				},
+				"order_id": {
+					"required": "Order ID is required",
+					"min": "Order ID cannot be empty"
+				}
+			},
+			"buttons": {
+				"decline": "Cancel",
+				"save": "Create"
+			}
+		}
+	},
+	"menu": {
+		"assign": {
+			"button": "Assign",
+			"form": {
+				"title": "Assign Payment to Order",
+				"fields": {
+					"order_id": {
+						"label": "Order ID",
+						"placeholder": "Enter order ID (e.g., RQA00001)"
+					},
+					"amount": {
+						"label": "Amount",
+						"placeholder": "Enter amount"
+					},
+					"note": {
+						"label": "Note",
+						"placeholder": "Enter note"
+					}
+				},
+				"errors": {
+					"order_id": {
+						"required": "Order ID is required",
+						"min": "Order ID cannot be empty"
+					},
+					"amount": {
+						"required": "Amount is required",
+						"min": "Amount must be greater than 0"
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Assign"
+				}
+			}
+		},
+		"delete": {
+			"button": "Delete",
+			"form": {
+				"title": "Delete Payment",
+				"warning": "Are you sure you want to delete this payment? This action cannot be undone.",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete"
+				}
+			}
+		}
+	},
 	"table": {
-		"id": "ID",
 		"paymentId": "Payment ID",
 		"orderId": "Order ID",
 		"dateCreated": "Date created",
@@ -10,65 +98,11 @@
 		"statuses": {
 			"assigned": "Assigned",
 			"not_assigned": "Not Assigned"
-		}
-	},
-	"client_payment": {
+		},
 		"menu": {
-			"open": {
-				"form": {
-					"title": "Payment Details",
-					"fields": {
-						"payment_id": {
-							"label": "Payment ID",
-							"placeholder": "INV-1234"
-						},
-						"order_id": {
-							"label": "Order ID",
-							"placeholder": "RQA00001"
-						},
-						"date_created": {
-							"label": "Date Created",
-							"placeholder": "2024-10-10"
-						},
-						"amount": {
-							"label": "Amount",
-							"placeholder": "10000.00"
-						},
-						"currency": {
-							"label": "Currency",
-							"placeholder": "USD"
-						},
-						"status": {
-							"label": "Status",
-							"placeholder": "Assigned"
-						}
-					},
-					"buttons": {
-						"close": "Close"
-					}
-				}
-			},
-			"assign": {
-				"form": {
-					"title": "Assign Payment to Order",
-					"fields": {
-						"order_id": {
-							"label": "Order ID",
-							"placeholder": "Enter order ID (e.g., RQA00001)"
-						}
-					},
-					"buttons": {
-						"decline": "Cancel",
-						"save": "Assign"
-					},
-					"errors": {
-						"order_id": {
-							"required": "Order ID is required",
-							"min": "Order ID cannot be empty"
-						}
-					}
-				}
-			}
+			"assign": "Assign",
+			"open": "Open",
+			"delete": "Delete"
 		}
 	}
 }

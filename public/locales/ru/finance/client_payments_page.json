@@ -1,7 +1,95 @@
 {
 	"page_name": "Платежи клиентов",
+	"new_payment": {
+		"button": "Новый платеж",
+		"form": {
+			"title": "Создать новый платеж",
+			"fields": {
+				"payment_id": {
+					"label": "ID платежа",
+					"placeholder": "Введите ID платежа (например, INV-1234)"
+				},
+				"amount": {
+					"label": "Сумма",
+					"placeholder": "Введите сумму"
+				},
+				"order_id": {
+					"label": "ID заказа",
+					"placeholder": "Введите ID заказа (например, RQA00001)"
+				},
+				"note": {
+					"label": "Примечание",
+					"placeholder": "Введите примечание"
+				}
+			},
+			"errors": {
+				"payment_id": {
+					"required": "ID платежа обязателен",
+					"min": "ID платежа не может быть пустым"
+				},
+				"amount": {
+					"required": "Сумма обязательна",
+					"min": "Сумма должна быть больше 0"
+				},
+				"order_id": {
+					"required": "ID заказа обязателен",
+					"min": "ID заказа не может быть пустым"
+				}
+			},
+			"buttons": {
+				"decline": "Отмена",
+				"save": "Создать"
+			}
+		}
+	},
+	"menu": {
+		"assign": {
+			"button": "Назначить",
+			"form": {
+				"title": "Назначить платеж к заказу",
+				"fields": {
+					"order_id": {
+						"label": "ID заказа",
+						"placeholder": "Введите ID заказа (например, RQA00001)"
+					},
+					"amount": {
+						"label": "Сумма",
+						"placeholder": "Введите сумму"
+					},
+					"note": {
+						"label": "Примечание",
+						"placeholder": "Введите примечание"
+					}
+				},
+				"errors": {
+					"order_id": {
+						"required": "ID заказа обязателен",
+						"min": "ID заказа не может быть пустым"
+					},
+					"amount": {
+						"required": "Сумма обязательна",
+						"min": "Сумма должна быть больше 0"
+					}
+				},
+				"buttons": {
+					"decline": "Отмена",
+					"save": "Назначить"
+				}
+			}
+		},
+		"delete": {
+			"button": "Удалить",
+			"form": {
+				"title": "Удалить платеж",
+				"warning": "Вы уверены, что хотите удалить этот платеж? Это действие нельзя отменить.",
+				"buttons": {
+					"decline": "Отмена",
+					"confirm": "Удалить"
+				}
+			}
+		}
+	},
 	"table": {
-		"id": "ID",
 		"paymentId": "ID платежа",
 		"orderId": "ID заказа",
 		"dateCreated": "Дата создания",
@@ -10,65 +98,10 @@
 		"statuses": {
 			"assigned": "Назначен",
 			"not_assigned": "Не назначен"
-		}
-	},
-	"client_payment": {
+		},
 		"menu": {
-			"open": {
-				"form": {
-					"title": "Детали платежа",
-					"fields": {
-						"payment_id": {
-							"label": "ID платежа",
-							"placeholder": "INV-1234"
-						},
-						"order_id": {
-							"label": "ID заказа",
-							"placeholder": "RQA00001"
-						},
-						"date_created": {
-							"label": "Дата создания",
-							"placeholder": "2024-10-10"
-						},
-						"amount": {
-							"label": "Сумма",
-							"placeholder": "10000.00"
-						},
-						"currency": {
-							"label": "Валюта",
-							"placeholder": "USD"
-						},
-						"status": {
-							"label": "Статус",
-							"placeholder": "Назначен"
-						}
-					},
-					"buttons": {
-						"close": "Закрыть"
-					}
-				}
-			},
-			"assign": {
-				"form": {
-					"title": "Назначить платеж к заказу",
-					"fields": {
-						"order_id": {
-							"label": "ID заказа",
-							"placeholder": "Введите ID заказа (например, RQA00001)"
-						}
-					},
-					"buttons": {
-						"decline": "Отмена",
-						"save": "Назначить"
-					},
-					"errors": {
-						"order_id": {
-							"required": "ID заказа обязателен",
-							"min": "ID заказа не может быть пустым"
-						}
-					}
-				}
-			}
+			"assign": "Назначить",
+			"delete": "Удалить"
 		}
 	}
 }

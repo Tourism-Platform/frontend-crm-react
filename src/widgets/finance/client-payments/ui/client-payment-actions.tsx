@@ -10,24 +10,24 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import type { IStaffUser } from "@/entities/staff";
+import { ENUM_PAYMENT_STATUS, type IPayment } from "@/entities/finance";
 
-import { DeleteStaff, EditStaff } from "@/features/settings";
+import { AssignPayment, DeletePayment } from "@/features/finance";
 
-interface IStaffActionsProps {
-	user?: IStaffUser;
-	onEdit?: (id: string, data: Partial<IStaffUser>) => void;
+interface IClientPaymentActionsProps {
+	payment?: IPayment;
+	onAssign?: (id: string, data: Partial<IPayment>) => void;
 	onDelete?: (id: string) => void;
 }
 
-export const StaffActions: FC<IStaffActionsProps> = ({
-	user,
-	onEdit,
+export const ClientPaymentActions: FC<IClientPaymentActionsProps> = ({
+	payment,
+	onAssign,
 	onDelete
 }) => {
-	const { t } = useTranslation("staff_information_page");
+	const { t } = useTranslation("client_payments_page");
 
-	if (!user) return null;
+	if (!payment) return null;
 
 	return (
 		<DropdownMenu>
@@ -45,25 +45,27 @@ export const StaffActions: FC<IStaffActionsProps> = ({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
-					<EditStaff
+					<AssignPayment
 						trigger={
 							<div className="w-full h-full cursor-pointer hover:bg-accent px-2 py-1.5 text-sm">
-								{t("menu.edit.button")}
+								{payment.status === ENUM_PAYMENT_STATUS.ASSIGNED
+									? t("table.menu.open")
+									: t("table.menu.assign")}
 							</div>
 						}
-						user={user}
-						onEdit={onEdit}
+						payment={payment}
+						onAssign={onAssign}
 					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
-					<DeleteStaff
+					<DeletePayment
 						trigger={
 							<div className="w-full h-full cursor-pointer text-destructive focus:text-destructive hover:bg-accent px-2 py-1.5 text-sm">
-								{t("menu.delete.button")}
+								{t("table.menu.delete")}
 							</div>
 						}
 						className="w-full justify-start px-2 py-1.5"
-						id={user.id}
+						id={payment.id}
 						onDelete={onDelete}
 					/>
 				</DropdownMenuItem>

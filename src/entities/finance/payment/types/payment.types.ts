@@ -9,13 +9,14 @@ export type ENUM_PAYMENT_STATUS_TYPE =
 	(typeof ENUM_PAYMENT_STATUS)[keyof typeof ENUM_PAYMENT_STATUS];
 
 export interface IPayment {
-	id: number;
+	id: string;
 	paymentId: string; // INV-1234
 	orderId: string; // RQA00001
 	dateCreated: string; // ISO: 2024-10-10
 	amount: number; // 10000.00
 	currency: "USD"; // расширяемо
 	status: ENUM_PAYMENT_STATUS_TYPE;
+	note?: string;
 }
 
 export const PAYMENT_STATUS_LABELS: Record<
