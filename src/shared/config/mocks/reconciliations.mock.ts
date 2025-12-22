@@ -1,4 +1,4 @@
-import type { IReconciliation } from "@/entities/finance/reconciliation/types/reconciliation.types";
+import type { IReconciliation } from "@/entities/finance";
 
 export const RECONCILIATIONS_MOCK: IReconciliation[] = [
 	{

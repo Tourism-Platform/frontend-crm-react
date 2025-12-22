@@ -11,7 +11,7 @@ import {
 	ENUM_RECONCILIATION_STATUS,
 	type ENUM_RECONCILIATION_STATUS_TYPE,
 	type IReconciliation
-} from "@/entities/finance/reconciliation/types/reconciliation.types";
+} from "@/entities/finance";
 
 export const COLUMNS = (): ColumnDef<IReconciliation>[] => {
 	const { t } = useTranslation("reconciliation_page");

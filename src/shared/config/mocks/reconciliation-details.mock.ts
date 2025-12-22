@@ -1,4 +1,4 @@
-import type { IReconciliationDetail } from "@/entities/finance/reconciliation/types/reconciliation.types";
+import type { IReconciliationDetail } from "@/entities/finance";
 
 export const RECONCILIATION_DETAILS_MOCK: Record<
 	string,

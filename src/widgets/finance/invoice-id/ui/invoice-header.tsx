@@ -3,14 +3,14 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { ENUM_PATH, type TInvoiceIdPageKeys } from "@/shared/config";
+import { ENUM_PATH } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import { Badge, type BadgeVariant, Button } from "@/shared/ui";
 
 import {
 	ENUM_INVOICE_STATUS,
 	type ENUM_INVOICE_STATUS_TYPE,
-	INVOICE_STATUS_LABELS
+	INVOICE_ID_STATUS_LABELS
 } from "@/entities/finance";
 
 interface IInvoiceHeaderProps {
@@ -68,9 +68,7 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 								"px-3 py-2 text-xs font-bold uppercase rounded-md"
 							)}
 						>
-							{t(
-								`payment_table.table.statuses.${INVOICE_STATUS_LABELS[status].replace("table.statuses.", "")}` as TInvoiceIdPageKeys
-							)}
+							{t(INVOICE_ID_STATUS_LABELS[status])}
 						</Badge>
 					</div>
 					<Button>{t("buttons.export")}</Button>
