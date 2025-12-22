@@ -41,7 +41,7 @@ export const NewPayment: FC<INewPaymentProps> = ({ onAdd }) => {
 	function onSubmit(data: TNewPaymentSchema) {
 		if (onAdd) {
 			onAdd({
-				paymentId: data.paymentId,
+				paymentId: `INV-${Math.floor(Math.random() * 10000)}`,
 				amount: data.amount,
 				orderId: data.orderId || "",
 				note: data.note || "",

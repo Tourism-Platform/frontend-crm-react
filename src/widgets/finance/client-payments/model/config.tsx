@@ -2,11 +2,13 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { formatToDollars } from "@/shared/utils";
 
 import {
 	ENUM_PAYMENT_STATUS,
 	type ENUM_PAYMENT_STATUS_TYPE,
-	type IPayment
+	type IPayment,
+	PAYMENT_STATUS_LABELS
 } from "@/entities/finance";
 
 import { ClientPaymentActions } from "../ui";
@@ -65,11 +67,8 @@ export const COLUMNS = (
 			accessorKey: "amount",
 			cell: ({ row }) => {
 				const amount = parseFloat(row.getValue("amount"));
-				const currency = row.original.currency;
 				return (
-					<div className="font-medium">
-						{amount.toLocaleString()} {currency}
-					</div>
+					<div className="font-medium">{formatToDollars(amount)}</div>
 				);
 			},
 			size: 140
@@ -96,7 +95,7 @@ export const COLUMNS = (
 
 				return (
 					<Badge variant={variant}>
-						{t(`table.statuses.${status}`)}
+						{t(PAYMENT_STATUS_LABELS[status])}
 					</Badge>
 				);
 			},
@@ -104,17 +103,15 @@ export const COLUMNS = (
 		},
 		{
 			id: "actions",
-			cell: ({ row }) => {
-				const payment = row.original;
-				return (
-					<ClientPaymentActions
-						payment={payment}
-						onAssign={onAssign}
-						onDelete={onDelete}
-					/>
-				);
-			},
-			size: 100,
+			header: () => <span className="sr-only">Actions</span>,
+			cell: ({ row }) => (
+				<ClientPaymentActions
+					payment={row.original}
+					onAssign={onAssign}
+					onDelete={onDelete}
+				/>
+			),
+			size: 60,
 			enableHiding: false
 		}
 	];

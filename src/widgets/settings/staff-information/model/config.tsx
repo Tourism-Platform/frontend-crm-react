@@ -12,7 +12,7 @@ import {
 	STAFF_STATUS_LABELS
 } from "@/entities/staff";
 
-import { StaffActions } from "../ui/staff-actions";
+import { StaffActions } from "../ui";
 
 export const COLUMNS = (
 	onEdit?: (id: string, data: Partial<IStaffUser>) => void,
@@ -102,7 +102,7 @@ export const COLUMNS = (
 
 				return (
 					<Badge variant={variant}>
-						{STAFF_STATUS_LABELS[status]}
+						{t(STAFF_STATUS_LABELS[status])}
 					</Badge>
 				);
 			},

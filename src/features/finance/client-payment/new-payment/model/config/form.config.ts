@@ -2,9 +2,9 @@ import { ENUM_FORM_NEW_PAYMENT, type TForm } from "../types";
 
 export const FORM_NEW_PAYMENT_LIST: TForm[] = [
 	{
-		label: "new_payment.form.fields.payment_id.label",
-		placeholder: "new_payment.form.fields.payment_id.placeholder",
-		key: ENUM_FORM_NEW_PAYMENT.PAYMENT_ID,
+		label: "new_payment.form.fields.order_id.label",
+		placeholder: "new_payment.form.fields.order_id.placeholder",
+		key: ENUM_FORM_NEW_PAYMENT.ORDER_ID,
 		fieldType: "input"
 	},
 	{
@@ -13,12 +13,6 @@ export const FORM_NEW_PAYMENT_LIST: TForm[] = [
 		key: ENUM_FORM_NEW_PAYMENT.AMOUNT,
 		fieldType: "input",
 		type: "number"
-	},
-	{
-		label: "new_payment.form.fields.order_id.label",
-		placeholder: "new_payment.form.fields.order_id.placeholder",
-		key: ENUM_FORM_NEW_PAYMENT.ORDER_ID,
-		fieldType: "input"
 	},
 	{
 		label: "new_payment.form.fields.note.label",

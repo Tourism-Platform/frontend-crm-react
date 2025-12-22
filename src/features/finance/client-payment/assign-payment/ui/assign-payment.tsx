@@ -88,6 +88,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 										control={form?.control}
 										name={key}
 										t={t}
+										disabled={isAssigned}
 										{...item}
 									/>
 								)

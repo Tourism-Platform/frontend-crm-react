@@ -46,7 +46,7 @@
 		"assign": {
 			"button": "Assign",
 			"form": {
-				"title": "Assign Payment to Order",
+				"title": "Payment details",
 				"fields": {
 					"order_id": {
 						"label": "Order ID",
