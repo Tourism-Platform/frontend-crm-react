@@ -1,8 +1,8 @@
 import {
 	DollarSquareIcon,
 	MoneysIcon,
-	TaskSquareIcon,
-	TicketStarIcon
+	ReceiptIcon,
+	ReceiptIcon2
 } from "@/shared/assets";
 import { ENUM_PATH } from "@/shared/config";
 import type { ISidebarMenu } from "@/shared/ui";
@@ -14,7 +14,7 @@ export const FINANCE_SIDEBAR_LIST: ISidebarMenu[] = [
 			{
 				label: "owner.finance.general.menu.invoices",
 				path: ENUM_PATH.FINANCE.INVOICES,
-				icon: TaskSquareIcon
+				icon: ReceiptIcon2
 			},
 			{
 				label: "owner.finance.general.menu.client_payments",
@@ -24,12 +24,12 @@ export const FINANCE_SIDEBAR_LIST: ISidebarMenu[] = [
 			{
 				label: "owner.finance.general.menu.supplier_payments",
 				path: ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS,
-				icon: MoneysIcon
+				icon: ReceiptIcon
 			},
 			{
 				label: "owner.finance.general.menu.reconciliation",
 				path: ENUM_PATH.FINANCE.RECONCILIATION,
-				icon: TicketStarIcon
+				icon: MoneysIcon
 			}
 		]
 	}

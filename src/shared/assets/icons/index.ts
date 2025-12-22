@@ -19,6 +19,8 @@ export * from "./moneys";
 export * from "./notification-bing";
 export * from "./percent-circle";
 export * from "./plane";
+export * from "./receipt";
+export * from "./receipt2";
 export * from "./settings";
 export * from "./tag";
 export * from "./task-square";

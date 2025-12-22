@@ -2,8 +2,9 @@ import {
 	CalendarDaysIcon,
 	DollarSquareIcon,
 	MoneysIcon,
-	TaskSquareIcon,
-	TicketStarIcon
+	ReceiptIcon,
+	ReceiptIcon2,
+	TaskSquareIcon
 } from "@/shared/assets";
 import { ENUM_PATH } from "@/shared/config";
 import type { INavItemBase } from "@/shared/ui";
@@ -74,7 +75,7 @@ export const NAV_ITEMS_LIST: INavItemBase[] = [
 			{
 				href: ENUM_PATH.FINANCE.INVOICES,
 				label: "owner.finance.menu.invoices",
-				icon: TaskSquareIcon
+				icon: ReceiptIcon2
 			},
 			{
 				href: ENUM_PATH.FINANCE.CLIENT_PAYMENTS,
@@ -84,12 +85,12 @@ export const NAV_ITEMS_LIST: INavItemBase[] = [
 			{
 				href: ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS,
 				label: "owner.finance.menu.supplier_payments",
-				icon: MoneysIcon
+				icon: ReceiptIcon
 			},
 			{
 				href: ENUM_PATH.FINANCE.RECONCILIATION,
 				label: "owner.finance.menu.reconciliation",
-				icon: TicketStarIcon
+				icon: MoneysIcon
 			}
 		]
 	},
