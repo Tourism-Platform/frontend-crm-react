@@ -1,0 +1,21 @@
+{
+	"page_name": "Reconciliation",
+	"table": {
+		"id": "ID",
+		"orderId": "Order id",
+		"client": "Client",
+		"plannedRevenue": "Planned revenue",
+		"actualRevenue": "Actual revenue",
+		"plannedCost": "Planned cost",
+		"actualCost": "Actual cost",
+		"variance": "Variance",
+		"status": "Status",
+		"statuses": {
+			"in_progress": "In progress",
+			"completed": "Completed"
+		},
+		"menu": {
+			"open": "Open"
+		}
+	}
+}

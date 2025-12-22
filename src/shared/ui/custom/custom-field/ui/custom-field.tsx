@@ -36,6 +36,7 @@ type BaseFieldProps = {
 	label: string;
 	t: TFunction<any>;
 	className?: string;
+	disabled?: boolean;
 };
 
 type TextFieldVariant = BaseFieldProps & {

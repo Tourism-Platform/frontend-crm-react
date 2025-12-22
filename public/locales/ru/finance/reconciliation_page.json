@@ -1,0 +1,21 @@
+{
+	"page_name": "Сверка",
+	"table": {
+		"id": "ID",
+		"orderId": "ID заказа",
+		"client": "Клиент",
+		"plannedRevenue": "План. доход",
+		"actualRevenue": "Факт. доход",
+		"plannedCost": "План. расход",
+		"actualCost": "Факт. расход",
+		"variance": "Разница",
+		"status": "Статус",
+		"statuses": {
+			"in_progress": "В процессе",
+			"completed": "Завершено"
+		},
+		"menu": {
+			"open": "Открыть"
+		}
+	}
+}

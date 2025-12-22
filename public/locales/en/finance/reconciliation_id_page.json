@@ -1,0 +1,46 @@
+{
+	"page_name": "Reconciliation Details",
+	"buttons": {
+		"back": "Back"
+	},
+	"reconciliation_not_found": "Reconciliation not found",
+	"stats": {
+		"plannedRevenue": "Planned revenue",
+		"actualRevenue": "Actual revenue",
+		"plannedCost": "Planned cost",
+		"actualCost": "Actual cost",
+		"plannedMargin": "Planned margin",
+		"actualMargin": "Actual margin"
+	},
+	"table": {
+		"title": "Supplier payments",
+		"id": "No",
+		"component": "Component",
+		"plannedAmount": "Planned amount",
+		"actualAmount": "Actual amount",
+		"variance": "Variance",
+		"menu": {
+			"open": "Open"
+		}
+	},
+	"form": {
+		"title": "Supplier payment details",
+		"fields": {
+			"order_id": {
+				"label": "Order id",
+				"placeholder": "Order id"
+			},
+			"amount": {
+				"label": "Amount",
+				"placeholder": "Amount"
+			},
+			"note": {
+				"label": "Note",
+				"placeholder": "Note"
+			}
+		},
+		"buttons": {
+			"close": "Close"
+		}
+	}
+}

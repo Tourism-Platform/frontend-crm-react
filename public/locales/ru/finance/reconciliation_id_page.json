@@ -1,0 +1,46 @@
+{
+	"page_name": "Детали сверки",
+	"buttons": {
+		"back": "Назад"
+	},
+	"reconciliation_not_found": "Сверка не найдена",
+	"stats": {
+		"plannedRevenue": "План. доход",
+		"actualRevenue": "Факт. доход",
+		"plannedCost": "План. расход",
+		"actualCost": "Факт. расход",
+		"plannedMargin": "План. маржа",
+		"actualMargin": "Факт. маржа"
+	},
+	"table": {
+		"title": "Платежи поставщиков",
+		"id": "№",
+		"component": "Компонент",
+		"plannedAmount": "Плановая сумма",
+		"actualAmount": "Фактическая сумма",
+		"variance": "Разница",
+		"menu": {
+			"open": "Открыть"
+		}
+	},
+	"form": {
+		"title": "Детали платежа поставщика",
+		"fields": {
+			"order_id": {
+				"label": "ID заказа",
+				"placeholder": "ID заказа"
+			},
+			"amount": {
+				"label": "Сумма",
+				"placeholder": "Сумма"
+			},
+			"note": {
+				"label": "Примечание",
+				"placeholder": "Примечание"
+			}
+		},
+		"buttons": {
+			"close": "Закрыть"
+		}
+	}
+}

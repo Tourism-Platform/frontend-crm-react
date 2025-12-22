@@ -4,6 +4,8 @@ import common from "../../../../public/locales/en/common.json";
 import client_payments_page from "../../../../public/locales/en/finance/client_payments_page.json";
 import invoice_id_page from "../../../../public/locales/en/finance/invoice_id_page.json";
 import invoices_page from "../../../../public/locales/en/finance/invoices_page.json";
+import reconciliation_id_page from "../../../../public/locales/en/finance/reconciliation_id_page.json";
+import reconciliation_page from "../../../../public/locales/en/finance/reconciliation_page.json";
 import supplier_payments_page from "../../../../public/locales/en/finance/supplier_payments_page.json";
 import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
@@ -42,6 +44,8 @@ export type TClientPaymentsPage = typeof client_payments_page;
 export type TInvoicesPage = typeof invoices_page;
 export type TInvoiceIdPage = typeof invoice_id_page;
 export type TSupplierPaymentsPage = typeof supplier_payments_page;
+export type TReconciliationPage = typeof reconciliation_page;
+export type TReconciliationIdPage = typeof reconciliation_id_page;
 export type TFinancialSettingsPage = typeof financial_settings_page;
 export type TToursPage = typeof tours_page;
 export type TTourOverviewPage = typeof tour_overview_page;
@@ -71,6 +75,8 @@ export type TResources = {
 	invoices_page: TInvoicesPage;
 	invoice_id_page: TInvoiceIdPage;
 	supplier_payments_page: TSupplierPaymentsPage;
+	reconciliation_page: TReconciliationPage;
+	reconciliation_id_page: TReconciliationIdPage;
 	financial_settings_page: TFinancialSettingsPage;
 	tours_page: TToursPage;
 	tour_overview_page: TTourOverviewPage;
@@ -101,6 +107,8 @@ export const NS = [
 	"invoices_page",
 	"invoice_id_page",
 	"supplier_payments_page",
+	"reconciliation_page",
+	"reconciliation_id_page",
 	"financial_settings_page",
 	"tours_page",
 	"tour_overview_page",
@@ -128,6 +136,8 @@ export type TClientPaymentsPageKeys = TNestedKeyOf<TClientPaymentsPage>;
 export type TInvoicesPageKeys = TNestedKeyOf<TInvoicesPage>;
 export type TInvoiceIdPageKeys = TNestedKeyOf<TInvoiceIdPage>;
 export type TSupplierPaymentsPageKeys = TNestedKeyOf<TSupplierPaymentsPage>;
+export type TReconciliationPageKeys = TNestedKeyOf<TReconciliationPage>;
+export type TReconciliationIdPageKeys = TNestedKeyOf<TReconciliationIdPage>;
 export type TFinancialSettingsPageKeys = TNestedKeyOf<TFinancialSettingsPage>;
 export type TAccountSettingsPageKeys = TNestedKeyOf<TAccountSettingsPage>;
 export type TBusinessSettingsPageKeys = TNestedKeyOf<TBusinessSettingsPage>;

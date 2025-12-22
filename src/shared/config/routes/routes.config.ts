@@ -47,6 +47,7 @@ export const ENUM_PATH = {
 		INVOICE_ID: "/finance/invoices/:invoiceId",
 		CLIENT_PAYMENTS: "/finance/client-payments",
 		SUPPLIER_PAYMENTS: "/finance/supplier-payments",
-		RECONCILIATION: "/finance/reconciliation"
+		RECONCILIATION: "/finance/reconciliation",
+		RECONCILIATION_ID: "/finance/reconciliation/:reconciliationId"
 	}
 } as const;

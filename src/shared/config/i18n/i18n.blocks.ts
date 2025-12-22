@@ -47,7 +47,9 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"client_payments_page",
 			"invoices_page",
 			"invoice_id_page",
-			"supplier_payments_page"
+			"supplier_payments_page",
+			"reconciliation_page",
+			"reconciliation_id_page"
 		]
 	},
 

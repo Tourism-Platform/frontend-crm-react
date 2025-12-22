@@ -44,5 +44,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS]:
 		"owner.finance.general.menu.supplier_payments",
 	[ENUM_PATH.FINANCE.RECONCILIATION]:
+		"owner.finance.general.menu.reconciliation",
+	[ENUM_PATH.FINANCE.RECONCILIATION_ID]:
 		"owner.finance.general.menu.reconciliation"
 };

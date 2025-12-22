@@ -24,6 +24,7 @@ import {
 	ClientPaymentsPage,
 	InvoiceIdPage,
 	InvoicesPage,
+	ReconciliationIdPage,
 	ReconciliationPage,
 	SupplierPaymentsPage
 } from "@/pages/finance";
@@ -487,6 +488,21 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.FINANCE.RECONCILIATION,
 		component: ReconciliationPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			FinanceOwnerLayout
+		]
+	},
+
+	{
+		path: ENUM_PATH.FINANCE.RECONCILIATION_ID,
+		component: ReconciliationIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [
