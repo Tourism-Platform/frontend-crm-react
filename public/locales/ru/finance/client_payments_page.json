@@ -1,16 +1,74 @@
 {
 	"page_name": "Платежи клиентов",
 	"table": {
+		"id": "ID",
 		"paymentId": "ID платежа",
 		"orderId": "ID заказа",
-		"issueDate": "Дата выставления",
+		"dateCreated": "Дата создания",
 		"amount": "Сумма",
-		"paidAmount": "Оплачено",
 		"status": "Статус",
 		"statuses": {
-			"paid": "Оплачен",
-			"unpaid": "Не оплачен",
-			"partially_paid": "Оплачен частично"
+			"assigned": "Назначен",
+			"not_assigned": "Не назначен"
+		}
+	},
+	"client_payment": {
+		"menu": {
+			"open": {
+				"form": {
+					"title": "Детали платежа",
+					"fields": {
+						"payment_id": {
+							"label": "ID платежа",
+							"placeholder": "INV-1234"
+						},
+						"order_id": {
+							"label": "ID заказа",
+							"placeholder": "RQA00001"
+						},
+						"date_created": {
+							"label": "Дата создания",
+							"placeholder": "2024-10-10"
+						},
+						"amount": {
+							"label": "Сумма",
+							"placeholder": "10000.00"
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "USD"
+						},
+						"status": {
+							"label": "Статус",
+							"placeholder": "Назначен"
+						}
+					},
+					"buttons": {
+						"close": "Закрыть"
+					}
+				}
+			},
+			"assign": {
+				"form": {
+					"title": "Назначить платеж к заказу",
+					"fields": {
+						"order_id": {
+							"label": "ID заказа",
+							"placeholder": "Введите ID заказа (например, RQA00001)"
+						}
+					},
+					"buttons": {
+						"decline": "Отмена",
+						"save": "Назначить"
+					},
+					"errors": {
+						"order_id": {
+							"required": "ID заказа обязателен",
+							"min": "ID заказа не может быть пустым"
+						}
+					}
+				}
+			}
 		}
 	}
 }

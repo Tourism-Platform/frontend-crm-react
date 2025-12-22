@@ -1,16 +1,74 @@
 {
 	"page_name": "Client payments",
 	"table": {
+		"id": "ID",
 		"paymentId": "Payment ID",
 		"orderId": "Order ID",
-		"issueDate": "Issue date",
+		"dateCreated": "Date created",
 		"amount": "Amount",
-		"paidAmount": "Paid amount",
 		"status": "Status",
 		"statuses": {
-			"paid": "Paid",
-			"unpaid": "Unpaid",
-			"partially_paid": "Partially paid"
+			"assigned": "Assigned",
+			"not_assigned": "Not Assigned"
+		}
+	},
+	"client_payment": {
+		"menu": {
+			"open": {
+				"form": {
+					"title": "Payment Details",
+					"fields": {
+						"payment_id": {
+							"label": "Payment ID",
+							"placeholder": "INV-1234"
+						},
+						"order_id": {
+							"label": "Order ID",
+							"placeholder": "RQA00001"
+						},
+						"date_created": {
+							"label": "Date Created",
+							"placeholder": "2024-10-10"
+						},
+						"amount": {
+							"label": "Amount",
+							"placeholder": "10000.00"
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "USD"
+						},
+						"status": {
+							"label": "Status",
+							"placeholder": "Assigned"
+						}
+					},
+					"buttons": {
+						"close": "Close"
+					}
+				}
+			},
+			"assign": {
+				"form": {
+					"title": "Assign Payment to Order",
+					"fields": {
+						"order_id": {
+							"label": "Order ID",
+							"placeholder": "Enter order ID (e.g., RQA00001)"
+						}
+					},
+					"buttons": {
+						"decline": "Cancel",
+						"save": "Assign"
+					},
+					"errors": {
+						"order_id": {
+							"required": "Order ID is required",
+							"min": "Order ID cannot be empty"
+						}
+					}
+				}
+			}
 		}
 	}
 }

@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
-import { cn } from "@/shared/lib";
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
 
 import {
 	ENUM_INVOICE_STATUS,
@@ -109,26 +108,23 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 					"status"
 				) as ENUM_INVOICE_STATUS_TYPE;
 
-				let badgeClasses = "";
+				let variant: BadgeVariant = "default";
 				switch (status) {
 					case ENUM_INVOICE_STATUS.PAID:
-						badgeClasses =
-							"bg-green-500/20 text-green-700 border-green-500/50";
+						variant = "green";
 						break;
 					case ENUM_INVOICE_STATUS.UNPAID:
-						badgeClasses =
-							"bg-red-500/20 text-red-700 border-red-500/50";
+						variant = "red";
 						break;
 					case ENUM_INVOICE_STATUS.PARTIALLY_PAID:
-						badgeClasses =
-							"bg-yellow-500/20 text-yellow-700 border-yellow-500/50";
+						variant = "yellow";
 						break;
 					default:
-						badgeClasses = "";
+						variant = "default";
 				}
 
 				return (
-					<Badge variant="outline" className={cn(badgeClasses)}>
+					<Badge variant={variant}>
 						{t(INVOICE_STATUS_LABELS[status])}
 					</Badge>
 				);

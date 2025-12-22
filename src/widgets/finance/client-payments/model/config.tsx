@@ -1,8 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { cn } from "@/shared/lib";
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge, type BadgeVariant, Button, Checkbox } from "@/shared/ui";
 
 import {
 	ENUM_PAYMENT_STATUS,
@@ -10,6 +9,8 @@ import {
 	type IPayment,
 	PAYMENT_STATUS_LABELS
 } from "@/entities/finance";
+
+import { AssignClientPayment, OpenClientPayment } from "@/features/finance";
 
 export const COLUMNS = (): ColumnDef<IPayment>[] => {
 	const { t } = useTranslation("client_payments_page");
@@ -53,8 +54,8 @@ export const COLUMNS = (): ColumnDef<IPayment>[] => {
 			size: 160
 		},
 		{
-			header: t("table.issueDate"),
-			accessorKey: "issueDate",
+			header: t("table.dateCreated"),
+			accessorKey: "dateCreated",
 			size: 160
 		},
 		{
@@ -72,20 +73,6 @@ export const COLUMNS = (): ColumnDef<IPayment>[] => {
 			size: 140
 		},
 		{
-			header: t("table.paidAmount"),
-			accessorKey: "paidAmount",
-			cell: ({ row }) => {
-				const paidAmount = parseFloat(row.getValue("paidAmount"));
-				const currency = row.original.currency;
-				return (
-					<div className="font-medium">
-						{paidAmount.toLocaleString()} {currency}
-					</div>
-				);
-			},
-			size: 140
-		},
-		{
 			header: t("table.status"),
 			accessorKey: "status",
 			cell: ({ row }) => {
@@ -93,31 +80,79 @@ export const COLUMNS = (): ColumnDef<IPayment>[] => {
 					"status"
 				) as ENUM_PAYMENT_STATUS_TYPE;
 
-				let badgeClasses = "";
+				let variant: BadgeVariant = "default";
 				switch (status) {
-					case ENUM_PAYMENT_STATUS.PAID:
-						badgeClasses =
-							"bg-green-500/20 text-green-700 border-green-500/50";
+					case ENUM_PAYMENT_STATUS.ASSIGNED:
+						variant = "green";
 						break;
-					case ENUM_PAYMENT_STATUS.UNPAID:
-						badgeClasses =
-							"bg-red-500/20 text-red-700 border-red-500/50";
-						break;
-					case ENUM_PAYMENT_STATUS.PARTIALLY_PAID:
-						badgeClasses =
-							"bg-yellow-500/20 text-yellow-700 border-yellow-500/50";
+					case ENUM_PAYMENT_STATUS.NOT_ASSIGNED:
+						variant = "red";
 						break;
 					default:
-						badgeClasses = "";
+						variant = "default";
 				}
 
 				return (
-					<Badge variant="outline" className={cn(badgeClasses)}>
+					<Badge variant={variant}>
 						{t(PAYMENT_STATUS_LABELS[status])}
 					</Badge>
 				);
 			},
 			size: 160
+		},
+		{
+			id: "actions",
+			header: () => <div className="text-right">Actions</div>,
+			cell: ({ row }) => {
+				const payment = row.original;
+				const status = payment.status;
+
+				const handleAssign = (data: { orderId: string }) => {
+					console.log("Assigning payment to order:", data.orderId);
+					// TODO: Implement actual assignment logic
+				};
+
+				return (
+					<div className="text-right">
+						{status === ENUM_PAYMENT_STATUS.ASSIGNED ? (
+							<OpenClientPayment
+								trigger={
+									<Button
+										variant="outline"
+										size="sm"
+										className="h-8 py-0 rounded px-4 text-xs font-medium border-gray-200"
+									>
+										Open
+									</Button>
+								}
+								data={{
+									paymentId: payment.paymentId,
+									orderId: payment.orderId,
+									dateCreated: payment.dateCreated,
+									amount: payment.amount,
+									currency: payment.currency,
+									status: payment.status
+								}}
+							/>
+						) : (
+							<AssignClientPayment
+								trigger={
+									<Button
+										variant="outline"
+										size="sm"
+										className="h-8 py-0 rounded px-4 text-xs font-medium border-gray-200"
+									>
+										Assign
+									</Button>
+								}
+								onAssign={handleAssign}
+							/>
+						)}
+					</div>
+				);
+			},
+			size: 120,
+			enableHiding: false
 		}
 	];
 };

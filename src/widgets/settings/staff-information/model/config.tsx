@@ -1,16 +1,16 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { cn } from "@/shared/lib";
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
 
 import {
 	type ENUM_STAFF_ROLE_OPTIONS_TYPE,
 	ENUM_STAFF_STATUS_OPTIONS,
 	type ENUM_STAFF_STATUS_OPTIONS_TYPE,
-	type IStaffUser
+	type IStaffUser,
+	STAFF_ROLE_LABELS,
+	STAFF_STATUS_LABELS
 } from "@/entities/staff";
-import { STAFF_ROLE_LABELS, STAFF_STATUS_LABELS } from "@/entities/staff";
 
 import { StaffActions } from "../ui/staff-actions";
 
@@ -85,24 +85,23 @@ export const COLUMNS = (
 					"status"
 				) as ENUM_STAFF_STATUS_OPTIONS_TYPE;
 
-				let badgeClasses = "";
+				let variant: BadgeVariant = "default";
 				switch (status) {
 					case ENUM_STAFF_STATUS_OPTIONS.ACTIVE:
-						badgeClasses = " ";
+						variant = "green";
 						break;
 					case ENUM_STAFF_STATUS_OPTIONS.INACTIVE:
-						badgeClasses = "bg-red-400/60 ";
+						variant = "red";
 						break;
 					case ENUM_STAFF_STATUS_OPTIONS.PENDING:
-						badgeClasses =
-							"bg-muted-foreground/60 text-primary-foreground";
+						variant = "yellow";
 						break;
 					default:
-						badgeClasses = "";
+						variant = "default";
 				}
 
 				return (
-					<Badge className={cn(badgeClasses)}>
+					<Badge variant={variant}>
 						{STAFF_STATUS_LABELS[status]}
 					</Badge>
 				);

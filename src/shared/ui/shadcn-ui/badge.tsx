@@ -16,7 +16,12 @@ const badgeVariants = cva(
 				destructive:
 					"border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
 				outline:
-					"text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground"
+					"text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+				red: "bg-red-500/20 text-red-600 border-none rounded-sm",
+				green: "bg-green-500/20 text-green-600 border-none rounded-sm",
+				blue: "bg-blue-500/20 text-blue-600 border-none rounded-sm",
+				yellow: "bg-yellow-500/20 text-yellow-600 border-none rounded-sm",
+				orange: "bg-orange-500/20 text-orange-600 border-none rounded-sm"
 			}
 		},
 		defaultVariants: {
@@ -24,6 +29,8 @@ const badgeVariants = cva(
 		}
 	}
 );
+
+export type BadgeVariant = VariantProps<typeof badgeVariants>["variant"];
 
 function Badge({
 	className,
