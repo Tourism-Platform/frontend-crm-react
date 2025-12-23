@@ -1,0 +1,26 @@
+{
+	"page_name": "Orders",
+	"table": {
+		"orderId": "Order ID",
+		"orderType": "Type",
+		"dateCreated": "Date Created",
+		"client": "Client",
+		"clientType": "Client Type",
+		"pax": "PAX",
+		"dates": "Dates",
+		"orderTypes": {
+			"regular": "Regular",
+			"vip": "VIP",
+			"group": "Group"
+		},
+		"clientTypes": {
+			"agency": "Agency",
+			"direct": "Direct",
+			"corporate": "Corporate"
+		}
+	},
+	"menu": {
+		"edit": "Edit",
+		"delete": "Delete"
+	}
+}

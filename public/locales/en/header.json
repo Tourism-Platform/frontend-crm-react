@@ -15,7 +15,7 @@
 		"booking": {
 			"title": "Booking",
 			"menu": {
-				"booking_requests": "Booking requests",
+				"orders": "Orders",
 				"appeals": "Appeals"
 			}
 		},

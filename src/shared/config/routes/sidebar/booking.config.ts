@@ -7,8 +7,8 @@ export const BOOKING_SIDEBAR_LIST: ISidebarMenu[] = [
 		title: "owner.booking.general.title",
 		menu: [
 			{
-				label: "owner.booking.general.menu.booking_requests",
-				path: ENUM_PATH.BOOKING.BOOKING_REQUESTS,
+				label: "owner.booking.general.menu.orders",
+				path: ENUM_PATH.BOOKING.ORDERS,
 				icon: TaskSquareIcon
 			},
 			{

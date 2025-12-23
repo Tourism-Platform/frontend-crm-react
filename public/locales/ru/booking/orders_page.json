@@ -1,0 +1,26 @@
+{
+	"page_name": "Заказы",
+	"table": {
+		"orderId": "ID заказа",
+		"orderType": "Тип",
+		"dateCreated": "Дата создания",
+		"client": "Клиент",
+		"clientType": "Тип клиента",
+		"pax": "PAX",
+		"dates": "Даты",
+		"orderTypes": {
+			"regular": "Обычный",
+			"vip": "VIP",
+			"group": "Групповой"
+		},
+		"clientTypes": {
+			"agency": "Агентство",
+			"direct": "Прямой",
+			"corporate": "Корпоративный"
+		}
+	},
+	"menu": {
+		"edit": "Редактировать",
+		"delete": "Удалить"
+	}
+}

@@ -57,8 +57,8 @@ export const NAV_ITEMS_LIST: INavItemBase[] = [
 		submenu: true,
 		items: [
 			{
-				href: ENUM_PATH.BOOKING.BOOKING_REQUESTS,
-				label: "owner.booking.menu.booking_requests",
+				href: ENUM_PATH.BOOKING.ORDERS,
+				label: "owner.booking.menu.orders",
 				icon: TaskSquareIcon
 			},
 			{

@@ -45,7 +45,7 @@
 			"general": {
 				"title": "Основное",
 				"menu": {
-					"booking_requests": "Запросы на бронирование",
+					"orders": "Заказы",
 					"appeals": "Обращения"
 				}
 			}

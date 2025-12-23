@@ -1,2 +1,2 @@
 ﻿export * from "./appeals-page";
-export * from "./booking-requests-page";
+export * from "./orders-page";

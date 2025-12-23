@@ -19,7 +19,7 @@ import {
 	ToursOwnerLayout
 } from "@/widgets/layouts";
 
-import { AppealsPage, BookingRequestsPage } from "@/pages/booking";
+import { AppealsPage, OrdersPage } from "@/pages/booking";
 import {
 	ClientPaymentsPage,
 	InvoiceIdPage,
@@ -414,8 +414,8 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		]
 	},
 	{
-		path: ENUM_PATH.BOOKING.BOOKING_REQUESTS,
-		component: BookingRequestsPage,
+		path: ENUM_PATH.BOOKING.ORDERS,
+		component: OrdersPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [

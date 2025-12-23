@@ -15,7 +15,7 @@
 		"booking": {
 			"title": "Бронирование",
 			"menu": {
-				"booking_requests": "Запросы на бронирование",
+				"orders": "Заказы",
 				"appeals": "Обращения"
 			}
 		},

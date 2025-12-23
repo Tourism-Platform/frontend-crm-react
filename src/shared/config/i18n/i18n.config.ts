@@ -1,5 +1,6 @@
 // относительные пути от этого файла к public/locales/en/*
 // путь: src/types -> ../../public/...
+import orders_page from "../../../../public/locales/en/booking/orders_page.json";
 import common from "../../../../public/locales/en/common.json";
 import client_payments_page from "../../../../public/locales/en/finance/client_payments_page.json";
 import invoice_id_page from "../../../../public/locales/en/finance/invoice_id_page.json";
@@ -61,6 +62,7 @@ export type TTourAccommodationEditPage = typeof accommodation_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
 export type TCommonEvents = typeof common_events;
 export type TLoginPage = typeof login_page;
+export type TOrdersPage = typeof orders_page;
 
 export type TResources = {
 	header: THeader;
@@ -92,6 +94,7 @@ export type TResources = {
 	multiply_option_edit_page: TTourEventMultiplyOptionEditPage;
 	common_events: TCommonEvents;
 	login_page: TLoginPage;
+	orders_page: TOrdersPage;
 };
 
 export const NS = [
@@ -123,7 +126,8 @@ export const NS = [
 	"tour_details_edit_page",
 	"multiply_option_edit_page",
 	"common_events",
-	"login_page"
+	"login_page",
+	"orders_page"
 ] as const;
 export type TNS = (typeof NS)[number];
 
@@ -166,3 +170,4 @@ export type TTourEventMultiplyOptionEditPageKeys =
 export type TTourCommonEventsKeys = TNestedKeyOf<TCommonEvents>;
 
 export type TLoginPageKeys = TNestedKeyOf<TLoginPage>;
+export type TOrdersPageKeys = TNestedKeyOf<TOrdersPage>;

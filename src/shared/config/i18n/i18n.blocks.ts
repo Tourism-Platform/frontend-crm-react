@@ -53,6 +53,11 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 		]
 	},
 
+	booking: {
+		folder: "booking",
+		namespaces: ["orders_page"]
+	},
+
 	shared: {
 		folder: "", // пустая строка = корень
 		namespaces: ["header", "sidebar", "home", "common", "login_page"]

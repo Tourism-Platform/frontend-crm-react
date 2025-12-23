@@ -45,7 +45,7 @@
 			"general": {
 				"title": "General",
 				"menu": {
-					"booking_requests": "Booking requests",
+					"orders": "Orders",
 					"appeals": "Appeals"
 				}
 			}

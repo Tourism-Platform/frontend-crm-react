@@ -1,4 +1,4 @@
-import { type TStaffInformationPageKeys } from "@/shared/config/i18n/i18n.config";
+import { type TStaffInformationPageKeys } from "@/shared/config";
 import { valueToLabel } from "@/shared/utils";
 
 import {
