@@ -39,6 +39,7 @@ export const ENUM_PATH = {
 	BOOKING: {
 		ROOT: "/booking",
 		ORDERS: "/booking/orders",
+		ORDER_ID: "/booking/orders/:orderId",
 		APPEALS: "/booking/appeals"
 	},
 	FINANCE: {

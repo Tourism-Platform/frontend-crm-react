@@ -55,7 +55,7 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 
 	booking: {
 		folder: "booking",
-		namespaces: ["orders_page"]
+		namespaces: ["orders_page", "order_id_page"]
 	},
 
 	shared: {

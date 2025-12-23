@@ -19,7 +19,7 @@ import {
 	ToursOwnerLayout
 } from "@/widgets/layouts";
 
-import { AppealsPage, OrdersPage } from "@/pages/booking";
+import { AppealsPage, OrderIdPage, OrdersPage } from "@/pages/booking";
 import {
 	ClientPaymentsPage,
 	InvoiceIdPage,
@@ -416,6 +416,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.BOOKING.ORDERS,
 		component: OrdersPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={BOOKING_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			BookingOwnerLayout
+		]
+	},
+	{
+		path: ENUM_PATH.BOOKING.ORDER_ID,
+		component: OrderIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [

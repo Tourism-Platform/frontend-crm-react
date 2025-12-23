@@ -1,6 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
+import { ENUM_PATH } from "@/shared/config";
 import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
 
 import {
@@ -50,7 +52,15 @@ export const COLUMNS = (
 			header: t("table.orderId"),
 			accessorKey: "orderId",
 			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("orderId")}</div>
+				<Link
+					to={ENUM_PATH.BOOKING.ORDER_ID.replace(
+						":orderId",
+						row.getValue("orderId")
+					)}
+					className="font-medium text-primary hover:underline"
+				>
+					{row.getValue("orderId")}
+				</Link>
 			),
 			size: 120
 		},

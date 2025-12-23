@@ -32,6 +32,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	// Booking
 	[ENUM_PATH.BOOKING.ROOT]: "owner.booking.title",
 	[ENUM_PATH.BOOKING.ORDERS]: "owner.booking.general.menu.orders",
+	[ENUM_PATH.BOOKING.ORDER_ID]: "owner.booking.general.menu.orders",
 	[ENUM_PATH.BOOKING.APPEALS]: "owner.booking.general.menu.appeals",
 
 	// Finance

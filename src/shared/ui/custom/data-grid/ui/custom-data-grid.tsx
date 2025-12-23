@@ -3,6 +3,7 @@
 import {
 	type ColumnDef,
 	getCoreRowModel,
+	getExpandedRowModel,
 	getPaginationRowModel,
 	useReactTable
 } from "@tanstack/react-table";
@@ -25,6 +26,7 @@ interface CustomDataGridProps<TData extends object> {
 	pageSize?: number;
 	topChildren?: React.ReactNode;
 	actions?: React.ReactNode;
+	getSubRows?: (row: TData) => TData[] | undefined;
 }
 
 export function CustomDataGrid<TData extends object>({
@@ -36,7 +38,8 @@ export function CustomDataGrid<TData extends object>({
 	paginationInfo,
 	pageSize = 10,
 	topChildren,
-	actions
+	actions,
+	getSubRows
 }: CustomDataGridProps<TData>) {
 	const memoizedData = useMemo(() => data, [data]);
 	const memoizedColumns = useMemo(() => columns, [columns]);
@@ -46,6 +49,8 @@ export function CustomDataGrid<TData extends object>({
 		columns: memoizedColumns,
 		getCoreRowModel: getCoreRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
+		getExpandedRowModel: getExpandedRowModel(),
+		getSubRows,
 		initialState: {
 			pagination: {
 				pageSize

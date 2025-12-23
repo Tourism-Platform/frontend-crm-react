@@ -1,0 +1,68 @@
+{
+	"buttons": {
+		"back": "Назад",
+		"accept": "Принять"
+	},
+	"header": {
+		"order_status": "Статус заказа"
+	},
+	"statuses": {
+		"new": "Новый",
+		"accepted": "Принят",
+		"rejected": "Отклонен",
+		"pending": "В ожидании"
+	},
+	"order_info": {
+		"title": "Информация о заказе",
+		"fields": {
+			"tour_name": "Название тура",
+			"type": "Тип",
+			"pax": "PAX",
+			"route": "Маршрут",
+			"duration": "Длительность",
+			"dates": "Даты",
+			"comment": "Комментарий"
+		}
+	},
+	"contact_info": {
+		"title": "Контактная информация",
+		"fields": {
+			"client": "Клиент",
+			"type": "Тип",
+			"email": "Email",
+			"phone": "Номер телефона"
+		}
+	},
+	"selected_options": {
+		"title": "Выбранные опции",
+		"fields": {
+			"room_type": "Тип комнаты",
+			"car_class": "Класс авто"
+		}
+	},
+	"order_not_found": "Заказ не найден",
+	"tour_review": {
+		"title": "Обзор тура",
+		"revenue": "Общий доход",
+		"profit": "Ожидаемая прибыль",
+		"table": {
+			"item": "Наименование",
+			"supplier": "Поставщик",
+			"planned_cost": "Плановая стоимость",
+			"estimated_revenue": "Ожидаемая выручка"
+		}
+	},
+	"pax_information": {
+		"title": "Информация о пассажирах (PAX)",
+		"table": {
+			"full_name": "ФИО",
+			"gender": "Пол",
+			"nationality": "Гражданство",
+			"date_of_birth": "Дата рождения",
+			"passport_number": "№ Паспорта",
+			"expired_date": "Срок действия",
+			"comment": "Комментарий",
+			"file": "Файл"
+		}
+	}
+}
