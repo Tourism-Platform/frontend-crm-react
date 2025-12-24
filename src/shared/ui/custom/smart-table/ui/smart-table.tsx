@@ -54,6 +54,7 @@ export function SmartTable<TData extends object>({
 	loadingMode = "skeleton",
 	tableLayout,
 	getSubRows,
+	getRowCanExpand,
 	...props
 }: TSmartTableProps<TData>) {
 	const id = useId();
@@ -98,6 +99,7 @@ export function SmartTable<TData extends object>({
 		getFilteredRowModel: getFilteredRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
 		getExpandedRowModel: getExpandedRowModel(),
+		getRowCanExpand: getRowCanExpand as any,
 		getSubRows,
 		columnResizeMode: "onChange",
 		enableSortingRemoval: false,
@@ -149,45 +151,52 @@ export function SmartTable<TData extends object>({
 		>
 			<CustomOptionTabs defaultValue={defaultViewMode}>
 				<div className="space-y-4">
-					<div className="grid grid-cols-[1fr_auto] items-center gap-3">
-						<div className="flex items-center gap-3">
-							{topChildren}
-							{showTopFilters && (
-								<SmartTableFilters
-									id={id}
-									table={table}
-									showSearchFilter={showSearchFilter}
-									showStatusFilter={showStatusFilter}
-									showVisibilityFilter={showVisibilityFilter}
-									statusTabs={statusTabs}
-									activeStatusTab={activeStatusTab}
-									onStatusTabChange={onStatusTabChange}
-								/>
-							)}
-						</div>
+					{(topChildren ||
+						showTopFilters ||
+						actions ||
+						useViewMode) && (
+						<div className="grid grid-cols-[1fr_auto] items-center gap-3">
+							<div className="flex items-center gap-3">
+								{topChildren}
+								{showTopFilters && (
+									<SmartTableFilters
+										id={id}
+										table={table}
+										showSearchFilter={showSearchFilter}
+										showStatusFilter={showStatusFilter}
+										showVisibilityFilter={
+											showVisibilityFilter
+										}
+										statusTabs={statusTabs}
+										activeStatusTab={activeStatusTab}
+										onStatusTabChange={onStatusTabChange}
+									/>
+								)}
+							</div>
 
-						<div className="flex items-center gap-3">
-							{actions}
-							{useViewMode && (
-								<CustomOptionTabsList className="grid-cols-2 gap-2">
-									{VIEW_CONFIG.map((item) => (
-										<CustomOptionTabsTrigger
-											key={item.type}
-											value={item.type}
-											asChild
-										>
-											<Button
-												variant="outline"
-												size="icon"
+							<div className="flex items-center gap-3">
+								{actions}
+								{useViewMode && (
+									<CustomOptionTabsList className="grid-cols-2 gap-2">
+										{VIEW_CONFIG.map((item) => (
+											<CustomOptionTabsTrigger
+												key={item.type}
+												value={item.type}
+												asChild
 											>
-												{item.icon}
-											</Button>
-										</CustomOptionTabsTrigger>
-									))}
-								</CustomOptionTabsList>
-							)}
+												<Button
+													variant="outline"
+													size="icon"
+												>
+													{item.icon}
+												</Button>
+											</CustomOptionTabsTrigger>
+										))}
+									</CustomOptionTabsList>
+								)}
+							</div>
 						</div>
-					</div>
+					)}
 
 					<DataGridContainer>
 						{VIEW_CONFIG.map((item) => (

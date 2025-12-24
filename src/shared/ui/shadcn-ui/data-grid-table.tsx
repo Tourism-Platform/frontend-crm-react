@@ -502,44 +502,49 @@ function DataGridTable<TData>() {
 
 	return (
 		<DataGridTableBase>
-			<DataGridTableHead>
-				{table
-					.getHeaderGroups()
-					.map((headerGroup: HeaderGroup<TData>, index) => {
-						return (
-							<DataGridTableHeadRow
-								headerGroup={headerGroup}
-								key={index}
-							>
-								{headerGroup.headers.map((header, index) => {
-									const { column } = header;
+			{props.tableLayout?.showHeader !== false && (
+				<DataGridTableHead>
+					{table
+						.getHeaderGroups()
+						.map((headerGroup: HeaderGroup<TData>, index) => {
+							return (
+								<DataGridTableHeadRow
+									headerGroup={headerGroup}
+									key={index}
+								>
+									{headerGroup.headers.map(
+										(header, index) => {
+											const { column } = header;
 
-									return (
-										<DataGridTableHeadRowCell
-											header={header}
-											key={index}
-										>
-											{header.isPlaceholder
-												? null
-												: flexRender(
-														header.column.columnDef
-															.header,
-														header.getContext()
-													)}
-											{props.tableLayout
-												?.columnsResizable &&
-												column.getCanResize() && (
-													<DataGridTableHeadRowCellResize
-														header={header}
-													/>
-												)}
-										</DataGridTableHeadRowCell>
-									);
-								})}
-							</DataGridTableHeadRow>
-						);
-					})}
-			</DataGridTableHead>
+											return (
+												<DataGridTableHeadRowCell
+													header={header}
+													key={index}
+												>
+													{header.isPlaceholder
+														? null
+														: flexRender(
+																header.column
+																	.columnDef
+																	.header,
+																header.getContext()
+															)}
+													{props.tableLayout
+														?.columnsResizable &&
+														column.getCanResize() && (
+															<DataGridTableHeadRowCellResize
+																header={header}
+															/>
+														)}
+												</DataGridTableHeadRowCell>
+											);
+										}
+									)}
+								</DataGridTableHeadRow>
+							);
+						})}
+				</DataGridTableHead>
+			)}
 
 			{(props.tableLayout?.stripped || !props.tableLayout?.rowBorder) && (
 				<DataGridTableRowSpacer />

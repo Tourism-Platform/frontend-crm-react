@@ -78,6 +78,7 @@ export interface DataGridProps<TData extends object> {
 		columnsMovable?: boolean;
 		columnsDraggable?: boolean;
 		rowsDraggable?: boolean;
+		showHeader?: boolean;
 	};
 	tableClassNames?: {
 		base?: string;
@@ -145,7 +146,8 @@ function DataGrid<TData extends object>({
 			columnsPinnable: false,
 			columnsMovable: false,
 			columnsDraggable: false,
-			rowsDraggable: false
+			rowsDraggable: false,
+			showHeader: true
 		},
 		tableClassNames: {
 			base: "",

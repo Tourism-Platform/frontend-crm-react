@@ -62,7 +62,11 @@
 			"passport_number": "№ Паспорта",
 			"expired_date": "Срок действия",
 			"comment": "Комментарий",
-			"file": "Файл"
+			"file": "Файл",
+			"label_item": "элемент",
+			"label_items": "элемента(ов)",
+			"type": "Тип",
+			"detail": "Детали"
 		}
 	}
 }

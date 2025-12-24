@@ -41,6 +41,7 @@ export interface ISmartTableProps<TData extends object>
 	onStatusTabChange?: (value: string) => void;
 	showPagination?: boolean;
 	getSubRows?: (row: TData) => TData[] | undefined;
+	getRowCanExpand?: (row: { original: TData }) => boolean;
 	onRowsReorder?: (oldIndex: number, newIndex: number) => void;
 }
 

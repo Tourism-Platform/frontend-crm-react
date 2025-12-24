@@ -62,7 +62,12 @@
 			"passport_number": "Passport #",
 			"expired_date": "Expired date",
 			"comment": "Comment",
-			"file": "File"
+			"file": "File",
+			"label_item": "item",
+			"label_items": "items",
+			"type": "Type",
+			"detail": "Detail",
+			"items": "Items"
 		}
 	}
 }
