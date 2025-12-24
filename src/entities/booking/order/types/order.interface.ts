@@ -1,3 +1,4 @@
+import { type IOrderSupplierPaymentItem } from "@/entities/finance";
 import { type ITourReviewItem, type ITourSummary } from "@/entities/tour";
 
 import { type ENUM_CLIENT_TYPE_OPTIONS_TYPE } from "./client-type.types";
@@ -56,5 +57,6 @@ export interface IOrder {
 	status: ENUM_ORDER_STATUS_TYPE;
 	paxDetails?: IPaxReviewItem[];
 	tourReview: ITourReviewItem[];
+	supplierPayments?: IOrderSupplierPaymentItem[];
 	tourSummary: ITourSummary;
 }

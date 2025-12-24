@@ -4,7 +4,9 @@
 		"accept": "Принять",
 		"export": "Экспорт",
 		"generate": "Сгенерировать счет",
-		"send": "Отправить ваучер"
+		"send": "Отправить ваучер",
+		"edit": "Редактировать",
+		"book": "Забронировать"
 	},
 	"header": {
 		"order_status": "Статус заказа",
@@ -21,6 +23,12 @@
 			"paid": "Оплачено",
 			"partially_paid": "Частично оплачено",
 			"unpaid": "Не оплачено"
+		},
+		"supplier_payment": {
+			"booked": "Забронировано",
+			"recorded": "Записано",
+			"not_booked": "Не забронировано",
+			"confirmed": "Подтверждено"
 		}
 	},
 	"order_info": {
@@ -62,6 +70,19 @@
 		}
 	},
 	"order_not_found": "Заказ не найден",
+	"report": {
+		"title": "Отчет"
+	},
+	"supplier_payments": {
+		"title": "Бронирование и платежи поставщикам",
+		"table": {
+			"item": "Наименование",
+			"confirmation": "Подтверждение",
+			"supplier_payment": "Платеж поставщику",
+			"status": "Статус",
+			"actions": "Действия"
+		}
+	},
 	"tour_review": {
 		"title": "Обзор тура",
 		"revenue": "Общий доход",

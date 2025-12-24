@@ -7,6 +7,7 @@ import { formatToDollars } from "@/shared/utils";
 import {
 	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
 	type ISupplierPayment,
+	SUPPLIER_PAYMENT_STATUS_LABELS_FINANCE,
 	SUPPLIER_PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
 
@@ -101,7 +102,7 @@ export const COLUMNS = (
 
 				return (
 					<Badge variant={SUPPLIER_PAYMENT_STATUS_VARIANTS[status]}>
-						{t(`table.statuses.${status}`)}
+						{t(SUPPLIER_PAYMENT_STATUS_LABELS_FINANCE[status])}
 					</Badge>
 				);
 			},

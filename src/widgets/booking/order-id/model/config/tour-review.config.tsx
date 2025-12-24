@@ -54,16 +54,12 @@ export const TOUR_REVIEW_COLUMNS = (
 								)}
 							</Button>
 						) : (
-							<div className="w-10" />
+							<div className="w-9" />
 						)}
 						<div
 							className={cn(
 								"size-8 rounded-full flex items-center justify-center text-white shrink-0",
-								metadata?.color_bg,
-								type === ENUM_EVENT.ACCOMMODATION &&
-									depth > 0 &&
-									"bg-blue-900",
-								!metadata && "bg-slate-400"
+								metadata?.color_bg
 							)}
 						>
 							{Icon && <Icon className="size-4" />}

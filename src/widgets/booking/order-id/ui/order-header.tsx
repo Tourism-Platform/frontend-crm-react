@@ -94,20 +94,24 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					)}
 					{status === ENUM_ORDER_STATUS.IN_PROCESSING && (
 						<div className="flex gap-3">
-							<Button>{t("buttons.export")}</Button>
+							<Button variant="slate">
+								{t("buttons.export")}
+							</Button>
 
 							<Button disabled>{t("buttons.generate")}</Button>
 						</div>
 					)}
 					{status === ENUM_ORDER_STATUS.BOOKING && (
 						<div className="flex gap-3">
-							<Button>{t("buttons.export")}</Button>
+							<Button variant="slate">
+								{t("buttons.export")}
+							</Button>
 							<Button>{t("buttons.send")}</Button>
 						</div>
 					)}
 					{(status === ENUM_ORDER_STATUS.IN_PROGRESS ||
 						status === ENUM_ORDER_STATUS.COMPLETED) && (
-						<Button>{t("buttons.export")}</Button>
+						<Button variant="slate">{t("buttons.export")}</Button>
 					)}
 				</div>
 			</div>

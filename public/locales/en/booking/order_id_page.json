@@ -4,7 +4,9 @@
 		"accept": "Accept",
 		"export": "Export",
 		"generate": "Generate invoice",
-		"send": "Send voucher"
+		"send": "Send voucher",
+		"edit": "Edit",
+		"book": "Book"
 	},
 	"header": {
 		"order_status": "Order status",
@@ -21,6 +23,12 @@
 			"paid": "Paid",
 			"partially_paid": "Partially paid",
 			"unpaid": "Unpaid"
+		},
+		"supplier_payment": {
+			"booked": "Booked",
+			"recorded": "Recorded",
+			"not_booked": "Not booked",
+			"confirmed": "Confirmed"
 		}
 	},
 	"order_info": {
@@ -62,6 +70,19 @@
 		}
 	},
 	"order_not_found": "Order not found",
+	"report": {
+		"title": "Report"
+	},
+	"supplier_payments": {
+		"title": "Booking & supplier payments",
+		"table": {
+			"item": "Item",
+			"confirmation": "Confirmation",
+			"supplier_payment": "Supplier payment",
+			"status": "Status",
+			"actions": "Actions"
+		}
+	},
 	"tour_review": {
 		"title": "Tour review",
 		"revenue": "Total Revenue",

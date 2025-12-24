@@ -41,13 +41,17 @@
 		"amount": "Amount",
 		"manager": "Manager",
 		"status": "Status",
-		"statuses": {
-			"recorded": "Recorded",
-			"confirmed": "Confirmed"
-		},
 		"menu": {
 			"open": "Open",
 			"confirm": "Confirm"
+		}
+	},
+	"statuses": {
+		"supplier_payment": {
+			"booked": "Booked",
+			"recorded": "Recorded",
+			"not_booked": "Not booked",
+			"confirmed": "Confirmed"
 		}
 	}
 }

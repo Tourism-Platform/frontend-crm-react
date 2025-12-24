@@ -6,16 +6,16 @@ import { Link, useParams } from "react-router-dom";
 import { ENUM_PATH, ORDERS_MOCK } from "@/shared/config";
 import { Button } from "@/shared/ui";
 
-import {
-	getContactItems,
-	getOptionItems,
-	getOrderItems
-} from "../model/helpers";
+import { ENUM_ORDER_STATUS } from "@/entities/booking";
+
+import { getContactItems, getOptionItems, getOrderItems } from "../model";
 
 import {
 	OrderHeader,
 	OrderInfoCard,
 	OrderPaxReview,
+	OrderReport,
+	OrderSupplierPayments,
 	OrderTourReview
 } from "./index";
 
@@ -51,7 +51,11 @@ export const OrderId: FC = () => {
 				invoiceStatus={order.invoiceStatus}
 			/>
 
-			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+			{order.status === ENUM_ORDER_STATUS.CANCELLED && (
+				<OrderReport report={order.report || ""} />
+			)}
+
+			<div className="grid grid-cols-2 gap-6">
 				<OrderInfoCard
 					title={t("order_info.title")}
 					items={getOrderItems(order, t)}
@@ -63,18 +67,30 @@ export const OrderId: FC = () => {
 				/>
 			</div>
 
-			<OrderInfoCard
-				title={t("selected_options.title")}
-				items={getOptionItems(order, t)}
-			/>
+			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (
+				<>
+					<OrderInfoCard
+						title={t("selected_options.title")}
+						items={getOptionItems(order, t)}
+					/>
 
-			<OrderTourReview
-				items={order.tourReview}
-				summary={order.tourSummary}
-				orderStatus={order.status}
-			/>
+					<OrderTourReview
+						items={order.tourReview}
+						summary={order.tourSummary}
+						orderStatus={order.status}
+					/>
 
-			<OrderPaxReview items={order.paxDetails} />
+					{(order.status === ENUM_ORDER_STATUS.BOOKING ||
+						order.status === ENUM_ORDER_STATUS.IN_PROGRESS ||
+						order.status === ENUM_ORDER_STATUS.COMPLETED) && (
+						<OrderSupplierPayments
+							items={order.supplierPayments || []}
+						/>
+					)}
+
+					<OrderPaxReview items={order.paxDetails} />
+				</>
+			)}
 		</div>
 	);
 };

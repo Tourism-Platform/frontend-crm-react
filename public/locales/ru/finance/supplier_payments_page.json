@@ -41,13 +41,17 @@
 		"amount": "Сумма",
 		"manager": "Менеджер",
 		"status": "Статус",
-		"statuses": {
-			"recorded": "Записано",
-			"confirmed": "Подтверждено"
-		},
 		"menu": {
 			"open": "Открыть",
 			"confirm": "Подтвердить"
+		}
+	},
+	"statuses": {
+		"supplier_payment": {
+			"booked": "Забронировано",
+			"recorded": "Записано",
+			"not_booked": "Не забронировано",
+			"confirmed": "Подтверждено"
 		}
 	}
 }
