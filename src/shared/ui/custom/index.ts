@@ -7,3 +7,4 @@ export * from "./custom-range-field";
 export * from "./custom-upload-files";
 export * from "./custom-upload-images";
 export * from "./data-grid";
+export * from "./smart-table";

@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { CustomDataGrid } from "@/shared/ui/custom/data-grid";
+import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 interface ITourReviewItem {
 	id: string;
@@ -190,6 +191,24 @@ export const TourReview = () => {
 					getSubRows={(row) => row.subRows}
 					pageSize={100} // show all
 					paginationInfo=" " // hide pagination info
+				/>
+			</div>
+
+			<div className="mt-8 p-6 border-t bg-slate-50/50">
+				<h3 className="text-lg font-semibold mb-4 text-primary">
+					Demo: New SmartTable (with DND Columns)
+				</h3>
+				<SmartTable
+					data={TOUR_REVIEW_MOCK}
+					columns={columns}
+					getSubRows={(row) => row.subRows}
+					showPagination={true}
+					tableLayout={{
+						columnsDraggable: true,
+						columnsResizable: false,
+						rowBorder: true,
+						headerBackground: false
+					}}
 				/>
 			</div>
 		</div>

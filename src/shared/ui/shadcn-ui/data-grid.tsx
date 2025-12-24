@@ -137,7 +137,7 @@ function DataGrid<TData extends object>({
 			rowRounded: false,
 			stripped: false,
 			headerSticky: false,
-			headerBackground: true,
+			headerBackground: false,
 			headerBorder: true,
 			width: "fixed",
 			columnsVisibility: false,
@@ -197,8 +197,8 @@ function DataGridContainer({
 		<div
 			data-slot="data-grid"
 			className={cn(
-				"grid w-full",
-				border && "border border-border rounded-lg",
+				"grid w-full bg-background overflow-hidden",
+				border && "border border-border rounded-md",
 				className
 			)}
 		>

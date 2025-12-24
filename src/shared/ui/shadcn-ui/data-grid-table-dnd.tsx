@@ -13,6 +13,7 @@ import {
 } from "@dnd-kit/core";
 import {
 	restrictToHorizontalAxis,
+	restrictToVerticalAxis,
 	restrictToWindowEdges
 } from "@dnd-kit/modifiers";
 import {
@@ -30,7 +31,10 @@ import {
 	type Row,
 	flexRender
 } from "@tanstack/react-table";
-import { useMemo } from "react";
+import { GripVertical } from "lucide-react";
+import { useId, useMemo } from "react";
+
+import { Button } from "@/shared/ui";
 
 import { useDataGrid } from "./data-grid";
 import {
@@ -68,6 +72,7 @@ function DataGridTableHeadRowCellDraggable<TData>({
 		position: "relative",
 		transform: CSS.Translate.toString(transform),
 		transition,
+		width: column.getSize(),
 		zIndex: isDragging ? 1 : 0
 	};
 
@@ -77,17 +82,29 @@ function DataGridTableHeadRowCellDraggable<TData>({
 			dndRef={setNodeRef}
 			dndStyle={style}
 		>
-			<div
-				className="flex items-center h-full grow"
-				{...attributes}
-				{...listeners}
-			>
-				{header.isPlaceholder
-					? null
-					: flexRender(
-							header.column.columnDef.header,
-							header.getContext()
-						)}
+			<div className="flex items-center justify-start gap-1">
+				<Button
+					variant="dim"
+					size="sm"
+					mode="icon"
+					className="-ms-2 size-6 shrink-0"
+					{...attributes}
+					{...listeners}
+					aria-label="Drag to reorder"
+				>
+					<GripVertical
+						className="opacity-50 size-3"
+						aria-hidden="true"
+					/>
+				</Button>
+				<div className="truncate">
+					{header.isPlaceholder
+						? null
+						: flexRender(
+								header.column.columnDef.header,
+								header.getContext()
+							)}
+				</div>
 			</div>
 			{props.tableLayout?.columnsResizable && column.getCanResize() && (
 				<DataGridTableHeadRowCellResize header={header} />
@@ -96,7 +113,43 @@ function DataGridTableHeadRowCellDraggable<TData>({
 	);
 }
 
-function DataGridTableBodyRowDraggable<TData>({ row }: { row: Row<TData> }) {
+function DataGridTableBodyRowCellDraggable<TData>({
+	cell
+}: {
+	cell: Cell<TData, unknown>;
+}) {
+	const { isDragging, setNodeRef, transform, transition } = useSortable({
+		id: cell.column.id
+	});
+
+	const style: React.CSSProperties = {
+		opacity: isDragging ? 0.8 : 1,
+		position: "relative",
+		transform: CSS.Translate.toString(transform),
+		transition,
+		width: cell.column.getSize(),
+		zIndex: isDragging ? 1 : 0
+	};
+
+	return (
+		<DataGridTableBodyRowCell
+			cell={cell}
+			dndRef={setNodeRef}
+			dndStyle={style}
+		>
+			{flexRender(cell.column.columnDef.cell, cell.getContext())}
+		</DataGridTableBodyRowCell>
+	);
+}
+
+function DataGridTableBodyRowDraggable<TData>({
+	row,
+	columnIds
+}: {
+	row: Row<TData>;
+	columnIds: string[];
+}) {
+	const { props } = useDataGrid();
 	const {
 		attributes,
 		isDragging,
@@ -118,23 +171,37 @@ function DataGridTableBodyRowDraggable<TData>({ row }: { row: Row<TData> }) {
 
 	return (
 		<DataGridTableBodyRow row={row} dndRef={setNodeRef} dndStyle={style}>
-			{row
-				.getVisibleCells()
-				.map((cell: Cell<TData, unknown>, colIndex) => {
-					return (
-						<DataGridTableBodyRowCell
-							cell={cell}
-							key={colIndex}
-							{...attributes}
-							{...listeners}
-						>
-							{flexRender(
-								cell.column.columnDef.cell,
-								cell.getContext()
-							)}
-						</DataGridTableBodyRowCell>
-					);
-				})}
+			<SortableContext
+				items={columnIds}
+				strategy={horizontalListSortingStrategy}
+			>
+				{row
+					.getVisibleCells()
+					.map((cell: Cell<TData, unknown>, colIndex) => {
+						if (props.tableLayout?.columnsDraggable) {
+							return (
+								<DataGridTableBodyRowCellDraggable
+									cell={cell}
+									key={colIndex}
+								/>
+							);
+						}
+						return (
+							<DataGridTableBodyRowCell
+								cell={cell}
+								key={colIndex}
+								{...(props.tableLayout?.rowsDraggable
+									? { ...attributes, ...listeners }
+									: {})}
+							>
+								{flexRender(
+									cell.column.columnDef.cell,
+									cell.getContext()
+								)}
+							</DataGridTableBodyRowCell>
+						);
+					})}
+			</SortableContext>
 		</DataGridTableBodyRow>
 	);
 }
@@ -161,19 +228,39 @@ function DataGridTableDnD<TData extends { id: string }>() {
 	function handleDragEnd(event: DragEndEvent) {
 		const { active, over } = event;
 		if (active && over && active.id !== over.id) {
-			if (props.tableLayout?.columnsDraggable) {
+			if (
+				props.tableLayout?.columnsDraggable &&
+				columnIds.includes(active.id as string)
+			) {
 				const oldIndex = columnIds.indexOf(active.id as string);
 				const newIndex = columnIds.indexOf(over.id as string);
 				table.setColumnOrder(arrayMove(columnIds, oldIndex, newIndex));
+			} else if (
+				props.tableLayout?.rowsDraggable &&
+				rowIds.includes(active.id as string)
+			) {
+				const oldIndex = rowIds.indexOf(active.id as string);
+				const newIndex = rowIds.indexOf(over.id as string);
+
+				// If there's a custom handler in SmartTable props (needs to be passed via context or props)
+				// For now, we assume SmartTable will handle it if we expose it
+				if ((props as any).onRowsReorder) {
+					(props as any).onRowsReorder(oldIndex, newIndex);
+				}
 			}
 		}
 	}
 
 	return (
 		<DndContext
+			id={useId()}
 			sensors={sensors}
 			collisionDetection={closestCenter}
-			modifiers={[restrictToHorizontalAxis, restrictToWindowEdges]}
+			modifiers={
+				props.tableLayout?.rowsDraggable
+					? [restrictToVerticalAxis]
+					: [restrictToHorizontalAxis, restrictToWindowEdges]
+			}
 			onDragEnd={handleDragEnd}
 		>
 			<DataGridTableBase>
@@ -214,6 +301,7 @@ function DataGridTableDnD<TData extends { id: string }>() {
 									<DataGridTableBodyRowDraggable
 										row={row}
 										key={index}
+										columnIds={columnIds}
 									/>
 								))}
 						</SortableContext>
@@ -221,27 +309,11 @@ function DataGridTableDnD<TData extends { id: string }>() {
 						table
 							.getRowModel()
 							.rows.map((row: Row<TData>, index) => (
-								<DataGridTableBodyRow row={row} key={index}>
-									{row
-										.getVisibleCells()
-										.map(
-											(
-												cell: Cell<TData, unknown>,
-												colIndex
-											) => (
-												<DataGridTableBodyRowCell
-													cell={cell}
-													key={colIndex}
-												>
-													{flexRender(
-														cell.column.columnDef
-															.cell,
-														cell.getContext()
-													)}
-												</DataGridTableBodyRowCell>
-											)
-										)}
-								</DataGridTableBodyRow>
+								<DataGridTableBodyRowDraggable
+									row={row}
+									key={index}
+									columnIds={columnIds}
+								/>
 							))
 					)}
 				</DataGridTableBody>

@@ -19,7 +19,7 @@ const headerCellSpacingVariants = cva("", {
 	variants: {
 		size: {
 			dense: "px-2.5 h-9",
-			default: "px-4"
+			default: "px-3 h-11"
 		}
 	},
 	defaultVariants: {
@@ -31,7 +31,7 @@ const bodyCellSpacingVariants = cva("", {
 	variants: {
 		size: {
 			dense: "px-2.5 py-2",
-			default: "px-4 py-3"
+			default: "px-3 py-3"
 		}
 	},
 	defaultVariants: {
@@ -102,12 +102,10 @@ function DataGridTableHeadRow<TData>({
 		<tr
 			key={headerGroup.id}
 			className={cn(
-				"bg-muted/40",
+				props.tableLayout?.headerBackground && "bg-muted/40",
 				props.tableLayout?.headerBorder && "[&>th]:border-b",
 				props.tableLayout?.cellBorder && "[&_>:last-child]:border-e-0",
 				props.tableLayout?.stripped && "bg-transparent",
-				props.tableLayout?.headerBackground === false &&
-					"bg-transparent",
 				props.tableClassNames?.headerRow
 			)}
 		>
@@ -161,7 +159,7 @@ function DataGridTableHeadRowCell<TData>({
 						: undefined
 			}
 			className={cn(
-				"relative h-10 text-left rtl:text-right align-middle font-normal text-secondary-foreground/80 [&:has([role=checkbox])]:pe-0",
+				"relative text-muted-foreground text-left rtl:text-right align-middle font-medium has-[role=checkbox]:w-px [&:has([role=checkbox])]:pr-0",
 				headerCellSpacing,
 				props.tableLayout?.cellBorder && "border-e",
 				props.tableLayout?.columnsResizable &&
@@ -308,7 +306,7 @@ function DataGridTableBodyRow<TData>({
 			}
 			onClick={() => props.onRowClick && props.onRowClick(row.original)}
 			className={cn(
-				"hover:bg-muted/40 data-[state=selected]:bg-muted/50",
+				"hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
 				props.onRowClick && "cursor-pointer",
 				!props.tableLayout?.stripped &&
 					props.tableLayout?.rowBorder &&
@@ -369,6 +367,9 @@ function DataGridTableBodyRowCell<TData>({
 			key={cell.id}
 			ref={dndRef}
 			style={{
+				...(props.tableLayout?.width === "fixed" && {
+					width: `${column.getSize()}px`
+				}),
 				...(props.tableLayout?.columnsPinnable &&
 					column.getCanPin() &&
 					getPinningStyles(column)),
