@@ -18,5 +18,13 @@ export interface ITourSummaryRange {
 
 export interface ITourSummary {
 	revenue: ITourSummaryRange;
+	cost?: ITourSummaryRange;
 	profit: ITourSummaryRange;
+}
+
+export interface IPricingReviewOption {
+	id: number;
+	name: string;
+	summary: ITourSummary;
+	items: ITourReviewItem[];
 }

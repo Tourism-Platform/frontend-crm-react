@@ -1,3 +1,5 @@
+import type React from "react";
+
 export const ENUM_EVENT = {
 	ACCOMMODATION: "accommodation",
 	FLIGHT: "flight",

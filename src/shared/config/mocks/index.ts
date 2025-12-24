@@ -6,6 +6,7 @@ export * from "./activity-log.mock";
 export * from "./cars.mock";
 export * from "./multiply-option.mock";
 export * from "./payments.mock";
+export * from "./price.mock";
 export * from "./invoices.mock";
 export * from "./supplier-payments.mock";
 export * from "./reconciliations.mock";

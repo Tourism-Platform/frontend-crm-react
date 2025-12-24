@@ -25,7 +25,7 @@ export const TourInfo: FC = () => {
 		<div className="grid grid-cols-3 gap-4">
 			{data?.map((item) => (
 				<InfoCard
-					key={item?.key}
+					key={String(item?.key)}
 					label={item?.label}
 					value={item?.value}
 				/>

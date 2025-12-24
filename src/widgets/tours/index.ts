@@ -5,3 +5,4 @@ export * from "./overview";
 export * from "./tours";
 export * from "./events";
 export * from "./activity-log";
+export * from "./pricing-review";

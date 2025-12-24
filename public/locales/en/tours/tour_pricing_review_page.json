@@ -1,0 +1,23 @@
+{
+	"title": "Pricing and review of tour {{name}}",
+	"tabs": {
+		"add": "Add option"
+	},
+	"overview": {
+		"title": "Overview",
+		"revenue": "Planned revenue",
+		"cost": "Planned cost",
+		"profit": "Planned profit"
+	},
+	"table": {
+		"item": "Order ID",
+		"supplier": "Supplier",
+		"total_cost": "Total cost",
+		"estimated_revenue": "Estimated revenue",
+		"buttons": {
+			"add_item": "Add item",
+			"preview": "Preview",
+			"publish": "Publish"
+		}
+	}
+}
