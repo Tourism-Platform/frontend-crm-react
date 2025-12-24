@@ -14,17 +14,19 @@ import { PAX_DETAILS_COLUMNS, PAX_REVIEW_COLUMNS } from "../model";
 
 const OrderPaxReviewSubTable = ({ items }: { items: IPaxReviewDetail[] }) => {
 	return (
-		<SmartTable
-			data={items}
-			columns={PAX_DETAILS_COLUMNS()}
-			showTopFilters={false}
-			showPagination={false}
-			tableLayout={{
-				rowBorder: true,
-				headerBackground: true,
-				showHeader: false
-			}}
-		/>
+		<div className="p-2">
+			<SmartTable
+				data={items}
+				columns={PAX_DETAILS_COLUMNS()}
+				showTopFilters={false}
+				showPagination={false}
+				tableLayout={{
+					rowBorder: true,
+					headerBackground: true,
+					showHeader: false
+				}}
+			/>
+		</div>
 	);
 };
 
