@@ -1,9 +1,13 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { cn } from "@/shared/lib";
 import { Badge, Checkbox, RowActions } from "@/shared/ui";
 
+import {
+	type ENUM_TOUR_ORDER_STATUS_TYPE,
+	TOUR_ORDER_STATUS_LABELS,
+	TOUR_ORDER_STATUS_VARIANTS
+} from "@/entities/tour";
 import type { IRecentOrder } from "@/entities/tour";
 
 export const ORDER_HISTORY_COLUMNS = (): ColumnDef<IRecentOrder>[] => {
@@ -78,20 +82,12 @@ export const ORDER_HISTORY_COLUMNS = (): ColumnDef<IRecentOrder>[] => {
 			header: t("table.status"),
 			accessorKey: "status",
 			cell: ({ row }) => {
-				const status = row.getValue("status") as string;
+				const status = row.getValue(
+					"status"
+				) as ENUM_TOUR_ORDER_STATUS_TYPE;
 				return (
-					<Badge
-						className={cn({
-							"bg-green-500/10 text-green-500":
-								status === "confirmed",
-							"bg-yellow-500/10 text-yellow-500":
-								status === "pending",
-							"bg-blue-500/10 text-blue-500":
-								status === "completed",
-							"bg-red-500/10 text-red-500": status === "cancelled"
-						})}
-					>
-						{status}
+					<Badge variant={TOUR_ORDER_STATUS_VARIANTS[status]}>
+						{t(TOUR_ORDER_STATUS_LABELS[status])}
 					</Badge>
 				);
 			},

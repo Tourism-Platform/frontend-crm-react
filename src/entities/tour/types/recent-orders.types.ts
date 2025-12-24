@@ -1,3 +1,5 @@
+import { type ENUM_TOUR_ORDER_STATUS_TYPE } from "./order-status.types";
+
 export interface IRecentOrder {
 	order_id: string;
 	client: string;
@@ -5,5 +7,5 @@ export interface IRecentOrder {
 	pax: number;
 	date_from: string;
 	date_to: string;
-	status: string;
+	status: ENUM_TOUR_ORDER_STATUS_TYPE;
 }

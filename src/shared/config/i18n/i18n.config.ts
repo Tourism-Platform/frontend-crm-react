@@ -160,6 +160,8 @@ export type TTourSchedulePageKeys = TNestedKeyOf<TTourSchedulePage>;
 export type TTourEventFlightEditPageKeys =
 	TNestedKeyOf<TTourEventFlightEditPage>;
 
+export type TTourOrderHistoryPageKeys = TNestedKeyOf<TTourOrderHistoryPage>;
+
 export type TTourEventTransportationEditPageKeys =
 	TNestedKeyOf<TTourEventTransportationEditPage>;
 

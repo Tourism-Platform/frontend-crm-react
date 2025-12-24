@@ -1,6 +1,5 @@
 {
 	"page_name": "История заказов",
-
 	"table": {
 		"order_id": "ID заказа",
 		"client": "Клиент",
@@ -8,5 +7,13 @@
 		"pax": "Туристов",
 		"dates": "Даты",
 		"status": "Статус"
+	},
+	"statuses": {
+		"new": "Новый",
+		"in_processing": "В обработке",
+		"booking": "Бронирование",
+		"in_progress": "В процессе",
+		"completed": "Завершен",
+		"cancelled": "Отменен"
 	}
 }

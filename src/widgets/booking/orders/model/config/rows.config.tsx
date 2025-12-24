@@ -71,6 +71,11 @@ export const COLUMNS = (
 			size: 120
 		},
 		{
+			header: t("table.tourName"),
+			accessorKey: "tourName",
+			size: 120
+		},
+		{
 			header: t("table.orderType"),
 			accessorKey: "orderType",
 			cell: ({ row }) => {

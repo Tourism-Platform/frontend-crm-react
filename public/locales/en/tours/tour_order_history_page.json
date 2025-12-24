@@ -1,6 +1,5 @@
 {
 	"page_name": "Order history",
-
 	"table": {
 		"order_id": "Order ID",
 		"client": "Client",
@@ -8,5 +7,13 @@
 		"pax": "Pax",
 		"dates": "Dates",
 		"status": "Status"
+	},
+	"statuses": {
+		"new": "New",
+		"in_processing": "In processing",
+		"booking": "Booking",
+		"in_progress": "In progress",
+		"completed": "Completed",
+		"cancelled": "Cancelled"
 	}
 }

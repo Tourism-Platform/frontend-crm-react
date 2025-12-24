@@ -189,7 +189,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 24,
 		date_from: "24.08.2025",
 		date_to: "2.09.2025",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123342",
@@ -198,7 +198,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 12,
 		date_from: "15.09.2025",
 		date_to: "22.09.2025",
-		status: "pending"
+		status: "in_processing"
 	},
 	{
 		order_id: "RQA-123343",
@@ -207,7 +207,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 8,
 		date_from: "01.10.2025",
 		date_to: "08.10.2025",
-		status: "completed"
+		status: "in_progress"
 	},
 	{
 		order_id: "RQA-123344",
@@ -216,7 +216,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 16,
 		date_from: "10.10.2025",
 		date_to: "18.10.2025",
-		status: "pending"
+		status: "in_progress"
 	},
 	{
 		order_id: "RQA-123345",
@@ -225,7 +225,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 6,
 		date_from: "05.11.2025",
 		date_to: "12.11.2025",
-		status: "cancelled"
+		status: "new"
 	},
 	{
 		order_id: "RQA-123346",
@@ -234,7 +234,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 18,
 		date_from: "20.11.2025",
 		date_to: "28.11.2025",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123347",
@@ -243,7 +243,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 10,
 		date_from: "03.12.2025",
 		date_to: "11.12.2025",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123348",
@@ -252,7 +252,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 22,
 		date_from: "15.12.2025",
 		date_to: "23.12.2025",
-		status: "pending"
+		status: "in_processing"
 	},
 	{
 		order_id: "RQA-123349",
@@ -261,7 +261,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 14,
 		date_from: "05.01.2026",
 		date_to: "13.01.2026",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123350",
@@ -279,7 +279,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 4,
 		date_from: "01.02.2026",
 		date_to: "08.02.2026",
-		status: "pending"
+		status: "in_processing"
 	},
 	{
 		order_id: "RQA-123352",
@@ -288,7 +288,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 26,
 		date_from: "14.02.2026",
 		date_to: "22.02.2026",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123353",
@@ -306,7 +306,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 8,
 		date_from: "15.03.2026",
 		date_to: "22.03.2026",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123355",
@@ -315,7 +315,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 30,
 		date_from: "01.04.2026",
 		date_to: "10.04.2026",
-		status: "pending"
+		status: "in_processing"
 	},
 	{
 		order_id: "RQA-123356",
@@ -333,7 +333,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 9,
 		date_from: "05.05.2026",
 		date_to: "13.05.2026",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123358",
@@ -342,7 +342,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 17,
 		date_from: "22.05.2026",
 		date_to: "30.05.2026",
-		status: "pending"
+		status: "in_processing"
 	},
 	{
 		order_id: "RQA-123359",
@@ -351,7 +351,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 13,
 		date_from: "10.06.2026",
 		date_to: "18.06.2026",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123360",
@@ -369,7 +369,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 21,
 		date_from: "15.07.2026",
 		date_to: "23.07.2026",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123362",
@@ -387,7 +387,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 19,
 		date_from: "18.08.2026",
 		date_to: "26.08.2026",
-		status: "pending"
+		status: "in_processing"
 	},
 	{
 		order_id: "RQA-123364",
@@ -396,7 +396,7 @@ export const RECENT_ORDERS_MOCK = [
 		pax: 28,
 		date_from: "05.09.2026",
 		date_to: "13.09.2026",
-		status: "confirmed"
+		status: "completed"
 	},
 	{
 		order_id: "RQA-123365",

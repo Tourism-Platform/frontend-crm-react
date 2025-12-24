@@ -2,6 +2,7 @@
 	"page_name": "Orders",
 	"table": {
 		"orderId": "Order ID",
+		"tourName": "Tour name",
 		"orderType": "Type",
 		"dateCreated": "Date Created",
 		"manager": "Manager",

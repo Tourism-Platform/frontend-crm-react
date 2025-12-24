@@ -2,6 +2,7 @@
 	"page_name": "Заказы",
 	"table": {
 		"orderId": "ID заказа",
+		"tourName": "Название тура",
 		"orderType": "Тип",
 		"dateCreated": "Дата создания",
 		"manager": "Менеджер",
