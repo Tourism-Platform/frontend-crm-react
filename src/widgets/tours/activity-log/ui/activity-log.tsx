@@ -1,17 +1,18 @@
-import { type FC } from "react";
+import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { RECENT_ORDERS_MOCK } from "@/shared/config";
-import { Card, CardContent, CustomTable } from "@/shared/ui";
+import { ACTIVITY_LOG_MOCK } from "@/shared/config";
 
 import { TourHeader } from "@/entities/tour";
 
 import { PreviewTourButton, PublishTourButton } from "@/features/tours";
 
-import { ORDER_HISTORY_COLUMNS } from "../model";
+import { ActivityLogContent } from "./activity-log-content";
 
-export const OrderHistory: FC = () => {
-	const { t } = useTranslation("tour_order_history_page");
+export const ActivityLog: FC = () => {
+	const [activities] = useState(ACTIVITY_LOG_MOCK);
+	const { t } = useTranslation("tour_activity_log_page");
+
 	return (
 		<section className="flex flex-col gap-6 container">
 			<TourHeader
@@ -26,14 +27,7 @@ export const OrderHistory: FC = () => {
 					</>
 				}
 			/>
-			<Card>
-				<CardContent>
-					<CustomTable
-						data={RECENT_ORDERS_MOCK}
-						columns={ORDER_HISTORY_COLUMNS()}
-					/>
-				</CardContent>
-			</Card>
+			<ActivityLogContent items={activities} />
 		</section>
 	);
 };

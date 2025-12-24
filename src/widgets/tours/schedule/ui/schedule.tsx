@@ -10,6 +10,10 @@ import {
 	CustomOptionTabsTrigger
 } from "@/shared/ui";
 
+import { TourHeader } from "@/entities/tour";
+
+import { PreviewTourButton, PublishTourButton } from "@/features/tours";
+
 import { DATES_TYPE_LIST, type ENUM_DATES_TYPE_TYPE } from "../model";
 
 import { CalendarInfo } from "./calendar-info";
@@ -35,9 +39,18 @@ export const Schedule: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-6 container">
-			<div className="flex flex-col gap-2">
-				<h1 className="text-2xl">{t("page_name")}: TOUR NAME</h1>
-			</div>
+			<TourHeader
+				title={`${t("page_name")}: Embark on an Unforgettable Archaeological Journey`}
+				badgeText="Planning"
+				duration="6 days / 5 nights"
+				type="Group"
+				actions={
+					<>
+						<PreviewTourButton />
+						<PublishTourButton />
+					</>
+				}
+			/>
 			<Card>
 				<CardContent className="grid gap-12">
 					<div className="flex justify-between gap-6 items-center">

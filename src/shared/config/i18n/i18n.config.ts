@@ -26,6 +26,7 @@ import information_edit_page from "../../../../public/locales/en/tours/events/in
 import multiply_option_edit_page from "../../../../public/locales/en/tours/events/multiply_option_edit_page.json";
 import tour_details_edit_page from "../../../../public/locales/en/tours/events/tour_details_edit_page.json";
 import transportation_edit_page from "../../../../public/locales/en/tours/events/transportation_edit_page.json";
+import tour_activity_log_page from "../../../../public/locales/en/tours/tour_activity_log_page.json";
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
 import tour_order_history_page from "../../../../public/locales/en/tours/tour_order_history_page.json";
 import tour_overview_page from "../../../../public/locales/en/tours/tour_overview_page.json";
@@ -64,6 +65,7 @@ export type TTourItineraryPage = typeof tour_itinerary_page;
 export type TCommonEvents = typeof common_events;
 export type TLoginPage = typeof login_page;
 export type TOrdersPage = typeof orders_page;
+export type TTourActivityLogPage = typeof tour_activity_log_page;
 export type TOrderIdPage = typeof order_id_page;
 
 export type TResources = {
@@ -98,6 +100,7 @@ export type TResources = {
 	login_page: TLoginPage;
 	orders_page: TOrdersPage;
 	order_id_page: TOrderIdPage;
+	tour_activity_log_page: TTourActivityLogPage;
 };
 
 export const NS = [
@@ -131,7 +134,8 @@ export const NS = [
 	"common_events",
 	"login_page",
 	"orders_page",
-	"order_id_page"
+	"order_id_page",
+	"tour_activity_log_page"
 ] as const;
 
 export type TNS = (typeof NS)[number];
@@ -177,3 +181,4 @@ export type TTourCommonEventsKeys = TNestedKeyOf<TCommonEvents>;
 export type TLoginPageKeys = TNestedKeyOf<TLoginPage>;
 export type TOrdersPageKeys = TNestedKeyOf<TOrdersPage>;
 export type TOrderIdPageKeys = TNestedKeyOf<TOrderIdPage>;
+export type TTourActivityLogPageKeys = TNestedKeyOf<TTourActivityLogPage>;

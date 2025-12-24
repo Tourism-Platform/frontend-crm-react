@@ -1,0 +1,11 @@
+{
+	"page_name": "Tour activity log",
+	"content": {
+		"title": "Last activities"
+	},
+	"actions": {
+		"preview": "Preview",
+		"publish": "Publish",
+		"export": "Export"
+	}
+}

@@ -8,10 +8,8 @@
 		"confirmed_revenue": "Confirmed revenue",
 		"potential_revenue": "Potential revenue"
 	},
-
 	"recent_orders": {
 		"title": "Resent orders",
-
 		"table": {
 			"order_id": "Order ID",
 			"client": "Client",
@@ -21,8 +19,11 @@
 			"status": "Status"
 		}
 	},
-
 	"managers": {
 		"title": "Managers"
+	},
+	"actions": {
+		"preview": "Preview",
+		"publish": "Publish"
 	}
 }
