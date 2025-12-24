@@ -1,4 +1,10 @@
-import type { CustomFieldVariant, SelectPickerOption } from "@/shared/ui";
+import type {
+	BadgeVariant,
+	CustomFieldVariant,
+	MultipleSelectorDisplayMode,
+	Option as MultipleSelectorOption,
+	SelectPickerOption
+} from "@/shared/ui";
 
 // Универсальные типы ключей и идентификаторов
 type TGenericLabel = string;
@@ -13,7 +19,10 @@ interface IFormBase<L = TGenericLabel, K = TGenericKey> {
 
 // Универсальные поля
 type TFormRequired<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
-	fieldType: Exclude<CustomFieldVariant, "date" | "time" | "select">;
+	fieldType: Exclude<
+		CustomFieldVariant,
+		"date" | "time" | "select" | "multiselect"
+	>;
 	placeholder: L;
 	type?: string;
 };
@@ -30,8 +39,18 @@ type TFormSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	defaultValue?: string;
 };
 
+type TFormMultiSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "multiselect";
+	options: MultipleSelectorOption[];
+	placeholder?: string;
+	displayMode?: MultipleSelectorDisplayMode;
+	badgeVariant?: BadgeVariant;
+	hideClearAllButton?: boolean;
+};
+
 // Универсальный тип формы
 export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormRequired<L, K>
 	| TFormOptional<L, K>
-	| TFormSelect<L, K>;
+	| TFormSelect<L, K>
+	| TFormMultiSelect<L, K>;

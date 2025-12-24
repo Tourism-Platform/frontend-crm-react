@@ -1,8 +1,8 @@
 import { CURRENCY_OPTIONS } from "@/entities/commission";
 
-import { ENUM_FORM_PRICE_DETAILS, type TFormPriceDetails } from "../types";
+import { ENUM_FORM_PRICE_DETAILS, type TForm } from "../types";
 
-export const PRICE_DETAILS_DATA_LIST: TFormPriceDetails[] = [
+export const PRICE_DETAILS_DATA_LIST: TForm[] = [
 	{
 		label: "pricing.form.pricing_details.fields.total_price.label",
 		placeholder:

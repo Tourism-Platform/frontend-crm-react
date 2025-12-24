@@ -167,7 +167,9 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				return (
 					<MultipleSelector
 						defaultOptions={props.options}
-						placeholder={props.placeholder ? t(props.placeholder) : undefined}
+						placeholder={
+							props.placeholder ? t(props.placeholder) : undefined
+						}
 						value={field.value}
 						onChange={(options) => field.onChange(options)}
 						displayMode={props.displayMode}

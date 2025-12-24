@@ -2,9 +2,9 @@ import { COMMISSION_OPTIONS } from "@/shared/config";
 
 import { CURRENCY_OPTIONS } from "@/entities/commission";
 
-import { ENUM_FORM_PRICE_DETAILS, type TFormPriceDetails } from "../types";
+import { ENUM_FORM_PRICE_DETAILS, type TForm } from "../types";
 
-export const COMMISSION_DETAILS_DATA_LIST: TFormPriceDetails[] = [
+export const COMMISSION_DETAILS_DATA_LIST: TForm[] = [
 	{
 		label: "pricing.form.commissions.fields.total_expected.label",
 		placeholder:

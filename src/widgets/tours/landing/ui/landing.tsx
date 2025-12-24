@@ -30,10 +30,8 @@ export const Landing: FC = () => {
 			photos: [],
 			description: "",
 			languages: [],
-			included: [
-			],
-			not_included: [
-			],
+			included: [],
+			not_included: [],
 			pickup_type: "airport",
 			pickup_description: "",
 			cancellation_policy: "",
