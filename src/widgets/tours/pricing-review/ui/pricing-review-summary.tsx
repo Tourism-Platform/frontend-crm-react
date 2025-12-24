@@ -21,7 +21,7 @@ export const PricingReviewSummary: FC<IPricingReviewSummaryProps> = ({
 				<CardTitle className="text-lg font-semibold">
 					{t("overview.title")}
 				</CardTitle>
-				<div className="grid grid-cols-[auto_1px_auto_1px_auto] items-center gap-8 w-fit mt-4">
+				<div className="grid grid-flow-col items-center gap-8 justify-start">
 					<div className="flex flex-col gap-1">
 						<div className="text-xs text-muted-foreground uppercase">
 							{t("overview.revenue")}
@@ -32,24 +32,19 @@ export const PricingReviewSummary: FC<IPricingReviewSummaryProps> = ({
 						</div>
 					</div>
 
-					{summary.cost && (
-						<>
-							<div className="flex flex-col gap-1">
-								<div className="text-xs text-muted-foreground uppercase">
-									{t("overview.cost")}
-								</div>
-								<div className="text-xl font-medium">
-									{formatToDollars(summary.cost.from)} -{" "}
-									{formatToDollars(summary.cost.to)}
-								</div>
-							</div>
+					<Separator orientation="vertical" className="h-12" />
 
-							<Separator
-								orientation="vertical"
-								className="h-12"
-							/>
-						</>
-					)}
+					<div className="flex flex-col gap-1">
+						<div className="text-xs text-muted-foreground uppercase">
+							{t("overview.cost")}
+						</div>
+						<div className="text-xl font-medium">
+							{formatToDollars(summary.cost?.from || 0)} -{" "}
+							{formatToDollars(summary.cost?.to || 0)}
+						</div>
+					</div>
+
+					<Separator orientation="vertical" className="h-12" />
 
 					<div className="flex flex-col gap-1">
 						<div className="text-xs text-muted-foreground uppercase">
