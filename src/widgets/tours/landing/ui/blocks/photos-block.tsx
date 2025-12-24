@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { FormControl, FormField, FormItem, FormMessage } from "@/shared/ui";
-import { CustomUploadMainImage } from "@/shared/ui/custom";
+import { CustomUploadMainImage } from "@/shared/ui";
 
 import { ENUM_FORM_LANDING } from "../../model";
 

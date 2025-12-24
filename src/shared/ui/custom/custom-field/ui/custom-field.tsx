@@ -3,6 +3,7 @@ import type { ComponentProps, FC } from "react";
 import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
+import type { BadgeVariant } from "@/shared/ui";
 import {
 	CustomEditor,
 	DatePickerInput,
@@ -13,6 +14,9 @@ import {
 	FormLabel,
 	FormMessage,
 	Input,
+	MultipleSelector,
+	type MultipleSelectorDisplayMode,
+	type Option as MultipleSelectorOption,
 	PasswordInput,
 	SelectPicker,
 	type SelectPickerProps,
@@ -28,6 +32,7 @@ export type CustomFieldVariant =
 	| "time"
 	| "date"
 	| "select"
+	| "multiselect"
 	| "editor";
 
 type BaseFieldProps = {
@@ -70,6 +75,15 @@ type EditorFieldVariant = BaseFieldProps & {
 	defaultValue?: string;
 };
 
+type MultiselectFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "multiselect">;
+	options: MultipleSelectorOption[];
+	placeholder?: string;
+	displayMode?: MultipleSelectorDisplayMode;
+	badgeVariant?: BadgeVariant;
+	hideClearAllButton?: boolean;
+};
+
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
@@ -77,6 +91,7 @@ type CustomFieldProps =
 	| TimeFieldVariant
 	| DateFieldVariant
 	| SelectFieldVariant
+	| MultiselectFieldVariant
 	| EditorFieldVariant;
 
 export const CustomField: FC<CustomFieldProps> = (props) => {
@@ -146,6 +161,19 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 					<CustomEditor
 						field={field}
 						defaultValue={props?.defaultValue}
+					/>
+				);
+			case "multiselect":
+				return (
+					<MultipleSelector
+						defaultOptions={props.options}
+						placeholder={props.placeholder ? t(props.placeholder) : undefined}
+						value={field.value}
+						onChange={(options) => field.onChange(options)}
+						displayMode={props.displayMode}
+						badgeVariant={props.badgeVariant}
+						hideClearAllButton={props.hideClearAllButton}
+						// emptyIndicator={<p className="text-center text-sm text-muted-foreground">No results found</p>}
 					/>
 				);
 

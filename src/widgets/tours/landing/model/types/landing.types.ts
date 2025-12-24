@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import type { TFormField } from "@/shared/types";
 
-import type { LANDING_SCHEMA } from "../schema/landing.schema";
+import type { LANDING_SCHEMA } from "../schema";
 
 export const ENUM_FORM_LANDING = {
 	PHOTOS: "photos",

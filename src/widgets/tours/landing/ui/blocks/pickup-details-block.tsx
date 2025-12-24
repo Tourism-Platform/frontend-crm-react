@@ -2,9 +2,14 @@ import { type FC } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField } from "@/shared/ui";
+import {
+	CustomField,
+	CustomOptionTabs,
+	CustomOptionTabsList,
+	CustomOptionTabsTrigger
+} from "@/shared/ui";
 
-import { ENUM_FORM_LANDING } from "../../model";
+import { ENUM_FORM_LANDING, PICKUP_TYPE_OPTIONS } from "../../model";
 
 export const PickupDetailsBlock: FC = () => {
 	const { t } = useTranslation("landing_page");
@@ -18,36 +23,25 @@ export const PickupDetailsBlock: FC = () => {
 				{t("blocks.pickup.description")}
 			</p>
 
-			<div className="flex gap-2">
-				<Button
-					type="button"
-					variant={pickupType === "airport" ? "default" : "outline"}
-					className={
-						pickupType === "airport"
-							? "bg-sky-100 text-sky-600 hover:bg-sky-200 border-sky-200"
-							: ""
-					}
-					onClick={() =>
-						setValue(ENUM_FORM_LANDING.PICKUP_TYPE, "airport")
-					}
-				>
-					{t("blocks.pickup.fields.pickup_type.options.airport")}
-				</Button>
-				<Button
-					type="button"
-					variant={pickupType === "hotel" ? "default" : "outline"}
-					className={
-						pickupType === "hotel"
-							? "bg-sky-100 text-sky-600 hover:bg-sky-200 border-sky-200"
-							: ""
-					}
-					onClick={() =>
-						setValue(ENUM_FORM_LANDING.PICKUP_TYPE, "hotel")
-					}
-				>
-					{t("blocks.pickup.fields.pickup_type.options.hotel")}
-				</Button>
-			</div>
+			<CustomOptionTabs
+				defaultValue={PICKUP_TYPE_OPTIONS[0].value}
+				value={pickupType}
+				onValueChange={(val) =>
+					setValue(ENUM_FORM_LANDING.PICKUP_TYPE, val)
+				}
+			>
+				<CustomOptionTabsList className="grid grid-cols-2 gap-2">
+					{PICKUP_TYPE_OPTIONS.map((tab) => (
+						<CustomOptionTabsTrigger
+							key={tab.value}
+							value={tab.value}
+							variant={"bigOutline"}
+						>
+							{t(tab.label)}
+						</CustomOptionTabsTrigger>
+					))}
+				</CustomOptionTabsList>
+			</CustomOptionTabs>
 
 			<CustomField
 				name={ENUM_FORM_LANDING.PICKUP_DESCRIPTION}

@@ -16,7 +16,6 @@ export * from "./field";
 export * from "./form";
 export * from "./input";
 export * from "./label";
-export * from "./multi-select";
 export * from "./navigation-menu";
 export * from "./pagination";
 export * from "./password-input";
@@ -47,3 +46,6 @@ export * from "./data-grid-table-dnd-rows";
 export * from "./date-picker-input";
 export * from "./datefield-rac";
 export * from "./command";
+
+export * from "./multiselect";
+

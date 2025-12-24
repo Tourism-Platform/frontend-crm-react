@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ENUM_FORM_LANDING } from "../types/landing.types";
+import { ENUM_FORM_LANDING } from "../types";
 
 export const LANDING_SCHEMA = z.object({
 	[ENUM_FORM_LANDING.PHOTOS]: z.array(z.string()).min(1, {

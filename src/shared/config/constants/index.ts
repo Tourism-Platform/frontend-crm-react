@@ -5,4 +5,6 @@ export * from "./event-options";
 export * from "./length-of-stay-options";
 export * from "./local-storage.config";
 export * from "./package-options";
+export * from "./tour-amenities-options";
 export * from "./utc-options";
+

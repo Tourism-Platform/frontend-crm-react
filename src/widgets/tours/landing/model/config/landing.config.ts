@@ -1,3 +1,4 @@
+import type { TLandingPageKeys } from "@/shared/config";
 import { ENUM_FORM_LANDING, type TLandingForm } from "../types/landing.types";
 
 export const LANDING_DATA_LIST: TLandingForm[] = [
@@ -42,3 +43,12 @@ export const LANGUAGES_OPTIONS = [
 	{ value: "uzbek", label: "Uzbek" },
 	{ value: "portuguese", label: "Portuguese" }
 ];
+
+export const PICKUP_TYPE_OPTIONS: {
+	value: string;
+	label: TLandingPageKeys;
+}[] = [
+		{ value: "airport", label: "blocks.pickup.fields.pickup_type.options.airport" },
+		{ value: "hotel", label: "blocks.pickup.fields.pickup_type.options.hotel" }
+	];
+

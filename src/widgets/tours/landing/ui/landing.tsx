@@ -31,12 +31,8 @@ export const Landing: FC = () => {
 			description: "",
 			languages: [],
 			included: [
-				"Local licensed experienced Guide in each city",
-				"Breakfast on the first day"
 			],
 			not_included: [
-				"Camera and camera fee (up to $ 10 in the whole country)",
-				"Personal expenses, additional services and tips (to the guide and driver)."
 			],
 			pickup_type: "airport",
 			pickup_description: "",
