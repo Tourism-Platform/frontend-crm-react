@@ -1,5 +1,6 @@
 ﻿export * from "./activity-log-page";
 export * from "./itinerary-page";
+export * from "./landing-page";
 export * from "./messages-page";
 export * from "./order-history-page";
 export * from "./overview-page";

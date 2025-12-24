@@ -21,6 +21,7 @@ export const ENUM_PATH = {
 		PRICING_REVIEW: "/tours/:tourId/pricing-review",
 		ORDER_HISTORY: "/tours/:tourId/order-history",
 		MESSAGES: "/tours/:tourId/messages",
+		LANDING: "/tours/:tourId/landing",
 		ACTIVITY_LOG: "/tours/:tourId/activity-log",
 		EVENTS: {
 			ROOT: "/tours/:tourId/itinerary/events",

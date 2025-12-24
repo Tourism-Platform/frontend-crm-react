@@ -48,6 +48,7 @@ import {
 	FlightEditPage,
 	InformationEditPage,
 	ItineraryPage,
+	LandingPage,
 	MessagesPage,
 	MultiplyOptionEditPage,
 	OrderHistoryPage,
@@ -272,6 +273,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.TOURS.MESSAGES,
 		component: MessagesPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			TourOwnerLayout
+		]
+	},
+	{
+		path: ENUM_PATH.TOURS.LANDING,
+		component: LandingPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [

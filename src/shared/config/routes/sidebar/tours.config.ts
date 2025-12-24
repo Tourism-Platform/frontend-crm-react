@@ -2,6 +2,7 @@ import {
 	CalendarDaysIcon,
 	CheckIcon,
 	ClockIcon,
+	DocumentIcon,
 	HealthIcon,
 	MapPinIcon,
 	MessagesCircleIcon,
@@ -18,6 +19,11 @@ export const TOURS_SIDEBAR_LIST: ISidebarMenu[] = [
 				label: "owner.tours.general.menu.overview",
 				path: ENUM_PATH.TOURS.OVERVIEW,
 				icon: CalendarDaysIcon
+			},
+			{
+				label: "owner.tours.general.menu.landing",
+				path: ENUM_PATH.TOURS.LANDING,
+				icon: DocumentIcon
 			},
 			{
 				label: "owner.tours.general.menu.itinerary",
