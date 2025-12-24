@@ -15,9 +15,7 @@ export const AmenitiesBlock: FC = () => {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<h3 className="text-lg font-medium">
-				{t("blocks.amenities.title")}
-			</h3>
+			<h3 className="text-lg ">{t("blocks.amenities.title")}</h3>
 			<p className="text-sm text-muted-foreground">
 				{t("blocks.amenities.description")}
 			</p>

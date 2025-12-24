@@ -6,5 +6,5 @@ export * from "./custom-option-tab";
 export * from "./custom-range-field";
 export * from "./custom-upload-files";
 export * from "./custom-upload-images";
-export * from "./data-grid";
+export * from "./custom-upload-main-image";
 export * from "./smart-table";

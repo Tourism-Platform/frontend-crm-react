@@ -12,9 +12,7 @@ export const OverviewBlock: FC = () => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg font-medium">
-				{t("blocks.overview.title")}
-			</h3>
+			<h3 className="text-lg ">{t("blocks.overview.title")}</h3>
 			<p className="text-sm text-muted-foreground">
 				{t("blocks.overview.description")}
 			</p>

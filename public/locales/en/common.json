@@ -36,5 +36,14 @@
 			"clear": "Clear all",
 			"select": "Select images"
 		}
+	},
+	"upload_main_image": {
+		"title": "Upload main image",
+		"description": "Drop your image here or click to browse",
+		"formats": "Max size: {{maxSize}}",
+		"errors": {
+			"title": "File upload error",
+			"remove": "Remove image"
+		}
 	}
 }

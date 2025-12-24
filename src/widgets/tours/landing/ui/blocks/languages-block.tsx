@@ -29,9 +29,7 @@ export const LanguagesBlock: FC = () => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg font-medium">
-				{t("blocks.languages.title")}
-			</h3>
+			<h3 className="text-lg ">{t("blocks.languages.title")}</h3>
 			<p className="text-sm text-muted-foreground">
 				{t("blocks.languages.description")}
 			</p>
@@ -50,13 +48,8 @@ export const LanguagesBlock: FC = () => {
 									type="button"
 									variant={
 										selectedLanguages.includes(lang.value)
-											? "default"
+											? "outlineActive"
 											: "outline"
-									}
-									className={
-										selectedLanguages.includes(lang.value)
-											? "bg-sky-100 text-sky-600 hover:bg-sky-200 border-sky-200"
-											: ""
 									}
 									onClick={() => toggleLanguage(lang.value)}
 								>

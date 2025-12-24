@@ -65,12 +65,9 @@ export const Landing: FC = () => {
 				}
 			/>
 			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="flex flex-col gap-6"
-				>
+				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<Card>
-						<CardContent className="flex flex-col gap-6">
+						<CardContent className="grid gap-6">
 							<PhotosBlock />
 							<Separator />
 							<OverviewBlock />
