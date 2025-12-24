@@ -22,5 +22,13 @@
 	"menu": {
 		"edit": "Редактировать",
 		"delete": "Удалить"
+	},
+	"statuses": {
+		"new": "Новый",
+		"in_processing": "В обработке",
+		"booking": "Бронирование",
+		"in_progress": "В процессе",
+		"completed": "Завершен",
+		"cancelled": "Отменен"
 	}
 }

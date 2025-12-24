@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { type FC, type ReactNode } from "react";
 
-import { type DataGridProps } from "@/shared/ui/shadcn-ui/data-grid";
+import { type DataGridProps } from "@/shared/ui";
 
 export type TViewModeType = "table" | "cards";
 
@@ -39,6 +39,7 @@ export interface ISmartTableProps<TData extends object>
 	statusTabs?: { label: string; value: string }[];
 	activeStatusTab?: string;
 	onStatusTabChange?: (value: string) => void;
+	showStatusTabsFilter?: boolean;
 	showPagination?: boolean;
 	getSubRows?: (row: TData) => TData[] | undefined;
 	getRowCanExpand?: (row: { original: TData }) => boolean;

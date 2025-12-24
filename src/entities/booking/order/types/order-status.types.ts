@@ -1,8 +1,10 @@
 export const ENUM_ORDER_STATUS = {
 	NEW: "new",
-	ACCEPTED: "accepted",
-	REJECTED: "rejected",
-	PENDING: "pending"
+	IN_PROCESSING: "in_processing",
+	BOOKING: "booking",
+	IN_PROGRESS: "in_progress",
+	COMPLETED: "completed",
+	CANCELLED: "cancelled"
 } as const;
 
 export type ENUM_ORDER_STATUS_TYPE =

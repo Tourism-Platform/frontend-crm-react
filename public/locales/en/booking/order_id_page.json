@@ -8,9 +8,11 @@
 	},
 	"statuses": {
 		"new": "New",
-		"accepted": "Accepted",
-		"rejected": "Rejected",
-		"pending": "Pending"
+		"in_processing": "In processing",
+		"booking": "Booking",
+		"in_progress": "In progress",
+		"completed": "Completed",
+		"cancelled": "Cancelled"
 	},
 	"order_info": {
 		"title": "Order info",

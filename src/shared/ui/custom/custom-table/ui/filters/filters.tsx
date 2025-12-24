@@ -24,6 +24,7 @@ export interface IShowFilters {
 	showVisibilityFilter?: boolean;
 	statusTabs?: { label: string; value: string }[];
 	activeStatusTab?: string;
+	showStatusTabsFilter?: boolean;
 	onStatusTabChange?: (value: string) => void;
 }
 
@@ -39,33 +40,38 @@ export const Filters: FC<IFiltersProps> = ({
 	showVisibilityFilter = true,
 	statusTabs,
 	activeStatusTab,
+	showStatusTabsFilter = false,
 	onStatusTabChange,
 	currentView = "table"
 }) => {
 	return (
-		<div className="flex justify-between gap-3">
+		<div className="flex justify-between gap-3 w-full">
 			{/* Status tabs filter - только для режима карточек */}
-			{currentView === "cards" && statusTabs && statusTabs.length > 0 && (
-				<StatusTabsFilter
-					statusTabs={statusTabs}
-					activeStatusTab={activeStatusTab}
-					onStatusTabChange={onStatusTabChange}
-				/>
-			)}
+			{(currentView === "cards" || showStatusTabsFilter) &&
+				statusTabs &&
+				statusTabs.length > 0 && (
+					<StatusTabsFilter
+						statusTabs={statusTabs}
+						activeStatusTab={activeStatusTab}
+						onStatusTabChange={onStatusTabChange}
+					/>
+				)}
 			<div className="flex items-center gap-3">
 				{/* Filter by name or email */}
 				{showSearchFilter && (
 					<SearchFilter id={id} inputRef={inputRef} table={table} />
 				)}
 				{/* Filter by status - только для режима таблицы */}
-				{currentView === "table" && showStatusFilter && (
-					<StatusFilter
-						id={id}
-						selectedStatuses={selectedStatuses}
-						uniqueStatusValues={uniqueStatusValues}
-						handleStatusChange={handleStatusChange}
-					/>
-				)}
+				{currentView === "table" &&
+					!showStatusTabsFilter &&
+					showStatusFilter && (
+						<StatusFilter
+							id={id}
+							selectedStatuses={selectedStatuses}
+							uniqueStatusValues={uniqueStatusValues}
+							handleStatusChange={handleStatusChange}
+						/>
+					)}
 				{/* Toggle columns visibility */}
 				{currentView === "table" && showVisibilityFilter && (
 					<VisibilityFilter table={table} />

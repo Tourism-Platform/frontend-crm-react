@@ -15,7 +15,7 @@ import {
 	ORDER_TYPE_LABELS
 } from "@/entities/booking";
 
-import { OrderActions } from "../ui";
+import { OrderActions } from "../../ui";
 
 export const COLUMNS = (
 	onEdit?: (id: string, data: Partial<IOrder>) => void,

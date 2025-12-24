@@ -8,9 +8,11 @@
 	},
 	"statuses": {
 		"new": "Новый",
-		"accepted": "Принят",
-		"rejected": "Отклонен",
-		"pending": "В ожидании"
+		"in_processing": "В обработке",
+		"booking": "Бронирование",
+		"in_progress": "В процессе",
+		"completed": "Завершен",
+		"cancelled": "Отменен"
 	},
 	"order_info": {
 		"title": "Информация о заказе",

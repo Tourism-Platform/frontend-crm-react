@@ -95,6 +95,7 @@ type TCustomTableProps = TShowFilters & {
 	statusTabs?: { label: string; value: string }[];
 	activeStatusTab?: string;
 	onStatusTabChange?: (value: string) => void;
+	showStatusTabsFilter?: boolean;
 	showPagination?: boolean;
 } & TViewMode;
 
@@ -113,7 +114,8 @@ export const CustomTable: FC<TCustomTableProps> = ({
 	card: Card,
 	statusTabs,
 	activeStatusTab,
-	onStatusTabChange
+	onStatusTabChange,
+	showStatusTabsFilter = false
 }) => {
 	const id = useId();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -261,6 +263,7 @@ export const CustomTable: FC<TCustomTableProps> = ({
 							statusTabs={statusTabs}
 							activeStatusTab={activeStatusTab}
 							onStatusTabChange={onStatusTabChange}
+							showStatusTabsFilter={showStatusTabsFilter}
 							currentView={currentView}
 						/>
 					)}

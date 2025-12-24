@@ -1,9 +1,10 @@
 import {
 	ENUM_CLIENT_TYPE_OPTIONS,
 	ENUM_GENDER_OPTIONS,
-	ENUM_ORDER_TYPE_OPTIONS,
-	type IOrder
+	ENUM_ORDER_STATUS,
+	ENUM_ORDER_TYPE_OPTIONS
 } from "@/entities/booking";
+import { type IOrder } from "@/entities/booking/order/types";
 
 export const ORDERS_MOCK: IOrder[] = [
 	{
@@ -25,7 +26,7 @@ export const ORDERS_MOCK: IOrder[] = [
 		phone: "+7 943 123 12 22",
 		roomType: "Standart suite",
 		carClass: "Comfort",
-		status: "new",
+		status: ENUM_ORDER_STATUS.NEW,
 		tourReview: [
 			{
 				id: "1",
@@ -156,7 +157,7 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Standard Route",
 		email: "bender@example.com",
 		phone: "+123456789",
-		status: "accepted",
+		status: ENUM_ORDER_STATUS.IN_PROCESSING,
 		tourReview: [
 			{
 				id: "1",
@@ -240,7 +241,7 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Scenic Route",
 		email: "smith@example.com",
 		phone: "+987654321",
-		status: "pending",
+		status: ENUM_ORDER_STATUS.BOOKING,
 		tourReview: [
 			{
 				id: "1",
@@ -324,7 +325,7 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Adventure Trail",
 		email: "corp@example.com",
 		phone: "+1122334455",
-		status: "new",
+		status: ENUM_ORDER_STATUS.IN_PROGRESS,
 		tourReview: [
 			{
 				id: "1",
@@ -408,7 +409,7 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Coast to Coast",
 		email: "williams@example.com",
 		phone: "+5544332211",
-		status: "rejected",
+		status: ENUM_ORDER_STATUS.COMPLETED,
 		tourReview: [
 			{
 				id: "1",
@@ -492,7 +493,7 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Hidden Gems",
 		email: "brown@example.com",
 		phone: "+9988776655",
-		status: "accepted",
+		status: ENUM_ORDER_STATUS.CANCELLED,
 		tourReview: [
 			{
 				id: "1",

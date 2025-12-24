@@ -22,5 +22,13 @@
 	"menu": {
 		"edit": "Edit",
 		"delete": "Delete"
+	},
+	"statuses": {
+		"new": "New",
+		"in_processing": "In processing",
+		"booking": "Booking",
+		"in_progress": "In progress",
+		"completed": "Completed",
+		"cancelled": "Cancelled"
 	}
 }

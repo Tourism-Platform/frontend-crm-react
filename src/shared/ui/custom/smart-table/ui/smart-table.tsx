@@ -49,6 +49,7 @@ export function SmartTable<TData extends object>({
 	statusTabs,
 	activeStatusTab,
 	onStatusTabChange,
+	showStatusTabsFilter = false,
 	recordCount,
 	isLoading = false,
 	loadingMode = "skeleton",
@@ -155,7 +156,9 @@ export function SmartTable<TData extends object>({
 						showTopFilters ||
 						actions ||
 						useViewMode) && (
-						<div className="grid grid-cols-[1fr_auto] items-center gap-3">
+						<div
+							className={`grid-cols-[1fr_auto] items-center gap-3 ${!!actions || useViewMode ? "grid" : "block"}`}
+						>
 							<div className="flex items-center gap-3">
 								{topChildren}
 								{showTopFilters && (
@@ -167,14 +170,18 @@ export function SmartTable<TData extends object>({
 										showVisibilityFilter={
 											showVisibilityFilter
 										}
+										showStatusTabsFilter={
+											showStatusTabsFilter
+										}
 										statusTabs={statusTabs}
 										activeStatusTab={activeStatusTab}
 										onStatusTabChange={onStatusTabChange}
 									/>
 								)}
 							</div>
-
-							<div className="flex items-center gap-3">
+							<div
+								className={`flex items-center gap-3 ${!!actions || useViewMode ? "flex" : "hidden"}`}
+							>
 								{actions}
 								{useViewMode && (
 									<CustomOptionTabsList className="grid-cols-2 gap-2">
