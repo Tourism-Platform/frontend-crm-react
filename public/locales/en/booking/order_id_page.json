@@ -22,6 +22,11 @@
 			"duration": "Duration",
 			"dates": "Dates",
 			"comment": "Comment"
+		},
+		"types": {
+			"regular": "Regular",
+			"vip": "VIP",
+			"group": "Group"
 		}
 	},
 	"contact_info": {
@@ -31,6 +36,11 @@
 			"type": "Type",
 			"email": "Email",
 			"phone": "Phone number"
+		},
+		"types": {
+			"agency": "Agency",
+			"direct": "Direct",
+			"corporate": "Corporate"
 		}
 	},
 	"selected_options": {
@@ -67,7 +77,11 @@
 			"label_items": "items",
 			"type": "Type",
 			"detail": "Detail",
-			"items": "Items"
+			"items": "Items",
+			"genders": {
+				"male": "Male",
+				"female": "Female"
+			}
 		}
 	}
 }

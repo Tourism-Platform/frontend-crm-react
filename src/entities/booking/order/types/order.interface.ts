@@ -1,6 +1,9 @@
 import { type ITourReviewItem, type ITourSummary } from "@/entities/tour";
 
+import { type ENUM_CLIENT_TYPE_OPTIONS_TYPE } from "./client-type.types";
+import { type ENUM_GENDER_OPTIONS_TYPE } from "./gender.types";
 import { type ENUM_ORDER_STATUS_TYPE } from "./order-status.types";
+import { type ENUM_ORDER_TYPE_OPTIONS_TYPE } from "./order-type.types";
 
 export interface IPaxReviewDetail {
 	id: string;
@@ -15,7 +18,7 @@ export interface IPaxReviewDetail {
 export interface IPaxReviewItem {
 	id: string;
 	fullName: string;
-	gender: "Male" | "Female";
+	gender: ENUM_GENDER_OPTIONS_TYPE;
 	nationality: string;
 	dateOfBirth: string;
 	passportNumber: string;
@@ -30,10 +33,10 @@ export interface IOrderDates {
 
 export interface IOrder {
 	orderId: string;
-	orderType: string;
+	orderType: ENUM_ORDER_TYPE_OPTIONS_TYPE;
 	dateCreated: string;
 	client: string;
-	clientType: string;
+	clientType: ENUM_CLIENT_TYPE_OPTIONS_TYPE;
 	pax: number;
 	dates: IOrderDates;
 	// New fields

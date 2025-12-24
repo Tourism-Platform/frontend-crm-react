@@ -22,6 +22,11 @@
 			"duration": "Длительность",
 			"dates": "Даты",
 			"comment": "Комментарий"
+		},
+		"types": {
+			"regular": "Обычный",
+			"vip": "VIP",
+			"group": "Групповой"
 		}
 	},
 	"contact_info": {
@@ -31,6 +36,11 @@
 			"type": "Тип",
 			"email": "Email",
 			"phone": "Номер телефона"
+		},
+		"types": {
+			"agency": "Агентство",
+			"direct": "Прямой",
+			"corporate": "Корпоративный"
 		}
 	},
 	"selected_options": {
@@ -66,7 +76,12 @@
 			"label_item": "элемент",
 			"label_items": "элемента(ов)",
 			"type": "Тип",
-			"detail": "Детали"
+			"detail": "Детали",
+			"items": "Items",
+			"genders": {
+				"male": "Мужской",
+				"female": "Женский"
+			}
 		}
 	}
 }

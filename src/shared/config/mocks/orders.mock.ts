@@ -1,12 +1,17 @@
-import type { IOrder } from "@/entities/booking";
+import {
+	ENUM_CLIENT_TYPE_OPTIONS,
+	ENUM_GENDER_OPTIONS,
+	ENUM_ORDER_TYPE_OPTIONS,
+	type IOrder
+} from "@/entities/booking";
 
 export const ORDERS_MOCK: IOrder[] = [
 	{
 		orderId: "RQA00001",
-		orderType: "Regular",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
 		dateCreated: "20.08.2025",
 		client: "Danda Fisher",
-		clientType: "Agency",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
 		pax: 20,
 		dates: {
 			from: "09.09.2025",
@@ -91,7 +96,7 @@ export const ORDERS_MOCK: IOrder[] = [
 			{
 				id: "1",
 				fullName: "Saimon Bill",
-				gender: "Male",
+				gender: ENUM_GENDER_OPTIONS.MALE,
 				nationality: "USA",
 				dateOfBirth: "13/05/1988",
 				passportNumber: "13213467",
@@ -101,7 +106,7 @@ export const ORDERS_MOCK: IOrder[] = [
 			{
 				id: "2",
 				fullName: "Amanda Jally",
-				gender: "Female",
+				gender: ENUM_GENDER_OPTIONS.FEMALE,
 				nationality: "USA",
 				dateOfBirth: "17/01/1999",
 				passportNumber: "13289067",
@@ -126,7 +131,7 @@ export const ORDERS_MOCK: IOrder[] = [
 			{
 				id: "3",
 				fullName: "Amad Diallo",
-				gender: "Male",
+				gender: ENUM_GENDER_OPTIONS.MALE,
 				nationality: "USA",
 				dateOfBirth: "20/09/1992",
 				passportNumber: "89213467",
@@ -137,10 +142,10 @@ export const ORDERS_MOCK: IOrder[] = [
 	},
 	{
 		orderId: "RQA00005",
-		orderType: "Regular",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
 		dateCreated: "20.08.2025",
 		client: "Bender",
-		clientType: "Agency",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
 		pax: 20,
 		dates: {
 			from: "24.08.2025",
@@ -221,10 +226,10 @@ export const ORDERS_MOCK: IOrder[] = [
 	},
 	{
 		orderId: "RQA00006",
-		orderType: "VIP",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.VIP,
 		dateCreated: "21.08.2025",
 		client: "Smith",
-		clientType: "Direct",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
 		pax: 4,
 		dates: {
 			from: "01.09.2025",
@@ -305,10 +310,10 @@ export const ORDERS_MOCK: IOrder[] = [
 	},
 	{
 		orderId: "RQA00007",
-		orderType: "Group",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.GROUP,
 		dateCreated: "22.08.2025",
 		client: "Johnson Corp",
-		clientType: "Corporate",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.CORPORATE,
 		pax: 50,
 		dates: {
 			from: "15.09.2025",
@@ -389,10 +394,10 @@ export const ORDERS_MOCK: IOrder[] = [
 	},
 	{
 		orderId: "RQA00008",
-		orderType: "Regular",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
 		dateCreated: "23.08.2025",
 		client: "Williams",
-		clientType: "Agency",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
 		pax: 8,
 		dates: {
 			from: "10.10.2025",
@@ -473,10 +478,10 @@ export const ORDERS_MOCK: IOrder[] = [
 	},
 	{
 		orderId: "RQA00009",
-		orderType: "VIP",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.VIP,
 		dateCreated: "24.08.2025",
 		client: "Brown",
-		clientType: "Direct",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
 		pax: 2,
 		dates: {
 			from: "05.11.2025",

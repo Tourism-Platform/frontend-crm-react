@@ -1,6 +1,10 @@
 import type { TFunction } from "i18next";
 
-import { type IOrder } from "@/entities/booking";
+import {
+	CLIENT_TYPE_LABELS_ID,
+	type IOrder,
+	ORDER_TYPE_LABELS_ID
+} from "@/entities/booking";
 
 import { type IInfoItem } from "./types";
 
@@ -9,7 +13,10 @@ export const getOrderItems = (
 	t: TFunction<"order_id_page">
 ): IInfoItem[] => [
 	{ label: t("order_info.fields.tour_name"), value: order.tourName },
-	{ label: t("order_info.fields.type"), value: order.orderType },
+	{
+		label: t("order_info.fields.type"),
+		value: t(ORDER_TYPE_LABELS_ID[order.orderType])
+	},
 	{ label: t("order_info.fields.pax"), value: order.pax },
 	{ label: t("order_info.fields.route"), value: order.route },
 	{
@@ -28,7 +35,10 @@ export const getContactItems = (
 	t: TFunction<"order_id_page">
 ): IInfoItem[] => [
 	{ label: t("contact_info.fields.client"), value: order.client },
-	{ label: t("contact_info.fields.type"), value: order.clientType },
+	{
+		label: t("contact_info.fields.type"),
+		value: t(CLIENT_TYPE_LABELS_ID[order.clientType])
+	},
 	{ label: t("contact_info.fields.email"), value: order.email },
 	{ label: t("contact_info.fields.phone"), value: order.phone }
 ];

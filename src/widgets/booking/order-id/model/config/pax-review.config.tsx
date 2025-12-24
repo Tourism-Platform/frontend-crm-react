@@ -5,7 +5,11 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui";
 
-import { type IPaxReviewDetail, type IPaxReviewItem } from "@/entities/booking";
+import {
+	GENDER_LABELS,
+	type IPaxReviewDetail,
+	type IPaxReviewItem
+} from "@/entities/booking";
 
 export const PAX_REVIEW_COLUMNS = (
 	renderSubTable: (items: IPaxReviewDetail[]) => ReactNode
@@ -44,7 +48,8 @@ export const PAX_REVIEW_COLUMNS = (
 		},
 		{
 			accessorKey: "gender",
-			header: t("pax_information.table.gender")
+			header: t("pax_information.table.gender"),
+			cell: ({ row }) => t(GENDER_LABELS[row.original.gender])
 		},
 		{
 			accessorKey: "nationality",
