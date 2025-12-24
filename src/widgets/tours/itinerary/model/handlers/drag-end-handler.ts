@@ -1,19 +1,15 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 import { v4 as uuidv4 } from "uuid";
 
-import { EVENT_TEMPLATES_LIST } from "../config";
+import { ENUM_EVENT, EVENT_TEMPLATES_LIST } from "@/entities/tour";
+
 import {
 	addItemToData,
 	findItemLocation,
 	moveItemInData,
 	reorderDaysInData
 } from "../helpers";
-import {
-	ENUM_EVENT,
-	type IDayItem,
-	type IItemLocation,
-	type TOptionsData
-} from "../types";
+import { type IDayItem, type IItemLocation, type TOptionsData } from "../types";
 
 import { getTargetContainer } from "./target-container";
 

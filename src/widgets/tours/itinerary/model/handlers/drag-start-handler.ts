@@ -1,8 +1,9 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 
-import { EVENT_TEMPLATES_LIST } from "../config";
+import { EVENT_TEMPLATES_LIST, type ITemplateItem } from "@/entities/tour";
+
 import { findItemLocation } from "../helpers";
-import type { IDayItem, ITemplateItem, TOptionsData } from "../types";
+import type { IDayItem, TOptionsData } from "../types";
 
 export interface IDragStartState {
 	activeDayItem: IDayItem | null;

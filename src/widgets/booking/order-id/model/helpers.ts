@@ -6,7 +6,7 @@ import { type IInfoItem } from "./types";
 
 export const getOrderItems = (
 	order: IOrder,
-	t: TFunction<"order_id_page", undefined>
+	t: TFunction<"order_id_page">
 ): IInfoItem[] => [
 	{ label: t("order_info.fields.tour_name"), value: order.tourName },
 	{ label: t("order_info.fields.type"), value: order.orderType },
@@ -25,7 +25,7 @@ export const getOrderItems = (
 
 export const getContactItems = (
 	order: IOrder,
-	t: TFunction<"order_id_page", undefined>
+	t: TFunction<"order_id_page">
 ): IInfoItem[] => [
 	{ label: t("contact_info.fields.client"), value: order.client },
 	{ label: t("contact_info.fields.type"), value: order.clientType },
@@ -35,7 +35,7 @@ export const getContactItems = (
 
 export const getOptionItems = (
 	order: IOrder,
-	t: TFunction<"order_id_page", undefined>
+	t: TFunction<"order_id_page">
 ): IInfoItem[] => [
 	{
 		label: t("selected_options.fields.room_type"),

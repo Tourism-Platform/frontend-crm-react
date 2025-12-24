@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
+import { ENUM_EVENT } from "@/entities/tour";
+
 import {
 	addItemToData,
 	moveItemInData,
 	removeItemFromData,
 	reorderDaysInData
 } from "../helpers";
-import { ENUM_EVENT, type IDayItem } from "../types";
+import { type IDayItem } from "../types";
 
 describe("Itinerary DnD Scenarios", () => {
 	const initialData = {

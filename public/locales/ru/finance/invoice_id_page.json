@@ -2,7 +2,7 @@
 	"page_name": "Счет",
 	"invoice_not_found": "Счет не найден",
 	"buttons": {
-		"back": "Назад к списку",
+		"back": "Назад",
 		"export": "Экспорт"
 	},
 	"header": {

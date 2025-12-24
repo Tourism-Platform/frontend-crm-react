@@ -20,7 +20,120 @@ export const ORDERS_MOCK: IOrder[] = [
 		phone: "+7 943 123 12 22",
 		roomType: "Standart suite",
 		carClass: "Comfort",
-		status: "new"
+		status: "new",
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
+		tourSummary: {
+			revenue: { from: 10999, to: 12432 },
+			profit: { from: 2458, to: 2999 }
+		},
+		paxDetails: [
+			{
+				id: "1",
+				fullName: "Saimon Bill",
+				gender: "Male",
+				nationality: "USA",
+				dateOfBirth: "13/05/1988",
+				passportNumber: "13213467",
+				expiredDate: "13/05/2029",
+				items: []
+			},
+			{
+				id: "2",
+				fullName: "Amanda Jally",
+				gender: "Female",
+				nationality: "USA",
+				dateOfBirth: "17/01/1999",
+				passportNumber: "13289067",
+				expiredDate: "17/01/2029",
+				items: [
+					{
+						id: "2-1",
+						type: "comment",
+						value: "The passenger has a strong allergy to peanuts and nuts. Please ensure that all meals provided are completely nut-free and that no cross-contamination occurs during preparation."
+					},
+					{
+						id: "2-2",
+						type: "file",
+						value: "Passport Amanda Jally.pdf",
+						metadata: {
+							fileName: "Passport Amanda Jally.pdf",
+							fileSize: "94 KB"
+						}
+					}
+				]
+			},
+			{
+				id: "3",
+				fullName: "Amad Diallo",
+				gender: "Male",
+				nationality: "USA",
+				dateOfBirth: "20/09/1992",
+				passportNumber: "89213467",
+				expiredDate: "20/09/2029",
+				items: []
+			}
+		]
 	},
 	{
 		orderId: "RQA00005",
@@ -38,7 +151,73 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Standard Route",
 		email: "bender@example.com",
 		phone: "+123456789",
-		status: "accepted"
+		status: "accepted",
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
+		tourSummary: {
+			revenue: { from: 10999, to: 12432 },
+			profit: { from: 2458, to: 2999 }
+		}
 	},
 	{
 		orderId: "RQA00006",
@@ -56,7 +235,73 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Scenic Route",
 		email: "smith@example.com",
 		phone: "+987654321",
-		status: "pending"
+		status: "pending",
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
+		tourSummary: {
+			revenue: { from: 10999, to: 12432 },
+			profit: { from: 2458, to: 2999 }
+		}
 	},
 	{
 		orderId: "RQA00007",
@@ -74,7 +319,73 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Adventure Trail",
 		email: "corp@example.com",
 		phone: "+1122334455",
-		status: "new"
+		status: "new",
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
+		tourSummary: {
+			revenue: { from: 10999, to: 12432 },
+			profit: { from: 2458, to: 2999 }
+		}
 	},
 	{
 		orderId: "RQA00008",
@@ -92,7 +403,73 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Coast to Coast",
 		email: "williams@example.com",
 		phone: "+5544332211",
-		status: "rejected"
+		status: "rejected",
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
+		tourSummary: {
+			revenue: { from: 10999, to: 12432 },
+			profit: { from: 2458, to: 2999 }
+		}
 	},
 	{
 		orderId: "RQA00009",
@@ -110,6 +487,72 @@ export const ORDERS_MOCK: IOrder[] = [
 		route: "Hidden Gems",
 		email: "brown@example.com",
 		phone: "+9988776655",
-		status: "accepted"
+		status: "accepted",
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
+		tourSummary: {
+			revenue: { from: 10999, to: 12432 },
+			profit: { from: 2458, to: 2999 }
+		}
 	}
 ];

@@ -2,7 +2,7 @@
 	"page_name": "Invoice",
 	"invoice_not_found": "Invoice not found",
 	"buttons": {
-		"back": "Back to invoices",
+		"back": "Back",
 		"export": "Export"
 	},
 	"header": {

@@ -1,4 +1,27 @@
+import { type ITourReviewItem, type ITourSummary } from "@/entities/tour";
+
 import { type ENUM_ORDER_STATUS_TYPE } from "./order-status.types";
+
+export interface IPaxReviewDetail {
+	id: string;
+	type: string;
+	value: string;
+	metadata?: {
+		fileName?: string;
+		fileSize?: string;
+	};
+}
+
+export interface IPaxReviewItem {
+	id: string;
+	fullName: string;
+	gender: "Male" | "Female";
+	nationality: string;
+	dateOfBirth: string;
+	passportNumber: string;
+	expiredDate: string;
+	items: IPaxReviewDetail[];
+}
 
 export interface IOrderDates {
 	from: string;
@@ -23,4 +46,7 @@ export interface IOrder {
 	roomType?: string;
 	carClass?: string;
 	status: ENUM_ORDER_STATUS_TYPE;
+	paxDetails?: IPaxReviewItem[];
+	tourReview: ITourReviewItem[];
+	tourSummary: ITourSummary;
 }

@@ -13,10 +13,10 @@ import {
 	ENUM_EVENT,
 	EVENT_TEMPLATES_LIST,
 	EVENT_TYPE_TO_PATH,
-	type IDayItem,
-	type ITemplateItem,
-	itemId
-} from "../../model";
+	type ITemplateItem
+} from "@/entities/tour";
+
+import { type IDayItem, itemId } from "../../model";
 
 import { DraggableDayItemMenu } from "./draggable-day-item-menu";
 import { DroppableNestedContainer } from "./droppable-nested-container";

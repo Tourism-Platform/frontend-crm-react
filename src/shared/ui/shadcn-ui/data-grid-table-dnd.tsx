@@ -87,7 +87,7 @@ function DataGridTableHeadRowCellDraggable<TData>({
 					variant="dim"
 					size="sm"
 					mode="icon"
-					className="-ms-2 size-6 shrink-0"
+					className="-ms-2 size-6 shrink-0 cursor-grab active:cursor-grabbing"
 					{...attributes}
 					{...listeners}
 					aria-label="Drag to reorder"

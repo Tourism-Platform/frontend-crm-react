@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
 
+import { ENUM_EVENT } from "@/entities/tour";
+
 import { findItemLocation } from "../helpers";
 import type { TOptionsData } from "../types";
-import { ENUM_EVENT } from "../types";
 
 describe("findItemLocation", () => {
 	const mockOptionsData: TOptionsData = {

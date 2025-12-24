@@ -15,8 +15,8 @@ import {
 import {
 	OrderHeader,
 	OrderInfoCard,
-	PaxInformation,
-	TourReview
+	OrderPaxReview,
+	OrderTourReview
 } from "./index";
 
 export const OrderId: FC = () => {
@@ -64,9 +64,12 @@ export const OrderId: FC = () => {
 				items={getOptionItems(order, t)}
 			/>
 
-			<TourReview />
+			<OrderTourReview
+				items={order.tourReview}
+				summary={order.tourSummary}
+			/>
 
-			<PaxInformation />
+			<OrderPaxReview items={order.paxDetails} />
 		</div>
 	);
 };

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { ENUM_EVENT } from "@/entities/tour";
+
 import { moveItemInData } from "../helpers";
-import { ENUM_EVENT } from "../types";
 import type { TOptionsData } from "../types";
 
 describe("moveItemInData", () => {
