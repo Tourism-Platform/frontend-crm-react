@@ -1,0 +1,111 @@
+{
+	"page_name": "Landing page",
+	"buttons": {
+		"save": "Save"
+	},
+	"blocks": {
+		"photos": {
+			"title": "Photos",
+			"description": "Add photos for the tour landing page",
+			"upload_text": "Click to upload or drag & drop",
+			"upload_hint": "JPG, JPEG, PNG less than 50MB",
+			"errors": {
+				"required": "Upload at least one photo"
+			}
+		},
+		"overview": {
+			"title": "Overview",
+			"description": "Brief description of the tour",
+			"fields": {
+				"description": {
+					"label": "Description",
+					"placeholder": "Enter tour description...",
+					"errors": {
+						"required": "Description is required"
+					}
+				}
+			}
+		},
+		"languages": {
+			"title": "Languages",
+			"description": "Select available languages for the tour",
+			"fields": {
+				"languages": {
+					"label": "Languages",
+					"errors": {
+						"required": "Select at least one language"
+					}
+				}
+			}
+		},
+		"amenities": {
+			"title": "Amenities and Inclusions",
+			"description": "What is included and not included in the tour price",
+			"fields": {
+				"included": {
+					"label": "Included",
+					"placeholder": "E.g.: Breakfast, Guide services",
+					"errors": {
+						"required": "Included items are required"
+					}
+				},
+				"not_included": {
+					"label": "Not Included",
+					"placeholder": "E.g.: Personal expenses, Tips",
+					"errors": {
+						"required": "Excluded items are required"
+					}
+				}
+			}
+		},
+		"pickup": {
+			"title": "Pickup Details",
+			"description": "Where and how to pick up tourists",
+			"fields": {
+				"pickup_type": {
+					"label": "Pickup Type",
+					"options": {
+						"airport": "Airport pickup",
+						"hotel": "Hotel pickup"
+					},
+					"errors": {
+						"required": "Select pickup type"
+					}
+				},
+				"pickup_description": {
+					"label": "Pickup Description",
+					"placeholder": "Where exactly to wait for the guide/driver...",
+					"errors": {
+						"required": "Pickup description is required"
+					}
+				}
+			}
+		},
+		"cancellation": {
+			"title": "Cancellation Policy",
+			"description": "Terms of refund upon cancellation",
+			"fields": {
+				"cancellation_policy": {
+					"label": "Cancellation Policy",
+					"placeholder": "Specify cancellation terms...",
+					"errors": {
+						"required": "Cancellation policy is required"
+					}
+				}
+			}
+		},
+		"additional_info": {
+			"title": "Additional Information",
+			"description": "Any other important details",
+			"fields": {
+				"additional_info": {
+					"label": "Additional Information",
+					"placeholder": "Any useful information for the tourist...",
+					"errors": {
+						"required": "Additional information is required"
+					}
+				}
+			}
+		}
+	}
+}

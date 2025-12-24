@@ -26,6 +26,7 @@ import information_edit_page from "../../../../public/locales/en/tours/events/in
 import multiply_option_edit_page from "../../../../public/locales/en/tours/events/multiply_option_edit_page.json";
 import tour_details_edit_page from "../../../../public/locales/en/tours/events/tour_details_edit_page.json";
 import transportation_edit_page from "../../../../public/locales/en/tours/events/transportation_edit_page.json";
+import landing_page from "../../../../public/locales/en/tours/landing_page.json";
 import tour_activity_log_page from "../../../../public/locales/en/tours/tour_activity_log_page.json";
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
 import tour_order_history_page from "../../../../public/locales/en/tours/tour_order_history_page.json";
@@ -105,6 +106,7 @@ export type TResources = {
 	order_id_page: TOrderIdPage;
 	tour_activity_log_page: TTourActivityLogPage;
 	tour_pricing_review_page: TTourPricingReviewPage;
+	landing_page: typeof landing_page;
 };
 
 export const NS = [
@@ -140,7 +142,8 @@ export const NS = [
 	"orders_page",
 	"order_id_page",
 	"tour_activity_log_page",
-	"tour_pricing_review_page"
+	"tour_pricing_review_page",
+	"landing_page"
 ] as const;
 
 export type TNS = (typeof NS)[number];
@@ -190,3 +193,4 @@ export type TOrdersPageKeys = TNestedKeyOf<TOrdersPage>;
 export type TOrderIdPageKeys = TNestedKeyOf<TOrderIdPage>;
 export type TTourActivityLogPageKeys = TNestedKeyOf<TTourActivityLogPage>;
 export type TTourPricingReviewPageKeys = TNestedKeyOf<TTourPricingReviewPage>;
+export type TLandingPageKeys = TNestedKeyOf<typeof landing_page>;
