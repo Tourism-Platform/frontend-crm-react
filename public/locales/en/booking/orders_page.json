@@ -4,10 +4,12 @@
 		"orderId": "Order ID",
 		"orderType": "Type",
 		"dateCreated": "Date Created",
+		"manager": "Manager",
 		"client": "Client",
 		"clientType": "Client Type",
 		"pax": "PAX",
 		"dates": "Dates",
+		"invoiceStatusColumn": "Invoice Status",
 		"orderTypes": {
 			"regular": "Regular",
 			"vip": "VIP",
@@ -17,6 +19,11 @@
 			"agency": "Agency",
 			"direct": "Direct",
 			"corporate": "Corporate"
+		},
+		"invoiceStatus": {
+			"paid": "Paid",
+			"partiallyPaid": "Partially paid",
+			"unpaid": "Unpaid"
 		}
 	},
 	"menu": {

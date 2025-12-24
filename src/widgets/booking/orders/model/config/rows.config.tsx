@@ -9,8 +9,13 @@ import {
 	CLIENT_TYPE_LABELS,
 	ENUM_CLIENT_TYPE_OPTIONS,
 	type ENUM_CLIENT_TYPE_OPTIONS_TYPE,
+	ENUM_INVOICE_STATUS,
+	type ENUM_INVOICE_STATUS_TYPE,
+	ENUM_ORDER_STATUS,
+	type ENUM_ORDER_STATUS_TYPE,
 	ENUM_ORDER_TYPE_OPTIONS,
 	type ENUM_ORDER_TYPE_OPTIONS_TYPE,
+	INVOICE_STATUS_LABELS,
 	type IOrder,
 	ORDER_TYPE_LABELS
 } from "@/entities/booking";
@@ -18,6 +23,7 @@ import {
 import { OrderActions } from "../../ui";
 
 export const COLUMNS = (
+	activeTab: ENUM_ORDER_STATUS_TYPE,
 	onEdit?: (id: string, data: Partial<IOrder>) => void,
 	onDelete?: (id: string) => void
 ): ColumnDef<IOrder>[] => {
@@ -100,6 +106,20 @@ export const COLUMNS = (
 			accessorKey: "dateCreated",
 			size: 120
 		},
+		...(activeTab !== ENUM_ORDER_STATUS.NEW
+			? [
+					{
+						header: t("table.manager"),
+						accessorKey: "manager",
+						cell: ({ row }) => (
+							<div className="font-medium">
+								{row.getValue("manager") || "-"}
+							</div>
+						),
+						size: 120
+					} as ColumnDef<IOrder>
+				]
+			: []),
 		{
 			header: t("table.client"),
 			accessorKey: "client",
@@ -147,6 +167,45 @@ export const COLUMNS = (
 			),
 			size: 80
 		},
+		...(activeTab === ENUM_ORDER_STATUS.IN_PROGRESS ||
+		activeTab === ENUM_ORDER_STATUS.COMPLETED
+			? [
+					{
+						header: t("table.invoiceStatusColumn"),
+						accessorKey: "invoiceStatus",
+						cell: ({ row }) => {
+							const invoiceStatus = row.getValue(
+								"invoiceStatus"
+							) as ENUM_INVOICE_STATUS_TYPE;
+
+							if (!invoiceStatus) return <div>-</div>;
+
+							let variant: BadgeVariant = "default";
+							switch (invoiceStatus) {
+								case ENUM_INVOICE_STATUS.PAID:
+									variant = "green";
+									break;
+								case ENUM_INVOICE_STATUS.PARTIALLY_PAID:
+									variant = "yellow";
+									break;
+								case ENUM_INVOICE_STATUS.UNPAID:
+									variant = "red";
+									break;
+								default:
+									variant = "default";
+							}
+
+							return (
+								<Badge variant={variant}>
+									{t(INVOICE_STATUS_LABELS[invoiceStatus])}
+								</Badge>
+							);
+						},
+						size: 150
+					} as ColumnDef<IOrder>
+				]
+			: []),
+
 		{
 			header: t("table.dates"),
 			accessorKey: "dates",
@@ -160,6 +219,7 @@ export const COLUMNS = (
 			},
 			size: 200
 		},
+
 		{
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,

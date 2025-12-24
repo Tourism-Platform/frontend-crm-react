@@ -50,7 +50,11 @@ export const Orders: FC = () => {
 				<CardContent>
 					<SmartTable
 						data={filteredData}
-						columns={COLUMNS(handleEditOrder, handleDeleteOrder)}
+						columns={COLUMNS(
+							activeTab,
+							handleEditOrder,
+							handleDeleteOrder
+						)}
 						statusTabs={translatedStatusTabs}
 						activeStatusTab={activeTab}
 						onStatusTabChange={(val) =>

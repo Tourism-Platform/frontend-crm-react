@@ -1,10 +1,11 @@
 import {
 	ENUM_CLIENT_TYPE_OPTIONS,
 	ENUM_GENDER_OPTIONS,
+	ENUM_INVOICE_STATUS,
 	ENUM_ORDER_STATUS,
 	ENUM_ORDER_TYPE_OPTIONS
 } from "@/entities/booking";
-import { type IOrder } from "@/entities/booking/order/types";
+import { type IOrder } from "@/entities/booking";
 
 export const ORDERS_MOCK: IOrder[] = [
 	{
@@ -560,5 +561,325 @@ export const ORDERS_MOCK: IOrder[] = [
 			revenue: { from: 10999, to: 12432 },
 			profit: { from: 2458, to: 2999 }
 		}
+	},
+	// IN_PROCESSING (3 items)
+	{
+		orderId: "RQA00010",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "25.08.2025",
+		client: "Processing Client 1",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 2,
+		dates: { from: "01.12.2025", to: "10.12.2025" },
+		tourName: "Winter Wonderland",
+		duration: "10 days",
+		route: "North Pole",
+		email: "proc1@test.com",
+		phone: "+11111111",
+		status: ENUM_ORDER_STATUS.IN_PROCESSING,
+		isAvailable: true,
+		manager: "Manager A",
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 1000, to: 2000 },
+			profit: { from: 100, to: 200 }
+		}
+	},
+	{
+		orderId: "RQA00011",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "26.08.2025",
+		client: "Processing Client 2",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
+		pax: 3,
+		dates: { from: "05.12.2025", to: "15.12.2025" },
+		tourName: "Ski Trip",
+		duration: "10 days",
+		route: "Alps",
+		email: "proc2@test.com",
+		phone: "+22222222",
+		status: ENUM_ORDER_STATUS.IN_PROCESSING,
+		isAvailable: false,
+		manager: "Manager B",
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 1500, to: 2500 },
+			profit: { from: 150, to: 250 }
+		}
+	},
+	{
+		orderId: "RQA00012",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.VIP,
+		dateCreated: "27.08.2025",
+		client: "Processing Client 3",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 1,
+		dates: { from: "10.12.2025", to: "20.12.2025" },
+		tourName: "City Tour",
+		duration: "10 days",
+		route: "Paris",
+		email: "proc3@test.com",
+		phone: "+33333333",
+		status: ENUM_ORDER_STATUS.IN_PROCESSING,
+		isAvailable: true,
+		manager: "Manager A",
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 1200, to: 2200 },
+			profit: { from: 120, to: 220 }
+		}
+	},
+	// BOOKING (3 items)
+	{
+		orderId: "RQA00013",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "28.08.2025",
+		client: "Booking Client 1",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
+		pax: 4,
+		dates: { from: "15.01.2026", to: "25.01.2026" },
+		tourName: "Safari",
+		duration: "10 days",
+		route: "Kenya",
+		email: "book1@test.com",
+		phone: "+44444444",
+		status: ENUM_ORDER_STATUS.BOOKING,
+		manager: "Manager B",
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 3000, to: 4000 },
+			profit: { from: 300, to: 400 }
+		}
+	},
+	{
+		orderId: "RQA00014",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.GROUP,
+		dateCreated: "29.08.2025",
+		client: "Booking Client 2",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.CORPORATE,
+		pax: 10,
+		dates: { from: "01.02.2026", to: "10.02.2026" },
+		tourName: "Conference",
+		duration: "9 days",
+		route: "Dubai",
+		email: "book2@test.com",
+		phone: "+55555555",
+		status: ENUM_ORDER_STATUS.BOOKING,
+		manager: "Manager C",
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 5000, to: 6000 },
+			profit: { from: 500, to: 600 }
+		}
+	},
+	{
+		orderId: "RQA00015",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "30.08.2025",
+		client: "Booking Client 3",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 2,
+		dates: { from: "10.02.2026", to: "20.02.2026" },
+		tourName: "Honeymoon",
+		duration: "10 days",
+		route: "Maldives",
+		email: "book3@test.com",
+		phone: "+66666666",
+		status: ENUM_ORDER_STATUS.BOOKING,
+		manager: "Manager A",
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 4000, to: 5000 },
+			profit: { from: 400, to: 500 }
+		}
+	},
+	// IN_PROGRESS (3 items)
+	{
+		orderId: "RQA00016",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "01.09.2025",
+		client: "Progress Client 1",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 2,
+		dates: { from: "01.09.2025", to: "10.09.2025" },
+		tourName: "Beach Holiday",
+		duration: "9 days",
+		route: "Bali",
+		email: "prog1@test.com",
+		phone: "+77777777",
+		status: ENUM_ORDER_STATUS.IN_PROGRESS,
+		manager: "Manager C",
+		invoiceStatus: ENUM_INVOICE_STATUS.PAID,
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 2000, to: 3000 },
+			profit: { from: 200, to: 300 }
+		}
+	},
+	{
+		orderId: "RQA00017",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "02.09.2025",
+		client: "Progress Client 2",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
+		pax: 3,
+		dates: { from: "05.09.2025", to: "15.09.2025" },
+		tourName: "Cultural Trip",
+		duration: "10 days",
+		route: "Kyoto",
+		email: "prog2@test.com",
+		phone: "+88888888",
+		status: ENUM_ORDER_STATUS.IN_PROGRESS,
+		manager: "Manager B",
+		invoiceStatus: ENUM_INVOICE_STATUS.PARTIALLY_PAID,
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 2500, to: 3500 },
+			profit: { from: 250, to: 350 }
+		}
+	},
+	{
+		orderId: "RQA00018",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.VIP,
+		dateCreated: "03.09.2025",
+		client: "Progress Client 3",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 1,
+		dates: { from: "10.09.2025", to: "20.09.2025" },
+		tourName: "Solo Adventure",
+		duration: "10 days",
+		route: "Patagonia",
+		email: "prog3@test.com",
+		phone: "+99999999",
+		status: ENUM_ORDER_STATUS.IN_PROGRESS,
+		manager: "Manager A",
+		invoiceStatus: ENUM_INVOICE_STATUS.UNPAID,
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 1800, to: 2800 },
+			profit: { from: 180, to: 280 }
+		}
+	},
+	// COMPLETED (3 items)
+	{
+		orderId: "RQA00019",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "01.08.2025",
+		client: "Completed Client 1",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 2,
+		dates: { from: "10.08.2025", to: "20.08.2025" },
+		tourName: "Summer Break",
+		duration: "10 days",
+		route: "Spain",
+		email: "comp1@test.com",
+		phone: "+10101010",
+		status: ENUM_ORDER_STATUS.COMPLETED,
+		manager: "Manager C",
+		invoiceStatus: ENUM_INVOICE_STATUS.PAID,
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 2200, to: 3200 },
+			profit: { from: 220, to: 320 }
+		}
+	},
+	{
+		orderId: "RQA00020",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "05.08.2025",
+		client: "Completed Client 2",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
+		pax: 4,
+		dates: { from: "15.08.2025", to: "25.08.2025" },
+		tourName: "Family Fun",
+		duration: "10 days",
+		route: "Florida",
+		email: "comp2@test.com",
+		phone: "+20202020",
+		status: ENUM_ORDER_STATUS.COMPLETED,
+		manager: "Manager B",
+		invoiceStatus: ENUM_INVOICE_STATUS.PAID,
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 4000, to: 5000 },
+			profit: { from: 400, to: 500 }
+		}
+	},
+	{
+		orderId: "RQA00021",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.VIP,
+		dateCreated: "10.08.2025",
+		client: "Completed Client 3",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 2,
+		dates: { from: "20.08.2025", to: "30.08.2025" },
+		tourName: "Luxury Cruise",
+		duration: "10 days",
+		route: "Mediterranean",
+		email: "comp3@test.com",
+		phone: "+30303030",
+		status: ENUM_ORDER_STATUS.COMPLETED,
+		manager: "Manager A",
+		invoiceStatus: ENUM_INVOICE_STATUS.PAID,
+		tourReview: [],
+		tourSummary: {
+			revenue: { from: 8000, to: 9000 },
+			profit: { from: 800, to: 900 }
+		}
+	},
+	// CANCELLED (3 items)
+	{
+		orderId: "RQA00022",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "01.09.2025",
+		client: "Cancelled Client 1",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 2,
+		dates: { from: "01.10.2025", to: "10.10.2025" },
+		tourName: "Fall Trip",
+		duration: "9 days",
+		route: "New England",
+		email: "can1@test.com",
+		phone: "+40404040",
+		status: ENUM_ORDER_STATUS.CANCELLED,
+		report: "Client personal reasons",
+		tourReview: [],
+		tourSummary: { revenue: { from: 0, to: 0 }, profit: { from: 0, to: 0 } }
+	},
+	{
+		orderId: "RQA00023",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		dateCreated: "02.09.2025",
+		client: "Cancelled Client 2",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.AGENCY,
+		pax: 3,
+		dates: { from: "05.10.2025", to: "15.10.2025" },
+		tourName: "Mountain Hike",
+		duration: "10 days",
+		route: "Rockies",
+		email: "can2@test.com",
+		phone: "+50505050",
+		status: ENUM_ORDER_STATUS.CANCELLED,
+		report: "Visa rejection",
+		tourReview: [],
+		tourSummary: { revenue: { from: 0, to: 0 }, profit: { from: 0, to: 0 } }
+	},
+	{
+		orderId: "RQA00024",
+		orderType: ENUM_ORDER_TYPE_OPTIONS.VIP,
+		dateCreated: "03.09.2025",
+		client: "Cancelled Client 3",
+		clientType: ENUM_CLIENT_TYPE_OPTIONS.DIRECT,
+		pax: 1,
+		dates: { from: "10.10.2025", to: "20.10.2025" },
+		tourName: "Business Trip",
+		duration: "10 days",
+		route: "London",
+		email: "can3@test.com",
+		phone: "+60606060",
+		status: ENUM_ORDER_STATUS.CANCELLED,
+		report: "Meeting cancelled",
+		tourReview: [],
+		tourSummary: { revenue: { from: 0, to: 0 }, profit: { from: 0, to: 0 } }
 	}
 ];
