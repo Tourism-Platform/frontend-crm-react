@@ -21,7 +21,8 @@ const badgeVariants = cva(
 				green: "bg-green-500/20 text-green-600 border-none rounded-sm",
 				blue: "bg-blue-500/20 text-blue-600 border-none rounded-sm",
 				yellow: "bg-yellow-500/20 text-yellow-600 border-none rounded-sm",
-				orange: "bg-orange-500/20 text-orange-600 border-none rounded-sm"
+				orange: "bg-orange-500/20 text-orange-600 border-none rounded-sm",
+				cyan: "bg-cyan-500/20 text-cyan-600 border-none rounded-sm"
 			}
 		},
 		defaultVariants: {

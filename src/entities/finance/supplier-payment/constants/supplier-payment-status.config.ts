@@ -1,4 +1,4 @@
-import { type TSupplierPaymentsPageKeys } from "@/shared/config";
+import type { BadgeVariant } from "@/shared/ui";
 
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
@@ -7,8 +7,16 @@ import {
 
 export const SUPPLIER_PAYMENT_STATUS_LABELS: Record<
 	ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
-	TSupplierPaymentsPageKeys
+	string | string
 > = {
-	[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]: "table.statuses.recorded",
-	[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED]: "table.statuses.confirmed"
+	[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED]: "confirmed",
+	[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]: "recorded"
+};
+
+export const SUPPLIER_PAYMENT_STATUS_VARIANTS: Record<
+	ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
+	BadgeVariant
+> = {
+	[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED]: "green",
+	[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]: "yellow"
 };

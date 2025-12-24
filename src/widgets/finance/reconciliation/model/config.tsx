@@ -4,13 +4,14 @@ import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Badge, type BadgeVariant, Button, Checkbox } from "@/shared/ui";
+import { Badge, Button, Checkbox } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
-	ENUM_RECONCILIATION_STATUS,
 	type ENUM_RECONCILIATION_STATUS_TYPE,
-	type IReconciliation
+	type IReconciliation,
+	RECONCILIATION_STATUS_LABELS,
+	RECONCILIATION_STATUS_VARIANTS
 } from "@/entities/finance";
 
 export const COLUMNS = (): ColumnDef<IReconciliation>[] => {
@@ -125,21 +126,9 @@ export const COLUMNS = (): ColumnDef<IReconciliation>[] => {
 					"status"
 				) as ENUM_RECONCILIATION_STATUS_TYPE;
 
-				let variant: BadgeVariant = "default";
-				switch (status) {
-					case ENUM_RECONCILIATION_STATUS.COMPLETED:
-						variant = "green";
-						break;
-					case ENUM_RECONCILIATION_STATUS.IN_PROGRESS:
-						variant = "yellow";
-						break;
-					default:
-						variant = "default";
-				}
-
 				return (
-					<Badge variant={variant}>
-						{t(`table.statuses.${status}`)}
+					<Badge variant={RECONCILIATION_STATUS_VARIANTS[status]}>
+						{t(RECONCILIATION_STATUS_LABELS[status])}
 					</Badge>
 				);
 			},

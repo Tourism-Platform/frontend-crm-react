@@ -6,6 +6,7 @@ import {
 	ENUM_ORDER_TYPE_OPTIONS
 } from "@/entities/booking";
 import { type IOrder } from "@/entities/booking";
+import { ENUM_EVENT } from "@/entities/tour";
 
 export const ORDERS_MOCK: IOrder[] = [
 	{
@@ -334,7 +335,8 @@ export const ORDERS_MOCK: IOrder[] = [
 				supplier: 'Aviakassa "Hayot"',
 				plannedCost: "$4,756.99",
 				estimatedRevenue: "$456.99",
-				type: "flight"
+				type: "flight",
+				isApplied: true
 			},
 			{
 				id: "2",
@@ -342,7 +344,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				supplier: "-",
 				plannedCost: "$4,243.99 - $4,444.99",
 				estimatedRevenue: "$456.99 - $480.99",
-				type: "accommodation",
+				type: "multiply-option",
 				subRows: [
 					{
 						id: "2-1",
@@ -350,7 +352,8 @@ export const ORDERS_MOCK: IOrder[] = [
 						supplier: "Hilton LLC",
 						plannedCost: "$4,444.99",
 						estimatedRevenue: "$456.99",
-						type: "accommodation"
+						type: "accommodation",
+						isApplied: true
 					},
 					{
 						id: "2-2",
@@ -358,7 +361,8 @@ export const ORDERS_MOCK: IOrder[] = [
 						supplier: '"MIR"',
 						plannedCost: "$4,243.99",
 						estimatedRevenue: "$456.99",
-						type: "accommodation"
+						type: "accommodation",
+						isApplied: false
 					}
 				]
 			},
@@ -369,6 +373,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				plannedCost: "$2,314.99",
 				estimatedRevenue: "$456.99",
 				type: "activity",
+				isApplied: false,
 				subRows: [
 					{
 						id: "3-1",
@@ -579,7 +584,68 @@ export const ORDERS_MOCK: IOrder[] = [
 		status: ENUM_ORDER_STATUS.IN_PROCESSING,
 		isAvailable: true,
 		manager: "Manager A",
-		tourReview: [],
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Multiply option",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: ENUM_EVENT.MULTIPLY_OPTION,
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
 		tourSummary: {
 			revenue: { from: 1000, to: 2000 },
 			profit: { from: 100, to: 200 }
@@ -601,7 +667,68 @@ export const ORDERS_MOCK: IOrder[] = [
 		status: ENUM_ORDER_STATUS.IN_PROCESSING,
 		isAvailable: false,
 		manager: "Manager B",
-		tourReview: [],
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
 		tourSummary: {
 			revenue: { from: 1500, to: 2500 },
 			profit: { from: 150, to: 250 }
@@ -623,7 +750,68 @@ export const ORDERS_MOCK: IOrder[] = [
 		status: ENUM_ORDER_STATUS.IN_PROCESSING,
 		isAvailable: true,
 		manager: "Manager A",
-		tourReview: [],
+		tourReview: [
+			{
+				id: "1",
+				item: "Flight from london to tashkent",
+				supplier: 'Aviakassa "Hayot"',
+				plannedCost: "$4,756.99",
+				estimatedRevenue: "$456.99",
+				type: "flight"
+			},
+			{
+				id: "2",
+				item: "Hotels in Tashkent options",
+				supplier: "-",
+				plannedCost: "$4,243.99 - $4,444.99",
+				estimatedRevenue: "$456.99 - $480.99",
+				type: "accommodation",
+				subRows: [
+					{
+						id: "2-1",
+						item: "Hilton hotel",
+						supplier: "Hilton LLC",
+						plannedCost: "$4,444.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					},
+					{
+						id: "2-2",
+						item: "Uzbekistan hotel",
+						supplier: '"MIR"',
+						plannedCost: "$4,243.99",
+						estimatedRevenue: "$456.99",
+						type: "accommodation"
+					}
+				]
+			},
+			{
+				id: "3",
+				item: "Meals",
+				supplier: "-",
+				plannedCost: "$2,314.99",
+				estimatedRevenue: "$456.99",
+				type: "activity",
+				subRows: [
+					{
+						id: "3-1",
+						item: "Tashkent cafe",
+						supplier: '"Davron Krus"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					},
+					{
+						id: "3-2",
+						item: "Oshkand",
+						supplier: '"Osh pakazz"',
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: "accommodation"
+					}
+				]
+			}
+		],
 		tourSummary: {
 			revenue: { from: 1200, to: 2200 },
 			profit: { from: 120, to: 220 }

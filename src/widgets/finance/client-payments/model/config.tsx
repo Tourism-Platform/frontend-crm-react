@@ -1,14 +1,14 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
-	ENUM_PAYMENT_STATUS,
 	type ENUM_PAYMENT_STATUS_TYPE,
 	type IPayment,
-	PAYMENT_STATUS_LABELS
+	PAYMENT_STATUS_LABELS,
+	PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
 
 import { ClientPaymentActions } from "../ui";
@@ -81,20 +81,8 @@ export const COLUMNS = (
 					"status"
 				) as ENUM_PAYMENT_STATUS_TYPE;
 
-				let variant: BadgeVariant = "default";
-				switch (status) {
-					case ENUM_PAYMENT_STATUS.ASSIGNED:
-						variant = "green";
-						break;
-					case ENUM_PAYMENT_STATUS.NOT_ASSIGNED:
-						variant = "red";
-						break;
-					default:
-						variant = "default";
-				}
-
 				return (
-					<Badge variant={variant}>
+					<Badge variant={PAYMENT_STATUS_VARIANTS[status]}>
 						{t(PAYMENT_STATUS_LABELS[status])}
 					</Badge>
 				);

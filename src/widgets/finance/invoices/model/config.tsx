@@ -3,14 +3,14 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
-import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
-	ENUM_INVOICE_STATUS,
 	type ENUM_INVOICE_STATUS_TYPE,
 	type IInvoice,
-	INVOICE_STATUS_LABELS
+	INVOICE_STATUS_LABELS,
+	INVOICE_STATUS_VARIANTS
 } from "@/entities/finance";
 
 export const COLUMNS = (): ColumnDef<IInvoice>[] => {
@@ -101,23 +101,8 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 					"status"
 				) as ENUM_INVOICE_STATUS_TYPE;
 
-				let variant: BadgeVariant = "default";
-				switch (status) {
-					case ENUM_INVOICE_STATUS.PAID:
-						variant = "green";
-						break;
-					case ENUM_INVOICE_STATUS.UNPAID:
-						variant = "red";
-						break;
-					case ENUM_INVOICE_STATUS.PARTIALLY_PAID:
-						variant = "yellow";
-						break;
-					default:
-						variant = "default";
-				}
-
 				return (
-					<Badge variant={variant}>
+					<Badge variant={INVOICE_STATUS_VARIANTS[status]}>
 						{t(INVOICE_STATUS_LABELS[status])}
 					</Badge>
 				);

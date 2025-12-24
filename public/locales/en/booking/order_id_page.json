@@ -1,10 +1,14 @@
 {
 	"buttons": {
 		"back": "Back",
-		"accept": "Accept"
+		"accept": "Accept",
+		"export": "Export",
+		"generate": "Generate invoice",
+		"send": "Send voucher"
 	},
 	"header": {
-		"order_status": "Order status"
+		"order_status": "Order status",
+		"invoice_status": "Invoice status"
 	},
 	"statuses": {
 		"new": "New",
@@ -12,7 +16,12 @@
 		"booking": "Booking",
 		"in_progress": "In progress",
 		"completed": "Completed",
-		"cancelled": "Cancelled"
+		"cancelled": "Cancelled",
+		"invoice": {
+			"paid": "Paid",
+			"partially_paid": "Partially paid",
+			"unpaid": "Unpaid"
+		}
 	},
 	"order_info": {
 		"title": "Order info",
@@ -61,7 +70,10 @@
 			"item": "Item",
 			"supplier": "Supplier",
 			"planned_cost": "Planned cost",
-			"estimated_revenue": "Estimated revenue"
+			"estimated_revenue": "Estimated revenue",
+			"action": "Action",
+			"apply": "Apply",
+			"applied": "Applied"
 		}
 	},
 	"pax_information": {

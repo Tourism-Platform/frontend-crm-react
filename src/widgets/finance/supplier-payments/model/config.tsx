@@ -1,17 +1,17 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
-	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
-	type ISupplierPayment
+	type ISupplierPayment,
+	SUPPLIER_PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
 
-import { ConfirmPayment } from "@/features/finance";
 import type { TConfirmPaymentSchema } from "@/features/finance";
+import { ConfirmPayment } from "@/features/finance";
 
 export const COLUMNS = (
 	onConfirm?: (id: string, data: Partial<TConfirmPaymentSchema>) => void
@@ -99,20 +99,8 @@ export const COLUMNS = (
 					"status"
 				) as ENUM_SUPPLIER_PAYMENT_STATUS_TYPE;
 
-				let variant: BadgeVariant = "default";
-				switch (status) {
-					case ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED:
-						variant = "green";
-						break;
-					case ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED:
-						variant = "yellow";
-						break;
-					default:
-						variant = "default";
-				}
-
 				return (
-					<Badge variant={variant}>
+					<Badge variant={SUPPLIER_PAYMENT_STATUS_VARIANTS[status]}>
 						{t(`table.statuses.${status}`)}
 					</Badge>
 				);

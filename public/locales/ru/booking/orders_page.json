@@ -36,6 +36,11 @@
 		"booking": "Бронирование",
 		"in_progress": "В процессе",
 		"completed": "Завершен",
-		"cancelled": "Отменен"
+		"cancelled": "Отменен",
+		"invoice": {
+			"paid": "Оплачено",
+			"partially_paid": "Частично оплачено",
+			"unpaid": "Не оплачено"
+		}
 	}
 }

@@ -6,12 +6,18 @@ import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
 import {
+	ENUM_ORDER_STATUS,
+	type ENUM_ORDER_STATUS_TYPE
+} from "@/entities/booking";
+import {
 	ENUM_EVENT,
 	EVENT_METADATA,
 	type ITourReviewItem
 } from "@/entities/tour";
 
-export const TOUR_REVIEW_COLUMNS = (): ColumnDef<ITourReviewItem>[] => {
+export const TOUR_REVIEW_COLUMNS = (
+	orderStatus?: ENUM_ORDER_STATUS_TYPE
+): ColumnDef<ITourReviewItem>[] => {
 	const { t } = useTranslation("order_id_page");
 	return [
 		{
@@ -80,6 +86,49 @@ export const TOUR_REVIEW_COLUMNS = (): ColumnDef<ITourReviewItem>[] => {
 		{
 			accessorKey: "estimatedRevenue",
 			header: t("tour_review.table.estimated_revenue")
-		}
+		},
+		...(orderStatus === ENUM_ORDER_STATUS.IN_PROCESSING
+			? [
+					{
+						id: "action",
+						header: () => (
+							<span className="sr-only">
+								{t("tour_review.table.action")}
+							</span>
+						),
+						cell: ({ row }) => {
+							const { type, isApplied } = row.original;
+							const depth = row.depth;
+							const parentRow = row.getParentRow?.();
+							const parentType = parentRow?.original?.type;
+
+							// Если это multiply-option — кнопку не показываем в родителе
+							if (type === ENUM_EVENT.MULTIPLY_OPTION) {
+								return null;
+							}
+
+							// Если это subRow — показываем кнопку только если родитель = multiply-option
+							if (
+								depth > 0 &&
+								parentType !== ENUM_EVENT.MULTIPLY_OPTION
+							) {
+								return null;
+							}
+
+							return (
+								<Button
+									variant={isApplied ? "default" : "outline"}
+									size="sm"
+								>
+									{isApplied
+										? t("tour_review.table.applied")
+										: t("tour_review.table.apply")}
+								</Button>
+							);
+						},
+						size: 60
+					} as ColumnDef<ITourReviewItem>
+				]
+			: [])
 	];
 };

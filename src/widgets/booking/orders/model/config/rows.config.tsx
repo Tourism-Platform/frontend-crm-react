@@ -3,21 +3,21 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
-import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox } from "@/shared/ui";
 
 import {
 	CLIENT_TYPE_LABELS,
-	ENUM_CLIENT_TYPE_OPTIONS,
+	CLIENT_TYPE_VARIANTS,
 	type ENUM_CLIENT_TYPE_OPTIONS_TYPE,
-	ENUM_INVOICE_STATUS,
 	type ENUM_INVOICE_STATUS_TYPE,
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
-	ENUM_ORDER_TYPE_OPTIONS,
 	type ENUM_ORDER_TYPE_OPTIONS_TYPE,
 	INVOICE_STATUS_LABELS,
+	INVOICE_STATUS_VARIANTS,
 	type IOrder,
-	ORDER_TYPE_LABELS
+	ORDER_TYPE_LABELS,
+	ORDER_TYPE_VARIANTS
 } from "@/entities/booking";
 
 import { OrderActions } from "../../ui";
@@ -78,23 +78,8 @@ export const COLUMNS = (
 					"orderType"
 				) as ENUM_ORDER_TYPE_OPTIONS_TYPE;
 
-				let variant: BadgeVariant = "default";
-				switch (orderType) {
-					case ENUM_ORDER_TYPE_OPTIONS.REGULAR:
-						variant = "blue";
-						break;
-					case ENUM_ORDER_TYPE_OPTIONS.VIP:
-						variant = "orange";
-						break;
-					case ENUM_ORDER_TYPE_OPTIONS.GROUP:
-						variant = "green";
-						break;
-					default:
-						variant = "default";
-				}
-
 				return (
-					<Badge variant={variant}>
+					<Badge variant={ORDER_TYPE_VARIANTS[orderType]}>
 						{t(ORDER_TYPE_LABELS[orderType])}
 					</Badge>
 				);
@@ -106,20 +91,6 @@ export const COLUMNS = (
 			accessorKey: "dateCreated",
 			size: 120
 		},
-		...(activeTab !== ENUM_ORDER_STATUS.NEW
-			? [
-					{
-						header: t("table.manager"),
-						accessorKey: "manager",
-						cell: ({ row }) => (
-							<div className="font-medium">
-								{row.getValue("manager") || "-"}
-							</div>
-						),
-						size: 120
-					} as ColumnDef<IOrder>
-				]
-			: []),
 		{
 			header: t("table.client"),
 			accessorKey: "client",
@@ -136,23 +107,8 @@ export const COLUMNS = (
 					"clientType"
 				) as ENUM_CLIENT_TYPE_OPTIONS_TYPE;
 
-				let variant: BadgeVariant = "default";
-				switch (clientType) {
-					case ENUM_CLIENT_TYPE_OPTIONS.AGENCY:
-						variant = "yellow";
-						break;
-					case ENUM_CLIENT_TYPE_OPTIONS.DIRECT:
-						variant = "green";
-						break;
-					case ENUM_CLIENT_TYPE_OPTIONS.CORPORATE:
-						variant = "blue";
-						break;
-					default:
-						variant = "default";
-				}
-
 				return (
-					<Badge variant={variant}>
+					<Badge variant={CLIENT_TYPE_VARIANTS[clientType]}>
 						{t(CLIENT_TYPE_LABELS[clientType])}
 					</Badge>
 				);
@@ -167,44 +123,6 @@ export const COLUMNS = (
 			),
 			size: 80
 		},
-		...(activeTab === ENUM_ORDER_STATUS.IN_PROGRESS ||
-		activeTab === ENUM_ORDER_STATUS.COMPLETED
-			? [
-					{
-						header: t("table.invoiceStatusColumn"),
-						accessorKey: "invoiceStatus",
-						cell: ({ row }) => {
-							const invoiceStatus = row.getValue(
-								"invoiceStatus"
-							) as ENUM_INVOICE_STATUS_TYPE;
-
-							if (!invoiceStatus) return <div>-</div>;
-
-							let variant: BadgeVariant = "default";
-							switch (invoiceStatus) {
-								case ENUM_INVOICE_STATUS.PAID:
-									variant = "green";
-									break;
-								case ENUM_INVOICE_STATUS.PARTIALLY_PAID:
-									variant = "yellow";
-									break;
-								case ENUM_INVOICE_STATUS.UNPAID:
-									variant = "red";
-									break;
-								default:
-									variant = "default";
-							}
-
-							return (
-								<Badge variant={variant}>
-									{t(INVOICE_STATUS_LABELS[invoiceStatus])}
-								</Badge>
-							);
-						},
-						size: 150
-					} as ColumnDef<IOrder>
-				]
-			: []),
 
 		{
 			header: t("table.dates"),
@@ -219,6 +137,47 @@ export const COLUMNS = (
 			},
 			size: 200
 		},
+		...(activeTab !== ENUM_ORDER_STATUS.NEW
+			? [
+					{
+						header: t("table.manager"),
+						accessorKey: "manager",
+						cell: ({ row }) => (
+							<div className="font-medium">
+								{row.getValue("manager") || "-"}
+							</div>
+						),
+						size: 120
+					} as ColumnDef<IOrder>
+				]
+			: []),
+		...(activeTab === ENUM_ORDER_STATUS.IN_PROGRESS ||
+		activeTab === ENUM_ORDER_STATUS.COMPLETED
+			? [
+					{
+						header: t("table.invoiceStatusColumn"),
+						accessorKey: "invoiceStatus",
+						cell: ({ row }) => {
+							const invoiceStatus = row.getValue(
+								"invoiceStatus"
+							) as ENUM_INVOICE_STATUS_TYPE;
+
+							if (!invoiceStatus) return <div>-</div>;
+
+							return (
+								<Badge
+									variant={
+										INVOICE_STATUS_VARIANTS[invoiceStatus]
+									}
+								>
+									{t(INVOICE_STATUS_LABELS[invoiceStatus])}
+								</Badge>
+							);
+						},
+						size: 150
+					} as ColumnDef<IOrder>
+				]
+			: []),
 
 		{
 			id: "actions",

@@ -1,4 +1,5 @@
 import { type TOrderIdPageKeys, type TOrdersPageKeys } from "@/shared/config";
+import type { BadgeVariant } from "@/shared/ui";
 
 import {
 	ENUM_CLIENT_TYPE_OPTIONS,
@@ -12,6 +13,15 @@ export const CLIENT_TYPE_LABELS: Record<
 	[ENUM_CLIENT_TYPE_OPTIONS.AGENCY]: "table.clientTypes.agency",
 	[ENUM_CLIENT_TYPE_OPTIONS.DIRECT]: "table.clientTypes.direct",
 	[ENUM_CLIENT_TYPE_OPTIONS.CORPORATE]: "table.clientTypes.corporate"
+};
+
+export const CLIENT_TYPE_VARIANTS: Record<
+	ENUM_CLIENT_TYPE_OPTIONS_TYPE,
+	BadgeVariant
+> = {
+	[ENUM_CLIENT_TYPE_OPTIONS.AGENCY]: "yellow",
+	[ENUM_CLIENT_TYPE_OPTIONS.DIRECT]: "green",
+	[ENUM_CLIENT_TYPE_OPTIONS.CORPORATE]: "blue"
 };
 
 export const CLIENT_TYPE_LABELS_ID: Record<

@@ -13,6 +13,15 @@ export const INVOICE_STATUS_LABELS: Record<
 	[ENUM_INVOICE_STATUS.UNPAID]: "table.statuses.unpaid",
 	[ENUM_INVOICE_STATUS.PARTIALLY_PAID]: "table.statuses.partially_paid"
 };
+
+export const INVOICE_STATUS_VARIANTS: Record<
+	ENUM_INVOICE_STATUS_TYPE,
+	"default" | "green" | "red" | "yellow"
+> = {
+	[ENUM_INVOICE_STATUS.PAID]: "green",
+	[ENUM_INVOICE_STATUS.UNPAID]: "red",
+	[ENUM_INVOICE_STATUS.PARTIALLY_PAID]: "yellow"
+};
 export const INVOICE_ID_STATUS_LABELS: Record<
 	ENUM_INVOICE_STATUS_TYPE,
 	TInvoiceIdPageKeys

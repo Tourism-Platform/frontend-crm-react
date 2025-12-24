@@ -1,10 +1,14 @@
 {
 	"buttons": {
 		"back": "Назад",
-		"accept": "Принять"
+		"accept": "Принять",
+		"export": "Экспорт",
+		"generate": "Сгенерировать счет",
+		"send": "Отправить ваучер"
 	},
 	"header": {
-		"order_status": "Статус заказа"
+		"order_status": "Статус заказа",
+		"invoice_status": "Статус счета"
 	},
 	"statuses": {
 		"new": "Новый",
@@ -12,7 +16,12 @@
 		"booking": "Бронирование",
 		"in_progress": "В процессе",
 		"completed": "Завершен",
-		"cancelled": "Отменен"
+		"cancelled": "Отменен",
+		"invoice": {
+			"paid": "Оплачено",
+			"partially_paid": "Частично оплачено",
+			"unpaid": "Не оплачено"
+		}
 	},
 	"order_info": {
 		"title": "Информация о заказе",
@@ -61,7 +70,10 @@
 			"item": "Наименование",
 			"supplier": "Поставщик",
 			"planned_cost": "Плановая стоимость",
-			"estimated_revenue": "Ожидаемая выручка"
+			"estimated_revenue": "Ожидаемая выручка",
+			"action": "Действие",
+			"apply": "Применить",
+			"applied": "Применено"
 		}
 	},
 	"pax_information": {

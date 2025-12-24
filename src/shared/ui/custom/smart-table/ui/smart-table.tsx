@@ -14,7 +14,7 @@ import {
 	useReactTable
 } from "@tanstack/react-table";
 import { LayoutGridIcon, StretchHorizontalIcon } from "lucide-react";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 import {
 	Button,
@@ -68,16 +68,24 @@ export function SmartTable<TData extends object>({
 		pageSize: 10
 	});
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [columnOrder, setColumnOrder] = useState<string[]>(
-		columns
+	const getColumnIds = (cols: typeof columns) =>
+		cols
 			.map((column) => {
 				if ("id" in column && column.id) return column.id as string;
 				if ("accessorKey" in column && column.accessorKey)
 					return column.accessorKey as string;
 				return "";
 			})
-			.filter(Boolean)
+			.filter(Boolean);
+
+	const [columnOrder, setColumnOrder] = useState<string[]>(
+		getColumnIds(columns)
 	);
+
+	// Синхронизация columnOrder при изменении columns
+	useEffect(() => {
+		setColumnOrder(getColumnIds(columns));
+	}, [columns]);
 
 	const table = useReactTable({
 		data,

@@ -36,6 +36,11 @@
 		"booking": "Booking",
 		"in_progress": "In progress",
 		"completed": "Completed",
-		"cancelled": "Cancelled"
+		"cancelled": "Cancelled",
+		"invoice": {
+			"paid": "Paid",
+			"partially_paid": "Partially paid",
+			"unpaid": "Unpaid"
+		}
 	}
 }

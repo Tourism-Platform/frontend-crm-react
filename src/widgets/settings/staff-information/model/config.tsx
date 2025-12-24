@@ -1,15 +1,15 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, type BadgeVariant, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox } from "@/shared/ui";
 
 import {
 	type ENUM_STAFF_ROLE_OPTIONS_TYPE,
-	ENUM_STAFF_STATUS_OPTIONS,
 	type ENUM_STAFF_STATUS_OPTIONS_TYPE,
 	type IStaffUser,
 	STAFF_ROLE_LABELS,
-	STAFF_STATUS_LABELS
+	STAFF_STATUS_LABELS,
+	STAFF_STATUS_VARIANTS
 } from "@/entities/staff";
 
 import { StaffActions } from "../ui";
@@ -85,23 +85,8 @@ export const COLUMNS = (
 					"status"
 				) as ENUM_STAFF_STATUS_OPTIONS_TYPE;
 
-				let variant: BadgeVariant = "default";
-				switch (status) {
-					case ENUM_STAFF_STATUS_OPTIONS.ACTIVE:
-						variant = "green";
-						break;
-					case ENUM_STAFF_STATUS_OPTIONS.INACTIVE:
-						variant = "red";
-						break;
-					case ENUM_STAFF_STATUS_OPTIONS.PENDING:
-						variant = "yellow";
-						break;
-					default:
-						variant = "default";
-				}
-
 				return (
-					<Badge variant={variant}>
+					<Badge variant={STAFF_STATUS_VARIANTS[status]}>
 						{t(STAFF_STATUS_LABELS[status])}
 					</Badge>
 				);

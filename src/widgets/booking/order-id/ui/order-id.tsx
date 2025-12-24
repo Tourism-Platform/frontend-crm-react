@@ -45,7 +45,11 @@ export const OrderId: FC = () => {
 
 	return (
 		<div className="flex flex-col gap-8">
-			<OrderHeader orderId={order.orderId} status={order.status} />
+			<OrderHeader
+				orderId={order.orderId}
+				status={order.status}
+				invoiceStatus={order.invoiceStatus}
+			/>
 
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 				<OrderInfoCard
@@ -67,6 +71,7 @@ export const OrderId: FC = () => {
 			<OrderTourReview
 				items={order.tourReview}
 				summary={order.tourSummary}
+				orderStatus={order.status}
 			/>
 
 			<OrderPaxReview items={order.paxDetails} />

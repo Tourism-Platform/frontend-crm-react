@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Badge, type BadgeVariant, Button } from "@/shared/ui";
+import { Badge, Button } from "@/shared/ui";
 
 import {
-	ENUM_INVOICE_STATUS,
 	type ENUM_INVOICE_STATUS_TYPE,
-	INVOICE_ID_STATUS_LABELS
+	INVOICE_ID_STATUS_LABELS,
+	INVOICE_STATUS_VARIANTS
 } from "@/entities/finance";
 
 interface IInvoiceHeaderProps {
@@ -27,21 +27,6 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 	dueDate
 }) => {
 	const { t } = useTranslation("invoice_id_page");
-
-	const getStatusClasses = (
-		status: ENUM_INVOICE_STATUS_TYPE
-	): BadgeVariant => {
-		switch (status) {
-			case ENUM_INVOICE_STATUS.PAID:
-				return "green";
-			case ENUM_INVOICE_STATUS.UNPAID:
-				return "red";
-			case ENUM_INVOICE_STATUS.PARTIALLY_PAID:
-				return "yellow";
-			default:
-				return "default";
-		}
-	};
 
 	return (
 		<div className="grid gap-5">
@@ -63,7 +48,7 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 					<div className="flex gap-3">
 						<h1 className="text-3xl">{paymentId}</h1>
 						<Badge
-							variant={getStatusClasses(status)}
+							variant={INVOICE_STATUS_VARIANTS[status]}
 							className={cn(
 								"px-3 py-2 text-xs font-bold uppercase rounded-md"
 							)}

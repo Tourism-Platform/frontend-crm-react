@@ -10,6 +10,7 @@ import {
 } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
+import { type ENUM_ORDER_STATUS_TYPE } from "@/entities/booking";
 import { type ITourReviewItem, type ITourSummary } from "@/entities/tour";
 
 import { TOUR_REVIEW_COLUMNS } from "../model";
@@ -17,9 +18,14 @@ import { TOUR_REVIEW_COLUMNS } from "../model";
 interface IOrderTourReviewProps {
 	items: ITourReviewItem[];
 	summary: ITourSummary;
+	orderStatus?: ENUM_ORDER_STATUS_TYPE;
 }
 
-export const OrderTourReview = ({ items, summary }: IOrderTourReviewProps) => {
+export const OrderTourReview = ({
+	items,
+	summary,
+	orderStatus
+}: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
 
 	return (
@@ -55,13 +61,11 @@ export const OrderTourReview = ({ items, summary }: IOrderTourReviewProps) => {
 			<CardContent>
 				<SmartTable
 					data={items}
-					columns={TOUR_REVIEW_COLUMNS()}
+					columns={TOUR_REVIEW_COLUMNS(orderStatus)}
 					getSubRows={(row) => row.subRows}
 					showPagination={true}
 					showStatusFilter={false}
 					tableLayout={{
-						columnsDraggable: true,
-						columnsResizable: false,
 						rowBorder: true,
 						headerBackground: false
 					}}
