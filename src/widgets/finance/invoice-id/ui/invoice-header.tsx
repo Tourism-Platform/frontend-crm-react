@@ -49,9 +49,7 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 						<h1 className="text-3xl">{paymentId}</h1>
 						<Badge
 							variant={INVOICE_STATUS_VARIANTS[status]}
-							className={cn(
-								"px-3 py-2 text-xs font-bold uppercase rounded-md"
-							)}
+							className={cn("px-3 py-2 text-xs font-bold")}
 						>
 							{t(INVOICE_ID_STATUS_LABELS[status])}
 						</Badge>

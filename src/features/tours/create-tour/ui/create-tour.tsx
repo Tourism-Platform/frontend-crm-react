@@ -4,6 +4,7 @@ import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { TOUR_CATEGORY_OPTIONS } from "@/shared/config";
 import {
 	Button,
 	CustomField,
@@ -42,7 +43,8 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 			tourType: undefined,
 			groupSize: undefined,
 			duration: { from: undefined, to: undefined },
-			ageRequires: { from: undefined, to: undefined }
+			ageRequires: { from: undefined, to: undefined },
+			tourCategories: []
 		}
 	});
 
@@ -102,6 +104,17 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 								label="create.form.fields.ageRequires.label"
 								placeholder_left="create.form.fields.ageRequires.placeholder_left"
 								placeholder_right="create.form.fields.ageRequires.placeholder_right"
+								t={t}
+							/>
+							<CustomField
+								control={form?.control}
+								name={ENUM_FORM_CREATE_TOUR.TOUR_CATEGORIES}
+								label="create.form.fields.tourCategories.label"
+								placeholder="create.form.fields.tourCategories.placeholder"
+								options={TOUR_CATEGORY_OPTIONS}
+								fieldType="multiselect"
+								className="col-span-2"
+								badgeVariant="secondary"
 								t={t}
 							/>
 						</div>

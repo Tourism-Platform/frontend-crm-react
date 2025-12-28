@@ -33,5 +33,13 @@ export const CREATE_TOUR_SCHEMA = z.object({
 		to: z
 			.number({ message: "create.form.errors.ageRequires.to.required" })
 			.min(0, "create.form.errors.ageRequires.to.required")
-	})
+	}),
+	tourCategories: z
+		.array(
+			z.object({
+				label: z.string(),
+				value: z.string()
+			})
+		)
+		.min(1, "create.form.errors.tourCategories.required")
 });

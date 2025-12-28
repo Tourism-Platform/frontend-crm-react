@@ -7,3 +7,4 @@ export * from "./local-storage.config";
 export * from "./package-options";
 export * from "./tour-amenities-options";
 export * from "./utc-options";
+export * from "./tour-categories-options";

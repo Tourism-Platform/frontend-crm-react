@@ -57,7 +57,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 								<Badge
 									variant={ORDER_STATUS_VARIANTS[status]}
 									className={cn(
-										"px-3 py-1 text-xs font-bold uppercase rounded-md"
+										"px-3 py-1 text-xs font-bold"
 									)}
 								>
 									{t(ORDER_STATUS_LABELS[status])}
@@ -76,7 +76,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 											]
 										}
 										className={cn(
-											"px-3 py-1 text-xs font-bold uppercase rounded-md"
+											"px-3 py-1 text-xs font-bold"
 										)}
 									>
 										{t(

@@ -41,6 +41,10 @@
 					"label": "Age requires",
 					"placeholder_left": "From",
 					"placeholder_right": "To"
+				},
+				"tourCategories": {
+					"label": "Tour Categories",
+					"placeholder": "Select categories..."
 				}
 			},
 			"buttons": {
@@ -75,6 +79,9 @@
 					"to": {
 						"required": "Required"
 					}
+				},
+				"tourCategories": {
+					"required": "Select at least one category"
 				}
 			}
 		}

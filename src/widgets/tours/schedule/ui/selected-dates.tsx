@@ -16,10 +16,7 @@ export const SelectedDates: FC<ISelectedDatesProps> = ({ date, onDelete }) => {
 			<h2>{t("selected_dates.title")}</h2>
 			<div className="flex gap-2">
 				{date?.map((item, index) => (
-					<Badge
-						className="p-2 rounded-md text-base flex gap-2"
-						key={index}
-					>
+					<Badge className="p-2 text-base flex gap-2" key={index}>
 						<p>{item.toLocaleDateString()}</p>
 						<button
 							onClick={() => onDelete(item)}
