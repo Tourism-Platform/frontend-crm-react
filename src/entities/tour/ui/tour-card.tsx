@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { Link } from "react-router-dom";
 
 import { FlagIcon, MoneysIcon, UsersOutlineIcon } from "@/shared/assets";
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import {
 	Badge,
 	Card,
@@ -33,10 +33,9 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 				<CardTitle className="truncate">
 					<Link
 						className="hover:underline hover:text-primary"
-						to={ENUM_PATH.TOURS.OVERVIEW.replace(
-							":tourId",
-							card.id
-						)}
+						to={buildRoute(ENUM_PATH.TOURS.OVERVIEW, {
+							tourId: card.id
+						})}
 					>
 						{card.title}
 					</Link>

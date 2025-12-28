@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import { Badge, Button, Checkbox } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
@@ -139,10 +139,9 @@ export const COLUMNS = (): ColumnDef<IReconciliation>[] => {
 			cell: ({ row }) => (
 				<Button variant="outline" size="sm" asChild>
 					<Link
-						to={ENUM_PATH.FINANCE.RECONCILIATION_ID.replace(
-							":reconciliationId",
-							row.original.id
-						)}
+						to={buildRoute(ENUM_PATH.FINANCE.RECONCILIATION_ID, {
+							reconciliationId: row.original.id
+						})}
 					>
 						{t("table.menu.open")}
 					</Link>

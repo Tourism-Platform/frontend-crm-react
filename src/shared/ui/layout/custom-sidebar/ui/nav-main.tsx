@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, matchPath, useLocation, useParams } from "react-router-dom";
 
+import { type TToursPath, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import {
 	SidebarGroup,
@@ -33,7 +34,10 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 							);
 							let toPath: string = subItem.path;
 							if (tourId)
-								toPath = toPath.replace(":tourId", tourId);
+								toPath = buildRoute(
+									subItem.path as TToursPath,
+									{ tourId: tourId }
+								);
 							return (
 								<SidebarMenuButton
 									tooltip={t(subItem?.label)}

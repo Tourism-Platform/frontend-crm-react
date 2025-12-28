@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Checkbox } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
@@ -46,10 +46,9 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 			accessorKey: "paymentId",
 			cell: ({ row }) => (
 				<Link
-					to={ENUM_PATH.FINANCE.INVOICE_ID.replace(
-						":invoiceId",
-						row.getValue("paymentId")
-					)}
+					to={buildRoute(ENUM_PATH.FINANCE.INVOICE_ID, {
+						invoiceId: row.getValue("paymentId")
+					})}
 					className="font-medium text-primary hover:underline"
 				>
 					{row.getValue("paymentId")}

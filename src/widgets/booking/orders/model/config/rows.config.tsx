@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Checkbox } from "@/shared/ui";
 
 import {
@@ -59,10 +59,9 @@ export const COLUMNS = (
 			accessorKey: "orderId",
 			cell: ({ row }) => (
 				<Link
-					to={ENUM_PATH.BOOKING.ORDER_ID.replace(
-						":orderId",
-						row.getValue("orderId")
-					)}
+					to={buildRoute(ENUM_PATH.BOOKING.ORDER_ID, {
+						orderId: row.getValue("orderId")
+					})}
 					className="font-medium text-primary hover:underline"
 				>
 					{row.getValue("orderId")}

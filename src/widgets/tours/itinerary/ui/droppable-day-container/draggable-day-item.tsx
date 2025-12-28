@@ -6,6 +6,7 @@ import type { FC } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { InfoCircleIcon } from "@/shared/assets";
+import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import { Button, Card, CardContent } from "@/shared/ui";
 
@@ -61,9 +62,10 @@ export const DraggableDayItem: FC<{
 	const isMultiplyOption = item.event_type === ENUM_EVENT.MULTIPLY_OPTION;
 
 	const { tourId } = useParams<{ tourId: string }>();
-	const href = (EVENT_TYPE_TO_PATH[item.event_type] || "")
-		.replace(":tourId", tourId || "")
-		.replace(":eventId", item.id);
+	const href = buildRoute(EVENT_TYPE_TO_PATH[item.event_type] || "", {
+		tourId: tourId || "",
+		eventId: item.id
+	});
 
 	const content = (
 		<Card
