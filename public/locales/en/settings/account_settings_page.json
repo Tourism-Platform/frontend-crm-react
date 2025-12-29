@@ -16,7 +16,8 @@
 					"placeholder": "Enter your login",
 					"errors": {
 						"min": "Login must contain at least 3 characters",
-						"max": "Login is too long"
+						"max": "Login is too long",
+						"required": "Login is required"
 					}
 				},
 				"first_name": {
@@ -24,7 +25,8 @@
 					"placeholder": "Enter your first name",
 					"errors": {
 						"min": "First name is too short",
-						"max": "First name is too long"
+						"max": "First name is too long",
+						"required": "First name is required"
 					}
 				},
 				"last_name": {
@@ -32,21 +34,27 @@
 					"placeholder": "Enter your last name",
 					"errors": {
 						"min": "Last name is too short",
-						"max": "Last name is too long"
+						"max": "Last name is too long",
+						"required": "Last name is required"
 					}
 				},
 				"title": {
 					"label": "Title",
 					"placeholder": "Enter your title",
 					"errors": {
-						"max": "Title is too long"
+						"min": "Title is too short",
+						"max": "Title is too long",
+						"required": "Title is required"
 					}
 				},
 				"phone_number": {
 					"label": "Phone number",
 					"placeholder": "Enter your phone number",
 					"errors": {
-						"pattern": "Enter a valid phone number"
+						"min": "Phone number is too short",
+						"max": "Phone number is too long",
+						"pattern": "Enter a valid phone number",
+						"required": "Phone number is required"
 					}
 				}
 			}
@@ -59,20 +67,25 @@
 					"placeholder": "Uzbekistan",
 					"errors": {
 						"min": "Location is too short",
-						"max": "Location is too long"
+						"max": "Location is too long",
+						"required": "Location is required"
 					}
 				},
 				"currency": {
 					"label": "Default currency",
-					"placeholder": "USD",
+					"placeholder": "Select currency",
 					"errors": {
+						"min": "Currency is not selected",
+						"max": "Currency code is too long",
 						"required": "Currency selection is required"
 					}
 				}
 			}
 		},
 		"buttons": {
-			"save": "Save"
+			"save": "Save",
+			"loading": "Loading",
+			"saving": "Saving"
 		}
 	}
 }

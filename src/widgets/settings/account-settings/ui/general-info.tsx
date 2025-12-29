@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField } from "@/shared/ui";
 
-import { GENERAL_ACCOUNT_DATA_LIST, type TChangeAccountSchema } from "../model";
+import type { TAccountSchema } from "@/entities/user";
+
+import { GENERAL_ACCOUNT_DATA_LIST } from "../model";
 
 interface IGeneralInfoProps {
-	form: UseFormReturn<TChangeAccountSchema>;
+	form: UseFormReturn<TAccountSchema>;
 }
 
 export const GeneralInfo: FC<IGeneralInfoProps> = ({ form }) => {
