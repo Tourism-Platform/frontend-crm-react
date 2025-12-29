@@ -18,6 +18,7 @@ import {
 	type MultipleSelectorDisplayMode,
 	type Option as MultipleSelectorOption,
 	PasswordInput,
+	PhoneInput,
 	SelectPicker,
 	type SelectPickerProps,
 	Textarea,
@@ -28,6 +29,7 @@ import {
 export type CustomFieldVariant =
 	| "input"
 	| "password"
+	| "phone"
 	| "textarea"
 	| "time"
 	| "date"
@@ -51,6 +53,10 @@ type TextFieldVariant = BaseFieldProps & {
 
 type PasswordFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "password">;
+} & Omit<ComponentProps<typeof Input>, "type">;
+
+type PhoneFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "phone">;
 } & Omit<ComponentProps<typeof Input>, "type">;
 
 type TextareaFieldVariant = BaseFieldProps & {
@@ -88,6 +94,7 @@ type MultiselectFieldVariant = BaseFieldProps & {
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
+	| PhoneFieldVariant
 	| TextareaFieldVariant
 	| TimeFieldVariant
 	| DateFieldVariant
@@ -128,6 +135,15 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				return (
 					<PasswordInput
 						{...rest}
+						placeholder={t(props.placeholder)}
+						{...field}
+					/>
+				);
+			case "phone":
+				return (
+					<PhoneInput
+						{...rest}
+						international
 						placeholder={t(props.placeholder)}
 						{...field}
 					/>

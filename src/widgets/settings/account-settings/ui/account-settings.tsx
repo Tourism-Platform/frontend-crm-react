@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC } from "react";
-import { useEffect } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { Button, Card, CardContent, Form, Separator } from "@/shared/ui";
 
@@ -21,8 +21,11 @@ import { PersonalInfo } from "./personal-info";
 export const AccountSettings: FC = () => {
 	const { t } = useTranslation("account_settings_page");
 
-	const { data: accountData, isLoading: isAccountLoading } =
-		useGetAccountQuery();
+	const {
+		data: accountData,
+		isLoading: isAccountLoading,
+		isError: isAccountError
+	} = useGetAccountQuery();
 	const [updateAccount, { isLoading: isUpdating }] =
 		useUpdateAccountMutation();
 
@@ -37,12 +40,19 @@ export const AccountSettings: FC = () => {
 		}
 	}, [accountData, form.reset]);
 
+	useEffect(() => {
+		if (isAccountError) {
+			toast.error(t("form.toasts.load.error"));
+		}
+	}, [isAccountError, t]);
+
 	async function onSubmit(data: TAccountSchema) {
 		try {
 			await updateAccount(data).unwrap();
-			console.log("Form updated successfully");
+			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
-			console.error("Failed to update account:", error);
+			toast.error(t("form.toasts.save.error"));
+			console.log(error);
 		}
 	}
 	return (

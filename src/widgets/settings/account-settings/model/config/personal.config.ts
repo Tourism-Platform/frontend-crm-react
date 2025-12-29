@@ -31,6 +31,6 @@ export const PERSONAL_CHANGE_ACCOUNT_LIST: TForm[] = [
 		label: "form.personal.fields.phone_number.label",
 		placeholder: "form.personal.fields.phone_number.placeholder",
 		key: ENUM_FORM_ACCOUNT.PHONE_NUMBER,
-		fieldType: "input"
+		fieldType: "phone"
 	}
 ];

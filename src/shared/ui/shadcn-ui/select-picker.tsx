@@ -17,6 +17,7 @@ export interface SelectPickerOption {
 }
 
 export interface SelectPickerProps {
+	value?: string;
 	defaultValue?: string;
 	onChange?: (value: string) => void;
 	options: SelectPickerOption[];
@@ -31,6 +32,7 @@ export const SelectPicker = React.forwardRef<
 >(
 	(
 		{
+			value,
 			defaultValue,
 			onChange,
 			options,
@@ -45,6 +47,7 @@ export const SelectPicker = React.forwardRef<
 			<Select
 				onValueChange={onChange}
 				defaultValue={defaultValue}
+				value={value}
 				disabled={disabled}
 			>
 				<SelectTrigger
