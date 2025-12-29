@@ -76,20 +76,15 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_CREATE_TOUR_LIST.map(
-								({ key, ...item }, index) => (
-									<CustomField
-										className={
-											index === 0 ? "col-span-2" : ""
-										}
-										key={key}
-										control={form?.control}
-										name={key}
-										t={t}
-										{...item}
-									/>
-								)
-							)}
+							{FORM_CREATE_TOUR_LIST.map(({ key, ...item }) => (
+								<CustomField
+									key={key}
+									control={form?.control}
+									name={key}
+									t={t}
+									{...item}
+								/>
+							))}
 							<CustomRangeField
 								control={form?.control}
 								name={ENUM_FORM_CREATE_TOUR.DURATION}

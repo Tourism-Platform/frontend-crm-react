@@ -7,3 +7,4 @@ export * from "./events";
 export * from "./activity-log";
 export * from "./pricing-review";
 export * from "./landing";
+export * from "./settings";

@@ -33,6 +33,7 @@ import tour_order_history_page from "../../../../public/locales/en/tours/tour_or
 import tour_overview_page from "../../../../public/locales/en/tours/tour_overview_page.json";
 import tour_pricing_review_page from "../../../../public/locales/en/tours/tour_pricing_review_page.json";
 import tour_schedule_page from "../../../../public/locales/en/tours/tour_schedule_page.json";
+import tour_settings_page from "../../../../public/locales/en/tours/tour_settings_page.json";
 import tours_page from "../../../../public/locales/en/tours/tours_page.json";
 
 import type { TNestedKeyOf } from "./i18n.types";
@@ -69,8 +70,10 @@ export type TLoginPage = typeof login_page;
 export type TOrdersPage = typeof orders_page;
 export type TTourActivityLogPage = typeof tour_activity_log_page;
 export type TTourPricingReviewPage = typeof tour_pricing_review_page;
+export type TTourSettingsPage = typeof tour_settings_page;
 
 export type TOrderIdPage = typeof order_id_page;
+export type TLandingPage = typeof landing_page;
 
 export type TResources = {
 	header: THeader;
@@ -106,7 +109,8 @@ export type TResources = {
 	order_id_page: TOrderIdPage;
 	tour_activity_log_page: TTourActivityLogPage;
 	tour_pricing_review_page: TTourPricingReviewPage;
-	landing_page: typeof landing_page;
+	tour_settings_page: TTourSettingsPage;
+	landing_page: TLandingPage;
 };
 
 export const NS = [
@@ -143,6 +147,7 @@ export const NS = [
 	"order_id_page",
 	"tour_activity_log_page",
 	"tour_pricing_review_page",
+	"tour_settings_page",
 	"landing_page"
 ] as const;
 
@@ -193,4 +198,5 @@ export type TOrdersPageKeys = TNestedKeyOf<TOrdersPage>;
 export type TOrderIdPageKeys = TNestedKeyOf<TOrderIdPage>;
 export type TTourActivityLogPageKeys = TNestedKeyOf<TTourActivityLogPage>;
 export type TTourPricingReviewPageKeys = TNestedKeyOf<TTourPricingReviewPage>;
-export type TLandingPageKeys = TNestedKeyOf<typeof landing_page>;
+export type TTourSettingsPageKeys = TNestedKeyOf<TTourSettingsPage>;
+export type TLandingPageKeys = TNestedKeyOf<TLandingPage>;

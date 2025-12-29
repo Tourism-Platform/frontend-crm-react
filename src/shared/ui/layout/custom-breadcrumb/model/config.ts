@@ -29,6 +29,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.TOURS.ORDER_HISTORY]: "owner.tours.more.menu.order_history",
 	[ENUM_PATH.TOURS.MESSAGES]: "owner.tours.more.menu.messages",
 	[ENUM_PATH.TOURS.ACTIVITY_LOG]: "owner.tours.more.menu.activity_log",
+	[ENUM_PATH.TOURS.SETTINGS]: "owner.tours.more.menu.settings",
 
 	// Booking
 	[ENUM_PATH.BOOKING.ROOT]: "owner.booking.title",

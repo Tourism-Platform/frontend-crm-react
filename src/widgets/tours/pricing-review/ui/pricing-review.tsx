@@ -26,7 +26,7 @@ export const PricingReview: FC = () => {
 	return (
 		<section className="flex flex-col gap-6 container">
 			<TourHeader
-				title={t("title", {
+				title={t("page_name", {
 					name: "Embark on an Unforgettable Archaeological Journey"
 				})}
 				badgeText="Planning"

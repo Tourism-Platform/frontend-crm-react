@@ -1,0 +1,101 @@
+{
+	"page_name": "Settings of tour {{name}}",
+	"tabs": {
+		"general": "General",
+		"finance": "Finance settings"
+	},
+	"general": {
+		"title": "General information",
+		"buttons": {
+			"save": "Save"
+		},
+		"form": {
+			"fields": {
+				"tourTitle": {
+					"label": "Tour Title",
+					"placeholder": "Enter..."
+				},
+				"tourType": {
+					"label": "Tour type",
+					"placeholder": "Enter..."
+				},
+				"groupSize": {
+					"label": "Group size",
+					"placeholder": "Enter..."
+				},
+				"duration": {
+					"label": "Duration",
+					"placeholder_left": "Days",
+					"placeholder_right": "Nights"
+				},
+				"ageRequires": {
+					"label": "Age requires",
+					"placeholder_left": "From",
+					"placeholder_right": "To"
+				},
+				"tourCategories": {
+					"label": "Tour category",
+					"placeholder": "Select categories..."
+				}
+			},
+			"errors": {
+				"tourTitle": {
+					"min": "Minimum 3 characters",
+					"max": "Maximum 100 characters"
+				},
+				"tourType": {
+					"required": "Select tour type"
+				},
+				"groupSize": {
+					"required": "Specify group size",
+					"min": "Minimum 1 person"
+				},
+				"duration": {
+					"from": {
+						"required": "Required"
+					},
+					"to": {
+						"required": "Required"
+					}
+				},
+				"ageRequires": {
+					"from": {
+						"required": "Required"
+					},
+					"to": {
+						"required": "Required"
+					}
+				},
+				"tourCategories": {
+					"required": "Select at least one category"
+				}
+			}
+		}
+	},
+	"finance": {
+		"title": "Pricing view",
+		"buttons": {
+			"save": "Save"
+		},
+		"form": {
+			"fields": {
+				"currencyType": {
+					"label": "Currency type",
+					"placeholder": "Select..."
+				},
+				"pricingVisibility": {
+					"label": "Pricing visibility",
+					"placeholder": "Select..."
+				}
+			},
+			"errors": {
+				"currencyType": {
+					"required": "Select currency"
+				},
+				"pricingVisibility": {
+					"required": "Select visibility"
+				}
+			}
+		}
+	}
+}

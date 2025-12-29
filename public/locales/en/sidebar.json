@@ -37,7 +37,8 @@
 				"menu": {
 					"order_history": "Order history",
 					"messages": "Messages",
-					"activity_log": "Activity log"
+					"activity_log": "Activity log",
+					"settings": "Settings"
 				}
 			}
 		},

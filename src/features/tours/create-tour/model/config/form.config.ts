@@ -7,7 +7,8 @@ export const FORM_CREATE_TOUR_LIST: TForm[] = [
 		label: "create.form.fields.tourTitle.label",
 		placeholder: "create.form.fields.tourTitle.placeholder",
 		key: ENUM_FORM_CREATE_TOUR.TOUR_TITLE,
-		fieldType: "input"
+		fieldType: "input",
+		className: "col-span-2"
 	},
 	{
 		label: "create.form.fields.tourType.label",

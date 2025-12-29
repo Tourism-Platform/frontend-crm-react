@@ -37,7 +37,8 @@
 				"menu": {
 					"order_history": "История заказов",
 					"messages": "Сообщения",
-					"activity_log": "Журнал активности"
+					"activity_log": "Журнал активности",
+					"settings": "Настройки"
 				}
 			}
 		},

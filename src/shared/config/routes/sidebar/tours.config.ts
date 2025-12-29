@@ -6,7 +6,8 @@ import {
 	HealthIcon,
 	MapPinIcon,
 	MessagesCircleIcon,
-	PercentCircleIcon
+	PercentCircleIcon,
+	SettingsIcon
 } from "@/shared/assets";
 import { ENUM_PATH } from "@/shared/config";
 import type { ISidebarMenu } from "@/shared/ui";
@@ -59,6 +60,11 @@ export const TOURS_SIDEBAR_LIST: ISidebarMenu[] = [
 				label: "owner.tours.more.menu.activity_log",
 				path: ENUM_PATH.TOURS.ACTIVITY_LOG,
 				icon: HealthIcon
+			},
+			{
+				label: "owner.tours.more.menu.settings",
+				path: ENUM_PATH.TOURS.SETTINGS,
+				icon: SettingsIcon
 			}
 		]
 	}

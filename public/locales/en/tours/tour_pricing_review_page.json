@@ -1,5 +1,5 @@
 {
-	"title": "Pricing and review of tour {{name}}",
+	"page_name": "Pricing and review of tour {{name}}",
 	"tabs": {
 		"add": "Add option"
 	},

@@ -1,0 +1,101 @@
+{
+	"page_name": "Настройки тура {{name}}",
+	"tabs": {
+		"general": "Основное",
+		"finance": "Финансовые настройки"
+	},
+	"general": {
+		"title": "Общая информация",
+		"buttons": {
+			"save": "Сохранить"
+		},
+		"form": {
+			"fields": {
+				"tourTitle": {
+					"label": "Название тура",
+					"placeholder": "Введите..."
+				},
+				"tourType": {
+					"label": "Тип тура",
+					"placeholder": "Введите..."
+				},
+				"groupSize": {
+					"label": "Размер группы",
+					"placeholder": "Введите..."
+				},
+				"duration": {
+					"label": "Длительность",
+					"placeholder_left": "Дней",
+					"placeholder_right": "Ночей"
+				},
+				"ageRequires": {
+					"label": "Возрастные ограничения",
+					"placeholder_left": "От",
+					"placeholder_right": "До"
+				},
+				"tourCategories": {
+					"label": "Категория тура",
+					"placeholder": "Выберите категории..."
+				}
+			},
+			"errors": {
+				"tourTitle": {
+					"min": "Минимум 3 символа",
+					"max": "Максимум 100 символов"
+				},
+				"tourType": {
+					"required": "Выберите тип тура"
+				},
+				"groupSize": {
+					"required": "Укажите размер группы",
+					"min": "Минимум 1 человек"
+				},
+				"duration": {
+					"from": {
+						"required": "Обязательно"
+					},
+					"to": {
+						"required": "Обязательно"
+					}
+				},
+				"ageRequires": {
+					"from": {
+						"required": "Обязательно"
+					},
+					"to": {
+						"required": "Обязательно"
+					}
+				},
+				"tourCategories": {
+					"required": "Выберите хотя бы одну категорию"
+				}
+			}
+		}
+	},
+	"finance": {
+		"title": "Ценообразование",
+		"buttons": {
+			"save": "Сохранить"
+		},
+		"form": {
+			"fields": {
+				"currencyType": {
+					"label": "Валюта",
+					"placeholder": "Выберите..."
+				},
+				"pricingVisibility": {
+					"label": "Отображение цены",
+					"placeholder": "Выберите..."
+				}
+			},
+			"errors": {
+				"currencyType": {
+					"required": "Выберите валюту"
+				},
+				"pricingVisibility": {
+					"required": "Выберите видимость"
+				}
+			}
+		}
+	}
+}

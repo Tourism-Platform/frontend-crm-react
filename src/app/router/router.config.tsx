@@ -55,6 +55,7 @@ import {
 	OverviewPage,
 	PricingReviewPage,
 	SchedulePage,
+	SettingsPage,
 	ToursPage,
 	TransportationEditPage
 } from "@/pages/tours";
@@ -301,6 +302,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.TOURS.ACTIVITY_LOG,
 		component: ActivityLogPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOwnerLayout>
+			),
+			TourOwnerLayout
+		]
+	},
+	{
+		path: ENUM_PATH.TOURS.SETTINGS,
+		component: SettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [
