@@ -17,8 +17,16 @@ import { SignInForm } from "./sign-in-form";
 import { SignUpForm } from "./sign-up-form";
 
 export const LoginForm: FC = () => {
-	const { handleSignIn, isLoading: isLoadingSignIn } = useSignInAction();
-	const { handleSignUp, isLoading: isLoadingSignUp } = useSignUpAction();
+	const {
+		handleSignIn,
+		isLoading: isLoadingSignIn,
+		error: signInError
+	} = useSignInAction();
+	const {
+		handleSignUp,
+		isLoading: isLoadingSignUp,
+		error: signUpError
+	} = useSignUpAction();
 
 	const form = useForm<TLoginSchema>({
 		resolver: zodResolver(LOGIN_SCHEMA),
@@ -44,9 +52,17 @@ export const LoginForm: FC = () => {
 			<form onSubmit={form.handleSubmit(onSubmit)}>
 				{form.watch(ENUM_FORM_LOGIN.LOGIN_TYPE) ===
 				ENUM_LOGIN.SIGN_IN ? (
-					<SignInForm form={form} isLoading={isLoadingSignIn} />
+					<SignInForm
+						form={form}
+						isLoading={isLoadingSignIn}
+						error={signInError}
+					/>
 				) : (
-					<SignUpForm form={form} isLoading={isLoadingSignUp} />
+					<SignUpForm
+						form={form}
+						isLoading={isLoadingSignUp}
+						error={signUpError}
+					/>
 				)}
 				<div
 					onClick={() => {

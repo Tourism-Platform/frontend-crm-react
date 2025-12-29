@@ -42,6 +42,7 @@ type BaseFieldProps = {
 	t: TFunction<any>;
 	className?: string;
 	disabled?: boolean;
+	externalError?: string;
 };
 
 type TextFieldVariant = BaseFieldProps & {
@@ -95,7 +96,16 @@ type CustomFieldProps =
 	| EditorFieldVariant;
 
 export const CustomField: FC<CustomFieldProps> = (props) => {
-	const { control, name, label, t, className, fieldType, ...rest } = props;
+	const {
+		control,
+		name,
+		label,
+		t,
+		className,
+		fieldType,
+		externalError,
+		...rest
+	} = props;
 
 	const renderInput = (field: any) => {
 		switch (fieldType) {
@@ -208,7 +218,9 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 					<FormMessage
 						t={t}
 						className="absolute bottom-[-20px] left-1"
-					/>
+					>
+						{externalError}
+					</FormMessage>
 				</FormItem>
 			)}
 		/>

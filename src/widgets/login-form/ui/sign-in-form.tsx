@@ -1,3 +1,5 @@
+import { type SerializedError } from "@reduxjs/toolkit";
+import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { Loader } from "lucide-react";
 import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
@@ -15,9 +17,14 @@ import {
 interface ISignInFormProps {
 	form: UseFormReturn<TLoginSchema>;
 	isLoading?: boolean;
+	error?: FetchBaseQueryError | SerializedError | unknown;
 }
 
-export const SignInForm: FC<ISignInFormProps> = ({ form, isLoading }) => {
+export const SignInForm: FC<ISignInFormProps> = ({
+	form,
+	isLoading,
+	error
+}) => {
 	const { t } = useTranslation("login_page");
 	return (
 		<div className="flex flex-col gap-6">
@@ -29,15 +36,24 @@ export const SignInForm: FC<ISignInFormProps> = ({ form, isLoading }) => {
 					{t("form.sign_in.description")}
 				</p>
 			</div>
-			{FORM_LOGIN_LIST.map(({ key, ...item }) => (
-				<CustomField
-					key={key}
-					control={form?.control}
-					name={key}
-					t={t}
-					{...item}
-				/>
-			))}
+			<div className="grid gap-1">
+				{FORM_LOGIN_LIST.map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={form?.control}
+						name={key}
+						t={t}
+						{...item}
+						externalError={
+							key === ENUM_FORM_LOGIN.PASSWORD &&
+							error &&
+							(error as FetchBaseQueryError).status === 401
+								? "form.fields.password.errors.server_error"
+								: undefined
+						}
+					/>
+				))}
+			</div>
 			<Button
 				type="submit"
 				className="flex gap-2 items-center justify-center"

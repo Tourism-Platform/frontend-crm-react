@@ -6,7 +6,6 @@
 			"continue": "Or continue with",
 			"sign_up": "Don't have an account?"
 		},
-
 		"sign_up": {
 			"title": "Create your account",
 			"description": "Enter your email and password below to create your account",
@@ -19,7 +18,10 @@
 				"placeholder": "Enter email address",
 				"errors": {
 					"min": "Email is too short",
-					"max": "Email is too long"
+					"max": "Email is too long",
+					"required": "This field is required",
+					"invalid": "Invalid email",
+					"already_exists": "This email is already in use"
 				}
 			},
 			"password": {
@@ -27,7 +29,9 @@
 				"placeholder": "Enter password",
 				"errors": {
 					"min": "Password is too short",
-					"max": "Password is too long"
+					"max": "Password is too long",
+					"required": "This field is required",
+					"server_error": "Invalid email or password"
 				}
 			}
 		},
