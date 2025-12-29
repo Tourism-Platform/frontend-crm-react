@@ -21,7 +21,8 @@
 		"errors": {
 			"current_password": {
 				"required": "Current password is required",
-				"min": "Password must be at least 6 characters"
+				"min": "Password must be at least 6 characters",
+				"incorrect": "Current password is incorrect"
 			},
 			"new_password": {
 				"required": "New password is required",
@@ -39,6 +40,10 @@
 		"buttons": {
 			"decline": "Decline",
 			"save": "Save"
+		},
+		"toasts": {
+			"success": "Password changed successfully",
+			"error": "Error changing password"
 		}
 	}
 }

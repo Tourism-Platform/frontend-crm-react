@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { FC } from "react";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -20,30 +22,46 @@ import {
 
 import {
 	CHANGE_PASSWORD_SCHEMA,
-	FORM_CHANGE_PASSWORD_LIST,
-	type TChangePasswordSchema
-} from "../model";
+	ENUM_FORM_CHANGE_PASSWORD,
+	type TChangePasswordSchema,
+	useChangePasswordMutation
+} from "@/entities/user";
+
+import { FORM_CHANGE_PASSWORD_LIST } from "../model";
 
 export const ChangePassword: FC = () => {
 	const { t } = useTranslation("security_page");
+	const [open, setOpen] = useState<boolean>(false);
+	const [changePassword, { isLoading, error }] = useChangePasswordMutation();
+
 	const form = useForm<TChangePasswordSchema>({
 		resolver: zodResolver(CHANGE_PASSWORD_SCHEMA),
-		defaultValues: {
-			current_password: "",
-			new_password: "",
-			confirm_password: ""
-		},
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TChangePasswordSchema) {
-		console.log("Form submitted:", data);
+
+	async function onSubmit(data: TChangePasswordSchema) {
+		try {
+			await changePassword(data).unwrap();
+			toast.success(t("form.toasts.success"));
+			form.reset();
+			setOpen(false);
+		} catch (error) {
+			toast.error(t("form.toasts.error"));
+			console.log("Error changing password:", error);
+		}
 	}
+
+	const handleClose = () => {
+		form.reset();
+		setOpen(false);
+	};
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button>{t("change_password")}</Button>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent onCloseBtn={handleClose}>
 				<DialogHeader>
 					<DialogTitle>{t("form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
@@ -63,6 +81,15 @@ export const ChangePassword: FC = () => {
 								name={key}
 								t={t}
 								{...item}
+								externalError={
+									key ===
+										ENUM_FORM_CHANGE_PASSWORD.CURRENT_PASSWORD &&
+									error &&
+									(error as FetchBaseQueryError).status ===
+										400
+										? "form.current_password.errors.incorrect"
+										: undefined
+								}
 							/>
 						))}
 						<DialogFooter>
@@ -70,12 +97,12 @@ export const ChangePassword: FC = () => {
 								<Button
 									type="reset"
 									variant="outline"
-									onClick={() => form.reset()}
+									onClick={handleClose}
 								>
 									{t("form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit">
+							<Button type="submit" disabled={isLoading}>
 								{t("form.buttons.save")}
 							</Button>
 						</DialogFooter>

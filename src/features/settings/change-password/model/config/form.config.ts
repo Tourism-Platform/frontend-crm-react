@@ -1,4 +1,6 @@
-import { ENUM_FORM_CHANGE_PASSWORD, type TForm } from "../types";
+import { ENUM_FORM_CHANGE_PASSWORD } from "@/entities/user";
+
+import { type TForm } from "../types";
 
 export const FORM_CHANGE_PASSWORD_LIST: TForm[] = [
 	{

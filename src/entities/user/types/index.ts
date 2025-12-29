@@ -1,2 +1,4 @@
 export * from "./account.types";
 export * from "./account-backend.interface";
+export * from "./password.types";
+export * from "./password-backend.interface";
