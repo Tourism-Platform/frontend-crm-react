@@ -1,5 +1,9 @@
+import { z } from "zod";
+
 import type { TTourSettingsPageKeys } from "@/shared/config";
 import type { TFormField } from "@/shared/types";
+
+import type { GENERAL_FORM_SCHEMA } from "../schema";
 
 export const ENUM_GENERAL_FORM = {
 	TOUR_TITLE: "tourTitle",
@@ -17,3 +21,5 @@ export type TGeneralForm = TFormField<
 	TTourSettingsPageKeys,
 	ENUM_GENERAL_FORM_TYPE
 >;
+
+export type TGeneralFormSchema = z.infer<typeof GENERAL_FORM_SCHEMA>;

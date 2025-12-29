@@ -1,4 +1,6 @@
-import { CURRENCY_OPTIONS, PRICING_VISIBILITY_OPTIONS } from "@/shared/config";
+import { PRICING_VISIBILITY_OPTIONS } from "@/shared/config";
+
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 
 import { ENUM_FINANCE_FORM, type TFinanceForm } from "../types";
 

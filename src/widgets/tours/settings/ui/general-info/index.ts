@@ -1,2 +1,1 @@
 export * from "./general-info";
-export * from "./finance-info";
