@@ -1,4 +1,8 @@
 import { authHandlers } from "@/entities/auth/api/auth.mock";
-import { accountHandlers } from "@/entities/user/handlers/account.handlers";
+import { accountHandlers, businessHandlers } from "@/entities/user/handlers";
 
-export const handlers = [...authHandlers, ...accountHandlers];
+export const handlers = [
+	...authHandlers,
+	...accountHandlers,
+	...businessHandlers
+];

@@ -8,5 +8,5 @@ export const authApi = createApi({
 	baseQuery: authBaseQuery,
 	reducerPath: "authApi",
 	endpoints: () => ({}),
-	tagTypes: [ENUM_API_TAGS.USER]
+	tagTypes: [ENUM_API_TAGS.USER, ENUM_API_TAGS.BUSINESS]
 });

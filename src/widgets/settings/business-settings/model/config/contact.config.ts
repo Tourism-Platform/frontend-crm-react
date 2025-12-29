@@ -1,4 +1,6 @@
-import { ENUM_FORM_CHANGE_BUSINESS, type TForm } from "../types";
+import { ENUM_FORM_CHANGE_BUSINESS } from "@/entities/user";
+
+import { type TForm } from "../types";
 
 export const CONTACT_BUSINESS_DATA_LIST: TForm[] = [
 	{
@@ -17,7 +19,7 @@ export const CONTACT_BUSINESS_DATA_LIST: TForm[] = [
 		label: "form.contact.fields.phone_number.label",
 		placeholder: "form.contact.fields.phone_number.placeholder",
 		key: ENUM_FORM_CHANGE_BUSINESS.CONTACT_PHONE_NUMBER,
-		fieldType: "input"
+		fieldType: "phone"
 	},
 	{
 		label: "form.contact.fields.email.label",

@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField } from "@/shared/ui";
 
-import { LEGAL_BUSINESS_DATA_LIST, type TChangeBusinessSchema } from "../model";
+import type { TBusinessSchema } from "@/entities/user";
+
+import { LEGAL_BUSINESS_DATA_LIST } from "../model";
 
 interface ILegalInfoProps {
-	form: UseFormReturn<TChangeBusinessSchema>;
+	form: UseFormReturn<TBusinessSchema>;
 }
 
 export const LegalInfo: FC<ILegalInfoProps> = ({ form }) => {

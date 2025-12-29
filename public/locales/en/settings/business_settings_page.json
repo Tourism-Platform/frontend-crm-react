@@ -141,7 +141,10 @@
 					"label": "Phone number",
 					"placeholder": "+998 90 123 45 67",
 					"errors": {
-						"pattern": "Enter a valid Uzbekistan phone number"
+						"min": "Phone number is too short",
+						"max": "Phone number is too long",
+						"pattern": "Enter a valid phone number",
+						"required": "Enter phone number"
 					}
 				},
 				"email": {
@@ -157,7 +160,18 @@
 			"title": "Documents"
 		},
 		"buttons": {
-			"save": "Save"
+			"save": "Save",
+			"loading": "Loading",
+			"saving": "Saving"
+		},
+		"toasts": {
+			"save": {
+				"success": "Business data updated successfully",
+				"error": "Failed to update business data"
+			},
+			"load": {
+				"error": "Failed to load business data"
+			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const CHANGE_BUSINESS_SCHEMA = z.object({
+export const BUSINESS_SCHEMA = z.object({
 	business: z.object({
 		business_description: z
 			.string()
@@ -84,11 +84,15 @@ export const CHANGE_BUSINESS_SCHEMA = z.object({
 			.max(100, { message: "form.contact.fields.position.errors.max" }),
 		phone_number: z
 			.string()
-			.regex(/^\+998\s?\d{2}\s?\d{3}\s?\d{2}\s?\d{2}$/, {
+			.min(1, {
+				message: "form.contact.fields.phone_number.errors.required"
+			})
+			.min(10, { message: "form.contact.fields.phone_number.errors.min" })
+			.max(15, { message: "form.contact.fields.phone_number.errors.max" })
+			.regex(/^\+?[1-9]\d{7,14}$/, {
 				message: "form.contact.fields.phone_number.errors.pattern"
 			}),
-		email: z
-			.string()
-			.email({ message: "form.contact.fields.email.errors.email" })
-	})
+		email: z.email({ message: "form.contact.fields.email.errors.email" })
+	}),
+	avatar: z.string().optional()
 });

@@ -1,4 +1,6 @@
-import { ENUM_FORM_CHANGE_BUSINESS, type TForm } from "../types";
+import { ENUM_FORM_CHANGE_BUSINESS } from "@/entities/user";
+
+import { type TForm } from "../types";
 
 export const ADDRESS_BUSINESS_DATA_LIST: TForm[] = [
 	{

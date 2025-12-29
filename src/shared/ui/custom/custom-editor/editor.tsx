@@ -1,8 +1,7 @@
-"use client";
-
 import TextAlign from "@tiptap/extension-text-align";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
+import { useEffect } from "react";
 import { type ControllerRenderProps, type FieldValues } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
@@ -21,6 +20,14 @@ export const CustomEditor = <T extends FieldValues>({
 	className,
 	...props
 }: ICustomEditorProps<T>) => {
+	const parseContent = (value: string) => {
+		try {
+			return JSON.parse(value);
+		} catch {
+			return value;
+		}
+	};
+
 	const editor = useEditor({
 		extensions: [
 			StarterKit,
@@ -34,7 +41,7 @@ export const CustomEditor = <T extends FieldValues>({
 		},
 
 		content: field?.value
-			? JSON.parse(field?.value)
+			? parseContent(field.value)
 			: `<p>${defaultValue || ""}</p>`,
 		onUpdate: ({ editor }) => {
 			const text = JSON.stringify(editor?.getJSON());
@@ -43,6 +50,16 @@ export const CustomEditor = <T extends FieldValues>({
 
 		immediatelyRender: false
 	});
+
+	// Синхронизация контента при изменении значения в форме (например, после form.reset)
+	useEffect(() => {
+		if (!editor) return;
+
+		const currentJson = JSON.stringify(editor.getJSON());
+		if (field.value !== currentJson && field.value !== undefined) {
+			editor.commands.setContent(parseContent(field.value));
+		}
+	}, [field.value, editor]);
 
 	const isInvalid =
 		props["aria-invalid"] === true || props["aria-invalid"] === "true";

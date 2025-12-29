@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField } from "@/shared/ui";
 
-import {
-	ADDRESS_BUSINESS_DATA_LIST,
-	type TChangeBusinessSchema
-} from "../model";
+import type { TBusinessSchema } from "@/entities/user";
+
+import { ADDRESS_BUSINESS_DATA_LIST } from "../model";
 
 interface IAddressInfoProps {
-	form: UseFormReturn<TChangeBusinessSchema>;
+	form: UseFormReturn<TBusinessSchema>;
 }
 
 export const AddressInfo: FC<IAddressInfoProps> = ({ form }) => {

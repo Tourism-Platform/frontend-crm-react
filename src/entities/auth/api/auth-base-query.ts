@@ -7,7 +7,7 @@ import {
 
 import { ENV } from "@/shared/config";
 
-import { logout } from "@/entities/user";
+import { logout } from "@/entities/user/slice/user.slice";
 
 export const authBaseQuery: BaseQueryFn<
 	string | FetchArgs,

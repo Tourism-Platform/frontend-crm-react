@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField } from "@/shared/ui";
 
-import {
-	CONTACT_BUSINESS_DATA_LIST,
-	type TChangeBusinessSchema
-} from "../model";
+import type { TBusinessSchema } from "@/entities/user";
+
+import { CONTACT_BUSINESS_DATA_LIST } from "../model";
 
 interface IContactInfoProps {
-	form: UseFormReturn<TChangeBusinessSchema>;
+	form: UseFormReturn<TBusinessSchema>;
 }
 
 export const ContactInfo: FC<IContactInfoProps> = ({ form }) => {
