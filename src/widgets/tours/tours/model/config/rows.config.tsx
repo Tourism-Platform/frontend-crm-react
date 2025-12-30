@@ -3,7 +3,12 @@ import { useTranslation } from "react-i18next";
 
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 
-import { TOUR_STATUS_LABELS, TOUR_STATUS_VARIANTS, type ENUM_TOUR_STATUS_TYPE, type ITourCard } from "@/entities/tour";
+import {
+	type ENUM_TOUR_STATUS_TYPE,
+	type ITourCard,
+	TOUR_STATUS_LABELS,
+	TOUR_STATUS_VARIANTS
+} from "@/entities/tour";
 
 export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 	const { t } = useTranslation(["tours_page", "options"]);
@@ -103,11 +108,11 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 				return (
 					<Badge variant={TOUR_STATUS_VARIANTS[status]}>
 						{t(TOUR_STATUS_LABELS[status], { ns: "options" })}
-					</Badge>	
+					</Badge>
 				);
 			},
 			size: 120
-		},
+		}
 		// {
 		// 	id: "actions",
 		// 	header: () => <span className="sr-only">Actions</span>,

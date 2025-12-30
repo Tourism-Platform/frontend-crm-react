@@ -1,5 +1,6 @@
 import { Image, MoreHorizontal } from "lucide-react";
 import { type FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { FlagIcon, MoneysIcon, UsersOutlineIcon } from "@/shared/assets";
@@ -15,7 +16,6 @@ import {
 	Skeleton
 } from "@/shared/ui";
 
-import { useTranslation } from "react-i18next";
 import { TOUR_STATUS_LABELS, TOUR_STATUS_VARIANTS } from "../constants";
 import type { ITourCard } from "../types";
 

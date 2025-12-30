@@ -22,15 +22,12 @@ export const TOUR_STATUS_LABELS: Record<ENUM_TOUR_STATUS_TYPE, TOptionsKeys> = {
 	[ENUM_TOUR_STATUS.ARCHIVED]: "tour.statuses.archived"
 };
 
-
-export const TOUR_STATUS_VARIANTS: Record<
-	ENUM_TOUR_STATUS_TYPE,
-	BadgeVariant
-> = {
-	[ENUM_TOUR_STATUS.ACTIVE]: "green",
-	[ENUM_TOUR_STATUS.MODERATE]: "yellow",
-	[ENUM_TOUR_STATUS.PLANNING]: "blue",
-	[ENUM_TOUR_STATUS.CANCELLED]: "red",
-	[ENUM_TOUR_STATUS.ARCHIVED]: "cyan",
-	[ENUM_TOUR_STATUS.ALL]: "default"
-};
+export const TOUR_STATUS_VARIANTS: Record<ENUM_TOUR_STATUS_TYPE, BadgeVariant> =
+	{
+		[ENUM_TOUR_STATUS.ACTIVE]: "green",
+		[ENUM_TOUR_STATUS.MODERATE]: "yellow",
+		[ENUM_TOUR_STATUS.PLANNING]: "blue",
+		[ENUM_TOUR_STATUS.CANCELLED]: "red",
+		[ENUM_TOUR_STATUS.ARCHIVED]: "cyan",
+		[ENUM_TOUR_STATUS.ALL]: "default"
+	};

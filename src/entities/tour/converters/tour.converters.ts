@@ -1,7 +1,7 @@
 import { type IPaginationResponse } from "@/shared/types";
 
-import type { ITourBackend, ITourCard, ITourFilters } from "../types";
 import type { ENUM_TOUR_STATUS_TYPE } from "../constants";
+import type { ITourBackend, ITourCard, ITourFilters } from "../types";
 
 export const mapTourToFrontend = (data: ITourBackend): ITourCard => ({
 	id: data.id,

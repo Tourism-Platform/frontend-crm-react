@@ -1,12 +1,12 @@
 "use client";
 
+import { type Table } from "@tanstack/react-table";
 import {
 	ChevronFirstIcon,
 	ChevronLastIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon
 } from "lucide-react";
-import { type Table } from "@tanstack/react-table";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
