@@ -1,0 +1,17 @@
+{
+	"commission": {
+		"fixed": "Fixed amount",
+		"percentage": "Percentage of total price",
+		"partner": "Partner commission",
+		"platform": "Platform commission",
+		"service_fee": "Service fee"
+	},
+
+	"staff": {
+		"statuses": {
+			"active": "Active",
+			"inactive": "Inactive",
+			"pending": "Pending"
+		}
+	}
+}

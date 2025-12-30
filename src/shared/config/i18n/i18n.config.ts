@@ -13,6 +13,7 @@ import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
 import login_page from "../../../../public/locales/en/login_page.json";
 import not_found_page from "../../../../public/locales/en/not_found_page.json";
+import options from "../../../../public/locales/en/options.json";
 import account_settings_page from "../../../../public/locales/en/settings/account_settings_page.json";
 import business_settings_page from "../../../../public/locales/en/settings/business_settings_page.json";
 import financial_settings_page from "../../../../public/locales/en/settings/financial_settings_page.json";
@@ -76,6 +77,7 @@ export type TTourSettingsPage = typeof tour_settings_page;
 export type TOrderIdPage = typeof order_id_page;
 export type TLandingPage = typeof landing_page;
 export type TNotFoundPage = typeof not_found_page;
+export type TOptions = typeof options;
 
 export type TResources = {
 	header: THeader;
@@ -114,6 +116,7 @@ export type TResources = {
 	tour_settings_page: TTourSettingsPage;
 	landing_page: TLandingPage;
 	not_found_page: TNotFoundPage;
+	options: TOptions;
 };
 
 export const NS = [
@@ -152,7 +155,8 @@ export const NS = [
 	"tour_pricing_review_page",
 	"tour_settings_page",
 	"landing_page",
-	"not_found_page"
+	"not_found_page",
+	"options"
 ] as const;
 
 export type TNS = (typeof NS)[number];
@@ -205,3 +209,4 @@ export type TTourPricingReviewPageKeys = TNestedKeyOf<TTourPricingReviewPage>;
 export type TTourSettingsPageKeys = TNestedKeyOf<TTourSettingsPage>;
 export type TLandingPageKeys = TNestedKeyOf<TLandingPage>;
 export type TNotFoundPageKeys = TNestedKeyOf<TNotFoundPage>;
+export type TOptionsKeys = TNestedKeyOf<TOptions>;

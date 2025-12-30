@@ -23,8 +23,8 @@ export const PersonalDetails: FC<IPersonalDetailsProps> = ({ form }) => {
 					{t("menu.edit.form.details.description")}
 				</p>
 			</div>
-			<div className="grid grid-cols-2 gap-x-6">
-				{PERSONAL_DETAILS_LIST.map(({ key, ...item }) => (
+			<div className="grid grid-cols-6 gap-x-6">
+				{PERSONAL_DETAILS_LIST().map(({ key, ...item }) => (
 					<CustomField
 						key={key}
 						control={form?.control}

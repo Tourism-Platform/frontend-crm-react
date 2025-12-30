@@ -27,7 +27,12 @@
 			},
 			"buttons": {
 				"decline": "Cancel",
-				"save": "Send invite"
+				"save": "Send invite",
+				"saving": "Inviting..."
+			},
+			"toasts": {
+				"success": "Invite sent successfully",
+				"error": "Failed to send invite"
 			}
 		}
 	},
@@ -40,9 +45,13 @@
 					"title": "Personal details",
 					"description": "Information about the staff member",
 					"fields": {
-						"name": {
-							"label": "Name",
-							"placeholder": "Enter staff name"
+						"firstName": {
+							"label": "First Name",
+							"placeholder": "Enter first name"
+						},
+						"lastName": {
+							"label": "Last Name",
+							"placeholder": "Enter last name"
 						},
 						"email": {
 							"label": "Email",
@@ -58,10 +67,15 @@
 						}
 					},
 					"errors": {
-						"name": {
-							"required": "Name is required",
-							"min": "Name is too short",
-							"max": "Name is too long"
+						"firstName": {
+							"required": "First name is required",
+							"min": "First name is too short",
+							"max": "First name is too long"
+						},
+						"lastName": {
+							"required": "Last name is required",
+							"min": "Last name is too short",
+							"max": "Last name is too long"
 						},
 						"email": {
 							"required": "Email is required",
@@ -103,7 +117,12 @@
 				},
 				"buttons": {
 					"decline": "Cancel",
-					"save": "Save changes"
+					"save": "Save changes",
+					"saving": "Saving changes..."
+				},
+				"toasts": {
+					"success": "Staff member updated successfully",
+					"error": "Failed to update staff member"
 				}
 			}
 		},
@@ -114,7 +133,12 @@
 				"warning": "This action is irreversible. The staff member will be permanently removed from the system.",
 				"buttons": {
 					"decline": "Cancel",
-					"confirm": "Delete"
+					"confirm": "Delete",
+					"confirming": "Deleting..."
+				},
+				"toasts": {
+					"success": "Staff member deleted successfully",
+					"error": "Failed to delete staff member"
 				}
 			}
 		}
@@ -126,11 +150,6 @@
 		"role": "Role",
 		"status": "Status",
 		"split": "Split, %",
-		"statuses": {
-			"active": "Active",
-			"inactive": "Inactive",
-			"pending": "Pending"
-		},
 		"menu": {
 			"edit": "Edit",
 			"delete": "Delete",

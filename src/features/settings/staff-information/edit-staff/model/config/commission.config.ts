@@ -1,15 +1,16 @@
-import { COMMISSION_OPTIONS } from "@/shared/config";
+import { useValueToTranslateLabel } from "@/shared/utils";
+
+import { COMMISSION_LABELS } from "@/entities/commission";
 
 import { ENUM_FORM_EDIT_STAFF, type TForm } from "../types/form.types";
 
-export const COMMISSION_LIST: TForm[] = [
+export const COMMISSION_LIST = (): TForm[] => [
 	{
 		label: "menu.edit.form.commission.fields.type.label",
 		placeholder: "menu.edit.form.commission.fields.type.placeholder",
 		key: ENUM_FORM_EDIT_STAFF.TYPE,
 		fieldType: "select",
-		options: COMMISSION_OPTIONS,
-		defaultValue: COMMISSION_OPTIONS?.[0]?.value
+		options: useValueToTranslateLabel(COMMISSION_LABELS)
 	},
 	{
 		label: "menu.edit.form.commission.fields.split.label",

@@ -70,7 +70,8 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"home",
 			"common",
 			"login_page",
-			"not_found_page"
+			"not_found_page",
+			"options"
 		]
 	}
 };

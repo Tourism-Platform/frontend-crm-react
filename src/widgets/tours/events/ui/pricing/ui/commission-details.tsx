@@ -28,7 +28,7 @@ export const CommissionDetails: FC<ICommissionDetailsProps> = ({
 				</p>
 			</div>
 			<div className="grid grid-cols-3 gap-5">
-				{COMMISSION_DETAILS_DATA_LIST.map(({ key, ...item }) => (
+				{COMMISSION_DETAILS_DATA_LIST().map(({ key, ...item }) => (
 					<CustomField
 						key={key}
 						control={form?.control}

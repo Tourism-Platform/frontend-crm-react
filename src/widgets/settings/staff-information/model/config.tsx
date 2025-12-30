@@ -14,11 +14,9 @@ import {
 
 import { StaffActions } from "../ui";
 
-export const COLUMNS = (
-	onEdit?: (id: string, data: Partial<IStaffUser>) => void,
-	onDelete?: (id: string) => void
-): ColumnDef<IStaffUser>[] => {
+export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 	const { t } = useTranslation("staff_information_page");
+	const { t: tOptions } = useTranslation("options");
 	return [
 		{
 			id: "select",
@@ -47,15 +45,15 @@ export const COLUMNS = (
 		},
 		{
 			header: t("table.firstName"),
-			accessorKey: "firstName",
+			accessorKey: "first_name",
 			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("firstName")}</div>
+				<div className="font-medium">{row.getValue("first_name")}</div>
 			),
 			size: 160
 		},
 		{
 			header: t("table.lastName"),
-			accessorKey: "lastName",
+			accessorKey: "last_name",
 			size: 160
 		},
 		{
@@ -87,7 +85,7 @@ export const COLUMNS = (
 
 				return (
 					<Badge variant={STAFF_STATUS_VARIANTS[status]}>
-						{t(STAFF_STATUS_LABELS[status])}
+						{tOptions(STAFF_STATUS_LABELS[status])}
 					</Badge>
 				);
 			},
@@ -104,13 +102,7 @@ export const COLUMNS = (
 		{
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,
-			cell: ({ row }) => (
-				<StaffActions
-					user={row.original}
-					onEdit={onEdit}
-					onDelete={onDelete}
-				/>
-			),
+			cell: ({ row }) => <StaffActions user={row.original} />,
 			size: 60,
 			enableHiding: false
 		}

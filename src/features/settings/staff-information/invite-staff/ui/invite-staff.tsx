@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -18,11 +20,7 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import {
-	ENUM_STAFF_ROLE_OPTIONS,
-	ENUM_STAFF_STATUS_OPTIONS,
-	type IStaffUser
-} from "@/entities/staff";
+import { useCreateStaffMutation } from "@/entities/staff";
 
 import {
 	FORM_INVITE_STAFF_LIST,
@@ -30,30 +28,28 @@ import {
 	type TAddStaffSchema
 } from "../model";
 
-interface IInviteStaffProps {
-	onAdd?: (user: Omit<IStaffUser, "id">) => void;
-}
-
-export const InviteStaff: FC<IInviteStaffProps> = ({ onAdd }) => {
+export const InviteStaff: FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("staff_information_page");
+	const [createStaff, { isLoading }] = useCreateStaffMutation();
+
 	const form = useForm<TAddStaffSchema>({
 		resolver: zodResolver(INVITE_STAFF_SCHEMA),
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TAddStaffSchema) {
-		console.log("Form submitted:", data);
-		if (onAdd) {
-			// Mocking missing fields for now based on schema
-			onAdd({
-				firstName: "New", // Placeholder
-				lastName: "User", // Placeholder
+
+	async function onSubmit(data: TAddStaffSchema) {
+		try {
+			await createStaff({
 				email: data.email,
-				role: ENUM_STAFF_ROLE_OPTIONS.SALES_MANAGER,
-				status: ENUM_STAFF_STATUS_OPTIONS.PENDING,
-				split: null
-			});
+				role: data.role
+			}).unwrap();
+			toast.success(t("invite.form.toasts.success"));
 			setOpen(false);
+			form.reset();
+		} catch (error) {
+			toast.error(t("invite.form.toasts.error"));
+			console.error("Failed to create staff:", error);
 		}
 	}
 	return (
@@ -95,8 +91,13 @@ export const InviteStaff: FC<IInviteStaffProps> = ({ onAdd }) => {
 									{t("invite.form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit">
-								{t("invite.form.buttons.save")}
+							<Button type="submit" disabled={isLoading}>
+								{isLoading && (
+									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								)}
+								{isLoading
+									? t("invite.form.buttons.saving")
+									: t("invite.form.buttons.save")}
 							</Button>
 						</DialogFooter>
 					</form>

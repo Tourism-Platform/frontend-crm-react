@@ -24,7 +24,7 @@ export const Commission: FC<ICommissionProps> = ({ form }) => {
 				</p>
 			</div>
 			<div className="grid grid-cols-2 gap-x-6">
-				{COMMISSION_LIST.map(({ key, ...item }) => (
+				{COMMISSION_LIST().map(({ key, ...item }) => (
 					<CustomField
 						key={key}
 						control={form?.control}

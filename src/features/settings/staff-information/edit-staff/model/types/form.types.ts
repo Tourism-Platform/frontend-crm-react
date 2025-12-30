@@ -11,7 +11,8 @@ export type TForm = TFormField<
 >;
 
 export const ENUM_FORM_EDIT_STAFF = {
-	NAME: "name",
+	FIRST_NAME: "first_name",
+	LAST_NAME: "last_name",
 	EMAIL: "email",
 	ROLE: "role",
 	STATUS: "status",

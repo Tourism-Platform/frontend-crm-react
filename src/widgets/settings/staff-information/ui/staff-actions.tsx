@@ -16,15 +16,9 @@ import { DeleteStaff, EditStaff } from "@/features/settings";
 
 interface IStaffActionsProps {
 	user?: IStaffUser;
-	onEdit?: (id: string, data: Partial<IStaffUser>) => void;
-	onDelete?: (id: string) => void;
 }
 
-export const StaffActions: FC<IStaffActionsProps> = ({
-	user,
-	onEdit,
-	onDelete
-}) => {
+export const StaffActions: FC<IStaffActionsProps> = ({ user }) => {
 	const { t } = useTranslation("staff_information_page");
 
 	if (!user) return null;
@@ -52,7 +46,6 @@ export const StaffActions: FC<IStaffActionsProps> = ({
 							</div>
 						}
 						user={user}
-						onEdit={onEdit}
 					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
@@ -64,7 +57,6 @@ export const StaffActions: FC<IStaffActionsProps> = ({
 						}
 						className="w-full justify-start px-2 py-1.5"
 						id={user.id}
-						onDelete={onDelete}
 					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

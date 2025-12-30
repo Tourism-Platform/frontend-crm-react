@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, type ReactNode } from "react";
+import { Loader } from "lucide-react";
+import React, { type FC, type ReactNode } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
-import { COMMISSION_OPTIONS } from "@/shared/config";
 import {
 	Button,
 	Dialog,
@@ -18,11 +19,7 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import type {
-	ENUM_STAFF_ROLE_OPTIONS_TYPE,
-	ENUM_STAFF_STATUS_OPTIONS_TYPE,
-	IStaffUser
-} from "@/entities/staff";
+import { type IStaffUser, useUpdateStaffMutation } from "@/entities/staff";
 
 import { EDIT_STAFF_SCHEMA, type TEditStaffSchema } from "../model";
 
@@ -33,50 +30,47 @@ interface IEditStaffProps {
 	trigger: ReactNode;
 	className?: string;
 	user?: IStaffUser;
-	onEdit?: (id: string, data: Partial<IStaffUser>) => void;
 }
 
 export const EditStaff: FC<IEditStaffProps> = ({
 	trigger,
 	className,
-	user,
-	onEdit
+	user
 }) => {
+	const [open, setOpen] = React.useState(false);
 	const { t } = useTranslation("staff_information_page");
+	const [updateStaff, { isLoading }] = useUpdateStaffMutation();
 	const form = useForm<TEditStaffSchema>({
 		resolver: zodResolver(EDIT_STAFF_SCHEMA),
 		defaultValues: {
-			name: user ? `${user.firstName} ${user.lastName}` : "",
+			first_name: user?.first_name || "",
+			last_name: user?.last_name || "",
 			email: user?.email || "",
 			role: user?.role,
 			status: user?.status,
-			type: COMMISSION_OPTIONS?.[0]?.value,
+			type: user?.type,
 			split: user?.split || 0
 		},
 		mode: "onSubmit"
 	});
 
-	console.log(form.watch());
-
-	function onSubmit(data: TEditStaffSchema) {
-		console.log("Form submitted:", data);
-		if (onEdit && user) {
-			// Split name back to first and last
-			const [firstName, ...rest] = data.name.split(" ");
-			const lastName = rest.join(" ");
-
-			onEdit(user.id!, {
-				firstName,
-				lastName,
-				email: data.email,
-				role: data.role as ENUM_STAFF_ROLE_OPTIONS_TYPE,
-				status: data.status as ENUM_STAFF_STATUS_OPTIONS_TYPE,
-				split: data.split
-			});
+	async function onSubmit(data: TEditStaffSchema) {
+		if (user) {
+			try {
+				await updateStaff({
+					id: user.id!,
+					data: data
+				}).unwrap();
+				toast.success(t("menu.edit.form.toasts.success"));
+				setOpen(false);
+			} catch (error) {
+				toast.error(t("menu.edit.form.toasts.error"));
+				console.error("Failed to update staff:", error);
+			}
 		}
 	}
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
@@ -104,8 +98,13 @@ export const EditStaff: FC<IEditStaffProps> = ({
 									{t("menu.edit.form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit">
-								{t("menu.edit.form.buttons.save")}
+							<Button type="submit" disabled={isLoading}>
+								{isLoading && (
+									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								)}
+								{isLoading
+									? t("menu.edit.form.buttons.saving")
+									: t("menu.edit.form.buttons.save")}
 							</Button>
 						</DialogFooter>
 					</form>
