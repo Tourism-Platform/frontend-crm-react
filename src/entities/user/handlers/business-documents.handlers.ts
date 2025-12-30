@@ -2,12 +2,12 @@ import { HttpResponse, delay, http } from "msw";
 
 import { ENV } from "@/shared/config";
 
-import { mockBusinessDocuments } from "../mock";
+import { BUSINESS_DOCUMENTS_MOCK } from "../mock";
 import type { IBusinessDocument } from "../types";
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
-let documentsStore = [...mockBusinessDocuments];
+let documentsStore = [...BUSINESS_DOCUMENTS_MOCK];
 
 export const businessDocumentsHandlers = [
 	http.get(`${BASE_URL}/user/business-documents`, async () => {

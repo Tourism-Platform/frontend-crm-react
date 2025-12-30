@@ -1,6 +1,6 @@
 import type { IBusinessInfoBackend } from "../types";
 
-export const mockBusiness: IBusinessInfoBackend = {
+export const BUSINESS_MOCK: IBusinessInfoBackend = {
 	avatarUrl:
 		"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0V3dWN9gEdpOEGs0kUIYQw2AeBHj94JtcfnMLg",
 	business: {

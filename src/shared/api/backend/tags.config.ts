@@ -1,5 +1,6 @@
 export const ENUM_API_TAGS = {
 	USER: "User",
 	BUSINESS: "Business",
-	STAFF: "Staff"
+	STAFF: "Staff",
+	COMMISSION: "Commission"
 } as const;

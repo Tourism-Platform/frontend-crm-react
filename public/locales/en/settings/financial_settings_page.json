@@ -29,7 +29,12 @@
 				},
 				"buttons": {
 					"decline": "Cancel",
-					"save": "Add"
+					"save": "Add",
+					"saving": "Adding..."
+				},
+				"toasts": {
+					"success": "Commission type added successfully",
+					"error": "Failed to add commission type"
 				}
 			}
 		},
@@ -60,7 +65,12 @@
 					},
 					"buttons": {
 						"decline": "Cancel",
-						"save": "Save"
+						"save": "Save",
+						"saving": "Saving..."
+					},
+					"toasts": {
+						"success": "Commission type updated successfully",
+						"error": "Failed to update commission type"
 					}
 				}
 			},
@@ -71,7 +81,12 @@
 					"warning": "This action is irreversible. The commission type will be permanently removed from the system.",
 					"buttons": {
 						"decline": "Cancel",
-						"confirm": "Delete"
+						"confirm": "Delete",
+						"confirming": "Deleting..."
+					},
+					"toasts": {
+						"success": "Commission type deleted successfully",
+						"error": "Failed to delete commission type"
 					}
 				}
 			}

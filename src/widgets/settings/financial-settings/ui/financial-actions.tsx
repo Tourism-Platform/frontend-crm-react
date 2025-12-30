@@ -13,19 +13,12 @@ import {
 import type { ICommission } from "@/entities/commission";
 
 import { DeleteCommissionType, EditCommissionType } from "@/features/settings";
-import type { TEditCommissionTypeSchema } from "@/features/settings";
 
 interface IFinancialActionsProps {
 	row: ICommission;
-	onEdit: (id: string, data: TEditCommissionTypeSchema) => void;
-	onDelete: (id: string) => void;
 }
 
-export const FinancialActions: FC<IFinancialActionsProps> = ({
-	row,
-	onEdit,
-	onDelete
-}) => {
+export const FinancialActions: FC<IFinancialActionsProps> = ({ row }) => {
 	const { t } = useTranslation("financial_settings_page");
 	return (
 		<DropdownMenu>
@@ -44,10 +37,10 @@ export const FinancialActions: FC<IFinancialActionsProps> = ({
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem asChild>
 					<EditCommissionType
+						id={row.id}
 						data={row}
-						onEdit={(data) => onEdit(row.id, data)}
 						trigger={
-							<div className="w-full hover:bg-accent cursor-pointer">
+							<div className="w-full hover:bg-accent cursor-pointer px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
 								{t("commission_type.menu.edit.button")}
 							</div>
 						}
@@ -55,9 +48,9 @@ export const FinancialActions: FC<IFinancialActionsProps> = ({
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild>
 					<DeleteCommissionType
-						onDelete={() => onDelete(row.id)}
+						id={row.id}
 						trigger={
-							<div className="w-full cursor-pointer">
+							<div className="w-full cursor-pointer px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
 								{t("commission_type.menu.delete.button")}
 							</div>
 						}

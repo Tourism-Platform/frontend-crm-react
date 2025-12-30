@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, type ReactNode } from "react";
+import { Loader } from "lucide-react";
+import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -18,6 +20,8 @@ import {
 	Separator
 } from "@/shared/ui";
 
+import { useUpdateCommissionMutation } from "@/entities/commission";
+
 import {
 	EDIT_COMMISSION_TYPE_SCHEMA,
 	FORM_EDIT_COMMISSION_TYPE_LIST,
@@ -25,33 +29,44 @@ import {
 } from "../model";
 
 interface IEditCommissionTypeProps {
+	id: string;
 	trigger: ReactNode;
 	className?: string;
-	onEdit: (data: TEditCommissionTypeSchema) => void;
 	data: TEditCommissionTypeSchema;
 }
 
 export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
+	id,
 	trigger,
 	className,
-	onEdit,
 	data
 }) => {
+	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("financial_settings_page");
+	const [updateCommission, { isLoading }] = useUpdateCommissionMutation();
 	const form = useForm<TEditCommissionTypeSchema>({
 		resolver: zodResolver(EDIT_COMMISSION_TYPE_SCHEMA),
 		defaultValues: data,
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TEditCommissionTypeSchema) {
-		onEdit(data);
+
+	async function onSubmit(data: TEditCommissionTypeSchema) {
+		try {
+			await updateCommission({ id, data }).unwrap();
+			toast.success(t("commission_type.menu.edit.form.toasts.success"));
+			setOpen(false);
+		} catch (error) {
+			toast.error(t("commission_type.menu.edit.form.toasts.error"));
+			console.error("Failed to update commission:", error);
+		}
 	}
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent onCloseBtn={() => setOpen(false)}>
 				<DialogHeader>
 					<DialogTitle>
 						{t("commission_type.menu.edit.form.title")}
@@ -80,7 +95,7 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 							)}
 						</div>
 						<DialogFooter>
-							<DialogClose asChild>
+							<DialogClose asChild onClick={() => setOpen(false)}>
 								<Button
 									type="reset"
 									variant="outline"
@@ -91,13 +106,18 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 									)}
 								</Button>
 							</DialogClose>
-							<DialogClose asChild>
-								<Button type="submit">
-									{t(
-										"commission_type.menu.edit.form.buttons.save"
-									)}
-								</Button>
-							</DialogClose>
+							<Button type="submit" disabled={isLoading}>
+								{isLoading && (
+									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								)}
+								{isLoading
+									? t(
+											"commission_type.menu.edit.form.buttons.saving"
+										)
+									: t(
+											"commission_type.menu.edit.form.buttons.save"
+										)}
+							</Button>
 						</DialogFooter>
 					</form>
 				</Form>

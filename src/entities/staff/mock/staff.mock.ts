@@ -6,7 +6,7 @@ import {
 	type IStaffBackend
 } from "../types";
 
-export const mockStaffMembers: IStaffBackend[] = [
+export const STAFF_MOCK: IStaffBackend[] = [
 	{
 		id: "1",
 		first_name: "Иван",

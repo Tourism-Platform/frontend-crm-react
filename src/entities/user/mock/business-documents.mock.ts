@@ -1,6 +1,6 @@
 import type { IBusinessDocument } from "../types";
 
-export const mockBusinessDocuments: IBusinessDocument[] = [
+export const BUSINESS_DOCUMENTS_MOCK: IBusinessDocument[] = [
 	{
 		id: "doc-license-001",
 		name: "Лицензия на турагентскую деятельность.pdf",

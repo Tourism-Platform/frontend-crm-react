@@ -2,7 +2,7 @@ import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 
 import type { IAccountBackend } from "../types";
 
-export const mockUser: IAccountBackend = {
+export const ACCOUNT_MOCK: IAccountBackend = {
 	username: "john_doe",
 	firstName: "John",
 	lastName: "Doe",

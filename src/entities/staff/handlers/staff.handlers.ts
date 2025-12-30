@@ -4,7 +4,7 @@ import { ENV } from "@/shared/config";
 
 import { ENUM_COMMISSION_OPTIONS } from "@/entities/commission";
 
-import { mockStaffMembers } from "../mock";
+import { STAFF_MOCK } from "../mock";
 import {
 	ENUM_STAFF_ROLE_OPTIONS,
 	ENUM_STAFF_STATUS_OPTIONS,
@@ -13,11 +13,11 @@ import {
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
-let staff = [...mockStaffMembers];
+let staff = [...STAFF_MOCK];
 
 export const staffHandlers = [
 	http.get(`${BASE_URL}/staff`, async () => {
-		await delay(800);
+		await delay(500);
 		return HttpResponse.json(staff, { status: 200 });
 	}),
 
@@ -52,7 +52,7 @@ export const staffHandlers = [
 	}),
 
 	http.delete(`${BASE_URL}/staff/:id`, async ({ params }) => {
-		await delay(800);
+		await delay(500);
 		const { id } = params;
 		staff = staff.filter((s) => s.id !== id);
 		return new HttpResponse(null, { status: 204 });

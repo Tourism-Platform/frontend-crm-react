@@ -1,38 +1,27 @@
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CustomTable } from "@/shared/ui";
+import { SmartTable } from "@/shared/ui";
 
 import type { ICommission } from "@/entities/commission";
 
 import { NewCurrencyRate } from "@/features/settings";
-import type {
-	TEditCommissionTypeSchema,
-	TNewCurrencyRateSchema
-} from "@/features/settings";
 
 import { COLUMNS } from "../model";
 
 interface ICommissionTypeProps {
 	data: ICommission[];
-	onEdit: (id: string, data: TEditCommissionTypeSchema) => void;
-	onDelete: (id: string) => void;
-	onAdd: (data: TNewCurrencyRateSchema) => void;
+	isLoading: boolean;
 }
 
-export const CommissionType: FC<ICommissionTypeProps> = ({
-	data,
-	onEdit,
-	onDelete,
-	onAdd
-}) => {
+export const CommissionType: FC<ICommissionTypeProps> = ({ data }) => {
 	const { t } = useTranslation("financial_settings_page");
 	return (
 		<div className="flex gap-5 flex-col">
-			<CustomTable
+			<SmartTable
 				data={data}
-				columns={COLUMNS(onEdit, onDelete)}
-				actions={<NewCurrencyRate onAdd={onAdd} />}
+				columns={COLUMNS()}
+				actions={<NewCurrencyRate />}
 				showTopFilters={false}
 				topChildren={
 					<div className="flex flex-col gap-2">

@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { FC } from "react";
+import { Loader } from "lucide-react";
+import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -18,32 +20,43 @@ import {
 	Separator
 } from "@/shared/ui";
 
+import { useCreateCommissionMutation } from "@/entities/commission";
+
 import {
 	FORM_NEW_CURRENCY_RATE_LIST,
 	NEW_CURRENCY_RATE_SCHEMA,
 	type TNewCurrencyRateSchema
 } from "../model";
 
-interface INewCommissionTypeProps {
-	onAdd: (data: TNewCurrencyRateSchema) => void;
-}
-
-export const NewCurrencyRate: FC<INewCommissionTypeProps> = ({ onAdd }) => {
+export const NewCurrencyRate: FC = () => {
+	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("financial_settings_page");
+	const [createCommission, { isLoading }] = useCreateCommissionMutation();
 	const form = useForm<TNewCurrencyRateSchema>({
 		resolver: zodResolver(NEW_CURRENCY_RATE_SCHEMA),
 		mode: "onSubmit"
 	});
-	function onSubmit(data: TNewCurrencyRateSchema) {
-		onAdd(data);
-		form.reset();
+
+	async function onSubmit(data: TNewCurrencyRateSchema) {
+		try {
+			await createCommission(data).unwrap();
+			toast.success(
+				t("commission_type.new_currency.form.toasts.success")
+			);
+			setOpen(false);
+			form.reset();
+		} catch (error) {
+			toast.error(t("commission_type.new_currency.form.toasts.error"));
+			console.error("Failed to create commission:", error);
+		}
 	}
+
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button>{t("commission_type.new_currency.button")}</Button>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent onCloseBtn={() => setOpen(false)}>
 				<DialogHeader>
 					<DialogTitle>
 						{t("commission_type.new_currency.form.title")}
@@ -72,7 +85,7 @@ export const NewCurrencyRate: FC<INewCommissionTypeProps> = ({ onAdd }) => {
 							)}
 						</div>
 						<DialogFooter>
-							<DialogClose asChild>
+							<DialogClose asChild onClick={() => setOpen(false)}>
 								<Button
 									type="reset"
 									variant="outline"
@@ -83,13 +96,18 @@ export const NewCurrencyRate: FC<INewCommissionTypeProps> = ({ onAdd }) => {
 									)}
 								</Button>
 							</DialogClose>
-							<DialogClose asChild>
-								<Button type="submit">
-									{t(
-										"commission_type.new_currency.form.buttons.save"
-									)}
-								</Button>
-							</DialogClose>
+							<Button type="submit" disabled={isLoading}>
+								{isLoading && (
+									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								)}
+								{isLoading
+									? t(
+											"commission_type.new_currency.form.buttons.saving"
+										)
+									: t(
+											"commission_type.new_currency.form.buttons.save"
+										)}
+							</Button>
 						</DialogFooter>
 					</form>
 				</Form>

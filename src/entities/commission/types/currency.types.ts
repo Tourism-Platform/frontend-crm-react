@@ -1,6 +1,7 @@
 export const ENUM_CURRENCY_OPTIONS = {
 	USD: "USD",
-	EUR: "EUR"
+	EUR: "EUR",
+	GBP: "GBP"
 } as const;
 
 export type ENUM_CURRENCY_OPTIONS_TYPE =
