@@ -6,6 +6,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useDebounce } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import { Badge, type BadgeVariant } from "@/shared/ui";
 import {
@@ -97,20 +98,6 @@ export interface MultipleSelectorRef {
 	input: HTMLInputElement;
 	focus: () => void;
 	reset: () => void;
-}
-
-export function useDebounce<T>(value: T, delay?: number): T {
-	const [debouncedValue, setDebouncedValue] = React.useState<T>(value);
-
-	useEffect(() => {
-		const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
-
-		return () => {
-			clearTimeout(timer);
-		};
-	}, [value, delay]);
-
-	return debouncedValue;
 }
 
 function transToGroupOption(options: Option[], groupBy?: string) {
