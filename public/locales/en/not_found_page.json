@@ -1,0 +1,9 @@
+{
+	"title": "404",
+	"subtitle": "Page Not Found",
+	"description": "It seems you've lost your way. Don't worry, we'll help you get back.",
+	"buttons": {
+		"home": "Go Home",
+		"back": "Go Back"
+	}
+}

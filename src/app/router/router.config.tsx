@@ -132,8 +132,8 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
 					{children}
 				</SideBarOwnerLayout>
-			),
-			SettingsOwnerLayout
+			)
+			// SettingsOwnerLayout
 		]
 	},
 	{
@@ -174,8 +174,8 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
 					{children}
 				</SideBarOwnerLayout>
-			),
-			SettingsOwnerLayout
+			)
+			// SettingsOwnerLayout
 		]
 	},
 	{
@@ -188,8 +188,8 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
 					{children}
 				</SideBarOwnerLayout>
-			),
-			SettingsOwnerLayout
+			)
+			// SettingsOwnerLayout
 		]
 	},
 

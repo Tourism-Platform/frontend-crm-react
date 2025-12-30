@@ -14,14 +14,14 @@ export const UnderConstruction: FC = () => {
 
 					{/* Text Content */}
 					<div className="space-y-6">
-						<h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-balance animate-in fade-in slide-in-from-bottom-4 duration-800 delay-200">
+						<h1 className="text-4xl md:text-6xl font-bold tracking-tighter text-balance">
 							We are building <br />
 							<span className="text-muted-foreground">
 								something amazing.
 							</span>
 						</h1>
 
-						<p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto leading-relaxed animate-in fade-in slide-in-from-bottom-4 duration-800 delay-400">
+						<p className="text-lg md:text-xl text-muted-foreground max-w-lg mx-auto leading-relaxed">
 							Our new platform is currently under development.{" "}
 							<br />
 							Check back soon to see what we're creating.

@@ -64,7 +64,14 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 
 	shared: {
 		folder: "", // пустая строка = корень
-		namespaces: ["header", "sidebar", "home", "common", "login_page"]
+		namespaces: [
+			"header",
+			"sidebar",
+			"home",
+			"common",
+			"login_page",
+			"not_found_page"
+		]
 	}
 };
 
