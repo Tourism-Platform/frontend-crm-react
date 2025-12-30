@@ -55,6 +55,8 @@ export function SmartTable<TData extends object>({
 	isLoading = false,
 	loadingMode = "skeleton",
 	tableLayout,
+	pagination: externalPagination,
+	onPaginationChange: externalOnPaginationChange,
 	getSubRows,
 	getRowCanExpand,
 	...props
@@ -64,10 +66,15 @@ export function SmartTable<TData extends object>({
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
 		{}
 	);
-	const [pagination, setPagination] = useState<PaginationState>({
-		pageIndex: 0,
-		pageSize: 10
-	});
+	const [internalPagination, setInternalPagination] =
+		useState<PaginationState>({
+			pageIndex: 0,
+			pageSize: 10
+		});
+	const pagination = externalPagination ?? internalPagination;
+	const onPaginationChange =
+		externalOnPaginationChange ?? setInternalPagination;
+
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const getColumnIds = (cols: typeof columns) =>
 		cols
@@ -99,7 +106,7 @@ export function SmartTable<TData extends object>({
 			columnOrder
 		},
 		onSortingChange: setSorting,
-		onPaginationChange: setPagination,
+		onPaginationChange,
 		onColumnFiltersChange: setColumnFilters,
 		onColumnVisibilityChange: setColumnVisibility,
 		onColumnOrderChange: setColumnOrder,
@@ -113,8 +120,26 @@ export function SmartTable<TData extends object>({
 		getSubRows,
 		columnResizeMode: "onChange",
 		enableSortingRemoval: false,
-		manualPagination: !!recordCount
+		manualPagination: recordCount !== undefined,
+		pageCount:
+			recordCount !== undefined
+				? Math.ceil(recordCount / pagination.pageSize)
+				: -1
 	});
+
+	// Если на текущей странице нет данных (после удаления) и это не первая страница,
+	// переходим на предыдущую таблицу.
+	useEffect(() => {
+		if (
+			!isLoading &&
+			pagination.pageIndex > 0 &&
+			data.length === 0 &&
+			recordCount !== undefined &&
+			recordCount > 0
+		) {
+			table.setPageIndex(pagination.pageIndex - 1);
+		}
+	}, [data.length, isLoading, recordCount, pagination.pageIndex, table]);
 
 	const VIEW_CONFIG = [
 		...(useViewMode && Card

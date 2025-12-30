@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge } from "@/shared/ui";
+import { Badge, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_STAFF_ROLE_OPTIONS_TYPE,
@@ -20,25 +20,6 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 	return [
 		{
 			id: "select",
-			// header: ({ table }) => (
-			// 	<Checkbox
-			// 		checked={
-			// 			table.getIsAllPageRowsSelected() ||
-			// 			(table.getIsSomePageRowsSelected() && "indeterminate")
-			// 		}
-			// 		onCheckedChange={(value) =>
-			// 			table.toggleAllPageRowsSelected(!!value)
-			// 		}
-			// 		aria-label="Select all"
-			// 	/>
-			// ),
-			// cell: ({ row }) => (
-			// 	<Checkbox
-			// 		checked={row.getIsSelected()}
-			// 		onCheckedChange={(value) => row.toggleSelected(!!value)}
-			// 		aria-label="Select row"
-			// 	/>
-			// ),
 			size: 28,
 			enableSorting: false,
 			enableHiding: false
@@ -46,7 +27,8 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		{
 			header: t("table.firstName"),
 			meta: {
-				headerTitle: t("table.firstName")
+				headerTitle: t("table.firstName"),
+				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			accessorKey: "first_name",
 			cell: ({ row }) => (
@@ -57,7 +39,8 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		{
 			header: t("table.lastName"),
 			meta: {
-				headerTitle: t("table.lastName")
+				headerTitle: t("table.lastName"),
+				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			accessorKey: "last_name",
 			size: 160
@@ -65,7 +48,8 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		{
 			header: t("table.email"),
 			meta: {
-				headerTitle: t("table.email")
+				headerTitle: t("table.email"),
+				skeleton: <Skeleton className="h-4 w-[200px]" />
 			},
 			accessorKey: "email",
 			size: 240
@@ -73,7 +57,8 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		{
 			header: t("table.role"),
 			meta: {
-				headerTitle: t("table.role")
+				headerTitle: t("table.role"),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
 			accessorKey: "role",
 			cell: ({ row }) => (
@@ -90,7 +75,8 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		{
 			header: t("table.status"),
 			meta: {
-				headerTitle: t("table.status")
+				headerTitle: t("table.status"),
+				skeleton: <Skeleton className="h-5 w-[80px] rounded-full" />
 			},
 			accessorKey: "status",
 			cell: ({ row }) => {
@@ -109,7 +95,8 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		{
 			header: t("table.split"),
 			meta: {
-				headerTitle: t("table.split")
+				headerTitle: t("table.split"),
+				skeleton: <Skeleton className="h-4 w-[40px]" />
 			},
 			accessorKey: "split",
 			cell: ({ row }) => (
@@ -121,6 +108,9 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,
 			cell: ({ row }) => <StaffActions user={row.original} />,
+			meta: {
+				skeleton: <div className="size-9 rounded-md" />
+			},
 			size: 60,
 			enableHiding: false
 		}

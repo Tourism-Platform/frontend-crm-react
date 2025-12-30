@@ -1,9 +1,13 @@
 import { ENUM_API_TAGS } from "@/shared/api";
+import {
+	type IPaginationRequest,
+	type IPaginationResponse
+} from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
-	mapStaffListToFrontend,
+	mapStaffPaginatedToFrontend,
 	mapStaffToBackend,
 	mapStaffToFrontend
 } from "../converters";
@@ -11,10 +15,16 @@ import type { IStaffBackend, IStaffUser } from "../types";
 
 export const staffApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getStaff: builder.query<IStaffUser[], void>({
-			query: () => "/staff",
-			transformResponse: (response: IStaffBackend[]) =>
-				mapStaffListToFrontend(response),
+		getStaff: builder.query<
+			IPaginationResponse<IStaffUser>,
+			IPaginationRequest | void
+		>({
+			query: (params) => ({
+				url: "/staff",
+				params: params || undefined
+			}),
+			transformResponse: (response: IPaginationResponse<IStaffBackend>) =>
+				mapStaffPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.STAFF]
 		}),
 		createStaff: builder.mutation<IStaffUser, Partial<IStaffUser>>({

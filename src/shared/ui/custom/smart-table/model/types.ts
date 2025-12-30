@@ -1,4 +1,8 @@
-import { type ColumnDef } from "@tanstack/react-table";
+import {
+	type ColumnDef,
+	type OnChangeFn,
+	type PaginationState
+} from "@tanstack/react-table";
 import { type FC, type ReactNode } from "react";
 
 import { type DataGridProps } from "@/shared/ui";
@@ -41,6 +45,8 @@ export interface ISmartTableProps<TData extends object>
 	onStatusTabChange?: (value: string) => void;
 	showStatusTabsFilter?: boolean;
 	showPagination?: boolean;
+	pagination?: PaginationState;
+	onPaginationChange?: OnChangeFn<PaginationState>;
 	getSubRows?: (row: TData) => TData[] | undefined;
 	getRowCanExpand?: (row: { original: TData }) => boolean;
 	onRowsReorder?: (oldIndex: number, newIndex: number) => void;

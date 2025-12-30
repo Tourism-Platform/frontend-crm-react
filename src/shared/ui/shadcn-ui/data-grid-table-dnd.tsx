@@ -42,6 +42,8 @@ import {
 	DataGridTableBody,
 	DataGridTableBodyRow,
 	DataGridTableBodyRowCell,
+	DataGridTableBodyRowSkeleton,
+	DataGridTableBodyRowSkeletonCell,
 	DataGridTableHead,
 	DataGridTableHeadRow,
 	DataGridTableHeadRowCell,
@@ -207,7 +209,8 @@ function DataGridTableBodyRowDraggable<TData>({
 }
 
 function DataGridTableDnD<TData extends { id: string }>() {
-	const { table, props } = useDataGrid();
+	const { table, isLoading, props } = useDataGrid();
+	const pagination = table.getState().pagination;
 
 	const columnIds = useMemo(
 		() => table.getState().columnOrder,
@@ -290,7 +293,31 @@ function DataGridTableDnD<TData extends { id: string }>() {
 				</DataGridTableHead>
 
 				<DataGridTableBody>
-					{props.tableLayout?.rowsDraggable ? (
+					{props.loadingMode === "skeleton" &&
+					isLoading &&
+					pagination?.pageSize ? (
+						Array.from({ length: pagination.pageSize }).map(
+							(_, rowIndex) => (
+								<DataGridTableBodyRowSkeleton key={rowIndex}>
+									{table
+										.getVisibleFlatColumns()
+										.map((column, colIndex) => {
+											return (
+												<DataGridTableBodyRowSkeletonCell
+													column={column}
+													key={colIndex}
+												>
+													{
+														column.columnDef.meta
+															?.skeleton
+													}
+												</DataGridTableBodyRowSkeletonCell>
+											);
+										})}
+								</DataGridTableBodyRowSkeleton>
+							)
+						)
+					) : props.tableLayout?.rowsDraggable ? (
 						<SortableContext
 							items={rowIds}
 							strategy={verticalListSortingStrategy}

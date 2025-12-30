@@ -1,3 +1,5 @@
+import { type IPaginationResponse } from "@/shared/types";
+
 import type { ENUM_COMMISSION_OPTIONS_TYPE } from "@/entities/commission";
 
 import type { IStaffBackend, IStaffUser } from "../types";
@@ -28,3 +30,10 @@ export const mapStaffToBackend = (
 
 export const mapStaffListToFrontend = (data: IStaffBackend[]): IStaffUser[] =>
 	data.map(mapStaffToFrontend);
+
+export const mapStaffPaginatedToFrontend = (
+	response: IPaginationResponse<IStaffBackend>
+): IPaginationResponse<IStaffUser> => ({
+	data: mapStaffListToFrontend(response.data),
+	total: response.total
+});

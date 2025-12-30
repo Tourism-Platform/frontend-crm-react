@@ -16,9 +16,23 @@ const BASE_URL = ENV.VITE_API_URL || "";
 let staff = [...STAFF_MOCK];
 
 export const staffHandlers = [
-	http.get(`${BASE_URL}/staff`, async () => {
+	http.get(`${BASE_URL}/staff`, async ({ request }) => {
 		await delay(500);
-		return HttpResponse.json(staff, { status: 200 });
+		const url = new URL(request.url);
+		const page = Number(url.searchParams.get("page")) || 1;
+		const limit = Number(url.searchParams.get("limit")) || 10;
+
+		const start = (page - 1) * limit;
+		const end = start + limit;
+		const pagedData = staff.slice(start, end);
+
+		return HttpResponse.json(
+			{
+				data: pagedData,
+				total: staff.length
+			},
+			{ status: 200 }
+		);
 	}),
 
 	http.post(`${BASE_URL}/staff`, async ({ request }) => {

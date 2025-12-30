@@ -1,20 +1,15 @@
-"use client";
-
 import {
 	DndContext,
 	type DragEndEvent,
 	KeyboardSensor,
 	MouseSensor,
-	PointerSensor,
 	TouchSensor,
+	type UniqueIdentifier,
 	closestCenter,
 	useSensor,
 	useSensors
 } from "@dnd-kit/core";
-import {
-	restrictToVerticalAxis,
-	restrictToWindowEdges
-} from "@dnd-kit/modifiers";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
 	SortableContext,
 	useSortable,
@@ -28,64 +23,61 @@ import {
 	flexRender
 } from "@tanstack/react-table";
 import { GripHorizontal } from "lucide-react";
-import { useMemo } from "react";
+import { type CSSProperties, useId } from "react";
 
+import { Button } from "./button";
 import { useDataGrid } from "./data-grid";
 import {
 	DataGridTableBase,
 	DataGridTableBody,
 	DataGridTableBodyRow,
 	DataGridTableBodyRowCell,
+	DataGridTableBodyRowSkeleton,
+	DataGridTableBodyRowSkeletonCell,
+	DataGridTableEmpty,
 	DataGridTableHead,
 	DataGridTableHeadRow,
 	DataGridTableHeadRowCell,
-	DataGridTableHeadRowCellResize
+	DataGridTableHeadRowCellResize,
+	DataGridTableRowSpacer
 } from "./data-grid-table";
 
-function DataGridTableRowHandle<TData>({ row }: { row: Row<TData> }) {
-	const { attributes, listeners, setNodeRef } = useSortable({
-		id: row.id
+function DataGridTableDndRowHandle({ rowId }: { rowId: string }) {
+	const { attributes, listeners } = useSortable({
+		id: rowId
 	});
 
 	return (
-		<div
-			ref={setNodeRef}
+		<Button
+			variant="dim"
+			size="sm"
+			className="size-7"
 			{...attributes}
 			{...listeners}
-			className="cursor-grab active:cursor-grabbing p-1 hover:bg-muted rounded-md transition-colors"
 		>
-			<GripHorizontal className="size-4 text-muted-foreground" />
-		</div>
+			<GripHorizontal />
+		</Button>
 	);
 }
 
-function DataGridTableBodyRowDraggable<TData>({ row }: { row: Row<TData> }) {
-	const {
-		attributes,
-		listeners,
-		isDragging,
-		setNodeRef,
-		transform,
-		transition
-	} = useSortable({
+function DataGridTableDndRow<TData>({ row }: { row: Row<TData> }) {
+	const { transform, transition, setNodeRef, isDragging } = useSortable({
 		id: row.id
 	});
 
-	const style: React.CSSProperties = {
+	const style: CSSProperties = {
+		transform: CSS.Transform.toString(transform), //let dnd-kit do its thing
+		transition: transition,
 		opacity: isDragging ? 0.8 : 1,
-		position: "relative",
-		transform: CSS.Translate.toString(transform),
-		transition,
-		zIndex: isDragging ? 1 : 0
+		zIndex: isDragging ? 1 : 0,
+		position: "relative"
 	};
-
 	return (
 		<DataGridTableBodyRow
 			row={row}
 			dndRef={setNodeRef}
 			dndStyle={style}
-			{...attributes}
-			{...listeners}
+			key={row.id}
 		>
 			{row
 				.getVisibleCells()
@@ -103,95 +95,133 @@ function DataGridTableBodyRowDraggable<TData>({ row }: { row: Row<TData> }) {
 	);
 }
 
-function DataGridTableDnDRows<TData extends { id: string }>({
-	onDragEnd
+function DataGridTableDndRows<TData>({
+	handleDragEnd,
+	dataIds
 }: {
-	onDragEnd?: (event: DragEndEvent) => void;
+	handleDragEnd: (event: DragEndEvent) => void;
+	dataIds: UniqueIdentifier[];
 }) {
-	const { table, props } = useDataGrid();
-
-	const rowIds = useMemo(
-		() => table.getRowModel().rows.map((row) => row.id),
-		[table.getRowModel().rows]
-	);
+	const { table, isLoading, props } = useDataGrid();
+	const pagination = table.getState().pagination;
 
 	const sensors = useSensors(
 		useSensor(MouseSensor, {}),
 		useSensor(TouchSensor, {}),
-		useSensor(PointerSensor, {}),
 		useSensor(KeyboardSensor, {})
 	);
 
 	return (
 		<DndContext
-			sensors={sensors}
+			id={useId()}
 			collisionDetection={closestCenter}
-			modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-			onDragEnd={onDragEnd}
+			modifiers={[restrictToVerticalAxis]}
+			onDragEnd={handleDragEnd}
+			sensors={sensors}
 		>
-			<DataGridTableBase>
-				<DataGridTableHead>
-					{table
-						.getHeaderGroups()
-						.map((headerGroup: HeaderGroup<TData>, index) => {
-							return (
-								<DataGridTableHeadRow
-									headerGroup={headerGroup}
-									key={index}
-								>
-									{headerGroup.headers.map(
-										(header, index) => {
-											const { column } = header;
-
-											return (
-												<DataGridTableHeadRowCell
-													header={header}
-													key={index}
-												>
-													{header.isPlaceholder
-														? null
-														: flexRender(
-																header.column
-																	.columnDef
-																	.header,
-																header.getContext()
-															)}
-													{props.tableLayout
-														?.columnsResizable &&
-														column.getCanResize() && (
-															<DataGridTableHeadRowCellResize
-																header={header}
-															/>
-														)}
-												</DataGridTableHeadRowCell>
-											);
-										}
-									)}
-								</DataGridTableHeadRow>
-							);
-						})}
-				</DataGridTableHead>
-
-				<DataGridTableBody>
-					<SortableContext
-						items={rowIds}
-						strategy={verticalListSortingStrategy}
-					>
+			<div className="relative">
+				<DataGridTableBase>
+					<DataGridTableHead>
 						{table
-							.getRowModel()
-							.rows.map((row: Row<TData>, index) => {
+							.getHeaderGroups()
+							.map((headerGroup: HeaderGroup<TData>, index) => {
 								return (
-									<DataGridTableBodyRowDraggable
-										row={row}
+									<DataGridTableHeadRow
+										headerGroup={headerGroup}
 										key={index}
-									/>
+									>
+										{headerGroup.headers.map(
+											(header, index) => {
+												const { column } = header;
+
+												return (
+													<DataGridTableHeadRowCell
+														header={header}
+														key={index}
+													>
+														{header.isPlaceholder
+															? null
+															: flexRender(
+																	header
+																		.column
+																		.columnDef
+																		.header,
+																	header.getContext()
+																)}
+														{props.tableLayout
+															?.columnsResizable &&
+															column.getCanResize() && (
+																<DataGridTableHeadRowCellResize
+																	header={
+																		header
+																	}
+																/>
+															)}
+													</DataGridTableHeadRowCell>
+												);
+											}
+										)}
+									</DataGridTableHeadRow>
 								);
 							})}
-					</SortableContext>
-				</DataGridTableBody>
-			</DataGridTableBase>
+					</DataGridTableHead>
+
+					{(props.tableLayout?.stripped ||
+						!props.tableLayout?.rowBorder) && (
+						<DataGridTableRowSpacer />
+					)}
+
+					<DataGridTableBody>
+						{props.loadingMode === "skeleton" &&
+						isLoading &&
+						pagination?.pageSize ? (
+							Array.from({ length: pagination.pageSize }).map(
+								(_, rowIndex) => (
+									<DataGridTableBodyRowSkeleton
+										key={rowIndex}
+									>
+										{table
+											.getVisibleFlatColumns()
+											.map((column, colIndex) => {
+												return (
+													<DataGridTableBodyRowSkeletonCell
+														column={column}
+														key={colIndex}
+													>
+														{
+															column.columnDef
+																.meta?.skeleton
+														}
+													</DataGridTableBodyRowSkeletonCell>
+												);
+											})}
+									</DataGridTableBodyRowSkeleton>
+								)
+							)
+						) : table.getRowModel().rows.length ? (
+							<SortableContext
+								items={dataIds}
+								strategy={verticalListSortingStrategy}
+							>
+								{table
+									.getRowModel()
+									.rows.map((row: Row<TData>) => {
+										return (
+											<DataGridTableDndRow
+												row={row}
+												key={row.id}
+											/>
+										);
+									})}
+							</SortableContext>
+						) : (
+							<DataGridTableEmpty />
+						)}
+					</DataGridTableBody>
+				</DataGridTableBase>
+			</div>
 		</DndContext>
 	);
 }
 
-export { DataGridTableDnDRows, DataGridTableRowHandle };
+export { DataGridTableDndRowHandle, DataGridTableDndRows };

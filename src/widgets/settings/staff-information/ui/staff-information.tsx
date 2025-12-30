@@ -1,4 +1,5 @@
-import { type FC } from "react";
+import { type PaginationState } from "@tanstack/react-table";
+import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
@@ -11,7 +12,18 @@ import { COLUMNS } from "../model";
 
 export const StaffInformation: FC = () => {
 	const { t } = useTranslation("staff_information_page");
-	const { data: users = [] } = useGetStaffQuery();
+	const [pagination, setPagination] = useState<PaginationState>({
+		pageIndex: 0,
+		pageSize: 10
+	});
+
+	const { data, isLoading, isFetching } = useGetStaffQuery({
+		page: pagination.pageIndex + 1,
+		limit: pagination.pageSize
+	});
+
+	const users = data?.data ?? [];
+	const totalCount = data?.total ?? 0;
 
 	return (
 		<section className="flex gap-5 flex-col">
@@ -22,6 +34,11 @@ export const StaffInformation: FC = () => {
 						data={users}
 						columns={COLUMNS()}
 						actions={<InviteStaff />}
+						isLoading={isLoading || isFetching}
+						loadingMode="skeleton"
+						recordCount={totalCount}
+						pagination={pagination}
+						onPaginationChange={setPagination}
 					/>
 				</CardContent>
 			</Card>
