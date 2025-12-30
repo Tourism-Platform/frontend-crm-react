@@ -15,6 +15,11 @@ interface SmartTableFiltersProps<TData extends object> {
 	activeStatusTab?: string;
 	onStatusTabChange?: (value: string) => void;
 	showStatusTabsFilter?: boolean;
+	search?: string;
+	onSearchChange?: (value: string) => void;
+	status?: any[];
+	onStatusChange?: (value: any[]) => void;
+	statusOptions?: { label: string; value: string }[];
 }
 
 export function SmartTableFilters<TData extends object>({
@@ -26,7 +31,12 @@ export function SmartTableFilters<TData extends object>({
 	statusTabs,
 	activeStatusTab,
 	onStatusTabChange,
-	showStatusTabsFilter
+	showStatusTabsFilter,
+	search,
+	onSearchChange,
+	status,
+	onStatusChange,
+	statusOptions
 }: SmartTableFiltersProps<TData>) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -83,6 +93,11 @@ export function SmartTableFilters<TData extends object>({
 			activeStatusTab={activeStatusTab}
 			onStatusTabChange={onStatusTabChange}
 			showStatusTabsFilter={showStatusTabsFilter}
+			search={search}
+			onSearchChange={onSearchChange}
+			status={status}
+			onStatusChange={onStatusChange}
+			statusOptions={statusOptions}
 			currentView="table" // Internal use for icon sizing in Filters
 		/>
 	);

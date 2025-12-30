@@ -12,7 +12,7 @@ interface IFiltersProps extends IShowFilters {
 	id: string;
 	inputRef: RefObject<HTMLInputElement | null>;
 	table: Table<IItem>;
-	selectedStatuses: string[];
+	selectedStatuses: any[];
 	uniqueStatusValues: any[];
 	handleStatusChange: (checked: boolean, value: string) => void;
 	currentView?: "table" | "cards";
@@ -26,6 +26,11 @@ export interface IShowFilters {
 	activeStatusTab?: string;
 	showStatusTabsFilter?: boolean;
 	onStatusTabChange?: (value: string) => void;
+	search?: string;
+	onSearchChange?: (value: string) => void;
+	status?: any[];
+	onStatusChange?: (value: any[]) => void;
+	statusOptions?: { label: string; value: string }[];
 }
 
 export const Filters: FC<IFiltersProps> = ({
@@ -42,6 +47,11 @@ export const Filters: FC<IFiltersProps> = ({
 	activeStatusTab,
 	showStatusTabsFilter = false,
 	onStatusTabChange,
+	search,
+	onSearchChange,
+	status: controlledStatus,
+	onStatusChange,
+	statusOptions,
 	currentView = "table"
 }) => {
 	return (
@@ -59,7 +69,13 @@ export const Filters: FC<IFiltersProps> = ({
 			<div className="flex items-center gap-3">
 				{/* Filter by name or email */}
 				{showSearchFilter && (
-					<SearchFilter id={id} inputRef={inputRef} table={table} />
+					<SearchFilter
+						id={id}
+						inputRef={inputRef}
+						table={table}
+						search={search}
+						onSearchChange={onSearchChange}
+					/>
 				)}
 				{/* Filter by status - только для режима таблицы */}
 				{currentView === "table" &&
@@ -67,9 +83,25 @@ export const Filters: FC<IFiltersProps> = ({
 					showStatusFilter && (
 						<StatusFilter
 							id={id}
-							selectedStatuses={selectedStatuses}
+							selectedStatuses={
+								controlledStatus ?? selectedStatuses
+							}
 							uniqueStatusValues={uniqueStatusValues}
-							handleStatusChange={handleStatusChange}
+							handleStatusChange={
+								onStatusChange
+									? (checked, value) => {
+											const current =
+												controlledStatus ?? [];
+											const next = checked
+												? [...current, value]
+												: current.filter(
+														(s) => s !== value
+													);
+											onStatusChange(next);
+										}
+									: handleStatusChange
+							}
+							statusOptions={statusOptions}
 						/>
 					)}
 				{/* Toggle columns visibility */}

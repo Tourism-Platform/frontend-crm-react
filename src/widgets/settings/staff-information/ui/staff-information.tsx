@@ -1,10 +1,17 @@
-import { type PaginationState } from "@tanstack/react-table";
-import { type FC, useState } from "react";
+import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
+import { type FC } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { useGetStaffQuery } from "@/entities/staff";
+import {
+	type ENUM_STAFF_STATUS_OPTIONS_TYPE,
+	type IStaffFilters,
+	STAFF_STATUS_LABELS,
+	useGetStaffQuery
+} from "@/entities/staff";
 
 import { InviteStaff } from "@/features/settings";
 
@@ -12,18 +19,51 @@ import { COLUMNS } from "../model";
 
 export const StaffInformation: FC = () => {
 	const { t } = useTranslation("staff_information_page");
-	const [pagination, setPagination] = useState<PaginationState>({
-		pageIndex: 0,
-		pageSize: 10
+
+	const { watch, setValue } = useForm<IStaffFilters>({
+		defaultValues: {
+			search: "",
+			status: [],
+			page: 1,
+			limit: 10
+		}
 	});
 
-	const { data, isLoading, isFetching } = useGetStaffQuery({
-		page: pagination.pageIndex + 1,
-		limit: pagination.pageSize
-	});
+	const filters = watch();
+
+	const { data, isLoading, isFetching } = useGetStaffQuery(filters);
 
 	const users = data?.data ?? [];
 	const totalCount = data?.total ?? 0;
+
+	const statusOptions = useValueToTranslateLabel(STAFF_STATUS_LABELS);
+
+	const handlePaginationChange: OnChangeFn<PaginationState> = (
+		updaterOrValue
+	) => {
+		const currentPagination = {
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		};
+
+		const nextValue =
+			typeof updaterOrValue === "function"
+				? updaterOrValue(currentPagination)
+				: updaterOrValue;
+
+		setValue("page", nextValue.pageIndex + 1);
+		setValue("limit", nextValue.pageSize);
+	};
+
+	const handleSearchChange = (val: string) => {
+		setValue("search", val);
+		setValue("page", 1);
+	};
+
+	const handleStatusChange = (val: string[]) => {
+		setValue("status", val as ENUM_STAFF_STATUS_OPTIONS_TYPE[]);
+		setValue("page", 1);
+	};
 
 	return (
 		<section className="flex gap-5 flex-col">
@@ -37,8 +77,16 @@ export const StaffInformation: FC = () => {
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
 						recordCount={totalCount}
-						pagination={pagination}
-						onPaginationChange={setPagination}
+						pagination={{
+							pageIndex: filters.page - 1,
+							pageSize: filters.limit
+						}}
+						onPaginationChange={handlePaginationChange}
+						search={filters.search}
+						onSearchChange={handleSearchChange}
+						status={filters.status}
+						onStatusChange={handleStatusChange}
+						statusOptions={statusOptions}
 					/>
 				</CardContent>
 			</Card>

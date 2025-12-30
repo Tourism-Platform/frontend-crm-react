@@ -13,18 +13,25 @@ import {
 
 interface IStatusFilterProps {
 	id: string;
-	selectedStatuses: string[];
+	selectedStatuses: any[];
 	uniqueStatusValues: any[];
 	handleStatusChange: (checked: boolean, value: string) => void;
+	statusOptions?: { label: string; value: string }[];
 }
 
 export const StatusFilter: FC<IStatusFilterProps> = ({
 	id,
 	selectedStatuses,
 	uniqueStatusValues,
-	handleStatusChange
+	handleStatusChange,
+	statusOptions
 }) => {
 	const { t } = useTranslation("common");
+
+	const options =
+		statusOptions ??
+		uniqueStatusValues.map((v) => ({ label: v, value: v }));
+
 	return (
 		<Popover>
 			<PopoverTrigger asChild>
@@ -40,23 +47,28 @@ export const StatusFilter: FC<IStatusFilterProps> = ({
 			<PopoverContent className="w-auto min-w-36 p-3" align="start">
 				<div className="space-y-3">
 					<div className="space-y-3">
-						{uniqueStatusValues.map((value, i) => (
+						{options.map((option, i) => (
 							<div
-								key={value}
+								key={option.value}
 								className="flex items-center gap-2"
 							>
 								<Checkbox
 									id={`${id}-${i}`}
-									checked={selectedStatuses.includes(value)}
+									checked={selectedStatuses.includes(
+										option.value
+									)}
 									onCheckedChange={(checked: boolean) =>
-										handleStatusChange(checked, value)
+										handleStatusChange(
+											checked,
+											option.value
+										)
 									}
 								/>
 								<Label
 									htmlFor={`${id}-${i}`}
 									className="flex grow justify-between gap-2 font-normal"
 								>
-									{value}
+									{option.label}
 								</Label>
 							</div>
 						))}

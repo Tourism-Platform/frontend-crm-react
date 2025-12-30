@@ -31,6 +31,11 @@ export interface ISmartTableFilters {
 	showSearchFilter?: boolean;
 	showStatusFilter?: boolean;
 	showVisibilityFilter?: boolean;
+	search?: string;
+	onSearchChange?: (value: string) => void;
+	status?: string[];
+	onStatusChange?: (value: string[]) => void;
+	statusOptions?: { label: string; value: string }[];
 }
 
 export interface ISmartTableProps<TData extends object>

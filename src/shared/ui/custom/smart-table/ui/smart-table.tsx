@@ -57,6 +57,11 @@ export function SmartTable<TData extends object>({
 	tableLayout,
 	pagination: externalPagination,
 	onPaginationChange: externalOnPaginationChange,
+	search,
+	onSearchChange,
+	status,
+	onStatusChange,
+	statusOptions,
 	getSubRows,
 	getRowCanExpand,
 	...props
@@ -217,6 +222,11 @@ export function SmartTable<TData extends object>({
 										statusTabs={statusTabs}
 										activeStatusTab={activeStatusTab}
 										onStatusTabChange={onStatusTabChange}
+										search={search}
+										onSearchChange={onSearchChange}
+										status={status}
+										onStatusChange={onStatusChange}
+										statusOptions={statusOptions}
 									/>
 								)}
 							</div>

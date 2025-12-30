@@ -2,7 +2,7 @@ import { type IPaginationResponse } from "@/shared/types";
 
 import type { ENUM_COMMISSION_OPTIONS_TYPE } from "@/entities/commission";
 
-import type { IStaffBackend, IStaffUser } from "../types";
+import type { IStaffBackend, IStaffFilters, IStaffUser } from "../types";
 
 export const mapStaffToFrontend = (data: IStaffBackend): IStaffUser => ({
 	id: data.id,
@@ -36,4 +36,11 @@ export const mapStaffPaginatedToFrontend = (
 ): IPaginationResponse<IStaffUser> => ({
 	data: mapStaffListToFrontend(response.data),
 	total: response.total
+});
+
+export const mapStaffFiltersToBackend = (filters: IStaffFilters) => ({
+	page: filters.page,
+	limit: filters.limit,
+	search: filters.search || undefined,
+	status: filters.status.length > 0 ? filters.status.join(",") : undefined
 });

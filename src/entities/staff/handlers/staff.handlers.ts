@@ -21,15 +21,35 @@ export const staffHandlers = [
 		const url = new URL(request.url);
 		const page = Number(url.searchParams.get("page")) || 1;
 		const limit = Number(url.searchParams.get("limit")) || 10;
+		const search = url.searchParams.get("search");
+		const status = url.searchParams.get("status")?.split(",");
+
+		let filteredStaff = [...staff];
+
+		if (search) {
+			const query = search.toLowerCase();
+			filteredStaff = filteredStaff.filter(
+				(s) =>
+					s.first_name.toLowerCase().includes(query) ||
+					s.last_name.toLowerCase().includes(query) ||
+					s.email.toLowerCase().includes(query)
+			);
+		}
+
+		if (status && status.length > 0) {
+			filteredStaff = filteredStaff.filter((s) =>
+				status.includes(s.status)
+			);
+		}
 
 		const start = (page - 1) * limit;
 		const end = start + limit;
-		const pagedData = staff.slice(start, end);
+		const pagedData = filteredStaff.slice(start, end);
 
 		return HttpResponse.json(
 			{
 				data: pagedData,
-				total: staff.length
+				total: filteredStaff.length
 			},
 			{ status: 200 }
 		);
