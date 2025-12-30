@@ -1,5 +1,7 @@
 ﻿import type { FC } from "react";
 
+import { UnderConstruction } from "@/widgets/under-construction";
+
 export const TagsPage: FC = () => {
-	return <div>TagsPage</div>;
+	return <UnderConstruction />;
 };
