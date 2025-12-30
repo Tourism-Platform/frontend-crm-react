@@ -14,7 +14,10 @@ interface ICommissionTypeProps {
 	isLoading: boolean;
 }
 
-export const CommissionType: FC<ICommissionTypeProps> = ({ data }) => {
+export const CommissionType: FC<ICommissionTypeProps> = ({
+	data,
+	isLoading
+}) => {
 	const { t } = useTranslation("financial_settings_page");
 	return (
 		<div className="flex gap-5 flex-col">
@@ -22,7 +25,10 @@ export const CommissionType: FC<ICommissionTypeProps> = ({ data }) => {
 				data={data}
 				columns={COLUMNS()}
 				actions={<NewCurrencyRate />}
+				defaultPageSize={5}
 				showTopFilters={false}
+				showPagination={false}
+				isLoading={isLoading}
 				topChildren={
 					<div className="flex flex-col gap-2">
 						<h2 className="text-xl">

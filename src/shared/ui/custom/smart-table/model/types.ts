@@ -51,6 +51,7 @@ export interface ISmartTableProps<TData extends object>
 	showStatusTabsFilter?: boolean;
 	showPagination?: boolean;
 	pagination?: PaginationState;
+	defaultPageSize?: number;
 	onPaginationChange?: OnChangeFn<PaginationState>;
 	getSubRows?: (row: TData) => TData[] | undefined;
 	getRowCanExpand?: (row: { original: TData }) => boolean;

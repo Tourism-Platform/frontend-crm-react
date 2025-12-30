@@ -10,14 +10,21 @@ import { CommissionType } from "./commission-type";
 
 export const FinancialSettings: FC = () => {
 	const { t } = useTranslation("financial_settings_page");
-	const { data: commissions = [], isLoading } = useGetCommissionsQuery();
+	const {
+		data: commissions = [],
+		isLoading,
+		isFetching
+	} = useGetCommissionsQuery();
 
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex gap-8 flex-col">
-					<CommissionType data={commissions} isLoading={isLoading} />
+					<CommissionType
+						data={commissions}
+						isLoading={isLoading || isFetching}
+					/>
 					<Separator />
 					<CommissionRate />
 				</CardContent>

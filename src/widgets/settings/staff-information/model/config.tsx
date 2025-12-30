@@ -15,8 +15,7 @@ import {
 import { StaffActions } from "../ui";
 
 export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
-	const { t } = useTranslation("staff_information_page");
-	const { t: tOptions } = useTranslation("options");
+	const { t } = useTranslation(["staff_information_page", "options"]);
 	return [
 		{
 			id: "select",
@@ -25,9 +24,11 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 			enableHiding: false
 		},
 		{
-			header: t("table.firstName"),
+			header: t("table.firstName", { ns: "staff_information_page" }),
 			meta: {
-				headerTitle: t("table.firstName"),
+				headerTitle: t("table.firstName", {
+					ns: "staff_information_page"
+				}),
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			accessorKey: "first_name",
@@ -37,27 +38,29 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 			size: 160
 		},
 		{
-			header: t("table.lastName"),
+			header: t("table.lastName", { ns: "staff_information_page" }),
 			meta: {
-				headerTitle: t("table.lastName"),
+				headerTitle: t("table.lastName", {
+					ns: "staff_information_page"
+				}),
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			accessorKey: "last_name",
 			size: 160
 		},
 		{
-			header: t("table.email"),
+			header: t("table.email", { ns: "staff_information_page" }),
 			meta: {
-				headerTitle: t("table.email"),
+				headerTitle: t("table.email", { ns: "staff_information_page" }),
 				skeleton: <Skeleton className="h-4 w-[200px]" />
 			},
 			accessorKey: "email",
 			size: 240
 		},
 		{
-			header: t("table.role"),
+			header: t("table.role", { ns: "staff_information_page" }),
 			meta: {
-				headerTitle: t("table.role"),
+				headerTitle: t("table.role", { ns: "staff_information_page" }),
 				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
 			accessorKey: "role",
@@ -73,9 +76,11 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 			size: 180
 		},
 		{
-			header: t("table.status"),
+			header: t("table.status", { ns: "staff_information_page" }),
 			meta: {
-				headerTitle: t("table.status"),
+				headerTitle: t("table.status", {
+					ns: "staff_information_page"
+				}),
 				skeleton: <Skeleton className="h-5 w-[80px] rounded-full" />
 			},
 			accessorKey: "status",
@@ -86,16 +91,16 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 
 				return (
 					<Badge variant={STAFF_STATUS_VARIANTS[status]}>
-						{tOptions(STAFF_STATUS_LABELS[status])}
+						{t(STAFF_STATUS_LABELS[status], { ns: "options" })}
 					</Badge>
 				);
 			},
 			size: 120
 		},
 		{
-			header: t("table.split"),
+			header: t("table.split", { ns: "staff_information_page" }),
 			meta: {
-				headerTitle: t("table.split"),
+				headerTitle: t("table.split", { ns: "staff_information_page" }),
 				skeleton: <Skeleton className="h-4 w-[40px]" />
 			},
 			accessorKey: "split",

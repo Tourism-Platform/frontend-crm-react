@@ -1,6 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
+import { Skeleton } from "@/shared/ui";
+
 import {
 	CURRENCY_LABELS,
 	type ENUM_CURRENCY_OPTIONS_TYPE,
@@ -22,7 +24,8 @@ export const COLUMNS = (): ColumnDef<ICommission>[] => {
 		{
 			header: t("commission_type.table.name"),
 			meta: {
-				headerTitle: t("commission_type.table.name")
+				headerTitle: t("commission_type.table.name"),
+				skeleton: <Skeleton className="h-4 w-[160px]" />
 			},
 			accessorKey: "name",
 			cell: ({ row }) => (
@@ -39,7 +42,8 @@ export const COLUMNS = (): ColumnDef<ICommission>[] => {
 		{
 			header: t("commission_type.table.rate"),
 			meta: {
-				headerTitle: t("commission_type.table.rate")
+				headerTitle: t("commission_type.table.rate"),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
 			},
 			accessorKey: "rate",
 			size: 160
@@ -48,6 +52,9 @@ export const COLUMNS = (): ColumnDef<ICommission>[] => {
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,
 			cell: ({ row }) => <FinancialActions row={row.original} />,
+			meta: {
+				skeleton: <div className="size-9 rounded-md" />
+			},
 			size: 60,
 			enableHiding: false
 		}

@@ -56,6 +56,7 @@ export function SmartTable<TData extends object>({
 	loadingMode = "skeleton",
 	tableLayout,
 	pagination: externalPagination,
+	defaultPageSize = 10,
 	onPaginationChange: externalOnPaginationChange,
 	search,
 	onSearchChange,
@@ -74,7 +75,7 @@ export function SmartTable<TData extends object>({
 	const [internalPagination, setInternalPagination] =
 		useState<PaginationState>({
 			pageIndex: 0,
-			pageSize: 10
+			pageSize: defaultPageSize
 		});
 	const pagination = externalPagination ?? internalPagination;
 	const onPaginationChange =
@@ -117,7 +118,9 @@ export function SmartTable<TData extends object>({
 		onColumnOrderChange: setColumnOrder,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		getPaginationRowModel: getPaginationRowModel(),
+		...(showPagination || recordCount !== undefined
+			? { getPaginationRowModel: getPaginationRowModel() }
+			: {}),
 		getFilteredRowModel: getFilteredRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
 		getExpandedRowModel: getExpandedRowModel(),
