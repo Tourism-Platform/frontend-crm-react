@@ -1,2 +1,2 @@
-export * from "./ui/smart-table";
+export * from "./ui";
 export * from "./model/types";

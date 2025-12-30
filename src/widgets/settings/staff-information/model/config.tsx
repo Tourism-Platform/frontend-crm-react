@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge } from "@/shared/ui";
 
 import {
 	type ENUM_STAFF_ROLE_OPTIONS_TYPE,
@@ -20,31 +20,34 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 	return [
 		{
 			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={
-						table.getIsAllPageRowsSelected() ||
-						(table.getIsSomePageRowsSelected() && "indeterminate")
-					}
-					onCheckedChange={(value) =>
-						table.toggleAllPageRowsSelected(!!value)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
+			// header: ({ table }) => (
+			// 	<Checkbox
+			// 		checked={
+			// 			table.getIsAllPageRowsSelected() ||
+			// 			(table.getIsSomePageRowsSelected() && "indeterminate")
+			// 		}
+			// 		onCheckedChange={(value) =>
+			// 			table.toggleAllPageRowsSelected(!!value)
+			// 		}
+			// 		aria-label="Select all"
+			// 	/>
+			// ),
+			// cell: ({ row }) => (
+			// 	<Checkbox
+			// 		checked={row.getIsSelected()}
+			// 		onCheckedChange={(value) => row.toggleSelected(!!value)}
+			// 		aria-label="Select row"
+			// 	/>
+			// ),
 			size: 28,
 			enableSorting: false,
 			enableHiding: false
 		},
 		{
 			header: t("table.firstName"),
+			meta: {
+				headerTitle: t("table.firstName")
+			},
 			accessorKey: "first_name",
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("first_name")}</div>
@@ -53,16 +56,25 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		},
 		{
 			header: t("table.lastName"),
+			meta: {
+				headerTitle: t("table.lastName")
+			},
 			accessorKey: "last_name",
 			size: 160
 		},
 		{
 			header: t("table.email"),
+			meta: {
+				headerTitle: t("table.email")
+			},
 			accessorKey: "email",
 			size: 240
 		},
 		{
 			header: t("table.role"),
+			meta: {
+				headerTitle: t("table.role")
+			},
 			accessorKey: "role",
 			cell: ({ row }) => (
 				<div className="font-medium">
@@ -77,6 +89,9 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		},
 		{
 			header: t("table.status"),
+			meta: {
+				headerTitle: t("table.status")
+			},
 			accessorKey: "status",
 			cell: ({ row }) => {
 				const status = row.getValue(
@@ -93,6 +108,9 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 		},
 		{
 			header: t("table.split"),
+			meta: {
+				headerTitle: t("table.split")
+			},
 			accessorKey: "split",
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("split")}</div>

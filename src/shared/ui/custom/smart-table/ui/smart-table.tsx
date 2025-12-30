@@ -30,6 +30,7 @@ import { DataGridTableDnD } from "@/shared/ui/shadcn-ui/data-grid-table-dnd";
 
 import { type TSmartTableProps } from "../model/types";
 
+import { EmptyState } from "./empty-state";
 import { SmartTableFilters } from "./smart-table-filters";
 import { SmartTablePagination } from "./smart-table-pagination";
 
@@ -122,15 +123,21 @@ export function SmartTable<TData extends object>({
 						type: "cards" as const,
 						component: (
 							<div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-								{data.map((item, index) => (
-									<Card
-										key={
-											(item as { id?: string }).id ||
-											index
-										}
-										data={item}
-									/>
-								))}
+								{data.length > 0 ? (
+									data.map((item, index) => (
+										<Card
+											key={
+												(item as { id?: string }).id ||
+												index
+											}
+											data={item}
+										/>
+									))
+								) : (
+									<div className="col-span-full">
+										<EmptyState />
+									</div>
+								)}
 							</div>
 						),
 						icon: <LayoutGridIcon className="w-3 h-3" />
@@ -156,6 +163,7 @@ export function SmartTable<TData extends object>({
 			isLoading={isLoading}
 			loadingMode={loadingMode}
 			tableLayout={tableLayout}
+			emptyMessage={<EmptyState />}
 			{...props}
 		>
 			<CustomOptionTabs defaultValue={defaultViewMode}>

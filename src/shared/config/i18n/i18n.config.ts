@@ -210,3 +210,4 @@ export type TTourSettingsPageKeys = TNestedKeyOf<TTourSettingsPage>;
 export type TLandingPageKeys = TNestedKeyOf<TLandingPage>;
 export type TNotFoundPageKeys = TNestedKeyOf<TNotFoundPage>;
 export type TOptionsKeys = TNestedKeyOf<TOptions>;
+export type TCommonKeys = TNestedKeyOf<TCommon>;

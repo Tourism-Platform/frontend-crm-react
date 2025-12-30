@@ -16,7 +16,11 @@
 			"title": "View",
 			"toggle": "Toggle columns"
 		},
-		"pagination": "Rows per page"
+		"pagination": "Rows per page",
+		"empty_state": {
+			"title": "No results found",
+			"description": "Try adjusting your filters or search to find what you're looking for"
+		}
 	},
 	"date_picker": {
 		"placeholder": "Select date",

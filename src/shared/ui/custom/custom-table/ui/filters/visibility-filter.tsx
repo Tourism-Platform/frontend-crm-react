@@ -36,6 +36,8 @@ export const VisibilityFilter: FC<IVisibilityFilterProps> = ({ table }) => {
 					.getAllColumns()
 					.filter((column) => column.getCanHide())
 					.map((column) => {
+						const label =
+							column.columnDef.meta?.headerTitle ?? column.id;
 						return (
 							<DropdownMenuCheckboxItem
 								key={column.id}
@@ -46,7 +48,7 @@ export const VisibilityFilter: FC<IVisibilityFilterProps> = ({ table }) => {
 								}
 								onSelect={(event) => event.preventDefault()}
 							>
-								{column.id}
+								{label}
 							</DropdownMenuCheckboxItem>
 						);
 					})}
