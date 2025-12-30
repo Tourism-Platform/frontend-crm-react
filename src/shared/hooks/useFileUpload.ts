@@ -6,6 +6,7 @@ import {
 	type DragEvent,
 	type InputHTMLAttributes,
 	useCallback,
+	useEffect,
 	useRef,
 	useState
 } from "react";
@@ -82,6 +83,20 @@ export const useFileUpload = (
 	});
 
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	// Синхронизация с внешними данными (например, после загрузки из API)
+	useEffect(() => {
+		if (initialFiles.length > 0) {
+			setState((prev) => ({
+				...prev,
+				files: initialFiles.map((file) => ({
+					file,
+					id: file.id,
+					preview: file.url
+				}))
+			}));
+		}
+	}, [initialFiles]);
 
 	const validateFile = useCallback(
 		(file: File | TFileMetadata): string | null => {

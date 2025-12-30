@@ -157,7 +157,20 @@
 			}
 		},
 		"documents": {
-			"title": "Documents"
+			"title": "Documents",
+			"toasts": {
+				"load": {
+					"error": "Failed to load documents"
+				},
+				"upload": {
+					"success": "Document uploaded successfully",
+					"error": "Failed to upload document"
+				},
+				"delete": {
+					"success": "Document deleted successfully",
+					"error": "Failed to delete document"
+				}
+			}
 		},
 		"buttons": {
 			"save": "Save",

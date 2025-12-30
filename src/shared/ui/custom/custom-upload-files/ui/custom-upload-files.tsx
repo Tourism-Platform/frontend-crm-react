@@ -1,5 +1,6 @@
 import {
 	AlertCircleIcon,
+	DownloadIcon,
 	FileIcon,
 	Trash2Icon,
 	UploadIcon,
@@ -8,43 +9,35 @@ import {
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { formatBytes, useFileUpload } from "@/shared/hooks";
+import {
+	type TFileMetadata,
+	type TFileWithPreview,
+	formatBytes,
+	useFileUpload
+} from "@/shared/hooks";
+import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
 import { getFileIcon } from "../model";
 
-const initialFiles = [
-	{
-		name: "document.pdf",
-		size: 528737,
-		type: "application/pdf",
-		url: "https://example.com/document.pdf",
-		id: "document.pdf-1744638436563-8u5xuls"
-	},
-	{
-		name: "intro.zip",
-		size: 252873,
-		type: "application/zip",
-		url: "https://example.com/intro.zip",
-		id: "intro.zip-1744638436563-8u5xuls"
-	},
-	{
-		name: "conclusion.xlsx",
-		size: 352873,
-		type: "application/xlsx",
-		url: "https://example.com/conclusion.xlsx",
-		id: "conclusion.xlsx-1744638436563-8u5xuls"
-	}
-];
-
-interface ICustomUploadFiles {
+interface ICustomUploadFilesProps {
 	size?: number;
 	maxFiles?: number;
+	initialFiles?: TFileMetadata[];
+	onFilesChange?: (files: TFileWithPreview[]) => void;
+	onFileRemove?: (fileId: string) => void;
+	isLoading?: boolean;
+	loadingId?: string;
 }
 
-export const CustomUploadFiles: FC<ICustomUploadFiles> = ({
+export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 	size = 10,
-	maxFiles = 10
+	maxFiles = 10,
+	initialFiles = [],
+	onFilesChange,
+	onFileRemove,
+	isLoading = false,
+	loadingId
 }) => {
 	const { t } = useTranslation("common");
 	const maxSize = size * 1024 * 1024;
@@ -65,8 +58,27 @@ export const CustomUploadFiles: FC<ICustomUploadFiles> = ({
 		multiple: true,
 		maxFiles,
 		maxSize,
-		initialFiles
+		initialFiles,
+		onFilesChange
 	});
+
+	const handleRemoveFile = (fileId: string) => {
+		removeFile(fileId);
+		onFileRemove?.(fileId);
+	};
+
+	const handleDownloadFile = (file: TFileWithPreview) => {
+		const url = file.preview || (file.file as TFileMetadata).url;
+		if (!url) return;
+
+		const link = document.createElement("a");
+		link.href = url;
+		link.download =
+			file.file instanceof File ? file.file.name : file.file.name;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -97,6 +109,7 @@ export const CustomUploadFiles: FC<ICustomUploadFiles> = ({
 								size="sm"
 								type="button"
 								onClick={clearFiles}
+								disabled={isLoading}
 							>
 								<Trash2Icon
 									className="-ms-0.5 size-3.5 opacity-60"
@@ -106,46 +119,84 @@ export const CustomUploadFiles: FC<ICustomUploadFiles> = ({
 							</Button>
 						</div>
 						<div className="w-full space-y-2">
-							{files.map((file) => (
-								<div
-									key={file.id}
-									className="bg-background flex items-center justify-between gap-2 rounded-lg border p-2 pe-3"
-								>
-									<div className="flex items-center gap-3 overflow-hidden">
-										<div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded border">
-											{getFileIcon(file)}
+							{files.map((file) => {
+								const isFileLoading =
+									loadingId === file.id ||
+									(isLoading && file.file instanceof File);
+
+								return (
+									<div
+										key={file.id}
+										className={cn(
+											"bg-background flex items-center justify-between gap-2 rounded-lg border p-2 pe-3 transition-opacity",
+											isFileLoading && "opacity-60"
+										)}
+									>
+										<div className="flex items-center gap-3 overflow-hidden">
+											<div className="flex aspect-square size-10 shrink-0 items-center justify-center rounded border">
+												{getFileIcon(file)}
+											</div>
+											<div className="flex min-w-0 flex-col gap-0.5">
+												<p className="truncate text-[13px] font-medium">
+													{file.file instanceof File
+														? file.file.name
+														: file.file.name}
+												</p>
+												<p className="text-muted-foreground text-xs">
+													{formatBytes(
+														file.file instanceof
+															File
+															? file.file.size
+															: file.file.size
+													)}
+												</p>
+											</div>
 										</div>
-										<div className="flex min-w-0 flex-col gap-0.5">
-											<p className="truncate text-[13px] font-medium">
-												{file.file instanceof File
-													? file.file.name
-													: file.file.name}
-											</p>
-											<p className="text-muted-foreground text-xs">
-												{formatBytes(
+
+										<div className="flex items-center gap-1">
+											{/* Download button - only for files with URL */}
+											{(file.preview ||
+												!(
 													file.file instanceof File
-														? file.file.size
-														: file.file.size
-												)}
-											</p>
+												)) && (
+												<Button
+													size="icon"
+													type="button"
+													variant="ghost"
+													className="text-muted-foreground/80 hover:text-foreground size-8 hover:bg-transparent"
+													onClick={() =>
+														handleDownloadFile(file)
+													}
+													aria-label="Download file"
+													disabled={isFileLoading}
+												>
+													<DownloadIcon
+														className="size-4"
+														aria-hidden="true"
+													/>
+												</Button>
+											)}
+
+											<Button
+												size="icon"
+												type="button"
+												variant="ghost"
+												className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
+												onClick={() =>
+													handleRemoveFile(file.id)
+												}
+												aria-label="Remove file"
+												disabled={isFileLoading}
+											>
+												<XIcon
+													className="size-4"
+													aria-hidden="true"
+												/>
+											</Button>
 										</div>
 									</div>
-
-									<Button
-										size="icon"
-										type="button"
-										variant="ghost"
-										className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
-										onClick={() => removeFile(file.id)}
-										aria-label="Remove file"
-									>
-										<XIcon
-											className="size-4"
-											aria-hidden="true"
-										/>
-									</Button>
-								</div>
-							))}
+								);
+							})}
 
 							{files.length < maxFiles && (
 								<div className="flex justify-end">
@@ -153,6 +204,7 @@ export const CustomUploadFiles: FC<ICustomUploadFiles> = ({
 										variant="outline"
 										type="button"
 										onClick={openFileDialog}
+										disabled={isLoading}
 									>
 										<UploadIcon
 											className="-ms-1 opacity-60"
@@ -186,6 +238,7 @@ export const CustomUploadFiles: FC<ICustomUploadFiles> = ({
 							type="button"
 							className="mt-4"
 							onClick={openFileDialog}
+							disabled={isLoading}
 						>
 							<UploadIcon
 								className="-ms-1 opacity-60"

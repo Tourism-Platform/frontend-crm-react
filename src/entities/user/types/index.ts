@@ -4,3 +4,4 @@ export * from "./password.types";
 export * from "./password-backend.interface";
 export * from "./business.types";
 export * from "./business-backend.interface";
+export * from "./business-documents.types";
