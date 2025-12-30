@@ -1,4 +1,4 @@
-import { Toaster } from "@/shared/ui/shadcn-ui/sonner";
+import { Toaster } from "@/shared/ui";
 
 export const withToast = (Component: React.FC) => {
 	return () => (

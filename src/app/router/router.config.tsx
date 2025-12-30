@@ -1,4 +1,6 @@
-﻿import {
+﻿import React from "react";
+
+import {
 	BOOKING_SIDEBAR_LIST,
 	ENUM_AUTH,
 	ENUM_LAYOUT,
@@ -19,46 +21,195 @@ import {
 	ToursOwnerLayout
 } from "@/widgets/layouts";
 
-import { AppealsPage, OrderIdPage, OrdersPage } from "@/pages/booking";
-import {
-	ClientPaymentsPage,
-	InvoiceIdPage,
-	InvoicesPage,
-	ReconciliationIdPage,
-	ReconciliationPage,
-	SupplierPaymentsPage
-} from "@/pages/finance";
-import { LoginPage } from "@/pages/login";
-import { MainPage } from "@/pages/main";
-import { NotFoundPage } from "@/pages/not-found-page";
-import {
-	AccountSettingsPage,
-	BusinessSettingsPage,
-	FinancialSettingsPage,
-	NotificationsPage,
-	SecurityPage,
-	StaffInformationPage,
-	TagsPage,
-	TourSettingsPage
-} from "@/pages/settings";
-import {
-	AccommodationEditPage,
-	ActivityLogPage,
-	EventEditPage,
-	FlightEditPage,
-	InformationEditPage,
-	ItineraryPage,
-	LandingPage,
-	MessagesPage,
-	MultiplyOptionEditPage,
-	OrderHistoryPage,
-	OverviewPage,
-	PricingReviewPage,
-	SchedulePage,
-	SettingsPage,
-	ToursPage,
-	TransportationEditPage
-} from "@/pages/tours";
+// Lazy loading страниц для корректной работы Suspense
+const LoginPage = React.lazy(() =>
+	import("@/pages/login/ui/login-page").then((m) => ({
+		default: m.LoginPage
+	}))
+);
+const MainPage = React.lazy(() =>
+	import("@/pages/main/ui/main-page").then((m) => ({ default: m.MainPage }))
+);
+const NotFoundPage = React.lazy(() =>
+	import("@/pages/not-found-page/ui/not-found-page").then((m) => ({
+		default: m.NotFoundPage
+	}))
+);
+
+// Settings pages
+const AccountSettingsPage = React.lazy(() =>
+	import(
+		"@/pages/settings/account-settings-page/ui/account-settings-page"
+	).then((m) => ({ default: m.AccountSettingsPage }))
+);
+const BusinessSettingsPage = React.lazy(() =>
+	import(
+		"@/pages/settings/business-settings-page/ui/business-settings-page"
+	).then((m) => ({ default: m.BusinessSettingsPage }))
+);
+const FinancialSettingsPage = React.lazy(() =>
+	import(
+		"@/pages/settings/financial-settings-page/ui/financial-settings-page"
+	).then((m) => ({ default: m.FinancialSettingsPage }))
+);
+const NotificationsPage = React.lazy(() =>
+	import("@/pages/settings/notifications-page/ui/notifications-page").then(
+		(m) => ({ default: m.NotificationsPage })
+	)
+);
+const SecurityPage = React.lazy(() =>
+	import("@/pages/settings/security-page/ui/security-page").then((m) => ({
+		default: m.SecurityPage
+	}))
+);
+const StaffInformationPage = React.lazy(() =>
+	import(
+		"@/pages/settings/staff-information-page/ui/staff-information-page"
+	).then((m) => ({ default: m.StaffInformationPage }))
+);
+const TagsPage = React.lazy(() =>
+	import("@/pages/settings/tags-page/ui/tags-page").then((m) => ({
+		default: m.TagsPage
+	}))
+);
+const TourSettingsPage = React.lazy(() =>
+	import("@/pages/settings/tour-settings-page/ui/tour-settings-page").then(
+		(m) => ({ default: m.TourSettingsPage })
+	)
+);
+
+// Tours pages
+const ToursPage = React.lazy(() =>
+	import("@/pages/tours/tours-page/ui/tours-page").then((m) => ({
+		default: m.ToursPage
+	}))
+);
+const OverviewPage = React.lazy(() =>
+	import("@/pages/tours/overview-page/ui/overview-page").then((m) => ({
+		default: m.OverviewPage
+	}))
+);
+const ItineraryPage = React.lazy(() =>
+	import("@/pages/tours/itinerary-page/ui/itinerary-page").then((m) => ({
+		default: m.ItineraryPage
+	}))
+);
+const SchedulePage = React.lazy(() =>
+	import("@/pages/tours/schedule-page/ui/schedule-page").then((m) => ({
+		default: m.SchedulePage
+	}))
+);
+const PricingReviewPage = React.lazy(() =>
+	import("@/pages/tours/pricing-review-page/ui/pricing-review-page").then(
+		(m) => ({ default: m.PricingReviewPage })
+	)
+);
+const OrderHistoryPage = React.lazy(() =>
+	import("@/pages/tours/order-history-page/ui/order-history-page").then(
+		(m) => ({ default: m.OrderHistoryPage })
+	)
+);
+const MessagesPage = React.lazy(() =>
+	import("@/pages/tours/messages-page/ui/messages-page").then((m) => ({
+		default: m.MessagesPage
+	}))
+);
+const LandingPage = React.lazy(() =>
+	import("@/pages/tours/landing-page/ui/landing-page").then((m) => ({
+		default: m.LandingPage
+	}))
+);
+const ActivityLogPage = React.lazy(() =>
+	import("@/pages/tours/activity-log-page/ui/activity-log-page").then(
+		(m) => ({ default: m.ActivityLogPage })
+	)
+);
+const SettingsPage = React.lazy(() =>
+	import("@/pages/tours/settings-page/ui/settings-page").then((m) => ({
+		default: m.SettingsPage
+	}))
+);
+
+// Events pages
+const FlightEditPage = React.lazy(() =>
+	import("@/pages/tours/events/flight-edit-page/ui/flight-edit-page").then(
+		(m) => ({ default: m.FlightEditPage })
+	)
+);
+const EventEditPage = React.lazy(() =>
+	import("@/pages/tours/events/event-edit-page/ui/event-edit-page").then(
+		(m) => ({ default: m.EventEditPage })
+	)
+);
+const TransportationEditPage = React.lazy(() =>
+	import(
+		"@/pages/tours/events/transportation-edit-page/ui/transportation-edit-page"
+	).then((m) => ({ default: m.TransportationEditPage }))
+);
+const AccommodationEditPage = React.lazy(() =>
+	import(
+		"@/pages/tours/events/accommodation-edit-page/ui/accommodation-edit-page"
+	).then((m) => ({ default: m.AccommodationEditPage }))
+);
+const MultiplyOptionEditPage = React.lazy(() =>
+	import(
+		"@/pages/tours/events/multiply-option-edit-page/ui/multiply-option-edit-page"
+	).then((m) => ({ default: m.MultiplyOptionEditPage }))
+);
+const InformationEditPage = React.lazy(() =>
+	import(
+		"@/pages/tours/events/information-edit-page/ui/information-edit-page"
+	).then((m) => ({ default: m.InformationEditPage }))
+);
+
+// Booking pages
+const AppealsPage = React.lazy(() =>
+	import("@/pages/booking/appeals-page/ui/appeals-page").then((m) => ({
+		default: m.AppealsPage
+	}))
+);
+const OrdersPage = React.lazy(() =>
+	import("@/pages/booking/orders-page/ui/orders-page").then((m) => ({
+		default: m.OrdersPage
+	}))
+);
+const OrderIdPage = React.lazy(() =>
+	import("@/pages/booking/order-id-page/ui/order-id-page").then((m) => ({
+		default: m.OrderIdPage
+	}))
+);
+
+// Finance pages
+const InvoicesPage = React.lazy(() =>
+	import("@/pages/finance/invoices-page/ui/invoices-page").then((m) => ({
+		default: m.InvoicesPage
+	}))
+);
+const InvoiceIdPage = React.lazy(() =>
+	import("@/pages/finance/invoice-id-page/ui/invoice-id-page").then((m) => ({
+		default: m.InvoiceIdPage
+	}))
+);
+const ClientPaymentsPage = React.lazy(() =>
+	import("@/pages/finance/client-payments-page/ui/client-payments-page").then(
+		(m) => ({ default: m.ClientPaymentsPage })
+	)
+);
+const SupplierPaymentsPage = React.lazy(() =>
+	import(
+		"@/pages/finance/supplier-payments-page/ui/supplier-payments-page"
+	).then((m) => ({ default: m.SupplierPaymentsPage }))
+);
+const ReconciliationPage = React.lazy(() =>
+	import("@/pages/finance/reconciliation-page/ui/reconciliation-page").then(
+		(m) => ({ default: m.ReconciliationPage })
+	)
+);
+const ReconciliationIdPage = React.lazy(() =>
+	import(
+		"@/pages/finance/reconciliation-id-page/ui/reconciliation-details-page"
+	).then((m) => ({ default: m.ReconciliationIdPage }))
+);
 
 export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	// only public
