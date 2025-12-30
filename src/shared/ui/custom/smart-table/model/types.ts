@@ -12,11 +12,12 @@ export type TViewModeType = "table" | "cards";
 export interface IViewModeBase {
 	useViewMode?: boolean;
 	defaultViewMode?: TViewModeType;
+	cardSkeleton?: FC;
 }
 
-export interface IViewModeEnabled extends IViewModeBase {
+export interface IViewModeEnabled<TData extends object> extends IViewModeBase {
 	useViewMode: true;
-	card: FC<{ data: unknown }>;
+	card: FC<{ data: TData }>;
 }
 
 export interface IViewModeDisabled extends IViewModeBase {
@@ -24,7 +25,9 @@ export interface IViewModeDisabled extends IViewModeBase {
 	card?: never;
 }
 
-export type TViewMode = IViewModeEnabled | IViewModeDisabled;
+export type TViewMode<TData extends object> =
+	| IViewModeEnabled<TData>
+	| IViewModeDisabled;
 
 export interface ISmartTableFilters {
 	showTopFilters?: boolean;
@@ -60,4 +63,4 @@ export interface ISmartTableProps<TData extends object>
 
 export type TSmartTableProps<TData extends object> = ISmartTableProps<TData> &
 	ISmartTableFilters &
-	TViewMode;
+	TViewMode<TData>;

@@ -4,6 +4,7 @@ import { type Table } from "@tanstack/react-table";
 import { useMemo, useRef } from "react";
 
 import { Filters } from "../../custom-table/ui/filters";
+import type { TViewModeType } from "../model";
 
 interface SmartTableFiltersProps<TData extends object> {
 	id: string;
@@ -20,6 +21,7 @@ interface SmartTableFiltersProps<TData extends object> {
 	status?: any[];
 	onStatusChange?: (value: any[]) => void;
 	statusOptions?: { label: string; value: string }[];
+	currentView?: TViewModeType;
 }
 
 export function SmartTableFilters<TData extends object>({
@@ -36,7 +38,8 @@ export function SmartTableFilters<TData extends object>({
 	onSearchChange,
 	status,
 	onStatusChange,
-	statusOptions
+	statusOptions,
+	currentView = "table"
 }: SmartTableFiltersProps<TData>) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -81,7 +84,6 @@ export function SmartTableFilters<TData extends object>({
 		<Filters
 			id={id}
 			inputRef={inputRef}
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			table={table as any}
 			selectedStatuses={selectedStatuses}
 			uniqueStatusValues={uniqueStatusValues}
@@ -98,7 +100,7 @@ export function SmartTableFilters<TData extends object>({
 			status={status}
 			onStatusChange={onStatusChange}
 			statusOptions={statusOptions}
-			currentView="table" // Internal use for icon sizing in Filters
+			currentView={currentView}
 		/>
 	);
 }

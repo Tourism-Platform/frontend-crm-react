@@ -26,9 +26,9 @@ import {
 	DataGridContainer,
 	DataGridTable
 } from "@/shared/ui";
-import { DataGridTableDnD } from "@/shared/ui/shadcn-ui/data-grid-table-dnd";
+import { DataGridTableDnD } from "@/shared/ui";
 
-import { type TSmartTableProps } from "../model/types";
+import { type TSmartTableProps, type TViewModeType } from "../model";
 
 import { EmptyState } from "./empty-state";
 import { SmartTableFilters } from "./smart-table-filters";
@@ -47,6 +47,7 @@ export function SmartTable<TData extends object>({
 	useViewMode = false,
 	defaultViewMode = "table",
 	card: Card,
+	cardSkeleton: CardSkeleton,
 	statusTabs,
 	activeStatusTab,
 	onStatusTabChange,
@@ -156,7 +157,20 @@ export function SmartTable<TData extends object>({
 						type: "cards" as const,
 						component: (
 							<div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-								{data.length > 0 ? (
+								{isLoading && loadingMode === "skeleton" ? (
+									Array.from({
+										length: pagination.pageSize
+									}).map((_, i) =>
+										CardSkeleton ? (
+											<CardSkeleton key={i} />
+										) : (
+											<div
+												key={i}
+												className="h-64 rounded-xl bg-muted animate-pulse"
+											/>
+										)
+									)
+								) : data.length > 0 ? (
 									data.map((item, index) => (
 										<Card
 											key={
@@ -179,15 +193,22 @@ export function SmartTable<TData extends object>({
 			: []),
 		{
 			type: "table" as const,
-			component:
-				tableLayout?.columnsDraggable || tableLayout?.rowsDraggable ? (
-					<DataGridTableDnD />
-				) : (
-					<DataGridTable />
-				),
+			component: (
+				<DataGridContainer>
+					{tableLayout?.columnsDraggable ||
+					tableLayout?.rowsDraggable ? (
+						<DataGridTableDnD />
+					) : (
+						<DataGridTable />
+					)}
+				</DataGridContainer>
+			),
 			icon: <StretchHorizontalIcon className="w-3 h-3" />
 		}
 	];
+
+	const [currentView, setCurrentView] =
+		useState<TViewModeType>(defaultViewMode);
 
 	return (
 		<DataGrid
@@ -199,7 +220,10 @@ export function SmartTable<TData extends object>({
 			emptyMessage={<EmptyState />}
 			{...props}
 		>
-			<CustomOptionTabs defaultValue={defaultViewMode}>
+			<CustomOptionTabs
+				value={currentView}
+				onValueChange={(val) => setCurrentView(val as TViewModeType)}
+			>
 				<div className="space-y-4">
 					{(topChildren ||
 						showTopFilters ||
@@ -230,6 +254,7 @@ export function SmartTable<TData extends object>({
 										status={status}
 										onStatusChange={onStatusChange}
 										statusOptions={statusOptions}
+										currentView={currentView}
 									/>
 								)}
 							</div>
@@ -259,16 +284,14 @@ export function SmartTable<TData extends object>({
 						</div>
 					)}
 
-					<DataGridContainer>
-						{VIEW_CONFIG.map((item) => (
-							<CustomOptionTabsContent
-								key={item.type}
-								value={item.type}
-							>
-								{item.component}
-							</CustomOptionTabsContent>
-						))}
-					</DataGridContainer>
+					{VIEW_CONFIG.map((item) => (
+						<CustomOptionTabsContent
+							key={item.type}
+							value={item.type}
+						>
+							{item.component}
+						</CustomOptionTabsContent>
+					))}
 
 					{showPagination && <SmartTablePagination id={id} />}
 				</div>

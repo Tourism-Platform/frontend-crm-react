@@ -6,6 +6,7 @@ import {
 	ChevronLeftIcon,
 	ChevronRightIcon
 } from "lucide-react";
+import { type Table } from "@tanstack/react-table";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,14 +22,22 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/shared/ui";
-import { useDataGrid } from "@/shared/ui/shadcn-ui/data-grid";
+import { useDataGrid } from "@/shared/ui";
 
 interface SmartTablePaginationProps {
 	id: string;
+	table?: Table<any>;
+	recordCount?: number;
 }
 
-export const SmartTablePagination: FC<SmartTablePaginationProps> = ({ id }) => {
-	const { table, recordCount } = useDataGrid();
+export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
+	id,
+	table: externalTable,
+	recordCount: externalRecordCount
+}) => {
+	const dataGridContext = useDataGrid();
+	const table = externalTable ?? dataGridContext.table;
+	const recordCount = externalRecordCount ?? dataGridContext.recordCount;
 	const { t } = useTranslation("common");
 
 	const { pageIndex, pageSize } = table.getState().pagination;

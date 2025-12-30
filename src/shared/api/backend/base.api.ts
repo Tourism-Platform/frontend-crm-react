@@ -11,5 +11,11 @@ export const baseApi = createApi({
 	}),
 	reducerPath: "baseApi",
 	endpoints: () => ({}),
-	tagTypes: [ENUM_API_TAGS.USER]
+	tagTypes: [
+		ENUM_API_TAGS.USER,
+		ENUM_API_TAGS.BUSINESS,
+		ENUM_API_TAGS.STAFF,
+		ENUM_API_TAGS.COMMISSION,
+		ENUM_API_TAGS.TOURS
+	]
 });

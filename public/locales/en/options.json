@@ -13,5 +13,16 @@
 			"inactive": "Inactive",
 			"pending": "Pending"
 		}
+	},
+
+	"tour": {
+		"statuses": {
+			"all": "All",
+			"active": "Active",
+			"moderate": "Moderate",
+			"planning": "Planning",
+			"cancelled": "Cancelled",
+			"archived": "Archived"
+		}
 	}
 }

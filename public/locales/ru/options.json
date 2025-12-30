@@ -13,5 +13,15 @@
 			"inactive": "Неактивен",
 			"pending": "В ожидании"
 		}
+	},
+
+	"tour": {
+		"statuses": {
+			"active": "Активен",
+			"moderate": "Модерация",
+			"planning": "Планирование",
+			"cancelled": "Отменен",
+			"archived": "Архив"
+		}
 	}
 }

@@ -1,4 +1,4 @@
-export interface ITourCard {
+export interface ITourBackend {
 	id: string;
 	status: string;
 	title: string;
@@ -6,4 +6,5 @@ export interface ITourCard {
 	type: string;
 	price_from: number;
 	price_to: number;
+	image_url: string;
 }

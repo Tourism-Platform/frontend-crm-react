@@ -1,12 +1,12 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 
-import type { ITourCard } from "@/entities/tour";
+import { TOUR_STATUS_LABELS, TOUR_STATUS_VARIANTS, type ENUM_TOUR_STATUS_TYPE, type ITourCard } from "@/entities/tour";
 
 export const COLUMNS = (): ColumnDef<ITourCard>[] => {
-	const { t } = useTranslation("tours_page");
+	const { t } = useTranslation(["tours_page", "options"]);
 
 	return [
 		{
@@ -30,12 +30,19 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 					aria-label="Select row"
 				/>
 			),
+			meta: {
+				skeleton: <Skeleton className="size-4 rounded" />
+			},
 			size: 28,
 			enableSorting: false,
 			enableHiding: false
 		},
 		{
-			header: t("table.title"),
+			header: t("table.title", { ns: "tours_page" }),
+			meta: {
+				headerTitle: t("table.title", { ns: "tours_page" }),
+				skeleton: <Skeleton className="h-4 w-[200px]" />
+			},
 			accessorKey: "title",
 			cell: ({ row }) => (
 				<div className="font-medium max-w-xs truncate">
@@ -45,7 +52,11 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 			size: 300
 		},
 		{
-			header: t("table.route"),
+			header: t("table.route", { ns: "tours_page" }),
+			meta: {
+				headerTitle: t("table.route", { ns: "tours_page" }),
+				skeleton: <Skeleton className="h-4 w-[150px]" />
+			},
 			accessorKey: "route",
 			cell: ({ row }) => (
 				<div className="text-sm">
@@ -55,7 +66,11 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 			size: 200
 		},
 		{
-			header: t("table.type"),
+			header: t("table.type", { ns: "tours_page" }),
+			meta: {
+				headerTitle: t("table.type", { ns: "tours_page" }),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
 			accessorKey: "type",
 			cell: ({ row }) => (
 				<div className="text-sm">{row.getValue("type")}</div>
@@ -63,7 +78,11 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 			size: 120
 		},
 		{
-			header: t("table.price"),
+			header: t("table.price", { ns: "tours_page" }),
+			meta: {
+				headerTitle: t("table.price", { ns: "tours_page" }),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
 			accessorKey: "price_from",
 			cell: ({ row }) => (
 				<div className="text-sm font-medium">
@@ -73,13 +92,35 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 			size: 140
 		},
 		{
-			header: t("table.status"),
+			header: t("table.status", { ns: "tours_page" }),
+			meta: {
+				headerTitle: t("table.status", { ns: "tours_page" }),
+				skeleton: <Skeleton className="h-5 w-[80px] rounded-full" />
+			},
 			accessorKey: "status",
 			cell: ({ row }) => {
-				const status = row.getValue("status") as string;
-				return <Badge>{status}</Badge>;
+				const status = row.getValue("status") as ENUM_TOUR_STATUS_TYPE;
+				return (
+					<Badge variant={TOUR_STATUS_VARIANTS[status]}>
+						{t(TOUR_STATUS_LABELS[status], { ns: "options" })}
+					</Badge>	
+				);
 			},
 			size: 120
-		}
+		},
+		// {
+		// 	id: "actions",
+		// 	header: () => <span className="sr-only">Actions</span>,
+		// 	cell: () => (
+		// 		<div className="flex justify-end">
+		// 			<Skeleton className="size-8 rounded-md" />
+		// 		</div>
+		// 	),
+		// 	meta: {
+		// 		skeleton: <div className="size-8 rounded-md bg-muted" />
+		// 	},
+		// 	size: 50,
+		// 	enableHiding: false
+		// }
 	];
 };

@@ -1,7 +1,6 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { RECENT_ORDERS_MOCK } from "@/shared/config";
 import { Card, CardContent, CustomTable } from "@/shared/ui";
 
 import { TourHeader } from "@/entities/tour";
@@ -28,10 +27,7 @@ export const OrderHistory: FC = () => {
 			/>
 			<Card>
 				<CardContent>
-					<CustomTable
-						data={RECENT_ORDERS_MOCK}
-						columns={ORDER_HISTORY_COLUMNS()}
-					/>
+					<CustomTable data={[]} columns={ORDER_HISTORY_COLUMNS()} />
 				</CardContent>
 			</Card>
 		</section>
