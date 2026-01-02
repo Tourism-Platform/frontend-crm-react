@@ -1,9 +1,15 @@
 import { z } from "zod";
 
+import { ENUM_BUSINESS_TYPES } from "../types";
+
 export const BUSINESS_SCHEMA = z.object({
 	business: z.object({
 		business_description: z
 			.string()
+			.min(1, {
+				message:
+					"form.business.fields.business_description.errors.required"
+			})
 			.min(10, {
 				message: "form.business.fields.business_description.errors.min"
 			})
@@ -12,6 +18,9 @@ export const BUSINESS_SCHEMA = z.object({
 			}),
 		business_name: z
 			.string()
+			.min(1, {
+				message: "form.business.fields.business_name.errors.required"
+			})
 			.min(2, {
 				message: "form.business.fields.business_name.errors.min"
 			})
@@ -20,17 +29,22 @@ export const BUSINESS_SCHEMA = z.object({
 			}),
 		business_website: z
 			.string()
+			.min(1, {
+				message: "form.business.fields.business_website.errors.required"
+			})
 			.min(2, {
 				message: "form.business.fields.business_website.errors.min"
 			})
 			.max(100, {
 				message: "form.business.fields.business_website.errors.max"
 			})
-			.optional()
 	}),
 	legal: z.object({
 		legal_company_name: z
 			.string()
+			.min(1, {
+				message: "form.legal.fields.legal_company_name.errors.required"
+			})
 			.min(2, {
 				message: "form.legal.fields.legal_company_name.errors.min"
 			})
@@ -39,39 +53,46 @@ export const BUSINESS_SCHEMA = z.object({
 			}),
 		director: z
 			.string()
+			.min(1, { message: "form.legal.fields.director.errors.required" })
 			.min(2, { message: "form.legal.fields.director.errors.min" })
 			.max(100, { message: "form.legal.fields.director.errors.max" }),
-		tin: z.string().regex(/^\d{9}$/, {
-			message: "form.legal.fields.tin.errors.pattern"
-		}),
-		type_of_business: z
+		tin: z
 			.string()
-			.min(2, {
-				message: "form.legal.fields.type_of_business.errors.min"
-			})
-			.max(100, {
-				message: "form.legal.fields.type_of_business.errors.max"
-			})
+			.min(1, { message: "form.legal.fields.tin.errors.required" })
+			.regex(/^\d{9}$/, {
+				message: "form.legal.fields.tin.errors.pattern"
+			}),
+		type_of_business: z.enum(ENUM_BUSINESS_TYPES, {
+			message: "form.legal.fields.type_of_business.errors.required"
+		})
 	}),
 	address: z.object({
 		address_line: z
 			.string()
+			.min(1, {
+				message: "form.address.fields.address_line.errors.required"
+			})
 			.min(5, { message: "form.address.fields.address_line.errors.min" })
 			.max(300, {
 				message: "form.address.fields.address_line.errors.max"
 			}),
 		country: z
 			.string()
+			.min(1, { message: "form.address.fields.country.errors.required" })
 			.min(2, { message: "form.address.fields.country.errors.min" })
 			.max(100, { message: "form.address.fields.country.errors.max" }),
 		city: z
 			.string()
+			.min(1, { message: "form.address.fields.city.errors.required" })
 			.min(2, { message: "form.address.fields.city.errors.min" })
 			.max(100, { message: "form.address.fields.city.errors.max" })
 	}),
 	contact: z.object({
 		contact_person: z
 			.string()
+			.min(1, {
+				message: "form.contact.fields.contact_person.errors.required"
+			})
 			.min(2, {
 				message: "form.contact.fields.contact_person.errors.min"
 			})
@@ -80,6 +101,7 @@ export const BUSINESS_SCHEMA = z.object({
 			}),
 		position: z
 			.string()
+			.min(1, { message: "form.contact.fields.position.errors.required" })
 			.min(2, { message: "form.contact.fields.position.errors.min" })
 			.max(100, { message: "form.contact.fields.position.errors.max" }),
 		phone_number: z

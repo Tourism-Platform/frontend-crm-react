@@ -1,8 +1,13 @@
-import { ENUM_FORM_CHANGE_BUSINESS } from "@/entities/user";
+import { useValueToTranslateLabel } from "@/shared/utils";
+
+import {
+	BUSINESS_TYPE_LABELS,
+	ENUM_FORM_CHANGE_BUSINESS
+} from "@/entities/user";
 
 import { type TForm } from "../types";
 
-export const LEGAL_BUSINESS_DATA_LIST: TForm[] = [
+export const LEGAL_BUSINESS_DATA_LIST = (): TForm[] => [
 	{
 		label: "form.legal.fields.legal_company_name.label",
 		placeholder: "form.legal.fields.legal_company_name.placeholder",
@@ -25,6 +30,7 @@ export const LEGAL_BUSINESS_DATA_LIST: TForm[] = [
 		label: "form.legal.fields.type_of_business.label",
 		placeholder: "form.legal.fields.type_of_business.placeholder",
 		key: ENUM_FORM_CHANGE_BUSINESS.LEGAL_TYPE_OF_BUSINESS,
-		fieldType: "input"
+		fieldType: "select",
+		options: useValueToTranslateLabel(BUSINESS_TYPE_LABELS)
 	}
 ];

@@ -5,3 +5,4 @@ export * from "./mock";
 export * from "./schema";
 export * from "./slice";
 export * from "./types";
+export * from "./config";

@@ -1,4 +1,8 @@
-import type { IBusinessInfoBackend, TBusinessSchema } from "../types";
+import type {
+	ENUM_BUSINESS_TYPES_TYPE,
+	IBusinessInfoBackend,
+	TBusinessSchema
+} from "../types";
 
 export const mapBusinessInfoToBackend = (
 	frontend: TBusinessSchema
@@ -40,7 +44,8 @@ export const mapBusinessInfoToFrontend = (
 		legal_company_name: backend.legal.legalCompanyName,
 		director: backend.legal.director,
 		tin: backend.legal.tin,
-		type_of_business: backend.legal.typeOfBusiness
+		type_of_business: backend.legal
+			.typeOfBusiness as ENUM_BUSINESS_TYPES_TYPE
 	},
 	address: {
 		address_line: backend.address.addressLine,

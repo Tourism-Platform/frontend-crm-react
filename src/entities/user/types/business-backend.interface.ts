@@ -3,7 +3,7 @@ export interface IBusinessInfoBackend {
 	business: {
 		businessDescription: string;
 		businessName: string;
-		businessWebsite?: string;
+		businessWebsite: string;
 	};
 	legal: {
 		legalCompanyName: string;

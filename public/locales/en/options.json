@@ -6,7 +6,6 @@
 		"platform": "Platform commission",
 		"service_fee": "Service fee"
 	},
-
 	"staff": {
 		"statuses": {
 			"active": "Active",
@@ -14,7 +13,6 @@
 			"pending": "Pending"
 		}
 	},
-
 	"tour": {
 		"statuses": {
 			"all": "All",
@@ -24,11 +22,18 @@
 			"cancelled": "Cancelled",
 			"archived": "Archived"
 		},
-
 		"tourTypes": {
 			"private": "Private",
 			"group": "Group",
 			"private_group": "Private/Group"
+		}
+	},
+	"user": {
+		"business": {
+			"types": {
+				"tour_operator": "Tour operator",
+				"agency": "Agency"
+			}
 		}
 	}
 }

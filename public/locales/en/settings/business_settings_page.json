@@ -16,7 +16,8 @@
 					"placeholder": "Enter company description",
 					"errors": {
 						"min": "Description is too short",
-						"max": "Description is too long"
+						"max": "Description is too long",
+						"required": "Enter company description"
 					}
 				},
 				"business_name": {
@@ -24,7 +25,8 @@
 					"placeholder": "Orient Star",
 					"errors": {
 						"min": "Business name is too short",
-						"max": "Business name is too long"
+						"max": "Business name is too long",
+						"required": "Enter business name"
 					}
 				},
 				"business_website": {
@@ -32,7 +34,8 @@
 					"placeholder": "Orient Star",
 					"errors": {
 						"min": "Website is too short",
-						"max": "Website is too long"
+						"max": "Website is too long",
+						"required": "Enter business website"
 					}
 				}
 			}
@@ -45,7 +48,8 @@
 					"placeholder": "Enter legal company name",
 					"errors": {
 						"min": "Company name is too short",
-						"max": "Company name is too long"
+						"max": "Company name is too long",
+						"required": "Enter legal company name"
 					}
 				},
 				"director": {
@@ -53,14 +57,16 @@
 					"placeholder": "Enter director name",
 					"errors": {
 						"min": "Director name is too short",
-						"max": "Director name is too long"
+						"max": "Director name is too long",
+						"required": "Enter director name"
 					}
 				},
 				"tin": {
 					"label": "TIN",
 					"placeholder": "Enter TIN",
 					"errors": {
-						"pattern": "TIN must be 9 digits"
+						"pattern": "TIN must be 9 digits",
+						"required": "Enter TIN"
 					}
 				},
 				"type_of_business": {
@@ -68,7 +74,8 @@
 					"placeholder": "Enter type of business",
 					"errors": {
 						"min": "Business type is too short",
-						"max": "Business type is too long"
+						"max": "Business type is too long",
+						"required": "Select type of business"
 					}
 				},
 				"business_name": {
@@ -97,7 +104,8 @@
 					"placeholder": "15 Buyuk Ipak Yuli Street, Office 23, 100007",
 					"errors": {
 						"min": "Address is too short",
-						"max": "Address is too long"
+						"max": "Address is too long",
+						"required": "Enter address"
 					}
 				},
 				"country": {
@@ -105,7 +113,8 @@
 					"placeholder": "Uzbekistan",
 					"errors": {
 						"min": "Country is too short",
-						"max": "Country is too long"
+						"max": "Country is too long",
+						"required": "Enter country"
 					}
 				},
 				"city": {
@@ -113,7 +122,8 @@
 					"placeholder": "Tashkent",
 					"errors": {
 						"min": "City is too short",
-						"max": "City is too long"
+						"max": "City is too long",
+						"required": "Enter city"
 					}
 				}
 			}
@@ -126,7 +136,8 @@
 					"placeholder": "Emma Watson",
 					"errors": {
 						"min": "Contact person is too short",
-						"max": "Contact person is too long"
+						"max": "Contact person is too long",
+						"required": "Enter contact person"
 					}
 				},
 				"position": {
@@ -134,7 +145,8 @@
 					"placeholder": "Manager",
 					"errors": {
 						"min": "Position is too short",
-						"max": "Position is too long"
+						"max": "Position is too long",
+						"required": "Enter position"
 					}
 				},
 				"phone_number": {
@@ -151,7 +163,8 @@
 					"label": "Email",
 					"placeholder": "Contact@gmail.com",
 					"errors": {
-						"email": "Enter a valid email address"
+						"email": "Enter a valid email address",
+						"required": "Enter email address"
 					}
 				}
 			}

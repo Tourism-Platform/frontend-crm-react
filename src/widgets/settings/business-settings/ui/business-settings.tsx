@@ -37,8 +37,6 @@ export const BusinessSettings: FC = () => {
 		mode: "onSubmit"
 	});
 
-	console.log(form.watch());
-
 	useEffect(() => {
 		if (businessData) {
 			form.reset(businessData);

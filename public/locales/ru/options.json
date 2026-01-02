@@ -6,7 +6,6 @@
 		"platform": "Платформенная комиссия",
 		"service_fee": "Сервисный сбор"
 	},
-
 	"staff": {
 		"statuses": {
 			"active": "Активен",
@@ -14,7 +13,6 @@
 			"pending": "В ожидании"
 		}
 	},
-
 	"tour": {
 		"statuses": {
 			"active": "Активен",
@@ -23,11 +21,18 @@
 			"cancelled": "Отменен",
 			"archived": "Архив"
 		},
-
 		"tourTypes": {
 			"private": "Частный",
 			"group": "Группа",
 			"private_group": "Частный/Группа"
+		}
+	},
+	"user": {
+		"business": {
+			"types": {
+				"tour_operator": "Туроператор",
+				"agency": "Агентство"
+			}
 		}
 	}
 }

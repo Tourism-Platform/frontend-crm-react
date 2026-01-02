@@ -9,7 +9,7 @@ import {
 	type ICommission
 } from "@/entities/commission";
 
-import { FinancialActions } from "../ui/financial-actions";
+import { FinancialActions } from "../ui";
 
 export const COLUMNS = (): ColumnDef<ICommission>[] => {
 	const { t } = useTranslation("financial_settings_page");
@@ -46,6 +46,11 @@ export const COLUMNS = (): ColumnDef<ICommission>[] => {
 				skeleton: <Skeleton className="h-4 w-[80px]" />
 			},
 			accessorKey: "rate",
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{(row.getValue("rate") as number).toLocaleString()}
+				</div>
+			),
 			size: 160
 		},
 		{

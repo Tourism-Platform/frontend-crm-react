@@ -4,16 +4,16 @@ export const COMMISSIONS_MOCK: ICommissionBackend[] = [
 	{
 		id: "1",
 		name: ENUM_CURRENCY_OPTIONS.USD,
-		rate: 20
+		rate: 12000
 	},
 	{
 		id: "2",
 		name: ENUM_CURRENCY_OPTIONS.EUR,
-		rate: 15
+		rate: 15000
 	},
 	{
 		id: "3",
 		name: ENUM_CURRENCY_OPTIONS.GBP,
-		rate: 10
+		rate: 10000
 	}
 ];

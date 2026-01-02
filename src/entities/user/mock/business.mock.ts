@@ -1,4 +1,4 @@
-import type { IBusinessInfoBackend } from "../types";
+import { ENUM_BUSINESS_TYPES, type IBusinessInfoBackend } from "../types";
 
 export const BUSINESS_MOCK: IBusinessInfoBackend = {
 	avatarUrl:
@@ -13,7 +13,7 @@ export const BUSINESS_MOCK: IBusinessInfoBackend = {
 		legalCompanyName: "Global Travel Services LLC",
 		director: "John Doe",
 		tin: "123456789",
-		typeOfBusiness: "LLC"
+		typeOfBusiness: ENUM_BUSINESS_TYPES.TOUR_OPERATOR
 	},
 	address: {
 		addressLine: "123 Main St",
