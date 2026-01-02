@@ -5,9 +5,11 @@ import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_TOUR_STATUS_TYPE,
+	type ENUM_TOUR_TYPES_TYPE,
 	type ITourCard,
 	TOUR_STATUS_LABELS,
-	TOUR_STATUS_VARIANTS
+	TOUR_STATUS_VARIANTS,
+	TOUR_TYPE_LABELS
 } from "@/entities/tour";
 
 export const COLUMNS = (): ColumnDef<ITourCard>[] => {
@@ -77,9 +79,14 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 				skeleton: <Skeleton className="h-4 w-[80px]" />
 			},
 			accessorKey: "type",
-			cell: ({ row }) => (
-				<div className="text-sm">{row.getValue("type")}</div>
-			),
+			cell: ({ row }) => {
+				const type = row.getValue("type") as ENUM_TOUR_TYPES_TYPE;
+				return (
+					<div className="text-sm">
+						{t(TOUR_TYPE_LABELS[type], { ns: "options" })}
+					</div>
+				);
+			},
 			size: 120
 		},
 		{

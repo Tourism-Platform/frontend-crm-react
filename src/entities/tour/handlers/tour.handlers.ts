@@ -4,6 +4,7 @@ import { ENV } from "@/shared/config";
 
 import { ENUM_TOUR_STATUS } from "../constants";
 import { TOUR_MOCK } from "../mock";
+import type { ITourCard } from "../types";
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
@@ -50,5 +51,22 @@ export const tourHandlers = [
 			},
 			{ status: 200 }
 		);
+	}),
+	http.post(`${BASE_URL}/tours`, async ({ request }) => {
+		await delay(500);
+		const body = (await request.json()) as ITourCard;
+		const newTour = {
+			...body,
+			id: (tours.length + 1).toString(),
+			price_from: 100,
+			price_to: 1000,
+			title: body.title,
+			route: ["TAS", "SAM", "BUH", "KHIV"],
+			status: ENUM_TOUR_STATUS.MODERATE,
+			image_url:
+				"https://www.atorus.ru/sites/default/files/styles/head_carousel/public/2021-09/ca3023.jpg.webp?itok=Wg-lCwZ0"
+		};
+		tours.push(newTour);
+		return HttpResponse.json(newTour, { status: 201 });
 	})
 ];

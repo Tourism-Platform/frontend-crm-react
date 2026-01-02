@@ -20,39 +20,44 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useUpdateCommissionMutation } from "@/entities/commission";
+import {
+	type ICommission,
+	useUpdateCommissionMutation
+} from "@/entities/commission";
 
 import {
 	EDIT_COMMISSION_TYPE_SCHEMA,
+	ENUM_FORM_EDIT_COMMISSION_TYPE,
 	FORM_EDIT_COMMISSION_TYPE_LIST,
 	type TEditCommissionTypeSchema
 } from "../model";
 
 interface IEditCommissionTypeProps {
-	id: string;
 	trigger: ReactNode;
 	className?: string;
-	data: TEditCommissionTypeSchema;
+	commission: ICommission;
 }
 
 export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
-	id,
 	trigger,
 	className,
-	data
+	commission
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("financial_settings_page");
 	const [updateCommission, { isLoading }] = useUpdateCommissionMutation();
 	const form = useForm<TEditCommissionTypeSchema>({
 		resolver: zodResolver(EDIT_COMMISSION_TYPE_SCHEMA),
-		defaultValues: data,
+		defaultValues: {
+			[ENUM_FORM_EDIT_COMMISSION_TYPE.CURRENCY]: commission.currency,
+			[ENUM_FORM_EDIT_COMMISSION_TYPE.RATE]: commission.rate
+		},
 		mode: "onSubmit"
 	});
 
 	async function onSubmit(data: TEditCommissionTypeSchema) {
 		try {
-			await updateCommission({ id, data }).unwrap();
+			await updateCommission({ id: commission.id, data }).unwrap();
 			toast.success(t("commission_type.menu.edit.form.toasts.success"));
 			setOpen(false);
 		} catch (error) {

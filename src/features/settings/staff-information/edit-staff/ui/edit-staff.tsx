@@ -21,7 +21,11 @@ import {
 
 import { type IStaffUser, useUpdateStaffMutation } from "@/entities/staff";
 
-import { EDIT_STAFF_SCHEMA, type TEditStaffSchema } from "../model";
+import {
+	EDIT_STAFF_SCHEMA,
+	ENUM_FORM_EDIT_STAFF,
+	type TEditStaffSchema
+} from "../model";
 
 import { Commission } from "./commission";
 import { PersonalDetails } from "./personal-details";
@@ -43,13 +47,13 @@ export const EditStaff: FC<IEditStaffProps> = ({
 	const form = useForm<TEditStaffSchema>({
 		resolver: zodResolver(EDIT_STAFF_SCHEMA),
 		defaultValues: {
-			first_name: user?.first_name || "",
-			last_name: user?.last_name || "",
-			email: user?.email || "",
-			role: user?.role,
-			status: user?.status,
-			type: user?.type,
-			split: user?.split || 0
+			[ENUM_FORM_EDIT_STAFF.FIRST_NAME]: user?.first_name || "",
+			[ENUM_FORM_EDIT_STAFF.LAST_NAME]: user?.last_name || "",
+			[ENUM_FORM_EDIT_STAFF.EMAIL]: user?.email || "",
+			[ENUM_FORM_EDIT_STAFF.ROLE]: user?.role,
+			[ENUM_FORM_EDIT_STAFF.STATUS]: user?.status,
+			[ENUM_FORM_EDIT_STAFF.TYPE]: user?.type,
+			[ENUM_FORM_EDIT_STAFF.SPLIT]: user?.split || 0
 		},
 		mode: "onSubmit"
 	});

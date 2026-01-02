@@ -1,20 +1,14 @@
 import { z } from "zod";
 
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_LABELS } from "@/entities/commission";
 
-const CURRENCY_VALUES = CURRENCY_OPTIONS.map((o) => o.value) as [
-	string,
-	...string[]
-];
+import { ENUM_FORM_EDIT_COMMISSION_TYPE } from "../types";
 
 export const EDIT_COMMISSION_TYPE_SCHEMA = z.object({
-	name: z.enum(CURRENCY_VALUES, {
+	[ENUM_FORM_EDIT_COMMISSION_TYPE.CURRENCY]: z.enum(CURRENCY_LABELS, {
 		message: "commission_type.menu.edit.form.errors.name.required"
 	}),
-	rate: z
-		.number({
-			message: "commission_type.menu.edit.form.errors.rate.required"
-		})
-		.min(0.01, "commission_type.menu.edit.form.errors.rate.min")
-		.max(1000, "commission_type.menu.edit.form.errors.rate.max")
+	[ENUM_FORM_EDIT_COMMISSION_TYPE.RATE]: z.number({
+		message: "commission_type.menu.edit.form.errors.rate.required"
+	})
 });

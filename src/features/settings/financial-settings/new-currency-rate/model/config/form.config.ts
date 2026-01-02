@@ -4,10 +4,10 @@ import { ENUM_FORM_NEW_CURRENCY_RATE, type TForm } from "../types";
 
 export const FORM_NEW_CURRENCY_RATE_LIST: TForm[] = [
 	{
-		label: "commission_type.new_currency.form.fields.name.label",
+		label: "commission_type.new_currency.form.fields.currency.label",
 		placeholder:
-			"commission_type.new_currency.form.fields.name.placeholder",
-		key: ENUM_FORM_NEW_CURRENCY_RATE.NAME,
+			"commission_type.new_currency.form.fields.currency.placeholder",
+		key: ENUM_FORM_NEW_CURRENCY_RATE.CURRENCY,
 		fieldType: "select",
 		options: CURRENCY_OPTIONS
 	},

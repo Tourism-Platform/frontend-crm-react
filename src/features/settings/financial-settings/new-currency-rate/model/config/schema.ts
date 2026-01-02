@@ -1,10 +1,14 @@
 import { z } from "zod";
 
+import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+
+import { ENUM_FORM_NEW_CURRENCY_RATE } from "../types";
+
 export const NEW_CURRENCY_RATE_SCHEMA = z.object({
-	name: z.string({
+	[ENUM_FORM_NEW_CURRENCY_RATE.CURRENCY]: z.enum(ENUM_CURRENCY_OPTIONS, {
 		message: "commission_type.new_currency.form.errors.name.required"
 	}),
-	rate: z
+	[ENUM_FORM_NEW_CURRENCY_RATE.RATE]: z
 		.number({
 			message: "commission_type.new_currency.form.errors.rate.required"
 		})

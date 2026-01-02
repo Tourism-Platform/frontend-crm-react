@@ -1,5 +1,5 @@
 import { ENUM_TOUR_STATUS } from "../constants";
-import type { ITourBackend } from "../types";
+import { ENUM_TOUR_TYPES, type ITourBackend } from "../types";
 
 export const TOUR_MOCK: ITourBackend[] = [
 	{
@@ -7,7 +7,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ACTIVE,
 		title: "Embark on an Unforgettable Archaeological Journey",
 		route: ["TAS", "SAM", "BUH", "KHIV"],
-		type: "Private/Group",
+		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
 		price_from: 500,
 		price_to: 1000,
 		image_url:
@@ -18,7 +18,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.MODERATE,
 		title: "Silk Road Highlights Expedition",
 		route: ["TAS", "SAM", "BUH"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 300,
 		price_to: 750,
 		image_url:
@@ -29,7 +29,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.CANCELLED,
 		title: "Desert Adventure: Khiva to Nukus",
 		route: ["KHIV", "NUK"],
-		type: "Private",
+		type: ENUM_TOUR_TYPES.PRIVATE,
 		price_from: 400,
 		price_to: 900,
 		image_url:
@@ -40,7 +40,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.PLANNING,
 		title: "Cultural Treasures of Samarkand",
 		route: ["TAS", "SAM"],
-		type: "Private/Group",
+		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
 		price_from: 250,
 		price_to: 600,
 		image_url:
@@ -51,7 +51,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ACTIVE,
 		title: "Ancient Cities Tour: Bukhara & Khiva",
 		route: ["BUH", "KHIV"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 350,
 		price_to: 800,
 		image_url:
@@ -62,7 +62,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ARCHIVED,
 		title: "Mountain Escape in Chimgan",
 		route: ["TAS", "CHIM"],
-		type: "Private",
+		type: ENUM_TOUR_TYPES.PRIVATE,
 		price_from: 200,
 		price_to: 450,
 		image_url:
@@ -73,7 +73,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ACTIVE,
 		title: "Golden Ring of Uzbekistan",
 		route: ["TAS", "SAM", "BUH", "KHIV", "NUK"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 600,
 		price_to: 1200,
 		image_url:
@@ -84,7 +84,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.MODERATE,
 		title: "Tashkent City Break",
 		route: ["TAS"],
-		type: "Private",
+		type: ENUM_TOUR_TYPES.PRIVATE,
 		price_from: 100,
 		price_to: 300,
 		image_url:
@@ -95,7 +95,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.PLANNING,
 		title: "Fergana Valley Handicraft Tour",
 		route: ["FER", "AND", "NAM"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 280,
 		price_to: 550,
 		image_url:
@@ -106,7 +106,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.CANCELLED,
 		title: "Safari in Kyzylkum Desert",
 		route: ["SAM", "KYZ"],
-		type: "Private",
+		type: ENUM_TOUR_TYPES.PRIVATE,
 		price_from: 450,
 		price_to: 950,
 		image_url:
@@ -117,7 +117,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ACTIVE,
 		title: "Weekend Getaway in Samarkand",
 		route: ["TAS", "SAM"],
-		type: "Private",
+		type: ENUM_TOUR_TYPES.PRIVATE,
 		price_from: 200,
 		price_to: 400,
 		image_url:
@@ -128,7 +128,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ARCHIVED,
 		title: "Pilgrimage Tour: Seven Saints of Bukhara",
 		route: ["BUH"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 320,
 		price_to: 700,
 		image_url:
@@ -139,7 +139,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.MODERATE,
 		title: "Adventure Trekking in Nuratau Mountains",
 		route: ["NUR", "AYDAR"],
-		type: "Private/Group",
+		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
 		price_from: 350,
 		price_to: 650,
 		image_url:
@@ -150,7 +150,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.PLANNING,
 		title: "Khiva Architectural Wonders",
 		route: ["KHIV"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 220,
 		price_to: 480,
 		image_url:
@@ -161,7 +161,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.CANCELLED,
 		title: "Luxury Tour across Uzbekistan",
 		route: ["TAS", "SAM", "BUH", "KHIV"],
-		type: "Private",
+		type: ENUM_TOUR_TYPES.PRIVATE,
 		price_from: 1500,
 		price_to: 2500,
 		image_url:
@@ -172,7 +172,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ACTIVE,
 		title: "Nomadic Yurt Experience",
 		route: ["AYDAR"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 180,
 		price_to: 350,
 		image_url:
@@ -183,7 +183,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ARCHIVED,
 		title: "Eco-tour in Zaamin National Park",
 		route: ["ZAA"],
-		type: "Private",
+		type: ENUM_TOUR_TYPES.PRIVATE,
 		price_from: 260,
 		price_to: 520,
 		image_url:
@@ -194,7 +194,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.MODERATE,
 		title: "Wine Tasting Journey in Samarkand",
 		route: ["SAM"],
-		type: "Private/Group",
+		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
 		price_from: 400,
 		price_to: 700,
 		image_url:
@@ -205,7 +205,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.PLANNING,
 		title: "Historical Tashkent City Tour",
 		route: ["TAS"],
-		type: "Group",
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 120,
 		price_to: 280,
 		image_url:

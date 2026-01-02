@@ -49,7 +49,12 @@
 			},
 			"buttons": {
 				"decline": "Cancel",
-				"save": "Create"
+				"save": "Create",
+				"saving": "Creating..."
+			},
+			"toasts": {
+				"success": "Tour created successfully",
+				"error": "Failed to create tour"
 			},
 			"errors": {
 				"tourTitle": {

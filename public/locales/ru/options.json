@@ -22,6 +22,12 @@
 			"planning": "Планирование",
 			"cancelled": "Отменен",
 			"archived": "Архив"
+		},
+
+		"tourTypes": {
+			"private": "Частный",
+			"group": "Группа",
+			"private_group": "Частный/Группа"
 		}
 	}
 }

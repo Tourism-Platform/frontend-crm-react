@@ -37,8 +37,7 @@ export const FinancialActions: FC<IFinancialActionsProps> = ({ row }) => {
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem asChild>
 					<EditCommissionType
-						id={row.id}
-						data={row}
+						commission={row}
 						trigger={
 							<div className="w-full hover:bg-accent cursor-pointer px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
 								{t("commission_type.menu.edit.button")}

@@ -11,7 +11,7 @@ export type TForm = TFormField<
 >;
 
 export const ENUM_FORM_NEW_CURRENCY_RATE = {
-	NAME: "name",
+	CURRENCY: "currency",
 	RATE: "rate"
 } as const;
 

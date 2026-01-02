@@ -23,6 +23,12 @@
 			"planning": "Planning",
 			"cancelled": "Cancelled",
 			"archived": "Archived"
+		},
+
+		"tourTypes": {
+			"private": "Private",
+			"group": "Group",
+			"private_group": "Private/Group"
 		}
 	}
 }

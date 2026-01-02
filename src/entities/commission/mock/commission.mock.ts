@@ -1,6 +1,6 @@
-import { ENUM_CURRENCY_OPTIONS, type ICommission } from "../types";
+import { ENUM_CURRENCY_OPTIONS, type ICommissionBackend } from "../types";
 
-export const COMMISSIONS_MOCK: ICommission[] = [
+export const COMMISSIONS_MOCK: ICommissionBackend[] = [
 	{
 		id: "1",
 		name: ENUM_CURRENCY_OPTIONS.USD,

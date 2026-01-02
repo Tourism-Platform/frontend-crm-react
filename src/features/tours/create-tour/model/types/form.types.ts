@@ -7,8 +7,8 @@ import type { CREATE_TOUR_SCHEMA } from "../config";
 export type TForm = TFormField<string, ENUM_FORM_CREATE_TOUR_TYPE>;
 
 export const ENUM_FORM_CREATE_TOUR = {
-	TOUR_TITLE: "tourTitle",
-	TOUR_TYPE: "tourType",
+	TITLE: "title", // keeping internal key as camelCase but CONSTANT as PascalCase is standard
+	TYPE: "type",
 	GROUP_SIZE: "groupSize",
 	DURATION: "duration",
 	AGE_REQUIRES: "ageRequires",

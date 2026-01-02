@@ -22,9 +22,9 @@ export const COLUMNS = (): ColumnDef<ICommission>[] => {
 			enableHiding: false
 		},
 		{
-			header: t("commission_type.table.name"),
+			header: t("commission_type.table.currency"),
 			meta: {
-				headerTitle: t("commission_type.table.name"),
+				headerTitle: t("commission_type.table.currency"),
 				skeleton: <Skeleton className="h-4 w-[160px]" />
 			},
 			accessorKey: "name",

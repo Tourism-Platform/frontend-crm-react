@@ -8,8 +8,8 @@
 			"form": {
 				"title": "Add New Type",
 				"fields": {
-					"name": {
-						"label": "Type Name",
+					"currency": {
+						"label": "Currency",
 						"placeholder": "Select currency"
 					},
 					"rate": {
@@ -18,7 +18,7 @@
 					}
 				},
 				"errors": {
-					"name": {
+					"currency": {
 						"required": "Currency name is required"
 					},
 					"rate": {
@@ -44,7 +44,7 @@
 				"form": {
 					"title": "Edit commission type",
 					"fields": {
-						"name": {
+						"currency": {
 							"label": "Currency",
 							"placeholder": "Select currency"
 						},
@@ -54,7 +54,7 @@
 						}
 					},
 					"errors": {
-						"name": {
+						"currency": {
 							"required": "Currency name is required"
 						},
 						"rate": {
@@ -92,9 +92,8 @@
 			}
 		},
 		"table": {
-			"name": "Name",
-			"description": "Description",
-			"rate": "Rate, %",
+			"currency": "Currency",
+			"rate": "Exchange rate",
 			"status": "Status"
 		}
 	},
