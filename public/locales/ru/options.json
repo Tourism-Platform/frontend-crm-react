@@ -34,5 +34,14 @@
 				"agency": "Агентство"
 			}
 		}
+	},
+	"finance": {
+		"invoice": {
+			"statuses": {
+				"paid": "Оплачено",
+				"unpaid": "Не оплачено",
+				"partially_paid": "Частично оплачено"
+			}
+		}
 	}
 }

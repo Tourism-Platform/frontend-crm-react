@@ -2,9 +2,10 @@ import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { formatBytes, useFileUpload } from "@/shared/hooks";
+import { useFileUpload } from "@/shared/hooks";
 import { type TFileWithPreview } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
+import { formatBytes } from "@/shared/utils";
 
 interface ICustomUploadMainImageProps {
 	maxSize?: number;

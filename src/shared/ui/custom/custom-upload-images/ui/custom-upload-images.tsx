@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 import {
 	type TFileMetadata,
 	type TFileWithPreview,
-	formatBytes,
 	useFileUpload
 } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
@@ -26,6 +25,7 @@ import {
 	AlertTitle,
 	Button
 } from "@/shared/ui";
+import { formatBytes } from "@/shared/utils";
 
 interface ICustomUploadImagesProps {
 	maxFiles?: number;

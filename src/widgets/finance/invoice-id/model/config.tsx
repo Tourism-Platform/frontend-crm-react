@@ -1,12 +1,13 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
-import { type IInvoice } from "@/entities/finance";
+import { type IInvoicePayment } from "@/entities/finance";
 
-export const COLUMNS = (): ColumnDef<IInvoice>[] => {
+import { OpenPayment } from "@/features/finance/open-payment";
+
+export const COLUMNS = (): ColumnDef<IInvoicePayment>[] => {
 	const { t } = useTranslation("invoice_id_page");
 	return [
 		{
@@ -42,17 +43,7 @@ export const COLUMNS = (): ColumnDef<IInvoice>[] => {
 					{t("payment_table.table.fields.document")}
 				</div>
 			),
-			cell: () => (
-				<div className="text-right">
-					<Button
-						variant="outline"
-						size="sm"
-						className="h-8 py-0 rounded px-4 text-xs font-medium border-gray-200"
-					>
-						{t("payment_table.table.fields.open")}
-					</Button>
-				</div>
-			),
+			cell: ({ row }) => <OpenPayment file={row.original.file} />,
 			size: 60,
 			enableHiding: false
 		}

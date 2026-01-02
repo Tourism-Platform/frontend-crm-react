@@ -1,7 +1,7 @@
 export const ENUM_INVOICE_STATUS = {
 	PAID: "paid",
-	UNPAID: "unpaid",
-	PARTIALLY_PAID: "partially_paid"
+	PARTIALLY_PAID: "partially_paid",
+	UNPAID: "unpaid"
 } as const;
 
 export type ENUM_INVOICE_STATUS_TYPE =

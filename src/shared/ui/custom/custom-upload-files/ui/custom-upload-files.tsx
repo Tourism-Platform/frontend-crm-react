@@ -1,6 +1,5 @@
 import {
 	AlertCircleIcon,
-	DownloadIcon,
 	FileIcon,
 	Trash2Icon,
 	UploadIcon,
@@ -12,13 +11,15 @@ import { useTranslation } from "react-i18next";
 import {
 	type TFileMetadata,
 	type TFileWithPreview,
-	formatBytes,
 	useFileUpload
 } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
+import { formatBytes } from "@/shared/utils";
 
 import { getFileIcon } from "../model";
+
+import { DownloadButton } from "./download-button";
 
 interface ICustomUploadFilesProps {
 	size?: number;
@@ -65,19 +66,6 @@ export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 	const handleRemoveFile = (fileId: string) => {
 		removeFile(fileId);
 		onFileRemove?.(fileId);
-	};
-
-	const handleDownloadFile = (file: TFileWithPreview) => {
-		const url = file.preview || (file.file as TFileMetadata).url;
-		if (!url) return;
-
-		const link = document.createElement("a");
-		link.href = url;
-		link.download =
-			file.file instanceof File ? file.file.name : file.file.name;
-		document.body.appendChild(link);
-		link.click();
-		document.body.removeChild(link);
 	};
 
 	return (
@@ -159,22 +147,10 @@ export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 												!(
 													file.file instanceof File
 												)) && (
-												<Button
-													size="icon"
-													type="button"
-													variant="ghost"
-													className="text-muted-foreground/80 hover:text-foreground size-8 hover:bg-transparent"
-													onClick={() =>
-														handleDownloadFile(file)
-													}
-													aria-label="Download file"
+												<DownloadButton
+													file={file}
 													disabled={isFileLoading}
-												>
-													<DownloadIcon
-														className="size-4"
-														aria-hidden="true"
-													/>
-												</Button>
+												/>
 											)}
 
 											<Button

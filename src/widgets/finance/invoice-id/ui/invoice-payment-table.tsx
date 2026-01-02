@@ -5,17 +5,17 @@ import {
 	Card,
 	CardContent,
 	CardHeader,
-	CustomTable,
-	Separator
+	Separator,
+	SmartTable
 } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
-import type { IInvoice } from "@/entities/finance";
+import type { IInvoiceDetail } from "@/entities/finance";
 
 import { COLUMNS } from "../model";
 
 interface IInvoicePaymentTableProps {
-	invoice: IInvoice;
+	invoice: IInvoiceDetail;
 }
 
 export const InvoicePaymentTable: FC<IInvoicePaymentTableProps> = ({
@@ -46,11 +46,11 @@ export const InvoicePaymentTable: FC<IInvoicePaymentTableProps> = ({
 				</div>
 			</CardHeader>
 			<Separator />
-			<CardContent>
+			<CardContent className="grid gap-4">
 				<h2 className="text-lg font-semibold">
 					{t("payment_table.table.title")}
 				</h2>
-				<CustomTable
+				<SmartTable
 					data={invoice.payments}
 					columns={COLUMNS()}
 					showTopFilters={false}

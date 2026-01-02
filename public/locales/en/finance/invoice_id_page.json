@@ -1,6 +1,9 @@
 {
 	"page_name": "Invoice",
-	"invoice_not_found": "Invoice not found",
+	"not_found": {
+		"title": "Invoice not found",
+		"description": "The invoice you are looking for does not exist or has been moved. Please check the invoice number and try again."
+	},
 	"buttons": {
 		"back": "Back",
 		"export": "Export"
@@ -24,11 +27,6 @@
 				"document": "Document",
 				"open": "Open",
 				"empty": "No payments recorded"
-			},
-			"statuses": {
-				"paid": "Paid",
-				"unpaid": "Unpaid",
-				"partially_paid": "Partially paid"
 			}
 		}
 	},

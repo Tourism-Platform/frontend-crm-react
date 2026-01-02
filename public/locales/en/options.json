@@ -35,5 +35,15 @@
 				"agency": "Agency"
 			}
 		}
+	},
+
+	"finance": {
+		"invoice": {
+			"statuses": {
+				"paid": "Paid",
+				"unpaid": "Unpaid",
+				"partially_paid": "Partially paid"
+			}
+		}
 	}
 }

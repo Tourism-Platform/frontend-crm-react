@@ -1,12 +1,12 @@
 import type { TFunction } from "i18next";
 
-import { type IInvoice } from "@/entities/finance";
+import { type IInvoiceDetail } from "@/entities/finance";
 
 import { type IInfoItem } from "./types";
 
 export const getBillingItems = (
-	invoice: IInvoice,
-	t: TFunction<"invoice_id_page", undefined>
+	invoice: IInvoiceDetail,
+	t: TFunction<"invoice_id_page">
 ): IInfoItem[] => [
 	{ label: t("billing.fields.company"), value: invoice.billingInfo.company },
 	{ label: t("billing.fields.address"), value: invoice.billingInfo.address },
@@ -16,8 +16,8 @@ export const getBillingItems = (
 ];
 
 export const getBookingItems = (
-	invoice: IInvoice,
-	t: TFunction<"invoice_id_page", undefined>
+	invoice: IInvoiceDetail,
+	t: TFunction<"invoice_id_page">
 ): IInfoItem[] => [
 	{ label: t("booking.fields.order"), value: invoice.orderId },
 	{ label: t("booking.fields.tour"), value: invoice.bookingInfo.tour },
