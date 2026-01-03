@@ -54,6 +54,12 @@
 				"recorded": "Записано",
 				"confirmed": "Подтверждено"
 			}
+		},
+		"reconciliation": {
+			"statuses": {
+				"in_progress": "В процессе",
+				"completed": "Завершенно"
+			}
 		}
 	}
 }

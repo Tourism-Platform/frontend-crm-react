@@ -10,10 +10,6 @@
 		"actualCost": "Факт. расход",
 		"variance": "Разница",
 		"status": "Статус",
-		"statuses": {
-			"in_progress": "В процессе",
-			"completed": "Завершено"
-		},
 		"menu": {
 			"open": "Открыть"
 		}

@@ -1,3 +1,5 @@
+import { type IPaginationResponse } from "@/shared/types";
+
 import type { ENUM_RECONCILIATION_STATUS_TYPE } from "./reconciliation.types";
 
 export interface IReconciliation {
@@ -13,16 +15,12 @@ export interface IReconciliation {
 	currency: string;
 }
 
-export interface IReconciliationSupplierPayment {
-	id: string;
-	component: string;
-	plannedAmount: number;
-	actualAmount: number;
-	variance: number;
-}
+export type TReconciliationStatusCounts = Record<
+	ENUM_RECONCILIATION_STATUS_TYPE,
+	number
+>;
 
-export interface IReconciliationDetail extends IReconciliation {
-	plannedMargin: number;
-	actualMargin: number;
-	supplierPayments: IReconciliationSupplierPayment[];
+export interface IReconciliationPaginatedResponse
+	extends IPaginationResponse<IReconciliation> {
+	statusCounts: TReconciliationStatusCounts;
 }

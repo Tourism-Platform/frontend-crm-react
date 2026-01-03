@@ -55,6 +55,12 @@
 				"recorded": "Recorded",
 				"confirmed": "Confirmed"
 			}
+		},
+		"reconciliation": {
+			"statuses": {
+				"in_progress": "In progress",
+				"completed": "Completed"
+			}
 		}
 	}
 }

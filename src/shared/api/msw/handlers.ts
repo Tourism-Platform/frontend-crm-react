@@ -3,6 +3,7 @@ import { commissionHandlers } from "@/entities/commission";
 import {
 	financeClientPaymentHandlers,
 	financeInvoiceHandlers,
+	financeReconciliationHandler,
 	financeSupplierPaymentHandlers
 } from "@/entities/finance";
 import { staffHandlers } from "@/entities/staff";
@@ -11,7 +12,7 @@ import {
 	accountHandlers,
 	businessDocumentsHandlers,
 	businessHandlers
-} from "@/entities/user/handlers";
+} from "@/entities/user";
 
 export const handlers = [
 	...authHandlers,
@@ -23,5 +24,6 @@ export const handlers = [
 	...tourHandlers,
 	...financeInvoiceHandlers,
 	...financeClientPaymentHandlers,
-	...financeSupplierPaymentHandlers
+	...financeSupplierPaymentHandlers,
+	...financeReconciliationHandler
 ];

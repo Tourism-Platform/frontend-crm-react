@@ -10,10 +10,6 @@
 		"actualCost": "Actual cost",
 		"variance": "Variance",
 		"status": "Status",
-		"statuses": {
-			"in_progress": "In progress",
-			"completed": "Completed"
-		},
 		"menu": {
 			"open": "Open"
 		}
