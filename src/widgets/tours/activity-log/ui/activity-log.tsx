@@ -1,17 +1,36 @@
 import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
-import { ACTIVITY_LOG_MOCK } from "@/shared/config";
+import { Button, Card, CardContent } from "@/shared/ui";
 
+import { useGetActivityLogQuery } from "@/entities/activity-log";
 import { TourHeader } from "@/entities/tour";
 
 import { PreviewTourButton, PublishTourButton } from "@/features/tours";
 
 import { ActivityLogContent } from "./activity-log-content";
+import { ActivityLogSkeleton } from "./activity-log-skeleton";
 
 export const ActivityLog: FC = () => {
-	const [activities] = useState(ACTIVITY_LOG_MOCK);
+	const { tourId } = useParams<{ tourId: string }>();
+	const [page, setPage] = useState(1);
+	const limit = 5;
+
+	const { data, isLoading, isFetching } = useGetActivityLogQuery({
+		tourId,
+		page,
+		limit
+	});
 	const { t } = useTranslation("tour_activity_log_page");
+
+	const activities = data?.data || [];
+	const total = data?.total || 0;
+	const hasMore = activities.length < total;
+
+	const handleLoadMore = () => {
+		setPage((prev) => prev + 1);
+	};
 
 	return (
 		<section className="flex flex-col gap-6 container">
@@ -27,7 +46,22 @@ export const ActivityLog: FC = () => {
 					</>
 				}
 			/>
-			<ActivityLogContent items={activities} />
+
+			<Card>
+				<CardContent className="flex flex-col gap-6">
+					<ActivityLogContent items={activities} />
+
+					{(isLoading || isFetching) && <ActivityLogSkeleton />}
+
+					{hasMore && (
+						<div className="flex justify-center pb-4">
+							<Button variant="outline" onClick={handleLoadMore}>
+								{t("actions.load_more")}
+							</Button>
+						</div>
+					)}
+				</CardContent>
+			</Card>
 		</section>
 	);
 };

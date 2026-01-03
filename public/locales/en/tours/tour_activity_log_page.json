@@ -6,6 +6,7 @@
 	"actions": {
 		"preview": "Preview",
 		"publish": "Publish",
-		"export": "Export"
+		"export": "Export",
+		"load_more": "Load more"
 	}
 }

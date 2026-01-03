@@ -1,3 +1,4 @@
+import { activityLogHandlers } from "@/entities/activity-log";
 import { authHandlers } from "@/entities/auth/api/auth.mock";
 import { commissionHandlers } from "@/entities/commission";
 import {
@@ -25,5 +26,6 @@ export const handlers = [
 	...financeInvoiceHandlers,
 	...financeClientPaymentHandlers,
 	...financeSupplierPaymentHandlers,
-	...financeReconciliationHandler
+	...financeReconciliationHandler,
+	...activityLogHandlers
 ];
