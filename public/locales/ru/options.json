@@ -61,5 +61,17 @@
 				"completed": "Завершенно"
 			}
 		}
+	},
+	"booking": {
+		"order": {
+			"statuses": {
+				"new": "Новый",
+				"in_processing": "Обработка",
+				"booking": "Бронирование",
+				"in_progress": "В работе",
+				"completed": "Завершен",
+				"cancelled": "Отменен"
+			}
+		}
 	}
 }

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge, Skeleton } from "@/shared/ui";
 
 import {
 	CLIENT_TYPE_LABELS,
@@ -20,7 +20,7 @@ import {
 	ORDER_TYPE_VARIANTS
 } from "@/entities/booking";
 
-import { OrderActions } from "../../ui";
+import { OrderActions } from "../ui";
 
 export const COLUMNS = (
 	activeTab: ENUM_ORDER_STATUS_TYPE,
@@ -31,25 +31,6 @@ export const COLUMNS = (
 	return [
 		{
 			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={
-						table.getIsAllPageRowsSelected() ||
-						(table.getIsSomePageRowsSelected() && "indeterminate")
-					}
-					onCheckedChange={(value) =>
-						table.toggleAllPageRowsSelected(!!value)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
 			size: 28,
 			enableSorting: false,
 			enableHiding: false
@@ -57,6 +38,10 @@ export const COLUMNS = (
 		{
 			header: t("table.orderId"),
 			accessorKey: "orderId",
+			meta: {
+				headerTitle: t("table.orderId"),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
 			cell: ({ row }) => (
 				<Link
 					to={buildRoute(ENUM_PATH.BOOKING.ORDER_ID, {
@@ -72,11 +57,24 @@ export const COLUMNS = (
 		{
 			header: t("table.tourName"),
 			accessorKey: "tourName",
+			meta: {
+				headerTitle: t("table.tourName"),
+				skeleton: <Skeleton className="h-4 w-[120px]" />
+			},
+			cell: ({ row }) => (
+				<div className="font-medium truncate">
+					{row.getValue("tourName")}
+				</div>
+			),
 			size: 120
 		},
 		{
 			header: t("table.orderType"),
 			accessorKey: "orderType",
+			meta: {
+				headerTitle: t("table.orderType"),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
 			cell: ({ row }) => {
 				const orderType = row.getValue(
 					"orderType"
@@ -93,11 +91,19 @@ export const COLUMNS = (
 		{
 			header: t("table.dateCreated"),
 			accessorKey: "dateCreated",
+			meta: {
+				headerTitle: t("table.dateCreated"),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
 			size: 120
 		},
 		{
 			header: t("table.client"),
 			accessorKey: "client",
+			meta: {
+				headerTitle: t("table.client"),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("client")}</div>
 			),
@@ -106,6 +112,10 @@ export const COLUMNS = (
 		{
 			header: t("table.clientType"),
 			accessorKey: "clientType",
+			meta: {
+				headerTitle: t("table.clientType"),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
 			cell: ({ row }) => {
 				const clientType = row.getValue(
 					"clientType"
@@ -122,6 +132,10 @@ export const COLUMNS = (
 		{
 			header: t("table.pax"),
 			accessorKey: "pax",
+			meta: {
+				headerTitle: t("table.pax"),
+				skeleton: <Skeleton className="h-4 w-[30px]" />
+			},
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("pax")}</div>
 			),
@@ -131,6 +145,10 @@ export const COLUMNS = (
 		{
 			header: t("table.dates"),
 			accessorKey: "dates",
+			meta: {
+				headerTitle: t("table.dates"),
+				skeleton: <Skeleton className="h-4 w-[120px]" />
+			},
 			cell: ({ row }) => {
 				const dates = row.getValue("dates") as IOrder["dates"];
 				return (
@@ -146,6 +164,10 @@ export const COLUMNS = (
 					{
 						header: t("table.manager"),
 						accessorKey: "manager",
+						meta: {
+							headerTitle: t("table.manager"),
+							skeleton: <Skeleton className="h-4 w-[100px]" />
+						},
 						cell: ({ row }) => (
 							<div className="font-medium">
 								{row.getValue("manager") || "-"}
@@ -161,6 +183,10 @@ export const COLUMNS = (
 					{
 						header: t("table.invoiceStatusColumn"),
 						accessorKey: "invoiceStatus",
+						meta: {
+							headerTitle: t("table.invoiceStatusColumn"),
+							skeleton: <Skeleton className="h-4 w-[80px]" />
+						},
 						cell: ({ row }) => {
 							const invoiceStatus = row.getValue(
 								"invoiceStatus"
@@ -193,6 +219,9 @@ export const COLUMNS = (
 					onDelete={onDelete}
 				/>
 			),
+			meta: {
+				skeleton: <div className="size-9 rounded-md" />
+			},
 			size: 60,
 			enableHiding: false
 		}

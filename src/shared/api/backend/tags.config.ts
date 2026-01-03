@@ -8,5 +8,6 @@ export const ENUM_API_TAGS = {
 	FINANCE_INVOICES: "Finance Invoices",
 	FINANCE_CLIENT_PAYMENTS: "Finance Client Payments",
 	FINANCE_SUPPLIER_PAYMENTS: "Finance Supplier Payments",
-	ACTIVITY_LOG: "Activity Log"
+	ACTIVITY_LOG: "Activity Log",
+	BOOKING_ORDERS: "Booking Orders"
 } as const;

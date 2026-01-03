@@ -8,13 +8,13 @@ import { cn } from "@/shared/lib";
 import { Badge, Button } from "@/shared/ui";
 
 import {
+	BOOKING_ORDER_STATUS_LABELS,
+	BOOKING_ORDER_STATUS_VARIANTS,
 	type ENUM_INVOICE_STATUS_TYPE,
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
 	INVOICE_STATUS_LABELS_ID,
-	INVOICE_STATUS_VARIANTS,
-	ORDER_STATUS_LABELS,
-	ORDER_STATUS_VARIANTS
+	INVOICE_STATUS_VARIANTS
 } from "@/entities/booking";
 
 interface IOrderHeaderProps {
@@ -28,7 +28,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 	status,
 	invoiceStatus
 }) => {
-	const { t } = useTranslation("order_id_page");
+	const { t } = useTranslation(["order_id_page", "options"]);
 
 	return (
 		<div className="grid gap-5">
@@ -55,12 +55,16 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 									{t("header.order_status")}:
 								</span>
 								<Badge
-									variant={ORDER_STATUS_VARIANTS[status]}
+									variant={
+										BOOKING_ORDER_STATUS_VARIANTS[status]
+									}
 									className={cn(
 										"px-3 py-1 text-xs font-bold"
 									)}
 								>
-									{t(ORDER_STATUS_LABELS[status])}
+									{t(BOOKING_ORDER_STATUS_LABELS[status], {
+										ns: "options"
+									})}
 								</Badge>
 							</div>
 

@@ -1,21 +1,21 @@
-import { type TOrderIdPageKeys } from "@/shared/config";
+import { type TOptionsKeys } from "@/shared/config";
 import type { BadgeVariant } from "@/shared/ui";
 
 import { ENUM_ORDER_STATUS, type ENUM_ORDER_STATUS_TYPE } from "../types";
 
-export const ORDER_STATUS_LABELS: Record<
+export const BOOKING_ORDER_STATUS_LABELS: Record<
 	ENUM_ORDER_STATUS_TYPE,
-	TOrderIdPageKeys
+	TOptionsKeys
 > = {
-	[ENUM_ORDER_STATUS.NEW]: "statuses.new",
-	[ENUM_ORDER_STATUS.IN_PROCESSING]: "statuses.in_processing",
-	[ENUM_ORDER_STATUS.BOOKING]: "statuses.booking",
-	[ENUM_ORDER_STATUS.IN_PROGRESS]: "statuses.in_progress",
-	[ENUM_ORDER_STATUS.COMPLETED]: "statuses.completed",
-	[ENUM_ORDER_STATUS.CANCELLED]: "statuses.cancelled"
+	[ENUM_ORDER_STATUS.NEW]: "booking.order.statuses.new",
+	[ENUM_ORDER_STATUS.IN_PROCESSING]: "booking.order.statuses.in_processing",
+	[ENUM_ORDER_STATUS.BOOKING]: "booking.order.statuses.booking",
+	[ENUM_ORDER_STATUS.IN_PROGRESS]: "booking.order.statuses.in_progress",
+	[ENUM_ORDER_STATUS.COMPLETED]: "booking.order.statuses.completed",
+	[ENUM_ORDER_STATUS.CANCELLED]: "booking.order.statuses.cancelled"
 };
 
-export const ORDER_STATUS_VARIANTS: Record<
+export const BOOKING_ORDER_STATUS_VARIANTS: Record<
 	ENUM_ORDER_STATUS_TYPE,
 	BadgeVariant
 > = {

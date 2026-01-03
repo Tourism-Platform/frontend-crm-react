@@ -1,46 +1,78 @@
-import { type FC, useMemo, useState } from "react";
+import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
+import { type FC } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { ORDERS_MOCK } from "@/shared/config";
 import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
+	BOOKING_ORDER_STATUS_LABELS,
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
-	type IOrder
+	useGetBookingOrdersQuery
 } from "@/entities/booking";
 
-import { COLUMNS, ORDER_TABS_LIST } from "../model";
+import { COLUMNS } from "../model";
 
 export const Orders: FC = () => {
 	const { t } = useTranslation("orders_page");
-	const [orders, setOrders] = useState<IOrder[]>(ORDERS_MOCK);
 
-	// Status tabs state
-	const [activeTab, setActiveTab] = useState<ENUM_ORDER_STATUS_TYPE>(
-		ENUM_ORDER_STATUS.NEW
-	); // Default to 'all' or first status
+	const { watch, setValue } = useForm<{
+		status: ENUM_ORDER_STATUS_TYPE;
+		search: string;
+		page: number;
+		limit: number;
+	}>({
+		defaultValues: {
+			status: ENUM_ORDER_STATUS.NEW,
+			search: "",
+			page: 1,
+			limit: 10
+		}
+	});
 
-	const handleEditOrder = (id: string, updatedOrder: Partial<IOrder>) => {
-		setOrders(
-			orders.map((order) =>
-				order.orderId === id ? { ...order, ...updatedOrder } : order
-			)
-		);
+	const filters = watch();
+
+	const { data, isLoading, isFetching } = useGetBookingOrdersQuery({
+		status: [filters.status],
+		search: filters.search,
+		page: filters.page,
+		limit: filters.limit
+	});
+
+	const orders = data?.data ?? [];
+	const totalCount = data?.total ?? 0;
+
+	const handlePaginationChange: OnChangeFn<PaginationState> = (
+		updaterOrValue
+	) => {
+		const currentPagination = {
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		};
+
+		const nextValue =
+			typeof updaterOrValue === "function"
+				? updaterOrValue(currentPagination)
+				: updaterOrValue;
+
+		setValue("page", nextValue.pageIndex + 1);
+		setValue("limit", nextValue.pageSize);
 	};
 
-	const handleDeleteOrder = (id: string) => {
-		setOrders(orders.filter((order) => order.orderId !== id));
+	const handleSearchChange = (val: string) => {
+		setValue("search", val);
+		setValue("page", 1);
 	};
 
-	const filteredData = orders.filter((order) => order.status === activeTab);
-	const translatedStatusTabs = useMemo(
-		() =>
-			ORDER_TABS_LIST.map((tab) => ({
-				label: t(tab.label),
-				value: tab.value
-			})),
-		[t]
+	const handleStatusTabChange = (val: string) => {
+		setValue("status", val as ENUM_ORDER_STATUS_TYPE);
+		setValue("page", 1);
+	};
+
+	const translatedStatusTabs = useValueToTranslateLabel(
+		BOOKING_ORDER_STATUS_LABELS
 	);
 
 	return (
@@ -49,17 +81,21 @@ export const Orders: FC = () => {
 			<Card>
 				<CardContent>
 					<SmartTable
-						data={filteredData}
-						columns={COLUMNS(
-							activeTab,
-							handleEditOrder,
-							handleDeleteOrder
-						)}
+						data={orders}
+						columns={COLUMNS(filters.status)}
+						recordCount={totalCount}
+						isLoading={isLoading || isFetching}
+						loadingMode="skeleton"
+						pagination={{
+							pageIndex: filters.page - 1,
+							pageSize: filters.limit
+						}}
+						onPaginationChange={handlePaginationChange}
+						search={filters.search}
+						onSearchChange={handleSearchChange}
 						statusTabs={translatedStatusTabs}
-						activeStatusTab={activeTab}
-						onStatusTabChange={(val) =>
-							setActiveTab(val as ENUM_ORDER_STATUS_TYPE)
-						}
+						activeStatusTab={filters.status}
+						onStatusTabChange={handleStatusTabChange}
 						showStatusTabsFilter={true}
 					/>
 				</CardContent>
