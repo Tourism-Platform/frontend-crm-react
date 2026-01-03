@@ -5,7 +5,7 @@ import { formatToDollars } from "@/shared/utils";
 
 import { type IInvoicePayment } from "@/entities/finance";
 
-import { OpenPayment } from "@/features/finance/open-payment";
+import { OpenPayment } from "@/features/finance";
 
 export const COLUMNS = (): ColumnDef<IInvoicePayment>[] => {
 	const { t } = useTranslation("invoice_id_page");
