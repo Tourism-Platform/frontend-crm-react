@@ -1,3 +1,5 @@
+import { formatDate } from "@/shared/utils";
+
 import type {
 	IInvoice,
 	IInvoiceBackend,
@@ -11,7 +13,7 @@ import type {
 export const mapInvoiceToFrontend = (data: IInvoiceBackend): IInvoice => ({
 	paymentId: data.payment_id,
 	orderId: data.order_id,
-	issueDate: data.issue_date,
+	issueDate: formatDate(data.issue_date),
 	amount: data.amount,
 	paidAmount: data.paid_amount,
 	status: data.status
@@ -21,7 +23,7 @@ export const mapInvoiceDetailToFrontend = (
 	data: IInvoiceDetailBackend
 ): IInvoiceDetail => ({
 	...mapInvoiceToFrontend(data),
-	dueDate: data.due_date,
+	dueDate: formatDate(data.due_date),
 	remainingAmount: data.remaining_amount,
 	currency: data.currency,
 	billingInfo: {
@@ -40,7 +42,7 @@ export const mapInvoiceDetailToFrontend = (
 	payments: data.payments.map((p) => ({
 		no: p.no,
 		amount: p.amount,
-		date: p.date,
+		date: formatDate(p.date),
 		file: p.file
 			? {
 					url: p.file.url,
