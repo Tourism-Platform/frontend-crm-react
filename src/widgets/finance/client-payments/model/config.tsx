@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
@@ -13,11 +13,8 @@ import {
 
 import { ClientPaymentActions } from "../ui";
 
-export const COLUMNS = (
-	onAssign?: (id: string, data: Partial<IPayment>) => void,
-	onDelete?: (id: string) => void
-): ColumnDef<IPayment>[] => {
-	const { t } = useTranslation("client_payments_page");
+export const COLUMNS = (): ColumnDef<IPayment>[] => {
+	const { t } = useTranslation(["client_payments_page", "options"]);
 	return [
 		{
 			id: "select",
@@ -45,7 +42,13 @@ export const COLUMNS = (
 			enableHiding: false
 		},
 		{
-			header: t("table.paymentId"),
+			header: t("table.paymentId", { ns: "client_payments_page" }),
+			meta: {
+				headerTitle: t("table.paymentId", {
+					ns: "client_payments_page"
+				}),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
 			accessorKey: "paymentId",
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("paymentId")}</div>
@@ -53,17 +56,31 @@ export const COLUMNS = (
 			size: 160
 		},
 		{
-			header: t("table.orderId"),
+			header: t("table.orderId", { ns: "client_payments_page" }),
+			meta: {
+				headerTitle: t("table.orderId", { ns: "client_payments_page" }),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
 			accessorKey: "orderId",
 			size: 160
 		},
 		{
-			header: t("table.dateCreated"),
+			header: t("table.dateCreated", { ns: "client_payments_page" }),
+			meta: {
+				headerTitle: t("table.dateCreated", {
+					ns: "client_payments_page"
+				}),
+				skeleton: <Skeleton className="h-4 w-[120px]" />
+			},
 			accessorKey: "dateCreated",
 			size: 160
 		},
 		{
-			header: t("table.amount"),
+			header: t("table.amount", { ns: "client_payments_page" }),
+			meta: {
+				headerTitle: t("table.amount", { ns: "client_payments_page" }),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
 			accessorKey: "amount",
 			cell: ({ row }) => {
 				const amount = parseFloat(row.getValue("amount"));
@@ -74,7 +91,11 @@ export const COLUMNS = (
 			size: 140
 		},
 		{
-			header: t("table.status"),
+			header: t("table.status", { ns: "client_payments_page" }),
+			meta: {
+				headerTitle: t("table.status", { ns: "client_payments_page" }),
+				skeleton: <Skeleton className="h-5 w-[100px] rounded-full" />
+			},
 			accessorKey: "status",
 			cell: ({ row }) => {
 				const status = row.getValue(
@@ -83,7 +104,7 @@ export const COLUMNS = (
 
 				return (
 					<Badge variant={PAYMENT_STATUS_VARIANTS[status]}>
-						{t(PAYMENT_STATUS_LABELS[status])}
+						{t(PAYMENT_STATUS_LABELS[status], { ns: "options" })}
 					</Badge>
 				);
 			},
@@ -92,13 +113,10 @@ export const COLUMNS = (
 		{
 			id: "actions",
 			header: () => <span className="sr-only">Actions</span>,
-			cell: ({ row }) => (
-				<ClientPaymentActions
-					payment={row.original}
-					onAssign={onAssign}
-					onDelete={onDelete}
-				/>
-			),
+			cell: ({ row }) => <ClientPaymentActions payment={row.original} />,
+			meta: {
+				skeleton: <div className="size-9 rounded-md" />
+			},
 			size: 60,
 			enableHiding: false
 		}

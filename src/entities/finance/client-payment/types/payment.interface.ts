@@ -1,3 +1,5 @@
+import { type IPaginationResponse } from "@/shared/types";
+
 import { type ENUM_PAYMENT_STATUS_TYPE } from "./payment-status.types";
 
 export interface IPayment {
@@ -9,4 +11,11 @@ export interface IPayment {
 	currency: "USD"; // расширяемо
 	status: ENUM_PAYMENT_STATUS_TYPE;
 	note?: string;
+}
+
+export type TPaymentStatusCounts = Record<ENUM_PAYMENT_STATUS_TYPE, number>;
+
+export interface IPaymentPaginatedResponse
+	extends IPaginationResponse<IPayment> {
+	statusCounts: TPaymentStatusCounts;
 }

@@ -1,6 +1,9 @@
 import { authHandlers } from "@/entities/auth/api/auth.mock";
 import { commissionHandlers } from "@/entities/commission";
-import { financeInvoiceHandlers } from "@/entities/finance";
+import {
+	financeClientPaymentHandlers,
+	financeInvoiceHandlers
+} from "@/entities/finance";
 import { staffHandlers } from "@/entities/staff";
 import { tourHandlers } from "@/entities/tour";
 import {
@@ -17,5 +20,6 @@ export const handlers = [
 	...staffHandlers,
 	...commissionHandlers,
 	...tourHandlers,
-	...financeInvoiceHandlers
+	...financeInvoiceHandlers,
+	...financeClientPaymentHandlers
 ];

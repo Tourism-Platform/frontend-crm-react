@@ -44,6 +44,12 @@
 				"unpaid": "Unpaid",
 				"partially_paid": "Partially paid"
 			}
+		},
+		"client_payment": {
+			"statuses": {
+				"assigned": "Assigned",
+				"not_assigned": "Not Assigned"
+			}
 		}
 	}
 }

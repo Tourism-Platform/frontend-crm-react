@@ -5,7 +5,7 @@
 		"form": {
 			"title": "Create New Payment",
 			"fields": {
-				"payment_id": {
+				"paymentId": {
 					"label": "Payment ID",
 					"placeholder": "Enter payment ID (e.g., INV-1234)"
 				},
@@ -13,7 +13,7 @@
 					"label": "Amount",
 					"placeholder": "Enter amount"
 				},
-				"order_id": {
+				"orderId": {
 					"label": "Order ID",
 					"placeholder": "Enter order ID (e.g., RQA00001)"
 				},
@@ -23,7 +23,7 @@
 				}
 			},
 			"errors": {
-				"payment_id": {
+				"paymentId": {
 					"required": "Payment ID is required",
 					"min": "Payment ID cannot be empty"
 				},
@@ -31,14 +31,19 @@
 					"required": "Amount is required",
 					"min": "Amount must be greater than 0"
 				},
-				"order_id": {
+				"orderId": {
 					"required": "Order ID is required",
 					"min": "Order ID cannot be empty"
 				}
 			},
 			"buttons": {
 				"decline": "Cancel",
-				"save": "Create"
+				"save": "Create",
+				"saving": "Creating..."
+			},
+			"toasts": {
+				"success": "Payment created successfully",
+				"error": "Failed to create payment"
 			}
 		}
 	},
@@ -48,7 +53,7 @@
 			"form": {
 				"title": "Payment details",
 				"fields": {
-					"order_id": {
+					"orderId": {
 						"label": "Order ID",
 						"placeholder": "Enter order ID (e.g., RQA00001)"
 					},
@@ -62,7 +67,7 @@
 					}
 				},
 				"errors": {
-					"order_id": {
+					"orderId": {
 						"required": "Order ID is required",
 						"min": "Order ID cannot be empty"
 					},
@@ -73,7 +78,12 @@
 				},
 				"buttons": {
 					"decline": "Cancel",
-					"save": "Assign"
+					"save": "Assign",
+					"saving": "Saving..."
+				},
+				"toasts": {
+					"success": "Payment assigned successfully",
+					"error": "Failed to assign payment"
 				}
 			}
 		},
@@ -84,7 +94,12 @@
 				"warning": "Are you sure you want to delete this payment? This action cannot be undone.",
 				"buttons": {
 					"decline": "Cancel",
-					"confirm": "Delete"
+					"confirm": "Delete",
+					"confirming": "Deleting..."
+				},
+				"toasts": {
+					"success": "Payment deleted successfully",
+					"error": "Failed to delete payment"
 				}
 			}
 		}
@@ -95,10 +110,6 @@
 		"dateCreated": "Date created",
 		"amount": "Amount",
 		"status": "Status",
-		"statuses": {
-			"assigned": "Assigned",
-			"not_assigned": "Not Assigned"
-		},
 		"menu": {
 			"assign": "Assign",
 			"open": "Open",

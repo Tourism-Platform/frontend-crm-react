@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -18,7 +20,7 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import type { IPayment } from "@/entities/finance";
+import { useCreatePaymentMutation } from "@/entities/finance";
 
 import {
 	FORM_NEW_PAYMENT_LIST,
@@ -26,31 +28,25 @@ import {
 	type TNewPaymentSchema
 } from "../model";
 
-interface INewPaymentProps {
-	onAdd?: (payment: Omit<IPayment, "id">) => void;
-}
-
-export const NewPayment: FC<INewPaymentProps> = ({ onAdd }) => {
+export const NewPayment: FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("client_payments_page");
+	const [createPayment, { isLoading }] = useCreatePaymentMutation();
+
 	const form = useForm<TNewPaymentSchema>({
 		resolver: zodResolver(NEW_PAYMENT_SCHEMA),
 		mode: "onSubmit"
 	});
 
-	function onSubmit(data: TNewPaymentSchema) {
-		if (onAdd) {
-			onAdd({
-				paymentId: `INV-${Math.floor(Math.random() * 10000)}`,
-				amount: data.amount,
-				orderId: data.orderId || "",
-				note: data.note || "",
-				dateCreated: new Date().toISOString().split("T")[0],
-				currency: "USD",
-				status: data.orderId ? "assigned" : "not_assigned"
-			});
+	async function onSubmit(data: TNewPaymentSchema) {
+		try {
+			await createPayment(data).unwrap();
+			toast.success(t("new_payment.form.toasts.success"));
 			setOpen(false);
 			form.reset();
+		} catch (error) {
+			toast.error(t("new_payment.form.toasts.error"));
+			console.error("Failed to create payment:", error);
 		}
 	}
 
@@ -93,8 +89,13 @@ export const NewPayment: FC<INewPaymentProps> = ({ onAdd }) => {
 									{t("new_payment.form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit">
-								{t("new_payment.form.buttons.save")}
+							<Button type="submit" disabled={isLoading}>
+								{isLoading && (
+									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								)}
+								{isLoading
+									? t("new_payment.form.buttons.saving")
+									: t("new_payment.form.buttons.save")}
 							</Button>
 						</DialogFooter>
 					</form>

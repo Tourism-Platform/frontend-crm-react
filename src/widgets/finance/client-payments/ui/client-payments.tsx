@@ -1,48 +1,92 @@
-import { type FC, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
+import { type FC } from "react";
+import { useForm } from "react-hook-form";
 
-import { PAYMENTS_MOCK } from "@/shared/config";
-import { Card, CardContent, CustomTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { type IPayment } from "@/entities/finance";
+import {
+	type ENUM_PAYMENT_STATUS_TYPE,
+	type IPaymentFilters,
+	PAYMENT_STATUS_LABELS,
+	useGetPaymentsQuery
+} from "@/entities/finance";
 
 import { NewPayment } from "@/features/finance";
 
 import { COLUMNS } from "../model";
 
+import { ClientPaymentsHeader } from "./client-payments-header";
+
 export const ClientPayments: FC = () => {
-	const { t } = useTranslation("client_payments_page");
-	const [payments, setPayments] = useState<IPayment[]>(PAYMENTS_MOCK);
+	const { watch, setValue } = useForm<IPaymentFilters>({
+		defaultValues: {
+			search: "",
+			status: [],
+			page: 1,
+			limit: 10
+		}
+	});
 
-	const handleAddPayment = (newPayment: Omit<IPayment, "id">) => {
-		const id = (
-			Math.max(...payments.map((p) => parseInt(p.id))) + 1
-		).toString();
-		setPayments([...payments, { ...newPayment, id }]);
+	const filters = watch();
+
+	const { data, isLoading, isFetching } = useGetPaymentsQuery(filters);
+
+	const payments = data?.data ?? [];
+	const totalCount = data?.total ?? 0;
+	const statusCounts = data?.statusCounts;
+
+	const statusOptions = useValueToTranslateLabel(PAYMENT_STATUS_LABELS);
+
+	const handlePaginationChange: OnChangeFn<PaginationState> = (
+		updaterOrValue
+	) => {
+		const currentPagination = {
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		};
+
+		const nextValue =
+			typeof updaterOrValue === "function"
+				? updaterOrValue(currentPagination)
+				: updaterOrValue;
+
+		setValue("page", nextValue.pageIndex + 1);
+		setValue("limit", nextValue.pageSize);
 	};
 
-	const handleEditPayment = (id: string, updatedData: Partial<IPayment>) => {
-		setPayments(
-			payments.map((p) => (p.id === id ? { ...p, ...updatedData } : p))
-		);
+	const handleSearchChange = (val: string) => {
+		setValue("search", val);
+		setValue("page", 1);
 	};
 
-	const handleDeletePayment = (id: string) => {
-		setPayments(payments.filter((p) => p.id !== id));
+	const handleStatusChange = (val: string[]) => {
+		setValue("status", val as ENUM_PAYMENT_STATUS_TYPE[]);
+		setValue("page", 1);
 	};
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="text-3xl">{t("page_name")}</h1>
+			<ClientPaymentsHeader statusCounts={statusCounts} />
 			<Card>
 				<CardContent>
-					<CustomTable
+					<SmartTable
 						data={payments}
-						columns={COLUMNS(
-							handleEditPayment,
-							handleDeletePayment
-						)}
-						actions={<NewPayment onAdd={handleAddPayment} />}
+						columns={COLUMNS()}
+						actions={<NewPayment />}
+						isLoading={isLoading || isFetching}
+						loadingMode="skeleton"
+						recordCount={totalCount}
+						pagination={{
+							pageIndex: filters.page - 1,
+							pageSize: filters.limit
+						}}
+						onPaginationChange={handlePaginationChange}
+						search={filters.search}
+						onSearchChange={handleSearchChange}
+						status={filters.status}
+						onStatusChange={handleStatusChange}
+						statusOptions={statusOptions}
 					/>
 				</CardContent>
 			</Card>

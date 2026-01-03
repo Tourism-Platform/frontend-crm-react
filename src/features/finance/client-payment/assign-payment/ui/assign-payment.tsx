@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -18,10 +20,15 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { ENUM_PAYMENT_STATUS, type IPayment } from "@/entities/finance";
+import {
+	ENUM_PAYMENT_STATUS,
+	type IPayment,
+	useUpdatePaymentMutation
+} from "@/entities/finance";
 
 import {
 	ASSIGN_PAYMENT_SCHEMA,
+	ENUM_FORM_ASSIGN_PAYMENT,
 	FORM_ASSIGN_PAYMENT_LIST,
 	type TAssignPaymentSchema
 } from "../model";
@@ -30,44 +37,49 @@ interface IAssignPaymentProps {
 	trigger?: ReactNode;
 	className?: string;
 	payment: IPayment;
-	onAssign?: (id: string, data: Partial<TAssignPaymentSchema>) => void;
 }
 
 export const AssignPayment: FC<IAssignPaymentProps> = ({
 	trigger,
 	className,
-	payment,
-	onAssign
+	payment
 }) => {
 	const { t } = useTranslation("client_payments_page");
 	const [open, setOpen] = useState<boolean>(false);
+	const [updatePayment, { isLoading }] = useUpdatePaymentMutation();
+
 	const form = useForm<TAssignPaymentSchema>({
 		resolver: zodResolver(ASSIGN_PAYMENT_SCHEMA),
 		defaultValues: {
-			orderId: payment.orderId,
-			amount: payment.amount,
-			note: ""
+			[ENUM_FORM_ASSIGN_PAYMENT.ORDER_ID]: payment.orderId,
+			[ENUM_FORM_ASSIGN_PAYMENT.AMOUNT]: payment.amount,
+			[ENUM_FORM_ASSIGN_PAYMENT.NOTE]: payment.note || ""
 		},
 		mode: "onSubmit"
 	});
 
-	function onSubmit(data: TAssignPaymentSchema) {
-		setOpen(false);
-		if (onAssign && payment) {
-			onAssign(payment.id!, {
-				orderId: data.orderId,
-				amount: data.amount,
-				note: data.note
-			});
+	async function onSubmit(data: TAssignPaymentSchema) {
+		try {
+			await updatePayment({
+				id: payment.id,
+				data
+			}).unwrap();
+			toast.success(t("menu.assign.form.toasts.success"));
+			setOpen(false);
+		} catch (error) {
+			toast.error(t("menu.assign.form.toasts.error"));
+			console.error("Failed to update payment:", error);
 		}
 	}
+
 	const isAssigned = payment.status === ENUM_PAYMENT_STATUS.ASSIGNED;
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>{t("menu.assign.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
@@ -95,7 +107,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 							)}
 						</div>
 						<DialogFooter>
-							<DialogClose asChild onClick={() => setOpen(false)}>
+							<DialogClose asChild>
 								<Button
 									variant="outline"
 									type="reset"
@@ -105,8 +117,13 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 								</Button>
 							</DialogClose>
 							{!isAssigned && (
-								<Button type="submit">
-									{t("menu.assign.form.buttons.save")}
+								<Button type="submit" disabled={isLoading}>
+									{isLoading && (
+										<Loader className="mr-2 h-4 w-4 animate-spin" />
+									)}
+									{isLoading
+										? t("menu.assign.form.buttons.saving")
+										: t("menu.assign.form.buttons.save")}
 								</Button>
 							)}
 						</DialogFooter>

@@ -16,14 +16,10 @@ import { AssignPayment, DeletePayment } from "@/features/finance";
 
 interface IClientPaymentActionsProps {
 	payment?: IPayment;
-	onAssign?: (id: string, data: Partial<IPayment>) => void;
-	onDelete?: (id: string) => void;
 }
 
 export const ClientPaymentActions: FC<IClientPaymentActionsProps> = ({
-	payment,
-	onAssign,
-	onDelete
+	payment
 }) => {
 	const { t } = useTranslation("client_payments_page");
 
@@ -54,7 +50,6 @@ export const ClientPaymentActions: FC<IClientPaymentActionsProps> = ({
 							</div>
 						}
 						payment={payment}
-						onAssign={onAssign}
 					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
@@ -66,7 +61,6 @@ export const ClientPaymentActions: FC<IClientPaymentActionsProps> = ({
 						}
 						className="w-full justify-start px-2 py-1.5"
 						id={payment.id}
-						onDelete={onDelete}
 					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

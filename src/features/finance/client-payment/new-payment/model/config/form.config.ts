@@ -2,8 +2,8 @@ import { ENUM_FORM_NEW_PAYMENT, type TForm } from "../types";
 
 export const FORM_NEW_PAYMENT_LIST: TForm[] = [
 	{
-		label: "new_payment.form.fields.order_id.label",
-		placeholder: "new_payment.form.fields.order_id.placeholder",
+		label: "new_payment.form.fields.orderId.label",
+		placeholder: "new_payment.form.fields.orderId.placeholder",
 		key: ENUM_FORM_NEW_PAYMENT.ORDER_ID,
 		fieldType: "input"
 	},

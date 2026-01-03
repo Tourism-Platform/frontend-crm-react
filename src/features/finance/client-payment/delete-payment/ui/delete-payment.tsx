@@ -1,5 +1,7 @@
-import { type FC, type ReactNode } from "react";
+import { Loader } from "lucide-react";
+import { type FC, type ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -14,29 +16,38 @@ import {
 	Separator
 } from "@/shared/ui";
 
+import { useDeletePaymentMutation } from "@/entities/finance";
+
 interface IDeletePaymentProps {
 	trigger: ReactNode;
 	className?: string;
 	id?: string;
-	onDelete?: (id: string) => void;
 }
 
 export const DeletePayment: FC<IDeletePaymentProps> = ({
 	trigger,
 	className,
-	id,
-	onDelete
+	id
 }) => {
+	const [open, setOpen] = useState(false);
 	const { t } = useTranslation("client_payments_page");
+	const [deletePayment, { isLoading }] = useDeletePaymentMutation();
 
-	function handleDelete() {
-		if (onDelete && id) {
-			onDelete(id);
+	async function handleDelete() {
+		if (id) {
+			try {
+				await deletePayment(id).unwrap();
+				toast.success(t("menu.delete.form.toasts.success"));
+				setOpen(false);
+			} catch (error) {
+				toast.error(t("menu.delete.form.toasts.error"));
+				console.error("Failed to delete payment:", error);
+			}
 		}
 	}
 
 	return (
-		<Dialog>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
@@ -59,15 +70,19 @@ export const DeletePayment: FC<IDeletePaymentProps> = ({
 							{t("menu.delete.form.buttons.decline")}
 						</Button>
 					</DialogClose>
-					<DialogClose asChild>
-						<Button
-							type="button"
-							variant="destructive"
-							onClick={handleDelete}
-						>
-							{t("menu.delete.form.buttons.confirm")}
-						</Button>
-					</DialogClose>
+					<Button
+						type="button"
+						variant="destructive"
+						onClick={handleDelete}
+						disabled={isLoading}
+					>
+						{isLoading && (
+							<Loader className="mr-2 h-4 w-4 animate-spin" />
+						)}
+						{isLoading
+							? t("menu.delete.form.buttons.confirming")
+							: t("menu.delete.form.buttons.confirm")}
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
