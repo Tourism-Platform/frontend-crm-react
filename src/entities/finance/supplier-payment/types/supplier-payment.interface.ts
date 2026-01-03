@@ -1,4 +1,6 @@
-import type { ENUM_SUPPLIER_PAYMENT_STATUS_TYPE } from "./supplier-payment.types";
+import { type IPaginationResponse } from "@/shared/types";
+
+import type { ENUM_SUPPLIER_PAYMENT_STATUS_TYPE } from "./supplier-payment-status.types";
 
 export interface ISupplierPayment {
 	id: string;
@@ -11,6 +13,16 @@ export interface ISupplierPayment {
 	currency: string;
 	manager: string;
 	status: ENUM_SUPPLIER_PAYMENT_STATUS_TYPE;
+}
+
+export type TSupplierPaymentStatusCounts = Record<
+	ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
+	number
+>;
+
+export interface ISupplierPaymentPaginatedResponse
+	extends IPaginationResponse<ISupplierPayment> {
+	statusCounts: TSupplierPaymentStatusCounts;
 }
 
 export interface IConfirmedFile {

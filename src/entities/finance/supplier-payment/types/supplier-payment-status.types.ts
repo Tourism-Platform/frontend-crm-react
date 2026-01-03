@@ -1,8 +1,6 @@
 export const ENUM_SUPPLIER_PAYMENT_STATUS = {
 	RECORDED: "recorded",
-	CONFIRMED: "confirmed",
-	BOOKED: "booked",
-	NOT_BOOKED: "not_booked"
+	CONFIRMED: "confirmed"
 } as const;
 
 export type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE =

@@ -1,23 +1,21 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
-import { Badge, Checkbox } from "@/shared/ui";
+import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
 	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
 	type ISupplierPayment,
-	SUPPLIER_PAYMENT_STATUS_LABELS_FINANCE,
+	SUPPLIER_PAYMENT_STATUS_LABELS,
 	SUPPLIER_PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
 
-import type { TConfirmPaymentSchema } from "@/features/finance";
 import { ConfirmPayment } from "@/features/finance";
 
-export const COLUMNS = (
-	onConfirm?: (id: string, data: Partial<TConfirmPaymentSchema>) => void
-): ColumnDef<ISupplierPayment>[] => {
-	const { t } = useTranslation("supplier_payments_page");
+export const COLUMNS = (): ColumnDef<ISupplierPayment>[] => {
+	const { t } = useTranslation(["supplier_payments_page", "options"]);
+
 	return [
 		{
 			id: "select",
@@ -46,6 +44,10 @@ export const COLUMNS = (
 		},
 		{
 			header: t("table.id"),
+			meta: {
+				headerTitle: t("table.id"),
+				skeleton: <Skeleton className="h-4 w-[40px]" />
+			},
 			accessorKey: "id",
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("id")}</div>
@@ -54,31 +56,55 @@ export const COLUMNS = (
 		},
 		{
 			header: t("table.orderId"),
+			meta: {
+				headerTitle: t("table.orderId"),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
 			accessorKey: "orderId",
 			size: 120
 		},
 		{
 			header: t("table.component"),
+			meta: {
+				headerTitle: t("table.component"),
+				skeleton: <Skeleton className="h-4 w-[180px]" />
+			},
 			accessorKey: "component",
 			size: 200
 		},
 		{
 			header: t("table.type"),
+			meta: {
+				headerTitle: t("table.type"),
+				skeleton: <Skeleton className="h-4 w-[150px]" />
+			},
 			accessorKey: "type",
 			size: 180
 		},
 		{
 			header: t("table.supplier"),
+			meta: {
+				headerTitle: t("table.supplier"),
+				skeleton: <Skeleton className="h-4 w-[120px]" />
+			},
 			accessorKey: "supplier",
 			size: 140
 		},
 		{
 			header: t("table.dateCreated"),
+			meta: {
+				headerTitle: t("table.dateCreated"),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
 			accessorKey: "dateCreated",
 			size: 120
 		},
 		{
 			header: t("table.amount"),
+			meta: {
+				headerTitle: t("table.amount"),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
 			accessorKey: "amount",
 			cell: ({ row }) => (
 				<div className="font-medium">
@@ -89,11 +115,19 @@ export const COLUMNS = (
 		},
 		{
 			header: t("table.manager"),
+			meta: {
+				headerTitle: t("table.manager"),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
 			accessorKey: "manager",
 			size: 120
 		},
 		{
 			header: t("table.status"),
+			meta: {
+				headerTitle: t("table.status"),
+				skeleton: <Skeleton className="h-5 w-[80px] rounded-full" />
+			},
 			accessorKey: "status",
 			cell: ({ row }) => {
 				const status = row.getValue(
@@ -102,7 +136,9 @@ export const COLUMNS = (
 
 				return (
 					<Badge variant={SUPPLIER_PAYMENT_STATUS_VARIANTS[status]}>
-						{t(SUPPLIER_PAYMENT_STATUS_LABELS_FINANCE[status])}
+						{t(SUPPLIER_PAYMENT_STATUS_LABELS[status], {
+							ns: "options"
+						})}
 					</Badge>
 				);
 			},
@@ -110,11 +146,13 @@ export const COLUMNS = (
 		},
 		{
 			id: "actions",
+			header: () => <span className="sr-only">Actions</span>,
 			cell: ({ row }) => {
 				const payment = row.original;
-				return (
-					<ConfirmPayment payment={payment} onConfirm={onConfirm} />
-				);
+				return <ConfirmPayment payment={payment} />;
+			},
+			meta: {
+				skeleton: <div className="size-9 rounded-md" />
 			},
 			size: 120,
 			enableHiding: false

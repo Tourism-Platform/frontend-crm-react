@@ -43,11 +43,16 @@
 				"partially_paid": "Частично оплачено"
 			}
 		},
-
 		"client_payment": {
 			"statuses": {
 				"assigned": "Назначен",
 				"not_assigned": "Не назначен"
+			}
+		},
+		"supplier_payment": {
+			"statuses": {
+				"recorded": "Записано",
+				"confirmed": "Подтверждено"
 			}
 		}
 	}

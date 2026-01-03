@@ -1,47 +1,92 @@
-import { type FC, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
+import { type FC } from "react";
+import { useForm } from "react-hook-form";
 
-import { SUPPLIER_PAYMENTS_MOCK } from "@/shared/config";
-import { Card, CardContent, CustomTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
-	ENUM_SUPPLIER_PAYMENT_STATUS,
-	type ISupplierPayment
+	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
+	type ISupplierPaymentFilters,
+	SUPPLIER_PAYMENT_STATUS_LABELS,
+	useGetSupplierPaymentsQuery
 } from "@/entities/finance";
 
 import { COLUMNS } from "../model";
 
+import { SupplierPaymentsHeader } from "./supplier-payments-header";
+
 export const SupplierPayments: FC = () => {
-	const { t } = useTranslation("supplier_payments_page");
-	const [payments, setPayments] = useState<ISupplierPayment[]>(
-		SUPPLIER_PAYMENTS_MOCK
+	const { watch, setValue } = useForm<ISupplierPaymentFilters>({
+		defaultValues: {
+			search: "",
+			status: [],
+			page: 1,
+			limit: 10
+		}
+	});
+
+	const filters = watch();
+
+	const { data, isLoading, isFetching } =
+		useGetSupplierPaymentsQuery(filters);
+
+	const payments = data?.data ?? [];
+	const totalCount = data?.total ?? 0;
+	const statusCounts = data?.statusCounts;
+
+	const statusOptions = useValueToTranslateLabel(
+		SUPPLIER_PAYMENT_STATUS_LABELS
 	);
 
-	const handleConfirmPayment = (
-		id: string,
-		data: Partial<ISupplierPayment>
+	const handlePaginationChange: OnChangeFn<PaginationState> = (
+		updaterOrValue
 	) => {
-		setPayments(
-			payments.map((p) =>
-				p.id === id
-					? {
-							...p,
-							...data,
-							status: ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
-						}
-					: p
-			)
-		);
+		const currentPagination = {
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		};
+
+		const nextValue =
+			typeof updaterOrValue === "function"
+				? updaterOrValue(currentPagination)
+				: updaterOrValue;
+
+		setValue("page", nextValue.pageIndex + 1);
+		setValue("limit", nextValue.pageSize);
+	};
+
+	const handleSearchChange = (val: string) => {
+		setValue("search", val);
+		setValue("page", 1);
+	};
+
+	const handleStatusChange = (val: string[]) => {
+		setValue("status", val as ENUM_SUPPLIER_PAYMENT_STATUS_TYPE[]);
+		setValue("page", 1);
 	};
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="text-3xl">{t("page_name")}</h1>
+			<SupplierPaymentsHeader statusCounts={statusCounts} />
 			<Card>
 				<CardContent>
-					<CustomTable
+					<SmartTable
 						data={payments}
-						columns={COLUMNS(handleConfirmPayment)}
+						columns={COLUMNS()}
+						isLoading={isLoading || isFetching}
+						loadingMode="skeleton"
+						recordCount={totalCount}
+						pagination={{
+							pageIndex: filters.page - 1,
+							pageSize: filters.limit
+						}}
+						onPaginationChange={handlePaginationChange}
+						search={filters.search}
+						onSearchChange={handleSearchChange}
+						status={filters.status}
+						onStatusChange={handleStatusChange}
+						statusOptions={statusOptions}
 					/>
 				</CardContent>
 			</Card>

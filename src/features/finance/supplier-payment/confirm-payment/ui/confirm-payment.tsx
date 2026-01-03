@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
@@ -20,47 +22,50 @@ import {
 
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
-	type ISupplierPayment
+	type ISupplierPayment,
+	useUpdateSupplierPaymentMutation
 } from "@/entities/finance";
 
 import {
 	CONFIRM_PAYMENT_SCHEMA,
+	ENUM_FORM_CONFIRM_PAYMENT,
 	FORM_CONFIRM_PAYMENT_LIST,
 	type TConfirmPaymentSchema
 } from "../model";
 
 interface IConfirmPaymentProps {
 	payment: ISupplierPayment;
-	onConfirm?: (id: string, data: Partial<TConfirmPaymentSchema>) => void;
 }
 
-export const ConfirmPayment: FC<IConfirmPaymentProps> = ({
-	payment,
-	onConfirm
-}) => {
+export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 	const { t } = useTranslation("supplier_payments_page");
 	const [open, setOpen] = useState<boolean>(false);
+	const [updatePayment, { isLoading }] = useUpdateSupplierPaymentMutation();
+
 	const isConfirmed =
 		payment.status === ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED;
 
 	const form = useForm<TConfirmPaymentSchema>({
 		resolver: zodResolver(CONFIRM_PAYMENT_SCHEMA),
 		defaultValues: {
-			orderId: payment.orderId,
-			amount: payment.amount,
-			note: ""
+			[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: payment.orderId,
+			[ENUM_FORM_CONFIRM_PAYMENT.AMOUNT]: payment.amount,
+			[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: ""
 		},
 		mode: "onSubmit"
 	});
 
-	function onSubmit(data: TConfirmPaymentSchema) {
-		setOpen(false);
-		if (onConfirm && payment) {
-			onConfirm(payment.id, {
-				orderId: data.orderId,
-				amount: data.amount,
-				note: data.note
-			});
+	async function onSubmit(data: TConfirmPaymentSchema) {
+		try {
+			await updatePayment({
+				id: payment.id,
+				data
+			}).unwrap();
+			toast.success(t("form.toasts.success"));
+			setOpen(false);
+		} catch (error) {
+			toast.error(t("form.toasts.error"));
+			console.error("Failed to update supplier payment:", error);
 		}
 	}
 
@@ -77,7 +82,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({
 						: t("table.menu.confirm")}
 				</Button>
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>{t("form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
@@ -115,8 +120,13 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({
 								</Button>
 							</DialogClose>
 							{!isConfirmed && (
-								<Button type="submit">
-									{t("form.buttons.save")}
+								<Button type="submit" disabled={isLoading}>
+									{isLoading && (
+										<Loader className="mr-2 h-4 w-4 animate-spin" />
+									)}
+									{isLoading
+										? t("form.buttons.saving")
+										: t("form.buttons.save")}
 								</Button>
 							)}
 						</DialogFooter>

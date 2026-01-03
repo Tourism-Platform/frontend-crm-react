@@ -3,7 +3,7 @@
 	"form": {
 		"title": "Payment details",
 		"fields": {
-			"order_id": {
+			"orderId": {
 				"label": "Order ID",
 				"placeholder": "Enter order ID"
 			},
@@ -17,7 +17,7 @@
 			}
 		},
 		"errors": {
-			"order_id": {
+			"orderId": {
 				"required": "Order ID is required",
 				"min": "Order ID cannot be empty"
 			},
@@ -27,13 +27,18 @@
 			}
 		},
 		"buttons": {
-			"close": "Close",
-			"save": "Confirm"
+			"save": "Save",
+			"saving": "Saving...",
+			"close": "Close"
+		},
+		"toasts": {
+			"success": "Supplier payment successfully confirmed",
+			"error": "Failed to confirm supplier payment"
 		}
 	},
 	"table": {
 		"id": "ID",
-		"orderId": "Order id",
+		"orderId": "Order ID",
 		"component": "Component",
 		"type": "Type",
 		"supplier": "Supplier",
@@ -41,17 +46,10 @@
 		"amount": "Amount",
 		"manager": "Manager",
 		"status": "Status",
+		"actions": "Actions",
 		"menu": {
 			"open": "Open",
 			"confirm": "Confirm"
-		}
-	},
-	"statuses": {
-		"supplier_payment": {
-			"booked": "Booked",
-			"recorded": "Recorded",
-			"not_booked": "Not booked",
-			"confirmed": "Confirmed"
 		}
 	}
 }

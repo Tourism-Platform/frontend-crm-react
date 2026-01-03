@@ -9,14 +9,14 @@ import { formatToDollars } from "@/shared/utils";
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type IOrderSupplierPaymentItem,
-	SUPPLIER_PAYMENT_STATUS_LABELS_ID,
+	SUPPLIER_PAYMENT_STATUS_LABELS,
 	SUPPLIER_PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
 import { EVENT_METADATA } from "@/entities/tour";
 
 export const SUPPLIER_PAYMENTS_COLUMNS =
 	(): ColumnDef<IOrderSupplierPaymentItem>[] => {
-		const { t } = useTranslation("order_id_page");
+		const { t } = useTranslation(["order_id_page", "options"]);
 
 		return [
 			{
@@ -111,7 +111,9 @@ export const SUPPLIER_PAYMENTS_COLUMNS =
 						<Badge
 							variant={SUPPLIER_PAYMENT_STATUS_VARIANTS[status]}
 						>
-							{t(SUPPLIER_PAYMENT_STATUS_LABELS_ID[status])}
+							{t(SUPPLIER_PAYMENT_STATUS_LABELS[status], {
+								ns: "options"
+							})}
 						</Badge>
 					);
 				}
@@ -122,9 +124,9 @@ export const SUPPLIER_PAYMENTS_COLUMNS =
 				cell: ({ row }) => {
 					const status = row.original.status;
 
-					if (status === ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED) {
-						return null;
-					}
+					// if (status === ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED) {
+					// 	return null;
+					// }
 
 					if (status === ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED) {
 						return (

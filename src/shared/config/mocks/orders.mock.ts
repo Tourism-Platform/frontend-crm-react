@@ -82,7 +82,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -250,7 +250,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -436,7 +436,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -600,7 +600,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -760,7 +760,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -924,7 +924,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -1085,7 +1085,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -1279,7 +1279,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -1442,7 +1442,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -1609,7 +1609,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -1776,7 +1776,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -1942,7 +1942,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -2135,7 +2135,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -2294,7 +2294,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -2461,7 +2461,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",
@@ -2647,7 +2647,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Local Flight",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 400.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED,
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED,
 				confirmation: {
 					fileName: "local_flight.pdf",
 					fileUrl: "#"
@@ -2819,7 +2819,7 @@ export const ORDERS_MOCK: IOrder[] = [
 				item: "Flight Ticket Deposit",
 				type: ENUM_EVENT.FLIGHT,
 				supplierPayment: 600.0,
-				status: ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
+				status: ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 			},
 			{
 				id: "sp-2",

@@ -30,7 +30,7 @@ export const clientPaymentApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: IPaymentPaginatedResponseBackend) =>
 				mapPaymentsPaginatedToFrontend(response),
-			providesTags: [ENUM_API_TAGS.FINANCE_PAYMENTS]
+			providesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
 		createPayment: builder.mutation<IPayment, Partial<IPayment>>({
 			query: (payment) => ({
@@ -40,7 +40,7 @@ export const clientPaymentApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: IPaymentBackend) =>
 				mapPaymentToFrontend(response),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_PAYMENTS]
+			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
 		updatePayment: builder.mutation<
 			IPayment,
@@ -53,14 +53,14 @@ export const clientPaymentApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: IPaymentBackend) =>
 				mapPaymentToFrontend(response),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_PAYMENTS]
+			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
 		deletePayment: builder.mutation<void, string>({
 			query: (id) => ({
 				url: `/finance/client-payments/${id}`,
 				method: "DELETE"
 			}),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_PAYMENTS]
+			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		})
 	})
 });

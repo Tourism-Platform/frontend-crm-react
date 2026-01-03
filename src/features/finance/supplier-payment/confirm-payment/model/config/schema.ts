@@ -1,17 +1,17 @@
 import { z } from "zod";
 
+import { ENUM_FORM_CONFIRM_PAYMENT } from "../types";
+
 export const CONFIRM_PAYMENT_SCHEMA = z.object({
-	orderId: z
+	[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: z
 		.string({
-			message: "form.errors.order_id.required"
+			message: "form.errors.orderId.required"
 		})
-		.min(1, "form.errors.order_id.min"),
-	amount: z
+		.min(1, "form.errors.orderId.min"),
+	[ENUM_FORM_CONFIRM_PAYMENT.AMOUNT]: z
 		.number({
 			message: "form.errors.amount.required"
 		})
 		.min(1, "form.errors.amount.min"),
-	note: z.string().optional()
+	[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: z.string().optional()
 });
-
-export type TConfirmPaymentSchema = z.infer<typeof CONFIRM_PAYMENT_SCHEMA>;

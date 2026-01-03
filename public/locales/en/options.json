@@ -36,7 +36,6 @@
 			}
 		}
 	},
-
 	"finance": {
 		"invoice": {
 			"statuses": {
@@ -49,6 +48,12 @@
 			"statuses": {
 				"assigned": "Assigned",
 				"not_assigned": "Not Assigned"
+			}
+		},
+		"supplier_payment": {
+			"statuses": {
+				"recorded": "Recorded",
+				"confirmed": "Confirmed"
 			}
 		}
 	}
