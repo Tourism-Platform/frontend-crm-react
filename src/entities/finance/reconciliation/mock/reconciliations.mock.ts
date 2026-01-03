@@ -8,7 +8,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-001",
 		order_id: "ORD-12345",
-		client: "Иван Иванов",
+		client: "Travel Expert Pro",
 		planned_revenue: 1500,
 		actual_revenue: 1500,
 		planned_cost: 1000,
@@ -20,7 +20,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-002",
 		order_id: "ORD-12346",
-		client: "Петр Петров",
+		client: "Skyline Journeys",
 		planned_revenue: 2000,
 		actual_revenue: 1800,
 		planned_cost: 1500,
@@ -32,7 +32,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-003",
 		order_id: "ORD-12347",
-		client: "Алексей Сидоров",
+		client: "Azure Waves Agency",
 		planned_revenue: 3000,
 		actual_revenue: 3200,
 		planned_cost: 2500,
@@ -44,7 +44,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-004",
 		order_id: "ORD-12348",
-		client: "Мария Козлова",
+		client: "Silver Peak Travels",
 		planned_revenue: 5000,
 		actual_revenue: 5000,
 		planned_cost: 4000,
@@ -68,7 +68,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-006",
 		order_id: "ORD-12350",
-		client: "Елена Смирнова",
+		client: "Emerald Forest Agency",
 		planned_revenue: 1200,
 		actual_revenue: 1200,
 		planned_cost: 800,
@@ -92,7 +92,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-008",
 		order_id: "ORD-12352",
-		client: "Дмитрий Волков",
+		client: "Midnight Star Tours",
 		planned_revenue: 800,
 		actual_revenue: 850,
 		planned_cost: 600,
@@ -104,7 +104,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-009",
 		order_id: "ORD-12353",
-		client: "Ольга Морозова",
+		client: "Velvet Sky Agency",
 		planned_revenue: 3500,
 		actual_revenue: 3500,
 		planned_cost: 2800,
@@ -128,7 +128,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-011",
 		order_id: "ORD-12355",
-		client: "Сергей Кузнецов",
+		client: "Golden Gate Travels",
 		planned_revenue: 4200,
 		actual_revenue: 4000,
 		planned_cost: 3500,
@@ -140,7 +140,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-012",
 		order_id: "ORD-12356",
-		client: "Анна Павлова",
+		client: "Crystal Clear Tours",
 		planned_revenue: 1800,
 		actual_revenue: 1800,
 		planned_cost: 1400,
@@ -176,7 +176,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-015",
 		order_id: "ORD-12359",
-		client: "Виктор Соколов",
+		client: "Falcon Wings Agency",
 		planned_revenue: 950,
 		actual_revenue: 950,
 		planned_cost: 700,
@@ -200,7 +200,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-017",
 		order_id: "ORD-12361",
-		client: "Наталья Белова",
+		client: "Pearl Harbor Travels",
 		planned_revenue: 2200,
 		actual_revenue: 2200,
 		planned_cost: 1800,
@@ -224,7 +224,7 @@ export const RECONCILIATIONS_MOCK: IReconciliationBackend[] = [
 	{
 		id: "REC-019",
 		order_id: "ORD-12363",
-		client: "Игорь Тарасов",
+		client: "Titanium Tours",
 		planned_revenue: 1300,
 		actual_revenue: 1300,
 		planned_cost: 900,

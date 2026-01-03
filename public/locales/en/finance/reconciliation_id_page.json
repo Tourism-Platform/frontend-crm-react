@@ -3,7 +3,10 @@
 	"buttons": {
 		"back": "Back"
 	},
-	"reconciliation_not_found": "Reconciliation not found",
+	"not_found": {
+		"title": "Reconciliation not found",
+		"description": "The reconciliation you are looking for does not exist or has been moved. Please check the reconciliation number and try again."
+	},
 	"stats": {
 		"plannedRevenue": "Planned revenue",
 		"actualRevenue": "Actual revenue",

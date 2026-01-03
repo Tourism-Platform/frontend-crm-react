@@ -6,7 +6,7 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	CustomTable
+	SmartTable
 } from "@/shared/ui";
 
 import { type IReconciliationSupplierPayment } from "@/entities/finance";
@@ -30,7 +30,12 @@ export const ReconciliationSupplierPayments: FC<
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<CustomTable data={data} columns={COLUMNS()} />
+				<SmartTable
+					data={data}
+					columns={COLUMNS()}
+					showPagination={false}
+					showTopFilters={false}
+				/>
 			</CardContent>
 		</Card>
 	);

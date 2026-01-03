@@ -2,7 +2,6 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Checkbox } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import { type IReconciliationSupplierPayment } from "@/entities/finance";
@@ -14,25 +13,6 @@ export const COLUMNS = (): ColumnDef<IReconciliationSupplierPayment>[] => {
 	return [
 		{
 			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={
-						table.getIsAllPageRowsSelected() ||
-						(table.getIsSomePageRowsSelected() && "indeterminate")
-					}
-					onCheckedChange={(value) =>
-						table.toggleAllPageRowsSelected(!!value)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
 			size: 28,
 			enableSorting: false,
 			enableHiding: false
@@ -43,12 +23,12 @@ export const COLUMNS = (): ColumnDef<IReconciliationSupplierPayment>[] => {
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("id")}</div>
 			),
-			size: 60
+			size: 120
 		},
 		{
 			header: t("table.component"),
 			accessorKey: "component",
-			size: 300
+			size: 200
 		},
 		{
 			header: t("table.plannedAmount"),
