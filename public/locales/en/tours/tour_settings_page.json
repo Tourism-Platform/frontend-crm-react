@@ -40,6 +40,7 @@
 			},
 			"errors": {
 				"tourTitle": {
+					"required": "Tour title is required",
 					"min": "Minimum 3 characters",
 					"max": "Maximum 100 characters"
 				},

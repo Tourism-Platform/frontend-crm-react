@@ -1,8 +1,10 @@
-import { TOUR_TYPE_OPTIONS } from "@/shared/config";
+import { useValueToTranslateLabel } from "@/shared/utils";
+
+import { TOUR_TYPE_LABELS } from "@/entities/tour";
 
 import { ENUM_GENERAL_FORM, type TGeneralForm } from "../types";
 
-export const GENERAL_FORM_LIST: TGeneralForm[] = [
+export const GENERAL_FORM_LIST = (): TGeneralForm[] => [
 	{
 		label: "general.form.fields.tourTitle.label",
 		placeholder: "general.form.fields.tourTitle.placeholder",
@@ -15,7 +17,7 @@ export const GENERAL_FORM_LIST: TGeneralForm[] = [
 		placeholder: "general.form.fields.tourType.placeholder",
 		key: ENUM_GENERAL_FORM.TOUR_TYPE,
 		fieldType: "select",
-		options: TOUR_TYPE_OPTIONS
+		options: useValueToTranslateLabel(TOUR_TYPE_LABELS)
 	},
 	{
 		label: "general.form.fields.groupSize.label",

@@ -26,17 +26,6 @@ export const Landing: FC = () => {
 
 	const form = useForm<TLandingSchema>({
 		resolver: zodResolver(LANDING_SCHEMA),
-		defaultValues: {
-			photos: [],
-			description: "",
-			languages: [],
-			included: [],
-			not_included: [],
-			pickup_type: "airport",
-			pickup_description: "",
-			cancellation_policy: "",
-			additional_info: ""
-		},
 		mode: "onSubmit"
 	});
 

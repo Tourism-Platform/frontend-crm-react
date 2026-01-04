@@ -21,7 +21,9 @@
 					"label": "Description",
 					"placeholder": "Enter tour description...",
 					"errors": {
-						"required": "Description is required"
+						"required": "Description is required",
+						"min": "Minimum 3 characters",
+						"max": "Description is too long"
 					}
 				}
 			}
@@ -76,7 +78,9 @@
 					"label": "Pickup Description",
 					"placeholder": "Where exactly to wait for the guide/driver...",
 					"errors": {
-						"required": "Pickup description is required"
+						"required": "Pickup description is required",
+						"min": "Minimum 3 characters",
+						"max": "Description is too long"
 					}
 				}
 			}
@@ -89,7 +93,9 @@
 					"label": "Cancellation Policy",
 					"placeholder": "Specify cancellation terms...",
 					"errors": {
-						"required": "Cancellation policy is required"
+						"required": "Cancellation policy is required",
+						"min": "Minimum 3 characters",
+						"max": "Policy is too long"
 					}
 				}
 			}
@@ -102,7 +108,9 @@
 					"label": "Additional Information",
 					"placeholder": "Any useful information for the tourist...",
 					"errors": {
-						"required": "Additional information is required"
+						"required": "Additional information is required",
+						"min": "Minimum 3 characters",
+						"max": "Information is too long"
 					}
 				}
 			}

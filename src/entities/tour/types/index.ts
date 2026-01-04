@@ -11,3 +11,4 @@ export type * from "./tour-review.types";
 export * from "./order-status.types";
 export * from "./event.types";
 export * from "./tour-type.types";
+export * from "./pricing-visibility.types";

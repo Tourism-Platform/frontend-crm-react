@@ -1,47 +1,55 @@
 import { z } from "zod";
 
-import { TOUR_TYPE_OPTIONS } from "@/shared/config";
+import { type TTourSettingsPageKeys, i18nKey } from "@/shared/config";
 
-const TOUR_TYPE_VALUES = TOUR_TYPE_OPTIONS.map((o) => o.value) as [
-	string,
-	...string[]
-];
+import { ENUM_TOUR_TYPES } from "@/entities/tour";
+
+import { ENUM_GENERAL_FORM } from "../types";
+
+const msg = i18nKey<TTourSettingsPageKeys>();
 
 export const GENERAL_FORM_SCHEMA = z.object({
-	tourTitle: z
+	[ENUM_GENERAL_FORM.TOUR_TITLE]: z
 		.string()
-		.min(3, "general.form.errors.tourTitle.min")
-		.max(100, "general.form.errors.tourTitle.max"),
-	tourType: z.enum(TOUR_TYPE_VALUES, {
-		message: "general.form.errors.tourType.required"
+		.min(1, { message: msg("general.form.errors.tourTitle.required") })
+		.min(3, { message: msg("general.form.errors.tourTitle.min") })
+		.max(100, { message: msg("general.form.errors.tourTitle.max") }),
+	[ENUM_GENERAL_FORM.TOUR_TYPE]: z.enum(ENUM_TOUR_TYPES, {
+		message: msg("general.form.errors.tourType.required")
 	}),
-	groupSize: z
-		.number({ message: "general.form.errors.groupSize.required" })
-		.min(1, "general.form.errors.groupSize.min"),
-	duration: z.object({
-		from: z
-			.number({ message: "general.form.errors.duration.from.required" })
-			.min(1, "general.form.errors.duration.from.required"),
-		to: z
-			.number({ message: "general.form.errors.duration.to.required" })
-			.min(1, "general.form.errors.duration.to.required")
-	}),
-	ageRequires: z.object({
+	[ENUM_GENERAL_FORM.GROUP_SIZE]: z
+		.number({ message: msg("general.form.errors.groupSize.required") })
+		.min(1, msg("general.form.errors.groupSize.min")),
+	[ENUM_GENERAL_FORM.DURATION]: z.object({
 		from: z
 			.number({
-				message: "general.form.errors.ageRequires.from.required"
+				message: msg("general.form.errors.duration.from.required")
 			})
-			.min(0, "general.form.errors.ageRequires.from.required"),
+			.min(1, msg("general.form.errors.duration.from.required")),
 		to: z
-			.number({ message: "general.form.errors.ageRequires.to.required" })
-			.min(0, "general.form.errors.ageRequires.to.required")
+			.number({
+				message: msg("general.form.errors.duration.to.required")
+			})
+			.min(1, msg("general.form.errors.duration.to.required"))
 	}),
-	tourCategories: z
+	[ENUM_GENERAL_FORM.AGE_REQUIRES]: z.object({
+		from: z
+			.number({
+				message: msg("general.form.errors.ageRequires.from.required")
+			})
+			.min(0, msg("general.form.errors.ageRequires.from.required")),
+		to: z
+			.number({
+				message: msg("general.form.errors.ageRequires.to.required")
+			})
+			.min(0, msg("general.form.errors.ageRequires.to.required"))
+	}),
+	[ENUM_GENERAL_FORM.TOUR_CATEGORIES]: z
 		.array(
 			z.object({
-				label: z.string(),
-				value: z.string()
+				label: z.string().min(1),
+				value: z.string().min(1)
 			})
 		)
-		.min(1, "general.form.errors.tourCategories.required")
+		.min(1, msg("general.form.errors.tourCategories.required"))
 });

@@ -1,7 +1,6 @@
 export const ENUM_TOUR_TYPES = {
 	PRIVATE: "private",
-	GROUP: "group",
-	PRIVATE_GROUP: "private_group"
+	GROUP: "group"
 } as const;
 
 export type ENUM_TOUR_TYPES_TYPE =

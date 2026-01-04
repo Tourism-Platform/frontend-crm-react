@@ -26,13 +26,14 @@ export const GeneralInfo: FC = () => {
 		resolver: zodResolver(GENERAL_FORM_SCHEMA),
 		mode: "onSubmit",
 		defaultValues: {
-			tourTitle: "Embark on an Unforgettable Archaeological Journey",
-			tourType: "group",
-			groupSize: 15,
-			duration: { from: 5, to: 7 },
-			ageRequires: { from: 18, to: 65 },
-			tourCategories: TOUR_CATEGORY_OPTIONS.filter((option) =>
-				startCategories.includes(option.value)
+			[ENUM_GENERAL_FORM.TOUR_TITLE]:
+				"Embark on an Unforgettable Archaeological Journey",
+			[ENUM_GENERAL_FORM.TOUR_TYPE]: "group",
+			[ENUM_GENERAL_FORM.GROUP_SIZE]: 15,
+			[ENUM_GENERAL_FORM.DURATION]: { from: 5, to: 7 },
+			[ENUM_GENERAL_FORM.AGE_REQUIRES]: { from: 18, to: 65 },
+			[ENUM_GENERAL_FORM.TOUR_CATEGORIES]: TOUR_CATEGORY_OPTIONS.filter(
+				(option) => startCategories.includes(option.value)
 			)
 		}
 	});
@@ -49,7 +50,7 @@ export const GeneralInfo: FC = () => {
 			>
 				<h2 className="text-xl">{t("general.title")}</h2>
 				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-					{GENERAL_FORM_LIST.map(({ key, ...item }) => (
+					{GENERAL_FORM_LIST().map(({ key, ...item }) => (
 						<CustomField
 							key={key}
 							control={form?.control}

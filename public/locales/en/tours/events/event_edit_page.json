@@ -26,7 +26,8 @@
 						"label": "Event subtype",
 						"placeholder": "Select event subtype",
 						"errors": {
-							"required": "Event subtype is required"
+							"required": "Event subtype is required",
+							"max": "Event subtype is too long"
 						}
 					},
 					"location": {
@@ -50,7 +51,8 @@
 						"label": "Timezone",
 						"placeholder": "Choose timezone",
 						"errors": {
-							"required": "Start timezone is required"
+							"required": "Start timezone is required",
+							"max": "Timezone is too long"
 						}
 					},
 					"event_end_time": {
@@ -65,7 +67,8 @@
 						"label": "Timezone",
 						"placeholder": "Choose timezone",
 						"errors": {
-							"required": "End timezone is required"
+							"required": "End timezone is required",
+							"max": "Timezone is too long"
 						}
 					},
 					"description": {
@@ -108,11 +111,19 @@
 				"fields": {
 					"total_price": {
 						"label": "Total price",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Price must be at least 1",
+							"max": "Price must not exceed 10000"
+						}
 					},
 					"taxes_and_fees": {
 						"label": "Taxes & fees",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Taxes must be at least 1",
+							"max": "Taxes must not exceed 100"
+						}
 					},
 					"currency": {
 						"label": "Currency",

@@ -1,24 +1,19 @@
 import { z } from "zod";
 
-import { PRICING_VISIBILITY_OPTIONS } from "@/shared/config";
+import { type TTourSettingsPageKeys, i18nKey } from "@/shared/config";
 
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_LABELS } from "@/entities/commission";
+import { ENUM_PRICING_VISIBILITY } from "@/entities/tour";
 
-const CURRENCY_VALUES = CURRENCY_OPTIONS.map((o) => o.value) as [
-	string,
-	...string[]
-];
+import { ENUM_FINANCE_FORM } from "../types";
 
-const PRICING_VALUES = PRICING_VISIBILITY_OPTIONS.map((o) => o.value) as [
-	string,
-	...string[]
-];
+const msg = i18nKey<TTourSettingsPageKeys>();
 
 export const FINANCE_FORM_SCHEMA = z.object({
-	currencyType: z.enum(CURRENCY_VALUES, {
-		message: "finance.form.errors.currencyType.required"
+	[ENUM_FINANCE_FORM.CURRENCY_TYPE]: z.enum(CURRENCY_LABELS, {
+		message: msg("finance.form.errors.currencyType.required")
 	}),
-	pricingVisibility: z.enum(PRICING_VALUES, {
-		message: "finance.form.errors.pricingVisibility.required"
+	[ENUM_FINANCE_FORM.PRICING_VISIBILITY]: z.enum(ENUM_PRICING_VISIBILITY, {
+		message: msg("finance.form.errors.pricingVisibility.required")
 	})
 });

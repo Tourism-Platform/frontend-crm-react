@@ -15,6 +15,7 @@
 	},
 	"tour": {
 		"statuses": {
+			"all": "Все",
 			"active": "Активен",
 			"moderate": "Модерация",
 			"planning": "Планирование",
@@ -23,8 +24,12 @@
 		},
 		"tourTypes": {
 			"private": "Частный",
-			"group": "Группа",
-			"private_group": "Частный/Группа"
+			"group": "Группа"
+		},
+		"visibility": {
+			"show_from": "Показывать цену 'от'",
+			"show_exact": "Показывать точную цену",
+			"hide": "Скрыть цену"
 		}
 	},
 	"user": {

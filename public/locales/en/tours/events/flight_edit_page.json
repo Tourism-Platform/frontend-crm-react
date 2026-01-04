@@ -102,14 +102,16 @@
 							"label": "Timezone",
 							"placeholder": "Choose timezone",
 							"errors": {
-								"required": "Departure timezone is required"
+								"required": "Departure timezone is required",
+								"max": "Timezone is too long"
 							}
 						},
 						"arrival_timezone": {
 							"label": "Timezone",
 							"placeholder": "Choose timezone",
 							"errors": {
-								"required": "Arrival timezone is required"
+								"required": "Arrival timezone is required",
+								"max": "Timezone is too long"
 							}
 						},
 						"departure_terminal": {
@@ -221,14 +223,16 @@
 							"label": "Timezone",
 							"placeholder": "Choose timezone",
 							"errors": {
-								"required": "Departure timezone is required"
+								"required": "Departure timezone is required",
+								"max": "Timezone is too long"
 							}
 						},
 						"arrival_timezone": {
 							"label": "Timezone",
 							"placeholder": "Choose timezone",
 							"errors": {
-								"required": "Arrival timezone is required"
+								"required": "Arrival timezone is required",
+								"max": "Timezone is too long"
 							}
 						}
 					}
@@ -308,14 +312,16 @@
 							"label": "Timezone",
 							"placeholder": "Choose timezone",
 							"errors": {
-								"required": "Departure timezone is required"
+								"required": "Departure timezone is required",
+								"max": "Timezone is too long"
 							}
 						},
 						"arrival_timezone": {
 							"label": "Timezone",
 							"placeholder": "Choose timezone",
 							"errors": {
-								"required": "Arrival timezone is required"
+								"required": "Arrival timezone is required",
+								"max": "Timezone is too long"
 							}
 						}
 					}
@@ -369,11 +375,19 @@
 				"fields": {
 					"total_price": {
 						"label": "Total price",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Price must be at least 1",
+							"max": "Price must not exceed 10000"
+						}
 					},
 					"taxes_and_fees": {
 						"label": "Taxes & fees",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Taxes must be at least 1",
+							"max": "Taxes must not exceed 100"
+						}
 					},
 					"currency": {
 						"label": "Currency",

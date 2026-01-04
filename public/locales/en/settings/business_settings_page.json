@@ -66,6 +66,7 @@
 					"placeholder": "Enter TIN",
 					"errors": {
 						"pattern": "TIN must be 9 digits",
+						"max": "TIN is too long",
 						"required": "Enter TIN"
 					}
 				},

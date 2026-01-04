@@ -24,8 +24,12 @@
 		},
 		"tourTypes": {
 			"private": "Private",
-			"group": "Group",
-			"private_group": "Private/Group"
+			"group": "Group"
+		},
+		"visibility": {
+			"show_from": "Show price 'from'",
+			"show_exact": "Show exact price",
+			"hide": "Hide price"
 		}
 	},
 	"user": {

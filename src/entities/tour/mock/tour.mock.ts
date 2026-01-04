@@ -7,7 +7,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.ACTIVE,
 		title: "Embark on an Unforgettable Archaeological Journey",
 		route: ["TAS", "SAM", "BUH", "KHIV"],
-		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 500,
 		price_to: 1000,
 		image_url:
@@ -40,7 +40,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.PLANNING,
 		title: "Cultural Treasures of Samarkand",
 		route: ["TAS", "SAM"],
-		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 250,
 		price_to: 600,
 		image_url:
@@ -139,7 +139,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.MODERATE,
 		title: "Adventure Trekking in Nuratau Mountains",
 		route: ["NUR", "AYDAR"],
-		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 350,
 		price_to: 650,
 		image_url:
@@ -194,7 +194,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 		status: ENUM_TOUR_STATUS.MODERATE,
 		title: "Wine Tasting Journey in Samarkand",
 		route: ["SAM"],
-		type: ENUM_TOUR_TYPES.PRIVATE_GROUP,
+		type: ENUM_TOUR_TYPES.GROUP,
 		price_from: 400,
 		price_to: 700,
 		image_url:

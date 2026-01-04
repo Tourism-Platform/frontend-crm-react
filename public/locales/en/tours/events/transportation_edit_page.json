@@ -27,21 +27,24 @@
 						"label": "Type of transfer",
 						"placeholder": "Select type",
 						"errors": {
-							"required": "Transfer type is required"
+							"required": "Transfer type is required",
+							"max": "Transfer type is too long"
 						}
 					},
 					"meet_point": {
 						"label": "Meet point",
 						"placeholder": "Enter meet point",
 						"errors": {
-							"required": "Meet point is required"
+							"required": "Meet point is required",
+							"max": "Meet point is too long"
 						}
 					},
 					"end_point": {
 						"label": "End point",
 						"placeholder": "Enter end point",
 						"errors": {
-							"required": "End point is required"
+							"required": "End point is required",
+							"max": "End point is too long"
 						}
 					},
 					"departure_date": {
@@ -76,14 +79,16 @@
 						"label": "Timezone",
 						"placeholder": "Select timezone",
 						"errors": {
-							"required": "Timezone is required"
+							"required": "Timezone is required",
+							"max": "Timezone is too long"
 						}
 					},
 					"arrival_timezone": {
 						"label": "Timezone",
 						"placeholder": "Select timezone",
 						"errors": {
-							"required": "Timezone is required"
+							"required": "Timezone is required",
+							"max": "Timezone is too long"
 						}
 					}
 				}
@@ -115,14 +120,16 @@
 						"label": "Car brand",
 						"placeholder": "Select brand",
 						"errors": {
-							"required": "Car brand is required"
+							"required": "Car brand is required",
+							"max": "Car brand is too long"
 						}
 					},
 					"pax": {
 						"label": "Capacity (pax)",
 						"placeholder": "Number of people",
 						"errors": {
-							"required": "Capacity is required"
+							"required": "Capacity is required",
+							"max": "Value is too long"
 						}
 					}
 				},
@@ -172,15 +179,27 @@
 				"fields": {
 					"total_price": {
 						"label": "Total price",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Price must be at least 1",
+							"max": "Price must not exceed 10000"
+						}
 					},
 					"taxes_and_fees": {
 						"label": "Taxes & fees",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Taxes must be at least 1",
+							"max": "Taxes must not exceed 100"
+						}
 					},
 					"currency": {
 						"label": "Currency",
-						"placeholder": "Choose"
+						"placeholder": "Choose",
+						"errors": {
+							"required": "Currency is required",
+							"max": "Currency code is too long"
+						}
 					}
 				}
 			},

@@ -130,6 +130,11 @@
 						"min": "Details is too short",
 						"max": "Details is too long"
 					}
+				},
+				"rooms": {
+					"errors": {
+						"required": "At least one room is required"
+					}
 				}
 			}
 		}
@@ -162,15 +167,27 @@
 				"fields": {
 					"total_price": {
 						"label": "Total price",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Price must be at least 1",
+							"max": "Price must not exceed 10000"
+						}
 					},
 					"taxes_and_fees": {
 						"label": "Taxes & fees",
-						"placeholder": "Enter..."
+						"placeholder": "Enter...",
+						"errors": {
+							"min": "Taxes must be at least 1",
+							"max": "Taxes must not exceed 100"
+						}
 					},
 					"currency": {
 						"label": "Currency",
-						"placeholder": "Choose"
+						"placeholder": "Choose",
+						"errors": {
+							"required": "Currency is required",
+							"max": "Currency code is too long"
+						}
 					}
 				}
 			},

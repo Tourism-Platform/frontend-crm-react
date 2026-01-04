@@ -8,6 +8,7 @@ import { Button, CustomField, Form } from "@/shared/ui";
 import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 
 import {
+	ENUM_FINANCE_FORM,
 	FINANCE_FORM_LIST,
 	FINANCE_FORM_SCHEMA,
 	type TFinanceFormSchema
@@ -20,8 +21,8 @@ export const FinanceInfo: FC = () => {
 		resolver: zodResolver(FINANCE_FORM_SCHEMA),
 		mode: "onSubmit",
 		defaultValues: {
-			currencyType: ENUM_CURRENCY_OPTIONS.USD,
-			pricingVisibility: "show_from"
+			[ENUM_FINANCE_FORM.CURRENCY_TYPE]: ENUM_CURRENCY_OPTIONS.USD,
+			[ENUM_FINANCE_FORM.PRICING_VISIBILITY]: "show_from"
 		}
 	});
 
@@ -37,7 +38,7 @@ export const FinanceInfo: FC = () => {
 			>
 				<h2 className="text-xl">{t("finance.title")}</h2>
 				<div className="grid grid-cols-1 gap-4">
-					{FINANCE_FORM_LIST.map(({ key, ...item }) => (
+					{FINANCE_FORM_LIST().map(({ key, ...item }) => (
 						<CustomField
 							key={key}
 							control={form?.control}

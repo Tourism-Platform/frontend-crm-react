@@ -21,7 +21,6 @@ export const Pricing: FC = () => {
 	const { t } = useTranslation("flight_edit_page");
 	const form = useForm<TPricingSchema>({
 		resolver: zodResolver(PRICING_SCHEMA),
-		defaultValues: {},
 		mode: "onSubmit"
 	});
 	function onSubmit(data: TPricingSchema) {
