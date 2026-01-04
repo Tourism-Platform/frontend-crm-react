@@ -6,8 +6,10 @@ import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Skeleton } from "@/shared/ui";
 
 import {
-	CLIENT_TYPE_LABELS,
-	CLIENT_TYPE_VARIANTS,
+	BOOKING_CLIENT_TYPE_LABELS,
+	BOOKING_CLIENT_TYPE_VARIANTS,
+	BOOKING_ORDER_TYPE_LABELS,
+	BOOKING_ORDER_TYPE_VARIANTS,
 	type ENUM_CLIENT_TYPE_OPTIONS_TYPE,
 	type ENUM_INVOICE_STATUS_TYPE,
 	ENUM_ORDER_STATUS,
@@ -15,9 +17,7 @@ import {
 	type ENUM_ORDER_TYPE_OPTIONS_TYPE,
 	INVOICE_STATUS_LABELS,
 	INVOICE_STATUS_VARIANTS,
-	type IOrder,
-	ORDER_TYPE_LABELS,
-	ORDER_TYPE_VARIANTS
+	type IOrder
 } from "@/entities/booking";
 
 import { OrderActions } from "../ui";
@@ -81,8 +81,10 @@ export const COLUMNS = (
 				) as ENUM_ORDER_TYPE_OPTIONS_TYPE;
 
 				return (
-					<Badge variant={ORDER_TYPE_VARIANTS[orderType]}>
-						{t(ORDER_TYPE_LABELS[orderType])}
+					<Badge variant={BOOKING_ORDER_TYPE_VARIANTS[orderType]}>
+						{t(BOOKING_ORDER_TYPE_LABELS[orderType], {
+							ns: "options"
+						})}
 					</Badge>
 				);
 			},
@@ -122,8 +124,10 @@ export const COLUMNS = (
 				) as ENUM_CLIENT_TYPE_OPTIONS_TYPE;
 
 				return (
-					<Badge variant={CLIENT_TYPE_VARIANTS[clientType]}>
-						{t(CLIENT_TYPE_LABELS[clientType])}
+					<Badge variant={BOOKING_CLIENT_TYPE_VARIANTS[clientType]}>
+						{t(BOOKING_CLIENT_TYPE_LABELS[clientType], {
+							ns: "options"
+						})}
 					</Badge>
 				);
 			},
@@ -200,7 +204,9 @@ export const COLUMNS = (
 										INVOICE_STATUS_VARIANTS[invoiceStatus]
 									}
 								>
-									{t(INVOICE_STATUS_LABELS[invoiceStatus])}
+									{t(INVOICE_STATUS_LABELS[invoiceStatus], {
+										ns: "options"
+									})}
 								</Badge>
 							);
 						},

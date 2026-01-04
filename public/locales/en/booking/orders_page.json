@@ -10,38 +10,10 @@
 		"clientType": "Client Type",
 		"pax": "PAX",
 		"dates": "Dates",
-		"invoiceStatusColumn": "Invoice Status",
-		"orderTypes": {
-			"regular": "Regular",
-			"vip": "VIP",
-			"group": "Group"
-		},
-		"clientTypes": {
-			"agency": "Agency",
-			"direct": "Direct",
-			"corporate": "Corporate"
-		},
-		"invoiceStatus": {
-			"paid": "Paid",
-			"partiallyPaid": "Partially paid",
-			"unpaid": "Unpaid"
-		}
+		"invoiceStatusColumn": "Invoice Status"
 	},
 	"menu": {
 		"edit": "Edit",
 		"delete": "Delete"
-	},
-	"statuses": {
-		"new": "New",
-		"in_processing": "In processing",
-		"booking": "Booking",
-		"in_progress": "In progress",
-		"completed": "Completed",
-		"cancelled": "Cancelled",
-		"invoice": {
-			"paid": "Paid",
-			"partially_paid": "Partially paid",
-			"unpaid": "Unpaid"
-		}
 	}
 }

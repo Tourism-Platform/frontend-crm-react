@@ -1,4 +1,3 @@
-import { type IPaginationResponse } from "@/shared/types";
 import { formatDate } from "@/shared/utils";
 
 import {
@@ -7,8 +6,12 @@ import {
 	type ENUM_ORDER_STATUS_TYPE,
 	type ENUM_ORDER_TYPE_OPTIONS_TYPE,
 	type IBookingOrderBackend,
+	type IBookingOrderDetailBackend,
 	type IBookingOrderFilters,
-	type IOrder
+	type IOrder,
+	type IOrderDetail,
+	type TBookingOrderPaginatedResponse,
+	type TBookingOrderPaginatedResponseBackend
 } from "../types";
 
 export const mapBookingOrderToFrontend = (
@@ -25,6 +28,16 @@ export const mapBookingOrderToFrontend = (
 		to: formatDate(data.dates.to)
 	},
 	tourName: data.tour_name,
+	manager: data.manager ?? undefined,
+	invoiceStatus:
+		(data.invoice_status as ENUM_INVOICE_STATUS_TYPE) || undefined,
+	status: data.status as ENUM_ORDER_STATUS_TYPE
+});
+
+export const mapBookingOrderDetailToFrontend = (
+	data: IBookingOrderDetailBackend
+): IOrderDetail => ({
+	...mapBookingOrderToFrontend(data),
 	duration: data.duration,
 	route: data.route,
 	comment: data.comment ?? undefined,
@@ -33,20 +46,20 @@ export const mapBookingOrderToFrontend = (
 	roomType: data.room_type ?? undefined,
 	carClass: data.car_class ?? undefined,
 	isAvailable: data.is_available,
-	manager: data.manager ?? undefined,
-	invoiceStatus:
-		(data.invoice_status as ENUM_INVOICE_STATUS_TYPE) || undefined,
 	report: data.report ?? undefined,
-	status: data.status as ENUM_ORDER_STATUS_TYPE,
-	paxDetails: data.pax_details ?? undefined,
+	paxDetails: data.pax_details?.map((pax) => ({
+		...pax,
+		dateOfBirth: formatDate(pax.dateOfBirth),
+		expiredDate: formatDate(pax.expiredDate)
+	})),
 	tourReview: data.tour_review,
 	supplierPayments: data.supplier_payments ?? undefined,
 	tourSummary: data.tour_summary
 });
 
 export const mapBookingOrderToBackend = (
-	data: Partial<IOrder>
-): Partial<IBookingOrderBackend> => ({
+	data: Partial<IOrderDetail>
+): Partial<IBookingOrderDetailBackend> => ({
 	order_id: data.orderId,
 	order_type: data.orderType,
 	date_created: data.dateCreated,
@@ -78,8 +91,8 @@ export const mapBookingOrderListToFrontend = (
 ): IOrder[] => data.map(mapBookingOrderToFrontend);
 
 export const mapBookingOrderPaginatedToFrontend = (
-	response: IPaginationResponse<IBookingOrderBackend>
-): IPaginationResponse<IOrder> => ({
+	response: TBookingOrderPaginatedResponseBackend
+): TBookingOrderPaginatedResponse => ({
 	data: mapBookingOrderListToFrontend(response.data),
 	total: response.total
 });

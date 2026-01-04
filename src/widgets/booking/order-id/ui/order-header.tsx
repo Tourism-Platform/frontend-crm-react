@@ -13,7 +13,7 @@ import {
 	type ENUM_INVOICE_STATUS_TYPE,
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
-	INVOICE_STATUS_LABELS_ID,
+	INVOICE_STATUS_LABELS,
 	INVOICE_STATUS_VARIANTS
 } from "@/entities/booking";
 
@@ -29,6 +29,10 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 	invoiceStatus
 }) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
+	const showInvoiceStatus =
+		status === ENUM_ORDER_STATUS.BOOKING ||
+		status === ENUM_ORDER_STATUS.COMPLETED ||
+		status === ENUM_ORDER_STATUS.IN_PROGRESS;
 
 	return (
 		<div className="grid gap-5">
@@ -68,7 +72,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 								</Badge>
 							</div>
 
-							{invoiceStatus && (
+							{invoiceStatus && showInvoiceStatus && (
 								<div className="flex items-center gap-2">
 									<span className="text-sm font-medium">
 										{t("header.invoice_status")}:
@@ -84,9 +88,12 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 										)}
 									>
 										{t(
-											INVOICE_STATUS_LABELS_ID[
+											INVOICE_STATUS_LABELS[
 												invoiceStatus
-											]
+											],
+											{
+												ns: "options"
+											}
 										)}
 									</Badge>
 								</div>

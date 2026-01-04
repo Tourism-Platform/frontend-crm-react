@@ -1,20 +1,19 @@
-import { type IOrderSupplierPaymentItem } from "@/entities/finance";
-import { type ITourReviewItem, type ITourSummary } from "@/entities/tour";
+import type { IDownloadFile } from "@/shared/hooks";
+import { type IPaginationResponse } from "@/shared/types";
 
 import { type ENUM_CLIENT_TYPE_OPTIONS_TYPE } from "./client-type.types";
 import { type ENUM_GENDER_OPTIONS_TYPE } from "./gender.types";
 import { type ENUM_INVOICE_STATUS_TYPE } from "./invoice-status.types";
 import { type ENUM_ORDER_STATUS_TYPE } from "./order-status.types";
 import { type ENUM_ORDER_TYPE_OPTIONS_TYPE } from "./order-type.types";
+import type { ISupplierPaymentItem } from "./supplier-payment.interface";
+import type { ITourReviewItem, ITourSummary } from "./tour.interface";
 
 export interface IPaxReviewDetail {
 	id: string;
 	type: string;
 	value: string;
-	metadata?: {
-		fileName?: string;
-		fileSize?: string;
-	};
+	file?: IDownloadFile;
 }
 
 export interface IPaxReviewItem {
@@ -41,8 +40,13 @@ export interface IOrder {
 	clientType: ENUM_CLIENT_TYPE_OPTIONS_TYPE;
 	pax: number;
 	dates: IOrderDates;
-	// New fields
 	tourName: string;
+	manager?: string;
+	invoiceStatus?: ENUM_INVOICE_STATUS_TYPE;
+	status: ENUM_ORDER_STATUS_TYPE;
+}
+
+export interface IOrderDetail extends IOrder {
 	duration: string;
 	route: string;
 	comment?: string;
@@ -51,12 +55,11 @@ export interface IOrder {
 	roomType?: string;
 	carClass?: string;
 	isAvailable?: boolean;
-	manager?: string;
-	invoiceStatus?: ENUM_INVOICE_STATUS_TYPE;
 	report?: string;
-	status: ENUM_ORDER_STATUS_TYPE;
 	paxDetails?: IPaxReviewItem[];
 	tourReview: ITourReviewItem[];
-	supplierPayments?: IOrderSupplierPaymentItem[];
+	supplierPayments?: ISupplierPaymentItem[];
 	tourSummary: ITourSummary;
 }
+
+export type TBookingOrderPaginatedResponse = IPaginationResponse<IOrder>;

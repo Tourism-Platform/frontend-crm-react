@@ -1,5 +1,7 @@
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
@@ -8,18 +10,32 @@ import {
 	Separator,
 	SmartTable
 } from "@/shared/ui";
-import { formatToDollars } from "@/shared/utils";
 
-import { type ENUM_ORDER_STATUS_TYPE } from "@/entities/booking";
-import { type ITourReviewItem, type ITourSummary } from "@/entities/tour";
+import {
+	ENUM_ORDER_STATUS,
+	type ENUM_ORDER_STATUS_TYPE,
+	type ITourReviewItem,
+	type ITourSummary
+} from "@/entities/booking";
 
-import { TOUR_REVIEW_COLUMNS } from "../model";
+import { type IInfoItem, TOUR_REVIEW_COLUMNS, getTourSummary } from "../model";
 
 interface IOrderTourReviewProps {
 	items: ITourReviewItem[];
 	summary: ITourSummary;
-	orderStatus?: ENUM_ORDER_STATUS_TYPE;
+	orderStatus: ENUM_ORDER_STATUS_TYPE;
 }
+
+const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
+	return (
+		<div className="flex flex-col">
+			<span className={cn("text-sm text-muted-foreground", className)}>
+				{label}
+			</span>
+			<span className="text-lg text-foreground">{value}</span>
+		</div>
+	);
+};
 
 export const OrderTourReview = ({
 	items,
@@ -27,35 +43,33 @@ export const OrderTourReview = ({
 	orderStatus
 }: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
+	const summaryItems = getTourSummary(summary, orderStatus, t);
 
 	return (
 		<Card>
-			<CardHeader>
+			<CardHeader className="gap-4">
 				<CardTitle className="text-lg font-semibold">
 					{t("tour_review.title")}
 				</CardTitle>
-				<div className="grid grid-cols-[auto_1px_auto] items-center gap-8 w-fit">
-					<div className="flex flex-col gap-1">
-						<div className="text-xs text-muted-foreground uppercase">
-							{t("tour_review.revenue")}
-						</div>
-						<div className="text-lg text-foreground">
-							{formatToDollars(summary.revenue.from)} -{" "}
-							{formatToDollars(summary.revenue.to)}
-						</div>
-					</div>
-
-					<Separator orientation="vertical" className="h-10" />
-
-					<div className="flex flex-col gap-1">
-						<div className="text-xs text-muted-foreground uppercase">
-							{t("tour_review.profit")}
-						</div>
-						<div className="text-lg text-foreground">
-							{formatToDollars(summary.profit.from)} -{" "}
-							{formatToDollars(summary.profit.to)}
-						</div>
-					</div>
+				<div
+					className={cn("grid items-center gap-8 w-fit", {
+						"grid-cols-[auto_1px_auto]":
+							orderStatus === ENUM_ORDER_STATUS.NEW,
+						"grid-cols-[auto_1px_auto_1px_auto_1px_auto]":
+							orderStatus !== ENUM_ORDER_STATUS.NEW
+					})}
+				>
+					{summaryItems.map((item, index) => (
+						<Fragment key={item.label}>
+							<TourSummaryColumn {...item} />
+							{index < summaryItems.length - 1 && (
+								<Separator
+									orientation="vertical"
+									className="h-10"
+								/>
+							)}
+						</Fragment>
+					))}
 				</div>
 			</CardHeader>
 			<CardContent>
@@ -63,12 +77,11 @@ export const OrderTourReview = ({
 					data={items}
 					columns={TOUR_REVIEW_COLUMNS(orderStatus)}
 					getSubRows={(row) => row.subRows}
-					showPagination={true}
-					showStatusFilter={false}
 					tableLayout={{
 						rowBorder: true,
 						headerBackground: false
 					}}
+					showTopFilters={false}
 				/>
 			</CardContent>
 		</Card>

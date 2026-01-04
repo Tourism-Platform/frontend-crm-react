@@ -28,7 +28,7 @@ export const PAX_DETAILS_COLUMNS = (): ColumnDef<IPaxReviewDetail>[] => {
 		{
 			accessorKey: "value",
 			cell: ({ row: { original } }) => {
-				const { type, value, metadata } = original;
+				const { type, value, file } = original;
 
 				if (type === "file") {
 					return (
@@ -38,11 +38,11 @@ export const PAX_DETAILS_COLUMNS = (): ColumnDef<IPaxReviewDetail>[] => {
 							</div>
 							<div className="flex-1 min-w-0">
 								<div className="text-sm font-semibold truncate">
-									{metadata?.fileName || value}
+									{file?.fileName || value}
 								</div>
-								<div className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">
-									{metadata?.fileSize || "-"}
-								</div>
+								{/* <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">
+									{file?.fileSize || "-"}
+								</div> */}
 							</div>
 							<div className="p-2 hover:bg-muted rounded-full cursor-pointer text-muted-foreground transition-colors hover:text-foreground">
 								<Lock className="size-4" />

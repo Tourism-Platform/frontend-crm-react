@@ -1,22 +1,26 @@
 import { ENUM_API_TAGS } from "@/shared/api";
-import { type IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapApplyReviewItemToBackend,
+	mapBookingOrderDetailToFrontend,
 	mapBookingOrderFiltersToBackend,
 	mapBookingOrderPaginatedToFrontend
-} from "../converters/booking-order.converters";
+} from "../converters";
 import type {
-	IBookingOrderBackend,
+	IApplyReviewItemRequest,
+	IBookingOrderDetailBackend,
 	IBookingOrderFilters,
-	IOrder
+	IOrderDetail,
+	TBookingOrderPaginatedResponse,
+	TBookingOrderPaginatedResponseBackend
 } from "../types";
 
 export const bookingOrderApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getBookingOrders: builder.query<
-			IPaginationResponse<IOrder>,
+			TBookingOrderPaginatedResponse,
 			IBookingOrderFilters | void
 		>({
 			query: (filters) => ({
@@ -26,11 +30,31 @@ export const bookingOrderApi = authApi.injectEndpoints({
 					: undefined
 			}),
 			transformResponse: (
-				response: IPaginationResponse<IBookingOrderBackend>
+				response: TBookingOrderPaginatedResponseBackend
 			) => mapBookingOrderPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.BOOKING_ORDERS]
+		}),
+		getBookingOrderById: builder.query<IOrderDetail, string>({
+			query: (id) => `/booking/orders/${id}`,
+			transformResponse: (response: IBookingOrderDetailBackend) =>
+				mapBookingOrderDetailToFrontend(response),
+			providesTags: (_result, _error, id) => [
+				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
+			]
+		}),
+		applyReviewItem: builder.mutation<void, IApplyReviewItemRequest>({
+			query: (body) => ({
+				url: "/booking/orders/apply-review",
+				method: "POST",
+				body: mapApplyReviewItemToBackend(body)
+			}),
+			invalidatesTags: [ENUM_API_TAGS.BOOKING_ORDERS]
 		})
 	})
 });
 
-export const { useGetBookingOrdersQuery } = bookingOrderApi;
+export const {
+	useGetBookingOrdersQuery,
+	useGetBookingOrderByIdQuery,
+	useApplyReviewItemMutation
+} = bookingOrderApi;

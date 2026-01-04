@@ -22,7 +22,11 @@ const buttonVariants = cva(
 				ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 				link: "text-primary underline-offset-4 hover:underline",
 				dim: "text-muted-foreground hover:text-foreground data-[state=open]:text-foreground",
-				slate: "bg-slate-500 text-white hover:bg-slate-600"
+				slate: "bg-slate-500 text-white hover:bg-slate-600",
+				green_outline:
+					"border-green-500 text-white bg-green-500/20 text-green-600 border",
+				cyan_outline:
+					"border-cyan-500 text-white bg-cyan-500/20 text-cyan-600 border"
 			},
 			mode: {
 				default:

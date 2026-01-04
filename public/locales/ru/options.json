@@ -71,6 +71,23 @@
 				"in_progress": "В работе",
 				"completed": "Завершен",
 				"cancelled": "Отменен"
+			},
+			"types": {
+				"regular": "Обычный",
+				"vip": "VIP",
+				"group": "Групповой"
+			},
+			"client_types": {
+				"agency": "Агентство",
+				"direct": "Прямой",
+				"corporate": "Корпоративный"
+			},
+			"supplier_payment": {
+				"statuses": {
+					"booked": "Забронировано",
+					"recorded": "Записано",
+					"not_booked": "Не забронировано"
+				}
 			}
 		}
 	}

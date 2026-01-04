@@ -18,18 +18,7 @@
 		"booking": "Booking",
 		"in_progress": "In progress",
 		"completed": "Completed",
-		"cancelled": "Cancelled",
-		"invoice": {
-			"paid": "Paid",
-			"partially_paid": "Partially paid",
-			"unpaid": "Unpaid"
-		},
-		"supplier_payment": {
-			"booked": "Booked",
-			"recorded": "Recorded",
-			"not_booked": "Not booked",
-			"confirmed": "Confirmed"
-		}
+		"cancelled": "Cancelled"
 	},
 	"order_info": {
 		"title": "Order info",
@@ -41,11 +30,6 @@
 			"duration": "Duration",
 			"dates": "Dates",
 			"comment": "Comment"
-		},
-		"types": {
-			"regular": "Regular",
-			"vip": "VIP",
-			"group": "Group"
 		}
 	},
 	"contact_info": {
@@ -55,11 +39,6 @@
 			"type": "Type",
 			"email": "Email",
 			"phone": "Phone number"
-		},
-		"types": {
-			"agency": "Agency",
-			"direct": "Direct",
-			"corporate": "Corporate"
 		}
 	},
 	"selected_options": {
@@ -69,7 +48,10 @@
 			"car_class": "Class car"
 		}
 	},
-	"order_not_found": "Order not found",
+	"not_found": {
+		"title": "Order not found",
+		"description": "Sorry, we couldn't find the order with this ID. Please check the data or return to the order list."
+	},
 	"report": {
 		"title": "Report"
 	},
@@ -87,6 +69,8 @@
 		"title": "Tour review",
 		"revenue": "Total Revenue",
 		"profit": "Estimated Profit",
+		"paid": "Paid",
+		"unpaid": "Unpaid",
 		"table": {
 			"item": "Item",
 			"supplier": "Supplier",
@@ -94,7 +78,11 @@
 			"estimated_revenue": "Estimated revenue",
 			"action": "Action",
 			"apply": "Apply",
-			"applied": "Applied"
+			"applied": "Applied",
+			"toasts": {
+				"success": "Data applied successfully",
+				"error": "Error applying data"
+			}
 		}
 	},
 	"pax_information": {

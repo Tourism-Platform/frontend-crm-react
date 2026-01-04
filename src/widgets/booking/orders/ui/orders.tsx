@@ -17,7 +17,6 @@ import { COLUMNS } from "../model";
 
 export const Orders: FC = () => {
 	const { t } = useTranslation("orders_page");
-
 	const { watch, setValue } = useForm<{
 		status: ENUM_ORDER_STATUS_TYPE;
 		search: string;

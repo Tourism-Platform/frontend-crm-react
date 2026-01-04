@@ -72,6 +72,23 @@
 				"in_progress": "In progress",
 				"completed": "Completed",
 				"cancelled": "Cancelled"
+			},
+			"types": {
+				"regular": "Regular",
+				"vip": "VIP",
+				"group": "Group"
+			},
+			"client_types": {
+				"agency": "Agency",
+				"direct": "Direct",
+				"corporate": "Corporate"
+			},
+			"supplier_payment": {
+				"statuses": {
+					"booked": "Booked",
+					"recorded": "Recorded",
+					"not_booked": "Not booked"
+				}
 			}
 		}
 	}

@@ -9,11 +9,10 @@ import {
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE
 } from "@/entities/booking";
-import {
-	ENUM_EVENT,
-	EVENT_METADATA,
-	type ITourReviewItem
-} from "@/entities/tour";
+import { type ITourReviewItem } from "@/entities/booking";
+import { ENUM_EVENT, EVENT_METADATA } from "@/entities/tour";
+
+import { ApplyReviewAction } from "@/features/booking";
 
 export const TOUR_REVIEW_COLUMNS = (
 	orderStatus?: ENUM_ORDER_STATUS_TYPE
@@ -93,10 +92,11 @@ export const TOUR_REVIEW_COLUMNS = (
 							</span>
 						),
 						cell: ({ row }) => {
-							const { type, isApplied } = row.original;
+							const { id, type, isApplied } = row.original;
 							const depth = row.depth;
 							const parentRow = row.getParentRow?.();
 							const parentType = parentRow?.original?.type;
+							const parentId = parentRow?.original?.id;
 
 							// Если это multiply-option — кнопку не показываем в родителе
 							if (type === ENUM_EVENT.MULTIPLY_OPTION) {
@@ -112,17 +112,14 @@ export const TOUR_REVIEW_COLUMNS = (
 							}
 
 							return (
-								<Button
-									variant={isApplied ? "default" : "outline"}
-									size="sm"
-								>
-									{isApplied
-										? t("tour_review.table.applied")
-										: t("tour_review.table.apply")}
-								</Button>
+								<ApplyReviewAction
+									id={id}
+									parentId={parentId}
+									isApplied={isApplied}
+								/>
 							);
 						},
-						size: 60
+						size: 50
 					} as ColumnDef<ITourReviewItem>
 				]
 			: [])

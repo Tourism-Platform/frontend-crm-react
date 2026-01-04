@@ -10,38 +10,10 @@
 		"clientType": "Тип клиента",
 		"pax": "PAX",
 		"dates": "Даты",
-		"invoiceStatusColumn": "Статус оплаты",
-		"orderTypes": {
-			"regular": "Обычный",
-			"vip": "VIP",
-			"group": "Групповой"
-		},
-		"clientTypes": {
-			"agency": "Агентство",
-			"direct": "Прямой",
-			"corporate": "Корпоративный"
-		},
-		"invoiceStatus": {
-			"paid": "Оплачено",
-			"partiallyPaid": "Частично оплачено",
-			"unpaid": "Не оплачено"
-		}
+		"invoiceStatusColumn": "Статус оплаты"
 	},
 	"menu": {
 		"edit": "Редактировать",
 		"delete": "Удалить"
-	},
-	"statuses": {
-		"new": "Новый",
-		"in_processing": "В обработке",
-		"booking": "Бронирование",
-		"in_progress": "В процессе",
-		"completed": "Завершен",
-		"cancelled": "Отменен",
-		"invoice": {
-			"paid": "Оплачено",
-			"partially_paid": "Частично оплачено",
-			"unpaid": "Не оплачено"
-		}
 	}
 }

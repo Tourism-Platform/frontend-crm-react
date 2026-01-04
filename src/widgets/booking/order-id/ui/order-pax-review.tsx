@@ -45,7 +45,6 @@ export const OrderPaxReview = ({ items = [] }: IOrderPaxReviewProps) => {
 			<CardContent>
 				<SmartTable
 					data={items}
-					showStatusFilter={false}
 					columns={PAX_REVIEW_COLUMNS((subItems) => (
 						<OrderPaxReviewSubTable items={subItems} />
 					))}
@@ -56,6 +55,7 @@ export const OrderPaxReview = ({ items = [] }: IOrderPaxReviewProps) => {
 						rowBorder: true,
 						headerBackground: false
 					}}
+					showTopFilters={false}
 				/>
 			</CardContent>
 		</Card>

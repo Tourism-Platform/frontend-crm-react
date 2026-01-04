@@ -1,7 +1,8 @@
-import { type IOrderSupplierPaymentItem } from "@/entities/finance";
-import { type ITourReviewItem, type ITourSummary } from "@/entities/tour";
+import { type IPaginationResponse } from "@/shared/types";
 
 import { type IOrderDates, type IPaxReviewItem } from "./order.interface";
+import type { ISupplierPaymentItem } from "./supplier-payment.interface";
+import type { ITourReviewItem, ITourSummary } from "./tour.interface";
 
 export interface IBookingOrderBackend {
 	order_id: string;
@@ -12,6 +13,12 @@ export interface IBookingOrderBackend {
 	pax: number;
 	dates: IOrderDates;
 	tour_name: string;
+	manager: string | null;
+	invoice_status: string | null;
+	status: string;
+}
+
+export interface IBookingOrderDetailBackend extends IBookingOrderBackend {
 	duration: string;
 	route: string;
 	comment: string | null;
@@ -20,12 +27,17 @@ export interface IBookingOrderBackend {
 	room_type: string | null;
 	car_class: string | null;
 	is_available: boolean;
-	manager: string | null;
-	invoice_status: string | null;
 	report: string | null;
-	status: string;
 	pax_details: IPaxReviewItem[] | null;
 	tour_review: ITourReviewItem[];
-	supplier_payments: IOrderSupplierPaymentItem[] | null;
+	supplier_payments: ISupplierPaymentItem[] | null;
 	tour_summary: ITourSummary;
+}
+
+export type TBookingOrderPaginatedResponseBackend =
+	IPaginationResponse<IBookingOrderBackend>;
+
+export interface IApplyReviewItemBackend {
+	id: string;
+	parent_id?: string;
 }

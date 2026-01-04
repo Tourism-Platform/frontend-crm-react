@@ -8,16 +8,21 @@ import {
 	SmartTable
 } from "@/shared/ui";
 
-import { type IOrderSupplierPaymentItem } from "@/entities/finance";
+import type {
+	ENUM_ORDER_STATUS_TYPE,
+	ISupplierPaymentItem
+} from "@/entities/booking";
 
 import { SUPPLIER_PAYMENTS_COLUMNS } from "../model";
 
 interface IOrderSupplierPaymentsProps {
-	items: IOrderSupplierPaymentItem[];
+	items: ISupplierPaymentItem[];
+	orderStatus?: ENUM_ORDER_STATUS_TYPE;
 }
 
 export const OrderSupplierPayments = ({
-	items
+	items,
+	orderStatus
 }: IOrderSupplierPaymentsProps) => {
 	const { t } = useTranslation("order_id_page");
 
@@ -31,10 +36,9 @@ export const OrderSupplierPayments = ({
 			<CardContent>
 				<SmartTable
 					data={items}
-					columns={SUPPLIER_PAYMENTS_COLUMNS()}
+					columns={SUPPLIER_PAYMENTS_COLUMNS(orderStatus)}
 					getSubRows={(row) => row.subRows}
-					showPagination={true}
-					showStatusFilter={false}
+					showTopFilters={false}
 					tableLayout={{
 						rowBorder: true,
 						headerBackground: false
