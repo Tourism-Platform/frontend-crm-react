@@ -1,6 +1,7 @@
 {
 	"upload_files": {
 		"title": "Upload files",
+		"empty": "No files attached",
 		"description": "Max {{maxFiles}} files ∙ Up to {{maxSize}}MB",
 		"uploaded": "Uploaded",
 		"buttons": {

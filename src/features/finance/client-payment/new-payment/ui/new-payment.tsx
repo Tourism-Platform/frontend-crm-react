@@ -55,7 +55,10 @@ export const NewPayment: FC = () => {
 			<DialogTrigger asChild>
 				<Button>{t("new_payment.button")}</Button>
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent
+				onCloseBtn={() => setOpen(false)}
+				className="sm:max-w-[52rem]"
+			>
 				<DialogHeader>
 					<DialogTitle>{t("new_payment.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">

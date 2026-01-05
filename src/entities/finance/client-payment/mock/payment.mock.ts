@@ -10,7 +10,16 @@ export const PAYMENTS_MOCK: IPaymentBackend[] = [
 		amount: 1500,
 		currency: "USD",
 		status: ENUM_PAYMENT_STATUS.ASSIGNED,
-		note: "First payment"
+		note: "First payment",
+		files: [
+			{
+				id: "doc-insurance-003",
+				name: "Страховой полис.pdf",
+				size: 425600,
+				type: "application/pdf",
+				url: "https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VCAE65snBIiK1zJ4RHlMC0E6u5pUdLos7WFtX"
+			}
+		]
 	},
 	{
 		id: "2",

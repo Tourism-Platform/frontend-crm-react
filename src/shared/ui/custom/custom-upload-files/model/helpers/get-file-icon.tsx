@@ -9,32 +9,32 @@ import {
 } from "lucide-react";
 
 export const getFileIcon = (file: {
-	file: File | { type: string; name: string };
+	file: File | { type?: string; name?: string };
 }) => {
 	const fileType =
-		file.file instanceof File ? file.file.type : file.file.type;
+		(file.file instanceof File ? file.file.type : file.file.type) || "";
 	const fileName =
-		file.file instanceof File ? file.file.name : file.file.name;
+		(file.file instanceof File ? file.file.name : file.file.name) || "";
 
 	if (
 		fileType.includes("pdf") ||
-		fileName.endsWith(".pdf") ||
+		fileName.toLowerCase().endsWith(".pdf") ||
 		fileType.includes("word") ||
-		fileName.endsWith(".doc") ||
-		fileName.endsWith(".docx")
+		fileName.toLowerCase().endsWith(".doc") ||
+		fileName.toLowerCase().endsWith(".docx")
 	) {
 		return <FileTextIcon className="size-4 opacity-60" />;
 	} else if (
 		fileType.includes("zip") ||
 		fileType.includes("archive") ||
-		fileName.endsWith(".zip") ||
-		fileName.endsWith(".rar")
+		fileName.toLowerCase().endsWith(".zip") ||
+		fileName.toLowerCase().endsWith(".rar")
 	) {
 		return <FileArchiveIcon className="size-4 opacity-60" />;
 	} else if (
 		fileType.includes("excel") ||
-		fileName.endsWith(".xls") ||
-		fileName.endsWith(".xlsx")
+		fileName.toLowerCase().endsWith(".xls") ||
+		fileName.toLowerCase().endsWith(".xlsx")
 	) {
 		return <FileSpreadsheetIcon className="size-4 opacity-60" />;
 	} else if (fileType.includes("video/")) {

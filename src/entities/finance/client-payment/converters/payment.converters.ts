@@ -16,7 +16,8 @@ export const mapPaymentToFrontend = (payment: IPaymentBackend): IPayment => ({
 	amount: payment.amount,
 	currency: payment.currency,
 	status: payment.status,
-	note: payment.note
+	note: payment.note,
+	files: payment.files
 });
 
 export const mapPaymentToBackend = (
@@ -26,7 +27,8 @@ export const mapPaymentToBackend = (
 	order_id: payment.orderId,
 	amount: payment.amount,
 	status: payment.status,
-	note: payment.note
+	note: payment.note,
+	files: payment.files
 });
 
 export const mapPaymentsPaginatedToFrontend = (

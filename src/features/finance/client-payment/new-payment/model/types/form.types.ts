@@ -14,7 +14,8 @@ export const ENUM_FORM_NEW_PAYMENT = {
 	PAYMENT_ID: "paymentId",
 	AMOUNT: "amount",
 	ORDER_ID: "orderId",
-	NOTE: "note"
+	NOTE: "note",
+	FILES: "files"
 } as const;
 
 export type ENUM_FORM_NEW_PAYMENT_TYPE =

@@ -1,6 +1,7 @@
 import { HttpResponse, delay, http } from "msw";
 
 import { ENV } from "@/shared/config";
+import { type TFileMetadata } from "@/shared/hooks";
 
 import { PAYMENTS_MOCK } from "../mock";
 import {
@@ -11,6 +12,23 @@ import {
 } from "../types";
 
 const BASE_URL = ENV.VITE_API_URL || "";
+const DEFAULT_FILE_URL =
+	"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VCAE65snBIiK1zJ4RHlMC0E6u5pUdLos7WFtX";
+
+const processFiles = (
+	files?: Pick<TFileMetadata, "name" | "size" | "type">[]
+): TFileMetadata[] | undefined => {
+	if (!files) return undefined;
+	return files.map((f, index) => {
+		return {
+			id: `mock-file-${Date.now()}-${index}`,
+			name: f.name || "uploaded-file.pdf",
+			size: f.size || 1024 * 1024,
+			type: f.type || "application/pdf",
+			url: DEFAULT_FILE_URL
+		};
+	});
+};
 
 let payments = [...PAYMENTS_MOCK];
 
@@ -84,12 +102,18 @@ export const financeClientPaymentHandlers = [
 			...body,
 			id: (payments.length + 1).toString(),
 			payment_id:
-				body.payment_id || `INV-${Math.floor(Math.random() * 10000)}`,
-			order_id: body.order_id || "",
+				body.payment_id ||
+				`INV-${Math.floor(Math.random() * 10000)
+					.toString()
+					.padStart(4, "0")}`,
+			order_id: body.order_id ?? "",
 			date_created: new Date().toISOString(),
-			amount: body.amount || 0,
+			amount: body.amount ?? 0,
 			currency: body.currency || "USD",
-			status: ENUM_PAYMENT_STATUS.NOT_ASSIGNED
+			status: body.order_id
+				? ENUM_PAYMENT_STATUS.ASSIGNED
+				: ENUM_PAYMENT_STATUS.NOT_ASSIGNED,
+			files: processFiles(body.files)
 		} as IPaymentBackend;
 
 		payments.push(newPayment);
@@ -110,7 +134,12 @@ export const financeClientPaymentHandlers = [
 					? ENUM_PAYMENT_STATUS.ASSIGNED
 					: body.status || payments[index].status;
 
-				payments[index] = { ...payments[index], ...body, status };
+				payments[index] = {
+					...payments[index],
+					...body,
+					status,
+					files: processFiles(body.files) || payments[index].files
+				};
 				return HttpResponse.json(payments[index], { status: 200 });
 			}
 

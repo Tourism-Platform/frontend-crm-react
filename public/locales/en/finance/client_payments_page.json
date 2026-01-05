@@ -20,6 +20,9 @@
 				"note": {
 					"label": "Note",
 					"placeholder": "Enter note"
+				},
+				"files": {
+					"label": "Files"
 				}
 			},
 			"errors": {
@@ -64,6 +67,9 @@
 					"note": {
 						"label": "Note",
 						"placeholder": "Enter note"
+					},
+					"files": {
+						"label": "Files"
 					}
 				},
 				"errors": {

@@ -1,6 +1,6 @@
-import type { IBusinessDocument } from "../types";
+import type { TFileMetadata } from "@/shared/hooks";
 
-export const BUSINESS_DOCUMENTS_MOCK: IBusinessDocument[] = [
+export const BUSINESS_DOCUMENTS_MOCK: TFileMetadata[] = [
 	{
 		id: "doc-license-001",
 		name: "Лицензия на турагентскую деятельность.pdf",

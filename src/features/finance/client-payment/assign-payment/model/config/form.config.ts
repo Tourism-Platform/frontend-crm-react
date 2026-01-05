@@ -20,5 +20,14 @@ export const FORM_ASSIGN_PAYMENT_LIST: TForm[] = [
 		key: ENUM_FORM_ASSIGN_PAYMENT.NOTE,
 		fieldType: "textarea",
 		className: "col-span-2"
+	},
+	{
+		label: "menu.assign.form.fields.files.label",
+		key: ENUM_FORM_ASSIGN_PAYMENT.FILES,
+		fieldType: "upload",
+		className: "col-span-2",
+		showAllRemoveButton: false,
+		showTopTitle: false,
+		maxFiles: 1
 	}
 ];

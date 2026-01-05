@@ -32,7 +32,7 @@ export type TFileUploadOptions = {
 	maxSize?: number; // in bytes
 	accept?: string;
 	multiple?: boolean; // Defaults to false
-	initialFiles?: TFileMetadata[];
+	initialFiles?: (TFileMetadata | File)[];
 	onFilesChange?: (files: TFileWithPreview[]) => void; // Callback when files change
 	onFilesAdded?: (addedFiles: TFileWithPreview[]) => void; // Callback when new files are added
 };
@@ -77,8 +77,8 @@ export const useFileUpload = (
 	const [state, setState] = useState<TFileUploadState>({
 		files: initialFiles.map((file) => ({
 			file,
-			id: file.id,
-			preview: file.url
+			id: file instanceof File ? `${file.name}-${Date.now()}` : file.id,
+			preview: file instanceof File ? undefined : file.url
 		})),
 		isDragging: false,
 		errors: []
@@ -89,14 +89,36 @@ export const useFileUpload = (
 	// Синхронизация с внешними данными (например, после загрузки из API)
 	useEffect(() => {
 		if (initialFiles.length > 0) {
-			setState((prev) => ({
-				...prev,
-				files: initialFiles.map((file) => ({
-					file,
-					id: file.id,
-					preview: file.url
-				}))
-			}));
+			setState((prev) => {
+				// Избегаем бесконечного цикла обновлений, сравнивая количество
+				if (prev.files.length === initialFiles.length) {
+					return prev;
+				}
+
+				return {
+					...prev,
+					files: initialFiles.map((file) => {
+						const existingFile = prev.files.find(
+							(f) =>
+								f.file === file ||
+								(!(f.file instanceof File) &&
+									!(file instanceof File) &&
+									f.file.id === file.id)
+						);
+
+						if (existingFile) return existingFile;
+
+						return {
+							file,
+							id:
+								file instanceof File
+									? `${file.name}-${Date.now()}`
+									: file.id,
+							preview: file instanceof File ? undefined : file.url
+						};
+					})
+				};
+			});
 		}
 	}, [initialFiles]);
 

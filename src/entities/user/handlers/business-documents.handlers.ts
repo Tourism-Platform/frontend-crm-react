@@ -1,9 +1,9 @@
 import { HttpResponse, delay, http } from "msw";
 
 import { ENV } from "@/shared/config";
+import type { TFileMetadata } from "@/shared/hooks";
 
 import { BUSINESS_DOCUMENTS_MOCK } from "../mock";
-import type { IBusinessDocument } from "../types";
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
@@ -27,7 +27,7 @@ export const businessDocumentsHandlers = [
 			);
 		}
 
-		const newDocument: IBusinessDocument = {
+		const newDocument: TFileMetadata = {
 			id: `doc-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
 			name: file.name,
 			size: file.size,

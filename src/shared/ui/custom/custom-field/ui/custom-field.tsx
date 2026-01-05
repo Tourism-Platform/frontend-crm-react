@@ -3,9 +3,10 @@ import type { ComponentProps, FC } from "react";
 import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
-import type { BadgeVariant } from "@/shared/ui";
+import type { BadgeVariant, ICustomUploadFilesProps } from "@/shared/ui";
 import {
 	CustomEditor,
+	CustomUploadFilesField,
 	DatePickerInput,
 	type DatePickerInputProps,
 	FormControl,
@@ -35,7 +36,8 @@ export type CustomFieldVariant =
 	| "date"
 	| "select"
 	| "multiselect"
-	| "editor";
+	| "editor"
+	| "upload";
 
 type BaseFieldProps = {
 	control: Control<any>;
@@ -91,6 +93,10 @@ type MultiselectFieldVariant = BaseFieldProps & {
 	hideClearAllButton?: boolean;
 };
 
+type UploadFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "upload">;
+} & ICustomUploadFilesProps;
+
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
@@ -100,7 +106,8 @@ type CustomFieldProps =
 	| DateFieldVariant
 	| SelectFieldVariant
 	| MultiselectFieldVariant
-	| EditorFieldVariant;
+	| EditorFieldVariant
+	| UploadFieldVariant;
 
 export const CustomField: FC<CustomFieldProps> = (props) => {
 	const {
@@ -202,6 +209,13 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						badgeVariant={props.badgeVariant}
 						hideClearAllButton={props.hideClearAllButton}
 						// emptyIndicator={<p className="text-center text-sm text-muted-foreground">No results found</p>}
+					/>
+				);
+			case "upload":
+				return (
+					<CustomUploadFilesField
+						{...props}
+						readOnly={props.readOnly || props.disabled}
 					/>
 				);
 

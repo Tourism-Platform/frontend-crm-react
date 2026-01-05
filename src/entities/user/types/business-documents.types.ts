@@ -1,11 +1,5 @@
-export interface IBusinessDocument {
-	id: string;
-	name: string;
-	size: number;
-	type: string;
-	url: string;
-}
+import type { TFileMetadata } from "@/shared/hooks";
 
 export interface IBusinessDocumentsResponse {
-	documents: IBusinessDocument[];
+	documents: TFileMetadata[];
 }

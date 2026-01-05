@@ -20,6 +20,9 @@
 				"note": {
 					"label": "Примечание",
 					"placeholder": "Введите примечание"
+				},
+				"files": {
+					"label": "Файлы"
 				}
 			},
 			"errors": {
@@ -64,6 +67,9 @@
 					"note": {
 						"label": "Примечание",
 						"placeholder": "Введите примечание"
+					},
+					"files": {
+						"label": "Файлы"
 					}
 				},
 				"errors": {

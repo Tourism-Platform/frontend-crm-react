@@ -13,5 +13,6 @@ export const NEW_PAYMENT_SCHEMA = z.object({
 			message: "new_payment.form.errors.amount.required"
 		})
 		.min(1, "new_payment.form.errors.amount.min"),
-	[ENUM_FORM_NEW_PAYMENT.NOTE]: z.string().optional()
+	[ENUM_FORM_NEW_PAYMENT.NOTE]: z.string().optional(),
+	[ENUM_FORM_NEW_PAYMENT.FILES]: z.any().array().optional()
 });

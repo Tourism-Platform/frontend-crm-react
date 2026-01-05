@@ -1,3 +1,4 @@
+import { type TFileMetadata } from "@/shared/hooks";
 import { type IPaginationResponse } from "@/shared/types";
 
 import { type ENUM_PAYMENT_STATUS_TYPE } from "./payment-status.types";
@@ -12,6 +13,7 @@ export interface IPaymentBackend {
 	currency: "USD";
 	status: ENUM_PAYMENT_STATUS_TYPE;
 	note?: string;
+	files?: TFileMetadata[];
 }
 
 export interface IPaymentPaginatedResponseBackend

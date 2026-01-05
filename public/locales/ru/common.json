@@ -1,6 +1,7 @@
 {
 	"upload_files": {
 		"title": "Загрузить файлы",
+		"empty": "Нет прикрепленных файлов",
 		"description": "Максимум {{maxFiles}} файлов ∙ До {{maxSize}} МБ",
 		"uploaded": "Загружено",
 		"buttons": {

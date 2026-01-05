@@ -53,7 +53,8 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 		defaultValues: {
 			[ENUM_FORM_ASSIGN_PAYMENT.ORDER_ID]: payment.orderId,
 			[ENUM_FORM_ASSIGN_PAYMENT.AMOUNT]: payment.amount,
-			[ENUM_FORM_ASSIGN_PAYMENT.NOTE]: payment.note || ""
+			[ENUM_FORM_ASSIGN_PAYMENT.NOTE]: payment.note || "",
+			[ENUM_FORM_ASSIGN_PAYMENT.FILES]: payment.files || []
 		},
 		mode: "onSubmit"
 	});
@@ -79,7 +80,10 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent
+				onCloseBtn={() => setOpen(false)}
+				className="sm:max-w-[52rem]"
+			>
 				<DialogHeader>
 					<DialogTitle>{t("menu.assign.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
