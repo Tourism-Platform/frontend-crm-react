@@ -1,6 +1,7 @@
 import { HttpResponse, delay, http } from "msw";
 
 import { ENV } from "@/shared/config";
+import { type TFileMetadata } from "@/shared/hooks";
 
 import { SUPPLIER_PAYMENTS_MOCK } from "../mock";
 import {
@@ -11,6 +12,23 @@ import {
 } from "../types";
 
 const BASE_URL = ENV.VITE_API_URL || "";
+const DEFAULT_FILE_URL =
+	"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VCAE65snBIiK1zJ4RHlMC0E6u5pUdLos7WFtX";
+
+const processFiles = (
+	files?: Pick<TFileMetadata, "name" | "size" | "type">[]
+): TFileMetadata[] | undefined => {
+	if (!files) return undefined;
+	return files.map((f, index) => {
+		return {
+			id: `mock-file-${Date.now()}-${index}`,
+			name: f.name || "uploaded-file.pdf",
+			size: f.size || 1024 * 1024,
+			type: f.type || "application/pdf",
+			url: DEFAULT_FILE_URL
+		};
+	});
+};
 
 const payments = [...SUPPLIER_PAYMENTS_MOCK];
 
@@ -90,7 +108,8 @@ export const financeSupplierPaymentHandlers = [
 				payments[index] = {
 					...payments[index],
 					...body,
-					status: ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
+					status: ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED,
+					files: processFiles(body.files) || payments[index].files
 				};
 				return HttpResponse.json(payments[index], { status: 200 });
 			}

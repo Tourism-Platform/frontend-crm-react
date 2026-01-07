@@ -31,15 +31,18 @@
 		"fields": {
 			"order_id": {
 				"label": "ID заказа",
-				"placeholder": "ID заказа"
+				"placeholder": "Введите ID заказа"
 			},
 			"amount": {
 				"label": "Сумма",
-				"placeholder": "Сумма"
+				"placeholder": "Введите сумму"
 			},
 			"note": {
 				"label": "Примечание",
-				"placeholder": "Примечание"
+				"placeholder": "Введите примечание"
+			},
+			"files": {
+				"label": "Скан квитанции/файлы"
 			}
 		},
 		"buttons": {

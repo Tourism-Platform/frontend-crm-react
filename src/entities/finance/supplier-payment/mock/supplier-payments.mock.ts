@@ -14,7 +14,23 @@ export const SUPPLIER_PAYMENTS_MOCK: ISupplierPaymentBackend[] = [
 		amount: 2100.0,
 		currency: "USD",
 		manager: "Madina T.",
-		status: ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
+		status: ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED,
+		files: [
+			{
+				id: "mock-file-1",
+				name: "invoice_123.pdf",
+				size: 1024 * 450,
+				type: "application/pdf",
+				url: "https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VCAE65snBIiK1zJ4RHlMC0E6u5pUdLos7WFtX"
+			},
+			{
+				id: "mock-file-2",
+				name: "invoice_123.pdf",
+				size: 1024 * 450,
+				type: "application/pdf",
+				url: "https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VCAE65snBIiK1zJ4RHlMC0E6u5pUdLos7WFtX"
+			}
+		]
 	},
 	{
 		id: "2",

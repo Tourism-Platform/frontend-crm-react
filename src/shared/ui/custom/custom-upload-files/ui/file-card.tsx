@@ -26,7 +26,8 @@ export const FileCard: FC<IFileCardProps> = ({
 	onRemove
 }) => {
 	const isFileLoading =
-		loadingId === file.id || (isLoading && file.file instanceof File);
+		(!!loadingId && loadingId === file.id) ||
+		(isLoading && file.file instanceof File);
 
 	return (
 		<div

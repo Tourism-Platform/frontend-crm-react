@@ -8,7 +8,8 @@ import type { CONFIRM_PAYMENT_SCHEMA } from "../config";
 export const ENUM_FORM_CONFIRM_PAYMENT = {
 	ORDER_ID: "orderId",
 	AMOUNT: "amount",
-	NOTE: "note"
+	NOTE: "note",
+	FILES: "files"
 } as const;
 
 export type TForm = TFormField<

@@ -1,6 +1,8 @@
 import { type FC } from "react";
 import { type UseControllerProps, useController } from "react-hook-form";
 
+import type { TFileMetadata } from "@/shared/hooks";
+
 import {
 	CustomUploadFiles,
 	type ICustomUploadFilesProps
@@ -39,12 +41,14 @@ export const CustomUploadFilesField: FC<ICustomUploadFilesFieldProps> = ({
 			maxFiles={maxFiles}
 			initialFiles={value}
 			onFilesChange={(files) => {
-				const metadata = files.map((f) => {
+				const metadata: TFileMetadata[] = files.map((f) => {
 					if (f.file instanceof File) {
 						return {
+							id: f.id,
 							name: f.file.name,
 							size: f.file.size,
-							type: f.file.type
+							type: f.file.type,
+							url: f.preview || ""
 						};
 					}
 					return f.file;

@@ -33,6 +33,15 @@ export const mapReconciliationDetailToFrontend = (
 	supplierPayments: data.supplier_payments.map(
 		(p): IReconciliationSupplierPayment => ({
 			id: p.id,
+			orderId: p.order_id,
+			note: p.note,
+			files: p.files?.map((file) => ({
+				id: file.id,
+				name: file.name,
+				size: file.size,
+				type: file.type,
+				url: file.url
+			})),
 			component: p.component,
 			plannedAmount: p.planned_amount,
 			actualAmount: p.actual_amount,

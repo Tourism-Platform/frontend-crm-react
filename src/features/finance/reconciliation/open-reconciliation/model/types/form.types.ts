@@ -4,7 +4,8 @@ import type { TFormField } from "@/shared/types";
 export const ENUM_FORM_OPEN_RECONCILIATION = {
 	ORDER_ID: "orderId",
 	AMOUNT: "amount",
-	NOTE: "note"
+	NOTE: "note",
+	FILES: "files"
 } as const;
 
 export type TForm = TFormField<

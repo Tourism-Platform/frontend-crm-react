@@ -258,18 +258,32 @@ export const RECONCILIATION_DETAILS_MAP: Record<
 			actual_margin: item.actual_revenue - item.actual_cost,
 			supplier_payments: [
 				{
-					id: `PAY-${item.id}-01`,
+					id: `PAY - ${item.id}-01`,
+					order_id: item.order_id,
 					component: "Hotel Accommodation",
 					planned_amount: item.planned_cost * 0.6,
 					actual_amount: item.actual_cost * 0.6,
-					variance: (item.planned_cost - item.actual_cost) * 0.6
+					variance: (item.planned_cost - item.actual_cost) * 0.6,
+					note: "Standard payment for hotel services",
+					files: [
+						{
+							id: "file-1",
+							name: "invoice-hotel.pdf",
+							size: 1024 * 512,
+							type: "application/pdf",
+							url: "/mock/invoice-hotel.pdf"
+						}
+					]
 				},
 				{
-					id: `PAY-${item.id}-02`,
+					id: `PAY - ${item.id}-02`,
+					order_id: item.order_id,
 					component: "Transportation",
 					planned_amount: item.planned_cost * 0.4,
 					actual_amount: item.actual_cost * 0.4,
-					variance: (item.planned_cost - item.actual_cost) * 0.4
+					variance: (item.planned_cost - item.actual_cost) * 0.4,
+					note: "Transportation costs including fuel and driver",
+					files: []
 				}
 			]
 		};

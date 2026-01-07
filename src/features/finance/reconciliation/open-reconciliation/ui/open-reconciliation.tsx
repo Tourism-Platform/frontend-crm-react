@@ -19,7 +19,10 @@ import {
 
 import { type IReconciliationSupplierPayment } from "@/entities/finance";
 
-import { FORM_OPEN_RECONCILIATION_LIST } from "../model";
+import {
+	ENUM_FORM_OPEN_RECONCILIATION,
+	FORM_OPEN_RECONCILIATION_LIST
+} from "../model";
 
 interface IOpenReconciliationProps {
 	payment: IReconciliationSupplierPayment;
@@ -33,9 +36,10 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 
 	const form = useForm({
 		defaultValues: {
-			orderId: payment.id,
-			amount: payment.actualAmount,
-			note: ""
+			[ENUM_FORM_OPEN_RECONCILIATION.ORDER_ID]: payment.orderId,
+			[ENUM_FORM_OPEN_RECONCILIATION.AMOUNT]: payment.actualAmount,
+			[ENUM_FORM_OPEN_RECONCILIATION.NOTE]: payment.note || "",
+			[ENUM_FORM_OPEN_RECONCILIATION.FILES]: payment.files || []
 		}
 	});
 
@@ -46,7 +50,10 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 					{t("table.menu.open")}
 				</Button>
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent
+				onCloseBtn={() => setOpen(false)}
+				className="sm:max-w-[52rem]"
+			>
 				<DialogHeader>
 					<DialogTitle>{t("form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">

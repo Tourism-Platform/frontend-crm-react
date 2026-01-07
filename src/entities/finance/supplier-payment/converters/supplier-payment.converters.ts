@@ -20,7 +20,9 @@ export const mapSupplierPaymentToFrontend = (
 	amount: data.amount,
 	currency: data.currency,
 	manager: data.manager,
-	status: data.status
+	status: data.status,
+	note: data.note,
+	files: data.files
 });
 
 export const mapSupplierPaymentToBackend = (
@@ -35,7 +37,9 @@ export const mapSupplierPaymentToBackend = (
 	amount: data.amount,
 	currency: data.currency,
 	manager: data.manager,
-	status: data.status
+	status: data.status,
+	note: data.note,
+	files: data.files
 });
 
 export const mapSupplierPaymentListToFrontend = (

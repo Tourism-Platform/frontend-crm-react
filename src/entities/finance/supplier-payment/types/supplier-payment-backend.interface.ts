@@ -1,3 +1,4 @@
+import { type TFileMetadata } from "@/shared/hooks";
 import { type IPaginationResponse } from "@/shared/types";
 
 import type { ENUM_SUPPLIER_PAYMENT_STATUS_TYPE } from "./supplier-payment-status.types";
@@ -14,6 +15,8 @@ export interface ISupplierPaymentBackend {
 	currency: string;
 	manager: string;
 	status: ENUM_SUPPLIER_PAYMENT_STATUS_TYPE;
+	note?: string;
+	files?: TFileMetadata[];
 }
 
 export interface ISupplierPaymentPaginatedResponseBackend

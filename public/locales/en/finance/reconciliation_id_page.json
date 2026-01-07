@@ -30,16 +30,19 @@
 		"title": "Supplier payment details",
 		"fields": {
 			"order_id": {
-				"label": "Order id",
-				"placeholder": "Order id"
+				"label": "Order ID",
+				"placeholder": "Enter order ID"
 			},
 			"amount": {
 				"label": "Amount",
-				"placeholder": "Amount"
+				"placeholder": "Enter amount"
 			},
 			"note": {
 				"label": "Note",
-				"placeholder": "Note"
+				"placeholder": "Enter note"
+			},
+			"files": {
+				"label": "Receipt scan/files"
 			}
 		},
 		"buttons": {
