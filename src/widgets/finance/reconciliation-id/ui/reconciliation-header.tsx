@@ -44,7 +44,7 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 						variant="ghost"
 						size="sm"
 						asChild
-						// className="w-fit p-0 h-auto hover:bg-transparent text-[#71717A]"
+						className="text-primary"
 					>
 						<Link to={ENUM_PATH.FINANCE.RECONCILIATION}>
 							<ChevronLeft className="mr-2 h-4 w-4" />

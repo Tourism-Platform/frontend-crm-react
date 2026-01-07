@@ -25,7 +25,7 @@ export const activityLogApi = authApi.injectEndpoints({
 				...response,
 				data: response.data.map(mapActivityLogToFrontend)
 			}),
-			providesTags: [ENUM_API_TAGS.ACTIVITY_LOG]
+			providesTags: [ENUM_API_TAGS.TOUR_ACTIVITY_LOG]
 		})
 	})
 });

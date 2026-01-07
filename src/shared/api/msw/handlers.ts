@@ -9,7 +9,7 @@ import {
 	financeSupplierPaymentHandlers
 } from "@/entities/finance";
 import { staffHandlers } from "@/entities/staff";
-import { tourHandlers } from "@/entities/tour";
+import { tourHandlers, tourOrderHandlers } from "@/entities/tour";
 import {
 	accountHandlers,
 	businessDocumentsHandlers,
@@ -24,6 +24,7 @@ export const handlers = [
 	...staffHandlers,
 	...commissionHandlers,
 	...tourHandlers,
+	...tourOrderHandlers,
 	...financeInvoiceHandlers,
 	...financeClientPaymentHandlers,
 	...financeSupplierPaymentHandlers,

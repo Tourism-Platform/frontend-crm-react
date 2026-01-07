@@ -1,4 +1,4 @@
-import type { TTourOrderHistoryPageKeys } from "@/shared/config";
+import type { TOptionsKeys } from "@/shared/config";
 import { type BadgeVariant } from "@/shared/ui";
 
 import {
@@ -8,14 +8,15 @@ import {
 
 export const TOUR_ORDER_STATUS_LABELS: Record<
 	ENUM_TOUR_ORDER_STATUS_TYPE,
-	TTourOrderHistoryPageKeys
+	TOptionsKeys
 > = {
-	[ENUM_TOUR_ORDER_STATUS.NEW]: "statuses.new",
-	[ENUM_TOUR_ORDER_STATUS.IN_PROCESSING]: "statuses.in_processing",
-	[ENUM_TOUR_ORDER_STATUS.BOOKING]: "statuses.booking",
-	[ENUM_TOUR_ORDER_STATUS.IN_PROGRESS]: "statuses.in_progress",
-	[ENUM_TOUR_ORDER_STATUS.COMPLETED]: "statuses.completed",
-	[ENUM_TOUR_ORDER_STATUS.CANCELLED]: "statuses.cancelled"
+	[ENUM_TOUR_ORDER_STATUS.NEW]: "booking.order.statuses.new",
+	[ENUM_TOUR_ORDER_STATUS.IN_PROCESSING]:
+		"booking.order.statuses.in_processing",
+	[ENUM_TOUR_ORDER_STATUS.BOOKING]: "booking.order.statuses.booking",
+	[ENUM_TOUR_ORDER_STATUS.IN_PROGRESS]: "booking.order.statuses.in_progress",
+	[ENUM_TOUR_ORDER_STATUS.COMPLETED]: "booking.order.statuses.completed",
+	[ENUM_TOUR_ORDER_STATUS.CANCELLED]: "booking.order.statuses.cancelled"
 };
 
 export const TOUR_ORDER_STATUS_VARIANTS: Record<

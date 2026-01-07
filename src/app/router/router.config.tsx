@@ -13,6 +13,7 @@ import {
 
 import {
 	BookingOwnerLayout,
+	DefaultOwnerLayout,
 	EventOwnerLayout,
 	FinanceOwnerLayout,
 	SettingsOwnerLayout,
@@ -613,14 +614,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: OrderIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={BOOKING_SIDEBAR_LIST}>
-					{children}
-				</SideBarOwnerLayout>
-			),
-			BookingOwnerLayout
-		]
+		layout_cascade: [DefaultOwnerLayout]
 	},
 
 	// finance
@@ -643,14 +637,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: InvoiceIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
-					{children}
-				</SideBarOwnerLayout>
-			),
-			FinanceOwnerLayout
-		]
+		layout_cascade: [DefaultOwnerLayout]
 	},
 	{
 		path: ENUM_PATH.FINANCE.CLIENT_PAYMENTS,
@@ -700,14 +687,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: ReconciliationIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
-					{children}
-				</SideBarOwnerLayout>
-			),
-			FinanceOwnerLayout
-		]
+		layout_cascade: [DefaultOwnerLayout]
 	},
 
 	// 404

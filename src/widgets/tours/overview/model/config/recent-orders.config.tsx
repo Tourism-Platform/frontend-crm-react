@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Badge, Checkbox, RowActions } from "@/shared/ui";
 
-import type { IRecentOrder } from "@/entities/tour";
+import type { ITourOrder } from "@/entities/tour";
 
-export const RECENT_ORDERS_COLUMNS = (): ColumnDef<IRecentOrder>[] => {
+export const RECENT_ORDERS_COLUMNS = (): ColumnDef<ITourOrder>[] => {
 	const { t } = useTranslation("tour_overview_page");
 
 	return [
@@ -68,7 +68,7 @@ export const RECENT_ORDERS_COLUMNS = (): ColumnDef<IRecentOrder>[] => {
 				const order = row.original;
 				return (
 					<div className="whitespace-nowrap">
-						{order.date_from} - {order.date_to}
+						{order.dates.from} - {order.dates.to}
 					</div>
 				);
 			},

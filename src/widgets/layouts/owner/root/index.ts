@@ -7,3 +7,4 @@ export * from "./sidebar/settings/layout";
 export * from "./sidebar/tours/layout";
 export * from "./sidebar/tours/tour/events/layout";
 export * from "./sidebar/tours/tour/layout";
+export * from "./sidebar/default/layout";
