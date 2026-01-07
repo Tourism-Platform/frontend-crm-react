@@ -9,7 +9,6 @@ export const tourLandingHandlers = [
 
 	http.patch("*/tours/:tourId/landing", async ({ request }) => {
 		const data = await request.json();
-		console.log("Update Landing:", data);
 		return HttpResponse.json(data);
 	})
 ];

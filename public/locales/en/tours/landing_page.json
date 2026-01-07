@@ -3,6 +3,17 @@
 	"buttons": {
 		"save": "Save"
 	},
+	"form": {
+		"buttons": {
+			"saving": "Saving..."
+		},
+		"toasts": {
+			"save": {
+				"success": "Landing updated successfully",
+				"error": "Failed to update landing"
+			}
+		}
+	},
 	"blocks": {
 		"photos": {
 			"title": "Photos",

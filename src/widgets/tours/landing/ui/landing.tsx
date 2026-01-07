@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
+import { toast } from "sonner";
 
 import { Button, Card, CardContent, Form, Separator } from "@/shared/ui";
 
@@ -44,23 +46,24 @@ export const Landing: FC = () => {
 		resolver: zodResolver(LANDING_SCHEMA),
 		mode: "onSubmit"
 	});
-	console.log("form", form.watch());
+
 	useEffect(() => {
 		if (landingData) {
 			form.reset(landingData);
 		}
 	}, [landingData, form]);
 
-	const onSubmit = async (data: TLandingSchema) => {
+	async function onSubmit(data: TLandingSchema) {
 		if (tourId) {
 			try {
 				await updateLanding({ tourId, data }).unwrap();
-				console.log("Landing Updated Successfully");
+				toast.success(t("form.toasts.save.success"));
 			} catch (error) {
-				console.error("Failed to update landing:", error);
+				toast.error(t("form.toasts.save.error"));
+				console.error(error);
 			}
 		}
-	};
+	}
 
 	if ((!landingData || isError) && !isLoading) {
 		return <TourNotFound />;
@@ -103,7 +106,14 @@ export const Landing: FC = () => {
 									type="submit"
 									disabled={isUpdating}
 								>
-									{t("buttons.save")}
+									{isUpdating ? (
+										<>
+											<Loader className="mr-2 h-4 w-4 animate-spin" />
+											{t("form.buttons.saving")}
+										</>
+									) : (
+										t("buttons.save")
+									)}
 								</Button>
 							</div>
 						</CardContent>
