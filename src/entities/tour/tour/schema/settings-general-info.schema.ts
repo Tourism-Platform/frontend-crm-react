@@ -43,11 +43,6 @@ export const SETTINGS_GENERAL_FORM_SCHEMA = z.object({
 			.min(0, msg("general.form.errors.ageRequires.to.required"))
 	}),
 	[ENUM_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES]: z
-		.array(
-			z.object({
-				label: z.string().min(1),
-				value: z.string().min(1)
-			})
-		)
+		.array(z.string())
 		.min(1, msg("general.form.errors.tourCategories.required"))
 });

@@ -16,11 +16,16 @@ export const ActivityLog: FC = () => {
 	const [page, setPage] = useState(1);
 	const limit = 5;
 
-	const { data, isLoading, isFetching } = useGetActivityLogQuery({
-		tourId,
-		page,
-		limit
-	});
+	const { data, isLoading, isFetching } = useGetActivityLogQuery(
+		{
+			tourId,
+			page,
+			limit
+		},
+		{
+			skip: !tourId
+		}
+	);
 	const { t } = useTranslation("tour_activity_log_page");
 
 	const activities = data?.data || [];

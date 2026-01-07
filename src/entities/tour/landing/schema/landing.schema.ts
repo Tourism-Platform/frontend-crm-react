@@ -2,12 +2,18 @@ import { z } from "zod";
 
 import { type TLandingPageKeys, i18nKey } from "@/shared/config";
 
-import { ENUM_FORM_LANDING } from "../types";
+import {
+	ENUM_AMENITIES,
+	ENUM_LANGUAGES,
+	ENUM_PICKUP_TYPE
+} from "@/entities/tour";
+
+import { ENUM_FORM_LANDING } from "../types/landing.types";
 
 const msg = i18nKey<TLandingPageKeys>();
 
 export const LANDING_SCHEMA = z.object({
-	[ENUM_FORM_LANDING.PHOTOS]: z.array(z.string()).min(1, {
+	[ENUM_FORM_LANDING.PHOTOS]: z.string().min(1, {
 		message: msg("blocks.photos.errors.required")
 	}),
 	[ENUM_FORM_LANDING.DESCRIPTION]: z
@@ -22,16 +28,16 @@ export const LANDING_SCHEMA = z.object({
 		.max(5000, {
 			message: msg("blocks.overview.fields.description.errors.max")
 		}),
-	[ENUM_FORM_LANDING.LANGUAGES]: z.array(z.string()).min(1, {
+	[ENUM_FORM_LANDING.LANGUAGES]: z.array(z.enum(ENUM_LANGUAGES)).min(1, {
 		message: msg("blocks.languages.fields.languages.errors.required")
 	}),
-	[ENUM_FORM_LANDING.INCLUDED]: z.array(z.string()).min(1, {
+	[ENUM_FORM_LANDING.INCLUDED]: z.array(z.enum(ENUM_AMENITIES)).min(1, {
 		message: msg("blocks.amenities.fields.included.errors.required")
 	}),
-	[ENUM_FORM_LANDING.NOT_INCLUDED]: z.array(z.string()).min(1, {
+	[ENUM_FORM_LANDING.NOT_INCLUDED]: z.array(z.enum(ENUM_AMENITIES)).min(1, {
 		message: msg("blocks.amenities.fields.not_included.errors.required")
 	}),
-	[ENUM_FORM_LANDING.PICKUP_TYPE]: z.enum(["airport", "hotel"], {
+	[ENUM_FORM_LANDING.PICKUP_TYPE]: z.array(z.enum(ENUM_PICKUP_TYPE)).min(1, {
 		message: msg("blocks.pickup.fields.pickup_type.errors.required")
 	}),
 	[ENUM_FORM_LANDING.PICKUP_DESCRIPTION]: z

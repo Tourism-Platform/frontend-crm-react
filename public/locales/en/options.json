@@ -14,6 +14,17 @@
 		}
 	},
 	"tour": {
+		"languages": {
+			"english": "English",
+			"russian": "Russian",
+			"spanish": "Spanish",
+			"italian": "Italian",
+			"french": "French",
+			"chinese": "Chinese",
+			"japanese": "Japanese",
+			"uzbek": "Uzbek",
+			"portuguese": "Portuguese"
+		},
 		"statuses": {
 			"all": "All",
 			"active": "Active",
@@ -30,6 +41,39 @@
 			"show_from": "Show price 'from'",
 			"show_exact": "Show exact price",
 			"hide": "Hide price"
+		},
+		"pickup": {
+			"airport": "Airport pickup",
+			"hotel": "Hotel pickup"
+		},
+		"amenities": {
+			"professional_guide": "Professional guide",
+			"hotel_accommodation": "Hotel accommodation",
+			"breakfast": "Breakfast",
+			"lunch": "Lunch",
+			"dinner": "Dinner",
+			"airport_transfer": "Airport transfer",
+			"entrance_fees": "Entrance fees",
+			"travel_insurance": "Travel insurance",
+			"transportation": "Transportation",
+			"bottled_water": "Bottled water",
+			"wifi_on_board": "Wi-Fi on board",
+			"air_conditioning": "Air conditioning",
+			"luggage_handling": "Luggage handling",
+			"support_24_7": "24/7 support",
+			"international_flights": "International flights",
+			"visa_fees": "Visa fees",
+			"personal_expenses": "Personal expenses",
+			"tips_gratuities": "Tips and gratuities",
+			"camera_video_fees": "Camera/video fees",
+			"optional_activities": "Optional activities",
+			"alcoholic_beverages": "Alcoholic beverages",
+			"souvenirs": "Souvenirs",
+			"extra_meals": "Extra meals",
+			"room_service": "Room service",
+			"laundry_service": "Laundry service",
+			"phone_calls": "Phone calls",
+			"medical_expenses": "Medical expenses"
 		}
 	},
 	"user": {

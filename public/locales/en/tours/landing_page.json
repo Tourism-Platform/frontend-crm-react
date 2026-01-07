@@ -66,10 +66,6 @@
 			"fields": {
 				"pickup_type": {
 					"label": "Pickup Type",
-					"options": {
-						"airport": "Airport pickup",
-						"hotel": "Hotel pickup"
-					},
 					"errors": {
 						"required": "Select pickup type"
 					}

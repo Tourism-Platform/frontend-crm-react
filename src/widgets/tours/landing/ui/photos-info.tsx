@@ -1,15 +1,19 @@
 import { type FC } from "react";
-import { useFormContext } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { FormControl, FormField, FormItem, FormMessage } from "@/shared/ui";
 import { CustomUploadMainImage } from "@/shared/ui";
 
-import { ENUM_FORM_LANDING } from "../../model";
+import { ENUM_FORM_LANDING, type TLandingSchema } from "@/entities/tour";
 
-export const PhotosBlock: FC = () => {
+interface IPhotosInfoProps {
+	form: UseFormReturn<TLandingSchema>;
+}
+
+export const PhotosInfo: FC<IPhotosInfoProps> = ({ form }) => {
 	const { t } = useTranslation("landing_page");
-	const { control } = useFormContext();
+	const { control } = form;
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -25,12 +29,12 @@ export const PhotosBlock: FC = () => {
 					<FormItem>
 						<FormControl>
 							<CustomUploadMainImage
-								initialValue={field.value?.[0]}
+								initialValue={field.value}
 								onFilesChange={(files) => {
 									const urls = files.map(
 										(f) => f.preview || ""
 									);
-									field.onChange(urls);
+									field.onChange(urls?.[0] || "");
 								}}
 							/>
 						</FormControl>

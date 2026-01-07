@@ -14,6 +14,17 @@
 		}
 	},
 	"tour": {
+		"languages": {
+			"english": "Английский",
+			"russian": "Русский",
+			"spanish": "Испанский",
+			"italian": "Итальянский",
+			"french": "Французский",
+			"chinese": "Китайский",
+			"japanese": "Японский",
+			"uzbek": "Узбекский",
+			"portuguese": "Португальский"
+		},
 		"statuses": {
 			"all": "Все",
 			"active": "Активен",
@@ -30,6 +41,39 @@
 			"show_from": "Показывать цену 'от'",
 			"show_exact": "Показывать точную цену",
 			"hide": "Скрыть цену"
+		},
+		"pickup": {
+			"airport": "Трансфер из аэропорта",
+			"hotel": "Трансфер из отеля"
+		},
+		"amenities": {
+			"professional_guide": "Профессиональный гид",
+			"hotel_accommodation": "Проживание в отеле",
+			"breakfast": "Завтрак",
+			"lunch": "Обед",
+			"dinner": "Ужин",
+			"airport_transfer": "Аэропортовый трансфер",
+			"entrance_fees": "Входные билеты",
+			"travel_insurance": "Страхование путешествий",
+			"transportation": "Транспорт",
+			"bottled_water": "Бутилированная вода",
+			"wifi_on_board": "Wi-Fi на борту",
+			"air_conditioning": "Кондиционер",
+			"luggage_handling": "Обслуживание багажа",
+			"support_24_7": "Поддержка 24/7",
+			"international_flights": "Международные рейсы",
+			"visa_fees": "Визовые сборы",
+			"personal_expenses": "Личные расходы",
+			"tips_gratuities": "Чаевые",
+			"camera_video_fees": "Сборы за фото/видео",
+			"optional_activities": "Дополнительные мероприятия",
+			"alcoholic_beverages": "Алкогольные напитки",
+			"souvenirs": "Сувениры",
+			"extra_meals": "Дополнительное питание",
+			"room_service": "Обслуживание номеров",
+			"laundry_service": "Услуги прачечной",
+			"phone_calls": "Телефонные звонки",
+			"medical_expenses": "Медицинские расходы"
 		}
 	},
 	"user": {

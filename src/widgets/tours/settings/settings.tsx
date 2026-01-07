@@ -28,7 +28,7 @@ export const Settings: FC = () => {
 		data: tour,
 		isError,
 		isLoading
-	} = useGetTourGeneralQuery(tourId as string, {
+	} = useGetTourGeneralQuery(tourId || "", {
 		skip: !tourId
 	});
 

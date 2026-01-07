@@ -203,12 +203,15 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						placeholder={
 							props.placeholder ? t(props.placeholder) : undefined
 						}
-						value={field.value}
-						onChange={(options) => field.onChange(options)}
+						value={props.options.filter((opt) =>
+							(field.value || []).includes(opt.value)
+						)}
+						onChange={(options) =>
+							field.onChange(options.map((opt) => opt.value))
+						}
 						displayMode={props.displayMode}
 						badgeVariant={props.badgeVariant}
 						hideClearAllButton={props.hideClearAllButton}
-						// emptyIndicator={<p className="text-center text-sm text-muted-foreground">No results found</p>}
 					/>
 				);
 			case "upload":

@@ -18,10 +18,7 @@ export interface ITourGeneralBackend {
 	duration_to: number;
 	age_requires_from: number;
 	age_requires_to: number;
-	categories: {
-		label: string;
-		value: string;
-	}[];
+	categories: string[];
 }
 
 export interface ITourFinanceBackend {

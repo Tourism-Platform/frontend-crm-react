@@ -1,14 +1,18 @@
 import { type FC } from "react";
-import { useFormContext } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { CustomField } from "@/shared/ui";
 
-import { ENUM_FORM_LANDING } from "../../model";
+import { ENUM_FORM_LANDING, type TLandingSchema } from "@/entities/tour";
 
-export const OverviewBlock: FC = () => {
+interface IOverviewInfoProps {
+	form: UseFormReturn<TLandingSchema>;
+}
+
+export const OverviewInfo: FC<IOverviewInfoProps> = ({ form }) => {
 	const { t } = useTranslation("landing_page");
-	const { control } = useFormContext();
+	const { control } = form;
 
 	return (
 		<div className="flex flex-col gap-4">

@@ -10,8 +10,5 @@ export const TOUR_GENERAL_MOCK: ITourGeneralBackend = {
 	duration_to: 10,
 	age_requires_from: 18,
 	age_requires_to: 65,
-	categories: [
-		{ label: "Archaeology", value: "archaeology" },
-		{ label: "Cultural", value: "cultural" }
-	]
+	categories: ["archaeology", "cultural"]
 };
