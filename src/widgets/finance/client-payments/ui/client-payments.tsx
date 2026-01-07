@@ -9,6 +9,7 @@ import {
 	type ENUM_PAYMENT_STATUS_TYPE,
 	type IPaymentFilters,
 	PAYMENT_STATUS_LABELS,
+	useGetAvailableOrderIdsQuery,
 	useGetPaymentsQuery
 } from "@/entities/finance";
 
@@ -30,6 +31,7 @@ export const ClientPayments: FC = () => {
 
 	const filters = watch();
 
+	useGetAvailableOrderIdsQuery();
 	const { data, isLoading, isFetching } = useGetPaymentsQuery(filters);
 
 	const payments = data?.data ?? [];

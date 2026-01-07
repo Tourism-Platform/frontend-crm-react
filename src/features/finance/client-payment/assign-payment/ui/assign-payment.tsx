@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC, type ReactNode, useState } from "react";
+import { type FC, type ReactNode, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ import {
 import {
 	ENUM_PAYMENT_STATUS,
 	type IPayment,
+	useGetAvailableOrderIdsQuery,
 	useUpdatePaymentMutation
 } from "@/entities/finance";
 
@@ -47,6 +48,15 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 	const { t } = useTranslation("client_payments_page");
 	const [open, setOpen] = useState<boolean>(false);
 	const [updatePayment, { isLoading }] = useUpdatePaymentMutation();
+
+	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
+
+	const orderOptions = useMemo(() => {
+		return orderIds.map((o) => ({
+			value: o,
+			label: o
+		}));
+	}, [orderIds]);
 
 	const form = useForm<TAssignPaymentSchema>({
 		resolver: zodResolver(ASSIGN_PAYMENT_SCHEMA),
@@ -97,7 +107,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_ASSIGN_PAYMENT_LIST.map(
+							{FORM_ASSIGN_PAYMENT_LIST({ orderOptions }).map(
 								({ key, ...item }) => (
 									<CustomField
 										key={key}

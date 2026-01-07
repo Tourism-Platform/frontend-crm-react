@@ -34,6 +34,20 @@ let payments = [...PAYMENTS_MOCK];
 
 export const financeClientPaymentHandlers = [
 	http.get(
+		`${BASE_URL}/finance/client-payments/available-orders`,
+		async (): Promise<HttpResponse<string[]>> => {
+			await delay(500);
+			const availableOrders: string[] = [
+				"ORD-12345",
+				"ORD-12346",
+				"ORD-12347",
+				"ORD-12348",
+				"ORD-12349"
+			];
+			return HttpResponse.json(availableOrders, { status: 200 });
+		}
+	),
+	http.get(
 		`${BASE_URL}/finance/client-payments`,
 		async ({
 			request

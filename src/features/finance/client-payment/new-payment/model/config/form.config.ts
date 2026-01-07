@@ -1,11 +1,18 @@
+import type { SelectPickerOption } from "@/shared/ui";
+
 import { ENUM_FORM_NEW_PAYMENT, type TForm } from "../types";
 
-export const FORM_NEW_PAYMENT_LIST: TForm[] = [
+export const FORM_NEW_PAYMENT_LIST = ({
+	orderOptions
+}: {
+	orderOptions: SelectPickerOption[];
+}): TForm[] => [
 	{
 		label: "new_payment.form.fields.orderId.label",
 		placeholder: "new_payment.form.fields.orderId.placeholder",
 		key: ENUM_FORM_NEW_PAYMENT.ORDER_ID,
-		fieldType: "input"
+		fieldType: "select",
+		options: orderOptions
 	},
 	{
 		label: "new_payment.form.fields.amount.label",

@@ -18,6 +18,10 @@ import {
 
 export const clientPaymentApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
+		getAvailableOrderIds: builder.query<string[], void>({
+			query: () => "/finance/client-payments/available-orders",
+			providesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
+		}),
 		getPayments: builder.query<
 			IPaymentPaginatedResponse,
 			IPaymentFilters | void
@@ -66,6 +70,7 @@ export const clientPaymentApi = authApi.injectEndpoints({
 });
 
 export const {
+	useGetAvailableOrderIdsQuery,
 	useGetPaymentsQuery,
 	useCreatePaymentMutation,
 	useUpdatePaymentMutation,

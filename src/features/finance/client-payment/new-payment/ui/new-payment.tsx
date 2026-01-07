@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC, useState } from "react";
+import { type FC, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -20,7 +20,10 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useCreatePaymentMutation } from "@/entities/finance";
+import {
+	useCreatePaymentMutation,
+	useGetAvailableOrderIdsQuery
+} from "@/entities/finance";
 
 import {
 	FORM_NEW_PAYMENT_LIST,
@@ -32,6 +35,15 @@ export const NewPayment: FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("client_payments_page");
 	const [createPayment, { isLoading }] = useCreatePaymentMutation();
+
+	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
+
+	const orderOptions = useMemo(() => {
+		return orderIds.map((o) => ({
+			value: o,
+			label: o
+		}));
+	}, [orderIds]);
 
 	const form = useForm<TNewPaymentSchema>({
 		resolver: zodResolver(NEW_PAYMENT_SCHEMA),
@@ -72,15 +84,17 @@ export const NewPayment: FC = () => {
 						className="space-y-6"
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_NEW_PAYMENT_LIST.map(({ key, ...item }) => (
-								<CustomField
-									key={key}
-									control={form?.control}
-									name={key}
-									t={t}
-									{...item}
-								/>
-							))}
+							{FORM_NEW_PAYMENT_LIST({ orderOptions }).map(
+								({ key, ...item }) => (
+									<CustomField
+										key={key}
+										control={form?.control}
+										name={key}
+										t={t}
+										{...item}
+									/>
+								)
+							)}
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>
