@@ -9,6 +9,10 @@
 		"buttons": {
 			"save": "Save"
 		},
+		"toasts": {
+			"success": "General information saved successfully",
+			"error": "Error saving general information"
+		},
 		"form": {
 			"fields": {
 				"tourTitle": {
@@ -77,6 +81,10 @@
 		"title": "Pricing view",
 		"buttons": {
 			"save": "Save"
+		},
+		"toasts": {
+			"success": "Pricing settings saved successfully",
+			"error": "Error saving pricing settings"
 		},
 		"form": {
 			"fields": {

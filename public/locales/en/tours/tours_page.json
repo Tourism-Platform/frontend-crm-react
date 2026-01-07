@@ -90,5 +90,12 @@
 				}
 			}
 		}
+	},
+	"not_found": {
+		"title": "Tour not found",
+		"description": "The tour you are looking for does not exist or has been deleted."
+	},
+	"buttons": {
+		"back": "Back"
 	}
 }

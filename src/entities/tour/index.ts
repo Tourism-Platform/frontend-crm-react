@@ -6,3 +6,4 @@ export * from "./mock";
 export * from "./handlers";
 export * from "./api";
 export * from "./converters";
+export * from "./schema";

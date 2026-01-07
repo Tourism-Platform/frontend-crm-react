@@ -12,3 +12,5 @@ export * from "./order-status.types";
 export * from "./event.types";
 export * from "./tour-type.types";
 export * from "./pricing-visibility.types";
+export * from "./setting-general-info.types";
+export * from "./settings-finance-info.types";
