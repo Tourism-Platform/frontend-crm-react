@@ -1,4 +1,4 @@
-import { type ENUM_TOUR_ORDER_STATUS_TYPE } from "../../types";
+import { type ENUM_TOUR_ORDER_STATUS_TYPE } from "../../tour/types";
 
 export interface ITourOrderFilters {
 	tourId: string;

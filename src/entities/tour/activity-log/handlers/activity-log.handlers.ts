@@ -8,7 +8,7 @@ const BASE_URL = ENV.VITE_API_URL || "";
 
 const activityLog = [...ACTIVITY_LOG_MOCK];
 
-export const activityLogHandlers = [
+export const tourActivityLogHandlers = [
 	http.get(`${BASE_URL}/tours/:tourId/activity-log`, async ({ request }) => {
 		await delay(1000);
 		const url = new URL(request.url);

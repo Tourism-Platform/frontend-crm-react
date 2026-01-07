@@ -4,8 +4,7 @@ import { useParams } from "react-router-dom";
 
 import { Button, Card, CardContent } from "@/shared/ui";
 
-import { useGetActivityLogQuery } from "@/entities/activity-log";
-import { TourHeader } from "@/entities/tour";
+import { TourHeader, useGetActivityLogQuery } from "@/entities/tour";
 
 import { PreviewTourButton, PublishTourButton } from "@/features/tours";
 

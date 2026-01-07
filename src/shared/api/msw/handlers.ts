@@ -1,4 +1,3 @@
-import { activityLogHandlers } from "@/entities/activity-log";
 import { authHandlers } from "@/entities/auth/api/auth.mock";
 import { bookingOrderHandlers } from "@/entities/booking/order/handlers/booking-order.handlers";
 import { commissionHandlers } from "@/entities/commission";
@@ -10,6 +9,7 @@ import {
 } from "@/entities/finance";
 import { staffHandlers } from "@/entities/staff";
 import { tourHandlers, tourOrderHandlers } from "@/entities/tour";
+import { tourActivityLogHandlers } from "@/entities/tour/activity-log";
 import {
 	accountHandlers,
 	businessDocumentsHandlers,
@@ -23,12 +23,12 @@ export const handlers = [
 	...businessDocumentsHandlers,
 	...staffHandlers,
 	...commissionHandlers,
-	...tourHandlers,
-	...tourOrderHandlers,
 	...financeInvoiceHandlers,
 	...financeClientPaymentHandlers,
 	...financeSupplierPaymentHandlers,
 	...financeReconciliationHandler,
-	...activityLogHandlers,
+	...tourHandlers,
+	...tourActivityLogHandlers,
+	...tourOrderHandlers,
 	...bookingOrderHandlers
 ];

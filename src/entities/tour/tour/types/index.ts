@@ -1,5 +1,5 @@
 export type * from "./manager.types";
-export type * from "../order/types/order-status.types";
+export type * from "../../order/types/order-status.types";
 export type * from "./tour-info.types";
 export type * from "./tour.interface";
 export type * from "./tour-backend.interface";

@@ -1,6 +1,6 @@
 import { type FC } from "react";
 
-import { ActivityLogItemSkeleton } from "@/entities/activity-log";
+import { ActivityLogItemSkeleton } from "@/entities/tour";
 
 export const ActivityLogSkeleton: FC = () => {
 	return (

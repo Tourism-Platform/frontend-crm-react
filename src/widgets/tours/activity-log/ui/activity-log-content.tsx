@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui";
 
-import type { IActivityLogItem } from "@/entities/activity-log";
+import type { IActivityLogItem } from "@/entities/tour";
 
 interface IActivityLogContentProps {
 	items: IActivityLogItem[];
