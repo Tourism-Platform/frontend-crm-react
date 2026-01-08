@@ -6,12 +6,13 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { TOUR_CATEGORY_OPTIONS } from "@/shared/config";
 import { Button, CustomField, CustomRangeField, Form } from "@/shared/ui";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
 	ENUM_SETTINGS_GENERAL_FORM,
 	SETTINGS_GENERAL_FORM_SCHEMA,
+	TOUR_CATEGORY_LABELS,
 	type TSettingsGeneralFormSchema,
 	useGetTourGeneralQuery,
 	useUpdateTourGeneralMutation
@@ -23,7 +24,11 @@ export const GeneralInfo: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
 	const { tourId } = useParams<{ tourId: string }>();
 
-	const { data: tour } = useGetTourGeneralQuery(tourId as string, {
+	const {
+		data: tour,
+		isLoading: isTourLoading,
+		isError: isTourError
+	} = useGetTourGeneralQuery(tourId || "", {
 		skip: !tourId
 	});
 	const [updateTour, { isLoading: isUpdating }] =
@@ -40,13 +45,19 @@ export const GeneralInfo: FC = () => {
 		}
 	}, [tour, form]);
 
+	useEffect(() => {
+		if (isTourError) {
+			toast.error(t("general.form.toasts.load.error"));
+		}
+	}, [isTourError, t]);
+
 	async function onSubmit(data: TSettingsGeneralFormSchema) {
 		if (!tourId) return;
 		try {
 			await updateTour({ id: tourId, data }).unwrap();
-			toast.success(t("general.toasts.success"));
+			toast.success(t("general.form.toasts.save.success"));
 		} catch (error) {
-			toast.error(t("general.toasts.error"));
+			toast.error(t("general.form.toasts.save.error"));
 			console.error("Failed to update tour:", error);
 		}
 	}
@@ -89,7 +100,7 @@ export const GeneralInfo: FC = () => {
 						name={ENUM_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES}
 						label="general.form.fields.tourCategories.label"
 						placeholder="general.form.fields.tourCategories.placeholder"
-						options={TOUR_CATEGORY_OPTIONS}
+						options={useValueToTranslateLabel(TOUR_CATEGORY_LABELS)}
 						fieldType="multiselect"
 						className="col-span-2"
 						badgeVariant="secondary"
@@ -97,11 +108,20 @@ export const GeneralInfo: FC = () => {
 					/>
 				</div>
 				<div className="flex justify-end mt-6">
-					<Button type="submit" disabled={isUpdating}>
-						{isUpdating && (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
+					<Button
+						type="submit"
+						disabled={isUpdating || isTourLoading}
+					>
+						{isUpdating || isTourLoading ? (
+							<>
+								<Loader className="mr-2 h-4 w-4 animate-spin" />
+								{isTourLoading
+									? t("general.form.buttons.loading")
+									: t("general.form.buttons.saving")}
+							</>
+						) : (
+							t("general.form.buttons.save")
 						)}
-						{t("general.buttons.save")}
 					</Button>
 				</div>
 			</form>

@@ -46,9 +46,9 @@ export const PickupDetailsInfo: FC<IPickupDetailsInfoProps> = ({ form }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg ">{t("blocks.pickup.title")}</h3>
+			<h3 className="text-lg ">{t("form.pickup.title")}</h3>
 			<p className="text-sm text-muted-foreground">
-				{t("blocks.pickup.description")}
+				{t("form.pickup.description")}
 			</p>
 
 			<FormField
@@ -57,7 +57,7 @@ export const PickupDetailsInfo: FC<IPickupDetailsInfoProps> = ({ form }) => {
 				render={() => (
 					<FormItem className="flex flex-col gap-2">
 						<FormLabel className="hidden">
-							{t("blocks.pickup.title")}
+							{t("form.pickup.title")}
 						</FormLabel>
 						<div className="flex flex-wrap gap-2">
 							{pickupTypeOptions.map((item) => (
@@ -89,7 +89,7 @@ export const PickupDetailsInfo: FC<IPickupDetailsInfoProps> = ({ form }) => {
 			<CustomField
 				name={ENUM_FORM_LANDING.PICKUP_DESCRIPTION}
 				control={control}
-				label={t("blocks.pickup.fields.pickup_description.label")}
+				label={t("form.pickup.fields.pickup_description.label")}
 				fieldType="editor"
 				t={t}
 			/>

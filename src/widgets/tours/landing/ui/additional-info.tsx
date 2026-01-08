@@ -16,14 +16,14 @@ export const AdditionalInfo: FC<IAdditionalInfoProps> = ({ form }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg ">{t("blocks.additional_info.title")}</h3>
+			<h3 className="text-lg ">{t("form.additional_info.title")}</h3>
 			<p className="text-sm text-muted-foreground">
-				{t("blocks.additional_info.description")}
+				{t("form.additional_info.description")}
 			</p>
 			<CustomField
 				name={ENUM_FORM_LANDING.ADDITIONAL_INFO}
 				control={control}
-				label={t("blocks.additional_info.fields.additional_info.label")}
+				label={t("form.additional_info.fields.additional_info.label")}
 				fieldType="editor"
 				t={t}
 			/>

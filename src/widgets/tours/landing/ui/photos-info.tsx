@@ -17,9 +17,9 @@ export const PhotosInfo: FC<IPhotosInfoProps> = ({ form }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg ">{t("blocks.photos.title")}</h3>
+			<h3 className="text-lg ">{t("form.photos.title")}</h3>
 			<p className="text-sm text-muted-foreground">
-				{t("blocks.photos.description")}
+				{t("form.photos.description")}
 			</p>
 
 			<FormField

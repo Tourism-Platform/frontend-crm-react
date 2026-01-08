@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import type { SelectPickerOption } from "@/shared/ui";
+import type { Option, SelectPickerOption } from "@/shared/ui";
 
 import type { TOptionsKeys } from "../config";
 
@@ -17,7 +17,7 @@ export const useValueToTranslateLabel = <
 	T extends Record<string, TOptionsKeys>
 >(
 	labels: T
-): SelectPickerOption[] => {
+): Option[] => {
 	const { t } = useTranslation("options");
 
 	return useMemo(

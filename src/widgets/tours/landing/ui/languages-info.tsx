@@ -45,9 +45,9 @@ export const LanguagesInfo: FC<ILanguagesInfoProps> = ({ form }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg ">{t("blocks.languages.title")}</h3>
+			<h3 className="text-lg ">{t("form.languages.title")}</h3>
 			<p className="text-sm text-muted-foreground">
-				{t("blocks.languages.description")}
+				{t("form.languages.description")}
 			</p>
 			<FormField
 				control={control}
@@ -55,7 +55,7 @@ export const LanguagesInfo: FC<ILanguagesInfoProps> = ({ form }) => {
 				render={() => (
 					<FormItem className="flex flex-col gap-2">
 						<FormLabel className="hidden">
-							{t("blocks.languages.fields.languages.label")}
+							{t("form.languages.fields.languages.label")}
 						</FormLabel>
 						<div className="flex flex-wrap gap-2">
 							{languagesOptions.map((lang) => (

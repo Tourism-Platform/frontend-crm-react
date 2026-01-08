@@ -6,7 +6,15 @@
 	"actions": {
 		"preview": "Preview",
 		"publish": "Publish",
-		"export": "Export",
-		"load_more": "Load more"
+		"export": "Export"
+	},
+	"buttons": {
+		"load": "Load more",
+		"loading": "Loading ..."
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load activity log"
+		}
 	}
 }

@@ -12,3 +12,4 @@ export * from "./tour-type.types";
 export * from "./pricing-visibility.types";
 export * from "./setting-general-info.types";
 export * from "./settings-finance-info.types";
+export * from "./tour-category.types";

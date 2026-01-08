@@ -1,4 +1,4 @@
-import { ENUM_TOUR_TYPES } from "../types";
+import { ENUM_TOUR_CATEGORY, ENUM_TOUR_TYPES } from "../types";
 import type { ITourGeneralBackend } from "../types";
 
 export const TOUR_GENERAL_MOCK: ITourGeneralBackend = {
@@ -10,5 +10,5 @@ export const TOUR_GENERAL_MOCK: ITourGeneralBackend = {
 	duration_to: 10,
 	age_requires_from: 18,
 	age_requires_to: 65,
-	categories: ["archaeology", "cultural"]
+	categories: [ENUM_TOUR_CATEGORY.BEACH, ENUM_TOUR_CATEGORY.MOUNTAIN]
 };

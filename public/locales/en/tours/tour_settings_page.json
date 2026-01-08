@@ -6,13 +6,6 @@
 	},
 	"general": {
 		"title": "General information",
-		"buttons": {
-			"save": "Save"
-		},
-		"toasts": {
-			"success": "General information saved successfully",
-			"error": "Error saving general information"
-		},
 		"form": {
 			"fields": {
 				"tourTitle": {
@@ -74,18 +67,25 @@
 				"tourCategories": {
 					"required": "Select at least one category"
 				}
+			},
+			"buttons": {
+				"save": "Save",
+				"loading": "Loading ...",
+				"saving": "Saving ..."
+			},
+			"toasts": {
+				"save": {
+					"success": "General information saved successfully",
+					"error": "Error saving general information"
+				},
+				"load": {
+					"error": "Error loading tour data"
+				}
 			}
 		}
 	},
 	"finance": {
 		"title": "Pricing view",
-		"buttons": {
-			"save": "Save"
-		},
-		"toasts": {
-			"success": "Pricing settings saved successfully",
-			"error": "Error saving pricing settings"
-		},
 		"form": {
 			"fields": {
 				"currencyType": {
@@ -103,6 +103,20 @@
 				},
 				"pricingVisibility": {
 					"required": "Select visibility"
+				}
+			},
+			"buttons": {
+				"save": "Save",
+				"loading": "Loading ...",
+				"saving": "Saving ..."
+			},
+			"toasts": {
+				"save": {
+					"success": "Pricing settings saved successfully",
+					"error": "Error saving pricing settings"
+				},
+				"load": {
+					"error": "Error loading pricing settings"
 				}
 			}
 		}

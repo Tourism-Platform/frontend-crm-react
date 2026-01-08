@@ -2,7 +2,11 @@ import { z } from "zod";
 
 import { type TTourSettingsPageKeys, i18nKey } from "@/shared/config";
 
-import { ENUM_SETTINGS_GENERAL_FORM, ENUM_TOUR_TYPES } from "../types";
+import {
+	ENUM_SETTINGS_GENERAL_FORM,
+	ENUM_TOUR_CATEGORY,
+	ENUM_TOUR_TYPES
+} from "../types";
 
 const msg = i18nKey<TTourSettingsPageKeys>();
 
@@ -43,6 +47,6 @@ export const SETTINGS_GENERAL_FORM_SCHEMA = z.object({
 			.min(0, msg("general.form.errors.ageRequires.to.required"))
 	}),
 	[ENUM_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES]: z
-		.array(z.string())
+		.array(z.enum(ENUM_TOUR_CATEGORY))
 		.min(1, msg("general.form.errors.tourCategories.required"))
 });

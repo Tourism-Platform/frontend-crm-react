@@ -37,6 +37,15 @@
 			"private": "Private",
 			"group": "Group"
 		},
+		"tourCategories": {
+			"beach": "Beach",
+			"mountain": "Mountain",
+			"city": "City",
+			"safari": "Safari",
+			"cruise": "Cruise",
+			"gastronomic": "Gastronomic",
+			"extreme": "Extreme"
+		},
 		"visibility": {
 			"show_from": "Show price 'from'",
 			"show_exact": "Show exact price",

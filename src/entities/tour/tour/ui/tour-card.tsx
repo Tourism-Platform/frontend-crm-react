@@ -53,7 +53,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 				<Badge variant={TOUR_STATUS_VARIANTS[card.status]}>
 					{t(TOUR_STATUS_LABELS[card.status], { ns: "options" })}
 				</Badge>
-				<CardTitle className="truncate">
+				<CardTitle className="truncate leading-tight">
 					<Link
 						className="hover:underline hover:text-primary transition-colors"
 						to={buildRoute(ENUM_PATH.TOURS.OVERVIEW, {

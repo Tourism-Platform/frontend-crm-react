@@ -1,6 +1,8 @@
-import { type FC, useState } from "react";
+import { Loader } from "lucide-react";
+import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 import { Button, Card, CardContent } from "@/shared/ui";
 
@@ -16,7 +18,12 @@ export const ActivityLog: FC = () => {
 	const [page, setPage] = useState(1);
 	const limit = 5;
 
-	const { data, isLoading, isFetching } = useGetActivityLogQuery(
+	const {
+		data,
+		isLoading: isActivityLogLoading,
+		isFetching,
+		isError: isActivityLogError
+	} = useGetActivityLogQuery(
 		{
 			tourId,
 			page,
@@ -27,6 +34,12 @@ export const ActivityLog: FC = () => {
 		}
 	);
 	const { t } = useTranslation("tour_activity_log_page");
+
+	useEffect(() => {
+		if (isActivityLogError) {
+			toast.error(t("toasts.load.error"));
+		}
+	}, [isActivityLogError, t]);
 
 	const activities = data?.data || [];
 	const total = data?.total || 0;
@@ -55,12 +68,23 @@ export const ActivityLog: FC = () => {
 				<CardContent className="flex flex-col gap-6">
 					<ActivityLogContent items={activities} />
 
-					{(isLoading || isFetching) && <ActivityLogSkeleton />}
+					{(isActivityLogLoading || isFetching) && (
+						<ActivityLogSkeleton />
+					)}
 
 					{hasMore && (
 						<div className="flex justify-center pb-4">
-							<Button variant="outline" onClick={handleLoadMore}>
-								{t("actions.load_more")}
+							<Button
+								variant="outline"
+								onClick={handleLoadMore}
+								disabled={isFetching || isActivityLogError}
+							>
+								{isFetching && (
+									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								)}
+								{isFetching
+									? t("buttons.loading")
+									: t("buttons.load")}
 							</Button>
 						</div>
 					)}

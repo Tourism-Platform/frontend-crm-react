@@ -34,8 +34,8 @@ export const Landing: FC = () => {
 
 	const {
 		data: landingData,
-		isLoading,
-		isError
+		isLoading: isLandingLoading,
+		isError: isLandingError
 	} = useGetLandingQuery(tourId || "", {
 		skip: !tourId
 	});
@@ -53,6 +53,12 @@ export const Landing: FC = () => {
 		}
 	}, [landingData, form]);
 
+	useEffect(() => {
+		if (isLandingError) {
+			toast.error(t("form.toasts.load.error"));
+		}
+	}, [isLandingError, t]);
+
 	async function onSubmit(data: TLandingSchema) {
 		if (tourId) {
 			try {
@@ -65,7 +71,7 @@ export const Landing: FC = () => {
 		}
 	}
 
-	if ((!landingData || isError) && !isLoading) {
+	if ((!landingData || isLandingError) && !isLandingLoading) {
 		return <TourNotFound />;
 	}
 
@@ -104,15 +110,17 @@ export const Landing: FC = () => {
 								<Button
 									size="lg"
 									type="submit"
-									disabled={isUpdating}
+									disabled={isUpdating || isLandingLoading}
 								>
-									{isUpdating ? (
+									{isUpdating || isLandingLoading ? (
 										<>
 											<Loader className="mr-2 h-4 w-4 animate-spin" />
-											{t("form.buttons.saving")}
+											{isLandingLoading
+												? t("form.buttons.loading")
+												: t("form.buttons.saving")}
 										</>
 									) : (
-										t("buttons.save")
+										t("form.buttons.save")
 									)}
 								</Button>
 							</div>

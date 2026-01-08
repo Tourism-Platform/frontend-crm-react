@@ -18,16 +18,14 @@ export const CancellationPolicyInfo: FC<ICancellationPolicyInfoProps> = ({
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg ">{t("blocks.cancellation.title")}</h3>
+			<h3 className="text-lg ">{t("form.cancellation.title")}</h3>
 			<p className="text-sm text-muted-foreground">
-				{t("blocks.cancellation.description")}
+				{t("form.cancellation.description")}
 			</p>
 			<CustomField
 				name={ENUM_FORM_LANDING.CANCELLATION_POLICY}
 				control={control}
-				label={t(
-					"blocks.cancellation.fields.cancellation_policy.label"
-				)}
+				label={t("form.cancellation.fields.cancellation_policy.label")}
 				fieldType="editor"
 				t={t}
 			/>

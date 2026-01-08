@@ -1,20 +1,6 @@
 {
 	"page_name": "Landing",
-	"buttons": {
-		"save": "Save"
-	},
 	"form": {
-		"buttons": {
-			"saving": "Saving..."
-		},
-		"toasts": {
-			"save": {
-				"success": "Landing updated successfully",
-				"error": "Failed to update landing"
-			}
-		}
-	},
-	"blocks": {
 		"photos": {
 			"title": "Photos",
 			"description": "Add photos for the tour landing page",
@@ -120,6 +106,20 @@
 						"max": "Information is too long"
 					}
 				}
+			}
+		},
+		"buttons": {
+			"save": "Save",
+			"loading": "Loading ...",
+			"saving": "Saving ..."
+		},
+		"toasts": {
+			"save": {
+				"success": "Landing updated successfully",
+				"error": "Failed to update landing"
+			},
+			"load": {
+				"error": "Failed to load landing data"
 			}
 		}
 	}

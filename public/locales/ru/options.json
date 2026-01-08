@@ -37,6 +37,15 @@
 			"private": "Частный",
 			"group": "Группа"
 		},
+		"tourCategories": {
+			"beach": "Пляжный",
+			"mountain": "Горный",
+			"city": "Городской",
+			"safari": "Сафари",
+			"cruise": "Круиз",
+			"gastronomic": "Гастрономический",
+			"extreme": "Экстремальный"
+		},
 		"visibility": {
 			"show_from": "Показывать цену 'от'",
 			"show_exact": "Показывать точную цену",

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ENUM_TOUR_TYPES } from "@/entities/tour";
+import { ENUM_TOUR_CATEGORY, ENUM_TOUR_TYPES } from "@/entities/tour";
 
 import { ENUM_FORM_CREATE_TOUR as ENUM_FORM } from "../types";
 
@@ -32,11 +32,6 @@ export const CREATE_TOUR_SCHEMA = z.object({
 			.min(0, "create.form.errors.ageRequires.to.required")
 	}),
 	[ENUM_FORM.TOUR_CATEGORIES]: z
-		.array(
-			z.object({
-				label: z.string(),
-				value: z.string()
-			})
-		)
+		.array(z.enum(ENUM_TOUR_CATEGORY))
 		.min(1, "create.form.errors.tourCategories.required")
 });

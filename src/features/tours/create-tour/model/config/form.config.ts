@@ -1,7 +1,6 @@
-import { TOUR_CATEGORY_OPTIONS } from "@/shared/config";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { TOUR_TYPE_LABELS } from "@/entities/tour";
+import { TOUR_CATEGORY_LABELS, TOUR_TYPE_LABELS } from "@/entities/tour";
 
 import { ENUM_FORM_CREATE_TOUR as ENUM_FORM, type TForm } from "../types";
 
@@ -44,7 +43,7 @@ export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 		placeholder: "create.form.fields.tourCategories.placeholder",
 		key: ENUM_FORM.TOUR_CATEGORIES,
 		fieldType: "multiselect",
-		options: TOUR_CATEGORY_OPTIONS,
+		options: useValueToTranslateLabel(TOUR_CATEGORY_LABELS),
 		className: "col-span-2",
 		badgeVariant: "secondary"
 	}

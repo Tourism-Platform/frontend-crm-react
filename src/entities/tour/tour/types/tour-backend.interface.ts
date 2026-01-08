@@ -1,3 +1,5 @@
+import type { ENUM_TOUR_CATEGORY_TYPE } from "./tour-category.types";
+
 export interface ITourBackend {
 	id: string;
 	status: string;
@@ -18,7 +20,7 @@ export interface ITourGeneralBackend {
 	duration_to: number;
 	age_requires_from: number;
 	age_requires_to: number;
-	categories: string[];
+	categories: ENUM_TOUR_CATEGORY_TYPE[];
 }
 
 export interface ITourFinanceBackend {

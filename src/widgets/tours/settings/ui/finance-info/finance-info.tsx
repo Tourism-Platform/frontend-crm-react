@@ -22,7 +22,11 @@ export const FinanceInfo: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
 	const { tourId } = useParams<{ tourId: string }>();
 
-	const { data: tour } = useGetTourFinanceQuery(tourId as string, {
+	const {
+		data: tour,
+		isLoading: isTourLoading,
+		isError: isTourError
+	} = useGetTourFinanceQuery(tourId || "", {
 		skip: !tourId
 	});
 	const [updateTour, { isLoading: isUpdating }] =
@@ -43,13 +47,19 @@ export const FinanceInfo: FC = () => {
 		}
 	}, [tour, form]);
 
+	useEffect(() => {
+		if (isTourError) {
+			toast.error(t("finance.form.toasts.load.error"));
+		}
+	}, [isTourError, t]);
+
 	async function onSubmit(data: TSettingsFinanceFormSchema) {
 		if (!tourId) return;
 		try {
 			await updateTour({ id: tourId, data }).unwrap();
-			toast.success(t("finance.toasts.success"));
+			toast.success(t("finance.form.toasts.save.success"));
 		} catch (error) {
-			toast.error(t("finance.toasts.error"));
+			toast.error(t("finance.form.toasts.save.error"));
 			console.error("Failed to update tour finance:", error);
 		}
 	}
@@ -73,11 +83,20 @@ export const FinanceInfo: FC = () => {
 					))}
 				</div>
 				<div className="flex justify-end mt-6">
-					<Button type="submit" disabled={isUpdating}>
-						{isUpdating && (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
+					<Button
+						type="submit"
+						disabled={isUpdating || isTourLoading}
+					>
+						{isUpdating || isTourLoading ? (
+							<>
+								<Loader className="mr-2 h-4 w-4 animate-spin" />
+								{isTourLoading
+									? t("finance.form.buttons.loading")
+									: t("finance.form.buttons.saving")}
+							</>
+						) : (
+							t("finance.form.buttons.save")
 						)}
-						{t("finance.buttons.save")}
 					</Button>
 				</div>
 			</form>

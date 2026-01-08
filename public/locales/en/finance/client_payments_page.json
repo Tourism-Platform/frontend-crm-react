@@ -42,7 +42,7 @@
 			"buttons": {
 				"decline": "Cancel",
 				"save": "Create",
-				"saving": "Creating..."
+				"saving": "Creating ..."
 			},
 			"toasts": {
 				"success": "Payment created successfully",
@@ -85,7 +85,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Assign",
-					"saving": "Saving..."
+					"saving": "Assigning ..."
 				},
 				"toasts": {
 					"success": "Payment assigned successfully",
