@@ -54,5 +54,10 @@
 			"open": "Open",
 			"confirm": "Confirm"
 		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load payments"
+		}
 	}
 }

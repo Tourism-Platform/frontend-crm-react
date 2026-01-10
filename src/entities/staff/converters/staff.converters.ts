@@ -6,8 +6,8 @@ import type { IStaffBackend, IStaffFilters, IStaffUser } from "../types";
 
 export const mapStaffToFrontend = (data: IStaffBackend): IStaffUser => ({
 	id: data.id,
-	first_name: data.first_name,
-	last_name: data.last_name,
+	firstName: data.first_name,
+	lastName: data.last_name,
 	email: data.email,
 	role: data.role,
 	status: data.status,
@@ -19,8 +19,8 @@ export const mapStaffToBackend = (
 	data: Partial<IStaffUser>
 ): Partial<IStaffBackend> => ({
 	id: data.id,
-	first_name: data.first_name,
-	last_name: data.last_name,
+	first_name: data.firstName,
+	last_name: data.lastName,
 	email: data.email,
 	role: data.role,
 	status: data.status,

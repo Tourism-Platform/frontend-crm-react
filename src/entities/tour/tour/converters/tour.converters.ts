@@ -21,9 +21,9 @@ export const mapTourToFrontend = (data: ITourBackend): ITourCard => ({
 	title: data.title,
 	route: data.route,
 	type: data.type,
-	price_from: data.price_from,
-	price_to: data.price_to,
-	image_url: data.image_url
+	priceFrom: data.price_from,
+	priceTo: data.price_to,
+	imageUrl: data.image_url
 });
 
 export const mapTourToBackend = (
@@ -34,9 +34,9 @@ export const mapTourToBackend = (
 	title: data.title,
 	route: data.route,
 	type: data.type,
-	price_from: data.price_from,
-	price_to: data.price_to,
-	image_url: data.image_url
+	price_from: data.priceFrom,
+	price_to: data.priceTo,
+	image_url: data.imageUrl
 });
 
 export const mapTourGeneralToFrontend = (

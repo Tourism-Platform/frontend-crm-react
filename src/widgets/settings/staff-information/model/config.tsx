@@ -31,9 +31,9 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 				}),
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
-			accessorKey: "first_name",
+			accessorKey: "firstName",
 			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("first_name")}</div>
+				<div className="font-medium">{row.getValue("firstName")}</div>
 			),
 			size: 160
 		},
@@ -45,7 +45,7 @@ export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
 				}),
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
-			accessorKey: "last_name",
+			accessorKey: "lastName",
 			size: 160
 		},
 		{

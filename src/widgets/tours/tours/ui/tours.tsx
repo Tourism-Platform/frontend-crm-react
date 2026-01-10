@@ -1,7 +1,8 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -34,10 +35,21 @@ export const Tours: FC = () => {
 
 	const filters = watch();
 
-	const { data, isLoading, isFetching } = useGetToursQuery(filters);
+	const {
+		data: toursData,
+		isLoading,
+		isFetching,
+		isError
+	} = useGetToursQuery(filters);
 
-	const tours = data?.data ?? [];
-	const totalCount = data?.total ?? 0;
+	useEffect(() => {
+		if (isError) {
+			toast.error(t("toasts.load.error"));
+		}
+	}, [isError, t]);
+
+	const tours = toursData?.data ?? [];
+	const totalCount = toursData?.total ?? 0;
 
 	const statusOptions = useValueToTranslateLabel(TOUR_STATUS_LABELS);
 

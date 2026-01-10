@@ -1,6 +1,8 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -17,6 +19,7 @@ import { COLUMNS } from "../model";
 import { SupplierPaymentsHeader } from "./supplier-payments-header";
 
 export const SupplierPayments: FC = () => {
+	const { t } = useTranslation("supplier_payments_page");
 	const { watch, setValue } = useForm<ISupplierPaymentFilters>({
 		defaultValues: {
 			search: "",
@@ -28,12 +31,22 @@ export const SupplierPayments: FC = () => {
 
 	const filters = watch();
 
-	const { data, isLoading, isFetching } =
-		useGetSupplierPaymentsQuery(filters);
+	const {
+		data: paymentsData,
+		isLoading,
+		isFetching,
+		isError
+	} = useGetSupplierPaymentsQuery(filters);
 
-	const payments = data?.data ?? [];
-	const totalCount = data?.total ?? 0;
-	const statusCounts = data?.statusCounts;
+	useEffect(() => {
+		if (isError) {
+			toast.error(t("toasts.load.error"));
+		}
+	}, [isError, t]);
+
+	const payments = paymentsData?.data ?? [];
+	const totalCount = paymentsData?.total ?? 0;
+	const statusCounts = paymentsData?.statusCounts;
 
 	const statusOptions = useValueToTranslateLabel(
 		SUPPLIER_PAYMENT_STATUS_LABELS

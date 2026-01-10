@@ -95,10 +95,10 @@ export const COLUMNS = (): ColumnDef<ITourCard>[] => {
 				headerTitle: t("table.price", { ns: "tours_page" }),
 				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
-			accessorKey: "price_from",
+			accessorKey: "priceFrom",
 			cell: ({ row }) => (
 				<div className="text-sm font-medium">
-					${row.original.price_from} - ${row.original.price_to}
+					${row.original.priceFrom} - ${row.original.priceTo}
 				</div>
 			),
 			size: 140

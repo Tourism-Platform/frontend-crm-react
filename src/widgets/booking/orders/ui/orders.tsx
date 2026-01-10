@@ -1,7 +1,8 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -33,15 +34,26 @@ export const Orders: FC = () => {
 
 	const filters = watch();
 
-	const { data, isLoading, isFetching } = useGetBookingOrdersQuery({
+	const {
+		data: ordersData,
+		isLoading,
+		isFetching,
+		isError
+	} = useGetBookingOrdersQuery({
 		status: [filters.status],
 		search: filters.search,
 		page: filters.page,
 		limit: filters.limit
 	});
 
-	const orders = data?.data ?? [];
-	const totalCount = data?.total ?? 0;
+	useEffect(() => {
+		if (isError) {
+			toast.error(t("toasts.load.error"));
+		}
+	}, [isError, t]);
+
+	const orders = ordersData?.data ?? [];
+	const totalCount = ordersData?.total ?? 0;
 
 	const handlePaginationChange: OnChangeFn<PaginationState> = (
 		updaterOrValue

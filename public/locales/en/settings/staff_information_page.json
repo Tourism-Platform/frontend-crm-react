@@ -155,5 +155,10 @@
 			"delete": "Delete",
 			"resend_invite": "Resend invite"
 		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load staff"
+		}
 	}
 }

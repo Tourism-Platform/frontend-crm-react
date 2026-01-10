@@ -47,8 +47,8 @@ export const EditStaff: FC<IEditStaffProps> = ({
 	const form = useForm<TEditStaffSchema>({
 		resolver: zodResolver(EDIT_STAFF_SCHEMA),
 		defaultValues: {
-			[ENUM_FORM_EDIT_STAFF.FIRST_NAME]: user?.first_name || "",
-			[ENUM_FORM_EDIT_STAFF.LAST_NAME]: user?.last_name || "",
+			[ENUM_FORM_EDIT_STAFF.FIRST_NAME]: user?.firstName || "",
+			[ENUM_FORM_EDIT_STAFF.LAST_NAME]: user?.lastName || "",
 			[ENUM_FORM_EDIT_STAFF.EMAIL]: user?.email || "",
 			[ENUM_FORM_EDIT_STAFF.ROLE]: user?.role,
 			[ENUM_FORM_EDIT_STAFF.STATUS]: user?.status,

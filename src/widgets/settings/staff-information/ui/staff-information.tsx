@@ -1,7 +1,8 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -31,10 +32,21 @@ export const StaffInformation: FC = () => {
 
 	const filters = watch();
 
-	const { data, isLoading, isFetching } = useGetStaffQuery(filters);
+	const {
+		data: staffData,
+		isLoading,
+		isFetching,
+		isError
+	} = useGetStaffQuery(filters);
 
-	const users = data?.data ?? [];
-	const totalCount = data?.total ?? 0;
+	useEffect(() => {
+		if (isError) {
+			toast.error(t("toasts.load.error"));
+		}
+	}, [isError, t]);
+
+	const users = staffData?.data ?? [];
+	const totalCount = staffData?.total ?? 0;
 
 	const statusOptions = useValueToTranslateLabel(STAFF_STATUS_LABELS);
 

@@ -121,5 +121,10 @@
 			"open": "Open",
 			"delete": "Delete"
 		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load payments"
+		}
 	}
 }

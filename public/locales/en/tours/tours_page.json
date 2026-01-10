@@ -97,5 +97,10 @@
 	},
 	"buttons": {
 		"back": "Back"
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load tours"
+		}
 	}
 }

@@ -15,5 +15,10 @@
 	"menu": {
 		"edit": "Edit",
 		"delete": "Delete"
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load orders"
+		}
 	}
 }

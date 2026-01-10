@@ -39,7 +39,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 					</div>
 				)}
 				<img
-					src={card.image_url}
+					src={card.imageUrl}
 					alt={card.title}
 					onLoad={() => setIsImageLoaded(true)}
 					className={cn(
@@ -79,7 +79,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 				<div className="bg-accent px-3 py-2 rounded-md text-muted-foreground text-xs flex gap-2 items-center">
 					<MoneysIcon className="h-4" />
 					<p>
-						{card.price_from} - {card.price_to}
+						{card.priceFrom} - {card.priceTo}
 					</p>
 				</div>
 			</CardContent>

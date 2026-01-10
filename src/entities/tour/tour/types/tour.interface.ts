@@ -6,7 +6,7 @@ export interface ITourCard {
 	title: string;
 	route: string[];
 	type: string;
-	price_from: number;
-	price_to: number;
-	image_url: string;
+	priceFrom: number;
+	priceTo: number;
+	imageUrl: string;
 }
