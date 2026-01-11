@@ -1,12 +1,19 @@
 {
 	"page_name": "Обзор тура",
 	"info": {
-		"total": "Всего",
-		"completed": "Завершено",
-		"in_progress": "В процессе",
-		"tourists": "Туристы",
-		"confirmed_revenue": "Подтверждённый доход",
-		"potential_revenue": "Потенциальный доход"
+		"fields": {
+			"total": "Всего",
+			"completed": "Завершено",
+			"in_progress": "В процессе",
+			"tourists": "Туристы",
+			"confirmed_revenue": "Подтверждённый доход",
+			"potential_revenue": "Потенциальный доход"
+		},
+		"toasts": {
+			"load": {
+				"error": "Ошибка при загрузке статистики тура"
+			}
+		}
 	},
 	"recent_orders": {
 		"title": "Последние заказы",
@@ -17,6 +24,11 @@
 			"pax": "Туристов",
 			"dates": "Даты",
 			"status": "Статус"
+		},
+		"toasts": {
+			"load": {
+				"error": "Ошибка при загрузке последних заказов"
+			}
 		}
 	},
 	"managers": {
@@ -25,5 +37,13 @@
 	"actions": {
 		"preview": "Предпросмотр",
 		"publish": "Опубликовать"
+	},
+	"recent_activity": {
+		"title": "Последние действия",
+		"toasts": {
+			"load": {
+				"error": "Ошибка при загрузке последних действий"
+			}
+		}
 	}
 }

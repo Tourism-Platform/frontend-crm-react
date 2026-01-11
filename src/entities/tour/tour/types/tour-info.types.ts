@@ -1,8 +1,8 @@
 export interface ITourInfo {
 	total: number;
 	completed: number;
-	in_progress: number;
+	inProgress: number;
 	tourists: number;
-	confirmed_revenue: number;
-	potential_revenue: number;
+	confirmedRevenue: number;
+	potentialRevenue: number;
 }

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Button, Card, CardContent } from "@/shared/ui";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
 
 import { TourHeader, useGetActivityLogQuery } from "@/entities/tour";
 
@@ -14,7 +14,7 @@ import { ActivityLogContent } from "./activity-log-content";
 import { ActivityLogSkeleton } from "./activity-log-skeleton";
 
 export const ActivityLog: FC = () => {
-	const { tourId } = useParams<{ tourId: string }>();
+	const { tourId = "" } = useParams<{ tourId: string }>();
 	const [page, setPage] = useState(1);
 	const limit = 5;
 
@@ -65,10 +65,18 @@ export const ActivityLog: FC = () => {
 			/>
 
 			<Card>
+				<CardHeader className="flex justify-between items-center">
+					<CardTitle className="text-xl font-normal">
+						{t("content.title")}
+					</CardTitle>
+					<Button variant="outline">{t("actions.export")}</Button>
+				</CardHeader>
 				<CardContent className="flex flex-col gap-6">
-					<ActivityLogContent items={activities} />
+					{!isActivityLogLoading && (
+						<ActivityLogContent items={activities} />
+					)}
 
-					{(isActivityLogLoading || isFetching) && (
+					{(isFetching || isActivityLogLoading) && (
 						<ActivityLogSkeleton />
 					)}
 

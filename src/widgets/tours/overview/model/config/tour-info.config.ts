@@ -4,29 +4,29 @@ import type { ITourInfoOverview } from "../types";
 
 export const TOUR_INFO_LIST: Partial<ITourInfoOverview>[] = [
 	{
-		label: "info.total",
+		label: "info.fields.total",
 		key: "total"
 	},
 	{
-		label: "info.completed",
+		label: "info.fields.completed",
 		key: "completed"
 	},
 	{
-		label: "info.in_progress",
-		key: "in_progress"
+		label: "info.fields.in_progress",
+		key: "inProgress"
 	},
 	{
-		label: "info.tourists",
+		label: "info.fields.tourists",
 		key: "tourists"
 	},
 	{
-		label: "info.confirmed_revenue",
-		key: "confirmed_revenue",
+		label: "info.fields.confirmed_revenue",
+		key: "confirmedRevenue",
 		func: formatToDollars
 	},
 	{
-		label: "info.potential_revenue",
-		key: "potential_revenue",
+		label: "info.fields.potential_revenue",
+		key: "potentialRevenue",
 		func: formatToDollars
 	}
 ];

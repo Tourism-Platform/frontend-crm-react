@@ -1,15 +1,22 @@
 {
 	"page_name": "Tour Overview",
 	"info": {
-		"total": "Total",
-		"completed": "Completed",
-		"in_progress": "In progress",
-		"tourists": "Tourists",
-		"confirmed_revenue": "Confirmed revenue",
-		"potential_revenue": "Potential revenue"
+		"fields": {
+			"total": "Total",
+			"completed": "Completed",
+			"in_progress": "In progress",
+			"tourists": "Tourists",
+			"confirmed_revenue": "Confirmed revenue",
+			"potential_revenue": "Potential revenue"
+		},
+		"toasts": {
+			"load": {
+				"error": "Error loading tour info"
+			}
+		}
 	},
 	"recent_orders": {
-		"title": "Resent orders",
+		"title": "Recent orders",
 		"table": {
 			"order_id": "Order ID",
 			"client": "Client",
@@ -17,6 +24,11 @@
 			"pax": "Pax",
 			"dates": "Dates",
 			"status": "Status"
+		},
+		"toasts": {
+			"load": {
+				"error": "Error loading recent orders"
+			}
 		}
 	},
 	"managers": {
@@ -25,5 +37,13 @@
 	"actions": {
 		"preview": "Preview",
 		"publish": "Publish"
+	},
+	"recent_activity": {
+		"title": "Recent Activity",
+		"toasts": {
+			"load": {
+				"error": "Error loading recent activity"
+			}
+		}
 	}
 }

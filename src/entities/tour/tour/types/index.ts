@@ -1,6 +1,7 @@
 export * from "./manager.types";
 export * from "../../order/types/order-status.types";
 export * from "./tour-info.types";
+export * from "./tour-info-backend.interface";
 export * from "./tour.interface";
 export * from "./tour-backend.interface";
 export * from "./tour-filter.interface";

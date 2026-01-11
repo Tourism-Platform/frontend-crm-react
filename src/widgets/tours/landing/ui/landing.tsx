@@ -30,13 +30,13 @@ import { PickupDetailsInfo } from "./pickup-details-info";
 
 export const Landing: FC = () => {
 	const { t } = useTranslation("landing_page" as const);
-	const { tourId } = useParams<{ tourId: string }>();
+	const { tourId = "" } = useParams<{ tourId: string }>();
 
 	const {
 		data: landingData,
 		isLoading: isLandingLoading,
 		isError: isLandingError
-	} = useGetLandingQuery(tourId || "", {
+	} = useGetLandingQuery(tourId, {
 		skip: !tourId
 	});
 	const [updateLanding, { isLoading: isUpdating }] =

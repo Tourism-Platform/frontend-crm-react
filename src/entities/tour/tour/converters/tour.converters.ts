@@ -11,9 +11,20 @@ import type {
 	ITourFilters,
 	ITourFinanceBackend,
 	ITourGeneralBackend,
+	ITourInfo,
+	ITourInfoBackend,
 	TSettingsFinanceFormSchema,
 	TSettingsGeneralFormSchema
 } from "../types";
+
+export const mapTourStatsToFrontend = (data: ITourInfoBackend): ITourInfo => ({
+	total: data.total,
+	completed: data.completed,
+	inProgress: data.in_progress,
+	tourists: data.tourists,
+	confirmedRevenue: data.confirmed_revenue,
+	potentialRevenue: data.potential_revenue
+});
 
 export const mapTourToFrontend = (data: ITourBackend): ITourCard => ({
 	id: data.id,

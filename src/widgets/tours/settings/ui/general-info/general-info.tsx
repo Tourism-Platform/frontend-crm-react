@@ -22,13 +22,13 @@ import { GENERAL_FORM_LIST } from "../../model";
 
 export const GeneralInfo: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
-	const { tourId } = useParams<{ tourId: string }>();
+	const { tourId = "" } = useParams<{ tourId: string }>();
 
 	const {
 		data: tour,
 		isLoading: isTourLoading,
 		isError: isTourError
-	} = useGetTourGeneralQuery(tourId || "", {
+	} = useGetTourGeneralQuery(tourId, {
 		skip: !tourId
 	});
 	const [updateTour, { isLoading: isUpdating }] =

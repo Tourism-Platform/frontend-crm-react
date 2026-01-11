@@ -1,8 +1,9 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -35,7 +36,18 @@ export const OrderHistory: FC = () => {
 
 	const filters = watch();
 
-	const { data, isLoading, isFetching } = useGetTourOrdersQuery(filters);
+	const {
+		data,
+		isLoading,
+		isFetching,
+		isError: isLandingError
+	} = useGetTourOrdersQuery(filters);
+
+	useEffect(() => {
+		if (isLandingError) {
+			toast.error(t("toasts.load.error"));
+		}
+	}, [isLandingError, t]);
 
 	const orders = data?.data ?? [];
 	const totalCount = data?.total ?? 0;

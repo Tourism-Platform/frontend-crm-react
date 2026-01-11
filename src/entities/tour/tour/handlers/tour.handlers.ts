@@ -3,7 +3,12 @@ import { HttpResponse, delay, http } from "msw";
 import { ENV } from "@/shared/config";
 
 import { ENUM_TOUR_STATUS } from "../constants";
-import { TOUR_FINANCE_MOCK, TOUR_GENERAL_MOCK, TOUR_MOCK } from "../mock";
+import {
+	TOUR_FINANCE_MOCK,
+	TOUR_GENERAL_MOCK,
+	TOUR_MOCK,
+	TOUR_STATS_MOCK
+} from "../mock";
 import type {
 	ITourCard,
 	ITourFinanceBackend,
@@ -142,5 +147,9 @@ export const tourHandlers = [
 		};
 
 		return HttpResponse.json(updatedFinance, { status: 200 });
+	}),
+	http.get(`${BASE_URL}/tours/stats`, async () => {
+		await delay(500);
+		return HttpResponse.json(TOUR_STATS_MOCK, { status: 200 });
 	})
 ];

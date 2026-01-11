@@ -10,6 +10,7 @@ import {
 	mapTourGeneralToBackend,
 	mapTourGeneralToFrontend,
 	mapTourPaginatedToFrontend,
+	mapTourStatsToFrontend,
 	mapTourToBackend,
 	mapTourToFrontend
 } from "../converters";
@@ -19,6 +20,8 @@ import type {
 	ITourFilters,
 	ITourFinanceBackend,
 	ITourGeneralBackend,
+	ITourInfo,
+	ITourInfoBackend,
 	TSettingsFinanceFormSchema,
 	TSettingsGeneralFormSchema
 } from "../types";
@@ -98,6 +101,14 @@ export const tourApi = authApi.injectEndpoints({
 				{ type: ENUM_API_TAGS.TOURS, id: `FINANCE_${id}` },
 				ENUM_API_TAGS.TOURS
 			]
+		}),
+		getTourStats: builder.query<ITourInfo, string>({
+			query: (id) => `/tours/${id}/stats`,
+			transformResponse: (response: ITourInfoBackend) =>
+				mapTourStatsToFrontend(response),
+			providesTags: (_result, _error, id) => [
+				{ type: ENUM_API_TAGS.TOURS, id: `STATS_${id}` }
+			]
 		})
 	})
 });
@@ -108,5 +119,6 @@ export const {
 	useGetTourGeneralQuery,
 	useUpdateTourGeneralMutation,
 	useGetTourFinanceQuery,
-	useUpdateTourFinanceMutation
+	useUpdateTourFinanceMutation,
+	useGetTourStatsQuery
 } = tourApi;

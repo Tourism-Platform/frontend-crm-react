@@ -15,5 +15,10 @@
 		"in_progress": "In progress",
 		"completed": "Completed",
 		"cancelled": "Cancelled"
+	},
+	"toasts": {
+		"load": {
+			"error": "Error loading order history"
+		}
 	}
 }

@@ -5,10 +5,9 @@ import { TourHeader } from "@/entities/tour";
 
 import { PreviewTourButton, PublishTourButton } from "@/features/tours";
 
-import { Managers } from "./managers";
+import { RecentActivityLog } from "./recent-activity-log";
 import { LastOrders } from "./resent-orders";
 import { TourInfo } from "./tour-info";
-import { TourSettings } from "./tour-settings";
 
 export const Overview: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
@@ -27,17 +26,10 @@ export const Overview: FC = () => {
 				}
 			/>
 
-			<div className="grid grid-cols-[1fr_400px] gap-6">
-				<div className="grid gap-6">
-					<TourInfo />
-					<LastOrders />
-				</div>
-				<div>
-					<div className="grid gap-6">
-						<Managers />
-						<TourSettings />
-					</div>
-				</div>
+			<div className="grid gap-6">
+				<TourInfo />
+				<LastOrders />
+				<RecentActivityLog />
 			</div>
 		</section>
 	);

@@ -20,13 +20,13 @@ import { FINANCE_FORM_LIST } from "../../model";
 
 export const FinanceInfo: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
-	const { tourId } = useParams<{ tourId: string }>();
+	const { tourId = "" } = useParams<{ tourId: string }>();
 
 	const {
 		data: tour,
 		isLoading: isTourLoading,
 		isError: isTourError
-	} = useGetTourFinanceQuery(tourId || "", {
+	} = useGetTourFinanceQuery(tourId, {
 		skip: !tourId
 	});
 	const [updateTour, { isLoading: isUpdating }] =
