@@ -66,6 +66,8 @@ export function SmartTable<TData extends object>({
 	statusOptions,
 	getSubRows,
 	getRowCanExpand,
+	searchKey,
+	statusKey,
 	...props
 }: TSmartTableProps<TData>) {
 	const id = useId();
@@ -255,6 +257,8 @@ export function SmartTable<TData extends object>({
 										onStatusChange={onStatusChange}
 										statusOptions={statusOptions}
 										currentView={currentView}
+										searchKey={searchKey}
+										statusKey={statusKey}
 									/>
 								)}
 							</div>

@@ -1,35 +1,36 @@
 import type { Table } from "@tanstack/react-table";
 import { CircleXIcon, ListFilterIcon } from "lucide-react";
-import { type FC, type RefObject, useEffect, useState } from "react";
+import { type RefObject, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useDebounce } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import { Input } from "@/shared/ui";
 
-import type { IItem } from "../../model";
-
-interface ISearchFilterProps {
+interface ISearchFilterProps<TData extends object> {
 	// add your props here
 	id: string;
 	inputRef: RefObject<HTMLInputElement | null>;
-	table: Table<IItem>;
+	table: Table<TData>;
 	search?: string;
 	onSearchChange?: (value: string) => void;
+	searchKey?: keyof TData;
 }
 
-export const SearchFilter: FC<ISearchFilterProps> = ({
+export const SearchFilter = <TData extends object>({
 	id,
 	inputRef,
 	table,
 	search,
-	onSearchChange
-}) => {
+	onSearchChange,
+	searchKey = "name" as keyof TData
+}: ISearchFilterProps<TData>) => {
 	const { t } = useTranslation("common");
 	const isControlled = search !== undefined;
 	const externalValue = isControlled
 		? search
-		: ((table.getColumn("name")?.getFilterValue() ?? "") as string);
+		: ((table.getColumn(searchKey as string)?.getFilterValue() ??
+				"") as string);
 
 	const [localSearch, setLocalSearch] = useState(externalValue);
 	const debouncedSearch = useDebounce(localSearch, 500);
@@ -51,7 +52,9 @@ export const SearchFilter: FC<ISearchFilterProps> = ({
 			if (onSearchChange) {
 				onSearchChange(debouncedSearch);
 			} else {
-				table.getColumn("name")?.setFilterValue(debouncedSearch);
+				table
+					.getColumn(searchKey as string)
+					?.setFilterValue(debouncedSearch);
 			}
 		}
 	}, [debouncedSearch, onSearchChange, table, externalValue]);

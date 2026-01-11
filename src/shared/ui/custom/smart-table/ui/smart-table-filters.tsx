@@ -3,8 +3,9 @@
 import { type Table } from "@tanstack/react-table";
 import { useMemo, useRef } from "react";
 
-import { Filters } from "../../custom-table/ui/filters";
 import type { TViewModeType } from "../model";
+
+import { Filters } from "./filters";
 
 interface SmartTableFiltersProps<TData extends object> {
 	id: string;
@@ -18,10 +19,12 @@ interface SmartTableFiltersProps<TData extends object> {
 	showStatusTabsFilter?: boolean;
 	search?: string;
 	onSearchChange?: (value: string) => void;
-	status?: any[];
-	onStatusChange?: (value: any[]) => void;
+	status?: string[];
+	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];
 	currentView?: TViewModeType;
+	searchKey?: keyof TData;
+	statusKey?: keyof TData;
 }
 
 export function SmartTableFilters<TData extends object>({
@@ -36,31 +39,33 @@ export function SmartTableFilters<TData extends object>({
 	showStatusTabsFilter,
 	search,
 	onSearchChange,
-	status,
+	status: controlledStatus,
 	onStatusChange,
 	statusOptions,
-	currentView = "table"
+	currentView = "table",
+	searchKey,
+	statusKey = "status" as keyof TData
 }: SmartTableFiltersProps<TData>) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	// Reusing logic from CustomTable filters if possible, or adapting it
 	const uniqueStatusValues = useMemo(() => {
-		const statusColumn = table.getColumn("status");
+		const statusColumn = table.getColumn(statusKey as string);
 		if (!statusColumn) return [];
 		const values = Array.from(statusColumn.getFacetedUniqueValues().keys());
 		return values.sort();
-	}, [table.getColumn("status")]);
+	}, [table, statusKey]);
 
 	const selectedStatuses = useMemo(() => {
 		const filterValue = table
-			.getColumn("status")
+			.getColumn(statusKey as string)
 			?.getFilterValue() as string[];
 		return filterValue ?? [];
-	}, [table.getColumn("status")]);
+	}, [table, statusKey]);
 
 	const handleStatusChange = (checked: boolean, value: string) => {
 		const filterValue = table
-			.getColumn("status")
+			.getColumn(statusKey as string)
 			?.getFilterValue() as string[];
 		const newFilterValue = filterValue ? [...filterValue] : [];
 
@@ -74,17 +79,17 @@ export function SmartTableFilters<TData extends object>({
 		}
 
 		table
-			.getColumn("status")
+			.getColumn(statusKey as string)
 			?.setFilterValue(
 				newFilterValue.length ? newFilterValue : undefined
 			);
 	};
 
 	return (
-		<Filters
+		<Filters<TData>
 			id={id}
 			inputRef={inputRef}
-			table={table as any}
+			table={table}
 			selectedStatuses={selectedStatuses}
 			uniqueStatusValues={uniqueStatusValues}
 			handleStatusChange={handleStatusChange}
@@ -97,10 +102,11 @@ export function SmartTableFilters<TData extends object>({
 			showStatusTabsFilter={showStatusTabsFilter}
 			search={search}
 			onSearchChange={onSearchChange}
-			status={status}
+			status={controlledStatus}
 			onStatusChange={onStatusChange}
 			statusOptions={statusOptions}
 			currentView={currentView}
+			searchKey={searchKey}
 		/>
 	);
 }

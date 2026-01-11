@@ -1,6 +1,5 @@
 import type { Table } from "@tanstack/react-table";
 import { Columns3Icon } from "lucide-react";
-import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui";
@@ -12,11 +11,13 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-interface IVisibilityFilterProps {
-	table: Table<any>;
+interface IVisibilityFilterProps<TData extends object> {
+	table: Table<TData>;
 }
 
-export const VisibilityFilter: FC<IVisibilityFilterProps> = ({ table }) => {
+export const VisibilityFilter = <TData extends object>({
+	table
+}: IVisibilityFilterProps<TData>) => {
 	const { t } = useTranslation("common");
 	return (
 		<DropdownMenu>

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Badge, RowActions, Skeleton } from "@/shared/ui";
+import { Badge, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_TOUR_ORDER_STATUS_TYPE,
@@ -114,16 +114,6 @@ export const ORDER_HISTORY_COLUMNS = (): ColumnDef<ITourOrder>[] => {
 				);
 			},
 			size: 120
-		},
-		{
-			id: "actions",
-			header: () => <span className="sr-only">Actions</span>,
-			cell: () => <RowActions />,
-			meta: {
-				skeleton: <div className="size-9 rounded-md" />
-			},
-			size: 60,
-			enableHiding: false
 		}
 	];
 };

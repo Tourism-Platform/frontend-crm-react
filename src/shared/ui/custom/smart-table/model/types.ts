@@ -59,8 +59,15 @@ export interface ISmartTableProps<TData extends object>
 	getSubRows?: (row: TData) => TData[] | undefined;
 	getRowCanExpand?: (row: { original: TData }) => boolean;
 	onRowsReorder?: (oldIndex: number, newIndex: number) => void;
+	searchKey?: keyof TData;
+	statusKey?: keyof TData;
 }
 
 export type TSmartTableProps<TData extends object> = ISmartTableProps<TData> &
 	ISmartTableFilters &
 	TViewMode<TData>;
+
+export interface IStatusTabs {
+	label: string;
+	value: string;
+}

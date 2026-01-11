@@ -13,8 +13,8 @@ import {
 
 interface IStatusFilterProps {
 	id: string;
-	selectedStatuses: any[];
-	uniqueStatusValues: any[];
+	selectedStatuses: string[];
+	uniqueStatusValues: string[];
 	handleStatusChange: (checked: boolean, value: string) => void;
 	statusOptions?: { label: string; value: string }[];
 }

@@ -1,21 +1,20 @@
 import type { Table } from "@tanstack/react-table";
-import { type FC, type RefObject } from "react";
-
-import type { IItem } from "../../model";
+import { type RefObject } from "react";
 
 import { SearchFilter } from "./search-filter";
 import { StatusFilter } from "./status-filter";
 import { StatusTabsFilter } from "./status-tabs-filter";
 import { VisibilityFilter } from "./visibility-filter";
 
-interface IFiltersProps extends IShowFilters {
+interface IFiltersProps<TData extends object> extends IShowFilters {
 	id: string;
 	inputRef: RefObject<HTMLInputElement | null>;
-	table: Table<IItem>;
-	selectedStatuses: any[];
-	uniqueStatusValues: any[];
+	table: Table<TData>;
+	selectedStatuses: string[];
+	uniqueStatusValues: string[];
 	handleStatusChange: (checked: boolean, value: string) => void;
 	currentView?: "table" | "cards";
+	searchKey?: keyof TData;
 }
 
 export interface IShowFilters {
@@ -28,12 +27,12 @@ export interface IShowFilters {
 	onStatusTabChange?: (value: string) => void;
 	search?: string;
 	onSearchChange?: (value: string) => void;
-	status?: any[];
-	onStatusChange?: (value: any[]) => void;
+	status?: string[];
+	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];
 }
 
-export const Filters: FC<IFiltersProps> = ({
+export const Filters = <TData extends object>({
 	id,
 	inputRef,
 	table,
@@ -52,8 +51,9 @@ export const Filters: FC<IFiltersProps> = ({
 	status: controlledStatus,
 	onStatusChange,
 	statusOptions,
-	currentView = "table"
-}) => {
+	currentView = "table",
+	searchKey
+}: IFiltersProps<TData>) => {
 	return (
 		<div className="flex justify-between gap-3 w-full">
 			{/* Status tabs filter - только для режима карточек */}
@@ -69,12 +69,13 @@ export const Filters: FC<IFiltersProps> = ({
 			<div className="flex items-center gap-3">
 				{/* Filter by name or email */}
 				{showSearchFilter && (
-					<SearchFilter
+					<SearchFilter<TData>
 						id={id}
 						inputRef={inputRef}
 						table={table}
 						search={search}
 						onSearchChange={onSearchChange}
+						searchKey={searchKey}
 					/>
 				)}
 				{/* Filter by status - только для режима таблицы */}
@@ -89,13 +90,14 @@ export const Filters: FC<IFiltersProps> = ({
 							uniqueStatusValues={uniqueStatusValues}
 							handleStatusChange={
 								onStatusChange
-									? (checked, value) => {
+									? (checked: boolean, value: string) => {
 											const current =
 												controlledStatus ?? [];
 											const next = checked
 												? [...current, value]
 												: current.filter(
-														(s) => s !== value
+														(s: string) =>
+															s !== value
 													);
 											onStatusChange(next);
 										}
@@ -106,7 +108,7 @@ export const Filters: FC<IFiltersProps> = ({
 					)}
 				{/* Toggle columns visibility */}
 				{currentView === "table" && showVisibilityFilter && (
-					<VisibilityFilter table={table} />
+					<VisibilityFilter<TData> table={table} />
 				)}
 			</div>
 		</div>
