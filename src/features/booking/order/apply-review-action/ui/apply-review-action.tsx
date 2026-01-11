@@ -35,7 +35,7 @@ export const ApplyReviewAction = ({
 		<Button
 			variant={isApplied ? "green_outline" : "cyan_outline"}
 			onClick={handleApply}
-			disabled={isLoading}
+			disabled={isLoading || isApplied}
 			className="w-full"
 		>
 			{isApplied ? (

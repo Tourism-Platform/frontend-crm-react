@@ -5,7 +5,7 @@ import { ENV } from "@/shared/config";
 import { mapBookingOrderToBackend } from "../converters";
 import { BOOKING_ORDERS_MOCK } from "../mock";
 import {
-	type IApplyReviewItemRequest,
+	type IApplyReviewItemBackend,
 	type IBookingOrderBackend,
 	type ITourReviewItem
 } from "../types";
@@ -72,16 +72,29 @@ export const bookingOrderHandlers = [
 	http.post(
 		`${ENV.VITE_API_URL}/booking/orders/apply-review`,
 		async ({ request }) => {
-			const { id } = (await request.json()) as IApplyReviewItemRequest;
+			const { id, parent_id: parentId } =
+				(await request.json()) as IApplyReviewItemBackend;
 
 			BOOKING_ORDERS_MOCK.forEach((order) => {
-				const findAndApply = (items: ITourReviewItem[]) => {
+				const findAndApply = (items: ITourReviewItem[]): boolean => {
 					for (const item of items) {
-						if (item.id === id) {
+						// Если есть parentId и мы нашли этого родителя
+						if (parentId && item.id === parentId) {
+							if (item.subRows) {
+								item.subRows.forEach((child) => {
+									child.isApplied = child.id === id;
+								});
+								return true;
+							}
+						}
+
+						// Если parentId нет (или это корневой элемент) и мы нашли нужный id
+						if (!parentId && item.id === id) {
 							item.isApplied = true;
 							return true;
 						}
 
+						// Рекурсивный поиск
 						if (item.subRows && findAndApply(item.subRows)) {
 							return true;
 						}
