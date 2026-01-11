@@ -143,19 +143,23 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 								status === ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
 							) {
 								return (
-									<Button variant="outline" size="sm">
+									<Button
+										variant="outline"
+										size="sm"
+										className="min-w-24"
+									>
 										{t("buttons.edit")}
 									</Button>
 								);
 							} else {
 								return (
-									<Button size="sm">
+									<Button size="sm" className="min-w-24">
 										{t("buttons.book")}
 									</Button>
 								);
 							}
 						},
-						size: 50
+						size: 100
 					} as ColumnDef<ISupplierPaymentItem>
 				]
 			: [])

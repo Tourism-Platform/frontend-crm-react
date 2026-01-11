@@ -119,7 +119,7 @@ export const TOUR_REVIEW_COLUMNS = (
 								/>
 							);
 						},
-						size: 50
+						size: 100
 					} as ColumnDef<ITourReviewItem>
 				]
 			: [])
