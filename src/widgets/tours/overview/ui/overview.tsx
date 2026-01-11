@@ -1,8 +1,7 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { TourHeader } from "@/entities/tour";
-
+import { ConnectedTourHeader } from "@/features/tours";
 import { PreviewTourButton, PublishTourButton } from "@/features/tours";
 
 import { RecentActivityLog } from "./recent-activity-log";
@@ -11,13 +10,11 @@ import { TourInfo } from "./tour-info";
 
 export const Overview: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
+
 	return (
 		<section className="flex flex-col gap-6 container">
-			<TourHeader
-				title={`${t("page_name")}: Embark on an Unforgettable Archaeological Journey`}
-				badgeText="Planning"
-				duration="6 days / 5 nights"
-				type="Group"
+			<ConnectedTourHeader
+				title={t("page_name")}
 				actions={
 					<>
 						<PreviewTourButton />

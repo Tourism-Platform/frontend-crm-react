@@ -4,8 +4,6 @@
 		"title": "Last activities"
 	},
 	"actions": {
-		"preview": "Preview",
-		"publish": "Publish",
 		"export": "Export"
 	},
 	"buttons": {

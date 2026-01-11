@@ -34,10 +34,6 @@
 	"managers": {
 		"title": "Менеджеры"
 	},
-	"actions": {
-		"preview": "Предпросмотр",
-		"publish": "Опубликовать"
-	},
 	"recent_activity": {
 		"title": "Последние действия",
 		"toasts": {

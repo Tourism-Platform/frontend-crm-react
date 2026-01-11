@@ -1,0 +1,16 @@
+{
+	"toast": {
+		"load": {
+			"error": "Error loading tour data"
+		},
+		"publish": {
+			"success": "Tour published successfully",
+			"error": "Error publishing tour"
+		}
+	},
+	"actions": {
+		"preview": "Preview",
+		"publish": "Publish",
+		"publishing": "Publishing..."
+	}
+}

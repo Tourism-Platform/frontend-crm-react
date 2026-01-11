@@ -1,50 +1,71 @@
 import { type FC, type ReactNode } from "react";
 
 import { BoxOutlineIcon, ClockOutlineIcon } from "@/shared/assets";
-import { Badge, type BadgeVariant } from "@/shared/ui";
+import { Badge, type BadgeVariant, Skeleton } from "@/shared/ui";
 
 interface ITourHeaderProps {
-	title: string;
+	pageName: string;
+	tourTitle?: string;
 	badgeText?: string;
 	badgeVariant?: BadgeVariant;
 	duration?: string;
 	type?: string;
 	actions?: ReactNode;
+	isLoading?: boolean;
 }
 
 export const TourHeader: FC<ITourHeaderProps> = ({
-	title,
+	pageName,
+	tourTitle = "—",
 	badgeText,
 	badgeVariant = "cyan",
 	duration,
 	type,
-	actions
+	actions,
+	isLoading
 }) => {
 	return (
 		<div className="flex justify-between items-start w-full">
 			<div className="flex flex-col gap-2">
-				<h1 className="text-2xl">{title}</h1>
+				<h1 className="text-2xl flex items-center gap-2">
+					{pageName}:{" "}
+					{isLoading ? <Skeleton className="h-7 w-64" /> : tourTitle}
+				</h1>
 				<div className="flex items-center gap-4">
-					{badgeText && (
-						<Badge variant={badgeVariant}>{badgeText}</Badge>
+					{isLoading ? (
+						<Skeleton className="h-5 w-15" />
+					) : (
+						badgeText && (
+							<Badge variant={badgeVariant}>{badgeText}</Badge>
+						)
 					)}
 					<div className="flex gap-4 items-center text-muted-foreground">
-						{duration && (
+						{(duration || isLoading) && (
 							<div className="flex gap-2 items-center">
 								<ClockOutlineIcon className="h-4" />
-								<p className="text-sm">{duration}</p>
+								{isLoading ? (
+									<Skeleton className="h-4 w-16" />
+								) : (
+									<p className="text-sm">{duration}</p>
+								)}
 							</div>
 						)}
-						{type && (
+						{(type || isLoading) && (
 							<div className="flex gap-2 items-center">
 								<BoxOutlineIcon className="h-4" />
-								<p className="text-sm">{type}</p>
+								{isLoading ? (
+									<Skeleton className="h-4 w-16" />
+								) : (
+									<p className="text-sm">{type}</p>
+								)}
 							</div>
 						)}
 					</div>
 				</div>
 			</div>
-			{actions && <div className="flex gap-2">{actions}</div>}
+			{actions && !isLoading && (
+				<div className="flex gap-2">{actions}</div>
+			)}
 		</div>
 	);
 };

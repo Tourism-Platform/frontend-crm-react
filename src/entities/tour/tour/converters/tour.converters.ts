@@ -10,6 +10,7 @@ import type {
 	ITourCard,
 	ITourFilters,
 	ITourFinanceBackend,
+	ITourGeneral,
 	ITourGeneralBackend,
 	ITourInfo,
 	ITourInfoBackend,
@@ -52,7 +53,9 @@ export const mapTourToBackend = (
 
 export const mapTourGeneralToFrontend = (
 	data: ITourGeneralBackend
-): TSettingsGeneralFormSchema => ({
+): ITourGeneral => ({
+	id: data.id,
+	status: data.status as ENUM_TOUR_STATUS_TYPE,
 	tourTitle: data.title,
 	tourType: data.type as ENUM_TOUR_TYPES_TYPE,
 	groupSize: data.group_size,

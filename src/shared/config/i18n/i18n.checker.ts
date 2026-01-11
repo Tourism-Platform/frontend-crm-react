@@ -18,6 +18,7 @@ import financial_settings_page_ru from "../../../../public/locales/ru/settings/f
 import security_page_ru from "../../../../public/locales/ru/settings/security_page.json";
 import staff_information_page_ru from "../../../../public/locales/ru/settings/staff_information_page.json";
 import sidebar_ru from "../../../../public/locales/ru/sidebar.json";
+import common_tours_ru from "../../../../public/locales/ru/tours/common_tours.json";
 import accommodation_edit_page_ru from "../../../../public/locales/ru/tours/events/accommodation_edit_page.json";
 import common_events_ru from "../../../../public/locales/ru/tours/events/common_events.json";
 import event_edit_page_ru from "../../../../public/locales/ru/tours/events/event_edit_page.json";
@@ -75,6 +76,7 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	tour_pricing_review_page: tour_pricing_review_page_ru,
 	tour_schedule_page: tour_schedule_page_ru,
 	tour_settings_page: tour_settings_page_ru,
+	common_tours: common_tours_ru,
 	tours_page: tours_page_ru,
 	order_id_page: order_id_page_ru,
 	orders_page: orders_page_ru,

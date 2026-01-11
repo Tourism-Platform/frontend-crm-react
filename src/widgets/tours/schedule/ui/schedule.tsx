@@ -10,9 +10,11 @@ import {
 	CustomOptionTabsTrigger
 } from "@/shared/ui";
 
-import { TourHeader } from "@/entities/tour";
-
-import { PreviewTourButton, PublishTourButton } from "@/features/tours";
+import {
+	ConnectedTourHeader,
+	PreviewTourButton,
+	PublishTourButton
+} from "@/features/tours";
 
 import { DATES_TYPE_LIST, type ENUM_DATES_TYPE_TYPE } from "../model";
 
@@ -39,11 +41,8 @@ export const Schedule: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-6 container">
-			<TourHeader
-				title={`${t("page_name")}: Embark on an Unforgettable Archaeological Journey`}
-				badgeText="Planning"
-				duration="6 days / 5 nights"
-				type="Group"
+			<ConnectedTourHeader
+				title={t("page_name")}
 				actions={
 					<>
 						<PreviewTourButton />

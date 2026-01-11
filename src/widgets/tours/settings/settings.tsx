@@ -12,9 +12,13 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { TourHeader, useGetTourGeneralQuery } from "@/entities/tour";
+import { useGetTourGeneralQuery } from "@/entities/tour";
 
-import { PreviewTourButton, PublishTourButton } from "@/features/tours";
+import {
+	ConnectedTourHeader,
+	PreviewTourButton,
+	PublishTourButton
+} from "@/features/tours";
 
 import { TourNotFound } from "../tour-not-found";
 
@@ -38,13 +42,8 @@ export const Settings: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-6">
-			<TourHeader
-				title={t("page_name", {
-					name: tour?.tourTitle || ""
-				})}
-				badgeText="Planning"
-				duration="6 days / 5 nights"
-				type={tour?.tourType || "Group"}
+			<ConnectedTourHeader
+				title={t("page_name")}
 				actions={
 					<>
 						<PreviewTourButton />

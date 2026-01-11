@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 
 import { MOCK_PRICING_DATA } from "@/shared/config";
 
-import { TourHeader } from "@/entities/tour";
-
-import { PreviewTourButton, PublishTourButton } from "@/features/tours";
+import {
+	ConnectedTourHeader,
+	PreviewTourButton,
+	PublishTourButton
+} from "@/features/tours";
 
 import {
 	PricingReviewSummary,
@@ -25,14 +27,8 @@ export const PricingReview: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-6 container">
-			<TourHeader
-				title={t("page_name", {
-					name: "Embark on an Unforgettable Archaeological Journey"
-				})}
-				badgeText="Planning"
-				badgeVariant="cyan"
-				duration="6 days / 5 nights"
-				type="Group"
+			<ConnectedTourHeader
+				title={t("page_name")}
 				actions={
 					<>
 						<PreviewTourButton />

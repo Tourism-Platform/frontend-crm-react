@@ -12,11 +12,14 @@ import {
 	type ENUM_TOUR_ORDER_STATUS_TYPE,
 	type ITourOrderFilters,
 	TOUR_ORDER_STATUS_LABELS,
-	TourHeader,
 	useGetTourOrdersQuery
 } from "@/entities/tour";
 
-import { PreviewTourButton, PublishTourButton } from "@/features/tours";
+import {
+	ConnectedTourHeader,
+	PreviewTourButton,
+	PublishTourButton
+} from "@/features/tours";
 
 import { ORDER_HISTORY_COLUMNS } from "../model";
 
@@ -83,11 +86,8 @@ export const OrderHistory: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-6 container">
-			<TourHeader
-				title={`${t("page_name")}: Embark on an Unforgettable Archaeological Journey`}
-				badgeText="Planning"
-				duration="6 days / 5 nights"
-				type="Group"
+			<ConnectedTourHeader
+				title={t("page_name")}
 				actions={
 					<>
 						<PreviewTourButton />

@@ -90,7 +90,8 @@ export const tourHandlers = [
 			...TOUR_GENERAL_MOCK,
 			id: tour.id,
 			title: tour.title,
-			type: tour.type
+			type: tour.type,
+			status: tour.status
 		};
 
 		return HttpResponse.json(detailTour, { status: 200 });
@@ -106,15 +107,10 @@ export const tourHandlers = [
 		}
 
 		const updatedTour: ITourGeneralBackend = {
-			id: id as string,
-			title: body.title || tours[index].title,
-			type: body.type || tours[index].type,
-			group_size: body.group_size || 15,
-			duration_from: body.duration_from || 5,
-			duration_to: body.duration_to || 10,
-			age_requires_from: body.age_requires_from || 18,
-			age_requires_to: body.age_requires_to || 65,
-			categories: body.categories || TOUR_GENERAL_MOCK.categories
+			...TOUR_GENERAL_MOCK,
+			...tours[index],
+			...body,
+			id: id as string
 		};
 
 		return HttpResponse.json(updatedTour, { status: 200 });
@@ -141,15 +137,19 @@ export const tourHandlers = [
 		const body = (await request.json()) as Partial<ITourFinanceBackend>;
 
 		const updatedFinance: ITourFinanceBackend = {
-			id: id as string,
-			currency_type: body.currency_type || "USD",
-			pricing_visibility: body.pricing_visibility || "show_from"
+			...TOUR_FINANCE_MOCK,
+			...body,
+			id: id as string
 		};
 
 		return HttpResponse.json(updatedFinance, { status: 200 });
 	}),
-	http.get(`${BASE_URL}/tours/stats`, async () => {
+	http.get(`${BASE_URL}/tours/:id/stats`, async () => {
 		await delay(500);
 		return HttpResponse.json(TOUR_STATS_MOCK, { status: 200 });
+	}),
+	http.post(`${BASE_URL}/tours/:id/publish`, async () => {
+		await delay(500);
+		return new HttpResponse(null, { status: 200 });
 	})
 ];

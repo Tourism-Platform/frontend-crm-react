@@ -13,6 +13,7 @@ export interface ITourBackend {
 
 export interface ITourGeneralBackend {
 	id: string;
+	status: string;
 	title: string;
 	type: string;
 	group_size: number;

@@ -1,5 +1,5 @@
 {
-	"page_name": "Pricing and review of tour {{name}}",
+	"page_name": "Pricing and review of tour",
 	"tabs": {
 		"add": "Add option"
 	},
@@ -15,9 +15,7 @@
 		"total_cost": "Total cost",
 		"estimated_revenue": "Estimated revenue",
 		"buttons": {
-			"add_item": "Add item",
-			"preview": "Preview",
-			"publish": "Publish"
+			"add_item": "Add item"
 		}
 	}
 }

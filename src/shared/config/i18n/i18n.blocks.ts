@@ -27,7 +27,8 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"tour_activity_log_page",
 			"tour_pricing_review_page",
 			"tour_settings_page",
-			"landing_page"
+			"landing_page",
+			"common_tours"
 		]
 	},
 	// Блок событий тура

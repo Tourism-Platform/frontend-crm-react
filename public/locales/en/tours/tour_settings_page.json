@@ -1,5 +1,5 @@
 {
-	"page_name": "Settings of tour {{name}}",
+	"page_name": "Settings of tour",
 	"tabs": {
 		"general": "General",
 		"finance": "Finance settings"

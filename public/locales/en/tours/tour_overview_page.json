@@ -34,10 +34,6 @@
 	"managers": {
 		"title": "Managers"
 	},
-	"actions": {
-		"preview": "Preview",
-		"publish": "Publish"
-	},
 	"recent_activity": {
 		"title": "Recent Activity",
 		"toasts": {

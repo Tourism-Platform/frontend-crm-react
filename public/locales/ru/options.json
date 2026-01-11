@@ -25,6 +25,10 @@
 			"uzbek": "Узбекский",
 			"portuguese": "Португальский"
 		},
+		"duration": {
+			"days": "дн.",
+			"nights": "ноч."
+		},
 		"statuses": {
 			"all": "Все",
 			"active": "Активен",

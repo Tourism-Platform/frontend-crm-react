@@ -19,6 +19,7 @@ import type {
 	ITourCard,
 	ITourFilters,
 	ITourFinanceBackend,
+	ITourGeneral,
 	ITourGeneralBackend,
 	ITourInfo,
 	ITourInfoBackend,
@@ -50,7 +51,7 @@ export const tourApi = authApi.injectEndpoints({
 				mapTourToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.TOURS]
 		}),
-		getTourGeneral: builder.query<TSettingsGeneralFormSchema, string>({
+		getTourGeneral: builder.query<ITourGeneral, string>({
 			query: (id) => `/tours/${id}/general`,
 			transformResponse: (response: ITourGeneralBackend) =>
 				mapTourGeneralToFrontend(response),
@@ -109,6 +110,16 @@ export const tourApi = authApi.injectEndpoints({
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `STATS_${id}` }
 			]
+		}),
+		publishTour: builder.mutation<void, string>({
+			query: (id) => ({
+				url: `/tours/${id}/publish`,
+				method: "POST"
+			}),
+			invalidatesTags: (_result, _error, id) => [
+				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },
+				ENUM_API_TAGS.TOURS
+			]
 		})
 	})
 });
@@ -120,5 +131,6 @@ export const {
 	useUpdateTourGeneralMutation,
 	useGetTourFinanceQuery,
 	useUpdateTourFinanceMutation,
-	useGetTourStatsQuery
+	useGetTourStatsQuery,
+	usePublishTourMutation
 } = tourApi;
