@@ -1,4 +1,4 @@
 export interface IPriceHistogramItemBackend {
-    range: string;
-    count: number;
+	range: string;
+	count: number;
 }
