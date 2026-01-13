@@ -49,5 +49,7 @@ export * from "./command";
 
 export * from "./multiselect";
 export * from "./phone-input";
-
 export * from "./sonner";
+export * from "./accordion";
+export * from "./slider";
+export * from "./chart";

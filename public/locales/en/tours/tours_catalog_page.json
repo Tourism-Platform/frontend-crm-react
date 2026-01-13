@@ -1,0 +1,27 @@
+{
+	"table": {
+		"title": "Title",
+		"route": "Route",
+		"type": "Type",
+		"price": "Price",
+		"status": "Status"
+	},
+	"toasts": {
+		"load": {
+			"error": "Error loading catalog"
+		}
+	},
+	"filters": {
+		"title": "Filters",
+		"fields": {
+			"price": "Price per traveler",
+			"region": "Region",
+			"duration": "Duration of the tour",
+			"language": "Language",
+			"category": "Category"
+		},
+		"buttons": {
+			"reset": "Reset"
+		}
+	}
+}

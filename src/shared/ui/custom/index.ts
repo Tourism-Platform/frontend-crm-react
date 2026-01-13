@@ -6,4 +6,7 @@ export * from "./custom-range-field";
 export * from "./custom-upload-files";
 export * from "./custom-upload-images";
 export * from "./custom-upload-main-image";
+export * from "./custom-price-filter";
+export * from "./custom-accordion-range";
 export * from "./smart-table";
+export * from "./custom-accordion";

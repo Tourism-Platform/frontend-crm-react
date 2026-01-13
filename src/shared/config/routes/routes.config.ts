@@ -15,6 +15,7 @@ export const ENUM_PATH = {
 	},
 	TOURS: {
 		ROOT: "/tours",
+		CATALOG: "/tours/catalog",
 		OVERVIEW: "/tours/:tourId/overview",
 		ITINERARY: "/tours/:tourId/itinerary",
 		SCHEDULE: "/tours/:tourId/schedule",

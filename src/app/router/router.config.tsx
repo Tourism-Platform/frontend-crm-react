@@ -130,6 +130,11 @@ const SettingsPage = React.lazy(() =>
 		default: m.SettingsPage
 	}))
 );
+const CatalogToursPage = React.lazy(() =>
+	import("@/pages/tours/catalog-page/ui/catalog-tours-page").then((m) => ({
+		default: m.CatalogToursPage
+	}))
+);
 
 // Events pages
 const FlightEditPage = React.lazy(() =>
@@ -349,6 +354,13 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.TOURS.ROOT,
 		component: ToursPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [ToursOwnerLayout]
+	},
+	{
+		path: ENUM_PATH.TOURS.CATALOG,
+		component: CatalogToursPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [ToursOwnerLayout]

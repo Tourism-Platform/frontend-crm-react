@@ -9,6 +9,7 @@ import {
 } from "@/entities/finance";
 import { staffHandlers } from "@/entities/staff";
 import {
+	tourCatalogHandlers,
 	tourHandlers,
 	tourLandingHandlers,
 	tourOrderHandlers
@@ -35,5 +36,6 @@ export const handlers = [
 	...tourLandingHandlers,
 	...tourActivityLogHandlers,
 	...tourOrderHandlers,
+	...tourCatalogHandlers,
 	...bookingOrderHandlers
 ];

@@ -35,6 +35,7 @@ import tour_overview_page_ru from "../../../../public/locales/ru/tours/tour_over
 import tour_pricing_review_page_ru from "../../../../public/locales/ru/tours/tour_pricing_review_page.json";
 import tour_schedule_page_ru from "../../../../public/locales/ru/tours/tour_schedule_page.json";
 import tour_settings_page_ru from "../../../../public/locales/ru/tours/tour_settings_page.json";
+import tours_catalog_page_ru from "../../../../public/locales/ru/tours/tours_catalog_page.json";
 import tours_page_ru from "../../../../public/locales/ru/tours/tours_page.json";
 
 import type { TResources } from "./i18n.config";
@@ -77,6 +78,7 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	tour_schedule_page: tour_schedule_page_ru,
 	tour_settings_page: tour_settings_page_ru,
 	common_tours: common_tours_ru,
+	tours_catalog_page: tours_catalog_page_ru,
 	tours_page: tours_page_ru,
 	order_id_page: order_id_page_ru,
 	orders_page: orders_page_ru,

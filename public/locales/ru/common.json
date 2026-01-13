@@ -1,4 +1,7 @@
 {
+	"actions": {
+		"show_more": "Показать еще"
+	},
 	"upload_files": {
 		"title": "Загрузить файлы",
 		"empty": "Нет прикрепленных файлов",
@@ -53,5 +56,11 @@
 	},
 	"multiselect": {
 		"selected": "{{selected}} из {{total}}"
+	},
+	"filters": {
+		"price": {
+			"from": "Мин",
+			"to": "Макс"
+		}
 	}
 }

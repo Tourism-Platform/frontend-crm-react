@@ -1,4 +1,7 @@
 {
+	"actions": {
+		"show_more": "Show more"
+	},
 	"upload_files": {
 		"title": "Upload files",
 		"empty": "No files attached",
@@ -53,5 +56,11 @@
 	},
 	"multiselect": {
 		"selected": "{{selected}} of {{total}}"
+	},
+	"filters": {
+		"price": {
+			"from": "Min",
+			"to": "Max"
+		}
 	}
 }

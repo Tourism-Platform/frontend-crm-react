@@ -2,13 +2,13 @@ import { HttpResponse, delay, http } from "msw";
 
 import { ENV } from "@/shared/config";
 
-import { ENUM_TOUR_STATUS } from "../constants";
 import {
 	TOUR_FINANCE_MOCK,
 	TOUR_GENERAL_MOCK,
 	TOUR_MOCK,
 	TOUR_STATS_MOCK
 } from "../mock";
+import { ENUM_TOUR_STATUS } from "../types";
 import type {
 	ITourCard,
 	ITourFinanceBackend,

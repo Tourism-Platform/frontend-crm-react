@@ -1,6 +1,5 @@
-import type { ENUM_TOUR_STATUS_TYPE } from "../constants";
-
 import type { TSettingsGeneralFormSchema } from "./setting-general-info.types";
+import type { ENUM_TOUR_STATUS_TYPE } from "./tour-status.types";
 
 export interface ITourCard {
 	id: string;

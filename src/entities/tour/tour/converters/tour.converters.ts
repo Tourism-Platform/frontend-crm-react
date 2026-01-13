@@ -2,7 +2,7 @@ import { type IPaginationResponse } from "@/shared/types";
 
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
-import type { ENUM_TOUR_STATUS_TYPE } from "../constants";
+import type { ENUM_TOUR_STATUS_TYPE } from "../types";
 import type {
 	ENUM_PRICING_VISIBILITY_TYPE,
 	ENUM_TOUR_TYPES_TYPE,

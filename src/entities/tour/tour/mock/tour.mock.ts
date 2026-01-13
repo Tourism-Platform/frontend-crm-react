@@ -1,4 +1,4 @@
-import { ENUM_TOUR_STATUS } from "../constants";
+import { ENUM_TOUR_STATUS } from "../types";
 import { ENUM_TOUR_TYPES, type ITourBackend } from "../types";
 
 export const TOUR_MOCK: ITourBackend[] = [

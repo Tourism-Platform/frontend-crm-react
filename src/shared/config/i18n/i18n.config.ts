@@ -37,6 +37,7 @@ import tour_overview_page from "../../../../public/locales/en/tours/tour_overvie
 import tour_pricing_review_page from "../../../../public/locales/en/tours/tour_pricing_review_page.json";
 import tour_schedule_page from "../../../../public/locales/en/tours/tour_schedule_page.json";
 import tour_settings_page from "../../../../public/locales/en/tours/tour_settings_page.json";
+import tours_catalog_page from "../../../../public/locales/en/tours/tours_catalog_page.json";
 import tours_page from "../../../../public/locales/en/tours/tours_page.json";
 
 import type { TNestedKeyOf } from "./i18n.types";
@@ -75,6 +76,7 @@ export type TTourActivityLogPage = typeof tour_activity_log_page;
 export type TTourPricingReviewPage = typeof tour_pricing_review_page;
 export type TTourSettingsPage = typeof tour_settings_page;
 export type TCommonTours = typeof common_tours;
+export type TToursCatalogPage = typeof tours_catalog_page;
 
 export type TOrderIdPage = typeof order_id_page;
 export type TLandingPage = typeof landing_page;
@@ -118,6 +120,7 @@ export type TResources = {
 	tour_settings_page: TTourSettingsPage;
 	landing_page: TLandingPage;
 	common_tours: TCommonTours;
+	tours_catalog_page: TToursCatalogPage;
 	not_found_page: TNotFoundPage;
 	options: TOptions;
 };
@@ -159,6 +162,7 @@ export const NS = [
 	"tour_settings_page",
 	"landing_page",
 	"common_tours",
+	"tours_catalog_page",
 	"not_found_page",
 	"options"
 ] as const;
@@ -216,3 +220,4 @@ export type TNotFoundPageKeys = TNestedKeyOf<TNotFoundPage>;
 export type TOptionsKeys = TNestedKeyOf<TOptions>;
 export type TCommonKeys = TNestedKeyOf<TCommon>;
 export type TCommonToursKeys = TNestedKeyOf<TCommonTours>;
+export type TToursCatalogPageKeys = TNestedKeyOf<TToursCatalogPage>;
