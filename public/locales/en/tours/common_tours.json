@@ -12,5 +12,23 @@
 		"preview": "Preview",
 		"publish": "Publish",
 		"publishing": "Publishing..."
+	},
+	"search": {
+		"form": {
+			"fields": {
+				"where": {
+					"label": "Where are you go",
+					"placeholder": "Select destination",
+					"empty": "No destinations found"
+				},
+				"when": {
+					"label": "When",
+					"placeholder": "Select dates"
+				}
+			},
+			"buttons": {
+				"search": "Search"
+			}
+		}
 	}
 }

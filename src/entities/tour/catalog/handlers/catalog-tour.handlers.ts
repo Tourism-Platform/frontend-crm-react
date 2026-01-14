@@ -2,6 +2,7 @@ import { HttpResponse, delay, http } from "msw";
 
 import {
 	CATALOG_CATEGORIES_MOCK,
+	CATALOG_DESTINATIONS_MOCK,
 	CATALOG_DURATIONS_MOCK,
 	CATALOG_LANGUAGES_MOCK,
 	CATALOG_REGIONS_MOCK,
@@ -141,5 +142,13 @@ export const tourCatalogHandlers = [
 		console.log("Price histogram request:", { min, max, step });
 
 		return HttpResponse.json(PRICE_HISTOGRAM_MOCK);
+	}),
+	http.get("*/tours/catalog/filters/destinations", async () => {
+		await delay(500);
+
+		return HttpResponse.json({
+			data: CATALOG_DESTINATIONS_MOCK,
+			total: CATALOG_DESTINATIONS_MOCK.length
+		});
 	})
 ];

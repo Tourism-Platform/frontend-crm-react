@@ -3,8 +3,14 @@ import type { ComponentProps, FC } from "react";
 import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
-import type { BadgeVariant, ICustomUploadFilesProps } from "@/shared/ui";
+import type {
+	BadgeVariant,
+	CustomAutocompleteProps,
+	ICustomUploadFilesProps
+} from "@/shared/ui";
 import {
+	CustomAutocomplete,
+	CustomCalendarRange,
 	CustomEditor,
 	CustomUploadFilesField,
 	DatePickerInput,
@@ -37,7 +43,9 @@ export type CustomFieldVariant =
 	| "select"
 	| "multiselect"
 	| "editor"
-	| "upload";
+	| "upload"
+	| "autocomplete"
+	| "dateRange";
 
 type BaseFieldProps = {
 	control: Control<any>;
@@ -97,6 +105,15 @@ type UploadFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "upload">;
 } & ICustomUploadFilesProps;
 
+type AutocompleteFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "autocomplete">;
+} & Omit<CustomAutocompleteProps, "value" | "onChange">;
+
+type DateRangeFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "dateRange">;
+	placeholder?: string;
+};
+
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
@@ -107,7 +124,9 @@ type CustomFieldProps =
 	| SelectFieldVariant
 	| MultiselectFieldVariant
 	| EditorFieldVariant
-	| UploadFieldVariant;
+	| UploadFieldVariant
+	| AutocompleteFieldVariant
+	| DateRangeFieldVariant;
 
 export const CustomField: FC<CustomFieldProps> = (props) => {
 	const {
@@ -200,14 +219,17 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				return (
 					<MultipleSelector
 						defaultOptions={props.options}
-						placeholder={
-							props.placeholder ? t(props.placeholder) : undefined
-						}
-						value={props.options.filter((opt) =>
-							(field.value || []).includes(opt.value)
+						placeholder={t(props.placeholder)}
+						value={props.options.filter(
+							(opt: MultipleSelectorOption) =>
+								(field.value || []).includes(opt.value)
 						)}
-						onChange={(options) =>
-							field.onChange(options.map((opt) => opt.value))
+						onChange={(options: MultipleSelectorOption[]) =>
+							field.onChange(
+								options.map(
+									(opt: MultipleSelectorOption) => opt.value
+								)
+							)
 						}
 						displayMode={props.displayMode}
 						badgeVariant={props.badgeVariant}
@@ -219,6 +241,24 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 					<CustomUploadFilesField
 						{...props}
 						readOnly={props.readOnly || props.disabled}
+					/>
+				);
+			case "autocomplete":
+				return (
+					<CustomAutocomplete
+						{...props}
+						placeholder={t(props.placeholder)}
+						emptyText={t(props.emptyText)}
+						value={field.value}
+						onChange={field.onChange}
+					/>
+				);
+			case "dateRange":
+				return (
+					<CustomCalendarRange
+						{...props}
+						placeholder={t(props.placeholder)}
+						{...field}
 					/>
 				);
 

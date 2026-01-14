@@ -148,6 +148,15 @@ export const catalogTourApi = authApi.injectEndpoints({
 			transformResponse: (response: IPriceHistogramItemBackend[]) =>
 				mapPriceHistogramToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
+		}),
+		getCatalogDestinations: builder.query<IFilterOption[], void>({
+			query: () => ({
+				url: "/tours/catalog/filters/destinations"
+			}),
+			transformResponse: (
+				response: IPaginationResponse<IFilterOptionBackend>
+			) => mapCatalogFilterPaginatedToFrontend(response).data,
+			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		})
 	})
 });
@@ -158,5 +167,6 @@ export const {
 	useGetCatalogDurationsQuery,
 	useGetCatalogLanguagesQuery,
 	useGetCatalogCategoriesQuery,
-	useGetCatalogPriceHistogramQuery
+	useGetCatalogPriceHistogramQuery,
+	useGetCatalogDestinationsQuery
 } = catalogTourApi;

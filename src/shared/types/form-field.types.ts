@@ -1,6 +1,8 @@
+import type { LucideIcon } from "lucide-react";
+
 import type {
 	BadgeVariant,
-	CustomFieldVariant,
+	CustomAutocompleteOption,
 	MultipleSelectorDisplayMode,
 	Option as MultipleSelectorOption,
 	SelectPickerOption
@@ -17,18 +19,31 @@ interface IFormBase<L = TGenericLabel, K = TGenericKey> {
 	className?: string;
 }
 
-// Универсальные поля
-type TFormRequired<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
-	fieldType: Exclude<
-		CustomFieldVariant,
-		"date" | "time" | "select" | "multiselect" | "upload"
-	>;
+// Конкретные типы полей
+type TFormInput<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType?: "input";
 	placeholder: L;
 	type?: string;
 };
 
+type TFormPassword<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "password";
+	placeholder: L;
+};
+
+type TFormPhone<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "phone";
+	placeholder: L;
+};
+
+type TFormTextarea<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "textarea";
+	placeholder: L;
+	rows?: number;
+};
+
 type TFormOptional<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
-	fieldType: "date" | "time" | "editor" | "upload";
+	fieldType: "date" | "time" | "editor";
 	placeholder?: L;
 };
 
@@ -58,10 +73,28 @@ type TFormUploadFiles<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	loadingId?: string;
 };
 
+type TFormDateRange<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "dateRange";
+	placeholder?: L;
+};
+
+type TFormAutocomplete<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "autocomplete";
+	options: CustomAutocompleteOption[];
+	placeholder?: string;
+	emptyText?: string;
+	icon?: LucideIcon;
+};
+
 // Универсальный тип формы
 export type TFormField<L = TGenericLabel, K = TGenericKey> =
-	| TFormRequired<L, K>
+	| TFormInput<L, K>
+	| TFormPassword<L, K>
+	| TFormPhone<L, K>
+	| TFormTextarea<L, K>
 	| TFormOptional<L, K>
 	| TFormSelect<L, K>
 	| TFormMultiSelect<L, K>
-	| TFormUploadFiles<L, K>;
+	| TFormUploadFiles<L, K>
+	| TFormAutocomplete<L, K>
+	| TFormDateRange<L, K>;

@@ -22,6 +22,8 @@ import {
 	useGetCatalogToursQuery
 } from "@/entities/tour";
 
+import { SearchTours } from "@/features/tours";
+
 import { CATALOG_COLUMNS } from "../model";
 
 import { CatalogToursFilter } from "./catalog-tours-filter";
@@ -97,8 +99,9 @@ export const CatalogToursWidget: FC = () => {
 	};
 
 	return (
-		<section className="flex gap-5 flex-col">
-			<div className="grid grid-cols-1 md:grid-cols-[280px_1fr] gap-6">
+		<section className="grid gap-12">
+			<SearchTours />
+			<div className="grid grid-cols-[400px_1fr] gap-6">
 				<aside className="flex flex-col gap-4">
 					<Card>
 						<CardHeader className="flex items-center justify-between ">
@@ -139,9 +142,6 @@ export const CatalogToursWidget: FC = () => {
 								showTopFilters={true}
 								search={filters.search}
 								onSearchChange={handleSearchChange}
-								// status={filters.status}
-								// onStatusChange={handleStatusChange}
-								// statusOptions={statusOptions}
 								showVisibilityFilter={false}
 								showStatusFilter={false}
 							/>

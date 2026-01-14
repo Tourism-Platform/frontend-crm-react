@@ -1,4 +1,6 @@
 export * from "./custom-editor";
+export * from "./custom-autocomplete";
+export * from "./custom-calendar-range";
 export * from "./custom-field";
 export * from "./custom-input";
 export * from "./custom-option-tab";

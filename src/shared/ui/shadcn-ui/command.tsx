@@ -2,7 +2,7 @@
 
 import { type DialogProps } from "@radix-ui/react-dialog";
 import { Command as CommandPrimitive } from "cmdk";
-import { Check, Search } from "lucide-react";
+import { Check, type LucideIcon, Search } from "lucide-react";
 import React from "react";
 
 import { cn } from "@/shared/lib/index";
@@ -45,20 +45,26 @@ const CommandDialog = ({
 	);
 };
 
+interface CommandInputProps
+	extends React.ComponentProps<typeof CommandPrimitive.Input> {
+	icon?: LucideIcon;
+}
+
 function CommandInput({
 	className,
+	icon: Icon = Search,
 	...props
-}: React.ComponentProps<typeof CommandPrimitive.Input>) {
+}: CommandInputProps) {
 	return (
 		<div
-			className="flex items-center border-border border-b px-3"
+			className="flex items-center px-3"
 			cmdk-input-wrapper=""
 			data-slot="command-input"
 		>
-			<Search className="me-2 h-4 w-4 shrink-0 opacity-50" />
+			<Icon className="me-2 h-4 w-4 shrink-0 opacity-50 text-primary" />
 			<CommandPrimitive.Input
 				className={cn(
-					"flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-hidden text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
+					"flex h-9 w-full rounded-md bg-transparent py-1 text-sm outline-hidden text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50",
 					className
 				)}
 				{...props}
