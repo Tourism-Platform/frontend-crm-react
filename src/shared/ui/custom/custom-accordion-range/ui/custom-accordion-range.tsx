@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useEffect, useMemo, useState } from "react";
+import { type FC, useCallback, useEffect, useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell } from "recharts";
 
 import { cn } from "@/shared/lib";
@@ -74,24 +74,36 @@ export const CustomAccordionRange: FC<ICustomAccordionRangeProps> = ({
 		});
 	}, [from, to, min, max]);
 
-	const isRangeInPriceFilter = (rangeStr: string): boolean => {
-		const [rangeStart, rangeEnd] = rangeStr.split("-").map(Number);
+	// Предварительно парсим данные гистограммы, чтобы не делать этого при каждом движении слайдера
+	const parsedHistogramData = useMemo(() => {
+		return histogramData.map((item) => {
+			const [start, end] = item.range.split("-").map(Number);
+			return { ...item, start, end };
+		});
+	}, [histogramData]);
+
+	const histogramColors = useMemo(() => {
 		const filterStart = Math.floor(localValue.from / step) * step;
 		const filterEnd = Math.ceil(localValue.to / step) * step;
 
-		return rangeStart >= filterStart && rangeEnd <= filterEnd;
-	};
-
-	const histogramColors = useMemo(() => {
-		return histogramData.map((item) =>
-			isRangeInPriceFilter(item.range) ? "var(--primary)" : "var(--muted)"
+		return parsedHistogramData.map((item) =>
+			item.start >= filterStart && item.end <= filterEnd
+				? "var(--primary)"
+				: "var(--muted)"
 		);
-	}, [histogramData, localValue, step]);
+	}, [parsedHistogramData, localValue, step]);
 
-	const handleSliderChange = (newValue: IPriceRange) => {
+	const handleLiveSliderChange = useCallback((newValue: IPriceRange) => {
 		setLocalValue(newValue);
-		onChange(newValue);
-	};
+	}, []);
+
+	const handleSliderCommit = useCallback(
+		(newValue: IPriceRange) => {
+			setLocalValue(newValue);
+			onChange(newValue);
+		},
+		[onChange]
+	);
 
 	return (
 		<Accordion
@@ -154,7 +166,8 @@ export const CustomAccordionRange: FC<ICustomAccordionRangeProps> = ({
 							max={max}
 							from={localValue.from}
 							to={localValue.to}
-							onChange={handleSliderChange}
+							onValueChange={handleLiveSliderChange}
+							onChange={handleSliderCommit}
 						/>
 					</div>
 				</AccordionContent>

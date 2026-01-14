@@ -1,6 +1,6 @@
 "use client";
 
-import { type FC, useEffect, useState } from "react";
+import { type FC, useCallback, useEffect, useState } from "react";
 
 import { Input, Slider } from "@/shared/ui";
 
@@ -14,6 +14,7 @@ interface ICustomPriceFilterProps {
 	max?: number;
 	from?: number;
 	to?: number;
+	onValueChange?: (value: IPriceRange) => void;
 	onChange?: (value: IPriceRange) => void;
 }
 
@@ -22,6 +23,7 @@ export const CustomPriceFilter: FC<ICustomPriceFilterProps> = ({
 	max = 3000,
 	from,
 	to,
+	onValueChange,
 	onChange
 }) => {
 	const [localValue, setLocalValue] = useState<IPriceRange>({
@@ -30,26 +32,48 @@ export const CustomPriceFilter: FC<ICustomPriceFilterProps> = ({
 	});
 
 	useEffect(() => {
-		setLocalValue({
-			from: from ?? min,
-			to: to ?? max
+		setLocalValue((prev) => {
+			const newFrom = from ?? min;
+			const newTo = to ?? max;
+			if (prev.from === newFrom && prev.to === newTo) return prev;
+			return { from: newFrom, to: newTo };
 		});
 	}, [from, to, min, max]);
 
-	const handleSliderChange = (val: number[]) => {
-		const newValue: IPriceRange = { from: val[0], to: val[1] };
-		setLocalValue(newValue);
-		onChange?.(newValue);
-	};
+	const handleSliderChange = useCallback(
+		(val: number[]) => {
+			const newValue: IPriceRange = { from: val[0], to: val[1] };
+			setLocalValue(newValue);
+			onValueChange?.(newValue);
+		},
+		[onValueChange]
+	);
 
-	const handleInputChange = (field: keyof IPriceRange, val: string) => {
-		const numVal = Number(val);
-		if (isNaN(numVal)) return;
+	const handleSliderCommit = useCallback(
+		(val: number[]) => {
+			const newValue: IPriceRange = { from: val[0], to: val[1] };
+			onChange?.(newValue);
+		},
+		[onChange]
+	);
 
-		const newValue: IPriceRange = { ...localValue, [field]: numVal };
-		setLocalValue(newValue);
-		onChange?.(newValue);
-	};
+	const handleInputChange = useCallback(
+		(field: keyof IPriceRange, val: string) => {
+			const numVal = Number(val);
+			if (isNaN(numVal)) return;
+
+			setLocalValue((prev) => {
+				const newValue = { ...prev, [field]: numVal };
+				onValueChange?.(newValue);
+				return newValue;
+			});
+		},
+		[onValueChange]
+	);
+
+	const handleInputBlur = useCallback(() => {
+		onChange?.(localValue);
+	}, [onChange, localValue]);
 
 	return (
 		<div className="space-y-4">
@@ -59,6 +83,7 @@ export const CustomPriceFilter: FC<ICustomPriceFilterProps> = ({
 				step={10}
 				value={[localValue.from, localValue.to]}
 				onValueChange={handleSliderChange}
+				onValueCommit={handleSliderCommit}
 				className="py-4"
 			/>
 
@@ -70,6 +95,7 @@ export const CustomPriceFilter: FC<ICustomPriceFilterProps> = ({
 						onChange={(e) =>
 							handleInputChange("from", e.target.value)
 						}
+						onBlur={handleInputBlur}
 						className="h-9 pr-3 text-sm"
 					/>
 				</div>
@@ -80,6 +106,7 @@ export const CustomPriceFilter: FC<ICustomPriceFilterProps> = ({
 						onChange={(e) =>
 							handleInputChange("to", e.target.value)
 						}
+						onBlur={handleInputBlur}
 						className="h-9 pr-3 text-sm"
 					/>
 				</div>
