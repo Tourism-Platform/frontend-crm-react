@@ -1,6 +1,6 @@
 import { MapPin, Search } from "lucide-react";
 import { type FC, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -14,17 +14,18 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useGetCatalogDestinationsQuery } from "@/entities/tour/catalog";
+import {
+	type ISearchTours,
+	useGetCatalogDestinationsQuery
+} from "@/entities/tour";
 
-interface ISearchTours {
-	destination: string;
-	dates?: {
-		from: string;
-		to: string;
-	};
+interface ISearchToursBarProps {
+	form?: UseFormReturn<ISearchTours>;
 }
 
-export const SearchTours: FC = () => {
+export const SearchToursBar: FC<ISearchToursBarProps> = ({
+	form: externalForm
+}) => {
 	const { t } = useTranslation("common_tours");
 
 	const { data: destinations = [] } = useGetCatalogDestinationsQuery();
@@ -36,7 +37,7 @@ export const SearchTours: FC = () => {
 		}));
 	}, [destinations]);
 
-	const form = useForm<ISearchTours>({
+	const localForm = useForm<ISearchTours>({
 		defaultValues: {
 			destination: "",
 			dates: {
@@ -45,6 +46,8 @@ export const SearchTours: FC = () => {
 			}
 		}
 	});
+
+	const form = externalForm || localForm;
 
 	return (
 		<Card>

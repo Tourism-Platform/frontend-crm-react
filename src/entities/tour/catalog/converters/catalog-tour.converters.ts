@@ -1,6 +1,5 @@
 import { type IPaginationResponse } from "@/shared/types";
 
-import type { ENUM_CATALOG_TOUR_STATUS_TYPE } from "../types";
 import type {
 	ICatalogTourBackend,
 	ICatalogTourCard,
@@ -24,10 +23,9 @@ export const mapCatalogTourToFrontend = (
 	data: ICatalogTourBackend
 ): ICatalogTourCard => ({
 	id: data.id,
-	status: data.status as ENUM_CATALOG_TOUR_STATUS_TYPE,
 	title: data.title,
-	route: data.route,
-	type: data.type,
+	description: data.description,
+	duration: data.duration,
 	priceFrom: data.price_from,
 	priceTo: data.price_to,
 	imageUrl: data.image_url
@@ -50,7 +48,6 @@ export const mapCatalogTourFiltersToBackend = (
 	page: filters.page,
 	limit: filters.limit,
 	search: filters.search || undefined,
-	status: filters.status.length > 0 ? filters.status.join(",") : undefined,
 	region: filters.filters?.region?.join(",") || undefined,
 	duration: filters.filters?.duration?.join(",") || undefined,
 	language: filters.filters?.language?.join(",") || undefined,

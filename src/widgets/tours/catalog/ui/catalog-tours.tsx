@@ -1,5 +1,5 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -17,12 +17,11 @@ import {
 import {
 	CatalogTourCard,
 	CatalogTourCardSkeleton,
-	ENUM_CATALOG_TOUR_STATUS,
 	type ICatalogTourFilters,
 	useGetCatalogToursQuery
 } from "@/entities/tour";
 
-import { SearchTours } from "@/features/tours";
+import { SearchToursBar } from "@/features/tours";
 
 import { CATALOG_COLUMNS } from "../model";
 
@@ -30,7 +29,6 @@ import { CatalogToursFilter } from "./catalog-tours-filter";
 
 const DEFAULT_FILTERS: ICatalogTourFilters = {
 	search: "",
-	status: [ENUM_CATALOG_TOUR_STATUS.ALL],
 	page: 1,
 	limit: 10,
 	filters: {
@@ -40,12 +38,12 @@ const DEFAULT_FILTERS: ICatalogTourFilters = {
 		category: [],
 		price: {
 			from: 0,
-			to: 3000
+			to: 3600
 		}
 	}
 };
 
-export const CatalogToursWidget: FC = () => {
+export const CatalogTours: FC = () => {
 	const { t } = useTranslation("tours_catalog_page");
 
 	const methods = useForm<ICatalogTourFilters>({
@@ -54,21 +52,26 @@ export const CatalogToursWidget: FC = () => {
 
 	const { watch, setValue } = methods;
 	const filters = watch();
-	const debouncedFilters = useDebounce(filters, 500);
+
+	const debouncedSource = useMemo(() => filters.filters, [filters.filters]);
+
+	const debouncedFilters = useDebounce(debouncedSource, 500);
 
 	const {
 		data: toursData,
 		isLoading,
 		isFetching,
 		isError
-	} = useGetCatalogToursQuery(debouncedFilters);
+	} = useGetCatalogToursQuery({
+		...filters,
+		filters: debouncedFilters
+	});
 
 	useEffect(() => {
 		if (isError) {
 			toast.error(t("toasts.load.error"));
 		}
 	}, [isError, t]);
-
 	const tours = toursData?.data ?? [];
 	const totalCount = toursData?.total ?? 0;
 
@@ -100,7 +103,7 @@ export const CatalogToursWidget: FC = () => {
 
 	return (
 		<section className="grid gap-12">
-			<SearchTours />
+			<SearchToursBar />
 			<div className="grid grid-cols-[400px_1fr] gap-6">
 				<aside className="flex flex-col gap-4">
 					<Card>
@@ -134,11 +137,19 @@ export const CatalogToursWidget: FC = () => {
 									pageIndex: filters.page - 1,
 									pageSize: filters.limit
 								}}
+								topChildren={
+									<p className="text-xl font-semibold">
+										{t("header.found", {
+											count: totalCount
+										})}
+									</p>
+								}
 								onPaginationChange={handlePaginationChange}
 								useViewMode={true}
 								defaultViewMode="cards"
 								card={CatalogTourCard}
 								cardSkeleton={CatalogTourCardSkeleton}
+								CardsClassName="lg:grid-cols-3"
 								showTopFilters={true}
 								search={filters.search}
 								onSearchChange={handleSearchChange}

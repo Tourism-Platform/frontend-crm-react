@@ -1,4 +1,21 @@
 {
+	"card": {
+		"duration": {
+			"days_one": "{{count}} день",
+			"days_few": "{{count}} дня",
+			"days_many": "{{count}} дней",
+			"days_other": "{{count}} дней"
+		},
+		"price": {
+			"from": "От {{price}}"
+		}
+	},
+	"header": {
+		"found_one": "{{count}} тур найден по вашему запросу",
+		"found_few": "{{count}} тура найдено по вашему запросу",
+		"found_many": "{{count}} туров найдено по вашему запросу",
+		"found_other": "{{count}} туров найдено по вашему запросу"
+	},
 	"table": {
 		"title": "Название",
 		"route": "Маршрут",

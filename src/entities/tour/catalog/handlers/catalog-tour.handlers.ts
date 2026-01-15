@@ -7,18 +7,21 @@ import {
 	CATALOG_LANGUAGES_MOCK,
 	CATALOG_REGIONS_MOCK,
 	CATALOG_TOURS_MOCK,
-	PRICE_HISTOGRAM_MOCK
+	PRICE_HISTOGRAM_MOCK,
+	RECENT_SEARCHES_MOCK
 } from "../mock";
-import { ENUM_CATALOG_TOUR_STATUS } from "../types";
 
 export const tourCatalogHandlers = [
+	http.get("*/tours/recently-searched", async () => {
+		await delay(500);
+		return HttpResponse.json(RECENT_SEARCHES_MOCK);
+	}),
 	http.get("*/tours/catalog", async ({ request }) => {
 		await delay(500);
 		const url = new URL(request.url);
 		const page = Number(url.searchParams.get("page")) || 1;
 		const limit = Number(url.searchParams.get("limit")) || 10;
 		const search = url.searchParams.get("search");
-		const status = url.searchParams.get("status")?.split(",");
 
 		// New filters
 		const regions = url.searchParams.get("region")?.split(",");
@@ -30,20 +33,8 @@ export const tourCatalogHandlers = [
 
 		if (search) {
 			const query = search.toLowerCase();
-			filteredTours = filteredTours.filter(
-				(t) =>
-					t.title.toLowerCase().includes(query) ||
-					t.type.toLowerCase().includes(query)
-			);
-		}
-
-		if (
-			status &&
-			status.length > 0 &&
-			!status.includes(ENUM_CATALOG_TOUR_STATUS.ALL)
-		) {
 			filteredTours = filteredTours.filter((t) =>
-				status.includes(t.status)
+				t.title.toLowerCase().includes(query)
 			);
 		}
 

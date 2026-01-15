@@ -9,3 +9,4 @@ export * from "./schedule-page";
 export * from "./tours-page";
 export * from "./settings-page";
 export * from "./events";
+export * from "./search-page";

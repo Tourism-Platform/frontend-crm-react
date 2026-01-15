@@ -53,21 +53,30 @@ export const CATALOG_CATEGORIES_MOCK = [
 ];
 
 export const PRICE_HISTOGRAM_MOCK = [
-	{ range: "0-200", count: 15 },
-	{ range: "200-400", count: 28 },
-	{ range: "400-600", count: 45 },
-	{ range: "600-800", count: 32 },
-	{ range: "800-1000", count: 18 },
-	{ range: "1000-1200", count: 12 },
-	{ range: "1200-1400", count: 8 },
-	{ range: "1400-1600", count: 5 },
-	{ range: "1600-1800", count: 3 },
-	{ range: "1800-2000", count: 7 },
-	{ range: "2000-2200", count: 4 },
-	{ range: "2200-2400", count: 2 },
-	{ range: "2400-2600", count: 1 },
-	{ range: "2600-2800", count: 0 },
-	{ range: "2800-3000", count: 1 }
+	{ range: "0-150", count: 8 },
+	{ range: "150-300", count: 15 },
+	{ range: "300-450", count: 25 },
+	{ range: "450-600", count: 38 },
+	{ range: "600-750", count: 52 },
+	{ range: "750-900", count: 65 },
+	{ range: "900-1050", count: 72 },
+	{ range: "1050-1200", count: 68 },
+	{ range: "1200-1350", count: 55 },
+	{ range: "1350-1500", count: 42 },
+	{ range: "1500-1650", count: 30 },
+	{ range: "1650-1800", count: 22 },
+	{ range: "1800-1950", count: 18 },
+	{ range: "1950-2100", count: 14 },
+	{ range: "2100-2250", count: 10 },
+	{ range: "2250-2400", count: 8 },
+	{ range: "2400-2550", count: 6 },
+	{ range: "2550-2700", count: 5 },
+	{ range: "2700-2850", count: 4 },
+	{ range: "2850-3000", count: 3 },
+	{ range: "3000-3150", count: 2 },
+	{ range: "3150-3300", count: 2 },
+	{ range: "3300-3450", count: 1 },
+	{ range: "3450-3600", count: 1 }
 ];
 
 export const CATALOG_DESTINATIONS_MOCK = [

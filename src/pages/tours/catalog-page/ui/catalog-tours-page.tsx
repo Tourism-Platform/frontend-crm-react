@@ -1,7 +1,7 @@
 import { type FC } from "react";
 
-import { CatalogToursWidget } from "@/widgets/tours";
+import { CatalogTours } from "@/widgets/tours";
 
 export const CatalogToursPage: FC = () => {
-	return <CatalogToursWidget />;
+	return <CatalogTours />;
 };

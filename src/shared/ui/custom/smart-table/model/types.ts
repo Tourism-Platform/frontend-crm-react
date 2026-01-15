@@ -18,11 +18,13 @@ export interface IViewModeBase {
 export interface IViewModeEnabled<TData extends object> extends IViewModeBase {
 	useViewMode: true;
 	card: FC<{ data: TData }>;
+	CardsClassName?: string;
 }
 
 export interface IViewModeDisabled extends IViewModeBase {
 	useViewMode?: false;
 	card?: never;
+	CardsClassName?: never;
 }
 
 export type TViewMode<TData extends object> =

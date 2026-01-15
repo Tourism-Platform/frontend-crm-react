@@ -1,4 +1,21 @@
 {
+	"card": {
+		"duration": {
+			"days_one": "{{count}} day",
+			"days_few": "{{count}} days",
+			"days_many": "{{count}} days",
+			"days_other": "{{count}} days"
+		},
+		"price": {
+			"from": "From {{price}}"
+		}
+	},
+	"header": {
+		"found_one": "{{count}} Tour Found on Your Search",
+		"found_few": "{{count}} Tours Found on Your Search",
+		"found_many": "{{count}} Tours Found on Your Search",
+		"found_other": "{{count}} Tours Found on Your Search"
+	},
 	"table": {
 		"title": "Title",
 		"route": "Route",

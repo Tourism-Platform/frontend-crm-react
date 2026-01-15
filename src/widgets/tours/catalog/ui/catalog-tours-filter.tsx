@@ -23,7 +23,9 @@ interface ICatalogToursFilterProps {
 	form: UseFormReturn<ICatalogTourFilters>;
 }
 
-const PRICE_STEP = 200;
+const PRICE_STEP = 150;
+const PRICE_MIN = 0;
+const PRICE_MAX = 3600;
 
 export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 	const { t } = useTranslation("tours_catalog_page");
@@ -35,8 +37,8 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 		data: priceHistogramData = [],
 		isLoading: isPriceHistogramLoading
 	} = useGetCatalogPriceHistogramQuery({
-		min: 0,
-		max: 3000,
+		min: PRICE_MIN,
+		max: PRICE_MAX,
 		step: PRICE_STEP
 	});
 
@@ -105,8 +107,8 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 				id="price"
 				title={t("filters.fields.price")}
 				icon={MoneysIcon}
-				min={0}
-				max={3000}
+				min={PRICE_MIN}
+				max={PRICE_MAX}
 				step={PRICE_STEP}
 				from={selectedFilters.price?.from}
 				to={selectedFilters.price?.to}

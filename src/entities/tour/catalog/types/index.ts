@@ -9,3 +9,5 @@ export * from "./catalog-tour-filters.interface";
 export * from "./catalog-tour-filter-backend.interface";
 export * from "./price-histogram.interface";
 export * from "./price-histogram-backend.interface";
+export * from "./recent-search.interface";
+export * from "./recent-search-backend.interface";

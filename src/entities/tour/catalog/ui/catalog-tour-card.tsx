@@ -1,58 +1,45 @@
-import type { FC, ReactNode } from "react";
+import { Clock4 } from "lucide-react";
+import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Badge, Card, CardContent } from "@/shared/ui";
+import { Card, CardContent, Separator } from "@/shared/ui";
+import { formatToDollars } from "@/shared/utils";
 
-import {
-	CATALOG_TOUR_STATUS_LABELS,
-	CATALOG_TOUR_STATUS_VARIANTS
-} from "../constants";
 import type { ICatalogTourCard } from "../types";
 
 interface ICatalogTourCardProps {
 	data: ICatalogTourCard;
-	actions?: ReactNode;
 }
 
-export const CatalogTourCard: FC<ICatalogTourCardProps> = ({
-	data: tour,
-	actions
-}) => {
-	const { t } = useTranslation(["options", "common"]);
-
+export const CatalogTourCard: FC<ICatalogTourCardProps> = ({ data: tour }) => {
+	const { t } = useTranslation("tours_catalog_page");
 	return (
-		<Card className="overflow-hidden">
-			<div className="relative h-48 w-full">
+		<Card className="pt-0 overflow-hidden">
+			<div className="relative h-48 w-full shrink-0">
 				<img
 					src={tour.imageUrl || "https://via.placeholder.com/400x200"}
 					alt={tour.title}
 					className="h-full w-full object-cover"
 				/>
-				<div className="absolute top-2 right-2">
-					<Badge variant={CATALOG_TOUR_STATUS_VARIANTS[tour.status]}>
-						{t(CATALOG_TOUR_STATUS_LABELS[tour.status], {
-							ns: "options"
-						})}
-					</Badge>
-				</div>
 			</div>
-			<CardContent className="p-4">
-				<h3 className="text-lg font-semibold mb-2 line-clamp-1">
+			<CardContent className="grid gap-5 grid-rows-[min-content_min-content_1fr_min-content] h-full">
+				<h3 className="text-lg font-semibold line-clamp-1">
 					{tour.title}
 				</h3>
-				<p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-					{tour.route.join(" → ")}
-				</p>
-				<div className="flex justify-between items-center mt-auto">
-					<div className="flex flex-col">
-						<span className="text-xs text-muted-foreground">
-							{/* {t("price.from", { ns: "common" })} */}
-						</span>
-						<span className="font-bold text-primary">
-							${tour.priceFrom} - ${tour.priceTo}
+				<Separator />
+				<p className="text-sm line-clamp-3">{tour.description}</p>
+				<div className="flex items-center gap-2 justify-between">
+					<div className="flex items-center gap-1 px-2 py-1 bg-muted rounded-md text-muted-foreground">
+						<Clock4 className="w-4 h-4" />
+						<span className="text-xs">
+							{t("card.duration.days", { count: tour.duration })}
 						</span>
 					</div>
-					{actions}
+					<span className="text-primary whitespace-nowrap text-lg">
+						{t("card.price.from", {
+							price: formatToDollars(tour.priceFrom)
+						})}
+					</span>
 				</div>
 			</CardContent>
 		</Card>

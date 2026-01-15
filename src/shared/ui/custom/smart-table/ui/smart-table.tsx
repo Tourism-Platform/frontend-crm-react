@@ -16,6 +16,7 @@ import {
 import { LayoutGridIcon, StretchHorizontalIcon } from "lucide-react";
 import { useEffect, useId, useState } from "react";
 
+import { cn } from "@/shared/lib";
 import {
 	Button,
 	CustomOptionTabs,
@@ -48,6 +49,7 @@ export function SmartTable<TData extends object>({
 	defaultViewMode = "table",
 	card: Card,
 	cardSkeleton: CardSkeleton,
+	CardsClassName,
 	statusTabs,
 	activeStatusTab,
 	onStatusTabChange,
@@ -158,7 +160,12 @@ export function SmartTable<TData extends object>({
 					{
 						type: "cards" as const,
 						component: (
-							<div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+							<div
+								className={cn(
+									"grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4",
+									CardsClassName
+								)}
+							>
 								{isLoading && loadingMode === "skeleton" ? (
 									Array.from({
 										length: pagination.pageSize
@@ -234,7 +241,8 @@ export function SmartTable<TData extends object>({
 						<div
 							className={`grid-cols-[1fr_auto] items-center gap-3 ${!!actions || useViewMode ? "grid" : "block"}`}
 						>
-							<div className="flex items-center gap-3">
+							{/* <div className="flex items-center gap-3"> */}
+							<div className="grid gap-3 grid-cols-[1fr_max-content]">
 								{topChildren}
 								{showTopFilters && (
 									<SmartTableFilters

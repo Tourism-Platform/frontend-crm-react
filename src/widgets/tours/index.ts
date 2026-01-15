@@ -9,3 +9,4 @@ export * from "./pricing-review";
 export * from "./landing";
 export * from "./settings";
 export * from "./catalog";
+export * from "./search";
