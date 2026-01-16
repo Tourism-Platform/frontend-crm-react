@@ -36,3 +36,15 @@ export type TFinancePath =
 
 export type TTourEventPath =
 	(typeof ENUM_PATH.TOURS.EVENTS)[keyof typeof ENUM_PATH.TOURS.EVENTS];
+
+export type TQueryParams = {
+	[ENUM_PATH.TOURS.SEARCH]: {
+		destination?: string;
+		checkIn?: string;
+		checkOut?: string;
+	};
+	[ENUM_PATH.TOURS.CATALOG]: {
+		page: number;
+		limit: number;
+	};
+};

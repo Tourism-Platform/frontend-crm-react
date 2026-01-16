@@ -26,6 +26,7 @@ import { SearchToursBar } from "@/features/tours";
 import { CATALOG_COLUMNS } from "../model";
 
 import { CatalogToursFilter } from "./catalog-tours-filter";
+import { CatalogToursSimilar } from "./catalog-tours-similar";
 
 const DEFAULT_FILTERS: ICatalogTourFilters = {
 	search: "",
@@ -124,40 +125,45 @@ export const CatalogTours: FC = () => {
 						</CardContent>
 					</Card>
 				</aside>
-				<div className="flex flex-col gap-4">
-					<Card>
-						<CardContent>
-							<SmartTable
-								columns={CATALOG_COLUMNS()}
-								data={tours}
-								recordCount={totalCount}
-								isLoading={isLoading || isFetching}
-								loadingMode="skeleton"
-								pagination={{
-									pageIndex: filters.page - 1,
-									pageSize: filters.limit
-								}}
-								topChildren={
-									<p className="text-xl font-semibold">
-										{t("header.found", {
-											count: totalCount
-										})}
-									</p>
-								}
-								onPaginationChange={handlePaginationChange}
-								useViewMode={true}
-								defaultViewMode="cards"
-								card={CatalogTourCard}
-								cardSkeleton={CatalogTourCardSkeleton}
-								CardsClassName="lg:grid-cols-3"
-								showTopFilters={true}
-								search={filters.search}
-								onSearchChange={handleSearchChange}
-								showVisibilityFilter={false}
-								showStatusFilter={false}
-							/>
-						</CardContent>
-					</Card>
+				<div className="flex flex-col gap-25">
+					<SmartTable
+						columns={CATALOG_COLUMNS()}
+						data={tours}
+						recordCount={totalCount}
+						isLoading={isLoading || isFetching}
+						loadingMode="skeleton"
+						pagination={{
+							pageIndex: filters.page - 1,
+							pageSize: filters.limit
+						}}
+						topChildren={
+							<p className="text-xl font-semibold">
+								{t("header.found", {
+									count: totalCount
+								})}
+							</p>
+						}
+						onPaginationChange={handlePaginationChange}
+						useViewMode={true}
+						defaultViewMode="cards"
+						card={CatalogTourCard}
+						cardSkeleton={CatalogTourCardSkeleton}
+						CardsClassName="lg:grid-cols-3"
+						showTopFilters={true}
+						search={filters.search}
+						onSearchChange={handleSearchChange}
+						showVisibilityFilter={false}
+						showStatusFilter={false}
+					/>
+					<CatalogToursSimilar
+						params={{
+							...filters,
+							filters: {
+								...debouncedFilters,
+								duration: []
+							}
+						}}
+					/>
 				</div>
 			</div>
 		</section>

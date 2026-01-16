@@ -4,7 +4,8 @@ export const mapRecentlySearchToFrontend = (
 	data: IRecentSearchBackend
 ): IRecentSearch => ({
 	id: data.id,
-	destination: data.destination,
+	destination: data.id,
+	label: data.label,
 	dates: {
 		from: data.date_from,
 		to: data.date_to

@@ -40,5 +40,12 @@
 		"buttons": {
 			"reset": "Reset"
 		}
+	},
+	"alert": {
+		"title": "Similar options:",
+		"description": "These options match your search criteria but are outside the dates you specified."
+	},
+	"popular_tours": {
+		"title": "Most Popular Tours"
 	}
 }

@@ -8,10 +8,10 @@ import {
 	CommandGroup,
 	CommandInput,
 	CommandItem,
+	CommandList,
 	Popover,
 	PopoverContent,
-	PopoverTrigger,
-	ScrollArea
+	PopoverTrigger
 } from "@/shared/ui";
 
 export interface CustomAutocompleteOption {
@@ -83,7 +83,7 @@ export const CustomAutocomplete: FC<CustomAutocompleteProps> = ({
 						align="start"
 						onOpenAutoFocus={(e) => e.preventDefault()}
 					>
-						<ScrollArea className="h-[300px]">
+						<CommandList>
 							<CommandEmpty>{emptyText}</CommandEmpty>
 							<CommandGroup className="p-0">
 								{options.map((option) => (
@@ -100,7 +100,7 @@ export const CustomAutocomplete: FC<CustomAutocompleteProps> = ({
 									</CommandItem>
 								))}
 							</CommandGroup>
-						</ScrollArea>
+						</CommandList>
 					</PopoverContent>
 				</Popover>
 			</Command>

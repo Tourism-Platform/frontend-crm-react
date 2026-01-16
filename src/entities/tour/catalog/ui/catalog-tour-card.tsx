@@ -14,7 +14,7 @@ interface ICatalogTourCardProps {
 export const CatalogTourCard: FC<ICatalogTourCardProps> = ({ data: tour }) => {
 	const { t } = useTranslation("tours_catalog_page");
 	return (
-		<Card className="pt-0 overflow-hidden">
+		<Card className="pt-0 overflow-hidden h-full">
 			<div className="relative h-48 w-full shrink-0">
 				<img
 					src={tour.imageUrl || "https://via.placeholder.com/400x200"}

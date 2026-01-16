@@ -1,6 +1,8 @@
 import { CircleCheckBig } from "lucide-react";
 import { type FC } from "react";
 
+import { useFormatDateRange } from "@/shared/hooks";
+
 import type { IActivityLogItem } from "../types";
 
 interface IActivityLogItemProps {
@@ -12,6 +14,7 @@ export const ActivityLogItem: FC<IActivityLogItemProps> = ({
 	item,
 	isLast
 }) => {
+	const { formatDateTime } = useFormatDateRange();
 	return (
 		<div className="flex gap-4 relative pb-6 last:pb-0">
 			{/* Line */}
@@ -33,7 +36,7 @@ export const ActivityLogItem: FC<IActivityLogItemProps> = ({
 					</span>
 				</p>
 				<span className="text-sm text-muted-foreground whitespace-nowrap">
-					{item.date}
+					{formatDateTime(item.date)}
 				</span>
 			</div>
 		</div>

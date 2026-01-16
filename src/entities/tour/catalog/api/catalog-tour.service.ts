@@ -183,6 +183,18 @@ export const catalogTourApi = authApi.injectEndpoints({
 			transformResponse: (response: IRecentSearchBackend[]) =>
 				mapRecentlySearchesToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
+		}),
+		getPopularTours: builder.query<
+			IPaginationResponse<ICatalogTourCard>,
+			void
+		>({
+			query: () => ({
+				url: "/tours/popular"
+			}),
+			transformResponse: (
+				response: IPaginationResponse<ICatalogTourBackend>
+			) => mapCatalogTourPaginatedToFrontend(response),
+			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		})
 	})
 });
@@ -196,5 +208,6 @@ export const {
 	useGetCatalogPriceHistogramQuery,
 	useGetCatalogDestinationsQuery,
 	useGetSearchToursQuery,
-	useGetRecentlySearchedToursQuery
+	useGetRecentlySearchedToursQuery,
+	useGetPopularToursQuery
 } = catalogTourApi;

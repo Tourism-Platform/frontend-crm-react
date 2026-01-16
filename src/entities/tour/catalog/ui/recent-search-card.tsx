@@ -1,6 +1,7 @@
 import { type FC } from "react";
 
 import { MapPinIcon } from "@/shared/assets";
+import { useFormatDateRange } from "@/shared/hooks";
 import { Card, CardContent } from "@/shared/ui";
 
 import { type IRecentSearch } from "../types";
@@ -14,15 +15,7 @@ export const RecentSearchCard: FC<IRecentSearchCardProps> = ({
 	data,
 	onClick
 }) => {
-	const formatDate = (dateStr?: string) => {
-		if (!dateStr) return "";
-		return new Intl.DateTimeFormat("ru-RU", {
-			weekday: "short",
-			day: "numeric",
-			month: "long"
-		}).format(new Date(dateStr));
-	};
-
+	const { formatDateRange } = useFormatDateRange();
 	return (
 		<Card
 			className="cursor-pointer hover:shadow-md transition-shadow min-w-[200px]"
@@ -33,12 +26,12 @@ export const RecentSearchCard: FC<IRecentSearchCardProps> = ({
 					<MapPinIcon className="size-5" />
 				</div>
 				<div className="flex flex-col gap-1 min-w-0">
-					<span className="font-medium truncate">
-						{data.destination}
-					</span>
+					<span className="font-medium truncate">{data.label}</span>
 					<span className="text-sm text-muted-foreground truncate">
-						{data.dates?.from ? formatDate(data.dates.from) : ""} -{" "}
-						{data.dates?.to ? formatDate(data.dates.to) : ""}
+						{formatDateRange({
+							from: new Date(data.dates.from),
+							to: new Date(data.dates.to)
+						})}
 					</span>
 				</div>
 			</CardContent>

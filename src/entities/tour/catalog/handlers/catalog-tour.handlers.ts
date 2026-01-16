@@ -7,6 +7,7 @@ import {
 	CATALOG_LANGUAGES_MOCK,
 	CATALOG_REGIONS_MOCK,
 	CATALOG_TOURS_MOCK,
+	POPULAR_TOURS_MOCK,
 	PRICE_HISTOGRAM_MOCK,
 	RECENT_SEARCHES_MOCK
 } from "../mock";
@@ -140,6 +141,13 @@ export const tourCatalogHandlers = [
 		return HttpResponse.json({
 			data: CATALOG_DESTINATIONS_MOCK,
 			total: CATALOG_DESTINATIONS_MOCK.length
+		});
+	}),
+	http.get("*/tours/popular", async () => {
+		await delay(500);
+		return HttpResponse.json({
+			data: POPULAR_TOURS_MOCK,
+			total: POPULAR_TOURS_MOCK.length
 		});
 	})
 ];

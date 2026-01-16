@@ -82,6 +82,8 @@ function CommandList({
 			data-slot="command-list"
 			className={cn(
 				"max-h-[300px] overflow-y-auto overflow-x-hidden",
+				"scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border",
+				"[&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-border/60 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-border",
 				className
 			)}
 			{...props}

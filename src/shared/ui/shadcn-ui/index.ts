@@ -53,3 +53,4 @@ export * from "./sonner";
 export * from "./accordion";
 export * from "./slider";
 export * from "./chart";
+export * from "./carousel";

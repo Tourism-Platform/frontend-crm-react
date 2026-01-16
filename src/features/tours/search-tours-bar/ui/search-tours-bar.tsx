@@ -2,9 +2,9 @@ import { MapPin, Search } from "lucide-react";
 import { type FC, useMemo } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, buildRouteWithQuery } from "@/shared/config";
 import {
 	Button,
 	Card,
@@ -13,6 +13,7 @@ import {
 	Form,
 	Separator
 } from "@/shared/ui";
+import { formatDateToISO } from "@/shared/utils";
 
 import {
 	type ISearchTours,
@@ -27,6 +28,7 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 	form: externalForm
 }) => {
 	const { t } = useTranslation("common_tours");
+	const navigate = useNavigate();
 
 	const { data: destinations = [] } = useGetCatalogDestinationsQuery();
 
@@ -41,19 +43,32 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 		defaultValues: {
 			destination: "",
 			dates: {
-				from: "",
-				to: ""
+				from: undefined,
+				to: undefined
 			}
 		}
 	});
 
 	const form = externalForm || localForm;
+	const { destination, dates } = form.watch();
+
+	const onSubmit = () => {
+		const route = buildRouteWithQuery(ENUM_PATH.TOURS.SEARCH, {
+			destination,
+			checkIn: formatDateToISO(dates.from),
+			checkOut: formatDateToISO(dates.to)
+		});
+		navigate(route);
+	};
 
 	return (
 		<Card>
 			<CardContent>
 				<Form {...form}>
-					<form className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto] items-end gap-4">
+					<form
+						className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto] items-end gap-4"
+						onSubmit={form.handleSubmit(onSubmit)}
+					>
 						<CustomField
 							icon={MapPin}
 							control={form.control}
@@ -79,14 +94,14 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 							className="mb-0"
 						/>
 
-						<Button className="text-xl px-5 py-4 h-auto">
-							<Link
-								to={ENUM_PATH.TOURS.SEARCH}
-								className="flex items-center gap-2"
-							>
+						<Button
+							className="text-xl px-5 py-4 h-auto"
+							type="submit"
+						>
+							<div className="flex items-center gap-2">
 								<span>{t("search.form.buttons.search")}</span>
 								<Search className="size-6" />
-							</Link>
+							</div>
 						</Button>
 					</form>
 				</Form>
