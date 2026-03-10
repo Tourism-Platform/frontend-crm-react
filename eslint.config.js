@@ -8,7 +8,7 @@ import boundaries from 'eslint-plugin-boundaries'
 import unicorn from 'eslint-plugin-unicorn'
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules']),
+  globalIgnores(['dist', 'node_modules', 'scripts']),
 
 
   // Основная конфигурация для исходного кода
