@@ -5,7 +5,12 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, FieldSeparator } from "@/shared/ui";
+import {
+	Button,
+	CustomField,
+	FieldSeparator,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ENUM_FORM_LOGIN,
@@ -20,11 +25,7 @@ interface ISignInFormProps {
 	error?: FetchBaseQueryError | SerializedError | unknown;
 }
 
-export const SignInForm: FC<ISignInFormProps> = ({
-	form,
-	isLoading,
-	error
-}) => {
+const SignInFormBase: FC<ISignInFormProps> = ({ form, isLoading, error }) => {
 	const { t } = useTranslation("login_page");
 	return (
 		<div className="flex flex-col gap-6">
@@ -84,3 +85,5 @@ export const SignInForm: FC<ISignInFormProps> = ({
 		</div>
 	);
 };
+
+export const SignInForm = withErrorBoundary(SignInFormBase);

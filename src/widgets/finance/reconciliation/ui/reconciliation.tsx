@@ -3,7 +3,7 @@ import { type FC, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -17,7 +17,7 @@ import { COLUMNS } from "../model";
 
 import { ReconciliationHeader } from "./reconciliation-header";
 
-export const Reconciliation: FC = () => {
+const ReconciliationBase: FC = () => {
 	const { t } = useTranslation(["reconciliation_page", "options"]);
 	const { watch, setValue } = useForm<IReconciliationFilters>({
 		defaultValues: {
@@ -116,3 +116,5 @@ export const Reconciliation: FC = () => {
 		</section>
 	);
 };
+
+export const Reconciliation = withErrorBoundary(ReconciliationBase);

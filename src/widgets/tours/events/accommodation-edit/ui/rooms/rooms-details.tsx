@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "@/shared/ui";
+import { Button, withErrorBoundary } from "@/shared/ui";
 
 import { type TRoomsSchema } from "../../model";
 
@@ -13,7 +13,7 @@ interface IRoomsDetailsProps {
 	form: UseFormReturn<TRoomsSchema>;
 }
 
-export const RoomsDetails: FC<IRoomsDetailsProps> = ({ form }) => {
+const RoomsDetailsBase: FC<IRoomsDetailsProps> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 
 	const { fields, append, remove } = useFieldArray({
@@ -57,3 +57,5 @@ export const RoomsDetails: FC<IRoomsDetailsProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const RoomsDetails = withErrorBoundary(RoomsDetailsBase);

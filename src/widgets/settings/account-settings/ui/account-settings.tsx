@@ -5,7 +5,14 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button, Card, CardContent, Form, Separator } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	Form,
+	Separator,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ACCOUNT_SCHEMA,
@@ -18,7 +25,7 @@ import { AvatarInfo } from "./avatar-info";
 import { GeneralInfo } from "./general-info";
 import { PersonalInfo } from "./personal-info";
 
-export const AccountSettings: FC = () => {
+const AccountSettingsBase: FC = () => {
 	const { t } = useTranslation("account_settings_page");
 
 	const {
@@ -94,3 +101,5 @@ export const AccountSettings: FC = () => {
 		</section>
 	);
 };
+
+export const AccountSettings = withErrorBoundary(AccountSettingsBase);

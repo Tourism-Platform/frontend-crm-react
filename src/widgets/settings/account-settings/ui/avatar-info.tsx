@@ -1,10 +1,9 @@
 import { TrashIcon } from "lucide-react";
-import { type FC } from "react";
-import { useEffect } from "react";
+import { type FC, useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { useFileUpload } from "@/shared/hooks/useFileUpload";
+import { useFileUpload } from "@/shared/hooks";
 import {
 	Avatar,
 	AvatarFallback,
@@ -13,7 +12,8 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormMessage
+	FormMessage,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import type { TAccountSchema } from "@/entities/user";
@@ -22,7 +22,7 @@ interface IAvatarInfoProps {
 	form: UseFormReturn<TAccountSchema>;
 }
 
-export const AvatarInfo: FC<IAvatarInfoProps> = ({ form }) => {
+const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 	const { t } = useTranslation("account_settings_page");
 	const account = form.watch();
 
@@ -120,3 +120,5 @@ export const AvatarInfo: FC<IAvatarInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const AvatarInfo = withErrorBoundary(AvatarInfoBase);

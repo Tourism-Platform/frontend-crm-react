@@ -2,7 +2,13 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { FormControl, FormField, FormItem, FormMessage } from "@/shared/ui";
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormMessage,
+	withErrorBoundary
+} from "@/shared/ui";
 import { CustomUploadMainImage } from "@/shared/ui";
 
 import { ENUM_FORM_LANDING, type TLandingSchema } from "@/entities/tour";
@@ -11,7 +17,7 @@ interface IPhotosInfoProps {
 	form: UseFormReturn<TLandingSchema>;
 }
 
-export const PhotosInfo: FC<IPhotosInfoProps> = ({ form }) => {
+const PhotosInfoBase: FC<IPhotosInfoProps> = ({ form }) => {
 	const { t } = useTranslation("landing_page");
 	const { control } = form;
 
@@ -45,3 +51,5 @@ export const PhotosInfo: FC<IPhotosInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const PhotosInfo = withErrorBoundary(PhotosInfoBase);

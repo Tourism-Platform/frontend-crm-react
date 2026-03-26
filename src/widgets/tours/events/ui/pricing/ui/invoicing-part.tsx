@@ -3,7 +3,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { PACKAGE_TYPE_OPTIONS } from "@/shared/config";
-import { CustomField, Separator } from "@/shared/ui";
+import { CustomField, Separator, withErrorBoundary } from "@/shared/ui";
 
 import type { TPricingSchema } from "../model";
 
@@ -13,7 +13,7 @@ export interface IInvoicingPartProps {
 	form: UseFormReturn<TPricingSchema>;
 }
 
-export const InvoicingPart: FC<IInvoicingPartProps> = ({ form }) => {
+const InvoicingPartBase: FC<IInvoicingPartProps> = ({ form }) => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
 		<div className="grid">
@@ -33,3 +33,5 @@ export const InvoicingPart: FC<IInvoicingPartProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const InvoicingPart = withErrorBoundary(InvoicingPartBase);

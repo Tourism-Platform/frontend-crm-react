@@ -2,7 +2,7 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ACCOMMODATION_DETAILS_LIST,
@@ -13,9 +13,7 @@ interface IAccommodationDetailsProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
 }
 
-export const AccommodationDetails: FC<IAccommodationDetailsProps> = ({
-	form
-}) => {
+const AccommodationDetailsBase: FC<IAccommodationDetailsProps> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 	return (
 		<div className="grid gap-5">
@@ -34,3 +32,5 @@ export const AccommodationDetails: FC<IAccommodationDetailsProps> = ({
 		</div>
 	);
 };
+
+export const AccommodationDetails = withErrorBoundary(AccommodationDetailsBase);

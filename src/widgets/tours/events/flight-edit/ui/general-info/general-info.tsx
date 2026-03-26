@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Form, Separator } from "@/shared/ui";
+import { Button, Form, Separator, withErrorBoundary } from "@/shared/ui";
 
 import {
 	BASE_FLIGHT_SCHEMA,
@@ -14,7 +14,7 @@ import {
 import { DescriptionInfo } from "./description-info";
 import { FlightInfo } from "./flight-info";
 
-export const GeneralInfo: FC = () => {
+const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("flight_edit_page");
 	const form = useForm<TGeneralInfoSchema>({
 		resolver: zodResolver(BASE_FLIGHT_SCHEMA),
@@ -62,3 +62,5 @@ export const GeneralInfo: FC = () => {
 		</Form>
 	);
 };
+
+export const GeneralInfo = withErrorBoundary(GeneralInfoBase);

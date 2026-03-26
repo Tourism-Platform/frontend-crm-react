@@ -3,7 +3,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Button, CustomField } from "@/shared/ui";
+import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
 
 import type { TPricingSchema } from "../model";
 
@@ -12,10 +12,7 @@ interface IBookingDetailsProps {
 	className?: string;
 }
 
-export const BookingDetails: FC<IBookingDetailsProps> = ({
-	form,
-	className
-}) => {
+const BookingDetailsBase: FC<IBookingDetailsProps> = ({ form, className }) => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
 		<div className={cn("grid gap-1 mb-12", className)}>
@@ -55,3 +52,5 @@ export const BookingDetails: FC<IBookingDetailsProps> = ({
 		</div>
 	);
 };
+
+export const BookingDetails = withErrorBoundary(BookingDetailsBase);

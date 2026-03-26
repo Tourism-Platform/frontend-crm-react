@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import type { TFileMetadata, TFileWithPreview } from "@/shared/hooks";
-import { CustomUploadFiles } from "@/shared/ui";
+import { CustomUploadFiles, withErrorBoundary } from "@/shared/ui";
 
 import {
 	useDeleteBusinessDocumentMutation,
@@ -11,7 +11,7 @@ import {
 	useUploadBusinessDocumentMutation
 } from "@/entities/user";
 
-export const DocumentsInfo: FC = () => {
+const DocumentsInfoBase: FC = () => {
 	const { t } = useTranslation("business_settings_page");
 
 	const { data: documents, isError: isDocumentsError } =
@@ -107,3 +107,5 @@ export const DocumentsInfo: FC = () => {
 		</div>
 	);
 };
+
+export const DocumentsInfo = withErrorBoundary(DocumentsInfoBase);

@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "@/shared/ui";
+import { Button, withErrorBoundary } from "@/shared/ui";
 
 import { type TCarsSchema } from "../../model";
 
@@ -13,7 +13,7 @@ interface ICarsDetailsProps {
 	form: UseFormReturn<TCarsSchema>;
 }
 
-export const CarsDetails: FC<ICarsDetailsProps> = ({ form }) => {
+const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 	const { t } = useTranslation("transportation_edit_page");
 
 	const { fields, append, remove } = useFieldArray({
@@ -58,3 +58,5 @@ export const CarsDetails: FC<ICarsDetailsProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const CarsDetails = withErrorBoundary(CarsDetailsBase);

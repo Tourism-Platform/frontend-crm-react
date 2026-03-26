@@ -6,7 +6,8 @@ import {
 	CardContent,
 	CardHeader,
 	Separator,
-	SmartTable
+	SmartTable,
+	withErrorBoundary
 } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
@@ -18,7 +19,7 @@ interface IInvoicePaymentTableProps {
 	invoice: IInvoiceDetail;
 }
 
-export const InvoicePaymentTable: FC<IInvoicePaymentTableProps> = ({
+const InvoicePaymentTableBase: FC<IInvoicePaymentTableProps> = ({
 	invoice
 }) => {
 	const { t } = useTranslation("invoice_id_page");
@@ -61,3 +62,5 @@ export const InvoicePaymentTable: FC<IInvoicePaymentTableProps> = ({
 		</Card>
 	);
 };
+
+export const InvoicePaymentTable = withErrorBoundary(InvoicePaymentTableBase);

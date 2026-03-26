@@ -5,7 +5,14 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button, Card, CardContent, Form, Separator } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	Form,
+	Separator,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	BUSINESS_SCHEMA,
@@ -21,7 +28,7 @@ import { ContactInfo } from "./contact-info";
 import { DocumentsInfo } from "./documents-info";
 import { LegalInfo } from "./legal-info";
 
-export const BusinessSettings: FC = () => {
+const BusinessSettingsBase: FC = () => {
 	const { t } = useTranslation("business_settings_page");
 
 	const {
@@ -104,3 +111,5 @@ export const BusinessSettings: FC = () => {
 		</section>
 	);
 };
+
+export const BusinessSettings = withErrorBoundary(BusinessSettingsBase);

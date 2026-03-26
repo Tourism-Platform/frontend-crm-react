@@ -6,7 +6,8 @@ import {
 	CustomOptionTabs,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
-	Separator
+	Separator,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import { PRICING_INDIVIDUAL_TABS_LIST, type TPricingSchema } from "../model";
@@ -18,9 +19,7 @@ export interface IInvoicingIndividualProps {
 	form: UseFormReturn<TPricingSchema>;
 }
 
-export const InvoicingIndividual: FC<IInvoicingIndividualProps> = ({
-	form
-}) => {
+const InvoicingIndividualBase: FC<IInvoicingIndividualProps> = ({ form }) => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
 		<div className="grid gap-5">
@@ -56,3 +55,5 @@ export const InvoicingIndividual: FC<IInvoicingIndividualProps> = ({
 		</div>
 	);
 };
+
+export const InvoicingIndividual = withErrorBoundary(InvoicingIndividualBase);

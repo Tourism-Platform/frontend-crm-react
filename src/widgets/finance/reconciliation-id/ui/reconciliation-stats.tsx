@@ -1,7 +1,13 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	withErrorBoundary
+} from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import { type IReconciliationDetail } from "@/entities/finance";
@@ -12,9 +18,7 @@ interface IReconciliationStatsProps {
 	data: IReconciliationDetail;
 }
 
-export const ReconciliationStats: FC<IReconciliationStatsProps> = ({
-	data
-}) => {
+const ReconciliationStatsBase: FC<IReconciliationStatsProps> = ({ data }) => {
 	const { t } = useTranslation("reconciliation_id_page");
 
 	const stats = useMemo(() => getStatsItems(data, t), [data, t]);
@@ -38,3 +42,5 @@ export const ReconciliationStats: FC<IReconciliationStatsProps> = ({
 		</div>
 	);
 };
+
+export const ReconciliationStats = withErrorBoundary(ReconciliationStatsBase);

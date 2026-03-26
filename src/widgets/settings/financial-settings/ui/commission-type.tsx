@@ -1,7 +1,7 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { SmartTable } from "@/shared/ui";
+import { SmartTable, withErrorBoundary } from "@/shared/ui";
 
 import type { ICommission } from "@/entities/commission";
 
@@ -14,10 +14,7 @@ interface ICommissionTypeProps {
 	isLoading: boolean;
 }
 
-export const CommissionType: FC<ICommissionTypeProps> = ({
-	data,
-	isLoading
-}) => {
+const CommissionTypeBase: FC<ICommissionTypeProps> = ({ data, isLoading }) => {
 	const { t } = useTranslation("financial_settings_page");
 	const columns = useMemo(() => COLUMNS(t), [t]);
 
@@ -49,3 +46,5 @@ export const CommissionType: FC<ICommissionTypeProps> = ({
 		</div>
 	);
 };
+
+export const CommissionType = withErrorBoundary(CommissionTypeBase);

@@ -3,7 +3,7 @@ import { type FC, useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { useFileUpload } from "@/shared/hooks/useFileUpload";
+import { useFileUpload } from "@/shared/hooks";
 import {
 	Avatar,
 	AvatarFallback,
@@ -12,7 +12,8 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormMessage
+	FormMessage,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import type { TBusinessSchema } from "@/entities/user";
@@ -21,7 +22,7 @@ interface IAvatarInfoProps {
 	form: UseFormReturn<TBusinessSchema>;
 }
 
-export const AvatarInfo: FC<IAvatarInfoProps> = ({ form }) => {
+const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 	const { t } = useTranslation("business_settings_page");
 	const business = form.watch();
 
@@ -124,3 +125,5 @@ export const AvatarInfo: FC<IAvatarInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const AvatarInfo = withErrorBoundary(AvatarInfoBase);

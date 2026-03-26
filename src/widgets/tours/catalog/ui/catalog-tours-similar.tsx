@@ -12,7 +12,8 @@ import {
 	CarouselContent,
 	CarouselItem,
 	CarouselNext,
-	CarouselPrevious
+	CarouselPrevious,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import {
@@ -26,9 +27,7 @@ interface ICatalogToursSimilarProps {
 	params: ICatalogTourFilters;
 }
 
-export const CatalogToursSimilar: FC<ICatalogToursSimilarProps> = ({
-	params
-}) => {
+const CatalogToursSimilarBase: FC<ICatalogToursSimilarProps> = ({ params }) => {
 	const { t } = useTranslation("tours_catalog_page");
 
 	const {
@@ -81,3 +80,5 @@ export const CatalogToursSimilar: FC<ICatalogToursSimilarProps> = ({
 		</div>
 	);
 };
+
+export const CatalogToursSimilar = withErrorBoundary(CatalogToursSimilarBase);

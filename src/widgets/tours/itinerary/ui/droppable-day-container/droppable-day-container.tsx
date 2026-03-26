@@ -13,7 +13,14 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Button, Card, CardContent, CardHeader, Separator } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	CardHeader,
+	Separator,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import { type IBaseDnDProps, type IDayItem, itemId } from "../../model";
 
@@ -29,7 +36,7 @@ interface IDroppableDayContainerProps extends IBaseDnDProps {
 	};
 }
 
-export const DroppableDayContainer: FC<IDroppableDayContainerProps> = ({
+const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 	items,
 	day,
 	containerId,
@@ -104,3 +111,7 @@ export const DroppableDayContainer: FC<IDroppableDayContainerProps> = ({
 		</Card>
 	);
 };
+
+export const DroppableDayContainer = withErrorBoundary(
+	DroppableDayContainerBase
+);

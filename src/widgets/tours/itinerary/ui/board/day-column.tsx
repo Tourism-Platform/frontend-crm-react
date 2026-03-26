@@ -3,6 +3,7 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { type FC } from "react";
 
 import { cn } from "@/shared/lib";
+import { withErrorBoundary } from "@/shared/ui";
 
 import { type IBaseDnDProps, type IDayItem, containerIdDay } from "../../model";
 import { DroppableDayContainer } from "../droppable-day-container";
@@ -16,7 +17,7 @@ export interface IDayColumnProps extends IBaseDnDProps {
 	listeners?: SyntheticListenerMap;
 }
 
-export const DayColumn: FC<IDayColumnProps> = ({
+const DayColumnBase: FC<IDayColumnProps> = ({
 	day,
 	items,
 	isDragging,
@@ -46,3 +47,5 @@ export const DayColumn: FC<IDayColumnProps> = ({
 		</div>
 	);
 };
+
+export const DayColumn = withErrorBoundary(DayColumnBase);

@@ -2,7 +2,7 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import type { TBusinessSchema } from "@/entities/user";
 
@@ -12,7 +12,7 @@ interface IBusinessInfoProps {
 	form: UseFormReturn<TBusinessSchema>;
 }
 
-export const BusinessInfo: FC<IBusinessInfoProps> = ({ form }) => {
+const BusinessInfoBase: FC<IBusinessInfoProps> = ({ form }) => {
 	const { t } = useTranslation("business_settings_page");
 	return (
 		<div className="flex gap-5 flex-col">
@@ -31,3 +31,5 @@ export const BusinessInfo: FC<IBusinessInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const BusinessInfo = withErrorBoundary(BusinessInfoBase);

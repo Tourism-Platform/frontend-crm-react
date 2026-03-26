@@ -1,10 +1,17 @@
 import { Loader } from "lucide-react";
-import { type FC, useEffect, useMemo, useState } from "react";
+import { type FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import { useGetActivityLogQuery } from "@/entities/tour";
 
@@ -17,7 +24,7 @@ import {
 import { ActivityLogContent } from "./activity-log-content";
 import { ActivityLogSkeleton } from "./activity-log-skeleton";
 
-export const ActivityLog: FC = () => {
+const ActivityLogBase: FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
 	const [page, setPage] = useState(1);
 	const limit = 5;
@@ -49,9 +56,9 @@ export const ActivityLog: FC = () => {
 	const total = data?.total || 0;
 	const hasMore = activities.length < total;
 
-	const handleLoadMore = () => {
+	const handleLoadMore = useCallback(() => {
 		setPage((prev) => prev + 1);
-	};
+	}, []);
 
 	const actionsJsx = useMemo(
 		() => (
@@ -104,3 +111,5 @@ export const ActivityLog: FC = () => {
 		</section>
 	);
 };
+
+export const ActivityLog = withErrorBoundary(ActivityLogBase);

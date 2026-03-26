@@ -2,14 +2,14 @@ import { XIcon } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Badge } from "@/shared/ui";
+import { Badge, withErrorBoundary } from "@/shared/ui";
 
 interface ISelectedDatesProps {
 	date: Date[] | undefined;
 	onDelete: (date: Date) => void;
 }
 
-export const SelectedDates: FC<ISelectedDatesProps> = ({ date, onDelete }) => {
+const SelectedDatesBase: FC<ISelectedDatesProps> = ({ date, onDelete }) => {
 	const { t } = useTranslation("tour_schedule_page");
 	return (
 		<div className="grid gap-2">
@@ -30,3 +30,5 @@ export const SelectedDates: FC<ISelectedDatesProps> = ({ date, onDelete }) => {
 		</div>
 	);
 };
+
+export const SelectedDates = withErrorBoundary(SelectedDatesBase);

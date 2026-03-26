@@ -1,7 +1,13 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardHeader, CardTitle, Separator } from "@/shared/ui";
+import {
+	Card,
+	CardHeader,
+	CardTitle,
+	Separator,
+	withErrorBoundary
+} from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import { type ITourSummary } from "@/entities/tour";
@@ -10,7 +16,7 @@ interface IPricingReviewSummaryProps {
 	summary: ITourSummary;
 }
 
-export const PricingReviewSummary: FC<IPricingReviewSummaryProps> = ({
+const PricingReviewSummaryBase: FC<IPricingReviewSummaryProps> = ({
 	summary
 }) => {
 	const { t } = useTranslation("tour_pricing_review_page");
@@ -60,3 +66,5 @@ export const PricingReviewSummary: FC<IPricingReviewSummaryProps> = ({
 		</Card>
 	);
 };
+
+export const PricingReviewSummary = withErrorBoundary(PricingReviewSummaryBase);

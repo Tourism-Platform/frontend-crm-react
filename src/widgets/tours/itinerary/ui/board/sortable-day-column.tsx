@@ -2,6 +2,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { type FC } from "react";
 
+import { withErrorBoundary } from "@/shared/ui";
+
 import { type IBaseDnDProps, type IDayItem, columnId } from "../../model";
 
 import { DayColumn } from "./day-column";
@@ -11,7 +13,7 @@ interface ISortableDayColumnProps extends IBaseDnDProps {
 	items: IDayItem[];
 }
 
-export const SortableDayColumn: FC<ISortableDayColumnProps> = ({
+const SortableDayColumnBase: FC<ISortableDayColumnProps> = ({
 	day,
 	items,
 	optionId,
@@ -47,3 +49,5 @@ export const SortableDayColumn: FC<ISortableDayColumnProps> = ({
 		</div>
 	);
 };
+
+export const SortableDayColumn = withErrorBoundary(SortableDayColumnBase);

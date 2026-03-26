@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
 
-import { Form } from "@/shared/ui";
+import { Form, withErrorBoundary } from "@/shared/ui";
 
 import { useSignInAction, useSignUpAction } from "@/features/auth";
 
@@ -16,7 +16,7 @@ import {
 import { SignInForm } from "./sign-in-form";
 import { SignUpForm } from "./sign-up-form";
 
-export const LoginForm: FC = () => {
+const LoginFormBase: FC = () => {
 	const {
 		handleSignIn,
 		isLoading: isLoadingSignIn,
@@ -76,3 +76,5 @@ export const LoginForm: FC = () => {
 		</Form>
 	);
 };
+
+export const LoginForm = withErrorBoundary(LoginFormBase);

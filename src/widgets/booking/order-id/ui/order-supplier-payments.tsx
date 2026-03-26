@@ -6,7 +6,8 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	SmartTable
+	SmartTable,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import type {
@@ -28,7 +29,7 @@ const TABLE_LAYOUT = {
 
 const getSubRowsFn = (row: ISupplierPaymentItem) => row.subRows;
 
-export const OrderSupplierPayments = ({
+const OrderSupplierPaymentsBase = ({
 	items,
 	orderStatus
 }: IOrderSupplierPaymentsProps) => {
@@ -57,3 +58,7 @@ export const OrderSupplierPayments = ({
 		</Card>
 	);
 };
+
+export const OrderSupplierPayments = withErrorBoundary(
+	OrderSupplierPaymentsBase
+);

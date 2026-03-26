@@ -6,7 +6,8 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	SmartTable
+	SmartTable,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import { type IPaxReviewDetail, type IPaxReviewItem } from "@/entities/booking";
@@ -47,7 +48,7 @@ interface IOrderPaxReviewProps {
 	items?: IPaxReviewItem[];
 }
 
-export const OrderPaxReview = ({ items = [] }: IOrderPaxReviewProps) => {
+const OrderPaxReviewBase = ({ items = [] }: IOrderPaxReviewProps) => {
 	const { t } = useTranslation("order_id_page");
 
 	const renderSubTable = useCallback(
@@ -79,3 +80,5 @@ export const OrderPaxReview = ({ items = [] }: IOrderPaxReviewProps) => {
 		</Card>
 	);
 };
+
+export const OrderPaxReview = withErrorBoundary(OrderPaxReviewBase);

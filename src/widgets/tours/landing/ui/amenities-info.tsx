@@ -2,7 +2,7 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -16,7 +16,7 @@ interface IAmenitiesInfoProps {
 	form: UseFormReturn<TLandingSchema>;
 }
 
-export const AmenitiesInfo: FC<IAmenitiesInfoProps> = ({ form }) => {
+const AmenitiesInfoBase: FC<IAmenitiesInfoProps> = ({ form }) => {
 	const { t } = useTranslation("landing_page");
 	const { control } = form;
 
@@ -57,3 +57,5 @@ export const AmenitiesInfo: FC<IAmenitiesInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const AmenitiesInfo = withErrorBoundary(AmenitiesInfoBase);

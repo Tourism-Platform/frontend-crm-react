@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, Form } from "@/shared/ui";
+import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
 
 import {
 	GENERAL_INFO_SCHEMA,
@@ -11,7 +11,7 @@ import {
 	TOUR_DETAILS_DATA_LIST
 } from "../../model";
 
-export const GeneralInfo: FC = () => {
+const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("tour_details_edit_page");
 	const form = useForm<TGeneralInfoSchema>({
 		resolver: zodResolver(GENERAL_INFO_SCHEMA),
@@ -44,3 +44,5 @@ export const GeneralInfo: FC = () => {
 		</Form>
 	);
 };
+
+export const GeneralInfo = withErrorBoundary(GeneralInfoBase);

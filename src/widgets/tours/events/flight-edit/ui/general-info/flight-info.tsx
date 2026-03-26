@@ -7,7 +7,8 @@ import {
 	Button,
 	CustomOptionTabs,
 	CustomOptionTabsList,
-	CustomOptionTabsTrigger
+	CustomOptionTabsTrigger,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import {
@@ -22,7 +23,7 @@ interface IFlightInfoProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
 }
 
-export const FlightInfo: FC<IFlightInfoProps> = ({ form }) => {
+const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 	const { t } = useTranslation("flight_edit_page");
 
 	const { fields, append, remove } = useFieldArray({
@@ -136,3 +137,5 @@ export const FlightInfo: FC<IFlightInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const FlightInfo = withErrorBoundary(FlightInfoBase);

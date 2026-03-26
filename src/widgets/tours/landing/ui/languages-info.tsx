@@ -7,7 +7,8 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage
+	FormMessage,
+	withErrorBoundary
 } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -22,7 +23,7 @@ interface ILanguagesInfoProps {
 	form: UseFormReturn<TLandingSchema>;
 }
 
-export const LanguagesInfo: FC<ILanguagesInfoProps> = ({ form }) => {
+const LanguagesInfoBase: FC<ILanguagesInfoProps> = ({ form }) => {
 	const { t } = useTranslation("landing_page");
 	const { watch, setValue, control } = form;
 	const selectedLanguages =
@@ -86,3 +87,5 @@ export const LanguagesInfo: FC<ILanguagesInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const LanguagesInfo = withErrorBoundary(LanguagesInfoBase);

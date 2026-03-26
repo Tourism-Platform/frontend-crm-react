@@ -1,13 +1,13 @@
 import { type FC } from "react";
 
-import { Calendar } from "@/shared/ui";
+import { Calendar, withErrorBoundary } from "@/shared/ui";
 
 interface ICalendarInfoProps {
 	date: Date[] | undefined;
 	setDate: (date: Date[] | undefined) => void;
 }
 
-export const CalendarInfo: FC<ICalendarInfoProps> = ({ date, setDate }) => {
+const CalendarInfoBase: FC<ICalendarInfoProps> = ({ date, setDate }) => {
 	return (
 		<div>
 			<Calendar
@@ -26,3 +26,5 @@ export const CalendarInfo: FC<ICalendarInfoProps> = ({ date, setDate }) => {
 		</div>
 	);
 };
+
+export const CalendarInfo = withErrorBoundary(CalendarInfoBase);

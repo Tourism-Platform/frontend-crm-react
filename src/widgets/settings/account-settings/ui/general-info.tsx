@@ -2,7 +2,7 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import type { TAccountSchema } from "@/entities/user";
 
@@ -12,7 +12,7 @@ interface IGeneralInfoProps {
 	form: UseFormReturn<TAccountSchema>;
 }
 
-export const GeneralInfo: FC<IGeneralInfoProps> = ({ form }) => {
+const GeneralInfoBase: FC<IGeneralInfoProps> = ({ form }) => {
 	const { t } = useTranslation("account_settings_page");
 	return (
 		<div className="flex gap-5 flex-col">
@@ -31,3 +31,5 @@ export const GeneralInfo: FC<IGeneralInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const GeneralInfo = withErrorBoundary(GeneralInfoBase);

@@ -6,7 +6,13 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Button, CustomField, CustomRangeField, Form } from "@/shared/ui";
+import {
+	Button,
+	CustomField,
+	CustomRangeField,
+	Form,
+	withErrorBoundary
+} from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -20,7 +26,7 @@ import {
 
 import { GENERAL_FORM_LIST } from "../../model";
 
-export const GeneralInfo: FC = () => {
+const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
@@ -128,3 +134,5 @@ export const GeneralInfo: FC = () => {
 		</Form>
 	);
 };
+
+export const GeneralInfo = withErrorBoundary(GeneralInfoBase);

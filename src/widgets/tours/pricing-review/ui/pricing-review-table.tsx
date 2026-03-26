@@ -1,7 +1,13 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, Card, CardContent, SmartTable } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	SmartTable,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import { type ITourReviewItem } from "@/entities/tour";
 
@@ -18,7 +24,7 @@ const TABLE_LAYOUT = {
 
 const getSubRowsFn = (row: ITourReviewItem) => row.subRows;
 
-export const PricingReviewTable: FC<IPricingReviewTableProps> = ({ items }) => {
+const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({ items }) => {
 	const { t } = useTranslation("tour_pricing_review_page");
 	const columns = useMemo(() => PRICING_REVIEW_COLUMNS(t), [t]);
 
@@ -43,3 +49,5 @@ export const PricingReviewTable: FC<IPricingReviewTableProps> = ({ items }) => {
 		</Card>
 	);
 };
+
+export const PricingReviewTable = withErrorBoundary(PricingReviewTableBase);

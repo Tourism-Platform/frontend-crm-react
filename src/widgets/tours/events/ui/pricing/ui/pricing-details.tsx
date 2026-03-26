@@ -3,7 +3,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import { PRICE_DETAILS_DATA_LIST, type TPricingSchema } from "../model";
 
@@ -12,10 +12,7 @@ interface IPricingDetailsProps {
 	className?: string;
 }
 
-export const PricingDetails: FC<IPricingDetailsProps> = ({
-	form,
-	className
-}) => {
+const PricingDetailsBase: FC<IPricingDetailsProps> = ({ form, className }) => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
 		<div className={cn("grid gap-1 mb-8", className)}>
@@ -36,3 +33,5 @@ export const PricingDetails: FC<IPricingDetailsProps> = ({
 		</div>
 	);
 };
+
+export const PricingDetails = withErrorBoundary(PricingDetailsBase);
