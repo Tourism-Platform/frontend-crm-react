@@ -101,7 +101,7 @@ export const OrderHistory: FC = () => {
 		[filters.page, filters.limit]
 	);
 
-	const headerActions = useMemo(
+	const actionsJsx = useMemo(
 		() => (
 			<>
 				<PreviewTourButton />
@@ -113,10 +113,7 @@ export const OrderHistory: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-6 container">
-			<ConnectedTourHeader
-				title={t("page_name")}
-				actions={headerActions}
-			/>
+			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Card>
 				<CardContent>
 					<SmartTable

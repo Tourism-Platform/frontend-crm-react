@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 
@@ -29,15 +29,18 @@ export const SearchTours: FC = () => {
 		}
 	});
 
-	const handleRecentSelect = (data: IRecentSearch) => {
-		topSearchForm.reset({
-			destination: data.destination,
-			dates: {
-				from: fromatISOtoDate(data.dates.from),
-				to: fromatISOtoDate(data.dates.to)
-			}
-		});
-	};
+	const handleRecentSelect = useCallback(
+		(data: IRecentSearch) => {
+			topSearchForm.reset({
+				destination: data.destination,
+				dates: {
+					from: fromatISOtoDate(data.dates.from),
+					to: fromatISOtoDate(data.dates.to)
+				}
+			});
+		},
+		[topSearchForm]
+	);
 	return (
 		<section className="grid gap-12">
 			<SearchToursBar form={topSearchForm} />

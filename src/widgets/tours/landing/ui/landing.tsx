@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
@@ -74,21 +74,23 @@ export const Landing: FC = () => {
 		}
 	}
 
+	const actionsJsx = useMemo(
+		() => (
+			<>
+				<PreviewTourButton />
+				<PublishTourButton />
+			</>
+		),
+		[]
+	);
+
 	if ((!landingData || isLandingError) && !isLandingLoading) {
 		return <TourNotFound />;
 	}
 
 	return (
 		<section className="flex flex-col gap-6 container">
-			<ConnectedTourHeader
-				title={t("page_name")}
-				actions={
-					<>
-						<PreviewTourButton />
-						<PublishTourButton />
-					</>
-				}
-			/>
+			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<Card>

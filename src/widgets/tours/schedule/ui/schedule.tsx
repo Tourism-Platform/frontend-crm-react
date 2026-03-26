@@ -1,5 +1,5 @@
 import { addDays, subDays } from "date-fns";
-import { type FC, useState } from "react";
+import { type FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -39,17 +39,19 @@ export const Schedule: FC = () => {
 	const [seasonality, setSeasonality] = useState(false);
 	const [activeTab, setActiveTab] = useState(DATES_TYPE_LIST[0].value);
 
+	const actionsJsx = useMemo(
+		() => (
+			<>
+				<PreviewTourButton />
+				<PublishTourButton />
+			</>
+		),
+		[]
+	);
+
 	return (
 		<section className="flex flex-col gap-6 container">
-			<ConnectedTourHeader
-				title={t("page_name")}
-				actions={
-					<>
-						<PreviewTourButton />
-						<PublishTourButton />
-					</>
-				}
-			/>
+			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Card>
 				<CardContent className="grid gap-12">
 					<div className="flex justify-between gap-6 items-center">

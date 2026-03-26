@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -36,21 +36,23 @@ export const Settings: FC = () => {
 		skip: !tourId
 	});
 
+	const actionsJsx = useMemo(
+		() => (
+			<>
+				<PreviewTourButton />
+				<PublishTourButton />
+			</>
+		),
+		[]
+	);
+
 	if ((isError || !tour) && !isLoading) {
 		return <TourNotFound />;
 	}
 
 	return (
 		<section className="flex flex-col gap-6">
-			<ConnectedTourHeader
-				title={t("page_name")}
-				actions={
-					<>
-						<PreviewTourButton />
-						<PublishTourButton />
-					</>
-				}
-			/>
+			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Card>
 				<CardContent>
 					<CustomOptionTabs

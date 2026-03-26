@@ -1,5 +1,5 @@
 import { Loader } from "lucide-react";
-import { type FC, useEffect, useMemo, useState } from "react";
+import { type FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -49,9 +49,9 @@ export const ActivityLog: FC = () => {
 	const total = data?.total || 0;
 	const hasMore = activities.length < total;
 
-	const handleLoadMore = () => {
+	const handleLoadMore = useCallback(() => {
 		setPage((prev) => prev + 1);
-	};
+	}, []);
 
 	const actionsJsx = useMemo(
 		() => (
