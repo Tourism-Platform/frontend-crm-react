@@ -9,14 +9,15 @@ import {
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
-	Separator
+	Separator,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import { EventTitleInput } from "../ui";
 
 import { EVENT_EDIT_TABS_LIST } from "./model";
 
-export const EventEdit: FC = () => {
+const EventEditBase: FC = () => {
 	const { t } = useTranslation("event_edit_page");
 	return (
 		<section className="flex flex-col gap-6">
@@ -56,3 +57,5 @@ export const EventEdit: FC = () => {
 		</section>
 	);
 };
+
+export const EventEdit = withErrorBoundary(EventEditBase);

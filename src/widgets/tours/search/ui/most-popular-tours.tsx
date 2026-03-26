@@ -7,7 +7,8 @@ import {
 	CarouselContent,
 	CarouselItem,
 	CarouselNext,
-	CarouselPrevious
+	CarouselPrevious,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import {
@@ -16,7 +17,7 @@ import {
 	useGetPopularToursQuery
 } from "@/entities/tour";
 
-export const MostPopularTours: FC = () => {
+const MostPopularToursBase: FC = () => {
 	const { t } = useTranslation("tours_catalog_page");
 
 	const {
@@ -73,3 +74,5 @@ export const MostPopularTours: FC = () => {
 		</div>
 	);
 };
+
+export const MostPopularTours = withErrorBoundary(MostPopularToursBase);

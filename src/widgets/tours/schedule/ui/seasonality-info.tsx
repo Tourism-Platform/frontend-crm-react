@@ -3,10 +3,10 @@ import { type FC } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Form, Input } from "@/shared/ui";
+import { Button, Form, Input, withErrorBoundary } from "@/shared/ui";
 import DatePickerDemo from "@/shared/ui/range";
 
-export const SeasonalityInfo: FC = () => {
+const SeasonalityInfoBase: FC = () => {
 	const { t } = useTranslation("tour_schedule_page");
 
 	const form = useForm<{
@@ -95,3 +95,5 @@ export const SeasonalityInfo: FC = () => {
 		</Form>
 	);
 };
+
+export const SeasonalityInfo = withErrorBoundary(SeasonalityInfoBase);

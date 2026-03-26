@@ -2,7 +2,7 @@ import { type FC, Fragment } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import { SCHEDULE_LIST, type TGeneralInfoSchema } from "../../model";
 
@@ -10,7 +10,7 @@ interface IScheduleProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
 }
 
-export const Schedule: FC<IScheduleProps> = ({ form }) => {
+const ScheduleBase: FC<IScheduleProps> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 	return (
 		<div className="grid gap-5">
@@ -31,3 +31,5 @@ export const Schedule: FC<IScheduleProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const Schedule = withErrorBoundary(ScheduleBase);

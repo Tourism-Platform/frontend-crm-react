@@ -9,7 +9,8 @@ import {
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
-	Separator
+	Separator,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import { useGetTourGeneralQuery } from "@/entities/tour";
@@ -24,7 +25,7 @@ import { TourNotFound } from "../tour-not-found";
 
 import { SETTINGS_TABS_LIST } from "./model";
 
-export const Settings: FC = () => {
+const SettingsBase: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
 	const { tourId } = useParams<{ tourId: string }>();
 
@@ -84,3 +85,5 @@ export const Settings: FC = () => {
 		</section>
 	);
 };
+
+export const Settings = withErrorBoundary(SettingsBase);

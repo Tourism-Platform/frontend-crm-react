@@ -7,6 +7,7 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
+import { withErrorBoundary } from "@/shared/ui";
 
 import { type IDayItem, itemId } from "../../model";
 
@@ -18,7 +19,7 @@ interface IDroppableNestedContainerProps {
 	onRemoveNested: (index: number) => void;
 }
 
-export const DroppableNestedContainer: FC<IDroppableNestedContainerProps> = ({
+const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
 	items,
 	parentBlockId,
 	onRemoveNested
@@ -70,3 +71,7 @@ export const DroppableNestedContainer: FC<IDroppableNestedContainerProps> = ({
 		</div>
 	);
 };
+
+export const DroppableNestedContainer = withErrorBoundary(
+	DroppableNestedContainerBase
+);

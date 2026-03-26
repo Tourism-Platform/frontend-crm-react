@@ -1,14 +1,14 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, Separator } from "@/shared/ui";
+import { Card, CardContent, Separator, withErrorBoundary } from "@/shared/ui";
 
 import { useGetCommissionsQuery } from "@/entities/commission";
 
 import { CommissionRate } from "./commission-rate";
 import { CommissionType } from "./commission-type";
 
-export const FinancialSettings: FC = () => {
+const FinancialSettingsBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page");
 	const {
 		data: commissions = [],
@@ -32,3 +32,5 @@ export const FinancialSettings: FC = () => {
 		</section>
 	);
 };
+
+export const FinancialSettings = withErrorBoundary(FinancialSettingsBase);

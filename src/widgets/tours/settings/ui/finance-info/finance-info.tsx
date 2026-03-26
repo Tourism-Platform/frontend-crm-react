@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Button, CustomField, Form } from "@/shared/ui";
+import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_SETTINGS_FINANCE_FORM,
@@ -18,7 +18,7 @@ import {
 
 import { FINANCE_FORM_LIST } from "../../model";
 
-export const FinanceInfo: FC = () => {
+const FinanceInfoBase: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
@@ -103,3 +103,5 @@ export const FinanceInfo: FC = () => {
 		</Form>
 	);
 };
+
+export const FinanceInfo = withErrorBoundary(FinanceInfoBase);

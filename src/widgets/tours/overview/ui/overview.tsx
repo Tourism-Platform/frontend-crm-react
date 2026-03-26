@@ -1,6 +1,8 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { withErrorBoundary } from "@/shared/ui";
+
 import { ConnectedTourHeader } from "@/features/tours";
 import { PreviewTourButton, PublishTourButton } from "@/features/tours";
 
@@ -8,7 +10,7 @@ import { RecentActivityLog } from "./recent-activity-log";
 import { LastOrders } from "./resent-orders";
 import { TourInfo } from "./tour-info";
 
-export const Overview: FC = () => {
+const OverviewBase: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
 
 	const actionsJsx = useMemo(
@@ -33,3 +35,5 @@ export const Overview: FC = () => {
 		</section>
 	);
 };
+
+export const Overview = withErrorBoundary(OverviewBase);

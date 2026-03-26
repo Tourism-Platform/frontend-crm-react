@@ -3,13 +3,13 @@ import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Form } from "@/shared/ui";
+import { Button, Form, withErrorBoundary } from "@/shared/ui";
 
 import { CARS_SCHEMA, type TCarsSchema } from "../../model";
 
 import { CarsDetails } from "./cars-details";
 
-export const CarsInfo: FC = () => {
+const CarsInfoBase: FC = () => {
 	const { t } = useTranslation("transportation_edit_page");
 	const form = useForm<TCarsSchema>({
 		resolver: zodResolver(CARS_SCHEMA),
@@ -44,3 +44,5 @@ export const CarsInfo: FC = () => {
 		</Form>
 	);
 };
+
+export const CarsInfo = withErrorBoundary(CarsInfoBase);

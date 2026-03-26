@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -18,7 +18,7 @@ import { COLUMNS } from "../model";
 
 import { SupplierPaymentsHeader } from "./supplier-payments-header";
 
-export const SupplierPayments: FC = () => {
+const SupplierPaymentsBase: FC = () => {
 	const { t } = useTranslation("supplier_payments_page");
 	const { t: tCols } = useTranslation(["supplier_payments_page", "options"]);
 	const { watch, setValue } = useForm<ISupplierPaymentFilters>({
@@ -121,3 +121,5 @@ export const SupplierPayments: FC = () => {
 		</section>
 	);
 };
+
+export const SupplierPayments = withErrorBoundary(SupplierPaymentsBase);

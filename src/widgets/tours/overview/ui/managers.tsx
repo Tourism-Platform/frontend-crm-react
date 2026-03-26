@@ -1,9 +1,9 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent } from "@/shared/ui";
+import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 
-export const Managers: FC = () => {
+const ManagersBase: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
 	return (
 		<Card>
@@ -18,3 +18,5 @@ export const Managers: FC = () => {
 		</Card>
 	);
 };
+
+export const Managers = withErrorBoundary(ManagersBase);

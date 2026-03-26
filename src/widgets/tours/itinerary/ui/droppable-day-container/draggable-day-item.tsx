@@ -8,7 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { InfoCircleIcon } from "@/shared/assets";
 import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Button, Card, CardContent } from "@/shared/ui";
+import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_EVENT,
@@ -39,7 +39,7 @@ interface IDraggableDayItemProps {
 	onRemoveNested?: (index: number, nestedIndex: number) => void;
 }
 
-export const DraggableDayItem: FC<IDraggableDayItemProps> = React.memo(
+const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 	({ item, index = 0, isOverlay, onRemove, onRemoveNested }) => {
 		const {
 			attributes,
@@ -136,3 +136,5 @@ export const DraggableDayItem: FC<IDraggableDayItemProps> = React.memo(
 		return <Link to={href}>{content}</Link>;
 	}
 );
+
+export const DraggableDayItem = withErrorBoundary(DraggableDayItemBase);

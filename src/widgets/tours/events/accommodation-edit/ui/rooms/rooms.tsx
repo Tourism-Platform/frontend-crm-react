@@ -3,13 +3,13 @@ import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Form } from "@/shared/ui";
+import { Button, Form, withErrorBoundary } from "@/shared/ui";
 
 import { ROOMS_SCHEMA, type TRoomsSchema } from "../../model";
 
 import { RoomsDetails } from "./rooms-details";
 
-export const Rooms: FC = () => {
+const RoomsBase: FC = () => {
 	const { t } = useTranslation("accommodation_edit_page");
 	const form = useForm<TRoomsSchema>({
 		resolver: zodResolver(ROOMS_SCHEMA),
@@ -43,3 +43,5 @@ export const Rooms: FC = () => {
 		</Form>
 	);
 };
+
+export const Rooms = withErrorBoundary(RoomsBase);

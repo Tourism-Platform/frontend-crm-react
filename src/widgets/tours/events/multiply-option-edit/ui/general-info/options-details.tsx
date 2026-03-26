@@ -2,6 +2,8 @@ import { type FC } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { withErrorBoundary } from "@/shared/ui";
+
 import { type TGeneralInfoSchema } from "../../model";
 
 import { OptionCard } from "./option-card";
@@ -10,7 +12,7 @@ interface IOptionsDetailsProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
 }
 
-export const OptionsDetails: FC<IOptionsDetailsProps> = ({ form }) => {
+const OptionsDetailsBase: FC<IOptionsDetailsProps> = ({ form }) => {
 	const { t } = useTranslation("multiply_option_edit_page");
 	const { fields } = useFieldArray({
 		control: form.control,
@@ -30,3 +32,5 @@ export const OptionsDetails: FC<IOptionsDetailsProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const OptionsDetails = withErrorBoundary(OptionsDetailsBase);

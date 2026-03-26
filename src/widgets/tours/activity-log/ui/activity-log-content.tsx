@@ -1,12 +1,14 @@
 import type { FC } from "react";
 
+import { withErrorBoundary } from "@/shared/ui";
+
 import { ActivityLogItem, type IActivityLogItem } from "@/entities/tour";
 
 interface IActivityLogContentProps {
 	items: IActivityLogItem[];
 }
 
-export const ActivityLogContent: FC<IActivityLogContentProps> = ({ items }) => {
+const ActivityLogContentBase: FC<IActivityLogContentProps> = ({ items }) => {
 	return (
 		<div className="flex flex-col">
 			{items.map((item, index) => (
@@ -19,3 +21,5 @@ export const ActivityLogContent: FC<IActivityLogContentProps> = ({ items }) => {
 		</div>
 	);
 };
+
+export const ActivityLogContent = withErrorBoundary(ActivityLogContentBase);

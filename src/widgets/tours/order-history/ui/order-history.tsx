@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -23,7 +23,7 @@ import {
 
 import { ORDER_HISTORY_COLUMNS } from "../model";
 
-export const OrderHistory: FC = () => {
+const OrderHistoryBase: FC = () => {
 	const { t } = useTranslation("tour_order_history_page");
 	const { t: tCols } = useTranslation(["tour_order_history_page", "options"]);
 	const { tourId = "" } = useParams<{ tourId: string }>();
@@ -135,3 +135,5 @@ export const OrderHistory: FC = () => {
 		</section>
 	);
 };
+
+export const OrderHistory = withErrorBoundary(OrderHistoryBase);

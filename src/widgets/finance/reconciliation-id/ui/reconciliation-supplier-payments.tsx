@@ -6,7 +6,8 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	SmartTable
+	SmartTable,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import { type IReconciliationSupplierPayment } from "@/entities/finance";
@@ -17,7 +18,7 @@ interface IReconciliationSupplierPaymentsProps {
 	data: IReconciliationSupplierPayment[];
 }
 
-export const ReconciliationSupplierPayments: FC<
+const ReconciliationSupplierPaymentsBase: FC<
 	IReconciliationSupplierPaymentsProps
 > = ({ data }) => {
 	const { t } = useTranslation("reconciliation_id_page");
@@ -41,3 +42,7 @@ export const ReconciliationSupplierPayments: FC<
 		</Card>
 	);
 };
+
+export const ReconciliationSupplierPayments = withErrorBoundary(
+	ReconciliationSupplierPaymentsBase
+);

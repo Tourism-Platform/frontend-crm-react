@@ -2,7 +2,7 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import { ENUM_FORM_LANDING, type TLandingSchema } from "@/entities/tour";
 
@@ -10,7 +10,7 @@ interface ICancellationPolicyInfoProps {
 	form: UseFormReturn<TLandingSchema>;
 }
 
-export const CancellationPolicyInfo: FC<ICancellationPolicyInfoProps> = ({
+const CancellationPolicyInfoBase: FC<ICancellationPolicyInfoProps> = ({
 	form
 }) => {
 	const { t } = useTranslation("landing_page");
@@ -32,3 +32,7 @@ export const CancellationPolicyInfo: FC<ICancellationPolicyInfoProps> = ({
 		</div>
 	);
 };
+
+export const CancellationPolicyInfo = withErrorBoundary(
+	CancellationPolicyInfoBase
+);

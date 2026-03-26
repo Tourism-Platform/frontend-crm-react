@@ -2,7 +2,7 @@ import { type FC, Fragment } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import { type TGeneralInfoSchema, TRANSPORTATION_DATA_LIST } from "../../model";
 
@@ -10,7 +10,7 @@ interface ITransportationInfoProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
 }
 
-export const TransportationInfo: FC<ITransportationInfoProps> = ({ form }) => {
+const TransportationInfoBase: FC<ITransportationInfoProps> = ({ form }) => {
 	const { t } = useTranslation("transportation_edit_page");
 
 	return (
@@ -33,3 +33,5 @@ export const TransportationInfo: FC<ITransportationInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const TransportationInfo = withErrorBoundary(TransportationInfoBase);

@@ -6,7 +6,14 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 
-import { Button, Card, CardContent, Form, Separator } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	Form,
+	Separator,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	LANDING_SCHEMA,
@@ -31,7 +38,7 @@ import { OverviewInfo } from "./overview-info";
 import { PhotosInfo } from "./photos-info";
 import { PickupDetailsInfo } from "./pickup-details-info";
 
-export const Landing: FC = () => {
+const LandingBase: FC = () => {
 	const { t } = useTranslation("landing_page" as const);
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
@@ -133,3 +140,5 @@ export const Landing: FC = () => {
 		</section>
 	);
 };
+
+export const Landing = withErrorBoundary(LandingBase);

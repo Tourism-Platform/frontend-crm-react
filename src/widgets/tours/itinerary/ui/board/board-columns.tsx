@@ -5,7 +5,7 @@ import {
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { ScrollArea, ScrollBar } from "@/shared/ui";
+import { ScrollArea, ScrollBar, withErrorBoundary } from "@/shared/ui";
 
 import {
 	type IBaseDnDProps,
@@ -21,7 +21,7 @@ interface IBoardColumnsProps extends IBaseDnDProps {
 	data: IOptionData;
 }
 
-export const BoardColumns: FC<IBoardColumnsProps> = ({
+const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 	data,
 	optionId,
 	onRemoveItem
@@ -84,3 +84,5 @@ export const BoardColumns: FC<IBoardColumnsProps> = ({
 		</ScrollArea>
 	);
 };
+
+export const BoardColumns = withErrorBoundary(BoardColumnsBase);

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -18,7 +18,7 @@ import { InviteStaff } from "@/features/settings";
 
 import { COLUMNS } from "../model";
 
-export const StaffInformation: FC = () => {
+const StaffInformationBase: FC = () => {
 	const { t } = useTranslation("staff_information_page");
 
 	const { watch, setValue } = useForm<IStaffFilters>({
@@ -121,3 +121,5 @@ export const StaffInformation: FC = () => {
 		</section>
 	);
 };
+
+export const StaffInformation = withErrorBoundary(StaffInformationBase);

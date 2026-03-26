@@ -9,14 +9,15 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	SmartTable
+	SmartTable,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import { type ITourOrderFilters, useGetTourOrdersQuery } from "@/entities/tour";
 
 import { RECENT_ORDERS_COLUMNS } from "../model";
 
-export const LastOrders: FC = () => {
+const LastOrdersBase: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
 	const { t: tCols } = useTranslation(["tour_order_history_page", "options"]);
 	const { tourId = "" } = useParams<{ tourId: string }>();
@@ -75,3 +76,5 @@ export const LastOrders: FC = () => {
 		</Card>
 	);
 };
+
+export const LastOrders = withErrorBoundary(LastOrdersBase);

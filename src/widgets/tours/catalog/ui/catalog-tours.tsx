@@ -11,7 +11,8 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	SmartTable
+	SmartTable,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import {
@@ -44,7 +45,7 @@ const DEFAULT_FILTERS: ICatalogTourFilters = {
 	}
 };
 
-export const CatalogTours: FC = () => {
+const CatalogToursBase: FC = () => {
 	const { t } = useTranslation("tours_catalog_page");
 	const { t: tCols } = useTranslation(["tours_catalog_page", "options"]);
 
@@ -187,3 +188,5 @@ export const CatalogTours: FC = () => {
 		</section>
 	);
 };
+
+export const CatalogTours = withErrorBoundary(CatalogToursBase);

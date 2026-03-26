@@ -8,7 +8,8 @@ import {
 	CardHeader,
 	CardTitle,
 	Separator,
-	SmartTable
+	SmartTable,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import {
@@ -44,7 +45,7 @@ const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
 	);
 };
 
-export const OrderTourReview = ({
+const OrderTourReviewBase = ({
 	items,
 	summary,
 	orderStatus
@@ -99,3 +100,5 @@ export const OrderTourReview = ({
 		</Card>
 	);
 };
+
+export const OrderTourReview = withErrorBoundary(OrderTourReviewBase);

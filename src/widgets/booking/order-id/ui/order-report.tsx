@@ -1,13 +1,19 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	withErrorBoundary
+} from "@/shared/ui";
 
 interface IOrderReportProps {
 	report: string;
 }
 
-export const OrderReport: FC<IOrderReportProps> = ({ report }) => {
+const OrderReportBase: FC<IOrderReportProps> = ({ report }) => {
 	const { t } = useTranslation("order_id_page");
 
 	return (
@@ -21,3 +27,5 @@ export const OrderReport: FC<IOrderReportProps> = ({ report }) => {
 		</Card>
 	);
 };
+
+export const OrderReport = withErrorBoundary(OrderReportBase);

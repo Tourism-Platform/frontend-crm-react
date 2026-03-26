@@ -7,7 +7,7 @@ import { type FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Card } from "@/shared/ui";
+import { Card, withErrorBoundary } from "@/shared/ui";
 
 import { type IBaseDnDProps, type IDayItem, itemId } from "../../model";
 
@@ -19,7 +19,7 @@ interface IDroppableTripContainerProps extends IBaseDnDProps {
 	showEmptyPlaceholder?: boolean;
 }
 
-export const DroppableTripContainer: FC<IDroppableTripContainerProps> = ({
+const DroppableTripContainerBase: FC<IDroppableTripContainerProps> = ({
 	items,
 	containerId,
 	showEmptyPlaceholder = false,
@@ -84,3 +84,7 @@ export const DroppableTripContainer: FC<IDroppableTripContainerProps> = ({
 		</Card>
 	);
 };
+
+export const DroppableTripContainer = withErrorBoundary(
+	DroppableTripContainerBase
+);

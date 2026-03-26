@@ -7,7 +7,8 @@ import {
 	CardContent,
 	CustomOptionTabs,
 	CustomOptionTabsList,
-	CustomOptionTabsTrigger
+	CustomOptionTabsTrigger,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import {
@@ -23,7 +24,7 @@ import { SeasonalityInfo } from "./seasonality-info";
 import { SelectedDates } from "./selected-dates";
 import { Switcher } from "./switcher";
 
-export const Schedule: FC = () => {
+const ScheduleBase: FC = () => {
 	const { t } = useTranslation("tour_schedule_page");
 	const today = new Date();
 	const [date, setDate] = useState<Date[] | undefined>([
@@ -88,3 +89,5 @@ export const Schedule: FC = () => {
 		</section>
 	);
 };
+
+export const Schedule = withErrorBoundary(ScheduleBase);

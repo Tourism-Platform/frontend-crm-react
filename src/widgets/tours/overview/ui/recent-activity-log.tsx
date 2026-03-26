@@ -3,7 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ActivityLogItem,
@@ -11,7 +17,7 @@ import {
 	useGetActivityLogQuery
 } from "@/entities/tour";
 
-export const RecentActivityLog: FC = () => {
+const RecentActivityLogBase: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
@@ -67,3 +73,5 @@ export const RecentActivityLog: FC = () => {
 		</Card>
 	);
 };
+
+export const RecentActivityLog = withErrorBoundary(RecentActivityLogBase);

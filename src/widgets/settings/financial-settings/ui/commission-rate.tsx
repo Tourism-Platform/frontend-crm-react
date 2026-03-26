@@ -1,9 +1,9 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CustomInput, Separator } from "@/shared/ui";
+import { CustomInput, Separator, withErrorBoundary } from "@/shared/ui";
 
-export const CommissionRate: FC = () => {
+const CommissionRateBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page");
 	return (
 		<div className="flex gap-8 flex-col">
@@ -41,3 +41,5 @@ export const CommissionRate: FC = () => {
 		</div>
 	);
 };
+
+export const CommissionRate = withErrorBoundary(CommissionRateBase);

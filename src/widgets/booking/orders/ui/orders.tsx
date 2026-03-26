@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -16,7 +16,7 @@ import {
 
 import { COLUMNS } from "../model";
 
-export const Orders: FC = () => {
+const OrdersBase: FC = () => {
 	const { t } = useTranslation("orders_page");
 	const { watch, setValue } = useForm<{
 		status: ENUM_ORDER_STATUS_TYPE;
@@ -131,3 +131,5 @@ export const Orders: FC = () => {
 		</section>
 	);
 };
+
+export const Orders = withErrorBoundary(OrdersBase);

@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
-import { Button } from "@/shared/ui";
+import { Button, withErrorBoundary } from "@/shared/ui";
 
 import { TourNotFoundCard } from "@/entities/tour";
 
-export const TourNotFound: FC = () => {
+const TourNotFoundBase: FC = () => {
 	const { t } = useTranslation("tours_page");
 
 	return (
@@ -30,3 +30,5 @@ export const TourNotFound: FC = () => {
 		</div>
 	);
 };
+
+export const TourNotFound = withErrorBoundary(TourNotFoundBase);

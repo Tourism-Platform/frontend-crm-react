@@ -8,7 +8,8 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
-	FormMessage
+	FormMessage,
+	withErrorBoundary
 } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -23,7 +24,7 @@ interface IPickupDetailsInfoProps {
 	form: UseFormReturn<TLandingSchema>;
 }
 
-export const PickupDetailsInfo: FC<IPickupDetailsInfoProps> = ({ form }) => {
+const PickupDetailsInfoBase: FC<IPickupDetailsInfoProps> = ({ form }) => {
 	const { t } = useTranslation("landing_page");
 	const { control, watch, setValue } = form;
 	const pickupType =
@@ -96,3 +97,5 @@ export const PickupDetailsInfo: FC<IPickupDetailsInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const PickupDetailsInfo = withErrorBoundary(PickupDetailsInfoBase);

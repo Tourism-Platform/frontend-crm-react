@@ -5,7 +5,12 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, FieldSeparator } from "@/shared/ui";
+import {
+	Button,
+	CustomField,
+	FieldSeparator,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ENUM_FORM_LOGIN,
@@ -20,11 +25,7 @@ interface ISignUpFormProps {
 	error?: FetchBaseQueryError | SerializedError | unknown;
 }
 
-export const SignUpForm: FC<ISignUpFormProps> = ({
-	form,
-	isLoading,
-	error
-}) => {
+const SignUpFormBase: FC<ISignUpFormProps> = ({ form, isLoading, error }) => {
 	const { t } = useTranslation("login_page");
 	console.log("error", error);
 	return (
@@ -85,3 +86,5 @@ export const SignUpForm: FC<ISignUpFormProps> = ({
 		</div>
 	);
 };
+
+export const SignUpForm = withErrorBoundary(SignUpFormBase);

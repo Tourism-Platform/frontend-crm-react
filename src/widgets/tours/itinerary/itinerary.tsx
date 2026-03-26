@@ -10,7 +10,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { ITINERARY_ROUTES_MOCK, ITINERARY_TABS_MOCK } from "@/shared/config";
-import { Separator } from "@/shared/ui";
+import { Separator, withErrorBoundary } from "@/shared/ui";
 
 import { type ITemplateItem } from "@/entities/tour";
 
@@ -34,7 +34,7 @@ import {
 	ItinerarySidebar
 } from "./ui";
 
-export const Itinerary: React.FC = () => {
+const ItineraryBase: React.FC = () => {
 	// tabs state (mocks "loading" tabs list)
 	const [options, setOptions] = useState<IOption[]>(ITINERARY_TABS_MOCK);
 	const [activeOption, setActiveOption] = useState<number>(
@@ -153,3 +153,5 @@ export const Itinerary: React.FC = () => {
 		</DndContext>
 	);
 };
+
+export const Itinerary = withErrorBoundary(ItineraryBase);

@@ -6,7 +6,11 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { MoneysIcon } from "@/shared/assets";
-import { CustomAccordion, CustomAccordionRange } from "@/shared/ui";
+import {
+	CustomAccordion,
+	CustomAccordionRange,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	type ICatalogTourFilters,
@@ -27,7 +31,7 @@ const PRICE_STEP = 150;
 const PRICE_MIN = 0;
 const PRICE_MAX = 3600;
 
-export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
+const CatalogToursFilterBase: FC<ICatalogToursFilterProps> = ({ form }) => {
 	const { t } = useTranslation("tours_catalog_page");
 	const { watch, setValue } = form;
 
@@ -196,3 +200,5 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const CatalogToursFilter = withErrorBoundary(CatalogToursFilterBase);

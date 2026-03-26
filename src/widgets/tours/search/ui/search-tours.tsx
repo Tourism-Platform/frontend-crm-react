@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useLocation } from "react-router-dom";
 
 import { ENUM_PATH, parseQueryByRoute } from "@/shared/config";
+import { withErrorBoundary } from "@/shared/ui";
 import { fromatISOtoDate } from "@/shared/utils";
 
 import { type IRecentSearch, type ISearchTours } from "@/entities/tour";
@@ -12,7 +13,7 @@ import { SearchToursBar } from "@/features/tours";
 import { MostPopularTours } from "./most-popular-tours";
 import { RecentlySearch } from "./recently-search";
 
-export const SearchTours: FC = () => {
+const SearchToursBase: FC = () => {
 	const location = useLocation();
 	const {
 		destination,
@@ -49,3 +50,5 @@ export const SearchTours: FC = () => {
 		</section>
 	);
 };
+
+export const SearchTours = withErrorBoundary(SearchToursBase);

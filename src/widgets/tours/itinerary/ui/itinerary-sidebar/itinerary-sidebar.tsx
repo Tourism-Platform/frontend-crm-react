@@ -3,13 +3,13 @@ import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Card } from "@/shared/ui";
+import { Card, withErrorBoundary } from "@/shared/ui";
 
 import { EVENT_TEMPLATES_LIST } from "@/entities/tour";
 
 import { DraggableTemplateItem } from "./draggable-template-item";
 
-export const ItinerarySidebar: FC = () => {
+const ItinerarySidebarBase: FC = () => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 	return (
@@ -73,3 +73,5 @@ export const ItinerarySidebar: FC = () => {
 		</Card>
 	);
 };
+
+export const ItinerarySidebar = withErrorBoundary(ItinerarySidebarBase);

@@ -2,7 +2,7 @@ import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import { FLIGHT_DESCRIPTION, type TGeneralInfoSchema } from "../../model";
 
@@ -10,7 +10,7 @@ interface IDescriptionInfoProps {
 	form: UseFormReturn<TGeneralInfoSchema>;
 }
 
-export const DescriptionInfo: FC<IDescriptionInfoProps> = ({ form }) => {
+const DescriptionInfoBase: FC<IDescriptionInfoProps> = ({ form }) => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
 		<div className="grid gap-6">
@@ -27,3 +27,5 @@ export const DescriptionInfo: FC<IDescriptionInfoProps> = ({ form }) => {
 		</div>
 	);
 };
+
+export const DescriptionInfo = withErrorBoundary(DescriptionInfoBase);

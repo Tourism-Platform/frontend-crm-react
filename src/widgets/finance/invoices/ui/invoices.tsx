@@ -3,7 +3,7 @@ import { type FC, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -17,7 +17,7 @@ import { COLUMNS } from "../model";
 
 import { InvoicesHeader } from "./invoices-header";
 
-export const Invoices: FC = () => {
+const InvoicesBase: FC = () => {
 	const { t } = useTranslation(["invoices_page", "options"]);
 	const { watch, setValue } = useForm<IInvoiceFilters>({
 		defaultValues: {
@@ -111,3 +111,5 @@ export const Invoices: FC = () => {
 		</section>
 	);
 };
+
+export const Invoices = withErrorBoundary(InvoicesBase);

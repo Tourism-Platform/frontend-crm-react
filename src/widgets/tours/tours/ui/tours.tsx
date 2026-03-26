@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Card, CardContent, SmartTable } from "@/shared/ui";
+import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
@@ -21,7 +21,7 @@ import { CreateTour } from "@/features/tours";
 
 import { COLUMNS } from "../model";
 
-export const Tours: FC = () => {
+const ToursBase: FC = () => {
 	const { t } = useTranslation(["tours_page", "options"]);
 
 	const { watch, setValue } = useForm<ITourFilters>({
@@ -151,3 +151,5 @@ export const Tours: FC = () => {
 		</section>
 	);
 };
+
+export const Tours = withErrorBoundary(ToursBase);

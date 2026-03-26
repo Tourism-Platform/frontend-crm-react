@@ -2,6 +2,7 @@ import { type FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { MOCK_PRICING_DATA } from "@/shared/config";
+import { withErrorBoundary } from "@/shared/ui";
 
 import {
 	ConnectedTourHeader,
@@ -15,7 +16,7 @@ import {
 	PricingReviewTabs
 } from "./index";
 
-export const PricingReview: FC = () => {
+const PricingReviewBase: FC = () => {
 	const { t } = useTranslation("tour_pricing_review_page");
 	const [activeOptionId, setActiveOptionId] = useState<number>(
 		MOCK_PRICING_DATA[0].id
@@ -54,3 +55,5 @@ export const PricingReview: FC = () => {
 		</section>
 	);
 };
+
+export const PricingReview = withErrorBoundary(PricingReviewBase);

@@ -8,7 +8,8 @@ import {
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
-	Form
+	Form,
+	withErrorBoundary
 } from "@/shared/ui";
 
 import {
@@ -17,7 +18,7 @@ import {
 	type TPricingSchema
 } from "./model";
 
-export const Pricing: FC = () => {
+const PricingBase: FC = () => {
 	const { t } = useTranslation("flight_edit_page");
 	const form = useForm<TPricingSchema>({
 		resolver: zodResolver(PRICING_SCHEMA),
@@ -69,3 +70,5 @@ export const Pricing: FC = () => {
 		</div>
 	);
 };
+
+export const Pricing = withErrorBoundary(PricingBase);

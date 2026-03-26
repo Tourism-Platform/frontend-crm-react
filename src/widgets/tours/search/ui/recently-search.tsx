@@ -1,6 +1,8 @@
 import { type FC, memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
+import { withErrorBoundary } from "@/shared/ui";
+
 import {
 	RecentSearchCard,
 	RecentSearchCardSkeleton,
@@ -12,7 +14,7 @@ interface IRecentlySearchProps {
 	onSelect: (data: IRecentSearch) => void;
 }
 
-const RecentlySearchInner: FC<IRecentlySearchProps> = ({ onSelect }) => {
+const RecentlySearchBase: FC<IRecentlySearchProps> = ({ onSelect }) => {
 	const { t } = useTranslation("tours_search_page");
 
 	const { data: items = [], isLoading } = useGetRecentlySearchedToursQuery();
@@ -48,4 +50,4 @@ const RecentlySearchInner: FC<IRecentlySearchProps> = ({ onSelect }) => {
 	);
 };
 
-export const RecentlySearch = memo(RecentlySearchInner);
+export const RecentlySearch = withErrorBoundary(memo(RecentlySearchBase));

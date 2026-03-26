@@ -3,7 +3,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { CustomField } from "@/shared/ui";
+import { CustomField, withErrorBoundary } from "@/shared/ui";
 
 import { COMMISSION_DETAILS_DATA_LIST, type TPricingSchema } from "../model";
 
@@ -12,7 +12,7 @@ interface ICommissionDetailsProps {
 	className?: string;
 }
 
-export const CommissionDetails: FC<ICommissionDetailsProps> = ({
+const CommissionDetailsBase: FC<ICommissionDetailsProps> = ({
 	form,
 	className
 }) => {
@@ -41,3 +41,5 @@ export const CommissionDetails: FC<ICommissionDetailsProps> = ({
 		</div>
 	);
 };
+
+export const CommissionDetails = withErrorBoundary(CommissionDetailsBase);
