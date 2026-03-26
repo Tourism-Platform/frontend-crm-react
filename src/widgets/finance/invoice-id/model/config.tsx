@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 import { formatToDollars } from "@/shared/utils";
 
@@ -7,8 +7,9 @@ import { type IInvoicePayment } from "@/entities/finance";
 
 import { OpenPayment } from "@/features/finance";
 
-export const COLUMNS = (): ColumnDef<IInvoicePayment>[] => {
-	const { t } = useTranslation("invoice_id_page");
+export const COLUMNS = (
+	t: TFunction<"invoice_id_page", undefined>
+): ColumnDef<IInvoicePayment>[] => {
 	return [
 		{
 			header: t("payment_table.table.fields.no"),

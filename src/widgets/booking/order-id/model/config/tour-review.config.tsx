@@ -1,6 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table";
+import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
@@ -15,9 +15,9 @@ import { ENUM_EVENT, EVENT_METADATA } from "@/entities/tour";
 import { ApplyReviewAction } from "@/features/booking";
 
 export const TOUR_REVIEW_COLUMNS = (
-	orderStatus?: ENUM_ORDER_STATUS_TYPE
+	t: TFunction<"order_id_page", undefined>,
+	orderStatus: ENUM_ORDER_STATUS_TYPE
 ): ColumnDef<ITourReviewItem>[] => {
-	const { t } = useTranslation("order_id_page");
 	return [
 		{
 			accessorKey: "item",

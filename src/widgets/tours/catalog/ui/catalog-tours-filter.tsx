@@ -1,7 +1,7 @@
 "use client";
 
 import { Clock, Globe, MapPin, Tag } from "lucide-react";
-import { type FC } from "react";
+import { type FC, useCallback } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -82,24 +82,55 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 		selectedValues: selectedFilters.category
 	});
 
-	const handleFilterChange = (
-		category: keyof NonNullable<ICatalogTourFilters["filters"]>,
-		id: string,
-		checked: boolean
-	) => {
-		const currentValues = (selectedFilters[category] as string[]) || [];
-		const nextValues = checked
-			? [...currentValues, id]
-			: currentValues.filter((val) => val !== id);
+	const handleFilterChange = useCallback(
+		(
+			category: keyof NonNullable<ICatalogTourFilters["filters"]>,
+			id: string,
+			checked: boolean
+		) => {
+			const currentValues =
+				(form.getValues(`filters.${category}`) as string[]) || [];
+			const nextValues = checked
+				? [...currentValues, id]
+				: currentValues.filter((val) => val !== id);
 
-		setValue(`filters.${category}`, nextValues);
-		setValue("page", 1);
-	};
+			setValue(`filters.${category}`, nextValues);
+			setValue("page", 1);
+		},
+		[form, setValue]
+	);
 
-	const handlePriceChange = (value: { from: number; to: number }) => {
-		setValue("filters.price", value);
-		setValue("page", 1);
-	};
+	const handlePriceChange = useCallback(
+		(value: { from: number; to: number }) => {
+			setValue("filters.price", value);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
+
+	const handleRegionChange = useCallback(
+		(id: string, checked: boolean) =>
+			handleFilterChange("region", id, checked),
+		[handleFilterChange]
+	);
+
+	const handleDurationChange = useCallback(
+		(id: string, checked: boolean) =>
+			handleFilterChange("duration", id, checked),
+		[handleFilterChange]
+	);
+
+	const handleLanguageChange = useCallback(
+		(id: string, checked: boolean) =>
+			handleFilterChange("language", id, checked),
+		[handleFilterChange]
+	);
+
+	const handleCategoryChange = useCallback(
+		(id: string, checked: boolean) =>
+			handleFilterChange("category", id, checked),
+		[handleFilterChange]
+	);
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -126,9 +157,7 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 				isLoading={isRegionsFetching}
 				hasMore={hasMoreRegions}
 				itemsLimit={5}
-				onChange={(id, checked) =>
-					handleFilterChange("region", id, checked)
-				}
+				onChange={handleRegionChange}
 				onLoadMore={loadMoreRegions}
 			/>
 
@@ -139,9 +168,7 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 				items={durationItems}
 				isLoading={isDurationsFetching}
 				hasMore={hasMoreDurations}
-				onChange={(id, checked) =>
-					handleFilterChange("duration", id, checked)
-				}
+				onChange={handleDurationChange}
 				onLoadMore={loadMoreDurations}
 			/>
 
@@ -152,9 +179,7 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 				items={languageItems}
 				isLoading={isLanguagesFetching}
 				hasMore={hasMoreLanguages}
-				onChange={(id, checked) =>
-					handleFilterChange("language", id, checked)
-				}
+				onChange={handleLanguageChange}
 				onLoadMore={loadMoreLanguages}
 			/>
 
@@ -165,9 +190,7 @@ export const CatalogToursFilter: FC<ICatalogToursFilterProps> = ({ form }) => {
 				items={categoryItems}
 				isLoading={isCategoriesFetching}
 				hasMore={hasMoreCategories}
-				onChange={(id, checked) =>
-					handleFilterChange("category", id, checked)
-				}
+				onChange={handleCategoryChange}
 				onLoadMore={loadMoreCategories}
 			/>
 		</div>

@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 import { Badge, Skeleton } from "@/shared/ui";
 
@@ -14,8 +14,9 @@ import {
 
 import { StaffActions } from "../ui";
 
-export const COLUMNS = (): ColumnDef<IStaffUser>[] => {
-	const { t } = useTranslation(["staff_information_page", "options"]);
+export const COLUMNS = (
+	t: TFunction<"staff_information_page", undefined>
+): ColumnDef<IStaffUser>[] => {
 	return [
 		{
 			id: "select",

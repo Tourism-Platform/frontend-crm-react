@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
@@ -24,6 +24,19 @@ export const OrderId: FC = () => {
 
 	const { data: order, isLoading } = useGetBookingOrderByIdQuery(
 		orderId || ""
+	);
+
+	const orderItems = useMemo(
+		() => (order ? getOrderItems(order, t) : []),
+		[order, t]
+	);
+	const contactItems = useMemo(
+		() => (order ? getContactItems(order, t) : []),
+		[order, t]
+	);
+	const optionItems = useMemo(
+		() => (order ? getOptionItems(order, t) : []),
+		[order, t]
 	);
 
 	if (isLoading) {
@@ -52,19 +65,19 @@ export const OrderId: FC = () => {
 			<div className="grid grid-cols-2 gap-6">
 				<OrderInfoCard
 					title={t("order_info.title")}
-					items={getOrderItems(order, t)}
+					items={orderItems}
 				/>
 
 				<OrderInfoCard
 					title={t("contact_info.title")}
-					items={getContactItems(order, t)}
+					items={contactItems}
 				/>
 			</div>
 
 			{order?.status !== ENUM_ORDER_STATUS.CANCELLED && (
 				<OrderInfoCard
 					title={t("selected_options.title")}
-					items={getOptionItems(order, t)}
+					items={optionItems}
 				/>
 			)}
 

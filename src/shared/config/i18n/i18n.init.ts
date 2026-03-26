@@ -14,7 +14,7 @@ i18n.use(HttpBackend)
 	.init({
 		fallbackLng: ENUM_LANGUAGES.EN,
 		debug: false,
-		ns: [...NS], // используем ваш существующий массив
+		ns: ["common", "header", "sidebar"], // используем ваш существующий массив
 		defaultNS: NS[0], // первый элемент как default
 		interpolation: {
 			escapeValue: false

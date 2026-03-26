@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
@@ -12,9 +12,9 @@ import {
 	TOUR_ORDER_STATUS_VARIANTS
 } from "@/entities/tour";
 
-export const RECENT_ORDERS_COLUMNS = (): ColumnDef<ITourOrder>[] => {
-	const { t } = useTranslation(["tour_order_history_page", "options"]);
-
+export const RECENT_ORDERS_COLUMNS = (
+	t: TFunction<["tour_order_history_page", "options"], undefined>
+): ColumnDef<ITourOrder>[] => {
 	return [
 		{
 			id: "select",

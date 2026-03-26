@@ -36,8 +36,13 @@ const FormField = <
 >({
 	...props
 }: ControllerProps<TFieldValues, TName>) => {
+	const contextValue = React.useMemo(
+		() => ({ name: props.name }),
+		[props.name]
+	);
+
 	return (
-		<FormFieldContext.Provider value={{ name: props.name }}>
+		<FormFieldContext.Provider value={contextValue}>
 			<Controller {...props} />
 		</FormFieldContext.Provider>
 	);
@@ -77,8 +82,10 @@ const FormItemContext = React.createContext<FormItemContextValue>(
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
 	const id = React.useId();
 
+	const contextValue = React.useMemo(() => ({ id }), [id]);
+
 	return (
-		<FormItemContext.Provider value={{ id }}>
+		<FormItemContext.Provider value={contextValue}>
 			<div
 				data-slot="form-item"
 				className={cn("grid gap-2", className)}

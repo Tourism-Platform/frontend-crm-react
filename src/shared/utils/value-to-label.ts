@@ -26,6 +26,6 @@ export const useValueToTranslateLabel = <
 				label: t(label),
 				value
 			})),
-		[labels]
+		[labels, t]
 	);
 };

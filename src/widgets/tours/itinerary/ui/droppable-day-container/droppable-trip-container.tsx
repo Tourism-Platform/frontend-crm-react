@@ -3,7 +3,7 @@ import {
 	SortableContext,
 	verticalListSortingStrategy
 } from "@dnd-kit/sortable";
-import { type FC } from "react";
+import { type FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
@@ -33,6 +33,25 @@ export const DroppableTripContainer: FC<IDroppableTripContainerProps> = ({
 	const isOverItem = items.some((item) => itemId(item.block_id) === over?.id);
 	const isOverContainer = isOver || isOverItem;
 
+	const handleRemoveItem = useCallback(
+		(index: number) => {
+			onRemoveItem({ optionId, location: "tripDetails", index });
+		},
+		[onRemoveItem, optionId]
+	);
+
+	const handleRemoveNestedItem = useCallback(
+		(index: number, nestedIndex: number) => {
+			onRemoveItem({
+				optionId,
+				location: "tripDetails",
+				index,
+				nestedIndex
+			});
+		},
+		[onRemoveItem, optionId]
+	);
+
 	return (
 		<Card
 			ref={setNodeRef}
@@ -54,21 +73,9 @@ export const DroppableTripContainer: FC<IDroppableTripContainerProps> = ({
 						<div key={item.block_id} className="mb-2">
 							<DraggableDayItem
 								item={item}
-								onRemove={() =>
-									onRemoveItem({
-										optionId,
-										location: "tripDetails",
-										index
-									})
-								}
-								onRemoveNested={(nestedIndex) =>
-									onRemoveItem({
-										optionId,
-										location: "tripDetails",
-										index,
-										nestedIndex
-									})
-								}
+								index={index}
+								onRemove={handleRemoveItem}
+								onRemoveNested={handleRemoveNestedItem}
 							/>
 						</div>
 					))

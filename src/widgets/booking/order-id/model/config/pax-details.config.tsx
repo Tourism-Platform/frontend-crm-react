@@ -1,11 +1,12 @@
 import { type ColumnDef } from "@tanstack/react-table";
+import type { TFunction } from "i18next";
 import { FileText, Lock } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 import { type IPaxReviewDetail } from "@/entities/booking";
 
-export const PAX_DETAILS_COLUMNS = (): ColumnDef<IPaxReviewDetail>[] => {
-	const { t } = useTranslation("order_id_page");
+export const PAX_DETAILS_COLUMNS = (
+	t: TFunction<["order_id_page"], undefined>
+): ColumnDef<IPaxReviewDetail>[] => {
 	return [
 		{
 			accessorKey: "type",

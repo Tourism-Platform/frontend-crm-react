@@ -1,4 +1,4 @@
-import type { FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SmartTable } from "@/shared/ui";
@@ -19,26 +19,32 @@ export const CommissionType: FC<ICommissionTypeProps> = ({
 	isLoading
 }) => {
 	const { t } = useTranslation("financial_settings_page");
+	const columns = useMemo(() => COLUMNS(t), [t]);
+
+	const actionsJsx = useMemo(() => <NewCurrencyRate />, []);
+	const topChildrenJsx = useMemo(
+		() => (
+			<div className="flex flex-col gap-2">
+				<h2 className="text-xl">{t("commission_type.title")}</h2>
+				<p className="text-sm text-muted-foreground">
+					{t("commission_type.description")}
+				</p>
+			</div>
+		),
+		[t]
+	);
+
 	return (
 		<div className="flex gap-5 flex-col">
 			<SmartTable
 				data={data}
-				columns={COLUMNS()}
-				actions={<NewCurrencyRate />}
+				columns={columns}
+				actions={actionsJsx}
 				defaultPageSize={5}
 				showTopFilters={false}
 				showPagination={false}
 				isLoading={isLoading}
-				topChildren={
-					<div className="flex flex-col gap-2">
-						<h2 className="text-xl">
-							{t("commission_type.title")}
-						</h2>
-						<p className="text-sm text-muted-foreground">
-							{t("commission_type.description")}
-						</p>
-					</div>
-				}
+				topChildren={topChildrenJsx}
 			/>
 		</div>
 	);

@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
@@ -13,8 +13,9 @@ import {
 
 import { ClientPaymentActions } from "../ui";
 
-export const COLUMNS = (): ColumnDef<IPayment>[] => {
-	const { t } = useTranslation(["client_payments_page", "options"]);
+export const COLUMNS = (
+	t: TFunction<["client_payments_page", "options"], undefined>
+): ColumnDef<IPayment>[] => {
 	return [
 		{
 			id: "select",

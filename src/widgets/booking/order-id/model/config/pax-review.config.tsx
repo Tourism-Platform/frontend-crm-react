@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
+import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { type ReactNode } from "react";
-import { useTranslation } from "react-i18next";
+import type { ReactNode } from "react";
 
 import { Button } from "@/shared/ui";
 
@@ -12,9 +12,9 @@ import {
 } from "@/entities/booking";
 
 export const PAX_REVIEW_COLUMNS = (
+	t: TFunction<"order_id_page", undefined>,
 	renderSubTable: (items: IPaxReviewDetail[]) => ReactNode
-): ColumnDef<IPaxReviewItem>[] => {
-	const { t } = useTranslation("order_id_page");
+): ColumnDef<IPaxReviewItem, unknown>[] => {
 	return [
 		{
 			id: "expand",

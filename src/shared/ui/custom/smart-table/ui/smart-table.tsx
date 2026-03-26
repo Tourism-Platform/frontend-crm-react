@@ -14,7 +14,7 @@ import {
 	useReactTable
 } from "@tanstack/react-table";
 import { LayoutGridIcon, StretchHorizontalIcon } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { memo, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { cn } from "@/shared/lib";
 import {
@@ -35,7 +35,7 @@ import { EmptyState } from "./empty-state";
 import { SmartTableFilters } from "./smart-table-filters";
 import { SmartTablePagination } from "./smart-table-pagination";
 
-export function SmartTable<TData extends object>({
+function SmartTableInner<TData extends object>({
 	columns,
 	data,
 	actions,
@@ -87,15 +87,18 @@ export function SmartTable<TData extends object>({
 		externalOnPaginationChange ?? setInternalPagination;
 
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const getColumnIds = (cols: typeof columns) =>
-		cols
-			.map((column) => {
-				if ("id" in column && column.id) return column.id as string;
-				if ("accessorKey" in column && column.accessorKey)
-					return column.accessorKey as string;
-				return "";
-			})
-			.filter(Boolean);
+	const getColumnIds = useCallback(
+		(cols: typeof columns) =>
+			cols
+				.map((column) => {
+					if ("id" in column && column.id) return column.id as string;
+					if ("accessorKey" in column && column.accessorKey)
+						return column.accessorKey as string;
+					return "";
+				})
+				.filter(Boolean),
+		[]
+	);
 
 	const [columnOrder, setColumnOrder] = useState<string[]>(
 		getColumnIds(columns)
@@ -104,7 +107,7 @@ export function SmartTable<TData extends object>({
 	// Синхронизация columnOrder при изменении columns
 	useEffect(() => {
 		setColumnOrder(getColumnIds(columns));
-	}, [columns]);
+	}, [columns, getColumnIds]);
 
 	const table = useReactTable({
 		data,
@@ -154,67 +157,81 @@ export function SmartTable<TData extends object>({
 		}
 	}, [data.length, isLoading, recordCount, pagination.pageIndex, table]);
 
-	const VIEW_CONFIG = [
-		...(useViewMode && Card
-			? [
-					{
-						type: "cards" as const,
-						component: (
-							<div
-								className={cn(
-									"grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4",
-									CardsClassName
-								)}
-							>
-								{isLoading && loadingMode === "skeleton" ? (
-									Array.from({
-										length: pagination.pageSize
-									}).map((_, i) =>
-										CardSkeleton ? (
-											<CardSkeleton key={i} />
-										) : (
-											<div
-												key={i}
-												className="h-64 rounded-xl bg-muted animate-pulse"
-											/>
+	const VIEW_CONFIG = useMemo(
+		() => [
+			...(useViewMode && Card
+				? [
+						{
+							type: "cards" as const,
+							component: (
+								<div
+									className={cn(
+										"grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4",
+										CardsClassName
+									)}
+								>
+									{isLoading && loadingMode === "skeleton" ? (
+										Array.from({
+											length: pagination.pageSize
+										}).map((_, i) =>
+											CardSkeleton ? (
+												<CardSkeleton key={i} />
+											) : (
+												<div
+													key={i}
+													className="h-64 rounded-xl bg-muted animate-pulse"
+												/>
+											)
 										)
-									)
-								) : data.length > 0 ? (
-									data.map((item, index) => (
-										<Card
-											key={
-												(item as { id?: string }).id ||
-												index
-											}
-											data={item}
-										/>
-									))
-								) : (
-									<div className="col-span-full">
-										<EmptyState />
-									</div>
-								)}
-							</div>
-						),
-						icon: <LayoutGridIcon className="w-3 h-3" />
-					}
-				]
-			: []),
-		{
-			type: "table" as const,
-			component: (
-				<DataGridContainer>
-					{tableLayout?.columnsDraggable ||
-					tableLayout?.rowsDraggable ? (
-						<DataGridTableDnD />
-					) : (
-						<DataGridTable />
-					)}
-				</DataGridContainer>
-			),
-			icon: <StretchHorizontalIcon className="w-3 h-3" />
-		}
-	];
+									) : data.length > 0 ? (
+										data.map((item, index) => (
+											<Card
+												key={
+													(item as { id?: string })
+														.id || index
+												}
+												data={item}
+											/>
+										))
+									) : (
+										<div className="col-span-full">
+											<EmptyState />
+										</div>
+									)}
+								</div>
+							),
+							icon: <LayoutGridIcon className="w-3 h-3" />
+						}
+					]
+				: []),
+			{
+				type: "table" as const,
+				component: (
+					<DataGridContainer>
+						{tableLayout?.columnsDraggable ||
+						tableLayout?.rowsDraggable ? (
+							<DataGridTableDnD />
+						) : (
+							<DataGridTable />
+						)}
+					</DataGridContainer>
+				),
+				icon: <StretchHorizontalIcon className="w-3 h-3" />
+			}
+		],
+		[
+			useViewMode,
+			Card,
+			CardsClassName,
+			isLoading,
+			loadingMode,
+			pagination.pageSize,
+			CardSkeleton,
+			data,
+			tableLayout?.columnsDraggable,
+			tableLayout?.rowsDraggable
+		]
+	);
 
 	const [currentView, setCurrentView] =
 		useState<TViewModeType>(defaultViewMode);
@@ -311,3 +328,5 @@ export function SmartTable<TData extends object>({
 		</DataGrid>
 	);
 }
+
+export const SmartTable = memo(SmartTableInner) as typeof SmartTableInner;

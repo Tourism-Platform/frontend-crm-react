@@ -1,5 +1,5 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useEffect } from "react";
+import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ import { COLUMNS } from "../model";
 import { ClientPaymentsHeader } from "./client-payments-header";
 
 export const ClientPayments: FC = () => {
-	const { t } = useTranslation("client_payments_page");
+	const { t } = useTranslation(["client_payments_page", "options"]);
 	const { watch, setValue } = useForm<IPaymentFilters>({
 		defaultValues: {
 			search: "",
@@ -48,38 +48,56 @@ export const ClientPayments: FC = () => {
 		}
 	}, [isError, t]);
 
-	const payments = paymentsData?.data ?? [];
+	const payments = useMemo(() => paymentsData?.data ?? [], [paymentsData]);
 	const totalCount = paymentsData?.total ?? 0;
 	const statusCounts = paymentsData?.statusCounts;
 
 	const statusOptions = useValueToTranslateLabel(PAYMENT_STATUS_LABELS);
 
-	const handlePaginationChange: OnChangeFn<PaginationState> = (
-		updaterOrValue
-	) => {
-		const currentPagination = {
+	const columns = useMemo(() => COLUMNS(t), [t]);
+
+	const actionsJsx = useMemo(() => <NewPayment />, []);
+	const paginationObj = useMemo(
+		() => ({
 			pageIndex: filters.page - 1,
 			pageSize: filters.limit
-		};
+		}),
+		[filters.page, filters.limit]
+	);
 
-		const nextValue =
-			typeof updaterOrValue === "function"
-				? updaterOrValue(currentPagination)
-				: updaterOrValue;
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
 
-		setValue("page", nextValue.pageIndex + 1);
-		setValue("limit", nextValue.pageSize);
-	};
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
 
-	const handleSearchChange = (val: string) => {
-		setValue("search", val);
-		setValue("page", 1);
-	};
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
 
-	const handleStatusChange = (val: string[]) => {
-		setValue("status", val as ENUM_PAYMENT_STATUS_TYPE[]);
-		setValue("page", 1);
-	};
+	const handleSearchChange = useCallback(
+		(val: string) => {
+			setValue("search", val);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
+
+	const handleStatusChange = useCallback(
+		(val: string[]) => {
+			setValue("status", val as ENUM_PAYMENT_STATUS_TYPE[]);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
 	return (
 		<section className="flex gap-5 flex-col">
@@ -88,15 +106,12 @@ export const ClientPayments: FC = () => {
 				<CardContent>
 					<SmartTable
 						data={payments}
-						columns={COLUMNS()}
-						actions={<NewPayment />}
+						columns={columns}
+						actions={actionsJsx}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
 						recordCount={totalCount}
-						pagination={{
-							pageIndex: filters.page - 1,
-							pageSize: filters.limit
-						}}
+						pagination={paginationObj}
 						onPaginationChange={handlePaginationChange}
 						search={filters.search}
 						onSearchChange={handleSearchChange}

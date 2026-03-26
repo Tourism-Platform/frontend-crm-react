@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
@@ -14,8 +14,9 @@ import {
 	RECONCILIATION_STATUS_VARIANTS
 } from "@/entities/finance";
 
-export const COLUMNS = (): ColumnDef<IReconciliation>[] => {
-	const { t } = useTranslation(["reconciliation_page", "options"]);
+export const COLUMNS = (
+	t: TFunction<["reconciliation_page", "options"], undefined>
+): ColumnDef<IReconciliation>[] => {
 	return [
 		{
 			id: "select",

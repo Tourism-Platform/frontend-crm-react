@@ -50,6 +50,11 @@ export const NewPayment: FC = () => {
 		mode: "onSubmit"
 	});
 
+	const formFields = useMemo(
+		() => FORM_NEW_PAYMENT_LIST({ orderOptions }),
+		[orderOptions]
+	);
+
 	async function onSubmit(data: TNewPaymentSchema) {
 		try {
 			await createPayment(data).unwrap();
@@ -84,17 +89,15 @@ export const NewPayment: FC = () => {
 						className="space-y-6"
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_NEW_PAYMENT_LIST({ orderOptions }).map(
-								({ key, ...item }) => (
-									<CustomField
-										key={key}
-										control={form?.control}
-										name={key}
-										t={t}
-										{...item}
-									/>
-								)
-							)}
+							{formFields.map(({ key, ...item }) => (
+								<CustomField
+									key={key}
+									control={form?.control}
+									name={key}
+									t={t}
+									{...item}
+								/>
+							))}
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>

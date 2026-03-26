@@ -1,6 +1,7 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC } from "react";
+import { type FC, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, SmartTable } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -17,6 +18,7 @@ import { COLUMNS } from "../model";
 import { InvoicesHeader } from "./invoices-header";
 
 export const Invoices: FC = () => {
+	const { t } = useTranslation(["invoices_page", "options"]);
 	const { watch, setValue } = useForm<IInvoiceFilters>({
 		defaultValues: {
 			search: "",
@@ -34,38 +36,55 @@ export const Invoices: FC = () => {
 		isFetching
 	} = useGetInvoicesQuery(filters);
 
-	const data = invoicesData?.data ?? [];
+	const data = useMemo(() => invoicesData?.data ?? [], [invoicesData]);
 	const totalCount = invoicesData?.total ?? 0;
 	const statusCounts = invoicesData?.statusCounts;
 
 	const statusOptions = useValueToTranslateLabel(INVOICE_STATUS_LABELS);
 
-	const handlePaginationChange: OnChangeFn<PaginationState> = (
-		updaterOrValue
-	) => {
-		const currentPagination = {
+	const columns = useMemo(() => COLUMNS(t), [t]);
+
+	const paginationObj = useMemo(
+		() => ({
 			pageIndex: filters.page - 1,
 			pageSize: filters.limit
-		};
+		}),
+		[filters.page, filters.limit]
+	);
 
-		const nextValue =
-			typeof updaterOrValue === "function"
-				? updaterOrValue(currentPagination)
-				: updaterOrValue;
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
 
-		setValue("page", nextValue.pageIndex + 1);
-		setValue("limit", nextValue.pageSize);
-	};
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
 
-	const handleSearchChange = (val: string) => {
-		setValue("search", val);
-		setValue("page", 1);
-	};
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
 
-	const handleStatusChange = (val: string[]) => {
-		setValue("status", val as ENUM_INVOICE_STATUS_TYPE[]);
-		setValue("page", 1);
-	};
+	const handleSearchChange = useCallback(
+		(val: string) => {
+			setValue("search", val);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
+
+	const handleStatusChange = useCallback(
+		(val: string[]) => {
+			setValue("status", val as ENUM_INVOICE_STATUS_TYPE[]);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
 	return (
 		<section className="flex gap-5 flex-col">
@@ -75,14 +94,11 @@ export const Invoices: FC = () => {
 				<CardContent>
 					<SmartTable
 						data={data}
-						columns={COLUMNS()}
+						columns={columns}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
 						recordCount={totalCount}
-						pagination={{
-							pageIndex: filters.page - 1,
-							pageSize: filters.limit
-						}}
+						pagination={paginationObj}
 						onPaginationChange={handlePaginationChange}
 						search={filters.search}
 						onSearchChange={handleSearchChange}

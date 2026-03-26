@@ -1,5 +1,5 @@
 import { Loader } from "lucide-react";
-import { type FC, useEffect, useState } from "react";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -53,17 +53,19 @@ export const ActivityLog: FC = () => {
 		setPage((prev) => prev + 1);
 	};
 
+	const actionsJsx = useMemo(
+		() => (
+			<>
+				<PreviewTourButton />
+				<PublishTourButton />
+			</>
+		),
+		[]
+	);
+
 	return (
 		<section className="flex flex-col gap-6 container">
-			<ConnectedTourHeader
-				title={t("page_name")}
-				actions={
-					<>
-						<PreviewTourButton />
-						<PublishTourButton />
-					</>
-				}
-			/>
+			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 
 			<Card>
 				<CardHeader className="flex justify-between items-center">

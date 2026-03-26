@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import { type TFunction } from "i18next";
 
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 
@@ -12,9 +12,9 @@ import {
 	TOUR_TYPE_LABELS
 } from "@/entities/tour";
 
-export const COLUMNS = (): ColumnDef<ITourCard>[] => {
-	const { t } = useTranslation(["tours_page", "options"]);
-
+export const COLUMNS = (
+	t: TFunction<"tours_page", undefined>
+): ColumnDef<ITourCard>[] => {
 	return [
 		{
 			id: "select",

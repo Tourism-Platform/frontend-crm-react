@@ -1,4 +1,4 @@
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -18,6 +18,7 @@ import { RECENT_ORDERS_COLUMNS } from "../model";
 
 export const LastOrders: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
+	const { t: tCols } = useTranslation(["tour_order_history_page", "options"]);
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
 	const { watch } = useForm<ITourOrderFilters>({
@@ -44,7 +45,16 @@ export const LastOrders: FC = () => {
 		}
 	}, [isLandingError, t]);
 
-	const orders = data?.data ?? [];
+	const orders = useMemo(() => data?.data ?? [], [data]);
+	const columns = useMemo(() => RECENT_ORDERS_COLUMNS(tCols), [tCols]);
+
+	const paginationObj = useMemo(
+		() => ({
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		}),
+		[filters.page, filters.limit]
+	);
 	return (
 		<Card>
 			<CardHeader>
@@ -55,14 +65,11 @@ export const LastOrders: FC = () => {
 			<CardContent>
 				<SmartTable
 					data={orders}
-					columns={RECENT_ORDERS_COLUMNS()}
+					columns={columns}
 					isLoading={isLoading}
 					showTopFilters={false}
 					showPagination={false}
-					pagination={{
-						pageIndex: filters.page - 1,
-						pageSize: filters.limit
-					}}
+					pagination={paginationObj}
 				/>
 			</CardContent>
 		</Card>
