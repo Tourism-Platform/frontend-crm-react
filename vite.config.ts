@@ -60,10 +60,7 @@ export default defineConfig({
             if (id.includes("@tiptap") || id.includes("prosemirror")) {
               return "vendor-editor";
             }
-            // Charts (Recharts only — d3-* has circular deps, let Rollup resolve them)
-            if (id.includes("recharts")) {
-              return "vendor-charts";
-            }
+            // Charts (recharts + d3-*) — NOT separated due to circular deps
             // Data Tables
             if (id.includes("@tanstack/react-table")) {
               return "vendor-table";
