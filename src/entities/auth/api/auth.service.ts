@@ -1,27 +1,34 @@
-import { baseApi } from "@/shared/api";
+import { AUTH_PATHS, baseApi } from "@/shared/api";
 
+import { mapAuthUserToBackend } from "../converters";
 import type { IAuthUser } from "../types";
 
 export const AuthService = baseApi.injectEndpoints({
 	endpoints: (build) => ({
-		signUp: build.mutation<{ email: string }, IAuthUser>({
+		signUp: build.mutation<
+			typeof AUTH_PATHS.registerUser._types.response,
+			IAuthUser
+		>({
 			query: (BodyParams) => ({
-				url: `/auth/signup`,
-				method: `POST`,
-				body: BodyParams
+				...AUTH_PATHS.registerUser,
+				body: mapAuthUserToBackend(BodyParams)
 			})
 		}),
-		signIn: build.mutation<string, IAuthUser>({
+		signIn: build.mutation<
+			typeof AUTH_PATHS.authUser._types.response,
+			IAuthUser
+		>({
 			query: (BodyParams) => ({
-				url: `/auth/signin`,
-				method: `POST`,
-				body: BodyParams
+				...AUTH_PATHS.authUser,
+				body: mapAuthUserToBackend(BodyParams)
 			})
 		}),
-		signOut: build.mutation<string, void>({
+		signOut: build.mutation<
+			typeof AUTH_PATHS.logoutUser._types.response,
+			void
+		>({
 			query: () => ({
-				url: `/auth/signout`,
-				method: `POST`
+				...AUTH_PATHS.logoutUser
 			})
 		})
 	})

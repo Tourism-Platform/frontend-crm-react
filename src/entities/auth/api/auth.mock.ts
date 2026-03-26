@@ -1,18 +1,26 @@
-import { HttpResponse, delay, http } from "msw";
+import { HttpResponse } from "msw";
 
-import { ENV } from "@/shared/config";
+import { AUTH_PATHS, createMockHandler } from "@/shared/api";
 
 import { type IAuthUser } from "../types";
 
-const BASE_URL = ENV.VITE_API_URL || "";
+export const MOCK_AUTH_CREDENTIALS = {
+	EMAIL: "damirk355@gmail.com",
+	PASSWORD: "String1!",
+	TOKEN: "mock-jwt-token"
+} as const;
 
 export const authHandlers = [
-	http.post(`${BASE_URL}/auth/signin`, async ({ request }) => {
-		await delay(500);
-		const body = (await request.json()) as IAuthUser;
+	// Обработчик входа (Signin)
+	createMockHandler<IAuthUser>(AUTH_PATHS.authUser, async ({ body }) => {
+		const isValid =
+			body.email === MOCK_AUTH_CREDENTIALS.EMAIL &&
+			body.password === MOCK_AUTH_CREDENTIALS.PASSWORD;
 
-		if (body.email === "client" && body.password === "client") {
-			return HttpResponse.json("mock-jwt-token", { status: 200 });
+		if (isValid) {
+			return HttpResponse.json(MOCK_AUTH_CREDENTIALS.TOKEN, {
+				status: 200
+			});
 		}
 
 		return new HttpResponse(null, {
@@ -20,11 +28,11 @@ export const authHandlers = [
 			statusText: "Unauthorized"
 		});
 	}),
-	http.post(`${BASE_URL}/auth/signup`, async ({ request }) => {
-		await delay(500);
-		const body = (await request.json()) as IAuthUser;
 
-		if (body.email === "client") {
+	// Обработчик регистрации (Signup)
+	createMockHandler<IAuthUser>(AUTH_PATHS.registerUser, async ({ body }) => {
+		// Если такой пользователь уже есть в нашей моковой базе
+		if (body.email === MOCK_AUTH_CREDENTIALS.EMAIL) {
 			return new HttpResponse(null, {
 				status: 409,
 				statusText: "Conflict"
