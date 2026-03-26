@@ -60,8 +60,8 @@ export default defineConfig({
             if (id.includes("@tiptap") || id.includes("prosemirror")) {
               return "vendor-editor";
             }
-            // Charts (Recharts)
-            if (id.includes("recharts") || id.includes("d3-")) {
+            // Charts (Recharts only — d3-* has circular deps, let Rollup resolve them)
+            if (id.includes("recharts")) {
               return "vendor-charts";
             }
             // Data Tables
