@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
@@ -17,7 +17,7 @@ export const ReconciliationStats: FC<IReconciliationStatsProps> = ({
 }) => {
 	const { t } = useTranslation("reconciliation_id_page");
 
-	const stats = getStatsItems(data, t);
+	const stats = useMemo(() => getStatsItems(data, t), [data, t]);
 
 	return (
 		<div className="grid grid-cols-3 gap-6">

@@ -1,6 +1,13 @@
 "use client";
 
-import { type FC, useCallback, useEffect, useMemo, useState } from "react";
+import {
+	type FC,
+	memo,
+	useCallback,
+	useEffect,
+	useMemo,
+	useState
+} from "react";
 import { Bar, BarChart, CartesianGrid, Cell } from "recharts";
 
 import { cn } from "@/shared/lib";
@@ -47,131 +54,139 @@ const CHART_CONFIG = {
 	}
 } satisfies ChartConfig;
 
-export const CustomAccordionRange: FC<ICustomAccordionRangeProps> = ({
-	id,
-	title,
-	icon: Icon,
-	min,
-	max,
-	from = 0,
-	to = 3000,
-	step = 200,
-	useHistogram,
-	histogramData = [],
-	isLoading,
-	onChange,
-	className
-}) => {
-	const [localValue, setLocalValue] = useState<IPriceRange>({
-		from: from ?? min,
-		to: to ?? max
-	});
-
-	useEffect(() => {
-		setLocalValue({
+export const CustomAccordionRange: FC<ICustomAccordionRangeProps> = memo(
+	({
+		id,
+		title,
+		icon: Icon,
+		min,
+		max,
+		from = 0,
+		to = 3000,
+		step = 200,
+		useHistogram,
+		histogramData = [],
+		isLoading,
+		onChange,
+		className
+	}) => {
+		const [localValue, setLocalValue] = useState<IPriceRange>({
 			from: from ?? min,
 			to: to ?? max
 		});
-	}, [from, to, min, max]);
 
-	// Предварительно парсим данные гистограммы, чтобы не делать этого при каждом движении слайдера
-	const parsedHistogramData = useMemo(() => {
-		return histogramData.map((item) => {
-			const [start, end] = item.range.split("-").map(Number);
-			return { ...item, start, end };
-		});
-	}, [histogramData]);
+		useEffect(() => {
+			setLocalValue({
+				from: from ?? min,
+				to: to ?? max
+			});
+		}, [from, to, min, max]);
 
-	const histogramColors = useMemo(() => {
-		const filterStart = Math.floor(localValue.from / step) * step;
-		const filterEnd = Math.ceil(localValue.to / step) * step;
+		// Предварительно парсим данные гистограммы, чтобы не делать этого при каждом движении слайдера
+		const parsedHistogramData = useMemo(() => {
+			return histogramData.map((item) => {
+				const [start, end] = item.range.split("-").map(Number);
+				return { ...item, start, end };
+			});
+		}, [histogramData]);
 
-		return parsedHistogramData.map((item) =>
-			item.start >= filterStart && item.end <= filterEnd
-				? "var(--primary)"
-				: "var(--muted)"
-		);
-	}, [parsedHistogramData, localValue, step]);
+		const histogramColors = useMemo(() => {
+			const filterStart = Math.floor(localValue.from / step) * step;
+			const filterEnd = Math.ceil(localValue.to / step) * step;
 
-	const handleLiveSliderChange = useCallback((newValue: IPriceRange) => {
-		setLocalValue(newValue);
-	}, []);
+			return parsedHistogramData.map((item) =>
+				item.start >= filterStart && item.end <= filterEnd
+					? "var(--primary)"
+					: "var(--muted)"
+			);
+		}, [parsedHistogramData, localValue, step]);
 
-	const handleSliderCommit = useCallback(
-		(newValue: IPriceRange) => {
+		const handleLiveSliderChange = useCallback((newValue: IPriceRange) => {
 			setLocalValue(newValue);
-			onChange(newValue);
-		},
-		[onChange]
-	);
+		}, []);
 
-	return (
-		<Accordion
-			type="single"
-			collapsible
-			defaultValue={id}
-			className={cn("w-full", className)}
-		>
-			<AccordionItem value={id} className="gap-3 grid border-none">
-				<AccordionTrigger className="py-2 hover:no-underline">
-					<div className="flex items-center gap-2 font-semibold text-foreground">
-						{Icon && <Icon className="text-primary h-5 w-5" />}
-						<span>{title}</span>
-					</div>
-				</AccordionTrigger>
-				<AccordionContent className="pb-4">
-					<div className="flex flex-col gap-4 px-1">
-						{useHistogram && isLoading && (
-							<CustomAccordionRangeSkeleton
-								count={(to - from) / step}
-							/>
-						)}
+		const handleSliderCommit = useCallback(
+			(newValue: IPriceRange) => {
+				setLocalValue(newValue);
+				onChange(newValue);
+			},
+			[onChange]
+		);
 
-						{useHistogram &&
-							!isLoading &&
-							histogramData.length > 0 && (
-								<ChartContainer
-									config={CHART_CONFIG}
-									className="h-[100px] w-full"
-								>
-									<BarChart
-										accessibilityLayer
-										data={histogramData}
-									>
-										<CartesianGrid vertical={false} />
-										<ChartTooltip
-											cursor={false}
-											content={
-												<ChartTooltipContent
-													hideLabel
-												/>
-											}
-										/>
-										<Bar dataKey="count" radius={4}>
-											{histogramData.map((_, index) => (
-												<Cell
-													key={`cell-${index}`}
-													fill={
-														histogramColors[index]
-													}
-												/>
-											))}
-										</Bar>
-									</BarChart>
-								</ChartContainer>
+		return (
+			<Accordion
+				type="single"
+				collapsible
+				defaultValue={id}
+				className={cn("w-full", className)}
+			>
+				<AccordionItem value={id} className="gap-3 grid border-none">
+					<AccordionTrigger className="py-2 hover:no-underline">
+						<div className="flex items-center gap-2 font-semibold text-foreground">
+							{Icon && <Icon className="text-primary h-5 w-5" />}
+							<span>{title}</span>
+						</div>
+					</AccordionTrigger>
+					<AccordionContent className="pb-4">
+						<div className="flex flex-col gap-4 px-1">
+							{useHistogram && isLoading && (
+								<CustomAccordionRangeSkeleton
+									count={(to - from) / step}
+								/>
 							)}
 
-						<CustomPriceFilter
-							min={min}
-							max={max}
-							from={localValue.from}
-							to={localValue.to}
-							onValueChange={handleLiveSliderChange}
-							onChange={handleSliderCommit}
-						/>
-					</div>
-				</AccordionContent>
-			</AccordionItem>
-		</Accordion>
-	);
-};
+							{useHistogram &&
+								!isLoading &&
+								histogramData.length > 0 && (
+									<ChartContainer
+										config={CHART_CONFIG}
+										className="h-[100px] w-full"
+									>
+										<BarChart
+											accessibilityLayer
+											data={histogramData}
+										>
+											<CartesianGrid vertical={false} />
+											<ChartTooltip
+												cursor={false}
+												content={
+													<ChartTooltipContent
+														hideLabel
+													/>
+												}
+											/>
+											<Bar dataKey="count" radius={4}>
+												{histogramData.map(
+													(_, index) => (
+														<Cell
+															key={`cell-${index}`}
+															fill={
+																histogramColors[
+																	index
+																]
+															}
+														/>
+													)
+												)}
+											</Bar>
+										</BarChart>
+									</ChartContainer>
+								)}
+
+							<CustomPriceFilter
+								min={min}
+								max={max}
+								from={localValue.from}
+								to={localValue.to}
+								onValueChange={handleLiveSliderChange}
+								onChange={handleSliderCommit}
+							/>
+						</div>
+					</AccordionContent>
+				</AccordionItem>
+			</Accordion>
+		);
+	}
+);
+
+CustomAccordionRange.displayName = "CustomAccordionRange";

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
@@ -26,6 +26,13 @@ interface IOrderTourReviewProps {
 	orderStatus: ENUM_ORDER_STATUS_TYPE;
 }
 
+const TABLE_LAYOUT = {
+	rowBorder: true,
+	headerBackground: false
+};
+
+const getSubRowsFn = (row: ITourReviewItem) => row.subRows;
+
 const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
 	return (
 		<div className="flex flex-col">
@@ -43,7 +50,15 @@ export const OrderTourReview = ({
 	orderStatus
 }: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
-	const summaryItems = getTourSummary(summary, orderStatus, t);
+	const summaryItems = useMemo(
+		() => getTourSummary(summary, orderStatus, t),
+		[summary, orderStatus, t]
+	);
+
+	const columns = useMemo(
+		() => TOUR_REVIEW_COLUMNS(t, orderStatus),
+		[t, orderStatus]
+	);
 
 	return (
 		<Card>
@@ -75,12 +90,9 @@ export const OrderTourReview = ({
 			<CardContent>
 				<SmartTable
 					data={items}
-					columns={TOUR_REVIEW_COLUMNS(orderStatus)}
-					getSubRows={(row) => row.subRows}
-					tableLayout={{
-						rowBorder: true,
-						headerBackground: false
-					}}
+					columns={columns}
+					getSubRows={getSubRowsFn}
+					tableLayout={TABLE_LAYOUT}
 					showTopFilters={false}
 				/>
 			</CardContent>

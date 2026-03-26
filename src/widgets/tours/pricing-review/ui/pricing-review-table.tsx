@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Button, Card, CardContent, SmartTable } from "@/shared/ui";
@@ -11,27 +11,33 @@ interface IPricingReviewTableProps {
 	items: ITourReviewItem[];
 }
 
+const TABLE_LAYOUT = {
+	rowBorder: true,
+	headerBackground: false
+};
+
+const getSubRowsFn = (row: ITourReviewItem) => row.subRows;
+
 export const PricingReviewTable: FC<IPricingReviewTableProps> = ({ items }) => {
 	const { t } = useTranslation("tour_pricing_review_page");
+	const columns = useMemo(() => PRICING_REVIEW_COLUMNS(t), [t]);
+
+	const actionsJsx = useMemo(
+		() => <Button variant="default">{t("table.buttons.add_item")}</Button>,
+		[t]
+	);
 
 	return (
 		<Card>
 			<CardContent>
 				<SmartTable
 					data={items}
-					actions={
-						<Button variant="default">
-							{t("table.buttons.add_item")}
-						</Button>
-					}
-					columns={PRICING_REVIEW_COLUMNS()}
-					getSubRows={(row) => row.subRows}
+					actions={actionsJsx}
+					columns={columns}
+					getSubRows={getSubRowsFn}
 					showPagination={true}
 					showStatusFilter={false}
-					tableLayout={{
-						rowBorder: true,
-						headerBackground: false
-					}}
+					tableLayout={TABLE_LAYOUT}
 				/>
 			</CardContent>
 		</Card>

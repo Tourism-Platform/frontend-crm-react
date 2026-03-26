@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -22,6 +22,7 @@ export const InvoicePaymentTable: FC<IInvoicePaymentTableProps> = ({
 	invoice
 }) => {
 	const { t } = useTranslation("invoice_id_page");
+	const columns = useMemo(() => COLUMNS(t), [t]);
 
 	return (
 		<Card className="gap-4">
@@ -52,7 +53,7 @@ export const InvoicePaymentTable: FC<IInvoicePaymentTableProps> = ({
 				</h2>
 				<SmartTable
 					data={invoice.payments}
-					columns={COLUMNS()}
+					columns={columns}
 					showTopFilters={false}
 					showPagination={false}
 				/>

@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { SerchFavoriteIcon } from "@/shared/assets";
@@ -37,7 +37,7 @@ export const CatalogToursSimilar: FC<ICatalogToursSimilarProps> = ({
 		isFetching
 	} = useGetCatalogToursQuery(params);
 
-	const tours = toursData?.data ?? [];
+	const tours = useMemo(() => toursData?.data ?? [], [toursData]);
 
 	return (
 		<div className="grid gap-10 ">

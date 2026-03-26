@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -21,6 +21,7 @@ export const ReconciliationSupplierPayments: FC<
 	IReconciliationSupplierPaymentsProps
 > = ({ data }) => {
 	const { t } = useTranslation("reconciliation_id_page");
+	const columns = useMemo(() => COLUMNS(t), [t]);
 
 	return (
 		<Card>
@@ -32,7 +33,7 @@ export const ReconciliationSupplierPayments: FC<
 			<CardContent>
 				<SmartTable
 					data={data}
-					columns={COLUMNS()}
+					columns={columns}
 					showPagination={false}
 					showTopFilters={false}
 				/>

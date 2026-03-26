@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import { type TFunction } from "i18next";
 
 import { Skeleton } from "@/shared/ui";
 
@@ -11,9 +11,9 @@ import {
 
 import { FinancialActions } from "../ui";
 
-export const COLUMNS = (): ColumnDef<ICommission>[] => {
-	const { t } = useTranslation("financial_settings_page");
-
+export const COLUMNS = (
+	t: TFunction<"financial_settings_page", undefined>
+): ColumnDef<ICommission>[] => {
 	return [
 		{
 			id: "select",

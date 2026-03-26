@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -12,19 +13,31 @@ import { type IPaxReviewDetail, type IPaxReviewItem } from "@/entities/booking";
 
 import { PAX_DETAILS_COLUMNS, PAX_REVIEW_COLUMNS } from "../model";
 
+const SUBTABLE_LAYOUT = {
+	rowBorder: true,
+	headerBackground: true,
+	showHeader: false
+};
+
+const MAIN_TABLE_LAYOUT = {
+	rowBorder: true,
+	headerBackground: false
+};
+
+const getRowCanExpandFn = (row: { original: IPaxReviewItem }) =>
+	row.original.items.length > 0;
+
 const OrderPaxReviewSubTable = ({ items }: { items: IPaxReviewDetail[] }) => {
+	const { t } = useTranslation("order_id_page");
+	const columns = useMemo(() => PAX_DETAILS_COLUMNS(t), [t]);
 	return (
 		<div className="p-2">
 			<SmartTable
 				data={items}
-				columns={PAX_DETAILS_COLUMNS()}
+				columns={columns}
 				showTopFilters={false}
 				showPagination={false}
-				tableLayout={{
-					rowBorder: true,
-					headerBackground: true,
-					showHeader: false
-				}}
+				tableLayout={SUBTABLE_LAYOUT}
 			/>
 		</div>
 	);
@@ -37,6 +50,18 @@ interface IOrderPaxReviewProps {
 export const OrderPaxReview = ({ items = [] }: IOrderPaxReviewProps) => {
 	const { t } = useTranslation("order_id_page");
 
+	const renderSubTable = useCallback(
+		(subItems: IPaxReviewDetail[]) => (
+			<OrderPaxReviewSubTable items={subItems} />
+		),
+		[]
+	);
+
+	const columns = useMemo(
+		() => PAX_REVIEW_COLUMNS(t, renderSubTable),
+		[t, renderSubTable]
+	);
+
 	return (
 		<Card>
 			<CardHeader className="text-lg font-semibold">
@@ -45,16 +70,9 @@ export const OrderPaxReview = ({ items = [] }: IOrderPaxReviewProps) => {
 			<CardContent>
 				<SmartTable
 					data={items}
-					columns={PAX_REVIEW_COLUMNS((subItems) => (
-						<OrderPaxReviewSubTable items={subItems} />
-					))}
-					getRowCanExpand={(row: { original: IPaxReviewItem }) =>
-						row.original.items.length > 0
-					}
-					tableLayout={{
-						rowBorder: true,
-						headerBackground: false
-					}}
+					columns={columns}
+					getRowCanExpand={getRowCanExpandFn}
+					tableLayout={MAIN_TABLE_LAYOUT}
 					showTopFilters={false}
 				/>
 			</CardContent>

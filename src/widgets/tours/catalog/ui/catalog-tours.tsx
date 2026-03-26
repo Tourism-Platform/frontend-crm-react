@@ -1,5 +1,5 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -46,6 +46,7 @@ const DEFAULT_FILTERS: ICatalogTourFilters = {
 
 export const CatalogTours: FC = () => {
 	const { t } = useTranslation("tours_catalog_page");
+	const { t: tCols } = useTranslation(["tours_catalog_page", "options"]);
 
 	const methods = useForm<ICatalogTourFilters>({
 		defaultValues: DEFAULT_FILTERS
@@ -73,34 +74,68 @@ export const CatalogTours: FC = () => {
 			toast.error(t("toasts.load.error"));
 		}
 	}, [isError, t]);
-	const tours = toursData?.data ?? [];
+	const tours = useMemo(() => toursData?.data ?? [], [toursData]);
 	const totalCount = toursData?.total ?? 0;
 
-	const handlePaginationChange: OnChangeFn<PaginationState> = (
-		updaterOrValue
-	) => {
-		const currentPagination = {
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
+
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
+
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
+
+	const handleSearchChange = useCallback(
+		(val: string) => {
+			setValue("search", val);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
+
+	const handleReset = useCallback(() => {
+		methods.reset(DEFAULT_FILTERS);
+	}, [methods]);
+
+	const columns = useMemo(() => CATALOG_COLUMNS(tCols), [tCols]);
+
+	const paginationObj = useMemo(
+		() => ({
 			pageIndex: filters.page - 1,
 			pageSize: filters.limit
-		};
+		}),
+		[filters.page, filters.limit]
+	);
 
-		const nextValue =
-			typeof updaterOrValue === "function"
-				? updaterOrValue(currentPagination)
-				: updaterOrValue;
+	const topChildrenJsx = useMemo(
+		() => (
+			<p className="text-xl font-semibold">
+				{t("header.found", { count: totalCount })}
+			</p>
+		),
+		[t, totalCount]
+	);
 
-		setValue("page", nextValue.pageIndex + 1);
-		setValue("limit", nextValue.pageSize);
-	};
-
-	const handleSearchChange = (val: string) => {
-		setValue("search", val);
-		setValue("page", 1);
-	};
-
-	const handleReset = () => {
-		methods.reset(DEFAULT_FILTERS);
-	};
+	const similarParams = useMemo(
+		() => ({
+			...filters,
+			filters: {
+				...debouncedFilters,
+				duration: []
+			}
+		}),
+		[filters, debouncedFilters]
+	);
 
 	return (
 		<section className="grid gap-12">
@@ -127,22 +162,13 @@ export const CatalogTours: FC = () => {
 				</aside>
 				<div className="flex flex-col gap-25">
 					<SmartTable
-						columns={CATALOG_COLUMNS()}
+						columns={columns}
 						data={tours}
 						recordCount={totalCount}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
-						pagination={{
-							pageIndex: filters.page - 1,
-							pageSize: filters.limit
-						}}
-						topChildren={
-							<p className="text-xl font-semibold">
-								{t("header.found", {
-									count: totalCount
-								})}
-							</p>
-						}
+						pagination={paginationObj}
+						topChildren={topChildrenJsx}
 						onPaginationChange={handlePaginationChange}
 						useViewMode={true}
 						defaultViewMode="cards"
@@ -155,15 +181,7 @@ export const CatalogTours: FC = () => {
 						showVisibilityFilter={false}
 						showStatusFilter={false}
 					/>
-					<CatalogToursSimilar
-						params={{
-							...filters,
-							filters: {
-								...debouncedFilters,
-								duration: []
-							}
-						}}
-					/>
+					<CatalogToursSimilar params={similarParams} />
 				</div>
 			</div>
 		</section>

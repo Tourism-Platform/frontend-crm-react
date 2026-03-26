@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -20,11 +21,22 @@ interface IOrderSupplierPaymentsProps {
 	orderStatus?: ENUM_ORDER_STATUS_TYPE;
 }
 
+const TABLE_LAYOUT = {
+	rowBorder: true,
+	headerBackground: false
+};
+
+const getSubRowsFn = (row: ISupplierPaymentItem) => row.subRows;
+
 export const OrderSupplierPayments = ({
 	items,
 	orderStatus
 }: IOrderSupplierPaymentsProps) => {
-	const { t } = useTranslation("order_id_page");
+	const { t } = useTranslation(["order_id_page", "options"]);
+	const columns = useMemo(
+		() => SUPPLIER_PAYMENTS_COLUMNS(t, orderStatus),
+		[orderStatus, t]
+	);
 
 	return (
 		<Card>
@@ -36,13 +48,10 @@ export const OrderSupplierPayments = ({
 			<CardContent>
 				<SmartTable
 					data={items}
-					columns={SUPPLIER_PAYMENTS_COLUMNS(orderStatus)}
-					getSubRows={(row) => row.subRows}
+					columns={columns}
+					getSubRows={getSubRowsFn}
 					showTopFilters={false}
-					tableLayout={{
-						rowBorder: true,
-						headerBackground: false
-					}}
+					tableLayout={TABLE_LAYOUT}
 				/>
 			</CardContent>
 		</Card>

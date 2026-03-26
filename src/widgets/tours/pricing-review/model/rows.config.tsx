@@ -1,15 +1,15 @@
 import { type ColumnDef } from "@tanstack/react-table";
+import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
 import { EVENT_METADATA, type ITourReviewItem } from "@/entities/tour";
 
-export const PRICING_REVIEW_COLUMNS = (): ColumnDef<ITourReviewItem>[] => {
-	const { t } = useTranslation("tour_pricing_review_page");
-
+export const PRICING_REVIEW_COLUMNS = (
+	t: TFunction<"tour_pricing_review_page", undefined>
+): ColumnDef<ITourReviewItem>[] => {
 	return [
 		{
 			accessorKey: "item",

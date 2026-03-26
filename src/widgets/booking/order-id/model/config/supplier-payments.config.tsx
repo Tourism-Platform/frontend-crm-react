@@ -1,6 +1,6 @@
 import { type ColumnDef } from "@tanstack/react-table";
+import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { Badge, Button } from "@/shared/ui";
@@ -17,10 +17,9 @@ import {
 import { EVENT_METADATA } from "@/entities/tour";
 
 export const SUPPLIER_PAYMENTS_COLUMNS = (
+	t: TFunction<["order_id_page", "options"], undefined>,
 	orderStatus?: ENUM_ORDER_STATUS_TYPE
 ): ColumnDef<ISupplierPaymentItem>[] => {
-	const { t } = useTranslation(["order_id_page", "options"]);
-
 	return [
 		{
 			accessorKey: "item",

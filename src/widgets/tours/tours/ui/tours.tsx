@@ -1,5 +1,5 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useEffect } from "react";
+import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -22,7 +22,7 @@ import { CreateTour } from "@/features/tours";
 import { COLUMNS } from "../model";
 
 export const Tours: FC = () => {
-	const { t } = useTranslation("tours_page");
+	const { t } = useTranslation(["tours_page", "options"]);
 
 	const { watch, setValue } = useForm<ITourFilters>({
 		defaultValues: {
@@ -48,48 +48,74 @@ export const Tours: FC = () => {
 		}
 	}, [isError, t]);
 
-	const tours = toursData?.data ?? [];
+	const tours = useMemo(() => toursData?.data ?? [], [toursData]);
 	const totalCount = toursData?.total ?? 0;
 
 	const statusOptions = useValueToTranslateLabel(TOUR_STATUS_LABELS);
 
-	const handlePaginationChange: OnChangeFn<PaginationState> = (
-		updaterOrValue
-	) => {
-		const currentPagination = {
-			pageIndex: filters.page - 1,
-			pageSize: filters.limit
-		};
+	const columns = useMemo(() => COLUMNS(t), [t]);
 
-		const nextValue =
-			typeof updaterOrValue === "function"
-				? updaterOrValue(currentPagination)
-				: updaterOrValue;
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
 
-		setValue("page", nextValue.pageIndex + 1);
-		setValue("limit", nextValue.pageSize);
-	};
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
 
-	const handleSearchChange = (val: string) => {
-		setValue("search", val);
-		setValue("page", 1);
-	};
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
 
-	const handleStatusChange = (val: string[]) => {
-		setValue("status", val as ENUM_TOUR_STATUS_TYPE[]);
-		setValue("page", 1);
-	};
+	const handleSearchChange = useCallback(
+		(val: string) => {
+			setValue("search", val);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
-	const handleStatusTabChange = (val: string) => {
-		setValue("status", [val as ENUM_TOUR_STATUS_TYPE]);
-		setValue("page", 1);
-	};
+	const handleStatusChange = useCallback(
+		(val: string[]) => {
+			setValue("status", val as ENUM_TOUR_STATUS_TYPE[]);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
-	const activeTab =
-		filters.status.length === 1 ? filters.status[0] : ENUM_TOUR_STATUS.ALL;
+	const handleStatusTabChange = useCallback(
+		(val: string) => {
+			setValue("status", [val as ENUM_TOUR_STATUS_TYPE]);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
+
+	const activeTab = useMemo(
+		() =>
+			filters.status.length === 1
+				? filters.status[0]
+				: ENUM_TOUR_STATUS.ALL,
+		[filters.status]
+	);
 
 	// Переводим тексты табов
 	const translatedStatusTabs = useValueToTranslateLabel(TOUR_STATUS_LABELS);
+
+	const actionsJsx = useMemo(() => <CreateTour />, []);
+	const paginationObj = useMemo(
+		() => ({
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		}),
+		[filters.page, filters.limit]
+	);
 
 	return (
 		<section className="flex gap-5 flex-col">
@@ -97,15 +123,12 @@ export const Tours: FC = () => {
 			<Card>
 				<CardContent>
 					<SmartTable
-						columns={COLUMNS()}
+						columns={columns}
 						data={tours}
 						recordCount={totalCount}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
-						pagination={{
-							pageIndex: filters.page - 1,
-							pageSize: filters.limit
-						}}
+						pagination={paginationObj}
 						onPaginationChange={handlePaginationChange}
 						useViewMode={true}
 						defaultViewMode="cards"
@@ -121,7 +144,7 @@ export const Tours: FC = () => {
 						activeStatusTab={activeTab}
 						onStatusTabChange={handleStatusTabChange}
 						showStatusTabsFilter={true}
-						actions={<CreateTour />}
+						actions={actionsJsx}
 					/>
 				</CardContent>
 			</Card>

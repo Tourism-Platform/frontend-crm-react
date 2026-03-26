@@ -1,5 +1,5 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useEffect } from "react";
+import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -52,38 +52,58 @@ export const Orders: FC = () => {
 		}
 	}, [isError, t]);
 
-	const orders = ordersData?.data ?? [];
+	const orders = useMemo(() => ordersData?.data ?? [], [ordersData]);
 	const totalCount = ordersData?.total ?? 0;
 
-	const handlePaginationChange: OnChangeFn<PaginationState> = (
-		updaterOrValue
-	) => {
-		const currentPagination = {
-			pageIndex: filters.page - 1,
-			pageSize: filters.limit
-		};
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
 
-		const nextValue =
-			typeof updaterOrValue === "function"
-				? updaterOrValue(currentPagination)
-				: updaterOrValue;
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
 
-		setValue("page", nextValue.pageIndex + 1);
-		setValue("limit", nextValue.pageSize);
-	};
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
 
-	const handleSearchChange = (val: string) => {
-		setValue("search", val);
-		setValue("page", 1);
-	};
+	const handleSearchChange = useCallback(
+		(val: string) => {
+			setValue("search", val);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
-	const handleStatusTabChange = (val: string) => {
-		setValue("status", val as ENUM_ORDER_STATUS_TYPE);
-		setValue("page", 1);
-	};
+	const handleStatusTabChange = useCallback(
+		(val: string) => {
+			setValue("status", val as ENUM_ORDER_STATUS_TYPE);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
 	const translatedStatusTabs = useValueToTranslateLabel(
 		BOOKING_ORDER_STATUS_LABELS
+	);
+
+	const columns = useMemo(
+		() => COLUMNS(filters.status, t),
+		[filters.status, t]
+	);
+
+	const paginationObj = useMemo(
+		() => ({
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		}),
+		[filters.page, filters.limit]
 	);
 
 	return (
@@ -93,14 +113,11 @@ export const Orders: FC = () => {
 				<CardContent>
 					<SmartTable
 						data={orders}
-						columns={COLUMNS(filters.status)}
+						columns={columns}
 						recordCount={totalCount}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
-						pagination={{
-							pageIndex: filters.page - 1,
-							pageSize: filters.limit
-						}}
+						pagination={paginationObj}
 						onPaginationChange={handlePaginationChange}
 						search={filters.search}
 						onSearchChange={handleSearchChange}

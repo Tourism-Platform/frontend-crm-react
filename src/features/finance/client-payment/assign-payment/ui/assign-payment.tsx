@@ -69,6 +69,11 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 		mode: "onSubmit"
 	});
 
+	const formFields = useMemo(
+		() => FORM_ASSIGN_PAYMENT_LIST({ orderOptions }),
+		[orderOptions]
+	);
+
 	async function onSubmit(data: TAssignPaymentSchema) {
 		try {
 			await updatePayment({
@@ -107,18 +112,16 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_ASSIGN_PAYMENT_LIST({ orderOptions }).map(
-								({ key, ...item }) => (
-									<CustomField
-										key={key}
-										control={form?.control}
-										name={key}
-										t={t}
-										disabled={isAssigned}
-										{...item}
-									/>
-								)
-							)}
+							{formFields.map(({ key, ...item }) => (
+								<CustomField
+									key={key}
+									control={form?.control}
+									name={key}
+									t={t}
+									disabled={isAssigned}
+									{...item}
+								/>
+							))}
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>

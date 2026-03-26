@@ -1,7 +1,7 @@
 "use client";
 
 import { type Table } from "@tanstack/react-table";
-import { useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef } from "react";
 
 import type { TViewModeType } from "../model";
 
@@ -48,42 +48,43 @@ export function SmartTableFilters<TData extends object>({
 }: SmartTableFiltersProps<TData>) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	// Reusing logic from CustomTable filters if possible, or adapting it
+	const statusColumn = table.getColumn(statusKey as string);
+	const facetedValues = statusColumn?.getFacetedUniqueValues();
+
 	const uniqueStatusValues = useMemo(() => {
-		const statusColumn = table.getColumn(statusKey as string);
-		if (!statusColumn) return [];
-		const values = Array.from(statusColumn.getFacetedUniqueValues().keys());
-		return values.sort();
-	}, [table, statusKey]);
+		if (!facetedValues) return [];
+		return Array.from(facetedValues.keys()).sort();
+	}, [facetedValues]);
 
+	const filterValue = statusColumn?.getFilterValue() as string[];
 	const selectedStatuses = useMemo(() => {
-		const filterValue = table
-			.getColumn(statusKey as string)
-			?.getFilterValue() as string[];
 		return filterValue ?? [];
-	}, [table, statusKey]);
+	}, [filterValue]);
 
-	const handleStatusChange = (checked: boolean, value: string) => {
-		const filterValue = table
-			.getColumn(statusKey as string)
-			?.getFilterValue() as string[];
-		const newFilterValue = filterValue ? [...filterValue] : [];
+	const handleStatusChange = useCallback(
+		(checked: boolean, value: string) => {
+			const filterValue = table
+				.getColumn(statusKey as string)
+				?.getFilterValue() as string[];
+			const newFilterValue = filterValue ? [...filterValue] : [];
 
-		if (checked) {
-			newFilterValue.push(value);
-		} else {
-			const index = newFilterValue.indexOf(value);
-			if (index > -1) {
-				newFilterValue.splice(index, 1);
+			if (checked) {
+				newFilterValue.push(value);
+			} else {
+				const index = newFilterValue.indexOf(value);
+				if (index > -1) {
+					newFilterValue.splice(index, 1);
+				}
 			}
-		}
 
-		table
-			.getColumn(statusKey as string)
-			?.setFilterValue(
-				newFilterValue.length ? newFilterValue : undefined
-			);
-	};
+			table
+				.getColumn(statusKey as string)
+				?.setFilterValue(
+					newFilterValue.length ? newFilterValue : undefined
+				);
+		},
+		[table, statusKey]
+	);
 
 	return (
 		<Filters<TData>

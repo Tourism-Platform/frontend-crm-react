@@ -1,5 +1,5 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useEffect } from "react";
+import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -25,6 +25,7 @@ import { ORDER_HISTORY_COLUMNS } from "../model";
 
 export const OrderHistory: FC = () => {
 	const { t } = useTranslation("tour_order_history_page");
+	const { t: tCols } = useTranslation(["tour_order_history_page", "options"]);
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
 	const { watch, setValue } = useForm<ITourOrderFilters>({
@@ -52,61 +53,79 @@ export const OrderHistory: FC = () => {
 		}
 	}, [isLandingError, t]);
 
-	const orders = data?.data ?? [];
+	const orders = useMemo(() => data?.data ?? [], [data]);
 	const totalCount = data?.total ?? 0;
 
-	const handlePaginationChange: OnChangeFn<PaginationState> = (
-		updaterOrValue
-	) => {
-		const currentPagination = {
-			pageIndex: filters.page - 1,
-			pageSize: filters.limit
-		};
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
 
-		const nextValue =
-			typeof updaterOrValue === "function"
-				? updaterOrValue(currentPagination)
-				: updaterOrValue;
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
 
-		setValue("page", nextValue.pageIndex + 1);
-		setValue("limit", nextValue.pageSize);
-	};
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
 
-	const handleSearchChange = (val: string) => {
-		setValue("search", val);
-		setValue("page", 1);
-	};
+	const handleSearchChange = useCallback(
+		(val: string) => {
+			setValue("search", val);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
-	const handleStatusChange = (val: string[]) => {
-		setValue("status", val as ENUM_TOUR_ORDER_STATUS_TYPE[]);
-		setValue("page", 1);
-	};
+	const handleStatusChange = useCallback(
+		(val: string[]) => {
+			setValue("status", val as ENUM_TOUR_ORDER_STATUS_TYPE[]);
+			setValue("page", 1);
+		},
+		[setValue]
+	);
 
 	const statusOptions = useValueToTranslateLabel(TOUR_ORDER_STATUS_LABELS);
+	const columns = useMemo(() => ORDER_HISTORY_COLUMNS(tCols), [tCols]);
+
+	const paginationObj = useMemo(
+		() => ({
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		}),
+		[filters.page, filters.limit]
+	);
+
+	const headerActions = useMemo(
+		() => (
+			<>
+				<PreviewTourButton />
+				<PublishTourButton />
+			</>
+		),
+		[]
+	);
 
 	return (
 		<section className="flex flex-col gap-6 container">
 			<ConnectedTourHeader
 				title={t("page_name")}
-				actions={
-					<>
-						<PreviewTourButton />
-						<PublishTourButton />
-					</>
-				}
+				actions={headerActions}
 			/>
 			<Card>
 				<CardContent>
 					<SmartTable
 						data={orders}
-						columns={ORDER_HISTORY_COLUMNS()}
+						columns={columns}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
 						recordCount={totalCount}
-						pagination={{
-							pageIndex: filters.page - 1,
-							pageSize: filters.limit
-						}}
+						pagination={paginationObj}
 						onPaginationChange={handlePaginationChange}
 						search={filters.search}
 						onSearchChange={handleSearchChange}

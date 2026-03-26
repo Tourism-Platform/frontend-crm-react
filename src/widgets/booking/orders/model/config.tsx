@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import { type TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
@@ -24,10 +24,10 @@ import { OrderActions } from "../ui";
 
 export const COLUMNS = (
 	activeTab: ENUM_ORDER_STATUS_TYPE,
+	t: TFunction<"orders_page", undefined>,
 	onEdit?: (id: string, data: Partial<IOrder>) => void,
 	onDelete?: (id: string) => void
 ): ColumnDef<IOrder>[] => {
-	const { t } = useTranslation("orders_page");
 	return [
 		{
 			id: "select",

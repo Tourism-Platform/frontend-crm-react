@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 
 import { cn } from "@/shared/lib";
 import { formatToDollars } from "@/shared/utils";
@@ -8,8 +8,9 @@ import { type IReconciliationSupplierPayment } from "@/entities/finance";
 
 import { OpenReconciliation } from "@/features/finance";
 
-export const COLUMNS = (): ColumnDef<IReconciliationSupplierPayment>[] => {
-	const { t } = useTranslation("reconciliation_id_page");
+export const COLUMNS = (
+	t: TFunction<"reconciliation_id_page", undefined>
+): ColumnDef<IReconciliationSupplierPayment>[] => {
 	return [
 		{
 			id: "select",

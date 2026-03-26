@@ -1,5 +1,5 @@
 import { PlusIcon } from "lucide-react";
-import { type FC } from "react";
+import React, { type FC } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -78,6 +78,13 @@ export const FlightInfo: FC<IFlightInfoProps> = ({ form }) => {
 		]);
 	};
 
+	const handleRemoveFlight = React.useCallback(
+		(index: number) => {
+			remove(index);
+		},
+		[remove]
+	);
+
 	return (
 		<div className="grid gap-6">
 			<div className="flex flex-col gap-4">
@@ -111,7 +118,7 @@ export const FlightInfo: FC<IFlightInfoProps> = ({ form }) => {
 						key={field.id}
 						form={form}
 						index={index}
-						onRemove={() => remove(index)} // если нужно убирать сегмент
+						onRemove={handleRemoveFlight}
 					/>
 				))}
 

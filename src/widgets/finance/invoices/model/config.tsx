@@ -1,5 +1,5 @@
 import { type ColumnDef } from "@tanstack/react-table";
-import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
@@ -13,8 +13,9 @@ import {
 	INVOICE_STATUS_VARIANTS
 } from "@/entities/finance";
 
-export const COLUMNS = (): ColumnDef<IInvoice>[] => {
-	const { t } = useTranslation(["invoices_page", "options"]);
+export const COLUMNS = (
+	t: TFunction<["invoices_page", "options"], undefined>
+): ColumnDef<IInvoice>[] => {
 	return [
 		{
 			id: "select",
