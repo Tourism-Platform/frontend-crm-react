@@ -5,7 +5,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { Card, CardContent, SmartTable, withErrorBoundary } from "@/shared/ui";
+import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {

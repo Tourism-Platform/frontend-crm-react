@@ -1,4 +1,3 @@
-export * from "./custom-editor";
 export * from "./custom-autocomplete";
 export * from "./custom-calendar-range";
 export * from "./custom-field";
@@ -9,6 +8,4 @@ export * from "./custom-upload-files";
 export * from "./custom-upload-images";
 export * from "./custom-upload-main-image";
 export * from "./custom-price-filter";
-export * from "./custom-accordion-range";
-export * from "./smart-table";
 export * from "./custom-accordion";

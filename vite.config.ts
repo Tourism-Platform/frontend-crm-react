@@ -17,72 +17,23 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           if (id.includes("node_modules")) {
-            // Core React
-            if (id.includes("react-dom/")) {
-              return "vendor-react-dom";
-            }
-            if (id.includes("react/")) {
-              return "vendor-react-core";
-            }
-            // React Router
-            if (id.includes("react-router") || id.includes("@remix-run")) {
-              return "vendor-router";
-            }
-            // State Management
-            if (id.includes("@reduxjs/toolkit") || id.includes("react-redux") || id.includes("redux")) {
-              return "vendor-redux";
-            }
-            // Phone Number Validation
-            if (id.includes("react-phone-number-input") || id.includes("libphonenumber-js")) {
-              return "vendor-phone-input";
-            }
-            // Heavy password strength library
-            if (id.includes("@zxcvbn-ts") || id.includes("zxcvbn")) {
-              return "vendor-zxcvbn";
-            }
-            // Date libraries and Internationalization
-            if (id.includes("@internationalized/date") || id.includes("date-fns") || id.includes("react-day-picker")) {
-              return "vendor-date";
-            }
-            // Radix UI Component Primitives
-            if (id.includes("radix-ui")) {
-              return "vendor-radix";
-            }
-            // Form validation and state
-            if (id.includes("react-hook-form") || id.includes("@hookform") || id.includes("zod")) {
-              return "vendor-forms";
-            }
-            // General UI ecosystems
-            if (id.includes("lucide-react") || id.includes("tailwind") || id.includes("cmdk") || id.includes("clsx") || id.includes("sonner") || id.includes("embla-carousel") || id.includes("html-react-parser") || id.includes("react-aria-components")) {
-              return "vendor-ui";
-            }
-            // Rich Text Editor (Tiptap)
-            if (id.includes("@tiptap") || id.includes("prosemirror")) {
-              return "vendor-editor";
-            }
-            // Charts (recharts + d3-*) — NOT separated due to circular deps
-            // Data Tables
-            if (id.includes("@tanstack/react-table")) {
-              return "vendor-table";
-            }
-            // Localization
-            if (id.includes("i18next") || id.includes("react-i18next") || id.includes("i18n")) {
-              return "vendor-i18n";
-            }
-            // DnD Kit
-            if (id.includes("@dnd-kit")) {
-              return "vendor-dnd";
-            }
-            // Utility Libraries
-            if (id.includes("lodash") || id.includes("uuid") || id.includes("compose-function") || id.includes("js-cookie") || id.includes("axios")) { // Added axios to utils
-              return "vendor-utils";
-            }
-            // @fontsource files
-            if (id.includes("@fontsource")) {
-              return "vendor-fonts";
-            }
-            // Everything else
-            return "vendor-others";
+            // === Only truly standalone libs (no circular deps, no React) ===
+
+            if (id.includes("@zxcvbn-ts") || id.includes("zxcvbn")) return "vendor-zxcvbn";
+            if (id.includes("libphonenumber-js")) return "vendor-phone";
+            if (id.includes("prosemirror")) return "vendor-prosemirror";
+            if (id.includes("date-fns") || id.includes("@internationalized/date")) return "vendor-date";
+            if (id.includes("zod")) return "vendor-zod";
+            if (id.includes("@fontsource")) return "vendor-fonts";
+            if (id.includes("lucide-react")) return "vendor-icons";
+            if (id.includes("@radix-ui")) return "vendor-radix";
+            if (id.includes("framer-motion")) return "vendor-framer";
+            if (id.includes("@tanstack")) return "vendor-tanstack";
+            if (id.includes("@dnd-kit")) return "vendor-dnd";
+            if (id.includes("react-router-dom") || id.includes("@remix-run")) return "vendor-router";
+            if (id.includes("react-day-picker")) return "vendor-calendar";
+            if (id.includes("lodash") || id.includes("uuid") || id.includes("axios") || id.includes("js-cookie") || id.includes("clsx") || id.includes("tailwind-merge")) return "vendor-utils";
+
           }
         },
       },

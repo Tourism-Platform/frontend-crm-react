@@ -15,12 +15,14 @@ import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
-	AccordionTrigger,
+	AccordionTrigger
+} from "@/shared/ui";
+import {
 	type ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent
-} from "@/shared/ui";
+} from "@/shared/ui/shadcn-ui/chart";
 
 import { CustomPriceFilter } from "../../custom-price-filter";
 

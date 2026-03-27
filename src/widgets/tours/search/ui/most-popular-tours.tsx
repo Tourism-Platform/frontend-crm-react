@@ -2,14 +2,14 @@ import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { withErrorBoundary } from "@/shared/ui";
 import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
 	CarouselNext,
-	CarouselPrevious,
-	withErrorBoundary
-} from "@/shared/ui";
+	CarouselPrevious
+} from "@/shared/ui/shadcn-ui/carousel";
 
 import {
 	CatalogTourCard,

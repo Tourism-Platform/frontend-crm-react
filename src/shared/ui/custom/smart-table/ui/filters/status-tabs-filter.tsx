@@ -3,9 +3,10 @@ import { type FC } from "react";
 import {
 	CustomOptionTabs,
 	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	type IStatusTabs
+	CustomOptionTabsTrigger
 } from "@/shared/ui";
+
+import type { IStatusTabs } from "../../model";
 
 interface IStatusTabsFilterProps {
 	statusTabs: IStatusTabs[];

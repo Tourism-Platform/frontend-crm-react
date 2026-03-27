@@ -1,13 +1,8 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-	Button,
-	Card,
-	CardContent,
-	SmartTable,
-	withErrorBoundary
-} from "@/shared/ui";
+import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { type ITourReviewItem } from "@/entities/tour";
 

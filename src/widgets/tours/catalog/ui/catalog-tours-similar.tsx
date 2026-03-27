@@ -8,13 +8,15 @@ import {
 	AlertDescription,
 	AlertIcon,
 	AlertTitle,
+	withErrorBoundary
+} from "@/shared/ui";
+import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
 	CarouselNext,
-	CarouselPrevious,
-	withErrorBoundary
-} from "@/shared/ui";
+	CarouselPrevious
+} from "@/shared/ui/shadcn-ui/carousel";
 
 import {
 	CatalogTourCard,
