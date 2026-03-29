@@ -11,7 +11,6 @@ import type {
 import {
 	CustomAutocomplete,
 	CustomCalendarRange,
-	CustomEditor,
 	CustomUploadFilesField,
 	DatePickerInput,
 	type DatePickerInputProps,
@@ -25,13 +24,14 @@ import {
 	type MultipleSelectorDisplayMode,
 	type Option as MultipleSelectorOption,
 	PasswordInput,
-	PhoneInput,
 	SelectPicker,
 	type SelectPickerProps,
 	Textarea,
 	TimePickerInput,
 	type TimePickerInputProps
 } from "@/shared/ui";
+import { CustomEditor } from "@/shared/ui/custom/custom-editor";
+import { PhoneInput } from "@/shared/ui/shadcn-ui/phone-input";
 
 export type CustomFieldVariant =
 	| "input"

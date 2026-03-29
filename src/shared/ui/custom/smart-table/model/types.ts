@@ -5,7 +5,7 @@ import {
 } from "@tanstack/react-table";
 import { type FC, type ReactNode } from "react";
 
-import { type DataGridProps } from "@/shared/ui";
+import { type DataGridProps } from "@/shared/ui/shadcn-ui/data-grid";
 
 export type TViewModeType = "table" | "cards";
 

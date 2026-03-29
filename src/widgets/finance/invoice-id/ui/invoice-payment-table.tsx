@@ -6,9 +6,9 @@ import {
 	CardContent,
 	CardHeader,
 	Separator,
-	SmartTable,
 	withErrorBoundary
 } from "@/shared/ui";
+import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { formatToDollars } from "@/shared/utils";
 
 import type { IInvoiceDetail } from "@/entities/finance";

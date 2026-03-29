@@ -22,12 +22,11 @@ import {
 	CustomOptionTabs,
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	DataGrid,
-	DataGridContainer,
-	DataGridTable
+	CustomOptionTabsTrigger
 } from "@/shared/ui";
-import { DataGridTableDnD } from "@/shared/ui";
+import { DataGrid, DataGridContainer } from "@/shared/ui/shadcn-ui/data-grid";
+import { DataGridTable } from "@/shared/ui/shadcn-ui/data-grid-table";
+import { DataGridTableDnD } from "@/shared/ui/shadcn-ui/data-grid-table-dnd";
 
 import { type TSmartTableProps, type TViewModeType } from "../model";
 

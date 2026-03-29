@@ -6,11 +6,8 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { MoneysIcon } from "@/shared/assets";
-import {
-	CustomAccordion,
-	CustomAccordionRange,
-	withErrorBoundary
-} from "@/shared/ui";
+import { CustomAccordion, withErrorBoundary } from "@/shared/ui";
+import { CustomAccordionRange } from "@/shared/ui/custom/custom-accordion-range";
 
 import {
 	type ICatalogTourFilters,

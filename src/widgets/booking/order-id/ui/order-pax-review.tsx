@@ -6,9 +6,9 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
-	SmartTable,
 	withErrorBoundary
 } from "@/shared/ui";
+import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { type IPaxReviewDetail, type IPaxReviewItem } from "@/entities/booking";
 

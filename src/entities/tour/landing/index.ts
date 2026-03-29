@@ -4,4 +4,3 @@ export * from "./schema";
 export * from "./converters";
 export * from "./api";
 export * from "./mock";
-export * from "./handlers";

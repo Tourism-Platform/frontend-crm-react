@@ -22,7 +22,7 @@ import {
 	SelectTrigger,
 	SelectValue
 } from "@/shared/ui";
-import { useDataGrid } from "@/shared/ui";
+import { useDataGrid } from "@/shared/ui/shadcn-ui/data-grid";
 
 interface SmartTablePaginationProps {
 	id: string;

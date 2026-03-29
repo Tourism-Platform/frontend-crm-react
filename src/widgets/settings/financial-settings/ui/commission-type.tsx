@@ -1,7 +1,8 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { SmartTable, withErrorBoundary } from "@/shared/ui";
+import { withErrorBoundary } from "@/shared/ui";
+import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import type { ICommission } from "@/entities/commission";
 
