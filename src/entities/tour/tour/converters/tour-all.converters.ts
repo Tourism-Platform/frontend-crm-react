@@ -2,17 +2,12 @@ import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
 import type {
 	ENUM_PRICING_VISIBILITY_TYPE,
-	ENUM_TOUR_STATUS_TYPE,
-	ENUM_TOUR_TYPES_TYPE,
 	ITourBackend,
 	ITourCard,
 	ITourFinanceBackend,
-	ITourGeneral,
-	ITourGeneralBackend,
 	ITourInfo,
 	ITourInfoBackend,
-	TSettingsFinanceFormSchema,
-	TTourSettingsGeneralFormSchema
+	TSettingsFinanceFormSchema
 } from "../types";
 
 export const mapTourStatsToFrontend = (data: ITourInfoBackend): ITourInfo => ({
@@ -35,38 +30,6 @@ export const mapTourToBackend = (
 	price_from: data.priceFrom,
 	price_to: data.priceTo,
 	image_url: data.imageUrl
-});
-
-export const mapTourGeneralToFrontend = (
-	data: ITourGeneralBackend
-): ITourGeneral => ({
-	id: data.id,
-	status: data.status as ENUM_TOUR_STATUS_TYPE,
-	tourTitle: data.title,
-	tourType: data.type as ENUM_TOUR_TYPES_TYPE,
-	groupSize: data.group_size,
-	duration: {
-		from: data.duration_from,
-		to: data.duration_to
-	},
-	ageRequires: {
-		from: data.age_requires_from,
-		to: data.age_requires_to
-	},
-	tourCategories: data.categories
-});
-
-export const mapTourGeneralToBackend = (
-	data: TTourSettingsGeneralFormSchema
-): Partial<ITourGeneralBackend> => ({
-	title: data.tourTitle,
-	type: data.tourType,
-	group_size: data.groupSize,
-	duration_from: data.duration.from,
-	duration_to: data.duration.to,
-	age_requires_from: data.ageRequires.from,
-	age_requires_to: data.ageRequires.to,
-	categories: data.tourCategories
 });
 
 export const mapTourFinanceToFrontend = (

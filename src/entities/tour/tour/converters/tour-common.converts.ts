@@ -3,8 +3,10 @@ import type { IPaginationResponse } from "@/shared/types";
 
 import type {
 	ENUM_TOUR_STATUS_TYPE,
+	ENUM_TOUR_TYPES_TYPE,
 	ITourCard,
 	ITourFilters,
+	ITourGeneral,
 	TCreateTourSchema,
 	TTourBackend,
 	TTourCreateBackend,
@@ -22,6 +24,24 @@ export const mapTourToFrontend = (data: TTourBackend): ITourCard => ({
 	imageUrl: ""
 });
 
+export const mapTourGeneralToFrontend = (data: TTourBackend): ITourGeneral => ({
+	//!!! оправить типы
+	id: data.id,
+	status: data.status as ENUM_TOUR_STATUS_TYPE,
+	tourTitle: data.name,
+	tourType: data.typ as ENUM_TOUR_TYPES_TYPE,
+	groupSize: data.group_size,
+	duration: {
+		from: data.days,
+		to: data.nights
+	},
+	ageRequires: {
+		from: data.age_from,
+		to: data.age_from
+	},
+	tourCategories: []
+});
+
 export const mapTourCreateToBackend = (
 	data: Partial<TCreateTourSchema>
 ): Partial<TTourCreateBackend> => ({
@@ -33,6 +53,7 @@ export const mapTourCreateToBackend = (
 	age_from: data.ageRequires?.from,
 	group_size: data.groupSize
 });
+
 export const mapTourCreateToFrontend = (
 	data: Partial<TTourBackend>
 ): Partial<TTourSettingsGeneralFormSchema> => ({

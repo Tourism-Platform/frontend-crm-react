@@ -60,6 +60,7 @@ const GeneralInfoBase: FC = () => {
 	async function onSubmit(data: TTourSettingsGeneralFormSchema) {
 		if (!tourId) return;
 		try {
+			console.log(data);
 			await updateTour({ id: tourId, data }).unwrap();
 			toast.success(t("general.form.toasts.save.success"));
 		} catch (error) {

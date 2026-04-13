@@ -8,7 +8,6 @@ import {
 	mapTourFiltersToBackend,
 	mapTourFinanceToBackend,
 	mapTourFinanceToFrontend,
-	mapTourGeneralToBackend,
 	mapTourGeneralToFrontend,
 	mapTourPaginatedToFrontend,
 	mapTourStatsToFrontend
@@ -18,7 +17,6 @@ import type {
 	ITourFilters,
 	ITourFinanceBackend,
 	ITourGeneral,
-	ITourGeneralBackend,
 	ITourInfo,
 	ITourInfoBackend,
 	TSettingsFinanceFormSchema,
@@ -48,11 +46,16 @@ export const tourApi = authApi.injectEndpoints({
 			// !!! проблема с типизацией
 			// transformResponse: (response: TTourBackend) =>
 			// 	mapTourCreateToFrontend(response),
+
+			// transformResponse: (response: TTourBackend) =>
+			// 	mapTourGeneralToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.TOURS]
 		}),
 		getTourGeneral: builder.query<ITourGeneral, string>({
-			query: (id) => `/tours/${id}/general`,
-			transformResponse: (response: ITourGeneralBackend) =>
+			query: (id) => ({
+				...TOUR_PATHS.getTour(id)
+			}),
+			transformResponse: (response: TTourBackend) =>
 				mapTourGeneralToFrontend(response),
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` }
@@ -63,13 +66,10 @@ export const tourApi = authApi.injectEndpoints({
 			{ id: string; data: Partial<TTourSettingsGeneralFormSchema> }
 		>({
 			query: ({ id, data }) => ({
-				url: `/tours/${id}/general`,
-				method: "PATCH",
-				body: mapTourGeneralToBackend(
-					data as TTourSettingsGeneralFormSchema
-				)
+				...TOUR_PATHS.updateTour(id),
+				body: mapTourCreateToBackend(data)
 			}),
-			transformResponse: (response: ITourGeneralBackend) =>
+			transformResponse: (response: TTourBackend) =>
 				mapTourGeneralToFrontend(response),
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },
