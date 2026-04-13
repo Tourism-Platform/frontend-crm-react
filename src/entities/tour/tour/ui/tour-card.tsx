@@ -3,7 +3,12 @@ import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { FlagIcon, MoneysIcon, UsersOutlineIcon } from "@/shared/assets";
+import {
+	FlagIcon,
+	MoneysIcon,
+	UsersOutlineIcon,
+	tourPlaceholder
+} from "@/shared/assets";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import {
@@ -26,7 +31,6 @@ interface ITourCardProps {
 export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 	const [isImageLoaded, setIsImageLoaded] = useState(false);
 	const { t } = useTranslation("options");
-
 	return (
 		<Card className="relative pt-10 overflow-hidden">
 			<MoreHorizontal className="absolute top-2 right-4 text-muted-foreground/50 z-10" />
@@ -39,8 +43,11 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 					</div>
 				)}
 				<img
-					src={card.imageUrl}
+					src={card.imageUrl || tourPlaceholder}
 					alt={card.title}
+					onError={(e) => {
+						e.currentTarget.src = tourPlaceholder;
+					}}
 					onLoad={() => setIsImageLoaded(true)}
 					className={cn(
 						"max-h-35 object-cover w-full transition-opacity duration-500",

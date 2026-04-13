@@ -21,14 +21,14 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useCreateTourMutation } from "@/entities/tour";
-
 import {
-	CREATE_TOUR_SCHEMA,
-	ENUM_FORM_CREATE_TOUR as ENUM_FORM,
-	FORM_CREATE_TOUR_LIST,
-	type TCreateTourSchema
-} from "../model";
+	ENUM_TOUR_CREATE_FORM as ENUM_FORM,
+	type TCreateTourSchema,
+	TOUR_CREATE_SCHEMA,
+	useCreateTourMutation
+} from "@/entities/tour";
+
+import { FORM_CREATE_TOUR_LIST } from "../model";
 
 interface ICreateTourProps {
 	onAdd?: (tour: TCreateTourSchema) => void;
@@ -40,11 +40,11 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 	const [createTour, { isLoading }] = useCreateTourMutation();
 
 	const form = useForm<TCreateTourSchema>({
-		resolver: zodResolver(CREATE_TOUR_SCHEMA),
+		resolver: zodResolver(TOUR_CREATE_SCHEMA),
 		mode: "onSubmit",
 		defaultValues: {
-			[ENUM_FORM.TITLE]: "",
-			[ENUM_FORM.TYPE]: undefined,
+			[ENUM_FORM.TOUR_TITLE]: "",
+			[ENUM_FORM.TOUR_TYPE]: undefined,
 			[ENUM_FORM.GROUP_SIZE]: undefined,
 			[ENUM_FORM.DURATION]: { from: undefined, to: undefined },
 			[ENUM_FORM.AGE_REQUIRES]: { from: undefined, to: undefined },
@@ -54,6 +54,7 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 
 	async function onSubmit(data: TCreateTourSchema) {
 		try {
+			console.log(data);
 			await createTour(data).unwrap();
 			toast.success(t("create.form.toasts.success"));
 			setOpen(false);

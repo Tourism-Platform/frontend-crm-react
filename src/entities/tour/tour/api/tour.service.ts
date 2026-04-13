@@ -1,21 +1,19 @@
-import { ENUM_API_TAGS } from "@/shared/api";
+import { ENUM_API_TAGS, TOUR_PATHS } from "@/shared/api";
 import { type IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapTourCreateToBackend,
 	mapTourFiltersToBackend,
 	mapTourFinanceToBackend,
 	mapTourFinanceToFrontend,
 	mapTourGeneralToBackend,
 	mapTourGeneralToFrontend,
 	mapTourPaginatedToFrontend,
-	mapTourStatsToFrontend,
-	mapTourToBackend,
-	mapTourToFrontend
+	mapTourStatsToFrontend
 } from "../converters";
 import type {
-	ITourBackend,
 	ITourCard,
 	ITourFilters,
 	ITourFinanceBackend,
@@ -24,31 +22,32 @@ import type {
 	ITourInfo,
 	ITourInfoBackend,
 	TSettingsFinanceFormSchema,
-	TSettingsGeneralFormSchema
+	TTourBackend,
+	TTourSettingsGeneralFormSchema
 } from "../types";
 
 export const tourApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getTours: builder.query<
-			IPaginationResponse<ITourCard>,
-			ITourFilters | void
-		>({
+		getTours: builder.query<IPaginationResponse<ITourCard>, ITourFilters>({
 			query: (filters) => ({
-				url: "/tours",
-				params: filters ? mapTourFiltersToBackend(filters) : undefined
+				...TOUR_PATHS.listTours,
+				params: mapTourFiltersToBackend(filters)
 			}),
-			transformResponse: (response: IPaginationResponse<ITourBackend>) =>
+			transformResponse: (response: TTourBackend[]) =>
 				mapTourPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS]
 		}),
-		createTour: builder.mutation<ITourCard, Partial<ITourCard>>({
+		createTour: builder.mutation<
+			ITourCard,
+			Partial<TTourSettingsGeneralFormSchema>
+		>({
 			query: (tour) => ({
-				url: "/tours",
-				method: "POST",
-				body: mapTourToBackend(tour)
+				...TOUR_PATHS.createTour,
+				body: mapTourCreateToBackend(tour)
 			}),
-			transformResponse: (response: ITourBackend) =>
-				mapTourToFrontend(response),
+			// !!! проблема с типизацией
+			// transformResponse: (response: TTourBackend) =>
+			// 	mapTourCreateToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.TOURS]
 		}),
 		getTourGeneral: builder.query<ITourGeneral, string>({
@@ -60,14 +59,14 @@ export const tourApi = authApi.injectEndpoints({
 			]
 		}),
 		updateTourGeneral: builder.mutation<
-			TSettingsGeneralFormSchema,
-			{ id: string; data: Partial<TSettingsGeneralFormSchema> }
+			TTourSettingsGeneralFormSchema,
+			{ id: string; data: Partial<TTourSettingsGeneralFormSchema> }
 		>({
 			query: ({ id, data }) => ({
 				url: `/tours/${id}/general`,
 				method: "PATCH",
 				body: mapTourGeneralToBackend(
-					data as TSettingsGeneralFormSchema
+					data as TTourSettingsGeneralFormSchema
 				)
 			}),
 			transformResponse: (response: ITourGeneralBackend) =>

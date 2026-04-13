@@ -1,21 +1,24 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { TOUR_CATEGORY_LABELS, TOUR_TYPE_LABELS } from "@/entities/tour";
-
-import { ENUM_FORM_CREATE_TOUR as ENUM_FORM, type TForm } from "../types";
+import {
+	ENUM_TOUR_CREATE_FORM as ENUM_FORM,
+	type TForm,
+	TOUR_CATEGORY_LABELS,
+	TOUR_TYPE_LABELS
+} from "@/entities/tour";
 
 export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 	{
 		label: "create.form.fields.tourTitle.label",
 		placeholder: "create.form.fields.tourTitle.placeholder",
-		key: ENUM_FORM.TITLE,
+		key: ENUM_FORM.TOUR_TITLE,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
 		label: "create.form.fields.tourType.label",
 		placeholder: "create.form.fields.tourType.placeholder",
-		key: ENUM_FORM.TYPE,
+		key: ENUM_FORM.TOUR_TYPE,
 		fieldType: "select",
 		options: useValueToTranslateLabel(TOUR_TYPE_LABELS)
 	},

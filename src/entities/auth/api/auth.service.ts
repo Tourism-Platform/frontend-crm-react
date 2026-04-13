@@ -5,15 +5,6 @@ import type { IAuthUser } from "../types";
 
 export const AuthService = baseApi.injectEndpoints({
 	endpoints: (build) => ({
-		signUp: build.mutation<
-			typeof AUTH_PATHS.registerUser._types.response,
-			IAuthUser
-		>({
-			query: (BodyParams) => ({
-				...AUTH_PATHS.registerUser,
-				body: mapAuthUserToBackend(BodyParams)
-			})
-		}),
 		signIn: build.mutation<
 			typeof AUTH_PATHS.authUser._types.response,
 			IAuthUser
@@ -34,5 +25,4 @@ export const AuthService = baseApi.injectEndpoints({
 	})
 });
 
-export const { useSignUpMutation, useSignInMutation, useSignOutMutation } =
-	AuthService;
+export const { useSignInMutation, useSignOutMutation } = AuthService;

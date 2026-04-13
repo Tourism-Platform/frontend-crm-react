@@ -2,9 +2,8 @@ export const ENUM_TOUR_STATUS = {
 	ALL: "all",
 	ACTIVE: "active",
 	MODERATE: "moderate",
-	PLANNING: "planning",
 	CANCELLED: "cancelled",
-	ARCHIVED: "archived"
+	DRAFT: "draft"
 } as const;
 
 export type ENUM_TOUR_STATUS_TYPE =

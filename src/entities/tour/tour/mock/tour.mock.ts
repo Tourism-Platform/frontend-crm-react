@@ -37,7 +37,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 	},
 	{
 		id: "0f7a1c92-bf61-4db0-921e-2283f9f72f33",
-		status: ENUM_TOUR_STATUS.PLANNING,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Cultural Treasures of Samarkand",
 		route: ["TAS", "SAM"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -59,7 +59,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 	},
 	{
 		id: "74f3a6b9-1d2c-4f98-a18f-7a4b5c0f0c91",
-		status: ENUM_TOUR_STATUS.ARCHIVED,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Mountain Escape in Chimgan",
 		route: ["TAS", "CHIM"],
 		type: ENUM_TOUR_TYPES.PRIVATE,
@@ -92,7 +92,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 	},
 	{
 		id: "b4f29c88-6b10-4d3c-9d22-0b2f83af5a42",
-		status: ENUM_TOUR_STATUS.PLANNING,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Fergana Valley Handicraft Tour",
 		route: ["FER", "AND", "NAM"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -125,7 +125,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 	},
 	{
 		id: "5c0f9e1b-8f42-4d82-a2e0-6c3a1e4f7b29",
-		status: ENUM_TOUR_STATUS.ARCHIVED,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Pilgrimage Tour: Seven Saints of Bukhara",
 		route: ["BUH"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -147,7 +147,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 	},
 	{
 		id: "8f2b7c6a-1e23-49f7-9a62-4f0b1d8e32a3",
-		status: ENUM_TOUR_STATUS.PLANNING,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Khiva Architectural Wonders",
 		route: ["KHIV"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -180,7 +180,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 	},
 	{
 		id: "0c1f7d2e-6a3b-46e1-8a9f-3c7f2b9e8d3a",
-		status: ENUM_TOUR_STATUS.ARCHIVED,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Eco-tour in Zaamin National Park",
 		route: ["ZAA"],
 		type: ENUM_TOUR_TYPES.PRIVATE,
@@ -202,7 +202,7 @@ export const TOUR_MOCK: ITourBackend[] = [
 	},
 	{
 		id: "9a2b7f6c-3d1e-40a8-9f2b-5c7d8f3a1b9c",
-		status: ENUM_TOUR_STATUS.PLANNING,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Historical Tashkent City Tour",
 		route: ["TAS"],
 		type: ENUM_TOUR_TYPES.GROUP,

@@ -1,21 +1,18 @@
-import { type IPaginationResponse } from "@/shared/types";
-
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
-import type { ENUM_TOUR_STATUS_TYPE } from "../types";
 import type {
 	ENUM_PRICING_VISIBILITY_TYPE,
+	ENUM_TOUR_STATUS_TYPE,
 	ENUM_TOUR_TYPES_TYPE,
 	ITourBackend,
 	ITourCard,
-	ITourFilters,
 	ITourFinanceBackend,
 	ITourGeneral,
 	ITourGeneralBackend,
 	ITourInfo,
 	ITourInfoBackend,
 	TSettingsFinanceFormSchema,
-	TSettingsGeneralFormSchema
+	TTourSettingsGeneralFormSchema
 } from "../types";
 
 export const mapTourStatsToFrontend = (data: ITourInfoBackend): ITourInfo => ({
@@ -25,17 +22,6 @@ export const mapTourStatsToFrontend = (data: ITourInfoBackend): ITourInfo => ({
 	tourists: data.tourists,
 	confirmedRevenue: data.confirmed_revenue,
 	potentialRevenue: data.potential_revenue
-});
-
-export const mapTourToFrontend = (data: ITourBackend): ITourCard => ({
-	id: data.id,
-	status: data.status as ENUM_TOUR_STATUS_TYPE,
-	title: data.title,
-	route: data.route,
-	type: data.type,
-	priceFrom: data.price_from,
-	priceTo: data.price_to,
-	imageUrl: data.image_url
 });
 
 export const mapTourToBackend = (
@@ -71,7 +57,7 @@ export const mapTourGeneralToFrontend = (
 });
 
 export const mapTourGeneralToBackend = (
-	data: TSettingsGeneralFormSchema
+	data: TTourSettingsGeneralFormSchema
 ): Partial<ITourGeneralBackend> => ({
 	title: data.tourTitle,
 	type: data.tourType,
@@ -95,21 +81,4 @@ export const mapTourFinanceToBackend = (
 ): Partial<ITourFinanceBackend> => ({
 	currency_type: data.currencyType,
 	pricing_visibility: data.pricingVisibility
-});
-
-export const mapTourListToFrontend = (data: ITourBackend[]): ITourCard[] =>
-	data.map(mapTourToFrontend);
-
-export const mapTourPaginatedToFrontend = (
-	response: IPaginationResponse<ITourBackend>
-): IPaginationResponse<ITourCard> => ({
-	data: mapTourListToFrontend(response.data),
-	total: response.total
-});
-
-export const mapTourFiltersToBackend = (filters: ITourFilters) => ({
-	page: filters.page,
-	limit: filters.limit,
-	search: filters.search || undefined,
-	status: filters.status.length > 0 ? filters.status.join(",") : undefined
 });

@@ -27,18 +27,18 @@ export const authHandlers = [
 			status: 401,
 			statusText: "Unauthorized"
 		});
-	}),
+	})
 
 	// Обработчик регистрации (Signup)
-	createMockHandler<IAuthUser>(AUTH_PATHS.registerUser, async ({ body }) => {
-		// Если такой пользователь уже есть в нашей моковой базе
-		if (body.email === MOCK_AUTH_CREDENTIALS.EMAIL) {
-			return new HttpResponse(null, {
-				status: 409,
-				statusText: "Conflict"
-			});
-		}
+	// createMockHandler<IAuthUser>(AUTH_PATHS.registerUser, async ({ body }) => {
+	// 	// Если такой пользователь уже есть в нашей моковой базе
+	// 	if (body.email === MOCK_AUTH_CREDENTIALS.EMAIL) {
+	// 		return new HttpResponse(null, {
+	// 			status: 409,
+	// 			statusText: "Conflict"
+	// 		});
+	// 	}
 
-		return HttpResponse.json({ email: body.email }, { status: 200 });
-	})
+	// 	return HttpResponse.json({ email: body.email }, { status: 200 });
+	// })
 ];

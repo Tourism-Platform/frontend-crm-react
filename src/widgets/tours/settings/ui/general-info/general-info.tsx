@@ -16,10 +16,10 @@ import {
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
-	ENUM_SETTINGS_GENERAL_FORM,
-	SETTINGS_GENERAL_FORM_SCHEMA,
+	ENUM_TOUR_SETTINGS_GENERAL_FORM,
 	TOUR_CATEGORY_LABELS,
-	type TSettingsGeneralFormSchema,
+	TOUR_SETTINGS_GENERAL_FORM_SCHEMA,
+	type TTourSettingsGeneralFormSchema,
 	useGetTourGeneralQuery,
 	useUpdateTourGeneralMutation
 } from "@/entities/tour";
@@ -40,8 +40,8 @@ const GeneralInfoBase: FC = () => {
 	const [updateTour, { isLoading: isUpdating }] =
 		useUpdateTourGeneralMutation();
 
-	const form = useForm<TSettingsGeneralFormSchema>({
-		resolver: zodResolver(SETTINGS_GENERAL_FORM_SCHEMA),
+	const form = useForm<TTourSettingsGeneralFormSchema>({
+		resolver: zodResolver(TOUR_SETTINGS_GENERAL_FORM_SCHEMA),
 		mode: "onSubmit"
 	});
 
@@ -57,7 +57,7 @@ const GeneralInfoBase: FC = () => {
 		}
 	}, [isTourError, t]);
 
-	async function onSubmit(data: TSettingsGeneralFormSchema) {
+	async function onSubmit(data: TTourSettingsGeneralFormSchema) {
 		if (!tourId) return;
 		try {
 			await updateTour({ id: tourId, data }).unwrap();
@@ -87,7 +87,7 @@ const GeneralInfoBase: FC = () => {
 					))}
 					<CustomRangeField
 						control={form?.control}
-						name={ENUM_SETTINGS_GENERAL_FORM.DURATION}
+						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.DURATION}
 						label="general.form.fields.duration.label"
 						placeholder_left="general.form.fields.duration.placeholder_left"
 						placeholder_right="general.form.fields.duration.placeholder_right"
@@ -95,7 +95,7 @@ const GeneralInfoBase: FC = () => {
 					/>
 					<CustomRangeField
 						control={form?.control}
-						name={ENUM_SETTINGS_GENERAL_FORM.AGE_REQUIRES}
+						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.AGE_REQUIRES}
 						label="general.form.fields.ageRequires.label"
 						placeholder_left="general.form.fields.ageRequires.placeholder_left"
 						placeholder_right="general.form.fields.ageRequires.placeholder_right"
@@ -103,7 +103,7 @@ const GeneralInfoBase: FC = () => {
 					/>
 					<CustomField
 						control={form?.control}
-						name={ENUM_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES}
+						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES}
 						label="general.form.fields.tourCategories.label"
 						placeholder="general.form.fields.tourCategories.placeholder"
 						options={useValueToTranslateLabel(TOUR_CATEGORY_LABELS)}

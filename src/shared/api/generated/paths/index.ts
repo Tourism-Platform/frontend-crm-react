@@ -15,6 +15,5 @@ export { OPERATOR_FILES_PATHS } from "./operator-files.paths";
 export { OPERATOR_STAFF_PATHS } from "./operator-staff.paths";
 export { SUPPLIER_PATHS } from "./supplier.paths";
 export { AGENCY_PATHS } from "./agency.paths";
-export { BOOKING_PATHS } from "./booking.paths";
 export { BOOKING_ORDER_PATHS } from "./booking-order.paths";
 export { BOOKING_PASSENGER_PATHS } from "./booking-passenger.paths";

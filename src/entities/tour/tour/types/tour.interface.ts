@@ -1,4 +1,4 @@
-import type { TSettingsGeneralFormSchema } from "./setting-general-info.types";
+import type { TTourSettingsGeneralFormSchema } from "./setting-general-info.types";
 import type { ENUM_TOUR_STATUS_TYPE } from "./tour-status.types";
 
 export interface ITourCard {
@@ -12,7 +12,7 @@ export interface ITourCard {
 	imageUrl: string;
 }
 
-export interface ITourGeneral extends TSettingsGeneralFormSchema {
+export interface ITourGeneral extends TTourSettingsGeneralFormSchema {
 	id: string;
 	status: ENUM_TOUR_STATUS_TYPE;
 }

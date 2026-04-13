@@ -1,15 +1,17 @@
 import { z } from "zod";
 
-import { ENUM_TOUR_CATEGORY, ENUM_TOUR_TYPES } from "@/entities/tour";
+import {
+	ENUM_TOUR_CREATE_FORM as ENUM_FORM,
+	ENUM_TOUR_CATEGORY,
+	ENUM_TOUR_TYPES
+} from "../types";
 
-import { ENUM_FORM_CREATE_TOUR as ENUM_FORM } from "../types";
-
-export const CREATE_TOUR_SCHEMA = z.object({
-	[ENUM_FORM.TITLE]: z
+export const TOUR_CREATE_SCHEMA = z.object({
+	[ENUM_FORM.TOUR_TITLE]: z
 		.string()
 		.min(1, "create.form.errors.tourTitle.min")
 		.max(100, "create.form.errors.tourTitle.max"),
-	[ENUM_FORM.TYPE]: z.enum(ENUM_TOUR_TYPES, {
+	[ENUM_FORM.TOUR_TYPE]: z.enum(ENUM_TOUR_TYPES, {
 		message: "create.form.errors.tourType.required"
 	}),
 	[ENUM_FORM.GROUP_SIZE]: z

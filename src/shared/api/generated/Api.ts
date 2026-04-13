@@ -351,15 +351,6 @@ export interface AuthUserModel {
 	role: UserRoles;
 }
 
-/** BaseUser */
-export interface BaseUser {
-	/**
-	 * Email
-	 * @format email
-	 */
-	email: string;
-}
-
 /** Body_add_files_operator_me_files_post */
 export interface BodyAddFilesOperatorMeFilesPost {
 	/** Files */
@@ -468,8 +459,6 @@ export interface BookingModel {
 	agreed_price: number | null;
 	/** Agreed Currency */
 	agreed_currency: string | null;
-	/** Invoice Id */
-	invoice_id: string | null;
 	/** Confirmed At */
 	confirmed_at: string | null;
 	/** Cancelled At */
@@ -1214,6 +1203,25 @@ export interface LocationSchema {
 	long: number;
 }
 
+/** MeSchema */
+export interface MeSchema {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Email */
+	email: string;
+	/** Role */
+	role: string;
+	/** Picture */
+	picture?: string | null;
+	/** Agency Id */
+	agency_id?: string | null;
+	/** Operator Id */
+	operator_id?: string | null;
+}
+
 /** MonetaryValueSchema */
 export interface MonetaryValueSchema {
 	/**
@@ -1707,11 +1715,8 @@ export interface StaffInvite {
 	role: StaffInviteRoleEnum;
 	/** Commission Split */
 	commission_split?: number | null;
-	/**
-	 * Employment Status
-	 * @default "active"
-	 */
-	employment_status?: string;
+	/** @default "active" */
+	employment_status?: EmploymentStatus;
 }
 
 /** StaffRead */

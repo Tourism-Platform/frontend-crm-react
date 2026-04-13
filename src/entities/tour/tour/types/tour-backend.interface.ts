@@ -1,3 +1,5 @@
+import type { TourMetaCreateSchema, TourMetaModel } from "@/shared/api";
+
 import type { ENUM_TOUR_CATEGORY_TYPE } from "./tour-category.types";
 
 export interface ITourBackend {
@@ -10,6 +12,10 @@ export interface ITourBackend {
 	price_to: number;
 	image_url: string;
 }
+
+export type TTourCreateBackend = TourMetaCreateSchema;
+
+export type TTourBackend = TourMetaModel;
 
 export interface ITourGeneralBackend {
 	id: string;
