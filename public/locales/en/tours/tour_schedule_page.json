@@ -23,6 +23,16 @@
 
 		"buttons": {
 			"add": "Add new rule"
+		},
+
+		"toasts": {
+			"enabled": "Seasonality enabled",
+			"disabled": "Seasonality disabled",
+			"error": "An error occurred",
+			"removed": "Rule removed",
+			"updated": "Rule updated",
+			"created": "Rule created",
+			"validation_error": "Please fill in all fields"
 		}
 	}
 }

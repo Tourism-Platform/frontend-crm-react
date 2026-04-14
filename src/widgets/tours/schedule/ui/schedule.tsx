@@ -1,6 +1,6 @@
-import { addDays, subDays } from "date-fns";
 import { type FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 import {
 	Card,
@@ -10,6 +10,8 @@ import {
 	CustomOptionTabsTrigger,
 	withErrorBoundary
 } from "@/shared/ui";
+
+import { useGetScheduleQuery } from "@/entities/tour";
 
 import {
 	ConnectedTourHeader,
@@ -26,18 +28,12 @@ import { Switcher } from "./switcher";
 
 const ScheduleBase: FC = () => {
 	const { t } = useTranslation("tour_schedule_page");
-	const today = new Date();
-	const [date, setDate] = useState<Date[] | undefined>([
-		subDays(today, 17),
-		addDays(today, 2),
-		addDays(today, 6),
-		addDays(today, 8)
-	]);
+	const { tourId = "" } = useParams<{ tourId: string }>();
 
-	const handleDeleteDate = (date: Date) => {
-		setDate((prev) => prev?.filter((item) => item !== date));
-	};
-	const [seasonality, setSeasonality] = useState(false);
+	const { data: scheduleData, isLoading } = useGetScheduleQuery(tourId, {
+		skip: !tourId
+	});
+
 	const [activeTab, setActiveTab] = useState(DATES_TYPE_LIST[0].value);
 
 	const actionsJsx = useMemo(
@@ -49,6 +45,13 @@ const ScheduleBase: FC = () => {
 		),
 		[]
 	);
+
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
+
+	const fixedDates = scheduleData?.fixedDates ?? [];
+	const isSeasonal = scheduleData?.schedule.isSeasonal ?? false;
 
 	return (
 		<section className="flex flex-col gap-6 container">
@@ -74,16 +77,13 @@ const ScheduleBase: FC = () => {
 								))}
 							</CustomOptionTabsList>
 						</CustomOptionTabs>
-						<Switcher
-							checked={seasonality}
-							toggleSwitch={() => setSeasonality(!seasonality)}
-						/>
+						<Switcher tourId={tourId} checked={isSeasonal} />
 					</div>
 					<div className="flex items-center justify-center">
-						<CalendarInfo date={date} setDate={setDate} />
+						<CalendarInfo tourId={tourId} fixedDates={fixedDates} />
 					</div>
-					<SelectedDates date={date} onDelete={handleDeleteDate} />
-					{seasonality && <SeasonalityInfo />}
+					<SelectedDates tourId={tourId} fixedDates={fixedDates} />
+					{isSeasonal && <SeasonalityInfo tourId={tourId} />}
 				</CardContent>
 			</Card>
 		</section>

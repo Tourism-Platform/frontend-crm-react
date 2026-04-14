@@ -1,8 +1,7 @@
 "use client";
 
-import { addDays } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { type DateRange } from "react-day-picker";
 import { useTranslation } from "react-i18next";
 
@@ -10,27 +9,37 @@ import { Button } from "@/shared/ui";
 import { Calendar } from "@/shared/ui";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui";
 
-export default function DatePickerDemo() {
+interface IDatePickerProps {
+	from?: Date;
+	to?: Date;
+	onChange?: (date: { from?: Date; to?: Date }) => void;
+}
+
+export default function DatePicker({ from, to, onChange }: IDatePickerProps) {
 	const { t } = useTranslation("common");
-	const today = new Date();
 	const defaultDate: DateRange = {
-		from: today,
-		to: addDays(today, 5)
+		from: from,
+		to: to
 	};
 
 	const [date, setDate] = useState<DateRange | undefined>(defaultDate);
-
 	const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+	useEffect(() => {
+		setDate({ from, to });
+	}, [from, to]);
 
 	const handleApply = () => {
 		if (date) {
-			setDate(date);
+			onChange?.({ from: date.from, to: date.to });
 		}
 		setIsPopoverOpen(false);
 	};
 
 	const handleReset = () => {
-		setDate(defaultDate);
+		const empty = { from: undefined, to: undefined };
+		setDate(empty);
+		onChange?.(empty);
 		setIsPopoverOpen(false);
 	};
 

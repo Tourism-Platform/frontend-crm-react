@@ -1,23 +1,31 @@
-import { Trash } from "lucide-react";
-import { type FC } from "react";
+import { Check, Loader2, Trash } from "lucide-react";
+import { type FC, useEffect } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { Button, Form, Input, withErrorBoundary } from "@/shared/ui";
-import DatePickerDemo from "@/shared/ui/range";
+import DatePicker from "@/shared/ui/date-picker";
 
-const SeasonalityInfoBase: FC = () => {
+import { type ISeasonality, useGetSeasonalityQuery } from "@/entities/tour";
+
+import { useSeasonalityRemove, useSeasonalitySave } from "../model";
+
+interface ISeasonalityInfoProps {
+	tourId: string;
+}
+
+const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 	const { t } = useTranslation("tour_schedule_page");
 
+	const { data: seasonalityData } = useGetSeasonalityQuery(tourId, {
+		skip: !tourId
+	});
+
 	const form = useForm<{
-		seasonality: {
-			from: string;
-			to: string;
-			percent: string;
-		}[];
+		seasonality: Partial<ISeasonality>[];
 	}>({
 		defaultValues: {
-			seasonality: [{ from: "", to: "", percent: "" }]
+			seasonality: []
 		},
 		mode: "onSubmit"
 	});
@@ -27,9 +35,24 @@ const SeasonalityInfoBase: FC = () => {
 		name: "seasonality"
 	});
 
-	// function onSubmit(data: ) {
-	// 	console.log("Form submitted:", data);
-	// }
+	const { handleSave, isCheckedPending } = useSeasonalitySave({
+		tourId,
+		form
+	});
+
+	const { handleRemove, isRemoving } = useSeasonalityRemove({
+		tourId,
+		form,
+		remove
+	});
+
+	useEffect(() => {
+		if (seasonalityData) {
+			form.reset({
+				seasonality: seasonalityData
+			});
+		}
+	}, [seasonalityData, form]);
 
 	return (
 		<Form {...form}>
@@ -45,9 +68,7 @@ const SeasonalityInfoBase: FC = () => {
 					<Button
 						type="button"
 						variant="outline"
-						onClick={() =>
-							append({ from: "", to: "", percent: "" })
-						}
+						onClick={() => append({})}
 					>
 						{t("seasonality.buttons.add")}
 					</Button>
@@ -62,12 +83,27 @@ const SeasonalityInfoBase: FC = () => {
 						>
 							{/* Дата */}
 							<div className="grid grid-cols-2 gap-5">
-								<DatePickerDemo />
+								<DatePicker
+									from={form.watch(
+										`seasonality.${index}.from`
+									)}
+									to={form.watch(`seasonality.${index}.to`)}
+									onChange={({ from, to }) => {
+										form.setValue(
+											`seasonality.${index}.from`,
+											from
+										);
+										form.setValue(
+											`seasonality.${index}.to`,
+											to
+										);
+									}}
+								/>
 
 								{/* Процент */}
 								<Controller
 									control={form.control}
-									name={`seasonality.${index}.percent`}
+									name={`seasonality.${index}.commission`}
 									render={({ field }) => (
 										<Input
 											{...field}
@@ -79,14 +115,34 @@ const SeasonalityInfoBase: FC = () => {
 									)}
 								/>
 							</div>
+							{/* Сохранить правило */}
+							<Button
+								type="button"
+								variant="outline"
+								size={"icon"}
+								disabled={isRemoving}
+								onClick={() => handleSave(index)}
+							>
+								{isCheckedPending ? (
+									<Loader2 className="h-4 w-4 animate-spin" />
+								) : (
+									<Check className="text-green-600" />
+								)}
+							</Button>
+
 							{/* Удалить правило */}
 							<Button
 								type="button"
 								variant="destructive"
 								size={"icon"}
-								onClick={() => remove(index)}
+								disabled={isCheckedPending}
+								onClick={() => handleRemove(index)}
 							>
-								<Trash />
+								{isRemoving ? (
+									<Loader2 className="h-4 w-4 animate-spin" />
+								) : (
+									<Trash />
+								)}
 							</Button>
 						</div>
 					))}
