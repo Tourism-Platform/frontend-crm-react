@@ -55,6 +55,11 @@ export const CustomUploadMainImage: FC<ICustomUploadMainImageProps> = ({
 
 	const previewUrl = files[0]?.preview || null;
 
+	const handleDeleteClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation();
+		removeFile(files[0]?.id);
+	};
+
 	return (
 		<div className={cn("flex flex-col gap-2", className)}>
 			<div className="relative">
@@ -113,10 +118,7 @@ export const CustomUploadMainImage: FC<ICustomUploadMainImageProps> = ({
 						<button
 							aria-label={t("upload_main_image.errors.remove")}
 							className="z-50 flex size-8 cursor-pointer items-center justify-center rounded-full bg-black/60 text-white outline-none transition-[color,box-shadow] hover:bg-black/80 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
-							onClick={(e) => {
-								e.stopPropagation();
-								removeFile(files[0]?.id);
-							}}
+							onClick={handleDeleteClick}
 							type="button"
 						>
 							<XIcon aria-hidden="true" className="size-4" />

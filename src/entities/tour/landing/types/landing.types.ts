@@ -3,7 +3,6 @@ import { z } from "zod";
 import type { LANDING_SCHEMA } from "../schema";
 
 export const ENUM_FORM_LANDING = {
-	PHOTOS: "photos",
 	DESCRIPTION: "description",
 	LANGUAGES: "languages",
 	INCLUDED: "included",

@@ -1,4 +1,5 @@
-import { ENUM_EVENT, type IPricingReviewOption } from "@/entities/tour";
+import { ENUM_EVENT } from "@/entities/tour/tour/types/event.types";
+import type { IPricingReviewOption } from "@/entities/tour/tour/types/tour-review.interface";
 
 export const MOCK_PRICING_DATA: IPricingReviewOption[] = [
 	{

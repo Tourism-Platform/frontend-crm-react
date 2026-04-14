@@ -18,6 +18,7 @@ import {
 import {
 	LANDING_SCHEMA,
 	type TLandingSchema,
+	useCreateLandingMutation,
 	useGetLandingQuery,
 	useUpdateLandingMutation
 } from "@/entities/tour";
@@ -27,8 +28,6 @@ import {
 	PreviewTourButton,
 	PublishTourButton
 } from "@/features/tours";
-
-import { TourNotFound } from "../../tour-not-found";
 
 import { AdditionalInfo } from "./additional-info";
 import { AmenitiesInfo } from "./amenities-info";
@@ -52,16 +51,13 @@ const LandingBase: FC = () => {
 	const [updateLanding, { isLoading: isUpdating }] =
 		useUpdateLandingMutation();
 
+	const [createLanding, { isLoading: isCreating }] =
+		useCreateLandingMutation();
+
 	const form = useForm<TLandingSchema>({
 		resolver: zodResolver(LANDING_SCHEMA),
 		mode: "onSubmit"
 	});
-
-	useEffect(() => {
-		if (landingData) {
-			form.reset(landingData);
-		}
-	}, [landingData, form]);
 
 	useEffect(() => {
 		if (isLandingError) {
@@ -72,7 +68,11 @@ const LandingBase: FC = () => {
 	async function onSubmit(data: TLandingSchema) {
 		if (tourId) {
 			try {
-				await updateLanding({ tourId, data }).unwrap();
+				if (landingData) {
+					await updateLanding({ tourId, data }).unwrap();
+				} else {
+					await createLanding({ tourId, data }).unwrap();
+				}
 				toast.success(t("form.toasts.save.success"));
 			} catch (error) {
 				toast.error(t("form.toasts.save.error"));
@@ -91,10 +91,10 @@ const LandingBase: FC = () => {
 		[]
 	);
 
-	if ((!landingData || isLandingError) && !isLandingLoading) {
-		return <TourNotFound />;
-	}
-
+	// if ((!landingData || isLandingError) && !isLandingLoading) {
+	// 	return <TourNotFound />;
+	// }
+	const isLoading = isUpdating || isCreating || isLandingLoading;
 	return (
 		<section className="flex flex-col gap-6 container">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
@@ -102,7 +102,7 @@ const LandingBase: FC = () => {
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<Card>
 						<CardContent className="grid gap-6">
-							<PhotosInfo form={form} />
+							<PhotosInfo tourId={tourId} />
 							<Separator />
 							<OverviewInfo form={form} />
 							<Separator />
@@ -119,9 +119,9 @@ const LandingBase: FC = () => {
 								<Button
 									size="lg"
 									type="submit"
-									disabled={isUpdating || isLandingLoading}
+									disabled={isLoading}
 								>
-									{isUpdating || isLandingLoading ? (
+									{isLoading ? (
 										<>
 											<Loader className="mr-2 h-4 w-4 animate-spin" />
 											{isLandingLoading

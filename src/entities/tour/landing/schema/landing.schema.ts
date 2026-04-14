@@ -4,18 +4,14 @@ import { type TLandingPageKeys, i18nKey } from "@/shared/config";
 
 import {
 	ENUM_AMENITIES,
+	ENUM_FORM_LANDING,
 	ENUM_LANGUAGES,
 	ENUM_PICKUP_TYPE
-} from "@/entities/tour";
-
-import { ENUM_FORM_LANDING } from "../types";
+} from "../types";
 
 const msg = i18nKey<TLandingPageKeys>();
 
 export const LANDING_SCHEMA = z.object({
-	[ENUM_FORM_LANDING.PHOTOS]: z.string().min(1, {
-		message: msg("form.photos.errors.required")
-	}),
 	[ENUM_FORM_LANDING.DESCRIPTION]: z
 		.string()
 		.trim()

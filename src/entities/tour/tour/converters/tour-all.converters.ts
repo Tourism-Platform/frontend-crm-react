@@ -10,38 +10,41 @@ import type {
 	TSettingsFinanceFormSchema
 } from "../types";
 
-export const mapTourStatsToFrontend = (data: ITourInfoBackend): ITourInfo => ({
-	total: data.total,
-	completed: data.completed,
-	inProgress: data.in_progress,
-	tourists: data.tourists,
-	confirmedRevenue: data.confirmed_revenue,
-	potentialRevenue: data.potential_revenue
+export const mapTourStatsToFrontend = (
+	backend: ITourInfoBackend
+): ITourInfo => ({
+	total: backend.total,
+	completed: backend.completed,
+	inProgress: backend.in_progress,
+	tourists: backend.tourists,
+	confirmedRevenue: backend.confirmed_revenue,
+	potentialRevenue: backend.potential_revenue
 });
 
 export const mapTourToBackend = (
-	data: Partial<ITourCard>
+	frontend: Partial<ITourCard>
 ): Partial<ITourBackend> => ({
-	id: data.id,
-	status: data.status,
-	title: data.title,
-	route: data.route,
-	type: data.type,
-	price_from: data.priceFrom,
-	price_to: data.priceTo,
-	image_url: data.imageUrl
+	id: frontend.id,
+	status: frontend.status,
+	title: frontend.title,
+	route: frontend.route,
+	type: frontend.type,
+	price_from: frontend.priceFrom,
+	price_to: frontend.priceTo,
+	image_url: frontend.imageUrl
 });
 
 export const mapTourFinanceToFrontend = (
-	data: ITourFinanceBackend
+	backend: ITourFinanceBackend
 ): TSettingsFinanceFormSchema => ({
-	currencyType: data.currency_type as ENUM_CURRENCY_OPTIONS_TYPE,
-	pricingVisibility: data.pricing_visibility as ENUM_PRICING_VISIBILITY_TYPE
+	currencyType: backend.currency_type as ENUM_CURRENCY_OPTIONS_TYPE,
+	pricingVisibility:
+		backend.pricing_visibility as ENUM_PRICING_VISIBILITY_TYPE
 });
 
 export const mapTourFinanceToBackend = (
-	data: TSettingsFinanceFormSchema
+	frontend: TSettingsFinanceFormSchema
 ): Partial<ITourFinanceBackend> => ({
-	currency_type: data.currencyType,
-	pricing_visibility: data.pricingVisibility
+	currency_type: frontend.currencyType,
+	pricing_visibility: frontend.pricingVisibility
 });

@@ -1,29 +1,35 @@
-import type { ILandingBackend, TLandingSchema } from "../types";
+import { PickupType } from "@/shared/api";
+
+import { type TLandingCreateBackend, type TLandingSchema } from "../types";
+
+import { amenitiesMapper } from "./amenities.converters";
+import { languageMapper } from "./languages.converters";
+import { pickupMapper } from "./pickup.converters";
 
 export const mapLandingToBackend = (
 	frontend: TLandingSchema
-): ILandingBackend => ({
-	photos: frontend.photos,
-	description: frontend.description,
-	languages: frontend.languages,
-	includedAmenities: frontend.included,
-	notIncludedAmenities: frontend.not_included,
-	pickupType: frontend.pickup_type,
-	pickupDescription: frontend.pickup_description,
-	cancellationPolicy: frontend.cancellation_policy,
-	additionalInfo: frontend.additional_info
+): TLandingCreateBackend => ({
+	title: frontend.description,
+	overview: frontend.description,
+	languages: languageMapper.toMany(frontend.languages),
+	amenities_included: amenitiesMapper.toMany(frontend.included),
+	amenities_not_included: amenitiesMapper.toMany(frontend.not_included),
+	pickup_details: pickupMapper.to(frontend.pickup_type[0]!) ?? null, // !!! Костыль потом убрать
+	cancellation_policy: frontend.cancellation_policy,
+	additional_info: frontend.additional_info
 });
 
 export const mapLandingToFrontend = (
-	backend: ILandingBackend
+	backend: TLandingCreateBackend
 ): TLandingSchema => ({
-	photos: backend.photos,
-	description: backend.description,
-	languages: backend.languages,
-	included: backend.includedAmenities,
-	not_included: backend.notIncludedAmenities,
-	pickup_type: backend.pickupType,
-	pickup_description: backend.pickupDescription,
-	cancellation_policy: backend.cancellationPolicy,
-	additional_info: backend.additionalInfo
+	description: backend.overview,
+	languages: languageMapper.fromMany(backend.languages),
+	included: amenitiesMapper.fromMany(backend.amenities_included),
+	not_included: amenitiesMapper.fromMany(backend.amenities_not_included),
+	pickup_type: pickupMapper.fromMany([
+		backend.pickup_details || PickupType.Airport
+	]), // !!! Костыль потом убрать
+	pickup_description: "",
+	cancellation_policy: backend.cancellation_policy,
+	additional_info: backend.additional_info
 });

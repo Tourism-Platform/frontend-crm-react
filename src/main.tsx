@@ -2,7 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./app";
-import { initMsw } from "./app/init/msw";
+import { initMsw } from "./app/mws/init";
 import "./shared/config/i18n/i18n.init";
 import "./shared/styles/global.css";
 

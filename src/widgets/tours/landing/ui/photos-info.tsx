@@ -1,52 +1,71 @@
-import { type FC } from "react";
-import type { UseFormReturn } from "react-hook-form";
+import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage,
-	withErrorBoundary
-} from "@/shared/ui";
-import { CustomUploadMainImage } from "@/shared/ui";
+import { CustomUploadMainImage, withErrorBoundary } from "@/shared/ui";
 
-import { ENUM_FORM_LANDING, type TLandingSchema } from "@/entities/tour";
+import {
+	useDeleteLandingImageMutation,
+	useListLandingImagesQuery,
+	useUploadLandingImagesMutation
+} from "@/entities/tour";
 
 interface IPhotosInfoProps {
-	form: UseFormReturn<TLandingSchema>;
+	tourId: string;
 }
 
-const PhotosInfoBase: FC<IPhotosInfoProps> = ({ form }) => {
+const PhotosInfoBase: FC<IPhotosInfoProps> = ({ tourId }) => {
 	const { t } = useTranslation("landing_page");
-	const { control } = form;
+
+	const { data: images = [] } = useListLandingImagesQuery(tourId, {
+		skip: !tourId
+	});
+
+	const [uploadImages] = useUploadLandingImagesMutation();
+	const [deleteImage] = useDeleteLandingImageMutation();
+
+	// Локальное состояние для мгновенной реакции UI (избегаем race condition хука useFileUpload)
+	const [localImage, setLocalImage] = useState<string>("");
+
+	useEffect(() => {
+		setLocalImage(images.length > 0 ? images[0].imagePath : "");
+	}, [images]);
+
+	const handleFilesChange = async (files: (File | { url: string })[]) => {
+		if (!tourId) return;
+
+		if (files.length === 0) {
+			setLocalImage(""); // Мгновенная реакция UI
+			if (images.length > 0) {
+				await deleteImage({ tourId, imageId: images[0].id }).unwrap();
+			}
+			return;
+		}
+
+		// Выбираем только новые загруженные файлы
+		const newFiles = files.filter((f): f is File => f instanceof File);
+
+		if (newFiles.length > 0) {
+			// Если уже есть картинка, удаляем её перед загрузкой новой
+			if (images.length > 0) {
+				await deleteImage({ tourId, imageId: images[0].id }).unwrap();
+			}
+			await uploadImages({ tourId, files: newFiles });
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg ">{t("form.photos.title")}</h3>
+			<h3 className="text-lg">{t("form.photos.title")}</h3>
 			<p className="text-sm text-muted-foreground">
 				{t("form.photos.description")}
 			</p>
 
-			<FormField
-				control={control}
-				name={ENUM_FORM_LANDING.PHOTOS}
-				render={({ field }) => (
-					<FormItem>
-						<FormControl>
-							<CustomUploadMainImage
-								initialValue={field.value}
-								onFilesChange={(files) => {
-									const urls = files.map(
-										(f) => f.preview || ""
-									);
-									field.onChange(urls?.[0] || "");
-								}}
-							/>
-						</FormControl>
-						<FormMessage t={t} />
-					</FormItem>
-				)}
+			<CustomUploadMainImage
+				initialValue={localImage}
+				onFilesChange={(files) => {
+					const mappedFiles = files.map((f) => f.file);
+					handleFilesChange(mappedFiles);
+				}}
 			/>
 		</div>
 	);

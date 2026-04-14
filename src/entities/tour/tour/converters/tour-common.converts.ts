@@ -13,51 +13,53 @@ import type {
 	TTourSettingsGeneralFormSchema
 } from "../types";
 
-export const mapTourToFrontend = (data: TTourBackend): ITourCard => ({
-	id: data.id,
-	status: data.status as ENUM_TOUR_STATUS_TYPE,
-	title: data.name,
+export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
+	id: backend.id,
+	status: backend.status as ENUM_TOUR_STATUS_TYPE,
+	title: backend.name,
 	route: [],
-	type: data.typ,
+	type: backend.typ,
 	priceFrom: 0,
 	priceTo: 0,
 	imageUrl: ""
 });
 
-export const mapTourGeneralToFrontend = (data: TTourBackend): ITourGeneral => ({
+export const mapTourGeneralToFrontend = (
+	backend: TTourBackend
+): ITourGeneral => ({
 	//!!! оправить типы
-	id: data.id,
-	status: data.status as ENUM_TOUR_STATUS_TYPE,
-	tourTitle: data.name,
-	tourType: data.typ as ENUM_TOUR_TYPES_TYPE,
-	groupSize: data.group_size,
+	id: backend.id,
+	status: backend.status as ENUM_TOUR_STATUS_TYPE,
+	tourTitle: backend.name,
+	tourType: backend.typ as ENUM_TOUR_TYPES_TYPE,
+	groupSize: backend.group_size,
 	duration: {
-		from: data.days,
-		to: data.nights
+		from: backend.days,
+		to: backend.nights
 	},
 	ageRequires: {
-		from: data.age_from,
-		to: data.age_from
+		from: backend.age_from,
+		to: backend.age_from
 	},
 	tourCategories: []
 });
 
 export const mapTourCreateToBackend = (
-	data: Partial<TCreateTourSchema>
+	frontend: Partial<TCreateTourSchema>
 ): Partial<TTourCreateBackend> => ({
 	// !!! need to add all fields
-	name: data.tourTitle,
+	name: frontend.tourTitle,
 	description: "no description",
-	days: data.duration?.from,
-	nights: data.duration?.to,
-	age_from: data.ageRequires?.from,
-	group_size: data.groupSize
+	days: frontend.duration?.from,
+	nights: frontend.duration?.to,
+	age_from: frontend.ageRequires?.from,
+	group_size: frontend.groupSize
 });
 
 export const mapTourCreateToFrontend = (
-	data: Partial<TTourBackend>
+	backend: Partial<TTourBackend>
 ): Partial<TTourSettingsGeneralFormSchema> => ({
-	tourTitle: data.name
+	tourTitle: backend.name
 	// status: data.status as ENUM_TOUR_STATUS_TYPE,
 	// title: data.title,
 	// route: data.route,
@@ -67,8 +69,8 @@ export const mapTourCreateToFrontend = (
 	// imageUrl: data.image_url
 });
 
-export const mapTourListToFrontend = (data: TTourBackend[]): ITourCard[] =>
-	data.map(mapTourToFrontend);
+export const mapTourListToFrontend = (backend: TTourBackend[]): ITourCard[] =>
+	backend.map(mapTourToFrontend);
 
 // !!! Полностью переделать
 export const mapTourPaginatedToFrontend = (

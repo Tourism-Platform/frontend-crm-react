@@ -1,2 +1,2 @@
 export * from "./paths";
-export * from "./Api.ts";
+export * from "./Api";

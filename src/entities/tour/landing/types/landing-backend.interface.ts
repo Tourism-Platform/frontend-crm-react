@@ -1,3 +1,5 @@
+import type { LandingPageModel } from "@/shared/api";
+
 import type {
 	ENUM_AMENITIES_TYPE,
 	ENUM_LANGUAGES_TYPE,
@@ -15,3 +17,7 @@ export interface ILandingBackend {
 	cancellationPolicy: string;
 	additionalInfo: string;
 }
+
+export type TLandingBackend = LandingPageModel;
+
+export type TLandingCreateBackend = Omit<LandingPageModel, "id" | "tour_id">;

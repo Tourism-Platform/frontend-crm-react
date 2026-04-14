@@ -11,5 +11,6 @@ export const ENUM_API_TAGS = {
 	BOOKING_ORDERS: "Booking Orders",
 	TOUR_ORDER_HISTORY: "Tour Order History",
 	TOUR_ACTIVITY_LOG: "Tour Activity Log",
-	TOURS_CATALOG: "Tours Catalog"
+	TOURS_CATALOG: "Tours Catalog",
+	LANDING_IMAGES: "Landing Images"
 } as const;
