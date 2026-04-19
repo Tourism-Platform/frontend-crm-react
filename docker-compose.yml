@@ -1,0 +1,13 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_ENABLE_MSW: ${VITE_ENABLE_MSW:-false}
+        VITE_APP_ENV: ${VITE_APP_ENV:-prod}
+    container_name: crm-frontend
+    ports:
+      - "8080:80"
+    restart: unless-stopped
