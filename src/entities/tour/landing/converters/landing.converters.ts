@@ -1,14 +1,20 @@
 import { PickupType } from "@/shared/api";
 
-import { type TLandingCreateBackend, type TLandingSchema } from "../types";
+import {
+	type TCreateLandingBackendResponse,
+	type TCreateLandingImageBackendBody,
+	type TGetLandingBackendResponse,
+	type TLandingSchema,
+	type TUpdateLandingBackendResponse
+} from "../types";
 
 import { amenitiesMapper } from "./amenities.converters";
 import { languageMapper } from "./languages.converters";
 import { pickupMapper } from "./pickup.converters";
 
-export const mapLandingToBackend = (
+export const mapCreateLandingToBackend = (
 	frontend: TLandingSchema
-): TLandingCreateBackend => ({
+): TCreateLandingImageBackendBody => ({
 	title: frontend.description,
 	overview: frontend.description,
 	languages: languageMapper.toMany(frontend.languages),
@@ -19,8 +25,13 @@ export const mapLandingToBackend = (
 	additional_info: frontend.additional_info
 });
 
+export const mapUpdateLandingToBackend = mapCreateLandingToBackend;
+
 export const mapLandingToFrontend = (
-	backend: TLandingCreateBackend
+	backend:
+		| TCreateLandingBackendResponse
+		| TGetLandingBackendResponse
+		| TUpdateLandingBackendResponse
 ): TLandingSchema => ({
 	description: backend.overview,
 	languages: languageMapper.fromMany(backend.languages),

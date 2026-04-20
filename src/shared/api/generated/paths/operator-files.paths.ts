@@ -22,7 +22,7 @@ export const OPERATOR_FILES_PATHS = {
 			response: OperatorFilesModel[];
 		}
 	} as const,
-	getFileBinary: (fileId: string) =>
+	getFileUrl: (fileId: string) =>
 		({
 			url: `/operator/me/files/${fileId}`,
 			method: "GET",

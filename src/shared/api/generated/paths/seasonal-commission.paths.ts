@@ -7,7 +7,7 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const SEASONAL_COMMISSION_PATHS = {
-	getTourComissions: (tourId: string) =>
+	getTourCommissions: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/seasonality/`,
 			method: "GET",
@@ -27,7 +27,7 @@ export const SEASONAL_COMMISSION_PATHS = {
 				response: SeasonalityCommissionModel;
 			}
 		}) as const,
-	updateTourComissions: (tourId: string, commissionId: string) =>
+	updateTourCommissions: (tourId: string, commissionId: string) =>
 		({
 			url: `/tour/${tourId}/seasonality/update/${commissionId}`,
 			method: "PATCH",

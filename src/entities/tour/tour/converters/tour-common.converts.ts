@@ -8,8 +8,9 @@ import type {
 	ITourFilters,
 	ITourGeneral,
 	TCreateTourSchema,
+	TGetTourBackendResponse,
+	TListToursBackendResponse,
 	TTourBackend,
-	TTourCreateBackend,
 	TTourSettingsGeneralFormSchema
 } from "../types";
 
@@ -25,7 +26,7 @@ export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
 });
 
 export const mapTourGeneralToFrontend = (
-	backend: TTourBackend
+	backend: TGetTourBackendResponse
 ): ITourGeneral => ({
 	//!!! оправить типы
 	id: backend.id,
@@ -45,10 +46,10 @@ export const mapTourGeneralToFrontend = (
 });
 
 export const mapTourCreateToBackend = (
-	frontend: Partial<TCreateTourSchema>
-): Partial<TTourCreateBackend> => ({
+	frontend: TCreateTourSchema
+): typeof TOUR_PATHS.createTour._types.body => ({
 	// !!! need to add all fields
-	name: frontend.tourTitle,
+	name: frontend.tourTitle || "NAME",
 	description: "no description",
 	days: frontend.duration?.from,
 	nights: frontend.duration?.to,
@@ -69,16 +70,12 @@ export const mapTourCreateToFrontend = (
 	// imageUrl: data.image_url
 });
 
-export const mapTourListToFrontend = (backend: TTourBackend[]): ITourCard[] =>
-	backend.map(mapTourToFrontend);
-
 // !!! Полностью переделать
 export const mapTourPaginatedToFrontend = (
-	// response: IPaginationResponse<ITourBackend>
-	response: TTourBackend[]
+	response: TListToursBackendResponse
 ): IPaginationResponse<ITourCard> => ({
-	data: mapTourListToFrontend(response),
-	total: response.length
+	data: response.data.map(mapTourToFrontend),
+	total: response.total_count
 });
 
 // !!! Полностью переделать

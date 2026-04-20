@@ -19,9 +19,12 @@ import type {
 	ITourGeneral,
 	ITourInfo,
 	ITourInfoBackend,
+	TCreateTourSchema,
+	TGetTourBackendResponse,
+	TListToursBackendResponse,
 	TSettingsFinanceFormSchema,
-	TTourBackend,
-	TTourSettingsGeneralFormSchema
+	TTourSettingsGeneralFormSchema,
+	TUpdateTourBackendResponse
 } from "../types";
 
 export const tourApi = authApi.injectEndpoints({
@@ -31,31 +34,25 @@ export const tourApi = authApi.injectEndpoints({
 				...TOUR_PATHS.listTours,
 				params: mapTourFiltersToBackend(filters)
 			}),
-			transformResponse: (response: TTourBackend[]) =>
+			transformResponse: (response: TListToursBackendResponse) =>
 				mapTourPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS]
 		}),
-		createTour: builder.mutation<
-			ITourCard,
-			Partial<TTourSettingsGeneralFormSchema>
-		>({
+		createTour: builder.mutation<ITourCard, TCreateTourSchema>({
 			query: (tour) => ({
 				...TOUR_PATHS.createTour,
 				body: mapTourCreateToBackend(tour)
 			}),
-			// !!! проблема с типизацией
-			// transformResponse: (response: TTourBackend) =>
-			// 	mapTourCreateToFrontend(response),
-
-			// transformResponse: (response: TTourBackend) =>
-			// 	mapTourGeneralToFrontend(response),
+			// transformResponse: (
+			// 	response: typeof TOUR_PATHS.createTour._types.response
+			// ) => mapTourGeneralToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.TOURS]
 		}),
 		getTourGeneral: builder.query<ITourGeneral, string>({
 			query: (id) => ({
 				...TOUR_PATHS.getTour(id)
 			}),
-			transformResponse: (response: TTourBackend) =>
+			transformResponse: (response: TGetTourBackendResponse) =>
 				mapTourGeneralToFrontend(response),
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` }
@@ -63,13 +60,13 @@ export const tourApi = authApi.injectEndpoints({
 		}),
 		updateTourGeneral: builder.mutation<
 			TTourSettingsGeneralFormSchema,
-			{ id: string; data: Partial<TTourSettingsGeneralFormSchema> }
+			{ id: string; data: TTourSettingsGeneralFormSchema }
 		>({
 			query: ({ id, data }) => ({
 				...TOUR_PATHS.updateTour(id),
 				body: mapTourCreateToBackend(data)
 			}),
-			transformResponse: (response: TTourBackend) =>
+			transformResponse: (response: TUpdateTourBackendResponse) =>
 				mapTourGeneralToFrontend(response),
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },

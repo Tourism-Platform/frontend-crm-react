@@ -1,5 +1,7 @@
 import type {
+	EventTypes,
 	SupplierCreateSchema,
+	SupplierListResponse,
 	SupplierModel,
 	SupplierUpdateSchema
 } from "../Api";
@@ -8,6 +10,15 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const SUPPLIER_PATHS = {
+	listSuppliers: {
+		url: "/supplier",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { skip?: number; limit?: number; typ?: EventTypes | null };
+			response: SupplierListResponse;
+		}
+	} as const,
 	createSupplier: {
 		url: "/supplier",
 		method: "POST",
@@ -23,14 +34,14 @@ export const SUPPLIER_PATHS = {
 			method: "GET",
 			_types: {} as { body: void; query: void; response: SupplierModel }
 		}) as const,
-	udpateSupplier: (supplierId: string) =>
+	updateSupplier: (supplierId: string) =>
 		({
 			url: `/supplier/${supplierId}`,
 			method: "PATCH",
 			_types: {} as {
 				body: SupplierUpdateSchema;
 				query: void;
-				response: void;
+				response: SupplierModel;
 			}
 		}) as const,
 	deleteSupplier: (supplierId: string) =>

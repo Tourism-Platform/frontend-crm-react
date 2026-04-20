@@ -12,7 +12,7 @@ export const tourSeasonalityApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getSeasonality: builder.query<ISeasonality[], string>({
 			query: (tourId) => ({
-				...SEASONAL_COMMISSION_PATHS.getTourComissions(tourId)
+				...SEASONAL_COMMISSION_PATHS.getTourCommissions(tourId)
 			}),
 			transformResponse: (response: TSeasonalityCommissionBackend[]) =>
 				response.map(mapSeasonalityToFrontend)
@@ -49,7 +49,7 @@ export const tourSeasonalityApi = authApi.injectEndpoints({
 			{ tourId: string; commissionId: string; data: ISeasonality }
 		>({
 			query: ({ tourId, commissionId, data }) => ({
-				...SEASONAL_COMMISSION_PATHS.updateTourComissions(
+				...SEASONAL_COMMISSION_PATHS.updateTourCommissions(
 					tourId,
 					commissionId
 				),

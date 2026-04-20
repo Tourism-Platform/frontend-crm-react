@@ -30,7 +30,7 @@ const ScheduleBase: FC = () => {
 	const { t } = useTranslation("tour_schedule_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
-	const { data: scheduleData, isLoading } = useGetScheduleQuery(tourId, {
+	const { data: scheduleData } = useGetScheduleQuery(tourId, {
 		skip: !tourId
 	});
 
@@ -45,10 +45,6 @@ const ScheduleBase: FC = () => {
 		),
 		[]
 	);
-
-	if (isLoading) {
-		return <div>Loading...</div>;
-	}
 
 	const fixedDates = scheduleData?.fixedDates ?? [];
 	const isSeasonal = scheduleData?.schedule.isSeasonal ?? false;

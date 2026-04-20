@@ -1,19 +1,21 @@
-import { ENUM_API_TAGS } from "@/shared/api";
-import { TOUR_LANDING_PAGE_PATHS } from "@/shared/api";
+import { ENUM_API_TAGS, TOUR_LANDING_PAGE_PATHS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapCreateLandingToBackend,
 	mapLandingImagesToFrontend,
-	mapLandingToBackend,
-	mapLandingToFrontend
+	mapLandingToFrontend,
+	mapUpdateLandingToBackend
 } from "../converters";
 import type {
 	ILandingImageSchema,
-	TLandingBackend,
-	TLandingCreateBackend,
-	TLandingImageBackend,
-	TLandingSchema
+	TCreateLandingBackendResponse,
+	TGetLandingBackendResponse,
+	TLandingSchema,
+	TListLandingImagesBackendResponse,
+	TUpdateLandingBackendResponse,
+	TUploadLandingImagesBackendResponse
 } from "../types";
 
 export const tourLandingApi = authApi.injectEndpoints({
@@ -24,16 +26,16 @@ export const tourLandingApi = authApi.injectEndpoints({
 		>({
 			query: ({ tourId, data }) => ({
 				...TOUR_LANDING_PAGE_PATHS.createLandingPage(tourId),
-				body: mapLandingToBackend(data)
+				body: mapCreateLandingToBackend(data)
 			}),
-			transformResponse: (response: TLandingCreateBackend) =>
+			transformResponse: (response: TCreateLandingBackendResponse) =>
 				mapLandingToFrontend(response)
 		}),
 		getLanding: builder.query<TLandingSchema, string>({
 			query: (tourId) => ({
 				...TOUR_LANDING_PAGE_PATHS.getLandingPage(tourId)
 			}),
-			transformResponse: (response: TLandingBackend) =>
+			transformResponse: (response: TGetLandingBackendResponse) =>
 				mapLandingToFrontend(response)
 		}),
 		updateLanding: builder.mutation<
@@ -42,16 +44,16 @@ export const tourLandingApi = authApi.injectEndpoints({
 		>({
 			query: ({ tourId, data }) => ({
 				...TOUR_LANDING_PAGE_PATHS.updateLandingPage(tourId),
-				body: mapLandingToBackend(data)
+				body: mapUpdateLandingToBackend(data)
 			}),
-			transformResponse: (response: TLandingBackend) =>
+			transformResponse: (response: TUpdateLandingBackendResponse) =>
 				mapLandingToFrontend(response)
 		}),
 		listLandingImages: builder.query<ILandingImageSchema[], string>({
 			query: (tourId) => ({
 				...TOUR_LANDING_PAGE_PATHS.listLandingImages(tourId)
 			}),
-			transformResponse: (response: TLandingImageBackend[]) =>
+			transformResponse: (response: TListLandingImagesBackendResponse) =>
 				mapLandingImagesToFrontend(response),
 			providesTags: [ENUM_API_TAGS.LANDING_IMAGES]
 		}),
@@ -67,8 +69,9 @@ export const tourLandingApi = authApi.injectEndpoints({
 					body: formData
 				};
 			},
-			transformResponse: (response: TLandingImageBackend[]) =>
-				mapLandingImagesToFrontend(response),
+			transformResponse: (
+				response: TUploadLandingImagesBackendResponse
+			) => mapLandingImagesToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.LANDING_IMAGES]
 		}),
 		deleteLandingImage: builder.mutation<

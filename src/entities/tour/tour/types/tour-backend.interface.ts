@@ -1,4 +1,8 @@
-import type { TourMetaCreateSchema, TourMetaModel } from "@/shared/api";
+import type {
+	TOUR_PATHS,
+	TourMetaCreateSchema,
+	TourMetaModel
+} from "@/shared/api";
 
 import type { ENUM_TOUR_CATEGORY_TYPE } from "./tour-category.types";
 
@@ -16,6 +20,20 @@ export interface ITourBackend {
 export type TTourCreateBackend = TourMetaCreateSchema;
 
 export type TTourBackend = TourMetaModel;
+
+export type TCreateTourBackendResponse =
+	typeof TOUR_PATHS.createTour._types.response;
+
+export type TUpdateTourBackendResponse = ReturnType<
+	typeof TOUR_PATHS.updateTour
+>["_types"]["response"];
+
+export type TGetTourBackendResponse = ReturnType<
+	typeof TOUR_PATHS.getTour
+>["_types"]["response"];
+
+export type TListToursBackendResponse =
+	typeof TOUR_PATHS.listTours._types.response;
 
 export interface ITourGeneralBackend {
 	id: string;

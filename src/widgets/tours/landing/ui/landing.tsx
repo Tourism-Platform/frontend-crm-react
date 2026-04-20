@@ -48,11 +48,14 @@ const LandingBase: FC = () => {
 	} = useGetLandingQuery(tourId, {
 		skip: !tourId
 	});
+
 	const [updateLanding, { isLoading: isUpdating }] =
 		useUpdateLandingMutation();
 
 	const [createLanding, { isLoading: isCreating }] =
 		useCreateLandingMutation();
+
+	const isLoading = isUpdating || isCreating || isLandingLoading;
 
 	const form = useForm<TLandingSchema>({
 		resolver: zodResolver(LANDING_SCHEMA),
@@ -64,6 +67,12 @@ const LandingBase: FC = () => {
 			toast.error(t("form.toasts.load.error"));
 		}
 	}, [isLandingError, t]);
+
+	useEffect(() => {
+		if (landingData) {
+			form.reset(landingData);
+		}
+	}, [landingData, form]);
 
 	async function onSubmit(data: TLandingSchema) {
 		if (tourId) {
@@ -94,7 +103,7 @@ const LandingBase: FC = () => {
 	// if ((!landingData || isLandingError) && !isLandingLoading) {
 	// 	return <TourNotFound />;
 	// }
-	const isLoading = isUpdating || isCreating || isLandingLoading;
+
 	return (
 		<section className="flex flex-col gap-6 container">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
