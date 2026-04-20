@@ -9,5 +9,5 @@ services:
         VITE_APP_ENV: ${VITE_APP_ENV:-prod}
     container_name: crm-frontend
     ports:
-      - "8080:80"
+      - "80:80"
     restart: unless-stopped
