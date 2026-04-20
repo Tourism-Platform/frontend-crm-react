@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -87,7 +88,7 @@ export const ChangePassword: FC = () => {
 									error &&
 									(error as FetchBaseQueryError).status ===
 										400
-										? "form.current_password.errors.incorrect"
+										? "form.errors.current_password.incorrect"
 										: undefined
 								}
 							/>
@@ -103,7 +104,12 @@ export const ChangePassword: FC = () => {
 								</Button>
 							</DialogClose>
 							<Button type="submit" disabled={isLoading}>
-								{t("form.buttons.save")}
+								{isLoading && (
+									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								)}
+								{isLoading
+									? t("form.buttons.saving")
+									: t("form.buttons.save")}
 							</Button>
 						</DialogFooter>
 					</form>

@@ -1,4 +1,4 @@
-import { ENUM_API_TAGS } from "@/shared/api";
+import { AUTH_PATHS, ENUM_API_TAGS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -29,10 +29,9 @@ export const accountApi = authApi.injectEndpoints({
 			invalidatesTags: [ENUM_API_TAGS.USER]
 		}),
 		changePassword: builder.mutation<void, TChangePasswordSchema>({
-			query: (passwords) => ({
-				url: "/user/change-password",
-				method: "POST",
-				body: mapPasswordChangeToBackend(passwords)
+			query: (body) => ({
+				...AUTH_PATHS.changePassword,
+				body: mapPasswordChangeToBackend(body)
 			})
 		})
 	})

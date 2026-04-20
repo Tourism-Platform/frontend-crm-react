@@ -42,7 +42,8 @@
 		},
 		"buttons": {
 			"decline": "Decline",
-			"save": "Save"
+			"save": "Save",
+			"saving": "Saving..."
 		},
 		"toasts": {
 			"success": "Password changed successfully",

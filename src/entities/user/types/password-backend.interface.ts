@@ -1,4 +1,3 @@
-export interface IChangePasswordBackend {
-	current_password: string;
-	new_password: string;
-}
+import type { PasswordChangeIn } from "@/shared/api";
+
+export type TChangePasswordBackend = PasswordChangeIn;
