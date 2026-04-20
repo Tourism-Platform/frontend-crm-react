@@ -18,7 +18,7 @@ export const mapSeasonalityToFrontend = (
 	backend: TSeasonalityCommissionBackend
 ): ISeasonality => ({
 	id: backend.id,
-	commission: backend.comission,
+	commission: backend.commission,
 	from: new Date(backend.valid_from),
 	to: new Date(backend.valid_until)
 });

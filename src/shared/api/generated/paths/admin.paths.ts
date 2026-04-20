@@ -1,6 +1,6 @@
 import type {
+	AdminUserView,
 	AuthUserIn,
-	AuthUserModel,
 	UpdateUserSchema,
 	UserRoles
 } from "../Api";
@@ -12,13 +12,13 @@ export const ADMIN_PATHS = {
 	getAllUsers: {
 		url: "/admin/user/all",
 		method: "GET",
-		_types: {} as { body: void; query: void; response: AuthUserModel[] }
+		_types: {} as { body: void; query: void; response: AdminUserView[] }
 	} as const,
 	getUser: (id: string) =>
 		({
 			url: `/admin/user/${id}`,
 			method: "GET",
-			_types: {} as { body: void; query: void; response: AuthUserModel }
+			_types: {} as { body: void; query: void; response: AdminUserView }
 		}) as const,
 	updateUser: (id: string) =>
 		({
@@ -27,7 +27,7 @@ export const ADMIN_PATHS = {
 			_types: {} as {
 				body: UpdateUserSchema;
 				query: void;
-				response: AuthUserModel;
+				response: AdminUserView;
 			}
 		}) as const,
 	deleteUser: (id: string) =>
@@ -42,7 +42,7 @@ export const ADMIN_PATHS = {
 		_types: {} as {
 			body: AuthUserIn;
 			query: { role?: UserRoles };
-			response: AuthUserModel;
+			response: AdminUserView;
 		}
 	} as const
 } as const;

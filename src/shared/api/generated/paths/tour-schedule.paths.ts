@@ -1,9 +1,12 @@
 import type {
 	FixedDateCreate,
 	FixedDateModel,
+	FixedDatesBulkCreate,
+	FixedDatesBulkDelete,
 	FullScheduleSchema,
 	RecurrenceDateModel,
 	RecurrenceRuleCreate,
+	RecurrenceRulesBulkCreate,
 	TourScheduleUpdate
 } from "../Api";
 
@@ -41,6 +44,26 @@ export const TOUR_SCHEDULE_PATHS = {
 				response: FixedDateModel;
 			}
 		}) as const,
+	bulkAddFixedDates: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/date/bulk`,
+			method: "POST",
+			_types: {} as {
+				body: FixedDatesBulkCreate;
+				query: void;
+				response: FixedDateModel[];
+			}
+		}) as const,
+	bulkRemoveFixedDates: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/date/bulk`,
+			method: "DELETE",
+			_types: {} as {
+				body: FixedDatesBulkDelete;
+				query: void;
+				response: void;
+			}
+		}) as const,
 	removeFixedDate: (tourId: string, dateId: string) =>
 		({
 			url: `/tour/${tourId}/schedule/date/${dateId}`,
@@ -57,10 +80,30 @@ export const TOUR_SCHEDULE_PATHS = {
 				response: RecurrenceDateModel;
 			}
 		}) as const,
+	bulkAddRecurrenceRules: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/rule/bulk`,
+			method: "POST",
+			_types: {} as {
+				body: RecurrenceRulesBulkCreate;
+				query: void;
+				response: RecurrenceDateModel[];
+			}
+		}) as const,
 	removeRecurrenceRule: (tourId: string, ruleId: string) =>
 		({
 			url: `/tour/${tourId}/schedule/rule/${ruleId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	getScheduleOccurrences: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/occurrences`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { from: string; to: string };
+				response: string[];
+			}
 		}) as const
 } as const;

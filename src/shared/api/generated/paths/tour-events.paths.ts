@@ -1,14 +1,16 @@
 import type {
 	ActivityEventSchemaInput,
+	BusEventSchemaInput,
 	EventReorderSchema,
 	FlightEventSchemaInput,
 	HousingEventSchemaInput,
 	InformationEventSchema,
+	LanguageCode,
 	MultipleOptionEventInput,
-	TourEventModel,
+	TourEventResponse,
 	TourEventUpdateSchema,
-	TransferEventSchemaInput,
-	TransportEventSchemaInput
+	TrainEventSchemaInput,
+	TransferEventSchemaInput
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -21,8 +23,8 @@ export const TOUR_EVENTS_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { day?: number | null };
-				response: TourEventModel[];
+				query: { day?: number | null; lang?: LanguageCode };
+				response: TourEventResponse[];
 			}
 		}) as const,
 	createEvent: (tourId: string, optionId: string) =>
@@ -32,21 +34,26 @@ export const TOUR_EVENTS_PATHS = {
 			_types: {} as {
 				body:
 					| InformationEventSchema
-					| TransportEventSchemaInput
+					| BusEventSchemaInput
+					| TrainEventSchemaInput
 					| TransferEventSchemaInput
 					| ActivityEventSchemaInput
 					| HousingEventSchemaInput
 					| FlightEventSchemaInput
 					| MultipleOptionEventInput;
-				query: void;
-				response: TourEventModel;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
 			}
 		}) as const,
 	getTourEvent: (tourId: string, optionId: string, eventId: string) =>
 		({
 			url: `/tour/${tourId}/${optionId}/event/${eventId}`,
 			method: "GET",
-			_types: {} as { body: void; query: void; response: TourEventModel }
+			_types: {} as {
+				body: void;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
+			}
 		}) as const,
 	updateTourEvent: (tourId: string, optionId: string, eventId: string) =>
 		({
@@ -54,8 +61,8 @@ export const TOUR_EVENTS_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body: TourEventUpdateSchema;
-				query: void;
-				response: TourEventModel;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
 			}
 		}) as const,
 	deleteTourEvent: (tourId: string, optionId: string, eventId: string) =>
@@ -70,8 +77,8 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: EventReorderSchema;
-				query: void;
-				response: TourEventModel;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
 			}
 		}) as const
 } as const;

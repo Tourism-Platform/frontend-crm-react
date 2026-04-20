@@ -1,4 +1,9 @@
-import type { AuthUserIn, AuthUserModel, MeSchema } from "../Api";
+import type {
+	AdminUserView,
+	AuthUserIn,
+	MeSchema,
+	PasswordChangeIn
+} from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -12,11 +17,7 @@ export const AUTH_PATHS = {
 	changePassword: {
 		url: "/auth/password/change",
 		method: "PATCH",
-		_types: {} as {
-			body: void;
-			query: { new_password: string };
-			response: void;
-		}
+		_types: {} as { body: PasswordChangeIn; query: void; response: void }
 	} as const,
 	authUser: {
 		url: "/auth/signin",
@@ -31,6 +32,6 @@ export const AUTH_PATHS = {
 	registerUserAsAdmin: {
 		url: "/auth/signup/as/admin",
 		method: "POST",
-		_types: {} as { body: AuthUserIn; query: void; response: AuthUserModel }
+		_types: {} as { body: AuthUserIn; query: void; response: AdminUserView }
 	} as const
 } as const;
