@@ -9,11 +9,7 @@ import {
 	TOUR_STATS_MOCK
 } from "../mock";
 import { ENUM_TOUR_STATUS } from "../types";
-import type {
-	ITourCard,
-	ITourFinanceBackend,
-	ITourGeneralBackend
-} from "../types";
+import type { ITourCard, TTourFinanceBackend } from "../types";
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
@@ -86,12 +82,9 @@ export const tourHandlers = [
 			return new HttpResponse(null, { status: 404 });
 		}
 
-		const detailTour: ITourGeneralBackend = {
+		const detailTour = {
 			...TOUR_GENERAL_MOCK,
-			id: tour.id,
-			title: tour.title,
-			type: tour.type,
-			status: tour.status
+			id: tour.id
 		};
 
 		return HttpResponse.json(detailTour, { status: 200 });
@@ -99,14 +92,14 @@ export const tourHandlers = [
 	http.patch(`${BASE_URL}/tours/:id/general`, async ({ request, params }) => {
 		await delay(500);
 		const { id } = params;
-		const body = (await request.json()) as Partial<ITourGeneralBackend>;
+		const body = (await request.json()) as Partial<TTourFinanceBackend>;
 		const index = tours.findIndex((t) => t.id === id);
 
 		if (index === -1) {
 			return new HttpResponse(null, { status: 404 });
 		}
 
-		const updatedTour: ITourGeneralBackend = {
+		const updatedTour = {
 			...TOUR_GENERAL_MOCK,
 			...tours[index],
 			...body,
@@ -124,7 +117,7 @@ export const tourHandlers = [
 			return new HttpResponse(null, { status: 404 });
 		}
 
-		const financeTour: ITourFinanceBackend = {
+		const financeTour = {
 			...TOUR_FINANCE_MOCK,
 			id: tour.id
 		};
@@ -134,9 +127,9 @@ export const tourHandlers = [
 	http.patch(`${BASE_URL}/tours/:id/finance`, async ({ request, params }) => {
 		await delay(500);
 		const { id } = params;
-		const body = (await request.json()) as Partial<ITourFinanceBackend>;
+		const body = (await request.json()) as Partial<TTourFinanceBackend>;
 
-		const updatedFinance: ITourFinanceBackend = {
+		const updatedFinance = {
 			...TOUR_FINANCE_MOCK,
 			...body,
 			id: id as string

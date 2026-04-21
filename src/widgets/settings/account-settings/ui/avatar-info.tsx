@@ -1,7 +1,8 @@
-import { TrashIcon } from "lucide-react";
+import { Loader, TrashIcon } from "lucide-react";
 import { type FC, useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { useFileUpload } from "@/shared/hooks";
 import {
@@ -16,7 +17,11 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import type { TAccountSchema } from "@/entities/user";
+import {
+	type TAccountSchema,
+	useDeleteProfileImageMutation,
+	useUploadProfileImageMutation
+} from "@/entities/user";
 
 interface IAvatarInfoProps {
 	form: UseFormReturn<TAccountSchema>;
@@ -26,16 +31,29 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 	const { t } = useTranslation("account_settings_page");
 	const account = form.watch();
 
+	const [uploadAvatar, { isLoading: isUploading }] =
+		useUploadProfileImageMutation();
+	const [deleteAvatar, { isLoading: isDeleting }] =
+		useDeleteProfileImageMutation();
+
 	const [{ files }, { removeFile, openFileDialog, getInputProps }] =
 		useFileUpload({
 			accept: "image/*",
 			multiple: false,
-			onFilesAdded: (addedFiles) => {
+			onFilesAdded: async (addedFiles) => {
 				const file = addedFiles[0];
-				if (file?.preview) {
-					form.setValue("avatar", file.preview, {
-						shouldDirty: true
-					});
+				if (file?.preview && file?.file) {
+					try {
+						await uploadAvatar(file.file as File).unwrap();
+						toast.success(t("avatar.toasts.upload.success"));
+						form.setValue("avatar", file.preview, {
+							shouldDirty: true
+						});
+					} catch (error) {
+						toast.error(t("avatar.toasts.upload.error"));
+						if (file.id) removeFile(file.id);
+						console.error(error);
+					}
 				}
 			}
 		});
@@ -47,9 +65,16 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 		}
 	}, [files, form]);
 
-	const handleRemove = () => {
-		if (files[0]?.id) removeFile(files[0].id);
-		form.setValue("avatar", "", { shouldDirty: true });
+	const handleRemove = async () => {
+		try {
+			await deleteAvatar().unwrap();
+			toast.success(t("avatar.toasts.delete.success"));
+			if (files[0]?.id) removeFile(files[0].id);
+			form.setValue("avatar", "", { shouldDirty: true });
+		} catch (error) {
+			toast.error(t("avatar.toasts.delete.error"));
+			console.error(error);
+		}
 	};
 
 	const fallbackName = () => {
@@ -89,7 +114,11 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 										type="button"
 										onClick={openFileDialog}
 										aria-haspopup="dialog"
+										disabled={isUploading || isDeleting}
 									>
+										{isUploading && (
+											<Loader className="mr-2 h-4 w-4 animate-spin" />
+										)}
 										{field.value || files[0]?.file.name
 											? t("avatar.buttons.change")
 											: t("avatar.buttons.add")}
@@ -107,8 +136,13 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 										variant={"outline"}
 										size={"icon"}
 										onClick={handleRemove}
+										disabled={isUploading || isDeleting}
 									>
-										<TrashIcon />
+										{isDeleting ? (
+											<Loader className="mr-2 h-4 w-4 animate-spin" />
+										) : (
+											<TrashIcon />
+										)}
 									</Button>
 								)}
 							</div>

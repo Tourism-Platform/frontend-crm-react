@@ -1,7 +1,6 @@
-import { ENUM_TOUR_STATUS } from "../types";
-import { ENUM_TOUR_TYPES, type ITourBackend } from "../types";
+import { ENUM_TOUR_STATUS, ENUM_TOUR_TYPES } from "../types";
 
-export const TOUR_MOCK: ITourBackend[] = [
+export const TOUR_MOCK = [
 	{
 		id: "9f2b3d82-5c4d-4b9f-9f7a-1a42e71d1b11",
 		status: ENUM_TOUR_STATUS.ACTIVE,

@@ -1,7 +1,6 @@
 import { ENUM_TOUR_CATEGORY, ENUM_TOUR_TYPES } from "../types";
-import type { ITourGeneralBackend } from "../types";
 
-export const TOUR_GENERAL_MOCK: ITourGeneralBackend = {
+export const TOUR_GENERAL_MOCK = {
 	id: "9f2b3d82-5c4d-4b9f-9f7a-1a42e71d1b11",
 	status: "planning",
 	title: "Embark on an Unforgettable Archaeological Journey",

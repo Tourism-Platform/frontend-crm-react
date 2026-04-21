@@ -1,4 +1,4 @@
-import { ENUM_API_TAGS, TOUR_PATHS } from "@/shared/api";
+import { ENUM_API_TAGS, TOUR_FINANCIAL_PATHS, TOUR_PATHS } from "@/shared/api";
 import { type IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
@@ -15,7 +15,6 @@ import {
 import type {
 	ITourCard,
 	ITourFilters,
-	ITourFinanceBackend,
 	ITourGeneral,
 	ITourInfo,
 	ITourInfoBackend,
@@ -23,6 +22,8 @@ import type {
 	TGetTourBackendResponse,
 	TListToursBackendResponse,
 	TSettingsFinanceFormSchema,
+	TTourFinanceBackend,
+	TTourFinanceBackendResponse,
 	TTourSettingsGeneralFormSchema,
 	TUpdateTourBackendResponse
 } from "../types";
@@ -74,25 +75,39 @@ export const tourApi = authApi.injectEndpoints({
 			]
 		}),
 		getTourFinance: builder.query<TSettingsFinanceFormSchema, string>({
-			query: (id) => `/tours/${id}/finance`,
-			transformResponse: (response: ITourFinanceBackend) =>
+			query: (id) => ({
+				...TOUR_FINANCIAL_PATHS.getTourFinancials(id)
+			}),
+			transformResponse: (response: TTourFinanceBackendResponse) =>
 				mapTourFinanceToFrontend(response),
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `FINANCE_${id}` }
 			]
 		}),
-		updateTourFinance: builder.mutation<
+		createTourFinance: builder.mutation<
 			TSettingsFinanceFormSchema,
-			{ id: string; data: Partial<TSettingsFinanceFormSchema> }
+			{ id: string; data: TSettingsFinanceFormSchema }
 		>({
 			query: ({ id, data }) => ({
-				url: `/tours/${id}/finance`,
-				method: "PATCH",
-				body: mapTourFinanceToBackend(
-					data as TSettingsFinanceFormSchema
-				)
+				...TOUR_FINANCIAL_PATHS.createTourFinancials(id),
+				body: mapTourFinanceToBackend(data)
 			}),
-			transformResponse: (response: ITourFinanceBackend) =>
+			transformResponse: (response: TTourFinanceBackendResponse) =>
+				mapTourFinanceToFrontend(response),
+			invalidatesTags: (_result, _error, { id }) => [
+				{ type: ENUM_API_TAGS.TOURS, id: `FINANCE_${id}` },
+				ENUM_API_TAGS.TOURS
+			]
+		}),
+		updateTourFinance: builder.mutation<
+			TSettingsFinanceFormSchema,
+			{ id: string; data: TSettingsFinanceFormSchema }
+		>({
+			query: ({ id, data }) => ({
+				...TOUR_FINANCIAL_PATHS.updateTourFinancials(id),
+				body: mapTourFinanceToBackend(data)
+			}),
+			transformResponse: (response: TTourFinanceBackend) =>
 				mapTourFinanceToFrontend(response),
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `FINANCE_${id}` },

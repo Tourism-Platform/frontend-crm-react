@@ -1,9 +1,9 @@
-import type { IChangePasswordBackend } from "../types";
+import type { TChangePasswordBackend } from "../types";
 import type { TChangePasswordSchema } from "../types";
 
 export const mapPasswordChangeToBackend = (
 	frontend: TChangePasswordSchema
-): IChangePasswordBackend => ({
+): TChangePasswordBackend => ({
 	current_password: frontend.currentPassword,
 	new_password: frontend.newPassword
 });

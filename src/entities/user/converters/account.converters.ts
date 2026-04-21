@@ -1,27 +1,31 @@
-import type { IAccountBackend, TAccountSchema } from "../types";
+import type { CurrencyCode } from "@/shared/api";
+
+import type {
+	TAccountBackend,
+	TAccountSchema,
+	TUpdateAccountBackend
+} from "../types";
 
 export const mapAccountToFrontend = (
-	backend: IAccountBackend
+	backend: TAccountBackend
 ): TAccountSchema => ({
-	avatar: backend.avatarUrl,
-	login: backend.username,
-	first_name: backend.firstName,
-	last_name: backend.lastName,
-	title: backend.title,
-	phone_number: backend.phoneNumber,
-	location: backend.location,
-	currency: backend.currency
+	avatar: backend.profile_picture_url ?? undefined,
+	login: backend.first_name || "",
+	first_name: backend.first_name || "",
+	last_name: backend.last_name || "",
+	title: backend.title || "",
+	phone_number: backend.phone_number || "",
+	location: backend.location || "",
+	currency: backend.preferred_currency || ""
 });
 
 export const mapAccountToBackend = (
 	frontend: TAccountSchema
-): IAccountBackend => ({
-	avatarUrl: frontend.avatar || "",
-	username: frontend.login,
-	firstName: frontend.first_name,
-	lastName: frontend.last_name,
+): TUpdateAccountBackend => ({
+	first_name: frontend.first_name,
+	last_name: frontend.last_name,
 	title: frontend.title,
-	phoneNumber: frontend.phone_number,
+	phone_number: frontend.phone_number,
 	location: frontend.location,
-	currency: frontend.currency
+	preferred_currency: frontend.currency as CurrencyCode
 });
