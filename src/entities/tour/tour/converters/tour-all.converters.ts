@@ -1,13 +1,13 @@
+import type { CurrencyType, TourPricingVisibility } from "@/shared/api";
+
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
 import type {
 	ENUM_PRICING_VISIBILITY_TYPE,
-	ITourBackend,
-	ITourCard,
-	ITourFinanceBackend,
 	ITourInfo,
 	ITourInfoBackend,
-	TSettingsFinanceFormSchema
+	TSettingsFinanceFormSchema,
+	TTourFinanceBackend
 } from "../types";
 
 export const mapTourStatsToFrontend = (
@@ -21,30 +21,18 @@ export const mapTourStatsToFrontend = (
 	potentialRevenue: backend.potential_revenue
 });
 
-export const mapTourToBackend = (
-	frontend: Partial<ITourCard>
-): Partial<ITourBackend> => ({
-	id: frontend.id,
-	status: frontend.status,
-	title: frontend.title,
-	route: frontend.route,
-	type: frontend.type,
-	price_from: frontend.priceFrom,
-	price_to: frontend.priceTo,
-	image_url: frontend.imageUrl
-});
-
 export const mapTourFinanceToFrontend = (
-	backend: ITourFinanceBackend
+	backend: TTourFinanceBackend
 ): TSettingsFinanceFormSchema => ({
-	currencyType: backend.currency_type as ENUM_CURRENCY_OPTIONS_TYPE,
+	currencyType: backend.currency as ENUM_CURRENCY_OPTIONS_TYPE,
 	pricingVisibility:
-		backend.pricing_visibility as ENUM_PRICING_VISIBILITY_TYPE
+		backend.pricing_visibility as unknown as ENUM_PRICING_VISIBILITY_TYPE
 });
 
 export const mapTourFinanceToBackend = (
 	frontend: TSettingsFinanceFormSchema
-): Partial<ITourFinanceBackend> => ({
-	currency_type: frontend.currencyType,
-	pricing_visibility: frontend.pricingVisibility
+): Partial<TTourFinanceBackend> => ({
+	currency: frontend.currencyType as unknown as CurrencyType,
+	pricing_visibility:
+		frontend.pricingVisibility as unknown as TourPricingVisibility
 });
