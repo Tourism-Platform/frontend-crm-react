@@ -10,3 +10,4 @@ export * from "./apply-review-item.types";
 export * from "./supplier-payment-status.types";
 export * from "./supplier-payment.interface";
 export * from "./tour.interface";
+export * from "./order-pax-backend.types";
