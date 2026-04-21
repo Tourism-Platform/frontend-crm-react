@@ -3,7 +3,7 @@ import { HttpResponse, delay, http } from "msw";
 import { ENV } from "@/shared/config";
 
 import { ACCOUNT_MOCK } from "../mock";
-import type { IAccountBackend, TChangePasswordBackend } from "../types";
+import type { TAccountBackend, TChangePasswordBackend } from "../types";
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
@@ -15,7 +15,7 @@ export const accountHandlers = [
 
 	http.patch(`${BASE_URL}/user/account`, async ({ request }) => {
 		await delay(1000);
-		const body = (await request.json()) as Partial<IAccountBackend>;
+		const body = (await request.json()) as Partial<TAccountBackend>;
 		return HttpResponse.json({ ...ACCOUNT_MOCK, ...body }, { status: 200 });
 	}),
 	http.post(`${BASE_URL}/user/change-password`, async ({ request }) => {

@@ -1,10 +1,5 @@
-export interface IAccountBackend {
-	username: string;
-	firstName: string;
-	lastName: string;
-	title: string;
-	phoneNumber: string;
-	location: string;
-	currency: string;
-	avatarUrl: string;
-}
+import type { AuthUserProfileModel, UserProfileUpdate } from "@/shared/api";
+
+export type TAccountBackend = AuthUserProfileModel;
+
+export type TUpdateAccountBackend = UserProfileUpdate;

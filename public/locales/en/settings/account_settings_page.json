@@ -5,6 +5,16 @@
 		"buttons": {
 			"change": "Change photo",
 			"add": "Add photo"
+		},
+		"toasts": {
+			"upload": {
+				"success": "Profile photo updated successfully",
+				"error": "Failed to upload profile photo"
+			},
+			"delete": {
+				"success": "Profile photo deleted successfully",
+				"error": "Failed to delete profile photo"
+			}
 		}
 	},
 	"form": {
