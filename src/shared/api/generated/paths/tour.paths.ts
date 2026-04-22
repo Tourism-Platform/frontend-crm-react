@@ -1,4 +1,5 @@
 import type {
+	BodyUploadTourCoverTourTourIdCoverPost,
 	TourListResponse,
 	TourListSortField,
 	TourMetaCreateSchema,
@@ -62,7 +63,11 @@ export const TOUR_PATHS = {
 		({
 			url: `/tour/${tourId}/cover`,
 			method: "POST",
-			_types: {} as { body: void; query: void; response: TourMetaModel }
+			_types: {} as {
+				body: BodyUploadTourCoverTourTourIdCoverPost;
+				query: void;
+				response: TourMetaModel;
+			}
 		}) as const,
 	deleteTourCover: (tourId: string) =>
 		({

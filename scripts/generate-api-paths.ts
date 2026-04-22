@@ -36,20 +36,16 @@ interface OpenAPIOperation {
 		schema?: { type?: string; $ref?: string; items?: { $ref?: string } };
 	}>;
 	requestBody?: {
-		content?: {
-			"application/json"?: {
-				schema?: { $ref?: string; type?: string; items?: { $ref?: string } };
-			};
-		};
+		content?: Record<string, {
+			schema?: any;
+		}>;
 	};
 	responses?: Record<
 		string,
 		{
-			content?: {
-				"application/json"?: {
-					schema?: { $ref?: string; type?: string; items?: { $ref?: string } };
-				};
-			};
+			content?: Record<string, {
+				schema?: any;
+			}>;
 		}
 	>;
 }
@@ -283,9 +279,15 @@ async function main() {
 			const operationId = operation.operationId ?? `${method}_${path}`;
 			const name = operation.summary ? summaryToName(operation.summary) : operationIdToName(operationId);
 			
-			const bodyInfo = resolveSchemaType(operation.requestBody?.content?.["application/json"]?.schema, operationId, "Body");
+			const reqContent = operation.requestBody?.content;
+			const bodySchema = reqContent ? Object.values(reqContent)[0]?.schema : undefined;
+			const bodyInfo = resolveSchemaType(bodySchema, operationId, "Body");
+			
 			const queryInfo = resolveQueryType(operation.parameters);
-			const responseInfo = resolveSchemaType((operation.responses?.["200"] || operation.responses?.["201"])?.content?.["application/json"]?.schema, operationId, "Response");
+			
+			const resContent = (operation.responses?.["200"] || operation.responses?.["201"] || operation.responses?.["204"])?.content;
+			const responseSchema = resContent ? Object.values(resContent)[0]?.schema : undefined;
+			const responseInfo = resolveSchemaType(responseSchema, operationId, "Response");
 
 			const deps = Array.from(new Set([...bodyInfo.deps, ...queryInfo.deps, ...responseInfo.deps]));
 

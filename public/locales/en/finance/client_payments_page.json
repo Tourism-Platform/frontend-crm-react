@@ -13,6 +13,10 @@
 					"label": "Amount",
 					"placeholder": "Enter amount"
 				},
+				"rate": {
+					"label": "Rate",
+					"placeholder": "Enter rate"
+				},
 				"orderId": {
 					"label": "Order ID",
 					"placeholder": "Enter order ID (e.g., RQA00001)"
@@ -33,6 +37,10 @@
 				"amount": {
 					"required": "Amount is required",
 					"min": "Amount must be greater than 0"
+				},
+				"rate": {
+					"required": "Rate is required",
+					"min": "Rate must be greater than 0"
 				},
 				"orderId": {
 					"required": "Order ID is required",

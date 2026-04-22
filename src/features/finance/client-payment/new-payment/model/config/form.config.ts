@@ -1,23 +1,34 @@
-import type { SelectPickerOption } from "@/shared/ui";
+// import type { SelectPickerOption } from "@/shared/ui";
+import {
+	ENUM_FORM_NEW_PAYMENT,
+	type TCreatePaymentForm
+} from "@/entities/finance";
 
-import { ENUM_FORM_NEW_PAYMENT, type TForm } from "../types";
-
-export const FORM_NEW_PAYMENT_LIST = ({
-	orderOptions
-}: {
-	orderOptions: SelectPickerOption[];
-}): TForm[] => [
+export const FORM_NEW_PAYMENT_LIST = () // {
+// 	// orderOptions
+// }: {
+// 	// orderOptions: SelectPickerOption[];
+// }
+: TCreatePaymentForm[] => [
 	{
 		label: "new_payment.form.fields.orderId.label",
 		placeholder: "new_payment.form.fields.orderId.placeholder",
 		key: ENUM_FORM_NEW_PAYMENT.ORDER_ID,
-		fieldType: "select",
-		options: orderOptions
+		fieldType: "input",
+		className: "col-span-2"
+		// options: orderOptions
 	},
 	{
 		label: "new_payment.form.fields.amount.label",
 		placeholder: "new_payment.form.fields.amount.placeholder",
 		key: ENUM_FORM_NEW_PAYMENT.AMOUNT,
+		fieldType: "input",
+		type: "number"
+	},
+	{
+		label: "new_payment.form.fields.rate.label",
+		placeholder: "new_payment.form.fields.rate.placeholder",
+		key: ENUM_FORM_NEW_PAYMENT.RATE,
 		fieldType: "input",
 		type: "number"
 	},
