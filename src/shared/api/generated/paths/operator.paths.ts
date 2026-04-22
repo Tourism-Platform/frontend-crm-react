@@ -1,4 +1,5 @@
 import type {
+	BodyAddLogoOperatorMeLogoPost,
 	OperatorCreateSchema,
 	OperatorFinancialSettingsModel,
 	OperatorFinancialSettingsUpdate,
@@ -86,7 +87,11 @@ export const OPERATOR_PATHS = {
 	addLogo: {
 		url: "/operator/me/logo",
 		method: "POST",
-		_types: {} as { body: void; query: void; response: OperatorInfoModel }
+		_types: {} as {
+			body: BodyAddLogoOperatorMeLogoPost;
+			query: void;
+			response: OperatorInfoModel;
+		}
 	} as const,
 	deleteLogo: {
 		url: "/operator/me/logo",

@@ -1,47 +1,61 @@
+import { CLIENT_PAYMENT_PATHS, ClientPaymentStatus } from "@/shared/api";
 import { formatDate } from "@/shared/utils";
 
+import { currencyConverter } from "@/entities/commission";
+
 import {
+	ENUM_PAYMENT_STATUS,
 	type IPayment,
-	type IPaymentBackend,
 	type IPaymentFilters,
 	type IPaymentPaginatedResponse,
-	type IPaymentPaginatedResponseBackend
+	type TCreatePaymentBackend,
+	type TNewPaymentSchema,
+	type TPaymentBackend,
+	type TPaymentBackendResponse
 } from "../types";
 
-export const mapPaymentToFrontend = (payment: IPaymentBackend): IPayment => ({
+import { paymentStatusConverter } from "./payment-status.converter";
+
+export const mapPaymentToFrontend = (payment: TPaymentBackend): IPayment => ({
 	id: payment.id,
-	paymentId: payment.payment_id,
-	orderId: payment.order_id,
-	dateCreated: formatDate(payment.date_created),
+	paymentId: payment.id,
+	orderId: payment.booking_id,
+	dateCreated: formatDate(payment.created_at || ""),
 	amount: payment.amount,
-	currency: payment.currency,
-	status: payment.status,
-	note: payment.note,
-	files: payment.files
+	currency: currencyConverter.from(payment.currency) as "USD",
+	status: paymentStatusConverter.from(payment.status)!,
+	note: payment.note!,
+	files: undefined
 });
 
-export const mapPaymentToBackend = (
-	payment: Partial<IPayment>
-): Partial<IPaymentBackend> => ({
-	id: payment.id,
-	order_id: payment.orderId,
-	amount: payment.amount,
-	status: payment.status,
-	note: payment.note,
-	files: payment.files
+export const mapCreatePaymentToBackend = (
+	payment: TNewPaymentSchema
+): TCreatePaymentBackend => ({
+	booking_id: payment.orderId,
+	amount_uzs: payment.amount,
+	exchange_rate: payment.rate,
+	note: payment.note || null,
+	file: payment.files?.[0]?.file || payment.files?.[0]
 });
 
 export const mapPaymentsPaginatedToFrontend = (
-	response: IPaymentPaginatedResponseBackend
+	response: TPaymentBackendResponse
 ): IPaymentPaginatedResponse => ({
 	data: response.data.map(mapPaymentToFrontend),
-	total: response.total,
-	statusCounts: response.status_counts
+	total: response.total_count,
+	statusCounts: {
+		[ENUM_PAYMENT_STATUS.ASSIGNED]: 0,
+		[ENUM_PAYMENT_STATUS.NOT_ASSIGNED]: 0
+	}
 });
 
-export const mapPaymentFiltersToBackend = (filters: IPaymentFilters) => ({
-	page: filters.page,
+export const mapPaymentFiltersToBackend = (
+	filters: IPaymentFilters
+): typeof CLIENT_PAYMENT_PATHS.listPayments._types.query => ({
+	skip: (filters.page - 1) * filters.limit,
 	limit: filters.limit,
-	search: filters.search || undefined,
-	status: filters.status.length > 0 ? filters.status.join(",") : undefined
+	status:
+		filters.status.length > 0
+			? paymentStatusConverter.to(filters.status[0])
+			: ClientPaymentStatus.Confirmed
 });

@@ -48,7 +48,8 @@ export const CustomUploadFilesField: FC<ICustomUploadFilesFieldProps> = ({
 							name: f.file.name,
 							size: f.file.size,
 							type: f.file.type,
-							url: f.preview || ""
+							url: f.preview || "",
+							file: f.file
 						};
 					}
 					return f.file;

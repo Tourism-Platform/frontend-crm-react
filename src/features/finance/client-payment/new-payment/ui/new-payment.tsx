@@ -21,23 +21,20 @@ import {
 } from "@/shared/ui";
 
 import {
-	useCreatePaymentMutation,
-	useGetAvailableOrderIdsQuery
+	type TNewPaymentSchema,
+	// useGetAvailableOrderIdsQuery
+	useCreatePaymentMutation
 } from "@/entities/finance";
 
-import {
-	FORM_NEW_PAYMENT_LIST,
-	NEW_PAYMENT_SCHEMA,
-	type TNewPaymentSchema
-} from "../model";
+import { FORM_NEW_PAYMENT_LIST, NEW_PAYMENT_SCHEMA } from "../model";
 
 export const NewPayment: FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("client_payments_page");
 	const [createPayment, { isLoading }] = useCreatePaymentMutation();
 
-	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
-
+	// const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
+	const orderIds: string[] = [];
 	const orderOptions = useMemo(() => {
 		return orderIds.map((o) => ({
 			value: o,
@@ -50,10 +47,7 @@ export const NewPayment: FC = () => {
 		mode: "onSubmit"
 	});
 
-	const formFields = useMemo(
-		() => FORM_NEW_PAYMENT_LIST({ orderOptions }),
-		[orderOptions]
-	);
+	const formFields = useMemo(() => FORM_NEW_PAYMENT_LIST(), [orderOptions]);
 
 	async function onSubmit(data: TNewPaymentSchema) {
 		try {

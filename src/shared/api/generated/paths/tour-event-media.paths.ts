@@ -1,4 +1,7 @@
-import type { EventImageModel } from "../Api";
+import type {
+	BodyUploadEventImagesTourTourIdEventEventIdImagesPost,
+	EventImageModel
+} from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -9,7 +12,7 @@ export const TOUR_EVENT_MEDIA_PATHS = {
 			url: `/tour/${tourId}/event/${eventId}/images`,
 			method: "POST",
 			_types: {} as {
-				body: void;
+				body: BodyUploadEventImagesTourTourIdEventEventIdImagesPost;
 				query: void;
 				response: EventImageModel[];
 			}

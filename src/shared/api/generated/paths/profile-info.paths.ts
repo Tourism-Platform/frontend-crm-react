@@ -1,4 +1,8 @@
-import type { AuthUserProfileModel, UserProfileUpdate } from "../Api";
+import type {
+	AuthUserProfileModel,
+	BodyUploadAvatarProfileMePhotoPost,
+	UserProfileUpdate
+} from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -26,7 +30,7 @@ export const PROFILE_INFO_PATHS = {
 		url: "/profile/me/photo",
 		method: "POST",
 		_types: {} as {
-			body: void;
+			body: BodyUploadAvatarProfileMePhotoPost;
 			query: void;
 			response: AuthUserProfileModel;
 		}

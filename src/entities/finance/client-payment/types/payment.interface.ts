@@ -1,15 +1,17 @@
 import { type TFileMetadata } from "@/shared/hooks";
 import { type IPaginationResponse } from "@/shared/types";
 
-import { type ENUM_PAYMENT_STATUS_TYPE } from "./payment-status.types";
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
+import type { ENUM_PAYMENT_STATUS_TYPE } from "./payment-status.types";
 
 export interface IPayment {
 	id: string;
-	paymentId: string; // INV-1234
-	orderId: string; // RQA00001
-	dateCreated: string; // ISO: 2024-10-10
-	amount: number; // 10000.00
-	currency: "USD"; // расширяемо
+	paymentId: string;
+	orderId: string;
+	dateCreated: string;
+	amount: number;
+	currency: ENUM_CURRENCY_OPTIONS_TYPE;
 	status: ENUM_PAYMENT_STATUS_TYPE;
 	note?: string;
 	files?: TFileMetadata[];

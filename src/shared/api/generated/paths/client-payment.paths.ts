@@ -1,4 +1,5 @@
 import type {
+	BodyCreatePaymentBookingPaymentPost,
 	ClientPaymentListResponse,
 	ClientPaymentResponse,
 	ClientPaymentStatus,
@@ -29,7 +30,7 @@ export const CLIENT_PAYMENT_PATHS = {
 		url: "/booking/payment",
 		method: "POST",
 		_types: {} as {
-			body: void;
+			body: BodyCreatePaymentBookingPaymentPost;
 			query: void;
 			response: ClientPaymentResponse;
 		}

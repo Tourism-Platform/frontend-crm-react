@@ -1,4 +1,5 @@
 import type {
+	BodyUploadLandingImagesTourTourIdLandingImagesPost,
 	LandingPageCreate,
 	LandingPageImageModel,
 	LandingPageModel,
@@ -54,7 +55,7 @@ export const TOUR_LANDING_PAGE_PATHS = {
 			url: `/tour/${tourId}/landing/images`,
 			method: "POST",
 			_types: {} as {
-				body: void;
+				body: BodyUploadLandingImagesTourTourIdLandingImagesPost;
 				query: void;
 				response: LandingPageImageModel[];
 			}

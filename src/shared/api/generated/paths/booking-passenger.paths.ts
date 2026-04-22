@@ -1,4 +1,8 @@
-import type { BookingPaxModel, OperatorFilesModel } from "../Api";
+import type {
+	BodyAddPassengerInfoBookingPaxBookingIdPost,
+	BookingPaxModel,
+	OperatorFilesModel
+} from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -19,7 +23,7 @@ export const BOOKING_PASSENGER_PATHS = {
 			url: `/booking/pax/${bookingId}`,
 			method: "POST",
 			_types: {} as {
-				body: void;
+				body: BodyAddPassengerInfoBookingPaxBookingIdPost;
 				query: void;
 				response: OperatorFilesModel[];
 			}

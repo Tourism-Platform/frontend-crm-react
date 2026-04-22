@@ -1,7 +1,6 @@
 import { ENUM_PAYMENT_STATUS } from "../types";
-import { type IPaymentBackend } from "../types/payment-backend.interface";
 
-export const PAYMENTS_MOCK: IPaymentBackend[] = [
+export const PAYMENTS_MOCK = [
 	{
 		id: "1",
 		payment_id: "INV-0001",

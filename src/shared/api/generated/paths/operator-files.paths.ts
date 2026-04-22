@@ -1,4 +1,7 @@
-import type { OperatorFilesModel } from "../Api";
+import type {
+	BodyAddFilesOperatorMeFilesPost,
+	OperatorFilesModel
+} from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -17,7 +20,7 @@ export const OPERATOR_FILES_PATHS = {
 		url: "/operator/me/files",
 		method: "POST",
 		_types: {} as {
-			body: void;
+			body: BodyAddFilesOperatorMeFilesPost;
 			query: void;
 			response: OperatorFilesModel[];
 		}

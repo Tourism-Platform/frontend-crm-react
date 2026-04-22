@@ -1,19 +1,20 @@
-import { ENUM_API_TAGS } from "@/shared/api";
+import { CLIENT_PAYMENT_PATHS, ENUM_API_TAGS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapCreatePaymentToBackend,
 	mapPaymentFiltersToBackend,
-	mapPaymentToBackend,
 	mapPaymentToFrontend,
 	mapPaymentsPaginatedToFrontend
 } from "../converters";
 import {
 	type IPayment,
-	type IPaymentBackend,
 	type IPaymentFilters,
 	type IPaymentPaginatedResponse,
-	type IPaymentPaginatedResponseBackend
+	type TNewPaymentSchema,
+	type TPaymentBackend,
+	type TPaymentBackendResponse
 } from "../types";
 
 export const clientPaymentApi = authApi.injectEndpoints({
@@ -22,47 +23,73 @@ export const clientPaymentApi = authApi.injectEndpoints({
 			query: () => "/finance/client-payments/available-orders",
 			providesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
-		getPayments: builder.query<
-			IPaymentPaginatedResponse,
-			IPaymentFilters | void
-		>({
+		getPayments: builder.query<IPaymentPaginatedResponse, IPaymentFilters>({
 			query: (filters) => ({
-				url: "/finance/client-payments",
-				params: filters
-					? mapPaymentFiltersToBackend(filters)
-					: undefined
+				...CLIENT_PAYMENT_PATHS.listPayments,
+				params: mapPaymentFiltersToBackend(filters)
 			}),
-			transformResponse: (response: IPaymentPaginatedResponseBackend) =>
+			transformResponse: (response: TPaymentBackendResponse) =>
 				mapPaymentsPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
-		createPayment: builder.mutation<IPayment, Partial<IPayment>>({
-			query: (payment) => ({
-				url: "/finance/client-payments",
-				method: "POST",
-				body: mapPaymentToBackend(payment)
-			}),
-			transformResponse: (response: IPaymentBackend) =>
-				mapPaymentToFrontend(response),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
+		createPayment: builder.mutation<IPayment, TNewPaymentSchema>({
+			query: (payment) => {
+				console.log("payment", payment);
+				const backendData = mapCreatePaymentToBackend(payment);
+				const formData = new FormData();
+				// Наполняем FormData
+				Object.entries(backendData).forEach(([key, value]) => {
+					if (value !== undefined && value !== null) {
+						// Файлы добавляются как есть, остальное приводим к строке
+						formData.append(
+							key,
+							value instanceof Blob ? value : String(value)
+						);
+					}
+				});
+
+				return {
+					...CLIENT_PAYMENT_PATHS.createPayment,
+					body: formData
+				};
+			}
 		}),
 		updatePayment: builder.mutation<
 			IPayment,
 			{ id: string; data: Partial<IPayment> }
 		>({
-			query: ({ id, data }) => ({
-				url: `/finance/client-payments/${id}`,
-				method: "PATCH",
-				body: mapPaymentToBackend(data)
+			query: ({ id }) => ({
+				...CLIENT_PAYMENT_PATHS.updatePayment(id)
+				// body: mapPaymentToBackend(data)
 			}),
-			transformResponse: (response: IPaymentBackend) =>
+			transformResponse: (response: TPaymentBackend) =>
 				mapPaymentToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
+		getPaymentById: builder.query<IPayment, string>({
+			query: (id) => ({
+				...CLIENT_PAYMENT_PATHS.getPayment(id)
+			}),
+			transformResponse: (response: TPaymentBackend) =>
+				mapPaymentToFrontend(response),
+			providesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
+		}),
+		confirmPayment: builder.mutation<IPayment, string>({
+			query: (id) => ({
+				...CLIENT_PAYMENT_PATHS.confirmPayment(id)
+			}),
+			transformResponse: (response: TPaymentBackend) =>
+				mapPaymentToFrontend(response),
+			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
+		}),
+		downloadAttachment: builder.query<string, string>({
+			query: (id) => ({
+				...CLIENT_PAYMENT_PATHS.downloadAttachment(id)
+			})
+		}),
 		deletePayment: builder.mutation<void, string>({
 			query: (id) => ({
-				url: `/finance/client-payments/${id}`,
-				method: "DELETE"
+				...CLIENT_PAYMENT_PATHS.deletePayment(id)
 			}),
 			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		})
@@ -74,5 +101,9 @@ export const {
 	useGetPaymentsQuery,
 	useCreatePaymentMutation,
 	useUpdatePaymentMutation,
-	useDeletePaymentMutation
+	useDeletePaymentMutation,
+	useGetPaymentByIdQuery,
+	useConfirmPaymentMutation,
+	useDownloadAttachmentQuery,
+	useLazyDownloadAttachmentQuery
 } = clientPaymentApi;

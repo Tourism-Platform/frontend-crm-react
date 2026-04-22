@@ -3,9 +3,9 @@ import { z } from "zod";
 import type { TClientPaymentsPageKeys } from "@/shared/config";
 import type { TFormField } from "@/shared/types";
 
-import type { NEW_PAYMENT_SCHEMA } from "../config";
+import type { NEW_PAYMENT_SCHEMA } from "../schema";
 
-export type TForm = TFormField<
+export type TCreatePaymentForm = TFormField<
 	TClientPaymentsPageKeys,
 	ENUM_FORM_NEW_PAYMENT_TYPE
 >;
@@ -13,6 +13,7 @@ export type TForm = TFormField<
 export const ENUM_FORM_NEW_PAYMENT = {
 	PAYMENT_ID: "paymentId",
 	AMOUNT: "amount",
+	RATE: "rate",
 	ORDER_ID: "orderId",
 	NOTE: "note",
 	FILES: "files"

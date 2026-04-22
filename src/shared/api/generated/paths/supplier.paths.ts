@@ -1,4 +1,5 @@
 import type {
+	BodyAddLogoSupplierSupplierIdLogoPost,
 	EventTypes,
 	SupplierCreateSchema,
 	SupplierListResponse,
@@ -60,7 +61,11 @@ export const SUPPLIER_PATHS = {
 		({
 			url: `/supplier/${supplierId}/logo`,
 			method: "POST",
-			_types: {} as { body: void; query: void; response: SupplierModel }
+			_types: {} as {
+				body: BodyAddLogoSupplierSupplierIdLogoPost;
+				query: void;
+				response: SupplierModel;
+			}
 		}) as const,
 	deleteLogo: (supplierId: string) =>
 		({
