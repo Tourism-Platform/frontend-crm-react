@@ -6,7 +6,8 @@ import {
 	mapCreatePaymentToBackend,
 	mapPaymentFiltersToBackend,
 	mapPaymentToFrontend,
-	mapPaymentsPaginatedToFrontend
+	mapPaymentsPaginatedToFrontend,
+	mapUpdatePaymentToBackend
 } from "../converters";
 import {
 	type IPayment,
@@ -52,15 +53,16 @@ export const clientPaymentApi = authApi.injectEndpoints({
 					...CLIENT_PAYMENT_PATHS.createPayment,
 					body: formData
 				};
-			}
+			},
+			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
 		updatePayment: builder.mutation<
 			IPayment,
 			{ id: string; data: Partial<IPayment> }
 		>({
-			query: ({ id }) => ({
-				...CLIENT_PAYMENT_PATHS.updatePayment(id)
-				// body: mapPaymentToBackend(data)
+			query: ({ id, data }) => ({
+				...CLIENT_PAYMENT_PATHS.updatePayment(id),
+				body: mapUpdatePaymentToBackend(data)
 			}),
 			transformResponse: (response: TPaymentBackend) =>
 				mapPaymentToFrontend(response),

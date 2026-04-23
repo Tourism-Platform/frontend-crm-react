@@ -11,7 +11,8 @@ import {
 	type TCreatePaymentBackend,
 	type TNewPaymentSchema,
 	type TPaymentBackend,
-	type TPaymentBackendResponse
+	type TPaymentBackendResponse,
+	type TUpdatePaymentBackend
 } from "../types";
 
 import { paymentStatusConverter } from "./payment-status.converter";
@@ -36,6 +37,13 @@ export const mapCreatePaymentToBackend = (
 	exchange_rate: payment.rate,
 	note: payment.note || null,
 	file: payment.files?.[0]?.file || payment.files?.[0]
+});
+
+export const mapUpdatePaymentToBackend = (
+	payment: Partial<IPayment>
+): TUpdatePaymentBackend => ({
+	amount: payment.amount,
+	note: payment.note || null
 });
 
 export const mapPaymentsPaginatedToFrontend = (

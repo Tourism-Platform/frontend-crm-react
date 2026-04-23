@@ -16,6 +16,7 @@ type TGenericKey = string;
 interface IFormBase<L = TGenericLabel, K = TGenericKey> {
 	label: L;
 	key: K;
+	disabled?: boolean;
 	className?: string;
 }
 

@@ -1,158 +1,172 @@
-// import { HttpResponse, delay, http } from "msw";
+import { HttpResponse } from "msw";
 
-// import { ENV } from "@/shared/config";
-// import { type TFileMetadata } from "@/shared/hooks";
+import {
+	CLIENT_PAYMENT_PATHS,
+	ClientPaymentStatus,
+	CurrencyCode
+} from "@/shared/api";
+import { createMockHandler } from "@/shared/api/msw/utils";
 
-// import { PAYMENTS_MOCK } from "../mock";
-// import {
-// 	ENUM_PAYMENT_STATUS,
-// 	type IPaymentBackend,
-// type IPaymentPaginatedResponseBackend,
-// 	type TPaymentStatusCounts
-// } from "../types";
+import { PAYMENTS_MOCK } from "../mock";
+import { type TPaymentBackend, type TPaymentBackendResponse } from "../types";
 
-// const BASE_URL = ENV.VITE_API_URL || "";
-// const DEFAULT_FILE_URL =
-// 	"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VCAE65snBIiK1zJ4RHlMC0E6u5pUdLos7WFtX";
-
-// const processFiles = (
-// 	files?: Pick<TFileMetadata, "name" | "size" | "type">[]
-// ): TFileMetadata[] | undefined => {
-// 	if (!files) return undefined;
-// 	return files.map((f, index) => {
-// 		return {
-// 			id: `mock-file-${Date.now()}-${index}`,
-// 			name: f.name || "uploaded-file.pdf",
-// 			size: f.size || 1024 * 1024,
-// 			type: f.type || "application/pdf",
-// 			url: DEFAULT_FILE_URL
-// 		};
-// 	});
-// };
-
-// let payments = [...PAYMENTS_MOCK];
+let payments = [...PAYMENTS_MOCK.data];
 
 export const financeClientPaymentHandlers = [
-	// http.get(
-	// 	`${BASE_URL}/finance/client-payments/available-orders`,
-	// 	async (): Promise<HttpResponse<string[]>> => {
-	// 		await delay(500);
-	// 		const availableOrders: string[] = [
-	// 			"ORD-12345",
-	// 			"ORD-12346",
-	// 			"ORD-12347",
-	// 			"ORD-12348",
-	// 			"ORD-12349"
-	// 		];
-	// 		return HttpResponse.json(availableOrders, { status: 200 });
-	// 	}
-	// ),
-	// http.get(
-	// 	`${BASE_URL}/finance/client-payments`,
-	// 	async ({
-	// 		request
-	// 	}): Promise<HttpResponse<IPaymentPaginatedResponseBackend>> => {
-	// 		await delay(500);
-	// 		const url = new URL(request.url);
-	// 		const page = Number(url.searchParams.get("page")) || 1;
-	// 		const limit = Number(url.searchParams.get("limit")) || 10;
-	// 		const search = url.searchParams.get("search");
-	// 		const status = url.searchParams
-	// 			.get("status")
-	// 			?.split(",")
-	// 			.filter(Boolean);
-	// 		const statusCounts = payments.reduce(
-	// 			(acc: Record<string, number>, current) => {
-	// 				acc[current.status] = (acc[current.status] || 0) + 1;
-	// 				return acc;
-	// 			},
-	// 			Object.values(ENUM_PAYMENT_STATUS).reduce(
-	// 				(acc: Record<string, number>, status) => {
-	// 					acc[status] = 0;
-	// 					return acc;
-	// 				},
-	// 				{} as Record<string, number>
-	// 			)
-	// 		) as TPaymentStatusCounts;
-	// 		let filteredPayments = [...payments];
-	// 		if (search) {
-	// 			const query = search.toLowerCase();
-	// 			filteredPayments = filteredPayments.filter(
-	// 				(p) =>
-	// 					p.payment_id.toLowerCase().includes(query) ||
-	// 					p.order_id.toLowerCase().includes(query)
-	// 			);
-	// 		}
-	// 		if (status && status.length > 0) {
-	// 			filteredPayments = filteredPayments.filter(
-	// 				(p) => status && status.includes(p.status)
-	// 			);
-	// 		}
-	// 		const start = (page - 1) * limit;
-	// 		const end = start + limit;
-	// 		const pagedData = filteredPayments.slice(start, end);
-	// 		return HttpResponse.json(
-	// 			{
-	// 				data: pagedData,
-	// 				total: filteredPayments.length,
-	// 				status_counts: statusCounts
-	// 			},
-	// 			{ status: 200 }
-	// 		);
-	// 	}
-	// ),
-	// http.post(`${BASE_URL}/finance/client-payments`, async ({ request }) => {
-	// 	await delay(500);
-	// 	const body = (await request.json()) as Partial<IPaymentBackend>;
-	// 	const newPayment: IPaymentBackend = {
-	// 		...body,
-	// 		id: (payments.length + 1).toString(),
-	// 		payment_id:
-	// 			body.payment_id ||
-	// 			`INV-${Math.floor(Math.random() * 10000)
-	// 				.toString()
-	// 				.padStart(4, "0")}`,
-	// 		order_id: body.order_id ?? "",
-	// 		date_created: new Date().toISOString(),
-	// 		amount: body.amount ?? 0,
-	// 		currency: body.currency || "USD",
-	// 		status: body.order_id
-	// 			? ENUM_PAYMENT_STATUS.ASSIGNED
-	// 			: ENUM_PAYMENT_STATUS.NOT_ASSIGNED,
-	// 		files: processFiles(body.files)
-	// 	} as IPaymentBackend;
-	// 	payments.push(newPayment);
-	// 	return HttpResponse.json(newPayment, { status: 201 });
-	// }),
-	// http.patch(
-	// 	`${BASE_URL}/finance/client-payments/:id`,
-	// 	async ({ request, params }) => {
-	// 		await delay(500);
-	// 		const { id } = params;
-	// 		const body = (await request.json()) as Partial<IPaymentBackend>;
-	// 		const index = payments.findIndex((p) => p.id === id);
-	// 		if (index !== -1) {
-	// 			const status = body.order_id
-	// 				? ENUM_PAYMENT_STATUS.ASSIGNED
-	// 				: body.status || payments[index].status;
-	// 			payments[index] = {
-	// 				...payments[index],
-	// 				...body,
-	// 				status,
-	// 				files: processFiles(body.files) || payments[index].files
-	// 			};
-	// 			return HttpResponse.json(payments[index], { status: 200 });
-	// 		}
-	// 		return new HttpResponse(null, { status: 404 });
-	// 	}
-	// ),
-	// http.delete(
-	// 	`${BASE_URL}/finance/client-payments/:id`,
-	// 	async ({ params }) => {
-	// 		await delay(500);
-	// 		const { id } = params;
-	// 		payments = payments.filter((p) => p.id !== id);
-	// 		return new HttpResponse(null, { status: 204 });
-	// 	}
-	// )
+	// GET available orders
+	createMockHandler(
+		{ url: "/finance/client-payments/available-orders", method: "GET" },
+		async () => {
+			const availableOrders: string[] = [
+				"ORD-12345",
+				"ORD-12346",
+				"ORD-12347",
+				"ORD-12348",
+				"ORD-12349"
+			];
+			return HttpResponse.json(availableOrders, { status: 200 });
+		}
+	),
+
+	// GET list of payments
+	createMockHandler(
+		CLIENT_PAYMENT_PATHS.listPayments,
+		async ({ request }): Promise<HttpResponse<TPaymentBackendResponse>> => {
+			const url = new URL(request.url);
+			const skip = Number(url.searchParams.get("skip")) || 0;
+			const limit = Number(url.searchParams.get("limit")) || 10;
+			const status = url.searchParams.get("status");
+			const bookingId = url.searchParams.get("booking_id");
+
+			let filteredPayments = [...payments];
+
+			if (status && status !== "null" && status !== "undefined") {
+				filteredPayments = filteredPayments.filter(
+					(p) => p.status === status
+				);
+			}
+
+			if (
+				bookingId &&
+				bookingId !== "null" &&
+				bookingId !== "undefined"
+			) {
+				filteredPayments = filteredPayments.filter(
+					(p) => p.booking_id === bookingId
+				);
+			}
+
+			const pagedData = filteredPayments.slice(skip, skip + limit);
+
+			return HttpResponse.json(
+				{
+					data: pagedData,
+					total_count: filteredPayments.length
+				},
+				{ status: 200 }
+			);
+		}
+	),
+
+	// POST create payment
+	createMockHandler(
+		CLIENT_PAYMENT_PATHS.createPayment,
+		async ({ request }) => {
+			const formData = await request.formData();
+
+			const bookingId = formData.get("booking_id") as string;
+			const amountUzs = Number(formData.get("amount_uzs"));
+			const exchangeRate = Number(formData.get("exchange_rate"));
+			const note = formData.get("note") as string | null;
+			const file = formData.get("file");
+
+			const newPayment: TPaymentBackend = {
+				id: Math.random().toString(36).substring(7),
+				booking_id: bookingId,
+				operator_id: "op-current",
+				amount: amountUzs / exchangeRate,
+				currency: CurrencyCode.USD,
+				status: ClientPaymentStatus.NotConfirmed,
+				note: note,
+				has_attachment: !!file,
+				created_at: new Date().toISOString(),
+				updated_at: new Date().toISOString()
+			};
+
+			payments.unshift(newPayment);
+
+			return HttpResponse.json(newPayment, { status: 201 });
+		}
+	),
+
+	// PATCH update payment
+	createMockHandler(
+		CLIENT_PAYMENT_PATHS.updatePayment(":id"),
+		async ({ body, params }) => {
+			const { id } = params;
+			const index = payments.findIndex((p) => p.id === id);
+
+			if (index !== -1) {
+				payments[index] = {
+					...payments[index],
+					...(body as Partial<TPaymentBackend>),
+					updated_at: new Date().toISOString()
+				};
+				return HttpResponse.json(payments[index], { status: 200 });
+			}
+			return new HttpResponse(null, { status: 404 });
+		}
+	),
+
+	// POST confirm payment
+	createMockHandler(
+		CLIENT_PAYMENT_PATHS.confirmPayment(":id"),
+		async ({ params }) => {
+			const { id } = params;
+			const index = payments.findIndex((p) => p.id === id);
+
+			if (index !== -1) {
+				payments[index] = {
+					...payments[index],
+					status: ClientPaymentStatus.Confirmed,
+					updated_at: new Date().toISOString()
+				};
+				return HttpResponse.json(payments[index], { status: 200 });
+			}
+			return new HttpResponse(null, { status: 404 });
+		}
+	),
+
+	// GET payment by ID
+	createMockHandler(
+		CLIENT_PAYMENT_PATHS.getPayment(":id"),
+		async ({ params }) => {
+			const { id } = params;
+			const payment = payments.find((p) => p.id === id);
+			if (payment) {
+				return HttpResponse.json(payment, { status: 200 });
+			}
+			return new HttpResponse(null, { status: 404 });
+		}
+	),
+
+	// GET download attachment
+	createMockHandler(
+		CLIENT_PAYMENT_PATHS.downloadAttachment(":id"),
+		async () => {
+			return HttpResponse.json("https://example.com/mock-file.pdf", {
+				status: 200
+			});
+		}
+	),
+
+	// DELETE payment
+	createMockHandler(
+		CLIENT_PAYMENT_PATHS.deletePayment(":id"),
+		async ({ params }) => {
+			const { id } = params;
+			payments = payments.filter((p) => p.id !== id);
+			return new HttpResponse(null, { status: 204 });
+		}
+	)
 ];

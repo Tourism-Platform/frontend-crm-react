@@ -28,3 +28,7 @@ export type TPaymentBackendResponse =
 
 export type TCreatePaymentBackend =
 	typeof CLIENT_PAYMENT_PATHS.createPayment._types.body;
+
+export type TUpdatePaymentBackend = ReturnType<
+	typeof CLIENT_PAYMENT_PATHS.updatePayment
+>["_types"]["body"];

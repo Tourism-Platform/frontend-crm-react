@@ -12,7 +12,11 @@ import {
 
 import { ENUM_PAYMENT_STATUS, type IPayment } from "@/entities/finance";
 
-import { AssignPayment, DeletePayment } from "@/features/finance";
+import {
+	AssignPayment,
+	DeletePayment,
+	UpdatePayment
+} from "@/features/finance";
 
 interface IClientPaymentActionsProps {
 	payment?: IPayment;
@@ -47,6 +51,16 @@ export const ClientPaymentActions: FC<IClientPaymentActionsProps> = ({
 								{payment.status === ENUM_PAYMENT_STATUS.ASSIGNED
 									? t("table.menu.open")
 									: t("table.menu.assign")}
+							</div>
+						}
+						payment={payment}
+					/>
+				</DropdownMenuItem>
+				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
+					<UpdatePayment
+						trigger={
+							<div className="w-full h-full cursor-pointer hover:bg-accent px-2 py-1.5 text-sm">
+								{t("table.menu.edit")}
 							</div>
 						}
 						payment={payment}

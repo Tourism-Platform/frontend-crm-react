@@ -101,6 +101,44 @@
 				}
 			}
 		},
+		"update": {
+			"button": "Edit",
+			"form": {
+				"title": "Edit Payment",
+				"fields": {
+					"orderId": {
+						"label": "Order ID",
+						"placeholder": "Order ID"
+					},
+					"amount": {
+						"label": "Amount",
+						"placeholder": "Enter amount"
+					},
+					"note": {
+						"label": "Note",
+						"placeholder": "Enter note"
+					},
+					"files": {
+						"label": "Files"
+					}
+				},
+				"errors": {
+					"amount": {
+						"required": "Amount is required",
+						"min": "Amount must be greater than 0"
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Save",
+					"saving": "Saving ..."
+				},
+				"toasts": {
+					"success": "Payment updated successfully",
+					"error": "Failed to update payment"
+				}
+			}
+		},
 		"delete": {
 			"button": "Delete",
 			"form": {
@@ -127,6 +165,7 @@
 		"menu": {
 			"assign": "Assign",
 			"open": "Open",
+			"edit": "Edit",
 			"delete": "Delete"
 		}
 	},

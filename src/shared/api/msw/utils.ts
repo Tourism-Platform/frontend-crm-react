@@ -2,7 +2,7 @@ import { type PathParams, delay, http } from "msw";
 
 import { ENV } from "@/shared/config";
 
-const BASE_URL = ENV.VITE_API_URL || "";
+const BASE_URL = (ENV.VITE_API_URL || "").replace(/\/$/, "");
 
 /**
  * Обертка над MSW http обработчиком для уменьшения бойлерплейта.
