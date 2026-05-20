@@ -3,7 +3,7 @@ import { HttpResponse } from "msw";
 import {
 	CLIENT_PAYMENT_PATHS,
 	ClientPaymentStatus,
-	CurrencyCode
+	Currency
 } from "@/shared/api";
 import { createMockHandler } from "@/shared/api/msw/utils";
 
@@ -85,7 +85,7 @@ export const financeClientPaymentHandlers = [
 				booking_id: bookingId,
 				operator_id: "op-current",
 				amount: amountUzs / exchangeRate,
-				currency: CurrencyCode.USD,
+				currency: Currency.USD,
 				status: ClientPaymentStatus.NotConfirmed,
 				note: note,
 				has_attachment: !!file,

@@ -23,7 +23,7 @@ export const mapPaymentToFrontend = (payment: TPaymentBackend): IPayment => ({
 	orderId: payment.booking_id,
 	dateCreated: formatDate(payment.created_at || ""),
 	amount: payment.amount,
-	currency: currencyConverter.from(payment.currency) as "USD",
+	currency: currencyConverter.from(payment.currency)!,
 	status: paymentStatusConverter.from(payment.status)!,
 	note: payment.note!,
 	files: undefined

@@ -1,9 +1,6 @@
-import type { CurrencyType, TourPricingVisibility } from "@/shared/api";
-
-import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+import { currencyConverter } from "@/entities/commission";
 
 import type {
-	ENUM_PRICING_VISIBILITY_TYPE,
 	ITourInfo,
 	ITourInfoBackend,
 	TSettingsFinanceFormSchema,
@@ -24,15 +21,12 @@ export const mapTourStatsToFrontend = (
 export const mapTourFinanceToFrontend = (
 	backend: TTourFinanceBackend
 ): TSettingsFinanceFormSchema => ({
-	currencyType: backend.currency as ENUM_CURRENCY_OPTIONS_TYPE,
-	pricingVisibility:
-		backend.pricing_visibility as unknown as ENUM_PRICING_VISIBILITY_TYPE
+	currencyType: currencyConverter.from(backend.currency_type)!,
+	pricingVisibility: "" as TSettingsFinanceFormSchema["pricingVisibility"]
 });
 
 export const mapTourFinanceToBackend = (
 	frontend: TSettingsFinanceFormSchema
 ): Partial<TTourFinanceBackend> => ({
-	currency: frontend.currencyType as unknown as CurrencyType,
-	pricing_visibility:
-		frontend.pricingVisibility as unknown as TourPricingVisibility
+	currency_type: currencyConverter.to(frontend.currencyType)
 });

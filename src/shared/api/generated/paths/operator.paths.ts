@@ -1,7 +1,7 @@
 import type {
 	BodyAddLogoOperatorMeLogoPost,
 	OperatorCreateSchema,
-	OperatorFinancialSettingsModel,
+	OperatorFinancialSettingsRead,
 	OperatorFinancialSettingsUpdate,
 	OperatorInfoModel,
 	OperatorInfoUpdate,
@@ -45,7 +45,7 @@ export const OPERATOR_PATHS = {
 		_types: {} as {
 			body: void;
 			query: void;
-			response: OperatorFinancialSettingsModel | null;
+			response: OperatorFinancialSettingsRead | null;
 		}
 	} as const,
 	updateOperatorFinancials: {
@@ -54,7 +54,7 @@ export const OPERATOR_PATHS = {
 		_types: {} as {
 			body: OperatorFinancialSettingsUpdate;
 			query: void;
-			response: OperatorFinancialSettingsModel;
+			response: OperatorFinancialSettingsRead;
 		}
 	} as const,
 	getOperator: (id: string) =>

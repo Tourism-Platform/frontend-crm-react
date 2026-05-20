@@ -9,15 +9,6 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const BOOKING_ORDER_PATHS = {
-	listMyBookings: {
-		url: "/booking/order/my",
-		method: "GET",
-		_types: {} as {
-			body: void;
-			query: { booking_status: BookingStatus | null };
-			response: BookingModel[];
-		}
-	} as const,
 	createBookingOrder: {
 		url: "/booking/order",
 		method: "POST",
@@ -27,21 +18,29 @@ export const BOOKING_ORDER_PATHS = {
 			response: BookingModel;
 		}
 	} as const,
+	listMyBookings: {
+		url: "/booking/order/my",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: {
+				booking_status?: BookingStatus | null;
+				tour_id?: string | null;
+			};
+			response: BookingModel[];
+		}
+	} as const,
 	getBookingOrder: (bookingId: string) =>
 		({
 			url: `/booking/order/${bookingId}`,
 			method: "GET",
 			_types: {} as { body: void; query: void; response: BookingModel }
 		}) as const,
-	updateBookingStatus: (bookingId: string) =>
+	transitionBookingStatus: (bookingId: string, transition: string) =>
 		({
-			url: `/booking/order/${bookingId}/status/update`,
+			url: `/booking/order/${bookingId}/status/${transition}`,
 			method: "PATCH",
-			_types: {} as {
-				body: void;
-				query: { status: BookingStatus };
-				response: BookingModel;
-			}
+			_types: {} as { body: void; query: void; response: BookingModel }
 		}) as const,
 	cancelBooking: (bookingId: string) =>
 		({

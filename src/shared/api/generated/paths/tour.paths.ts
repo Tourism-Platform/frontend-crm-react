@@ -5,7 +5,8 @@ import type {
 	TourMetaCreateSchema,
 	TourMetaModel,
 	TourMetaUpdateSchema,
-	TourStatus
+	TourStatus,
+	TourType
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -22,6 +23,7 @@ export const TOUR_PATHS = {
 				limit?: number;
 				desc?: boolean;
 				status?: TourStatus | null;
+				typ?: TourType | null;
 				q?: string | null;
 				sort_by?: TourListSortField;
 			};
@@ -36,6 +38,11 @@ export const TOUR_PATHS = {
 			query: void;
 			response: TourMetaModel;
 		}
+	} as const,
+	listOneDayTours: {
+		url: "/tour/one-day",
+		method: "GET",
+		_types: {} as { body: void; query: void; response: TourMetaModel[] }
 	} as const,
 	getTour: (tourId: string) =>
 		({

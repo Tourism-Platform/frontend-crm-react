@@ -11,13 +11,13 @@ export const mapBookingPaxToFrontend = (
 ): IBookingPax => ({
 	id: data.id,
 	bookingId: data.booking_id,
-	name: data.name,
-	surname: data.surname,
+	name: data.full_name,
+	surname: data.full_name,
 	gender: data.gender,
 	nationality: data.nationality,
 	dateOfBirth: formatDate(data.date_of_birth),
-	passportNum: data.passport_num,
-	passportExpiryDate: formatDate(data.passport_expiry_date),
+	passportNum: data.passport_number,
+	passportExpiryDate: formatDate(data.expired_date),
 	comment: data.comment
 });
 

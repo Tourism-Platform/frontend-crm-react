@@ -6,11 +6,27 @@ export const TOUR_CATEGORY_LABELS: Record<
 	ENUM_TOUR_CATEGORY_TYPE,
 	TOptionsKeys
 > = {
-	[ENUM_TOUR_CATEGORY.BEACH]: "tour.tourCategories.beach",
-	[ENUM_TOUR_CATEGORY.MOUNTAIN]: "tour.tourCategories.mountain",
-	[ENUM_TOUR_CATEGORY.CITY]: "tour.tourCategories.city",
-	[ENUM_TOUR_CATEGORY.SAFARI]: "tour.tourCategories.safari",
-	[ENUM_TOUR_CATEGORY.CRUISE]: "tour.tourCategories.cruise",
-	[ENUM_TOUR_CATEGORY.GASTRONOMIC]: "tour.tourCategories.gastronomic",
-	[ENUM_TOUR_CATEGORY.EXTREME]: "tour.tourCategories.extreme"
+	[ENUM_TOUR_CATEGORY.CULTURAL_HISTORICAL]:
+		"tour.tourCategories.cultural_historical",
+	[ENUM_TOUR_CATEGORY.RELIGIOUS_SPIRITUAL]:
+		"tour.tourCategories.religious_spiritual",
+	[ENUM_TOUR_CATEGORY.ARCHAEOLOGICAL]: "tour.tourCategories.archaeological",
+	[ENUM_TOUR_CATEGORY.ADVENTURE_OUTDOOR]:
+		"tour.tourCategories.adventure_outdoor",
+	[ENUM_TOUR_CATEGORY.ECO_NATURE]: "tour.tourCategories.eco_nature",
+	[ENUM_TOUR_CATEGORY.HIKING_TREKKING]: "tour.tourCategories.hiking_trekking",
+	[ENUM_TOUR_CATEGORY.CITY_TOUR]: "tour.tourCategories.city_tour",
+	[ENUM_TOUR_CATEGORY.GASTRONOMY_CULINARY]:
+		"tour.tourCategories.gastronomy_culinary",
+	[ENUM_TOUR_CATEGORY.PHOTOGRAPHY_CREATIVE]:
+		"tour.tourCategories.photography_creative",
+	[ENUM_TOUR_CATEGORY.EDUCATIONAL]: "tour.tourCategories.educational",
+	[ENUM_TOUR_CATEGORY.MASTER_CLASS_WORKSHOP]:
+		"tour.tourCategories.master_class_workshop",
+	[ENUM_TOUR_CATEGORY.WELLNESS_SPA]: "tour.tourCategories.wellness_spa",
+	[ENUM_TOUR_CATEGORY.YOGA_MEDITATION]: "tour.tourCategories.yoga_meditation",
+	[ENUM_TOUR_CATEGORY.BUSINESS_MICE]: "tour.tourCategories.business_mice",
+	[ENUM_TOUR_CATEGORY.FAMILY_KIDS]: "tour.tourCategories.family_kids",
+	[ENUM_TOUR_CATEGORY.MULTI_DESTINATION]:
+		"tour.tourCategories.multi_destination"
 };

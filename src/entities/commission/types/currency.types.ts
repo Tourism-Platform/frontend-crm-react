@@ -1,6 +1,8 @@
 export const ENUM_CURRENCY_OPTIONS = {
+	UZS: "UZS",
 	USD: "USD",
 	EUR: "EUR",
+	RUB: "RUB",
 	GBP: "GBP"
 } as const;
 

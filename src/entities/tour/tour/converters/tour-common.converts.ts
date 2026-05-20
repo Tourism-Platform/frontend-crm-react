@@ -2,8 +2,6 @@ import type { TOUR_PATHS } from "@/shared/api";
 import type { IPaginationResponse } from "@/shared/types";
 
 import type {
-	ENUM_TOUR_STATUS_TYPE,
-	ENUM_TOUR_TYPES_TYPE,
 	ITourCard,
 	ITourFilters,
 	ITourGeneral,
@@ -14,12 +12,15 @@ import type {
 	TTourSettingsGeneralFormSchema
 } from "../types";
 
+import { tourStatusMapper } from "./tour-status.converters";
+import { tourTypeMapper } from "./tour-type.converters";
+
 export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
 	id: backend.id,
-	status: backend.status as ENUM_TOUR_STATUS_TYPE,
+	status: tourStatusMapper.from(backend.status)!,
 	title: backend.name,
 	route: [],
-	type: backend.typ,
+	type: tourTypeMapper.from(backend.typ)!,
 	priceFrom: 0,
 	priceTo: 0,
 	imageUrl: ""
@@ -28,19 +29,18 @@ export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
 export const mapTourGeneralToFrontend = (
 	backend: TGetTourBackendResponse
 ): ITourGeneral => ({
-	//!!! оправить типы
 	id: backend.id,
-	status: backend.status as ENUM_TOUR_STATUS_TYPE,
+	status: tourStatusMapper.from(backend.status)!,
 	tourTitle: backend.name,
-	tourType: backend.typ as ENUM_TOUR_TYPES_TYPE,
+	tourType: tourTypeMapper.from(backend.typ)!,
 	groupSize: backend.group_size,
 	duration: {
 		from: backend.days,
 		to: backend.nights
 	},
 	ageRequires: {
-		from: backend.age_from,
-		to: backend.age_from
+		from: backend.age_from!,
+		to: backend.age_to!
 	},
 	tourCategories: []
 });
@@ -49,8 +49,7 @@ export const mapTourCreateToBackend = (
 	frontend: TCreateTourSchema
 ): typeof TOUR_PATHS.createTour._types.body => ({
 	// !!! need to add all fields
-	name: frontend.tourTitle || "NAME",
-	description: "no description",
+	name: frontend.tourTitle,
 	days: frontend.duration?.from,
 	nights: frontend.duration?.to,
 	age_from: frontend.ageRequires?.from,

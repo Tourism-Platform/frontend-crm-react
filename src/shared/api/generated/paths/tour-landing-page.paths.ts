@@ -65,5 +65,15 @@ export const TOUR_LANDING_PAGE_PATHS = {
 			url: `/tour/${tourId}/landing/images/${imageId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	setPrimaryLandingImage: (tourId: string, imageId: string) =>
+		({
+			url: `/tour/${tourId}/landing/images/${imageId}/set-primary`,
+			method: "PATCH",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: LandingPageImageModel;
+			}
 		}) as const
 } as const;

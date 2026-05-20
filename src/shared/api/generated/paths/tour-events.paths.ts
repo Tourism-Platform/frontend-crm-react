@@ -4,7 +4,7 @@ import type {
 	EventReorderSchema,
 	FlightEventSchemaInput,
 	HousingEventSchemaInput,
-	InformationEventSchema,
+	InformationEventSchemaInput,
 	LanguageCode,
 	MultipleOptionEventInput,
 	TourEventResponse,
@@ -33,7 +33,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationEventSchema
+					| InformationEventSchemaInput
 					| BusEventSchemaInput
 					| TrainEventSchemaInput
 					| TransferEventSchemaInput

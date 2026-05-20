@@ -1,4 +1,4 @@
-import type { CurrencyCode } from "@/shared/api";
+import type { Currency } from "@/shared/api";
 
 import type {
 	TAccountBackend,
@@ -16,7 +16,7 @@ export const mapAccountToFrontend = (
 	title: backend.title || "",
 	phone_number: backend.phone_number || "",
 	location: backend.location || "",
-	currency: backend.preferred_currency || ""
+	currency: backend.default_currency || ""
 });
 
 export const mapAccountToBackend = (
@@ -27,5 +27,5 @@ export const mapAccountToBackend = (
 	title: frontend.title,
 	phone_number: frontend.phone_number,
 	location: frontend.location,
-	preferred_currency: frontend.currency as CurrencyCode
+	default_currency: frontend.currency as Currency
 });

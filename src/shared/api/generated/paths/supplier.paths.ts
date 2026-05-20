@@ -1,9 +1,9 @@
 import type {
 	BodyAddLogoSupplierSupplierIdLogoPost,
-	EventTypes,
 	SupplierCreateSchema,
 	SupplierListResponse,
 	SupplierModel,
+	SupplierType,
 	SupplierUpdateSchema
 } from "../Api";
 
@@ -16,7 +16,12 @@ export const SUPPLIER_PATHS = {
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: { skip?: number; limit?: number; typ?: EventTypes | null };
+			query: {
+				skip?: number;
+				limit?: number;
+				supplier_type?: SupplierType | null;
+				q?: string | null;
+			};
 			response: SupplierListResponse;
 		}
 	} as const,

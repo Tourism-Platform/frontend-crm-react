@@ -43,13 +43,22 @@
 			"group": "Group"
 		},
 		"tourCategories": {
-			"beach": "Beach",
-			"mountain": "Mountain",
-			"city": "City",
-			"safari": "Safari",
-			"cruise": "Cruise",
-			"gastronomic": "Gastronomic",
-			"extreme": "Extreme"
+			"cultural_historical": "Cultural & Historical",
+			"religious_spiritual": "Religious & Spiritual",
+			"archaeological": "Archaeological",
+			"adventure_outdoor": "Adventure & Outdoor",
+			"eco_nature": "Eco & Nature",
+			"hiking_trekking": "Hiking & Trekking",
+			"city_tour": "City Tour",
+			"gastronomy_culinary": "Gastronomy & Culinary",
+			"photography_creative": "Photography & Creative",
+			"educational": "Educational",
+			"master_class_workshop": "Master Class & Workshop",
+			"wellness_spa": "Wellness & Spa",
+			"yoga_meditation": "Yoga & Meditation",
+			"business_mice": "Business & MICE",
+			"family_kids": "Family & Kids",
+			"multi_destination": "Multi-destination"
 		},
 		"visibility": {
 			"show_from": "Show price 'from'",

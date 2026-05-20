@@ -10,6 +10,47 @@
  * ---------------------------------------------------------------
  */
 
+/** AmenitiesTypes */
+export enum SrcTourConstantsAmenitiesTypes {
+	Wifi = "wifi",
+	Pool = "pool",
+	Breakfast = "breakfast",
+	Parking = "parking",
+	Gym = "gym",
+	Spa = "spa",
+	Restaurant = "restaurant",
+	Bar = "bar",
+	AirportShuttle = "airport_shuttle",
+	AirConditioning = "air_conditioning",
+	RoomService = "room_service",
+	Laundry = "laundry",
+	Concierge = "concierge",
+	BusinessCenter = "business_center",
+	KidsClub = "kids_club",
+	BeachAccess = "beach_access",
+	Sauna = "sauna",
+	Jacuzzi = "jacuzzi",
+	PetFriendly = "pet_friendly",
+	WheelchairAccessible = "wheelchair_accessible"
+}
+
+/** AmenitiesTypes */
+export enum SrcCommonConstantsAmenitiesTypes {
+	Conditioner = "conditioner",
+	Wifi = "wifi"
+}
+
+/** VehicleBodyType */
+export enum VehicleBodyType {
+	Sedan = "sedan",
+	Minivan = "minivan",
+	Minibus = "minibus",
+	MinibusPlus = "minibus_plus",
+	Bus = "bus",
+	Suv = "suv",
+	Coach = "coach"
+}
+
 /** UserRoles */
 export enum UserRoles {
 	Admin = "admin",
@@ -24,37 +65,25 @@ export enum UserRoles {
 
 /** TransferTypes */
 export enum TransferTypes {
-	Value1 = "1"
-}
-
-/** TransferCarTypes */
-export enum TransferCarTypes {
-	Sedan = "Sedan",
-	Bus = "Bus"
+	CityTour = "city_tour",
+	CityTransfer = "city_transfer",
+	IntercityTransfer = "intercity_transfer",
+	AirportTransfer = "airport_transfer",
+	StationTransfer = "station_transfer",
+	Custom = "custom"
 }
 
 /** TourType */
 export enum TourType {
-	Private = "private",
-	Group = "group",
-	PrivateGroup = "private/group"
+	Regular = "regular",
+	Custom = "custom"
 }
 
 /** TourStatus */
 export enum TourStatus {
-	Active = "active",
-	Moderation = "moderation",
-	Planning = "planning",
-	Cancelled = "cancelled",
-	Archived = "archived",
-	Draft = "draft"
-}
-
-/** TourPricingVisibility */
-export enum TourPricingVisibility {
-	To = "to",
-	From = "from",
-	Range = "range"
+	Draft = "draft",
+	Published = "published",
+	Archived = "archived"
 }
 
 /** TourListSortField */
@@ -67,32 +96,58 @@ export enum TourListSortField {
 
 /** TourCategory */
 export enum TourCategory {
-	HistoryCulture = "history_culture",
-	ClassicalExcursions = "classical_excursions",
+	CulturalHistorical = "cultural_historical",
+	ReligiousSpiritual = "religious_spiritual",
+	Archaeological = "archaeological",
 	AdventureOutdoor = "adventure_outdoor",
-	WellnessSpiritual = "wellness_spiritual",
+	EcoNature = "eco_nature",
+	HikingTrekking = "hiking_trekking",
+	CityTour = "city_tour",
+	GastronomyCulinary = "gastronomy_culinary",
 	PhotographyCreative = "photography_creative",
-	GastronomicExperiences = "gastronomic_experiences"
+	Educational = "educational",
+	MasterClassWorkshop = "master_class_workshop",
+	WellnessSpa = "wellness_spa",
+	YogaMeditation = "yoga_meditation",
+	BusinessMice = "business_mice",
+	FamilyKids = "family_kids",
+	MultiDestination = "multi_destination"
+}
+
+/** TourCatalogSort */
+export enum TourCatalogSort {
+	PriceAsc = "price_asc",
+	PriceDesc = "price_desc",
+	DurationAsc = "duration_asc",
+	DurationDesc = "duration_desc"
+}
+
+/** SupplierType */
+export enum SupplierType {
+	Flight = "flight",
+	Transfer = "transfer",
+	Hotel = "hotel",
+	Museum = "museum",
+	Activity = "activity"
+}
+
+/** SupplierPaymentStatus */
+export enum SupplierPaymentStatus {
+	Paid = "paid",
+	NotPaid = "not_paid"
+}
+
+/** StaffStatus */
+export enum StaffStatus {
+	Pending = "pending",
+	Active = "active",
+	Inactive = "inactive"
 }
 
 /** PickupType */
 export enum PickupType {
-	Airport = "airport",
-	Hotel = "hotel"
-}
-
-/** Nationality */
-export enum Nationality {
-	Usa = "usa",
-	Fra = "fra",
-	Ind = "ind",
-	Chn = "chn"
-}
-
-/** Languages */
-export enum Languages {
-	En = "en",
-	Ru = "ru"
+	AirportPickup = "airport_pickup",
+	HotelPickup = "hotel_pickup"
 }
 
 /** LanguageCode */
@@ -102,11 +157,26 @@ export enum LanguageCode {
 	Uz = "uz"
 }
 
+/** Language */
+export enum Language {
+	Uzbek = "uzbek",
+	Russian = "russian",
+	English = "english",
+	Italian = "italian",
+	German = "german",
+	Spanish = "spanish",
+	Portuguese = "portuguese"
+}
+
 /** HousingRoomTypes */
 export enum HousingRoomTypes {
-	Single = "Single",
-	Double = "Double",
-	Triple = "Triple"
+	Single = "single",
+	Double = "double",
+	Twin = "twin",
+	Triple = "triple",
+	Quadruple = "quadruple",
+	Suite = "suite",
+	Family = "family"
 }
 
 /** Gender */
@@ -115,42 +185,13 @@ export enum Gender {
 	F = "F"
 }
 
-/** EventTypes */
-export enum EventTypes {
-	Value1 = "1",
-	Value2 = "2",
-	Value3 = "3",
-	Value4 = "4",
-	Value5 = "5",
-	Value6 = "6",
-	Value7 = "7",
-	Value8 = "8"
-}
-
-/** EmploymentStatus */
-export enum EmploymentStatus {
-	Active = "active"
-}
-
-/**
- * CurrencyType
- * Enumeration for supported currencies based on ISO 4217 codes.
- */
-export enum CurrencyType {
+/** Currency */
+export enum Currency {
 	UZS = "UZS",
 	USD = "USD",
 	EUR = "EUR",
-	GBP = "GBP",
-	JPY = "JPY"
-}
-
-/** CurrencyCode */
-export enum CurrencyCode {
-	USD = "USD",
-	EUR = "EUR",
-	UZS = "UZS",
 	RUB = "RUB",
-	KZT = "KZT"
+	GBP = "GBP"
 }
 
 /** ClientPaymentStatus */
@@ -159,28 +200,64 @@ export enum ClientPaymentStatus {
 	Confirmed = "confirmed"
 }
 
+/** BookingTransition */
+export enum BookingTransition {
+	MoveToPending = "move-to-pending",
+	MoveToConfirmed = "move-to-confirmed"
+}
+
 /** BookingStatus */
 export enum BookingStatus {
 	New = "new",
 	Pending = "pending",
-	InProcessing = "in_processing",
-	InProgress = "in_progress",
 	Confirmed = "confirmed",
-	Cancelled = "cancelled",
-	Completed = "completed"
-}
-
-/** AmenitiesTypes */
-export enum AmenitiesTypes {
-	Conditioner = "conditioner",
-	Wifi = "wifi"
+	InProgress = "in_progress",
+	Completed = "completed",
+	Cancelled = "cancelled"
 }
 
 /** ActivityType */
 export enum ActivityType {
-	Value1 = "1",
-	Value2 = "2",
-	Value3 = "3"
+	Food = "food",
+	MasterClass = "master_class",
+	Sightseeing = "sightseeing",
+	Outdoor = "outdoor",
+	Riding = "riding",
+	Extreme = "extreme",
+	Wellness = "wellness",
+	Entertainment = "entertainment",
+	WaterActivities = "water_activities",
+	Photography = "photography",
+	Spiritual = "spiritual"
+}
+
+/** AccountType */
+export enum AccountType {
+	TourOperator = "tour_operator",
+	TourAgency = "tour_agency"
+}
+
+/** AccountTypeRead */
+export interface AccountTypeRead {
+	account_type: AccountType;
+}
+
+/** ActivityDetailsPubSchema */
+export interface ActivityDetailsPubSchemaInput {
+	typ: ActivityType;
+	/** Location */
+	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	start_time: TimeSchema;
+	end_time: TimeSchema;
+}
+
+/** ActivityDetailsPubSchema */
+export interface ActivityDetailsPubSchemaOutput {
+	typ: ActivityType;
+	/** Location */
+	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	start_time: TimeSchema;
+	end_time: TimeSchema;
 }
 
 /** ActivityDetailsSchema */
@@ -235,6 +312,42 @@ export interface ActivityDetailsSchemaOutput {
 		  } & PerPersonExpenseOutput);
 }
 
+/** ActivityEventPubRead */
+export interface ActivityEventPubReadInput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details: ActivityDetailsPubSchemaInput;
+}
+
+/** ActivityEventPubRead */
+export interface ActivityEventPubReadOutput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details: ActivityDetailsPubSchemaOutput;
+}
+
 /** ActivityEventSchema */
 export interface ActivityEventSchemaInput {
 	/**
@@ -257,6 +370,23 @@ export interface ActivityEventSchemaInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "6"
@@ -287,6 +417,23 @@ export interface ActivityEventSchemaOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "6"
@@ -312,6 +459,94 @@ export interface AdminUserView {
 	operator_id?: string | null;
 	/** Agency Id */
 	agency_id?: string | null;
+}
+
+/** AgencyFilesModel */
+export interface AgencyFilesModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agency_id: string;
+	/** Url */
+	url: string;
+}
+
+/** AgencyInfoModel */
+export interface AgencyInfoModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agency_id: string;
+	/** Logo Url */
+	logo_url: string | null;
+	/** Description */
+	description: string | null;
+	/** Business Name */
+	business_name: string | null;
+	/** Website Url */
+	website_url: string | null;
+	/** Legal Name */
+	legal_name: string | null;
+	/** Director Name */
+	director_name: string | null;
+	/** Tax Id */
+	tax_id: string | null;
+	/** Contact Person */
+	contact_person: string | null;
+	/** Contact Position */
+	contact_position: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
+	/** Address Line */
+	address_line: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
+}
+
+/** AgencyInfoUpdate */
+export interface AgencyInfoUpdate {
+	/** Description */
+	description?: string | null;
+	/** Business Name */
+	business_name?: string | null;
+	/** Website Url */
+	website_url?: string | null;
+	/** Legal Name */
+	legal_name?: string | null;
+	/** Director Name */
+	director_name?: string | null;
+	/** Tax Id */
+	tax_id?: string | null;
+	/** Contact Person */
+	contact_person?: string | null;
+	/** Contact Position */
+	contact_position?: string | null;
+	/** Contact Email */
+	contact_email?: string | null;
+	/** Contact Phone */
+	contact_phone?: string | null;
+	/** Address Line */
+	address_line?: string | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
 }
 
 /** AgencyModel */
@@ -350,10 +585,11 @@ export interface AnyEventWithCostInput {
 				  } & ActivityEventSchemaInput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventSchemaInput)
 		  )
 		| MultipleOptionEventInput;
-	cost: MonetaryValueSchema;
+	cost: TourMinMaxCostSchemaInput;
+	markup: TourMinMaxCostSchemaInput;
 }
 
 /** AnyEventWithCost */
@@ -381,10 +617,11 @@ export interface AnyEventWithCostOutput {
 				  } & ActivityEventSchemaOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventSchemaOutput)
 		  )
 		| MultipleOptionEventOutput;
-	cost: MonetaryValueSchema;
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
 }
 
 /** AuthUserIn */
@@ -426,8 +663,22 @@ export interface AuthUserProfileModel {
 	location: string | null;
 	/** Profile Picture Url */
 	profile_picture_url: string | null;
-	/** Preferred Currency */
-	preferred_currency: string | null;
+	default_currency: Currency;
+}
+
+/** Body_add_agency_documents_agency_me_documents_post */
+export interface BodyAddAgencyDocumentsAgencyMeDocumentsPost {
+	/** Files */
+	files: File[];
+}
+
+/** Body_add_agency_logo_agency_me_logo_post */
+export interface BodyAddAgencyLogoAgencyMeLogoPost {
+	/**
+	 * File
+	 * @format binary
+	 */
+	file: File;
 }
 
 /** Body_add_files_operator_me_files_post */
@@ -452,13 +703,6 @@ export interface BodyAddLogoSupplierSupplierIdLogoPost {
 	 * @format binary
 	 */
 	file: File;
-}
-
-/** Body_add_passenger_info_booking_pax__booking_id__post */
-export interface BodyAddPassengerInfoBookingPaxBookingIdPost {
-	info: PassengerCreateInfo;
-	/** Files */
-	files: File[];
 }
 
 /** Body_create_payment_booking_payment_post */
@@ -487,12 +731,6 @@ export interface BodyCreatePaymentBookingPaymentPost {
 	note?: string | null;
 }
 
-/** Body_invite_staff_operator_staff_invite_post */
-export interface BodyInviteStaffOperatorStaffInvitePost {
-	user: AuthUserIn;
-	payload: StaffInvite;
-}
-
 /** Body_upload_avatar_profile_me_photo_post */
 export interface BodyUploadAvatarProfileMePhotoPost {
 	/**
@@ -512,6 +750,24 @@ export interface BodyUploadEventImagesTourTourIdEventEventIdImagesPost {
 export interface BodyUploadLandingImagesTourTourIdLandingImagesPost {
 	/** Images */
 	images: File[];
+}
+
+/** Body_upload_passenger_passport_booking_order__booking_id__pax__pax_id__passport_post */
+export interface BodyUploadPassengerPassportBookingOrderBookingIdPaxPaxIdPassportPost {
+	/**
+	 * File
+	 * @format binary
+	 */
+	file: File;
+}
+
+/** Body_upload_receipt_operator_me_supplier_payment__payment_id__receipt_post */
+export interface BodyUploadReceiptOperatorMeSupplierPaymentPaymentIdReceiptPost {
+	/**
+	 * File
+	 * @format binary
+	 */
+	file: File;
 }
 
 /** Body_upload_tour_cover_tour__tour_id__cover_post */
@@ -537,15 +793,17 @@ export interface BookingCreate {
 	 */
 	tour_option_id: string;
 	/**
-	 * Departure Date
+	 * Date
 	 * @format date
 	 */
-	departure_date: string;
-	/** Pax */
+	date: string;
+	/**
+	 * Pax
+	 * @exclusiveMin 0
+	 */
 	pax: number;
-	status: BookingStatus;
-	/** Notes */
-	notes: string | null;
+	/** Comment */
+	comment?: string | null;
 }
 
 /** BookingModel */
@@ -570,26 +828,61 @@ export interface BookingModel {
 	 * @format uuid
 	 */
 	tour_option_id: string;
+	/** Snapshot Id */
+	snapshot_id: string | null;
 	/**
-	 * Departure Date
+	 * Date
 	 * @format date
 	 */
-	departure_date: string;
+	date: string;
+	/**
+	 * End Date
+	 * @format date
+	 */
+	end_date: string;
 	/** Pax */
 	pax: number;
 	status: BookingStatus;
+	/**
+	 * Paid Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	paid_amount: string;
+	paid_currency: Currency;
+	/**
+	 * Tour Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	tour_amount: string;
+	tour_currency: Currency;
+	/** Fx Rate Id */
+	fx_rate_id: string | null;
+	/** Fx Rate Applied */
+	fx_rate_applied: string | null;
 	/** Agreed Price */
-	agreed_price: number | null;
-	/** Agreed Currency */
-	agreed_currency: string | null;
-	/** Confirmed At */
-	confirmed_at: string | null;
+	agreed_price: string | null;
 	/** Cancelled At */
 	cancelled_at: string | null;
 	/** Cancellation Reason */
 	cancellation_reason: string | null;
-	/** Notes */
-	notes: string | null;
+	/** Comment */
+	comment: string | null;
+}
+
+/** BookingPaxFilesModel */
+export interface BookingPaxFilesModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Booking Pax Id
+	 * @format uuid
+	 */
+	booking_pax_id: string;
+	/** Url */
+	url: string;
 }
 
 /** BookingPaxModel */
@@ -604,26 +897,37 @@ export interface BookingPaxModel {
 	 * @format uuid
 	 */
 	booking_id: string;
-	/** Name */
-	name: string;
-	/** Surname */
-	surname: string;
+	/** Full Name */
+	full_name: string;
 	gender: Gender;
-	nationality: Nationality;
+	/** Nationality */
+	nationality: string;
 	/**
 	 * Date Of Birth
-	 * @format date-time
+	 * @format date
 	 */
 	date_of_birth: string;
-	/** Passport Num */
-	passport_num: string;
+	/** Passport Number */
+	passport_number: string;
 	/**
-	 * Passport Expiry Date
-	 * @format date-time
+	 * Expired Date
+	 * @format date
 	 */
-	passport_expiry_date: string;
+	expired_date: string;
 	/** Comment */
 	comment: string | null;
+}
+
+/** BusDetailPubSchema */
+export interface BusDetailPubSchemaInput {
+	/** Hop */
+	hop: BusHopPubSchemaInput[];
+}
+
+/** BusDetailPubSchema */
+export interface BusDetailPubSchemaOutput {
+	/** Hop */
+	hop: BusHopPubSchemaOutput[];
 }
 
 /** BusDetailSchema */
@@ -636,6 +940,42 @@ export interface BusDetailSchemaInput {
 export interface BusDetailSchemaOutput {
 	/** Hop */
 	hop: BusHopSchemaOutput[];
+}
+
+/** BusEventPubRead */
+export interface BusEventPubReadInput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details: BusDetailPubSchemaInput;
+}
+
+/** BusEventPubRead */
+export interface BusEventPubReadOutput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details: BusDetailPubSchemaOutput;
 }
 
 /** BusEventSchema */
@@ -660,6 +1000,23 @@ export interface BusEventSchemaInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "3"
@@ -690,12 +1047,45 @@ export interface BusEventSchemaOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "3"
 	 */
 	typ?: "3";
 	details: BusDetailSchemaOutput;
+}
+
+/** BusHopPubSchema */
+export interface BusHopPubSchemaInput {
+	/** Represents either a departure or arrival point for the bus journey. */
+	departure: BusJourneyPointSchemaInput;
+	/** Represents either a departure or arrival point for the bus journey. */
+	arrival: BusJourneyPointSchemaInput;
+}
+
+/** BusHopPubSchema */
+export interface BusHopPubSchemaOutput {
+	/** Represents either a departure or arrival point for the bus journey. */
+	departure: BusJourneyPointSchemaOutput;
+	/** Represents either a departure or arrival point for the bus journey. */
+	arrival: BusJourneyPointSchemaOutput;
 }
 
 /**
@@ -803,7 +1193,7 @@ export interface ClientPaymentResponse {
 	operator_id: string;
 	/** Amount */
 	amount: number;
-	currency: CurrencyCode;
+	currency: Currency;
 	status: ClientPaymentStatus;
 	/** Note */
 	note?: string | null;
@@ -831,17 +1221,28 @@ export interface CreateAgencySchema {
 
 /** CreateFinancialSchema */
 export interface CreateFinancialSchema {
-	pricing_visibility: TourPricingVisibility;
-	/** Markup */
-	markup: number;
-	/** Enumeration for supported currencies based on ISO 4217 codes. */
-	currency: CurrencyType;
-	/** Currency Rate To Uzs */
-	currency_rate_to_uzs: number;
+	currency_type: Currency;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** EmptyDetails */
 export type EmptyDetails = object;
+
+/** EmptyDetailsPub */
+export type EmptyDetailsPub = object;
 
 /** EventImageModel */
 export interface EventImageModel {
@@ -933,6 +1334,19 @@ export interface FixedExpenseInput {
 	 * @default "fixed"
 	 */
 	typ?: "fixed";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	cost: MonetaryValueSchema;
 }
 
@@ -946,7 +1360,32 @@ export interface FixedExpenseOutput {
 	 * @default "fixed"
 	 */
 	typ?: "fixed";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	cost: MonetaryValueSchema;
+}
+
+/** FlightDetailsPubSchema */
+export interface FlightDetailsPubSchemaInput {
+	/** Hop */
+	hop: FlightHopPubSchemaInput[];
+}
+
+/** FlightDetailsPubSchema */
+export interface FlightDetailsPubSchemaOutput {
+	/** Hop */
+	hop: FlightHopPubSchemaOutput[];
 }
 
 /** FlightDetailsSchema */
@@ -959,6 +1398,42 @@ export interface FlightDetailsSchemaInput {
 export interface FlightDetailsSchemaOutput {
 	/** Hop */
 	hop: FlightHopDetailsSchemaOutput[];
+}
+
+/** FlightEventPubRead */
+export interface FlightEventPubReadInput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details: FlightDetailsPubSchemaInput;
+}
+
+/** FlightEventPubRead */
+export interface FlightEventPubReadOutput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details: FlightDetailsPubSchemaOutput;
 }
 
 /** FlightEventSchema */
@@ -983,6 +1458,23 @@ export interface FlightEventSchemaInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "1"
@@ -1013,6 +1505,23 @@ export interface FlightEventSchemaOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "1"
@@ -1093,7 +1602,7 @@ export interface FlightHopDetailsSchemaInput {
 	 * Amenities
 	 * List of amenities available on this flight.
 	 */
-	amenities?: AmenitiesTypes[];
+	amenities?: SrcTourConstantsAmenitiesTypes[];
 	/**
 	 * Expenses
 	 * Expenses strategy for this event
@@ -1179,7 +1688,7 @@ export interface FlightHopDetailsSchemaOutput {
 	 * Amenities
 	 * List of amenities available on this flight.
 	 */
-	amenities?: AmenitiesTypes[];
+	amenities?: SrcTourConstantsAmenitiesTypes[];
 	/**
 	 * Expenses
 	 * Expenses strategy for this event
@@ -1193,6 +1702,134 @@ export interface FlightHopDetailsSchemaOutput {
 		  } & PerPersonExpenseOutput);
 }
 
+/** FlightHopPubSchema */
+export interface FlightHopPubSchemaInput {
+	/**
+	 * Airline Code
+	 * @minLength 2
+	 * @maxLength 3
+	 * @pattern ^[A-Z0-9]{2,3}$
+	 */
+	airline_code: string;
+	/**
+	 * Flight Number
+	 * @min 1
+	 * @max 9999
+	 */
+	flight_number: number;
+	/**
+	 * Departure Airport Code
+	 * @minLength 3
+	 * @maxLength 3
+	 * @pattern ^[A-Z]{3}$
+	 */
+	departure_airport_code: string;
+	/**
+	 * Arrival Airport Code
+	 * @minLength 3
+	 * @maxLength 3
+	 * @pattern ^[A-Z]{3}$
+	 */
+	arrival_airport_code: string;
+	/** Departure Location */
+	departure_location:
+		| LocationInSchema
+		| LocationRefSchema
+		| LocationOutSchema;
+	/** Arrival Location */
+	arrival_location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	/**
+	 * Departure Date
+	 * @format date
+	 */
+	departure_date: string;
+	/**
+	 * Arrival Date
+	 * @format date
+	 */
+	arrival_date: string;
+	departure_time: TimeSchema;
+	arrival_time: TimeSchema;
+	/**
+	 * Departure Terminal
+	 * @minLength 1
+	 * @maxLength 5
+	 */
+	departure_terminal: string;
+	/**
+	 * Departure Gate
+	 * @minLength 1
+	 * @maxLength 5
+	 */
+	departure_gate: string;
+	/** Amenities */
+	amenities?: SrcTourConstantsAmenitiesTypes[];
+}
+
+/** FlightHopPubSchema */
+export interface FlightHopPubSchemaOutput {
+	/**
+	 * Airline Code
+	 * @minLength 2
+	 * @maxLength 3
+	 * @pattern ^[A-Z0-9]{2,3}$
+	 */
+	airline_code: string;
+	/**
+	 * Flight Number
+	 * @min 1
+	 * @max 9999
+	 */
+	flight_number: number;
+	/**
+	 * Departure Airport Code
+	 * @minLength 3
+	 * @maxLength 3
+	 * @pattern ^[A-Z]{3}$
+	 */
+	departure_airport_code: string;
+	/**
+	 * Arrival Airport Code
+	 * @minLength 3
+	 * @maxLength 3
+	 * @pattern ^[A-Z]{3}$
+	 */
+	arrival_airport_code: string;
+	/** Departure Location */
+	departure_location:
+		| LocationInSchema
+		| LocationRefSchema
+		| LocationOutSchema;
+	/** Arrival Location */
+	arrival_location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	/**
+	 * Departure Date
+	 * @format date
+	 */
+	departure_date: string;
+	/**
+	 * Arrival Date
+	 * @format date
+	 */
+	arrival_date: string;
+	departure_time: TimeSchema;
+	arrival_time: TimeSchema;
+	/**
+	 * Departure Terminal
+	 * @minLength 1
+	 * @maxLength 5
+	 */
+	departure_terminal: string;
+	/**
+	 * Departure Gate
+	 * @minLength 1
+	 * @maxLength 5
+	 */
+	departure_gate: string;
+	/** Amenities */
+	amenities?: SrcTourConstantsAmenitiesTypes[];
+}
+
 /** FullScheduleSchema */
 export interface FullScheduleSchema {
 	schedule: TourScheduleModel;
@@ -1200,6 +1837,14 @@ export interface FullScheduleSchema {
 	fixed_dates: FixedDateModel[];
 	/** Recurrence Rules */
 	recurrence_rules: RecurrenceDateModel[];
+}
+
+/** FxRateCreateSchema */
+export interface FxRateCreateSchema {
+	from_currency: Currency;
+	to_currency: Currency;
+	/** Rate */
+	rate: number | string;
 }
 
 /**
@@ -1233,6 +1878,30 @@ export interface HTTPValidationError {
 	detail?: ValidationError[];
 }
 
+/** HousingDetailsPubSchema */
+export interface HousingDetailsPubSchemaInput {
+	/** Location */
+	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	/** Amenities */
+	amenities: SrcTourConstantsAmenitiesTypes[];
+	/** Duration */
+	duration: number;
+	check_in: TimeSchema;
+	check_out: TimeSchema;
+}
+
+/** HousingDetailsPubSchema */
+export interface HousingDetailsPubSchemaOutput {
+	/** Location */
+	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	/** Amenities */
+	amenities: SrcTourConstantsAmenitiesTypes[];
+	/** Duration */
+	duration: number;
+	check_in: TimeSchema;
+	check_out: TimeSchema;
+}
+
 /** HousingDetailsSchema */
 export interface HousingDetailsSchemaInput {
 	/**
@@ -1241,7 +1910,7 @@ export interface HousingDetailsSchemaInput {
 	 */
 	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
 	/** Amenities */
-	amenities: AmenitiesTypes[];
+	amenities: SrcTourConstantsAmenitiesTypes[];
 	/**
 	 * Duration
 	 * Length of stay
@@ -1258,11 +1927,11 @@ export interface HousingDetailsSchemaInput {
 				typ: "fixed";
 		  } & FixedExpenseInput)
 		| ({
-				typ: "per_car";
-		  } & PerRoomExpensesInput)
-		| ({
 				typ: "per_person";
 		  } & PerPersonExpenseInput)
+		| ({
+				typ: "per_room";
+		  } & PerRoomExpensesInput)
 		| ({
 				typ: "per_room_category";
 		  } & PerRoomCategoryExpensesInput);
@@ -1276,7 +1945,7 @@ export interface HousingDetailsSchemaOutput {
 	 */
 	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
 	/** Amenities */
-	amenities: AmenitiesTypes[];
+	amenities: SrcTourConstantsAmenitiesTypes[];
 	/**
 	 * Duration
 	 * Length of stay
@@ -1293,14 +1962,50 @@ export interface HousingDetailsSchemaOutput {
 				typ: "fixed";
 		  } & FixedExpenseOutput)
 		| ({
-				typ: "per_car";
-		  } & PerRoomExpensesOutput)
-		| ({
 				typ: "per_person";
 		  } & PerPersonExpenseOutput)
 		| ({
+				typ: "per_room";
+		  } & PerRoomExpensesOutput)
+		| ({
 				typ: "per_room_category";
 		  } & PerRoomCategoryExpensesOutput);
+}
+
+/** HousingEventPubRead */
+export interface HousingEventPubReadInput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details: HousingDetailsPubSchemaInput;
+}
+
+/** HousingEventPubRead */
+export interface HousingEventPubReadOutput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details: HousingDetailsPubSchemaOutput;
 }
 
 /** HousingEventSchema */
@@ -1325,6 +2030,23 @@ export interface HousingEventSchemaInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "5"
@@ -1355,6 +2077,23 @@ export interface HousingEventSchemaOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "5"
@@ -1441,8 +2180,27 @@ export interface HousingRoomExpensesSchemaOutput {
 	expenses: FixedExpenseOutput;
 }
 
+/** InformationEventPubRead */
+export interface InformationEventPubRead {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	/** @default {} */
+	details?: EmptyDetailsPub;
+}
+
 /** InformationEventSchema */
-export interface InformationEventSchema {
+export interface InformationEventSchemaInput {
 	/**
 	 * Name
 	 * Event's name
@@ -1463,6 +2221,71 @@ export interface InformationEventSchema {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	/** @default {} */
+	details?: EmptyDetails;
+}
+
+/** InformationEventSchema */
+export interface InformationEventSchemaOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description: string;
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "7"
@@ -1475,35 +2298,27 @@ export interface InformationEventSchema {
 /** LandingPageCreate */
 export interface LandingPageCreate {
 	/** Title */
-	title: string;
+	title?: string | null;
 	/** Overview */
 	overview: string;
-	/**
-	 * Languages
-	 * @default []
-	 */
-	languages?: string[];
-	/**
-	 * Amenities Included
-	 * @default []
-	 */
-	amenities_included?: AmenitiesTypes[];
-	/**
-	 * Amenities Not Included
-	 * @default []
-	 */
-	amenities_not_included?: AmenitiesTypes[];
-	pickup_details?: PickupType | null;
-	/**
-	 * Cancellation Policy
-	 * @default ""
-	 */
+	/** Description */
+	description?: string | null;
+	/** Overview Description */
+	overview_description?: string | null;
+	/** Pickup Description */
+	pickup_description?: string | null;
+	/** Cancellation Policy */
 	cancellation_policy?: string | null;
-	/**
-	 * Additional Info
-	 * @default ""
-	 */
-	additional_info?: string | null;
+	/** Additional Information */
+	additional_information?: string | null;
+	/** Languages */
+	languages?: Language[];
+	/** Pickup Type */
+	pickup_type?: PickupType[];
+	/** Amenities Included */
+	amenities_included?: SrcCommonConstantsAmenitiesTypes[];
+	/** Amenities Not Included */
+	amenities_not_included?: SrcCommonConstantsAmenitiesTypes[];
 }
 
 /** LandingPageImageModel */
@@ -1531,26 +2346,28 @@ export interface LandingPageModel {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tour_id: string;
 	/** Title */
-	title: string;
+	title: string | null;
 	/** Overview */
 	overview: string;
-	/** Languages */
-	languages: Languages[];
-	/** Amenities Included */
-	amenities_included: AmenitiesTypes[];
-	/** Amenities Not Included */
-	amenities_not_included: AmenitiesTypes[];
-	pickup_details: PickupType | null;
+	/** Description */
+	description: string | null;
+	/** Overview Description */
+	overview_description: string | null;
+	/** Pickup Description */
+	pickup_description: string | null;
+	/** Additional Information */
+	additional_information: string | null;
 	/** Cancellation Policy */
-	cancellation_policy: string;
-	/** Additional Info */
-	additional_info: string;
+	cancellation_policy: string | null;
+	/** Languages */
+	languages: Language[];
+	/** Pickup Type */
+	pickup_type: PickupType[];
+	/** Amenities Included */
+	amenities_included: SrcCommonConstantsAmenitiesTypes[];
+	/** Amenities Not Included */
+	amenities_not_included: SrcCommonConstantsAmenitiesTypes[];
 }
 
 /** LandingPageUpdate */
@@ -1559,29 +2376,24 @@ export interface LandingPageUpdate {
 	title?: string | null;
 	/** Overview */
 	overview?: string | null;
-	/** Languages */
-	languages?: string[] | null;
-	/**
-	 * Amenities Included
-	 * @default []
-	 */
-	amenities_included?: AmenitiesTypes[];
-	/**
-	 * Amenities Not Included
-	 * @default []
-	 */
-	amenities_not_included?: AmenitiesTypes[];
-	pickup_details?: PickupType | null;
-	/**
-	 * Cancellation Policy
-	 * @default ""
-	 */
+	/** Description */
+	description?: string | null;
+	/** Overview Description */
+	overview_description?: string | null;
+	/** Pickup Description */
+	pickup_description?: string | null;
+	/** Cancellation Policy */
 	cancellation_policy?: string | null;
-	/**
-	 * Additional Info
-	 * @default ""
-	 */
-	additional_info?: string | null;
+	/** Additional Information */
+	additional_information?: string | null;
+	/** Languages */
+	languages?: Language[] | null;
+	/** Pickup Type */
+	pickup_type?: PickupType[] | null;
+	/** Amenities Included */
+	amenities_included?: SrcCommonConstantsAmenitiesTypes[] | null;
+	/** Amenities Not Included */
+	amenities_not_included?: SrcCommonConstantsAmenitiesTypes[] | null;
 }
 
 /** LocationInSchema */
@@ -1653,7 +2465,20 @@ export interface MeSchema {
 	operator_id?: string | null;
 }
 
-/** MonetaryValueSchema */
+/**
+ * MonetaryValueSchema
+ * Monetary value pair.
+ *
+ * Conversion happens inside the schema but takes an explicit ``FxContext``
+ * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+ * ``return self``; cross-currency requires a matching entry in
+ * ``fx.rates`` and applies ``val * rate``.
+ *
+ * Arithmetic operators stay same-currency-only on purpose: event calc
+ * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+ * so same-currency is always satisfied and the guards catch anything that
+ * slips through.
+ */
 export interface MonetaryValueSchema {
 	/**
 	 * Val
@@ -1661,11 +2486,8 @@ export interface MonetaryValueSchema {
 	 * @min 0
 	 */
 	val: number;
-	/**
-	 * Enumeration for supported currencies based on ISO 4217 codes.
-	 * @default "USD"
-	 */
-	currency?: CurrencyType;
+	/** @default "USD" */
+	currency?: Currency;
 }
 
 /** MultipleOptionEvent */
@@ -1690,9 +2512,29 @@ export interface MultipleOptionEventInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/** Typ */
 	typ: "8";
-	/** Details */
+	/**
+	 * Details
+	 * @minItems 1
+	 */
 	details: (
 		| ({
 				typ: "1";
@@ -1714,7 +2556,7 @@ export interface MultipleOptionEventInput {
 		  } & ActivityEventSchemaInput)
 		| ({
 				typ: "7";
-		  } & InformationEventSchema)
+		  } & InformationEventSchemaInput)
 	)[];
 }
 
@@ -1740,9 +2582,29 @@ export interface MultipleOptionEventOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/** Typ */
 	typ: "8";
-	/** Details */
+	/**
+	 * Details
+	 * @minItems 1
+	 */
 	details: (
 		| ({
 				typ: "1";
@@ -1764,7 +2626,89 @@ export interface MultipleOptionEventOutput {
 		  } & ActivityEventSchemaOutput)
 		| ({
 				typ: "7";
-		  } & InformationEventSchema)
+		  } & InformationEventSchemaOutput)
+	)[];
+}
+
+/** MultipleOptionEventPub */
+export interface MultipleOptionEventPubInput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/** Typ */
+	typ: "8";
+	/**
+	 * Details
+	 * @minItems 1
+	 */
+	details: (
+		| ({
+				typ: "1";
+		  } & FlightEventPubReadInput)
+		| ({
+				typ: "2";
+		  } & TrainEventPubReadInput)
+		| ({
+				typ: "3";
+		  } & BusEventPubReadInput)
+		| ({
+				typ: "4";
+		  } & TransferEventPubReadInput)
+		| ({
+				typ: "5";
+		  } & HousingEventPubReadInput)
+		| ({
+				typ: "6";
+		  } & ActivityEventPubReadInput)
+		| ({
+				typ: "7";
+		  } & InformationEventPubRead)
+	)[];
+}
+
+/** MultipleOptionEventPub */
+export interface MultipleOptionEventPubOutput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/** Typ */
+	typ: "8";
+	/**
+	 * Details
+	 * @minItems 1
+	 */
+	details: (
+		| ({
+				typ: "1";
+		  } & FlightEventPubReadOutput)
+		| ({
+				typ: "2";
+		  } & TrainEventPubReadOutput)
+		| ({
+				typ: "3";
+		  } & BusEventPubReadOutput)
+		| ({
+				typ: "4";
+		  } & TransferEventPubReadOutput)
+		| ({
+				typ: "5";
+		  } & HousingEventPubReadOutput)
+		| ({
+				typ: "6";
+		  } & ActivityEventPubReadOutput)
+		| ({
+				typ: "7";
+		  } & InformationEventPubRead)
 	)[];
 }
 
@@ -1790,8 +2734,83 @@ export interface OperatorFilesModel {
 	url: string;
 }
 
-/** OperatorFinancialSettingsModel */
-export interface OperatorFinancialSettingsModel {
+/** OperatorFinancialSettingsRead */
+export interface OperatorFinancialSettingsRead {
+	default_currency: Currency;
+	/**
+	 * Default Tour Margin
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	default_tour_margin: string;
+	/** Vat Enabled */
+	vat_enabled: boolean;
+	/**
+	 * Vat Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	vat_rate: string;
+	/** Profit Tax Enabled */
+	profit_tax_enabled: boolean;
+	/**
+	 * Profit Tax Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	profit_tax_rate: string;
+	/**
+	 * Default Markup
+	 * The markup calculation strategy.
+	 */
+	default_markup:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseOutput)
+		| ({
+				typ: "percentage";
+		  } & PercentageMarkup);
+	/** Default Staff Commission */
+	default_staff_commission: string | null;
+}
+
+/** OperatorFinancialSettingsUpdate */
+export interface OperatorFinancialSettingsUpdate {
+	default_currency?: Currency | null;
+	/** Default Tour Margin */
+	default_tour_margin?: number | string | null;
+	/** Vat Enabled */
+	vat_enabled?: boolean | null;
+	/** Vat Rate */
+	vat_rate?: number | string | null;
+	/** Profit Tax Enabled */
+	profit_tax_enabled?: boolean | null;
+	/** Profit Tax Rate */
+	profit_tax_rate?: number | string | null;
+	/**
+	 * Default Markup
+	 * The markup calculation strategy.
+	 */
+	default_markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Default Staff Commission */
+	default_staff_commission?: number | string | null;
+}
+
+/**
+ * OperatorFxRateModel
+ * Append-only FX rate ledger per operator.
+ *
+ * See ``src/operator/fx_rate/__init__.py`` for the append-only convention.
+ * The column type for ``from_currency`` / ``to_currency`` stays ``String(3)``;
+ * only the Python ``Mapped[...]`` annotation is the ``Currency`` StrEnum.
+ */
+export interface OperatorFxRateModel {
 	/**
 	 * Id
 	 * @format uuid
@@ -1802,22 +2821,20 @@ export interface OperatorFinancialSettingsModel {
 	 * @format uuid
 	 */
 	operator_id: string;
-	/** Default Currency */
-	default_currency: string | null;
-	/** Default Commission Rate */
-	default_commission_rate: number | null;
-	/** Default Tour Markup */
-	default_tour_markup: number | null;
-}
-
-/** OperatorFinancialSettingsUpdate */
-export interface OperatorFinancialSettingsUpdate {
-	/** Default Currency */
-	default_currency?: string | null;
-	/** Default Commission Rate */
-	default_commission_rate?: number | null;
-	/** Default Tour Markup */
-	default_tour_markup?: number | null;
+	from_currency: Currency;
+	to_currency: Currency;
+	/**
+	 * Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	rate: string;
+	/**
+	 * Valid From
+	 * @format date-time
+	 */
+	valid_from: string;
+	/** Created By */
+	created_by: string | null;
 }
 
 /** OperatorInfoModel */
@@ -1846,8 +2863,6 @@ export interface OperatorInfoModel {
 	director_name: string | null;
 	/** Tax Id */
 	tax_id: string | null;
-	/** Business Type */
-	business_type: string | null;
 	/** Contact Person */
 	contact_person: string | null;
 	/** Contact Position */
@@ -1878,8 +2893,6 @@ export interface OperatorInfoUpdate {
 	director_name?: string | null;
 	/** Tax Id */
 	tax_id?: string | null;
-	/** Business Type */
-	business_type?: string | null;
 	/** Contact Person */
 	contact_person?: string | null;
 	/** Contact Position */
@@ -1907,30 +2920,6 @@ export interface OperatorModel {
 	name: string;
 }
 
-/** PassengerCreateInfo */
-export interface PassengerCreateInfo {
-	/** Name */
-	name: string;
-	/** Surname */
-	surname: string;
-	gender: Gender;
-	nationality: Nationality;
-	/**
-	 * Date Of Birth
-	 * @format date-time
-	 */
-	date_of_birth: string;
-	/** Passport Num */
-	passport_num: string;
-	/**
-	 * Passport Expiry Date
-	 * @format date-time
-	 */
-	passport_expiry_date: string;
-	/** Comment */
-	comment: string;
-}
-
 /** PasswordChangeIn */
 export interface PasswordChangeIn {
 	/**
@@ -1945,6 +2934,35 @@ export interface PasswordChangeIn {
 	 * @maxLength 128
 	 */
 	new_password: string;
+}
+
+/** PaxCreate */
+export interface PaxCreate {
+	/**
+	 * Full Name
+	 * @maxLength 255
+	 */
+	full_name: string;
+	gender: Gender;
+	/** Nationality */
+	nationality: string;
+	/**
+	 * Date Of Birth
+	 * @format date
+	 */
+	date_of_birth: string;
+	/**
+	 * Passport Number
+	 * @maxLength 50
+	 */
+	passport_number: string;
+	/**
+	 * Expired Date
+	 * @format date
+	 */
+	expired_date: string;
+	/** Comment */
+	comment?: string | null;
 }
 
 /**
@@ -2013,6 +3031,19 @@ export interface PerPersonExpenseInput {
 	 * @default "per_person"
 	 */
 	typ?: "per_person";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	cost_per_person: MonetaryValueSchema;
 }
 
@@ -2026,6 +3057,19 @@ export interface PerPersonExpenseOutput {
 	 * @default "per_person"
 	 */
 	typ?: "per_person";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	cost_per_person: MonetaryValueSchema;
 }
 
@@ -2063,7 +3107,7 @@ export interface PerRoomCategoryExpensesOutput {
  */
 export interface PerRoomExpensesInput {
 	/** Typ */
-	typ: "per_car";
+	typ: "per_room";
 	/**
 	 * Rooms
 	 * All rooms
@@ -2077,12 +3121,99 @@ export interface PerRoomExpensesInput {
  */
 export interface PerRoomExpensesOutput {
 	/** Typ */
-	typ: "per_car";
+	typ: "per_room";
 	/**
 	 * Rooms
 	 * All rooms
 	 */
 	rooms: HousingRoomExpensesSchemaOutput[];
+}
+
+/**
+ * PercentageMarkup
+ * Adds a percentage on top of a base cost.
+ */
+export interface PercentageMarkup {
+	/** Typ */
+	typ: "percentage";
+	/**
+	 * Percentage
+	 * e.g., 0.15 for 15%
+	 * @exclusiveMin 0
+	 * @exclusiveMax 1
+	 */
+	percentage: number;
+}
+
+/** PriceRangeSchema */
+export interface PriceRangeSchema {
+	/** Min */
+	min: number | null;
+	/** Max */
+	max: number | null;
+	currency: Currency | null;
+}
+
+/** PublicTourCatalogSchema */
+export interface PublicTourCatalogSchemaInput {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tour_id: string;
+	/** Name */
+	name: string;
+	/** Cover Image Url */
+	cover_image_url: string | null;
+	/** Description */
+	description: string | null;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours: number | null;
+	/** Age From */
+	age_from: number | null;
+	/** Age To */
+	age_to: number | null;
+	/** Categories */
+	categories: TourCategory[];
+	tour_type: TourType;
+	/** Landing Photos */
+	landing_photos: string[];
+	price_range: PriceRangeSchema | null;
+}
+
+/** PublicTourCatalogSchema */
+export interface PublicTourCatalogSchemaOutput {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tour_id: string;
+	/** Name */
+	name: string;
+	/** Cover Image Url */
+	cover_image_url: string | null;
+	/** Description */
+	description: string | null;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours: number | null;
+	/** Age From */
+	age_from: number | null;
+	/** Age To */
+	age_to: number | null;
+	/** Categories */
+	categories: TourCategory[];
+	tour_type: TourType;
+	/** Landing Photos */
+	landing_photos: string[];
+	price_range: PriceRangeSchema | null;
 }
 
 /** RecurrenceDateModel */
@@ -2177,18 +3308,27 @@ export interface StaffInvite {
 	/**
 	 * Email
 	 * @format email
+	 * @maxLength 255
 	 */
 	email: string;
-	/** First Name */
+	/**
+	 * Password
+	 * @minLength 6
+	 * @maxLength 128
+	 */
+	password: string;
+	/**
+	 * First Name
+	 * @maxLength 255
+	 */
 	first_name: string;
-	/** Last Name */
+	/**
+	 * Last Name
+	 * @maxLength 255
+	 */
 	last_name: string;
 	/** Role */
 	role: StaffInviteRoleEnum;
-	/** Commission Split */
-	commission_split?: number | null;
-	/** @default "active" */
-	employment_status?: EmploymentStatus;
 }
 
 /** StaffRead */
@@ -2206,35 +3346,39 @@ export interface StaffRead {
 	email: string;
 	/** Role */
 	role: StaffReadRoleEnum;
-	status: EmploymentStatus | null;
-	/** Commission Split */
-	commission_split: number | null;
+	status: StaffStatus;
+	/** Commission Percent */
+	commission_percent: string | null;
 }
 
 /** StaffUpdate */
 export interface StaffUpdate {
+	/** First Name */
+	first_name?: string | null;
+	/** Last Name */
+	last_name?: string | null;
 	/** Role */
 	role?: StaffUpdateRoleEnum | null;
-	/** Commission Split */
-	commission_split?: number | null;
-	employment_status?: EmploymentStatus | null;
+	/** Status */
+	status?: StaffUpdateStatusEnum | null;
+	/** Commission Percent */
+	commission_percent?: number | string | null;
 }
 
 /** SupplierCreateSchema */
 export interface SupplierCreateSchema {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	typ: EventTypes;
-	/** Website Url */
-	website_url: string;
-	/** Logo Url */
-	logo_url?: string | null;
-	/** Contact Email */
-	contact_email?: string | null;
-	/** Contact Phone */
-	contact_phone?: string | null;
+	/**
+	 * Brand Name
+	 * @maxLength 255
+	 */
+	brand_name: string;
+	/** Legal Name */
+	legal_name?: string | null;
+	/** Phone */
+	phone?: string | null;
+	/** Website */
+	website?: string | null;
+	supplier_type: SupplierType;
 }
 
 /** SupplierListResponse */
@@ -2257,38 +3401,110 @@ export interface SupplierModel {
 	 * @format uuid
 	 */
 	operator_id: string;
-	typ: EventTypes;
-	/** Name */
-	name: string;
-	/** Description */
-	description: string | null;
+	/** Brand Name */
+	brand_name: string;
 	/** Legal Name */
 	legal_name: string | null;
-	/** Website Url */
-	website_url: string | null;
+	/** Phone */
+	phone: string | null;
+	/** Website */
+	website: string | null;
 	/** Logo Url */
 	logo_url: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
+	supplier_type: SupplierType;
+	/** Deleted At */
+	deleted_at: string | null;
+}
+
+/** SupplierPaymentCreate */
+export interface SupplierPaymentCreate {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/**
+	 * Item Id
+	 * @format uuid
+	 */
+	item_id: string;
+	/** Amount */
+	amount: number | string;
+	currency: Currency;
+	/** Rate */
+	rate: number | string;
+	/** Note */
+	note?: string | null;
+	/** @default "not_paid" */
+	status?: SupplierPaymentStatus;
+}
+
+/**
+ * SupplierPaymentModel
+ * Operator-scope supplier payment ledger entry.
+ *
+ * No ``booking_id``. ``item_id`` references ``tour_event.id`` or
+ * ``tour_option.id`` freely, enforced at the router/service layer — no FK
+ * constraint, to avoid cross-module coupling (see package docstring).
+ */
+export interface SupplierPaymentModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Operator Id
+	 * @format uuid
+	 */
+	operator_id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/**
+	 * Item Id
+	 * @format uuid
+	 */
+	item_id: string;
+	/**
+	 * Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	amount: string;
+	currency: Currency;
+	/**
+	 * Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	rate: string;
+	/** File */
+	file: string | null;
+	/** Note */
+	note: string | null;
+	status: SupplierPaymentStatus;
+	/** Paid At */
+	paid_at: string | null;
+}
+
+/** SupplierPaymentUpdate */
+export interface SupplierPaymentUpdate {
+	status?: SupplierPaymentStatus | null;
+	/** Note */
+	note?: string | null;
 }
 
 /** SupplierUpdateSchema */
 export interface SupplierUpdateSchema {
-	/** Name */
-	name?: string | null;
-	/** Description */
-	description?: string | null;
-	typ?: EventTypes | null;
-	/** Website Url */
-	website_url?: string | null;
-	/** Logo Url */
-	logo_url?: string | null;
-	/** Contact Email */
-	contact_email?: string | null;
-	/** Contact Phone */
-	contact_phone?: string | null;
+	/** Brand Name */
+	brand_name?: string | null;
+	/** Legal Name */
+	legal_name?: string | null;
+	/** Phone */
+	phone?: string | null;
+	/** Website */
+	website?: string | null;
 }
 
 /** TimeSchema */
@@ -2341,9 +3557,13 @@ export interface TourEventResponse {
 				  } & ActivityEventSchemaOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventSchemaOutput)
 		  )
 		| MultipleOptionEventOutput;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
 }
 
 /**
@@ -2370,13 +3590,9 @@ export interface TourFinSettingsModel {
 	id: string;
 	/** Tour Meta Id */
 	tour_meta_id: string | null;
-	pricing_visibility: TourPricingVisibility;
+	currency_type: Currency;
 	/** Markup */
-	markup: number;
-	/** Enumeration for supported currencies based on ISO 4217 codes. */
-	currency: CurrencyType;
-	/** Currency Rate To Uzs */
-	currency_rate_to_uzs: number;
+	markup: Record<string, any> | null;
 }
 
 /** TourListResponse */
@@ -2391,30 +3607,34 @@ export interface TourListResponse {
 export interface TourMetaCreateSchema {
 	/** Name */
 	name: string;
-	/** Description */
-	description: string;
 	/**
 	 * Days
+	 * @min 1
 	 * @default 1
 	 */
 	days?: number;
 	/**
 	 * Nights
+	 * @min 0
 	 * @default 0
 	 */
 	nights?: number;
-	/**
-	 * Age From
-	 * @default 18
-	 */
-	age_from?: number;
+	/** Duration Hours */
+	duration_hours?: number | null;
+	/** Age From */
+	age_from?: number | null;
+	/** Age To */
+	age_to?: number | null;
 	/**
 	 * Group Size
+	 * @min 1
 	 * @default 1
 	 */
 	group_size?: number;
-	/** @default "group" */
+	/** @default "regular" */
 	typ?: TourType;
+	/** Agency Id */
+	agency_id?: string | null;
 	/** Categories */
 	categories?: TourCategory[];
 }
@@ -2433,10 +3653,12 @@ export interface TourMetaModel {
 	operator_id: string;
 	/** Schedule Id */
 	schedule_id: string | null;
+	/** Agency Id */
+	agency_id: string | null;
+	/** Landing Id */
+	landing_id: string | null;
 	/** Name */
 	name: string;
-	/** Description */
-	description: string;
 	/** Cover Image Url */
 	cover_image_url: string | null;
 	/** Group Size */
@@ -2445,8 +3667,12 @@ export interface TourMetaModel {
 	days: number;
 	/** Nights */
 	nights: number;
+	/** Duration Hours */
+	duration_hours: number | null;
 	/** Age From */
-	age_from: number;
+	age_from: number | null;
+	/** Age To */
+	age_to: number | null;
 	typ: TourType;
 	status: TourStatus;
 	/** Categories */
@@ -2457,16 +3683,20 @@ export interface TourMetaModel {
 export interface TourMetaUpdateSchema {
 	/** Name */
 	name?: string | null;
-	/** Description */
-	description?: string | null;
 	status?: TourStatus | null;
 	typ?: TourType | null;
+	/** Agency Id */
+	agency_id?: string | null;
 	/** Days */
 	days?: number | null;
 	/** Nights */
 	nights?: number | null;
+	/** Duration Hours */
+	duration_hours?: number | null;
 	/** Age From */
 	age_from?: number | null;
+	/** Age To */
+	age_to?: number | null;
 	/** Group Size */
 	group_size?: number | null;
 	/** Categories */
@@ -2475,14 +3705,72 @@ export interface TourMetaUpdateSchema {
 
 /** TourMinMaxCostSchema */
 export interface TourMinMaxCostSchemaInput {
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	min: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	max: MonetaryValueSchema;
 }
 
 /** TourMinMaxCostSchema */
 export interface TourMinMaxCostSchemaOutput {
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	min: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
 	max: MonetaryValueSchema;
+}
+
+/** TourOptionCreateSchema */
+export interface TourOptionCreateSchema {
+	/** Name */
+	name?: string | null;
 }
 
 /** TourOptionModel */
@@ -2494,6 +3782,80 @@ export interface TourOptionModel {
 	id: string;
 	/** Tour Meta Id */
 	tour_meta_id: string | null;
+	/** Name */
+	name: string | null;
+	/** Deleted At */
+	deleted_at: string | null;
+}
+
+/** TourOptionPublicResponse */
+export interface TourOptionPublicResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Events */
+	events: (
+		| (
+				| ({
+						typ: "1";
+				  } & FlightEventPubReadOutput)
+				| ({
+						typ: "2";
+				  } & TrainEventPubReadOutput)
+				| ({
+						typ: "3";
+				  } & BusEventPubReadOutput)
+				| ({
+						typ: "4";
+				  } & TransferEventPubReadOutput)
+				| ({
+						typ: "5";
+				  } & HousingEventPubReadOutput)
+				| ({
+						typ: "6";
+				  } & ActivityEventPubReadOutput)
+				| ({
+						typ: "7";
+				  } & InformationEventPubRead)
+		  )
+		| MultipleOptionEventPubOutput
+	)[];
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	total_price: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	total_price_max: MonetaryValueSchema;
+}
+
+/** TourOptionUpdateSchema */
+export interface TourOptionUpdateSchema {
+	/** Name */
+	name?: string | null;
 }
 
 /** TourScheduleModel */
@@ -2523,6 +3885,19 @@ export interface TourSummaryResponse {
 	/** Events */
 	events: AnyEventWithCostOutput[];
 	tour_cost: TourMinMaxCostSchemaOutput;
+	tour_markup: TourMinMaxCostSchemaOutput;
+}
+
+/** TrainDetailPubSchema */
+export interface TrainDetailPubSchemaInput {
+	/** Hop */
+	hop: TrainHopPubSchemaInput[];
+}
+
+/** TrainDetailPubSchema */
+export interface TrainDetailPubSchemaOutput {
+	/** Hop */
+	hop: TrainHopPubSchemaOutput[];
 }
 
 /** TrainDetailSchema */
@@ -2535,6 +3910,42 @@ export interface TrainDetailSchemaInput {
 export interface TrainDetailSchemaOutput {
 	/** Hop */
 	hop: TrainHopSchemaOutput[];
+}
+
+/** TrainEventPubRead */
+export interface TrainEventPubReadInput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details: TrainDetailPubSchemaInput;
+}
+
+/** TrainEventPubRead */
+export interface TrainEventPubReadOutput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details: TrainDetailPubSchemaOutput;
 }
 
 /** TrainEventSchema */
@@ -2559,6 +3970,23 @@ export interface TrainEventSchemaInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "2"
@@ -2589,12 +4017,45 @@ export interface TrainEventSchemaOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "2"
 	 */
 	typ?: "2";
 	details: TrainDetailSchemaOutput;
+}
+
+/** TrainHopPubSchema */
+export interface TrainHopPubSchemaInput {
+	/** Represents either a departure or arrival point for the train journey. */
+	departure: TrainJourneyPointSchemaInput;
+	/** Represents either a departure or arrival point for the train journey. */
+	arrival: TrainJourneyPointSchemaInput;
+}
+
+/** TrainHopPubSchema */
+export interface TrainHopPubSchemaOutput {
+	/** Represents either a departure or arrival point for the train journey. */
+	departure: TrainJourneyPointSchemaOutput;
+	/** Represents either a departure or arrival point for the train journey. */
+	arrival: TrainJourneyPointSchemaOutput;
 }
 
 /**
@@ -2677,7 +4138,7 @@ export interface TrainJourneyPointSchemaOutput {
 
 /** TransferCarCategoriesVariant */
 export interface TransferCarCategoriesVariantInput {
-	typ: TransferCarTypes;
+	typ: VehicleBodyType;
 	/** Pax */
 	pax: number;
 	/**
@@ -2691,7 +4152,7 @@ export interface TransferCarCategoriesVariantInput {
 
 /** TransferCarCategoriesVariant */
 export interface TransferCarCategoriesVariantOutput {
-	typ: TransferCarTypes;
+	typ: VehicleBodyType;
 	/** Pax */
 	pax: number;
 	/**
@@ -2733,7 +4194,7 @@ export interface TransferCarPackageCategorySchemaOutput {
 
 /** TransferCarVariant */
 export interface TransferCarVariantInput {
-	typ: TransferCarTypes;
+	typ: VehicleBodyType;
 	/** Pax */
 	pax: number;
 	/**
@@ -2747,7 +4208,7 @@ export interface TransferCarVariantInput {
 
 /** TransferCarVariant */
 export interface TransferCarVariantOutput {
-	typ: TransferCarTypes;
+	typ: VehicleBodyType;
 	/** Pax */
 	pax: number;
 	/**
@@ -2757,6 +4218,24 @@ export interface TransferCarVariantOutput {
 	description: string;
 	/** A simple fixed cost, ignores all context. */
 	expenses: FixedExpenseOutput;
+}
+
+/** TransferDetailsPubSchema */
+export interface TransferDetailsPubSchemaInput {
+	typ: TransferTypes;
+	/** Represents either a departure or arrival point for the journey. */
+	departure: TransferJourneyPointSchemaInput;
+	/** Represents either a departure or arrival point for the journey. */
+	arrival: TransferJourneyPointSchemaInput;
+}
+
+/** TransferDetailsPubSchema */
+export interface TransferDetailsPubSchemaOutput {
+	typ: TransferTypes;
+	/** Represents either a departure or arrival point for the journey. */
+	departure: TransferJourneyPointSchemaOutput;
+	/** Represents either a departure or arrival point for the journey. */
+	arrival: TransferJourneyPointSchemaOutput;
 }
 
 /**
@@ -2811,6 +4290,42 @@ export interface TransferDetailsSchemaOutput {
 		  } & PerPersonExpenseOutput);
 }
 
+/** TransferEventPubRead */
+export interface TransferEventPubReadInput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details: TransferDetailsPubSchemaInput;
+}
+
+/** TransferEventPubRead */
+export interface TransferEventPubReadOutput {
+	/** Name */
+	name: string;
+	/** Description */
+	description: string;
+	/** Day */
+	day: number;
+	/** Position */
+	position: number;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details: TransferDetailsPubSchemaOutput;
+}
+
 /** TransferEventSchema */
 export interface TransferEventSchemaInput {
 	/**
@@ -2833,6 +4348,23 @@ export interface TransferEventSchemaInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "4"
@@ -2864,6 +4396,23 @@ export interface TransferEventSchemaOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 	/**
 	 * Typ
 	 * @default "4"
@@ -2909,12 +4458,21 @@ export interface TransferJourneyPointSchemaOutput {
 
 /** UpdateFinancialSchema */
 export interface UpdateFinancialSchema {
-	pricing_visibility?: TourPricingVisibility | null;
-	/** Markup */
-	markup?: number | null;
-	currency?: CurrencyType | null;
-	/** Currency Rate To Uzs */
-	currency_rate_to_uzs?: number | null;
+	currency_type?: Currency | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** UpdateUserSchema */
@@ -2934,7 +4492,7 @@ export interface UserProfileUpdate {
 	phone_number?: string | null;
 	/** Location */
 	location?: string | null;
-	preferred_currency?: CurrencyCode | null;
+	default_currency?: Currency | null;
 }
 
 /** ValidationError */
@@ -2962,6 +4520,11 @@ export enum StaffReadRoleEnum {
 export enum StaffUpdateRoleEnum {
 	OperatorSalesManager = "operator_sales_manager",
 	OperatorAccountant = "operator_accountant"
+}
+
+export enum StaffUpdateStatusEnum {
+	Active = "active",
+	Inactive = "inactive"
 }
 
 export interface GetUserAdminUserIdGetParams {
@@ -3011,6 +4574,8 @@ export interface ListToursTourGetParams {
 	desc?: boolean;
 	/** Status */
 	status?: TourStatus | null;
+	/** Typ */
+	typ?: TourType | null;
 	/** Q */
 	q?: string | null;
 	/** @default "created_at" */
@@ -3065,12 +4630,29 @@ export interface ListAllTourOptionsTourTourIdOptionAllGetParams {
 	tourId: string;
 }
 
+/** Payload */
+export type CreateTourOptionTourTourIdOptionCreatePostPayload =
+	TourOptionCreateSchema | null;
+
 export interface CreateTourOptionTourTourIdOptionCreatePostParams {
 	/**
 	 * Tour Id
 	 * @format uuid
 	 */
 	tourId: string;
+}
+
+export interface UpdateTourOptionTourTourIdOptionOptionIdPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 }
 
 export interface DeleteOptionTourTourIdOptionOptionIdDeleteParams {
@@ -3087,21 +4669,18 @@ export interface DeleteOptionTourTourIdOptionOptionIdDeleteParams {
 }
 
 export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
-	/**
-	 * Enumeration for supported currencies based on ISO 4217 codes.
-	 * @default "USD"
-	 */
-	currency?: CurrencyType;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	/** @default "USD" */
+	currency?: Currency;
 	/**
 	 * Tour Id
 	 * @format uuid
 	 */
 	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 }
 
 export interface GetTourFinancialsTourTourIdFinanceGetParams {
@@ -3113,6 +4692,10 @@ export interface GetTourFinancialsTourTourIdFinanceGetParams {
 }
 
 export interface CreateTourFinancialsTourTourIdFinancePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
 	tourId: string;
 }
 
@@ -3147,7 +4730,7 @@ export type CreateEventTourTourIdOptionIdEventPostPayload =
 			  } & ActivityEventSchemaInput)
 			| ({
 					typ: "7";
-			  } & InformationEventSchema)
+			  } & InformationEventSchemaInput)
 	  )
 	| MultipleOptionEventInput;
 
@@ -3518,6 +5101,34 @@ export interface DeleteLandingImageTourTourIdLandingImagesImageIdDeleteParams {
 	imageId: string;
 }
 
+export interface SetPrimaryLandingImageTourTourIdLandingImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface GetPublicTourOptionTourPublicTourIdOptionOptionIdGetParams {
+	/** @default "USD" */
+	currency?: Currency;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
 export interface UdpateOperatorOperatorIdPatchParams {
 	/**
 	 * Id
@@ -3566,6 +5177,45 @@ export interface UpdateStaffMemberOperatorStaffUserIdPatchParams {
 	userId: string;
 }
 
+export interface GetFxRateOperatorMeFxRateFxRateIdGetParams {
+	/**
+	 * Fx Rate Id
+	 * @format uuid
+	 */
+	fxRateId: string;
+}
+
+export interface ListSupplierPaymentsOperatorMeSupplierPaymentGetParams {
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Item Id */
+	item_id?: string | null;
+}
+
+export interface GetSupplierPaymentOperatorMeSupplierPaymentPaymentIdGetParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface UpdateSupplierPaymentOperatorMeSupplierPaymentPaymentIdPatchParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface UploadReceiptOperatorMeSupplierPaymentPaymentIdReceiptPostParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
 export interface ListSuppliersSupplierGetParams {
 	/**
 	 * Skip
@@ -3577,8 +5227,10 @@ export interface ListSuppliersSupplierGetParams {
 	 * @default 100
 	 */
 	limit?: number;
-	/** Typ */
-	typ?: EventTypes | null;
+	/** Supplier Type */
+	supplier_type?: SupplierType | null;
+	/** Q */
+	q?: string | null;
 }
 
 export interface GetSupplierSupplierSupplierIdGetParams {
@@ -3629,9 +5281,46 @@ export interface DeleteLogoSupplierSupplierIdLogoDeleteParams {
 	supplierId: string;
 }
 
+export interface GetAgencyDocumentUrlAgencyMeDocumentsFileIdGetParams {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface RemoveAgencyDocumentAgencyMeDocumentsFileIdDeleteParams {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface ListAgencyCatalogAgencyCatalogGetParams {
+	/**
+	 * Skip
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 200
+	 * @default 50
+	 */
+	limit?: number;
+	/** Sort */
+	sort?: TourCatalogSort | null;
+	/** Q */
+	q?: string | null;
+}
+
 export interface ListMyBookingsBookingOrderMyGetParams {
 	/** Booking Status */
-	booking_status: BookingStatus | null;
+	booking_status?: BookingStatus | null;
+	/** Tour Id */
+	tour_id?: string | null;
 }
 
 export interface GetBookingOrderBookingOrderBookingIdGetParams {
@@ -3642,13 +5331,13 @@ export interface GetBookingOrderBookingOrderBookingIdGetParams {
 	bookingId: string;
 }
 
-export interface UpdateBookingStatusBookingOrderBookingIdStatusUpdatePatchParams {
-	status: BookingStatus;
+export interface TransitionBookingStatusBookingOrderBookingIdStatusTransitionPatchParams {
 	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	bookingId: string;
+	transition: BookingTransition;
 }
 
 export interface CancelBookingBookingOrderBookingIdCancelPostParams {
@@ -3659,7 +5348,7 @@ export interface CancelBookingBookingOrderBookingIdCancelPostParams {
 	bookingId: string;
 }
 
-export interface AddPassengerInfoBookingPaxBookingIdPostParams {
+export interface AddPassengerInfoBookingOrderBookingIdPaxPostParams {
 	/**
 	 * Booking Id
 	 * @format uuid
@@ -3667,7 +5356,7 @@ export interface AddPassengerInfoBookingPaxBookingIdPostParams {
 	bookingId: string;
 }
 
-export interface ListPassengerInfoBookingPaxBookingIdGetParams {
+export interface ListPassengerInfoBookingOrderBookingIdPaxGetParams {
 	/**
 	 * Booking Id
 	 * @format uuid
@@ -3675,7 +5364,20 @@ export interface ListPassengerInfoBookingPaxBookingIdGetParams {
 	bookingId: string;
 }
 
-export interface GetFileBinaryBookingPaxFileFileIdGetParams {
+export interface UploadPassengerPassportBookingOrderBookingIdPaxPaxIdPassportPostParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Pax Id
+	 * @format uuid
+	 */
+	paxId: string;
+}
+
+export interface GetFileBinaryBookingOrderPaxFileFileIdGetParams {
 	/**
 	 * File Id
 	 * @format uuid
@@ -3683,7 +5385,7 @@ export interface GetFileBinaryBookingPaxFileFileIdGetParams {
 	fileId: string;
 }
 
-export interface RemoveFileBookingPaxFileFileIdDeleteParams {
+export interface RemoveFileBookingOrderPaxFileFileIdDeleteParams {
 	/**
 	 * File Id
 	 * @format uuid

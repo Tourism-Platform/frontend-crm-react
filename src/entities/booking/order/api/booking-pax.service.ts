@@ -1,4 +1,8 @@
-import { BOOKING_PASSENGER_PATHS, ENUM_API_TAGS } from "@/shared/api";
+import {
+	BOOKING_PASSENGER_FILES_PATHS,
+	BOOKING_PASSENGER_PATHS,
+	ENUM_API_TAGS
+} from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -35,7 +39,7 @@ export const bookingPaxApi = authApi.injectEndpoints({
 		}),
 		getFileBinary: builder.query<Blob, string>({
 			query: (id) => ({
-				...BOOKING_PASSENGER_PATHS.getFileBinary(id),
+				...BOOKING_PASSENGER_FILES_PATHS.getFileBinary(id),
 				responseHandler: (response) => response.blob()
 			})
 		}),
@@ -44,7 +48,7 @@ export const bookingPaxApi = authApi.injectEndpoints({
 			{ fileId: string; bookingId: string }
 		>({
 			query: ({ fileId }) => ({
-				...BOOKING_PASSENGER_PATHS.removeFile(fileId)
+				...BOOKING_PASSENGER_FILES_PATHS.removeFile(fileId)
 			}),
 			invalidatesTags: (_result, _error, { bookingId }) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id: `PAX_${bookingId}` }

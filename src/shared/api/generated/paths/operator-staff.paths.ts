@@ -1,8 +1,4 @@
-import type {
-	BodyInviteStaffOperatorStaffInvitePost,
-	StaffRead,
-	StaffUpdate
-} from "../Api";
+import type { StaffInvite, StaffRead, StaffUpdate } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -16,11 +12,7 @@ export const OPERATOR_STAFF_PATHS = {
 	inviteStaff: {
 		url: "/operator/staff/invite",
 		method: "POST",
-		_types: {} as {
-			body: BodyInviteStaffOperatorStaffInvitePost;
-			query: void;
-			response: StaffRead;
-		}
+		_types: {} as { body: StaffInvite; query: void; response: StaffRead }
 	} as const,
 	updateStaffMember: (userId: string) =>
 		({

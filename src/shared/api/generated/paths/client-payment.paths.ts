@@ -75,6 +75,6 @@ export const CLIENT_PAYMENT_PATHS = {
 		({
 			url: `/booking/payment/${paymentId}/attachment`,
 			method: "GET",
-			_types: {} as { body: void; query: void; response: string }
+			_types: {} as { body: void; query: void; response: void }
 		}) as const
 } as const;

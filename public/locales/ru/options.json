@@ -43,13 +43,22 @@
 			"group": "Группа"
 		},
 		"tourCategories": {
-			"beach": "Пляжный",
-			"mountain": "Горный",
-			"city": "Городской",
-			"safari": "Сафари",
-			"cruise": "Круиз",
-			"gastronomic": "Гастрономический",
-			"extreme": "Экстремальный"
+			"cultural_historical": "Культурно-исторический",
+			"religious_spiritual": "Религиозно-духовный",
+			"archaeological": "Археологический",
+			"adventure_outdoor": "Приключенческий и активный",
+			"eco_nature": "Эко и природа",
+			"hiking_trekking": "Хайкинг и треккинг",
+			"city_tour": "Городской тур",
+			"gastronomy_culinary": "Гастрономический",
+			"photography_creative": "Фото и творчество",
+			"educational": "Образовательный",
+			"master_class_workshop": "Мастер-классы и воркшопы",
+			"wellness_spa": "Велнес и СПА",
+			"yoga_meditation": "Йога и медитация",
+			"business_mice": "Бизнес и MICE",
+			"family_kids": "Для семьи и детей",
+			"multi_destination": "Многодневный тур"
 		},
 		"visibility": {
 			"show_from": "Показывать цену 'от'",

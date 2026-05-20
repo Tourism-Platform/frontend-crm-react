@@ -1,6 +1,8 @@
 import type {
-	CurrencyType,
+	Currency,
+	TourOptionCreateSchema,
 	TourOptionModel,
+	TourOptionUpdateSchema,
 	TourSummaryResponse
 } from "../Api";
 
@@ -22,7 +24,21 @@ export const TOUR_OPTION_PATHS = {
 		({
 			url: `/tour/${tourId}/option/create`,
 			method: "POST",
-			_types: {} as { body: void; query: void; response: TourOptionModel }
+			_types: {} as {
+				body: TourOptionCreateSchema | null;
+				query: void;
+				response: TourOptionModel;
+			}
+		}) as const,
+	updateTourOption: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/option/${optionId}`,
+			method: "PATCH",
+			_types: {} as {
+				body: TourOptionUpdateSchema;
+				query: void;
+				response: TourOptionModel;
+			}
 		}) as const,
 	deleteOption: (tourId: string, optionId: string) =>
 		({
@@ -36,7 +52,7 @@ export const TOUR_OPTION_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { currency?: CurrencyType };
+				query: { currency?: Currency };
 				response: TourSummaryResponse;
 			}
 		}) as const

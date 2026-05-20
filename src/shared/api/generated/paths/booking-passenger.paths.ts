@@ -1,7 +1,8 @@
 import type {
-	BodyAddPassengerInfoBookingPaxBookingIdPost,
+	BodyUploadPassengerPassportBookingOrderBookingIdPaxPaxIdPassportPost,
+	BookingPaxFilesModel,
 	BookingPaxModel,
-	OperatorFilesModel
+	PaxCreate
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -10,7 +11,7 @@ import type {
 export const BOOKING_PASSENGER_PATHS = {
 	listPassengerInfo: (bookingId: string) =>
 		({
-			url: `/booking/pax/${bookingId}`,
+			url: `/booking/order/${bookingId}/pax`,
 			method: "GET",
 			_types: {} as {
 				body: void;
@@ -20,24 +21,22 @@ export const BOOKING_PASSENGER_PATHS = {
 		}) as const,
 	addPassengerInfo: (bookingId: string) =>
 		({
-			url: `/booking/pax/${bookingId}`,
+			url: `/booking/order/${bookingId}/pax`,
 			method: "POST",
 			_types: {} as {
-				body: BodyAddPassengerInfoBookingPaxBookingIdPost;
+				body: PaxCreate;
 				query: void;
-				response: OperatorFilesModel[];
+				response: BookingPaxModel;
 			}
 		}) as const,
-	getFileBinary: (fileId: string) =>
+	uploadPassengerPassport: (bookingId: string, paxId: string) =>
 		({
-			url: `/booking/pax/file/${fileId}`,
-			method: "GET",
-			_types: {} as { body: void; query: void; response: void }
-		}) as const,
-	removeFile: (fileId: string) =>
-		({
-			url: `/booking/pax/file/${fileId}`,
-			method: "DELETE",
-			_types: {} as { body: void; query: void; response: void }
+			url: `/booking/order/${bookingId}/pax/${paxId}/passport`,
+			method: "POST",
+			_types: {} as {
+				body: BodyUploadPassengerPassportBookingOrderBookingIdPaxPaxIdPassportPost;
+				query: void;
+				response: BookingPaxFilesModel;
+			}
 		}) as const
 } as const;

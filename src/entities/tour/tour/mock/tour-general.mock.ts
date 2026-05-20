@@ -10,5 +10,8 @@ export const TOUR_GENERAL_MOCK = {
 	duration_to: 10,
 	age_requires_from: 18,
 	age_requires_to: 65,
-	categories: [ENUM_TOUR_CATEGORY.BEACH, ENUM_TOUR_CATEGORY.MOUNTAIN]
+	categories: [
+		ENUM_TOUR_CATEGORY.CULTURAL_HISTORICAL,
+		ENUM_TOUR_CATEGORY.ARCHAEOLOGICAL
+	]
 };

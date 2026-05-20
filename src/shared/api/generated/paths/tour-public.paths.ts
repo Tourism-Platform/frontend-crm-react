@@ -1,17 +1,17 @@
-import type { Currency, TourSummaryResponse } from "../Api";
+import type { Currency, TourOptionPublicResponse } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
-export const PRICING_REVIEW_PATHS = {
-	getTourSummary: (tourId: string, optionId: string) =>
+export const TOUR_PUBLIC_PATHS = {
+	getPublicTourOption: (tourId: string, optionId: string) =>
 		({
-			url: `/tour/${tourId}/option/${optionId}/summary`,
+			url: `/tour/public/${tourId}/option/${optionId}`,
 			method: "GET",
 			_types: {} as {
 				body: void;
 				query: { currency?: Currency };
-				response: TourSummaryResponse;
+				response: TourOptionPublicResponse;
 			}
 		}) as const
 } as const;

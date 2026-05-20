@@ -1,7 +1,6 @@
 import {
 	BOOKING_ORDER_PATHS,
 	type BookingCancel,
-	type BookingStatus,
 	ENUM_API_TAGS
 } from "@/shared/api";
 
@@ -62,11 +61,10 @@ export const bookingOrderApi = authApi.injectEndpoints({
 		}),
 		updateBookingStatus: builder.mutation<
 			IOrderDetail,
-			{ id: string; status: BookingStatus }
+			{ id: string; status: string }
 		>({
 			query: ({ id, status }) => ({
-				...BOOKING_ORDER_PATHS.updateBookingStatus(id),
-				params: { status }
+				...BOOKING_ORDER_PATHS.transitionBookingStatus(id, status)
 			}),
 			transformResponse: (response: TBookingOrderBackend) =>
 				mapBookingOrderDetailToFrontend(
