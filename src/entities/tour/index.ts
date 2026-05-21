@@ -4,3 +4,5 @@ export * from "./activity-log";
 export * from "./tour";
 export * from "./catalog";
 export * from "./schedule";
+export * from "./preview-tour";
+export * from "./preview-booking";

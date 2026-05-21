@@ -1,5 +1,6 @@
 import { HttpResponse, delay, http } from "msw";
 
+import { TOUR_PATHS, createMockHandler } from "@/shared/api";
 import { ENV } from "@/shared/config";
 
 import {
@@ -89,24 +90,8 @@ export const tourHandlers = [
 
 		return HttpResponse.json(detailTour, { status: 200 });
 	}),
-	http.patch(`${BASE_URL}/tours/:id/general`, async ({ request, params }) => {
-		await delay(500);
-		const { id } = params;
-		const body = (await request.json()) as Partial<TTourFinanceBackend>;
-		const index = tours.findIndex((t) => t.id === id);
-
-		if (index === -1) {
-			return new HttpResponse(null, { status: 404 });
-		}
-
-		const updatedTour = {
-			...TOUR_GENERAL_MOCK,
-			...tours[index],
-			...body,
-			id: id as string
-		};
-
-		return HttpResponse.json(updatedTour, { status: 200 });
+	createMockHandler(TOUR_PATHS.getTour(":tourId"), () => {
+		return HttpResponse.json(TOUR_GENERAL_MOCK, { status: 200 });
 	}),
 	http.get(`${BASE_URL}/tours/:id/finance`, async ({ params }) => {
 		await delay(500);

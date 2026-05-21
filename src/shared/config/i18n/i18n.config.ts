@@ -30,6 +30,9 @@ import multiply_option_edit_page from "../../../../public/locales/en/tours/event
 import tour_details_edit_page from "../../../../public/locales/en/tours/events/tour_details_edit_page.json";
 import transportation_edit_page from "../../../../public/locales/en/tours/events/transportation_edit_page.json";
 import landing_page from "../../../../public/locales/en/tours/landing_page.json";
+import preview_booking_page from "../../../../public/locales/en/tours/preview_booking_page.json";
+import preview_option_page from "../../../../public/locales/en/tours/preview_option_page.json";
+import preview_tour_page from "../../../../public/locales/en/tours/preview_tour_page.json";
 import tour_activity_log_page from "../../../../public/locales/en/tours/tour_activity_log_page.json";
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
 import tour_order_history_page from "../../../../public/locales/en/tours/tour_order_history_page.json";
@@ -79,6 +82,9 @@ export type TTourSettingsPage = typeof tour_settings_page;
 export type TCommonTours = typeof common_tours;
 export type TToursCatalogPage = typeof tours_catalog_page;
 export type TToursSearchPage = typeof tours_search_page;
+export type TPreviewTourPage = typeof preview_tour_page;
+export type TPreviewOptionPage = typeof preview_option_page;
+export type TPreviewBookingPage = typeof preview_booking_page;
 
 export type TOrderIdPage = typeof order_id_page;
 export type TLandingPage = typeof landing_page;
@@ -124,6 +130,9 @@ export type TResources = {
 	common_tours: TCommonTours;
 	tours_catalog_page: TToursCatalogPage;
 	tours_search_page: TToursSearchPage;
+	preview_tour_page: TPreviewTourPage;
+	preview_option_page: TPreviewOptionPage;
+	preview_booking_page: TPreviewBookingPage;
 	not_found_page: TNotFoundPage;
 
 	options: TOptions;
@@ -168,6 +177,9 @@ export const NS = [
 	"common_tours",
 	"tours_catalog_page",
 	"tours_search_page",
+	"preview_tour_page",
+	"preview_option_page",
+	"preview_booking_page",
 	"not_found_page",
 
 	"options"
@@ -228,3 +240,6 @@ export type TCommonKeys = TNestedKeyOf<TCommon>;
 export type TCommonToursKeys = TNestedKeyOf<TCommonTours>;
 export type TToursCatalogPageKeys = TNestedKeyOf<TToursCatalogPage>;
 export type TToursSearchPageKeys = TNestedKeyOf<TToursSearchPage>;
+export type TPreviewTourPageKeys = TNestedKeyOf<TPreviewTourPage>;
+export type TPreviewOptionPageKeys = TNestedKeyOf<TPreviewOptionPage>;
+export type TPreviewBookingPageKeys = TNestedKeyOf<TPreviewBookingPage>;

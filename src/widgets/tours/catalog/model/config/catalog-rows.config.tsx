@@ -1,6 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
+import { Link } from "react-router-dom";
 
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 
 import {
@@ -52,9 +54,15 @@ export const CATALOG_COLUMNS = (
 			},
 			accessorKey: "title",
 			cell: ({ row }) => (
-				<div className="font-medium max-w-xs truncate">
-					{row.getValue("title")}
-				</div>
+				<Link
+					to={buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
+						tourId: row.original.id
+					})}
+				>
+					<div className="font-medium max-w-xs truncate text-blue-500 hover:text-blue-600 hover:underline">
+						{row.getValue("title")}
+					</div>
+				</Link>
 			),
 			size: 300
 		},

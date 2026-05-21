@@ -2,7 +2,7 @@ import type { ICatalogTourBackend } from "../types";
 
 export const CATALOG_TOURS_MOCK: ICatalogTourBackend[] = [
 	{
-		id: "catalog-tour-1",
+		id: "0f042356-075c-4c44-a82d-e054108ea3f2",
 		title: "Catalog: Ancient Wonders of Samarkand",
 		price_from: 450,
 		price_to: 900,

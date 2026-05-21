@@ -2,6 +2,7 @@ import { ENV } from "@/shared/config";
 
 export const initMsw = async () => {
 	if (ENV.VITE_APP_ENV === "dev" && ENV.VITE_ENABLE_MSW === "true") {
+		console.log("MSW enabled");
 		const { worker } = await import("@/app/mws/browser");
 		return worker.start({
 			onUnhandledRequest: "bypass"

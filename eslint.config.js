@@ -40,6 +40,7 @@ export default defineConfig([
 
       // Проверка логов пока выключим
       'no-console': 'off',
+      '@typescript-eslint/no-explicit-any': 'off', 
       
       // Отключаем React Refresh предупреждения
       'react-refresh/only-export-components': 'off',

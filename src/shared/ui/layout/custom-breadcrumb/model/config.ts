@@ -21,7 +21,10 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 
 	// Tours
 	[ENUM_PATH.TOURS.ROOT]: "owner.tours.general.title",
-	[ENUM_PATH.TOURS.CATALOG]: "owner.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.ROOT]: "owner.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR]: "owner.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION]: "owner.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.BOOKING]: "owner.tours.general.title",
 	[ENUM_PATH.TOURS.SEARCH]: "owner.tours.general.title",
 	[ENUM_PATH.TOURS.OVERVIEW]: "owner.tours.general.menu.overview",
 	[ENUM_PATH.TOURS.LANDING]: "owner.tours.general.menu.landing",

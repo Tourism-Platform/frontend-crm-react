@@ -23,6 +23,11 @@ const badgeVariants = cva(
 				yellow: "bg-yellow-500/20 text-yellow-600 border-none rounded-sm",
 				orange: "bg-orange-500/20 text-orange-600 border-none rounded-sm",
 				cyan: "bg-cyan-500/20 text-cyan-600 border-none rounded-sm"
+			},
+			size: {
+				sm: "h-6 px-2.5 text-xs",
+				md: "h-8 px-3.5 text-sm",
+				lg: "h-10 px-4.5 text-base"
 			}
 		},
 		defaultVariants: {
@@ -36,6 +41,7 @@ export type BadgeVariant = VariantProps<typeof badgeVariants>["variant"];
 function Badge({
 	className,
 	variant,
+	size,
 	asChild = false,
 	...props
 }: React.ComponentProps<"span"> &
@@ -45,7 +51,7 @@ function Badge({
 	return (
 		<Comp
 			data-slot="badge"
-			className={cn(badgeVariants({ variant }), className)}
+			className={cn(badgeVariants({ variant, size }), className)}
 			{...props}
 		/>
 	);

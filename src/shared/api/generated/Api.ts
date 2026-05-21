@@ -2339,6 +2339,19 @@ export interface LandingPageImageModel {
 	is_primary: boolean;
 }
 
+/** LandingPageImagePubSchema */
+export interface LandingPageImagePubSchema {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Image Url */
+	image_url: string;
+	/** Is Primary */
+	is_primary: boolean;
+}
+
 /** LandingPageModel */
 export interface LandingPageModel {
 	/**
@@ -2368,6 +2381,34 @@ export interface LandingPageModel {
 	amenities_included: SrcCommonConstantsAmenitiesTypes[];
 	/** Amenities Not Included */
 	amenities_not_included: SrcCommonConstantsAmenitiesTypes[];
+}
+
+/** LandingPagePubSchema */
+export interface LandingPagePubSchema {
+	/** Title */
+	title: string | null;
+	/** Overview */
+	overview: string;
+	/** Description */
+	description: string | null;
+	/** Overview Description */
+	overview_description: string | null;
+	/** Pickup Description */
+	pickup_description: string | null;
+	/** Additional Information */
+	additional_information: string | null;
+	/** Cancellation Policy */
+	cancellation_policy: string | null;
+	/** Languages */
+	languages: Language[];
+	/** Pickup Type */
+	pickup_type: PickupType[];
+	/** Amenities Included */
+	amenities_included: SrcCommonConstantsAmenitiesTypes[];
+	/** Amenities Not Included */
+	amenities_not_included: SrcCommonConstantsAmenitiesTypes[];
+	/** Images */
+	images: LandingPageImagePubSchema[];
 }
 
 /** LandingPageUpdate */
@@ -2918,6 +2959,33 @@ export interface OperatorModel {
 	id: string;
 	/** Name */
 	name: string;
+}
+
+/** OperatorPreviewPubSchema */
+export interface OperatorPreviewPubSchema {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Business Name */
+	business_name: string | null;
+	/** Description */
+	description: string | null;
+	/** Website Url */
+	website_url: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
+	/** Address Line */
+	address_line: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
+	/** Logo Url */
+	logo_url: string | null;
 }
 
 /** PasswordChangeIn */
@@ -5114,7 +5182,7 @@ export interface SetPrimaryLandingImageTourTourIdLandingImagesImageIdSetPrimaryP
 	imageId: string;
 }
 
-export interface GetPublicTourOptionTourPublicTourIdOptionOptionIdGetParams {
+export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdGetParams {
 	/** @default "USD" */
 	currency?: Currency;
 	/**
@@ -5127,6 +5195,22 @@ export interface GetPublicTourOptionTourPublicTourIdOptionOptionIdGetParams {
 	 * @format uuid
 	 */
 	optionId: string;
+}
+
+export interface GetPublicLandingPageTourTourIdPublicLandingGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetPublicOperatorPreviewTourTourIdPublicOperatorGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
 }
 
 export interface UdpateOperatorOperatorIdPatchParams {

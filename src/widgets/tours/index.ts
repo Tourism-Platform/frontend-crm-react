@@ -10,3 +10,5 @@ export * from "./landing";
 export * from "./settings";
 export * from "./catalog";
 export * from "./search";
+export * from "./preview";
+export * from "./preview-booking";

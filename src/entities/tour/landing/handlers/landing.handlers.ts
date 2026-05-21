@@ -1,14 +1,20 @@
-import { HttpResponse, http } from "msw";
+import { HttpResponse } from "msw";
+
+import {
+	type LandingPageUpdate,
+	TOUR_LANDING_PAGE_PATHS,
+	createMockHandler
+} from "@/shared/api";
 
 import { TOUR_LANDING_MOCK } from "../mock/landing.mock";
 
 export const tourLandingHandlers = [
-	http.get("*/tours/:tourId/landing", () => {
-		return HttpResponse.json(TOUR_LANDING_MOCK);
-	}),
+	createMockHandler(TOUR_LANDING_PAGE_PATHS.getLandingPage(":tourId"), () =>
+		HttpResponse.json(TOUR_LANDING_MOCK)
+	),
 
-	http.patch("*/tours/:tourId/landing", async ({ request }) => {
-		const data = await request.json();
-		return HttpResponse.json(data);
-	})
+	createMockHandler<LandingPageUpdate>(
+		TOUR_LANDING_PAGE_PATHS.updateLandingPage(":tourId"),
+		async ({ body }) => HttpResponse.json(body)
+	)
 ];

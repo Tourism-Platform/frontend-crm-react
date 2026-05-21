@@ -1,0 +1,28 @@
+{
+	"page_name": "Предпросмотр опции",
+	"back_to_catalogue": "Вернуться в каталог",
+	"sections": {
+		"option": {
+			"day": "День",
+			"view_details": "Подробнее",
+			"details": "Детали",
+			"one_of_them": "(Один из них)",
+			"read_more": "Читать далее"
+		}
+	},
+	"tabs": {
+		"tour_information": "Информация о туре",
+		"full_itinerary": "Полный маршрут",
+		"pricing": "Цены"
+	},
+	"pricing": {
+		"title": "Детализация цен",
+		"total_price": "Итоговая цена",
+		"est_cost": "Примерная стоимость на человека",
+		"details": "Детали",
+		"accomodation": "Проживание",
+		"activity": "Активности",
+		"transportation": "Транспорт",
+		"transfer": "Трансфер"
+	}
+}

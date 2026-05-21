@@ -20,10 +20,12 @@ export interface IRouting {
 export type TSettingsPath =
 	(typeof ENUM_PATH.SETTINGS)[keyof typeof ENUM_PATH.SETTINGS];
 
-export type TToursPath = Omit<typeof ENUM_PATH.TOURS, "EVENTS">[keyof Omit<
-	typeof ENUM_PATH.TOURS,
-	"EVENTS"
->];
+export type TToursPath =
+	| Omit<typeof ENUM_PATH.TOURS, "EVENTS" | "CATALOG">[keyof Omit<
+			typeof ENUM_PATH.TOURS,
+			"EVENTS" | "CATALOG"
+	  >]
+	| (typeof ENUM_PATH.TOURS.CATALOG)[keyof typeof ENUM_PATH.TOURS.CATALOG];
 
 export type TTourEventsPath =
 	(typeof ENUM_PATH.TOURS.EVENTS)[keyof typeof ENUM_PATH.TOURS.EVENTS];
@@ -43,7 +45,7 @@ export type TQueryParams = {
 		checkIn?: string;
 		checkOut?: string;
 	};
-	[ENUM_PATH.TOURS.CATALOG]: {
+	[ENUM_PATH.TOURS.CATALOG.ROOT]: {
 		page: number;
 		limit: number;
 	};

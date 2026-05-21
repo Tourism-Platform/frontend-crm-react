@@ -28,6 +28,9 @@ import multiply_option_edit_page_ru from "../../../../public/locales/ru/tours/ev
 import tour_details_edit_page_ru from "../../../../public/locales/ru/tours/events/tour_details_edit_page.json";
 import transportation_edit_page_ru from "../../../../public/locales/ru/tours/events/transportation_edit_page.json";
 import landing_page_ru from "../../../../public/locales/ru/tours/landing_page.json";
+import preview_booking_page_ru from "../../../../public/locales/ru/tours/preview_booking_page.json";
+import preview_option_page_ru from "../../../../public/locales/ru/tours/preview_option_page.json";
+import preview_tour_page_ru from "../../../../public/locales/ru/tours/preview_tour_page.json";
 import tour_activity_log_page_ru from "../../../../public/locales/ru/tours/tour_activity_log_page.json";
 import tour_itinerary_page_ru from "../../../../public/locales/ru/tours/tour_itinerary_page.json";
 import tour_order_history_page_ru from "../../../../public/locales/ru/tours/tour_order_history_page.json";
@@ -81,6 +84,9 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	common_tours: common_tours_ru,
 	tours_catalog_page: tours_catalog_page_ru,
 	tours_search_page: tours_search_page_ru,
+	preview_tour_page: preview_tour_page_ru,
+	preview_option_page: preview_option_page_ru,
+	preview_booking_page: preview_booking_page_ru,
 	tours_page: tours_page_ru,
 
 	order_id_page: order_id_page_ru,

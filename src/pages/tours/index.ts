@@ -3,6 +3,8 @@ export * from "./itinerary-page";
 export * from "./landing-page";
 export * from "./messages-page";
 export * from "./order-history-page";
+export * from "./preview-tour-page";
+export * from "./preview-option-page";
 export * from "./overview-page";
 export * from "./pricing-review-page";
 export * from "./schedule-page";

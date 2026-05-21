@@ -43,3 +43,5 @@ export * from "./multiselect";
 export * from "./sonner";
 export * from "./accordion";
 export * from "./slider";
+export * from "./stepper";
+export * from "./timeline";

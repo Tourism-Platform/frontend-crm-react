@@ -222,6 +222,25 @@ const ReconciliationIdPage = React.lazy(() =>
 	).then((m) => ({ default: m.ReconciliationIdPage }))
 );
 
+// Preview tours pages
+const PreviewTourPage = React.lazy(() =>
+	import("@/pages/tours/preview-tour-page/ui/preview-tour-page").then(
+		(m) => ({
+			default: m.PreviewTourPage
+		})
+	)
+);
+const PreviewOptionPage = React.lazy(() =>
+	import("@/pages/tours/preview-option-page/ui/preview-option-page").then(
+		(m) => ({ default: m.PreviewOptionPage })
+	)
+);
+const PreviewBookingPage = React.lazy(() =>
+	import("@/pages/tours/preview-booking-page/ui/preview-booking-page").then(
+		(m) => ({ default: m.PreviewBookingPage })
+	)
+);
+
 export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	// only public
 
@@ -364,8 +383,29 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		layout_cascade: [ToursOwnerLayout]
 	},
 	{
-		path: ENUM_PATH.TOURS.CATALOG,
+		path: ENUM_PATH.TOURS.CATALOG.ROOT,
 		component: CatalogToursPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [ToursOwnerLayout]
+	},
+	{
+		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR,
+		component: PreviewTourPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [ToursOwnerLayout]
+	},
+	{
+		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION,
+		component: PreviewOptionPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT,
+		layout_cascade: [ToursOwnerLayout]
+	},
+	{
+		path: ENUM_PATH.TOURS.CATALOG.BOOKING,
+		component: PreviewBookingPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT,
 		layout_cascade: [ToursOwnerLayout]
