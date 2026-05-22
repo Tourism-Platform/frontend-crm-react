@@ -13,7 +13,9 @@ const msg = i18nKey<TLandingPageKeys>();
 
 export const LANDING_SCHEMA = z.object({
 	[ENUM_FORM_LANDING.DESCRIPTION]: z
-		.string()
+		.string({
+			message: msg("form.overview.fields.description.errors.required")
+		})
 		.trim()
 		.min(1, {
 			message: msg("form.overview.fields.description.errors.required")
@@ -24,20 +26,40 @@ export const LANDING_SCHEMA = z.object({
 		.max(5000, {
 			message: msg("form.overview.fields.description.errors.max")
 		}),
-	[ENUM_FORM_LANDING.LANGUAGES]: z.array(z.enum(ENUM_LANGUAGES)).min(1, {
-		message: msg("form.languages.fields.languages.errors.required")
-	}),
-	[ENUM_FORM_LANDING.INCLUDED]: z.array(z.enum(ENUM_AMENITIES)).min(1, {
-		message: msg("form.amenities.fields.included.errors.required")
-	}),
-	[ENUM_FORM_LANDING.NOT_INCLUDED]: z.array(z.enum(ENUM_AMENITIES)).min(1, {
-		message: msg("form.amenities.fields.not_included.errors.required")
-	}),
-	[ENUM_FORM_LANDING.PICKUP_TYPE]: z.array(z.enum(ENUM_PICKUP_TYPE)).min(1, {
-		message: msg("form.pickup.fields.pickup_type.errors.required")
-	}),
+	[ENUM_FORM_LANDING.LANGUAGES]: z
+		.array(z.enum(ENUM_LANGUAGES), {
+			message: msg("form.languages.fields.languages.errors.required")
+		})
+		.min(1, {
+			message: msg("form.languages.fields.languages.errors.required")
+		}),
+	[ENUM_FORM_LANDING.INCLUDED]: z
+		.array(z.enum(ENUM_AMENITIES), {
+			message: msg("form.amenities.fields.included.errors.required")
+		})
+		.min(1, {
+			message: msg("form.amenities.fields.included.errors.required")
+		}),
+	[ENUM_FORM_LANDING.NOT_INCLUDED]: z
+		.array(z.enum(ENUM_AMENITIES), {
+			message: msg("form.amenities.fields.not_included.errors.required")
+		})
+		.min(1, {
+			message: msg("form.amenities.fields.not_included.errors.required")
+		}),
+	[ENUM_FORM_LANDING.PICKUP_TYPE]: z
+		.array(z.enum(ENUM_PICKUP_TYPE), {
+			message: msg("form.pickup.fields.pickup_type.errors.required")
+		})
+		.min(1, {
+			message: msg("form.pickup.fields.pickup_type.errors.required")
+		}),
 	[ENUM_FORM_LANDING.PICKUP_DESCRIPTION]: z
-		.string()
+		.string({
+			message: msg(
+				"form.pickup.fields.pickup_description.errors.required"
+			)
+		})
 		.trim()
 		.min(1, {
 			message: msg(
@@ -51,7 +73,11 @@ export const LANDING_SCHEMA = z.object({
 			message: msg("form.pickup.fields.pickup_description.errors.max")
 		}),
 	[ENUM_FORM_LANDING.CANCELLATION_POLICY]: z
-		.string()
+		.string({
+			message: msg(
+				"form.cancellation.fields.cancellation_policy.errors.required"
+			)
+		})
 		.trim()
 		.min(1, {
 			message: msg(
@@ -69,7 +95,11 @@ export const LANDING_SCHEMA = z.object({
 			)
 		}),
 	[ENUM_FORM_LANDING.ADDITIONAL_INFO]: z
-		.string()
+		.string({
+			message: msg(
+				"form.additional_info.fields.additional_info.errors.required"
+			)
+		})
 		.trim()
 		.min(1, {
 			message: msg(
