@@ -12,9 +12,9 @@ import { tourLandingHandlers } from "@/entities/tour/landing/handlers/landing.ha
 import { tourOrderHandlers } from "@/entities/tour/order/handlers/tour-order.handlers";
 import { tourPreviewTourHandlers } from "@/entities/tour/preview-tour/handlers/preview-tour.handlers";
 import { tourHandlers } from "@/entities/tour/tour/handlers/tour.handlers";
-import { accountHandlers } from "@/entities/user/handlers/account.handlers";
-import { businessDocumentsHandlers } from "@/entities/user/handlers/business-documents.handlers";
-import { businessHandlers } from "@/entities/user/handlers/business.handlers";
+import { accountHandlers } from "@/entities/user/account/handlers/account.handlers";
+import { businessDocumentsHandlers } from "@/entities/user/business/handlers/business-documents.handlers";
+import { businessHandlers } from "@/entities/user/business/handlers/business.handlers";
 
 export const handlers = [
 	...authHandlers,

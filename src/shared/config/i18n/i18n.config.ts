@@ -12,6 +12,7 @@ import supplier_payments_page from "../../../../public/locales/en/finance/suppli
 import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
 import login_page from "../../../../public/locales/en/login_page.json";
+import main from "../../../../public/locales/en/main.json";
 import not_found_page from "../../../../public/locales/en/not_found_page.json";
 import options from "../../../../public/locales/en/options.json";
 import account_settings_page from "../../../../public/locales/en/settings/account_settings_page.json";
@@ -74,6 +75,7 @@ export type TTourEventMultiplyOptionEditPage = typeof multiply_option_edit_page;
 export type TTourAccommodationEditPage = typeof accommodation_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
 export type TCommonEvents = typeof common_events;
+export type TMain = typeof main;
 export type TLoginPage = typeof login_page;
 export type TOrdersPage = typeof orders_page;
 export type TTourActivityLogPage = typeof tour_activity_log_page;
@@ -120,6 +122,7 @@ export type TResources = {
 	tour_details_edit_page: TTourDetailsEditPage;
 	multiply_option_edit_page: TTourEventMultiplyOptionEditPage;
 	common_events: TCommonEvents;
+	main: TMain;
 	login_page: TLoginPage;
 	orders_page: TOrdersPage;
 	order_id_page: TOrderIdPage;
@@ -167,6 +170,7 @@ export const NS = [
 	"tour_details_edit_page",
 	"multiply_option_edit_page",
 	"common_events",
+	"main",
 	"login_page",
 	"orders_page",
 	"order_id_page",
@@ -227,6 +231,7 @@ export type TTourEventMultiplyOptionEditPageKeys =
 
 export type TTourCommonEventsKeys = TNestedKeyOf<TCommonEvents>;
 
+export type TMainKeys = TNestedKeyOf<TMain>;
 export type TLoginPageKeys = TNestedKeyOf<TLoginPage>;
 export type TOrdersPageKeys = TNestedKeyOf<TOrdersPage>;
 export type TOrderIdPageKeys = TNestedKeyOf<TOrderIdPage>;

@@ -7,12 +7,6 @@ export interface IRouting {
 	path: string;
 	component: React.ComponentType;
 	auth: ENUM_AUTH_TYPE;
-	// roles?: ENUM_ROLES[];
-	// authSidebar?: boolean;
-	// nonAuthSidebar?: boolean;
-	// adminSidebar?: boolean;
-	// useMainBreadcrumb?: boolean;
-	// useTourEventBreadcrumb?: boolean;
 	layout_cascade?: React.ComponentType<{ children: React.ReactNode }>[];
 	layout: ENUM_LAYOUT_TYPE;
 }

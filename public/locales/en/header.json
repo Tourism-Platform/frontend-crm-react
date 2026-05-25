@@ -1,4 +1,10 @@
 {
+	"public": {
+		"solutions": "Solutions",
+		"pricing": "Pricing",
+		"sign_in": "Sign in",
+		"get_started": "Get started"
+	},
 	"owner": {
 		"tours": {
 			"title": "Tours",

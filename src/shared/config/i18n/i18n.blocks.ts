@@ -77,7 +77,8 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"common",
 			"login_page",
 			"not_found_page",
-			"options"
+			"options",
+			"main"
 		]
 	}
 };

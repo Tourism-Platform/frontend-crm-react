@@ -1,3 +1,4 @@
+export * from "./animated-beam";
 export * from "./alert-dialog";
 export * from "./alert";
 export * from "./avatar";
@@ -45,3 +46,8 @@ export * from "./accordion";
 export * from "./slider";
 export * from "./stepper";
 export * from "./timeline";
+export * from "./animated-beam";
+export * from "./safari";
+export * from "./comet-card";
+export * from "./comet-card-tilt";
+export * from "./floating-card";

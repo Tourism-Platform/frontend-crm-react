@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 import { ENUM_LAYOUT } from "@/shared/config";
 
-import { RootOwnerLayout } from "@/widgets/layouts";
+import { RootDefaultLayout, RootOwnerLayout } from "@/widgets/layouts";
 
 import { ProtectedRoute } from "./protected-route";
 import { ALL_APP_ROUTES_LIST } from "./router.config";
@@ -27,6 +27,7 @@ export const router = createBrowserRouter(
 			children: ROOT_ROUTES_LIST
 		},
 		{
+			element: <RootDefaultLayout />,
 			children: DEFAULT_ROUTES_LIST
 		}
 	],
