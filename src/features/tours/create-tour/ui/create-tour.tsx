@@ -76,7 +76,10 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 					<PlusIcon />
 				</Button>
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent
+				onCloseBtn={() => setOpen(false)}
+				className="min-w-[700px]"
+			>
 				<DialogHeader>
 					<DialogTitle>{t("create.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">

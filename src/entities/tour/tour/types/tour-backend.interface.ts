@@ -28,4 +28,7 @@ export type TTourFinanceBackendResponse = ReturnType<
 	typeof TOUR_FINANCIAL_PATHS.getTourFinancials
 >["_types"]["response"];
 
+export type TCreateTourCategoriesBackend =
+	typeof TOUR_PATHS.createTour._types.body;
+
 export type TTourFinanceBackend = TourFinSettingsModel;
