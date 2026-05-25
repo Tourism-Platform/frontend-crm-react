@@ -9,7 +9,6 @@ import {
 
 interface ISideBarOwnerLayoutProps extends PropsWithChildren {
 	items: ISidebarMenu[];
-	useBreadcrumb?: boolean;
 }
 
 export const SideBarOwnerLayout = ({

@@ -1,4 +1,10 @@
 {
+	"public": {
+		"solutions": "Решения",
+		"pricing": "Тарифы",
+		"sign_in": "Войти",
+		"get_started": "Начать"
+	},
 	"owner": {
 		"tours": {
 			"title": "Туры",

@@ -1,0 +1,298 @@
+{
+	"page_name": "TourLink",
+	"hero": {
+		"badge": "Now onboarding operators across Central Asia",
+		"title": {
+			"line1": "The operating system",
+			"line2": "for tours in Central Asia"
+		},
+		"subtitle": "Operators build and sell. Agencies discover and book. One platform connecting hotels, transfers, dining and attractions across the region.",
+		"cta": {
+			"operator": "I'm a tour operator",
+			"agency": "I'm a travel agency"
+		},
+		"meta": ["No credit card", "Free during beta", "Set up in minutes"],
+		"visual": {
+			"builder": {
+				"title": "Tour builder",
+				"tours": [
+					{ "name": "JFK → TAS · Flight", "meta": "Day 1 · 09:20" },
+					{
+						"name": "Hotel · Hyatt Regency",
+						"meta": "Day 1 · check-in"
+					},
+					{ "name": "Plov Centre dinner", "meta": "Day 1 · 19:00" },
+					{ "name": "Afrosiyob train", "meta": "Day 2 · 08:00" }
+				]
+			},
+			"catalog": {
+				"city": "Tashkent",
+				"name": "Silk Road · 3 days",
+				"meta": "Orientstar · Verified",
+				"price": "$934",
+				"price_suffix": "/ person",
+				"book": "Book"
+			},
+			"stats": {
+				"label": "Bookings this week",
+				"value": "42",
+				"trend": "↑ 18%",
+				"notification": {
+					"title": "New booking",
+					"subtitle": "Asiatica Tours · $1,234"
+				}
+			}
+		}
+	},
+	"trust": {
+		"items": [
+			{
+				"name": "Built for Central Asia",
+				"desc": "Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan"
+			},
+			{
+				"name": "Verified operators",
+				"desc": "Every supplier vetted before going live"
+			},
+			{
+				"name": "Auto-translated",
+				"desc": "EN, RU, UZ — every tour, every booking"
+			},
+			{
+				"name": "Real-time bookings",
+				"desc": "No more WhatsApp threads or lost emails"
+			}
+		]
+	},
+	"problem": {
+		"eyebrow": "The problem we're solving",
+		"title": "Tour business still runs on chaos",
+		"subtitle": "Excel spreadsheets, endless WhatsApp threads, lost bookings, manual invoicing. The Central Asian tourism industry deserves better tools.",
+		"card": {
+			"title": "Built by tourism experts, for tourism professionals",
+			"paragraphs": [
+				"We talked to operators in Tashkent, Bukhara and Samarkand. We watched them juggle 6 different tools to assemble a single 3-day tour. We saw agencies lose bookings because confirmations came 2 days late.",
+				"TourLink replaces all of it with one platform — purpose-built for the region."
+			]
+		},
+		"tools": [
+			"Excel",
+			"WhatsApp",
+			"Telegram",
+			"Email threads",
+			"Word invoices"
+		],
+		"visual": {
+			"messages": [
+				{
+					"text": "\"Which hotel is free on May 5?\"",
+					"variant": "default"
+				},
+				{ "text": "⚠ Booking lost", "variant": "warning" },
+				{ "text": "\"Send invoice in EN?\"", "variant": "default" },
+				{ "text": "⚠ Double booking", "variant": "warning" },
+				{ "text": "✓ TourLink — one place", "variant": "success" }
+			]
+		}
+	},
+	"audience": {
+		"eyebrow": "Made for both sides",
+		"title": "One platform, two complete toolkits",
+		"subtitle": "Whether you build tours or sell them, we've designed the workflow around how your team actually works.",
+		"tabs": [
+			{ "id": "operator", "label": "For tour operators" },
+			{ "id": "agency", "label": "For travel agencies" }
+		]
+	},
+	"operator": {
+		"title": "Build tours visually. Sell them everywhere.",
+		"subtitle": "Stop assembling itineraries in Word documents. Drag and drop hotels, transfers, dining and attractions into a beautiful tour your clients will want to book.",
+		"cta": "Become an operator",
+		"features": [
+			{
+				"name": "Visual tour constructor",
+				"desc": "Drag-and-drop builder with pre-connected suppliers"
+			},
+			{
+				"name": "Auto-generated vouchers",
+				"desc": "Invoices and vouchers built from each booking"
+			},
+			{
+				"name": "Sales dashboard",
+				"desc": "Financial reporting and live booking analytics"
+			},
+			{
+				"name": "Auto-translation",
+				"desc": "One tour, three languages — EN, RU, UZ"
+			},
+			{
+				"name": "Task management",
+				"desc": "Assign tasks to staff, track progress in real-time"
+			},
+			{
+				"name": "Staff & permissions",
+				"desc": "Manage team access, audit logs for every action"
+			}
+		],
+		"mockup": {
+			"url": "tourlink.uz/builder",
+			"sidebar_title": "Components",
+			"sidebar_items": ["Hotels", "Transfers", "Activities", "Transport"],
+			"days": [
+				{
+					"label": "Day 1",
+					"city": "Tashkent",
+					"blocks": [
+						{ "name": "JFK → TAS", "time": "11h 30m" },
+						{ "name": "Hyatt Regency", "time": "1 night" },
+						{ "name": "Plov Centre", "time": "19:00" }
+					]
+				},
+				{
+					"label": "Day 2",
+					"city": "Bukhara",
+					"blocks": [
+						{ "name": "Afrosiyob train", "time": "3h 50m" },
+						{ "name": "Minorai Kalon", "time": "1 night" }
+					]
+				}
+			]
+		}
+	},
+	"agency": {
+		"title": "Sell verified tours without the back-and-forth",
+		"subtitle": "Browse a live catalog of guaranteed tours from verified operators. Customize on request. Book in real time. Track every sale in one dashboard.",
+		"cta": "Join as an agency",
+		"features": [
+			{
+				"name": "Live tour catalog",
+				"desc": "First in Central Asia — grows weekly with new tours"
+			},
+			{
+				"name": "Downloadable previews",
+				"desc": "Branded PDF tour previews to send your clients"
+			},
+			{
+				"name": "Custom tour requests",
+				"desc": "Build custom itineraries with platform operators"
+			},
+			{
+				"name": "Real-time bookings",
+				"desc": "Live availability, instant confirmations"
+			},
+			{
+				"name": "Commission control",
+				"desc": "Set and manage your markup on every tour"
+			},
+			{
+				"name": "Client contact CRM",
+				"desc": "Capture leads, manage clients, never lose contact"
+			}
+		],
+		"mockup": {
+			"url": "tourlink.uz/catalogue",
+			"search_placeholder": "🔍 Silk Road tours...",
+			"filter": "Filter",
+			"tours": [
+				{
+					"name": "Samarkand · 3 days",
+					"operator": "Orientstar ✓",
+					"price": "$934"
+				},
+				{
+					"name": "Bukhara classic",
+					"operator": "Asiatica ✓",
+					"price": "$620"
+				},
+				{
+					"name": "Khiva heritage",
+					"operator": "Orientstar ✓",
+					"price": "$780"
+				},
+				{
+					"name": "Full Silk Road",
+					"operator": "Asiatica ✓",
+					"price": "$1,840"
+				}
+			]
+		}
+	},
+	"network": {
+		"eyebrow": "The unique value",
+		"title": "One network. Every supplier.",
+		"subtitle": "We're building the connective tissue of Central Asian tourism — hotels, transfers, dining and attractions all in one network, ready to plug into any tour.",
+		"hub": {
+			"label": "The hub",
+			"name": "TourLink"
+		},
+		"suppliers_title": "Suppliers",
+		"users_title": "Users",
+		"suppliers": [
+			{ "label": "Hotels" },
+			{ "label": "Transfers" },
+			{ "label": "Dining" },
+			{ "label": "Attractions" },
+			{ "label": "Transport" }
+		],
+		"users": [
+			{ "label": "Operators" },
+			{ "label": "Agencies" },
+			{ "label": "Guides" },
+			{ "label": "Travelers" },
+			{ "label": "B2B partners" }
+		]
+	},
+	"how_it_works": {
+		"eyebrow": "Start in minutes",
+		"title": "How it works",
+		"subtitle": "From sign-up to your first booking — three simple steps.",
+		"steps": [
+			{
+				"title": "Pick your role",
+				"desc": "Sign up as an operator to build and sell tours, or as an agency to discover and book them. Quick verification gets you live within 24 hours."
+			},
+			{
+				"title": "Set up your profile",
+				"desc": "Operators: connect your supplier network and create your first tour. Agencies: browse the catalog and customize your commission settings."
+			},
+			{
+				"title": "Start transacting",
+				"desc": "Operators receive bookings in real-time. Agencies confirm tours with one click. Invoices, vouchers and payments handled automatically."
+			}
+		]
+	},
+	"testimonials": {
+		"eyebrow": "From early users",
+		"title": "Industry voices",
+		"subtitle": "Real feedback from operators and agencies in our private beta.",
+		"items": [
+			{
+				"tag": "Operator",
+				"quote": "Building a 3-day Silk Road tour used to take us a full day in Word and Excel. Now it takes 20 minutes, and the output looks ten times better than what we used to send clients.",
+				"name": "Aziz Rakhimov",
+				"role": "Orientstar · Tashkent"
+			},
+			{
+				"tag": "Agency",
+				"quote": "Before TourLink we lost two bookings a month because we couldn't confirm availability fast enough. The live catalog and instant booking changed that completely.",
+				"name": "Elena Kim",
+				"role": "Silk Travel · Samarkand"
+			},
+			{
+				"tag": "Agency",
+				"quote": "The downloadable PDF previews are gorgeous — my clients sign off on the itinerary in one call instead of three. Game changer for closing private group tours.",
+				"name": "Jamshid Aliev",
+				"role": "Heritage Tours · Bukhara"
+			}
+		]
+	},
+	"cta": {
+		"title": "Ready to grow your tour business?",
+		"subtitle": "Join Central Asia's first B2B tour platform. Free during our public beta. No credit card. Set up in minutes.",
+		"buttons": {
+			"operator": "Become an operator",
+			"agency": "Join as an agency"
+		},
+		"footnote": "No credit card required · Free during beta · Cancel anytime"
+	}
+}

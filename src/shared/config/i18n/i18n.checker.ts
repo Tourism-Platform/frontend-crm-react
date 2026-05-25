@@ -10,6 +10,7 @@ import supplier_payments_page_ru from "../../../../public/locales/ru/finance/sup
 import header_ru from "../../../../public/locales/ru/header.json";
 import home_ru from "../../../../public/locales/ru/home.json";
 import login_page_ru from "../../../../public/locales/ru/login_page.json";
+import main_ru from "../../../../public/locales/ru/main.json";
 import not_found_page_ru from "../../../../public/locales/ru/not_found_page.json";
 import options_ru from "../../../../public/locales/ru/options.json";
 import account_settings_page_ru from "../../../../public/locales/ru/settings/account_settings_page.json";
@@ -57,6 +58,7 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	common: common_ru,
 	header: header_ru,
 	home: home_ru,
+	main: main_ru,
 	login_page: login_page_ru,
 	not_found_page: not_found_page_ru,
 	options: options_ru,

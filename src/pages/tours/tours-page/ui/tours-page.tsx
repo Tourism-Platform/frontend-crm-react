@@ -1,6 +1,6 @@
 import { type FC } from "react";
 
-import { Tours } from "@/widgets/tours";
+import { Tours } from "@/widgets/tours/tours";
 
 export const ToursPage: FC = () => {
 	return <Tours />;
