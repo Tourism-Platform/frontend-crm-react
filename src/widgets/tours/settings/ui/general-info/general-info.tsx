@@ -77,15 +77,17 @@ const GeneralInfoBase: FC = () => {
 			>
 				<h2 className="text-xl">{t("general.title")}</h2>
 				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-					{GENERAL_FORM_LIST().map(({ key, ...item }) => (
-						<CustomField
-							key={key}
-							control={form?.control}
-							name={key}
-							t={t}
-							{...item}
-						/>
-					))}
+					{GENERAL_FORM_LIST({ defaultValues: tour }).map(
+						({ key, ...item }) => (
+							<CustomField
+								key={key}
+								control={form?.control}
+								name={key}
+								t={t}
+								{...item}
+							/>
+						)
+					)}
 					<CustomRangeField
 						control={form?.control}
 						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.DURATION}
