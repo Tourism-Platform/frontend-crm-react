@@ -3,7 +3,7 @@ import { ENUM_TOUR_STATUS, ENUM_TOUR_TYPES } from "../types";
 export const TOUR_MOCK = [
 	{
 		id: "9f2b3d82-5c4d-4b9f-9f7a-1a42e71d1b11",
-		status: ENUM_TOUR_STATUS.ACTIVE,
+		status: ENUM_TOUR_STATUS.PUBLISHED,
 		title: "Embark on an Unforgettable Archaeological Journey",
 		route: ["TAS", "SAM", "BUH", "KHIV"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -14,7 +14,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "3c6a27f5-1a9b-4f92-9cb3-2f58f3d4e8e2",
-		status: ENUM_TOUR_STATUS.MODERATE,
+		status: ENUM_TOUR_STATUS.ARCHIVED,
 		title: "Silk Road Highlights Expedition",
 		route: ["TAS", "SAM", "BUH"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -25,7 +25,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "f7d2e8a6-4e92-46ef-b0fc-7f2a2a69e921",
-		status: ENUM_TOUR_STATUS.CANCELLED,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Desert Adventure: Khiva to Nukus",
 		route: ["KHIV", "NUK"],
 		type: ENUM_TOUR_TYPES.PRIVATE,
@@ -47,7 +47,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "a2b8e0d3-83a7-496f-9d87-1e7d39b5c9de",
-		status: ENUM_TOUR_STATUS.ACTIVE,
+		status: ENUM_TOUR_STATUS.PUBLISHED,
 		title: "Ancient Cities Tour: Bukhara & Khiva",
 		route: ["BUH", "KHIV"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -69,7 +69,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "f2c1e7a8-6c9f-4e2a-889f-45e71a3d9222",
-		status: ENUM_TOUR_STATUS.ACTIVE,
+		status: ENUM_TOUR_STATUS.PUBLISHED,
 		title: "Golden Ring of Uzbekistan",
 		route: ["TAS", "SAM", "BUH", "KHIV", "NUK"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -80,7 +80,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "e1f9c7b2-0d38-4a63-9b0e-8821a2bffcc7",
-		status: ENUM_TOUR_STATUS.MODERATE,
+		status: ENUM_TOUR_STATUS.ARCHIVED,
 		title: "Tashkent City Break",
 		route: ["TAS"],
 		type: ENUM_TOUR_TYPES.PRIVATE,
@@ -102,7 +102,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "c3a6f2b1-4e8f-44c3-a20e-1f6e2d93c44a",
-		status: ENUM_TOUR_STATUS.CANCELLED,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Safari in Kyzylkum Desert",
 		route: ["SAM", "KYZ"],
 		type: ENUM_TOUR_TYPES.PRIVATE,
@@ -113,7 +113,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "6d4a7f93-0c62-47f8-8b77-97f5d2e381c0",
-		status: ENUM_TOUR_STATUS.ACTIVE,
+		status: ENUM_TOUR_STATUS.PUBLISHED,
 		title: "Weekend Getaway in Samarkand",
 		route: ["TAS", "SAM"],
 		type: ENUM_TOUR_TYPES.PRIVATE,
@@ -135,7 +135,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "4b3c8d6f-9f51-4a77-8a23-1d5e8f7c2b92",
-		status: ENUM_TOUR_STATUS.MODERATE,
+		status: ENUM_TOUR_STATUS.ARCHIVED,
 		title: "Adventure Trekking in Nuratau Mountains",
 		route: ["NUR", "AYDAR"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -157,7 +157,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "1e7f9a2b-3c4d-4f8a-9e1a-7f3c8d2a9f11",
-		status: ENUM_TOUR_STATUS.CANCELLED,
+		status: ENUM_TOUR_STATUS.DRAFT,
 		title: "Luxury Tour across Uzbekistan",
 		route: ["TAS", "SAM", "BUH", "KHIV"],
 		type: ENUM_TOUR_TYPES.PRIVATE,
@@ -168,7 +168,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "7c2e8f9b-0d1a-4a3f-bf21-2e8f1c4d7b2e",
-		status: ENUM_TOUR_STATUS.ACTIVE,
+		status: ENUM_TOUR_STATUS.PUBLISHED,
 		title: "Nomadic Yurt Experience",
 		route: ["AYDAR"],
 		type: ENUM_TOUR_TYPES.GROUP,
@@ -190,7 +190,7 @@ export const TOUR_MOCK = [
 	},
 	{
 		id: "2a9c8e1d-5f7a-49d3-b7c8-1f2b7e3c6a1d",
-		status: ENUM_TOUR_STATUS.MODERATE,
+		status: ENUM_TOUR_STATUS.ARCHIVED,
 		title: "Wine Tasting Journey in Samarkand",
 		route: ["SAM"],
 		type: ENUM_TOUR_TYPES.GROUP,

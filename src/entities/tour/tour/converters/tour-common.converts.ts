@@ -77,10 +77,13 @@ export const mapTourPaginatedToFrontend = (
 	total: response.total_count
 });
 
-// !!! Полностью переделать
 export const mapTourFiltersToBackend = (
 	filters: ITourFilters
 ): typeof TOUR_PATHS.listTours._types.query => ({
 	...(filters?.page > 1 && { skip: (filters.page - 1) * filters?.limit }),
-	...(filters?.limit && { limit: filters.limit })
+	...(filters?.limit && { limit: filters.limit }),
+	...(!!filters?.status?.length && {
+		status: tourStatusMapper.to(filters.status?.[0])
+	}),
+	...(!!filters?.search?.trim().length && { q: filters.search })
 });

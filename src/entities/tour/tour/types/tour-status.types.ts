@@ -1,8 +1,7 @@
 export const ENUM_TOUR_STATUS = {
 	ALL: "all",
-	ACTIVE: "active",
-	MODERATE: "moderate",
-	CANCELLED: "cancelled",
+	PUBLISHED: "published",
+	ARCHIVED: "archived",
 	DRAFT: "draft"
 } as const;
 
