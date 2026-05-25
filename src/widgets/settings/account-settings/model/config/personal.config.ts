@@ -4,12 +4,6 @@ import { type TForm } from "../types";
 
 export const PERSONAL_CHANGE_ACCOUNT_LIST: TForm[] = [
 	{
-		label: "form.personal.fields.login.label",
-		placeholder: "form.personal.fields.login.placeholder",
-		key: ENUM_FORM_ACCOUNT.LOGIN,
-		fieldType: "input"
-	},
-	{
 		label: "form.personal.fields.first_name.label",
 		placeholder: "form.personal.fields.first_name.placeholder",
 		key: ENUM_FORM_ACCOUNT.FIRST_NAME,

@@ -18,18 +18,12 @@
 		}
 	},
 	"form": {
+		"email": {
+			"title": "My email address"
+		},
 		"personal": {
 			"title": "Personal information",
 			"fields": {
-				"login": {
-					"label": "Login",
-					"placeholder": "Enter your login",
-					"errors": {
-						"min": "Login must contain at least 3 characters",
-						"max": "Login is too long",
-						"required": "Login is required"
-					}
-				},
 				"first_name": {
 					"label": "First name",
 					"placeholder": "Enter your first name",

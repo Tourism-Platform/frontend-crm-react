@@ -36,7 +36,8 @@
 			"planning": "Планирование",
 			"cancelled": "Отменен",
 			"archived": "Архив",
-			"draft": "Черновики"
+			"draft": "Черновики",
+			"published": "Опубликовано"
 		},
 		"tourTypes": {
 			"private": "Частный",

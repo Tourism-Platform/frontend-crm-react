@@ -82,6 +82,18 @@ export const tourLandingApi = authApi.injectEndpoints({
 				...TOUR_LANDING_PAGE_PATHS.deleteLandingImage(tourId, imageId)
 			}),
 			invalidatesTags: [ENUM_API_TAGS.LANDING_IMAGES]
+		}),
+		setPrimaryImage: builder.mutation<
+			void,
+			{ tourId: string; imageId: string }
+		>({
+			query: ({ tourId, imageId }) => ({
+				...TOUR_LANDING_PAGE_PATHS.setPrimaryLandingImage(
+					tourId,
+					imageId
+				)
+			}),
+			invalidatesTags: [ENUM_API_TAGS.LANDING_IMAGES]
 		})
 	})
 });
@@ -92,5 +104,6 @@ export const {
 	useUpdateLandingMutation,
 	useListLandingImagesQuery,
 	useUploadLandingImagesMutation,
-	useDeleteLandingImageMutation
+	useDeleteLandingImageMutation,
+	useSetPrimaryImageMutation
 } = tourLandingApi;

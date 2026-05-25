@@ -13,6 +13,7 @@ export const baseApi = createApi({
 	endpoints: () => ({}),
 	tagTypes: [
 		ENUM_API_TAGS.USER,
+		ENUM_API_TAGS.AUTH_ACCOUNT,
 		ENUM_API_TAGS.BUSINESS,
 		ENUM_API_TAGS.STAFF,
 		ENUM_API_TAGS.COMMISSION,

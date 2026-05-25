@@ -68,7 +68,7 @@ export const tourHandlers = [
 			price_to: 1000,
 			title: body.title,
 			route: ["TAS", "SAM", "BUH", "KHIV"],
-			status: ENUM_TOUR_STATUS.MODERATE,
+			status: ENUM_TOUR_STATUS.ARCHIVED,
 			image_url:
 				"https://www.atorus.ru/sites/default/files/styles/head_carousel/public/2021-09/ca3023.jpg.webp?itok=Wg-lCwZ0"
 		};

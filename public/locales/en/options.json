@@ -36,7 +36,8 @@
 			"planning": "Planning",
 			"cancelled": "Cancelled",
 			"archived": "Archived",
-			"draft": "Drafts"
+			"draft": "Drafts",
+			"published": "Published"
 		},
 		"tourTypes": {
 			"private": "Private",
