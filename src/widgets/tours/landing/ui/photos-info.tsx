@@ -1,57 +1,137 @@
-import { type FC, useEffect, useState } from "react";
+"use client";
+
+import { type FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CustomUploadMainImage, withErrorBoundary } from "@/shared/ui";
-
+import { withErrorBoundary } from "@/shared/ui";
 import {
-	useDeleteLandingImageMutation,
-	useListLandingImagesQuery,
-	useUploadLandingImagesMutation
-} from "@/entities/tour";
+	CustomUploadImages,
+	type TUploadImageItem,
+	getUploadItemId
+} from "@/shared/ui";
+
+import { useListLandingImagesQuery } from "@/entities/tour";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+// Pending changes accumulated locally — consumed by Landing on submit
+export interface IPhotosChanges {
+	// Uploaded image ids to delete on save
+	toDelete: string[];
+	// New files to upload (in final order)
+	toUpload: File[];
+	// Full final order of items (uploaded ids + pending tempIds in order)
+	// Used to re-upload all in correct order when needed
+	orderedItems: TUploadImageItem[];
+	// Id of the primary image (first uploaded item after save, if any)
+	// null if first item is pending (will be set after upload resolves)
+	primaryId: string | null;
+}
 
 interface IPhotosInfoProps {
 	tourId: string;
+	// Called on every local change so Landing can collect changes for submit
+	onChanges: (changes: IPhotosChanges) => void;
 }
 
-const PhotosInfoBase: FC<IPhotosInfoProps> = ({ tourId }) => {
+// ─── Component ────────────────────────────────────────────────────────────────
+
+const PhotosInfoBase: FC<IPhotosInfoProps> = ({ tourId, onChanges }) => {
 	const { t } = useTranslation("landing_page");
 
-	const { data: images = [] } = useListLandingImagesQuery(tourId, {
+	const { data: serverImages = [] } = useListLandingImagesQuery(tourId, {
 		skip: !tourId
 	});
 
-	const [uploadImages] = useUploadLandingImagesMutation();
-	const [deleteImage] = useDeleteLandingImageMutation();
+	const [items, setItems] = useState<TUploadImageItem[]>([]);
+	const toDeleteRef = useRef<string[]>([]);
 
-	// Локальное состояние для мгновенной реакции UI (избегаем race condition хука useFileUpload)
-	const [localImage, setLocalImage] = useState<string>("");
+	// ── Sync server → local ───────────────────────────────────────────────────
 
 	useEffect(() => {
-		setLocalImage(images.length > 0 ? images[0].imagePath : "");
-	}, [images]);
-
-	const handleFilesChange = async (files: (File | { url: string })[]) => {
-		if (!tourId) return;
-
-		if (files.length === 0) {
-			setLocalImage(""); // Мгновенная реакция UI
-			if (images.length > 0) {
-				await deleteImage({ tourId, imageId: images[0].id }).unwrap();
-			}
+		if (!serverImages.length) {
+			setItems([]);
 			return;
 		}
 
-		// Выбираем только новые загруженные файлы
-		const newFiles = files.filter((f): f is File => f instanceof File);
+		const sorted = [...serverImages].sort((a, b) =>
+			a.isPrimary === b.isPrimary ? 0 : a.isPrimary ? -1 : 1
+		);
 
-		if (newFiles.length > 0) {
-			// Если уже есть картинка, удаляем её перед загрузкой новой
-			if (images.length > 0) {
-				await deleteImage({ tourId, imageId: images[0].id }).unwrap();
-			}
-			await uploadImages({ tourId, files: newFiles });
-		}
+		setItems(
+			sorted.map((img) => ({
+				kind: "uploaded",
+				id: img.id,
+				src: img.imagePath
+			}))
+		);
+		toDeleteRef.current = [];
+	}, [serverImages]);
+
+	// ── Notify parent of current diff ─────────────────────────────────────────
+
+	const notifyChanges = (
+		nextItems: TUploadImageItem[],
+		toDelete: string[]
+	) => {
+		const pendingItems = nextItems.filter(
+			(i): i is Extract<TUploadImageItem, { kind: "pending" }> =>
+				i.kind === "pending"
+		);
+		const firstUploaded = nextItems.find(
+			(i): i is Extract<TUploadImageItem, { kind: "uploaded" }> =>
+				i.kind === "uploaded"
+		);
+
+		onChanges({
+			toDelete,
+			toUpload: pendingItems.map((i) => i.file),
+			orderedItems: nextItems,
+			// If first item is uploaded — we know the primaryId now
+			// If first item is pending — primaryId is resolved after upload
+			primaryId: firstUploaded?.id ?? null
+		});
 	};
+
+	// ── Handlers ──────────────────────────────────────────────────────────────
+
+	const handleAdd = (files: File[]) => {
+		const pending: TUploadImageItem[] = files.map((file) => ({
+			kind: "pending",
+			tempId: `pending-${crypto.randomUUID()}`,
+			file,
+			preview: URL.createObjectURL(file)
+		}));
+
+		setItems((prev) => {
+			const next = [...prev, ...pending];
+			notifyChanges(next, toDeleteRef.current);
+			return next;
+		});
+	};
+
+	const handleRemove = (id: string) => {
+		setItems((prev) => {
+			const item = prev.find((i) => getUploadItemId(i) === id);
+
+			if (item?.kind === "uploaded") {
+				toDeleteRef.current = [...toDeleteRef.current, item.id];
+			} else if (item?.kind === "pending") {
+				URL.revokeObjectURL(item.preview);
+			}
+
+			const next = prev.filter((i) => getUploadItemId(i) !== id);
+			notifyChanges(next, toDeleteRef.current);
+			return next;
+		});
+	};
+
+	const handleReorder = (reordered: TUploadImageItem[]) => {
+		setItems(reordered);
+		notifyChanges(reordered, toDeleteRef.current);
+	};
+
+	// ─────────────────────────────────────────────────────────────────────────
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -60,12 +140,11 @@ const PhotosInfoBase: FC<IPhotosInfoProps> = ({ tourId }) => {
 				{t("form.photos.description")}
 			</p>
 
-			<CustomUploadMainImage
-				initialValue={localImage}
-				onFilesChange={(files) => {
-					const mappedFiles = files.map((f) => f.file);
-					handleFilesChange(mappedFiles);
-				}}
+			<CustomUploadImages
+				items={items}
+				onAdd={handleAdd}
+				onRemove={handleRemove}
+				onReorder={handleReorder}
 			/>
 		</div>
 	);
