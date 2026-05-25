@@ -8,11 +8,11 @@ const msg = i18nKey<TAccountSettingsPageKeys>();
 
 export const ACCOUNT_SCHEMA = z.object({
 	[ENUM_FORM_ACCOUNT.AVATAR]: z.string().optional(),
-	[ENUM_FORM_ACCOUNT.LOGIN]: z
-		.string()
-		.min(1, { message: msg("form.personal.fields.login.errors.required") })
-		.min(3, { message: msg("form.personal.fields.login.errors.min") })
-		.max(50, { message: msg("form.personal.fields.login.errors.max") }),
+	// [ENUM_FORM_ACCOUNT.LOGIN]: z
+	// 	.string()
+	// 	.min(1, { message: msg("form.personal.fields.login.errors.required") })
+	// 	.min(3, { message: msg("form.personal.fields.login.errors.min") })
+	// 	.max(50, { message: msg("form.personal.fields.login.errors.max") }),
 
 	[ENUM_FORM_ACCOUNT.FIRST_NAME]: z
 		.string()

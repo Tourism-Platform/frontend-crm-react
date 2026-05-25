@@ -10,7 +10,7 @@ export const mapAccountToFrontend = (
 	backend: TAccountBackend
 ): TAccountSchema => ({
 	avatar: backend.profile_picture_url ?? undefined,
-	login: backend.first_name || "",
+	// login: backend.first_name || "",
 	first_name: backend.first_name || "",
 	last_name: backend.last_name || "",
 	title: backend.title || "",

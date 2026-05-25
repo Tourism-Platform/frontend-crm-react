@@ -14,6 +14,7 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
+import { useGetAuthAccountQuery } from "@/entities/auth";
 import {
 	ACCOUNT_SCHEMA,
 	type TAccountSchema,
@@ -22,6 +23,7 @@ import {
 } from "@/entities/user";
 
 import { AvatarInfo } from "./avatar-info";
+import { EmailAddress } from "./email-address";
 import { GeneralInfo } from "./general-info";
 import { PersonalInfo } from "./personal-info";
 
@@ -33,6 +35,12 @@ const AccountSettingsBase: FC = () => {
 		isLoading: isAccountLoading,
 		isError: isAccountError
 	} = useGetAccountQuery();
+
+	const {
+		data: authAccountData,
+		isLoading: isAuthAccountLoading,
+		isError: isAuthAccountError
+	} = useGetAuthAccountQuery();
 	const [updateAccount, { isLoading: isUpdating }] =
 		useUpdateAccountMutation();
 
@@ -48,10 +56,10 @@ const AccountSettingsBase: FC = () => {
 	}, [accountData, form.reset]);
 
 	useEffect(() => {
-		if (isAccountError) {
+		if (isAccountError || isAuthAccountError) {
 			toast.error(t("form.toasts.load.error"));
 		}
-	}, [isAccountError, t]);
+	}, [isAccountError, isAuthAccountError, t]);
 
 	async function onSubmit(data: TAccountSchema) {
 		try {
@@ -73,6 +81,11 @@ const AccountSettingsBase: FC = () => {
 							className="space-y-5"
 						>
 							<AvatarInfo form={form} />
+							<Separator />
+							<EmailAddress
+								email={authAccountData?.email}
+								isLoading={isAuthAccountLoading}
+							/>
 							<Separator />
 							<PersonalInfo form={form} />
 							<Separator />
