@@ -12,7 +12,7 @@ import { ENUM_PATH } from "@/shared/config";
 
 import type { IUserMenu } from "./types";
 
-export const USER_MENU_LIST: IUserMenu[] = [
+export const OPERATOR_USER_MENU_LIST: IUserMenu[] = [
 	{
 		menu: [
 			{

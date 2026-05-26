@@ -3,7 +3,7 @@ import { type FC } from "react";
 import { ENUM_PATH } from "@/shared/config";
 import { LanguageToggle, NavMenu, ThemeToggle } from "@/shared/ui";
 
-import { UserMenu } from "@/features/layout";
+import { AgencyUserMenu } from "@/features/layout";
 
 import logo from "./../../../../../../public/assets/logo.png";
 import { NAV_ITEMS_LIST } from "./model";
@@ -35,7 +35,7 @@ export const HeaderAgency: FC = () => {
 					{/* Language selector */}
 					<LanguageToggle />
 					{/* User menu */}
-					<UserMenu />
+					<AgencyUserMenu />
 				</div>
 			</div>
 		</header>

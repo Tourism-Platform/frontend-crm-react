@@ -78,5 +78,7 @@ export const agencyBusinessApi = authApi.injectEndpoints({
 
 export const {
 	useGetAgencyBusinessInfoQuery,
-	useUpdateAgencyBusinessInfoMutation
+	useUpdateAgencyBusinessInfoMutation,
+	useUploadAgencyLogoMutation,
+	useDeleteAgencyLogoMutation
 } = agencyBusinessApi;

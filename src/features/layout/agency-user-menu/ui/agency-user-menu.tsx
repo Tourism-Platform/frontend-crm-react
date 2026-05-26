@@ -15,18 +15,22 @@ import {
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-	DropdownMenuTrigger
+	DropdownMenuTrigger,
+	Skeleton
 } from "@/shared/ui";
+
+import { useGetAccountQuery } from "@/entities/user";
 
 import { useSignOutAction } from "@/features/auth";
 
-// import { useSignOutAction } from "@/features/auth";
+import { AGENCY_USER_MENU_LIST } from "../model";
 
-import { USER_MENU_LIST } from "../model";
-
-export const UserMenu: FC = () => {
+export const AgencyUserMenu: FC = () => {
 	const { t } = useTranslation("sidebar");
 	const { handleSignOut, isLoading } = useSignOutAction();
+	const { data: accountData, isLoading: isAccountLoading } =
+		useGetAccountQuery();
+
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -36,21 +40,42 @@ export const UserMenu: FC = () => {
 				>
 					<Avatar className="cursor-pointer">
 						<AvatarImage src="./avatar.jpg" alt="Profile image" />
-						<AvatarFallback>KK</AvatarFallback>
+						<AvatarFallback>
+							{isAccountLoading ? (
+								<Skeleton className="size-4" />
+							) : (
+								<>
+									{accountData?.first_name?.[0]}
+									{accountData?.last_name?.[0]}
+								</>
+							)}
+						</AvatarFallback>
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="max-w-64" align="end">
-				<DropdownMenuLabel className="flex min-w-0 flex-col">
-					<span className="text-foreground truncate text-sm font-medium">
-						Keith Kennedy
+				<DropdownMenuLabel className="flex min-w-0 flex-col gap-1">
+					<span className="text-foreground truncate text-sm font-medium line-clamp-1">
+						{isAccountLoading ? (
+							<Skeleton className="size-5 w-3/4" />
+						) : (
+							<>
+								{accountData?.first_name}{" "}
+								{accountData?.last_name}
+							</>
+						)}
 					</span>
 					<span className="text-muted-foreground truncate text-xs font-normal">
-						k.kennedy@originui.com
+						{isAccountLoading ? (
+							<Skeleton className="size-4 w-1/2" />
+						) : (
+							// accountData?.email
+							"example@gmail.com"
+						)}
 					</span>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				{USER_MENU_LIST.map((menuGroup, index) => (
+				{AGENCY_USER_MENU_LIST.map((menuGroup, index) => (
 					<DropdownMenuGroup key={index}>
 						{menuGroup.menu?.map((menuItem) => (
 							<DropdownMenuItem key={menuItem.label} asChild>
