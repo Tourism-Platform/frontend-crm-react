@@ -66,6 +66,8 @@ const BusinessSettingsBase: FC = () => {
 		}
 	}
 
+	const isLoading =
+		isUpdating || isBusinessLoading || form.formState.isSubmitting;
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="text-3xl">{t("page_name")}</h1>
@@ -88,11 +90,8 @@ const BusinessSettingsBase: FC = () => {
 							<Separator />
 							<DocumentsInfo />
 							<div>
-								<Button
-									type="submit"
-									disabled={isUpdating || isBusinessLoading}
-								>
-									{isUpdating || isBusinessLoading ? (
+								<Button type="submit" disabled={isLoading}>
+									{isLoading ? (
 										<>
 											<Loader className="mr-2 h-4 w-4 animate-spin" />
 											{isBusinessLoading

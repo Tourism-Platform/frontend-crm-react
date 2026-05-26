@@ -13,16 +13,26 @@ import { tourOrderHandlers } from "@/entities/tour/order/handlers/tour-order.han
 import { tourPreviewTourHandlers } from "@/entities/tour/preview-tour/handlers/preview-tour.handlers";
 import { tourHandlers } from "@/entities/tour/tour/handlers/tour.handlers";
 import {
+	agencyBusinessDocumentsHandlers,
+	agencyBusinessHandlers,
+	agencyHandlers,
 	operatorBusinessDocumentsHandlers,
-	operatorBusinessHandlers
+	operatorBusinessHandlers,
+	operatorFinancialHandlers,
+	operatorHandlers
 } from "@/entities/user";
 import { accountHandlers } from "@/entities/user/account/handlers/account.handlers";
 
 export const handlers = [
 	...authHandlers,
 	...accountHandlers,
+	...operatorHandlers,
 	...operatorBusinessHandlers,
 	...operatorBusinessDocumentsHandlers,
+	...operatorFinancialHandlers,
+	...agencyHandlers,
+	...agencyBusinessHandlers,
+	...agencyBusinessDocumentsHandlers,
 	...staffHandlers,
 	...commissionHandlers,
 	...financeInvoiceHandlers,

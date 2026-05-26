@@ -1,8 +1,8 @@
-import type { TOperatorBusinessInfoBackend } from "../types";
+import type { TAgencyBusinessInfoBackend } from "../types";
 
-export const OPERATOR_BUSINESS_MOCK: TOperatorBusinessInfoBackend = {
+export const AGENCY_BUSINESS_MOCK: TAgencyBusinessInfoBackend = {
 	id: "00000000-0000-4000-8000-000000000001",
-	operator_id: "00000000-0000-4000-8000-000000000002",
+	agency_id: "00000000-0000-4000-8000-000000000002",
 	logo_url:
 		"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0V3dWN9gEdpOEGs0kUIYQw2AeBHj94JtcfnMLg",
 	description:

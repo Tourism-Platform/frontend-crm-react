@@ -1,17 +1,16 @@
 import type {
-	TOperatorBusinessInfoBackend,
-	TOperatorBusinessInfoUpdateBackend
+	TAgencyBusinessInfoBackend,
+	TAgencyBusinessInfoUpdateBackend
 } from "../types";
 import {
-	ENUM_OPERATOR_BUSINESS_TYPES,
-	type TOperatorBusinessSchema
+	ENUM_AGENCY_BUSINESS_TYPES,
+	type TAgencyBusinessSchema
 } from "../types";
 
-export const mapOperatorBusinessInfoToFrontend = (
-	backend: TOperatorBusinessInfoBackend | null
-): TOperatorBusinessSchema | null => {
+export const mapAgencyBusinessInfoToFrontend = (
+	backend: TAgencyBusinessInfoBackend | null
+): TAgencyBusinessSchema | null => {
 	if (!backend) return null;
-
 	return {
 		business: {
 			business_description: backend?.description ?? "",
@@ -22,7 +21,7 @@ export const mapOperatorBusinessInfoToFrontend = (
 			legal_company_name: backend?.legal_name ?? "",
 			director: backend?.director_name ?? "",
 			tin: backend?.tax_id ?? "",
-			type_of_business: ENUM_OPERATOR_BUSINESS_TYPES.TOUR_OPERATOR
+			type_of_business: ENUM_AGENCY_BUSINESS_TYPES.AGENCY
 		},
 		address: {
 			address_line: backend?.address_line ?? "",
@@ -39,9 +38,9 @@ export const mapOperatorBusinessInfoToFrontend = (
 	};
 };
 
-export const mapOperatorBusinessInfoToBackend = (
-	frontend: TOperatorBusinessSchema
-): TOperatorBusinessInfoUpdateBackend => ({
+export const mapAgencyBusinessInfoToBackend = (
+	frontend: TAgencyBusinessSchema
+): TAgencyBusinessInfoUpdateBackend => ({
 	description: frontend.business.business_description,
 	business_name: frontend.business.business_name,
 	website_url: frontend.business.business_website,

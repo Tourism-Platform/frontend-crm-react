@@ -1,35 +1,48 @@
-import { ENUM_API_TAGS } from "@/shared/api";
+import { ENUM_API_TAGS, OPERATOR_DOCUMENTS_PATHS } from "@/shared/api";
 import type { TFileMetadata } from "@/shared/hooks";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
+import { mapOperatorDocumentsToFrontend } from "../converters";
+import type { TOperatorDocumentBackend } from "../types";
+
 export const operatorBusinessDocumentsApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getOperatorBusinessDocuments: builder.query<TFileMetadata[], void>({
-			query: () => "/user/business-documents",
+			query: () => ({
+				...OPERATOR_DOCUMENTS_PATHS.listFiles
+			}),
+			transformResponse: (response: TOperatorDocumentBackend[]) =>
+				mapOperatorDocumentsToFrontend(response),
 			providesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		uploadOperatorBusinessDocument: builder.mutation<
-			TFileMetadata,
+			TFileMetadata[],
 			{ file: File }
 		>({
 			query: ({ file }) => {
 				const formData = new FormData();
-				formData.append("file", file);
+				formData.append("files", file);
 				return {
-					url: "/user/business-documents",
-					method: "POST",
+					...OPERATOR_DOCUMENTS_PATHS.addFiles,
 					body: formData
 				};
 			},
+			transformResponse: (response: TOperatorDocumentBackend[]) =>
+				mapOperatorDocumentsToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		deleteOperatorBusinessDocument: builder.mutation<void, string>({
-			query: (documentId) => ({
-				url: `/user/business-documents/${documentId}`,
-				method: "DELETE"
+			query: (fileId) => ({
+				...OPERATOR_DOCUMENTS_PATHS.removeFile(fileId)
 			}),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
+		}),
+		getOperatorDocumentUrl: builder.query<Blob, string>({
+			query: (fileId) => ({
+				...OPERATOR_DOCUMENTS_PATHS.getFileUrl(fileId),
+				responseHandler: (response) => response.blob()
+			})
 		})
 	})
 });
