@@ -3,55 +3,71 @@ import { ENUM_PATH } from "@/shared/config";
 import type { TBreadcrumbList } from "./types";
 
 export const BREADCRUMB_LIST: TBreadcrumbList = {
-	// Settings
-	[ENUM_PATH.SETTINGS.ROOT]: "owner.settings.title",
-	[ENUM_PATH.SETTINGS.ACCOUNT_SETTINGS]:
-		"owner.settings.personal.menu.account",
-	[ENUM_PATH.SETTINGS.SECURITY]: "owner.settings.personal.menu.security",
-	[ENUM_PATH.SETTINGS.NOTIFICATIONS]:
-		"owner.settings.personal.menu.notifications",
-	[ENUM_PATH.SETTINGS.BUSINESS_SETTINGS]:
-		"owner.settings.business.menu.business",
-	[ENUM_PATH.SETTINGS.STAFF_INFORMATION]:
-		"owner.settings.business.menu.staff",
-	[ENUM_PATH.SETTINGS.FINANCIAL_SETTINGS]:
-		"owner.settings.business.menu.financial",
-	[ENUM_PATH.SETTINGS.TOUR_SETTINGS]: "owner.settings.business.menu.tour",
-	[ENUM_PATH.SETTINGS.TAGS]: "owner.settings.business.menu.tags",
+	// Settings — operator
+	[ENUM_PATH.OPERATOR.SETTINGS.ROOT]: "operator.settings.title",
+	[ENUM_PATH.OPERATOR.SETTINGS.ACCOUNT_SETTINGS]:
+		"operator.settings.personal.menu.account",
+	[ENUM_PATH.OPERATOR.SETTINGS.SECURITY]:
+		"operator.settings.personal.menu.security",
+	[ENUM_PATH.OPERATOR.SETTINGS.NOTIFICATIONS]:
+		"operator.settings.personal.menu.notifications",
+	[ENUM_PATH.OPERATOR.SETTINGS.BUSINESS_SETTINGS]:
+		"operator.settings.business.menu.business",
+	[ENUM_PATH.OPERATOR.SETTINGS.STAFF_INFORMATION]:
+		"operator.settings.business.menu.staff",
+	[ENUM_PATH.OPERATOR.SETTINGS.FINANCIAL_SETTINGS]:
+		"operator.settings.business.menu.financial",
+	[ENUM_PATH.OPERATOR.SETTINGS.TOUR_SETTINGS]:
+		"operator.settings.business.menu.tour",
+	[ENUM_PATH.OPERATOR.SETTINGS.TAGS]: "operator.settings.business.menu.tags",
+
+	// Settings — agency
+	[ENUM_PATH.AGENCY.SETTINGS.ROOT]: "agency.settings.title",
+	[ENUM_PATH.AGENCY.SETTINGS.ACCOUNT_SETTINGS]:
+		"agency.settings.personal.menu.account",
+	[ENUM_PATH.AGENCY.SETTINGS.SECURITY]:
+		"agency.settings.personal.menu.security",
+	[ENUM_PATH.AGENCY.SETTINGS.NOTIFICATIONS]:
+		"agency.settings.personal.menu.notifications",
+	[ENUM_PATH.AGENCY.SETTINGS.BUSINESS_SETTINGS]:
+		"agency.settings.business.menu.business",
+	[ENUM_PATH.AGENCY.SETTINGS.FINANCIAL_SETTINGS]:
+		"agency.settings.business.menu.financial",
 
 	// Tours
-	[ENUM_PATH.TOURS.ROOT]: "owner.tours.general.title",
-	[ENUM_PATH.TOURS.CATALOG.ROOT]: "owner.tours.general.title",
-	[ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR]: "owner.tours.general.title",
-	[ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION]: "owner.tours.general.title",
-	[ENUM_PATH.TOURS.CATALOG.BOOKING]: "owner.tours.general.title",
-	[ENUM_PATH.TOURS.SEARCH]: "owner.tours.general.title",
-	[ENUM_PATH.TOURS.OVERVIEW]: "owner.tours.general.menu.overview",
-	[ENUM_PATH.TOURS.LANDING]: "owner.tours.general.menu.landing",
-	[ENUM_PATH.TOURS.ITINERARY]: "owner.tours.general.menu.itinerary",
-	[ENUM_PATH.TOURS.SCHEDULE]: "owner.tours.general.menu.schedule",
-	[ENUM_PATH.TOURS.PRICING_REVIEW]: "owner.tours.general.menu.pricing_review",
-	[ENUM_PATH.TOURS.ORDER_HISTORY]: "owner.tours.more.menu.order_history",
-	[ENUM_PATH.TOURS.MESSAGES]: "owner.tours.more.menu.messages",
-	[ENUM_PATH.TOURS.ACTIVITY_LOG]: "owner.tours.more.menu.activity_log",
-	[ENUM_PATH.TOURS.SETTINGS]: "owner.tours.more.menu.settings",
+	[ENUM_PATH.TOURS.ROOT]: "operator.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.ROOT]: "operator.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR]: "operator.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION]: "operator.tours.general.title",
+	[ENUM_PATH.TOURS.CATALOG.BOOKING]: "operator.tours.general.title",
+	[ENUM_PATH.TOURS.SEARCH]: "operator.tours.general.title",
+	[ENUM_PATH.TOURS.OVERVIEW]: "operator.tours.general.menu.overview",
+	[ENUM_PATH.TOURS.LANDING]: "operator.tours.general.menu.landing",
+	[ENUM_PATH.TOURS.ITINERARY]: "operator.tours.general.menu.itinerary",
+	[ENUM_PATH.TOURS.SCHEDULE]: "operator.tours.general.menu.schedule",
+	[ENUM_PATH.TOURS.PRICING_REVIEW]:
+		"operator.tours.general.menu.pricing_review",
+	[ENUM_PATH.TOURS.ORDER_HISTORY]: "operator.tours.more.menu.order_history",
+	[ENUM_PATH.TOURS.MESSAGES]: "operator.tours.more.menu.messages",
+	[ENUM_PATH.TOURS.ACTIVITY_LOG]: "operator.tours.more.menu.activity_log",
+	[ENUM_PATH.TOURS.SETTINGS]: "operator.tours.more.menu.settings",
 
 	// Booking
-	[ENUM_PATH.BOOKING.ROOT]: "owner.booking.title",
-	[ENUM_PATH.BOOKING.ORDERS]: "owner.booking.general.menu.orders",
-	[ENUM_PATH.BOOKING.ORDER_ID]: "owner.booking.general.menu.orders",
-	[ENUM_PATH.BOOKING.APPEALS]: "owner.booking.general.menu.appeals",
+	[ENUM_PATH.BOOKING.ROOT]: "operator.booking.title",
+	[ENUM_PATH.BOOKING.ORDERS]: "operator.booking.general.menu.orders",
+	[ENUM_PATH.BOOKING.ORDER_ID]: "operator.booking.general.menu.orders",
+	[ENUM_PATH.BOOKING.APPEALS]: "operator.booking.general.menu.appeals",
 
 	// Finance
-	[ENUM_PATH.FINANCE.ROOT]: "owner.finance.title",
-	[ENUM_PATH.FINANCE.INVOICES]: "owner.finance.general.menu.invoices",
-	[ENUM_PATH.FINANCE.INVOICE_ID]: "owner.finance.general.menu.invoices",
+	[ENUM_PATH.FINANCE.ROOT]: "operator.finance.title",
+	[ENUM_PATH.FINANCE.INVOICES]: "operator.finance.general.menu.invoices",
+	[ENUM_PATH.FINANCE.INVOICE_ID]: "operator.finance.general.menu.invoices",
 	[ENUM_PATH.FINANCE.CLIENT_PAYMENTS]:
-		"owner.finance.general.menu.client_payments",
+		"operator.finance.general.menu.client_payments",
 	[ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS]:
-		"owner.finance.general.menu.supplier_payments",
+		"operator.finance.general.menu.supplier_payments",
 	[ENUM_PATH.FINANCE.RECONCILIATION]:
-		"owner.finance.general.menu.reconciliation",
+		"operator.finance.general.menu.reconciliation",
 	[ENUM_PATH.FINANCE.RECONCILIATION_ID]:
-		"owner.finance.general.menu.reconciliation"
+		"operator.finance.general.menu.reconciliation"
 };

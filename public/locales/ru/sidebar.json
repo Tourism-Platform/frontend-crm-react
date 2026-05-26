@@ -1,5 +1,5 @@
 {
-	"owner": {
+	"operator": {
 		"settings": {
 			"title": "Настройки",
 			"personal": {
@@ -18,6 +18,69 @@
 					"financial": "Финансовая информация",
 					"tour": "Настройки тура",
 					"tags": "Теги"
+				}
+			}
+		},
+		"tours": {
+			"general": {
+				"title": "Основное",
+				"menu": {
+					"overview": "Обзор",
+					"itinerary": "Маршрут",
+					"schedule": "Расписание",
+					"pricing_review": "Цены и отзывы",
+					"landing": "Лэндинг"
+				}
+			},
+			"more": {
+				"title": "Дополнительно",
+				"menu": {
+					"order_history": "История заказов",
+					"messages": "Сообщения",
+					"activity_log": "Журнал активности",
+					"settings": "Настройки"
+				}
+			}
+		},
+		"booking": {
+			"title": "Бронирование",
+			"general": {
+				"title": "Основное",
+				"menu": {
+					"orders": "Заказы",
+					"appeals": "Обращения"
+				}
+			}
+		},
+		"finance": {
+			"title": "Финансы",
+			"general": {
+				"title": "Общее",
+				"menu": {
+					"invoices": "Счета",
+					"client_payments": "Платежи клиентов",
+					"supplier_payments": "Платежи поставщикам",
+					"reconciliation": "Сверка"
+				}
+			}
+		}
+	},
+	"agency": {
+		"settings": {
+			"title": "Настройки",
+			"personal": {
+				"title": "Личные",
+				"menu": {
+					"account": "Настройки аккаунта",
+					"security": "Безопасность",
+					"notifications": "Уведомления"
+				}
+			},
+			"business": {
+				"title": "Бизнес",
+				"menu": {
+					"business": "Информация о бизнесе",
+					"financial": "Финансовая информация"
 				}
 			}
 		},

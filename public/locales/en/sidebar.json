@@ -1,5 +1,5 @@
 {
-	"owner": {
+	"operator": {
 		"settings": {
 			"title": "Settings",
 			"personal": {
@@ -18,6 +18,69 @@
 					"financial": "Financial information",
 					"tour": "Tour settings",
 					"tags": "Tags"
+				}
+			}
+		},
+		"tours": {
+			"general": {
+				"title": "General",
+				"menu": {
+					"overview": "Overview",
+					"itinerary": "Itinerary",
+					"schedule": "Schedule",
+					"pricing_review": "Pricing & review",
+					"landing": "Landing"
+				}
+			},
+			"more": {
+				"title": "More",
+				"menu": {
+					"order_history": "Order history",
+					"messages": "Messages",
+					"activity_log": "Activity log",
+					"settings": "Settings"
+				}
+			}
+		},
+		"booking": {
+			"title": "Booking",
+			"general": {
+				"title": "General",
+				"menu": {
+					"orders": "Orders",
+					"appeals": "Appeals"
+				}
+			}
+		},
+		"finance": {
+			"title": "Finance",
+			"general": {
+				"title": "General",
+				"menu": {
+					"invoices": "Invoices",
+					"client_payments": "Client payments",
+					"supplier_payments": "Supplier payments",
+					"reconciliation": "Reconciliation"
+				}
+			}
+		}
+	},
+	"agency": {
+		"settings": {
+			"title": "Settings",
+			"personal": {
+				"title": "Personal",
+				"menu": {
+					"account": "Account Settings",
+					"security": "Security",
+					"notifications": "Notifications"
+				}
+			},
+			"business": {
+				"title": "Business",
+				"menu": {
+					"business": "Business information",
+					"financial": "Financial information"
 				}
 			}
 		},

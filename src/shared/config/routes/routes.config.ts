@@ -2,16 +2,28 @@ export const ENUM_PATH = {
 	MAIN: "/",
 	LOGIN: "/login",
 	NOT_FOUND: "/*",
-	SETTINGS: {
-		ROOT: "/settings",
-		ACCOUNT_SETTINGS: "/settings/account-settings",
-		SECURITY: "/settings/security",
-		NOTIFICATIONS: "/settings/notifications",
-		BUSINESS_SETTINGS: "/settings/business-settings",
-		STAFF_INFORMATION: "/settings/staff-information",
-		FINANCIAL_SETTINGS: "/settings/financial-settings",
-		TOUR_SETTINGS: "/settings/tour-settings",
-		TAGS: "/settings/tags"
+	OPERATOR: {
+		SETTINGS: {
+			ROOT: "/operator/settings",
+			ACCOUNT_SETTINGS: "/operator/settings/account-settings",
+			SECURITY: "/operator/settings/security",
+			NOTIFICATIONS: "/operator/settings/notifications",
+			BUSINESS_SETTINGS: "/operator/settings/business-settings",
+			STAFF_INFORMATION: "/operator/settings/staff-information",
+			FINANCIAL_SETTINGS: "/operator/settings/financial-settings",
+			TOUR_SETTINGS: "/operator/settings/tour-settings",
+			TAGS: "/operator/settings/tags"
+		}
+	},
+	AGENCY: {
+		SETTINGS: {
+			ROOT: "/agency/settings",
+			ACCOUNT_SETTINGS: "/agency/settings/account-settings",
+			SECURITY: "/agency/settings/security",
+			NOTIFICATIONS: "/agency/settings/notifications",
+			BUSINESS_SETTINGS: "/agency/settings/business-settings",
+			FINANCIAL_SETTINGS: "/agency/settings/financial-settings"
+		}
 	},
 	TOURS: {
 		ROOT: "/tours",

@@ -11,8 +11,13 @@ export interface IRouting {
 	layout: ENUM_LAYOUT_TYPE;
 }
 
-export type TSettingsPath =
-	(typeof ENUM_PATH.SETTINGS)[keyof typeof ENUM_PATH.SETTINGS];
+export type TOperatorSettingsPath =
+	(typeof ENUM_PATH.OPERATOR.SETTINGS)[keyof typeof ENUM_PATH.OPERATOR.SETTINGS];
+
+export type TAgencySettingsPath =
+	(typeof ENUM_PATH.AGENCY.SETTINGS)[keyof typeof ENUM_PATH.AGENCY.SETTINGS];
+
+export type TSettingsPath = TOperatorSettingsPath | TAgencySettingsPath;
 
 export type TToursPath =
 	| Omit<typeof ENUM_PATH.TOURS, "EVENTS" | "CATALOG">[keyof Omit<

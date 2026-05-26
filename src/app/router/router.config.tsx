@@ -1,25 +1,28 @@
 ﻿import React from "react";
 
 import {
+	AGENCY_SETTINGS_SIDEBAR_LIST,
 	BOOKING_SIDEBAR_LIST,
 	ENUM_AUTH,
 	ENUM_LAYOUT,
 	ENUM_PATH,
 	FINANCE_SIDEBAR_LIST,
 	type IRouting,
-	SETTINGS_SIDEBAR_LIST,
+	OPERATOR_SETTINGS_SIDEBAR_LIST,
 	TOURS_SIDEBAR_LIST
 } from "@/shared/config";
 
 import {
-	BookingOwnerLayout,
-	DefaultOwnerLayout,
-	EventOwnerLayout,
-	FinanceOwnerLayout,
-	SettingsOwnerLayout,
-	SideBarOwnerLayout,
-	TourOwnerLayout,
-	ToursOwnerLayout
+	BookingOperatorLayout,
+	DefaultOperatorLayout,
+	EventOperatorLayout,
+	FinanceOperatorLayout,
+	SettingsAgencyLayout,
+	SettingsOperatorLayout,
+	SideBarAgencyLayout,
+	SideBarOperatorLayout,
+	TourOperatorLayout,
+	ToursOperatorLayout
 } from "@/widgets/layouts";
 
 // Lazy loading страниц для корректной работы Suspense
@@ -37,45 +40,74 @@ const NotFoundPage = React.lazy(() =>
 	}))
 );
 
-// Settings pages
-const AccountSettingsPage = React.lazy(() =>
+// Settings pages — operator
+const OperatorAccountSettingsPage = React.lazy(() =>
 	import(
-		"@/pages/settings/account-settings-page/ui/account-settings-page"
+		"@/pages/settings-operator/account-settings-page/ui/account-settings-page"
 	).then((m) => ({ default: m.AccountSettingsPage }))
 );
-const BusinessSettingsPage = React.lazy(() =>
+const OperatorBusinessSettingsPage = React.lazy(() =>
 	import(
-		"@/pages/settings/business-settings-page/ui/business-settings-page"
+		"@/pages/settings-operator/business-settings-page/ui/business-settings-page"
 	).then((m) => ({ default: m.BusinessSettingsPage }))
 );
-const FinancialSettingsPage = React.lazy(() =>
+const OperatorFinancialSettingsPage = React.lazy(() =>
 	import(
-		"@/pages/settings/financial-settings-page/ui/financial-settings-page"
+		"@/pages/settings-operator/financial-settings-page/ui/financial-settings-page"
 	).then((m) => ({ default: m.FinancialSettingsPage }))
 );
-const NotificationsPage = React.lazy(() =>
-	import("@/pages/settings/notifications-page/ui/notifications-page").then(
-		(m) => ({ default: m.NotificationsPage })
+const OperatorNotificationsPage = React.lazy(() =>
+	import(
+		"@/pages/settings-operator/notifications-page/ui/notifications-page"
+	).then((m) => ({ default: m.NotificationsPage }))
+);
+const OperatorSecurityPage = React.lazy(() =>
+	import("@/pages/settings-operator/security-page/ui/security-page").then(
+		(m) => ({ default: m.SecurityPage })
 	)
 );
-const SecurityPage = React.lazy(() =>
-	import("@/pages/settings/security-page/ui/security-page").then((m) => ({
-		default: m.SecurityPage
-	}))
-);
-const StaffInformationPage = React.lazy(() =>
+const OperatorStaffInformationPage = React.lazy(() =>
 	import(
-		"@/pages/settings/staff-information-page/ui/staff-information-page"
+		"@/pages/settings-operator/staff-information-page/ui/staff-information-page"
 	).then((m) => ({ default: m.StaffInformationPage }))
 );
-const TagsPage = React.lazy(() =>
-	import("@/pages/settings/tags-page/ui/tags-page").then((m) => ({
+const OperatorTagsPage = React.lazy(() =>
+	import("@/pages/settings-operator/tags-page/ui/tags-page").then((m) => ({
 		default: m.TagsPage
 	}))
 );
-const TourSettingsPage = React.lazy(() =>
-	import("@/pages/settings/tour-settings-page/ui/tour-settings-page").then(
-		(m) => ({ default: m.TourSettingsPage })
+const OperatorTourSettingsPage = React.lazy(() =>
+	import(
+		"@/pages/settings-operator/tour-settings-page/ui/tour-settings-page"
+	).then((m) => ({ default: m.TourSettingsPage }))
+);
+
+// Settings pages — agency
+const AgencyAccountSettingsPage = React.lazy(() =>
+	import(
+		"@/pages/settings-agency/account-settings-page/ui/account-settings-page"
+	).then((m) => ({ default: m.AccountSettingsPage }))
+);
+const AgencyBusinessSettingsPage = React.lazy(() =>
+	import(
+		"@/pages/settings-agency/business-settings-page/ui/business-settings-page"
+	).then((m) => ({ default: m.BusinessSettingsPage }))
+);
+const AgencyFinancialSettingsPage = React.lazy(() =>
+	import(
+		"@/pages/settings-agency/financial-settings-page/ui/financial-settings-page"
+	).then((m) => ({ default: m.FinancialSettingsPage }))
+);
+const AgencyNotificationsPage = React.lazy(() =>
+	import(
+		"@/pages/settings-agency/notifications-page/ui/notifications-page"
+	).then((m) => ({ default: m.NotificationsPage }))
+);
+const AgencySecurityPage = React.lazy(() =>
+	import("@/pages/settings-agency/security-page/ui/security-page").then(
+		(m) => ({
+			default: m.SecurityPage
+		})
 	)
 );
 
@@ -260,117 +292,185 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 
 	// only private
 
-	// settings
+	// settings — operator
 	{
-		path: ENUM_PATH.SETTINGS.ACCOUNT_SETTINGS,
-		component: AccountSettingsPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.ACCOUNT_SETTINGS,
+		component: OperatorAccountSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			SettingsOwnerLayout
+			SettingsOperatorLayout
 		]
 	},
 	{
-		path: ENUM_PATH.SETTINGS.BUSINESS_SETTINGS,
-		component: BusinessSettingsPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.BUSINESS_SETTINGS,
+		component: OperatorBusinessSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			SettingsOwnerLayout
+			SettingsOperatorLayout
 		]
 	},
 	{
-		path: ENUM_PATH.SETTINGS.FINANCIAL_SETTINGS,
-		component: FinancialSettingsPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.FINANCIAL_SETTINGS,
+		component: OperatorFinancialSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			SettingsOwnerLayout
+			SettingsOperatorLayout
 		]
 	},
 	{
-		path: ENUM_PATH.SETTINGS.NOTIFICATIONS,
-		component: NotificationsPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.NOTIFICATIONS,
+		component: OperatorNotificationsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			)
-			// SettingsOwnerLayout
 		]
 	},
 	{
-		path: ENUM_PATH.SETTINGS.SECURITY,
-		component: SecurityPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.SECURITY,
+		component: OperatorSecurityPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			SettingsOwnerLayout
+			SettingsOperatorLayout
 		]
 	},
 	{
-		path: ENUM_PATH.SETTINGS.STAFF_INFORMATION,
-		component: StaffInformationPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.STAFF_INFORMATION,
+		component: OperatorStaffInformationPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			SettingsOwnerLayout
+			SettingsOperatorLayout
 		]
 	},
 	{
-		path: ENUM_PATH.SETTINGS.TAGS,
-		component: TagsPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.TAGS,
+		component: OperatorTagsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			)
-			// SettingsOwnerLayout
 		]
 	},
 	{
-		path: ENUM_PATH.SETTINGS.TOUR_SETTINGS,
-		component: TourSettingsPage,
+		path: ENUM_PATH.OPERATOR.SETTINGS.TOUR_SETTINGS,
+		component: OperatorTourSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={SETTINGS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			)
-			// SettingsOwnerLayout
+		]
+	},
+
+	// settings — agency
+	{
+		path: ENUM_PATH.AGENCY.SETTINGS.ACCOUNT_SETTINGS,
+		component: AgencyAccountSettingsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
+					{children}
+				</SideBarAgencyLayout>
+			),
+			SettingsAgencyLayout
+		]
+	},
+	{
+		path: ENUM_PATH.AGENCY.SETTINGS.BUSINESS_SETTINGS,
+		component: AgencyBusinessSettingsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
+					{children}
+				</SideBarAgencyLayout>
+			),
+			SettingsAgencyLayout
+		]
+	},
+	{
+		path: ENUM_PATH.AGENCY.SETTINGS.FINANCIAL_SETTINGS,
+		component: AgencyFinancialSettingsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
+					{children}
+				</SideBarAgencyLayout>
+			),
+			SettingsAgencyLayout
+		]
+	},
+	{
+		path: ENUM_PATH.AGENCY.SETTINGS.NOTIFICATIONS,
+		component: AgencyNotificationsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
+					{children}
+				</SideBarAgencyLayout>
+			)
+		]
+	},
+	{
+		path: ENUM_PATH.AGENCY.SETTINGS.SECURITY,
+		component: AgencySecurityPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
+					{children}
+				</SideBarAgencyLayout>
+			),
+			SettingsAgencyLayout
 		]
 	},
 
@@ -379,168 +479,168 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.TOURS.ROOT,
 		component: ToursPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [ToursOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.ROOT,
 		component: CatalogToursPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [ToursOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR,
 		component: PreviewTourPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [ToursOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION,
 		component: PreviewOptionPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [ToursOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.BOOKING,
 		component: PreviewBookingPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [ToursOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.SEARCH,
 		component: SearchToursPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [ToursOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.OVERVIEW,
 		component: OverviewPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.ITINERARY,
 		component: ItineraryPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.SCHEDULE,
 		component: SchedulePage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.PRICING_REVIEW,
 		component: PricingReviewPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.ORDER_HISTORY,
 		component: OrderHistoryPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.MESSAGES,
 		component: MessagesPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.LANDING,
 		component: LandingPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.ACTIVITY_LOG,
 		component: ActivityLogPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.SETTINGS,
 		component: SettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			TourOwnerLayout
+			TourOperatorLayout
 		]
 	},
 
@@ -549,84 +649,84 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.TOURS.EVENTS.FLIGHT,
 		component: FlightEditPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			EventOwnerLayout
+			EventOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.EVENT,
 		component: EventEditPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			EventOwnerLayout
+			EventOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.TRANSFER,
 		component: TransportationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			EventOwnerLayout
+			EventOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION,
 		component: AccommodationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			EventOwnerLayout
+			EventOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.MULTIPLY_OPTION,
 		component: MultiplyOptionEditPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			EventOwnerLayout
+			EventOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.INFO,
 		component: InformationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			EventOwnerLayout
+			EventOperatorLayout
 		]
 	},
 	// {
@@ -636,11 +736,11 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	// 	layout: ENUM_LAYOUT.ROOT,
 	// 	layout_cascade: [
 	// 		({ children }: { children: React.ReactNode }) => (
-	// 			<SideBarOwnerLayout items={TOURS_SIDEBAR_LIST}>
+	// 			<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
 	// 				{children}
-	// 			</SideBarOwnerLayout>
+	// 			</SideBarOperatorLayout>
 	// 		),
-	// 		EventOwnerLayout
+	// 		EventOperatorLayout
 	// 	]
 	// },
 
@@ -649,36 +749,36 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.BOOKING.APPEALS,
 		component: AppealsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={BOOKING_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={BOOKING_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			BookingOwnerLayout
+			BookingOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.BOOKING.ORDERS,
 		component: OrdersPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={BOOKING_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={BOOKING_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			BookingOwnerLayout
+			BookingOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.BOOKING.ORDER_ID,
 		component: OrderIdPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [DefaultOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [DefaultOperatorLayout]
 	},
 
 	// finance
@@ -686,63 +786,63 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.FINANCE.INVOICES,
 		component: InvoicesPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			FinanceOwnerLayout
+			FinanceOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.FINANCE.INVOICE_ID,
 		component: InvoiceIdPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [DefaultOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [DefaultOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.FINANCE.CLIENT_PAYMENTS,
 		component: ClientPaymentsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			FinanceOwnerLayout
+			FinanceOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS,
 		component: SupplierPaymentsPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			FinanceOwnerLayout
+			FinanceOperatorLayout
 		]
 	},
 	{
 		path: ENUM_PATH.FINANCE.RECONCILIATION,
 		component: ReconciliationPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOwnerLayout items={FINANCE_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
 					{children}
-				</SideBarOwnerLayout>
+				</SideBarOperatorLayout>
 			),
-			FinanceOwnerLayout
+			FinanceOperatorLayout
 		]
 	},
 
@@ -750,8 +850,8 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.FINANCE.RECONCILIATION_ID,
 		component: ReconciliationIdPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT,
-		layout_cascade: [DefaultOwnerLayout]
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [DefaultOperatorLayout]
 	},
 
 	// 404
@@ -759,6 +859,6 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.NOT_FOUND,
 		component: NotFoundPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT
+		layout: ENUM_LAYOUT.ROOT_OPERATOR
 	}
 ];

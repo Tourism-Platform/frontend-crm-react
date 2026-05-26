@@ -1,0 +1,118 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
+import { type FC, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+
+import {
+	Button,
+	Card,
+	CardContent,
+	Form,
+	Separator,
+	withErrorBoundary
+} from "@/shared/ui";
+
+import { useGetAuthAccountQuery } from "@/entities/auth";
+import {
+	ACCOUNT_SCHEMA,
+	type TAccountSchema,
+	useGetAccountQuery,
+	useUpdateAccountMutation
+} from "@/entities/user";
+
+import { AvatarInfo } from "./avatar-info";
+import { EmailAddress } from "./email-address";
+import { GeneralInfo } from "./general-info";
+import { PersonalInfo } from "./personal-info";
+
+const AccountSettingsBase: FC = () => {
+	const { t } = useTranslation("account_settings_page");
+
+	const {
+		data: accountData,
+		isLoading: isAccountLoading,
+		isError: isAccountError
+	} = useGetAccountQuery();
+
+	const {
+		data: authAccountData,
+		isLoading: isAuthAccountLoading,
+		isError: isAuthAccountError
+	} = useGetAuthAccountQuery();
+	const [updateAccount, { isLoading: isUpdating }] =
+		useUpdateAccountMutation();
+
+	const form = useForm<TAccountSchema>({
+		resolver: zodResolver(ACCOUNT_SCHEMA),
+		mode: "onSubmit"
+	});
+
+	useEffect(() => {
+		if (accountData) {
+			form.reset(accountData);
+		}
+	}, [accountData, form.reset]);
+
+	useEffect(() => {
+		if (isAccountError || isAuthAccountError) {
+			toast.error(t("form.toasts.load.error"));
+		}
+	}, [isAccountError, isAuthAccountError, t]);
+
+	async function onSubmit(data: TAccountSchema) {
+		try {
+			await updateAccount(data).unwrap();
+			toast.success(t("form.toasts.save.success"));
+		} catch (error) {
+			toast.error(t("form.toasts.save.error"));
+			console.log(error);
+		}
+	}
+	return (
+		<section className="flex gap-5 flex-col">
+			<h1 className="text-3xl">{t("page_name")}</h1>
+			<Card>
+				<CardContent className="flex gap-5 flex-col max-w-5xl">
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							className="space-y-5"
+						>
+							<AvatarInfo form={form} />
+							<Separator />
+							<EmailAddress
+								email={authAccountData?.email}
+								isLoading={isAuthAccountLoading}
+							/>
+							<Separator />
+							<PersonalInfo form={form} />
+							<Separator />
+							<GeneralInfo form={form} />
+							<div>
+								<Button
+									type="submit"
+									disabled={isUpdating || isAccountLoading}
+								>
+									{isAccountLoading || isUpdating ? (
+										<>
+											<Loader className="mr-2 h-4 w-4 animate-spin" />
+											{isAccountLoading
+												? t("form.buttons.loading")
+												: t("form.buttons.saving")}
+										</>
+									) : (
+										t("form.buttons.save")
+									)}
+								</Button>
+							</div>
+						</form>
+					</Form>
+				</CardContent>
+			</Card>
+		</section>
+	);
+};
+
+export const AccountSettings = withErrorBoundary(AccountSettingsBase);

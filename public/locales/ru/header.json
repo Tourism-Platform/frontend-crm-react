@@ -5,7 +5,12 @@
 		"sign_in": "Войти",
 		"get_started": "Начать"
 	},
-	"owner": {
+	"agency": {
+		"catalog": {
+			"title": "Каталог"
+		}
+	},
+	"operator": {
 		"tours": {
 			"title": "Туры",
 			"menu": {

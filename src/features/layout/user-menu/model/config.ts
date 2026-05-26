@@ -16,18 +16,18 @@ export const USER_MENU_LIST: IUserMenu[] = [
 	{
 		menu: [
 			{
-				label: "owner.settings.personal.menu.account",
-				path: ENUM_PATH.SETTINGS.ACCOUNT_SETTINGS,
+				label: "operator.settings.personal.menu.account",
+				path: ENUM_PATH.OPERATOR.SETTINGS.ACCOUNT_SETTINGS,
 				icon: SettingsIcon
 			},
 			{
-				label: "owner.settings.personal.menu.security",
-				path: ENUM_PATH.SETTINGS.SECURITY,
+				label: "operator.settings.personal.menu.security",
+				path: ENUM_PATH.OPERATOR.SETTINGS.SECURITY,
 				icon: LockHoleIcon
 			},
 			{
-				label: "owner.settings.personal.menu.notifications",
-				path: ENUM_PATH.SETTINGS.NOTIFICATIONS,
+				label: "operator.settings.personal.menu.notifications",
+				path: ENUM_PATH.OPERATOR.SETTINGS.NOTIFICATIONS,
 				icon: NotificationBigIcon
 			}
 		]
@@ -35,28 +35,28 @@ export const USER_MENU_LIST: IUserMenu[] = [
 	{
 		menu: [
 			{
-				label: "owner.settings.business.menu.business",
-				path: ENUM_PATH.SETTINGS.BUSINESS_SETTINGS,
+				label: "operator.settings.business.menu.business",
+				path: ENUM_PATH.OPERATOR.SETTINGS.BUSINESS_SETTINGS,
 				icon: HouseIcon
 			},
 			{
-				label: "owner.settings.business.menu.staff",
-				path: ENUM_PATH.SETTINGS.STAFF_INFORMATION,
+				label: "operator.settings.business.menu.staff",
+				path: ENUM_PATH.OPERATOR.SETTINGS.STAFF_INFORMATION,
 				icon: UsersIcon
 			},
 			{
-				label: "owner.settings.business.menu.financial",
-				path: ENUM_PATH.SETTINGS.FINANCIAL_SETTINGS,
+				label: "operator.settings.business.menu.financial",
+				path: ENUM_PATH.OPERATOR.SETTINGS.FINANCIAL_SETTINGS,
 				icon: DollarSquareIcon
 			},
 			{
-				label: "owner.settings.business.menu.tour",
-				path: ENUM_PATH.SETTINGS.TOUR_SETTINGS,
+				label: "operator.settings.business.menu.tour",
+				path: ENUM_PATH.OPERATOR.SETTINGS.TOUR_SETTINGS,
 				icon: GlobeIcon
 			},
 			{
-				label: "owner.settings.business.menu.tags",
-				path: ENUM_PATH.SETTINGS.TAGS,
+				label: "operator.settings.business.menu.tags",
+				path: ENUM_PATH.OPERATOR.SETTINGS.TAGS,
 				icon: TagIcon
 			}
 		]
