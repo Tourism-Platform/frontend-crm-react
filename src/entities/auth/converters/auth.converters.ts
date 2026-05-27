@@ -1,9 +1,13 @@
+import { ENUM_ROLE } from "@/entities/user";
+
 import type {
 	IAuthAccount,
 	IAuthUser,
 	TAuthAccountBackend,
 	TAuthUserBackend
 } from "../types";
+
+import { roleMapper } from "./role.converters";
 
 export const mapAuthUserToBackend = (user: IAuthUser): TAuthUserBackend => ({
 	email: user.email,
@@ -20,7 +24,7 @@ export const mapAuthAccountToFrontend = (
 ): IAuthAccount => ({
 	id: user.id,
 	email: user.email,
-	role: user.role,
+	role: roleMapper.from(user?.role || "") || ENUM_ROLE.TOUR_OPERATOR,
 	picture: user.picture || null,
 	agency_id: user.agency_id || null,
 	operator_id: user.operator_id || null

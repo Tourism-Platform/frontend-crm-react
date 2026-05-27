@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { type TBusinessSettingsPageKeys, i18nKey } from "@/shared/config";
 
-import { ENUM_AGENCY_BUSINESS_TYPES } from "../types";
+import { ENUM_ROLE } from "../../account";
 
 const msg = i18nKey<TBusinessSettingsPageKeys>();
 
@@ -82,7 +82,7 @@ export const AGENCY_BUSINESS_SCHEMA = z.object({
 			.regex(/^\d{9}$/, {
 				message: msg("form.legal.fields.tin.errors.pattern")
 			}),
-		type_of_business: z.enum(ENUM_AGENCY_BUSINESS_TYPES, {
+		type_of_business: z.enum(ENUM_ROLE, {
 			message: msg("form.legal.fields.type_of_business.errors.required")
 		})
 	}),

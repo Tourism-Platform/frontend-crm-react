@@ -12,7 +12,11 @@ export const AuthService = baseApi.injectEndpoints({
 			query: (BodyParams) => ({
 				...AUTH_PATHS.authUser,
 				body: mapAuthUserToBackend(BodyParams)
-			})
+			}),
+			async onQueryStarted(_, { dispatch, queryFulfilled }) {
+				await queryFulfilled;
+				dispatch(baseApi.util.resetApiState());
+			}
 		}),
 		signOut: build.mutation<
 			typeof AUTH_PATHS.logoutUser._types.response,
@@ -20,7 +24,11 @@ export const AuthService = baseApi.injectEndpoints({
 		>({
 			query: () => ({
 				...AUTH_PATHS.logoutUser
-			})
+			}),
+			async onQueryStarted(_, { dispatch, queryFulfilled }) {
+				await queryFulfilled;
+				dispatch(baseApi.util.resetApiState());
+			}
 		}),
 		getAuthAccount: build.query<TAuthAccountBackend, void>({
 			query: () => ({

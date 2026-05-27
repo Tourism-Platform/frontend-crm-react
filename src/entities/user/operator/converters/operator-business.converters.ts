@@ -1,11 +1,9 @@
+import { ENUM_ROLE } from "../../account";
 import type {
 	TOperatorBusinessInfoBackend,
 	TOperatorBusinessInfoUpdateBackend
 } from "../types";
-import {
-	ENUM_OPERATOR_BUSINESS_TYPES,
-	type TOperatorBusinessSchema
-} from "../types";
+import { type TOperatorBusinessSchema } from "../types";
 
 export const mapOperatorBusinessInfoToFrontend = (
 	backend: TOperatorBusinessInfoBackend | null
@@ -22,7 +20,7 @@ export const mapOperatorBusinessInfoToFrontend = (
 			legal_company_name: backend?.legal_name ?? "",
 			director: backend?.director_name ?? "",
 			tin: backend?.tax_id ?? "",
-			type_of_business: ENUM_OPERATOR_BUSINESS_TYPES.TOUR_OPERATOR
+			type_of_business: ENUM_ROLE.TOUR_OPERATOR
 		},
 		address: {
 			address_line: backend?.address_line ?? "",

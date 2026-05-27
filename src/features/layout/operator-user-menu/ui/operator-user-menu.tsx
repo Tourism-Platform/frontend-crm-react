@@ -18,6 +18,7 @@ import {
 	Skeleton
 } from "@/shared/ui";
 
+import { useGetAuthAccountQuery } from "@/entities/auth";
 import { useGetAccountQuery } from "@/entities/user";
 
 import { useSignOutAction } from "@/features/auth";
@@ -29,6 +30,9 @@ export const OperatorUserMenu: FC = () => {
 	const { handleSignOut, isLoading } = useSignOutAction();
 	const { data: accountData, isLoading: isAccountLoading } =
 		useGetAccountQuery();
+
+	const { data: authAccount, isLoading: isAuthAccountLoading } =
+		useGetAuthAccountQuery();
 
 	return (
 		<DropdownMenu>
@@ -44,8 +48,10 @@ export const OperatorUserMenu: FC = () => {
 								<Skeleton className="size-4" />
 							) : (
 								<>
-									{accountData?.first_name?.[0]}
-									{accountData?.last_name?.[0]}
+									{accountData?.first_name &&
+									accountData?.last_name
+										? `${accountData?.first_name?.[0]} ${accountData?.last_name?.[0]}`
+										: "U"}
 								</>
 							)}
 						</AvatarFallback>
@@ -59,17 +65,19 @@ export const OperatorUserMenu: FC = () => {
 							<Skeleton className="size-5 w-3/4" />
 						) : (
 							<>
-								{accountData?.first_name}{" "}
-								{accountData?.last_name}
+								{accountData?.first_name &&
+								accountData?.last_name
+									? `${accountData?.first_name}{" "}
+									  ${accountData?.last_name}`
+									: "User"}
 							</>
 						)}
 					</span>
 					<span className="text-muted-foreground truncate text-xs font-normal">
-						{isAccountLoading ? (
+						{isAuthAccountLoading ? (
 							<Skeleton className="size-4 w-1/2" />
 						) : (
-							// accountData?.email
-							"example@gmail.com"
+							authAccount?.email
 						)}
 					</span>
 				</DropdownMenuLabel>

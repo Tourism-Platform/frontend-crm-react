@@ -1,15 +1,9 @@
 import { type TOptionsKeys } from "@/shared/config";
 
-import {
-	ENUM_AGENCY_BUSINESS_TYPES,
-	type ENUM_AGENCY_BUSINESS_TYPES_TYPE
-} from "../types";
+import { ENUM_ROLE, type ENUM_ROLE_TYPE } from "../../account";
 
-export const AGENCY_BUSINESS_TYPE_LABELS: Record<
-	ENUM_AGENCY_BUSINESS_TYPES_TYPE,
-	TOptionsKeys
-> = {
-	[ENUM_AGENCY_BUSINESS_TYPES.TOUR_OPERATOR]:
-		"user.business.types.tour_operator",
-	[ENUM_AGENCY_BUSINESS_TYPES.AGENCY]: "user.business.types.agency"
-};
+export const AGENCY_BUSINESS_TYPE_LABELS: Record<ENUM_ROLE_TYPE, TOptionsKeys> =
+	{
+		[ENUM_ROLE.TOUR_OPERATOR]: "user.business.types.tour_operator",
+		[ENUM_ROLE.AGENCY]: "user.business.types.agency"
+	};

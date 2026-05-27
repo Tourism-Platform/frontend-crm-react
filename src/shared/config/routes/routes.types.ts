@@ -8,7 +8,7 @@ export interface IRouting {
 	component: React.ComponentType;
 	auth: ENUM_AUTH_TYPE;
 	layout_cascade?: React.ComponentType<{ children: React.ReactNode }>[];
-	layout: ENUM_LAYOUT_TYPE;
+	layout: ENUM_LAYOUT_TYPE | null;
 }
 
 export type TOperatorSettingsPath =

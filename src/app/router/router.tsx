@@ -29,9 +29,18 @@ const DEFAULT_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
 	path: route.path,
 	element: <ProtectedRoute route={route} />
 }));
+const PUBLIC_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
+	(route) => route.layout === null
+).map((route) => ({
+	path: route.path,
+	element: <ProtectedRoute route={route} />
+}));
 
 export const router = createBrowserRouter(
 	[
+		{
+			children: PUBLIC_ROUTES_LIST
+		},
 		{
 			element: <RootOperatorLayout />,
 			children: ROOT_OPERATOR_ROUTES_LIST
