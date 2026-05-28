@@ -1,18 +1,14 @@
 import { ENUM_COMMISSION_OPTIONS } from "@/entities/commission";
 
-import {
-	ENUM_STAFF_ROLE_OPTIONS,
-	ENUM_STAFF_STATUS_OPTIONS,
-	type IStaffBackend
-} from "../types";
+import { ENUM_STAFF_ROLE_OPTIONS, ENUM_STAFF_STATUS_OPTIONS } from "../types";
 
-export const STAFF_MOCK: IStaffBackend[] = [
+export const STAFF_MOCK = [
 	{
 		id: "1",
 		first_name: "Иван",
 		last_name: "Иванов",
 		email: "ivan@example.com",
-		role: ENUM_STAFF_ROLE_OPTIONS.ADMIN,
+		role: ENUM_STAFF_ROLE_OPTIONS.ACCOUNTANT,
 		status: ENUM_STAFF_STATUS_OPTIONS.ACTIVE,
 		type: ENUM_COMMISSION_OPTIONS.PERCENTAGE,
 		split: 10
@@ -72,7 +68,7 @@ export const STAFF_MOCK: IStaffBackend[] = [
 		first_name: "Елена",
 		last_name: "Васильева",
 		email: "elena@example.com",
-		role: ENUM_STAFF_ROLE_OPTIONS.ADMIN,
+		role: ENUM_STAFF_ROLE_OPTIONS.ACCOUNTANT,
 		status: ENUM_STAFF_STATUS_OPTIONS.ACTIVE,
 		type: ENUM_COMMISSION_OPTIONS.PERCENTAGE,
 		split: 15

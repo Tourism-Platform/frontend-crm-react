@@ -20,30 +20,27 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useCreateStaffMutation } from "@/entities/staff";
-
 import {
-	FORM_INVITE_STAFF_LIST,
 	INVITE_STAFF_SCHEMA,
-	type TAddStaffSchema
-} from "../model";
+	type TInviteStaffSchema,
+	useCreateStaffMutation
+} from "@/entities/staff";
+
+import { FORM_INVITE_STAFF_LIST } from "../model";
 
 export const InviteStaff: FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("staff_information_page");
 	const [createStaff, { isLoading }] = useCreateStaffMutation();
 
-	const form = useForm<TAddStaffSchema>({
+	const form = useForm<TInviteStaffSchema>({
 		resolver: zodResolver(INVITE_STAFF_SCHEMA),
 		mode: "onSubmit"
 	});
 
-	async function onSubmit(data: TAddStaffSchema) {
+	async function onSubmit(data: TInviteStaffSchema) {
 		try {
-			await createStaff({
-				email: data.email,
-				role: data.role
-			}).unwrap();
+			await createStaff(data).unwrap();
 			toast.success(t("invite.form.toasts.success"));
 			setOpen(false);
 			form.reset();
@@ -57,7 +54,10 @@ export const InviteStaff: FC = () => {
 			<DialogTrigger asChild>
 				<Button>{t("invite.button")}</Button>
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent
+				onCloseBtn={() => setOpen(false)}
+				className="min-w-[700px]"
+			>
 				<DialogHeader>
 					<DialogTitle>{t("invite.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
@@ -70,7 +70,7 @@ export const InviteStaff: FC = () => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="space-y-6"
 					>
-						<div>
+						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 							{FORM_INVITE_STAFF_LIST.map(({ key, ...item }) => (
 								<CustomField
 									key={key}

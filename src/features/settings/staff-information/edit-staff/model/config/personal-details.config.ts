@@ -1,8 +1,12 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { STAFF_ROLE_OPTIONS, STAFF_STATUS_LABELS } from "@/entities/staff";
+import {
+	ENUM_FORM_EDIT_STAFF,
+	STAFF_ROLE_OPTIONS,
+	STAFF_STATUS_LABELS
+} from "@/entities/staff";
 
-import { ENUM_FORM_EDIT_STAFF, type TForm } from "../types";
+import { type TForm } from "../types";
 
 export const PERSONAL_DETAILS_LIST = (): TForm[] => [
 	{

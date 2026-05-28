@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField } from "@/shared/ui";
 
-import { COMMISSION_LIST, type TEditStaffSchema } from "../model";
+import type { TEditStaffSchema } from "@/entities/staff";
+
+import { COMMISSION_LIST } from "../model";
 
 interface ICommissionProps {
 	form: UseFormReturn<TEditStaffSchema>;

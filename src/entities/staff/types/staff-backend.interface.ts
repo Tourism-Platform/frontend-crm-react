@@ -1,13 +1,23 @@
-import type { ENUM_STAFF_STATUS_OPTIONS_TYPE } from "./staff-option.types";
-import type { ENUM_STAFF_ROLE_OPTIONS_TYPE } from "./staff-role.types";
+import { OPERATOR_STAFF_PATHS, type StaffRead } from "@/shared/api";
 
-export interface IStaffBackend {
-	id: string;
-	first_name: string;
-	last_name: string;
-	email: string;
-	role: ENUM_STAFF_ROLE_OPTIONS_TYPE;
-	status: ENUM_STAFF_STATUS_OPTIONS_TYPE;
-	type: string;
-	split: number | null;
-}
+export type TListStaffBackendResponse =
+	typeof OPERATOR_STAFF_PATHS.listStaff._types.response;
+
+export type TListStaffQuery =
+	typeof OPERATOR_STAFF_PATHS.listStaff._types.query;
+
+export type TInviteStaffBackendResponse =
+	typeof OPERATOR_STAFF_PATHS.inviteStaff._types.response;
+
+export type TInviteStaffBackendBody =
+	typeof OPERATOR_STAFF_PATHS.inviteStaff._types.body;
+
+export type TUpdateStaffBackendResponse = ReturnType<
+	typeof OPERATOR_STAFF_PATHS.updateStaffMember
+>["_types"]["response"];
+
+export type TUpdateStaffBackendBody = ReturnType<
+	typeof OPERATOR_STAFF_PATHS.updateStaffMember
+>["_types"]["body"];
+
+export type TStaffReadBackend = StaffRead;

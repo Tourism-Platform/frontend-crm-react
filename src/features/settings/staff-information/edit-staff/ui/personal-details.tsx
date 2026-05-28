@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField } from "@/shared/ui";
 
-import { PERSONAL_DETAILS_LIST, type TEditStaffSchema } from "../model";
+import type { TEditStaffSchema } from "@/entities/staff";
+
+import { PERSONAL_DETAILS_LIST } from "../model";
 
 interface IPersonalDetailsProps {
 	form: UseFormReturn<TEditStaffSchema>;

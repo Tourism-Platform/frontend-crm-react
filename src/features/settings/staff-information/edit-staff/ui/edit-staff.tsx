@@ -19,13 +19,13 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { type IStaffUser, useUpdateStaffMutation } from "@/entities/staff";
-
 import {
 	EDIT_STAFF_SCHEMA,
 	ENUM_FORM_EDIT_STAFF,
-	type TEditStaffSchema
-} from "../model";
+	type IStaffUser,
+	type TEditStaffSchema,
+	useUpdateStaffMutation
+} from "@/entities/staff";
 
 import { Commission } from "./commission";
 import { PersonalDetails } from "./personal-details";

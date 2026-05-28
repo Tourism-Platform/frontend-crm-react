@@ -1,5 +1,5 @@
 export const ENUM_STAFF_ROLE_OPTIONS = {
-	ADMIN: "admin",
+	ACCOUNTANT: "accountant",
 	SALES_MANAGER: "sales_manager"
 } as const;
 

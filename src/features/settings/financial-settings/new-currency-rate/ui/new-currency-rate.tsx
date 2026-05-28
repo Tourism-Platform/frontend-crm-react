@@ -41,13 +41,11 @@ export const NewCurrencyRate: FC = () => {
 	async function onSubmit(data: TOperatorCurrencyRateCreateSchema) {
 		try {
 			await createCurrencyRate(data).unwrap();
-			toast.success(
-				t("currency.currency_rate.form.toasts.success" as never)
-			);
+			toast.success(t("currency.currency_rate.form.toasts.success"));
 			setOpen(false);
 			form.reset();
 		} catch (error) {
-			toast.error(t("currency.currency_rate.form.toasts.error" as never));
+			toast.error(t("currency.currency_rate.form.toasts.error"));
 			console.error("Failed to create currency rate:", error);
 		}
 	}
@@ -55,15 +53,18 @@ export const NewCurrencyRate: FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>{t("currency.currency_rate.button" as never)}</Button>
+				<Button>{t("currency.currency_rate.button")}</Button>
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent
+				onCloseBtn={() => setOpen(false)}
+				className="min-w-[700px]"
+			>
 				<DialogHeader>
 					<DialogTitle>
-						{t("currency.currency_rate.form.title" as never)}
+						{t("currency.currency_rate.form.title")}
 					</DialogTitle>
 					<DialogDescription className="sr-only">
-						{t("currency.currency_rate.form.title" as never)}
+						{t("currency.currency_rate.form.title")}
 					</DialogDescription>
 				</DialogHeader>
 				<Separator />
@@ -72,7 +73,7 @@ export const NewCurrencyRate: FC = () => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="space-y-6"
 					>
-						<div className="grid grid-cols-2 gap-2">
+						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 							{FORM_OPERATOR_CREATE_CURRENCY_RATE_LIST.map(
 								({ key, ...item }) => (
 									<CustomField
@@ -93,7 +94,7 @@ export const NewCurrencyRate: FC = () => {
 									onClick={() => form.reset()}
 								>
 									{t(
-										"currency.currency_rate.form.buttons.decline" as never
+										"currency.currency_rate.form.buttons.decline"
 									)}
 								</Button>
 							</DialogClose>
@@ -103,10 +104,10 @@ export const NewCurrencyRate: FC = () => {
 								)}
 								{isLoading
 									? t(
-											"currency.currency_rate.form.buttons.saving" as never
+											"currency.currency_rate.form.buttons.saving"
 										)
 									: t(
-											"currency.currency_rate.form.buttons.save" as never
+											"currency.currency_rate.form.buttons.save"
 										)}
 							</Button>
 						</DialogFooter>

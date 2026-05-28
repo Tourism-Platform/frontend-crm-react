@@ -5,6 +5,14 @@
 		"form": {
 			"title": "Пригласить нового сотрудника",
 			"fields": {
+				"firstName": {
+					"label": "Имя",
+					"placeholder": "Введите имя"
+				},
+				"lastName": {
+					"label": "Фамилия",
+					"placeholder": "Введите фамилию"
+				},
 				"email": {
 					"label": "Email",
 					"placeholder": "Введите email сотрудника"
@@ -15,6 +23,14 @@
 				}
 			},
 			"errors": {
+				"firstName": {
+					"required": "Имя обязательно",
+					"max": "Имя слишком длинное"
+				},
+				"lastName": {
+					"required": "Фамилия обязательна",
+					"max": "Фамилия слишком длинная"
+				},
 				"email": {
 					"required": "Email обязателен",
 					"min": "Email обязателен",

@@ -5,6 +5,14 @@
 		"form": {
 			"title": "Invite new staff",
 			"fields": {
+				"firstName": {
+					"label": "First Name",
+					"placeholder": "Enter first name"
+				},
+				"lastName": {
+					"label": "Last Name",
+					"placeholder": "Enter last name"
+				},
 				"email": {
 					"label": "Email",
 					"placeholder": "Enter staff email address"
@@ -15,6 +23,14 @@
 				}
 			},
 			"errors": {
+				"firstName": {
+					"required": "First name is required",
+					"max": "First name is too long"
+				},
+				"lastName": {
+					"required": "Last name is required",
+					"max": "Last name is too long"
+				},
 				"email": {
 					"required": "Email is required",
 					"min": "Email is required",

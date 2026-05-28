@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 
 import { ENV } from "@/shared/config";
+import { serializeParams } from "@/shared/helpers";
 
 import { logout } from "@/entities/user/account/slice/user.slice";
 
@@ -16,7 +17,8 @@ export const authBaseQuery: BaseQueryFn<
 > = async (args, api, extraOptions) => {
 	const baseQuery = fetchBaseQuery({
 		baseUrl: ENV.VITE_API_URL,
-		credentials: "include"
+		credentials: "include",
+		paramsSerializer: serializeParams
 	});
 
 	// Выполняем базовый запрос

@@ -2,7 +2,6 @@ export const ENUM_API_TAGS = {
 	USER: "User",
 	AUTH_ACCOUNT: "Auth Account",
 	BUSINESS: "Business",
-	STAFF: "Staff",
 	COMMISSION: "Commission",
 	TOURS: "Tours",
 	FINANCE_RECONCILIATIONS: "Finance Reconciliations",
@@ -16,6 +15,7 @@ export const ENUM_API_TAGS = {
 	LANDING_IMAGES: "Landing Images",
 	OPERATOR: {
 		FINANCIAL_INFORMATION: "Operator Financial Information",
-		CURRENCY_RATES: "Operator Currency Rates"
+		CURRENCY_RATES: "Operator Currency Rates",
+		STAFF_INFORMATION: "Operator Staff Information"
 	}
 } as const;

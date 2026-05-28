@@ -75,7 +75,10 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
-			<DialogContent onCloseBtn={() => setOpen(false)}>
+			<DialogContent
+				onCloseBtn={() => setOpen(false)}
+				className="min-w-[700px]"
+			>
 				<DialogHeader>
 					<DialogTitle>
 						{t("currency.commission_type.menu.edit.form.title")}
@@ -90,7 +93,7 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="space-y-6"
 					>
-						<div>
+						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 							{FORM_EDIT_COMMISSION_TYPE_LIST.map(
 								({ key, ...item }) => (
 									<CustomField
