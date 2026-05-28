@@ -2,7 +2,6 @@ import {
 	AGENCY_PATHS,
 	type AgencyModel,
 	type CreateAgencySchema,
-	type PublicTourCatalogSchemaOutput,
 	type TourCatalogSort
 } from "@/shared/api";
 
@@ -22,15 +21,15 @@ export const agencyApi = authApi.injectEndpoints({
 				...AGENCY_PATHS.createAgency,
 				body
 			})
-		}),
-		listAgencyCatalog: builder.query<
-			PublicTourCatalogSchemaOutput[],
-			IAgencyCatalogQuery | void
-		>({
-			query: (params) => ({
-				...AGENCY_PATHS.listAgencyCatalog,
-				params: params ?? undefined
-			})
 		})
+		// listAgencyCatalog: builder.query<
+		// 	PublicTourCatalogSchemaOutput[],
+		// 	IAgencyCatalogQuery | void
+		// >({
+		// 	query: (params) => ({
+		// 		...AGENCY_PATHS.listAgencyCatalog,
+		// 		params: params ?? undefined
+		// 	})
+		// })
 	})
 });

@@ -9,7 +9,7 @@ export const ACCOUNT_MOCK: TAccountBackend = {
 	last_name: "Doe",
 	title: "Manager",
 	phone_number: "+79001112233",
-	profile_picture_url:
+	profile_picture_path:
 		"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VzebIeMz6caC1wMEhR7Syjd9H0JNzslbn4xF8",
 	location: "New York, USA",
 	default_currency: Currency.EUR

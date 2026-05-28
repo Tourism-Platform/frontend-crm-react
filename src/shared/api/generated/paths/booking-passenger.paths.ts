@@ -15,7 +15,7 @@ export const BOOKING_PASSENGER_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: void;
+				query: { skip?: number; limit?: number };
 				response: BookingPaxModel[];
 			}
 		}) as const,

@@ -23,7 +23,7 @@ export const TOUR_EVENT_MEDIA_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: void;
+				query: { skip?: number; limit?: number };
 				response: EventImageModel[];
 			}
 		}) as const,

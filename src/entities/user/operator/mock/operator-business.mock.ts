@@ -3,7 +3,7 @@ import type { TOperatorBusinessInfoBackend } from "../types";
 export const OPERATOR_BUSINESS_MOCK: TOperatorBusinessInfoBackend = {
 	id: "00000000-0000-4000-8000-000000000001",
 	operator_id: "00000000-0000-4000-8000-000000000002",
-	logo_url:
+	logo_path:
 		"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0V3dWN9gEdpOEGs0kUIYQw2AeBHj94JtcfnMLg",
 	description:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","marks":[{"type":"italic"}],"text":"Our travel agency specializes in organizing individual and group trips worldwide."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"We carefully select tours based on budget, travel goals, and timing."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"italic"}],"text":"We work only with trusted partners and licensed tour operators."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"Clients receive full support: consultation, booking, documentation, and assistance throughout the journey."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"italic"}],"text":"Our priority is reliability, convenience, and transparent service conditions."}]}]}',

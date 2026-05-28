@@ -10,12 +10,12 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import type { ICommission } from "@/entities/commission";
+import type { IOperatorCurrencyRate } from "@/entities/commission";
 
 import { DeleteCommissionType, EditCommissionType } from "@/features/settings";
 
 interface IFinancialActionsProps {
-	row: ICommission;
+	row: IOperatorCurrencyRate;
 }
 
 export const FinancialActions: FC<IFinancialActionsProps> = ({ row }) => {

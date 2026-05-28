@@ -26,6 +26,7 @@ import {
 	PasswordInput,
 	SelectPicker,
 	type SelectPickerProps,
+	Switch,
 	Textarea,
 	TimePickerInput,
 	type TimePickerInputProps
@@ -45,12 +46,13 @@ export type CustomFieldVariant =
 	| "editor"
 	| "upload"
 	| "autocomplete"
-	| "dateRange";
+	| "dateRange"
+	| "switch";
 
 type BaseFieldProps = {
 	control: Control<any>;
 	name: string;
-	label: string;
+	label?: string;
 	t: TFunction<any>;
 	className?: string;
 	disabled?: boolean;
@@ -114,6 +116,11 @@ type DateRangeFieldVariant = BaseFieldProps & {
 	placeholder?: string;
 };
 
+type SwitchFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "switch">;
+	description?: string;
+};
+
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
@@ -126,7 +133,8 @@ type CustomFieldProps =
 	| EditorFieldVariant
 	| UploadFieldVariant
 	| AutocompleteFieldVariant
-	| DateRangeFieldVariant;
+	| DateRangeFieldVariant
+	| SwitchFieldVariant;
 
 export const CustomField: FC<CustomFieldProps> = (props) => {
 	const {
@@ -261,6 +269,14 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...field}
 					/>
 				);
+			case "switch":
+				return (
+					<Switch
+						checked={field.value}
+						onCheckedChange={field.onChange}
+						disabled={props.disabled}
+					/>
+				);
 
 			default:
 				return (
@@ -279,6 +295,28 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				);
 		}
 	};
+
+	if (fieldType === "switch") {
+		return (
+			<FormField
+				control={control}
+				name={name}
+				render={({ field }) => (
+					<FormItem
+						className={cn(
+							"flex items-center justify-between gap-4",
+							className
+						)}
+					>
+						<FormLabel className="cursor-pointer">
+							{t(label)}
+						</FormLabel>
+						<FormControl>{renderInput(field)}</FormControl>
+					</FormItem>
+				)}
+			/>
+		);
+	}
 
 	return (
 		<FormField

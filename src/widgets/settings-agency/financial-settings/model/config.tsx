@@ -6,14 +6,14 @@ import { Skeleton } from "@/shared/ui";
 import {
 	CURRENCY_LABELS,
 	type ENUM_CURRENCY_OPTIONS_TYPE,
-	type ICommission
+	type IOperatorCurrencyRate
 } from "@/entities/commission";
 
 import { FinancialActions } from "../ui";
 
 export const COLUMNS = (
 	t: TFunction<"financial_settings_page", undefined>
-): ColumnDef<ICommission>[] => {
+): ColumnDef<IOperatorCurrencyRate>[] => {
 	return [
 		{
 			id: "select",

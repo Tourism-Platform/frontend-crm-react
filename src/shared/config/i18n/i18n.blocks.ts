@@ -12,7 +12,8 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"account_settings_page",
 			"business_settings_page",
 			"staff_information_page",
-			"financial_settings_page"
+			"financial_settings_page",
+			"financial_settings_page_operator"
 		]
 	},
 	// Блок туров

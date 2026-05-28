@@ -24,11 +24,7 @@ export const OPERATOR_PATHS = {
 	getOperatorInfo: {
 		url: "/operator/me/info",
 		method: "GET",
-		_types: {} as {
-			body: void;
-			query: void;
-			response: OperatorInfoModel | null;
-		}
+		_types: {} as { body: void; query: void; response: OperatorInfoModel }
 	} as const,
 	updateOperatorInfo: {
 		url: "/operator/me/info",

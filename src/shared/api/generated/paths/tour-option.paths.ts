@@ -16,7 +16,7 @@ export const TOUR_OPTION_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: void;
+				query: { skip?: number; limit?: number };
 				response: TourOptionModel[];
 			}
 		}) as const,

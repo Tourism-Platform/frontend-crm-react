@@ -1,5 +1,5 @@
 import type {
-	BodyUploadReceiptOperatorMeSupplierPaymentPaymentIdReceiptPost,
+	BodyUploadReceiptOperatorSupplierPaymentPaymentIdReceiptPost,
 	SupplierPaymentCreate,
 	SupplierPaymentModel,
 	SupplierPaymentUpdate
@@ -10,16 +10,21 @@ import type {
 
 export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 	listSupplierPayments: {
-		url: "/operator/me/supplier-payment",
+		url: "/operator/supplier-payment",
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: { supplier_id?: string | null; item_id?: string | null };
+			query: {
+				supplier_id?: string | null;
+				item_id?: string | null;
+				skip?: number;
+				limit?: number;
+			};
 			response: SupplierPaymentModel[];
 		}
 	} as const,
 	createSupplierPayment: {
-		url: "/operator/me/supplier-payment",
+		url: "/operator/supplier-payment",
 		method: "POST",
 		_types: {} as {
 			body: SupplierPaymentCreate;
@@ -29,7 +34,7 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 	} as const,
 	getSupplierPayment: (paymentId: string) =>
 		({
-			url: `/operator/me/supplier-payment/${paymentId}`,
+			url: `/operator/supplier-payment/${paymentId}`,
 			method: "GET",
 			_types: {} as {
 				body: void;
@@ -39,7 +44,7 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 		}) as const,
 	updateSupplierPayment: (paymentId: string) =>
 		({
-			url: `/operator/me/supplier-payment/${paymentId}`,
+			url: `/operator/supplier-payment/${paymentId}`,
 			method: "PATCH",
 			_types: {} as {
 				body: SupplierPaymentUpdate;
@@ -49,10 +54,10 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 		}) as const,
 	uploadReceipt: (paymentId: string) =>
 		({
-			url: `/operator/me/supplier-payment/${paymentId}/receipt`,
+			url: `/operator/supplier-payment/${paymentId}/receipt`,
 			method: "POST",
 			_types: {} as {
-				body: BodyUploadReceiptOperatorMeSupplierPaymentPaymentIdReceiptPost;
+				body: BodyUploadReceiptOperatorSupplierPaymentPaymentIdReceiptPost;
 				query: void;
 				response: SupplierPaymentModel;
 			}

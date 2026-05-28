@@ -1,12 +1,15 @@
 import { z } from "zod";
 
-import type { TFinancialSettingsPageKeys } from "@/shared/config";
+import type {
+	TFinancialSettingsPageKeys,
+	TFinancialSettingsPageOperatorKeys
+} from "@/shared/config";
 import type { TFormField } from "@/shared/types";
 
 import type { EDIT_COMMISSION_TYPE_SCHEMA } from "../config";
 
 export type TForm = TFormField<
-	TFinancialSettingsPageKeys,
+	TFinancialSettingsPageKeys | TFinancialSettingsPageOperatorKeys,
 	ENUM_FORM_EDIT_COMMISSION_TYPE_TYPE
 >;
 

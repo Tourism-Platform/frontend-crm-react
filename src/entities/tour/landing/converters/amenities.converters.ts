@@ -1,17 +1,14 @@
-import { SrcCommonConstantsAmenitiesTypes } from "@/shared/api";
+import { AmenitiesTypes } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
 import { ENUM_AMENITIES, type ENUM_AMENITIES_TYPE } from "../types";
 
-const MAP_AMENITIES: Partial<
-	Record<ENUM_AMENITIES_TYPE, SrcCommonConstantsAmenitiesTypes>
-> = {
-	[ENUM_AMENITIES.AIR_CONDITIONING]:
-		SrcCommonConstantsAmenitiesTypes.Conditioner,
-	[ENUM_AMENITIES.WIFI_ON_BOARD]: SrcCommonConstantsAmenitiesTypes.Wifi
+const MAP_AMENITIES: Partial<Record<ENUM_AMENITIES_TYPE, AmenitiesTypes>> = {
+	[ENUM_AMENITIES.AIR_CONDITIONING]: AmenitiesTypes.AirConditioning,
+	[ENUM_AMENITIES.WIFI_ON_BOARD]: AmenitiesTypes.Wifi
 };
 
 export const amenitiesMapper = createEnumMapper<
 	ENUM_AMENITIES_TYPE,
-	SrcCommonConstantsAmenitiesTypes
+	AmenitiesTypes
 >(MAP_AMENITIES);

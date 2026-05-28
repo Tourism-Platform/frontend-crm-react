@@ -21,7 +21,7 @@ import {
 } from "@/shared/ui";
 
 import {
-	type ICommission,
+	type IOperatorCurrencyRate,
 	useUpdateCommissionMutation
 } from "@/entities/commission";
 
@@ -35,7 +35,7 @@ import {
 interface IEditCommissionTypeProps {
 	trigger: ReactNode;
 	className?: string;
-	commission: ICommission;
+	commission: IOperatorCurrencyRate;
 }
 
 export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
@@ -44,12 +44,12 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 	commission
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
-	const { t } = useTranslation("financial_settings_page");
+	const { t } = useTranslation("financial_settings_page_operator");
 	const [updateCommission, { isLoading }] = useUpdateCommissionMutation();
 	const form = useForm<TEditCommissionTypeSchema>({
 		resolver: zodResolver(EDIT_COMMISSION_TYPE_SCHEMA),
 		defaultValues: {
-			[ENUM_FORM_EDIT_COMMISSION_TYPE.CURRENCY]: commission.currency,
+			[ENUM_FORM_EDIT_COMMISSION_TYPE.CURRENCY]: commission.from_currency,
 			[ENUM_FORM_EDIT_COMMISSION_TYPE.RATE]: commission.rate
 		},
 		mode: "onSubmit"
@@ -58,10 +58,14 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 	async function onSubmit(data: TEditCommissionTypeSchema) {
 		try {
 			await updateCommission({ id: commission.id, data }).unwrap();
-			toast.success(t("commission_type.menu.edit.form.toasts.success"));
+			toast.success(
+				t("currency.commission_type.menu.edit.form.toasts.success")
+			);
 			setOpen(false);
 		} catch (error) {
-			toast.error(t("commission_type.menu.edit.form.toasts.error"));
+			toast.error(
+				t("currency.commission_type.menu.edit.form.toasts.error")
+			);
 			console.error("Failed to update commission:", error);
 		}
 	}
@@ -74,10 +78,10 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 			<DialogContent onCloseBtn={() => setOpen(false)}>
 				<DialogHeader>
 					<DialogTitle>
-						{t("commission_type.menu.edit.form.title")}
+						{t("currency.commission_type.menu.edit.form.title")}
 					</DialogTitle>
 					<DialogDescription className="sr-only">
-						{t("commission_type.menu.edit.form.title")}
+						{t("currency.commission_type.menu.edit.form.title")}
 					</DialogDescription>
 				</DialogHeader>
 				<Separator />
@@ -107,7 +111,7 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 									onClick={() => form.reset()}
 								>
 									{t(
-										"commission_type.menu.edit.form.buttons.decline"
+										"currency.commission_type.menu.edit.form.buttons.decline"
 									)}
 								</Button>
 							</DialogClose>
@@ -117,10 +121,10 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 								)}
 								{isLoading
 									? t(
-											"commission_type.menu.edit.form.buttons.saving"
+											"currency.commission_type.menu.edit.form.buttons.saving"
 										)
 									: t(
-											"commission_type.menu.edit.form.buttons.save"
+											"currency.commission_type.menu.edit.form.buttons.save"
 										)}
 							</Button>
 						</DialogFooter>

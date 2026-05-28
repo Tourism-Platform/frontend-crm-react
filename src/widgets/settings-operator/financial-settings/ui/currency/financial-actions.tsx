@@ -7,19 +7,20 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuTrigger
+	DropdownMenuTrigger,
+	withErrorBoundary
 } from "@/shared/ui";
 
-import type { ICommission } from "@/entities/commission";
+import type { IOperatorCurrencyRate } from "@/entities/commission";
 
 import { DeleteCommissionType, EditCommissionType } from "@/features/settings";
 
 interface IFinancialActionsProps {
-	row: ICommission;
+	row: IOperatorCurrencyRate;
 }
 
-export const FinancialActions: FC<IFinancialActionsProps> = ({ row }) => {
-	const { t } = useTranslation("financial_settings_page");
+const FinancialActionsBase: FC<IFinancialActionsProps> = ({ row }) => {
+	const { t } = useTranslation("financial_settings_page_operator");
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -40,7 +41,7 @@ export const FinancialActions: FC<IFinancialActionsProps> = ({ row }) => {
 						commission={row}
 						trigger={
 							<div className="w-full hover:bg-accent cursor-pointer px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-								{t("commission_type.menu.edit.button")}
+								{t("currency.commission_type.menu.edit.button")}
 							</div>
 						}
 					/>
@@ -50,7 +51,9 @@ export const FinancialActions: FC<IFinancialActionsProps> = ({ row }) => {
 						id={row.id}
 						trigger={
 							<div className="w-full cursor-pointer px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50">
-								{t("commission_type.menu.delete.button")}
+								{t(
+									"currency.commission_type.menu.delete.button"
+								)}
 							</div>
 						}
 						className="text-destructive focus:text-destructive hover:bg-accent"
@@ -60,3 +63,5 @@ export const FinancialActions: FC<IFinancialActionsProps> = ({ row }) => {
 		</DropdownMenu>
 	);
 };
+
+export const FinancialActions = withErrorBoundary(FinancialActionsBase);

@@ -5,16 +5,16 @@ import type { FxRateCreateSchema, OperatorFxRateModel } from "../Api";
 
 export const OPERATOR_FX_RATE_PATHS = {
 	listFxRates: {
-		url: "/operator/me/fx-rate",
+		url: "/operator/fx-rate",
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: void;
+			query: { skip?: number; limit?: number };
 			response: OperatorFxRateModel[];
 		}
 	} as const,
 	recordFxRate: {
-		url: "/operator/me/fx-rate",
+		url: "/operator/fx-rate",
 		method: "POST",
 		_types: {} as {
 			body: FxRateCreateSchema;
@@ -24,7 +24,7 @@ export const OPERATOR_FX_RATE_PATHS = {
 	} as const,
 	getFxRate: (fxRateId: string) =>
 		({
-			url: `/operator/me/fx-rate/${fxRateId}`,
+			url: `/operator/fx-rate/${fxRateId}`,
 			method: "GET",
 			_types: {} as {
 				body: void;

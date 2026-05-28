@@ -20,49 +20,50 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useCreateCommissionMutation } from "@/entities/commission";
-
 import {
-	FORM_NEW_CURRENCY_RATE_LIST,
-	NEW_CURRENCY_RATE_SCHEMA,
-	type TNewCurrencyRateSchema
-} from "../model";
+	OPERATOR_CURRENCY_RATE_CREATE_SCHEMA,
+	type TOperatorCurrencyRateCreateSchema,
+	useCreateOperatorCurrencyRateMutation
+} from "@/entities/commission";
+
+import { FORM_OPERATOR_CREATE_CURRENCY_RATE_LIST } from "../model";
 
 export const NewCurrencyRate: FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
-	const { t } = useTranslation("financial_settings_page");
-	const [createCommission, { isLoading }] = useCreateCommissionMutation();
-	const form = useForm<TNewCurrencyRateSchema>({
-		resolver: zodResolver(NEW_CURRENCY_RATE_SCHEMA),
+	const { t } = useTranslation("financial_settings_page_operator");
+	const [createCurrencyRate, { isLoading }] =
+		useCreateOperatorCurrencyRateMutation();
+	const form = useForm<TOperatorCurrencyRateCreateSchema>({
+		resolver: zodResolver(OPERATOR_CURRENCY_RATE_CREATE_SCHEMA),
 		mode: "onSubmit"
 	});
 
-	async function onSubmit(data: TNewCurrencyRateSchema) {
+	async function onSubmit(data: TOperatorCurrencyRateCreateSchema) {
 		try {
-			await createCommission(data).unwrap();
+			await createCurrencyRate(data).unwrap();
 			toast.success(
-				t("commission_type.new_currency.form.toasts.success")
+				t("currency.currency_rate.form.toasts.success" as never)
 			);
 			setOpen(false);
 			form.reset();
 		} catch (error) {
-			toast.error(t("commission_type.new_currency.form.toasts.error"));
-			console.error("Failed to create commission:", error);
+			toast.error(t("currency.currency_rate.form.toasts.error" as never));
+			console.error("Failed to create currency rate:", error);
 		}
 	}
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>{t("commission_type.new_currency.button")}</Button>
+				<Button>{t("currency.currency_rate.button" as never)}</Button>
 			</DialogTrigger>
 			<DialogContent onCloseBtn={() => setOpen(false)}>
 				<DialogHeader>
 					<DialogTitle>
-						{t("commission_type.new_currency.form.title")}
+						{t("currency.currency_rate.form.title" as never)}
 					</DialogTitle>
 					<DialogDescription className="sr-only">
-						{t("commission_type.new_currency.form.title")}
+						{t("currency.currency_rate.form.title" as never)}
 					</DialogDescription>
 				</DialogHeader>
 				<Separator />
@@ -71,8 +72,8 @@ export const NewCurrencyRate: FC = () => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="space-y-6"
 					>
-						<div>
-							{FORM_NEW_CURRENCY_RATE_LIST.map(
+						<div className="grid grid-cols-2 gap-2">
+							{FORM_OPERATOR_CREATE_CURRENCY_RATE_LIST.map(
 								({ key, ...item }) => (
 									<CustomField
 										key={key}
@@ -92,7 +93,7 @@ export const NewCurrencyRate: FC = () => {
 									onClick={() => form.reset()}
 								>
 									{t(
-										"commission_type.new_currency.form.buttons.decline"
+										"currency.currency_rate.form.buttons.decline" as never
 									)}
 								</Button>
 							</DialogClose>
@@ -102,10 +103,10 @@ export const NewCurrencyRate: FC = () => {
 								)}
 								{isLoading
 									? t(
-											"commission_type.new_currency.form.buttons.saving"
+											"currency.currency_rate.form.buttons.saving" as never
 										)
 									: t(
-											"commission_type.new_currency.form.buttons.save"
+											"currency.currency_rate.form.buttons.save" as never
 										)}
 							</Button>
 						</DialogFooter>

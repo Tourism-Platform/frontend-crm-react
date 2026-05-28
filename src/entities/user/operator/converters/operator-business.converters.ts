@@ -33,7 +33,7 @@ export const mapOperatorBusinessInfoToFrontend = (
 			phone_number: backend?.contact_phone ?? "",
 			email: backend?.contact_email ?? ""
 		},
-		avatar: backend?.logo_url ?? ""
+		avatar: backend?.logo_path ?? ""
 	};
 };
 

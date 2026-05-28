@@ -1,0 +1,320 @@
+{
+	"page_name": "Financial settings",
+	"tabs": {
+		"general": "General",
+		"receiving_payments": "Receiving Payments",
+		"tax_settings": "Tax settings",
+		"currency": "Currency"
+	},
+	"general": {
+		"form": {
+			"title": "General Settings",
+			"fields": {
+				"default_tour_margin": {
+					"label": "Default Tour Margin",
+					"placeholder": "Enter rate",
+					"description": "Set the default margin applied to all tours. This percentage is added on top of the total cost to form your NET price for agencies.",
+					"errors": {
+						"required": "Tour margin is required",
+						"min": "Tour margin cannot be empty or less than 0%",
+						"max": "Tour margin cannot be more than 100%"
+					}
+				},
+				"staff_payouts": {
+					"label": "Staff Payouts",
+					"placeholder": "Enter rate",
+					"description": "Set default payout rates for your staff. These are applied automatically per tour based on the assigned role and can be adjusted individually.",
+					"errors": {
+						"required": "Staff payouts is required",
+						"min": "Staff payouts cannot be empty or less than 0%",
+						"max": "Staff payouts cannot be more than 100%"
+					}
+				}
+			},
+			"buttons": {
+				"save": "Save",
+				"loading": "Loading...",
+				"saving": "Saving ..."
+			},
+			"toasts": {
+				"save": {
+					"success": "Settings saved successfully",
+					"error": "Failed to save settings"
+				}
+			}
+		}
+	},
+	"payment_settings": {
+		"form": {
+			"title": "Receiving Payments",
+			"button": "Setup Payment Route",
+			"modal": {
+				"title": "Setup Payout Details",
+				"fields": {
+					"method_type": {
+						"label": "Method type",
+						"placeholder": "Select method type",
+						"errors": {
+							"required": "Method type is required",
+							"min": "Method type cannot be empty"
+						}
+					},
+					"internal_label": {
+						"label": "Internal label",
+						"placeholder": "Enter internal label",
+						"errors": {
+							"required": "Internal label is required",
+							"min": "Internal label cannot be empty"
+						}
+					},
+					"account_name_iban": {
+						"label": "Account name/IBAN",
+						"placeholder": "Enter account name/IBAN",
+						"errors": {
+							"required": "Account name/IBAN is required",
+							"min": "Account name/IBAN cannot be empty"
+						}
+					},
+					"swift_bic": {
+						"label": "SWIFT/BIC",
+						"placeholder": "Enter SWIFT/BIC",
+						"errors": {
+							"required": "SWIFT/BIC is required",
+							"min": "SWIFT/BIC cannot be empty"
+						}
+					},
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Select currency",
+						"errors": {
+							"required": "Currency is required",
+							"min": "Currency cannot be empty"
+						}
+					},
+					"bank_name": {
+						"label": "Bank Name",
+						"placeholder": "Enter bank name",
+						"errors": {
+							"required": "Bank name is required",
+							"min": "Bank name cannot be empty"
+						}
+					},
+					"bank_address": {
+						"label": "Bank address",
+						"placeholder": "Enter bank address",
+						"errors": {
+							"required": "Bank address is required",
+							"min": "Bank address cannot be empty"
+						}
+					},
+					"note": {
+						"label": "Note",
+						"placeholder": "Enter note"
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Save",
+					"saving": "Saving ..."
+				},
+				"toasts": {
+					"save": {
+						"success": "Payout details saved successfully",
+						"error": "Failed to save payout details"
+					}
+				}
+			}
+		}
+	},
+	"tax_settings": {
+		"form": {
+			"title": "Tax Settings",
+			"fields": {
+				"vat": {
+					"label": "VAT",
+					"placeholder": "Enter rate",
+					"description": "Set the default margin applied to all tours. This percentage is added on top of the total cost to form your NET price for agencies.",
+					"toggle_label": "Enabled",
+					"errors": {
+						"required": "VAT rate is required",
+						"min": "VAT rate cannot be empty or less than 0%",
+						"max": "VAT rate cannot be more than 100%"
+					}
+				},
+				"profit_tax": {
+					"label": "Profit Tax",
+					"placeholder": "Enter rate",
+					"description": "Set default payout rates for your staff. These are applied automatically per tour based on the assigned role and can be adjusted individually.",
+					"toggle_label": "Enabled",
+					"errors": {
+						"required": "Profit tax rate is required",
+						"min": "Profit tax rate cannot be empty or less than 0%",
+						"max": "Profit tax rate cannot be more than 100%"
+					}
+				}
+			},
+			"buttons": {
+				"save": "Save",
+				"loading": "Loading...",
+				"saving": "Saving ..."
+			},
+			"toasts": {
+				"save": {
+					"success": "Tax settings saved successfully",
+					"error": "Failed to save tax settings"
+				}
+			}
+		}
+	},
+	"currency": {
+		"commission_type": {
+			"title": "Default Currency rate",
+			"description": "Create global commission types for agents to select from when logging bookings.",
+			"button": "New type",
+			"form": {
+				"title": "Add New Type",
+				"fields": {
+					"currency": {
+						"label": "Currency",
+						"placeholder": "Select currency",
+						"errors": {
+							"required": "Currency name is required"
+						}
+					},
+					"rate": {
+						"label": "Exchange Rate",
+						"placeholder": "Enter exchange rate",
+						"errors": {
+							"required": "Exchange rate is required",
+							"min": "Exchange rate must be greater than 0",
+							"max": "Exchange rate is too high"
+						}
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Add",
+					"saving": "Adding ..."
+				},
+				"toasts": {
+					"success": "Commission type added successfully",
+					"error": "Failed to add commission type"
+				}
+			},
+			"menu": {
+				"edit": {
+					"button": "Edit",
+					"form": {
+						"title": "Edit commission type",
+						"fields": {
+							"currency": {
+								"label": "Currency",
+								"placeholder": "Select currency"
+							},
+							"rate": {
+								"label": "Exchange Rate",
+								"placeholder": "Enter exchange rate"
+							}
+						},
+						"buttons": {
+							"decline": "Cancel",
+							"save": "Save",
+							"saving": "Saving ..."
+						},
+						"toasts": {
+							"success": "Commission type updated successfully",
+							"error": "Failed to update commission type"
+						}
+					}
+				},
+				"delete": {
+					"button": "Delete",
+					"form": {
+						"title": "Delete commission type",
+						"warning": "This action is irreversible. The commission type will be permanently removed from the system.",
+						"buttons": {
+							"decline": "Cancel",
+							"confirm": "Delete",
+							"confirming": "Deleting..."
+						},
+						"toasts": {
+							"success": "Commission type deleted successfully",
+							"error": "Failed to delete commission type"
+						}
+					}
+				}
+			},
+			"table": {
+				"currency": "Currency",
+				"rate": "Exchange rate",
+				"status": "Status"
+			}
+		},
+		"currency_rate": {
+			"title": "Default Currency rate",
+			"description": "Set exchange rates for each currency. These rates are used when calculating tour costs and generating invoices.",
+			"button": "New rate",
+			"form": {
+				"title": "Add currency rate",
+				"fields": {
+					"from_currency": {
+						"label": "From currency",
+						"placeholder": "Select currency",
+						"errors": {
+							"required": "From currency is required"
+						}
+					},
+					"to_currency": {
+						"label": "To currency",
+						"placeholder": "Select currency",
+						"errors": {
+							"required": "To currency is required",
+							"same_currency": "To currency must be different"
+						}
+					},
+					"rate": {
+						"label": "Rate",
+						"placeholder": "Enter rate",
+						"errors": {
+							"required": "Rate is required",
+							"min": "Rate must be greater than 0",
+							"max": "Rate is too high"
+						}
+					},
+					"pair": {
+						"errors": {
+							"same_currency": "From and to currencies must be different"
+						}
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Add",
+					"saving": "Adding ..."
+				},
+				"toasts": {
+					"success": "Currency rate added successfully",
+					"error": "Failed to add currency rate"
+				}
+			},
+			"table": {
+				"from_currency": "From",
+				"to_currency": "To",
+				"rate": "Rate",
+				"valid_from": "Valid from"
+			}
+		},
+		"commission_rate": {
+			"agent": {
+				"title": "Default Agent Commission Rate",
+				"description": "Create global commission types for agents to select from when logging bookings.",
+				"rate": "Rate, %"
+			},
+			"tour": {
+				"title": "Default Tour Markup",
+				"description": "Create global commission type of your markup",
+				"rate": "Rate, %"
+			}
+		}
+	}
+}

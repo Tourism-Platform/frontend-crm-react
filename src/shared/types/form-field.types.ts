@@ -14,7 +14,7 @@ type TGenericKey = string;
 
 // Базовый интерфейс формы
 interface IFormBase<L = TGenericLabel, K = TGenericKey> {
-	label: L;
+	label?: L;
 	key: K;
 	disabled?: boolean;
 	className?: string;
@@ -25,6 +25,9 @@ type TFormInput<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType?: "input";
 	placeholder: L;
 	type?: string;
+	min?: number;
+	max?: number;
+	step?: string;
 };
 
 type TFormPassword<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
@@ -79,6 +82,11 @@ type TFormDateRange<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	placeholder?: L;
 };
 
+type TFormSwitch<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "switch";
+	description?: L;
+};
+
 type TFormAutocomplete<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: "autocomplete";
 	options: CustomAutocompleteOption[];
@@ -97,5 +105,6 @@ export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormSelect<L, K>
 	| TFormMultiSelect<L, K>
 	| TFormUploadFiles<L, K>
+	| TFormSwitch<L, K>
 	| TFormAutocomplete<L, K>
 	| TFormDateRange<L, K>;

@@ -23,7 +23,12 @@ export const TOUR_EVENTS_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { day?: number | null; lang?: LanguageCode };
+				query: {
+					day?: number | null;
+					lang?: LanguageCode;
+					skip?: number;
+					limit?: number;
+				};
 				response: TourEventResponse[];
 			}
 		}) as const,

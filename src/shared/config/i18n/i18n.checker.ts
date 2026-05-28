@@ -16,6 +16,7 @@ import options_ru from "../../../../public/locales/ru/options.json";
 import account_settings_page_ru from "../../../../public/locales/ru/settings/account_settings_page.json";
 import business_settings_page_ru from "../../../../public/locales/ru/settings/business_settings_page.json";
 import financial_settings_page_ru from "../../../../public/locales/ru/settings/financial_settings_page.json";
+import financial_settings_page_operator_ru from "../../../../public/locales/ru/settings/financial_settings_page_operator.json";
 import security_page_ru from "../../../../public/locales/ru/settings/security_page.json";
 import staff_information_page_ru from "../../../../public/locales/ru/settings/staff_information_page.json";
 import sidebar_ru from "../../../../public/locales/ru/sidebar.json";
@@ -99,5 +100,6 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	reconciliation_id_page: reconciliation_id_page_ru,
 	reconciliation_page: reconciliation_page_ru,
 	supplier_payments_page: supplier_payments_page_ru,
-	financial_settings_page: financial_settings_page_ru
+	financial_settings_page: financial_settings_page_ru,
+	financial_settings_page_operator: financial_settings_page_operator_ru
 };

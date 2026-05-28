@@ -1,1 +1,1 @@
-export { NewCurrencyRate } from "./new-currency-rate";
+export * from "./new-currency-rate";

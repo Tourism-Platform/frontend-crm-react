@@ -19,13 +19,13 @@ export const TOUR_PATHS = {
 		_types: {} as {
 			body: void;
 			query: {
-				skip?: number;
-				limit?: number;
 				desc?: boolean;
 				status?: TourStatus | null;
 				typ?: TourType | null;
 				q?: string | null;
 				sort_by?: TourListSortField;
+				skip?: number;
+				limit?: number;
 			};
 			response: TourListResponse;
 		}
@@ -42,7 +42,11 @@ export const TOUR_PATHS = {
 	listOneDayTours: {
 		url: "/tour/one-day",
 		method: "GET",
-		_types: {} as { body: void; query: void; response: TourMetaModel[] }
+		_types: {} as {
+			body: void;
+			query: { skip?: number; limit?: number };
+			response: TourMetaModel[];
+		}
 	} as const,
 	getTour: (tourId: string) =>
 		({

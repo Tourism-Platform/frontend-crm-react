@@ -1,8 +1,4 @@
-import {
-	Language,
-	PickupType,
-	SrcCommonConstantsAmenitiesTypes
-} from "@/shared/api";
+import { AmenitiesTypes, Language, PickupType } from "@/shared/api";
 
 import { ENUM_EVENT } from "@/entities/tour/tour/types/event.types";
 
@@ -21,8 +17,8 @@ export const TOUR_PREVIEW_TOUR_MOCK: TPreviewTourBackend = {
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Embark on an unforgettable journey through the ancient cities of Uzbekistan."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"Discover the rich history, stunning architecture, and warm hospitality of the Silk Road."}]}]}',
 	// cities: ["Tashkent", "Samarkand", "Bukhara", "Khiva"],
 	languages: [Language.English, Language.Russian],
-	amenities_included: [SrcCommonConstantsAmenitiesTypes.Wifi],
-	amenities_not_included: [SrcCommonConstantsAmenitiesTypes.Wifi],
+	amenities_included: [AmenitiesTypes.Wifi],
+	amenities_not_included: [AmenitiesTypes.Wifi],
 	pickup_type: [PickupType.AirportPickup],
 	pickup_description:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"We provide pickup from all major hotels in Tashkent and the international airport."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"italic"}],"text":"Please provide your arrival details at least 48 hours before the tour."}]}]}',

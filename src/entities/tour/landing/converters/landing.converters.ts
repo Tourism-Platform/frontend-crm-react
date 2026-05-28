@@ -1,3 +1,5 @@
+import type { AmenitiesTypes } from "@/shared/api";
+
 import {
 	type TCreateLandingBackendResponse,
 	type TCreateLandingImageBackendBody,
@@ -34,8 +36,12 @@ export const mapLandingToFrontend = (
 ): TLandingSchema => ({
 	description: backend.overview,
 	languages: languageMapper.fromMany(backend.languages),
-	included: amenitiesMapper.fromMany(backend.amenities_included),
-	not_included: amenitiesMapper.fromMany(backend.amenities_not_included),
+	included: amenitiesMapper.fromMany(
+		backend.amenities_included as AmenitiesTypes[]
+	),
+	not_included: amenitiesMapper.fromMany(
+		backend.amenities_not_included as AmenitiesTypes[]
+	),
 	pickup_type: pickupMapper.fromMany(backend.pickup_type),
 	pickup_description: backend.pickup_description || "",
 	cancellation_policy: backend.cancellation_policy || "",

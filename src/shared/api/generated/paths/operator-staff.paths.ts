@@ -1,4 +1,11 @@
-import type { StaffInvite, StaffRead, StaffUpdate } from "../Api";
+import type {
+	StaffInvite,
+	StaffInviteResult,
+	StaffListResponse,
+	StaffRead,
+	StaffStatus,
+	StaffUpdate
+} from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -7,12 +14,25 @@ export const OPERATOR_STAFF_PATHS = {
 	listStaff: {
 		url: "/operator/staff/all",
 		method: "GET",
-		_types: {} as { body: void; query: void; response: StaffRead[] }
+		_types: {} as {
+			body: void;
+			query: {
+				q?: string | null;
+				statuses?: StaffStatus[] | null;
+				skip?: number;
+				limit?: number;
+			};
+			response: StaffListResponse;
+		}
 	} as const,
 	inviteStaff: {
 		url: "/operator/staff/invite",
 		method: "POST",
-		_types: {} as { body: StaffInvite; query: void; response: StaffRead }
+		_types: {} as {
+			body: StaffInvite;
+			query: void;
+			response: StaffInviteResult;
+		}
 	} as const,
 	updateStaffMember: (userId: string) =>
 		({
@@ -23,5 +43,11 @@ export const OPERATOR_STAFF_PATHS = {
 				query: void;
 				response: StaffRead;
 			}
+		}) as const,
+	deleteStaffMember: (userId: string) =>
+		({
+			url: `/operator/staff/${userId}`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
 		}) as const
 } as const;

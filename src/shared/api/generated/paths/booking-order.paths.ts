@@ -26,6 +26,8 @@ export const BOOKING_ORDER_PATHS = {
 			query: {
 				booking_status?: BookingStatus | null;
 				tour_id?: string | null;
+				skip?: number;
+				limit?: number;
 			};
 			response: BookingModel[];
 		}

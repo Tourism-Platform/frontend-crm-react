@@ -9,7 +9,7 @@ export const TOUR_GENERAL_MOCK: TGetTourBackendResponse = {
 	schedule_id: "123",
 	agency_id: "123",
 	landing_id: "123",
-	cover_image_url: "123",
+	cover_image_path: "123",
 	duration_hours: 10,
 	typ: TourType.Regular,
 	name: "Embark on an Unforgettable Archaeological Journey",

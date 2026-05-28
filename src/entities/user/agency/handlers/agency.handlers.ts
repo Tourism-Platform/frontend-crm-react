@@ -19,9 +19,9 @@ export const agencyHandlers = [
 				{ status: 201 }
 			);
 		}
-	),
-	http.get(`${BASE_URL}${AGENCY_PATHS.listAgencyCatalog.url}`, async () => {
-		await delay(500);
-		return HttpResponse.json([], { status: 200 });
-	})
+	)
+	// http.get(`${BASE_URL}${AGENCY_PATHS.listAgencyCatalog.url}`, async () => {
+	// 	await delay(500);
+	// 	return HttpResponse.json([], { status: 200 });
+	// })
 ];

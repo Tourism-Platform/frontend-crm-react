@@ -12,7 +12,11 @@ export const ADMIN_PATHS = {
 	getAllUsers: {
 		url: "/admin/user/all",
 		method: "GET",
-		_types: {} as { body: void; query: void; response: AdminUserView[] }
+		_types: {} as {
+			body: void;
+			query: { skip?: number; limit?: number };
+			response: AdminUserView[];
+		}
 	} as const,
 	getUser: (id: string) =>
 		({

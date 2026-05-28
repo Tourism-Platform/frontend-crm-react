@@ -1,6 +1,7 @@
 import type {
 	AuthUserProfileModel,
 	BodyUploadAvatarProfileMePhotoPost,
+	MyAccountRead,
 	UserProfileUpdate
 } from "../Api";
 
@@ -11,11 +12,7 @@ export const PROFILE_INFO_PATHS = {
 	getMyAccount: {
 		url: "/profile/me",
 		method: "GET",
-		_types: {} as {
-			body: void;
-			query: void;
-			response: AuthUserProfileModel;
-		}
+		_types: {} as { body: void; query: void; response: MyAccountRead }
 	} as const,
 	updateMyProfile: {
 		url: "/profile/me",

@@ -18,6 +18,7 @@ import options from "../../../../public/locales/en/options.json";
 import account_settings_page from "../../../../public/locales/en/settings/account_settings_page.json";
 import business_settings_page from "../../../../public/locales/en/settings/business_settings_page.json";
 import financial_settings_page from "../../../../public/locales/en/settings/financial_settings_page.json";
+import financial_settings_page_operator from "../../../../public/locales/en/settings/financial_settings_page_operator.json";
 import security_page from "../../../../public/locales/en/settings/security_page.json";
 import staff_information_page from "../../../../public/locales/en/settings/staff_information_page.json";
 import sidebar from "../../../../public/locales/en/sidebar.json";
@@ -62,6 +63,8 @@ export type TSupplierPaymentsPage = typeof supplier_payments_page;
 export type TReconciliationPage = typeof reconciliation_page;
 export type TReconciliationIdPage = typeof reconciliation_id_page;
 export type TFinancialSettingsPage = typeof financial_settings_page;
+export type TFinancialSettingsPageOperator =
+	typeof financial_settings_page_operator;
 export type TToursPage = typeof tours_page;
 export type TTourOverviewPage = typeof tour_overview_page;
 export type TTourSchedulePage = typeof tour_schedule_page;
@@ -109,6 +112,7 @@ export type TResources = {
 	reconciliation_page: TReconciliationPage;
 	reconciliation_id_page: TReconciliationIdPage;
 	financial_settings_page: TFinancialSettingsPage;
+	financial_settings_page_operator: TFinancialSettingsPageOperator;
 	tours_page: TToursPage;
 	tour_overview_page: TTourOverviewPage;
 	tour_schedule_page: TTourSchedulePage;
@@ -157,6 +161,7 @@ export const NS = [
 	"reconciliation_page",
 	"reconciliation_id_page",
 	"financial_settings_page",
+	"financial_settings_page_operator",
 	"tours_page",
 	"tour_overview_page",
 	"tour_schedule_page",
@@ -203,6 +208,8 @@ export type TSupplierPaymentsPageKeys = TNestedKeyOf<TSupplierPaymentsPage>;
 export type TReconciliationPageKeys = TNestedKeyOf<TReconciliationPage>;
 export type TReconciliationIdPageKeys = TNestedKeyOf<TReconciliationIdPage>;
 export type TFinancialSettingsPageKeys = TNestedKeyOf<TFinancialSettingsPage>;
+export type TFinancialSettingsPageOperatorKeys =
+	TNestedKeyOf<TFinancialSettingsPageOperator>;
 export type TAccountSettingsPageKeys = TNestedKeyOf<TAccountSettingsPage>;
 export type TBusinessSettingsPageKeys = TNestedKeyOf<TBusinessSettingsPage>;
 export type TToursPageKeys = TNestedKeyOf<TToursPage>;

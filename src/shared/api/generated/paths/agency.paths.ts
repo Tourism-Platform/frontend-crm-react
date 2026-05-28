@@ -5,9 +5,7 @@ import type {
 	AgencyModel,
 	BodyAddAgencyDocumentsAgencyMeDocumentsPost,
 	BodyAddAgencyLogoAgencyMeLogoPost,
-	CreateAgencySchema,
-	PublicTourCatalogSchemaOutput,
-	TourCatalogSort
+	CreateAgencySchema
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -26,11 +24,7 @@ export const AGENCY_PATHS = {
 	getAgencyInfo: {
 		url: "/agency/me/info",
 		method: "GET",
-		_types: {} as {
-			body: void;
-			query: void;
-			response: AgencyInfoModel | null;
-		}
+		_types: {} as { body: void; query: void; response: AgencyInfoModel }
 	} as const,
 	updateAgencyInfo: {
 		url: "/agency/me/info",
@@ -63,7 +57,11 @@ export const AGENCY_PATHS = {
 	listAgencyDocuments: {
 		url: "/agency/me/documents",
 		method: "GET",
-		_types: {} as { body: void; query: void; response: AgencyFilesModel[] }
+		_types: {} as {
+			body: void;
+			query: { skip?: number; limit?: number };
+			response: AgencyFilesModel[];
+		}
 	} as const,
 	addAgencyDocuments: {
 		url: "/agency/me/documents",
@@ -85,19 +83,5 @@ export const AGENCY_PATHS = {
 			url: `/agency/me/documents/${fileId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
-		}) as const,
-	listAgencyCatalog: {
-		url: "/agency/catalog",
-		method: "GET",
-		_types: {} as {
-			body: void;
-			query: {
-				skip?: number;
-				limit?: number;
-				sort?: TourCatalogSort | null;
-				q?: string | null;
-			};
-			response: PublicTourCatalogSchemaOutput[];
-		}
-	} as const
+		}) as const
 } as const;

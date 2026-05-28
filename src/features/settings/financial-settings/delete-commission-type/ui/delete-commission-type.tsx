@@ -30,16 +30,20 @@ export const DeleteCommissionType: FC<IDeleteCommissionTypeProps> = ({
 	className
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
-	const { t } = useTranslation("financial_settings_page");
+	const { t } = useTranslation("financial_settings_page_operator");
 	const [deleteCommission, { isLoading }] = useDeleteCommissionMutation();
 
 	async function handleDelete() {
 		try {
 			await deleteCommission(id).unwrap();
-			toast.success(t("commission_type.menu.delete.form.toasts.success"));
+			toast.success(
+				t("currency.commission_type.menu.delete.form.toasts.success")
+			);
 			setOpen(false);
 		} catch (error) {
-			toast.error(t("commission_type.menu.delete.form.toasts.error"));
+			toast.error(
+				t("currency.commission_type.menu.delete.form.toasts.error")
+			);
 			console.error("Failed to delete commission:", error);
 		}
 	}
@@ -55,23 +59,23 @@ export const DeleteCommissionType: FC<IDeleteCommissionTypeProps> = ({
 			>
 				<DialogHeader>
 					<DialogTitle>
-						{t("commission_type.menu.delete.form.title")}
+						{t("currency.commission_type.menu.delete.form.title")}
 					</DialogTitle>
 					<DialogDescription className="sr-only">
-						{t("commission_type.menu.delete.form.title")}
+						{t("currency.commission_type.menu.delete.form.title")}
 					</DialogDescription>
 				</DialogHeader>
 				<Separator />
 				<div className="py-4">
 					<p className="text-sm text-muted-foreground">
-						{t("commission_type.menu.delete.form.warning")}
+						{t("currency.commission_type.menu.delete.form.warning")}
 					</p>
 				</div>
 				<DialogFooter>
 					<DialogClose asChild onClick={() => setOpen(false)}>
 						<Button type="button" variant="outline">
 							{t(
-								"commission_type.menu.delete.form.buttons.decline"
+								"currency.commission_type.menu.delete.form.buttons.decline"
 							)}
 						</Button>
 					</DialogClose>
@@ -86,10 +90,10 @@ export const DeleteCommissionType: FC<IDeleteCommissionTypeProps> = ({
 						)}
 						{isLoading
 							? t(
-									"commission_type.menu.delete.form.buttons.confirming"
+									"currency.commission_type.menu.delete.form.buttons.confirming"
 								)
 							: t(
-									"commission_type.menu.delete.form.buttons.confirm"
+									"currency.commission_type.menu.delete.form.buttons.confirm"
 								)}
 					</Button>
 				</DialogFooter>
