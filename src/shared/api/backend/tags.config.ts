@@ -16,6 +16,7 @@ export const ENUM_API_TAGS = {
 	OPERATOR: {
 		FINANCIAL_INFORMATION: "Operator Financial Information",
 		CURRENCY_RATES: "Operator Currency Rates",
-		STAFF_INFORMATION: "Operator Staff Information"
+		STAFF_INFORMATION: "Operator Staff Information",
+		PAYMENT_ROUTES: "Operator Payment Routes"
 	}
 } as const;

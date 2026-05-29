@@ -1,0 +1,9 @@
+import type { TFinancialSettingsPageOperatorKeys } from "@/shared/config";
+import type { TFormField } from "@/shared/types";
+
+import { type ENUM_FORM_OPERATOR_PAYMENT_SETTINGS_TYPE } from "@/entities/finance/finance-information";
+
+export type TForm = TFormField<
+	TFinancialSettingsPageOperatorKeys,
+	ENUM_FORM_OPERATOR_PAYMENT_SETTINGS_TYPE
+>;

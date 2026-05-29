@@ -133,6 +133,10 @@
 				"in_progress": "В процессе",
 				"completed": "Завершенно"
 			}
+		},
+		"payment_methods": {
+			"classic_swift": "Классический SWIFT",
+			"wise": "WISE"
 		}
 	},
 	"booking": {

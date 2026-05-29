@@ -107,6 +107,22 @@
 							"min": "Bank address cannot be empty"
 						}
 					},
+					"account_id_email": {
+						"label": "Account ID / Email",
+						"placeholder": "Enter account ID or email",
+						"errors": {
+							"required": "Account ID or email is required",
+							"min": "Account ID or email cannot be empty"
+						}
+					},
+					"payment_link": {
+						"label": "Payment link",
+						"placeholder": "Enter payment link",
+						"errors": {
+							"required": "Payment link is required",
+							"min": "Payment link cannot be empty"
+						}
+					},
 					"note": {
 						"label": "Note",
 						"placeholder": "Enter note"
@@ -123,6 +139,28 @@
 						"error": "Failed to save payout details"
 					}
 				}
+			},
+			"delete": {
+				"title": "Delete Payout Details",
+				"warning": "Are you sure you want to delete this payment route? This action cannot be undone.",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting..."
+				},
+				"toasts": {
+					"success": "Payment route deleted successfully",
+					"error": "Failed to delete payment route"
+				}
+			}
+		},
+		"actions": {
+			"edit": "Edit",
+			"delete": "Delete"
+		},
+		"toasts": {
+			"load": {
+				"error": "Failed to load payment routes"
 			}
 		}
 	},

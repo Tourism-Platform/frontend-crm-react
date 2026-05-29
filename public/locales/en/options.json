@@ -133,6 +133,10 @@
 				"in_progress": "In progress",
 				"completed": "Completed"
 			}
+		},
+		"payment_methods": {
+			"classic_swift": "Classic SWIFT",
+			"wise": "WISE"
 		}
 	},
 	"booking": {

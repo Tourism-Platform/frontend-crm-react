@@ -26,10 +26,10 @@ export const EDIT_STAFF_SCHEMA = z.object({
 	[ENUM_FORM_EDIT_STAFF.EMAIL]: z
 		.email("menu.edit.form.details.errors.email.invalid")
 		.min(1, "menu.edit.form.details.errors.email.min"),
-	[ENUM_FORM_EDIT_STAFF.ROLE]: z.nativeEnum(ENUM_STAFF_ROLE_OPTIONS, {
+	[ENUM_FORM_EDIT_STAFF.ROLE]: z.enum(ENUM_STAFF_ROLE_OPTIONS, {
 		message: "menu.edit.form.details.errors.role.required"
 	}),
-	[ENUM_FORM_EDIT_STAFF.STATUS]: z.nativeEnum(ENUM_STAFF_STATUS_OPTIONS, {
+	[ENUM_FORM_EDIT_STAFF.STATUS]: z.enum(ENUM_STAFF_STATUS_OPTIONS, {
 		message: "menu.edit.form.details.errors.status.required"
 	}),
 	[ENUM_FORM_EDIT_STAFF.TYPE]: z.enum(ENUM_COMMISSION_OPTIONS, {
