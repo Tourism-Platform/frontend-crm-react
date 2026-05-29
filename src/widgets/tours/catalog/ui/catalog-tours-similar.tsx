@@ -54,7 +54,7 @@ const CatalogToursSimilarBase: FC<ICatalogToursSimilarProps> = ({ params }) => {
 				</AlertContent>
 			</Alert>
 
-			<div className="w-[calc(96rem-400px-24px)]">
+			<div className="w-[calc(100%-24px)]">
 				<Carousel>
 					<CarouselContent className="pb-2">
 						{isLoading || isFetching
