@@ -14,7 +14,7 @@ export function moveItemInData(
 	target: IItemBaseLocation,
 	toIndex: number,
 	movedItem: IDayItem,
-	targetOptionId: number
+	targetOptionId: string
 ): TOptionsData {
 	// Check if we're moving within the same container
 	const isSameOption = from.optionId === targetOptionId;

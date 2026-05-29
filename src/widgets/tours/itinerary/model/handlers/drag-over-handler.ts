@@ -6,7 +6,7 @@ import type { TOptionsData } from "../types";
 export const handleDragOver = (
 	event: DragEndEvent,
 	optionsData: TOptionsData,
-	activeOption: number
+	activeOption: string
 ): TOptionsData | null => {
 	const { active, over } = event;
 	if (!over) return null;

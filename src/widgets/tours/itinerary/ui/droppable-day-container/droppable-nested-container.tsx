@@ -15,12 +15,14 @@ import { DraggableDayItem } from "./draggable-day-item";
 
 interface IDroppableNestedContainerProps {
 	items: IDayItem[];
+	optionId: string;
 	parentBlockId: string;
 	onRemoveNested: (index: number) => void;
 }
 
 const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
 	items,
+	optionId,
 	parentBlockId,
 	onRemoveNested
 }) => {
@@ -52,6 +54,7 @@ const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
 					{items.map((item, index) => (
 						<div key={item.block_id} className="mb-2">
 							<DraggableDayItem
+								optionId={optionId}
 								item={item}
 								onRemove={() => onRemoveNested(index)}
 							/>

@@ -206,7 +206,7 @@ const LandingBase: FC = () => {
 		),
 		[]
 	);
-	console.log(form.watch());
+
 	return (
 		<section className="flex flex-col gap-6 container">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />

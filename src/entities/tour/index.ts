@@ -6,3 +6,4 @@ export * from "./catalog";
 export * from "./schedule";
 export * from "./preview-tour";
 export * from "./preview-booking";
+export * from "./itinerary";

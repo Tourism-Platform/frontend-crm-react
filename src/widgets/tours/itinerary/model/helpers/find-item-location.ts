@@ -5,7 +5,7 @@ export function findItemLocation(
 	itemIdRaw: string
 ): IItemLocation | null {
 	for (const key of Object.keys(optionsData)) {
-		const optionKey = Number(key);
+		const optionKey = key;
 		const data = optionsData[optionKey];
 
 		// tripDetails

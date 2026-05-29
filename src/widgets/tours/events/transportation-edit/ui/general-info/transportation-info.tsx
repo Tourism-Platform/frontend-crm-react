@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import { type TGeneralInfoSchema, TRANSPORTATION_DATA_LIST } from "../../model";
+import type { TTransportationEditSchema } from "@/entities/tour";
+
+import { ENUM_FORM_SECTION, TRANSPORTATION_DATA_LIST } from "../../model";
 
 interface ITransportationInfoProps {
-	form: UseFormReturn<TGeneralInfoSchema>;
+	form: UseFormReturn<TTransportationEditSchema>;
 }
 
 const TransportationInfoBase: FC<ITransportationInfoProps> = ({ form }) => {
@@ -15,14 +17,14 @@ const TransportationInfoBase: FC<ITransportationInfoProps> = ({ form }) => {
 
 	return (
 		<div className="grid gap-8">
-			<h2 className="text-xl">{t("general.details.title")}</h2>
+			<h2 className="text-xl">{t("form.general.details.title")}</h2>
 
 			<div className="grid grid-cols-4 gap-x-4 gap-y-1">
-				{TRANSPORTATION_DATA_LIST.map(({ key, ...item }, index) => (
+				{TRANSPORTATION_DATA_LIST().map(({ key, ...item }, index) => (
 					<Fragment key={key}>
 						<CustomField
 							control={form?.control}
-							name={key}
+							name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
 							t={t}
 							{...item}
 						/>

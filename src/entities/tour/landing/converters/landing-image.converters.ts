@@ -1,5 +1,3 @@
-import { ENV } from "@/shared/config";
-
 import type { ILandingImageSchema, TLandingImageBackend } from "../types";
 
 export const mapLandingImageToFrontend = (
@@ -7,7 +5,7 @@ export const mapLandingImageToFrontend = (
 ): ILandingImageSchema => ({
 	id: backend.id,
 	landingPageId: backend.landing_page_id,
-	imagePath: `${ENV.VITE_API_URL}/${backend.image_path}`,
+	imagePath: backend.image_path,
 	isPrimary: backend.is_primary
 });
 

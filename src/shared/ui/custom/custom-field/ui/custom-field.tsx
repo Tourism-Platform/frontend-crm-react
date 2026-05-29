@@ -1,5 +1,7 @@
+import { parseDate, parseTime } from "@internationalized/date";
 import type { TFunction } from "i18next";
 import type { ComponentProps, FC } from "react";
+import type { DateValue, TimeValue } from "react-aria-components";
 import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
@@ -136,6 +138,25 @@ type CustomFieldProps =
 	| DateRangeFieldVariant
 	| SwitchFieldVariant;
 
+// helpers
+const toDateValue = (v: unknown): DateValue | null => {
+	if (!v || typeof v !== "string") return null;
+	try {
+		return parseDate(v);
+	} catch {
+		return null;
+	}
+};
+
+const toTimeValue = (v: unknown): TimeValue | null => {
+	if (!v || typeof v !== "string") return null;
+	try {
+		return parseTime(v);
+	} catch {
+		return null;
+	}
+};
+
 export const CustomField: FC<CustomFieldProps> = (props) => {
 	const {
 		control,
@@ -191,23 +212,44 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...field}
 					/>
 				);
-			case "time":
+			case "time": {
+				const timeRest = rest as Omit<
+					TimePickerInputProps,
+					"defaultValue"
+				>;
+
 				return (
 					<TimePickerInput
-						{...rest}
-						aria-label={t(label)}
+						{...timeRest}
+						aria-label={label ? t(label) : undefined}
 						hourCycle={24}
-						{...field}
+						value={toTimeValue(field.value)}
+						onChange={(val) =>
+							field.onChange(val?.toString() ?? null)
+						}
+						onBlur={field.onBlur}
 					/>
 				);
-			case "date":
+			}
+
+			case "date": {
+				const dateRest = rest as Omit<
+					DatePickerInputProps,
+					"defaultValue"
+				>;
+
 				return (
 					<DatePickerInput
-						{...rest}
-						aria-label={t(label)}
-						{...field}
+						{...dateRest}
+						aria-label={label ? t(label) : undefined}
+						value={toDateValue(field.value)}
+						onChange={(val) =>
+							field.onChange(val?.toString() ?? null)
+						}
+						onBlur={field.onBlur}
 					/>
 				);
+			}
 			case "select":
 				return (
 					<SelectPicker

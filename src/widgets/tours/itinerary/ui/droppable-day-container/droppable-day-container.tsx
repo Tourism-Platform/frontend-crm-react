@@ -85,6 +85,7 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 							<div key={item.block_id} className="mb-2">
 								<DraggableDayItem
 									item={item}
+									optionId={optionId}
 									onRemove={() =>
 										onRemoveItem({
 											optionId,

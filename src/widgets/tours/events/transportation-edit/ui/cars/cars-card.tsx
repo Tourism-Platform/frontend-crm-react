@@ -4,12 +4,18 @@ import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, CardHeader, CustomField } from "@/shared/ui";
 
-import { CARS_DATA_LIST, type TCarsSchema } from "../../model";
+import {
+	ENUM_FORM_CARS,
+	ENUM_FORM_SECTION,
+	type TTransportationEditSchema
+} from "@/entities/tour";
+
+import { CARS_DATA_LIST } from "../../model";
 
 import { CarsMenu } from "./cars-menu";
 
 interface ICarsCardProps {
-	form: UseFormReturn<TCarsSchema>;
+	form: UseFormReturn<TTransportationEditSchema>;
 	index: number;
 	onRemove: () => void;
 }
@@ -20,7 +26,7 @@ export const CarsCard: FC<ICarsCardProps> = ({ form, index, onRemove }) => {
 	return (
 		<Card className="relative">
 			<CardHeader className="flex items-center justify-between">
-				{t("cars.details.car_item", { index: index + 1 })}
+				{t("form.cars.details.car_item", { index: index + 1 })}
 			</CardHeader>
 			<CardContent>
 				<div className="absolute top-0 right-0">
@@ -32,7 +38,7 @@ export const CarsCard: FC<ICarsCardProps> = ({ form, index, onRemove }) => {
 						<CustomField
 							key={key}
 							control={form?.control}
-							name={`cars.${index}.${key}`}
+							name={`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${key}`}
 							t={t}
 							{...item}
 						/>

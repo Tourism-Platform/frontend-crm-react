@@ -68,8 +68,7 @@ export const AgencyUserMenu: FC = () => {
 							<>
 								{accountData?.first_name &&
 								accountData?.last_name
-									? `${accountData?.first_name}{" "}
-									  ${accountData?.last_name}`
+									? `${accountData?.first_name} ${accountData?.last_name}`
 									: "User"}
 							</>
 						)}

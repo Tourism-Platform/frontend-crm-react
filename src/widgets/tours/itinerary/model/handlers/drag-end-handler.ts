@@ -2,6 +2,7 @@ import type { DragEndEvent } from "@dnd-kit/core";
 import { v4 as uuidv4 } from "uuid";
 
 import { ENUM_EVENT, EVENT_TEMPLATES_LIST } from "@/entities/tour";
+import type { ENUM_EVENT_TYPE } from "@/entities/tour";
 
 import {
 	addItemToData,
@@ -13,10 +14,38 @@ import { type IDayItem, type IItemLocation, type TOptionsData } from "../types";
 
 import { getTargetContainer } from "./target-container";
 
+// Описание API-действия, которое нужно выполнить после DND
+export type TDragAction =
+	| {
+			type: "create";
+			day: number;
+			position: number;
+			eventType: ENUM_EVENT_TYPE;
+			title: string;
+			tempBlockId: string;
+			details: Record<string, unknown>;
+	  }
+	| {
+			type: "move";
+			backendId: string;
+			day: number;
+			position: number;
+	  }
+	| {
+			type: "reorder";
+			backendId: string;
+			day: number;
+			position: number;
+	  }
+	| {
+			type: "reorderDays";
+	  };
+
 export interface IDragEndResult {
 	shouldUpdate: boolean;
 	newData?: TOptionsData;
 	clearState: boolean;
+	action?: TDragAction;
 }
 
 const createItemFromTemplate = (
@@ -26,19 +55,19 @@ const createItemFromTemplate = (
 	const tpl = [
 		...EVENT_TEMPLATES_LIST.library,
 		...EVENT_TEMPLATES_LIST.components
-	].find((t) => t.event_type === tplId);
+	].find((t) => t.eventType === tplId);
 	if (!tpl) return null;
 
 	const newItem: IDayItem = {
 		id: uuidv4(),
-		block_id: `${tpl.event_type}-${Date.now()}`,
-		event_type: tpl.event_type,
+		block_id: `${tpl.eventType}-${Date.now()}`,
+		eventType: tpl.eventType,
 		title: tpl.title,
 		subtitle: "Information"
 	};
 
 	if (
-		newItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
+		newItem.eventType === ENUM_EVENT.MULTIPLY_OPTION &&
 		targetContainer?.nestedIndex !== undefined
 	) {
 		return null;
@@ -68,7 +97,7 @@ const getMovedItem = (
 export const handleDragEnd = (
 	event: DragEndEvent,
 	optionsData: TOptionsData,
-	activeOption: number
+	activeOption: string
 ): IDragEndResult => {
 	const { active, over } = event;
 
@@ -94,7 +123,8 @@ export const handleDragEnd = (
 			return {
 				shouldUpdate: true,
 				newData: resultData,
-				clearState: false
+				clearState: false,
+				action: { type: "reorderDays" }
 			};
 		}
 		return { shouldUpdate: false, clearState: false };
@@ -120,6 +150,8 @@ export const handleDragEnd = (
 			return { shouldUpdate: false, clearState: true };
 		}
 
+		const targetDay = targetContainer.day ?? 1;
+
 		const resultData = addItemToData(
 			optionsData,
 			targetContainer,
@@ -127,7 +159,21 @@ export const handleDragEnd = (
 			newItem,
 			activeOption
 		);
-		return { shouldUpdate: true, newData: resultData, clearState: true };
+		return {
+			shouldUpdate: true,
+			newData: resultData,
+			clearState: true,
+			action: {
+				type: "create",
+				day: targetDay,
+				position: toIndex,
+				eventType: newItem.eventType,
+				title: newItem.title,
+				tempBlockId: newItem.block_id,
+				// details: DEFAULT_EVENT_DETAILS[newItem.eventType] || {}
+				details: {}
+			}
+		};
 	}
 
 	// Existing item move
@@ -142,7 +188,7 @@ export const handleDragEnd = (
 
 		// Prevent nesting MULTIPLY_OPTION into another MULTIPLY_OPTION
 		if (
-			movedItem.event_type === ENUM_EVENT.MULTIPLY_OPTION &&
+			movedItem.eventType === ENUM_EVENT.MULTIPLY_OPTION &&
 			targetContainer.nestedIndex !== undefined
 		) {
 			return { shouldUpdate: false, clearState: true };
@@ -156,7 +202,38 @@ export const handleDragEnd = (
 			movedItem,
 			activeOption
 		);
-		return { shouldUpdate: true, newData: resultData, clearState: true };
+
+		// Определяем тип действия: move (смена дня) или reorder (тот же день)
+		let action: TDragAction | undefined;
+		if (movedItem.backendId) {
+			const isSameDay =
+				from.location === "day" &&
+				targetContainer.location === "day" &&
+				from.day === targetContainer.day;
+
+			if (isSameDay) {
+				action = {
+					type: "reorder",
+					day: targetContainer.day as number,
+					backendId: movedItem.backendId,
+					position: toIndex
+				};
+			} else if (targetContainer.location === "day") {
+				action = {
+					type: "move",
+					backendId: movedItem.backendId,
+					day: targetContainer.day as number,
+					position: toIndex
+				};
+			}
+		}
+
+		return {
+			shouldUpdate: true,
+			newData: resultData,
+			clearState: true,
+			action
+		};
 	}
 
 	return { shouldUpdate: false, clearState: true };

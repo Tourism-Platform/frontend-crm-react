@@ -1,6 +1,7 @@
 import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { ENUM_FORM_PRICE_DETAILS } from "@/entities/tour";
 
-import { ENUM_FORM_PRICE_DETAILS, type TForm } from "../types";
+import { type TForm } from "../types";
 
 export const PRICE_DETAILS_DATA_LIST: TForm[] = [
 	{

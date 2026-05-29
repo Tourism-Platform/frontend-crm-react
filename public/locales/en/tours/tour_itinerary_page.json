@@ -19,5 +19,42 @@
 		"title": "Let's build your tour",
 		"library": "Library",
 		"components": "Components"
+	},
+
+	"toasts": {
+		"option": {
+			"create": {
+				"loading": "Creating option...",
+				"success": "Option created",
+				"error": "Failed to create option"
+			},
+			"delete": {
+				"loading": "Deleting option...",
+				"success": "Option deleted",
+				"error": "Failed to delete option"
+			}
+		},
+		"event": {
+			"create": {
+				"loading": "Creating event...",
+				"success": "Event created",
+				"error": "Failed to create event"
+			},
+			"move": {
+				"loading": "Moving event...",
+				"success": "Event moved",
+				"error": "Failed to move event"
+			},
+			"reorder": {
+				"loading": "Reordering...",
+				"success": "Event reordered",
+				"error": "Failed to reorder event"
+			},
+			"delete": {
+				"loading": "Deleting event...",
+				"success": "Event deleted",
+				"error": "Failed to delete event"
+			}
+		}
 	}
 }

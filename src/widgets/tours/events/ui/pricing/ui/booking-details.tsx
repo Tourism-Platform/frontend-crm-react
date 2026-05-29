@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
 
-import type { TPricingSchema } from "../model";
+import type { TPricingSchema } from "@/entities/tour";
 
 interface IBookingDetailsProps {
 	form: UseFormReturn<TPricingSchema>;

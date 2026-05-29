@@ -45,7 +45,7 @@ const ItinerarySidebarBase: FC = () => {
 							{[...EVENT_TEMPLATES_LIST.library].map(
 								(template) => (
 									<DraggableTemplateItem
-										key={template.event_type}
+										key={template.eventType}
 										template={template}
 									/>
 								)
@@ -61,7 +61,7 @@ const ItinerarySidebarBase: FC = () => {
 							{[...EVENT_TEMPLATES_LIST.components].map(
 								(template) => (
 									<DraggableTemplateItem
-										key={template.event_type}
+										key={template.eventType}
 										template={template}
 									/>
 								)

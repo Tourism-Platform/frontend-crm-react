@@ -5,7 +5,7 @@ export function addItemToData(
 	target: IItemBaseLocation,
 	toIndex: number,
 	item: IDayItem,
-	targetOptionId: number
+	targetOptionId: string
 ): TOptionsData {
 	const resultData = { ...optionsData };
 	const targetOpt = { ...resultData[targetOptionId] };

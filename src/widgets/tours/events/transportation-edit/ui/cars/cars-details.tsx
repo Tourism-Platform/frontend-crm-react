@@ -5,12 +5,17 @@ import { useTranslation } from "react-i18next";
 
 import { Button, withErrorBoundary } from "@/shared/ui";
 
-import { type TCarsSchema } from "../../model";
+import {
+	ENUM_FORM_CARS,
+	type TTransportationEditSchema
+} from "@/entities/tour";
+
+import { ENUM_FORM_SECTION } from "../../model";
 
 import { CarsCard } from "./cars-card";
 
 interface ICarsDetailsProps {
-	form: UseFormReturn<TCarsSchema>;
+	form: UseFormReturn<TTransportationEditSchema>;
 }
 
 const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
@@ -18,7 +23,7 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
-		name: "cars"
+		name: `${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
 	});
 
 	const handleAddCar = () => {
@@ -31,7 +36,7 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 
 	return (
 		<div className="grid gap-6">
-			<h2 className="text-xl">{t("cars.details.title")}</h2>
+			<h2 className="text-xl">{t("form.cars.details.title")}</h2>
 
 			<div className="grid gap-4">
 				{fields.map((field, index) => (
@@ -50,7 +55,7 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 						onClick={handleAddCar}
 						className="gap-2"
 					>
-						<p>{t("cars.details.form.buttons.add")}</p>
+						<p>{t("form.cars.details.form.buttons.add")}</p>
 						<PlusIcon className="h-4 w-4" />
 					</Button>
 				</div>

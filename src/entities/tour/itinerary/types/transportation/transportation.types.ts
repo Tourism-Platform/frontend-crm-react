@@ -1,16 +1,9 @@
 import { z } from "zod";
 
-import type { TTourEventTransportationEditPageKeys } from "@/shared/config";
-import type { TFormField } from "@/shared/types";
-
-import type { GENERAL_INFO_SCHEMA } from "../config";
-
-import type { ENUM_FORM_CARS_TYPE } from "./cars.types";
-
-export type TForm = TFormField<
-	TTourEventTransportationEditPageKeys,
-	ENUM_FORM_TRANSPORTATION_TYPE | ENUM_FORM_CARS_TYPE
->;
+import type {
+	GENERAL_INFO_SCHEMA,
+	TRANSPORTATION_EDIT_SCHEMA
+} from "../../schema";
 
 export const ENUM_FORM_TRANSPORTATION = {
 	TRANSFER_TYPE: "transfer_type",
@@ -29,3 +22,7 @@ export type ENUM_FORM_TRANSPORTATION_TYPE =
 	(typeof ENUM_FORM_TRANSPORTATION)[keyof typeof ENUM_FORM_TRANSPORTATION];
 
 export type TGeneralInfoSchema = z.infer<typeof GENERAL_INFO_SCHEMA>;
+
+export type TTransportationEditSchema = z.infer<
+	typeof TRANSPORTATION_EDIT_SCHEMA
+>;

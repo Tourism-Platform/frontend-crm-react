@@ -1,8 +1,8 @@
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { matchPath, useLocation } from "react-router-dom";
+import { Link, matchPath, useLocation, useParams } from "react-router-dom";
 
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -17,6 +17,7 @@ import { BREADCRUMB_LIST } from "../model";
 
 export const CustomEventBreadcrumb: FC = () => {
 	const { t } = useTranslation("common_events");
+	const { tourId = "" } = useParams<{ tourId: string }>();
 	const location = useLocation();
 	const currentPath = Object.values(ENUM_PATH.TOURS.EVENTS).find((item) =>
 		matchPath(item, location.pathname)
@@ -26,9 +27,17 @@ export const CustomEventBreadcrumb: FC = () => {
 			<CardContent>
 				<Breadcrumb>
 					<BreadcrumbList>
-						<BreadcrumbItem className="hidden md:block">
-							{t(BREADCRUMB_LIST[ENUM_PATH.TOURS.EVENTS.ROOT])}
-						</BreadcrumbItem>
+						<Link
+							to={buildRoute(ENUM_PATH.TOURS.ITINERARY, {
+								tourId
+							})}
+						>
+							<BreadcrumbItem className="hidden md:block">
+								{t(
+									BREADCRUMB_LIST[ENUM_PATH.TOURS.EVENTS.ROOT]
+								)}
+							</BreadcrumbItem>
+						</Link>
 						<BreadcrumbSeparator className="hidden md:block" />
 						<BreadcrumbItem>
 							<BreadcrumbPage>

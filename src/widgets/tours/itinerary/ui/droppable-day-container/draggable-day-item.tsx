@@ -33,6 +33,7 @@ const variants = cva(" p-3 bg-background hover:text-primary", {
 
 interface IDraggableDayItemProps {
 	item: IDayItem;
+	optionId: string;
 	index?: number;
 	isOverlay?: boolean;
 	onRemove?: (index: number) => void;
@@ -40,7 +41,7 @@ interface IDraggableDayItemProps {
 }
 
 const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
-	({ item, index = 0, isOverlay, onRemove, onRemoveNested }) => {
+	({ item, optionId, index = 0, isOverlay, onRemove, onRemoveNested }) => {
 		const {
 			attributes,
 			listeners,
@@ -55,20 +56,22 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 		};
 		const template =
 			EVENT_TEMPLATES_LIST.components.find(
-				(tpl: ITemplateItem) => tpl.event_type === item.event_type
+				(tpl: ITemplateItem) => tpl.eventType === item.eventType
 			) ||
 			EVENT_TEMPLATES_LIST.library.find(
-				(tpl: ITemplateItem) => tpl.event_type === item.event_type
+				(tpl: ITemplateItem) => tpl.eventType === item.eventType
 			);
 		const Icon = template?.icon || InfoCircleIcon;
 		const colorBg = template?.color_bg || "bg-gray-500";
 
-		const isMultiplyOption = item.event_type === ENUM_EVENT.MULTIPLY_OPTION;
+		const isMultiplyOption = item.eventType === ENUM_EVENT.MULTIPLY_OPTION;
 
 		const { tourId } = useParams<{ tourId: string }>();
-		const href = buildRoute(EVENT_TYPE_TO_PATH[item.event_type] || "", {
+		const eventId = item.backendId ?? item.id;
+		const href = buildRoute(EVENT_TYPE_TO_PATH[item.eventType] || "", {
 			tourId: tourId || "",
-			eventId: item.id
+			optionId: optionId || "",
+			eventId
 		});
 
 		const content = (
@@ -120,6 +123,7 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 					{isMultiplyOption && (
 						<DroppableNestedContainer
 							items={item.items || []}
+							optionId={optionId}
 							parentBlockId={item.block_id}
 							onRemoveNested={
 								onRemoveNested

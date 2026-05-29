@@ -36,9 +36,14 @@ interface OpenAPIOperation {
 		schema?: { type?: string; $ref?: string; items?: { $ref?: string } };
 	}>;
 	requestBody?: {
-		content?: Record<string, {
-			schema?: any;
-		}>;
+		content?: {
+			"application/json"?: {
+				schema?: { $ref?: string; type?: string; items?: { $ref?: string } };
+			};
+			"multipart/form-data"?: {
+				schema?: { $ref?: string; type?: string; items?: { $ref?: string } };
+			};
+		};
 	};
 	responses?: Record<
 		string,
@@ -279,10 +284,8 @@ async function main() {
 			const operationId = operation.operationId ?? `${method}_${path}`;
 			const name = operation.summary ? summaryToName(operation.summary) : operationIdToName(operationId);
 			
-			const reqContent = operation.requestBody?.content;
-			const bodySchema = reqContent ? Object.values(reqContent)[0]?.schema : undefined;
+			const bodySchema = operation.requestBody?.content?.["application/json"]?.schema || operation.requestBody?.content?.["multipart/form-data"]?.schema;
 			const bodyInfo = resolveSchemaType(bodySchema, operationId, "Body");
-			
 			const queryInfo = resolveQueryType(operation.parameters);
 			
 			const resContent = (operation.responses?.["200"] || operation.responses?.["201"] || operation.responses?.["204"])?.content;

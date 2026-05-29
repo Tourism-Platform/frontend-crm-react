@@ -5,7 +5,9 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import { COMMISSION_DETAILS_DATA_LIST, type TPricingSchema } from "../model";
+import type { TPricingSchema } from "@/entities/tour";
+
+import { COMMISSION_DETAILS_DATA_LIST } from "../model";
 
 interface ICommissionDetailsProps {
 	form: UseFormReturn<TPricingSchema>;

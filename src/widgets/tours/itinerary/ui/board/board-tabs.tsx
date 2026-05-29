@@ -12,76 +12,48 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import type { IOption, TOptionsData } from "../../model";
+import type { IOption } from "../../model";
 
 interface IBoardTabsProps {
-	optionsData: TOptionsData;
-	setOptionsData: (v: TOptionsData) => void;
-	activeOption: number;
-	setActiveOption: React.Dispatch<React.SetStateAction<number>>;
+	activeOption: string;
+	setActiveOption: React.Dispatch<React.SetStateAction<string>>;
 	options: IOption[];
-	setOptions: React.Dispatch<React.SetStateAction<IOption[]>>;
+	onAddOption: () => void;
+	onDeleteOption: (optionId: string) => void;
 }
 
 export const BoardTabs: FC<IBoardTabsProps> = ({
-	optionsData,
-	setOptionsData,
 	activeOption,
 	setActiveOption,
 	options,
-	setOptions
+	onAddOption,
+	onDeleteOption
 }) => {
 	const inputRef = useRef<HTMLInputElement | null>(null);
 
 	// tabs states
-	const [editingOption, setEditingOption] = useState<number | null>(null);
+	const [editingOption, setEditingOption] = useState<string | null>(null);
 	const [editingName, setEditingName] = useState("");
-	const [draggedTab, setDraggedTab] = useState<number | null>(null);
+	const [draggedTab, setDraggedTab] = useState<string | null>(null);
 
-	// Tabs logic (add/delete/edit)
-	const addOption = () => {
-		const newId = options.length
-			? Math.max(...options.map((o) => o.id)) + 1
-			: 1;
-		setOptions((prev) => [...prev, { id: newId, name: `Option ${newId}` }]);
-		setOptionsData({
-			...optionsData,
-			[newId]: {
-				tripDetails: [],
-				days: { 1: [], 2: [], 3: [], 4: [] },
-				dayOrder: [1, 2, 3, 4]
-			}
-		});
-		setActiveOption(newId);
-	};
+	const [localNames, setLocalNames] = useState<Record<string, string>>({});
 
-	const deleteOption = (id: number) => {
-		if (options.length === 1) return;
-		setOptions((prev) => prev.filter((o) => o.id !== id));
-		const newOptionData = { ...optionsData };
-		delete newOptionData[id];
-		setOptionsData(newOptionData);
-		if (activeOption === id) {
-			const remaining = options.filter((o) => o.id !== id);
-			setActiveOption(remaining[0].id);
-		}
-	};
+	const getOptionName = (option: IOption) =>
+		localNames[option.id] || option.name;
 
 	const startEditingOption = (option: IOption) => {
 		setEditingOption(option.id);
-		setEditingName(option.name);
+		setEditingName(getOptionName(option));
 		setTimeout(() => inputRef.current?.focus(), 0);
 	};
 
 	const saveOptionName = () => {
-		if (editingName.trim())
-			setOptions((prev) =>
-				prev.map((o) =>
-					o.id === editingOption
-						? { ...o, name: editingName.trim() }
-						: o
-				)
-			);
+		if (editingName.trim() && editingOption) {
+			setLocalNames((prev) => ({
+				...prev,
+				[editingOption]: editingName.trim()
+			}));
+		}
 		setEditingOption(null);
 		setEditingName("");
 	};
@@ -91,31 +63,24 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 		setEditingName("");
 	};
 
-	const handleTabDragStart = (e: React.DragEvent, optionId: number) => {
+	const handleTabDragStart = (e: React.DragEvent, optionId: string) => {
 		setDraggedTab(optionId);
 		e.dataTransfer.effectAllowed = "move";
 	};
 
-	const handleTabDrop = (e: React.DragEvent, targetOptionId: number) => {
+	const handleTabDrop = (e: React.DragEvent, targetOptionId: string) => {
 		e.preventDefault();
 		if (draggedTab === targetOptionId || draggedTab === null) return;
-		setOptions((prev) => {
-			const draggedIndex = prev.findIndex((o) => o.id === draggedTab);
-			const targetIndex = prev.findIndex((o) => o.id === targetOptionId);
-			if (draggedIndex === -1 || targetIndex === -1) return prev;
-			const newOptions = [...prev];
-			const [removed] = newOptions.splice(draggedIndex, 1);
-			newOptions.splice(targetIndex, 0, removed);
-			return newOptions;
-		});
+		// Локальная перестановка табов (UI-only, бэкенд не поддерживает порядок опций)
 		setDraggedTab(null);
 	};
+
 	return (
 		<div className="px-4 py-2 flex items-center gap-2">
 			<CustomOptionTabs
-				defaultValue={`${activeOption}`}
-				value={`${activeOption}`}
-				onValueChange={(val) => setActiveOption(parseInt(val))}
+				defaultValue={activeOption}
+				value={activeOption}
+				onValueChange={(val) => setActiveOption(val)}
 			>
 				<CustomOptionTabsList className="flex items-center gap-2">
 					{options.map((option) => (
@@ -126,11 +91,9 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 							onDragStart={(e) =>
 								handleTabDragStart(e, option.id)
 							}
-							// onDragOver={(e) => handleTabDragOver(e, option.id)}
 							onDrop={(e) => handleTabDrop(e, option.id)}
 							onDragEnd={() => {
 								setDraggedTab(null);
-								// setDragOverTab(null);
 							}}
 						>
 							{editingOption === option.id ? (
@@ -151,8 +114,8 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 								/>
 							) : (
 								<CustomOptionTabsTrigger
-									key={`${option.id}`}
-									value={`${option.id}`}
+									key={option.id}
+									value={option.id}
 									onDoubleClick={() =>
 										startEditingOption(option)
 									}
@@ -164,7 +127,7 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 								>
 									<div>
 										<p className="truncate">
-											{option.name}
+											{getOptionName(option)}
 										</p>
 										<DropdownMenu>
 											<DropdownMenuTrigger className="cursor-pointer py-1 px-2">
@@ -173,7 +136,9 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 											<DropdownMenuContent align="end">
 												<DropdownMenuItem
 													onClick={() =>
-														deleteOption(option.id)
+														onDeleteOption(
+															option.id
+														)
 													}
 													className=" !text-red-400"
 												>
@@ -189,7 +154,7 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 				</CustomOptionTabsList>
 			</CustomOptionTabs>
 
-			<Button onClick={addOption} size={"icon"} variant={"ghost"}>
+			<Button onClick={onAddOption} size={"icon"} variant={"ghost"}>
 				<Plus className="w-5 h-5 text-muted-foreground" />
 			</Button>
 		</div>

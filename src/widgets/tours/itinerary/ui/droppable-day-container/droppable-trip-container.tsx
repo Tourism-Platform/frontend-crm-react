@@ -72,6 +72,7 @@ const DroppableTripContainerBase: FC<IDroppableTripContainerProps> = ({
 					items.map((item, index) => (
 						<div key={item.block_id} className="mb-2">
 							<DraggableDayItem
+								optionId={optionId}
 								item={item}
 								index={index}
 								onRemove={handleRemoveItem}

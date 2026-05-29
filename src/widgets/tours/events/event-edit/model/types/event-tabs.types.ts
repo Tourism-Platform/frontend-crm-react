@@ -14,5 +14,5 @@ export type ENUM_EVENT_EDIT_TAB_TYPE =
 export interface IEventEditTabs {
 	label: TTourEventEditPageKeys;
 	type: ENUM_EVENT_EDIT_TAB_TYPE;
-	slot: FC;
+	slot: FC<any>;
 }

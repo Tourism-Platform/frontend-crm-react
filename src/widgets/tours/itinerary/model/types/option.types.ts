@@ -1,7 +1,7 @@
 import type { IDayItem } from "./day-item.types";
 
 export interface IOption {
-	id: number;
+	id: string;
 	name: string;
 }
 
@@ -11,4 +11,4 @@ export interface IOptionData {
 	dayOrder: number[];
 }
 
-export type TOptionsData = Record<number, IOptionData>;
+export type TOptionsData = Record<string, IOptionData>;

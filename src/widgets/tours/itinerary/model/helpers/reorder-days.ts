@@ -4,7 +4,7 @@ import type { TOptionsData } from "../types";
 
 export function reorderDaysInData(
 	optionsData: TOptionsData,
-	optionId: number,
+	optionId: string,
 	activeDay: number,
 	overDay: number
 ): TOptionsData {

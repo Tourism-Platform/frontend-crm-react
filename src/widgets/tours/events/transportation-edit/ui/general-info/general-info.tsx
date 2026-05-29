@@ -1,52 +1,34 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { type FC } from "react";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Form, Separator, withErrorBoundary } from "@/shared/ui";
+import { Button, Separator, withErrorBoundary } from "@/shared/ui";
 
-import { GENERAL_INFO_SCHEMA, type TGeneralInfoSchema } from "../../model";
+import { type ISlotProps } from "../../model";
 
 import { DescriptionInfo } from "./description-info";
 import { TransportationInfo } from "./transportation-info";
 
-const GeneralInfoBase: FC = () => {
+const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("transportation_edit_page");
-	const form = useForm<TGeneralInfoSchema>({
-		resolver: zodResolver(GENERAL_INFO_SCHEMA),
-		defaultValues: {
-			description: "",
-			transfer_type: "",
-			meet_point: "",
-			end_point: "",
-			departure_date: null,
-			arrival_date: null,
-			departure_time: null,
-			arrival_time: null,
-			departure_timezone: "",
-			arrival_timezone: ""
-		},
-		mode: "onSubmit"
-	});
-	function onSubmit(data: TGeneralInfoSchema) {
-		console.log("Form submitted:", data);
-	}
 
 	return (
-		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="grid gap-12"
-			>
-				<TransportationInfo form={form} />
-				<Separator />
-				<DescriptionInfo form={form} />
+		<div className="grid gap-12">
+			<TransportationInfo form={form} />
+			<Separator />
+			<DescriptionInfo form={form} />
 
-				<div className="flex justify-end mt-6">
-					<Button>{t("general.buttons.save")}</Button>
-				</div>
-			</form>
-		</Form>
+			<div className="flex justify-end mt-6">
+				<Button type="button" onClick={onSubmit} disabled={isLoading}>
+					{isLoading && (
+						<Loader className="mr-2 h-4 w-4 animate-spin" />
+					)}
+					{isLoading
+						? t("form.general.buttons.saving")
+						: t("form.general.buttons.save")}
+				</Button>
+			</div>
+		</div>
 	);
 };
 

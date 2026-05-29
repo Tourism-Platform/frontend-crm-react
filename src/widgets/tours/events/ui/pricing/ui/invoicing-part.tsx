@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { PACKAGE_TYPE_OPTIONS } from "@/shared/config";
 import { CustomField, Separator, withErrorBoundary } from "@/shared/ui";
 
-import type { TPricingSchema } from "../model";
+import type { TPricingSchema } from "@/entities/tour";
 
 import { BookingDetails } from "./booking-details";
 

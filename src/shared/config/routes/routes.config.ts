@@ -44,17 +44,18 @@ export const ENUM_PATH = {
 		ACTIVITY_LOG: "/tours/:tourId/activity-log",
 		SETTINGS: "/tours/:tourId/settings",
 		EVENTS: {
-			ROOT: "/tours/:tourId/itinerary/events",
-			FLIGHT: "/tours/:tourId/itinerary/events/:eventId/flight",
-			EVENT: "/tours/:tourId/itinerary/events/:eventId/event",
-			TRANSFER: "/tours/:tourId/itinerary/events/:eventId/transfer",
+			ROOT: "/tours/:tourId/itinerary/:optionId/events",
+			FLIGHT: "/tours/:tourId/itinerary/:optionId/events/:eventId/flight",
+			EVENT: "/tours/:tourId/itinerary/:optionId/events/:eventId/event",
+			TRANSFER:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/transfer",
 			ACCOMMODATION:
-				"/tours/:tourId/itinerary/events/:eventId/accommodation",
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/accommodation",
 			MULTIPLY_OPTION:
-				"/tours/:tourId/itinerary/events/:eventId/multiply-option",
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/multiply-option",
 			TOUR_DETAILS:
-				"/tours/:tourId/itinerary/events/:eventId/tour-details",
-			INFO: "/tours/:tourId/itinerary/events/:eventId/info"
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/tour-details",
+			INFO: "/tours/:tourId/itinerary/:optionId/events/:eventId/info"
 		}
 	},
 	BOOKING: {

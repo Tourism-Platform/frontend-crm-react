@@ -5,11 +5,11 @@ export interface IItemBaseLocation {
 }
 
 export interface IItemLocation extends IItemBaseLocation {
-	optionId: number;
+	optionId: string;
 	index: number;
 }
 
 export interface IBaseDnDProps {
-	optionId: number;
+	optionId: string;
 	onRemoveItem: (loc: IItemLocation) => void;
 }

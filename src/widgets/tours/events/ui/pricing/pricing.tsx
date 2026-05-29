@@ -1,71 +1,66 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
+	Button,
 	CustomOptionTabs,
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
-	Form,
 	withErrorBoundary
 } from "@/shared/ui";
 
-import {
-	PRICING_SCHEMA,
-	PRICING_TABS_LIST,
-	type TPricingSchema
-} from "./model";
+import { PRICING_TABS_LIST } from "./model";
 
-const PricingBase: FC = () => {
+interface IPricingProps {
+	form: UseFormReturn<any>;
+	onSubmit: (data: any) => void;
+}
+
+const PricingBase: FC<IPricingProps> = ({ form, onSubmit }) => {
 	const { t } = useTranslation("flight_edit_page");
-	const form = useForm<TPricingSchema>({
-		resolver: zodResolver(PRICING_SCHEMA),
-		mode: "onSubmit"
-	});
-	function onSubmit(data: TPricingSchema) {
-		console.log("Form submitted:", data);
-	}
 
 	return (
 		<div>
 			<div className="grid gap-6">
 				<h2 className="text-xl">{t("pricing.title")}</h2>
-				<Form {...form}>
-					<form
-						onSubmit={form.handleSubmit(onSubmit)}
-						className="grid gap-1"
+				<div className="grid gap-1">
+					<h3 className="text-lg">{t("pricing.invoicing.title")}</h3>
+					<CustomOptionTabs
+						defaultValue={PRICING_TABS_LIST[0]?.type}
+						className="gap-4"
 					>
-						<h3 className="text-lg">
-							{t("pricing.invoicing.title")}
-						</h3>
-						<CustomOptionTabs
-							defaultValue={PRICING_TABS_LIST[0]?.type}
-							className="gap-4"
-						>
-							<CustomOptionTabsList className="grid-cols-2 w-70">
-								{PRICING_TABS_LIST.map((item) => (
-									<CustomOptionTabsTrigger
-										key={item.type}
-										value={item.type}
-										variant={"outline"}
-									>
-										{t(item?.label)}
-									</CustomOptionTabsTrigger>
-								))}
-							</CustomOptionTabsList>
+						<CustomOptionTabsList className="grid-cols-2 w-70">
 							{PRICING_TABS_LIST.map((item) => (
-								<CustomOptionTabsContent
+								<CustomOptionTabsTrigger
 									key={item.type}
 									value={item.type}
+									variant={"outline"}
 								>
-									<item.slot form={form} />
-								</CustomOptionTabsContent>
+									{t(item?.label)}
+								</CustomOptionTabsTrigger>
 							))}
-						</CustomOptionTabs>
-					</form>
-				</Form>
+						</CustomOptionTabsList>
+						{PRICING_TABS_LIST.map((item) => (
+							<CustomOptionTabsContent
+								key={item.type}
+								value={item.type}
+							>
+								<item.slot form={form} />
+							</CustomOptionTabsContent>
+						))}
+					</CustomOptionTabs>
+
+					<div className="flex justify-end mt-6">
+						<Button
+							type="button"
+							onClick={form.handleSubmit(onSubmit)}
+						>
+							{t("pricing.buttons.save", "Save")}
+						</Button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);

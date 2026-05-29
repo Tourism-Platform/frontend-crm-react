@@ -10,7 +10,9 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { PRICING_INDIVIDUAL_TABS_LIST, type TPricingSchema } from "../model";
+import type { TPricingSchema } from "@/entities/tour";
+
+import { PRICING_INDIVIDUAL_TABS_LIST } from "../model";
 
 import { BookingDetails } from "./booking-details";
 import { PricingDetails } from "./pricing-details";

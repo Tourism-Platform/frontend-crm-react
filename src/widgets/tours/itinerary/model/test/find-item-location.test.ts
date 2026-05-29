@@ -12,19 +12,19 @@ describe("findItemLocation", () => {
 				{
 					id: "1",
 					block_id: "block-1",
-					event_type: ENUM_EVENT.FLIGHT,
+					eventType: ENUM_EVENT.FLIGHT,
 					title: "Flight"
 				},
 				{
 					id: "2",
 					block_id: "block-2",
-					event_type: ENUM_EVENT.MULTIPLY_OPTION,
+					eventType: ENUM_EVENT.MULTIPLY_OPTION,
 					title: "Options",
 					items: [
 						{
 							id: "2-1",
 							block_id: "block-2-1",
-							event_type: ENUM_EVENT.ACTIVITY,
+							eventType: ENUM_EVENT.ACTIVITY,
 							title: "Nested Activity"
 						}
 					]
@@ -35,7 +35,7 @@ describe("findItemLocation", () => {
 					{
 						id: "3",
 						block_id: "block-3",
-						event_type: ENUM_EVENT.ACCOMMODATION,
+						eventType: ENUM_EVENT.ACCOMMODATION,
 						title: "Hotel"
 					}
 				],
@@ -43,13 +43,13 @@ describe("findItemLocation", () => {
 					{
 						id: "4",
 						block_id: "block-4",
-						event_type: ENUM_EVENT.MULTIPLY_OPTION,
+						eventType: ENUM_EVENT.MULTIPLY_OPTION,
 						title: "Day Options",
 						items: [
 							{
 								id: "4-1",
 								block_id: "block-4-1",
-								event_type: ENUM_EVENT.TRANSPORTATION,
+								eventType: ENUM_EVENT.TRANSPORTATION,
 								title: "Nested Car"
 							}
 						]

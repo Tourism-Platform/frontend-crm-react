@@ -44,8 +44,8 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 				events: [
 					{
 						id: "e1",
-						type: ENUM_EVENT.INFORMATION,
-						title: "Information for arrivals",
+						type: ENUM_EVENT.INFO,
+						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
 					}
@@ -68,15 +68,15 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 				events: [
 					{
 						id: "e2",
-						type: ENUM_EVENT.INFORMATION,
-						title: "Information for arrivals",
+						type: ENUM_EVENT.INFO,
+						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
 					},
 					{
 						id: "e3",
-						type: ENUM_EVENT.INFORMATION,
-						title: "Information for arrivals",
+						type: ENUM_EVENT.INFO,
+						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
 					}
@@ -89,15 +89,15 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 				events: [
 					{
 						id: "e4",
-						type: ENUM_EVENT.INFORMATION,
-						title: "Information for arrivals",
+						type: ENUM_EVENT.INFO,
+						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
 					},
 					{
 						id: "e5",
-						type: ENUM_EVENT.INFORMATION,
-						title: "Information for arrivals",
+						type: ENUM_EVENT.INFO,
+						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
 					}

@@ -14,7 +14,7 @@ export const PREVIEW_OPTION_DETAIL_MOCK: IOptionDetail = {
 			events: [
 				{
 					id: "e1",
-					type: ENUM_EVENT.INFORMATION,
+					type: ENUM_EVENT.INFO,
 					title: "Information for arrivals",
 					description:
 						"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel. Open arrival, check-in at the hotel will be available from 14:00. After accommodation, guests will have free time to rest and recover after the journey or explore the surroundings.",
@@ -24,7 +24,7 @@ export const PREVIEW_OPTION_DETAIL_MOCK: IOptionDetail = {
 				},
 				{
 					id: "e2",
-					type: ENUM_EVENT.TRANSPORTATION,
+					type: ENUM_EVENT.INFO,
 					title: "Transfer to hotel",
 					description:
 						"Lorem ipsum dolor sit amet consectetur. Iaculis nec feugiat in ut egestas non. Tristique turpis arcu platea diam risus amet diam interdum ac. Quis est id mi ac quam mattis libero fringilla nec. Lacus quis lacus ornare ac nisi. Bibendum egestas duis nullam ut nulla urna.",
@@ -90,7 +90,7 @@ export const PREVIEW_OPTION_DETAIL_MOCK: IOptionDetail = {
 			events: [
 				{
 					id: "e5",
-					type: ENUM_EVENT.INFORMATION,
+					type: ENUM_EVENT.INFO,
 					title: "Guided city tour",
 					description:
 						"Full day exploring Samarkand's famous landmarks including Registan Square, Shah-i-Zinda necropolis, and Bibi-Khanym Mosque. Lunch included at a local restaurant.",

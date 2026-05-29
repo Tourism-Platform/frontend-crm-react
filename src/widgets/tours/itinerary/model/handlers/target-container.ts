@@ -9,7 +9,7 @@ export interface ITargetInfo {
 export const getTargetContainer = (
 	overIdStr: string,
 	optionsData: TOptionsData,
-	activeOption: number
+	activeOption: string
 ): ITargetInfo => {
 	let targetContainer: IItemBaseLocation | null = null;
 	let toIndex = 0;

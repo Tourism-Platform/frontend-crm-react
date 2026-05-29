@@ -1,30 +1,15 @@
-import {
-	DndContext,
-	type DragEndEvent,
-	DragOverlay,
-	PointerSensor,
-	useSensor,
-	useSensors
-} from "@dnd-kit/core";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import React from "react";
+import { useParams } from "react-router-dom";
 
-import { ITINERARY_ROUTES_MOCK, ITINERARY_TABS_MOCK } from "@/shared/config";
 import { Separator, withErrorBoundary } from "@/shared/ui";
 
-import { type ITemplateItem } from "@/entities/tour";
-
+import { customCollisionDetection } from "./model";
 import {
-	type IDayItem,
-	type IItemLocation,
-	type IOption,
-	type TOptionsData,
-	customCollisionDetection,
-	handleDragEnd,
-	handleDragOver,
-	handleDragStart,
-	removeItemFromData
-} from "./model";
+	useItineraryDnd,
+	useItineraryEvents,
+	useItineraryOptions
+} from "./model/hooks";
 import {
 	BoardColumns,
 	BoardTabs,
@@ -35,66 +20,42 @@ import {
 } from "./ui";
 
 const ItineraryBase: React.FC = () => {
-	// tabs state (mocks "loading" tabs list)
-	const [options, setOptions] = useState<IOption[]>(ITINERARY_TABS_MOCK);
-	const [activeOption, setActiveOption] = useState<number>(
-		options[0]?.id || 1
+	const { tourId = "" } = useParams<{ tourId: string }>();
+
+	const {
+		options,
+		activeOption,
+		setActiveOption,
+		isLoading,
+		handleAddOption,
+		handleDeleteOption
+	} = useItineraryOptions(tourId);
+
+	const { eventsAsOptionData, EMPTY_OPTION_DATA } = useItineraryEvents(
+		tourId,
+		activeOption
 	);
 
-	const { watch, setValue } = useForm<{ optionsData: TOptionsData }>({
-		defaultValues: {
-			optionsData: ITINERARY_ROUTES_MOCK
-		}
+	const {
+		sensors,
+		currentData,
+		activeDayItem,
+		activeTemplateItem,
+		activeColumn,
+		onDragStart,
+		onDragEnd,
+		onDragOver,
+		handleRemoveItem
+	} = useItineraryDnd({
+		tourId,
+		activeOption,
+		eventsAsOptionData,
+		emptyOptionData: EMPTY_OPTION_DATA
 	});
 
-	const optionsData = watch("optionsData");
-
-	// dnd-kit sensors
-	const sensors = useSensors(useSensor(PointerSensor));
-
-	const [activeDayItem, setActiveDayItem] = useState<IDayItem | null>(null);
-	const [activeTemplateItem, setActiveTemplateItem] =
-		useState<ITemplateItem | null>(null);
-	const [activeColumn, setActiveColumn] = useState<number | null>(null);
-
-	const handleRemoveItem = (loc: IItemLocation) => {
-		const resultData = removeItemFromData(optionsData, loc);
-		setValue("optionsData", resultData);
-	};
-
-	const onDragStart = (event: DragEndEvent) => {
-		const state = handleDragStart(event, optionsData);
-		setActiveDayItem(state.activeDayItem);
-		setActiveTemplateItem(state.activeTemplateItem);
-		setActiveColumn(state.activeColumn);
-	};
-
-	const onDragEnd = (event: DragEndEvent) => {
-		const result = handleDragEnd(event, optionsData, activeOption);
-
-		if (result.shouldUpdate && result.newData) {
-			setValue("optionsData", result.newData);
-		}
-
-		if (result.clearState) {
-			setActiveDayItem(null);
-			setActiveTemplateItem(null);
-			setActiveColumn(null);
-		}
-	};
-
-	const onDragOver = (event: DragEndEvent) => {
-		const newData = handleDragOver(event, optionsData, activeOption);
-		if (newData) {
-			setValue("optionsData", newData, { shouldValidate: false });
-		}
-	};
-
-	const currentData = optionsData[activeOption] ?? {
-		tripDetails: [],
-		days: { 1: [], 2: [], 3: [], 4: [] },
-		dayOrder: []
-	};
+	if (isLoading) {
+		return <div>Loading...</div>;
+	}
 
 	return (
 		<DndContext
@@ -106,14 +67,11 @@ const ItineraryBase: React.FC = () => {
 		>
 			<div className="h-full flex flex-col">
 				<BoardTabs
-					optionsData={optionsData}
-					setOptionsData={(v: TOptionsData) =>
-						setValue("optionsData", v as TOptionsData)
-					}
 					activeOption={activeOption}
 					setActiveOption={setActiveOption}
 					options={options}
-					setOptions={setOptions}
+					onAddOption={handleAddOption}
+					onDeleteOption={handleDeleteOption}
 				/>
 
 				<Separator />
@@ -128,10 +86,14 @@ const ItineraryBase: React.FC = () => {
 					<ItinerarySidebar />
 				</div>
 
-				{/* Drag overlay - visual floating card while dragging */}
+				{/* Drag overlay */}
 				<DragOverlay adjustScale={false}>
 					{!!activeDayItem && (
-						<DraggableDayItem item={activeDayItem} isOverlay />
+						<DraggableDayItem
+							item={activeDayItem}
+							optionId={activeOption}
+							isOverlay
+						/>
 					)}
 					{!!activeTemplateItem && (
 						<DraggableTemplateItem

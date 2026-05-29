@@ -32,7 +32,6 @@ const getEventIcon = (type: string) => {
 		case ENUM_EVENT.MULTIPLY_OPTION:
 			return <MoreHorizontal className="w-5 h-5 text-primary" />;
 		case ENUM_EVENT.INFO:
-		case ENUM_EVENT.INFORMATION:
 			return <Info className="w-5 h-5 text-primary" />;
 		case ENUM_EVENT.EVENT_LIBRARY:
 		case ENUM_EVENT.ITINERARY_LIBRARY:

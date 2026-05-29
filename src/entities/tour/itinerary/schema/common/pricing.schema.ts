@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { type TTourAccommodationEditPageKeys, i18nKey } from "@/shared/config";
 
-import { ENUM_FORM_PRICE_DETAILS } from "../types";
+import { ENUM_FORM_PRICE_DETAILS } from "../../types";
 
 const msg = i18nKey<TTourAccommodationEditPageKeys>();
 

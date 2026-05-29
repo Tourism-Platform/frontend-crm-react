@@ -14,5 +14,5 @@ export type ENUM_FLIGHT_EDIT_TAB_TYPE =
 export interface IFlightEditTabs {
 	label: TTourEventFlightEditPageKeys;
 	type: ENUM_FLIGHT_EDIT_TAB_TYPE;
-	slot: FC;
+	slot: FC<any>;
 }

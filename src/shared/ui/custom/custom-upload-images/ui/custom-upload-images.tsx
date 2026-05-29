@@ -32,11 +32,67 @@ export type TUploadImageItem =
 export const getUploadItemId = (item: TUploadImageItem): string =>
 	item.kind === "uploaded" ? item.id : item.tempId;
 
+// ─── Dynamic Layouts ──────────────────────────────────────────────────────────
+
+const LAYOUTS: Record<number, { style: React.CSSProperties; areas: string[] }> =
+	{
+		1: {
+			style: {
+				gridTemplateColumns: "1fr",
+				gridTemplateRows: "1fr",
+				gridTemplateAreas: `"a"`
+			},
+			areas: ["a"]
+		},
+		2: {
+			style: {
+				gridTemplateColumns: "57fr 43fr",
+				gridTemplateRows: "1fr",
+				gridTemplateAreas: `"a b"`
+			},
+			areas: ["a", "b"]
+		},
+		3: {
+			style: {
+				gridTemplateColumns: "57fr 43fr",
+				gridTemplateRows: "1fr 1fr",
+				gridTemplateAreas: `
+        "a b"
+        "a c"
+      `
+			},
+			areas: ["a", "b", "c"]
+		},
+		4: {
+			style: {
+				gridTemplateColumns: "57fr 21.5fr 21.5fr",
+				gridTemplateRows: "1fr 1fr",
+				gridTemplateAreas: `
+        "a b c"
+        "a d d"
+      `
+			},
+			areas: ["a", "b", "c", "d"]
+		},
+		5: {
+			style: {
+				gridTemplateColumns: "57fr 21.5fr 21.5fr",
+				gridTemplateRows: "1fr 1fr",
+				gridTemplateAreas: `
+        "a b c"
+        "a d e"
+      `
+			},
+			areas: ["a", "b", "c", "d", "e"]
+		}
+	};
+
 // ─── Sortable Card ────────────────────────────────────────────────────────────
 
 interface ISortableCardProps {
 	item: TUploadImageItem;
 	isPrimary: boolean;
+	gridArea?: string;
 	onRemove: (id: string) => void;
 	onPreview: (src: string) => void;
 }
@@ -44,6 +100,7 @@ interface ISortableCardProps {
 const SortableCard: FC<ISortableCardProps> = ({
 	item,
 	isPrimary,
+	gridArea,
 	onRemove,
 	onPreview
 }) => {
@@ -69,7 +126,8 @@ const SortableCard: FC<ISortableCardProps> = ({
 		transition,
 		opacity: isDragging ? 0.4 : 1,
 		cursor: isDragging ? "grabbing" : "grab",
-		zIndex: isDragging ? 10 : undefined
+		zIndex: isDragging ? 10 : undefined,
+		gridArea
 	};
 
 	return (
@@ -78,7 +136,10 @@ const SortableCard: FC<ISortableCardProps> = ({
 			style={style}
 			{...attributes}
 			{...listeners}
-			className="group relative aspect-square"
+			className={cn(
+				"group relative rounded-lg overflow-hidden",
+				!gridArea && "aspect-square"
+			)}
 		>
 			{isPrimary && (
 				<div className="absolute left-2 top-2 z-10 flex items-center gap-1 rounded-full bg-yellow-400 px-2 py-0.5 text-[10px] font-semibold text-yellow-900">
@@ -181,7 +242,7 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 	};
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const files = Array.from(e.target.files ?? []);
+		const files = Array.from(e.target.files ?? [])?.slice(0, maxFiles);
 		if (files.length) onAdd(files);
 		e.target.value = "";
 	};
@@ -190,7 +251,7 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 		<div className={cn("w-full", className)}>
 			{items.length < maxFiles && (
 				<div
-					className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-muted-foreground/50"
+					className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-muted-foreground/50 mb-4"
 					onClick={() => fileInputRef.current?.click()}
 				>
 					<input
@@ -225,16 +286,51 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 						items={items.map(getUploadItemId)}
 						strategy={rectSortingStrategy}
 					>
-						<div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-							{items.map((item, idx) => (
-								<SortableCard
-									key={getUploadItemId(item)}
-									item={item}
-									isPrimary={idx === 0}
-									onRemove={onRemove}
-									onPreview={setPreviewSrc}
-								/>
-							))}
+						<div className="flex flex-col gap-4 w-full">
+							<div
+								className="grid gap-2 w-full"
+								style={{
+									height: "400px",
+									...(LAYOUTS[
+										Math.min(
+											items.length,
+											5
+										) as keyof typeof LAYOUTS
+									]?.style || {})
+								}}
+							>
+								{items.slice(0, 5).map((item, idx) => (
+									<SortableCard
+										key={getUploadItemId(item)}
+										item={item}
+										isPrimary={idx === 0}
+										gridArea={
+											LAYOUTS[
+												Math.min(
+													items.length,
+													5
+												) as keyof typeof LAYOUTS
+											]?.areas[idx]
+										}
+										onRemove={onRemove}
+										onPreview={setPreviewSrc}
+									/>
+								))}
+							</div>
+
+							{items.length > 5 && (
+								<div className="grid gap-4 w-full grid-cols-3">
+									{items.slice(5).map((item) => (
+										<SortableCard
+											key={getUploadItemId(item)}
+											item={item}
+											isPrimary={false}
+											onRemove={onRemove}
+											onPreview={setPreviewSrc}
+										/>
+									))}
+								</div>
+							)}
 						</div>
 					</SortableContext>
 				</DndContext>

@@ -15,5 +15,5 @@ export type ENUM_ACCOMMODATION_EDIT_TAB_TYPE =
 export interface IAccommodationEditTabs {
 	label: TTourAccommodationEditPageKeys;
 	type: ENUM_ACCOMMODATION_EDIT_TAB_TYPE;
-	slot: FC;
+	slot: FC<any>;
 }

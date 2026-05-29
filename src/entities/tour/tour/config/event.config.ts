@@ -19,7 +19,7 @@ import {
 
 export const EVENT_METADATA: Record<
 	string,
-	Omit<ITemplateItem, "event_type">
+	Omit<ITemplateItem, "eventType">
 > = {
 	[ENUM_EVENT.FLIGHT]: {
 		title: "Transportation",
@@ -77,12 +77,12 @@ const COMPONENT_TYPES: ENUM_EVENT_TYPE[] = [
 export const EVENT_TEMPLATES_LIST: IEventTemplate = {
 	library: [
 		{
-			event_type: ENUM_EVENT.EVENT_LIBRARY,
+			eventType: ENUM_EVENT.EVENT_LIBRARY,
 			...EVENT_METADATA[ENUM_EVENT.EVENT_LIBRARY]
 		}
 	],
 	components: COMPONENT_TYPES.map((type) => ({
-		event_type: type,
+		eventType: type,
 		...EVENT_METADATA[type]
 	}))
 };

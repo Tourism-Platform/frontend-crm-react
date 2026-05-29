@@ -48,7 +48,7 @@ export const handleDragStart = (
 		const found = [
 			...EVENT_TEMPLATES_LIST.library,
 			...EVENT_TEMPLATES_LIST.components
-		].find((t) => t.event_type === raw);
+		].find((t) => t.eventType === raw);
 		if (found) {
 			state.activeTemplateItem = found;
 		}

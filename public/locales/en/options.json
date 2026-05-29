@@ -98,6 +98,14 @@
 			"laundry_service": "Laundry service",
 			"phone_calls": "Phone calls",
 			"medical_expenses": "Medical expenses"
+		},
+		"transferTypes": {
+			"city_tour": "City tour",
+			"city_transfer": "City transfer",
+			"intercity_transfer": "Intercity transfer",
+			"airport_transfer": "Airport transfer",
+			"station_transfer": "Station transfer",
+			"custom": "Custom"
 		}
 	},
 	"user": {

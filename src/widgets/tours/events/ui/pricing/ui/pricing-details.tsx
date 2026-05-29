@@ -5,10 +5,10 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import { PRICE_DETAILS_DATA_LIST, type TPricingSchema } from "../model";
+import { PRICE_DETAILS_DATA_LIST } from "../model";
 
 interface IPricingDetailsProps {
-	form: UseFormReturn<TPricingSchema>;
+	form: UseFormReturn<any>;
 	className?: string;
 }
 
@@ -24,7 +24,7 @@ const PricingDetailsBase: FC<IPricingDetailsProps> = ({ form, className }) => {
 					<CustomField
 						key={key}
 						control={form?.control}
-						name={key}
+						name={`pricing.${key}` as any}
 						t={t}
 						{...item}
 					/>
