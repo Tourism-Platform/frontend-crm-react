@@ -1,5 +1,7 @@
 import { HttpResponse, delay, http } from "msw";
 
+import { TOUR_CATALOG_PATHS, TourType, createMockHandler } from "@/shared/api";
+
 import {
 	CATALOG_CATEGORIES_MOCK,
 	CATALOG_DESTINATIONS_MOCK,
@@ -13,6 +15,45 @@ import {
 } from "../mock";
 
 export const tourCatalogHandlers = [
+	createMockHandler(TOUR_CATALOG_PATHS.listPublicCatalog, ({ request }) => {
+		const url = new URL(request.url);
+		const skip = Number(url.searchParams.get("skip")) || 0;
+		const limit = Number(url.searchParams.get("limit")) || 10;
+		const q = url.searchParams.get("q")?.toLowerCase();
+
+		let filteredTours = [...CATALOG_TOURS_MOCK];
+
+		if (q) {
+			filteredTours = filteredTours.filter((t) =>
+				t.title.toLowerCase().includes(q)
+			);
+		}
+
+		const pagedData = filteredTours.slice(skip, skip + limit);
+
+		return HttpResponse.json(
+			pagedData.map((t) => ({
+				tour_id: t.id,
+				name: t.title,
+				cover_image_url: t.image_url,
+				description: t.description,
+				days: t.duration,
+				nights: Math.max(t.duration - 1, 0),
+				duration_hours: null,
+				age_from: null,
+				age_to: null,
+				categories: [],
+				tour_type: TourType.Regular,
+				landing_photos: [],
+				price_range: {
+					min: t.price_from,
+					max: t.price_to,
+					currency: null
+				},
+				option_count: null
+			}))
+		);
+	}),
 	http.get("*/tours/recently-searched", async () => {
 		await delay(500);
 		return HttpResponse.json(RECENT_SEARCHES_MOCK);

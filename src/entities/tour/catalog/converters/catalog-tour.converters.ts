@@ -1,11 +1,14 @@
 import { type IPaginationResponse } from "@/shared/types";
 
+import { tourCategoriesMapper } from "../../tour";
+import type { TCatalogTourQueryBackend } from "../types";
 import type {
-	ICatalogTourBackend,
 	ICatalogTourCard,
 	ICatalogTourFilters,
 	ICatalogTourInfo,
-	ICatalogTourInfoBackend
+	ICatalogTourInfoBackend,
+	TCatalogTourBackend,
+	TListCatalogToursBackendResponse
 } from "../types";
 
 export const mapCatalogTourStatsToFrontend = (
@@ -20,26 +23,36 @@ export const mapCatalogTourStatsToFrontend = (
 });
 
 export const mapCatalogTourToFrontend = (
-	data: ICatalogTourBackend
+	data: TCatalogTourBackend
 ): ICatalogTourCard => ({
-	id: data.id,
-	title: data.title,
-	description: data.description,
-	duration: data.duration,
-	priceFrom: data.price_from,
-	priceTo: data.price_to,
-	imageUrl: data.image_url
+	id: data.tour_id,
+	title: data.name,
+	description: data.description ?? "",
+	duration: data.days,
+	priceFrom: data.price_range?.min ?? 0,
+	priceTo: data.price_range?.max ?? 0,
+	imageUrl: data.cover_image_url ?? ""
 });
 
-export const mapCatalogTourListToFrontend = (
-	data: ICatalogTourBackend[]
-): ICatalogTourCard[] => data.map(mapCatalogTourToFrontend);
-
 export const mapCatalogTourPaginatedToFrontend = (
-	response: IPaginationResponse<ICatalogTourBackend>
+	response: TListCatalogToursBackendResponse
 ): IPaginationResponse<ICatalogTourCard> => ({
-	data: mapCatalogTourListToFrontend(response.data),
-	total: response.total
+	data: response.map(mapCatalogTourToFrontend),
+	total: response.length || 10
+});
+
+export const mapCatalogTourFiltersToPublicCatalogQuery = (
+	filters: ICatalogTourFilters
+): TCatalogTourQueryBackend => ({
+	...(filters?.page > 1 && { skip: (filters.page - 1) * filters?.limit }),
+	...(filters?.limit && { limit: filters.limit }),
+	...(!!filters?.filters?.category?.length && {
+		categories: tourCategoriesMapper.toMany(filters.filters.category)
+	}),
+	...(!!filters?.filters?.region?.length && {
+		region: filters.filters.region[0]
+	}),
+	...(!!filters?.search?.trim().length && { q: filters.search })
 });
 
 export const mapCatalogTourFiltersToBackend = (

@@ -1,4 +1,4 @@
-import { ENUM_API_TAGS } from "@/shared/api";
+import { ENUM_API_TAGS, TOUR_CATALOG_PATHS } from "@/shared/api";
 import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
@@ -11,7 +11,6 @@ import {
 	mapRecentlySearchesToFrontend
 } from "../converters";
 import type {
-	ICatalogTourBackend,
 	ICatalogTourCard,
 	ICatalogTourFilters,
 	IFilterOption,
@@ -20,24 +19,22 @@ import type {
 	IPriceHistogramItemBackend,
 	IPriceHistogramRequest,
 	IRecentSearch,
-	IRecentSearchBackend
+	IRecentSearchBackend,
+	TListCatalogToursBackendResponse
 } from "../types";
 
 export const catalogTourApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getCatalogTours: builder.query<
 			IPaginationResponse<ICatalogTourCard>,
-			ICatalogTourFilters | void
+			ICatalogTourFilters
 		>({
 			query: (filters) => ({
-				url: "/tours/catalog",
-				params: filters
-					? mapCatalogTourFiltersToBackend(filters)
-					: undefined
+				...TOUR_CATALOG_PATHS.listPublicCatalog,
+				params: mapCatalogTourFiltersToBackend(filters)
 			}),
-			transformResponse: (
-				response: IPaginationResponse<ICatalogTourBackend>
-			) => mapCatalogTourPaginatedToFrontend(response),
+			transformResponse: (response: TListCatalogToursBackendResponse) =>
+				mapCatalogTourPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		}),
 		getCatalogRegions: builder.query<
@@ -170,11 +167,11 @@ export const catalogTourApi = authApi.injectEndpoints({
 				params: filters
 					? mapCatalogTourFiltersToBackend(filters)
 					: undefined
-			}),
-			transformResponse: (
-				response: IPaginationResponse<ICatalogTourBackend>
-			) => mapCatalogTourPaginatedToFrontend(response),
-			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
+			})
+			// transformResponse: (
+			// 	response: IPaginationResponse<ICatalogTourBackend>
+			// ) => mapCatalogTourPaginatedToFrontend(response.data as any, response.total),
+			// providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		}),
 		getRecentlySearchedTours: builder.query<IRecentSearch[], void>({
 			query: () => ({
@@ -190,11 +187,11 @@ export const catalogTourApi = authApi.injectEndpoints({
 		>({
 			query: () => ({
 				url: "/tours/popular"
-			}),
-			transformResponse: (
-				response: IPaginationResponse<ICatalogTourBackend>
-			) => mapCatalogTourPaginatedToFrontend(response),
-			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
+			})
+			// transformResponse: (
+			// 	response: IPaginationResponse<ICatalogTourBackend>
+			// ) => mapCatalogTourPaginatedToFrontend(response.data as any, response.total),
+			// providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		})
 	})
 });
