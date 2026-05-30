@@ -493,7 +493,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR,
 		component: PreviewTourPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
 		layout_cascade: [ToursOperatorLayout]
 	},
 	{
