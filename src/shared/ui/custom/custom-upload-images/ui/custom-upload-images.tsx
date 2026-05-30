@@ -138,7 +138,7 @@ const SortableCard: FC<ISortableCardProps> = ({
 			{...listeners}
 			className={cn(
 				"group relative rounded-lg overflow-hidden",
-				!gridArea && "aspect-square"
+				!gridArea && "h-[200px]"
 			)}
 		>
 			{isPrimary && (
