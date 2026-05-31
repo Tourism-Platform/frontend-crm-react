@@ -10,6 +10,8 @@ export const ENUM_FORM_SECTION = {
 	GENERAL: "general",
 	CARS: "cars",
 	PRICING: "pricing",
+	DAY: "day",
+	POSITION: "position",
 	NAME: "name"
 } as const;
 

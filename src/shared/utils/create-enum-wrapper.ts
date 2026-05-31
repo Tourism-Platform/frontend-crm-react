@@ -11,13 +11,19 @@ export const createEnumMapper = <A extends string, B extends string>(
 	);
 
 	return {
-		to: (value: A): B | undefined => map[value],
-		from: (value: B): A | undefined => reverse[value],
+		to: (value: A | null | undefined): B | undefined =>
+			value != null ? map[value] : undefined,
+		from: (value: B | null | undefined): A | undefined =>
+			value != null ? reverse[value] : undefined,
 
-		toMany: (values: A[]): B[] =>
-			values.map((v) => map[v]).filter(Boolean) as B[],
+		toMany: (values: (A | null | undefined)[]): B[] =>
+			values
+				.map((v) => (v != null ? map[v] : undefined))
+				.filter(Boolean) as B[],
 
-		fromMany: (values: B[]): A[] =>
-			values.map((v) => reverse[v]).filter(Boolean) as A[]
+		fromMany: (values: (B | null | undefined)[]): A[] =>
+			values
+				.map((v) => (v != null ? reverse[v] : undefined))
+				.filter(Boolean) as A[]
 	};
 };

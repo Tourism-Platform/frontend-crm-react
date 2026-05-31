@@ -54,10 +54,7 @@ export const TransportationEdit: FC = () => {
 
 	const form = useForm<TTransportationEditSchema>({
 		resolver: zodResolver(TRANSPORTATION_EDIT_SCHEMA),
-		mode: "onSubmit",
-		defaultValues: {
-			name: ""
-		}
+		mode: "onSubmit"
 	});
 
 	useEffect(() => {
@@ -79,7 +76,13 @@ export const TransportationEdit: FC = () => {
 
 			const sectionData = {
 				[section]: form.getValues(section),
-				[ENUM_FORM_SECTION.NAME]: form.getValues(ENUM_FORM_SECTION.NAME)
+				[ENUM_FORM_SECTION.NAME]: form.getValues(
+					ENUM_FORM_SECTION.NAME
+				),
+				[ENUM_FORM_SECTION.DAY]: form.getValues(ENUM_FORM_SECTION.DAY),
+				[ENUM_FORM_SECTION.POSITION]: form.getValues(
+					ENUM_FORM_SECTION.POSITION
+				)
 			};
 			try {
 				await updateTourEvent({
