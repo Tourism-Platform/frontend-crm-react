@@ -2,7 +2,8 @@ import type {
 	BookingCancel,
 	BookingCreate,
 	BookingModel,
-	BookingStatus
+	BookingStatus,
+	BookingUpdate
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -36,6 +37,28 @@ export const BOOKING_ORDER_PATHS = {
 		({
 			url: `/booking/order/${bookingId}`,
 			method: "GET",
+			_types: {} as { body: void; query: void; response: BookingModel }
+		}) as const,
+	updateBookingOrder: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}`,
+			method: "PATCH",
+			_types: {} as {
+				body: BookingUpdate;
+				query: void;
+				response: BookingModel;
+			}
+		}) as const,
+	deleteBookingOrder: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	submitBookingOrder: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/submit`,
+			method: "PATCH",
 			_types: {} as { body: void; query: void; response: BookingModel }
 		}) as const,
 	transitionBookingStatus: (bookingId: string, transition: string) =>

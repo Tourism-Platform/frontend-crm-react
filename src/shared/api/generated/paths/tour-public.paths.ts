@@ -2,6 +2,7 @@ import type {
 	Currency,
 	LandingPagePubSchema,
 	OperatorPreviewPubSchema,
+	TourOptionPreviewSchemaOutput,
 	TourOptionPublicResponse
 } from "../Api";
 
@@ -9,6 +10,16 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const TOUR_PUBLIC_PATHS = {
+	listPublicTourOptions: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/public/option/all`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { currency?: Currency; skip?: number; limit?: number };
+				response: TourOptionPreviewSchemaOutput[];
+			}
+		}) as const,
 	getPublicTourOption: (tourId: string, optionId: string) =>
 		({
 			url: `/tour/${tourId}/public/option/${optionId}`,

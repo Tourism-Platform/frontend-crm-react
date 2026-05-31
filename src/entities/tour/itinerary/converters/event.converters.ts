@@ -73,7 +73,7 @@ export const mapEventUpdateToBackend = (
 
 	return {
 		name: frontend.name
-	};
+	} as TTourEventUpdateBackend;
 };
 
 export const mapEventReorderToBackend = (
@@ -224,5 +224,5 @@ export const mapTransferFormToUpdate = (
 			}
 			// expenses: carsExpenses
 		}
-	};
+	} as TTourEventUpdateBackend;
 };

@@ -70,6 +70,18 @@ export const TOUR_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
+	publishTour: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/publish`,
+			method: "POST",
+			_types: {} as { body: void; query: void; response: TourMetaModel }
+		}) as const,
+	archiveTour: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/archive`,
+			method: "POST",
+			_types: {} as { body: void; query: void; response: TourMetaModel }
+		}) as const,
 	uploadTourCover: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/cover`,

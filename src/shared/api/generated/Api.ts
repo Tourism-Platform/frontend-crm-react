@@ -172,12 +172,14 @@ export enum ClientPaymentStatus {
 
 /** BookingTransition */
 export enum BookingTransition {
+	Submit = "submit",
 	MoveToPending = "move-to-pending",
 	MoveToConfirmed = "move-to-confirmed"
 }
 
 /** BookingStatus */
 export enum BookingStatus {
+	Draft = "draft",
 	New = "new",
 	Pending = "pending",
 	Confirmed = "confirmed",
@@ -916,6 +918,16 @@ export interface BookingPaxModel {
 	expired_date: string;
 	/** Comment */
 	comment: string | null;
+}
+
+/** BookingUpdate */
+export interface BookingUpdate {
+	/** Date */
+	date?: string | null;
+	/** Pax */
+	pax?: number | null;
+	/** Comment */
+	comment?: string | null;
 }
 
 /** BusDetailPubSchema */
@@ -3112,6 +3124,23 @@ export interface PaxCreate {
 	comment?: string | null;
 }
 
+/** PaxUpdate */
+export interface PaxUpdate {
+	/** Full Name */
+	full_name?: string | null;
+	gender?: Gender | null;
+	/** Nationality */
+	nationality?: string | null;
+	/** Date Of Birth */
+	date_of_birth?: string | null;
+	/** Passport Number */
+	passport_number?: string | null;
+	/** Expired Date */
+	expired_date?: string | null;
+	/** Comment */
+	comment?: string | null;
+}
+
 /** PaymentRouteCreate */
 export interface PaymentRouteCreate {
 	/**
@@ -3781,21 +3810,6 @@ export interface TourEventResponse {
 	primary_image_path?: string | null;
 }
 
-/**
- * TourEventUpdateSchema
- * Schema for updating any event field.
- */
-export interface TourEventUpdateSchema {
-	/** Name */
-	name?: string | null;
-	/** Day */
-	day?: number | null;
-	/** Position */
-	position?: number | null;
-	/** Details */
-	details?: Record<string, any> | null;
-}
-
 /** TourFinSettingsModel */
 export interface TourFinSettingsModel {
 	/**
@@ -3910,7 +3924,6 @@ export interface TourMetaModel {
 export interface TourMetaUpdateSchema {
 	/** Name */
 	name?: string | null;
-	status?: TourStatus | null;
 	typ?: TourType | null;
 	/** Agency Id */
 	agency_id?: string | null;
@@ -4015,6 +4028,84 @@ export interface TourOptionModel {
 	deleted_at: string | null;
 }
 
+/** TourOptionPreviewSchema */
+export interface TourOptionPreviewSchemaInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string | null;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	total_price: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	total_price_max: MonetaryValueSchema;
+}
+
+/** TourOptionPreviewSchema */
+export interface TourOptionPreviewSchemaOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string | null;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	total_price: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	total_price_max: MonetaryValueSchema;
+}
+
 /** TourOptionPublicResponse */
 export interface TourOptionPublicResponse {
 	/**
@@ -4111,8 +4202,12 @@ export interface TourSummaryResponse {
 	id: string;
 	/** Events */
 	events: AnyEventWithCostOutput[];
-	tour_cost: TourMinMaxCostSchemaOutput;
-	tour_markup: TourMinMaxCostSchemaOutput;
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	profit_tax: TourMinMaxCostSchemaOutput;
+	vat: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+	total: TourMinMaxCostSchemaOutput;
 }
 
 /** TrainDetailPubSchema */
@@ -4899,6 +4994,22 @@ export interface DeleteTourTourTourIdDeleteParams {
 	tourId: string;
 }
 
+export interface PublishTourTourTourIdPublishPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ArchiveTourTourTourIdArchivePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface UploadTourCoverTourTourIdCoverPostParams {
 	/**
 	 * Tour Id
@@ -5104,6 +5215,33 @@ export interface GetTourEventTourTourIdOptionIdEventEventIdGetParams {
 	 */
 	tourId: string;
 }
+
+/** Event */
+export type UpdateTourEventTourTourIdOptionIdEventEventIdPatchPayload =
+	| (
+			| ({
+					typ: "1";
+			  } & FlightEventSchemaInput)
+			| ({
+					typ: "2";
+			  } & TrainEventSchemaInput)
+			| ({
+					typ: "3";
+			  } & BusEventSchemaInput)
+			| ({
+					typ: "4";
+			  } & TransferEventSchemaInput)
+			| ({
+					typ: "5";
+			  } & HousingEventSchemaInput)
+			| ({
+					typ: "6";
+			  } & ActivityEventSchemaInput)
+			| ({
+					typ: "7";
+			  } & InformationEventSchemaInput)
+	  )
+	| MultipleOptionEventInput;
 
 export interface UpdateTourEventTourTourIdOptionIdEventEventIdPatchParams {
 	/** @default "en" */
@@ -5470,6 +5608,29 @@ export interface SetPrimaryLandingImageTourTourIdLandingImagesImageIdSetPrimaryP
 	 * @format uuid
 	 */
 	imageId: string;
+}
+
+export interface ListPublicTourOptionsTourTourIdPublicOptionAllGetParams {
+	/** @default "USD" */
+	currency?: Currency;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
 }
 
 export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdGetParams {
@@ -5884,6 +6045,30 @@ export interface GetBookingOrderBookingOrderBookingIdGetParams {
 	bookingId: string;
 }
 
+export interface UpdateBookingOrderBookingOrderBookingIdPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface DeleteBookingOrderBookingOrderBookingIdDeleteParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface SubmitBookingOrderBookingOrderBookingIdSubmitPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
 export interface TransitionBookingStatusBookingOrderBookingIdStatusTransitionPatchParams {
 	/**
 	 * Booking Id
@@ -5928,6 +6113,32 @@ export interface ListPassengerInfoBookingOrderBookingIdPaxGetParams {
 	 * @format uuid
 	 */
 	bookingId: string;
+}
+
+export interface UpdatePassengerInfoBookingOrderBookingIdPaxPaxIdPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Pax Id
+	 * @format uuid
+	 */
+	paxId: string;
+}
+
+export interface DeletePassengerInfoBookingOrderBookingIdPaxPaxIdDeleteParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Pax Id
+	 * @format uuid
+	 */
+	paxId: string;
 }
 
 export interface UploadPassengerPassportBookingOrderBookingIdPaxPaxIdPassportPostParams {

@@ -6,32 +6,65 @@ import { toast } from "sonner";
 
 import { Button } from "@/shared/ui";
 
-import { usePublishTourMutation } from "@/entities/tour";
+import {
+	ENUM_TOUR_STATUS,
+	useArchiveTourMutation,
+	useGetTourGeneralQuery,
+	usePublishTourMutation
+} from "@/entities/tour";
 
 export const PublishTourButton: FC = () => {
 	const { t } = useTranslation("common_tours");
 	const { tourId = "" } = useParams<{ tourId: string }>();
+	const { data: tour, isLoading: isTourLoading } = useGetTourGeneralQuery(
+		tourId,
+		{
+			skip: !tourId
+		}
+	);
 
-	const [publishTour, { isLoading }] = usePublishTourMutation();
+	const [publishTour, { isLoading: isPublishLoading }] =
+		usePublishTourMutation();
+	const [archiveTour, { isLoading: isArchiveLoading }] =
+		useArchiveTourMutation();
 
-	const handlePublish = async () => {
-		try {
-			await publishTour(tourId).unwrap();
-			toast.success(t("toast.publish.success"));
-		} catch {
-			toast.error(t("toast.publish.error"));
+	const isPublished = tour?.status === ENUM_TOUR_STATUS.PUBLISHED;
+
+	const { action, label, loadingLabel, tostMessage } = {
+		action: isPublished ? archiveTour : publishTour,
+		label: isPublished ? t("actions.archive") : t("actions.publish"),
+		loadingLabel: isPublished
+			? t("actions.archiving")
+			: t("actions.publishing"),
+		tostMessage: {
+			success: isPublished
+				? t("toast.archive.success")
+				: t("toast.publish.success"),
+			error: isPublished
+				? t("toast.archive.error")
+				: t("toast.publish.error")
 		}
 	};
+	const handlePublish = async () => {
+		if (!tourId) return;
+		try {
+			await action(tourId).unwrap();
+			toast.success(tostMessage.success);
+		} catch {
+			toast.error(tostMessage.error);
+		}
+	};
+	const isLoading = isPublishLoading || isArchiveLoading || isTourLoading;
 
 	return (
 		<Button onClick={handlePublish} disabled={isLoading}>
 			{isLoading ? (
 				<>
 					<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-					{t("actions.publishing")}
+					{loadingLabel}
 				</>
 			) : (
-				t("actions.publish")
+				label
 			)}
 		</Button>
 	);

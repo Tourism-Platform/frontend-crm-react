@@ -8,7 +8,6 @@ import type {
 	LanguageCode,
 	MultipleOptionEventInput,
 	TourEventResponse,
-	TourEventUpdateSchema,
 	TrainEventSchemaInput,
 	TransferEventSchemaInput
 } from "../Api";
@@ -65,7 +64,15 @@ export const TOUR_EVENTS_PATHS = {
 			url: `/tour/${tourId}/${optionId}/event/${eventId}`,
 			method: "PATCH",
 			_types: {} as {
-				body: TourEventUpdateSchema;
+				body:
+					| InformationEventSchemaInput
+					| BusEventSchemaInput
+					| TrainEventSchemaInput
+					| TransferEventSchemaInput
+					| ActivityEventSchemaInput
+					| HousingEventSchemaInput
+					| FlightEventSchemaInput
+					| MultipleOptionEventInput;
 				query: { lang?: LanguageCode };
 				response: TourEventResponse;
 			}

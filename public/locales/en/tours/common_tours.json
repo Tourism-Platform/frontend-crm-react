@@ -6,12 +6,18 @@
 		"publish": {
 			"success": "Tour published successfully",
 			"error": "Error publishing tour"
+		},
+		"archive": {
+			"success": "Tour archived successfully",
+			"error": "Error archiving tour"
 		}
 	},
 	"actions": {
 		"preview": "Preview",
 		"publish": "Publish",
-		"publishing": "Publishing..."
+		"publishing": "Publishing...",
+		"archive": "Archive",
+		"archiving": "Archiving..."
 	},
 	"search": {
 		"form": {
