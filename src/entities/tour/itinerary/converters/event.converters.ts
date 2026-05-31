@@ -91,7 +91,10 @@ export const mapEventCreateToBackend = (
 	day: frontend.day,
 	position: frontend.position,
 	typ: eventTypeMapper.to(frontend.eventType) as any,
-	details: eventTypeMapper.to(frontend.eventType) !== "8" ? frontend.details || {} : []
+	details:
+		eventTypeMapper.to(frontend.eventType) !== "8"
+			? frontend.details || {}
+			: []
 });
 
 // const mapTransferEventUpdateToBackend = (

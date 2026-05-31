@@ -45,7 +45,8 @@
 					"errors": {
 						"min": "Website is too short",
 						"max": "Website is too long",
-						"required": "Enter business website"
+						"required": "Enter business website",
+						"pattern": "Enter a valid website URL"
 					}
 				}
 			}

@@ -38,18 +38,24 @@ export const mapAgencyBusinessInfoToFrontend = (
 
 export const mapAgencyBusinessInfoToBackend = (
 	frontend: TAgencyBusinessSchema
-): TAgencyBusinessInfoUpdateBackend => ({
-	description: frontend.business.business_description,
-	business_name: frontend.business.business_name,
-	website_url: frontend.business.business_website,
-	legal_name: frontend.legal.legal_company_name,
-	director_name: frontend.legal.director,
-	tax_id: frontend.legal.tin,
-	contact_person: frontend.contact.contact_person,
-	contact_position: frontend.contact.position,
-	contact_email: frontend.contact.email,
-	contact_phone: frontend.contact.phone_number,
-	address_line: frontend.address.address_line,
-	city: frontend.address.city,
-	country: frontend.address.country
-});
+): TAgencyBusinessInfoUpdateBackend => {
+	const raw = {
+		description: frontend.business.business_description,
+		business_name: frontend.business.business_name,
+		website_url: frontend.business.business_website,
+		legal_name: frontend.legal.legal_company_name,
+		director_name: frontend.legal.director,
+		tax_id: frontend.legal.tin,
+		contact_person: frontend.contact.contact_person,
+		contact_position: frontend.contact.position,
+		contact_email: frontend.contact.email,
+		contact_phone: frontend.contact.phone_number,
+		address_line: frontend.address.address_line,
+		city: frontend.address.city,
+		country: frontend.address.country
+	};
+
+	return Object.fromEntries(
+		Object.entries(raw).filter(([, v]) => !!v)
+	) as TAgencyBusinessInfoUpdateBackend;
+};
