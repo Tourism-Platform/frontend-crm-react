@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { CARS_SCHEMA } from "../../schema";
+import type { TRANSPORTATION_CARS_SCHEMA as CARS_SCHEMA } from "../../schema";
 
 export const ENUM_FORM_CARS = {
 	CARS_LIST: "cars",

@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-import type {
-	GENERAL_INFO_SCHEMA,
-	TRANSPORTATION_EDIT_SCHEMA
-} from "../../schema";
+import type { TRANSPORTATION_EDIT_SCHEMA } from "../../schema";
 
 export const ENUM_FORM_TRANSPORTATION = {
 	TRANSFER_TYPE: "transfer_type",
@@ -20,8 +17,6 @@ export const ENUM_FORM_TRANSPORTATION = {
 
 export type ENUM_FORM_TRANSPORTATION_TYPE =
 	(typeof ENUM_FORM_TRANSPORTATION)[keyof typeof ENUM_FORM_TRANSPORTATION];
-
-export type TGeneralInfoSchema = z.infer<typeof GENERAL_INFO_SCHEMA>;
 
 export type TTransportationEditSchema = z.infer<
 	typeof TRANSPORTATION_EDIT_SCHEMA

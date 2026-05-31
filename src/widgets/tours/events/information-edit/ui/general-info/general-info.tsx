@@ -1,46 +1,45 @@
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader } from "lucide-react";
 import { type FC } from "react";
-import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
+import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
 
 import {
-	GENERAL_INFO_SCHEMA,
+	ENUM_FORM_SECTION,
 	INFORMATION_DATA_LIST,
-	type TGeneralInfoSchema
+	type ISlotProps
 } from "../../model";
 
-const GeneralInfoBase: FC = () => {
+const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("information_edit_page");
-	const form = useForm<TGeneralInfoSchema>({
-		resolver: zodResolver(GENERAL_INFO_SCHEMA),
-		defaultValues: {
-			description: ""
-		},
-		mode: "onSubmit"
-	});
-	function onSubmit(data: TGeneralInfoSchema) {
-		console.log("Form submitted:", data);
-	}
-
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)}>
+		<div className="grid gap-12">
+			<div>
 				{INFORMATION_DATA_LIST.map(({ key, ...item }) => (
 					<CustomField
 						key={key}
 						control={form?.control}
-						name={key}
+						name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
 						t={t}
 						{...item}
 					/>
 				))}
 				<div className="flex justify-end mt-6">
-					<Button>{t("general.buttons.save")}</Button>
+					<Button
+						type="button"
+						onClick={onSubmit}
+						disabled={isLoading}
+					>
+						{isLoading && (
+							<Loader className="mr-2 h-4 w-4 animate-spin" />
+						)}
+						{isLoading
+							? t("form.general.buttons.saving")
+							: t("form.general.buttons.save")}
+					</Button>
 				</div>
-			</form>
-		</Form>
+			</div>
+		</div>
 	);
 };
 

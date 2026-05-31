@@ -1,8 +1,4 @@
-import type {
-	TOUR_EVENTS_PATHS,
-	TourEventResponse,
-	TransferEventSchemaInput
-} from "@/shared/api";
+import type { TOUR_EVENTS_PATHS, TourEventResponse } from "@/shared/api";
 
 export type TTourEventBackendResponce = TourEventResponse;
 export type TTourEventUpdateBackend = ReturnType<
@@ -12,11 +8,6 @@ export type TTourEventUpdateBackend = ReturnType<
 export type TTourEventCreateBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.createEvent
 >["_types"]["body"];
-
-export type TTourTransportationBackend = Extract<
-	TTourEventCreateBackend,
-	TransferEventSchemaInput
->;
 
 export interface ITourEventCreateBackend {
 	name: string;

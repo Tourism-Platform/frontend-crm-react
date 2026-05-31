@@ -8,3 +8,4 @@ export * from "./event-enum.types";
 export * from "./transfer-type.types";
 export * from "./transportation";
 export * from "./common";
+export * from "./info";

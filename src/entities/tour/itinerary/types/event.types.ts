@@ -1,4 +1,5 @@
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
+import type { TInfoEditSchema } from "./info";
 import type { TTransportationEditSchema } from "./transportation";
 
 export interface ITourEvent {
@@ -27,8 +28,10 @@ export interface ITourEventUpdate {
 	type: ENUM_EVENT_TYPE;
 	data: TTourEventUpdate;
 }
-export type TTourEvent = TTransportationEditSchema;
-export type TTourEventUpdate = Partial<TTransportationEditSchema>;
+export type TTourEvent = TTransportationEditSchema | TInfoEditSchema;
+export type TTourEventUpdate = Partial<
+	TTransportationEditSchema | TInfoEditSchema
+>;
 
 export interface ITourEventReorder {
 	day: number;

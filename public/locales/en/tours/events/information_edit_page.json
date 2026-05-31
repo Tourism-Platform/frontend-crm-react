@@ -13,26 +13,41 @@
 		"general": "General info",
 		"media": "Media"
 	},
-	"general": {
-		"buttons": {
-			"save": "Save"
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Error while loading data"
+			},
+			"save": {
+				"success": "Successfully saved",
+				"error": "Error while saving"
+			}
 		},
-		"info": {
-			"form": {
-				"fields": {
-					"description": {
-						"label": "Info description",
-						"placeholder": "Enter info description",
-						"errors": {
-							"required": "Info description is required",
-							"max": "Description is too long"
+		"general": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			},
+			"info": {
+				"form": {
+					"fields": {
+						"description": {
+							"label": "Info description",
+							"placeholder": "Enter info description",
+							"errors": {
+								"required": "Info description is required",
+								"max": "Description is too long"
+							}
 						}
 					}
 				}
 			}
+		},
+		"media": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			}
 		}
-	},
-	"media": {
-		"title": "Displayed photos"
 	}
 }

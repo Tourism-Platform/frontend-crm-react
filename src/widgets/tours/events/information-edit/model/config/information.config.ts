@@ -1,8 +1,11 @@
-import { ENUM_FORM_INFORMATION, type TForm } from "../types";
+import { ENUM_FORM_INFORMATION } from "@/entities/tour";
+
+import { type TForm } from "../types";
 
 export const INFORMATION_DATA_LIST: TForm[] = [
 	{
-		label: "general.info.form.fields.description.label",
+		label: "form.general.info.form.fields.description.label",
+		placeholder: "form.general.info.form.fields.description.placeholder",
 		key: ENUM_FORM_INFORMATION.DESCRIPTION,
 		fieldType: "editor"
 	}

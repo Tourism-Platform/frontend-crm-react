@@ -1,20 +1,19 @@
-import { z } from "zod";
-
 import type { TTourInformationEditPageKeys } from "@/shared/config";
 import type { TFormField } from "@/shared/types";
 
-import type { GENERAL_INFO_SCHEMA } from "../schema";
+import type { ENUM_FORM_INFORMATION_TYPE } from "@/entities/tour";
+
+export const ENUM_FORM_SECTION = {
+	GENERAL: "general",
+	NAME: "name",
+	DAY: "day",
+	POSITION: "position"
+} as const;
+
+export type ENUM_FORM_SECTION_TYPE =
+	(typeof ENUM_FORM_SECTION)[keyof typeof ENUM_FORM_SECTION];
 
 export type TForm = TFormField<
 	TTourInformationEditPageKeys,
 	ENUM_FORM_INFORMATION_TYPE
 >;
-
-export const ENUM_FORM_INFORMATION = {
-	DESCRIPTION: "description"
-} as const;
-
-export type ENUM_FORM_INFORMATION_TYPE =
-	(typeof ENUM_FORM_INFORMATION)[keyof typeof ENUM_FORM_INFORMATION];
-
-export type TGeneralInfoSchema = z.infer<typeof GENERAL_INFO_SCHEMA>;

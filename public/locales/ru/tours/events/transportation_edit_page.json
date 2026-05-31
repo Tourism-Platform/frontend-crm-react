@@ -159,8 +159,8 @@
 		},
 		"media": {
 			"buttons": {
-				"save": "Save",
-				"saving": "Saving ..."
+				"save": "Сохранить",
+				"saving": "Сохранение ..."
 			}
 		}
 	},

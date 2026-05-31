@@ -34,6 +34,7 @@ import {
 } from "./model";
 
 export const TransportationEdit: FC = () => {
+	const { t } = useTranslation("transportation_edit_page");
 	const {
 		tourId = "",
 		optionId = "",
@@ -43,7 +44,6 @@ export const TransportationEdit: FC = () => {
 		eventId: string;
 		optionId: string;
 	}>();
-	const { t } = useTranslation("transportation_edit_page");
 	const { data: eventData, isError: isLoadError } = useGetTourEventQuery(
 		{ tourId, optionId, eventId },
 		{ skip: !tourId || !optionId || !eventId }

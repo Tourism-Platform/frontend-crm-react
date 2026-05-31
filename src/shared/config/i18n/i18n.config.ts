@@ -29,7 +29,6 @@ import event_edit_page from "../../../../public/locales/en/tours/events/event_ed
 import flight_edit_page from "../../../../public/locales/en/tours/events/flight_edit_page.json";
 import information_edit_page from "../../../../public/locales/en/tours/events/information_edit_page.json";
 import multiply_option_edit_page from "../../../../public/locales/en/tours/events/multiply_option_edit_page.json";
-import tour_details_edit_page from "../../../../public/locales/en/tours/events/tour_details_edit_page.json";
 import transportation_edit_page from "../../../../public/locales/en/tours/events/transportation_edit_page.json";
 import landing_page from "../../../../public/locales/en/tours/landing_page.json";
 import preview_booking_page from "../../../../public/locales/en/tours/preview_booking_page.json";
@@ -73,7 +72,6 @@ export type TTourEventFlightEditPage = typeof flight_edit_page;
 export type TTourEventTransportationEditPage = typeof transportation_edit_page;
 export type TTourEventEditPage = typeof event_edit_page;
 export type TTourInformationEditPage = typeof information_edit_page;
-export type TTourDetailsEditPage = typeof tour_details_edit_page;
 export type TTourEventMultiplyOptionEditPage = typeof multiply_option_edit_page;
 export type TTourAccommodationEditPage = typeof accommodation_edit_page;
 export type TTourItineraryPage = typeof tour_itinerary_page;
@@ -123,7 +121,6 @@ export type TResources = {
 	event_edit_page: TTourEventEditPage;
 	accommodation_edit_page: TTourAccommodationEditPage;
 	information_edit_page: TTourInformationEditPage;
-	tour_details_edit_page: TTourDetailsEditPage;
 	multiply_option_edit_page: TTourEventMultiplyOptionEditPage;
 	common_events: TCommonEvents;
 	main: TMain;
@@ -230,8 +227,6 @@ export type TTourAccommodationEditPageKeys =
 
 export type TTourInformationEditPageKeys =
 	TNestedKeyOf<TTourInformationEditPage>;
-
-export type TTourDetailsEditPageKeys = TNestedKeyOf<TTourDetailsEditPage>;
 
 export type TTourEventMultiplyOptionEditPageKeys =
 	TNestedKeyOf<TTourEventMultiplyOptionEditPage>;
