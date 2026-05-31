@@ -2,7 +2,7 @@ import { type PropsWithChildren } from "react";
 
 import { ErrorBoundary } from "@/shared/ui";
 
-import { HeaderDefault } from "../ui";
+import { FooterDefault, HeaderDefault } from "../ui";
 
 export const MainDefaultLayout = ({ children }: PropsWithChildren) => {
 	return (
@@ -11,6 +11,7 @@ export const MainDefaultLayout = ({ children }: PropsWithChildren) => {
 			<ErrorBoundary>
 				<div>{children}</div>
 			</ErrorBoundary>
+			<FooterDefault />
 		</div>
 	);
 };
