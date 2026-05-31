@@ -1,6 +1,5 @@
 export const ENUM_FORM_SECTION = {
 	GENERAL: "general",
-	CARS: "cars",
 	PRICING: "pricing",
 	NAME: "name",
 	// !!! потом убрать эти два поля они не нужны для фронтенда

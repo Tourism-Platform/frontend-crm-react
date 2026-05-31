@@ -5,32 +5,36 @@ import { useTranslation } from "react-i18next";
 
 import { Button, withErrorBoundary } from "@/shared/ui";
 
-import { type TRoomsSchema } from "../../model";
+import {
+	ENUM_FORM_ROOMS,
+	type TAccommodationEditSchema
+} from "@/entities/tour";
+
+import { ENUM_FORM_SECTION } from "../../model";
 
 import { RoomCard } from "./room-card";
 
-interface IRoomsDetailsProps {
-	form: UseFormReturn<TRoomsSchema>;
+interface IRoomsProps {
+	form: UseFormReturn<TAccommodationEditSchema>;
 }
 
-const RoomsDetailsBase: FC<IRoomsDetailsProps> = ({ form }) => {
+const RoomsDetailsBase: FC<IRoomsProps> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
-
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
-		name: "rooms"
+		name: `${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}`
 	});
 
 	const handleAddRoom = () => {
 		append({
-			name: "",
-			details: ""
+			[ENUM_FORM_ROOMS.NAME]: "",
+			[ENUM_FORM_ROOMS.DETAILS]: ""
 		});
 	};
 
 	return (
 		<div className="grid gap-6">
-			<h2 className="text-xl">{t("rooms.title")}</h2>
+			<h2 className="text-xl">{t("form.rooms.details.title")}</h2>
 
 			<div className="grid gap-4">
 				{fields.map((field, index) => (
@@ -49,7 +53,7 @@ const RoomsDetailsBase: FC<IRoomsDetailsProps> = ({ form }) => {
 						onClick={handleAddRoom}
 						className="gap-2"
 					>
-						<p>{t("rooms.buttons.add")}</p>
+						<p>{t("form.rooms.details.form.buttons.add")}</p>
 						<PlusIcon className="h-4 w-4" />
 					</Button>
 				</div>

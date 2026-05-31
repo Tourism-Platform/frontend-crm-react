@@ -13,15 +13,14 @@ import {
 	type TTransportationEditSchema
 } from "../types";
 
-import { eventTypeMapper } from "./event-type.converters";
 import {
+	mapAccommodationEventToForm,
+	mapAccommodationFormToUpdate,
 	mapInfoEventToForm,
 	mapInfoFormToUpdate
-} from "./event/info.converters";
-import {
-	mapTransferEventToForm,
-	mapTransferFormToUpdate
-} from "./event/transportation.converters";
+} from "./event";
+import { mapTransferEventToForm, mapTransferFormToUpdate } from "./event";
+import { eventTypeMapper } from "./event-type.converters";
 
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
@@ -57,6 +56,8 @@ export const mapEventToFrontend = (
 	switch (backend?.event?.typ) {
 		case "4":
 			return mapTransferEventToForm(backend);
+		case "5":
+			return mapAccommodationEventToForm(backend);
 		case "7":
 			return mapInfoEventToForm(backend);
 
@@ -72,6 +73,8 @@ export const mapEventUpdateToBackend = (
 	if (type === ENUM_EVENT.TRANSPORTATION)
 		return mapTransferFormToUpdate(frontend);
 	else if (type === ENUM_EVENT.INFO) return mapInfoFormToUpdate(frontend);
+	else if (type === ENUM_EVENT.ACCOMMODATION)
+		return mapAccommodationFormToUpdate(frontend);
 
 	return {
 		name: frontend.name

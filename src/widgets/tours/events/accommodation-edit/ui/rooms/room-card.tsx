@@ -4,12 +4,17 @@ import { useTranslation } from "react-i18next";
 
 import { Card, CardContent, CardHeader, CustomField } from "@/shared/ui";
 
-import { ROOM_DATA_LIST, type TRoomsSchema } from "../../model";
+import {
+	ENUM_FORM_ROOMS,
+	type TAccommodationEditSchema
+} from "@/entities/tour";
+
+import { ENUM_FORM_SECTION, ROOM_DATA_LIST } from "../../model";
 
 import { RoomMenu } from "./room-menu";
 
 interface IRoomCardProps {
-	form: UseFormReturn<TRoomsSchema>;
+	form: UseFormReturn<TAccommodationEditSchema>;
 	onRemove: () => void;
 	index: number;
 }
@@ -19,7 +24,9 @@ export const RoomCard: FC<IRoomCardProps> = ({ form, onRemove, index }) => {
 	return (
 		<Card className="relative">
 			<CardHeader>
-				{t("rooms.form.fields.title", { number: index + 1 })}
+				{t("form.rooms.details.form.fields.title", {
+					number: index + 1
+				})}
 			</CardHeader>
 			<CardContent className="grid gap-1">
 				<div className="absolute top-0 right-0">
@@ -30,7 +37,7 @@ export const RoomCard: FC<IRoomCardProps> = ({ form, onRemove, index }) => {
 						<CustomField
 							key={key}
 							control={form?.control}
-							name={`rooms.${index}.${key}`}
+							name={`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${key}`}
 							t={t}
 							{...item}
 						/>

@@ -123,11 +123,11 @@ export const GENERAL_INFO_SCHEMA = z.object({
 		// 		"form.general.details.form.fields.departure_timezone.errors.required"
 		// 	)
 		// })
-		.max(100, {
-			message: msg(
-				"form.general.details.form.fields.departure_timezone.errors.max"
-			)
-		})
+		// .max(100, {
+		// 	message: msg(
+		// 		"form.general.details.form.fields.departure_timezone.errors.max"
+		// 	)
+		// })
 		.optional(),
 	[ENUM_FORM_TRANSPORTATION.ARRIVAL_TIME]: z
 		.string({
@@ -153,10 +153,10 @@ export const GENERAL_INFO_SCHEMA = z.object({
 		// 		"form.general.details.form.fields.arrival_timezone.errors.required"
 		// 	)
 		// })
-		.max(100, {
-			message: msg(
-				"form.general.details.form.fields.arrival_timezone.errors.max"
-			)
-		})
+		// .max(100, {
+		// 	message: msg(
+		// 		"form.general.details.form.fields.arrival_timezone.errors.max"
+		// 	)
+		// })
 		.optional()
 });

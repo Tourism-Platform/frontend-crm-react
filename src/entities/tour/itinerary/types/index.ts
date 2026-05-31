@@ -9,3 +9,4 @@ export * from "./transfer-type.types";
 export * from "./transportation";
 export * from "./common";
 export * from "./info";
+export * from "./accommodation";

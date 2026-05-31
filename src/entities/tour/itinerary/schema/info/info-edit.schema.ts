@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { ENUM_FORM_SECTION } from "../../types";
+import { ENUM_INFO_FORM_SECTION as ENUM_FORM_SECTION } from "../../types/info";
 
 import { GENERAL_INFO_SCHEMA } from "./general-info.schema";
 

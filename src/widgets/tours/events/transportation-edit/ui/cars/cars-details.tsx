@@ -28,9 +28,9 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 
 	const handleAddCar = () => {
 		append({
-			car_name: "",
-			pax: "",
-			description: ""
+			[ENUM_FORM_CARS.CAR_NAME]: "",
+			[ENUM_FORM_CARS.PAX]: "",
+			[ENUM_FORM_CARS.DESCRIPTION]: ""
 		});
 	};
 

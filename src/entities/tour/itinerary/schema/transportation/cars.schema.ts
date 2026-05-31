@@ -5,7 +5,7 @@ import {
 	i18nKey
 } from "@/shared/config";
 
-import { ENUM_FORM_CARS } from "../../types/transportation/cars.types";
+import { ENUM_FORM_CARS } from "../../types";
 
 const msg = i18nKey<TTourEventTransportationEditPageKeys>();
 

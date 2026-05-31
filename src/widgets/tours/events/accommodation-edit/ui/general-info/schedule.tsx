@@ -4,23 +4,26 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import { SCHEDULE_LIST, type TGeneralInfoSchema } from "../../model";
+import type { TAccommodationEditSchema } from "@/entities/tour";
+
+import { ENUM_FORM_SECTION, SCHEDULE_LIST } from "../../model";
 
 interface IScheduleProps {
-	form: UseFormReturn<TGeneralInfoSchema>;
+	form: UseFormReturn<TAccommodationEditSchema>;
 }
 
 const ScheduleBase: FC<IScheduleProps> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 	return (
 		<div className="grid gap-5">
-			<h2 className="text-xl">{t("general.schedule.title")}</h2>
+			<h2 className="text-xl">{t("form.general.schedule.title")}</h2>
 			<div className="grid grid-cols-4 gap-x-4 gap-y-1">
 				{SCHEDULE_LIST.map(({ key, ...item }, index) => (
 					<Fragment key={key}>
 						<CustomField
+							key={key}
 							control={form?.control}
-							name={key}
+							name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
 							t={t}
 							{...item}
 						/>
