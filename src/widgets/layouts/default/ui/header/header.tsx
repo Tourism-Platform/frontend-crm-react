@@ -15,7 +15,7 @@ export const HeaderDefault: FC = () => {
 	const authPath = isAuth ? ENUM_PATH.TOURS.ROOT : ENUM_PATH.LOGIN;
 
 	return (
-		<header className="border-b px-4 md:px-4 sticky top-0 z-40 bg-card ">
+		<header className="border-b px-4 md:px-4 sticky top-0 z-40 bg-card/75 shadow-black/6.5 backdrop-blur-xl">
 			<div className="flex h-16 items-center justify-between gap-4 max-w-6xl mx-auto">
 				<div className="flex items-center gap-2">
 					<div className="flex items-center gap-4">
