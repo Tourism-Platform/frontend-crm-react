@@ -15,7 +15,7 @@ export const mapInfoEventToForm = (
 		day: event.day,
 		position: event.position,
 		general: {
-			description: event.description || ""
+			description: event?.description || ""
 		}
 	} as unknown as TInfoEditSchema;
 };
@@ -31,9 +31,7 @@ export const mapInfoFormToUpdate = (
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),
-		...(Number.isFinite(frontend.day) && { day: frontend.day }),
-		details: {
-			...(g?.description && { description: g.description })
-		}
+		...(g?.description && { description: g.description }),
+		...(Number.isFinite(frontend.day) && { day: frontend.day })
 	} as unknown as TTourEventUpdateBackend;
 };
