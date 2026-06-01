@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -21,6 +21,16 @@ export const useItineraryOptions = (tourId: string) => {
 	const [createOption] = useCreateTourOptionMutation();
 	const [deleteOption] = useDeleteOptionMutation();
 
+	const hasInitialized = useRef(false);
+
+	useEffect(() => {
+		if (isLoading) return;
+		if (backendOptions.length === 0 && !hasInitialized.current) {
+			hasInitialized.current = true;
+			handleAddOption();
+		}
+	}, [backendOptions.length, isLoading]);
+
 	const options: IOption[] = useMemo(
 		() =>
 			backendOptions.map((opt, idx) => ({
@@ -38,9 +48,8 @@ export const useItineraryOptions = (tourId: string) => {
 		}
 	}, [options, activeOption]);
 
-	const handleAddOption = () => {
+	const handleAddOption = useCallback(() => {
 		const createPromise = createOption({ tourId }).unwrap();
-
 		toast.promise(createPromise, {
 			loading: t("toasts.option.create.loading"),
 			success: (newOption) => {
@@ -49,7 +58,7 @@ export const useItineraryOptions = (tourId: string) => {
 			},
 			error: t("toasts.option.create.error")
 		});
-	};
+	}, [createOption, tourId, t]);
 
 	const handleDeleteOption = (optionId: string) => {
 		const prevActiveOption = activeOption;

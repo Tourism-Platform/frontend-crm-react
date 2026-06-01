@@ -42,20 +42,24 @@ export const TOUR_CREATE_SCHEMA = z.object({
 		}),
 	[ENUM_FORM.AGE_REQUIRES]: z
 		.object({
-			from: z.number({
-				message: "create.form.errors.ageRequires.from.required"
-			}),
-			// .min(0, "create.form.errors.ageRequires.from.required"),
+			from: z
+				.number({
+					// message: "create.form.errors.ageRequires.from.required"
+				})
+				.min(0, "create.form.errors.ageRequires.from.required")
+				.or(z.literal(""))
+				.optional(),
 			to: z
 				.number()
 				.min(0, "create.form.errors.ageRequires.to.required")
+				.or(z.literal(""))
 				.optional()
 		})
 		.superRefine((val, ctx) => {
 			const from = val.from;
 			const to = val.to;
 
-			if (to && to < from) {
+			if (from && to && to < from) {
 				ctx.addIssue({
 					code: "custom",
 					message: "create.form.errors.ageRequires.toMismatch",

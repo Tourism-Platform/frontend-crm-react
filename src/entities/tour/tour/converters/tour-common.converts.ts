@@ -53,8 +53,8 @@ export const mapTourCreateToBackend = (
 	name: frontend.tourTitle,
 	days: frontend.duration?.from,
 	nights: frontend.duration?.to,
-	age_from: frontend.ageRequires?.from,
-	age_to: frontend.ageRequires?.to,
+	age_from: frontend.ageRequires?.from || null,
+	age_to: frontend.ageRequires?.to || null,
 	group_size: frontend.groupSize,
 	categories: tourCategoriesMapper.toMany(frontend.tourCategories ?? [])
 });
