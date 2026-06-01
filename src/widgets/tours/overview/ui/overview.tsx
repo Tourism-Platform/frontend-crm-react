@@ -6,7 +6,7 @@ import { withErrorBoundary } from "@/shared/ui";
 import { ConnectedTourHeader } from "@/features/tours";
 import { PreviewTourButton, PublishTourButton } from "@/features/tours";
 
-import { RecentActivityLog } from "./recent-activity-log";
+// import { RecentActivityLog } from "./recent-activity-log";
 import { LastOrders } from "./resent-orders";
 import { TourInfo } from "./tour-info";
 
@@ -30,7 +30,7 @@ const OverviewBase: FC = () => {
 			<div className="grid gap-6">
 				<TourInfo />
 				<LastOrders />
-				<RecentActivityLog />
+				{/* <RecentActivityLog /> */}
 			</div>
 		</section>
 	);
