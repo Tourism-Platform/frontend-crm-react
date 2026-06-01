@@ -1,7 +1,6 @@
 import type {
 	BodyUploadReceiptOperatorSupplierPaymentPaymentIdReceiptPost,
-	SupplierPaymentCreate,
-	SupplierPaymentModel,
+	SupplierPaymentResponse,
 	SupplierPaymentUpdate
 } from "../Api";
 
@@ -15,21 +14,13 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 		_types: {} as {
 			body: void;
 			query: {
+				booking_id?: string | null;
 				supplier_id?: string | null;
-				item_id?: string | null;
+				event_id?: string | null;
 				skip?: number;
 				limit?: number;
 			};
-			response: SupplierPaymentModel[];
-		}
-	} as const,
-	createSupplierPayment: {
-		url: "/operator/supplier-payment",
-		method: "POST",
-		_types: {} as {
-			body: SupplierPaymentCreate;
-			query: void;
-			response: SupplierPaymentModel;
+			response: SupplierPaymentResponse[];
 		}
 	} as const,
 	getSupplierPayment: (paymentId: string) =>
@@ -39,7 +30,7 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 			_types: {} as {
 				body: void;
 				query: void;
-				response: SupplierPaymentModel;
+				response: SupplierPaymentResponse;
 			}
 		}) as const,
 	updateSupplierPayment: (paymentId: string) =>
@@ -49,7 +40,7 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 			_types: {} as {
 				body: SupplierPaymentUpdate;
 				query: void;
-				response: SupplierPaymentModel;
+				response: SupplierPaymentResponse;
 			}
 		}) as const,
 	uploadReceipt: (paymentId: string) =>
@@ -59,7 +50,7 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 			_types: {} as {
 				body: BodyUploadReceiptOperatorSupplierPaymentPaymentIdReceiptPost;
 				query: void;
-				response: SupplierPaymentModel;
+				response: SupplierPaymentResponse;
 			}
 		}) as const
 } as const;

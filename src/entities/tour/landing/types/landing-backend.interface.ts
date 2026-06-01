@@ -20,12 +20,6 @@ export interface ILandingBackend {
 
 export type TLandingBackend = LandingPageModel;
 
-export type TLandingCreateBackend = Omit<LandingPageModel, "id" | "tour_id">;
-
-export type TCreateLandingBackendResponse = ReturnType<
-	typeof TOUR_LANDING_PAGE_PATHS.createLandingPage
->["_types"]["response"];
-
 export type TGetLandingBackendResponse = ReturnType<
 	typeof TOUR_LANDING_PAGE_PATHS.getLandingPage
 >["_types"]["response"];
@@ -41,10 +35,6 @@ export type TUploadLandingImagesBackendResponse = ReturnType<
 export type TListLandingImagesBackendResponse = ReturnType<
 	typeof TOUR_LANDING_PAGE_PATHS.listLandingImages
 >["_types"]["response"];
-
-export type TCreateLandingImageBackendBody = ReturnType<
-	typeof TOUR_LANDING_PAGE_PATHS.createLandingPage
->["_types"]["body"];
 
 export type TUpdateLandingImageBackendBody = ReturnType<
 	typeof TOUR_LANDING_PAGE_PATHS.updateLandingPage

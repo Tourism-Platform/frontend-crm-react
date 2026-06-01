@@ -3,14 +3,12 @@ import { ENUM_API_TAGS, TOUR_LANDING_PAGE_PATHS } from "@/shared/api";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
-	mapCreateLandingToBackend,
 	mapLandingImagesToFrontend,
 	mapLandingToFrontend,
 	mapUpdateLandingToBackend
 } from "../converters";
 import type {
 	ILandingImageSchema,
-	TCreateLandingBackendResponse,
 	TGetLandingBackendResponse,
 	TLandingSchema,
 	TListLandingImagesBackendResponse,
@@ -20,17 +18,6 @@ import type {
 
 export const tourLandingApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		createLanding: builder.mutation<
-			TLandingSchema,
-			{ tourId: string; data: TLandingSchema }
-		>({
-			query: ({ tourId, data }) => ({
-				...TOUR_LANDING_PAGE_PATHS.createLandingPage(tourId),
-				body: mapCreateLandingToBackend(data)
-			}),
-			transformResponse: (response: TCreateLandingBackendResponse) =>
-				mapLandingToFrontend(response)
-		}),
 		getLanding: builder.query<TLandingSchema, string>({
 			query: (tourId) => ({
 				...TOUR_LANDING_PAGE_PATHS.getLandingPage(tourId)
@@ -99,7 +86,6 @@ export const tourLandingApi = authApi.injectEndpoints({
 });
 
 export const {
-	useCreateLandingMutation,
 	useGetLandingQuery,
 	useUpdateLandingMutation,
 	useListLandingImagesQuery,

@@ -99,8 +99,8 @@ export const mapBookingOrderListToFrontend = (
 export const mapBookingOrderPaginatedToFrontend = (
 	response: TBookingOrderBackendResponse
 ): TBookingOrderPaginatedResponse => ({
-	data: mapBookingOrderListToFrontend(response),
-	total: response.length
+	data: response.data as unknown as IOrder[],
+	total: response.total_count
 });
 
 export const mapBookingOrderFiltersToBackend = (

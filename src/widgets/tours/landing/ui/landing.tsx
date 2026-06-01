@@ -20,7 +20,6 @@ import {
 import {
 	LANDING_SCHEMA,
 	type TLandingSchema,
-	useCreateLandingMutation,
 	useDeleteLandingImageMutation,
 	useGetLandingQuery,
 	useSetPrimaryImageMutation,
@@ -54,8 +53,6 @@ const LandingBase: FC = () => {
 
 	const [updateLanding, { isLoading: isUpdating }] =
 		useUpdateLandingMutation();
-	const [createLanding, { isLoading: isCreating }] =
-		useCreateLandingMutation();
 	const [uploadImages, { isLoading: isUploading }] =
 		useUploadLandingImagesMutation();
 	const [deleteImage, { isLoading: isDeleting }] =
@@ -65,7 +62,6 @@ const LandingBase: FC = () => {
 
 	const isLoading =
 		isUpdating ||
-		isCreating ||
 		isLandingLoading ||
 		isUploading ||
 		isDeleting ||
@@ -94,11 +90,7 @@ const LandingBase: FC = () => {
 
 		try {
 			// 1. Create or update landing first
-			if (landingData) {
-				await updateLanding({ tourId, data }).unwrap();
-			} else {
-				await createLanding({ tourId, data }).unwrap();
-			}
+			await updateLanding({ tourId, data }).unwrap();
 
 			// 2. Handle photos if there are any changes
 			const photos = photosChangesRef.current;

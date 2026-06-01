@@ -1,4 +1,5 @@
 import type {
+	Language,
 	PublicTourCatalogSchemaOutput,
 	TourCatalogSort,
 	TourCategory
@@ -20,6 +21,7 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_min?: number | null;
 				duration_days_max?: number | null;
 				city?: string | null;
+				language?: Language | null;
 				skip?: number;
 				limit?: number;
 			};
@@ -38,6 +40,7 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_min?: number | null;
 				duration_days_max?: number | null;
 				city?: string | null;
+				language?: Language | null;
 				skip?: number;
 				limit?: number;
 			};

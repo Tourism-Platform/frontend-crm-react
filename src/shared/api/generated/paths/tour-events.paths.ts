@@ -1,15 +1,23 @@
 import type {
 	ActivityEventSchemaInput,
+	ActivityEventUpdate,
 	BusEventSchemaInput,
+	BusEventUpdate,
 	EventReorderSchema,
 	FlightEventSchemaInput,
+	FlightEventUpdate,
 	HousingEventSchemaInput,
+	HousingEventUpdate,
 	InformationEventSchemaInput,
+	InformationEventUpdate,
 	LanguageCode,
 	MultipleOptionEventInput,
+	MultipleOptionEventUpdate,
 	TourEventResponse,
 	TrainEventSchemaInput,
-	TransferEventSchemaInput
+	TrainEventUpdate,
+	TransferEventSchemaInput,
+	TransferEventUpdate
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -65,14 +73,14 @@ export const TOUR_EVENTS_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| InformationEventSchemaInput
-					| BusEventSchemaInput
-					| TrainEventSchemaInput
-					| TransferEventSchemaInput
-					| ActivityEventSchemaInput
-					| HousingEventSchemaInput
-					| FlightEventSchemaInput
-					| MultipleOptionEventInput;
+					| InformationEventUpdate
+					| BusEventUpdate
+					| TrainEventUpdate
+					| TransferEventUpdate
+					| ActivityEventUpdate
+					| HousingEventUpdate
+					| FlightEventUpdate
+					| MultipleOptionEventUpdate;
 				query: { lang?: LanguageCode };
 				response: TourEventResponse;
 			}

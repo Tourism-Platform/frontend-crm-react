@@ -1,20 +1,19 @@
 import type { AmenitiesTypes } from "@/shared/api";
 
 import {
-	type TCreateLandingBackendResponse,
-	type TCreateLandingImageBackendBody,
 	type TGetLandingBackendResponse,
 	type TLandingSchema,
-	type TUpdateLandingBackendResponse
+	type TUpdateLandingBackendResponse,
+	type TUpdateLandingImageBackendBody
 } from "../types";
 
 import { amenitiesMapper } from "./amenities.converters";
 import { languageMapper } from "./languages.converters";
 import { pickupMapper } from "./pickup.converters";
 
-export const mapCreateLandingToBackend = (
+export const mapUpdateLandingToBackend = (
 	frontend: TLandingSchema
-): TCreateLandingImageBackendBody => ({
+): TUpdateLandingImageBackendBody => ({
 	title: frontend.description,
 	overview: frontend.description,
 	languages: languageMapper.toMany(frontend.languages),
@@ -26,15 +25,10 @@ export const mapCreateLandingToBackend = (
 	additional_information: frontend.additional_info
 });
 
-export const mapUpdateLandingToBackend = mapCreateLandingToBackend;
-
 export const mapLandingToFrontend = (
-	backend:
-		| TCreateLandingBackendResponse
-		| TGetLandingBackendResponse
-		| TUpdateLandingBackendResponse
+	backend: TGetLandingBackendResponse | TUpdateLandingBackendResponse
 ): TLandingSchema => ({
-	description: backend.overview,
+	description: backend.overview || "",
 	languages: languageMapper.fromMany(backend.languages),
 	included: amenitiesMapper.fromMany(
 		backend.amenities_included as AmenitiesTypes[]

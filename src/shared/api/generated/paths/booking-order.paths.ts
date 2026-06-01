@@ -2,6 +2,7 @@ import type {
 	BookingCancel,
 	BookingCreate,
 	BookingModel,
+	BookingOrderListResponse,
 	BookingStatus,
 	BookingUpdate
 } from "../Api";
@@ -27,10 +28,13 @@ export const BOOKING_ORDER_PATHS = {
 			query: {
 				booking_status?: BookingStatus | null;
 				tour_id?: string | null;
+				q?: string | null;
+				date_from?: string | null;
+				date_to?: string | null;
 				skip?: number;
 				limit?: number;
 			};
-			response: BookingModel[];
+			response: BookingOrderListResponse;
 		}
 	} as const,
 	getBookingOrder: (bookingId: string) =>
@@ -66,6 +70,16 @@ export const BOOKING_ORDER_PATHS = {
 			url: `/booking/order/${bookingId}/status/${transition}`,
 			method: "PATCH",
 			_types: {} as { body: void; query: void; response: BookingModel }
+		}) as const,
+	declineBooking: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/decline`,
+			method: "POST",
+			_types: {} as {
+				body: BookingCancel;
+				query: void;
+				response: BookingModel;
+			}
 		}) as const,
 	cancelBooking: (bookingId: string) =>
 		({
