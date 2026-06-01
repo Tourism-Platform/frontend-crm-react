@@ -9,4 +9,6 @@ export * from "./transfer-type.types";
 export * from "./transportation";
 export * from "./common";
 export * from "./info";
+export * from "./activity";
 export * from "./accommodation";
+export * from "./activity-type.types";

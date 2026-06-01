@@ -179,10 +179,10 @@ const FlightEditPage = React.lazy(() =>
 		(m) => ({ default: m.FlightEditPage })
 	)
 );
-const EventEditPage = React.lazy(() =>
-	import("@/pages/tours/events/event-edit-page/ui/event-edit-page").then(
-		(m) => ({ default: m.EventEditPage })
-	)
+const ActivityEditPage = React.lazy(() =>
+	import(
+		"@/pages/tours/events/activity-edit-page/ui/activity-edit-page"
+	).then((m) => ({ default: m.ActivityEditPage }))
 );
 const TransportationEditPage = React.lazy(() =>
 	import(
@@ -661,7 +661,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.EVENT,
-		component: EventEditPage,
+		component: ActivityEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [

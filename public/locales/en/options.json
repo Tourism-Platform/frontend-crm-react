@@ -106,6 +106,19 @@
 			"airport_transfer": "Airport transfer",
 			"station_transfer": "Station transfer",
 			"custom": "Custom"
+		},
+		"activityTypes": {
+			"food": "Restaurants, cafes, teahouses, and street food",
+			"master_class": "Any workshop or master class (cooking, ceramics, weaving, calligraphy)",
+			"sightseeing": "Museums, monuments, mosques, mausoleums, and bazaars",
+			"outdoor": "Hiking, trekking, camping, and safari tours",
+			"riding": "Horseback, camel, and cycling activities",
+			"extreme": "Rafting, rock climbing, and ziplining",
+			"wellness": "Hammam, spa, yoga, and meditation",
+			"entertainment": "Shows, theater, concerts, and festivals",
+			"water_activities": "Boating, jet skiing, and fishing",
+			"photography": "Photo walks",
+			"spiritual": "Pilgrimage and religious sites"
 		}
 	},
 	"user": {

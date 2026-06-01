@@ -16,10 +16,13 @@ import {
 import {
 	mapAccommodationEventToForm,
 	mapAccommodationFormToUpdate,
+	mapActivityEventToForm,
+	mapActivityFormToUpdate,
 	mapInfoEventToForm,
-	mapInfoFormToUpdate
+	mapInfoFormToUpdate,
+	mapTransferEventToForm,
+	mapTransferFormToUpdate
 } from "./event";
-import { mapTransferEventToForm, mapTransferFormToUpdate } from "./event";
 import { eventTypeMapper } from "./event-type.converters";
 
 export const mapAllEventsToFrontend = (
@@ -58,6 +61,8 @@ export const mapEventToFrontend = (
 			return mapTransferEventToForm(backend);
 		case "5":
 			return mapAccommodationEventToForm(backend);
+		case "6":
+			return mapActivityEventToForm(backend);
 		case "7":
 			return mapInfoEventToForm(backend);
 
@@ -75,6 +80,8 @@ export const mapEventUpdateToBackend = (
 	else if (type === ENUM_EVENT.INFO) return mapInfoFormToUpdate(frontend);
 	else if (type === ENUM_EVENT.ACCOMMODATION)
 		return mapAccommodationFormToUpdate(frontend);
+	else if (type === ENUM_EVENT.ACTIVITY)
+		return mapActivityFormToUpdate(frontend);
 
 	return {
 		name: frontend.name

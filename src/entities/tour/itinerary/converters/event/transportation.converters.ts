@@ -5,7 +5,8 @@ import {
 	type TTourEventUpdateBackend,
 	type TTransportationEditSchema
 } from "../../types";
-import { transferTypeMapper } from "../transfer-type.converters";
+
+import { transferTypeMapper } from "./transfer-type.converters";
 
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce

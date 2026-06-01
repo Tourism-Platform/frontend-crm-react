@@ -24,8 +24,8 @@ import staff_information_page from "../../../../public/locales/en/settings/staff
 import sidebar from "../../../../public/locales/en/sidebar.json";
 import common_tours from "../../../../public/locales/en/tours/common_tours.json";
 import accommodation_edit_page from "../../../../public/locales/en/tours/events/accommodation_edit_page.json";
+import activity_edit_page from "../../../../public/locales/en/tours/events/activity_edit_page.json";
 import common_events from "../../../../public/locales/en/tours/events/common_events.json";
-import event_edit_page from "../../../../public/locales/en/tours/events/event_edit_page.json";
 import flight_edit_page from "../../../../public/locales/en/tours/events/flight_edit_page.json";
 import information_edit_page from "../../../../public/locales/en/tours/events/information_edit_page.json";
 import multiply_option_edit_page from "../../../../public/locales/en/tours/events/multiply_option_edit_page.json";
@@ -70,7 +70,7 @@ export type TTourSchedulePage = typeof tour_schedule_page;
 export type TTourOrderHistoryPage = typeof tour_order_history_page;
 export type TTourEventFlightEditPage = typeof flight_edit_page;
 export type TTourEventTransportationEditPage = typeof transportation_edit_page;
-export type TTourEventEditPage = typeof event_edit_page;
+export type TTourActivityEditPage = typeof activity_edit_page;
 export type TTourInformationEditPage = typeof information_edit_page;
 export type TTourEventMultiplyOptionEditPage = typeof multiply_option_edit_page;
 export type TTourAccommodationEditPage = typeof accommodation_edit_page;
@@ -118,7 +118,7 @@ export type TResources = {
 	tour_itinerary_page: TTourItineraryPage;
 	flight_edit_page: TTourEventFlightEditPage;
 	transportation_edit_page: TTourEventTransportationEditPage;
-	event_edit_page: TTourEventEditPage;
+	activity_edit_page: TTourActivityEditPage;
 	accommodation_edit_page: TTourAccommodationEditPage;
 	information_edit_page: TTourInformationEditPage;
 	multiply_option_edit_page: TTourEventMultiplyOptionEditPage;
@@ -220,7 +220,7 @@ export type TTourOrderHistoryPageKeys = TNestedKeyOf<TTourOrderHistoryPage>;
 export type TTourEventTransportationEditPageKeys =
 	TNestedKeyOf<TTourEventTransportationEditPage>;
 
-export type TTourEventEditPageKeys = TNestedKeyOf<TTourEventEditPage>;
+export type TTourActivityEditPageKeys = TNestedKeyOf<TTourActivityEditPage>;
 
 export type TTourAccommodationEditPageKeys =
 	TNestedKeyOf<TTourAccommodationEditPage>;

@@ -1,10 +1,7 @@
 import { TransferTypes } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import {
-	ENUM_TRANSFER_TYPE,
-	type ENUM_TRANSFER_TYPE_TYPE
-} from "../types/transfer-type.types";
+import { ENUM_TRANSFER_TYPE, type ENUM_TRANSFER_TYPE_TYPE } from "../../types";
 
 const MAP_TRANSFER_TYPE: Partial<
 	Record<ENUM_TRANSFER_TYPE_TYPE, TransferTypes>
