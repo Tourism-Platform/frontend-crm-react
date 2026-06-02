@@ -6,11 +6,10 @@ import { Card, CardContent, CardHeader, CustomField } from "@/shared/ui";
 
 import {
 	ENUM_FORM_CARS,
-	ENUM_TRANSPORTATION_FORM_SECTION as ENUM_FORM_SECTION,
 	type TTransportationEditSchema
 } from "@/entities/tour";
 
-import { CARS_DATA_LIST } from "../../model";
+import { CARS_DATA_LIST, ENUM_FORM_SECTION } from "../../model";
 
 import { CarsMenu } from "./cars-menu";
 

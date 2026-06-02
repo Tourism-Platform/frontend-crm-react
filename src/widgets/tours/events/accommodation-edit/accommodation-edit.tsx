@@ -65,7 +65,7 @@ export const AccommodationEdit: FC = () => {
 
 	useEffect(() => {
 		if (eventData) {
-			form.reset(eventData);
+			form.reset(eventData as TAccommodationEditSchema);
 		}
 	}, [eventData, form]);
 

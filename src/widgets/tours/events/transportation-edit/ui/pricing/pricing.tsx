@@ -1,5 +1,6 @@
 import { Loader } from "lucide-react";
 import { type FC } from "react";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -24,6 +25,10 @@ import {
 
 const PricingBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("transportation_edit_page");
+	const invoicing = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.INVOICING}`
+	});
 
 	return (
 		<div className="grid gap-6">
@@ -31,10 +36,9 @@ const PricingBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 			<div className="grid gap-1">
 				<h3 className="text-lg">{t("form.pricing.invoicing.title")}</h3>
 				<CustomOptionTabs
-					defaultValue={
-						form.getValues(
-							`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.INVOICING}`
-						) ?? ENUM_TRANSPORTATION_PRICING_INVOICING.INDIVIDUAL
+					value={
+						invoicing ??
+						ENUM_TRANSPORTATION_PRICING_INVOICING.INDIVIDUAL
 					}
 					onValueChange={(val) =>
 						form.setValue(

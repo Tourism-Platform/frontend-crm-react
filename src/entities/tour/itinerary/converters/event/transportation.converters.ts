@@ -7,10 +7,7 @@ import {
 } from "../../types";
 
 import { transferTypeMapper } from "./transfer-type.converters";
-import {
-	mapCarsFromBackend,
-	mapCarsToBackend
-} from "./transportation-cars.converters";
+import { mapCarsFromBackend } from "./transportation-cars.converters";
 import {
 	mapTransportationPricingFromBackend,
 	mapTransportationPricingToBackend
@@ -61,14 +58,6 @@ export const mapTransferFormToUpdate = (
 		frontend?.pricing,
 		carsList
 	);
-	const isCarsSectionUpdate =
-		frontend.cars !== undefined &&
-		frontend.pricing === undefined &&
-		frontend.general === undefined;
-	const carsDetails =
-		isCarsSectionUpdate && !pricingDetails.details
-			? mapCarsToBackend(carsList)
-			: undefined;
 
 	return {
 		...(frontend.name !== undefined &&
@@ -108,8 +97,7 @@ export const mapTransferFormToUpdate = (
 					...(g?.end_point && { location: { name: g.end_point } })
 				}
 			}),
-			...pricingDetails.details,
-			...carsDetails?.details
+			...pricingDetails.details
 		}
 	} as unknown as TTourEventUpdateBackend;
 };

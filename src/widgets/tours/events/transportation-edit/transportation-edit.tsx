@@ -71,8 +71,17 @@ export const TransportationEdit: FC = () => {
 
 	const createSectionSubmit =
 		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const isValid = await form.trigger(section);
-			if (!isValid) return;
+			const sectionsToValidate: ENUM_FORM_SECTION_TYPE[] =
+				section === ENUM_FORM_SECTION.CARS ||
+				section === ENUM_FORM_SECTION.PRICING
+					? [ENUM_FORM_SECTION.CARS, ENUM_FORM_SECTION.PRICING]
+					: [section];
+
+			for (const sectionKey of sectionsToValidate) {
+				if (!(await form.trigger(sectionKey))) {
+					return;
+				}
+			}
 
 			const sectionData = {
 				[section]: form.getValues(section),
@@ -83,9 +92,13 @@ export const TransportationEdit: FC = () => {
 				[ENUM_FORM_SECTION.POSITION]: form.getValues(
 					ENUM_FORM_SECTION.POSITION
 				),
-				...(section === ENUM_FORM_SECTION.PRICING && {
+				...((section === ENUM_FORM_SECTION.PRICING ||
+					section === ENUM_FORM_SECTION.CARS) && {
 					[ENUM_FORM_SECTION.CARS]: form.getValues(
 						ENUM_FORM_SECTION.CARS
+					),
+					[ENUM_FORM_SECTION.PRICING]: form.getValues(
+						ENUM_FORM_SECTION.PRICING
 					)
 				})
 			};

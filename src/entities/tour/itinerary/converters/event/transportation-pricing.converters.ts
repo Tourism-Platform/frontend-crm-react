@@ -36,6 +36,10 @@ import {
 
 type TCarsList = TCarsSchema[typeof ENUM_FORM_CARS.CARS_LIST];
 
+type TTransferDetailsWithFees = TransferDetailsSchemaOutput & {
+	fees?: FixedExpenseOutput | null;
+};
+
 const createEmptyPerCarPriceRow = (): ITransportationPerCarPriceRow => ({
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: null,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: null,
@@ -139,9 +143,7 @@ const alignPerCarByClassPriceRows = (
 ): ITransportationPerCarByClassPriceRow[] =>
 	Array.from({ length: carsListLength }, (_, index) => {
 		const row = existing[index];
-		if (
-			row?.[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES]?.length
-		) {
+		if (row) {
 			return row;
 		}
 		if (apiRows?.[index]) {
@@ -188,52 +190,42 @@ const mapMarkupToBackend = (
 	};
 };
 
-const createEmptyMarkup = (): ITransportationPriceRowMarkup => ({
-	typ: ENUM_TRANSPORTATION_MARKUP_TYP.FIXED,
-	value: ""
-});
-
 const applyMarkupToPerCarExpenses = (
 	expenses:
 		| ITransportationPerCarExpenses
 		| ITransportationPerCarCategoryExpenses,
 	addMarginSeparately: boolean
 ): ITransportationPerCarExpenses | ITransportationPerCarCategoryExpenses => {
-	if (expenses.typ === ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR) {
+	if (!addMarginSeparately) {
+		if (expenses.typ === ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR) {
+			return {
+				...expenses,
+				[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]: expenses[
+					ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS
+				].map((car) => ({
+					...car,
+					[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: null
+				}))
+			};
+		}
+
 		return {
 			...expenses,
 			[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]: expenses[
 				ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS
 			].map((car) => ({
 				...car,
-				[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]:
-					addMarginSeparately
-						? (car[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP] ??
-							createEmptyMarkup())
-						: null
+				[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES]: car[
+					ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES
+				].map((category) => ({
+					...category,
+					[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]: null
+				}))
 			}))
 		};
 	}
 
-	return {
-		...expenses,
-		[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]: expenses[
-			ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS
-		].map((car) => ({
-			...car,
-			[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES]: car[
-				ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES
-			].map((category) => ({
-				...category,
-				[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]:
-					addMarginSeparately
-						? (category[
-								ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP
-							] ?? createEmptyMarkup())
-						: null
-			}))
-		}))
-	};
+	return expenses;
 };
 
 const hasAnyMarkup = (
@@ -304,7 +296,12 @@ export const mapTransportationPricingFromBackend = (
 	details?: TransferDetailsSchemaOutput | null,
 	carsList: TCarsList = []
 ): TTransportationPricingSchema => {
-	const expenses = details?.expenses;
+	const detailsWithFees = details as
+		| TTransferDetailsWithFees
+		| null
+		| undefined;
+	const expenses = detailsWithFees?.expenses;
+	const feesVal = detailsWithFees?.fees?.cost?.val ?? null;
 	const defaults = getDefaultTransportationPricing(carsList);
 
 	if (!expenses) {
@@ -355,6 +352,7 @@ export const mapTransportationPricingFromBackend = (
 			...(expenses.cost?.val != null && {
 				total_price: expenses.cost.val
 			}),
+			...(feesVal != null && { taxes: feesVal }),
 			...(expenses.cost?.currency && {
 				currency: expenses.cost.currency
 			})
@@ -367,6 +365,7 @@ export const mapTransportationPricingFromBackend = (
 		...(expenses.cost_per_person?.val != null && {
 			total_price: expenses.cost_per_person.val
 		}),
+		...(feesVal != null && { taxes: feesVal }),
 		...(expenses.cost_per_person?.currency && {
 			currency: expenses.cost_per_person.currency
 		})
@@ -376,7 +375,7 @@ export const mapTransportationPricingFromBackend = (
 export const mapTransportationPricingToBackend = (
 	pricing?: TTransportationPricingSchema,
 	carsList: TCarsList = []
-): { details?: Pick<TransferDetailsSchemaOutput, "expenses"> } => {
+): { details?: TTransferDetailsWithFees } => {
 	if (
 		!pricing ||
 		pricing.invoicing !== ENUM_TRANSPORTATION_PRICING_INVOICING.INDIVIDUAL
@@ -500,8 +499,9 @@ export const mapTransportationPricingToBackend = (
 
 	const totalPrice = pricing[ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE];
 	const currency = pricing[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY];
+	const taxes = pricing[ENUM_TRANSPORTATION_PRICING_FIELD.TAXES];
 
-	if (!totalPrice || !currency) {
+	if (totalPrice == null || !currency) {
 		return {};
 	}
 
@@ -509,18 +509,27 @@ export const mapTransportationPricingToBackend = (
 		val: totalPrice,
 		currency: currency as Currency
 	};
+	const fees =
+		taxes != null && currency
+			? {
+					typ: "fixed" as const,
+					cost: { val: taxes, currency: currency as Currency }
+				}
+			: undefined;
 
 	if (pricing.pricing_type === ENUM_TRANSPORTATION_PRICING_TYPE.FLAT_RATE) {
 		return {
 			details: {
-				expenses: { typ: "fixed", cost }
+				expenses: { typ: "fixed", cost },
+				...(fees && { fees })
 			}
 		};
 	}
 
 	return {
 		details: {
-			expenses: { typ: "per_person", cost_per_person: cost }
+			expenses: { typ: "per_person", cost_per_person: cost },
+			...(fees && { fees })
 		}
 	};
 };

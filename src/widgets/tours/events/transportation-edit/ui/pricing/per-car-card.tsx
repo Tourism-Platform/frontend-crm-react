@@ -21,9 +21,9 @@ import {
 import {
 	ENUM_FORM_SECTION,
 	PER_CAR_MARKUP_FIELD,
+	PER_CAR_ROW_FIELDS_LIST,
 	getCarDisplayName
 } from "../../model";
-import { PER_CAR_ROW_FIELDS_LIST } from "../../model";
 
 interface IPerCarCardProps {
 	form: UseFormReturn<TTransportationEditSchema>;
@@ -76,7 +76,6 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 									/>
 								) : null}
 								<CustomField
-									key={key}
 									control={form.control}
 									name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}.${index}.${key}`}
 									t={t}

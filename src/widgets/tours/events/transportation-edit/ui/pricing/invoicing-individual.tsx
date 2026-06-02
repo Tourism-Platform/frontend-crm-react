@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -25,6 +26,10 @@ import { PerCarDetails } from "./per-car-details";
 
 const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 	const { t } = useTranslation("transportation_edit_page");
+	const pricingType = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE}`
+	});
 
 	return (
 		<div className="grid gap-5">
@@ -33,10 +38,9 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 					{t("form.pricing.pricing_type.title")}
 				</h3>
 				<CustomOptionTabs
-					defaultValue={
-						form.getValues(
-							`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE}`
-						) ?? ENUM_TRANSPORTATION_PRICING_TYPE.FLAT_RATE
+					value={
+						pricingType ??
+						ENUM_TRANSPORTATION_PRICING_TYPE.FLAT_RATE
 					}
 					onValueChange={(val) =>
 						form.setValue(

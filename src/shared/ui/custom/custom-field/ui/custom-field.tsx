@@ -179,7 +179,10 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...field}
 						onChange={(event) => {
 							if (props.type === "number") {
-								field.onChange(event.target.valueAsNumber);
+								const value = event.target.valueAsNumber;
+								field.onChange(
+									Number.isFinite(value) ? value : null
+								);
 							} else {
 								field.onChange(event);
 							}
@@ -328,7 +331,10 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...field}
 						onChange={(event) => {
 							if (props.type === "number") {
-								field.onChange(event.target.valueAsNumber);
+								const value = event.target.valueAsNumber;
+								field.onChange(
+									Number.isFinite(value) ? value : null
+								);
 							} else {
 								field.onChange(event);
 							}

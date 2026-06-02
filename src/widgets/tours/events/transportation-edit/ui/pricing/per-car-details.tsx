@@ -1,5 +1,5 @@
 import { type FC, useEffect } from "react";
-import { type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { Checkbox, Label, withErrorBoundary } from "@/shared/ui";
@@ -19,81 +19,116 @@ import { ENUM_FORM_SECTION } from "../../model";
 import { PerCarByClassCard } from "./per-car-by-class-card";
 import { PerCarCard } from "./per-car-card";
 
+const syncPerCarExpenses = (form: UseFormReturn<TTransportationEditSchema>) => {
+	if (
+		form.getValues(
+			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE}`
+		) !== ENUM_TRANSPORTATION_PRICING_TYPE.PER_CAR
+	) {
+		return;
+	}
+
+	const priceBasedOnClass = form.getValues(
+		`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
+	);
+	const expectedTyp = priceBasedOnClass
+		? ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR_CATEGORY
+		: ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR;
+	const expenses = form.getValues(
+		`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`
+	);
+	const carsListLength =
+		form.getValues(`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`)
+			?.length ?? 0;
+
+	if (
+		expenses?.typ === expectedTyp &&
+		expenses[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]?.length ===
+			carsListLength
+	) {
+		return;
+	}
+
+	form.setValue(
+		`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`,
+		alignTransportationPerCarExpenses({
+			priceBasedOnClass,
+			carsListLength,
+			current: expenses,
+			...(form.getValues(
+				`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
+			) && { addMarginSeparately: true })
+		})
+	);
+};
+
 const PerCarDetailsBase: FC<{
 	form: UseFormReturn<TTransportationEditSchema>;
 }> = ({ form }) => {
 	const { t } = useTranslation("transportation_edit_page");
 
+	const carsList = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
+	});
+	const pricingType = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE}`
+	});
+	const priceBasedOnClass = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
+	});
+	const addMarginSeparately = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
+	});
+
 	useEffect(() => {
-		if (
-			form.getValues(
-				`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE}`
-			) !== ENUM_TRANSPORTATION_PRICING_TYPE.PER_CAR
-		) {
-			return;
-		}
+		syncPerCarExpenses(form);
+	}, [carsList, pricingType, priceBasedOnClass, form]);
 
-		if (
-			form.getValues(
-				`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`
-			)?.typ ===
-				(form.getValues(
-					`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
-				)
-					? ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR_CATEGORY
-					: ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR) &&
-			(form.getValues(
-				`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`
-			)?.[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]?.length ??
-				0) ===
-				(form.getValues(
-					`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
-				)?.length ?? 0)
-		) {
-			return;
-		}
-
+	const handlePriceBasedOnClassChange = (checked: boolean) => {
+		form.setValue(
+			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`,
+			checked
+		);
 		form.setValue(
 			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`,
 			alignTransportationPerCarExpenses({
-				priceBasedOnClass: form.getValues(
-					`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
-				),
-				carsListLength:
-					form.getValues(
-						`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
-					)?.length ?? 0,
+				priceBasedOnClass: checked,
+				carsListLength: carsList?.length ?? 0,
+				...(addMarginSeparately && { addMarginSeparately: true }),
 				current: form.getValues(
 					`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`
 				)
 			})
 		);
-	}, [
-		form.watch(`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`),
-		form.watch(
-			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE}`
-		),
-		form.watch(
-			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
-		),
-		form
-	]);
+	};
 
-	if (
-		form.watch(
-			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE}`
-		) !== ENUM_TRANSPORTATION_PRICING_TYPE.PER_CAR
-	) {
+	const handleAddMarginSeparatelyChange = (checked: boolean) => {
+		form.setValue(
+			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`,
+			checked
+		);
+		form.setValue(
+			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`,
+			alignTransportationPerCarExpenses({
+				priceBasedOnClass: Boolean(priceBasedOnClass),
+				carsListLength: carsList?.length ?? 0,
+				addMarginSeparately: checked,
+				current: form.getValues(
+					`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`
+				)
+			})
+		);
+	};
+
+	if (pricingType !== ENUM_TRANSPORTATION_PRICING_TYPE.PER_CAR) {
 		return null;
 	}
 
-	if (
-		!(
-			form.watch(
-				`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
-			) ?? []
-		).length
-	) {
+	if (!carsList?.length) {
 		return (
 			<p className="text-sm text-muted-foreground">
 				{t("form.pricing.form.per_car.empty_cars")}
@@ -111,31 +146,10 @@ const PerCarDetailsBase: FC<{
 					<div className="flex items-center gap-2">
 						<Checkbox
 							id="price-based-on-class"
-							checked={form.watch(
-								`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
-							)}
-							onCheckedChange={(checked) => {
-								form.setValue(
-									`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`,
-									Boolean(checked)
-								);
-								form.setValue(
-									`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`,
-									alignTransportationPerCarExpenses({
-										priceBasedOnClass: Boolean(checked),
-										carsListLength:
-											form.getValues(
-												`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
-											)?.length ?? 0,
-										...(form.getValues(
-											`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
-										) && { addMarginSeparately: true }),
-										current: form.getValues(
-											`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`
-										)
-									})
-								);
-							}}
+							checked={Boolean(priceBasedOnClass)}
+							onCheckedChange={(checked) =>
+								handlePriceBasedOnClassChange(Boolean(checked))
+							}
 						/>
 						<Label htmlFor="price-based-on-class">
 							{t(
@@ -146,31 +160,12 @@ const PerCarDetailsBase: FC<{
 					<div className="flex items-center gap-2">
 						<Checkbox
 							id="add-margin-separately"
-							checked={form.watch(
-								`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
-							)}
-							onCheckedChange={(checked) => {
-								form.setValue(
-									`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`,
+							checked={Boolean(addMarginSeparately)}
+							onCheckedChange={(checked) =>
+								handleAddMarginSeparatelyChange(
 									Boolean(checked)
-								);
-								form.setValue(
-									`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`,
-									alignTransportationPerCarExpenses({
-										priceBasedOnClass: form.getValues(
-											`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
-										),
-										carsListLength:
-											form.getValues(
-												`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
-											)?.length ?? 0,
-										addMarginSeparately: Boolean(checked),
-										current: form.getValues(
-											`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}`
-										)
-									})
-								);
-							}}
+								)
+							}
 						/>
 						<Label htmlFor="add-margin-separately">
 							{t(
@@ -182,34 +177,20 @@ const PerCarDetailsBase: FC<{
 			</div>
 
 			<div className="grid gap-4">
-				{(
-					form.watch(
-						`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
-					) ?? []
-				).map((_, index) =>
-					form.watch(
-						`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
-					) ? (
+				{carsList.map((_, index) =>
+					priceBasedOnClass ? (
 						<PerCarByClassCard
 							key={index}
 							form={form}
 							index={index}
-							addMarginSeparately={Boolean(
-								form.watch(
-									`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
-								)
-							)}
+							addMarginSeparately={Boolean(addMarginSeparately)}
 						/>
 					) : (
 						<PerCarCard
 							key={index}
 							form={form}
 							index={index}
-							addMarginSeparately={Boolean(
-								form.watch(
-									`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
-								)
-							)}
+							addMarginSeparately={Boolean(addMarginSeparately)}
 						/>
 					)
 				)}
