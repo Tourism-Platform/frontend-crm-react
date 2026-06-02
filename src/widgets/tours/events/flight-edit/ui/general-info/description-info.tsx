@@ -4,10 +4,15 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import { FLIGHT_DESCRIPTION, type TGeneralInfoSchema } from "../../model";
+import {
+	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
+	type TFlightEditSchema
+} from "@/entities/tour";
+
+import { FLIGHT_DESCRIPTION } from "../../model";
 
 interface IDescriptionInfoProps {
-	form: UseFormReturn<TGeneralInfoSchema>;
+	form: UseFormReturn<TFlightEditSchema>;
 }
 
 const DescriptionInfoBase: FC<IDescriptionInfoProps> = ({ form }) => {
@@ -19,7 +24,7 @@ const DescriptionInfoBase: FC<IDescriptionInfoProps> = ({ form }) => {
 				<CustomField
 					key={key}
 					control={form?.control}
-					name={key}
+					name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
 					{...item}
 					t={t}
 				/>

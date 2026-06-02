@@ -5,7 +5,7 @@ import { LanguageToggle, NavMenu, ThemeToggle } from "@/shared/ui";
 
 import { AgencyUserMenu } from "@/features/layout";
 
-import logo from "./../../../../../../public/assets/logo.png";
+import logo from "./../../../../../../public/assets/logo.svg";
 import { NAV_ITEMS_LIST } from "./model";
 
 export const HeaderAgency: FC = () => {

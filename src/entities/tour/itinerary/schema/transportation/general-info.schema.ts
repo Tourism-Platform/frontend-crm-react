@@ -140,7 +140,7 @@ export const GENERAL_INFO_SCHEMA = z.object({
 		// 	message: msg(
 		// 		"form.general.details.form.fields.arrival_time.errors.required"
 		// 	)
-		// }).or(z.literal(""))
+		.or(z.literal(""))
 		.optional(),
 	[ENUM_FORM_TRANSPORTATION.ARRIVAL_TIMEZONE]: z
 		.string({

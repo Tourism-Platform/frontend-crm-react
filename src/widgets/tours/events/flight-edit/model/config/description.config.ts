@@ -1,4 +1,6 @@
-import { ENUM_FORM_FLIGHT, type TForm } from "../types";
+import { ENUM_FORM_FLIGHT } from "@/entities/tour";
+
+import { type TForm } from "../types";
 
 export const FLIGHT_DESCRIPTION: TForm[] = [
 	{

@@ -5,17 +5,18 @@ import { useTranslation } from "react-i18next";
 import { Card, CardContent, CustomField } from "@/shared/ui";
 
 import {
-	BUS_DATA_LIST,
 	ENUM_FLIGHT_TRANSPORT_TYPE,
-	FLY_DATA_LIST,
-	type TGeneralInfoSchema,
-	TRAIN_DATA_LIST
-} from "../../model";
+	ENUM_FORM_FLIGHT,
+	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
+	type TFlightEditSchema
+} from "@/entities/tour";
+
+import { BUS_DATA_LIST, FLY_DATA_LIST, TRAIN_DATA_LIST } from "../../model";
 
 import { FlightMenu } from "./flight-menu";
 
 interface IFlightCardProps {
-	form: UseFormReturn<TGeneralInfoSchema>;
+	form: UseFormReturn<TFlightEditSchema>;
 	onRemove: (index: number) => void;
 	index: number;
 }
@@ -24,12 +25,13 @@ export const FlightCard: FC<IFlightCardProps> = React.memo(
 	({ form, onRemove, index }) => {
 		const { t } = useTranslation("flight_edit_page");
 
-		const transportType = form.watch(`transport_type`);
+		const data = form.watch();
 
 		const dataList =
-			transportType === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN
+			data?.general?.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN
 				? TRAIN_DATA_LIST
-				: transportType === ENUM_FLIGHT_TRANSPORT_TYPE.BUS
+				: data?.general?.transport_type ===
+					  ENUM_FLIGHT_TRANSPORT_TYPE.BUS
 					? BUS_DATA_LIST
 					: FLY_DATA_LIST;
 
@@ -44,7 +46,7 @@ export const FlightCard: FC<IFlightCardProps> = React.memo(
 							<CustomField
 								key={key}
 								control={form?.control}
-								name={`route.${index}.${key}`}
+								name={`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}.${index}.${key}`}
 								t={t}
 								{...item}
 							/>

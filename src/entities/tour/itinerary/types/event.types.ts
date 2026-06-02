@@ -1,6 +1,7 @@
 import type { TAccommodationEditSchema } from "./accommodation";
 import type { TActivityEditSchema } from "./activity";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
+import type { TFlightEditSchema } from "./flight";
 import type { TInfoEditSchema } from "./info";
 import type { TTransportationEditSchema } from "./transportation";
 
@@ -31,12 +32,14 @@ export interface ITourEventUpdate {
 	data: TTourEventUpdate;
 }
 export type TTourEvent =
+	| TFlightEditSchema
 	| TTransportationEditSchema
 	| TInfoEditSchema
 	| TAccommodationEditSchema
 	| TActivityEditSchema;
 
 export type TTourEventUpdate = Partial<
+	| TFlightEditSchema
 	| TTransportationEditSchema
 	| TInfoEditSchema
 	| TAccommodationEditSchema

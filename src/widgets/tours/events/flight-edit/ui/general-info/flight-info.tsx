@@ -12,15 +12,19 @@ import {
 } from "@/shared/ui";
 
 import {
+	ENUM_FLIGHT_TRANSPORT_TYPE,
 	type ENUM_FLIGHT_TRANSPORT_TYPE_TYPE,
-	FLIGHT_TRANSPORT_TYPE_TABS_LIST,
-	type TGeneralInfoSchema
-} from "../../model";
+	ENUM_FORM_FLIGHT,
+	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
+	type TFlightEditSchema
+} from "@/entities/tour";
+
+import { FLIGHT_TRANSPORT_TYPE_TABS_LIST } from "../../model";
 
 import { FlightCard } from "./flight-card";
 
 interface IFlightInfoProps {
-	form: UseFormReturn<TGeneralInfoSchema>;
+	form: UseFormReturn<TFlightEditSchema>;
 }
 
 const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
@@ -28,39 +32,49 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
-		name: "route"
+		name: `${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}`
 	});
 
-	const transportType = form.watch("transport_type");
+	const formState = form.watch();
 
-	const handleAddFlight = () => {
-		append({
-			transport_type: transportType as ENUM_FLIGHT_TRANSPORT_TYPE_TYPE,
-			airline_code: "",
-			flight_number: "",
-			departure_airport_code: "",
-			arrival_airport_code: "",
-			departure_date: null,
-			arrival_date: null,
-			departure_time: null,
-			arrival_time: null,
-			departure_timezone: "",
-			arrival_timezone: "",
-			departure_terminal: "",
-			departure_gate: "",
-			arrival_terminal: "",
-			arrival_gate: ""
-		});
-	};
+	const createEmptySegment = React.useCallback(
+		(
+			transportType: ENUM_FLIGHT_TRANSPORT_TYPE_TYPE | undefined
+		): TFlightEditSchema["general"]["route"][number] => {
+			if (transportType === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN) {
+				return {
+					transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
+					carrier: "",
+					train_number: "",
+					departure_station: "",
+					arrival_station: "",
+					departure_date: null,
+					arrival_date: null,
+					departure_time: null,
+					arrival_time: null,
+					departure_timezone: "",
+					arrival_timezone: ""
+				};
+			}
 
-	const handleTabChange = (value: string) => {
-		const type = value as ENUM_FLIGHT_TRANSPORT_TYPE_TYPE;
-		form.setValue("transport_type", value);
+			if (transportType === ENUM_FLIGHT_TRANSPORT_TYPE.BUS) {
+				return {
+					transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
+					bus_company: "",
+					bus_number: "",
+					departure_point: "",
+					arrival_point: "",
+					departure_date: null,
+					arrival_date: null,
+					departure_time: null,
+					arrival_time: null,
+					departure_timezone: "",
+					arrival_timezone: ""
+				};
+			}
 
-		// При смене табы старый роут удаляется и создается один новый соответствующего типа
-		form.setValue("route", [
-			{
-				transport_type: type,
+			return {
+				transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
 				airline_code: "",
 				flight_number: "",
 				departure_airport_code: "",
@@ -75,8 +89,25 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 				departure_gate: "",
 				arrival_terminal: "",
 				arrival_gate: ""
-			}
-		]);
+			};
+		},
+		[]
+	);
+
+	const handleAddFlight = () => {
+		append(createEmptySegment(formState?.general?.transport_type));
+	};
+
+	const handleTabChange = (value: ENUM_FLIGHT_TRANSPORT_TYPE_TYPE) => {
+		form.setValue(
+			`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.TRANSPORT_TYPE}`,
+			value
+		);
+
+		form.setValue(
+			`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}`,
+			[createEmptySegment(value)]
+		);
 	};
 
 	const handleRemoveFlight = React.useCallback(
@@ -91,8 +122,12 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 			<div className="flex flex-col gap-4">
 				<h2 className="text-xl">{t("general.flights.title")}</h2>
 				<CustomOptionTabs
-					value={transportType}
-					onValueChange={handleTabChange}
+					value={formState?.general?.transport_type}
+					onValueChange={(value) =>
+						handleTabChange(
+							value as ENUM_FLIGHT_TRANSPORT_TYPE_TYPE
+						)
+					}
 				>
 					<CustomOptionTabsList className="grid-cols-3 gap-5">
 						{FLIGHT_TRANSPORT_TYPE_TABS_LIST.map((item) => (
@@ -113,7 +148,6 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 			</div>
 
 			<div className="grid gap-4">
-				{/* {!!fields.length && <FlightPreview />} */}
 				{fields.map((field, index) => (
 					<FlightCard
 						key={field.id}

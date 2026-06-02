@@ -1,36 +1,37 @@
 import { UTC_OPTIONS } from "@/shared/config";
 
-import { ENUM_FORM_FLIGHT, type TForm } from "../types";
+import { ENUM_FORM_BUS } from "@/entities/tour";
+
+import { type TForm } from "../types";
 
 export const BUS_DATA_LIST: TForm[] = [
 	{
-		label: "general.flights.form.bus.fields.airline_code.label",
-		placeholder: "general.flights.form.bus.fields.airline_code.placeholder",
-		key: ENUM_FORM_FLIGHT.AIRLINE_CODE,
+		label: "general.flights.form.bus.fields.bus_company.label",
+		placeholder: "general.flights.form.bus.fields.bus_company.placeholder",
+		key: ENUM_FORM_BUS.BUS_COMPANY,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
-		label: "general.flights.form.bus.fields.flight_number.label",
-		placeholder:
-			"general.flights.form.bus.fields.flight_number.placeholder",
-		key: ENUM_FORM_FLIGHT.FLIGHT_NUMBER,
+		label: "general.flights.form.bus.fields.bus_number.label",
+		placeholder: "general.flights.form.bus.fields.bus_number.placeholder",
+		key: ENUM_FORM_BUS.BUS_NUMBER,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
-		label: "general.flights.form.bus.fields.departure_airport_code.label",
+		label: "general.flights.form.bus.fields.departure_point.label",
 		placeholder:
-			"general.flights.form.bus.fields.departure_airport_code.placeholder",
-		key: ENUM_FORM_FLIGHT.DEPARTURE_AIRPORT_CODE,
+			"general.flights.form.bus.fields.departure_point.placeholder",
+		key: ENUM_FORM_BUS.DEPARTURE_POINT,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
-		label: "general.flights.form.bus.fields.arrival_airport_code.label",
+		label: "general.flights.form.bus.fields.arrival_point.label",
 		placeholder:
-			"general.flights.form.bus.fields.arrival_airport_code.placeholder",
-		key: ENUM_FORM_FLIGHT.ARRIVAL_AIRPORT_CODE,
+			"general.flights.form.bus.fields.arrival_point.placeholder",
+		key: ENUM_FORM_BUS.ARRIVAL_POINT,
 		fieldType: "input",
 		className: "col-span-2"
 	},
@@ -38,28 +39,28 @@ export const BUS_DATA_LIST: TForm[] = [
 		label: "general.flights.form.bus.fields.departure_date.label",
 		placeholder:
 			"general.flights.form.bus.fields.departure_date.placeholder",
-		key: ENUM_FORM_FLIGHT.DEPARTURE_DATE,
+		key: ENUM_FORM_BUS.DEPARTURE_DATE,
 		fieldType: "date",
 		className: "col-span-2"
 	},
 	{
 		label: "general.flights.form.bus.fields.arrival_date.label",
 		placeholder: "general.flights.form.bus.fields.arrival_date.placeholder",
-		key: ENUM_FORM_FLIGHT.ARRIVAL_DATE,
+		key: ENUM_FORM_BUS.ARRIVAL_DATE,
 		fieldType: "date",
 		className: "col-span-2"
 	},
 	{
 		label: "general.flights.form.bus.fields.arrival_time.label",
 		placeholder: "general.flights.form.bus.fields.arrival_time.placeholder",
-		key: ENUM_FORM_FLIGHT.ARRIVAL_TIME,
+		key: ENUM_FORM_BUS.ARRIVAL_TIME,
 		fieldType: "time"
 	},
 	{
 		label: "general.flights.form.bus.fields.arrival_timezone.label",
 		placeholder:
 			"general.flights.form.bus.fields.arrival_timezone.placeholder",
-		key: ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE,
+		key: ENUM_FORM_BUS.ARRIVAL_TIMEZONE,
 		fieldType: "select",
 		options: UTC_OPTIONS
 	},
@@ -67,14 +68,14 @@ export const BUS_DATA_LIST: TForm[] = [
 		label: "general.flights.form.bus.fields.departure_time.label",
 		placeholder:
 			"general.flights.form.bus.fields.departure_time.placeholder",
-		key: ENUM_FORM_FLIGHT.DEPARTURE_TIME,
+		key: ENUM_FORM_BUS.DEPARTURE_TIME,
 		fieldType: "time"
 	},
 	{
 		label: "general.flights.form.bus.fields.departure_timezone.label",
 		placeholder:
 			"general.flights.form.bus.fields.departure_timezone.placeholder",
-		key: ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE,
+		key: ENUM_FORM_BUS.DEPARTURE_TIMEZONE,
 		fieldType: "select",
 		options: UTC_OPTIONS
 	}

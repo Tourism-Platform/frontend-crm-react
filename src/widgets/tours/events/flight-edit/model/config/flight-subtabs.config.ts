@@ -1,9 +1,8 @@
 import { BusIcon, PlaneIcon, TrainIcon } from "@/shared/assets";
 
-import {
-	ENUM_FLIGHT_TRANSPORT_TYPE,
-	type IFlightSubTabs
-} from "../types/flight-subtabs.types";
+import { ENUM_FLIGHT_TRANSPORT_TYPE } from "@/entities/tour";
+
+import type { IFlightSubTabs } from "../types/flight-subtabs.types";
 
 export const FLIGHT_TRANSPORT_TYPE_TABS_LIST: IFlightSubTabs[] = [
 	{

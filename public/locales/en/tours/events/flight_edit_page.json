@@ -9,6 +9,23 @@
 			}
 		}
 	},
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Error while loading data"
+			},
+			"save": {
+				"success": "Successfully saved",
+				"error": "Error while saving"
+			}
+		},
+		"general": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			}
+		}
+	},
 	"tabs": {
 		"general": "General info",
 		"media": "Media",
@@ -35,7 +52,8 @@
 							"errors": {
 								"required": "Airline code is required",
 								"min": "Airline code is too short",
-								"max": "Airline code is too long"
+								"max": "Airline code is too long",
+								"pattern": "Must be 2–3 uppercase letters or numbers"
 							}
 						},
 						"flight_number": {
@@ -54,7 +72,8 @@
 							"errors": {
 								"required": "Departure airport code is required",
 								"length": "Departure airport code must be 3 characters",
-								"invalid": "Invalid IATA airport code"
+								"invalid": "Invalid IATA airport code",
+								"pattern": "Must be 3 uppercase letters"
 							}
 						},
 						"arrival_airport_code": {
@@ -63,7 +82,8 @@
 							"errors": {
 								"required": "Arrival airport code is required",
 								"length": "Arrival airport code must be 3 characters",
-								"invalid": "Invalid IATA airport code"
+								"invalid": "Invalid IATA airport code",
+								"pattern": "Must be 3 uppercase letters"
 							}
 						},
 						"departure_date": {
@@ -150,7 +170,7 @@
 				},
 				"train": {
 					"fields": {
-						"airline_code": {
+						"carrier": {
 							"label": "Carrier",
 							"placeholder": "Enter carrier",
 							"errors": {
@@ -159,7 +179,7 @@
 								"max": "Carrier is too long"
 							}
 						},
-						"flight_number": {
+						"train_number": {
 							"label": "Train number",
 							"placeholder": "Enter train number",
 							"errors": {
@@ -169,7 +189,7 @@
 								"invalid": "Invalid format"
 							}
 						},
-						"departure_airport_code": {
+						"departure_station": {
 							"label": "Departure station",
 							"placeholder": "Enter departure station",
 							"errors": {
@@ -178,13 +198,14 @@
 								"invalid": "Invalid station code"
 							}
 						},
-						"arrival_airport_code": {
+						"arrival_station": {
 							"label": "Arrival station",
 							"placeholder": "Enter arrival station",
 							"errors": {
 								"required": "Arrival station is required",
 								"length": "Station code must be 3 characters",
-								"invalid": "Invalid station code"
+								"invalid": "Invalid station code",
+								"pattern": "Must contain 2–3 uppercase letters or numbers"
 							}
 						},
 						"departure_date": {
@@ -239,7 +260,7 @@
 				},
 				"bus": {
 					"fields": {
-						"airline_code": {
+						"bus_company": {
 							"label": "Bus company",
 							"placeholder": "Enter bus company",
 							"errors": {
@@ -248,7 +269,7 @@
 								"max": "Company name is too long"
 							}
 						},
-						"flight_number": {
+						"bus_number": {
 							"label": "Bus number",
 							"placeholder": "Enter bus number",
 							"errors": {
@@ -258,7 +279,7 @@
 								"invalid": "Invalid format"
 							}
 						},
-						"departure_airport_code": {
+						"departure_point": {
 							"label": "Departure point",
 							"placeholder": "Enter departure point",
 							"errors": {
@@ -267,13 +288,14 @@
 								"invalid": "Invalid point code"
 							}
 						},
-						"arrival_airport_code": {
+						"arrival_point": {
 							"label": "Arrival point",
 							"placeholder": "Enter arrival point",
 							"errors": {
 								"required": "Arrival point is required",
 								"length": "Point code must be 3 characters",
-								"invalid": "Invalid point code"
+								"invalid": "Invalid point code",
+								"pattern": "Must contain 2–3 uppercase letters or numbers"
 							}
 						},
 						"departure_date": {

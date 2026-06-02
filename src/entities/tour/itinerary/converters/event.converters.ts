@@ -4,6 +4,7 @@ import {
 	type ITourEvent,
 	type ITourEventCreate,
 	type ITourEventReorder,
+	type TFlightEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
 	type TTourEventCreateBackend,
@@ -18,12 +19,19 @@ import {
 	mapAccommodationFormToUpdate,
 	mapActivityEventToForm,
 	mapActivityFormToUpdate,
+	mapBusEventToForm,
+	mapFlyEventToForm,
 	mapInfoEventToForm,
 	mapInfoFormToUpdate,
+	mapTrainEventToForm,
 	mapTransferEventToForm,
-	mapTransferFormToUpdate
+	mapTransferFormToUpdate,
+	mapTransportFormToUpdate
 } from "./event";
-import { eventTypeMapper } from "./event-type.converters";
+import {
+	eventTypeMapper,
+	mapBackendTypToEventType
+} from "./event-type.converters";
 
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
@@ -35,8 +43,7 @@ export const mapAllEventsToFrontend = (
 	day: backend.event.day,
 	position: backend.event.position,
 	eventType:
-		eventTypeMapper.from(backend.event.typ as string) ||
-		ENUM_EVENT.TOUR_DETAILS,
+		mapBackendTypToEventType(backend.event.typ) || ENUM_EVENT.TOUR_DETAILS,
 	details: backend.event.details as Record<string, unknown>
 });
 
@@ -57,6 +64,12 @@ export const mapEventToFrontend = (
 	backend: TTourEventBackendResponce
 ): TTourEvent => {
 	switch (backend?.event?.typ) {
+		case "1":
+			return mapFlyEventToForm(backend);
+		case "2":
+			return mapTrainEventToForm(backend);
+		case "3":
+			return mapBusEventToForm(backend);
 		case "4":
 			return mapTransferEventToForm(backend);
 		case "5":
@@ -75,6 +88,8 @@ export const mapEventUpdateToBackend = (
 	type: ENUM_EVENT_TYPE,
 	frontend: TTourEventUpdate
 ): TTourEventUpdateBackend => {
+	if (type === ENUM_EVENT.FLIGHT)
+		return mapTransportFormToUpdate(frontend as TFlightEditSchema);
 	if (type === ENUM_EVENT.TRANSPORTATION)
 		return mapTransferFormToUpdate(frontend);
 	else if (type === ENUM_EVENT.INFO) return mapInfoFormToUpdate(frontend);

@@ -1,13 +1,8 @@
 import type { TTourEventFlightEditPageKeys } from "@/shared/config";
 
-export const ENUM_FLIGHT_TRANSPORT_TYPE = {
-	FLY: "fly",
-	TRAIN: "train",
-	BUS: "bus"
-} as const;
+import type { ENUM_FLIGHT_TRANSPORT_TYPE_TYPE } from "@/entities/tour";
 
-export type ENUM_FLIGHT_TRANSPORT_TYPE_TYPE =
-	(typeof ENUM_FLIGHT_TRANSPORT_TYPE)[keyof typeof ENUM_FLIGHT_TRANSPORT_TYPE];
+export type { ENUM_FLIGHT_TRANSPORT_TYPE_TYPE };
 
 export interface IFlightSubTabs {
 	label: TTourEventFlightEditPageKeys;
