@@ -19,6 +19,7 @@ import {
 
 import {
 	ENUM_EVENT,
+	ENUM_FORM_FLIGHT,
 	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
 	FLIGHT_EDIT_SCHEMA,
 	type TFlightEditSchema,
@@ -71,8 +72,16 @@ export const FlightEdit: FC = () => {
 			const isValid = await form.trigger(section);
 			if (!isValid) return;
 
+			const transportType = form.getValues(
+				`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.TRANSPORT_TYPE}`
+			);
+
 			const sectionData = {
 				[section]: form.getValues(section),
+				...(transportType &&
+					section !== ENUM_FORM_SECTION.GENERAL && {
+						general: { transport_type: transportType }
+					}),
 				[ENUM_FORM_SECTION.NAME]: form.getValues(
 					ENUM_FORM_SECTION.NAME
 				),
@@ -80,7 +89,8 @@ export const FlightEdit: FC = () => {
 				[ENUM_FORM_SECTION.POSITION]: form.getValues(
 					ENUM_FORM_SECTION.POSITION
 				)
-			};
+			} as Partial<TFlightEditSchema>;
+
 			try {
 				await updateTourEvent({
 					tourId,

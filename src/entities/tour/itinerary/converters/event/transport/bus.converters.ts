@@ -1,8 +1,4 @@
-import type {
-	BusEventSchemaOutput,
-	BusEventUpdate,
-	BusHopSchemaInput
-} from "@/shared/api";
+import type { BusEventSchemaOutput } from "@/shared/api";
 
 import type {
 	TBusRouteSegment,
@@ -11,12 +7,13 @@ import type {
 	TTourEventUpdateBackend
 } from "../../../types";
 import { ENUM_FLIGHT_TRANSPORT_TYPE, ENUM_FORM_BUS } from "../../../types";
+import {
+	mapFlightPricingFromBackend,
+	mapFlightPricingToBackend
+} from "../flight-pricing.converters";
 
 import { mapBusHopToSegment, mapBusSegmentToHop } from "./journey.helpers";
-import {
-	buildPartialFlightEditForm,
-	mapEventMetaToForm
-} from "./shared.helpers";
+import { mapEventMetaToForm } from "./shared.helpers";
 
 const createEmptyBusSegment = (): TBusRouteSegment => ({
 	[ENUM_FORM_BUS.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
@@ -51,29 +48,28 @@ export const mapBusEventToForm = (
 			? hops.map(mapBusHopToSegment)
 			: [createEmptyBusSegment()];
 
-	return buildPartialFlightEditForm({
+	return {
 		...mapEventMetaToForm(event),
 		general: {
 			description: event.description ?? "",
 			transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
 			route
-		}
-	});
+		},
+		pricing: mapFlightPricingFromBackend(event.details)
+	};
 };
 
 export const mapBusFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>
 ): TTourEventUpdateBackend => {
 	const g = frontend.general;
-	const busRoute = g?.route.filter(
+	const busRoute = g?.route?.filter(
 		(segment): segment is TBusRouteSegment =>
 			segment.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.BUS
 	);
+	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
 
-	const hop: BusHopSchemaInput[] | undefined =
-		busRoute?.map(mapBusSegmentToHop);
-
-	const update: BusEventUpdate = {
+	return {
 		typ: "3",
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
@@ -82,10 +78,11 @@ export const mapBusFormToUpdate = (
 		}),
 		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		...(g?.description !== undefined && { description: g.description }),
-		...(hop?.length && {
-			details: { hop }
-		})
+		details: {
+			...(busRoute?.length && {
+				hop: busRoute.map(mapBusSegmentToHop)
+			}),
+			...pricingDetails.details
+		}
 	};
-
-	return update;
 };

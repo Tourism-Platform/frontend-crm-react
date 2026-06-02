@@ -24,6 +24,107 @@
 				"save": "Сохранить",
 				"saving": "Сохранение ..."
 			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Сохранить"
+			},
+			"title": "Ценообразование",
+			"invoicing": {
+				"title": "Как будет выставляться счёт за этот рейс?",
+				"tabs": {
+					"individual": "Отдельно",
+					"part_of_package": "В составе пакета"
+				}
+			},
+			"pricing_type": {
+				"title": "Как рассчитывается стоимость этого рейса?",
+				"tabs": {
+					"flat_rate": "Фиксированная цена",
+					"per_person": "За человека"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Детали стоимости",
+					"fields": {
+						"total_price": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Стоимость должна быть не менее 1",
+								"max": "Стоимость не должна превышать 10000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
+						"taxes_and_fees": {
+							"label": "Налоги и сборы",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Налоги должны быть не менее 1",
+								"max": "Налоги не должны превышать 100"
+							}
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Налоги и сборы за человека",
+							"placeholder": "Введите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Валюта обязательна",
+								"max": "Код валюты слишком длинный"
+							}
+						}
+					}
+				},
+				"booking_details": {
+					"title": "Детали бронирования",
+					"fields": {
+						"supplier": {
+							"label": "Выберите поставщика, через которого будет выполнено бронирование",
+							"placeholder": "Введите..."
+						},
+						"client_selection": {
+							"label": "Выбор клиента",
+							"description": "Предложите этот рейс как дополнительную опцию, чтобы клиенты могли самостоятельно выбрать его."
+						}
+					},
+					"buttons": {
+						"make_optional": "Сделать необязательной"
+					}
+				},
+				"commissions": {
+					"title": "Комиссии",
+					"description": "Комиссии не отображаются клиентам",
+					"fields": {
+						"total_expected": {
+							"label": "Ожидаемая сумма",
+							"placeholder": "Рассчитывается автоматически..."
+						},
+						"commission_type": {
+							"label": "Тип комиссии",
+							"placeholder": "Выберите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите..."
+						}
+					}
+				},
+				"package": {
+					"title": "Тип пакета",
+					"fields": {
+						"package": {
+							"label": "Тип"
+						}
+					}
+				}
+			}
 		}
 	},
 	"tabs": {

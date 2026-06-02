@@ -24,6 +24,107 @@
 				"save": "Save",
 				"saving": "Saving ..."
 			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Save"
+			},
+			"title": "Pricing",
+			"invoicing": {
+				"title": "How will this flight be invoiced?",
+				"tabs": {
+					"individual": "Individual",
+					"part_of_package": "Part of package"
+				}
+			},
+			"pricing_type": {
+				"title": "How is this flight priced?",
+				"tabs": {
+					"flat_rate": "Flat rate",
+					"per_person": "Per person"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Pricing details",
+					"fields": {
+						"total_price": {
+							"label": "Total cost",
+							"placeholder": "Enter...",
+							"errors": {
+								"min": "Price must be at least 1",
+								"max": "Price must not exceed 10000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Total cost per person",
+							"placeholder": "Enter..."
+						},
+						"taxes_and_fees": {
+							"label": "Taxes & Fees",
+							"placeholder": "Enter...",
+							"errors": {
+								"min": "Taxes must be at least 1",
+								"max": "Taxes must not exceed 100"
+							}
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Taxes & Fees per person",
+							"placeholder": "Enter..."
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose",
+							"errors": {
+								"required": "Currency is required",
+								"max": "Currency code is too long"
+							}
+						}
+					}
+				},
+				"booking_details": {
+					"title": "Booking details",
+					"fields": {
+						"supplier": {
+							"label": "Select the supplier you'll book through",
+							"placeholder": "Enter..."
+						},
+						"client_selection": {
+							"label": "Client selection",
+							"description": "Propose as an optional add-on to allow your clients to opt-in to this flight."
+						}
+					},
+					"buttons": {
+						"make_optional": "Make optional"
+					}
+				},
+				"commissions": {
+					"title": "Commissions",
+					"description": "Commissions are not visible for clients",
+					"fields": {
+						"total_expected": {
+							"label": "Total expected",
+							"placeholder": "Automatically calculated..."
+						},
+						"commission_type": {
+							"label": "Commission type",
+							"placeholder": "Choose..."
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose..."
+						}
+					}
+				},
+				"package": {
+					"title": "Package type",
+					"fields": {
+						"package": {
+							"label": "Type"
+						}
+					}
+				}
+			}
 		}
 	},
 	"tabs": {

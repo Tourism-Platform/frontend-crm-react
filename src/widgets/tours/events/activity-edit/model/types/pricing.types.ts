@@ -1,6 +1,7 @@
 import type React from "react";
 
 import type { TTourActivityEditPageKeys } from "@/shared/config";
+import type { TFormField } from "@/shared/types";
 
 import {
 	ENUM_ACTIVITY_PRICING_INVOICING,
@@ -21,7 +22,13 @@ export interface IActivityPricingTab<TProps> {
 	slot: React.ComponentType<TProps>;
 }
 
+export type TActivityPricingFormField = TFormField<
+	TTourActivityEditPageKeys,
+	string
+>;
+
 export interface IActivityIndividualPricingTab {
 	label: TTourActivityEditPageKeys;
 	type: ENUM_ACTIVITY_PRICING_TYPE_TYPE;
+	priceDetailsList: TActivityPricingFormField[];
 }

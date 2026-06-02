@@ -1,8 +1,4 @@
-import type {
-	TrainEventSchemaOutput,
-	TrainEventUpdate,
-	TrainHopSchemaInput
-} from "@/shared/api";
+import type { TrainEventSchemaOutput } from "@/shared/api";
 
 import type {
 	TFlightEditSchema,
@@ -11,12 +7,13 @@ import type {
 	TTrainRouteSegment
 } from "../../../types";
 import { ENUM_FLIGHT_TRANSPORT_TYPE, ENUM_FORM_TRAIN } from "../../../types";
+import {
+	mapFlightPricingFromBackend,
+	mapFlightPricingToBackend
+} from "../flight-pricing.converters";
 
 import { mapTrainHopToSegment, mapTrainSegmentToHop } from "./journey.helpers";
-import {
-	buildPartialFlightEditForm,
-	mapEventMetaToForm
-} from "./shared.helpers";
+import { mapEventMetaToForm } from "./shared.helpers";
 
 const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 	[ENUM_FORM_TRAIN.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
@@ -53,29 +50,28 @@ export const mapTrainEventToForm = (
 			? hops.map(mapTrainHopToSegment)
 			: [createEmptyTrainSegment()];
 
-	return buildPartialFlightEditForm({
+	return {
 		...mapEventMetaToForm(event),
 		general: {
 			description: event.description ?? "",
 			transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
 			route
-		}
-	});
+		},
+		pricing: mapFlightPricingFromBackend(event.details)
+	};
 };
 
 export const mapTrainFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>
 ): TTourEventUpdateBackend => {
 	const g = frontend.general;
-	const trainRoute = g?.route.filter(
+	const trainRoute = g?.route?.filter(
 		(segment): segment is TTrainRouteSegment =>
 			segment.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN
 	);
+	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
 
-	const hop: TrainHopSchemaInput[] | undefined =
-		trainRoute?.map(mapTrainSegmentToHop);
-
-	const update: TrainEventUpdate = {
+	return {
 		typ: "2",
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
@@ -84,10 +80,11 @@ export const mapTrainFormToUpdate = (
 		}),
 		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		...(g?.description !== undefined && { description: g.description }),
-		...(hop?.length && {
-			details: { hop }
-		})
+		details: {
+			...(trainRoute?.length && {
+				hop: trainRoute.map(mapTrainSegmentToHop)
+			}),
+			...pricingDetails.details
+		}
 	};
-
-	return update;
 };

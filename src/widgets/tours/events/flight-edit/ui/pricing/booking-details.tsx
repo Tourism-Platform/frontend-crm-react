@@ -1,0 +1,57 @@
+import { type FC } from "react";
+import { useTranslation } from "react-i18next";
+
+import { cn } from "@/shared/lib";
+import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
+
+import type { ISlotProps } from "../../model/types";
+
+interface IBookingDetailsProps extends Pick<ISlotProps, "form"> {
+	className?: string;
+}
+
+const BookingDetailsBase: FC<IBookingDetailsProps> = ({ form, className }) => {
+	const { t } = useTranslation("flight_edit_page");
+
+	return (
+		<div className={cn("grid gap-1 mb-12", className)}>
+			<h3 className="text-lg">
+				{t("form.pricing.form.booking_details.title")}
+			</h3>
+			<div>
+				<CustomField
+					control={form?.control}
+					name="search"
+					t={t}
+					label={t(
+						"form.pricing.form.booking_details.fields.supplier.label"
+					)}
+					placeholder={t(
+						"form.pricing.form.booking_details.fields.supplier.placeholder"
+					)}
+				/>
+			</div>
+			<div className="flex items-center justify-between">
+				<div className="grid text-sm">
+					<p>
+						{t(
+							"form.pricing.form.booking_details.fields.client_selection.label"
+						)}
+					</p>
+					<span className="text-muted-foreground">
+						{t(
+							"form.pricing.form.booking_details.fields.client_selection.description"
+						)}
+					</span>
+				</div>
+				<Button variant={"outline"}>
+					{t(
+						"form.pricing.form.booking_details.buttons.make_optional"
+					)}
+				</Button>
+			</div>
+		</div>
+	);
+};
+
+export const BookingDetails = withErrorBoundary(BookingDetailsBase);

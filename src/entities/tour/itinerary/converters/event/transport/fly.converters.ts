@@ -1,6 +1,5 @@
 import type {
 	FlightEventSchemaOutput,
-	FlightEventUpdate,
 	FlightHopDetailsSchemaInput,
 	FlightHopDetailsSchemaOutput
 } from "@/shared/api";
@@ -12,11 +11,12 @@ import type {
 	TTourEventUpdateBackend
 } from "../../../types";
 import { ENUM_FLIGHT_TRANSPORT_TYPE, ENUM_FORM_FLIGHT } from "../../../types";
-
 import {
-	buildPartialFlightEditForm,
-	mapEventMetaToForm
-} from "./shared.helpers";
+	mapFlightPricingFromBackend,
+	mapFlightPricingToBackend
+} from "../flight-pricing.converters";
+
+import { mapEventMetaToForm } from "./shared.helpers";
 
 const createEmptyFlySegment = (): TFlyRouteSegment => ({
 	[ENUM_FORM_FLIGHT.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
@@ -118,26 +118,28 @@ export const mapFlyEventToForm = (
 			? hops.map(mapHopToFlySegment)
 			: [createEmptyFlySegment()];
 
-	return buildPartialFlightEditForm({
+	return {
 		...mapEventMetaToForm(event),
 		general: {
 			description: event.description ?? "",
 			transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
 			route
-		}
-	});
+		},
+		pricing: mapFlightPricingFromBackend(event.details)
+	};
 };
 
 export const mapFlyFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>
 ): TTourEventUpdateBackend => {
 	const g = frontend.general;
-	const flyRoute = g?.route.filter(
+	const flyRoute = g?.route?.filter(
 		(segment): segment is TFlyRouteSegment =>
 			segment.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.FLY
 	);
+	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
 
-	const update: FlightEventUpdate = {
+	return {
 		typ: "1",
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
@@ -146,12 +148,11 @@ export const mapFlyFormToUpdate = (
 		}),
 		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		...(g?.description !== undefined && { description: g.description }),
-		...(flyRoute?.length && {
-			details: {
+		details: {
+			...(flyRoute?.length && {
 				hop: flyRoute.map(mapFlySegmentToHop)
-			}
-		})
+			}),
+			...pricingDetails.details
+		}
 	};
-
-	return update;
 };

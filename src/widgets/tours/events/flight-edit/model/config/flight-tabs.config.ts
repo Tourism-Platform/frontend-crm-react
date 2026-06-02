@@ -1,7 +1,7 @@
 import { ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION } from "@/entities/tour";
 
-import { Media, Pricing } from "../../../ui";
-import { GeneralInfo } from "../../ui";
+import { Media } from "../../../ui";
+import { GeneralInfo, Pricing } from "../../ui";
 import { ENUM_FLIGHT_EDIT_TAB, type IFlightEditTabs } from "../types";
 
 export const FLIGHT_EDIT_TABS_LIST: IFlightEditTabs[] = [
@@ -21,7 +21,6 @@ export const FLIGHT_EDIT_TABS_LIST: IFlightEditTabs[] = [
 		label: "tabs.pricing",
 		type: ENUM_FLIGHT_EDIT_TAB.PRICING,
 		slot: Pricing,
-		section: ENUM_FORM_SECTION.PRICING,
-		ns: "flight_edit_page"
+		section: ENUM_FORM_SECTION.PRICING
 	}
 ];

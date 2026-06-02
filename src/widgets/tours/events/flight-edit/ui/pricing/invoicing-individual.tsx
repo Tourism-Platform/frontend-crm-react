@@ -11,8 +11,8 @@ import {
 } from "@/shared/ui";
 
 import {
-	ENUM_ACTIVITY_PRICING_FIELD,
-	ENUM_ACTIVITY_PRICING_TYPE
+	ENUM_FLIGHT_PRICING_FIELD,
+	ENUM_FLIGHT_PRICING_TYPE
 } from "@/entities/tour";
 
 import {
@@ -24,7 +24,7 @@ import {
 // import { BookingDetails } from "./booking-details";
 
 const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
-	const { t } = useTranslation("activity_edit_page");
+	const { t } = useTranslation("flight_edit_page");
 
 	return (
 		<div className="grid gap-5">
@@ -35,13 +35,13 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 				<CustomOptionTabs
 					defaultValue={
 						form.getValues(
-							`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACTIVITY_PRICING_FIELD.PRICING_TYPE}`
-						) ?? ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE
+							`${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.PRICING_TYPE}`
+						) ?? ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE
 					}
 					onValueChange={(val) =>
 						form.setValue(
-							`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACTIVITY_PRICING_FIELD.PRICING_TYPE}`,
-							val as typeof ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE
+							`${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.PRICING_TYPE}`,
+							val as typeof ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE
 						)
 					}
 				>
