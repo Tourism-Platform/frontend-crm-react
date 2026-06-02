@@ -8,7 +8,7 @@ import { Button } from "@/shared/ui";
 
 import {
 	ENUM_TOUR_STATUS,
-	useArchiveTourMutation,
+	// useArchiveTourMutation,
 	useGetTourGeneralQuery,
 	usePublishTourMutation
 } from "@/entities/tour";
@@ -25,13 +25,13 @@ export const PublishTourButton: FC = () => {
 
 	const [publishTour, { isLoading: isPublishLoading }] =
 		usePublishTourMutation();
-	const [archiveTour, { isLoading: isArchiveLoading }] =
-		useArchiveTourMutation();
+	// const [archiveTour, { isLoading: isArchiveLoading }] =
+	// 	useArchiveTourMutation();
 
 	const isPublished = tour?.status === ENUM_TOUR_STATUS.PUBLISHED;
 
 	const { action, label, loadingLabel, tostMessage } = {
-		action: isPublished ? archiveTour : publishTour,
+		action: isPublished ? publishTour : publishTour,
 		label: isPublished ? t("actions.archive") : t("actions.publish"),
 		loadingLabel: isPublished
 			? t("actions.archiving")
@@ -54,7 +54,7 @@ export const PublishTourButton: FC = () => {
 			toast.error(tostMessage.error);
 		}
 	};
-	const isLoading = isPublishLoading || isArchiveLoading || isTourLoading;
+	const isLoading = isPublishLoading || isPublishLoading || isTourLoading;
 
 	return (
 		<Button onClick={handlePublish} disabled={isLoading}>
