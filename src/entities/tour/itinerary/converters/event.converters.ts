@@ -4,6 +4,8 @@ import {
 	type ITourEvent,
 	type ITourEventCreate,
 	type ITourEventReorder,
+	type TAccommodationEditSchema,
+	type TActivityEditSchema,
 	type TFlightEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
@@ -90,13 +92,15 @@ export const mapEventUpdateToBackend = (
 ): TTourEventUpdateBackend => {
 	if (type === ENUM_EVENT.FLIGHT)
 		return mapTransportFormToUpdate(frontend as TFlightEditSchema);
-	if (type === ENUM_EVENT.TRANSPORTATION)
-		return mapTransferFormToUpdate(frontend);
+	else if (type === ENUM_EVENT.TRANSPORTATION)
+		return mapTransferFormToUpdate(frontend as TTransportationEditSchema);
 	else if (type === ENUM_EVENT.INFO) return mapInfoFormToUpdate(frontend);
 	else if (type === ENUM_EVENT.ACCOMMODATION)
-		return mapAccommodationFormToUpdate(frontend);
+		return mapAccommodationFormToUpdate(
+			frontend as TAccommodationEditSchema
+		);
 	else if (type === ENUM_EVENT.ACTIVITY)
-		return mapActivityFormToUpdate(frontend);
+		return mapActivityFormToUpdate(frontend as TActivityEditSchema);
 
 	return {
 		name: frontend.name

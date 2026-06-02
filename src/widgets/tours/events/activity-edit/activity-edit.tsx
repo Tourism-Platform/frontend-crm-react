@@ -19,9 +19,9 @@ import {
 } from "@/shared/ui";
 
 import {
+	ACTIVITY_EDIT_SCHEMA,
 	ENUM_EVENT,
-	TRANSPORTATION_EDIT_SCHEMA,
-	type TTransportationEditSchema,
+	type TActivityEditSchema,
 	useGetTourEventQuery,
 	useUpdateTourEventMutation
 } from "@/entities/tour";
@@ -53,8 +53,8 @@ const ActivityEditBase: FC = () => {
 	const [updateTourEvent, { isLoading: isUpdateLoading }] =
 		useUpdateTourEventMutation();
 
-	const form = useForm<TTransportationEditSchema>({
-		resolver: zodResolver(TRANSPORTATION_EDIT_SCHEMA),
+	const form = useForm<TActivityEditSchema>({
+		resolver: zodResolver(ACTIVITY_EDIT_SCHEMA),
 		mode: "onSubmit"
 	});
 

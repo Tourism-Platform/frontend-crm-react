@@ -1,7 +1,10 @@
 import type { TTourActivityEditPageKeys } from "@/shared/config";
 import type { TFormField } from "@/shared/types";
 
-import type { ENUM_FORM_ACTIVITY_TYPE } from "@/entities/tour";
+import type {
+	ENUM_ACTIVITY_PRICING_FIELD_TYPE,
+	ENUM_FORM_ACTIVITY_TYPE
+} from "@/entities/tour";
 
 export const ENUM_FORM_SECTION = {
 	GENERAL: "general",
@@ -16,5 +19,5 @@ export type ENUM_FORM_SECTION_TYPE =
 
 export type TForm = TFormField<
 	TTourActivityEditPageKeys,
-	ENUM_FORM_ACTIVITY_TYPE
+	ENUM_FORM_ACTIVITY_TYPE | ENUM_ACTIVITY_PRICING_FIELD_TYPE
 >;

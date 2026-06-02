@@ -131,6 +131,10 @@
 								"max": "Стоимость не должна превышать 10000"
 							}
 						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
 						"taxes_and_fees": {
 							"label": "Налоги и сборы",
 							"placeholder": "Введите...",
@@ -139,9 +143,17 @@
 								"max": "Налоги не должны превышать 100"
 							}
 						},
+						"taxes_and_fees_per_person": {
+							"label": "Налоги и сборы за человека",
+							"placeholder": "Введите..."
+						},
 						"currency": {
 							"label": "Валюта",
-							"placeholder": "Выберите"
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Валюта обязательна",
+								"max": "Код валюты слишком длинный"
+							}
 						}
 					}
 				},
@@ -180,9 +192,10 @@
 					}
 				},
 				"package": {
+					"title": "Тип пакета",
 					"fields": {
 						"package": {
-							"label": "Тип пакета"
+							"label": "Тип"
 						}
 					}
 				}

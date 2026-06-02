@@ -1,5 +1,5 @@
-import { Media, Pricing } from "../../../ui";
-import { GeneralInfo } from "../../ui";
+import { Media } from "../../../ui";
+import { GeneralInfo, Pricing } from "../../ui";
 import {
 	ENUM_ACTIVITY_EDIT_TAB,
 	ENUM_FORM_SECTION,
@@ -23,7 +23,6 @@ export const EVENT_EDIT_TABS_LIST: IActivityEditTabs[] = [
 		label: "tabs.pricing",
 		type: ENUM_ACTIVITY_EDIT_TAB.PRICING,
 		slot: Pricing,
-		section: ENUM_FORM_SECTION.PRICING,
-		ns: "activity_edit_page"
+		section: ENUM_FORM_SECTION.PRICING
 	}
 ];

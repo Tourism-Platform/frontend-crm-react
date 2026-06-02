@@ -1,4 +1,4 @@
-import type { InformationEventSchemaOutput } from "@/shared/api";
+import type { InformationEventSchema } from "@/shared/api";
 
 import {
 	type TInfoEditSchema,
@@ -9,7 +9,7 @@ import {
 export const mapInfoEventToForm = (
 	data: TTourEventBackendResponce
 ): TInfoEditSchema => {
-	const event = data?.event as InformationEventSchemaOutput;
+	const event = data?.event as InformationEventSchema;
 	return {
 		name: event?.name || "",
 		day: event.day,

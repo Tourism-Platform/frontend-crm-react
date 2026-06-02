@@ -323,6 +323,21 @@ export interface ActivityDetailsSchemaInput {
 				  } & PerPersonExpenseInput)
 		  )
 		| null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** ActivityDetailsSchema */
@@ -350,6 +365,21 @@ export interface ActivityDetailsSchemaOutput {
 				| ({
 						typ: "per_person";
 				  } & PerPersonExpenseOutput)
+		  )
+		| null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
 		  )
 		| null;
 }
@@ -404,21 +434,8 @@ export interface ActivityEventSchemaInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -451,21 +468,8 @@ export interface ActivityEventSchemaOutput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -498,21 +502,8 @@ export interface ActivityEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Typ
 	 * @default "6"
@@ -664,7 +655,7 @@ export interface AnyEventWithCostInput {
 				  } & ActivityEventSchemaInput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchemaInput)
+				  } & InformationEventSchema)
 		  )
 		| MultipleOptionEventInput;
 	cost: TourMinMaxCostSchemaInput;
@@ -696,7 +687,7 @@ export interface AnyEventWithCostOutput {
 				  } & ActivityEventSchemaOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchemaOutput)
+				  } & InformationEventSchema)
 		  )
 		| MultipleOptionEventOutput;
 	cost: TourMinMaxCostSchemaOutput;
@@ -1097,12 +1088,70 @@ export interface BusDetailPubSchemaOutput {
 export interface BusDetailSchemaInput {
 	/** Hop */
 	hop?: BusHopSchemaInput[] | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseInput)
+		  )
+		| null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** BusDetailSchema */
 export interface BusDetailSchemaOutput {
 	/** Hop */
 	hop?: BusHopSchemaOutput[] | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseOutput)
+		  )
+		| null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** BusEventPubRead */
@@ -1155,21 +1204,8 @@ export interface BusEventSchemaInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -1202,21 +1238,8 @@ export interface BusEventSchemaOutput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -1249,21 +1272,8 @@ export interface BusEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Typ
 	 * @default "3"
@@ -1297,20 +1307,6 @@ export interface BusHopSchemaInput {
 	departure?: BusJourneyPointSchemaInput | null;
 	/** Details of the arrival. */
 	arrival?: BusJourneyPointSchemaInput | null;
-	/**
-	 * Expenses
-	 * The expense calculation strategy.
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
 }
 
 /**
@@ -1322,20 +1318,6 @@ export interface BusHopSchemaOutput {
 	departure?: BusJourneyPointSchemaOutput | null;
 	/** Details of the arrival. */
 	arrival?: BusJourneyPointSchemaOutput | null;
-	/**
-	 * Expenses
-	 * The expense calculation strategy.
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonExpenseOutput)
-		  )
-		| null;
 }
 
 /**
@@ -1626,12 +1608,70 @@ export interface FlightDetailsPubSchemaOutput {
 export interface FlightDetailsSchemaInput {
 	/** Hop */
 	hop?: FlightHopDetailsSchemaInput[] | null;
+	/**
+	 * Expenses
+	 * Expenses strategy for this event
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseInput)
+		  )
+		| null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** FlightDetailsSchema */
 export interface FlightDetailsSchemaOutput {
 	/** Hop */
 	hop?: FlightHopDetailsSchemaOutput[] | null;
+	/**
+	 * Expenses
+	 * Expenses strategy for this event
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseOutput)
+		  )
+		| null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** FlightEventPubRead */
@@ -1684,21 +1724,8 @@ export interface FlightEventSchemaInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -1731,21 +1758,8 @@ export interface FlightEventSchemaOutput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -1778,21 +1792,8 @@ export interface FlightEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Typ
 	 * @default "1"
@@ -1862,20 +1863,6 @@ export interface FlightHopDetailsSchemaInput {
 	 * List of amenities available on this flight.
 	 */
 	amenities?: AmenitiesTypes[] | null;
-	/**
-	 * Expenses
-	 * Expenses strategy for this event
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
 }
 
 /** FlightHopDetailsSchema */
@@ -1939,20 +1926,6 @@ export interface FlightHopDetailsSchemaOutput {
 	 * List of amenities available on this flight.
 	 */
 	amenities?: AmenitiesTypes[] | null;
-	/**
-	 * Expenses
-	 * Expenses strategy for this event
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonExpenseOutput)
-		  )
-		| null;
 }
 
 /** FlightHopPubSchema */
@@ -2281,21 +2254,8 @@ export interface HousingEventSchemaInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2328,21 +2288,8 @@ export interface HousingEventSchemaOutput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2375,21 +2322,8 @@ export interface HousingEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Typ
 	 * @default "5"
@@ -2435,6 +2369,21 @@ export interface HousingRoomCategorySchemaInput {
 	name?: string | null;
 	/** Expenses for this car of this category. */
 	expenses?: FixedExpenseInput | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** HousingRoomCategorySchema */
@@ -2446,6 +2395,21 @@ export interface HousingRoomCategorySchemaOutput {
 	name?: string | null;
 	/** Expenses for this car of this category. */
 	expenses?: FixedExpenseOutput | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** HousingRoomExpensesSchema */
@@ -2459,6 +2423,21 @@ export interface HousingRoomExpensesSchemaInput {
 	 */
 	description?: string | null;
 	expenses?: FixedExpenseInput | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** HousingRoomExpensesSchema */
@@ -2472,6 +2451,21 @@ export interface HousingRoomExpensesSchemaOutput {
 	 */
 	description?: string | null;
 	expenses?: FixedExpenseOutput | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** InformationEventPubRead */
@@ -2494,7 +2488,7 @@ export interface InformationEventPubRead {
 }
 
 /** InformationEventSchema */
-export interface InformationEventSchemaInput {
+export interface InformationEventSchema {
 	/**
 	 * Name
 	 * Event's name
@@ -2507,68 +2501,8 @@ export interface InformationEventSchemaInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "7"
-	 */
-	typ?: "7";
-	details?: EmptyDetails | null;
-}
-
-/** InformationEventSchema */
-export interface InformationEventSchemaOutput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2601,21 +2535,8 @@ export interface InformationEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Typ
 	 * @default "7"
@@ -2938,21 +2859,8 @@ export interface MultipleOptionEventInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2988,7 +2896,7 @@ export interface MultipleOptionEventInput {
 				  } & ActivityEventSchemaInput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchemaInput)
+				  } & InformationEventSchema)
 		  )[]
 		| null;
 }
@@ -3007,21 +2915,8 @@ export interface MultipleOptionEventOutput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -3057,7 +2952,7 @@ export interface MultipleOptionEventOutput {
 				  } & ActivityEventSchemaOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchemaOutput)
+				  } & InformationEventSchema)
 		  )[]
 		| null;
 }
@@ -3158,21 +3053,8 @@ export interface MultipleOptionEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/** Typ */
 	typ: "8";
 	/** Details */
@@ -3501,6 +3383,77 @@ export interface OperatorPreviewPubSchema {
 	logo_url: string | null;
 }
 
+/** PackageCreate */
+export interface PackageCreate {
+	/** Name */
+	name: string;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseInput)
+		| ({
+				typ: "per_person";
+		  } & PerPersonExpenseInput);
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+}
+
+/** PackageUpdate */
+export interface PackageUpdate {
+	/** Name */
+	name?: string | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseInput)
+		  )
+		| null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+}
+
 /** PasswordChangeIn */
 export interface PasswordChangeIn {
 	/**
@@ -3603,10 +3556,7 @@ export interface PaymentRouteUpdate {
 		| null;
 }
 
-/**
- * PerCarCategoryExpense
- * Represents a transfer journey with departure and arrival details.
- */
+/** PerCarCategoryExpense */
 export interface PerCarCategoryExpenseInput {
 	/** Typ */
 	typ: "per_car_category";
@@ -3617,10 +3567,7 @@ export interface PerCarCategoryExpenseInput {
 	cars?: TransferCarCategoriesVariantInput[] | null;
 }
 
-/**
- * PerCarCategoryExpense
- * Represents a transfer journey with departure and arrival details.
- */
+/** PerCarCategoryExpense */
 export interface PerCarCategoryExpenseOutput {
 	/** Typ */
 	typ: "per_car_category";
@@ -3631,10 +3578,7 @@ export interface PerCarCategoryExpenseOutput {
 	cars?: TransferCarCategoriesVariantOutput[] | null;
 }
 
-/**
- * PerCarExpense
- * Represents a transfer journey with departure and arrival details.
- */
+/** PerCarExpense */
 export interface PerCarExpenseInput {
 	/** Typ */
 	typ: "per_car";
@@ -3645,10 +3589,7 @@ export interface PerCarExpenseInput {
 	cars?: TransferCarVariantInput[] | null;
 }
 
-/**
- * PerCarExpense
- * Represents a transfer journey with departure and arrival details.
- */
+/** PerCarExpense */
 export interface PerCarExpenseOutput {
 	/** Typ */
 	typ: "per_car";
@@ -4225,7 +4166,7 @@ export interface TourEventResponse {
 				  } & ActivityEventSchemaOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchemaOutput)
+				  } & InformationEventSchema)
 		  )
 		| MultipleOptionEventOutput;
 	/** Image Paths */
@@ -4600,6 +4541,50 @@ export interface TourOptionUpdateSchema {
 	name?: string | null;
 }
 
+/** TourPackageModel */
+export interface TourPackageModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/** Supplier Id */
+	supplier_id: string | null;
+	/** Name */
+	name: string;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseOutput)
+		| ({
+				typ: "per_person";
+		  } & PerPersonExpenseOutput);
+	fees: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
 /** TourScheduleModel */
 export interface TourScheduleModel {
 	/**
@@ -4650,12 +4635,70 @@ export interface TrainDetailPubSchemaOutput {
 export interface TrainDetailSchemaInput {
 	/** Hop */
 	hop?: TrainHopSchemaInput[] | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseInput)
+		  )
+		| null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** TrainDetailSchema */
 export interface TrainDetailSchemaOutput {
 	/** Hop */
 	hop?: TrainHopSchemaOutput[] | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseOutput)
+		  )
+		| null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** TrainEventPubRead */
@@ -4708,21 +4751,8 @@ export interface TrainEventSchemaInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -4755,21 +4785,8 @@ export interface TrainEventSchemaOutput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -4802,21 +4819,8 @@ export interface TrainEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Typ
 	 * @default "2"
@@ -4850,20 +4854,6 @@ export interface TrainHopSchemaInput {
 	departure?: TrainJourneyPointSchemaInput | null;
 	/** Details of the arrival. */
 	arrival?: TrainJourneyPointSchemaInput | null;
-	/**
-	 * Expenses
-	 * The expense calculation strategy.
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
 }
 
 /**
@@ -4875,20 +4865,6 @@ export interface TrainHopSchemaOutput {
 	departure?: TrainJourneyPointSchemaOutput | null;
 	/** Details of the arrival. */
 	arrival?: TrainJourneyPointSchemaOutput | null;
-	/**
-	 * Expenses
-	 * The expense calculation strategy.
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonExpenseOutput)
-		  )
-		| null;
 }
 
 /**
@@ -4963,6 +4939,21 @@ export interface TransferCarPackageCategorySchemaInput {
 	name?: string | null;
 	/** Expenses for this car of this category. */
 	expenses?: FixedExpenseInput | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /**
@@ -4977,6 +4968,21 @@ export interface TransferCarPackageCategorySchemaOutput {
 	name?: string | null;
 	/** Expenses for this car of this category. */
 	expenses?: FixedExpenseOutput | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** TransferCarVariant */
@@ -4990,6 +4996,21 @@ export interface TransferCarVariantInput {
 	 */
 	description?: string | null;
 	expenses?: FixedExpenseInput | null;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** TransferCarVariant */
@@ -5003,6 +5024,21 @@ export interface TransferCarVariantOutput {
 	 */
 	description?: string | null;
 	expenses?: FixedExpenseOutput | null;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** TransferDetailsPubSchema */
@@ -5131,21 +5167,8 @@ export interface TransferEventSchemaInput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -5178,21 +5201,8 @@ export interface TransferEventSchemaOutput {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -5225,21 +5235,8 @@ export interface TransferEventUpdate {
 	description?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Package Id */
+	package_id?: string | null;
 	/**
 	 * Typ
 	 * @default "4"
@@ -5645,7 +5642,7 @@ export type CreateEventTourTourIdOptionIdEventPostPayload =
 			  } & ActivityEventSchemaInput)
 			| ({
 					typ: "7";
-			  } & InformationEventSchemaInput)
+			  } & InformationEventSchema)
 	  )
 	| MultipleOptionEventInput;
 
@@ -6212,6 +6209,86 @@ export interface ListAgencyCatalogTourCatalogAgencyGetParams {
 	 * @default 10
 	 */
 	limit?: number;
+}
+
+export interface CreatePackageTourTourIdOptionIdPackagePostParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ListPackagesTourTourIdOptionIdPackageGetParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetPackageTourTourIdOptionIdPackagePackageIdGetParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Package Id
+	 * @format uuid
+	 */
+	packageId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UpdatePackageTourTourIdOptionIdPackagePackageIdPatchParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Package Id
+	 * @format uuid
+	 */
+	packageId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface DeletePackageTourTourIdOptionIdPackagePackageIdDeleteParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Package Id
+	 * @format uuid
+	 */
+	packageId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
 }
 
 export interface ListFilesOperatorMeFilesGetParams {

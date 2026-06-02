@@ -6,6 +6,10 @@ import {
 	type TTourEventUpdateBackend
 } from "../../types";
 
+import {
+	mapActivityPricingFromBackend,
+	mapActivityPricingToBackend
+} from "./activity-pricing.converters";
 import { activityTypeMapper } from "./activity-type.converters";
 
 export const mapActivityEventToForm = (
@@ -27,7 +31,8 @@ export const mapActivityEventToForm = (
 			activity_end_timezone: String(
 				event.details?.end_time?.timezone || ""
 			)
-		}
+		},
+		pricing: mapActivityPricingFromBackend(event.details)
 	};
 };
 
@@ -35,6 +40,8 @@ export const mapActivityFormToUpdate = (
 	frontend: Partial<TActivityEditSchema>
 ): TTourEventUpdateBackend => {
 	const g = frontend?.general;
+	const pricingDetails = mapActivityPricingToBackend(frontend?.pricing);
+
 	return {
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
@@ -59,7 +66,8 @@ export const mapActivityFormToUpdate = (
 					time: g.activity_end_time,
 					timezone: g.activity_end_timezone
 				}
-			})
+			}),
+			...pricingDetails.details
 		}
 	} as unknown as TTourEventUpdateBackend;
 };
