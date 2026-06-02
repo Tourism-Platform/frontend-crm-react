@@ -65,22 +65,14 @@ export const TransportationEdit: FC = () => {
 
 	useEffect(() => {
 		if (eventData) {
-			form.reset(eventData);
+			form.reset(eventData as TTransportationEditSchema);
 		}
 	}, [eventData, form]);
 
 	const createSectionSubmit =
 		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const sectionsToValidate: ENUM_FORM_SECTION_TYPE[] =
-				section === ENUM_FORM_SECTION.CARS ||
-				section === ENUM_FORM_SECTION.PRICING
-					? [ENUM_FORM_SECTION.CARS, ENUM_FORM_SECTION.PRICING]
-					: [section];
-
-			for (const sectionKey of sectionsToValidate) {
-				if (!(await form.trigger(sectionKey))) {
-					return;
-				}
+			if (!(await form.trigger(section))) {
+				return;
 			}
 
 			const sectionData = {

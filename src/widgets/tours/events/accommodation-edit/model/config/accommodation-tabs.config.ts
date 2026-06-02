@@ -1,5 +1,5 @@
-import { Media, Pricing } from "../../../ui";
-import { GeneralInfo, RoomsInfo } from "../../ui";
+import { Media } from "../../../ui";
+import { GeneralInfo, Pricing, RoomsInfo } from "../../ui";
 import {
 	ENUM_ACCOMMODATION_EDIT_TAB,
 	ENUM_FORM_SECTION,
@@ -29,7 +29,6 @@ export const ACCOMMODATION_EDIT_TABS_LIST: IAccommodationEditTabs[] = [
 		label: "tabs.pricing",
 		type: ENUM_ACCOMMODATION_EDIT_TAB.PRICING,
 		slot: Pricing,
-		section: ENUM_FORM_SECTION.PRICING,
-		ns: "accommodation_edit_page"
+		section: ENUM_FORM_SECTION.PRICING
 	}
 ];

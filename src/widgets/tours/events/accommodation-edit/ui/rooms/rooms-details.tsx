@@ -27,8 +27,8 @@ const RoomsDetailsBase: FC<IRoomsProps> = ({ form }) => {
 
 	const handleAddRoom = () => {
 		append({
-			[ENUM_FORM_ROOMS.NAME]: "",
-			[ENUM_FORM_ROOMS.DETAILS]: ""
+			[ENUM_FORM_ROOMS.ROOM_NAME]: "",
+			[ENUM_FORM_ROOMS.DESCRIPTION]: ""
 		});
 	};
 

@@ -6,35 +6,26 @@ import { ENUM_FORM_ROOMS } from "../../types";
 
 const msg = i18nKey<TTourAccommodationEditPageKeys>();
 
-const ROOM_SCHEMA = z.object({
-	[ENUM_FORM_ROOMS.NAME]: z
-		.string()
-		.min(1, {
-			message: msg("form.rooms.details.form.fields.name.errors.required")
-		})
-		.min(1, {
-			message: msg("form.rooms.details.form.fields.name.errors.min")
-		})
-		.max(100, {
-			message: msg("form.rooms.details.form.fields.name.errors.max")
-		}),
-	[ENUM_FORM_ROOMS.DETAILS]: z
-		.string()
-		.min(1, {
-			message: msg(
-				"form.rooms.details.form.fields.details.errors.required"
-			)
-		})
-		.min(1, {
-			message: msg("form.rooms.details.form.fields.details.errors.min")
-		})
-		.max(500, {
-			message: msg("form.rooms.details.form.fields.details.errors.max")
-		})
-});
-
 export const ROOMS_SCHEMA = z.object({
-	rooms: z.array(ROOM_SCHEMA).min(1, {
-		message: msg("form.rooms.details.form.fields.rooms.errors.required")
-	})
+	[ENUM_FORM_ROOMS.ROOMS_LIST]: z.array(
+		z.object({
+			[ENUM_FORM_ROOMS.ROOM_NAME]: z
+				.string({
+					message: msg(
+						"form.rooms.details.form.fields.room_name.errors.required"
+					)
+				})
+				.min(1, {
+					message: msg(
+						"form.rooms.details.form.fields.room_name.errors.required"
+					)
+				})
+				.max(100, {
+					message: msg(
+						"form.rooms.details.form.fields.room_name.errors.max"
+					)
+				}),
+			[ENUM_FORM_ROOMS.DESCRIPTION]: z.string().optional()
+		})
+	)
 });

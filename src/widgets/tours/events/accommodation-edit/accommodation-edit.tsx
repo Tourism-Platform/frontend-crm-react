@@ -69,13 +69,11 @@ export const AccommodationEdit: FC = () => {
 		}
 	}, [eventData, form]);
 
-	console.log(form.watch());
-
 	const createSectionSubmit =
 		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const isValid = await form.trigger(section);
-			console.log(isValid);
-			if (!isValid) return;
+			if (!(await form.trigger(section))) {
+				return;
+			}
 
 			const sectionData = {
 				[section]: form.getValues(section),
@@ -85,7 +83,16 @@ export const AccommodationEdit: FC = () => {
 				[ENUM_FORM_SECTION.DAY]: form.getValues(ENUM_FORM_SECTION.DAY),
 				[ENUM_FORM_SECTION.POSITION]: form.getValues(
 					ENUM_FORM_SECTION.POSITION
-				)
+				),
+				...((section === ENUM_FORM_SECTION.PRICING ||
+					section === ENUM_FORM_SECTION.ROOMS) && {
+					[ENUM_FORM_SECTION.ROOMS]: form.getValues(
+						ENUM_FORM_SECTION.ROOMS
+					),
+					[ENUM_FORM_SECTION.PRICING]: form.getValues(
+						ENUM_FORM_SECTION.PRICING
+					)
+				})
 			};
 			try {
 				await updateTourEvent({
@@ -101,6 +108,7 @@ export const AccommodationEdit: FC = () => {
 				console.log(error);
 			}
 		};
+
 	return (
 		<Form {...form}>
 			<section className="flex flex-col gap-6">

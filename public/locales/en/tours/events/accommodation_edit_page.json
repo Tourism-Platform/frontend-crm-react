@@ -120,7 +120,6 @@
 		"rooms": {
 			"buttons": {
 				"save": "Save",
-				"add": "Add room",
 				"saving": "Saving ..."
 			},
 			"details": {
@@ -128,28 +127,21 @@
 				"room_item": "Room {{index}}",
 				"form": {
 					"fields": {
-						"title": "Room {{number}}",
-						"name": {
-							"label": "Room name",
-							"placeholder": "Enter...",
+						"room_name": {
+							"label": "Room type",
+							"placeholder": "Select type",
 							"errors": {
-								"required": "Room name is required",
-								"min": "Room name is too short",
-								"max": "Room name is too long"
+								"required": "Room type is required",
+								"max": "Room type is too long"
 							}
 						},
-						"details": {
-							"label": "Details",
-							"placeholder": "Enter...",
+						"description": {
+							"label": "Additional information",
+							"placeholder": "Enter details...",
 							"errors": {
-								"required": "Details is required",
-								"min": "Details is too short",
-								"max": "Details is too long"
-							}
-						},
-						"rooms": {
-							"errors": {
-								"required": "At least one room is required"
+								"min": "Description is too short",
+								"max": "Description is too long",
+								"required": "Description is required"
 							}
 						}
 					},
@@ -181,6 +173,7 @@
 				"title": "How is this activity priced?",
 				"tabs": {
 					"flat_rate": "Flat rate",
+					"per_room": "Per room",
 					"per_person": "Per person"
 				}
 			},
@@ -189,20 +182,28 @@
 					"title": "Pricing details",
 					"fields": {
 						"total_price": {
-							"label": "Total price",
+							"label": "Total cost",
 							"placeholder": "Enter...",
 							"errors": {
 								"min": "Price must be at least 1",
 								"max": "Price must not exceed 10000"
 							}
 						},
+						"total_price_per_person": {
+							"label": "Total cost per person",
+							"placeholder": "Enter..."
+						},
 						"taxes_and_fees": {
-							"label": "Taxes & fees",
+							"label": "Taxes & Fees",
 							"placeholder": "Enter...",
 							"errors": {
-								"min": "Taxes must be at least 1",
+								"min": "Taxes must be at least 0",
 								"max": "Taxes must not exceed 100"
 							}
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Taxes & Fees per person",
+							"placeholder": "Enter..."
 						},
 						"currency": {
 							"label": "Currency",
@@ -214,45 +215,62 @@
 						}
 					}
 				},
-				"booking_details": {
-					"title": "Booking details",
-					"fields": {
-						"supplier": {
-							"label": "Select the supplier you'll book through",
-							"placeholder": "Enter..."
-						},
-						"client_selection": {
-							"label": "Client selection",
-							"description": "Propose as an optional add-on to allow your clients to opt-in to this activity."
-						}
-					},
-					"buttons": {
-						"make_optional": "Make optional"
-					}
-				},
-				"commissions": {
-					"title": "Commissions",
-					"description": "Commissions are not visible for clients",
-					"fields": {
-						"total_expected": {
-							"label": "Total expected",
-							"placeholder": "Automatically calculated..."
-						},
-						"commission_type": {
-							"label": "Commission type",
-							"placeholder": "Choose..."
-						},
-						"currency": {
-							"label": "Currency",
-							"placeholder": "Choose..."
-						}
-					}
-				},
 				"package": {
+					"title": "Package",
 					"fields": {
 						"package": {
 							"label": "Package type"
 						}
+					}
+				},
+				"per_room": {
+					"empty_rooms": "Add rooms on the Rooms tab to configure per-room pricing.",
+					"checkboxes": {
+						"price_based_on_class": "Price based on class",
+						"add_margin_separately": "Add margin to this component separately"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Total cost per room",
+							"placeholder": "Enter..."
+						},
+						"taxes_fees": {
+							"label": "Taxes & Fees per room",
+							"placeholder": "Enter..."
+						},
+						"category_name": {
+							"placeholder": "Enter...",
+							"errors": {
+								"required": "Class name is required"
+							}
+						},
+						"categories": {
+							"errors": {
+								"min": "Add at least one class"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Unique margin",
+								"placeholder": "Enter...",
+								"errors": {
+									"required": "Margin is required"
+								}
+							},
+							"currency": {
+								"label": "Currency",
+								"placeholder": "Select..."
+							}
+						}
+					},
+					"table": {
+						"type": "Type",
+						"cost": "Cost",
+						"fees": "Fees",
+						"currency": "Currency"
+					},
+					"buttons": {
+						"add_category": "Add new type"
 					}
 				}
 			}

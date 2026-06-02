@@ -179,6 +179,15 @@ export const TRANSPORTATION_PRICING_SCHEMA = z
 			return;
 		}
 
+		const hasFlatRatePricing =
+			data.total_price != null ||
+			data.taxes != null ||
+			Boolean(data.currency?.trim());
+
+		if (!hasFlatRatePricing) {
+			return;
+		}
+
 		if (
 			data.total_price == null ||
 			data.total_price < 1 ||

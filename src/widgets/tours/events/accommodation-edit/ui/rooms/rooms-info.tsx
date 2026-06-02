@@ -16,11 +16,7 @@ const RoomsInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 			<RoomsDetails form={form} />
 
 			<div className="flex justify-end mt-6">
-				<Button
-					type="button"
-					onClick={form.handleSubmit(onSubmit)}
-					disabled={isLoading}
-				>
+				<Button type="button" onClick={onSubmit} disabled={isLoading}>
 					{isLoading && (
 						<Loader className="mr-2 h-4 w-4 animate-spin" />
 					)}

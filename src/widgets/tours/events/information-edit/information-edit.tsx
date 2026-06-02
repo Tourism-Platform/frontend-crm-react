@@ -19,8 +19,8 @@ import {
 
 import {
 	ENUM_EVENT,
-	TRANSPORTATION_EDIT_SCHEMA,
-	type TTransportationEditSchema,
+	INFO_EDIT_SCHEMA,
+	type TInfoEditSchema,
 	useGetTourEventQuery,
 	useUpdateTourEventMutation
 } from "@/entities/tour";
@@ -53,8 +53,8 @@ export const InformationEdit: FC = () => {
 	const [updateTourEvent, { isLoading: isUpdateLoading }] =
 		useUpdateTourEventMutation();
 
-	const form = useForm<TTransportationEditSchema>({
-		resolver: zodResolver(TRANSPORTATION_EDIT_SCHEMA),
+	const form = useForm<TInfoEditSchema>({
+		resolver: zodResolver(INFO_EDIT_SCHEMA),
 		mode: "onSubmit"
 	});
 
@@ -66,7 +66,7 @@ export const InformationEdit: FC = () => {
 
 	useEffect(() => {
 		if (eventData) {
-			form.reset(eventData);
+			form.reset(eventData as TInfoEditSchema);
 		}
 	}, [eventData, form]);
 

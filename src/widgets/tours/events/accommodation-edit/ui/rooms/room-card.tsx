@@ -23,10 +23,8 @@ export const RoomCard: FC<IRoomCardProps> = ({ form, onRemove, index }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 	return (
 		<Card className="relative">
-			<CardHeader>
-				{t("form.rooms.details.form.fields.title", {
-					number: index + 1
-				})}
+			<CardHeader className="flex items-center justify-between">
+				{t("form.rooms.details.room_item", { index: index + 1 })}
 			</CardHeader>
 			<CardContent className="grid gap-1">
 				<div className="absolute top-0 right-0">

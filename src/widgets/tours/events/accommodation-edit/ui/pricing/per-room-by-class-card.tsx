@@ -14,45 +14,45 @@ import {
 } from "@/shared/ui";
 
 import {
-	ENUM_FORM_CARS,
-	ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD,
-	ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD,
-	ENUM_TRANSPORTATION_PRICING_FIELD,
-	type TTransportationEditSchema
+	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
+	ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD,
+	ENUM_ACCOMMODATION_PRICING_FIELD,
+	ENUM_FORM_ROOMS,
+	type TAccommodationEditSchema
 } from "@/entities/tour";
 
 import {
 	ENUM_FORM_SECTION,
-	PER_CAR_CATEGORY_ROW_FIELDS_LIST,
-	PER_CAR_MARKUP_FIELD,
-	getCarDisplayName
+	PER_ROOM_CATEGORY_ROW_FIELDS_LIST,
+	PER_ROOM_MARKUP_FIELD,
+	getRoomDisplayName
 } from "../../model";
 
-interface IPerCarByClassCardProps {
-	form: UseFormReturn<TTransportationEditSchema>;
+interface IPerRoomByClassCardProps {
+	form: UseFormReturn<TAccommodationEditSchema>;
 	index: number;
 	addMarginSeparately: boolean;
 }
 
-export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
+export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 	form,
 	index,
 	addMarginSeparately
 }) => {
-	const { t } = useTranslation("transportation_edit_page");
+	const { t } = useTranslation("accommodation_edit_page");
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
-		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}.${index}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES}`
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}`
 	});
 
 	return (
 		<Card>
 			<CardHeader>
 				<h4 className="font-semibold">
-					{getCarDisplayName(
+					{getRoomDisplayName(
 						form.watch(
-							`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${ENUM_FORM_CARS.CAR_NAME}`
+							`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_ROOMS.ROOM_NAME}`
 						) ?? ""
 					)}
 				</h4>
@@ -67,29 +67,29 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 								"grid-cols-[1fr_1fr_1fr_1.5fr_0.5fr_auto]"
 						)}
 					>
-						{PER_CAR_CATEGORY_ROW_FIELDS_LIST.map(
+						{PER_ROOM_CATEGORY_ROW_FIELDS_LIST.map(
 							({ key, ...item }, fieldIndex) => (
 								<Fragment key={key}>
 									{addMarginSeparately &&
 									fieldIndex ===
-										PER_CAR_CATEGORY_ROW_FIELDS_LIST.length -
+										PER_ROOM_CATEGORY_ROW_FIELDS_LIST.length -
 											1 ? (
 										<CustomInputSelect
 											control={form.control}
-											name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}.${index}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}.${PER_CAR_MARKUP_FIELD.key}`}
-											label={PER_CAR_MARKUP_FIELD.label}
+											name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}.${PER_ROOM_MARKUP_FIELD.key}`}
+											label={PER_ROOM_MARKUP_FIELD.label}
 											placeholder={
-												PER_CAR_MARKUP_FIELD.placeholder
+												PER_ROOM_MARKUP_FIELD.placeholder
 											}
 											selectOptions={[
-												...PER_CAR_MARKUP_FIELD.selectOptions
+												...PER_ROOM_MARKUP_FIELD.selectOptions
 											]}
 											t={t}
 										/>
 									) : null}
 									<CustomField
 										control={form.control}
-										name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}.${index}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}.${key}`}
+										name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}.${key}`}
 										t={t}
 										{...item}
 									/>
@@ -98,8 +98,8 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 						)}
 						<Button
 							type="button"
-							variant={"destructive"}
-							size={"icon"}
+							variant="destructive"
+							size="icon"
 							onClick={() => remove(categoryIndex)}
 							// disabled={fields.length <= 1}
 						>
@@ -113,18 +113,17 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 					className="w-fit"
 					onClick={() =>
 						append({
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: "",
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: null,
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: null,
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]:
+							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: "",
+							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: null,
+							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: null,
+							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]:
 								"",
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]:
-								null
+							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: null
 						})
 					}
 				>
 					<Plus className="mr-2 h-4 w-4" />
-					{t("form.pricing.form.per_car.buttons.add_category")}
+					{t("form.pricing.form.per_room.buttons.add_category")}
 				</Button>
 			</CardContent>
 		</Card>
