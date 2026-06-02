@@ -162,6 +162,124 @@
 				"save": "Сохранить",
 				"saving": "Сохранение ..."
 			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Сохранить"
+			},
+			"title": "Цены",
+			"invoicing": {
+				"title": "Как будет выставлен счёт за это мероприятие?",
+				"tabs": {
+					"individual": "Отдельно",
+					"part_of_package": "В составе пакета"
+				}
+			},
+			"pricing_type": {
+				"title": "Как рассчитывается стоимость мероприятия?",
+				"tabs": {
+					"flat_rate": "Фикс ставка",
+					"per_car": "За машину",
+					"per_person": "За человека"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Детали ценообразования",
+					"fields": {
+						"total_price": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Цена должна быть не менее 1",
+								"max": "Цена не должна превышать 10000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
+						"taxes_and_fees": {
+							"label": "Налоги и сборы",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Налоги должны быть не менее 0",
+								"max": "Налоги не должны превышать 100"
+							}
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Налоги и сборы за человека",
+							"placeholder": "Введите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Валюта обязательна",
+								"max": "Код валюты слишком длинный"
+							}
+						}
+					}
+				},
+				"package": {
+					"title": "Пакет",
+					"fields": {
+						"package": {
+							"label": "Тип турпакета"
+						}
+					}
+				},
+				"per_car": {
+					"empty_cars": "Добавьте машины на вкладке «Машины», чтобы настроить цену за машину.",
+					"checkboxes": {
+						"price_based_on_class": "Цена по классу",
+						"add_margin_separately": "Добавить маржу к этому компоненту отдельно"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Стоимость за машину",
+							"placeholder": "Введите..."
+						},
+						"taxes_fees": {
+							"label": "Налоги и сборы за машину",
+							"placeholder": "Введите..."
+						},
+						"category_name": {
+							"placeholder": "Введите...",
+							"errors": {
+								"required": "Название класса обязательно"
+							}
+						},
+						"categories": {
+							"errors": {
+								"min": "Добавьте хотя бы один класс"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Уникальная маржа",
+								"placeholder": "Введите...",
+								"errors": {
+									"required": "Маржа обязательна"
+								}
+							},
+							"currency": {
+								"label": "Валюта",
+								"placeholder": "Выберите..."
+							}
+						}
+					},
+					"table": {
+						"type": "Тип",
+						"cost": "Стоимость",
+						"fees": "Сборы",
+						"currency": "Валюта"
+					},
+					"buttons": {
+						"add_category": "Добавить тип"
+					}
+				}
+			}
 		}
 	},
 	"tabs": {

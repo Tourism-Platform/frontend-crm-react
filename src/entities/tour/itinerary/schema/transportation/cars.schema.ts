@@ -44,18 +44,19 @@ export const CARS_SCHEMA = z.object({
 				}),
 			[ENUM_FORM_CARS.DESCRIPTION]: z
 				.string({
-					message: msg(
-						"form.cars.description.description.errors.required"
-					)
+					// message: msg(
+					// 	"form.cars.description.description.errors.required"
+					// )
 				})
-				.min(1, {
-					message: msg(
-						"form.cars.description.description.errors.required"
-					)
-				})
-				.max(1000, {
-					message: msg("form.cars.description.description.errors.max")
-				})
+				// .min(1, {
+				// 	message: msg(
+				// 		"form.cars.description.description.errors.required"
+				// 	)
+				// })
+				// .max(1000, {
+				// 	message: msg("form.cars.description.description.errors.max")
+				// })
+				.optional()
 		})
 	)
 });

@@ -10,3 +10,4 @@ export * from "./custom-upload-main-image";
 export * from "./custom-price-filter";
 export * from "./custom-accordion";
 export * from "./custom-editor";
+export * from "./custom-input-select";

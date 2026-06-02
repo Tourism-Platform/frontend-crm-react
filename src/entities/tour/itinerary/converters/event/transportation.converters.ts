@@ -7,26 +7,25 @@ import {
 } from "../../types";
 
 import { transferTypeMapper } from "./transfer-type.converters";
+import {
+	mapCarsFromBackend,
+	mapCarsToBackend
+} from "./transportation-cars.converters";
+import {
+	mapTransportationPricingFromBackend,
+	mapTransportationPricingToBackend
+} from "./transportation-pricing.converters";
 
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce
 ): TTransportationEditSchema => {
 	const event = data?.event as TransferEventSchemaOutput;
-
-	// const carsList: any[] = [];
-	// if (details?.expenses?.typ === "per_car") {
-	// 	const perCar = details.expenses as PerCarExpenseOutput;
-	// 	perCar.cars.forEach((car) => {
-	// 		carsList.push({
-	// 			car_name: car.typ || "",
-	// 			pax: String(car.pax || 1),
-	// 			description: car.description || ""
-	// 		});
-	// 	});
-	// }
-	// if (carsList.length === 0) {
-	// 	carsList.push({ car_name: "", pax: "1", description: "" });
-	// }
+	const details = event?.details;
+	const expenses = details?.expenses;
+	const perCarCars = expenses?.typ === "per_car" ? expenses.cars : undefined;
+	const perCarCategoryCars =
+		expenses?.typ === "per_car_category" ? expenses.cars : undefined;
+	const cars = mapCarsFromBackend(perCarCars, perCarCategoryCars);
 
 	return {
 		name: event?.name || "",
@@ -35,8 +34,6 @@ export const mapTransferEventToForm = (
 		general: {
 			description: event.description || "",
 			transfer_type: transferTypeMapper.from(event?.details?.typ),
-			// meet_point: getLocationName(event?.details?.departure?.location?.),
-			// end_point: getLocationName(event?.details?.arrival?.location),
 			meet_point: "",
 			end_point: "",
 			departure_date: event?.details?.departure?.date || "",
@@ -50,36 +47,28 @@ export const mapTransferEventToForm = (
 				event?.details?.arrival?.time?.timezone ?? ""
 			)
 		},
-		cars: {
-			cars: []
-		},
-		pricing: {
-			total_price: 100,
-			taxes: 0,
-			currency: "USD"
-		}
-	} as unknown as TTransportationEditSchema;
+		cars,
+		pricing: mapTransportationPricingFromBackend(details, cars.cars)
+	};
 };
 
 export const mapTransferFormToUpdate = (
 	frontend: Partial<TTransportationEditSchema>
 ): TTourEventUpdateBackend => {
-	// const carsExpenses: PerCarExpenseInput = {
-	// 	typ: "per_car",
-	// 	cars: frontend.cars.cars.map((car) => ({
-	// 		typ: car.car_name as any,
-	// 		pax: Number(car.pax),
-	// 		description: car.description,
-	// 		expenses: {
-	// 			typ: "fixed",
-	// 			cost: {
-	// 				val: 0,
-	// 				currency: "USD" as Currency
-	// 			}
-	// 		}
-	// 	}))
-	// };
 	const g = frontend?.general;
+	const carsList = frontend?.cars?.cars ?? [];
+	const pricingDetails = mapTransportationPricingToBackend(
+		frontend?.pricing,
+		carsList
+	);
+	const isCarsSectionUpdate =
+		frontend.cars !== undefined &&
+		frontend.pricing === undefined &&
+		frontend.general === undefined;
+	const carsDetails =
+		isCarsSectionUpdate && !pricingDetails.details
+			? mapCarsToBackend(carsList)
+			: undefined;
 
 	return {
 		...(frontend.name !== undefined &&
@@ -118,7 +107,9 @@ export const mapTransferFormToUpdate = (
 						}),
 					...(g?.end_point && { location: { name: g.end_point } })
 				}
-			})
+			}),
+			...pricingDetails.details,
+			...carsDetails?.details
 		}
 	} as unknown as TTourEventUpdateBackend;
 };

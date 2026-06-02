@@ -66,7 +66,7 @@ const ActivityEditBase: FC = () => {
 
 	useEffect(() => {
 		if (eventData) {
-			form.reset(eventData);
+			form.reset(eventData as TActivityEditSchema);
 		}
 	}, [eventData, form]);
 

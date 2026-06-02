@@ -1,5 +1,5 @@
-import { Media, Pricing } from "../../../ui";
-import { CarsInfo, GeneralInfo } from "../../ui";
+import { Media } from "../../../ui";
+import { CarsInfo, GeneralInfo, Pricing } from "../../ui";
 import {
 	ENUM_FORM_SECTION,
 	ENUM_TRANSPORTATION_EDIT_TAB,
@@ -30,7 +30,6 @@ export const TRANSPORTATION_EDIT_TABS_LIST: ITransportationEditTabs[] = [
 		label: "tabs.pricing",
 		type: ENUM_TRANSPORTATION_EDIT_TAB.PRICING,
 		slot: Pricing,
-		section: ENUM_FORM_SECTION.PRICING,
-		ns: "transportation_edit_page"
+		section: ENUM_FORM_SECTION.PRICING
 	}
 ];

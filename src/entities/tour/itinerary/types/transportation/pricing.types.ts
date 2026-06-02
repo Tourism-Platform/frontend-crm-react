@@ -1,0 +1,107 @@
+export const ENUM_TRANSPORTATION_PRICING_INVOICING = {
+	INDIVIDUAL: "individual",
+	PART_OF_PACKAGE: "part_of_package"
+} as const;
+
+export type ENUM_TRANSPORTATION_PRICING_INVOICING_TYPE =
+	(typeof ENUM_TRANSPORTATION_PRICING_INVOICING)[keyof typeof ENUM_TRANSPORTATION_PRICING_INVOICING];
+
+export const ENUM_TRANSPORTATION_PRICING_TYPE = {
+	FLAT_RATE: "flat_rate",
+	PER_CAR: "per_car",
+	PER_PERSON: "per_person"
+} as const;
+
+export type ENUM_TRANSPORTATION_PRICING_TYPE_TYPE =
+	(typeof ENUM_TRANSPORTATION_PRICING_TYPE)[keyof typeof ENUM_TRANSPORTATION_PRICING_TYPE];
+
+export const ENUM_TRANSPORTATION_EXPENSE_TYP = {
+	PER_CAR: "per_car",
+	PER_CAR_CATEGORY: "per_car_category"
+} as const;
+
+export type ENUM_TRANSPORTATION_EXPENSE_TYP_TYPE =
+	(typeof ENUM_TRANSPORTATION_EXPENSE_TYP)[keyof typeof ENUM_TRANSPORTATION_EXPENSE_TYP];
+
+export const ENUM_TRANSPORTATION_MARKUP_TYP = {
+	FIXED: "fixed",
+	PERCENTAGE: "percentage"
+} as const;
+
+export type ENUM_TRANSPORTATION_MARKUP_TYP_TYPE =
+	(typeof ENUM_TRANSPORTATION_MARKUP_TYP)[keyof typeof ENUM_TRANSPORTATION_MARKUP_TYP];
+
+export const ENUM_TRANSPORTATION_PRICING_FIELD = {
+	INVOICING: "invoicing",
+	PRICING_TYPE: "pricing_type",
+	PRICE_BASED_ON_CLASS: "price_based_on_class",
+	ADD_MARGIN_SEPARATELY: "add_margin_separately",
+	EXPENSES: "expenses",
+	TOTAL_PRICE: "total_price",
+	TAXES: "taxes",
+	CURRENCY: "currency",
+	PACKAGE_TYPE: "package_type"
+} as const;
+
+export type ENUM_TRANSPORTATION_PRICING_FIELD_TYPE =
+	(typeof ENUM_TRANSPORTATION_PRICING_FIELD)[keyof typeof ENUM_TRANSPORTATION_PRICING_FIELD];
+
+export const ENUM_TRANSPORTATION_PRICE_ROW_FIELD = {
+	COST: "cost",
+	FEES: "fees",
+	CURRENCY: "currency",
+	MARKUP: "markup"
+} as const;
+
+export type ENUM_TRANSPORTATION_PRICE_ROW_FIELD_TYPE =
+	(typeof ENUM_TRANSPORTATION_PRICE_ROW_FIELD)[keyof typeof ENUM_TRANSPORTATION_PRICE_ROW_FIELD];
+
+export const ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD = {
+	NAME: "name",
+	COST: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST,
+	FEES: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES,
+	CURRENCY: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY,
+	MARKUP: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP
+} as const;
+
+export type ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD_TYPE =
+	(typeof ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD)[keyof typeof ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD];
+
+export const ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD = {
+	CARS: "cars",
+	CATEGORIES: "categories"
+} as const;
+
+export type ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD_TYPE =
+	(typeof ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD)[keyof typeof ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD];
+
+export interface ITransportationPriceRowMarkup {
+	typ: ENUM_TRANSPORTATION_MARKUP_TYP_TYPE;
+	value: string;
+}
+
+export interface ITransportationPerCarPriceRow {
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: number | null;
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: number | null;
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]: string;
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: ITransportationPriceRowMarkup | null;
+}
+
+export interface ITransportationCategoryPriceRow
+	extends ITransportationPerCarPriceRow {
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: string;
+}
+
+export interface ITransportationPerCarExpenses {
+	typ: typeof ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR;
+	[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]: ITransportationPerCarPriceRow[];
+}
+
+export interface ITransportationPerCarByClassPriceRow {
+	[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES]: ITransportationCategoryPriceRow[];
+}
+
+export interface ITransportationPerCarCategoryExpenses {
+	typ: typeof ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR_CATEGORY;
+	[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]: ITransportationPerCarByClassPriceRow[];
+}

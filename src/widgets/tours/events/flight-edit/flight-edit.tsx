@@ -63,7 +63,7 @@ export const FlightEdit: FC = () => {
 
 	useEffect(() => {
 		if (eventData) {
-			form.reset(eventData);
+			form.reset(eventData as TFlightEditSchema);
 		}
 	}, [eventData, form]);
 

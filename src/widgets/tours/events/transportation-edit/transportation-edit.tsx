@@ -82,7 +82,12 @@ export const TransportationEdit: FC = () => {
 				[ENUM_FORM_SECTION.DAY]: form.getValues(ENUM_FORM_SECTION.DAY),
 				[ENUM_FORM_SECTION.POSITION]: form.getValues(
 					ENUM_FORM_SECTION.POSITION
-				)
+				),
+				...(section === ENUM_FORM_SECTION.PRICING && {
+					[ENUM_FORM_SECTION.CARS]: form.getValues(
+						ENUM_FORM_SECTION.CARS
+					)
+				})
 			};
 			try {
 				await updateTourEvent({
