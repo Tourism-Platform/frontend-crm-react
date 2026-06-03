@@ -1,8 +1,6 @@
 import { TourCategory, TourStatus, TourType } from "@/shared/api";
 
-import type { TGetPreviewTourBackendResponse } from "../types";
-
-export const PREVIEW_TOUR_GENERAL_MOCK: TGetPreviewTourBackendResponse = {
+export const PREVIEW_TOUR_GENERAL_MOCK = {
 	id: "9f2b3d82-5c4d-4b9f-9f7a-1a42e71d1b11",
 	status: TourStatus.Archived,
 	operator_id: "123",

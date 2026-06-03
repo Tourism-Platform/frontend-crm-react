@@ -5,7 +5,7 @@ import type {
 } from "@/entities/tour";
 
 export interface IPreviewTourData {
-	overview: string;
+	// overview: string;
 	description: string;
 	images: string[];
 	cities: string[];

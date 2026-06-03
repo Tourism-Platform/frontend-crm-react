@@ -7,7 +7,7 @@ import {
 	useGetBookingOrderByIdQuery
 } from "@/entities/booking";
 
-import { getContactItems, getOptionItems, getOrderItems } from "../model";
+import { getContactItems, getOrderItems } from "../model";
 
 import { OrderHeader } from "./order-header";
 import { OrderIdSkeleton } from "./order-id-skeleton";

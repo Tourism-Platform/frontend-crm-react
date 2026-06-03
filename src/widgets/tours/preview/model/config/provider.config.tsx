@@ -1,4 +1,4 @@
-import { Info, type LucideIcon, Mail, MapPin, Phone } from "lucide-react";
+import { type LucideIcon, Mail, MapPin, Phone } from "lucide-react";
 
 import type { IPreviewOperator } from "@/entities/tour";
 
@@ -21,9 +21,9 @@ export const PROVIDER_CONTACTS = (
 	{
 		icon: MapPin,
 		value: providerData?.address ?? "--//--"
-	},
-	{
-		icon: Info,
-		value: "providerData.additionalInfo"
 	}
+	// {
+	// 	icon: Info,
+	// 	value: "providerData.additionalInfo"
+	// }
 ];
