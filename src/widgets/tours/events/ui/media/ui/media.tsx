@@ -76,7 +76,7 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 
 	return (
 		<div className="grid gap-6">
-			<h2 className="text-xl">{t("media.title")}</h2>
+			{/* <h2 className="text-xl">{t("media.title")}</h2> */}
 			<CustomUploadImages
 				items={items}
 				onAdd={handleAdd}

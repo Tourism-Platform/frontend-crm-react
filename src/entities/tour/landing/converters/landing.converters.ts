@@ -16,10 +16,10 @@ export const mapUpdateLandingToBackend = (
 ): TUpdateLandingImageBackendBody => ({
 	// description: frontend.description,
 	description: frontend.description,
-	languages: languageMapper.toMany(frontend.languages),
-	amenities_included: amenitiesMapper.toMany(frontend.included),
-	amenities_not_included: amenitiesMapper.toMany(frontend.not_included),
-	pickup_type: pickupMapper.toMany(frontend.pickup_type),
+	languages: languageMapper.toMany(frontend.languages ?? []),
+	amenities_included: amenitiesMapper.toMany(frontend.included ?? []),
+	amenities_not_included: amenitiesMapper.toMany(frontend.not_included ?? []),
+	pickup_type: pickupMapper.toMany(frontend.pickup_type ?? []),
 	pickup_description: frontend.pickup_description,
 	cancellation_policy: frontend.cancellation_policy,
 	additional_information: frontend.additional_info
