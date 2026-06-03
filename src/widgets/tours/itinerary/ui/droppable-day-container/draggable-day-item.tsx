@@ -8,7 +8,7 @@ import { Link, useParams } from "react-router-dom";
 import { InfoCircleIcon } from "@/shared/assets";
 import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { Button, Card, CardContent, PreviewerSimple, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_EVENT,
@@ -99,9 +99,11 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 						<div className="flex-1">
 							<p className="text-sm font-medium">{item.title}</p>
 							{item.subtitle && (
-								<p className="text-xs text-muted-foreground">
-									{item.subtitle}
-								</p>
+								<PreviewerSimple
+									text={item.subtitle}
+									lines={1}
+									className="text-xs text-muted-foreground"
+								/>
 							)}
 						</div>
 						<Button
