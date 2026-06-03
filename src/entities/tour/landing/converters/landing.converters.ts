@@ -14,8 +14,8 @@ import { pickupMapper } from "./pickup.converters";
 export const mapUpdateLandingToBackend = (
 	frontend: TLandingSchema
 ): TUpdateLandingImageBackendBody => ({
-	title: frontend.description,
-	overview: frontend.description,
+	// description: frontend.description,
+	description: frontend.description,
 	languages: languageMapper.toMany(frontend.languages),
 	amenities_included: amenitiesMapper.toMany(frontend.included),
 	amenities_not_included: amenitiesMapper.toMany(frontend.not_included),
@@ -28,7 +28,7 @@ export const mapUpdateLandingToBackend = (
 export const mapLandingToFrontend = (
 	backend: TGetLandingBackendResponse | TUpdateLandingBackendResponse
 ): TLandingSchema => ({
-	description: backend.overview || "",
+	description: backend.description || "",
 	languages: languageMapper.fromMany(backend.languages),
 	included: amenitiesMapper.fromMany(
 		backend.amenities_included as AmenitiesTypes[]

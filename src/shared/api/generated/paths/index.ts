@@ -3,6 +3,7 @@
 export { ADMIN_PATHS } from "./admin.paths";
 export { AUTH_PATHS } from "./auth.paths";
 export { ACCOUNT_PATHS } from "./account.paths";
+export { TOUR_CATALOG_PATHS } from "./tour-catalog.paths";
 export { TOUR_OPTION_PATHS } from "./tour-option.paths";
 export { PRICING_REVIEW_PATHS } from "./pricing-review.paths";
 export { TOUR_FINANCIAL_PATHS } from "./tour-financial.paths";
@@ -12,7 +13,6 @@ export { SEASONAL_COMMISSION_PATHS } from "./seasonal-commission.paths";
 export { TOUR_SCHEDULE_PATHS } from "./tour-schedule.paths";
 export { TOUR_LANDING_PAGE_PATHS } from "./tour-landing-page.paths";
 export { TOUR_PUBLIC_PATHS } from "./tour-public.paths";
-export { TOUR_CATALOG_PATHS } from "./tour-catalog.paths";
 export { TOUR_PACKAGES_PATHS } from "./tour-packages.paths";
 export { TOUR_PATHS } from "./tour.paths";
 export { OPERATOR_DOCUMENTS_PATHS } from "./operator-documents.paths";

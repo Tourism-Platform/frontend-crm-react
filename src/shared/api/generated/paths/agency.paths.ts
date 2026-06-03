@@ -35,6 +35,12 @@ export const AGENCY_PATHS = {
 			response: AgencyInfoModel;
 		}
 	} as const,
+	getAgencyInfoById: (agencyId: string) =>
+		({
+			url: `/agency/${agencyId}/info`,
+			method: "GET",
+			_types: {} as { body: void; query: void; response: AgencyInfoModel }
+		}) as const,
 	getAgencyLogo: {
 		url: "/agency/me/logo",
 		method: "GET",

@@ -1,5 +1,7 @@
 import type {
 	Language,
+	LanguageCode,
+	LocationSuggestionSchema,
 	PublicTourCatalogSchemaOutput,
 	TourCatalogSort,
 	TourCategory
@@ -9,6 +11,15 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const TOUR_CATALOG_PATHS = {
+	suggestLocations: {
+		url: "/tour/catalog/suggest",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { q: string; lang?: LanguageCode; limit?: number };
+			response: LocationSuggestionSchema[];
+		}
+	} as const,
 	listPublicCatalog: {
 		url: "/tour/catalog/public",
 		method: "GET",
@@ -21,6 +32,7 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_min?: number | null;
 				duration_days_max?: number | null;
 				city?: string | null;
+				country?: string | null;
 				language?: Language | null;
 				skip?: number;
 				limit?: number;
@@ -40,6 +52,7 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_min?: number | null;
 				duration_days_max?: number | null;
 				city?: string | null;
+				country?: string | null;
 				language?: Language | null;
 				skip?: number;
 				limit?: number;

@@ -107,6 +107,13 @@ export enum SupplierPaymentStatus {
 	NotPaid = "not_paid"
 }
 
+/** SuggestKind */
+export enum SuggestKind {
+	City = "city",
+	Place = "place",
+	Country = "country"
+}
+
 /** StaffStatus */
 export enum StaffStatus {
 	Pending = "pending",
@@ -2870,6 +2877,13 @@ export interface LocationRefSchema {
 	id: string;
 }
 
+/** LocationSuggestionSchema */
+export interface LocationSuggestionSchema {
+	/** Value */
+	value: string;
+	kind: SuggestKind;
+}
+
 /** MeSchema */
 export interface MeSchema {
 	/**
@@ -4306,6 +4320,8 @@ export interface TourMetaCreateSchema {
 	 * @default 1
 	 */
 	group_size?: number;
+	/** Group Size Min */
+	group_size_min?: number | null;
 	/** @default "regular" */
 	typ?: TourType;
 	/** Agency Id */
@@ -4338,6 +4354,8 @@ export interface TourMetaModel {
 	cover_image_path: string | null;
 	/** Group Size */
 	group_size: number;
+	/** Group Size Min */
+	group_size_min: number | null;
 	/** Days */
 	days: number;
 	/** Nights */
@@ -4373,6 +4391,8 @@ export interface TourMetaUpdateSchema {
 	age_to?: number | null;
 	/** Group Size */
 	group_size?: number | null;
+	/** Group Size Min */
+	group_size_min?: number | null;
 	/** Categories */
 	categories?: TourCategory[] | null;
 }
@@ -5595,6 +5615,88 @@ export interface CreateUserAdminUserPostParams {
 	role?: UserRoles;
 }
 
+export interface SuggestLocationsTourCatalogSuggestGetParams {
+	/**
+	 * Q
+	 * @minLength 1
+	 * @maxLength 128
+	 */
+	q: string;
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 20
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListPublicCatalogTourCatalogPublicGetParams {
+	/** Sort */
+	sort?: TourCatalogSort | null;
+	/** Q */
+	q?: string | null;
+	/** Categories */
+	categories?: TourCategory[] | null;
+	/** Duration Days Min */
+	duration_days_min?: number | null;
+	/** Duration Days Max */
+	duration_days_max?: number | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
+	/** Language */
+	language?: Language | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListAgencyCatalogTourCatalogAgencyGetParams {
+	/** Sort */
+	sort?: TourCatalogSort | null;
+	/** Q */
+	q?: string | null;
+	/** Categories */
+	categories?: TourCategory[] | null;
+	/** Duration Days Min */
+	duration_days_min?: number | null;
+	/** Duration Days Max */
+	duration_days_max?: number | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
+	/** Language */
+	language?: Language | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
 export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
 	/** @default "USD" */
 	currency?: Currency;
@@ -5750,15 +5852,15 @@ export interface CreateEventTourTourIdOptionIdEventPostParams {
 	/** @default "en" */
 	lang?: LanguageCode;
 	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
 	 * Tour Id
 	 * @format uuid
 	 */
 	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 }
 
 export interface ListTourEventsTourTourIdOptionIdEventGetParams {
@@ -5842,6 +5944,11 @@ export interface UpdateTourEventTourTourIdOptionIdEventEventIdPatchParams {
 	/** @default "en" */
 	lang?: LanguageCode;
 	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
 	 * Option Id
 	 * @format uuid
 	 */
@@ -5851,15 +5958,15 @@ export interface UpdateTourEventTourTourIdOptionIdEventEventIdPatchParams {
 	 * @format uuid
 	 */
 	eventId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
 }
 
 export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
 	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
 	 * Option Id
 	 * @format uuid
 	 */
@@ -5869,11 +5976,6 @@ export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
 	 * @format uuid
 	 */
 	eventId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
 }
 
 export interface ReorderEventTourTourIdOptionIdEventEventIdReorderPostParams {
@@ -6257,66 +6359,6 @@ export interface GetPublicOperatorPreviewTourTourIdPublicOperatorGetParams {
 	 * @format uuid
 	 */
 	tourId: string;
-}
-
-export interface ListPublicCatalogTourCatalogPublicGetParams {
-	/** Sort */
-	sort?: TourCatalogSort | null;
-	/** Q */
-	q?: string | null;
-	/** Categories */
-	categories?: TourCategory[] | null;
-	/** Duration Days Min */
-	duration_days_min?: number | null;
-	/** Duration Days Max */
-	duration_days_max?: number | null;
-	/** City */
-	city?: string | null;
-	/** Language */
-	language?: Language | null;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface ListAgencyCatalogTourCatalogAgencyGetParams {
-	/** Sort */
-	sort?: TourCatalogSort | null;
-	/** Q */
-	q?: string | null;
-	/** Categories */
-	categories?: TourCategory[] | null;
-	/** Duration Days Min */
-	duration_days_min?: number | null;
-	/** Duration Days Max */
-	duration_days_max?: number | null;
-	/** City */
-	city?: string | null;
-	/** Language */
-	language?: Language | null;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
 }
 
 export interface CreatePackageTourTourIdOptionIdPackagePostParams {
@@ -6777,6 +6819,14 @@ export interface DeleteLogoSupplierSupplierIdLogoDeleteParams {
 	 * @format uuid
 	 */
 	supplierId: string;
+}
+
+export interface GetAgencyInfoByIdAgencyAgencyIdInfoGetParams {
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agencyId: string;
 }
 
 export interface ListAgencyDocumentsAgencyMeDocumentsGetParams {

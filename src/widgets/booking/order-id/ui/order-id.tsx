@@ -34,10 +34,10 @@ export const OrderId: FC = () => {
 		() => (order ? getContactItems(order, t) : []),
 		[order, t]
 	);
-	const optionItems = useMemo(
-		() => (order ? getOptionItems(order, t) : []),
-		[order, t]
-	);
+	// const optionItems = useMemo(
+	// 	() => (order ? getOptionItems(order, t) : []),
+	// 	[order, t]
+	// );
 
 	if (isLoading) {
 		return <OrderIdSkeleton />;
@@ -74,12 +74,12 @@ export const OrderId: FC = () => {
 				/>
 			</div>
 
-			{order?.status !== ENUM_ORDER_STATUS.CANCELLED && (
+			{/* {order?.status !== ENUM_ORDER_STATUS.CANCELLED && (
 				<OrderInfoCard
 					title={t("selected_options.title")}
 					items={optionItems}
 				/>
-			)}
+			)} */}
 
 			{order?.status !== ENUM_ORDER_STATUS.CANCELLED && (
 				<OrderTourReview
