@@ -12,6 +12,7 @@ export const ENUM_API_TAGS = {
 	TOUR_ORDER_HISTORY: "Tour Order History",
 	TOUR_ACTIVITY_LOG: "Tour Activity Log",
 	TOURS_CATALOG: "Tours Catalog",
+	TOURS_EVENTS: "Tours Events",
 	LANDING_IMAGES: "Landing Images",
 	EVENT_IMAGES: "Event Images",
 	OPERATOR: {

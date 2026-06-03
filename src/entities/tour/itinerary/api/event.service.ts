@@ -1,4 +1,4 @@
-import { TOUR_EVENTS_PATHS } from "@/shared/api";
+import { ENUM_API_TAGS, TOUR_EVENTS_PATHS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -29,7 +29,13 @@ export const tourEventApi = authApi.injectEndpoints({
 				params: day !== undefined ? { day } : undefined
 			}),
 			transformResponse: (response: TTourEventBackendResponce[]) =>
-				response.map(mapAllEventsToFrontend)
+				response.map(mapAllEventsToFrontend),
+			providesTags: (_result, _error, { tourId, optionId }) => [
+				{
+					type: ENUM_API_TAGS.TOURS_EVENTS,
+					id: `${tourId}-${optionId}`
+				}
+			]
 		}),
 		getTourEvent: builder.query<
 			TTourEvent,
@@ -77,7 +83,7 @@ export const tourEventApi = authApi.injectEndpoints({
 				body: mapEventUpdateToBackend(type, data)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
-				mapAllEventsToFrontend(response)
+				mapAllEventsToFrontend(response),
 			// async onQueryStarted(
 			// 	{ tourId, optionId, eventId },
 			// 	{ dispatch, queryFulfilled }
@@ -102,6 +108,12 @@ export const tourEventApi = authApi.injectEndpoints({
 			// 		console.error(error);
 			// 	}
 			// }
+			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+				{
+					type: ENUM_API_TAGS.TOURS_EVENTS,
+					id: `${tourId}-${optionId}`
+				}
+			]
 		}),
 		deleteTourEvent: builder.mutation<
 			void,
