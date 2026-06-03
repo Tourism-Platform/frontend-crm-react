@@ -8,7 +8,7 @@ export interface IProviderContact {
 }
 
 export const PROVIDER_CONTACTS = (
-	providerData: IPreviewOperator
+	providerData?: IPreviewOperator
 ): IProviderContact[] => [
 	{
 		icon: Phone,

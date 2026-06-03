@@ -9,12 +9,14 @@ import { type IPreviewTourData, LANGUAGES_LABELS } from "@/entities/tour";
 import { META_INFO } from "../../model/config";
 
 interface IPreviewTourMetaProps {
-	data: IPreviewTourData;
+	data?: IPreviewTourData;
 }
 
 const PreviewTourMetaBase: FC<IPreviewTourMetaProps> = ({ data }) => {
 	const { t } = useTranslation("preview_tour_page");
 	const languagesLabels = useValueToTranslateLabel(LANGUAGES_LABELS);
+
+	if (!data) return null;
 
 	const getLabel = (
 		value: string,

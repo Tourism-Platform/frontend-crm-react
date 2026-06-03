@@ -2,8 +2,10 @@ import { ArrowLeft } from "lucide-react";
 import { type FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
+import { generatePath, useNavigate, useParams } from "react-router";
 
+import type { TPreviewBookingPageKeys } from "@/shared/config";
+import { ENUM_PATH } from "@/shared/config/routes/routes.config";
 import {
 	Stepper,
 	StepperIndicator,
@@ -20,28 +22,67 @@ import { Step1DateTravellers } from "./steps/step1-date-travellers";
 import { Step2TravellerDetails } from "./steps/step2-traveller-details";
 import { Step3Confirmation } from "./steps/step3-confirmation";
 
-const steps = [1, 2, 3];
+const STEPS: Array<{
+	step: number;
+	labelKey: TPreviewBookingPageKeys;
+	titleKey: TPreviewBookingPageKeys;
+}> = [
+	{
+		step: 1,
+		labelKey: "stepper.step_1.label",
+		titleKey: "stepper.step_1.title"
+	},
+	{
+		step: 2,
+		labelKey: "stepper.step_2.label",
+		titleKey: "stepper.step_2.title"
+	},
+	{
+		step: 3,
+		labelKey: "stepper.step_3.label",
+		titleKey: "stepper.step_3.title"
+	}
+];
+
+const LAST_STEP = STEPS[STEPS.length - 1].step;
 
 const PreviewBookingBase: FC = () => {
 	const { t } = useTranslation("preview_booking_page");
 	const navigate = useNavigate();
+	const { tourId = "" } = useParams<{ tourId: string; bookingId?: string }>();
 	const {
 		form,
 		currentStep,
 		handleNextStep,
 		handlePrevStep,
+		handleAddTraveller,
+		handleRemoveTraveller,
+		canAddTraveller,
 		onSubmit,
 		isLoading,
-		bookingData,
-		tourData
+		isPaxLoading,
+		isCreating,
+		isUpdating,
+		submittedBooking,
+		tourData,
+		options,
+		isOptionsLoading,
+		bookingId
 	} = usePreviewBooking();
 
 	return (
 		<FormProvider {...form}>
 			<div className="container py-8 max-w-[1200px]">
-				{currentStep < 3 && (
+				{currentStep < LAST_STEP && (
 					<button
-						onClick={() => navigate("..")}
+						onClick={() =>
+							navigate(
+								generatePath(
+									ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR,
+									{ tourId }
+								)
+							)
+						}
 						className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit mb-8"
 					>
 						<ArrowLeft className="w-4 h-4" />
@@ -50,10 +91,10 @@ const PreviewBookingBase: FC = () => {
 				)}
 
 				<div
-					className={`mb-8 ${currentStep === 3 ? "max-w-3xl mx-auto" : "max-w-3xl"}`}
+					className={`mb-8 ${currentStep === LAST_STEP ? "max-w-3xl mx-auto" : "max-w-3xl"}`}
 				>
 					<Stepper value={currentStep}>
-						{steps.map((step) => (
+						{STEPS.map(({ step, labelKey, titleKey }, index) => (
 							<StepperItem
 								key={step}
 								step={step}
@@ -64,43 +105,63 @@ const PreviewBookingBase: FC = () => {
 								</StepperTrigger>
 								<div className="ml-2 flex flex-col">
 									<span className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">
-										{t(`stepper.step_${step}.label` as any)}
+										{t(labelKey)}
 									</span>
 									<span
 										className={`text-sm font-medium ${step === currentStep ? "text-foreground" : "text-muted-foreground"}`}
 									>
-										{t(`stepper.step_${step}.title` as any)}
+										{t(titleKey)}
 									</span>
 								</div>
-								{step < steps.length && <StepperSeparator />}
+								{index < STEPS.length - 1 && (
+									<StepperSeparator />
+								)}
 							</StepperItem>
 						))}
 					</Stepper>
 				</div>
 
 				<div
-					className={`grid gap-8 items-start ${currentStep < 3 ? "grid-cols-1 lg:grid-cols-[1fr_360px]" : "grid-cols-1"}`}
+					className={`grid gap-8 items-start ${currentStep < LAST_STEP ? "grid-cols-1 lg:grid-cols-[1fr_360px]" : "grid-cols-1"}`}
 				>
 					<form
-						onSubmit={form.handleSubmit(onSubmit as any)}
-						className={`flex flex-col gap-8 w-full min-w-0 ${currentStep === 3 ? "max-w-3xl mx-auto" : ""}`}
+						onSubmit={form.handleSubmit(onSubmit)}
+						className={`flex flex-col gap-8 w-full min-w-0 ${currentStep === LAST_STEP ? "max-w-3xl mx-auto" : ""}`}
 					>
 						{currentStep === 1 && (
-							<Step1DateTravellers onNext={handleNextStep} />
+							<Step1DateTravellers
+								onNext={handleNextStep}
+								isLoading={isCreating || isUpdating}
+								options={options}
+								isOptionsLoading={isOptionsLoading}
+								isOptionLocked={!!bookingId}
+							/>
 						)}
 						{currentStep === 2 && (
 							<Step2TravellerDetails
 								onPrev={handlePrevStep}
+								onAddTraveller={handleAddTraveller}
+								onRemoveTraveller={handleRemoveTraveller}
+								canAddTraveller={canAddTraveller}
 								isLoading={isLoading}
+								isPaxLoading={isPaxLoading}
 							/>
 						)}
 						{currentStep === 3 && (
-							<Step3Confirmation bookingData={bookingData} />
+							<Step3Confirmation
+								submittedBooking={submittedBooking}
+								tourData={tourData}
+								options={options}
+							/>
 						)}
 					</form>
 
-					{currentStep < 3 && (
-						<PreviewBookingSidebar tourData={tourData} />
+					{currentStep < LAST_STEP && (
+						<PreviewBookingSidebar
+							tourData={tourData}
+							options={options}
+							submittedBooking={submittedBooking}
+						/>
 					)}
 				</div>
 			</div>

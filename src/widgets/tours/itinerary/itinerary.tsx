@@ -27,8 +27,7 @@ const ItineraryBase: React.FC = () => {
 		activeOption,
 		setActiveOption,
 		isLoading,
-		handleAddOption,
-		handleDeleteOption
+		handleOptionDeleted
 	} = useItineraryOptions(tourId);
 
 	const { eventsAsOptionData, EMPTY_OPTION_DATA } = useItineraryEvents(
@@ -67,16 +66,15 @@ const ItineraryBase: React.FC = () => {
 		>
 			<div className="h-full flex flex-col">
 				<BoardTabs
+					tourId={tourId}
 					activeOption={activeOption}
 					setActiveOption={setActiveOption}
 					options={options}
-					onAddOption={handleAddOption}
-					onDeleteOption={handleDeleteOption}
+					onOptionDeleted={handleOptionDeleted}
 				/>
 
 				<Separator />
 
-				{/* board + sidebar */}
 				<div className="flex-1 flex overflow-hidden">
 					<BoardColumns
 						data={currentData}
@@ -86,7 +84,6 @@ const ItineraryBase: React.FC = () => {
 					<ItinerarySidebar />
 				</div>
 
-				{/* Drag overlay */}
 				<DragOverlay adjustScale={false}>
 					{!!activeDayItem && (
 						<DraggableDayItem

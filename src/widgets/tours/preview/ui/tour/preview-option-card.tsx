@@ -1,3 +1,162 @@
+import { type FC } from "react";
+import { useTranslation } from "react-i18next";
+import { generatePath, useNavigate, useParams } from "react-router";
+
+import { ENUM_PATH } from "@/shared/config/routes/routes.config";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardTitle,
+	withErrorBoundary
+} from "@/shared/ui";
+import { Badge } from "@/shared/ui/shadcn-ui/badge";
+import { Button } from "@/shared/ui/shadcn-ui/button";
+
+import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
+
+interface IPreviewOptionCardProps {
+	option: IPreviewOptionCard;
+}
+
+export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
+	option
+}) => {
+	const { t } = useTranslation("preview_tour_page");
+	const navigate = useNavigate();
+	const { tourId = "" } = useParams<{ tourId: string }>();
+
+	const handleNavigate = () => {
+		const path = generatePath(ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION, {
+			tourId,
+			optionId: option.id
+		});
+		navigate(path);
+	};
+
+	return (
+		<Card>
+			<CardContent>
+				<div className="flex flex-col lg:flex-row gap-6">
+					<div className="flex-1 flex flex-col gap-4">
+						<div className="gap-3 grid">
+							<Badge>
+								<CardTitle>{option.title}</CardTitle>
+							</Badge>
+							<CardDescription>
+								{option.description}
+							</CardDescription>
+						</div>
+
+						<div className="mt-auto flex items-end justify-between gap-4">
+							<div>
+								<p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+									{t("sections.itinerary.card.from")}
+								</p>
+								<p className="text-xl font-bold">
+									{option.price}{" "}
+									<span className="text-base font-normal">
+										{t(
+											"sections.itinerary.card.per_person"
+										)}
+									</span>
+								</p>
+								<p className="text-xs text-muted-foreground mt-1">
+									{t("sections.itinerary.card.price_depends")}
+								</p>
+							</div>
+
+							<Button
+								onClick={handleNavigate}
+								className="bg-blue-400 hover:bg-blue-500 text-white shrink-0"
+							>
+								{t("sections.itinerary.card.book_package")}{" "}
+								<span className="ml-2">→</span>
+							</Button>
+						</div>
+					</div>
+
+					<div className="w-full lg:w-[320px] shrink-0">
+						<img
+							src={option.image}
+							alt={option.title}
+							className="w-full h-[240px] object-cover rounded-xl"
+						/>
+					</div>
+				</div>
+
+				{/*
+				<Accordion type="single" collapsible>
+					<Card>
+						<CardContent>
+							<AccordionItem value={option.id} className="border-none">
+								<div className="flex flex-col lg:flex-row gap-6">
+									<div className="flex-1 flex flex-col gap-4">
+										<div className="gap-3 grid">
+											<Badge>
+												<CardTitle>{option.title}</CardTitle>
+											</Badge>
+											<CardDescription>
+												{option.description}
+											</CardDescription>
+										</div>
+
+										<div className="mt-auto flex items-end justify-between">
+											<div>
+												<p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
+													{t("sections.itinerary.card.from")}
+												</p>
+												<p className="text-xl font-bold">
+													{option.price}{" "}
+													<span className="text-base font-normal">
+														{t(
+															"sections.itinerary.card.per_person"
+														)}
+													</span>
+												</p>
+												<p className="text-xs text-muted-foreground mt-1">
+													{t(
+														"sections.itinerary.card.price_depends"
+													)}
+												</p>
+											</div>
+
+											<AccordionTrigger className="text-sm text-primary hover:no-underline py-0 h-auto font-medium">
+												{t(
+													"sections.itinerary.card.view_itinerary"
+												)}
+											</AccordionTrigger>
+										</div>
+									</div>
+
+									<div className="w-full lg:w-[320px] shrink-0">
+										<img
+											src={option.image}
+											alt={option.title}
+											className="w-full h-[240px] object-cover rounded-xl"
+										/>
+									</div>
+								</div>
+
+								<AccordionContent className="px-6 pb-6">
+									<PreviewOptionItinerary
+										option={option}
+										handleNavigate={handleNavigate}
+									/>
+								</AccordionContent>
+							</AccordionItem>
+						</CardContent>
+					</Card>
+				</Accordion>
+				*/}
+			</CardContent>
+		</Card>
+	);
+};
+
+export const PreviewOptionCard = withErrorBoundary(PreviewOptionCardBase);
+
+/*
 import {
 	Bed,
 	Bus,
@@ -91,86 +250,6 @@ const getEventIcon = (type: string) => {
 	}
 };
 
-export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
-	option
-}) => {
-	const { t } = useTranslation("preview_tour_page");
-	const navigate = useNavigate();
-	const { tourId = "" } = useParams<{ tourId: string }>();
-	const handleNavigate = () => {
-		const path = generatePath(ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION, {
-			tourId,
-			optionId: option.id
-		});
-		navigate(path);
-	};
-
-	return (
-		<Accordion type="single" collapsible>
-			<Card>
-				<CardContent>
-					<AccordionItem value={option.id} className="border-none">
-						<div className="flex flex-col lg:flex-row gap-6">
-							<div className="flex-1 flex flex-col gap-4">
-								<div className="gap-3 grid">
-									<Badge>
-										<CardTitle>{option.title}</CardTitle>
-									</Badge>
-									<CardDescription>
-										{option.description}
-									</CardDescription>
-								</div>
-
-								<div className="mt-auto flex items-end justify-between">
-									<div>
-										<p className="text-xs text-muted-foreground uppercase tracking-wider mb-1">
-											{t("sections.itinerary.card.from")}
-										</p>
-										<p className="text-xl font-bold">
-											{option.price}{" "}
-											<span className="text-base font-normal">
-												{t(
-													"sections.itinerary.card.per_person"
-												)}
-											</span>
-										</p>
-										<p className="text-xs text-muted-foreground mt-1">
-											{t(
-												"sections.itinerary.card.price_depends"
-											)}
-										</p>
-									</div>
-
-									<AccordionTrigger className="text-sm text-primary hover:no-underline py-0 h-auto font-medium">
-										{t(
-											"sections.itinerary.card.view_itinerary"
-										)}
-									</AccordionTrigger>
-								</div>
-							</div>
-
-							<div className="w-full lg:w-[320px] shrink-0">
-								<img
-									src={option.image}
-									alt={option.title}
-									className="w-full h-[240px] object-cover rounded-xl"
-								/>
-							</div>
-						</div>
-
-						<AccordionContent className="px-6 pb-6">
-							<PreviewOptionItinerary
-								option={option}
-								handleNavigate={handleNavigate}
-							/>
-						</AccordionContent>
-					</AccordionItem>
-				</CardContent>
-			</Card>
-		</Accordion>
-	);
-};
-
 interface IPreviewOptionItineraryProps {
 	option: IPreviewOption;
 	handleNavigate: () => void;
@@ -258,5 +337,4 @@ const PreviewOptionItinerary: FC<IPreviewOptionItineraryProps> = ({
 		</div>
 	);
 };
-
-export const PreviewOptionCard = withErrorBoundary(PreviewOptionCardBase);
+*/

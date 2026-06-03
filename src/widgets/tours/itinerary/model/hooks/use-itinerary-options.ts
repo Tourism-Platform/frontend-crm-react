@@ -1,43 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import { useEffect, useState } from "react";
 
-import {
-	useCreateTourOptionMutation,
-	useDeleteOptionMutation,
-	useListAllTourOptionsQuery
-} from "@/entities/tour";
-
-import type { IOption } from "../types";
+import { useListAllTourOptionsQuery } from "@/entities/tour";
 
 export const useItineraryOptions = (tourId: string) => {
-	const { t } = useTranslation("tour_itinerary_page");
-
-	const { data: backendOptions = [], isLoading } = useListAllTourOptionsQuery(
+	const { data: options = [], isLoading } = useListAllTourOptionsQuery(
 		tourId,
 		{ skip: !tourId }
-	);
-
-	const [createOption] = useCreateTourOptionMutation();
-	const [deleteOption] = useDeleteOptionMutation();
-
-	const hasInitialized = useRef(false);
-
-	useEffect(() => {
-		if (isLoading) return;
-		if (backendOptions.length === 0 && !hasInitialized.current) {
-			hasInitialized.current = true;
-			handleAddOption();
-		}
-	}, [backendOptions.length, isLoading]);
-
-	const options: IOption[] = useMemo(
-		() =>
-			backendOptions.map((opt, idx) => ({
-				id: opt.id,
-				name: `Option ${idx + 1}`
-			})),
-		[backendOptions]
 	);
 
 	const [activeOption, setActiveOption] = useState<string>("");
@@ -48,38 +16,10 @@ export const useItineraryOptions = (tourId: string) => {
 		}
 	}, [options, activeOption]);
 
-	const handleAddOption = useCallback(() => {
-		const createPromise = createOption({ tourId }).unwrap();
-		toast.promise(createPromise, {
-			loading: t("toasts.option.create.loading"),
-			success: (newOption) => {
-				setActiveOption(newOption.id);
-				return t("toasts.option.create.success");
-			},
-			error: t("toasts.option.create.error")
-		});
-	}, [createOption, tourId, t]);
-
-	const handleDeleteOption = (optionId: string) => {
-		const prevActiveOption = activeOption;
-
-		// Оптимистично переключаем таб, если удаляем активный
-		if (activeOption === optionId) {
-			const remaining = options.filter((o) => o.id !== optionId);
-			setActiveOption(remaining.length > 0 ? remaining[0].id : "");
-		}
-
-		const deletePromise = deleteOption({ tourId, optionId }).unwrap();
-
-		toast.promise(deletePromise, {
-			loading: t("toasts.option.delete.loading"),
-			success: t("toasts.option.delete.success"),
-			error: () => {
-				// Rollback активного таба при ошибке
-				setActiveOption(prevActiveOption);
-				return t("toasts.option.delete.error");
-			}
-		});
+	const handleOptionDeleted = (optionId: string) => {
+		if (activeOption !== optionId) return;
+		const remaining = options.filter((o) => o.id !== optionId);
+		setActiveOption(remaining.length > 0 ? remaining[0].id : "");
 	};
 
 	return {
@@ -87,7 +27,6 @@ export const useItineraryOptions = (tourId: string) => {
 		activeOption,
 		setActiveOption,
 		isLoading,
-		handleAddOption,
-		handleDeleteOption
+		handleOptionDeleted
 	};
 };

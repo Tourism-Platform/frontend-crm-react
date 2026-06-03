@@ -1,8 +1,8 @@
-import { MoreVertical, Plus } from "lucide-react";
-import { type FC, useRef, useState } from "react";
+import { MoreVertical } from "lucide-react";
+import { type FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
-	Button,
 	CustomOptionTabs,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
@@ -12,56 +12,30 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import type { IOption } from "../../model";
+import type { IOption } from "@/entities/tour";
+
+import { CreateOption, DeleteOption, EditOption } from "@/features/tours";
+
+const menuItemClassName =
+	"w-full hover:bg-accent cursor-pointer px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
 
 interface IBoardTabsProps {
+	tourId: string;
 	activeOption: string;
 	setActiveOption: React.Dispatch<React.SetStateAction<string>>;
 	options: IOption[];
-	onAddOption: () => void;
-	onDeleteOption: (optionId: string) => void;
+	onOptionDeleted: (optionId: string) => void;
 }
 
 export const BoardTabs: FC<IBoardTabsProps> = ({
+	tourId,
 	activeOption,
 	setActiveOption,
 	options,
-	onAddOption,
-	onDeleteOption
+	onOptionDeleted
 }) => {
-	const inputRef = useRef<HTMLInputElement | null>(null);
-
-	// tabs states
-	const [editingOption, setEditingOption] = useState<string | null>(null);
-	const [editingName, setEditingName] = useState("");
+	const { t } = useTranslation("tour_itinerary_page");
 	const [draggedTab, setDraggedTab] = useState<string | null>(null);
-
-	const [localNames, setLocalNames] = useState<Record<string, string>>({});
-
-	const getOptionName = (option: IOption) =>
-		localNames[option.id] || option.name;
-
-	const startEditingOption = (option: IOption) => {
-		setEditingOption(option.id);
-		setEditingName(getOptionName(option));
-		setTimeout(() => inputRef.current?.focus(), 0);
-	};
-
-	const saveOptionName = () => {
-		if (editingName.trim() && editingOption) {
-			setLocalNames((prev) => ({
-				...prev,
-				[editingOption]: editingName.trim()
-			}));
-		}
-		setEditingOption(null);
-		setEditingName("");
-	};
-
-	const cancelEditingOption = () => {
-		setEditingOption(null);
-		setEditingName("");
-	};
 
 	const handleTabDragStart = (e: React.DragEvent, optionId: string) => {
 		setDraggedTab(optionId);
@@ -71,7 +45,6 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 	const handleTabDrop = (e: React.DragEvent, targetOptionId: string) => {
 		e.preventDefault();
 		if (draggedTab === targetOptionId || draggedTab === null) return;
-		// Локальная перестановка табов (UI-only, бэкенд не поддерживает порядок опций)
 		setDraggedTab(null);
 	};
 
@@ -87,76 +60,81 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 						<div
 							key={option.id}
 							className="relative"
-							draggable={editingOption !== option.id}
+							draggable
 							onDragStart={(e) =>
 								handleTabDragStart(e, option.id)
 							}
 							onDrop={(e) => handleTabDrop(e, option.id)}
-							onDragEnd={() => {
-								setDraggedTab(null);
-							}}
+							onDragEnd={() => setDraggedTab(null)}
 						>
-							{editingOption === option.id ? (
-								<input
-									ref={inputRef}
-									type="text"
-									value={editingName}
-									onChange={(e) =>
-										setEditingName(e.target.value)
-									}
-									onBlur={saveOptionName}
-									onKeyDown={(e) => {
-										if (e.key === "Enter") saveOptionName();
-										if (e.key === "Escape")
-											cancelEditingOption();
-									}}
-									className="px-4 py-2 border-2 border-primary rounded-t-lg outline-none"
-								/>
-							) : (
-								<CustomOptionTabsTrigger
-									key={option.id}
-									value={option.id}
-									onDoubleClick={() =>
-										startEditingOption(option)
-									}
-									className={
-										"flex gap-2 items-center min-w-[120px] max-w-[200px] pr-0"
-									}
-									variant={"tongue"}
-									asChild
-								>
-									<div>
-										<p className="truncate">
-											{getOptionName(option)}
-										</p>
-										<DropdownMenu>
-											<DropdownMenuTrigger className="cursor-pointer py-1 px-2">
-												<MoreVertical className="w-4 h-4" />
-											</DropdownMenuTrigger>
-											<DropdownMenuContent align="end">
-												<DropdownMenuItem
-													onClick={() =>
-														onDeleteOption(
+							<CustomOptionTabsTrigger
+								value={option.id}
+								className="flex gap-2 items-center min-w-[120px] max-w-[200px] pr-0"
+								variant="tongue"
+								asChild
+							>
+								<div>
+									<p className="truncate">
+										{option.name || option.id}
+									</p>
+									<DropdownMenu>
+										<DropdownMenuTrigger
+											className="cursor-pointer py-1 px-2"
+											onClick={(e) => e.stopPropagation()}
+										>
+											<MoreVertical className="w-4 h-4" />
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="end">
+											<DropdownMenuItem asChild>
+												<EditOption
+													tourId={tourId}
+													option={option}
+													trigger={
+														<div
+															className={
+																menuItemClassName
+															}
+														>
+															{t(
+																"option.actions.edit"
+															)}
+														</div>
+													}
+												/>
+											</DropdownMenuItem>
+											<DropdownMenuItem asChild>
+												<DeleteOption
+													tourId={tourId}
+													optionId={option.id}
+													onDeleted={() =>
+														onOptionDeleted(
 															option.id
 														)
 													}
-													className=" !text-red-400"
-												>
-													Delete
-												</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
-									</div>
-								</CustomOptionTabsTrigger>
-							)}
+													trigger={
+														<div
+															className={
+																menuItemClassName
+															}
+														>
+															{t(
+																"option.actions.delete"
+															)}
+														</div>
+													}
+													className="text-destructive focus:text-destructive hover:bg-accent"
+												/>
+											</DropdownMenuItem>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</div>
+							</CustomOptionTabsTrigger>
 						</div>
 					))}
 				</CustomOptionTabsList>
 			</CustomOptionTabs>
 
-			<Button onClick={onAddOption} size={"icon"} variant={"ghost"}>
-				<Plus className="w-5 h-5 text-muted-foreground" />
-			</Button>
+			<CreateOption tourId={tourId} />
 		</div>
 	);
 };

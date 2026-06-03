@@ -45,22 +45,13 @@ graph TD
 
 ---
 
-## 3. Логика добавления Option (Option Creation)
+## 3. Логика Option (create / edit / delete)
 
-1. Клик по кнопке добавления опции вызывает метод `handleAddOption` в `useItineraryOptions`.
-2. Запускается мутация `createTourOption`.
-3. В `option.service.ts` реализован механизм оптимистичного обновления кэша через `onQueryStarted`:
-   ```typescript
-   async onQueryStarted({ tourId }, { dispatch, queryFulfilled }) {
-       const { data: newOption } = await queryFulfilled;
-       dispatch(
-           tourOptionApi.util.updateQueryData("listAllTourOptions", tourId, (draft) => {
-               draft.push(newOption);
-           })
-       );
-   }
-   ```
-   Новая опция пушится в кэш RTK-Query, провоцируя автоматический реактивный ререндер табов в `BoardTabs`.
+1. **Create**: `CreateOption` (`@/features/tours`) у кнопки `+` в `BoardTabs`. Submit: `createTourOption` → при выборе файла `uploadOptionCover` (как landing).
+2. **Edit**: `EditOption` в меню таба (`DropdownMenuItem asChild` + `trigger`). Submit: `updateTourOption` → cover upload/delete.
+3. **Delete**: `DeleteOption` в меню таба, confirm dialog. `deleteOption` + `onDeleted` для смены `activeOption`.
+4. `useItineraryOptions` — только `listAllTourOptions` и UI-state (`activeOption`, `createOpen`). При пустом списке открывается create-модалка.
+5. Список табов обновляется через `invalidatesTags` RTK Query после мутаций.
 
 ---
 

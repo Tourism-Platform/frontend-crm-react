@@ -14,9 +14,13 @@ export const BOOKING_AVAILABILITY_PATHS = {
 				response: BookingEventAvailabilityModel[];
 			}
 		}) as const,
-	applyEventAvailability: (bookingId: string, eventId: string) =>
+	applyEventAvailability: (
+		bookingId: string,
+		eventId: string,
+		optionIndex: string
+	) =>
 		({
-			url: `/booking/order/${bookingId}/events/${eventId}/availability`,
+			url: `/booking/order/${bookingId}/events/${eventId}/options/${optionIndex}/availability`,
 			method: "PATCH",
 			_types: {} as {
 				body: AvailabilityApply;

@@ -1,10 +1,5 @@
 import type { IDayItem } from "./day-item.types";
 
-export interface IOption {
-	id: string;
-	name: string;
-}
-
 export interface IOptionData {
 	tripDetails: IDayItem[];
 	days: Record<number, IDayItem[]>;

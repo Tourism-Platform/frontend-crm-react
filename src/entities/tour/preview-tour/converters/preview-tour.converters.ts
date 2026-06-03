@@ -6,14 +6,20 @@ import { pickupMapper } from "@/entities/tour/landing/converters/pickup.converte
 
 import type { IPreviewTourData, TPreviewTourBackend } from "../types";
 
+const mapPreviewImagesToUrls = (
+	images: TPreviewTourBackend["images"]
+): string[] =>
+	[...images]
+		.sort((a, b) => Number(b.is_primary) - Number(a.is_primary))
+		.map((image) => image.image_url);
+
 export const mapPreviewTourToFrontend = (
 	backend: TPreviewTourBackend
 ): IPreviewTourData => ({
 	overview: backend.overview || "",
-	description: backend.description || "",
-	// cities: backend.cities || [],
-	// !!!
-	cities: ["Tashkent", "Samarkand"],
+	description: backend.overview || backend.description || "",
+	images: mapPreviewImagesToUrls(backend.images ?? []),
+	cities: [],
 	languages: languageMapper.fromMany(backend.languages),
 	included: amenitiesMapper.fromMany(
 		backend.amenities_included as AmenitiesTypes[]

@@ -7,8 +7,10 @@ import { toast } from "sonner";
 import { Separator, withErrorBoundary } from "@/shared/ui";
 
 import { useGetTourGeneralQuery } from "@/entities/tour";
-import { useGetPreviewTourQuery } from "@/entities/tour/preview-tour";
-import { PREVIEW_TOUR_OPTIONS_MOCK } from "@/entities/tour/preview-tour/mock";
+import {
+	useGetPreviewTourOptionsQuery,
+	useGetPreviewTourQuery
+} from "@/entities/tour/preview-tour";
 
 import {
 	PreviewOptionsCards,
@@ -18,6 +20,7 @@ import {
 	PreviewTourHero,
 	PreviewTourMeta,
 	PreviewTourOverview,
+	PreviewTourPhotos,
 	PreviewTourPickup,
 	PreviewTourProviderCard
 } from "./tour";
@@ -42,13 +45,21 @@ const PreviewTourBase: FC = () => {
 		skip: !tourId
 	});
 
-	const isLoading = isPreviewLoading || isTourLoading;
+	const {
+		data: optionsData,
+		isLoading: isOptionsLoading,
+		isError: isOptionsError
+	} = useGetPreviewTourOptionsQuery(tourId, {
+		skip: !tourId
+	});
+
+	const isLoading = isPreviewLoading || isTourLoading || isOptionsLoading;
 
 	useEffect(() => {
-		if (isPreviewError || isTourError) {
+		if (isPreviewError || isTourError || isOptionsError) {
 			toast.error(t("toasts.load.error"));
 		}
-	}, [isPreviewError, isTourError, t]);
+	}, [isPreviewError, isTourError, isOptionsError, t]);
 
 	if (isLoading) {
 		return (
@@ -65,8 +76,7 @@ const PreviewTourBase: FC = () => {
 	// 		</div>
 	// 	);
 	// }
-	console.log(previewData);
-	console.log(tourData);
+
 	return (
 		<section className="flex flex-col gap-8 container pb-12">
 			<Link
@@ -78,24 +88,26 @@ const PreviewTourBase: FC = () => {
 			</Link>
 
 			<div className="grid grid-cols-[1fr_auto] gap-8 items-start">
-				<PreviewTourHero tour={tourData!} />
+				<PreviewTourHero tour={tourData} />
 				<PreviewTourProviderCard />
 			</div>
 
 			<div className="flex flex-col gap-8">
-				<PreviewTourOverview data={previewData!} />
+				<PreviewTourOverview data={previewData} />
 				<Separator />
-				<PreviewTourMeta data={previewData!} />
+				<PreviewTourPhotos data={previewData} />
 				<Separator />
-				<PreviewTourAmenities data={previewData!} />
+				<PreviewTourMeta data={previewData} />
 				<Separator />
-				<PreviewTourPickup data={previewData!} />
+				<PreviewTourAmenities data={previewData} />
 				<Separator />
-				<PreviewTourCancellation data={previewData!} />
+				<PreviewTourPickup data={previewData} />
 				<Separator />
-				<PreviewTourAdditionalInfo data={previewData!} />
+				<PreviewTourCancellation data={previewData} />
 				<Separator />
-				<PreviewOptionsCards options={PREVIEW_TOUR_OPTIONS_MOCK} />
+				<PreviewTourAdditionalInfo data={previewData} />
+				<Separator />
+				<PreviewOptionsCards options={optionsData ?? []} />
 			</div>
 		</section>
 	);

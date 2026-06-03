@@ -1,4 +1,5 @@
 export * from "./option.types";
+export * from "./tour-option-form.types";
 export * from "./option-backend.types";
 export * from "./event.types";
 export * from "./event-backend.types";

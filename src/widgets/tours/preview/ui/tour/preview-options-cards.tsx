@@ -3,10 +3,12 @@ import { useTranslation } from "react-i18next";
 
 import { withErrorBoundary } from "@/shared/ui";
 
-import { type IPreviewOption, PreviewOptionCard } from "./preview-option-card";
+import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
+
+import { PreviewOptionCard } from "./preview-option-card";
 
 interface IPreviewOptionsCardsProps {
-	options: IPreviewOption[];
+	options: IPreviewOptionCard[];
 }
 
 export const PreviewOptionsCardsBase: FC<IPreviewOptionsCardsProps> = ({

@@ -1,8 +1,10 @@
 import type {
+	BodyUploadInvoicePdfInvoiceInvoiceIdPdfPost,
 	InvoiceDetailResponse,
 	InvoiceGenerate,
 	InvoiceListResponse,
 	InvoicePaymentCreate,
+	InvoicePdfResponse,
 	InvoiceStatus
 } from "../Api";
 
@@ -39,6 +41,26 @@ export const INVOICE_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
+				query: void;
+				response: InvoiceDetailResponse;
+			}
+		}) as const,
+	getInvoicePdf: (invoiceId: string) =>
+		({
+			url: `/invoice/${invoiceId}/pdf`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: InvoicePdfResponse;
+			}
+		}) as const,
+	uploadInvoicePdf: (invoiceId: string) =>
+		({
+			url: `/invoice/${invoiceId}/pdf`,
+			method: "POST",
+			_types: {} as {
+				body: BodyUploadInvoicePdfInvoiceInvoiceIdPdfPost;
 				query: void;
 				response: InvoiceDetailResponse;
 			}

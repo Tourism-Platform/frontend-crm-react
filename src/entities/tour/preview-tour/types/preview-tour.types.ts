@@ -7,6 +7,7 @@ import type {
 export interface IPreviewTourData {
 	overview: string;
 	description: string;
+	images: string[];
 	cities: string[];
 	languages: ENUM_LANGUAGES_TYPE[];
 	included: ENUM_AMENITIES_TYPE[];

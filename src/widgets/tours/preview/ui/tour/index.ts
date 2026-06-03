@@ -4,6 +4,7 @@ export * from "./preview-tour-amenities";
 export * from "./preview-tour-cancellation";
 export * from "./preview-tour-hero";
 export * from "./preview-tour-overview";
+export * from "./preview-tour-photos";
 export * from "./preview-tour-pickup";
 export * from "./preview-tour-provider-card";
 export * from "./preview-tour-meta";

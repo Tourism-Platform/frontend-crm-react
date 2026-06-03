@@ -1,4 +1,5 @@
 import type {
+	BodyUploadOptionCoverTourTourIdOptionOptionIdCoverPost,
 	Currency,
 	TourOptionCreateSchema,
 	TourOptionModel,
@@ -10,6 +11,16 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const TOUR_OPTION_PATHS = {
+	getTourSummary: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/option/${optionId}/summary`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { currency?: Currency };
+				response: TourSummaryResponse;
+			}
+		}) as const,
 	listAllTourOptions: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/option/all`,
@@ -46,14 +57,20 @@ export const TOUR_OPTION_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
-	getTourSummary: (tourId: string, optionId: string) =>
+	uploadOptionCover: (tourId: string, optionId: string) =>
 		({
-			url: `/tour/${tourId}/option/${optionId}/summary`,
-			method: "GET",
+			url: `/tour/${tourId}/option/${optionId}/cover`,
+			method: "POST",
 			_types: {} as {
-				body: void;
-				query: { currency?: Currency };
-				response: TourSummaryResponse;
+				body: BodyUploadOptionCoverTourTourIdOptionOptionIdCoverPost;
+				query: void;
+				response: TourOptionModel;
 			}
+		}) as const,
+	deleteOptionCover: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/option/${optionId}/cover`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
 		}) as const
 } as const;

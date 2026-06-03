@@ -4,6 +4,7 @@ export { ADMIN_PATHS } from "./admin.paths";
 export { AUTH_PATHS } from "./auth.paths";
 export { ACCOUNT_PATHS } from "./account.paths";
 export { TOUR_PATHS } from "./tour.paths";
+export { TOUR_STATISTICS_PATHS } from "./tour-statistics.paths";
 export { TOUR_OPTION_PATHS } from "./tour-option.paths";
 export { PRICING_REVIEW_PATHS } from "./pricing-review.paths";
 export { TOUR_FINANCIAL_PATHS } from "./tour-financial.paths";

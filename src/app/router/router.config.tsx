@@ -500,21 +500,21 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION,
 		component: PreviewOptionPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
 		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.BOOKING,
 		component: PreviewBookingPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
 		layout_cascade: [ToursOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.SEARCH,
 		component: SearchToursPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
 		layout_cascade: [ToursOperatorLayout]
 	},
 	{

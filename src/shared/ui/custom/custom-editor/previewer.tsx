@@ -6,20 +6,36 @@ import { type FC, useMemo } from "react";
 
 import { cn } from "@/shared/lib";
 
+const extensions = [
+	StarterKit,
+	TextAlign.configure({
+		types: ["heading", "paragraph", "bulletList", "orderedList"]
+	})
+];
+
 interface IPreviewerProps {
-	text: string;
+	text?: string | null;
 	className?: string;
 }
 
+const parseTipTapHtml = (value: string) => {
+	try {
+		return generateHTML(JSON.parse(value), extensions);
+	} catch {
+		return generateHTML(
+			JSON.parse('{ type: "doc", content: [] }'),
+			extensions
+		);
+	}
+};
+
 export const Previewer: FC<IPreviewerProps> = ({ text, className }) => {
 	const outPut = useMemo(() => {
-		return generateHTML(JSON.parse(text), [
-			StarterKit,
-			TextAlign.configure({
-				types: ["heading", "paragraph", "bulletList", "orderedList"]
-			})
-		]);
+		if (!text?.trim()) return null;
+		return parseTipTapHtml(text);
 	}, [text]);
+
+	if (!outPut) return null;
 
 	return (
 		<div

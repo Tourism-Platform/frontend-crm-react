@@ -53,7 +53,7 @@ export const AGENCY_BUSINESS_SCHEMA = z.object({
 			.max(100, {
 				message: msg("form.business.fields.business_website.errors.max")
 			})
-			.regex(/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/\S*)?$/, {
+			.regex(/^(\/\/)?([\w-]+\.)+[\w-]{2,}(\/\S*)?$/, {
 				message: msg(
 					"form.business.fields.business_website.errors.pattern"
 				)

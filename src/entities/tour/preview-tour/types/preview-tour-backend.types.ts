@@ -1,3 +1,3 @@
-import type { LandingPageModel } from "@/shared/api";
+import type { LandingPagePubSchema } from "@/shared/api";
 
-export type TPreviewTourBackend = LandingPageModel;
+export type TPreviewTourBackend = LandingPagePubSchema;

@@ -8,11 +8,14 @@ import type { ITourGeneral } from "@/entities/tour";
 import { HERO_INFO } from "../../model";
 
 interface IPreviewTourHeroProps {
-	tour: ITourGeneral;
+	tour?: ITourGeneral;
 }
 
 const PreviewTourHeroBase: FC<IPreviewTourHeroProps> = ({ tour }) => {
 	const { t } = useTranslation("preview_tour_page");
+
+	if (!tour) return null;
+
 	const heroData = HERO_INFO(tour, t);
 
 	return (

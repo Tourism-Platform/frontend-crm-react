@@ -5,18 +5,28 @@ import { useTranslation } from "react-i18next";
 
 import { Card, CardContent } from "@/shared/ui";
 
+import type { TSubmittedBooking } from "@/entities/booking";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	type TPreviewBookingSchema
 } from "@/entities/tour/preview-booking";
-import { PREVIEW_TOUR_OPTIONS_MOCK } from "@/entities/tour/preview-tour/mock";
+import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 import type { ITourGeneral } from "@/entities/tour/tour";
 
 interface ISidebarProps {
 	tourData?: ITourGeneral;
+	options: IPreviewOptionCard[];
+	submittedBooking?: TSubmittedBooking | null;
 }
 
-export const PreviewBookingSidebar: FC<ISidebarProps> = ({ tourData }) => {
+const parsePrice = (price: string) =>
+	parseFloat(price.replace(/[^0-9.-]+/g, "")) || 0;
+
+export const PreviewBookingSidebar: FC<ISidebarProps> = ({
+	tourData,
+	options,
+	submittedBooking
+}) => {
 	const { t } = useTranslation("preview_booking_page");
 	const form = useFormContext<TPreviewBookingSchema>();
 
@@ -33,20 +43,36 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({ tourData }) => {
 		name: ENUM_FORM_PREVIEW_BOOKING.OPTION_ID
 	});
 
-	const selectedOption = PREVIEW_TOUR_OPTIONS_MOCK.find(
-		(opt) => opt.id === optionId
-	);
+	const selectedOption = options.find((opt) => opt.id === optionId);
 	const pricePerPerson = selectedOption
-		? parseFloat(selectedOption.price.replace(/[^0-9.-]+/g, ""))
-		: 0;
-	const total = pricePerPerson * (count || 1);
+		? parsePrice(selectedOption.price)
+		: submittedBooking
+			? parseFloat(submittedBooking.tourAmount) / submittedBooking.pax
+			: 0;
+	const travellersCount = submittedBooking?.pax ?? count ?? 1;
+	const total = submittedBooking
+		? parseFloat(submittedBooking.tourAmount)
+		: pricePerPerson * travellersCount;
+
+	const startDate = submittedBooking?.date
+		? new Date(submittedBooking.date)
+		: date;
+	const endDate = submittedBooking?.endDate
+		? new Date(submittedBooking.endDate)
+		: startDate
+			? new Date(startDate)
+			: undefined;
 
 	const durationDays =
 		typeof tourData?.duration === "object"
-			? (tourData.duration as any).to ||
-				(tourData.duration as any).from ||
+			? (tourData.duration as { to?: number; from?: number }).to ||
+				(tourData.duration as { to?: number; from?: number }).from ||
 				1
 			: Number(tourData?.duration || 1);
+
+	if (endDate && startDate && !submittedBooking?.endDate) {
+		endDate.setDate(startDate.getDate() + durationDays);
+	}
 
 	return (
 		<Card className="w-full shrink-0 sticky top-8">
@@ -64,8 +90,8 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({ tourData }) => {
 							{t("sidebar.start_date")}
 						</span>
 						<span className="font-medium text-right">
-							{date
-								? format(date, "MMM dd, yyyy")
+							{startDate
+								? format(startDate, "MMM dd, yyyy")
 								: t("sidebar.not_selected")}
 						</span>
 					</div>
@@ -74,14 +100,8 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({ tourData }) => {
 							{t("sidebar.end_date")}
 						</span>
 						<span className="font-medium text-right">
-							{date && durationDays
-								? format(
-										new Date(date).setDate(
-											new Date(date).getDate() +
-												durationDays
-										),
-										"MMM dd, yyyy"
-									)
+							{endDate
+								? format(endDate, "MMM dd, yyyy")
 								: t("sidebar.not_selected")}
 						</span>
 					</div>
@@ -98,8 +118,8 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({ tourData }) => {
 							{t("sidebar.travellers")}
 						</span>
 						<span className="font-medium text-right">
-							{count || t("sidebar.not_selected")}{" "}
-							{count ? t("sidebar.person") : ""}
+							{travellersCount || t("sidebar.not_selected")}{" "}
+							{travellersCount ? t("sidebar.person") : ""}
 						</span>
 					</div>
 					<div className="flex justify-between">
@@ -117,7 +137,8 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({ tourData }) => {
 						{t("sidebar.price_per_person")}
 					</span>
 					<span className="font-semibold">
-						${pricePerPerson.toFixed(2)}
+						{submittedBooking?.tourCurrency ?? "$"}
+						{pricePerPerson.toFixed(2)}
 					</span>
 				</div>
 
@@ -127,11 +148,13 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({ tourData }) => {
 					</span>
 					<div className="flex flex-col items-end">
 						<span className="text-2xl font-bold">
-							${total.toFixed(2)}
+							{submittedBooking?.tourCurrency ?? "$"}
+							{total.toFixed(2)}
 						</span>
-						{count > 0 && pricePerPerson > 0 && (
+						{travellersCount > 0 && pricePerPerson > 0 && (
 							<span className="text-xs text-muted-foreground text-blue-400">
-								{count} {t("sidebar.person")} X $
+								{travellersCount} {t("sidebar.person")} X{" "}
+								{submittedBooking?.tourCurrency ?? "$"}
 								{pricePerPerson.toFixed(2)}
 							</span>
 						)}

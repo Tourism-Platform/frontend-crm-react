@@ -26,10 +26,13 @@ const PreviewTourProviderCardBase: FC = () => {
 		isLoading: isLoadingTourPreview
 	} = useGetPreviewOperatorQuery(tourId);
 
-	const providerData = PROVIDER_CONTACTS(data!);
+	const providerData = PROVIDER_CONTACTS(data);
 
 	const handleBooking = () => {
-		const path = generatePath(ENUM_PATH.TOURS.CATALOG.BOOKING, { tourId });
+		const path = generatePath(ENUM_PATH.TOURS.CATALOG.BOOKING, {
+			tourId,
+			bookingId: null
+		});
 		navigate(path);
 	};
 

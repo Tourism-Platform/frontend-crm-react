@@ -11,3 +11,5 @@ export * from "./supplier-payment-status.types";
 export * from "./supplier-payment.interface";
 export * from "./tour.interface";
 export * from "./order-pax-backend.types";
+export * from "./create-booking.types";
+export * from "./update-booking.types";

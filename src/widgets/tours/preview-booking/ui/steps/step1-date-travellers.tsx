@@ -1,24 +1,38 @@
-import { Minus, Plus } from "lucide-react";
+import { Loader2, Minus, Plus } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField } from "@/shared/ui";
+import { Button, Calendar } from "@/shared/ui";
 
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	type TPreviewBookingSchema
 } from "@/entities/tour/preview-booking";
-import { PREVIEW_TOUR_OPTIONS_MOCK } from "@/entities/tour/preview-tour/mock";
+import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
+
+import { PreviewBookingOptionCard } from "../preview-booking-option-card";
 
 interface IStep1Props {
 	onNext: () => void;
+	isLoading: boolean;
+	options: IPreviewOptionCard[];
+	isOptionsLoading: boolean;
+	isOptionLocked?: boolean;
 }
 
-export const Step1DateTravellers: FC<IStep1Props> = ({ onNext }) => {
+export const Step1DateTravellers: FC<IStep1Props> = ({
+	onNext,
+	isLoading,
+	options,
+	isOptionsLoading,
+	isOptionLocked = false
+}) => {
 	const { t } = useTranslation("preview_booking_page");
 	const form = useFormContext<TPreviewBookingSchema>();
 	const count = form.watch(ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT);
+	const selectedOptionId = form.watch(ENUM_FORM_PREVIEW_BOOKING.OPTION_ID);
+	const selectedDate = form.watch(ENUM_FORM_PREVIEW_BOOKING.DATE);
 
 	useEffect(() => {
 		const currentArr =
@@ -47,14 +61,35 @@ export const Step1DateTravellers: FC<IStep1Props> = ({ onNext }) => {
 					</p>
 				</div>
 				<div className="flex justify-center border-t pt-4">
-					<CustomField
-						name={ENUM_FORM_PREVIEW_BOOKING.DATE}
-						control={form.control}
-						label=""
-						fieldType="date"
-						t={t}
+					<Calendar
+						mode="single"
+						selected={selectedDate}
+						onSelect={(date) => {
+							if (date) {
+								form.setValue(
+									ENUM_FORM_PREVIEW_BOOKING.DATE,
+									date,
+									{ shouldValidate: true }
+								);
+							}
+						}}
+						numberOfMonths={1}
+						pagedNavigation
+						classNames={{
+							months: "sm:flex-col md:flex-row gap-20",
+							month: "relative first-of-type:before:hidden before:absolute max-md:before:inset-x-2 max-md:before:h-px max-md:before:-top-4 md:before:inset-y-2 md:before:w-px md:before:-left-4"
+						}}
 					/>
 				</div>
+				{form.formState.errors[ENUM_FORM_PREVIEW_BOOKING.DATE] && (
+					<p className="text-sm text-destructive text-center">
+						{
+							form.formState.errors[
+								ENUM_FORM_PREVIEW_BOOKING.DATE
+							]?.message
+						}
+					</p>
+				)}
 			</div>
 
 			<div className="bg-white rounded-xl border p-6 flex flex-col gap-4">
@@ -132,55 +167,36 @@ export const Step1DateTravellers: FC<IStep1Props> = ({ onNext }) => {
 						{t("step_1.options.title")}
 					</h3>
 					<p className="text-sm text-muted-foreground">
-						{t("step_1.options.description")}
+						{isOptionLocked
+							? t("step_1.options.locked")
+							: t("step_1.options.description")}
 					</p>
 				</div>
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
-					{PREVIEW_TOUR_OPTIONS_MOCK.map((opt) => {
-						const isSelected =
-							form.watch(ENUM_FORM_PREVIEW_BOOKING.OPTION_ID) ===
-							opt.id;
-						return (
-							<div
+
+				{isOptionsLoading ? (
+					<div className="flex justify-center py-8">
+						<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+					</div>
+				) : (
+					<div className="flex flex-col gap-4 mt-2">
+						{options.map((opt) => (
+							<PreviewBookingOptionCard
 								key={opt.id}
-								onClick={() =>
+								option={opt}
+								isSelected={selectedOptionId === opt.id}
+								disabled={isOptionLocked}
+								onSelect={(optionId) =>
 									form.setValue(
 										ENUM_FORM_PREVIEW_BOOKING.OPTION_ID,
-										opt.id,
+										optionId,
 										{ shouldValidate: true }
 									)
 								}
-								className={`cursor-pointer rounded-xl border p-4 flex flex-col gap-2 transition-colors ${
-									isSelected
-										? "bg-blue-50 border-blue-200"
-										: "hover:bg-slate-50"
-								}`}
-							>
-								<div className="flex justify-between items-start">
-									<p className="font-semibold text-base">
-										{opt.title}
-									</p>
-									<div
-										className={`w-4 h-4 rounded-full border flex items-center justify-center ${isSelected ? "bg-primary border-primary" : "border-input"}`}
-									>
-										{isSelected && (
-											<span className="w-2 h-2 rounded-full bg-white" />
-										)}
-									</div>
-								</div>
-								<p className="text-xs text-muted-foreground line-clamp-2">
-									{opt.description}
-								</p>
-								<p className="text-lg font-bold mt-2">
-									{opt.price}{" "}
-									<span className="text-xs font-normal text-muted-foreground">
-										{t("step_1.options.per_person")}
-									</span>
-								</p>
-							</div>
-						);
-					})}
-				</div>
+							/>
+						))}
+					</div>
+				)}
+
 				{form.formState.errors[ENUM_FORM_PREVIEW_BOOKING.OPTION_ID] && (
 					<p className="text-sm text-destructive mt-2">
 						{
@@ -196,8 +212,12 @@ export const Step1DateTravellers: FC<IStep1Props> = ({ onNext }) => {
 				<Button
 					type="button"
 					onClick={onNext}
-					className="w-32 bg-blue-400 hover:bg-blue-500 text-white"
+					disabled={isLoading}
+					className="w-auto min-w-32 bg-blue-400 hover:bg-blue-500 text-white"
 				>
+					{isLoading && (
+						<Loader2 className="w-4 h-4 mr-2 animate-spin" />
+					)}
 					{t("step_1.continue")}
 				</Button>
 			</div>

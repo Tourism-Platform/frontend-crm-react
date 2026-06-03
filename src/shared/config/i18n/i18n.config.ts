@@ -250,3 +250,4 @@ export type TToursSearchPageKeys = TNestedKeyOf<TToursSearchPage>;
 export type TPreviewTourPageKeys = TNestedKeyOf<TPreviewTourPage>;
 export type TPreviewOptionPageKeys = TNestedKeyOf<TPreviewOptionPage>;
 export type TPreviewBookingPageKeys = TNestedKeyOf<TPreviewBookingPage>;
+export type TTourItineraryPageKeys = TNestedKeyOf<TTourItineraryPage>;

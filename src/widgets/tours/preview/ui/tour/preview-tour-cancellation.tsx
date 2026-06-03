@@ -6,13 +6,15 @@ import { Previewer, withErrorBoundary } from "@/shared/ui";
 import type { IPreviewTourData } from "@/entities/tour";
 
 interface IPreviewTourCancellationProps {
-	data: IPreviewTourData;
+	data?: IPreviewTourData;
 }
 
 const PreviewTourCancellationBase: FC<IPreviewTourCancellationProps> = ({
 	data
 }) => {
 	const { t } = useTranslation("preview_tour_page");
+
+	if (!data) return null;
 
 	return (
 		<div className="flex flex-col gap-4">

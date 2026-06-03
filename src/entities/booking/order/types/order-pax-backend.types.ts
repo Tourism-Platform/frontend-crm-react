@@ -11,6 +11,16 @@ export type TAddPassengerResponseBackend = ReturnType<
 	typeof BOOKING_PASSENGER_PATHS.addPassengerInfo
 >["_types"]["response"];
 
+export interface IUploadPassengerPassportRequest {
+	bookingId: string;
+	paxId: string;
+	file: File;
+}
+
+export type TUploadPassengerPassportResponse = ReturnType<
+	typeof BOOKING_PASSENGER_PATHS.uploadPassengerPassport
+>["_types"]["response"];
+
 export interface IBookingPax {
 	id: string;
 	bookingId: string;

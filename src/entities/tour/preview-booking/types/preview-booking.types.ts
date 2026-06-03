@@ -13,8 +13,10 @@ export const ENUM_FORM_PREVIEW_BOOKING = {
 	NATIONALITY: "nationality",
 	PASSPORT_NUMBER: "passport_number",
 	PASSPORT_EXPIRY: "passport_expiry",
+	GENDER: "gender",
 	NOTE: "note",
-	FILE: "file"
+	FILE: "file",
+	PAX_ID: "pax_id"
 } as const;
 
 export type ENUM_FORM_PREVIEW_BOOKING_TYPE =

@@ -5,6 +5,7 @@ import type {
 	TourMetaCreateSchema,
 	TourMetaModel,
 	TourMetaUpdateSchema,
+	TourStatisticsResponse,
 	TourStatus,
 	TourType
 } from "../Api";
@@ -97,5 +98,15 @@ export const TOUR_PATHS = {
 			url: `/tour/${tourId}/cover`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	getTourStatistics: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/statistics`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourStatisticsResponse;
+			}
 		}) as const
 } as const;

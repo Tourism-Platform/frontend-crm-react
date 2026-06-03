@@ -225,7 +225,15 @@ export enum BookingClientType {
 export enum AvailabilityStatus {
 	Pending = "pending",
 	Available = "available",
-	Unavailable = "unavailable"
+	Unavailable = "unavailable",
+	Selected = "selected"
+}
+
+/** ApplyAvailabilityInput */
+export enum ApplyAvailabilityInput {
+	Available = "available",
+	Unavailable = "unavailable",
+	Selected = "selected"
 }
 
 /** AmenitiesTypes */
@@ -738,7 +746,7 @@ export interface AuthUserProfileModel {
 
 /** AvailabilityApply */
 export interface AvailabilityApply {
-	status: AvailabilityStatus;
+	status: ApplyAvailabilityInput;
 }
 
 /** Body_add_agency_documents_agency_me_documents_post */
@@ -821,10 +829,28 @@ export interface BodyUploadEventImagesTourTourIdEventEventIdImagesPost {
 	images: File[];
 }
 
+/** Body_upload_invoice_pdf_invoice__invoice_id__pdf_post */
+export interface BodyUploadInvoicePdfInvoiceInvoiceIdPdfPost {
+	/**
+	 * File
+	 * @format binary
+	 */
+	file: File;
+}
+
 /** Body_upload_landing_images_tour__tour_id__landing_images_post */
 export interface BodyUploadLandingImagesTourTourIdLandingImagesPost {
 	/** Images */
 	images: File[];
+}
+
+/** Body_upload_option_cover_tour__tour_id__option__option_id__cover_post */
+export interface BodyUploadOptionCoverTourTourIdOptionOptionIdCoverPost {
+	/**
+	 * Image
+	 * @format binary
+	 */
+	image: File;
 }
 
 /** Body_upload_passenger_passport_booking_order__booking_id__pax__pax_id__passport_post */
@@ -883,10 +909,16 @@ export interface BookingCreate {
 
 /**
  * BookingEventAvailabilityModel
- * Per-booking, per-event availability assessed by the operator while the
- * booking is being processed (``BookingStatus.PENDING``). All rows AVAILABLE
- * gates the transition to CONFIRMED; any UNAVAILABLE auto-declines the
- * booking.
+ * Per-booking, per-event-option availability assessed by the operator while
+ * the booking is being processed (``BookingStatus.PENDING``).
+ *
+ * One row per option: a singular event has a single row at ``option_index`` 0;
+ * a ``MultipleOptionEvent`` has one row per alternative. Each row records
+ * whether that supplier can provide the service (AVAILABLE / UNAVAILABLE) and,
+ * for exactly one option per event, SELECTED — the operator-chosen alternative
+ * the booking is priced and confirmed against. Every event resolving to one
+ * SELECTED gates the transition to CONFIRMED; an event with no available option
+ * auto-declines the booking.
  */
 export interface BookingEventAvailabilityModel {
 	/**
@@ -904,6 +936,8 @@ export interface BookingEventAvailabilityModel {
 	 * @format uuid
 	 */
 	event_id: string;
+	/** Option Index */
+	option_index: number;
 	status: AvailabilityStatus;
 }
 
@@ -2584,6 +2618,17 @@ export interface InvoiceDetailResponse {
 	balance: string;
 	/** Issued At */
 	issued_at: string | null;
+	/** Payment Details */
+	payment_details?:
+		| (
+				| ({
+						typ: "classic_swift";
+				  } & ClassicSwiftDetails)
+				| ({
+						typ: "wise";
+				  } & WiseDetails)
+		  )
+		| null;
 }
 
 /** InvoiceGenerate */
@@ -2593,6 +2638,11 @@ export interface InvoiceGenerate {
 	 * @format uuid
 	 */
 	booking_id: string;
+	/**
+	 * Payment Route Id
+	 * @format uuid
+	 */
+	payment_route_id: string;
 }
 
 /** InvoiceListItem */
@@ -2633,6 +2683,12 @@ export interface InvoicePaymentCreate {
 	amount: number | string;
 	/** @default "wire" */
 	method?: PaymentMethod;
+}
+
+/** InvoicePdfResponse */
+export interface InvoicePdfResponse {
+	/** Url */
+	url: string;
 }
 
 /** LandingPageImageModel */
@@ -4376,6 +4432,8 @@ export interface TourMinMaxCostSchemaOutput {
 export interface TourOptionCreateSchema {
 	/** Name */
 	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /** TourOptionModel */
@@ -4389,6 +4447,10 @@ export interface TourOptionModel {
 	tour_meta_id: string | null;
 	/** Name */
 	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Cover Image Path */
+	cover_image_path: string | null;
 	/** Deleted At */
 	deleted_at: string | null;
 }
@@ -4402,6 +4464,10 @@ export interface TourOptionPreviewSchemaInput {
 	id: string;
 	/** Name */
 	name: string | null;
+	/** Description */
+	description?: string | null;
+	/** Cover Image Path */
+	cover_image_path?: string | null;
 	/**
 	 * Monetary value pair.
 	 *
@@ -4441,6 +4507,10 @@ export interface TourOptionPreviewSchemaOutput {
 	id: string;
 	/** Name */
 	name: string | null;
+	/** Description */
+	description?: string | null;
+	/** Cover Image Path */
+	cover_image_path?: string | null;
 	/**
 	 * Monetary value pair.
 	 *
@@ -4539,6 +4609,8 @@ export interface TourOptionPublicResponse {
 export interface TourOptionUpdateSchema {
 	/** Name */
 	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /** TourPackageModel */
@@ -4600,6 +4672,83 @@ export interface TourScheduleModel {
 export interface TourScheduleUpdate {
 	/** Is Seasonal */
 	is_seasonal?: boolean | null;
+}
+
+/**
+ * TourStatisticsResponse
+ * Tour-level order, revenue & profit statistics over the confirmed booking
+ * set ({CONFIRMED, IN_PROGRESS, COMPLETED}), all in the operator's base
+ * currency. Every field defaults to 0 so the endpoint never returns
+ * null/empty when a tour has no orders yet.
+ *
+ * - ``potential_revenue`` — planned gross agency price (cost+markup+fees+taxes)
+ *   from the planned event costs, per each order's pax.
+ * - ``planned_cost`` — planned supplier cost for the same set.
+ * - ``confirmed_revenue`` — actually billed: sum of issued invoice totals.
+ * - ``real_cost`` — actually recorded supplier-payment ledger, FX-converted to
+ *   base (amount × pinned rate). Captures real cost + exchange differences.
+ * - ``potential_profit`` = potential_revenue − planned_cost (expected margin).
+ * - ``real_profit`` = confirmed_revenue − real_cost (real-time performance).
+ */
+export interface TourStatisticsResponse {
+	/**
+	 * Total Orders
+	 * @default 0
+	 */
+	total_orders?: number;
+	/**
+	 * Completed
+	 * @default 0
+	 */
+	completed?: number;
+	/**
+	 * In Progress
+	 * @default 0
+	 */
+	in_progress?: number;
+	/**
+	 * Tourists
+	 * @default 0
+	 */
+	tourists?: number;
+	/**
+	 * Potential Revenue
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	potential_revenue?: string;
+	/**
+	 * Confirmed Revenue
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	confirmed_revenue?: string;
+	/**
+	 * Planned Cost
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	planned_cost?: string;
+	/**
+	 * Real Cost
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	real_cost?: string;
+	/**
+	 * Potential Profit
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	potential_profit?: string;
+	/**
+	 * Real Profit
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	real_profit?: string;
+	/** @default "USD" */
+	currency?: Currency;
 }
 
 /** TourSummaryResponse */
@@ -5521,6 +5670,29 @@ export interface DeleteTourCoverTourTourIdCoverDeleteParams {
 	tourId: string;
 }
 
+export interface GetTourStatisticsTourTourIdStatisticsGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
+	/** @default "USD" */
+	currency?: Currency;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
 export interface ListAllTourOptionsTourTourIdOptionAllGetParams {
 	/**
 	 * Skip
@@ -5580,9 +5752,20 @@ export interface DeleteOptionTourTourIdOptionOptionIdDeleteParams {
 	optionId: string;
 }
 
-export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
-	/** @default "USD" */
-	currency?: Currency;
+export interface UploadOptionCoverTourTourIdOptionOptionIdCoverPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
+export interface DeleteOptionCoverTourTourIdOptionOptionIdCoverDeleteParams {
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -6681,7 +6864,7 @@ export interface ListBookingAvailabilityBookingOrderBookingIdAvailabilityGetPara
 	bookingId: string;
 }
 
-export interface ApplyEventAvailabilityBookingOrderBookingIdEventsEventIdAvailabilityPatchParams {
+export interface ApplyEventAvailabilityBookingOrderBookingIdEventsEventIdOptionsOptionIndexAvailabilityPatchParams {
 	/**
 	 * Booking Id
 	 * @format uuid
@@ -6692,6 +6875,8 @@ export interface ApplyEventAvailabilityBookingOrderBookingIdEventsEventIdAvailab
 	 * @format uuid
 	 */
 	eventId: string;
+	/** Option Index */
+	optionIndex: number;
 }
 
 export interface AddPassengerInfoBookingOrderBookingIdPaxPostParams {
@@ -6860,6 +7045,22 @@ export interface ListMyInvoicesInvoiceGetParams {
 }
 
 export interface GetInvoiceInvoiceInvoiceIdGetParams {
+	/**
+	 * Invoice Id
+	 * @format uuid
+	 */
+	invoiceId: string;
+}
+
+export interface UploadInvoicePdfInvoiceInvoiceIdPdfPostParams {
+	/**
+	 * Invoice Id
+	 * @format uuid
+	 */
+	invoiceId: string;
+}
+
+export interface GetInvoicePdfInvoiceInvoiceIdPdfGetParams {
 	/**
 	 * Invoice Id
 	 * @format uuid

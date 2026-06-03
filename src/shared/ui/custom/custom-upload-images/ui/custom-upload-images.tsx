@@ -15,13 +15,20 @@ import {
 	useSortable
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Star, Trash2, Upload, XIcon, ZoomInIcon } from "lucide-react";
+import { Star, Trash2, Upload, ZoomInIcon } from "lucide-react";
 import { type FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 import { formatBytes } from "@/shared/utils";
+
+import {
+	UPLOAD_IMAGES_GRID_HEIGHT,
+	getUploadImagesLayout
+} from "../model/upload-images-layout";
+
+import { UploadImagesLightbox } from "./previewer-upload-images";
 
 // ─── Public Types ─────────────────────────────────────────────────────────────
 
@@ -31,61 +38,6 @@ export type TUploadImageItem =
 
 export const getUploadItemId = (item: TUploadImageItem): string =>
 	item.kind === "uploaded" ? item.id : item.tempId;
-
-// ─── Dynamic Layouts ──────────────────────────────────────────────────────────
-
-const LAYOUTS: Record<number, { style: React.CSSProperties; areas: string[] }> =
-	{
-		1: {
-			style: {
-				gridTemplateColumns: "1fr",
-				gridTemplateRows: "1fr",
-				gridTemplateAreas: `"a"`
-			},
-			areas: ["a"]
-		},
-		2: {
-			style: {
-				gridTemplateColumns: "57fr 43fr",
-				gridTemplateRows: "1fr",
-				gridTemplateAreas: `"a b"`
-			},
-			areas: ["a", "b"]
-		},
-		3: {
-			style: {
-				gridTemplateColumns: "57fr 43fr",
-				gridTemplateRows: "1fr 1fr",
-				gridTemplateAreas: `
-        "a b"
-        "a c"
-      `
-			},
-			areas: ["a", "b", "c"]
-		},
-		4: {
-			style: {
-				gridTemplateColumns: "57fr 21.5fr 21.5fr",
-				gridTemplateRows: "1fr 1fr",
-				gridTemplateAreas: `
-        "a b c"
-        "a d d"
-      `
-			},
-			areas: ["a", "b", "c", "d"]
-		},
-		5: {
-			style: {
-				gridTemplateColumns: "57fr 21.5fr 21.5fr",
-				gridTemplateRows: "1fr 1fr",
-				gridTemplateAreas: `
-        "a b c"
-        "a d e"
-      `
-			},
-			areas: ["a", "b", "c", "d", "e"]
-		}
-	};
 
 // ─── Sortable Card ────────────────────────────────────────────────────────────
 
@@ -226,6 +178,7 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 	const { t } = useTranslation("common");
 	const [previewSrc, setPreviewSrc] = useState<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const layout = getUploadImagesLayout(items.length);
 
 	const sensors = useSensors(
 		useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
@@ -290,13 +243,8 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 							<div
 								className="grid gap-2 w-full"
 								style={{
-									height: "400px",
-									...(LAYOUTS[
-										Math.min(
-											items.length,
-											5
-										) as keyof typeof LAYOUTS
-									]?.style || {})
+									height: UPLOAD_IMAGES_GRID_HEIGHT,
+									...layout?.style
 								}}
 							>
 								{items.slice(0, 5).map((item, idx) => (
@@ -304,14 +252,7 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 										key={getUploadItemId(item)}
 										item={item}
 										isPrimary={idx === 0}
-										gridArea={
-											LAYOUTS[
-												Math.min(
-													items.length,
-													5
-												) as keyof typeof LAYOUTS
-											]?.areas[idx]
-										}
+										gridArea={layout?.areas[idx]}
 										onRemove={onRemove}
 										onPreview={setPreviewSrc}
 									/>
@@ -336,30 +277,10 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 				</DndContext>
 			)}
 
-			{previewSrc && (
-				<div
-					className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
-					onClick={() => setPreviewSrc(null)}
-				>
-					<div className="relative max-h-full max-w-full">
-						<img
-							src={previewSrc}
-							alt="Preview"
-							className="max-h-full max-w-full rounded-lg object-contain"
-							onClick={(e) => e.stopPropagation()}
-						/>
-						<Button
-							type="button"
-							onClick={() => setPreviewSrc(null)}
-							variant="secondary"
-							size="icon"
-							className="absolute end-2 top-2 size-7"
-						>
-							<XIcon className="h-4 w-4" />
-						</Button>
-					</div>
-				</div>
-			)}
+			<UploadImagesLightbox
+				src={previewSrc}
+				onClose={() => setPreviewSrc(null)}
+			/>
 		</div>
 	);
 };

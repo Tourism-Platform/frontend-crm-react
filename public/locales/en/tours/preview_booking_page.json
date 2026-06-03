@@ -37,6 +37,7 @@
 		"options": {
 			"title": "Choose option",
 			"description": "You can change this selection — it affects the final price.",
+			"locked": "Option cannot be changed after booking is created.",
 			"per_person": "/ person",
 			"errors": {
 				"required": "Option must be selected"
@@ -57,6 +58,8 @@
 		"traveller": "Traveller",
 		"lead": "Lead",
 		"make_lead": "Make lead",
+		"optional_hint": "Passport scan is required for each filled traveller",
+		"add_traveller": "Add traveller",
 		"filled": "Filled",
 		"fields": {
 			"first_name": {
@@ -66,6 +69,13 @@
 			"last_name": {
 				"label": "Last name",
 				"errors": { "required": "Last name is required" }
+			},
+			"gender": {
+				"label": "Gender",
+				"options": {
+					"male": "Male",
+					"female": "Female"
+				}
 			},
 			"date_of_birth": {
 				"label": "Date of birth",
@@ -87,10 +97,13 @@
 				"label": "Note"
 			},
 			"file": {
-				"label": "File",
+				"label": "Passport scan",
 				"click_to_upload": "Click to upload",
 				"or_drag": "or drag & drop",
-				"formats": "PDF, DOC, DOCX, XLS less than 50MB"
+				"formats": "PDF, DOC, DOCX, XLS less than 50MB",
+				"errors": {
+					"required": "Passport scan is required"
+				}
 			}
 		},
 		"back": "← Back",
@@ -100,6 +113,17 @@
 		"success_title": "Booking request submitted",
 		"success_desc": "Your request has been sent to the provider. We've emailed a copy to",
 		"booking_id": "Booking ID:",
+		"copied": "Booking ID copied",
+		"copy_failed": "Failed to copy",
+		"summary": {
+			"title": "Booking summary",
+			"tour": "Tour",
+			"start_date": "Start date",
+			"end_date": "End date",
+			"travellers": "Travellers",
+			"package": "Package",
+			"estimated_total": "Estimated total"
+		},
 		"timeline": {
 			"request_submitted": {
 				"title": "Request submitted",

@@ -12,7 +12,7 @@ import {
 } from "@/entities/tour";
 
 interface IPreviewTourAmenitiesProps {
-	data: IPreviewTourData;
+	data?: IPreviewTourData;
 }
 
 const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
@@ -29,6 +29,8 @@ const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
 		value: string,
 		labels: { value: string; label: string }[]
 	) => labels.find((l) => l.value === value)?.label ?? value;
+
+	if (!data) return null;
 
 	return (
 		<div className="grid grid-cols-2 gap-6">

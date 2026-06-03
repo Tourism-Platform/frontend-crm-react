@@ -5,8 +5,8 @@ import { ENUM_EVENT } from "@/entities/tour/tour/types/event.types";
 import type { TPreviewTourBackend } from "../types";
 
 export const TOUR_PREVIEW_TOUR_MOCK: TPreviewTourBackend = {
-	id: "36ec7294-0af4-4685-bb71-132808985b0c",
 	title: "Title",
+	images: [],
 	overview:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Embark on an unforgettable journey through the ancient cities of Uzbekistan."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"Discover the rich history, stunning architecture, and warm hospitality of the Silk Road."}]}]}',
 

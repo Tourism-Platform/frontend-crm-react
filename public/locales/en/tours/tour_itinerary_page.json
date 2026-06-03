@@ -21,6 +21,62 @@
 		"components": "Components"
 	},
 
+	"option": {
+		"actions": {
+			"edit": "Edit",
+			"delete": "Delete"
+		},
+		"form": {
+			"button": "Add option",
+			"modal": {
+				"title": "Option",
+				"fields": {
+					"name": {
+						"label": "Name",
+						"placeholder": "Option name",
+						"errors": {
+							"required": "Name is required",
+							"max": "Name is too long"
+						}
+					},
+					"description": {
+						"label": "Description",
+						"placeholder": "Option description"
+					},
+					"cover": {
+						"label": "Cover image"
+					}
+				},
+				"buttons": {
+					"decline": "Cancel",
+					"save": "Save",
+					"saving": "Saving..."
+				},
+				"toasts": {
+					"save": {
+						"success": "Option saved",
+						"error": "Failed to save option"
+					}
+				}
+			}
+		},
+		"delete": {
+			"form": {
+				"title": "Delete option",
+				"warning": "This option and its itinerary data will be removed. This action cannot be undone.",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting..."
+				},
+				"toasts": {
+					"success": "Option deleted",
+					"error": "Failed to delete option"
+				}
+			}
+		}
+	},
+
 	"toasts": {
 		"option": {
 			"create": {

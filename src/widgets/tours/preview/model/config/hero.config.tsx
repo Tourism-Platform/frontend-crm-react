@@ -9,10 +9,12 @@ export interface IHeroInfo {
 }
 
 export const HERO_INFO = (
-	tour: ITourGeneral,
+	tour: ITourGeneral | undefined,
 	t: TFunction<"preview_tour_page">
 ): IHeroInfo[] => {
 	const info: IHeroInfo[] = [];
+
+	if (!tour) return info;
 
 	if (tour.duration) {
 		const label =

@@ -31,3 +31,11 @@ export interface IOptionDetail {
 	price: string;
 	days: IOptionDay[];
 }
+
+export interface IPreviewOptionCard {
+	id: string;
+	title: string;
+	description: string;
+	price: string;
+	image: string;
+}

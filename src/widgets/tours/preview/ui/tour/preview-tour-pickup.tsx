@@ -9,12 +9,14 @@ import { type IPreviewTourData, PICKUP_TYPE_LABELS } from "@/entities/tour";
 import { PICKUP_ICONS } from "../../model/config/pickup.config";
 
 interface IPreviewTourPickupProps {
-	data: IPreviewTourData;
+	data?: IPreviewTourData;
 }
 
 const PreviewTourPickupBase: FC<IPreviewTourPickupProps> = ({ data }) => {
 	const { t } = useTranslation("preview_tour_page");
 	const pickupLabels = useValueToTranslateLabel(PICKUP_TYPE_LABELS);
+
+	if (!data) return null;
 
 	const getLabel = (
 		value: string,
