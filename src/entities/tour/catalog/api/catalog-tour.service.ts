@@ -5,7 +5,8 @@ import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
 	mapCatalogFilterPaginatedToFrontend,
-	mapCatalogTourFiltersToBackend,
+	// mapCatalogTourFiltersToBackend,
+	mapCatalogTourFiltersToPublicCatalogQuery,
 	mapCatalogTourPaginatedToFrontend,
 	mapPriceHistogramToFrontend,
 	mapRecentlySearchesToFrontend
@@ -31,7 +32,7 @@ export const catalogTourApi = authApi.injectEndpoints({
 		>({
 			query: (filters) => ({
 				...TOUR_CATALOG_PATHS.listPublicCatalog,
-				params: mapCatalogTourFiltersToBackend(filters)
+				params: mapCatalogTourFiltersToPublicCatalogQuery(filters)
 			}),
 			transformResponse: (response: TListCatalogToursBackendResponse) =>
 				mapCatalogTourPaginatedToFrontend(response),
@@ -158,21 +159,21 @@ export const catalogTourApi = authApi.injectEndpoints({
 			) => mapCatalogFilterPaginatedToFrontend(response).data,
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		}),
-		getSearchTours: builder.query<
-			IPaginationResponse<ICatalogTourCard>,
-			ICatalogTourFilters | void
-		>({
-			query: (filters) => ({
-				url: "/tours/search",
-				params: filters
-					? mapCatalogTourFiltersToBackend(filters)
-					: undefined
-			})
-			// transformResponse: (
-			// 	response: IPaginationResponse<ICatalogTourBackend>
-			// ) => mapCatalogTourPaginatedToFrontend(response.data as any, response.total),
-			// providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
-		}),
+		// getSearchTours: builder.query<
+		// 	IPaginationResponse<ICatalogTourCard>,
+		// 	ICatalogTourFilters | void
+		// >({
+		// 	query: (filters) => ({
+		// 		url: "/tours/search",
+		// 		params: filters
+		// 			? mapCatalogTourPaginatedToFrontend(filters)
+		// 			: undefined
+		// 	})
+		// 	// transformResponse: (
+		// 	// 	response: IPaginationResponse<ICatalogTourBackend>
+		// 	// ) => mapCatalogTourPaginatedToFrontend(response.data as any, response.total),
+		// 	// providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
+		// }),
 		getRecentlySearchedTours: builder.query<IRecentSearch[], void>({
 			query: () => ({
 				url: "/tours/recently-searched"
@@ -204,7 +205,7 @@ export const {
 	useGetCatalogCategoriesQuery,
 	useGetCatalogPriceHistogramQuery,
 	useGetCatalogDestinationsQuery,
-	useGetSearchToursQuery,
+	// useGetSearchToursQuery,
 	useGetRecentlySearchedToursQuery,
 	useGetPopularToursQuery
 } = catalogTourApi;

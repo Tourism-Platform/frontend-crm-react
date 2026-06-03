@@ -49,6 +49,7 @@
 					"min": "Minimum 1 person"
 				},
 				"duration": {
+					"nightsMismatch": "Uncorrect range",
 					"from": {
 						"required": "Required"
 					},
@@ -57,6 +58,7 @@
 					}
 				},
 				"ageRequires": {
+					"toMismatch": "Uncorrect range",
 					"from": {
 						"required": "Required"
 					},

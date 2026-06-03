@@ -37,7 +37,7 @@ export const COLUMNS = (
 		},
 		{
 			header: t("table.orderId"),
-			accessorKey: "orderId",
+			accessorKey: "orderNumber",
 			meta: {
 				headerTitle: t("table.orderId"),
 				skeleton: <Skeleton className="h-4 w-[80px]" />
@@ -45,11 +45,11 @@ export const COLUMNS = (
 			cell: ({ row }) => (
 				<Link
 					to={buildRoute(ENUM_PATH.BOOKING.ORDER_ID, {
-						orderId: row.getValue("orderId")
+						orderId: row.original.orderId
 					})}
 					className="font-medium text-primary hover:underline"
 				>
-					{row.getValue("orderId")}
+					{row.getValue("orderNumber") ?? row.original.orderId}
 				</Link>
 			),
 			size: 120

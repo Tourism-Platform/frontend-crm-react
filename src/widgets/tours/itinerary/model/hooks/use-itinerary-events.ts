@@ -20,18 +20,26 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 		{ skip: !tourId || !activeOption }
 	);
 
-	const duration = useMemo(() => {
+	const tourDuration = useMemo(() => {
 		if (!tour?.duration) return 1;
 		if (typeof tour.duration === "object") {
-			return tour.duration.to || tour.duration.from || 1;
+			return Math.max(tour.duration.from ?? 1, tour.duration.to ?? 1);
 		}
-		return Number(tour.duration || 1);
+		return Number(tour.duration) || 1;
 	}, [tour?.duration]);
+
+	const daysCount = useMemo(() => {
+		const maxEventDay = backendEvents.reduce(
+			(max, ev) => (ev.day > 0 ? Math.max(max, ev.day) : max),
+			0
+		);
+		return Math.max(tourDuration, maxEventDay, 1);
+	}, [tourDuration, backendEvents]);
 
 	const EMPTY_OPTION_DATA = useMemo((): IOptionData => {
 		const days: Record<number, IDayItem[]> = {};
 		const dayOrder: number[] = [];
-		for (let i = 1; i <= duration; i++) {
+		for (let i = 1; i <= daysCount; i++) {
 			dayOrder.push(i);
 			days[i] = [];
 		}
@@ -40,7 +48,7 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 			days,
 			dayOrder
 		};
-	}, [duration]);
+	}, [daysCount]);
 
 	const eventsAsOptionData = useMemo((): IOptionData => {
 		if (backendEvents.length === 0) {
@@ -51,8 +59,7 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 		const dayOrder: number[] = [];
 		const tripDetails: IDayItem[] = [];
 
-		// Инициализируем дни по умолчанию на основе длительности тура
-		for (let i = 1; i <= duration; i++) {
+		for (let i = 1; i <= daysCount; i++) {
 			dayOrder.push(i);
 			days[i] = [];
 		}
@@ -70,18 +77,9 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 			if (ev.day === 0) {
 				tripDetails.push(item);
 			} else {
-				if (!days[ev.day]) {
-					days[ev.day] = [];
-					if (!dayOrder.includes(ev.day)) {
-						dayOrder.push(ev.day);
-					}
-				}
-				days[ev.day].push(item);
+				days[ev.day]?.push(item);
 			}
 		}
-
-		// Сортируем порядок дней по возрастанию
-		dayOrder.sort((a, b) => a - b);
 
 		// Сортировка tripDetails по position
 		tripDetails.sort((a, b) => {
@@ -106,7 +104,7 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 		}
 
 		return { tripDetails, days, dayOrder };
-	}, [backendEvents, duration]);
+	}, [backendEvents, daysCount, EMPTY_OPTION_DATA]);
 
 	return { eventsAsOptionData, EMPTY_OPTION_DATA };
 };

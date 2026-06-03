@@ -49,6 +49,7 @@
 					"min": "Минимум 1 человек"
 				},
 				"duration": {
+					"nightsMismatch": "Неверный диапазон",
 					"from": {
 						"required": "Обязательно"
 					},
@@ -57,6 +58,7 @@
 					}
 				},
 				"ageRequires": {
+					"toMismatch": "Неверный диапазон",
 					"from": {
 						"required": "Обязательно"
 					},

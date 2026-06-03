@@ -10,10 +10,11 @@ import { ScrollArea, ScrollBar, withErrorBoundary } from "@/shared/ui";
 import {
 	type IBaseDnDProps,
 	type IOptionData,
-	columnId,
-	containerIdTrip
+	columnId
+	// containerIdTrip
 } from "../../model";
-import { DroppableTripContainer } from "../droppable-day-container";
+
+// import { DroppableTripContainer } from "../droppable-day-container";
 
 import { SortableDayColumn } from "./sortable-day-column";
 
@@ -37,7 +38,7 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 		<ScrollArea className="flex-1 overflow-x-auto p-4">
 			<div className="flex gap-4 min-w-max ">
 				{/* Trip details */}
-				<div className="w-100 flex-shrink-0">
+				{/* <div className="w-100 flex-shrink-0">
 					<h3 className="font-semibold px-1 mb-3">
 						{t("trip_details.title")}
 					</h3>
@@ -48,7 +49,7 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 						optionId={optionId}
 						onRemoveItem={onRemoveItem}
 					/>
-				</div>
+				</div> */}
 
 				{/* days */}
 				<SortableContext

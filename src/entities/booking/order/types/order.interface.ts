@@ -34,6 +34,7 @@ export interface IOrderDates {
 
 export interface IOrder {
 	orderId: string;
+	orderNumber?: string;
 	orderType: ENUM_ORDER_TYPE_OPTIONS_TYPE;
 	dateCreated: string;
 	client: string;

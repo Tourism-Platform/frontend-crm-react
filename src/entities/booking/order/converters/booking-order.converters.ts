@@ -1,41 +1,43 @@
-// import { formatDate } from "@/shared/utils";
 import { BOOKING_ORDER_PATHS } from "@/shared/api";
+import { formatDate } from "@/shared/utils";
 
 import {
-	// type ENUM_CLIENT_TYPE_OPTIONS_TYPE,
-	// type ENUM_INVOICE_STATUS_TYPE,
-	// type ENUM_ORDER_STATUS_TYPE,
-	// type ENUM_ORDER_TYPE_OPTIONS_TYPE,
 	type IBookingOrderDetailBackend,
 	type IBookingOrderFilters,
 	type IOrder,
 	type IOrderDetail,
 	type TBookingOrderBackend,
 	type TBookingOrderBackendResponse,
+	type TBookingOrderListItemBackend,
 	type TBookingOrderPaginatedResponse
 } from "../types";
 
+import { bookingClientTypeMapper } from "./booking-client-type.convert";
+import { bookingTourTypeMapper } from "./booking-tour-type.convert";
 import { orderStatusMapper } from "./order-status.convert";
 
-export const mapBookingOrderToFrontend = (data: TBookingOrderBackend) => ({
-	// ): IOrder => ({
-
-	orderId: data.id
-	// orderType: data.order_type as ENUM_ORDER_TYPE_OPTIONS_TYPE,
-	// dateCreated: formatDate(data.date_created),
-	// client: data.client,
-	// clientType: data.client_type as ENUM_CLIENT_TYPE_OPTIONS_TYPE,
-	// pax: data.pax,
-	// dates: {
-	// 	from: formatDate(data.dates.from),
-	// 	to: formatDate(data.dates.to)
-	// },
-	// tourName: data.tour_name,
-	// manager: data.manager ?? undefined,
-	// invoiceStatus:
-	// 	(data.invoice_status as ENUM_INVOICE_STATUS_TYPE) || undefined,
-	// status: data.status as ENUM_ORDER_STATUS_TYPE
+export const mapBookingOrderListItemToFrontend = (
+	data: TBookingOrderListItemBackend
+): IOrder => ({
+	orderId: data.id,
+	orderNumber: data.order_number,
+	orderType: bookingTourTypeMapper.from(data.tour_type)!,
+	dateCreated: formatDate(data.created_at),
+	client: data.client_name,
+	clientType: bookingClientTypeMapper.from(data.client_type)!,
+	pax: data.pax,
+	dates: {
+		from: formatDate(data.date),
+		to: formatDate(data.end_date)
+	},
+	tourName: data.tour_name,
+	status: orderStatusMapper.from(data.status)!
 });
+
+export const mapBookingOrderToFrontend = (data: TBookingOrderBackend) =>
+	mapBookingOrderListItemToFrontend(
+		data as unknown as TBookingOrderListItemBackend
+	);
 
 export const mapBookingOrderDetailToFrontend = (
 	data: IBookingOrderDetailBackend
@@ -92,14 +94,13 @@ export const mapBookingOrderToBackend = (
 });
 
 export const mapBookingOrderListToFrontend = (
-	data: TBookingOrderBackend[]
-): IOrder[] => data as unknown as IOrder[];
-// ): IOrder[] => data.map(mapBookingOrderToFrontend);
+	data: TBookingOrderListItemBackend[]
+): IOrder[] => data.map(mapBookingOrderListItemToFrontend);
 
 export const mapBookingOrderPaginatedToFrontend = (
 	response: TBookingOrderBackendResponse
 ): TBookingOrderPaginatedResponse => ({
-	data: response.data as unknown as IOrder[],
+	data: response.data.map(mapBookingOrderListItemToFrontend),
 	total: response.total_count
 });
 

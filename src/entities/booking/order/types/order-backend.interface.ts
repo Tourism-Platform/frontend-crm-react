@@ -1,11 +1,16 @@
-import type { BOOKING_ORDER_PATHS, BookingModel } from "@/shared/api";
-import { type IPaginationResponse } from "@/shared/types";
+import type {
+	BOOKING_ORDER_PATHS,
+	BookingModel,
+	BookingOrderListItem
+} from "@/shared/api";
 
 import { type IPaxReviewItem } from "./order.interface";
 import type { ISupplierPaymentItem } from "./supplier-payment.interface";
 import type { ITourReviewItem, ITourSummary } from "./tour.interface";
 
 export type TBookingOrderBackend = BookingModel;
+
+export type TBookingOrderListItemBackend = BookingOrderListItem;
 
 export interface IBookingOrderDetailBackend extends TBookingOrderBackend {
 	duration: string;
@@ -22,9 +27,6 @@ export interface IBookingOrderDetailBackend extends TBookingOrderBackend {
 	supplier_payments: ISupplierPaymentItem[] | null;
 	tour_summary: ITourSummary;
 }
-
-export type TBookingOrderPaginatedResponseBackend =
-	IPaginationResponse<TBookingOrderBackend>;
 
 export interface IApplyReviewItemBackend {
 	id: string;
