@@ -2,12 +2,13 @@
 	"page_name": "Обзор тура",
 	"info": {
 		"fields": {
-			"total": "Всего",
+			"total_sales": "Всего продаж",
 			"completed": "Завершено",
 			"in_progress": "В процессе",
 			"tourists": "Туристы",
+			"estimated_revenue": "Ожидаемый доход",
 			"confirmed_revenue": "Подтверждённый доход",
-			"potential_revenue": "Потенциальный доход"
+			"unconfirmed_revenue": "Неподтверждённый доход"
 		},
 		"toasts": {
 			"load": {

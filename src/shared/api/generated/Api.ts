@@ -4620,6 +4620,34 @@ export interface TourOptionPreviewSchemaInput {
 	 * slips through.
 	 */
 	total_price_max: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	price_per_person: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	price_per_person_max: MonetaryValueSchema;
 }
 
 /** TourOptionPreviewSchema */
@@ -4663,6 +4691,34 @@ export interface TourOptionPreviewSchemaOutput {
 	 * slips through.
 	 */
 	total_price_max: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	price_per_person: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	price_per_person_max: MonetaryValueSchema;
 }
 
 /** TourOptionPublicResponse */

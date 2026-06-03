@@ -3,6 +3,7 @@ import { type IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
+import { getTourStatsTag } from "../constants/tour-stats-tag";
 import {
 	mapTourCreateToBackend,
 	mapTourFiltersToBackend,
@@ -10,14 +11,13 @@ import {
 	mapTourFinanceToFrontend,
 	mapTourGeneralToFrontend,
 	mapTourPaginatedToFrontend,
-	mapTourStatsToFrontend
+	mapTourStatisticsToFrontend
 } from "../converters";
 import type {
 	ITourCard,
 	ITourFilters,
 	ITourGeneral,
-	ITourInfo,
-	ITourInfoBackend,
+	ITourStatistics,
 	TCreateTourSchema,
 	TGetTourBackendResponse,
 	TListToursBackendResponse,
@@ -71,6 +71,7 @@ export const tourApi = authApi.injectEndpoints({
 				mapTourGeneralToFrontend(response),
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },
+				getTourStatsTag(id),
 				ENUM_API_TAGS.TOURS
 			]
 		}),
@@ -96,6 +97,7 @@ export const tourApi = authApi.injectEndpoints({
 				mapTourFinanceToFrontend(response),
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `FINANCE_${id}` },
+				getTourStatsTag(id),
 				ENUM_API_TAGS.TOURS
 			]
 		}),
@@ -111,16 +113,14 @@ export const tourApi = authApi.injectEndpoints({
 				mapTourFinanceToFrontend(response),
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `FINANCE_${id}` },
+				getTourStatsTag(id),
 				ENUM_API_TAGS.TOURS
 			]
 		}),
-		getTourStats: builder.query<ITourInfo, string>({
-			query: (id) => `/tours/${id}/stats`,
-			transformResponse: (response: ITourInfoBackend) =>
-				mapTourStatsToFrontend(response),
-			providesTags: (_result, _error, id) => [
-				{ type: ENUM_API_TAGS.TOURS, id: `STATS_${id}` }
-			]
+		getTourStatistics: builder.query<ITourStatistics, string>({
+			query: (id) => TOUR_PATHS.getTourStatistics(id),
+			transformResponse: mapTourStatisticsToFrontend,
+			providesTags: (_result, _error, id) => [getTourStatsTag(id)]
 		}),
 		publishTour: builder.mutation<void, string>({
 			query: (id) => ({
@@ -128,6 +128,7 @@ export const tourApi = authApi.injectEndpoints({
 			}),
 			invalidatesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },
+				getTourStatsTag(id),
 				ENUM_API_TAGS.TOURS
 			]
 		}),
@@ -137,6 +138,15 @@ export const tourApi = authApi.injectEndpoints({
 			}),
 			invalidatesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },
+				getTourStatsTag(id),
+				ENUM_API_TAGS.TOURS
+			]
+		}),
+		refreshTourProjection: builder.mutation<void, string>({
+			query: (id) => TOUR_PATHS.refreshTourProjection(id),
+			invalidatesTags: (_result, _error, id) => [
+				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },
+				getTourStatsTag(id),
 				ENUM_API_TAGS.TOURS
 			]
 		})
@@ -150,7 +160,8 @@ export const {
 	useUpdateTourGeneralMutation,
 	useGetTourFinanceQuery,
 	useUpdateTourFinanceMutation,
-	useGetTourStatsQuery,
+	useGetTourStatisticsQuery,
 	usePublishTourMutation,
-	useArchiveTourMutation
+	useArchiveTourMutation,
+	useRefreshTourProjectionMutation
 } = tourApi;

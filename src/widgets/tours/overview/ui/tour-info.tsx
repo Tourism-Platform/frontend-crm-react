@@ -5,9 +5,13 @@ import { toast } from "sonner";
 
 import { withErrorBoundary } from "@/shared/ui";
 
-import { InfoCard, useGetTourStatsQuery } from "@/entities/tour";
+import { InfoCard, useGetTourStatisticsQuery } from "@/entities/tour";
 
-import { type ITourInfoOverview, TOUR_INFO_LIST } from "../model";
+import {
+	TOUR_ORDERS_STATS_CONFIG,
+	TOUR_REVENUE_STATS_CONFIG,
+	getTourStatCardValue
+} from "../model";
 
 const TourInfoBase: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
@@ -16,7 +20,7 @@ const TourInfoBase: FC = () => {
 		data: tourStats,
 		isLoading,
 		isError
-	} = useGetTourStatsQuery(tourId, {
+	} = useGetTourStatisticsQuery(tourId, {
 		skip: !tourId
 	});
 
@@ -26,24 +30,28 @@ const TourInfoBase: FC = () => {
 		}
 	}, [isError, t]);
 
-	const data = TOUR_INFO_LIST.map((item) => ({
-		...item,
-		value:
-			item?.func && tourStats
-				? item?.func(tourStats[item?.key as keyof typeof tourStats])
-				: tourStats?.[item?.key as keyof typeof tourStats] || "-"
-	})) as ITourInfoOverview[];
-
 	return (
-		<div className="grid grid-cols-3 gap-4">
-			{data?.map((item) => (
-				<InfoCard
-					key={String(item?.key)}
-					label={item?.label}
-					value={item?.value}
-					isLoading={isLoading}
-				/>
-			))}
+		<div className="grid gap-4">
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+				{TOUR_ORDERS_STATS_CONFIG.map((item) => (
+					<InfoCard
+						key={item.label}
+						label={item.label}
+						value={getTourStatCardValue(item, tourStats)}
+						isLoading={isLoading}
+					/>
+				))}
+			</div>
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{TOUR_REVENUE_STATS_CONFIG.map((item) => (
+					<InfoCard
+						key={item.label}
+						label={item.label}
+						value={getTourStatCardValue(item, tourStats)}
+						isLoading={isLoading}
+					/>
+				))}
+			</div>
 		</div>
 	);
 };

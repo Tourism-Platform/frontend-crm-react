@@ -1,6 +1,6 @@
 import type {
-	TOrderTourReviewSummary,
-	IOrderTourReviewSummaryAmounts
+	IOrderTourReviewSummaryAmounts,
+	TOrderTourReviewSummary
 } from "../types/order-tour-review.types";
 
 export const isOrderTourSummaryAmounts = (

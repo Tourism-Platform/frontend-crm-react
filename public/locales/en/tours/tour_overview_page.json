@@ -2,16 +2,17 @@
 	"page_name": "Tour Overview",
 	"info": {
 		"fields": {
-			"total": "Total",
+			"total_sales": "Total sales",
 			"completed": "Completed",
 			"in_progress": "In progress",
 			"tourists": "Tourists",
+			"estimated_revenue": "Estimated revenue",
 			"confirmed_revenue": "Confirmed revenue",
-			"potential_revenue": "Potential revenue"
+			"unconfirmed_revenue": "Unconfirmed revenue"
 		},
 		"toasts": {
 			"load": {
-				"error": "Error loading tour info"
+				"error": "Error loading tour statistics"
 			}
 		}
 	},

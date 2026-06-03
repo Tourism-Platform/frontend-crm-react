@@ -19,7 +19,7 @@ export const InfoCard: FC<IInfoCardProps> = ({ label, value, isLoading }) => {
 				{isLoading ? (
 					<Skeleton className="h-12 w-1/2" />
 				) : (
-					<CardTitle className="text-5xl font-normal">
+					<CardTitle className="text-2xl font-normal leading-tight break-words">
 						{value}
 					</CardTitle>
 				)}
