@@ -1,7 +1,8 @@
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 import { ENUM_PATH } from "@/shared/config";
 import { cn } from "@/shared/lib";
@@ -14,7 +15,8 @@ import {
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
 	INVOICE_STATUS_LABELS,
-	INVOICE_STATUS_VARIANTS
+	INVOICE_STATUS_VARIANTS,
+	useUpdateBookingStatusMutation
 } from "@/entities/booking";
 
 interface IOrderHeaderProps {
@@ -29,6 +31,24 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 	invoiceStatus
 }) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
+	const [updateBookingStatus, { isLoading: isAccepting }] =
+		useUpdateBookingStatusMutation();
+
+	const handleAccept = async () => {
+		try {
+			await updateBookingStatus({
+				id: orderId,
+				status: ENUM_ORDER_STATUS.IN_PROCESSING
+			}).unwrap();
+		} catch {
+			toast.error(
+				t("buttons.accept_error", {
+					defaultValue: "Failed to accept order"
+				})
+			);
+		}
+	};
+
 	const showInvoiceStatus =
 		status === ENUM_ORDER_STATUS.BOOKING ||
 		status === ENUM_ORDER_STATUS.COMPLETED ||
@@ -101,7 +121,12 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 						</div>
 					</div>
 					{status === ENUM_ORDER_STATUS.NEW && (
-						<Button>{t("buttons.accept")}</Button>
+						<Button onClick={handleAccept} disabled={isAccepting}>
+							{isAccepting && (
+								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+							)}
+							{t("buttons.accept")}
+						</Button>
 					)}
 					{status === ENUM_ORDER_STATUS.IN_PROCESSING && (
 						<div className="flex gap-3">

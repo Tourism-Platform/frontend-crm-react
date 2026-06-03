@@ -2,32 +2,47 @@ import { Check, CircleCheckBig, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { AvailabilityStatus } from "@/shared/api";
 import { Button } from "@/shared/ui";
 
-import { useApplyReviewItemMutation } from "@/entities/booking";
+import {
+	getNextAvailabilityApplyStatus,
+	useApplyEventAvailabilityMutation
+} from "@/entities/booking";
 
 interface IApplyReviewActionProps {
-	id: string;
-	parentId?: string;
-	isApplied?: boolean;
+	bookingId: string;
+	eventId?: string;
+	optionIndex: number;
+	availabilityStatus?: AvailabilityStatus;
 }
 
 export const ApplyReviewAction = ({
-	id,
-	parentId,
-	isApplied
+	bookingId,
+	eventId,
+	optionIndex,
+	availabilityStatus
 }: IApplyReviewActionProps) => {
 	const { t } = useTranslation("order_id_page");
-	const [apply, { isLoading }] = useApplyReviewItemMutation();
+	const [apply, { isLoading }] = useApplyEventAvailabilityMutation();
+
+	const nextStatus = getNextAvailabilityApplyStatus(availabilityStatus);
+	const isApplied = availabilityStatus === AvailabilityStatus.Selected;
 
 	async function handleApply() {
-		if (isApplied) return;
+		if (!eventId || !nextStatus || isApplied) return;
+
 		try {
-			await apply({ id, parentId }).unwrap();
+			await apply({
+				bookingId,
+				eventId,
+				optionIndex,
+				status: nextStatus
+			}).unwrap();
 			toast.success(t("tour_review.table.toasts.success"));
 		} catch (error) {
 			toast.error(t("tour_review.table.toasts.error"));
-			console.error("Failed to apply review item:", error);
+			console.error("Failed to apply event availability:", error);
 		}
 	}
 
@@ -35,7 +50,7 @@ export const ApplyReviewAction = ({
 		<Button
 			variant={isApplied ? "green_outline" : "cyan_outline"}
 			onClick={handleApply}
-			disabled={isLoading || isApplied}
+			disabled={isLoading || isApplied || !eventId || !nextStatus}
 			className="min-w-24"
 		>
 			{isApplied ? (

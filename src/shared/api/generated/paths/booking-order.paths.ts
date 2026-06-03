@@ -2,9 +2,11 @@ import type {
 	BookingCancel,
 	BookingCreate,
 	BookingModel,
+	BookingOrderDetail,
 	BookingOrderListResponse,
 	BookingStatus,
-	BookingUpdate
+	BookingUpdate,
+	LanguageCode
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -41,7 +43,11 @@ export const BOOKING_ORDER_PATHS = {
 		({
 			url: `/booking/order/${bookingId}`,
 			method: "GET",
-			_types: {} as { body: void; query: void; response: BookingModel }
+			_types: {} as {
+				body: void;
+				query: { lang?: LanguageCode };
+				response: BookingOrderDetail;
+			}
 		}) as const,
 	updateBookingOrder: (bookingId: string) =>
 		({

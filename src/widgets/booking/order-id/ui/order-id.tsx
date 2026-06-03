@@ -1,13 +1,10 @@
-import { type FC, useMemo } from "react";
+import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import {
-	ENUM_ORDER_STATUS,
-	useGetBookingOrderByIdQuery
-} from "@/entities/booking";
+import { ENUM_ORDER_STATUS } from "@/entities/booking";
 
-import { getContactItems, getOrderItems } from "../model";
+import { useOrderDetails } from "../model/hooks/use-order-details";
 
 import { OrderHeader } from "./order-header";
 import { OrderIdSkeleton } from "./order-id-skeleton";
@@ -22,22 +19,14 @@ export const OrderId: FC = () => {
 	const { orderId } = useParams<{ orderId: string }>();
 	const { t } = useTranslation(["order_id_page", "options"]);
 
-	const { data: order, isLoading } = useGetBookingOrderByIdQuery(
-		orderId || ""
-	);
-
-	const orderItems = useMemo(
-		() => (order ? getOrderItems(order, t) : []),
-		[order, t]
-	);
-	const contactItems = useMemo(
-		() => (order ? getContactItems(order, t) : []),
-		[order, t]
-	);
-	// const optionItems = useMemo(
-	// 	() => (order ? getOptionItems(order, t) : []),
-	// 	[order, t]
-	// );
+	const {
+		order,
+		orderItems,
+		contactItems,
+		paxDetails,
+		tourReview,
+		isLoading
+	} = useOrderDetails(orderId || "");
 
 	if (isLoading) {
 		return <OrderIdSkeleton />;
@@ -74,17 +63,11 @@ export const OrderId: FC = () => {
 				/>
 			</div>
 
-			{/* {order?.status !== ENUM_ORDER_STATUS.CANCELLED && (
-				<OrderInfoCard
-					title={t("selected_options.title")}
-					items={optionItems}
-				/>
-			)} */}
-
-			{order?.status !== ENUM_ORDER_STATUS.CANCELLED && (
+			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (
 				<OrderTourReview
-					items={order.tourReview}
-					summary={order.tourSummary}
+					bookingId={orderId || ""}
+					items={tourReview.items}
+					summary={tourReview.summary}
 					orderStatus={order.status}
 				/>
 			)}
@@ -95,8 +78,8 @@ export const OrderId: FC = () => {
 				/>
 			)}
 
-			{order?.status !== ENUM_ORDER_STATUS.CANCELLED && (
-				<OrderPaxReview items={order.paxDetails} />
+			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (
+				<OrderPaxReview items={paxDetails} />
 			)}
 		</div>
 	);

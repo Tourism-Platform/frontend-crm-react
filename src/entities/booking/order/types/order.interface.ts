@@ -1,13 +1,15 @@
 import type { IDownloadFile } from "@/shared/hooks";
 import { type IPaginationResponse } from "@/shared/types";
 
+import type { ITourSummary } from "@/entities/tour/tour/types/tour-review.interface";
+
 import { type ENUM_CLIENT_TYPE_OPTIONS_TYPE } from "./client-type.types";
 import { type ENUM_GENDER_OPTIONS_TYPE } from "./gender.types";
 import { type ENUM_INVOICE_STATUS_TYPE } from "./invoice-status.types";
 import { type ENUM_ORDER_STATUS_TYPE } from "./order-status.types";
+import type { IOrderTourReviewItem } from "./order-tour-review.types";
 import { type ENUM_ORDER_TYPE_OPTIONS_TYPE } from "./order-type.types";
 import type { ISupplierPaymentItem } from "./supplier-payment.interface";
-import type { ITourReviewItem, ITourSummary } from "./tour.interface";
 
 export interface IPaxReviewDetail {
 	id: string;
@@ -32,6 +34,15 @@ export interface IOrderDates {
 	to: string;
 }
 
+export interface IOrderTourInfo {
+	name: string;
+	type: ENUM_ORDER_TYPE_OPTIONS_TYPE;
+	days: number;
+	nights: number;
+	route: string;
+	duration: string;
+}
+
 export interface IOrder {
 	orderId: string;
 	orderNumber?: string;
@@ -48,19 +59,24 @@ export interface IOrder {
 }
 
 export interface IOrderDetail extends IOrder {
+	agencyId: string;
+	tourOptionId: string;
+	tour: IOrderTourInfo;
 	duration: string;
 	route: string;
 	comment?: string;
-	email: string;
-	phone: string;
+	tourAmount: string;
+	paidAmount: string;
+	email?: string;
+	phone?: string;
 	roomType?: string;
 	carClass?: string;
 	isAvailable?: boolean;
 	report?: string;
 	paxDetails?: IPaxReviewItem[];
-	tourReview: ITourReviewItem[];
+	tourReview?: IOrderTourReviewItem[];
 	supplierPayments?: ISupplierPaymentItem[];
-	tourSummary: ITourSummary;
+	tourSummary?: ITourSummary;
 }
 
 export type TBookingOrderPaginatedResponse = IPaginationResponse<IOrder>;

@@ -2,24 +2,24 @@ import {
 	BOOKING_ORDER_PATHS,
 	type BookingCancel,
 	type BookingModel,
+	type BookingOrderDetail,
 	ENUM_API_TAGS
 } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
-	mapApplyReviewItemToBackend,
 	mapBookingModelToCreated,
 	mapBookingModelToUpdated,
 	mapBookingOrderDetailToFrontend,
 	mapBookingOrderFiltersToBackend,
 	mapBookingOrderPaginatedToFrontend,
 	mapCreateBookingToBackend,
+	mapOrderStatusToTransition,
 	mapUpdateBookingToBackend
 } from "../converters";
 import type {
-	IApplyReviewItemRequest,
-	IBookingOrderDetailBackend,
+	ENUM_ORDER_STATUS_TYPE,
 	IBookingOrderFilters,
 	ICreateBookingRequest,
 	ICreatedBooking,
@@ -27,7 +27,6 @@ import type {
 	IUpdateBookingRequest,
 	IUpdatedBooking,
 	TBookingModelBackend,
-	TBookingOrderBackend,
 	TBookingOrderBackendResponse,
 	TBookingOrderPaginatedResponse,
 	TSubmittedBooking
@@ -86,54 +85,49 @@ export const bookingOrderApi = authApi.injectEndpoints({
 			query: (id) => ({
 				...BOOKING_ORDER_PATHS.getBookingOrder(id)
 			}),
-			transformResponse: (response: TBookingOrderBackend) =>
-				mapBookingOrderDetailToFrontend(
-					response as IBookingOrderDetailBackend
-				),
+			transformResponse: (response: BookingOrderDetail) =>
+				mapBookingOrderDetailToFrontend(response),
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
 			]
 		}),
 		updateBookingStatus: builder.mutation<
-			IOrderDetail,
-			{ id: string; status: string }
+			BookingModel,
+			{ id: string; status: ENUM_ORDER_STATUS_TYPE }
 		>({
-			query: ({ id, status }) => ({
-				...BOOKING_ORDER_PATHS.transitionBookingStatus(id, status)
-			}),
-			transformResponse: (response: TBookingOrderBackend) =>
-				mapBookingOrderDetailToFrontend(
-					response as IBookingOrderDetailBackend
-				),
+			query: ({ id, status }) => {
+				const transition = mapOrderStatusToTransition(status);
+
+				if (!transition) {
+					throw new Error(
+						`Unsupported booking status transition: ${status}`
+					);
+				}
+
+				return {
+					...BOOKING_ORDER_PATHS.transitionBookingStatus(
+						id,
+						transition
+					)
+				};
+			},
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id },
 				ENUM_API_TAGS.BOOKING_ORDERS
 			]
 		}),
 		cancelBooking: builder.mutation<
-			IOrderDetail,
+			BookingModel,
 			{ id: string; data: BookingCancel }
 		>({
 			query: ({ id, data }) => ({
 				...BOOKING_ORDER_PATHS.cancelBooking(id),
 				body: data
 			}),
-			transformResponse: (response: TBookingOrderBackend) =>
-				mapBookingOrderDetailToFrontend(
-					response as IBookingOrderDetailBackend
-				),
 			invalidatesTags: (_result, _error, { id }) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id },
 				ENUM_API_TAGS.BOOKING_ORDERS
 			]
-		}),
-		applyReviewItem: builder.mutation<void, IApplyReviewItemRequest>({
-			query: (body) => ({
-				url: "/booking/orders/apply-review",
-				method: "POST",
-				body: mapApplyReviewItemToBackend(body)
-			}),
-			invalidatesTags: [ENUM_API_TAGS.BOOKING_ORDERS]
 		})
 	})
 });
@@ -145,6 +139,5 @@ export const {
 	useSubmitBookingOrderMutation,
 	useGetBookingOrderByIdQuery,
 	useUpdateBookingStatusMutation,
-	useCancelBookingMutation,
-	useApplyReviewItemMutation
+	useCancelBookingMutation
 } = bookingOrderApi;

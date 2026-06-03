@@ -45,6 +45,12 @@ const mapMinMaxCostToDisplay = (cost: TourMinMaxCostSchemaOutput): string => {
 const getEventKey = (event: { day: number; position: number; typ?: string }) =>
 	`${event.day}-${event.position}-${event.typ ?? ""}`;
 
+const parseOptionIndexFromSuffix = (idSuffix: string): number => {
+	if (!idSuffix.startsWith("-")) return 0;
+	const index = Number.parseInt(idSuffix.slice(1), 10);
+	return Number.isNaN(index) ? 0 : index;
+};
+
 type TSummaryEvent = AnyEventWithCostOutput["event"];
 
 const mapSummaryEventToReviewItem = (
@@ -53,6 +59,8 @@ const mapSummaryEventToReviewItem = (
 	markup?: TourMinMaxCostSchemaOutput,
 	idSuffix = ""
 ): ITourReviewItem => {
+	const optionIndex = parseOptionIndexFromSuffix(idSuffix);
+
 	if ("typ" in event && event.typ === "8") {
 		const multi = event as MultipleOptionEventOutput;
 		const parentId = getEventKey(multi);
@@ -64,26 +72,40 @@ const mapSummaryEventToReviewItem = (
 			plannedCost: cost ? mapMinMaxCostToDisplay(cost) : "-",
 			estimatedRevenue: markup ? mapMinMaxCostToDisplay(markup) : "-",
 			type: ENUM_EVENT.MULTIPLY_OPTION,
-			subRows: (multi.details ?? []).map((detail, index) =>
-				mapSummaryEventToReviewItem(
+			day: multi.day,
+			position: multi.position,
+			optionIndex,
+			subRows: (multi.details ?? []).map((detail, index) => {
+				const subRow = mapSummaryEventToReviewItem(
 					detail,
 					undefined,
 					undefined,
 					`-${index}`
-				)
-			)
+				);
+
+				return {
+					...subRow,
+					day: multi.day,
+					position: multi.position,
+					optionIndex: index
+				};
+			})
 		};
 	}
 
 	const typ = "typ" in event ? event.typ : undefined;
+	const positioned = event as { day: number; position: number };
 
 	return {
-		id: `${getEventKey(event as { day: number; position: number; typ?: string })}${idSuffix}`,
+		id: `${getEventKey(positioned)}${idSuffix}`,
 		item: (event as { name?: string | null }).name ?? "",
 		supplier: (event as { supplier_id?: string | null }).supplier_id ?? "-",
 		plannedCost: cost ? mapMinMaxCostToDisplay(cost) : "-",
 		estimatedRevenue: markup ? mapMinMaxCostToDisplay(markup) : "-",
-		type: mapBackendTypToEventType(typ)
+		type: mapBackendTypToEventType(typ),
+		day: positioned.day,
+		position: positioned.position,
+		optionIndex
 	};
 };
 

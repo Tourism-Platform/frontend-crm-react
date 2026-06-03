@@ -9,7 +9,25 @@ import {
 } from "@/entities/booking";
 import { ENUM_EVENT } from "@/entities/tour";
 
-export const BOOKING_ORDERS_MOCK: IOrderDetail[] = [
+const MOCK_ORDER_DETAIL_DEFAULTS = {
+	agencyId: "00000000-0000-0000-0000-000000000001",
+	tourOptionId: "00000000-0000-0000-0000-000000000002",
+	tourAmount: "0",
+	paidAmount: "0",
+	tour: {
+		name: "",
+		type: ENUM_ORDER_TYPE_OPTIONS.REGULAR,
+		days: 0,
+		nights: 0,
+		route: "-",
+		duration: "-"
+	}
+} satisfies Pick<
+	IOrderDetail,
+	"agencyId" | "tourOptionId" | "tour" | "tourAmount" | "paidAmount"
+>;
+
+const BOOKING_ORDERS_MOCK_RAW = [
 	// NEW (2 items)
 	{
 		orderId: "RQA00001",
@@ -1856,3 +1874,18 @@ export const BOOKING_ORDERS_MOCK: IOrderDetail[] = [
 		paxDetails: []
 	}
 ];
+
+export const BOOKING_ORDERS_MOCK: IOrderDetail[] = BOOKING_ORDERS_MOCK_RAW.map(
+	(order) =>
+		({
+			...MOCK_ORDER_DETAIL_DEFAULTS,
+			...order,
+			tour: {
+				...MOCK_ORDER_DETAIL_DEFAULTS.tour,
+				name: order.tourName,
+				type: order.orderType,
+				route: order.route,
+				duration: order.duration
+			}
+		}) as IOrderDetail
+);

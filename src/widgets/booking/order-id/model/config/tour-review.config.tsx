@@ -7,17 +7,18 @@ import { Button } from "@/shared/ui";
 
 import {
 	ENUM_ORDER_STATUS,
-	type ENUM_ORDER_STATUS_TYPE
+	type ENUM_ORDER_STATUS_TYPE,
+	type IOrderTourReviewItem
 } from "@/entities/booking";
-import { type ITourReviewItem } from "@/entities/booking";
 import { ENUM_EVENT, EVENT_METADATA } from "@/entities/tour";
 
 import { ApplyReviewAction } from "@/features/booking";
 
 export const TOUR_REVIEW_COLUMNS = (
 	t: TFunction<"order_id_page", undefined>,
-	orderStatus: ENUM_ORDER_STATUS_TYPE
-): ColumnDef<ITourReviewItem>[] => {
+	orderStatus: ENUM_ORDER_STATUS_TYPE,
+	bookingId: string
+): ColumnDef<IOrderTourReviewItem>[] => {
 	return [
 		{
 			accessorKey: "item",
@@ -92,18 +93,20 @@ export const TOUR_REVIEW_COLUMNS = (
 							</span>
 						),
 						cell: ({ row }) => {
-							const { id, type, isApplied } = row.original;
+							const {
+								type,
+								eventId,
+								optionIndex,
+								availabilityStatus
+							} = row.original;
 							const depth = row.depth;
 							const parentRow = row.getParentRow?.();
 							const parentType = parentRow?.original?.type;
-							const parentId = parentRow?.original?.id;
 
-							// Если это multiply-option — кнопку не показываем в родителе
 							if (type === ENUM_EVENT.MULTIPLY_OPTION) {
 								return null;
 							}
 
-							// Если это subRow — показываем кнопку только если родитель = multiply-option
 							if (
 								depth > 0 &&
 								parentType !== ENUM_EVENT.MULTIPLY_OPTION
@@ -113,14 +116,15 @@ export const TOUR_REVIEW_COLUMNS = (
 
 							return (
 								<ApplyReviewAction
-									id={id}
-									parentId={parentId}
-									isApplied={isApplied}
+									bookingId={bookingId}
+									eventId={eventId}
+									optionIndex={optionIndex}
+									availabilityStatus={availabilityStatus}
 								/>
 							);
 						},
 						size: 100
-					} as ColumnDef<ITourReviewItem>
+					} as ColumnDef<IOrderTourReviewItem>
 				]
 			: [])
 	];

@@ -2,11 +2,25 @@ import { Gender, type PaxCreate, type PaxUpdate } from "@/shared/api";
 import type { TFileMetadata } from "@/shared/hooks";
 import { formatDate, formatDateToISO } from "@/shared/utils";
 
+import { ENUM_GENDER_OPTIONS, type ENUM_GENDER_OPTIONS_TYPE } from "../types";
 import type {
 	IBookingPax,
+	IPaxReviewDetail,
+	IPaxReviewItem,
 	TBookingPaxBackend,
 	TBookingPaxListBackendResponce
 } from "../types";
+
+/** TODO: заменить на files[] из API pax */
+const ORDER_PAX_PASSPORT_FILE_PLACEHOLDER: IPaxReviewDetail = {
+	id: "passport-file-placeholder",
+	type: "file",
+	value: "passport.pdf",
+	file: { url: "", fileName: "passport.pdf" }
+};
+
+const mapGenderToFrontend = (gender: Gender): ENUM_GENDER_OPTIONS_TYPE =>
+	gender === Gender.F ? ENUM_GENDER_OPTIONS.FEMALE : ENUM_GENDER_OPTIONS.MALE;
 
 export interface ITravellerPaxInput {
 	pax_id?: string;
@@ -75,6 +89,40 @@ export const mapBookingPaxToTravellerForm = (
 export const mapBookingPaxListToFrontend = (
 	data: TBookingPaxListBackendResponce
 ): IBookingPax[] => data.map(mapBookingPaxToFrontend);
+
+export const mapBookingPaxToPaxReviewItem = (
+	pax: IBookingPax
+): IPaxReviewItem => {
+	const items: IPaxReviewDetail[] = [];
+
+	if (pax.comment) {
+		items.push({
+			id: `${pax.id}-comment`,
+			type: "comment",
+			value: pax.comment
+		});
+	}
+
+	items.push({
+		...ORDER_PAX_PASSPORT_FILE_PLACEHOLDER,
+		id: `${pax.id}-passport-file`
+	});
+
+	return {
+		id: pax.id,
+		fullName: pax.name,
+		gender: mapGenderToFrontend(pax.gender),
+		nationality: pax.nationality,
+		dateOfBirth: pax.dateOfBirth,
+		passportNumber: pax.passportNum,
+		expiredDate: pax.passportExpiryDate,
+		items
+	};
+};
+
+export const mapBookingPaxListToPaxReview = (
+	data: IBookingPax[]
+): IPaxReviewItem[] => data.map(mapBookingPaxToPaxReviewItem);
 
 const isTravellerFieldsComplete = (traveller: ITravellerPaxInput) =>
 	Boolean(

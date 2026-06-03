@@ -7,7 +7,9 @@ export interface ITourReviewItem {
 	plannedCost?: string;
 	estimatedRevenue?: string;
 	type?: ENUM_EVENT_TYPE;
-	isApplied?: boolean;
+	day: number;
+	position: number;
+	optionIndex: number;
 	subRows?: ITourReviewItem[];
 }
 

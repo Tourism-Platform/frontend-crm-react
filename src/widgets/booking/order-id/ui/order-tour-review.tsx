@@ -15,15 +15,16 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 import {
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
-	type ITourReviewItem,
-	type ITourSummary
+	type IOrderTourReviewItem,
+	type TOrderTourReviewSummary
 } from "@/entities/booking";
 
 import { type IInfoItem, TOUR_REVIEW_COLUMNS, getTourSummary } from "../model";
 
 interface IOrderTourReviewProps {
-	items: ITourReviewItem[];
-	summary: ITourSummary;
+	bookingId: string;
+	items: IOrderTourReviewItem[];
+	summary: TOrderTourReviewSummary;
 	orderStatus: ENUM_ORDER_STATUS_TYPE;
 }
 
@@ -32,7 +33,7 @@ const TABLE_LAYOUT = {
 	headerBackground: false
 };
 
-const getSubRowsFn = (row: ITourReviewItem) => row.subRows;
+const getSubRowsFn = (row: IOrderTourReviewItem) => row.subRows;
 
 const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
 	return (
@@ -46,6 +47,7 @@ const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
 };
 
 const OrderTourReviewBase = ({
+	bookingId,
 	items,
 	summary,
 	orderStatus
@@ -57,8 +59,8 @@ const OrderTourReviewBase = ({
 	);
 
 	const columns = useMemo(
-		() => TOUR_REVIEW_COLUMNS(t, orderStatus),
-		[t, orderStatus]
+		() => TOUR_REVIEW_COLUMNS(t, orderStatus, bookingId),
+		[t, orderStatus, bookingId]
 	);
 
 	return (

@@ -1022,6 +1022,72 @@ export interface BookingModel {
 	voucher_path: string | null;
 }
 
+/** BookingOrderDetail */
+export interface BookingOrderDetail {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agency_id: string;
+	/**
+	 * Operator Id
+	 * @format uuid
+	 */
+	operator_id: string;
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/** Snapshot Id */
+	snapshot_id?: string | null;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/**
+	 * End Date
+	 * @format date
+	 */
+	end_date: string;
+	/** Pax */
+	pax: number;
+	status: BookingStatus;
+	/**
+	 * Paid Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	paid_amount: string;
+	paid_currency: Currency;
+	/**
+	 * Tour Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	tour_amount: string;
+	tour_currency: Currency;
+	/** Fx Rate Id */
+	fx_rate_id?: string | null;
+	/** Fx Rate Applied */
+	fx_rate_applied?: string | null;
+	/** Agreed Price */
+	agreed_price?: string | null;
+	/** Cancelled At */
+	cancelled_at?: string | null;
+	/** Cancellation Reason */
+	cancellation_reason?: string | null;
+	/** Comment */
+	comment?: string | null;
+	/** Voucher Path */
+	voucher_path?: string | null;
+	tour: OrderTourInfo;
+}
+
 /** BookingOrderListItem */
 export interface BookingOrderListItem {
 	/**
@@ -3466,6 +3532,21 @@ export interface OperatorPreviewPubSchema {
 	logo_url: string | null;
 }
 
+/** OrderTourInfo */
+export interface OrderTourInfo {
+	/** Name */
+	name: string;
+	typ: TourType;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours?: number | null;
+	/** Route */
+	route?: string[];
+}
+
 /** PackageCreate */
 export interface PackageCreate {
 	/** Name */
@@ -3839,6 +3920,10 @@ export interface PublicTourCatalogSchemaInput {
 	age_from: number | null;
 	/** Age To */
 	age_to: number | null;
+	/** Group Size */
+	group_size: number;
+	/** Group Size Min */
+	group_size_min: number | null;
 	/** Categories */
 	categories: TourCategory[];
 	tour_type: TourType;
@@ -3849,6 +3934,7 @@ export interface PublicTourCatalogSchemaInput {
 	/** Languages */
 	languages: Language[];
 	price_range: PriceRangeSchema | null;
+	price_per_person: PriceRangeSchema | null;
 	/** Option Count */
 	option_count?: number | null;
 }
@@ -3876,6 +3962,10 @@ export interface PublicTourCatalogSchemaOutput {
 	age_from: number | null;
 	/** Age To */
 	age_to: number | null;
+	/** Group Size */
+	group_size: number;
+	/** Group Size Min */
+	group_size_min: number | null;
 	/** Categories */
 	categories: TourCategory[];
 	tour_type: TourType;
@@ -3886,6 +3976,7 @@ export interface PublicTourCatalogSchemaOutput {
 	/** Languages */
 	languages: Language[];
 	price_range: PriceRangeSchema | null;
+	price_per_person: PriceRangeSchema | null;
 	/** Option Count */
 	option_count?: number | null;
 }
@@ -4709,18 +4800,27 @@ export interface TourScheduleUpdate {
 
 /**
  * TourStatisticsResponse
- * Tour-level order, revenue & profit statistics over the confirmed booking
- * set ({CONFIRMED, IN_PROGRESS, COMPLETED}), all in the operator's base
- * currency. Every field defaults to 0 so the endpoint never returns
- * null/empty when a tour has no orders yet.
+ * Tour-level order, revenue & profit statistics, all in the operator's base
+ * currency. Every field defaults to 0 so the endpoint never returns null/empty.
  *
- * - ``potential_revenue`` — planned gross agency price (cost+markup+fees+taxes)
- *   from the planned event costs, per each order's pax.
- * - ``planned_cost`` — planned supplier cost for the same set.
+ * Planned figures are catalog projections — independent of orders — so they
+ * show as soon as a tour has priced options. They are ``min``/``max`` ranges:
+ * the spread comes from category alternatives (cheapest vs dearest room/car/
+ * option) and the tour's pax range (``group_size_min`` → ``group_size``), rolled
+ * up across the tour's options (min of option mins, max of option maxes).
+ *
+ * - ``planned_revenue_min``/``planned_revenue_max`` — planned gross agency price
+ *   (cost+markup+fees+taxes) from current event pricing.
+ * - ``planned_cost_min``/``planned_cost_max`` — planned supplier cost.
+ * - ``planned_profit_min`` = revenue_min − cost_max (worst margin);
+ *   ``planned_profit_max`` = revenue_max − cost_min (best margin).
+ *
+ * Realized figures are over the confirmed booking set ({CONFIRMED, IN_PROGRESS,
+ * COMPLETED}):
+ *
  * - ``confirmed_revenue`` — actually billed: sum of issued invoice totals.
  * - ``real_cost`` — actually recorded supplier-payment ledger, FX-converted to
  *   base (amount × pinned rate). Captures real cost + exchange differences.
- * - ``potential_profit`` = potential_revenue − planned_cost (expected margin).
  * - ``real_profit`` = confirmed_revenue − real_cost (real-time performance).
  */
 export interface TourStatisticsResponse {
@@ -4745,11 +4845,41 @@ export interface TourStatisticsResponse {
 	 */
 	tourists?: number;
 	/**
-	 * Potential Revenue
+	 * Planned Revenue Min
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	potential_revenue?: string;
+	planned_revenue_min?: string;
+	/**
+	 * Planned Revenue Max
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	planned_revenue_max?: string;
+	/**
+	 * Planned Cost Min
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	planned_cost_min?: string;
+	/**
+	 * Planned Cost Max
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	planned_cost_max?: string;
+	/**
+	 * Planned Profit Min
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	planned_profit_min?: string;
+	/**
+	 * Planned Profit Max
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	planned_profit_max?: string;
 	/**
 	 * Confirmed Revenue
 	 * @default "0"
@@ -4757,23 +4887,11 @@ export interface TourStatisticsResponse {
 	 */
 	confirmed_revenue?: string;
 	/**
-	 * Planned Cost
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	planned_cost?: string;
-	/**
 	 * Real Cost
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	real_cost?: string;
-	/**
-	 * Potential Profit
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	potential_profit?: string;
 	/**
 	 * Real Profit
 	 * @default "0"
@@ -6526,6 +6644,14 @@ export interface ArchiveTourTourTourIdArchivePostParams {
 	tourId: string;
 }
 
+export interface RefreshTourProjectionTourTourIdRefreshPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface UploadTourCoverTourTourIdCoverPostParams {
 	/**
 	 * Tour Id
@@ -6888,6 +7014,8 @@ export interface ListMyBookingsBookingOrderMyGetParams {
 }
 
 export interface GetBookingOrderBookingOrderBookingIdGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
 	/**
 	 * Booking Id
 	 * @format uuid

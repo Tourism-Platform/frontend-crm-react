@@ -83,6 +83,12 @@ export const TOUR_PATHS = {
 			method: "POST",
 			_types: {} as { body: void; query: void; response: TourMetaModel }
 		}) as const,
+	refreshTourProjection: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/refresh`,
+			method: "POST",
+			_types: {} as { body: void; query: void; response: TourMetaModel }
+		}) as const,
 	uploadTourCover: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/cover`,

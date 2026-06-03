@@ -1,32 +1,15 @@
 import type {
 	BOOKING_ORDER_PATHS,
 	BookingModel,
+	BookingOrderDetail,
 	BookingOrderListItem
 } from "@/shared/api";
-
-import { type IPaxReviewItem } from "./order.interface";
-import type { ISupplierPaymentItem } from "./supplier-payment.interface";
-import type { ITourReviewItem, ITourSummary } from "./tour.interface";
 
 export type TBookingOrderBackend = BookingModel;
 
 export type TBookingOrderListItemBackend = BookingOrderListItem;
 
-export interface IBookingOrderDetailBackend extends TBookingOrderBackend {
-	duration: string;
-	route: string;
-	comment: string | null;
-	email: string;
-	phone: string;
-	room_type: string | null;
-	car_class: string | null;
-	is_available: boolean;
-	report: string | null;
-	pax_details: IPaxReviewItem[] | null;
-	tour_review: ITourReviewItem[];
-	supplier_payments: ISupplierPaymentItem[] | null;
-	tour_summary: ITourSummary;
-}
+export type TBookingOrderDetailBackend = BookingOrderDetail;
 
 export interface IApplyReviewItemBackend {
 	id: string;
