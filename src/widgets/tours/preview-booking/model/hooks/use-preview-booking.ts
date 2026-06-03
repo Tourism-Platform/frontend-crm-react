@@ -30,6 +30,7 @@ import type { TSubmittedBooking } from "@/entities/booking/order/types/create-bo
 import { useGetTourGeneralQuery } from "@/entities/tour";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
+	PREVIEW_BOOKING_DEFAULT_VALUES,
 	PREVIEW_BOOKING_SCHEMA,
 	type TPreviewBookingSchema
 } from "@/entities/tour/preview-booking";
@@ -108,6 +109,7 @@ export const usePreviewBooking = () => {
 		resolver: zodResolver(
 			PREVIEW_BOOKING_SCHEMA
 		) as Resolver<TPreviewBookingSchema>,
+		defaultValues: PREVIEW_BOOKING_DEFAULT_VALUES,
 		mode: "onChange"
 	});
 
