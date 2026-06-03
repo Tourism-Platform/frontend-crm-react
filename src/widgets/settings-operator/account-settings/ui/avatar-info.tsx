@@ -1,5 +1,5 @@
 import { Loader, TrashIcon } from "lucide-react";
-import { type FC, useEffect } from "react";
+import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -58,13 +58,6 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 			}
 		});
 
-	// Синхронизация при удалении
-	useEffect(() => {
-		if (files.length === 0) {
-			form.setValue("avatar", "", { shouldDirty: true });
-		}
-	}, [files, form]);
-
 	const handleRemove = async () => {
 		try {
 			await deleteAvatar().unwrap();
@@ -90,66 +83,71 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 			<FormField
 				control={form.control}
 				name="avatar"
-				render={({ field }) => (
-					<FormItem>
-						<div className="flex gap-5 items-center">
-							<FormControl>
-								<Avatar className="size-32 border-accent border">
-									<AvatarImage
-										src={
-											field.value ||
-											files[0]?.preview ||
-											""
-										}
-										alt="Profile image"
-									/>
-									<AvatarFallback className="text-3xl">
-										{fallbackName()}
-									</AvatarFallback>
-								</Avatar>
-							</FormControl>
-							<div className="flex gap-2">
-								<div className="relative inline-block">
-									<Button
-										type="button"
-										onClick={openFileDialog}
-										aria-haspopup="dialog"
-										disabled={isUploading || isDeleting}
+				render={({ field }) => {
+					const src = field.value || files[0]?.preview;
+
+					return (
+						<FormItem>
+							<div className="flex gap-5 items-center">
+								<FormControl>
+									<Avatar
+										key={src ?? "fallback"}
+										className="size-32 border-accent border"
 									>
-										{isUploading && (
-											<Loader className="mr-2 h-4 w-4 animate-spin" />
-										)}
-										{field.value || files[0]?.file.name
-											? t("avatar.buttons.change")
-											: t("avatar.buttons.add")}
-									</Button>
-									<input
-										{...getInputProps()}
-										className="sr-only"
-										aria-label="Upload image file"
-										tabIndex={-1}
-									/>
+										{src ? (
+											<AvatarImage
+												src={src}
+												alt="Profile image"
+											/>
+										) : null}
+										<AvatarFallback className="text-3xl">
+											{fallbackName()}
+										</AvatarFallback>
+									</Avatar>
+								</FormControl>
+								<div className="flex gap-2">
+									<div className="relative inline-block">
+										<Button
+											type="button"
+											onClick={openFileDialog}
+											aria-haspopup="dialog"
+											disabled={isUploading || isDeleting}
+										>
+											{isUploading && (
+												<Loader className="mr-2 h-4 w-4 animate-spin" />
+											)}
+											{field.value || files[0]?.file.name
+												? t("avatar.buttons.change")
+												: t("avatar.buttons.add")}
+										</Button>
+										<input
+											{...getInputProps()}
+											className="sr-only"
+											aria-label="Upload image file"
+											tabIndex={-1}
+										/>
+									</div>
+									{(field.value || files[0]?.file.name) && (
+										<Button
+											type="button"
+											variant={"outline"}
+											size={"icon"}
+											onClick={handleRemove}
+											disabled={isUploading || isDeleting}
+										>
+											{isDeleting ? (
+												<Loader className="h-4 w-4 animate-spin" />
+											) : (
+												<TrashIcon className="h-4 w-4" />
+											)}
+										</Button>
+									)}
 								</div>
-								{(field.value || files[0]?.file.name) && (
-									<Button
-										type="button"
-										variant={"outline"}
-										size={"icon"}
-										onClick={handleRemove}
-										disabled={isUploading || isDeleting}
-									>
-										{isDeleting ? (
-											<Loader className="mr-2 h-4 w-4 animate-spin" />
-										) : (
-											<TrashIcon />
-										)}
-									</Button>
-								)}
 							</div>
-						</div>
-						<FormMessage />
-					</FormItem>
-				)}
+							<FormMessage />
+						</FormItem>
+					);
+				}}
 			/>
 		</div>
 	);
