@@ -28,7 +28,6 @@ import {
 import { EventTitleInput } from "../ui";
 
 import {
-	ENUM_FORM_SECTION,
 	type ENUM_FORM_SECTION_TYPE,
 	TRANSPORTATION_EDIT_TABS_LIST
 } from "./model";
@@ -75,32 +74,13 @@ export const TransportationEdit: FC = () => {
 				return;
 			}
 
-			const sectionData = {
-				[section]: form.getValues(section),
-				[ENUM_FORM_SECTION.NAME]: form.getValues(
-					ENUM_FORM_SECTION.NAME
-				),
-				[ENUM_FORM_SECTION.DAY]: form.getValues(ENUM_FORM_SECTION.DAY),
-				[ENUM_FORM_SECTION.POSITION]: form.getValues(
-					ENUM_FORM_SECTION.POSITION
-				),
-				...((section === ENUM_FORM_SECTION.PRICING ||
-					section === ENUM_FORM_SECTION.CARS) && {
-					[ENUM_FORM_SECTION.CARS]: form.getValues(
-						ENUM_FORM_SECTION.CARS
-					),
-					[ENUM_FORM_SECTION.PRICING]: form.getValues(
-						ENUM_FORM_SECTION.PRICING
-					)
-				})
-			};
 			try {
 				await updateTourEvent({
 					tourId,
 					optionId,
 					eventId,
 					type: ENUM_EVENT.TRANSPORTATION,
-					data: sectionData
+					data: form.getValues()
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
 			} catch (error) {

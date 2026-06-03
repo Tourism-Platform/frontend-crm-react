@@ -19,8 +19,6 @@ import {
 
 import {
 	ENUM_EVENT,
-	ENUM_FORM_FLIGHT,
-	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
 	FLIGHT_EDIT_SCHEMA,
 	type TFlightEditSchema,
 	useGetTourEventQuery,
@@ -72,32 +70,13 @@ export const FlightEdit: FC = () => {
 			const isValid = await form.trigger(section);
 			if (!isValid) return;
 
-			const transportType = form.getValues(
-				`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.TRANSPORT_TYPE}`
-			);
-
-			const sectionData = {
-				[section]: form.getValues(section),
-				...(transportType &&
-					section !== ENUM_FORM_SECTION.GENERAL && {
-						general: { transport_type: transportType }
-					}),
-				[ENUM_FORM_SECTION.NAME]: form.getValues(
-					ENUM_FORM_SECTION.NAME
-				),
-				[ENUM_FORM_SECTION.DAY]: form.getValues(ENUM_FORM_SECTION.DAY),
-				[ENUM_FORM_SECTION.POSITION]: form.getValues(
-					ENUM_FORM_SECTION.POSITION
-				)
-			} as Partial<TFlightEditSchema>;
-
 			try {
 				await updateTourEvent({
 					tourId,
 					optionId,
 					eventId,
 					type: ENUM_EVENT.FLIGHT,
-					data: sectionData
+					data: form.getValues()
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
 			} catch (error) {
