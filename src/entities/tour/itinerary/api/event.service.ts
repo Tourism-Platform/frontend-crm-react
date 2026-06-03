@@ -75,7 +75,13 @@ export const tourEventApi = authApi.injectEndpoints({
 				} catch (error) {
 					console.error(error);
 				}
-			}
+			},
+			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+				{
+					type: ENUM_API_TAGS.TOURS_PRICING_SUMMARY,
+					id: `${tourId}:${optionId}`
+				}
+			]
 		}),
 		updateTourEvent: builder.mutation<ITourEvent, ITourEventUpdate>({
 			query: ({ tourId, optionId, eventId, type, data }) => ({
@@ -112,6 +118,10 @@ export const tourEventApi = authApi.injectEndpoints({
 				{
 					type: ENUM_API_TAGS.TOURS_EVENTS,
 					id: `${tourId}-${optionId}`
+				},
+				{
+					type: ENUM_API_TAGS.TOURS_PRICING_SUMMARY,
+					id: `${tourId}:${optionId}`
 				}
 			]
 		}),
@@ -140,7 +150,13 @@ export const tourEventApi = authApi.injectEndpoints({
 				} catch (error) {
 					console.error(error);
 				}
-			}
+			},
+			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+				{
+					type: ENUM_API_TAGS.TOURS_PRICING_SUMMARY,
+					id: `${tourId}:${optionId}`
+				}
+			]
 		}),
 		reorderEvent: builder.mutation<
 			ITourEvent,
@@ -154,9 +170,13 @@ export const tourEventApi = authApi.injectEndpoints({
 			query: ({ tourId, optionId, eventId, data }) => ({
 				...TOUR_EVENTS_PATHS.reorderEvent(tourId, optionId, eventId),
 				body: mapEventReorderToBackend(data)
-			})
-			// transformResponse: (response: TTourEventBackend) =>
-			// 	mapEventToFrontend(response)
+			}),
+			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+				{
+					type: ENUM_API_TAGS.TOURS_PRICING_SUMMARY,
+					id: `${tourId}:${optionId}`
+				}
+			]
 		})
 	})
 });

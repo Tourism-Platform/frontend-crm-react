@@ -8,12 +8,12 @@ import {
 	CustomOptionTabsTrigger
 } from "@/shared/ui";
 
-import type { IPricingReviewOption } from "@/entities/tour";
+import type { IOption } from "@/entities/tour";
 
 interface IPricingReviewTabsProps {
-	options: IPricingReviewOption[];
-	activeId: number;
-	onChange: (id: number) => void;
+	options: IOption[];
+	activeId: string;
+	onChange: (id: string) => void;
 }
 
 export const PricingReviewTabs: FC<IPricingReviewTabsProps> = ({
@@ -23,15 +23,12 @@ export const PricingReviewTabs: FC<IPricingReviewTabsProps> = ({
 }) => {
 	return (
 		<div className="flex items-center gap-2">
-			<CustomOptionTabs
-				value={activeId.toString()}
-				onValueChange={(val) => onChange(Number(val))}
-			>
+			<CustomOptionTabs value={activeId} onValueChange={onChange}>
 				<CustomOptionTabsList className="grid grid-flow-col">
 					{options.map((option) => (
 						<CustomOptionTabsTrigger
 							key={option.id}
-							value={option.id.toString()}
+							value={option.id}
 							variant="tongue"
 							className="min-w-[120px]"
 						>

@@ -90,8 +90,12 @@ export const tourOptionApi = authApi.injectEndpoints({
 			query: ({ tourId, optionId }) => ({
 				...TOUR_OPTION_PATHS.deleteOption(tourId, optionId)
 			}),
-			invalidatesTags: (_result, _error, { tourId }) => [
-				{ type: ENUM_API_TAGS.TOURS_OPTIONS, id: tourId }
+			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+				{ type: ENUM_API_TAGS.TOURS_OPTIONS, id: tourId },
+				{
+					type: ENUM_API_TAGS.TOURS_PRICING_SUMMARY,
+					id: `${tourId}:${optionId}`
+				}
 			]
 		})
 	})

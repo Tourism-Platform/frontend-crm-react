@@ -1,7 +1,7 @@
-import { type FC, useMemo, useState } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
-import { MOCK_PRICING_DATA } from "@/shared/config";
 import { withErrorBoundary } from "@/shared/ui";
 
 import {
@@ -9,6 +9,8 @@ import {
 	PreviewTourButton,
 	PublishTourButton
 } from "@/features/tours";
+
+import { usePricingReview } from "../model";
 
 import {
 	PricingReviewSummary,
@@ -18,16 +20,19 @@ import {
 
 const PricingReviewBase: FC = () => {
 	const { t } = useTranslation("tour_pricing_review_page");
-	const [activeOptionId, setActiveOptionId] = useState<number>(
-		MOCK_PRICING_DATA[0].id
-	);
+	const { tourId = "" } = useParams<{ tourId: string }>();
 
-	const activeOption = useMemo(
-		() =>
-			MOCK_PRICING_DATA.find((o) => o.id === activeOptionId) ||
-			MOCK_PRICING_DATA[0],
-		[activeOptionId]
-	);
+	const {
+		options,
+		activeOptionId,
+		setActiveOptionId,
+		pricingReview,
+		isOptionsLoading,
+		isOptionsError,
+		isSummaryLoading,
+		isSummaryError,
+		hasOptions
+	} = usePricingReview(tourId);
 
 	const actionsJsx = useMemo(
 		() => (
@@ -39,19 +44,56 @@ const PricingReviewBase: FC = () => {
 		[]
 	);
 
+	if (isOptionsLoading) {
+		return <div className="container py-6">Loading...</div>;
+	}
+
+	if (isOptionsError) {
+		return (
+			<div className="container py-6 text-destructive">
+				{t("errors.load_options", {
+					defaultValue: "Failed to load options"
+				})}
+			</div>
+		);
+	}
+
 	return (
 		<section className="flex flex-col gap-6 container">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 
-			<PricingReviewTabs
-				options={MOCK_PRICING_DATA}
-				activeId={activeOptionId}
-				onChange={setActiveOptionId}
-			/>
+			{hasOptions ? (
+				<PricingReviewTabs
+					options={options}
+					activeId={activeOptionId}
+					onChange={setActiveOptionId}
+				/>
+			) : (
+				<p className="text-muted-foreground">
+					{t("empty.no_options", {
+						defaultValue: "No tour options yet"
+					})}
+				</p>
+			)}
 
-			<PricingReviewSummary summary={activeOption.summary} />
+			{hasOptions && isSummaryLoading && !pricingReview && (
+				<div>Loading...</div>
+			)}
 
-			<PricingReviewTable items={activeOption.items} />
+			{hasOptions && isSummaryError && (
+				<div className="text-destructive">
+					{t("errors.load_summary", {
+						defaultValue: "Failed to load pricing summary"
+					})}
+				</div>
+			)}
+
+			{pricingReview && (
+				<>
+					<PricingReviewSummary summary={pricingReview.summary} />
+					<PricingReviewTable items={pricingReview.items} />
+				</>
+			)}
 		</section>
 	);
 };

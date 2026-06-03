@@ -9,7 +9,3 @@ export type TListAllTourOptionsBackendResponce = ReturnType<
 export type TCreateTourOptionBackendResponce = ReturnType<
 	typeof TOUR_OPTION_PATHS.createTourOption
 >["_types"]["response"];
-
-export type TGetTourSummaryBackendResponce = ReturnType<
-	typeof TOUR_OPTION_PATHS.getTourSummary
->["_types"]["response"];
