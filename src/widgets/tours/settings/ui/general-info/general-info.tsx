@@ -24,7 +24,7 @@ import {
 	useUpdateTourGeneralMutation
 } from "@/entities/tour";
 
-import { GENERAL_FORM_LIST } from "../../model";
+import { GENERAL_FORM_LIST } from "../../model/config/general.config";
 
 const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("tour_settings_page");

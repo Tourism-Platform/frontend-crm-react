@@ -52,7 +52,7 @@ export const PreviewOptionBase: FC = () => {
 	}
 
 	return (
-		<section className="flex flex-col gap-8 container pb-12 mt-6">
+		<section className="flex flex-col gap-8 container pb-12 mt-6 max-w-6xl mx-auto">
 			<Link
 				to={buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
 					tourId

@@ -16,7 +16,7 @@ import {
 	useUpdateTourFinanceMutation
 } from "@/entities/tour";
 
-import { FINANCE_FORM_LIST } from "../../model";
+import { FINANCE_FORM_LIST } from "../../model/config/finance.config";
 
 const FinanceInfoBase: FC = () => {
 	const { t } = useTranslation("tour_settings_page");

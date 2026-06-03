@@ -5,11 +5,11 @@ import { useParams } from "react-router-dom";
 import {
 	Card,
 	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Separator,
+	// CustomOptionTabs,
+	// CustomOptionTabsContent,
+	// CustomOptionTabsList,
+	// CustomOptionTabsTrigger,
+	// Separator,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -23,7 +23,8 @@ import {
 
 import { TourNotFound } from "../tour-not-found";
 
-import { SETTINGS_TABS_LIST } from "./model";
+// import { SETTINGS_TABS_LIST } from "./model";
+import { GeneralInfo } from "./ui";
 
 const SettingsBase: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
@@ -56,7 +57,8 @@ const SettingsBase: FC = () => {
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Card>
 				<CardContent>
-					<CustomOptionTabs
+					<GeneralInfo />
+					{/* <CustomOptionTabs
 						defaultValue={SETTINGS_TABS_LIST[0]?.type}
 					>
 						<CustomOptionTabsList className="grid-cols-2">
@@ -79,7 +81,7 @@ const SettingsBase: FC = () => {
 								<item.slot />
 							</CustomOptionTabsContent>
 						))}
-					</CustomOptionTabs>
+					</CustomOptionTabs> */}
 				</CardContent>
 			</Card>
 		</section>

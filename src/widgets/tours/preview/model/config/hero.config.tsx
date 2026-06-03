@@ -8,6 +8,50 @@ export interface IHeroInfo {
 	label: string;
 }
 
+const isAgeValue = (value?: number | ""): value is number =>
+	value !== undefined && value !== "";
+
+const formatDuration = (
+	duration: IPreviewTourGeneral["duration"],
+	t: TFunction<"preview_tour_page">
+): string => {
+	const parts: string[] = [];
+
+	if (duration.from) {
+		parts.push(t("hero.duration.days", { count: duration.from }));
+	}
+
+	if (duration.to) {
+		parts.push(t("hero.duration.nights", { count: duration.to }));
+	}
+
+	return parts.join(" ");
+};
+
+const formatAgeRequires = (
+	ageRequires: IPreviewTourGeneral["ageRequires"],
+	t: TFunction<"preview_tour_page">
+): string => {
+	const from = ageRequires.from;
+	const to = ageRequires.to;
+	const hasFrom = isAgeValue(from);
+	const hasTo = isAgeValue(to);
+
+	if (!hasFrom && !hasTo) {
+		return t("hero.age_no_restrictions");
+	}
+
+	if (hasFrom && hasTo) {
+		return t("hero.age_requires_range", { from, to });
+	}
+
+	if (hasFrom) {
+		return t("hero.age_requires_from", { from });
+	}
+
+	return t("hero.age_requires_to", { to: to as number });
+};
+
 export const HERO_INFO = (
 	tour: IPreviewTourGeneral | undefined,
 	t: TFunction<"preview_tour_page">
@@ -16,18 +60,10 @@ export const HERO_INFO = (
 
 	if (!tour) return info;
 
-	if (tour.duration) {
-		const label =
-			tour.duration.from === tour.duration.to
-				? t("hero.duration.days", { count: tour.duration.from })
-				: t("hero.duration_range", {
-						from: tour.duration.from,
-						to: tour.duration.to
-					});
-
+	if (tour.duration?.from || tour.duration?.to) {
 		info.push({
 			icon: Calendar,
-			label
+			label: formatDuration(tour.duration, t)
 		});
 	}
 
@@ -38,15 +74,10 @@ export const HERO_INFO = (
 		});
 	}
 
-	if (tour.ageRequires) {
-		info.push({
-			icon: Globe,
-			label: t("hero.age_requires", {
-				from: tour.ageRequires.from,
-				to: tour.ageRequires.to
-			})
-		});
-	}
+	info.push({
+		icon: Globe,
+		label: formatAgeRequires(tour.ageRequires, t)
+	});
 
 	return info;
 };

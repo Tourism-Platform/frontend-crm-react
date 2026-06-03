@@ -1,4 +1,5 @@
-import { FinanceInfo, GeneralInfo } from "../../ui";
+import { FinanceInfo } from "../../ui/finance-info";
+import { GeneralInfo } from "../../ui/general-info";
 import { ENUM_SETTINGS_TAB, type ISettingsTabs } from "../types";
 
 export const SETTINGS_TABS_LIST: ISettingsTabs[] = [

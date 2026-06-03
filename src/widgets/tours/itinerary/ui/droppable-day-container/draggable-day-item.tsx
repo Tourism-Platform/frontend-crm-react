@@ -8,7 +8,13 @@ import { Link, useParams } from "react-router-dom";
 import { InfoCircleIcon } from "@/shared/assets";
 import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Button, Card, CardContent, PreviewerSimple, withErrorBoundary } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	PreviewerSimple,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ENUM_EVENT,

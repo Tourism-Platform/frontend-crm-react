@@ -20,8 +20,8 @@ export const mapPreviewTourGeneralToFrontend = (
 		to: backend.nights
 	},
 	ageRequires: {
-		from: backend.age_from!,
-		to: backend.age_to!
+		from: backend.age_from ?? "",
+		to: backend.age_to ?? ""
 	},
 	tourCategories: previewTourCategoriesMapper.fromMany(
 		backend.categories ?? []

@@ -78,7 +78,7 @@ const PreviewTourBase: FC = () => {
 	// }
 
 	return (
-		<section className="flex flex-col gap-8 container pb-12">
+		<section className="flex flex-col gap-8 container pb-12 max-w-6xl mx-auto">
 			<Link
 				to=".."
 				className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
@@ -93,9 +93,9 @@ const PreviewTourBase: FC = () => {
 			</div>
 
 			<div className="flex flex-col gap-8">
-				<PreviewTourOverview data={previewData} />
-				<Separator />
 				<PreviewTourPhotos data={previewData} />
+				<Separator />
+				<PreviewTourOverview data={previewData} />
 				<Separator />
 				<PreviewTourMeta data={previewData} />
 				<Separator />
