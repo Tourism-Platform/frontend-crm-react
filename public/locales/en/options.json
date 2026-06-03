@@ -29,6 +29,11 @@
 			"days": "days",
 			"nights": "nights"
 		},
+		"catalogDurations": {
+			"half_day": "Half-day (0–1 day)",
+			"full_day": "Full day (1 day)",
+			"multi_days": "Multi days (2–15 days)"
+		},
 		"statuses": {
 			"all": "All",
 			"active": "Active",

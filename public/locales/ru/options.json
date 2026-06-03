@@ -29,6 +29,11 @@
 			"days": "дн.",
 			"nights": "ноч."
 		},
+		"catalogDurations": {
+			"half_day": "Полдня (0–1 день)",
+			"full_day": "Полный день (1 день)",
+			"multi_days": "Несколько дней (2–15 дней)"
+		},
 		"statuses": {
 			"all": "Все",
 			"active": "Активен",

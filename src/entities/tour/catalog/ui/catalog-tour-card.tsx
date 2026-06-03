@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Card, CardContent, Separator } from "@/shared/ui";
+import { Card, CardContent, PreviewerSimple, Separator } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import type { ICatalogTourCard } from "../types";
@@ -37,7 +37,11 @@ export const CatalogTourCard: FC<ICatalogTourCardProps> = ({ data: tour }) => {
 						{tour.title}
 					</h3>
 					<Separator />
-					<p className="text-sm line-clamp-3">{tour.description}</p>
+					<PreviewerSimple
+						text={tour.description}
+						lines={3}
+						className="text-sm"
+					/>
 					<div className="flex items-center gap-2 justify-between">
 						<div className="flex items-center gap-1 px-2 py-1 bg-muted rounded-md text-muted-foreground">
 							<Clock4 className="w-4 h-4" />

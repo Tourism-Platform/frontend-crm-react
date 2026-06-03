@@ -880,6 +880,15 @@ export interface BodyUploadTourCoverTourTourIdCoverPost {
 	image: File;
 }
 
+/** Body_upload_voucher_booking_voucher__booking_id__post */
+export interface BodyUploadVoucherBookingVoucherBookingIdPost {
+	/**
+	 * File
+	 * @format binary
+	 */
+	file: File;
+}
+
 /** BookingCancel */
 export interface BookingCancel {
 	/** Reason */
@@ -1002,6 +1011,8 @@ export interface BookingModel {
 	cancellation_reason: string | null;
 	/** Comment */
 	comment: string | null;
+	/** Voucher Path */
+	voucher_path: string | null;
 }
 
 /** BookingOrderListItem */
@@ -2130,6 +2141,8 @@ export interface GeoFeature {
 	state?: string | null;
 	/** Country */
 	country?: string | null;
+	/** Country Code */
+	country_code?: string | null;
 }
 
 /** HTTPValidationError */
@@ -5475,6 +5488,19 @@ export interface ValidationError {
 	type: string;
 }
 
+/** VoucherResponse */
+export interface VoucherResponse {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	booking_id: string;
+	/** Order Number */
+	order_number: string;
+	/** Url */
+	url: string;
+}
+
 /** WiseDetails */
 export interface WiseDetails {
 	/**
@@ -5567,115 +5593,6 @@ export interface DeleteUserAdminUserIdDeleteParams {
 export interface CreateUserAdminUserPostParams {
 	/** @default "authenticated_user" */
 	role?: UserRoles;
-}
-
-export interface ListToursTourGetParams {
-	/**
-	 * Desc
-	 * @default true
-	 */
-	desc?: boolean;
-	/** Status */
-	status?: TourStatus | null;
-	/** Typ */
-	typ?: TourType | null;
-	/** Q */
-	q?: string | null;
-	/** @default "created_at" */
-	sort_by?: TourListSortField;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface ListOneDayToursTourOneDayGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface GetTourTourTourIdGetParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UpdateTourTourTourIdPatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface DeleteTourTourTourIdDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface PublishTourTourTourIdPublishPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface ArchiveTourTourTourIdArchivePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UploadTourCoverTourTourIdCoverPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface DeleteTourCoverTourTourIdCoverDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetTourStatisticsTourTourIdStatisticsGetParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
 }
 
 export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
@@ -6280,6 +6197,14 @@ export interface SetPrimaryLandingImageTourTourIdLandingImagesImageIdSetPrimaryP
 	imageId: string;
 }
 
+export interface GetTourTourTourIdPublicGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface ListPublicTourOptionsTourTourIdPublicOptionAllGetParams {
 	/** @default "USD" */
 	currency?: Currency;
@@ -6474,6 +6399,115 @@ export interface DeletePackageTourTourIdOptionIdPackagePackageIdDeleteParams {
 	tourId: string;
 }
 
+export interface ListToursTourGetParams {
+	/**
+	 * Desc
+	 * @default true
+	 */
+	desc?: boolean;
+	/** Status */
+	status?: TourStatus | null;
+	/** Typ */
+	typ?: TourType | null;
+	/** Q */
+	q?: string | null;
+	/** @default "created_at" */
+	sort_by?: TourListSortField;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListOneDayToursTourOneDayGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface GetTourTourTourIdGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UpdateTourTourTourIdPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface DeleteTourTourTourIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface PublishTourTourTourIdPublishPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ArchiveTourTourTourIdArchivePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UploadTourCoverTourTourIdCoverPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface DeleteTourCoverTourTourIdCoverDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetTourStatisticsTourTourIdStatisticsGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface ListFilesOperatorMeFilesGetParams {
 	/**
 	 * Skip
@@ -6556,6 +6590,10 @@ export interface ListFxRatesOperatorFxRateGetParams {
 	 * @default 10
 	 */
 	limit?: number;
+}
+
+export interface DeleteFxRateOperatorFxRateFxRateIdDeleteParams {
+	fxRateId: string;
 }
 
 export interface GetFxRateOperatorFxRateFxRateIdGetParams {
@@ -7022,6 +7060,30 @@ export interface DownloadAttachmentBookingPaymentPaymentIdAttachmentGetParams {
 	 * @format uuid
 	 */
 	paymentId: string;
+}
+
+export interface UploadVoucherBookingVoucherBookingIdPostParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetVoucherBookingVoucherBookingIdGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface DeleteVoucherBookingVoucherBookingIdDeleteParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
 }
 
 export interface ListMyInvoicesInvoiceGetParams {

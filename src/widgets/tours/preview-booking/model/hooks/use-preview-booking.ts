@@ -27,14 +27,16 @@ import {
 	mapTravellerToPaxUpdate
 } from "@/entities/booking/order/converters/booking-pax.converters";
 import type { TSubmittedBooking } from "@/entities/booking/order/types/create-booking.types";
-import { useGetTourGeneralQuery } from "@/entities/tour";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	PREVIEW_BOOKING_DEFAULT_VALUES,
 	PREVIEW_BOOKING_SCHEMA,
 	type TPreviewBookingSchema
 } from "@/entities/tour/preview-booking";
-import { useGetPreviewTourOptionsQuery } from "@/entities/tour/preview-tour";
+import {
+	useGetPreviewTourGeneralQuery,
+	useGetPreviewTourOptionsQuery
+} from "@/entities/tour/preview-tour";
 
 const getStorageKey = (bookingId: string) => `preview-booking-${bookingId}`;
 
@@ -74,10 +76,8 @@ export const usePreviewBooking = () => {
 		useState<TSubmittedBooking | null>(null);
 	const hasSyncedPax = useRef(false);
 
-	const { data: tourData, isLoading: isTourLoading } = useGetTourGeneralQuery(
-		tourId,
-		{ skip: !tourId }
-	);
+	const { data: tourData, isLoading: isTourLoading } =
+		useGetPreviewTourGeneralQuery(tourId, { skip: !tourId });
 
 	const {
 		data: options = [],

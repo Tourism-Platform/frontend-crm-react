@@ -2,7 +2,7 @@ export * from "./catalog-tour.interface";
 export * from "./catalog-tour-filter.interface";
 export * from "./catalog-tour-backend.interface";
 export * from "./catalog-tour-info.interface";
-export * from "./catalog-tour-category.types";
+export * from "./catalog-duration.types";
 export * from "./catalog-tour-type.types";
 export * from "./catalog-tour-status.types";
 export * from "./catalog-tour-filters.interface";

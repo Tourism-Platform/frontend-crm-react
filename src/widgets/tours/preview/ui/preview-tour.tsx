@@ -6,8 +6,8 @@ import { toast } from "sonner";
 
 import { Separator, withErrorBoundary } from "@/shared/ui";
 
-import { useGetTourGeneralQuery } from "@/entities/tour";
 import {
+	useGetPreviewTourGeneralQuery,
 	useGetPreviewTourOptionsQuery,
 	useGetPreviewTourQuery
 } from "@/entities/tour/preview-tour";
@@ -41,7 +41,7 @@ const PreviewTourBase: FC = () => {
 		data: tourData,
 		isLoading: isTourLoading,
 		isError: isTourError
-	} = useGetTourGeneralQuery(tourId, {
+	} = useGetPreviewTourGeneralQuery(tourId, {
 		skip: !tourId
 	});
 

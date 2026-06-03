@@ -1,7 +1,12 @@
 import { type IPaginationResponse } from "@/shared/types";
 
+import { languageMapper } from "../../landing";
 import { tourCategoriesMapper } from "../../tour";
-import type { TCatalogTourQueryBackend } from "../types";
+import { CATALOG_DURATION_PRESETS } from "../config";
+import type {
+	ENUM_CATALOG_DURATION_TYPE,
+	TCatalogTourQueryBackend
+} from "../types";
 import type {
 	ICatalogTourCard,
 	ICatalogTourFilters,
@@ -10,6 +15,22 @@ import type {
 	TCatalogTourBackend,
 	TListCatalogToursBackendResponse
 } from "../types";
+
+const mapDurationFiltersToQuery = (
+	selected: ENUM_CATALOG_DURATION_TYPE[] | undefined
+): Pick<
+	TCatalogTourQueryBackend,
+	"duration_days_min" | "duration_days_max"
+> => {
+	if (!selected?.length) return {};
+
+	const presets = selected.map((key) => CATALOG_DURATION_PRESETS[key]);
+
+	return {
+		duration_days_min: Math.min(...presets.map((p) => p.from)),
+		duration_days_max: Math.max(...presets.map((p) => p.to))
+	};
+};
 
 export const mapCatalogTourStatsToFrontend = (
 	data: ICatalogTourInfoBackend
@@ -50,19 +71,11 @@ export const mapCatalogTourFiltersToPublicCatalogQuery = (
 		categories: tourCategoriesMapper.toMany(filters.filters.category)
 	}),
 	...(!!filters?.filters?.region?.length && {
-		region: filters.filters.region[0]
+		city: filters.filters.region[0]
 	}),
+	...(!!filters?.filters?.language?.length && {
+		language: languageMapper.to(filters.filters.language[0])
+	}),
+	...mapDurationFiltersToQuery(filters?.filters?.duration),
 	...(!!filters?.search?.trim().length && { q: filters.search })
-});
-
-export const mapCatalogTourFiltersToBackend = (
-	filters: ICatalogTourFilters
-) => ({
-	page: filters.page,
-	limit: filters.limit,
-	search: filters.search || undefined,
-	region: filters.filters?.region?.join(",") || undefined,
-	duration: filters.filters?.duration?.join(",") || undefined,
-	language: filters.filters?.language?.join(",") || undefined,
-	category: filters.filters?.category?.join(",") || undefined
 });

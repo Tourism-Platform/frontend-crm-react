@@ -63,81 +63,6 @@ export const catalogTourApi = authApi.injectEndpoints({
 			},
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		}),
-		getCatalogDurations: builder.query<
-			IPaginationResponse<IFilterOption>,
-			IPaginationRequest
-		>({
-			query: (params) => ({
-				url: "/tours/catalog/filters/durations",
-				params
-			}),
-			transformResponse: (
-				response: IPaginationResponse<IFilterOptionBackend>
-			) => mapCatalogFilterPaginatedToFrontend(response),
-			serializeQueryArgs: ({ queryArgs }) => {
-				const { page, ...rest } = queryArgs;
-				void page;
-				return rest;
-			},
-			merge: (currentCache, newItems) => {
-				currentCache.data.push(...newItems.data);
-				currentCache.total = newItems.total;
-			},
-			forceRefetch({ currentArg, previousArg }) {
-				return currentArg?.page !== previousArg?.page;
-			},
-			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
-		}),
-		getCatalogLanguages: builder.query<
-			IPaginationResponse<IFilterOption>,
-			IPaginationRequest
-		>({
-			query: (params) => ({
-				url: "/tours/catalog/filters/languages",
-				params
-			}),
-			transformResponse: (
-				response: IPaginationResponse<IFilterOptionBackend>
-			) => mapCatalogFilterPaginatedToFrontend(response),
-			serializeQueryArgs: ({ queryArgs }) => {
-				const { page, ...rest } = queryArgs;
-				void page;
-				return rest;
-			},
-			merge: (currentCache, newItems) => {
-				currentCache.data.push(...newItems.data);
-				currentCache.total = newItems.total;
-			},
-			forceRefetch({ currentArg, previousArg }) {
-				return currentArg?.page !== previousArg?.page;
-			},
-			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
-		}),
-		getCatalogCategories: builder.query<
-			IPaginationResponse<IFilterOption>,
-			IPaginationRequest
-		>({
-			query: (params) => ({
-				url: "/tours/catalog/filters/categories",
-				params
-			}),
-			transformResponse: (
-				response: IPaginationResponse<IFilterOptionBackend>
-			) => mapCatalogFilterPaginatedToFrontend(response),
-			serializeQueryArgs: ({ queryArgs }) => {
-				const { page, ...rest } = queryArgs;
-				void page;
-				return rest;
-			},
-			merge: (currentCache, newItems) => {
-				currentCache.data.push(...newItems.data);
-				currentCache.total = newItems.total;
-			},
-			forceRefetch({ currentArg, previousArg }) {
-				return currentArg?.page !== previousArg?.page;
-			},
-			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
-		}),
 		getCatalogPriceHistogram: builder.query<
 			IPriceHistogramItem[],
 			IPriceHistogramRequest
@@ -200,9 +125,6 @@ export const catalogTourApi = authApi.injectEndpoints({
 export const {
 	useGetCatalogToursQuery,
 	useGetCatalogRegionsQuery,
-	useGetCatalogDurationsQuery,
-	useGetCatalogLanguagesQuery,
-	useGetCatalogCategoriesQuery,
 	useGetCatalogPriceHistogramQuery,
 	useGetCatalogDestinationsQuery,
 	// useGetSearchToursQuery,

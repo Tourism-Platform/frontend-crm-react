@@ -14,7 +14,7 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useGetTourGeneralQuery } from "@/entities/tour";
+import { useGetPreviewTourGeneralQuery } from "@/entities/tour/preview-tour";
 import { PREVIEW_OPTION_DETAIL_MOCK } from "@/entities/tour/preview-tour/mock";
 
 import { PREVIEW_OPTION_TABS_LIST } from "../model/config/preview-option-tabs.config";
@@ -29,7 +29,7 @@ export const PreviewOptionBase: FC = () => {
 		data: tourData,
 		isLoading: isTourLoading,
 		isError: isTourError
-	} = useGetTourGeneralQuery(tourId, {
+	} = useGetPreviewTourGeneralQuery(tourId, {
 		skip: !tourId
 	});
 

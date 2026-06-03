@@ -3,12 +3,12 @@ import { useTranslation } from "react-i18next";
 
 import { withErrorBoundary } from "@/shared/ui";
 
-import type { ITourGeneral } from "@/entities/tour";
+import type { IPreviewTourGeneral } from "@/entities/tour/preview-tour";
 
 import { HERO_INFO } from "../../model";
 
 interface IPreviewTourHeroProps {
-	tour?: ITourGeneral;
+	tour?: IPreviewTourGeneral;
 }
 
 const PreviewTourHeroBase: FC<IPreviewTourHeroProps> = ({ tour }) => {

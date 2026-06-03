@@ -6,6 +6,7 @@ import {
 	mapPreviewOperatorToFrontend,
 	mapPreviewOptionToFrontend,
 	mapPreviewOptionsListToFrontend,
+	mapPreviewTourGeneralToFrontend,
 	mapPreviewTourToFrontend
 } from "../converters";
 import type {
@@ -13,6 +14,8 @@ import type {
 	IPreviewOperator,
 	IPreviewOptionCard,
 	IPreviewTourData,
+	IPreviewTourGeneral,
+	TGetPreviewTourBackendResponse,
 	TOptionDetailBackend,
 	TPreviewOperatorBackend,
 	TPreviewOptionListItemBackend,
@@ -21,6 +24,13 @@ import type {
 
 export const tourPreviewTourApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
+		getPreviewTourGeneral: builder.query<IPreviewTourGeneral, string>({
+			query: (tourId) => ({
+				...TOUR_PUBLIC_PATHS.getTour(tourId)
+			}),
+			transformResponse: (response: TGetPreviewTourBackendResponse) =>
+				mapPreviewTourGeneralToFrontend(response)
+		}),
 		getPreviewTour: builder.query<IPreviewTourData, string>({
 			query: (tourId) => ({
 				...TOUR_PUBLIC_PATHS.getPublicLandingPage(tourId)
@@ -56,6 +66,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 });
 
 export const {
+	useGetPreviewTourGeneralQuery,
 	useGetPreviewTourQuery,
 	useGetPreviewOperatorQuery,
 	useGetPreviewOptionQuery,

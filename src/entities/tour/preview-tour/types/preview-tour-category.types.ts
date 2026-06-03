@@ -1,4 +1,4 @@
-export const ENUM_CATALOG_TOUR_CATEGORY = {
+export const ENUM_PREVIEW_TOUR_CATEGORY = {
 	CULTURAL_HISTORICAL: "cultural_historical",
 	RELIGIOUS_SPIRITUAL: "religious_spiritual",
 	ARCHAEOLOGICAL: "archaeological",
@@ -17,5 +17,5 @@ export const ENUM_CATALOG_TOUR_CATEGORY = {
 	MULTI_DESTINATION: "multi_destination"
 } as const;
 
-export type ENUM_CATALOG_TOUR_CATEGORY_TYPE =
-	(typeof ENUM_CATALOG_TOUR_CATEGORY)[keyof typeof ENUM_CATALOG_TOUR_CATEGORY];
+export type ENUM_PREVIEW_TOUR_CATEGORY_TYPE =
+	(typeof ENUM_PREVIEW_TOUR_CATEGORY)[keyof typeof ENUM_PREVIEW_TOUR_CATEGORY];

@@ -1,7 +1,7 @@
 import type { TFunction } from "i18next";
 import { Calendar, Globe, type LucideIcon, Users } from "lucide-react";
 
-import type { ITourGeneral } from "@/entities/tour";
+import type { IPreviewTourGeneral } from "@/entities/tour/preview-tour";
 
 export interface IHeroInfo {
 	icon: LucideIcon;
@@ -9,7 +9,7 @@ export interface IHeroInfo {
 }
 
 export const HERO_INFO = (
-	tour: ITourGeneral | undefined,
+	tour: IPreviewTourGeneral | undefined,
 	t: TFunction<"preview_tour_page">
 ): IHeroInfo[] => {
 	const info: IHeroInfo[] = [];

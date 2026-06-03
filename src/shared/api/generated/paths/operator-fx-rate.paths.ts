@@ -19,9 +19,19 @@ export const OPERATOR_FX_RATE_PATHS = {
 		_types: {} as {
 			body: FxRateCreateSchema;
 			query: void;
-			response: OperatorFxRateModel;
+			response: OperatorFxRateModel | null;
 		}
 	} as const,
+	deleteFxRate: (fxRateId: string) =>
+		({
+			url: `/operator/fx-rate${fxRateId}`,
+			method: "DELETE",
+			_types: {} as {
+				body: FxRateCreateSchema;
+				query: void;
+				response: OperatorFxRateModel | null;
+			}
+		}) as const,
 	getFxRate: (fxRateId: string) =>
 		({
 			url: `/operator/fx-rate/${fxRateId}`,

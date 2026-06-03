@@ -11,10 +11,10 @@ import {
 	type TPreviewBookingSchema
 } from "@/entities/tour/preview-booking";
 import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
-import type { ITourGeneral } from "@/entities/tour/tour";
+import type { IPreviewTourGeneral } from "@/entities/tour/preview-tour";
 
 interface ISidebarProps {
-	tourData?: ITourGeneral;
+	tourData?: IPreviewTourGeneral;
 	options: IPreviewOptionCard[];
 	submittedBooking?: TSubmittedBooking | null;
 }
