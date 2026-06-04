@@ -5,7 +5,9 @@ import { Link, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
+import { cn } from "@/shared/lib";
 import {
+	Button,
 	CustomOptionTabs,
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
@@ -14,16 +16,21 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useGetPreviewTourGeneralQuery } from "@/entities/tour/preview-tour";
-import { PREVIEW_OPTION_DETAIL_MOCK } from "@/entities/tour/preview-tour/mock";
+import {
+	useGetPreviewTourGeneralQuery,
+	usePreviewOptionDetail
+} from "@/entities/tour/preview-tour";
 
-import { PREVIEW_OPTION_TABS_LIST } from "../model/config/preview-option-tabs.config";
+import { PREVIEW_OPTION_TABS_LIST } from "../model";
 
 import { PreviewTourHero, PreviewTourProviderCard } from "./tour";
 
 export const PreviewOptionBase: FC = () => {
-	const { tourId = "" } = useParams<{ tourId: string }>();
-	const { t } = useTranslation("preview_option_page");
+	const { tourId = "", optionId = "" } = useParams<{
+		tourId: string;
+		optionId: string;
+	}>();
+	const { t, ready } = useTranslation("preview_option_page");
 
 	const {
 		data: tourData,
@@ -33,15 +40,19 @@ export const PreviewOptionBase: FC = () => {
 		skip: !tourId
 	});
 
-	// В будущем здесь будет реальный запрос по optionId
-	const optionData = PREVIEW_OPTION_DETAIL_MOCK;
-	const isLoading = isTourLoading;
+	const {
+		data: optionDetail,
+		isLoading: isOptionLoading,
+		isError: isOptionError
+	} = usePreviewOptionDetail({ tourId, optionId });
+
+	const isLoading = !ready || isTourLoading || isOptionLoading;
 
 	useEffect(() => {
-		if (isTourError) {
-			toast.error("Failed to load tour data"); // В будущем добавить ключ
+		if (isTourError || isOptionError) {
+			toast.error("Failed to load tour data");
 		}
-	}, [isTourError]);
+	}, [isTourError, isOptionError]);
 
 	if (isLoading) {
 		return (
@@ -51,16 +62,20 @@ export const PreviewOptionBase: FC = () => {
 		);
 	}
 
+	const defaultTab = PREVIEW_OPTION_TABS_LIST[0]?.type ?? "";
+
 	return (
-		<section className="flex flex-col gap-8 container pb-12 mt-6 max-w-6xl mx-auto">
+		<section className="flex flex-col gap-8 container pb-12 mt-6 max-w-6xl mx-auto relative">
 			<Link
 				to={buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
 					tourId
 				})}
-				className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
+				className="absolute top-0 left-0"
 			>
-				<ArrowLeft className="w-4 h-4" />
-				{t("back_to_catalogue")}
+				<Button variant="ghost" size="sm">
+					<ArrowLeft className="w-4 h-4" />
+					{t("back")}
+				</Button>
 			</Link>
 
 			<div className="grid grid-cols-[1fr_auto] gap-8 items-start mb-8">
@@ -69,17 +84,17 @@ export const PreviewOptionBase: FC = () => {
 			</div>
 
 			<div className="flex flex-col mt-4">
-				<CustomOptionTabs
-					defaultValue={PREVIEW_OPTION_TABS_LIST[0]?.type}
-				>
-					<CustomOptionTabsList className="grid-cols-3 w-fit mb-4">
+				<CustomOptionTabs defaultValue={defaultTab}>
+					<CustomOptionTabsList
+						className={cn("grid w-fit mb-4 grid-cols-2")}
+					>
 						{PREVIEW_OPTION_TABS_LIST.map((item) => (
 							<CustomOptionTabsTrigger
 								key={item.type}
 								value={item.type}
 								variant="tongue"
 							>
-								{t(item.label as any)}
+								{t(item.label)}
 							</CustomOptionTabsTrigger>
 						))}
 					</CustomOptionTabsList>
@@ -89,7 +104,7 @@ export const PreviewOptionBase: FC = () => {
 							key={item.type}
 							value={item.type}
 						>
-							<item.slot optionData={optionData} />
+							<item.slot optionData={optionDetail} />
 						</CustomOptionTabsContent>
 					))}
 				</CustomOptionTabs>

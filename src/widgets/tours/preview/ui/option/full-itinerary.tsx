@@ -1,9 +1,11 @@
 import { type FC } from "react";
 
+import type { IOptionDetail } from "@/entities/tour/preview-tour";
+
 import { OptionDaySection } from "./option-day-section";
 
 interface IFullItineraryProps {
-	optionData: any;
+	optionData?: IOptionDetail;
 }
 
 export const FullItinerary: FC<IFullItineraryProps> = ({ optionData }) => {
@@ -11,7 +13,7 @@ export const FullItinerary: FC<IFullItineraryProps> = ({ optionData }) => {
 
 	return (
 		<div className="flex flex-col w-full">
-			{optionData?.days?.map((day: any) => {
+			{optionData?.days?.map((day) => {
 				const sectionIndex = currentGlobalEventIndex;
 				currentGlobalEventIndex += day.events.length;
 

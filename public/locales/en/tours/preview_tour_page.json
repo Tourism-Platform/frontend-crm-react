@@ -1,6 +1,6 @@
 {
 	"page_name": "Tour Preview",
-	"back_to_catalogue": "Back to catalogue",
+	"back": "Back to catalogue",
 	"not_found": "Tour not found",
 	"book_now": "Book now",
 	"hero": {
@@ -71,9 +71,17 @@
 		"title": "Provider",
 		"additional_info": "Additional information"
 	},
+	"tabs": {
+		"tour_information": "Tour information",
+		"full_itinerary": "Full itinerary",
+		"pricing": "Pricing"
+	},
 	"toasts": {
 		"load": {
 			"error": "Failed to load preview data"
+		},
+		"option": {
+			"error": "Failed to load package details"
 		}
 	}
 }

@@ -1,22 +1,24 @@
-import type { ENUM_EVENT_TYPE } from "@/entities/tour/tour/types/event.types";
+import type { TPreviewOptionEventType } from "./preview-option-event.types";
+import type { IOptionEventSheet } from "./preview-option-sheet.types";
 
 export interface ISubOption {
 	id: string;
 	title: string;
 	description: string;
-	image: string;
-	full_description: string;
+	sheet: IOptionEventSheet;
 }
 
 export interface IOptionEvent {
 	id: string;
-	type: ENUM_EVENT_TYPE;
+	type: TPreviewOptionEventType;
 	title: string;
 	description: string;
-	full_description: string;
-	image: string;
+	sheet: IOptionEventSheet;
 	sub_options?: ISubOption[];
 }
+
+/** Event or sub-option — enough data to open the detail sheet. */
+export type TOptionSheetSource = Pick<IOptionEvent, "title" | "sheet">;
 
 export interface IOptionDay {
 	id: string;

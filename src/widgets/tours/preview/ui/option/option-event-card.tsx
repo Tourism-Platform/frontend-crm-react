@@ -1,45 +1,13 @@
-import {
-	Bed,
-	Bus,
-	FolderOpen,
-	Info,
-	List,
-	Map,
-	MoreHorizontal,
-	Plane
-} from "lucide-react";
-import { type FC, useState } from "react";
+import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import { withErrorBoundary } from "@/shared/ui";
 
-import type { IOptionEvent } from "@/entities/tour/preview-tour/types";
-import { ENUM_EVENT } from "@/entities/tour/tour/types/event.types";
+import type { IOptionEvent } from "@/entities/tour/preview-tour";
 
 import { OptionEventDetailSheet } from "./option-event-detail-sheet";
-
-const getEventIcon = (type: string) => {
-	switch (type) {
-		case ENUM_EVENT.ACCOMMODATION:
-			return <Bed className="w-5 h-5 text-primary" />;
-		case ENUM_EVENT.FLIGHT:
-			return <Plane className="w-5 h-5 text-primary" />;
-		case ENUM_EVENT.TOUR_DETAILS:
-		case ENUM_EVENT.ACTIVITY:
-			return <Map className="w-5 h-5 text-primary" />;
-		case ENUM_EVENT.TRANSPORTATION:
-			return <Bus className="w-5 h-5 text-primary" />;
-		case ENUM_EVENT.MULTIPLY_OPTION:
-			return <MoreHorizontal className="w-5 h-5 text-primary" />;
-		case ENUM_EVENT.INFO:
-			return <Info className="w-5 h-5 text-primary" />;
-		case ENUM_EVENT.EVENT_LIBRARY:
-		case ENUM_EVENT.ITINERARY_LIBRARY:
-			return <FolderOpen className="w-5 h-5 text-primary" />;
-		default:
-			return <List className="w-5 h-5 text-primary" />;
-	}
-};
+import { getOptionEventIcon } from "./option-event-icons";
 
 interface IOptionEventCardProps {
 	event: IOptionEvent;
@@ -48,53 +16,82 @@ interface IOptionEventCardProps {
 
 const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 	const { t } = useTranslation("preview_option_page");
-	const [sheetOpen, setSheetOpen] = useState(false);
 
+	const isMultiply = Boolean(event.sub_options?.length);
 	const isReversed = index % 2 !== 0;
+	const cardImage = event.sheet.images[0];
 
 	return (
-		<>
-			<div className="grid grid-cols-2 gap-0 bg-white rounded-xl border overflow-hidden shadow-sm">
-				<div
-					className={`${isReversed ? "order-2" : "order-1"} flex flex-col gap-4 p-6`}
-				>
-					<div className="flex items-center gap-3">
-						<div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-							{getEventIcon(event.type)}
-						</div>
-						<h4 className="font-semibold">{event.title}</h4>
+		<div className="grid grid-cols-2 gap-0 bg-card rounded-xl border overflow-hidden shadow-sm">
+			<div
+				className={cn(
+					"flex flex-col gap-4 p-6",
+					isReversed ? "order-2" : "order-1"
+				)}
+			>
+				<div className="flex items-center gap-3">
+					<div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shrink-0">
+						{getOptionEventIcon(event.type)}
 					</div>
-
-					<p className="text-sm text-muted-foreground leading-relaxed line-clamp-6">
-						{event.description}
-					</p>
-
-					<button
-						type="button"
-						onClick={() => setSheetOpen(true)}
-						className="text-sm text-primary hover:underline underline-offset-4 w-fit"
-					>
-						{t("sections.option.view_details")}
-					</button>
+					<h4 className="font-semibold">
+						{event.title}
+						{isMultiply && ` ${t("sections.option.one_of_them")}`}
+					</h4>
 				</div>
 
-				<div className={`${isReversed ? "order-1" : "order-2"}`}>
+				<p
+					className={cn(
+						"text-sm text-muted-foreground leading-relaxed",
+						!isMultiply && "line-clamp-6"
+					)}
+				>
+					{event.description}
+				</p>
+
+				{isMultiply ? (
+					<div className="flex flex-col gap-3">
+						{event.sub_options?.map((subOption) => (
+							<div
+								key={subOption.id}
+								className="border rounded-lg p-4 flex flex-col gap-2"
+							>
+								<h5 className="font-semibold text-sm">
+									{subOption.title}
+								</h5>
+								<p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+									{subOption.description}
+								</p>
+								<OptionEventDetailSheet
+									source={subOption}
+									variant="xs"
+								/>
+							</div>
+						))}
+					</div>
+				) : (
+					<OptionEventDetailSheet source={event} />
+				)}
+			</div>
+
+			<div
+				className={cn(
+					isReversed ? "order-1" : "order-2",
+					!cardImage && "bg-muted"
+				)}
+			>
+				{cardImage ? (
 					<img
-						src={event.image}
+						src={cardImage}
 						alt={event.title}
 						className="w-full h-full min-h-[240px] object-cover"
 					/>
-				</div>
+				) : (
+					<div className="w-full min-h-[240px] flex items-center justify-center text-muted-foreground">
+						{getOptionEventIcon(event.type, "lg")}
+					</div>
+				)}
 			</div>
-
-			<OptionEventDetailSheet
-				open={sheetOpen}
-				onOpenChange={setSheetOpen}
-				title={event.title}
-				image={event.image}
-				description={event.full_description}
-			/>
-		</>
+		</div>
 	);
 };
 

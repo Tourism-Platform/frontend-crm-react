@@ -1,4 +1,5 @@
 export * from "./preview-options-cards";
+export * from "./preview-tour-information-sections";
 export * from "./preview-tour-additional-info";
 export * from "./preview-tour-amenities";
 export * from "./preview-tour-cancellation";

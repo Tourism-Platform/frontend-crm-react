@@ -1,0 +1,51 @@
+import { Coffee, Dumbbell, type LucideIcon, Star, Wifi } from "lucide-react";
+import { type FC } from "react";
+import { useTranslation } from "react-i18next";
+
+import { AmenitiesTypes } from "@/shared/api";
+
+const AMENITY_ICONS: Partial<Record<AmenitiesTypes, LucideIcon>> = {
+	[AmenitiesTypes.Wifi]: Wifi,
+	[AmenitiesTypes.Gym]: Dumbbell,
+	[AmenitiesTypes.Restaurant]: Coffee,
+	[AmenitiesTypes.Spa]: Star,
+	[AmenitiesTypes.Breakfast]: Coffee,
+	[AmenitiesTypes.Pool]: Star
+};
+
+const formatAmenityLabel = (value: AmenitiesTypes): string =>
+	value.replace(/_/g, " ");
+
+interface IOptionEventSheetAmenitiesProps {
+	amenities: AmenitiesTypes[];
+}
+
+export const OptionEventSheetAmenities: FC<IOptionEventSheetAmenitiesProps> = ({
+	amenities
+}) => {
+	const { t } = useTranslation("preview_option_page");
+
+	if (!amenities.length) return null;
+
+	return (
+		<div>
+			<h4 className="font-semibold mb-3">{t("sheet.amenities")}</h4>
+			<div className="flex flex-wrap gap-4">
+				{amenities.map((amenity) => {
+					const Icon = AMENITY_ICONS[amenity] ?? Wifi;
+					return (
+						<div
+							key={amenity}
+							className="flex items-center gap-2 text-sm"
+						>
+							<Icon className="w-4 h-4 text-primary shrink-0" />
+							<span className="capitalize">
+								{formatAmenityLabel(amenity)}
+							</span>
+						</div>
+					);
+				})}
+			</div>
+		</div>
+	);
+};

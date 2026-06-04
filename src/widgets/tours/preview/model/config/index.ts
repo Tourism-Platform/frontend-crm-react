@@ -1,4 +1,5 @@
 export * from "./preview-option-tabs.config";
+export * from "./preview-tour-single-option-tabs.config";
 export * from "./provider.config";
 export * from "./hero.config";
 export * from "./pickup.config";

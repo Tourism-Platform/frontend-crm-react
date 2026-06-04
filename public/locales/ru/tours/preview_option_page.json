@@ -1,6 +1,9 @@
 {
 	"page_name": "Предпросмотр опции",
-	"back_to_catalogue": "Вернуться в каталог",
+	"back": "Вернуться к туру",
+	"day": {
+		"title": "День {{n}}"
+	},
 	"sections": {
 		"option": {
 			"day": "День",
@@ -14,6 +17,22 @@
 		"tour_information": "Информация о туре",
 		"full_itinerary": "Полный маршрут",
 		"pricing": "Цены"
+	},
+	"sheet": {
+		"pickup_info": "Информация о трансфере",
+		"pickup": "Отправление",
+		"dropoff": "Прибытие",
+		"to": "до",
+		"amenities": "Удобства",
+		"schedule_info": "Расписание",
+		"nights": "Ночей",
+		"check_in": "Заезд",
+		"check_out": "Выезд",
+		"activity_info": "Об активности",
+		"location": "Локация",
+		"start_time": "Начало",
+		"end_time": "Окончание",
+		"flight_info": "Информация о рейсе"
 	},
 	"pricing": {
 		"title": "Детализация цен",

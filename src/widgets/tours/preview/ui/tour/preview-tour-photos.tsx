@@ -11,7 +11,12 @@ interface IPreviewTourPhotosProps {
 const PreviewTourPhotosBase: FC<IPreviewTourPhotosProps> = ({ data }) => {
 	if (!data?.images.length) return null;
 
-	return <UploadImagesPreviewer images={data.images.slice(0, 5)} />;
+	return (
+		<UploadImagesPreviewer
+			images={data.images.slice(0, 5)}
+			showPrimaryBadge
+		/>
+	);
 };
 
 export const PreviewTourPhotos = withErrorBoundary(PreviewTourPhotosBase);

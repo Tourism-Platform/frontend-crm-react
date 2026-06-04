@@ -1,12 +1,39 @@
 import { AmenitiesTypes, Language, PickupType } from "@/shared/api";
 
-import { ENUM_EVENT } from "@/entities/tour/tour/types/event.types";
-
 import type { TPreviewTourBackend } from "../types";
+import { ENUM_PREVIEW_OPTION_EVENT } from "../types/preview-option-event.types";
+
+import { PREVIEW_MOCK_IMAGE_URLS } from "./preview-option-media.mock";
 
 export const TOUR_PREVIEW_TOUR_MOCK: TPreviewTourBackend = {
 	title: "Title",
-	images: [],
+	images: [
+		{
+			id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+			image_url: PREVIEW_MOCK_IMAGE_URLS.cover,
+			is_primary: true
+		},
+		{
+			id: "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+			image_url: PREVIEW_MOCK_IMAGE_URLS.single1,
+			is_primary: false
+		},
+		{
+			id: "c3d4e5f6-a7b8-9012-cdef-123456789012",
+			image_url: PREVIEW_MOCK_IMAGE_URLS.single2,
+			is_primary: false
+		},
+		{
+			id: "d4e5f6a7-b8c9-0123-def0-234567890123",
+			image_url: PREVIEW_MOCK_IMAGE_URLS.hotelA,
+			is_primary: false
+		},
+		{
+			id: "e5f6a7b8-c9d0-1234-ef01-345678901234",
+			image_url: PREVIEW_MOCK_IMAGE_URLS.activityA,
+			is_primary: false
+		}
+	],
 	overview:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Embark on an unforgettable journey through the ancient cities of Uzbekistan."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"Discover the rich history, stunning architecture, and warm hospitality of the Silk Road."}]}]}',
 
@@ -44,7 +71,7 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 				events: [
 					{
 						id: "e1",
-						type: ENUM_EVENT.INFO,
+						type: ENUM_PREVIEW_OPTION_EVENT.INFO,
 						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
@@ -68,14 +95,14 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 				events: [
 					{
 						id: "e2",
-						type: ENUM_EVENT.INFO,
+						type: ENUM_PREVIEW_OPTION_EVENT.INFO,
 						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
 					},
 					{
 						id: "e3",
-						type: ENUM_EVENT.INFO,
+						type: ENUM_PREVIEW_OPTION_EVENT.INFO,
 						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
@@ -89,14 +116,14 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 				events: [
 					{
 						id: "e4",
-						type: ENUM_EVENT.INFO,
+						type: ENUM_PREVIEW_OPTION_EVENT.INFO,
 						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."
 					},
 					{
 						id: "e5",
-						type: ENUM_EVENT.INFO,
+						type: ENUM_PREVIEW_OPTION_EVENT.INFO,
 						title: "INFO for arrivals",
 						description:
 							"Upon arrival at the airport, guests will be met by a representative holding a name sign. A comfortable group transfer will then be provided to the hotel...."

@@ -10,7 +10,7 @@ import { tourActivityLogHandlers } from "@/entities/tour/activity-log/handlers/a
 import { tourCatalogHandlers } from "@/entities/tour/catalog/handlers/catalog-tour.handlers";
 import { tourLandingHandlers } from "@/entities/tour/landing/handlers/landing.handlers";
 import { tourOrderHandlers } from "@/entities/tour/order/handlers/tour-order.handlers";
-import { tourPreviewTourHandlers } from "@/entities/tour/preview-tour/handlers/preview-tour.handlers";
+import { tourPreviewTourHandlers } from "@/entities/tour/preview-tour";
 import { tourHandlers } from "@/entities/tour/tour/handlers/tour.handlers";
 import {
 	agencyBusinessDocumentsHandlers,
