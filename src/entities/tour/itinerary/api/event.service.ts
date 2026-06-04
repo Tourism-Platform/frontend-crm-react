@@ -84,9 +84,9 @@ export const tourEventApi = authApi.injectEndpoints({
 			]
 		}),
 		updateTourEvent: builder.mutation<ITourEvent, ITourEventUpdate>({
-			query: ({ tourId, optionId, eventId, type, data }) => ({
+			query: ({ tourId, optionId, eventId, type, data, language }) => ({
 				...TOUR_EVENTS_PATHS.updateTourEvent(tourId, optionId, eventId),
-				body: mapEventUpdateToBackend(type, data)
+				body: mapEventUpdateToBackend(type, data, language)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),

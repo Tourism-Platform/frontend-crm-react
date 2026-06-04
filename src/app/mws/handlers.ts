@@ -10,6 +10,7 @@ import { operatorPaymentRoutesHandlers } from "@/entities/finance/finance-inform
 import { financeInvoiceHandlers } from "@/entities/finance/invoice/handlers/invoice.handlers";
 import { financeReconciliationHandler } from "@/entities/finance/reconciliation/handlers/reconciliation.handlers";
 import { financeSupplierPaymentHandlers } from "@/entities/finance/supplier-payment/handlers/supplier-payment.handlers";
+import { geoHandlers } from "@/entities/geo/handlers";
 import { staffHandlers } from "@/entities/staff/handlers/staff.handlers";
 import { tourActivityLogHandlers } from "@/entities/tour/activity-log/handlers/activity-log.handlers";
 import { tourCatalogHandlers } from "@/entities/tour/catalog/handlers/catalog-tour.handlers";
@@ -55,5 +56,6 @@ export const handlers = [
 	...bookingOrderHandlers,
 	...bookingPaxHandlers,
 	...bookingAvailabilityHandlers,
-	...pricingReviewHandlers
+	...pricingReviewHandlers,
+	...geoHandlers
 ];

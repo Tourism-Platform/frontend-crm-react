@@ -22,6 +22,7 @@ export const CLIENT_PAYMENT_PATHS = {
 				booking_id?: string | null;
 				created_from?: string | null;
 				created_to?: string | null;
+				q?: string | null;
 			};
 			response: ClientPaymentListResponse;
 		}

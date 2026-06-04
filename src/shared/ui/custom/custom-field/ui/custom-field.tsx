@@ -8,11 +8,13 @@ import { cn } from "@/shared/lib";
 import type {
 	BadgeVariant,
 	CustomAutocompleteProps,
+	CustomGeoSelectProps,
 	ICustomUploadFilesProps
 } from "@/shared/ui";
 import {
 	CustomAutocomplete,
 	CustomCalendarRange,
+	CustomGeoSelect,
 	CustomUploadFilesField,
 	DatePickerInput,
 	type DatePickerInputProps,
@@ -48,6 +50,7 @@ export type CustomFieldVariant =
 	| "editor"
 	| "upload"
 	| "autocomplete"
+	| "geo"
 	| "dateRange"
 	| "switch";
 
@@ -113,6 +116,10 @@ type AutocompleteFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "autocomplete">;
 } & Omit<CustomAutocompleteProps, "value" | "onChange">;
 
+type GeoFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "geo">;
+} & Omit<CustomGeoSelectProps, "value" | "onChange">;
+
 type DateRangeFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "dateRange">;
 	placeholder?: string;
@@ -135,6 +142,7 @@ type CustomFieldProps =
 	| EditorFieldVariant
 	| UploadFieldVariant
 	| AutocompleteFieldVariant
+	| GeoFieldVariant
 	| DateRangeFieldVariant
 	| SwitchFieldVariant;
 
@@ -303,6 +311,16 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						placeholder={t(props.placeholder)}
 						emptyText={t(props.emptyText)}
 						value={field.value}
+						onChange={field.onChange}
+					/>
+				);
+			case "geo":
+				return (
+					<CustomGeoSelect
+						{...props}
+						placeholder={t(props.placeholder)}
+						emptyText={t(props.emptyText)}
+						value={field.value ?? null}
 						onChange={field.onChange}
 					/>
 				);

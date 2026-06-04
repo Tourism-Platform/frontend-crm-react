@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { type TTourActivityEditPageKeys, i18nKey } from "@/shared/config";
+import { GEO_FORM_VALUE_SCHEMA } from "@/shared/schema/geo-form.schema";
 
 import { ENUM_ACTIVITY_TYPE, ENUM_FORM_ACTIVITY } from "../../types";
 
@@ -27,26 +28,7 @@ export const GENERAL_INFO_SCHEMA = z.object({
 		})
 		.optional(),
 
-	[ENUM_FORM_ACTIVITY.LOCATION]: z
-		.string({
-			// message: msg(
-			// 	"form.general.details.form.fields.location.errors.required"
-			// )
-		})
-		// .min(1, {
-		// 	message: msg(
-		// 		"form.general.details.form.fields.location.errors.required"
-		// 	)
-		// })
-		// .min(2, {
-		// 	message: msg(
-		// 		"form.general.details.form.fields.location.errors.min"
-		// 	)
-		// })
-		.max(100, {
-			message: msg("form.general.details.form.fields.location.errors.max")
-		})
-		.optional(),
+	[ENUM_FORM_ACTIVITY.LOCATION]: GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 
 	[ENUM_FORM_ACTIVITY.ACTIVITY_START_TIME]: z
 		.string({

@@ -1,3 +1,5 @@
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
+
 import type { TAccommodationEditSchema } from "./accommodation";
 import type { TActivityEditSchema } from "./activity";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
@@ -30,6 +32,8 @@ export interface ITourEventUpdate {
 	eventId: string;
 	type: ENUM_EVENT_TYPE;
 	data: TTourEventUpdate;
+	/** Язык UI — конвертируется в LanguageCode при save */
+	language?: ENUM_LANGUAGES_TYPE;
 }
 export type TTourEvent =
 	| TFlightEditSchema

@@ -1,4 +1,8 @@
-import type { ActivityEventSchemaOutput } from "@/shared/api";
+import { type ActivityEventSchemaOutput, LanguageCode } from "@/shared/api";
+import {
+	mapBackendLocationToGeoForm,
+	mapGeoFormToBackendLocation
+} from "@/shared/converters";
 
 import {
 	type TActivityEditSchema,
@@ -30,14 +34,16 @@ export const mapActivityEventToForm = (
 			activity_end_time: event.details?.end_time?.time || "",
 			activity_end_timezone: String(
 				event.details?.end_time?.timezone || ""
-			)
+			),
+			location: mapBackendLocationToGeoForm(event.details?.location)
 		},
 		pricing: mapActivityPricingFromBackend(event.details)
 	};
 };
 
 export const mapActivityFormToUpdate = (
-	frontend: Partial<TActivityEditSchema>
+	frontend: Partial<TActivityEditSchema>,
+	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
 	const g = frontend?.general;
 	const pricingDetails = mapActivityPricingToBackend(frontend?.pricing);
@@ -66,6 +72,11 @@ export const mapActivityFormToUpdate = (
 					time: g.activity_end_time,
 					timezone: g.activity_end_timezone
 				}
+			}),
+			...(g !== undefined && {
+				location: g.location
+					? mapGeoFormToBackendLocation(g.location, lang)
+					: null
 			}),
 			...pricingDetails.details
 		}

@@ -45,6 +45,7 @@
 						"location": {
 							"label": "Location",
 							"placeholder": "Enter location",
+							"empty": "No locations found",
 							"errors": {
 								"required": "Location is required",
 								"max": "Location name is too long",

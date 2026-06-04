@@ -1,3 +1,7 @@
+import { LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
+import { languageCodeMapper } from "@/shared/converters";
+
 import {
 	ENUM_EVENT,
 	type ENUM_EVENT_TYPE,
@@ -88,8 +92,11 @@ export const mapEventToFrontend = (
 
 export const mapEventUpdateToBackend = (
 	type: ENUM_EVENT_TYPE,
-	frontend: TTourEventUpdate
+	frontend: TTourEventUpdate,
+	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
+	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+
 	if (type === ENUM_EVENT.FLIGHT)
 		return mapTransportFormToUpdate(frontend as TFlightEditSchema);
 	else if (type === ENUM_EVENT.TRANSPORTATION)
@@ -100,7 +107,7 @@ export const mapEventUpdateToBackend = (
 			frontend as TAccommodationEditSchema
 		);
 	else if (type === ENUM_EVENT.ACTIVITY)
-		return mapActivityFormToUpdate(frontend as TActivityEditSchema);
+		return mapActivityFormToUpdate(frontend as TActivityEditSchema, lang);
 
 	return {
 		name: frontend.name

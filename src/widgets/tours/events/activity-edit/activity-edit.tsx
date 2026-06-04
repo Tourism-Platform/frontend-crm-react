@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { TicketStarIcon } from "@/shared/assets";
+import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
 import {
 	Card,
 	CardContent,
@@ -31,7 +32,7 @@ import { EventTitleInput } from "../ui";
 import { type ENUM_FORM_SECTION_TYPE, EVENT_EDIT_TABS_LIST } from "./model";
 
 const ActivityEditBase: FC = () => {
-	const { t } = useTranslation("activity_edit_page");
+	const { t, i18n } = useTranslation("activity_edit_page");
 	const {
 		tourId = "",
 		optionId = "",
@@ -77,6 +78,9 @@ const ActivityEditBase: FC = () => {
 					optionId,
 					eventId,
 					type: ENUM_EVENT.ACTIVITY,
+					language:
+						i18nLanguageMapper.to(i18n.language) ??
+						ENUM_LANGUAGES.EN,
 					data: form.getValues()
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));

@@ -149,6 +149,9 @@ export const createPaymentFromFormData = (
 	const created: ClientPaymentResponse = {
 		id: buildPaymentUuid(payments.length + 1),
 		booking_id: bookingId,
+		order_number:
+			bookingOrderListItems.find((item) => item.id === bookingId)
+				?.order_number ?? "",
 		operator_id: MOCK_OPERATOR_ID,
 		amount: amountUzs / exchangeRate,
 		currency: MOCK_PAYMENT_DEFAULTS.currency,

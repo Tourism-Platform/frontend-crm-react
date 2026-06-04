@@ -1,4 +1,5 @@
 export * from "./custom-autocomplete";
+export * from "./custom-geo-select";
 export * from "./custom-calendar-range";
 export * from "./custom-field";
 export * from "./custom-input";

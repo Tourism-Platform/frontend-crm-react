@@ -6,7 +6,8 @@ import {
 	type ENUM_LANGUAGES_TYPE,
 	LANGUAGES_LIST,
 	changeLanguage,
-	i18n
+	i18n,
+	i18nLanguageMapper
 } from "@/shared/config";
 import {
 	Select,
@@ -21,7 +22,9 @@ export const LanguageToggle: FC = () => {
 
 	return (
 		<Select
-			defaultValue={i18n?.language?.split("-")?.[0] || ENUM_LANGUAGES.EN}
+			defaultValue={
+				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
+			}
 			onValueChange={(value) => {
 				changeLanguage(value as ENUM_LANGUAGES_TYPE);
 			}}

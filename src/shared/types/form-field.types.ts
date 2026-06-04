@@ -1,8 +1,13 @@
 import type { LucideIcon } from "lucide-react";
 
 import type {
+	IGeoSelectOption,
+	TGeoFormValue
+} from "@/shared/types/geo-form.types";
+import type {
 	BadgeVariant,
 	CustomAutocompleteOption,
+	CustomGeoSelectProps,
 	MultipleSelectorDisplayMode,
 	Option as MultipleSelectorOption,
 	SelectPickerOption
@@ -95,6 +100,18 @@ type TFormAutocomplete<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	icon?: LucideIcon;
 };
 
+export type TFormGeo<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "geo";
+	options: IGeoSelectOption[];
+	onQueryChange: CustomGeoSelectProps["onQueryChange"];
+	isLoading?: boolean;
+	minQueryLength?: number;
+	placeholder?: string;
+	emptyText?: string;
+	icon?: LucideIcon;
+	defaultValue?: TGeoFormValue | null;
+};
+
 // Универсальный тип формы
 export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormInput<L, K>
@@ -107,4 +124,5 @@ export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormUploadFiles<L, K>
 	| TFormSwitch<L, K>
 	| TFormAutocomplete<L, K>
+	| TFormGeo<L, K>
 	| TFormDateRange<L, K>;

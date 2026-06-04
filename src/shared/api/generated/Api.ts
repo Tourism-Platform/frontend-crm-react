@@ -233,14 +233,16 @@ export enum AvailabilityStatus {
 	Pending = "pending",
 	Available = "available",
 	Unavailable = "unavailable",
-	Selected = "selected"
+	Selected = "selected",
+	Deselected = "deselected"
 }
 
 /** ApplyAvailabilityInput */
 export enum ApplyAvailabilityInput {
 	Available = "available",
 	Unavailable = "unavailable",
-	Selected = "selected"
+	Selected = "selected",
+	Deselected = "deselected"
 }
 
 /** AmenitiesTypes */
@@ -452,6 +454,11 @@ export interface ActivityEventSchemaInput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -486,6 +493,11 @@ export interface ActivityEventSchemaOutput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -519,6 +531,11 @@ export interface ActivityEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Typ
 	 * @default "6"
@@ -1326,6 +1343,11 @@ export interface BusEventSchemaInput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -1360,6 +1382,11 @@ export interface BusEventSchemaOutput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -1393,6 +1420,11 @@ export interface BusEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Typ
 	 * @default "3"
@@ -1521,6 +1553,8 @@ export interface ClientPaymentResponse {
 	 * @format uuid
 	 */
 	booking_id: string;
+	/** Order Number */
+	order_number: string;
 	/**
 	 * Operator Id
 	 * @format uuid
@@ -1892,6 +1926,11 @@ export interface FlightEventSchemaInput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -1926,6 +1965,11 @@ export interface FlightEventSchemaOutput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -1959,6 +2003,11 @@ export interface FlightEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Typ
 	 * @default "1"
@@ -2441,6 +2490,11 @@ export interface HousingEventSchemaInput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -2475,6 +2529,11 @@ export interface HousingEventSchemaOutput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -2508,6 +2567,11 @@ export interface HousingEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Typ
 	 * @default "5"
@@ -2688,6 +2752,11 @@ export interface InformationEventSchema {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -2721,6 +2790,11 @@ export interface InformationEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Typ
 	 * @default "7"
@@ -3075,6 +3149,11 @@ export interface MultipleOptionEventInput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -3130,6 +3209,11 @@ export interface MultipleOptionEventOutput {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -3268,6 +3352,11 @@ export interface MultipleOptionEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/** Typ */
 	typ: "8";
 	/** Details */
@@ -5272,6 +5361,11 @@ export interface TrainEventSchemaInput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -5306,6 +5400,11 @@ export interface TrainEventSchemaOutput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -5339,6 +5438,11 @@ export interface TrainEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Typ
 	 * @default "2"
@@ -5688,6 +5792,11 @@ export interface TransferEventSchemaInput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -5722,6 +5831,11 @@ export interface TransferEventSchemaOutput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -5755,6 +5869,11 @@ export interface TransferEventUpdate {
 	supplier_id?: string | null;
 	/** Package Id */
 	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/**
 	 * Typ
 	 * @default "4"
@@ -7439,6 +7558,8 @@ export interface ListPaymentsBookingPaymentGetParams {
 	created_from?: string | null;
 	/** Created To */
 	created_to?: string | null;
+	/** Q */
+	q?: string | null;
 }
 
 export interface GetPaymentBookingPaymentPaymentIdGetParams {

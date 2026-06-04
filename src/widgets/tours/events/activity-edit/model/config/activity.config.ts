@@ -1,11 +1,19 @@
+import { MapPin } from "lucide-react";
+
 import { UTC_OPTIONS } from "@/shared/config";
+import type { TFormGeo } from "@/shared/types";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import { ACTIVITY_TYPE_LABELS, ENUM_FORM_ACTIVITY } from "@/entities/tour";
 
 import type { TForm } from "../types";
 
-export const EVENT_DATA_LIST = (): TForm[] => [
+export type TGeoFieldProps = Pick<
+	TFormGeo,
+	"options" | "onQueryChange" | "isLoading"
+>;
+
+export const EVENT_DATA_LIST = (geo: TGeoFieldProps): TForm[] => [
 	{
 		label: "form.general.details.form.fields.activity_subtype.label",
 		placeholder:
@@ -18,9 +26,12 @@ export const EVENT_DATA_LIST = (): TForm[] => [
 	{
 		label: "form.general.details.form.fields.location.label",
 		placeholder: "form.general.details.form.fields.location.placeholder",
+		emptyText: "form.general.details.form.fields.location.empty",
 		key: ENUM_FORM_ACTIVITY.LOCATION,
-		fieldType: "input",
-		className: "col-span-2"
+		fieldType: "geo",
+		className: "col-span-2",
+		icon: MapPin,
+		...geo
 	},
 	{
 		label: "form.general.details.form.fields.event_start_time.label",
