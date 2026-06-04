@@ -34,9 +34,9 @@ export const mapTourOrderPaginatedToFrontend = (
 });
 
 export const mapTourOrderFiltersToBackend = (filters: ITourOrderFilters) => ({
-	page: filters.page,
-	limit: filters.limit,
-	search: filters.search || undefined,
-	status: filters.status.length > 0 ? filters.status.join(",") : undefined,
-	tour_id: filters.tourId
+	page: filters.page
+	// limit: filters.limit,
+	// search: filters.search || undefined,
+	// status: filters.status.length > 0 ? filters.status.join(",") : undefined,
+	// tour_id: filters.tourId
 });

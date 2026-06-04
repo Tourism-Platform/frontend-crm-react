@@ -1,5 +1,4 @@
 import type { BookingOrderDetail } from "@/shared/api";
-import { BOOKING_ORDER_PATHS } from "@/shared/api";
 import { formatDate } from "@/shared/utils";
 
 import {
@@ -13,6 +12,7 @@ import {
 	type TBookingOrderBackendResponse,
 	type TBookingOrderDetailBackend,
 	type TBookingOrderListItemBackend,
+	type TBookingOrderPaginatedQuery,
 	type TBookingOrderPaginatedResponse
 } from "../types";
 
@@ -121,6 +121,10 @@ export const mapBookingOrderPaginatedToFrontend = (
 
 export const mapBookingOrderFiltersToBackend = (
 	filters: IBookingOrderFilters
-): typeof BOOKING_ORDER_PATHS.listMyBookings._types.query => ({
-	booking_status: orderStatusMapper.to(filters.status[0]) || null
+): TBookingOrderPaginatedQuery => ({
+	booking_status: orderStatusMapper.to(filters.status?.[0]),
+	tour_id: filters.tourId || null,
+	q: filters.search || null,
+	skip: (filters.page - 1) * filters.limit,
+	limit: filters.limit
 });

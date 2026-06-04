@@ -2,7 +2,7 @@ import Decimal from "decimal.js";
 
 const COMPACT_THRESHOLD_K = 100_000;
 const COMPACT_THRESHOLD_MLN = 1_000_000;
-const FRACTION_DIGITS = 3;
+const FRACTION_DIGITS = 2;
 
 const plainFormatter = new Intl.NumberFormat("en-US", {
 	minimumFractionDigits: FRACTION_DIGITS,

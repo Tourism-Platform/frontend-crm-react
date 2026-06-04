@@ -22,8 +22,8 @@ import {
 
 import {
 	type TNewPaymentSchema,
-	// useGetAvailableOrderIdsQuery
-	useCreatePaymentMutation
+	useCreatePaymentMutation,
+	useGetAvailableOrderIdsQuery
 } from "@/entities/finance";
 
 import { FORM_NEW_PAYMENT_LIST, NEW_PAYMENT_SCHEMA } from "../model";
@@ -33,21 +33,28 @@ export const NewPayment: FC = () => {
 	const { t } = useTranslation("client_payments_page");
 	const [createPayment, { isLoading }] = useCreatePaymentMutation();
 
-	// const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
-	const orderIds: string[] = [];
-	const orderOptions = useMemo(() => {
-		return orderIds.map((o) => ({
-			value: o,
-			label: o
-		}));
-	}, [orderIds]);
+	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery(undefined, {
+		skip: !open
+	});
+
+	const orderOptions = useMemo(
+		() =>
+			orderIds.map((id) => ({
+				value: id,
+				label: id
+			})),
+		[orderIds]
+	);
 
 	const form = useForm<TNewPaymentSchema>({
 		resolver: zodResolver(NEW_PAYMENT_SCHEMA),
 		mode: "onSubmit"
 	});
 
-	const formFields = useMemo(() => FORM_NEW_PAYMENT_LIST(), [orderOptions]);
+	const formFields = useMemo(
+		() => FORM_NEW_PAYMENT_LIST({ orderOptions }),
+		[orderOptions]
+	);
 
 	async function onSubmit(data: TNewPaymentSchema) {
 		try {

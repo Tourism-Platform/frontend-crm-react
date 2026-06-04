@@ -12,6 +12,7 @@ import {
 	BOOKING_ORDER_STATUS_LABELS,
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
+	type IBookingOrderFilters,
 	useGetBookingOrdersQuery
 } from "@/entities/booking";
 
@@ -19,14 +20,9 @@ import { COLUMNS } from "../model";
 
 const OrdersBase: FC = () => {
 	const { t } = useTranslation("orders_page");
-	const { watch, setValue } = useForm<{
-		status: ENUM_ORDER_STATUS_TYPE;
-		search: string;
-		page: number;
-		limit: number;
-	}>({
+	const { watch, setValue } = useForm<Required<IBookingOrderFilters>>({
 		defaultValues: {
-			status: ENUM_ORDER_STATUS.NEW,
+			status: [ENUM_ORDER_STATUS.NEW],
 			search: "",
 			page: 1,
 			limit: 10
@@ -41,7 +37,7 @@ const OrdersBase: FC = () => {
 		isFetching,
 		isError
 	} = useGetBookingOrdersQuery({
-		status: [filters.status],
+		status: filters.status,
 		search: filters.search,
 		page: filters.page,
 		limit: filters.limit
@@ -84,7 +80,7 @@ const OrdersBase: FC = () => {
 
 	const handleStatusTabChange = useCallback(
 		(val: string) => {
-			setValue("status", val as ENUM_ORDER_STATUS_TYPE);
+			setValue("status", [val as ENUM_ORDER_STATUS_TYPE]);
 			setValue("page", 1);
 		},
 		[setValue]
@@ -95,7 +91,7 @@ const OrdersBase: FC = () => {
 	);
 
 	const columns = useMemo(
-		() => COLUMNS(filters.status, t),
+		() => COLUMNS(filters.status[0], t),
 		[filters.status, t]
 	);
 
@@ -123,7 +119,7 @@ const OrdersBase: FC = () => {
 						search={filters.search}
 						onSearchChange={handleSearchChange}
 						statusTabs={translatedStatusTabs}
-						activeStatusTab={filters.status}
+						activeStatusTab={filters.status[0]}
 						onStatusTabChange={handleStatusTabChange}
 						showStatusTabsFilter={true}
 					/>

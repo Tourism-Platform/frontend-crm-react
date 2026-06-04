@@ -18,3 +18,6 @@ export interface IApplyReviewItemBackend {
 
 export type TBookingOrderBackendResponse =
 	typeof BOOKING_ORDER_PATHS.listMyBookings._types.response;
+
+export type TBookingOrderPaginatedQuery =
+	typeof BOOKING_ORDER_PATHS.listMyBookings._types.query;

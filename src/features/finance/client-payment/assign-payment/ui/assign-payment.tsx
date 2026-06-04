@@ -23,8 +23,8 @@ import {
 import {
 	ENUM_PAYMENT_STATUS,
 	type IPayment,
-	useGetAvailableOrderIdsQuery,
-	useUpdatePaymentMutation
+	useConfirmPaymentMutation,
+	useGetAvailableOrderIdsQuery
 } from "@/entities/finance";
 
 import {
@@ -47,7 +47,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 }) => {
 	const { t } = useTranslation("client_payments_page");
 	const [open, setOpen] = useState<boolean>(false);
-	const [updatePayment, { isLoading }] = useUpdatePaymentMutation();
+	const [confirmPayment, { isLoading }] = useConfirmPaymentMutation();
 
 	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
 
@@ -74,17 +74,14 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 		[orderOptions]
 	);
 
-	async function onSubmit(data: TAssignPaymentSchema) {
+	async function onSubmit() {
 		try {
-			await updatePayment({
-				id: payment.id,
-				data
-			}).unwrap();
+			await confirmPayment(payment.id).unwrap();
 			toast.success(t("menu.assign.form.toasts.success"));
 			setOpen(false);
 		} catch (error) {
 			toast.error(t("menu.assign.form.toasts.error"));
-			console.error("Failed to update payment:", error);
+			console.error("Failed to confirm payment:", error);
 		}
 	}
 

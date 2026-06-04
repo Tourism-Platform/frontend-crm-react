@@ -32,7 +32,12 @@ const MOCK_ORDER_DETAIL_DEFAULTS = {
 	}
 } satisfies Pick<
 	IOrderDetail,
-	"agencyId" | "agency" | "tourOptionId" | "tour" | "tourAmount" | "paidAmount"
+	| "agencyId"
+	| "agency"
+	| "tourOptionId"
+	| "tour"
+	| "tourAmount"
+	| "paidAmount"
 >;
 
 const BOOKING_ORDERS_MOCK_RAW = [

@@ -5,16 +5,16 @@ import { Link } from "react-router-dom";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Skeleton } from "@/shared/ui";
 
+import type { IOrder } from "@/entities/booking";
 import {
 	type ENUM_TOUR_ORDER_STATUS_TYPE,
-	type ITourOrder,
 	TOUR_ORDER_STATUS_LABELS,
 	TOUR_ORDER_STATUS_VARIANTS
 } from "@/entities/tour";
 
 export const RECENT_ORDERS_COLUMNS = (
 	t: TFunction<["tour_order_history_page", "options"], undefined>
-): ColumnDef<ITourOrder>[] => {
+): ColumnDef<IOrder>[] => {
 	return [
 		{
 			id: "select",

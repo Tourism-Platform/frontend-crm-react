@@ -1,4 +1,5 @@
 import { CLIENT_PAYMENT_PATHS, ENUM_API_TAGS } from "@/shared/api";
+import type { ClientPaymentResponse } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -9,13 +10,13 @@ import {
 	mapPaymentsPaginatedToFrontend,
 	mapUpdatePaymentToBackend
 } from "../converters";
-import {
-	type IPayment,
-	type IPaymentFilters,
-	type IPaymentPaginatedResponse,
-	type TNewPaymentSchema,
-	type TPaymentBackend,
-	type TPaymentBackendResponse
+import type {
+	IPayment,
+	IPaymentFilters,
+	IPaymentPaginatedResponse,
+	TNewPaymentSchema,
+	TPaymentBackend,
+	TPaymentListResponseInput
 } from "../types";
 
 export const clientPaymentApi = authApi.injectEndpoints({
@@ -29,31 +30,35 @@ export const clientPaymentApi = authApi.injectEndpoints({
 				...CLIENT_PAYMENT_PATHS.listPayments,
 				params: mapPaymentFiltersToBackend(filters)
 			}),
-			transformResponse: (response: TPaymentBackendResponse) =>
+			transformResponse: (response: TPaymentListResponseInput) =>
 				mapPaymentsPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
 		createPayment: builder.mutation<IPayment, TNewPaymentSchema>({
 			query: (payment) => {
-				console.log("payment", payment);
 				const backendData = mapCreatePaymentToBackend(payment);
 				const formData = new FormData();
-				// Наполняем FormData
-				Object.entries(backendData).forEach(([key, value]) => {
-					if (value !== undefined && value !== null) {
-						// Файлы добавляются как есть, остальное приводим к строке
-						formData.append(
-							key,
-							value instanceof Blob ? value : String(value)
-						);
-					}
-				});
+
+				formData.append("booking_id", backendData.booking_id);
+				formData.append("amount_uzs", String(backendData.amount_uzs));
+				formData.append(
+					"exchange_rate",
+					String(backendData.exchange_rate)
+				);
+
+				if (backendData.note) {
+					formData.append("note", backendData.note);
+				}
+
+				formData.append("file", backendData.file);
 
 				return {
 					...CLIENT_PAYMENT_PATHS.createPayment,
 					body: formData
 				};
 			},
+			transformResponse: (response: ClientPaymentResponse) =>
+				mapPaymentToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
 		updatePayment: builder.mutation<

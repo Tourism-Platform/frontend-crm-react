@@ -48,7 +48,7 @@ const filterInvoiceItems = ({
 const parseStatuses = (url: URL): string[] =>
 	url.searchParams.getAll("statuses").filter(Boolean);
 
-export const computeStatusCounts = (
+const computeStatusCounts = (
 	items: InvoiceListItem[]
 ): Record<InvoiceStatus, number> => {
 	const counts = Object.values(InvoiceStatus).reduce(

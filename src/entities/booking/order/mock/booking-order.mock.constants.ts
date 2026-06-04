@@ -11,7 +11,7 @@ export const MOCK_TOUR_ID = ORDER_TOUR_ID_FALLBACK;
 
 export const MOCK_ORDER_AGENCY_TEMPLATE: OrderAgencyInfo = {
 	id: MOCK_AGENCY_ID,
-	name: AGENCY_BUSINESS_MOCK.business_name,
+	name: AGENCY_BUSINESS_MOCK.business_name || "",
 	business_name: AGENCY_BUSINESS_MOCK.business_name,
 	legal_name: AGENCY_BUSINESS_MOCK.legal_name,
 	director_name: AGENCY_BUSINESS_MOCK.director_name,
