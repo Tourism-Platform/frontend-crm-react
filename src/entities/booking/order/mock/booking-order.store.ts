@@ -1,10 +1,10 @@
 import {
-	BookingStatus,
-	BookingTransition,
 	type BookingModel,
 	type BookingOrderDetail,
 	type BookingOrderListItem,
-	type BookingOrderListResponse
+	type BookingOrderListResponse,
+	BookingStatus,
+	BookingTransition
 } from "@/shared/api";
 
 import { createBookingOrderMocks } from "./booking-order.mock.factory";
@@ -14,7 +14,9 @@ const { listItems, detailsById } = createBookingOrderMocks();
 export const bookingOrderListItems: BookingOrderListItem[] = listItems;
 export const bookingOrderDetailStore = detailsById;
 
-export const detailToBookingModel = (detail: BookingOrderDetail): BookingModel => ({
+export const detailToBookingModel = (
+	detail: BookingOrderDetail
+): BookingModel => ({
 	id: detail.id,
 	agency_id: detail.agency_id,
 	operator_id: detail.operator_id,
@@ -94,7 +96,10 @@ const resolveStatusAfterTransition = (
 		return BookingStatus.Confirmed;
 	}
 
-	if (transition === BookingTransition.Submit && current === BookingStatus.Draft) {
+	if (
+		transition === BookingTransition.Submit &&
+		current === BookingStatus.Draft
+	) {
 		return BookingStatus.New;
 	}
 
@@ -113,7 +118,9 @@ export const transitionBookingStatusInStore = (
 
 	detail.status = nextStatus;
 
-	const listItem = bookingOrderListItems.find((item) => item.id === bookingId);
+	const listItem = bookingOrderListItems.find(
+		(item) => item.id === bookingId
+	);
 	if (listItem) {
 		listItem.status = nextStatus;
 	}

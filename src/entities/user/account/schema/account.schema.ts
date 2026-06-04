@@ -2,8 +2,9 @@ import { z } from "zod";
 
 import { type TAccountSettingsPageKeys, i18nKey } from "@/shared/config";
 
-import { ENUM_FORM_ACCOUNT } from "../types";
 import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+
+import { ENUM_FORM_ACCOUNT } from "../types";
 
 const msg = i18nKey<TAccountSettingsPageKeys>();
 

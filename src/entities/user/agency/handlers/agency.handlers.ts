@@ -4,6 +4,7 @@ import { AGENCY_PATHS, createMockHandler } from "@/shared/api";
 import { ENV } from "@/shared/config";
 
 import { MOCK_AGENCY_ID } from "@/entities/booking/order/mock/booking-order.mock.constants";
+
 import { AGENCY_BUSINESS_MOCK } from "../mock/agency-business.mock";
 
 const BASE_URL = ENV.VITE_API_URL || "";

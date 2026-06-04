@@ -65,7 +65,8 @@ export const bookingPaxHandlers = [
 				gender: data.gender ?? current.gender,
 				nationality: data.nationality ?? current.nationality,
 				date_of_birth: data.date_of_birth ?? current.date_of_birth,
-				passport_number: data.passport_number ?? current.passport_number,
+				passport_number:
+					data.passport_number ?? current.passport_number,
 				expired_date: data.expired_date ?? current.expired_date,
 				comment:
 					data.comment !== undefined ? data.comment : current.comment
@@ -84,7 +85,9 @@ export const bookingPaxHandlers = [
 		async ({ params }) => {
 			const bookingId = String(params.bookingId);
 			const paxId = String(params.paxId);
-			const list = getBookingPaxList(bookingId).filter((p) => p.id !== paxId);
+			const list = getBookingPaxList(bookingId).filter(
+				(p) => p.id !== paxId
+			);
 			setBookingPaxList(bookingId, list);
 			return new HttpResponse(null, { status: 204 });
 		}

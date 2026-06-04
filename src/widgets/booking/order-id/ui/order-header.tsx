@@ -19,6 +19,8 @@ import {
 	useUpdateBookingStatusMutation
 } from "@/entities/booking";
 
+import { SendInvoice } from "@/features/booking";
+
 interface IOrderHeaderProps {
 	orderId: string;
 	status: ENUM_ORDER_STATUS_TYPE;
@@ -134,7 +136,10 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 								{t("buttons.export")}
 							</Button>
 
-							<Button disabled>{t("buttons.generate")}</Button>
+							<SendInvoice
+								orderId={orderId}
+								orderStatus={status}
+							/>
 						</div>
 					)}
 					{status === ENUM_ORDER_STATUS.BOOKING && (

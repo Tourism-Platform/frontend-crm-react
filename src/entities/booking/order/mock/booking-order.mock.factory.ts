@@ -1,8 +1,8 @@
 import {
 	BookingClientType,
-	BookingStatus,
 	type BookingOrderDetail,
 	type BookingOrderListItem,
+	BookingStatus,
 	TourType
 } from "@/shared/api";
 
@@ -61,10 +61,9 @@ const STATUS_ROWS: {
 const padOrderNum = (n: number) => String(n).padStart(2, "0");
 
 const buildDates = (statusIndex: number, orderIndex: number) => {
-	const month = String(((statusIndex + 1) * 2 + orderIndex) % 12 || 12).padStart(
-		2,
-		"0"
-	);
+	const month = String(
+		((statusIndex + 1) * 2 + orderIndex) % 12 || 12
+	).padStart(2, "0");
 	const startDay = String(5 + orderIndex).padStart(2, "0");
 	const endDay = String(12 + orderIndex).padStart(2, "0");
 	return {
@@ -76,7 +75,13 @@ const buildDates = (statusIndex: number, orderIndex: number) => {
 const buildAmounts = (statusIndex: number, orderIndex: number) => {
 	const base = (statusIndex + 1) * 2500 + orderIndex * 500;
 	const paidRatio =
-		statusIndex === 4 ? 1 : statusIndex === 5 ? 0 : statusIndex >= 2 ? 0.6 : 0;
+		statusIndex === 4
+			? 1
+			: statusIndex === 5
+				? 0
+				: statusIndex >= 2
+					? 0.6
+					: 0;
 	const paid = Math.round(base * paidRatio);
 	return {
 		tour_amount: String(base),
@@ -103,7 +108,9 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 					(statusIndex + orderIndex - 1) % MOCK_CLIENT_NAMES.length
 				];
 			const tourName =
-				MOCK_TOUR_NAMES[(statusIndex + orderIndex - 1) % MOCK_TOUR_NAMES.length];
+				MOCK_TOUR_NAMES[
+					(statusIndex + orderIndex - 1) % MOCK_TOUR_NAMES.length
+				];
 			const orderNumber = `RQA-${row.label}-${padOrderNum(orderIndex)}`;
 			const createdMonth = String(statusIndex + 6).padStart(2, "0");
 
@@ -144,7 +151,7 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 					...MOCK_TOUR_INFO_TEMPLATE,
 					name: tourName,
 					typ: row.tourType
-				}
+				} as any
 			};
 
 			listItems.push(listItem);

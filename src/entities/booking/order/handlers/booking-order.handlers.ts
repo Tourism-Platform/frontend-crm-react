@@ -14,22 +14,25 @@ import {
 } from "../mock/booking-order.store";
 
 export const bookingOrderHandlers = [
-	createMockHandler(BOOKING_ORDER_PATHS.listMyBookings, async ({ request }) => {
-		const url = new URL(request.url);
-		const booking_status = url.searchParams.get("booking_status");
-		const q = url.searchParams.get("q");
-		const skip = Number(url.searchParams.get("skip")) || 0;
-		const limit = Number(url.searchParams.get("limit")) || 10;
+	createMockHandler(
+		BOOKING_ORDER_PATHS.listMyBookings,
+		async ({ request }) => {
+			const url = new URL(request.url);
+			const booking_status = url.searchParams.get("booking_status");
+			const q = url.searchParams.get("q");
+			const skip = Number(url.searchParams.get("skip")) || 0;
+			const limit = Number(url.searchParams.get("limit")) || 10;
 
-		return HttpResponse.json(
-			listBookingOrders({
-				booking_status,
-				q,
-				skip,
-				limit
-			})
-		);
-	}),
+			return HttpResponse.json(
+				listBookingOrders({
+					booking_status,
+					q,
+					skip,
+					limit
+				})
+			);
+		}
+	),
 	createMockHandler(
 		{
 			url: "/booking/order/:bookingId",
@@ -53,7 +56,10 @@ export const bookingOrderHandlers = [
 		async ({ params }) => {
 			const bookingId = String(params.bookingId);
 			const transition = String(params.transition) as BookingTransition;
-			const updated = transitionBookingStatusInStore(bookingId, transition);
+			const updated = transitionBookingStatusInStore(
+				bookingId,
+				transition
+			);
 
 			if (!updated) {
 				return new HttpResponse(null, { status: 404 });

@@ -5,6 +5,11 @@ import { ENV } from "@/shared/config";
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
+const OPERATOR_ID_UUID =
+	/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+const isOperatorEntityId = (id: string) => OPERATOR_ID_UUID.test(id);
+
 export const operatorHandlers = [
 	http.post(
 		`${BASE_URL}${OPERATOR_PATHS.createOperator.url}`,
@@ -21,20 +26,33 @@ export const operatorHandlers = [
 		}
 	),
 	http.get(`${BASE_URL}/operator/:id`, async ({ params }) => {
+		const id = String(params.id);
+		if (!isOperatorEntityId(id)) {
+			return new HttpResponse(null, { status: 404 });
+		}
+
 		await delay(500);
 		return HttpResponse.json(
 			{
-				id: params.id,
+				id,
 				name: "Mock Operator"
 			},
 			{ status: 200 }
 		);
 	}),
-	http.patch(`${BASE_URL}/operator/:id`, async () => {
+	http.patch(`${BASE_URL}/operator/:id`, async ({ params }) => {
+		if (!isOperatorEntityId(String(params.id))) {
+			return new HttpResponse(null, { status: 404 });
+		}
+
 		await delay(500);
 		return new HttpResponse(null, { status: 204 });
 	}),
-	http.delete(`${BASE_URL}/operator/:id`, async () => {
+	http.delete(`${BASE_URL}/operator/:id`, async ({ params }) => {
+		if (!isOperatorEntityId(String(params.id))) {
+			return new HttpResponse(null, { status: 404 });
+		}
+
 		await delay(500);
 		return new HttpResponse(null, { status: 204 });
 	})

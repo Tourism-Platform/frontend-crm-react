@@ -4,15 +4,16 @@ import {
 	bookingOrderHandlers,
 	bookingPaxHandlers
 } from "@/entities/booking/order/handlers";
-import { pricingReviewHandlers } from "@/entities/tour/itinerary/handlers/pricing-review.handlers";
 import { commissionHandlers } from "@/entities/commission/handlers/commission.handlers";
 import { financeClientPaymentHandlers } from "@/entities/finance/client-payment/handlers/payment.handlers";
+import { operatorPaymentRoutesHandlers } from "@/entities/finance/finance-information/handlers";
 import { financeInvoiceHandlers } from "@/entities/finance/invoice/handlers/invoice.handlers";
 import { financeReconciliationHandler } from "@/entities/finance/reconciliation/handlers/reconciliation.handlers";
 import { financeSupplierPaymentHandlers } from "@/entities/finance/supplier-payment/handlers/supplier-payment.handlers";
 import { staffHandlers } from "@/entities/staff/handlers/staff.handlers";
 import { tourActivityLogHandlers } from "@/entities/tour/activity-log/handlers/activity-log.handlers";
 import { tourCatalogHandlers } from "@/entities/tour/catalog/handlers/catalog-tour.handlers";
+import { pricingReviewHandlers } from "@/entities/tour/itinerary/handlers/pricing-review.handlers";
 import { tourLandingHandlers } from "@/entities/tour/landing/handlers/landing.handlers";
 import { tourOrderHandlers } from "@/entities/tour/order/handlers/tour-order.handlers";
 import { tourPreviewTourHandlers } from "@/entities/tour/preview-tour";
@@ -31,6 +32,7 @@ import { accountHandlers } from "@/entities/user/account/handlers/account.handle
 export const handlers = [
 	...authHandlers,
 	...accountHandlers,
+	...operatorPaymentRoutesHandlers,
 	...operatorHandlers,
 	...operatorBusinessHandlers,
 	...operatorBusinessDocumentsHandlers,

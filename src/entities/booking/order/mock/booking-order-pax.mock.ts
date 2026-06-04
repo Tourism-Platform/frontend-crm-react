@@ -1,4 +1,4 @@
-import { BookingStatus, Gender, type BookingPaxModel } from "@/shared/api";
+import { type BookingPaxModel, BookingStatus, Gender } from "@/shared/api";
 
 import { bookingOrderDetailStore } from "./booking-order.store";
 

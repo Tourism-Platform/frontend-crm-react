@@ -1,12 +1,12 @@
 import {
 	AvailabilityStatus,
-	BookingStatus,
-	type BookingEventAvailabilityModel
+	type BookingEventAvailabilityModel,
+	BookingStatus
 } from "@/shared/api";
 
+import { getPendingBookingIds } from "./booking-order-pax.mock";
 import { MOCK_EVENT_IDS } from "./booking-order.mock.constants";
 import { bookingOrderDetailStore } from "./booking-order.store";
-import { getPendingBookingIds } from "./booking-order-pax.mock";
 
 const buildAvailabilityRows = (
 	bookingId: string

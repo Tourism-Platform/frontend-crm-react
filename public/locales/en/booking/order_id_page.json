@@ -4,9 +4,20 @@
 		"accept": "Accept",
 		"export": "Export",
 		"generate": "Generate invoice",
+		"send_invoice": "Send invoice",
 		"send": "Send voucher",
 		"edit": "Edit",
 		"book": "Book"
+	},
+	"send_invoice_modal": {
+		"title": "Send invoice",
+		"description": "Select a payment route for the invoice",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
+		"empty": "No payment routes configured",
+		"load_error": "Failed to load payment routes",
+		"confirm_success": "Invoice sent successfully",
+		"confirm_error": "Failed to send invoice"
 	},
 	"header": {
 		"order_status": "Order status",
