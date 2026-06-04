@@ -1,5 +1,10 @@
 import { authHandlers } from "@/entities/auth/api/auth.mock";
-import { bookingOrderHandlers } from "@/entities/booking/order/handlers/booking-order.handlers";
+import {
+	bookingAvailabilityHandlers,
+	bookingOrderHandlers,
+	bookingPaxHandlers
+} from "@/entities/booking/order/handlers";
+import { pricingReviewHandlers } from "@/entities/tour/itinerary/handlers/pricing-review.handlers";
 import { commissionHandlers } from "@/entities/commission/handlers/commission.handlers";
 import { financeClientPaymentHandlers } from "@/entities/finance/client-payment/handlers/payment.handlers";
 import { financeInvoiceHandlers } from "@/entities/finance/invoice/handlers/invoice.handlers";
@@ -45,5 +50,8 @@ export const handlers = [
 	...tourActivityLogHandlers,
 	...tourOrderHandlers,
 	...tourCatalogHandlers,
-	...bookingOrderHandlers
+	...bookingOrderHandlers,
+	...bookingPaxHandlers,
+	...bookingAvailabilityHandlers,
+	...pricingReviewHandlers
 ];

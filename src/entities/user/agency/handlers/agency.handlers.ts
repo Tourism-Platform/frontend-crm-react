@@ -1,7 +1,10 @@
 import { HttpResponse, delay, http } from "msw";
 
-import { AGENCY_PATHS } from "@/shared/api";
+import { AGENCY_PATHS, createMockHandler } from "@/shared/api";
 import { ENV } from "@/shared/config";
+
+import { MOCK_AGENCY_ID } from "@/entities/booking/order/mock/booking-order.mock.constants";
+import { AGENCY_BUSINESS_MOCK } from "../mock/agency-business.mock";
 
 const BASE_URL = ENV.VITE_API_URL || "";
 
@@ -19,9 +22,18 @@ export const agencyHandlers = [
 				{ status: 201 }
 			);
 		}
+	),
+	createMockHandler(
+		{
+			url: "/agency/:agencyId/info",
+			method: "GET"
+		},
+		async ({ params }) => {
+			if (String(params.agencyId) !== MOCK_AGENCY_ID) {
+				return new HttpResponse(null, { status: 404 });
+			}
+
+			return HttpResponse.json(AGENCY_BUSINESS_MOCK);
+		}
 	)
-	// http.get(`${BASE_URL}${AGENCY_PATHS.listAgencyCatalog.url}`, async () => {
-	// 	await delay(500);
-	// 	return HttpResponse.json([], { status: 200 });
-	// })
 ];

@@ -1,100 +1,67 @@
-// import { HttpResponse, http } from "msw";
+import { HttpResponse } from "msw";
 
-// import { ENV } from "@/shared/config";
+import {
+	BOOKING_ORDER_PATHS,
+	BookingTransition,
+	createMockHandler
+} from "@/shared/api";
 
-// import { mapBookingOrderToBackend } from "../converters";
-// import { BOOKING_ORDERS_MOCK } from "../mock";
-// import {
-// 	type IApplyReviewItemBackend,
-// 	type TBookingOrderBackend,
-// 	type ITourReviewItem
-// } from "../types";
+import { ensureBookingAvailabilityForBooking } from "../mock/booking-order-availability.mock";
+import {
+	getBookingOrderDetail,
+	listBookingOrders,
+	transitionBookingStatusInStore
+} from "../mock/booking-order.store";
 
 export const bookingOrderHandlers = [
-	// http.get(`${ENV.VITE_API_URL}/booking/orders`, ({ request }) => {
-	// 	const url = new URL(request.url);
-	// 	const status = url.searchParams.get("status");
-	// 	const search = url.searchParams.get("search");
-	// 	let filteredOrders = [...BOOKING_ORDERS_MOCK];
-	// 	if (status) {
-	// 		const statuses = status.split(",");
-	// 		filteredOrders = filteredOrders.filter((order) =>
-	// 			statuses.includes(order.status)
-	// 		);
-	// 	}
-	// 	if (search) {
-	// 		filteredOrders = filteredOrders.filter(
-	// 			(order) =>
-	// 				order.orderId
-	// 					.toLowerCase()
-	// 					.includes(search.toLowerCase()) ||
-	// 				order.client.toLowerCase().includes(search.toLowerCase()) ||
-	// 				order.tourName.toLowerCase().includes(search.toLowerCase())
-	// 		);
-	// 	}
-	// 	return HttpResponse.json({
-	// 		data: filteredOrders.map((order) => {
-	// 			const full = mapBookingOrderToBackend(order);
-	// 			const brief: TBookingOrderBackend = {
-	// 				order_id: full.order_id!,
-	// 				order_type: full.order_type!,
-	// 				date_created: full.date_created!,
-	// 				client: full.client!,
-	// 				client_type: full.client_type!,
-	// 				pax: full.pax!,
-	// 				dates: full.dates!,
-	// 				tour_name: full.tour_name!,
-	// 				manager: full.manager!,
-	// 				invoice_status: full.invoice_status!,
-	// 				status: full.status!
-	// 			};
-	// 			return brief;
-	// 		}),
-	// 		total: filteredOrders.length
-	// 	});
-	// }),
-	// http.get(`${ENV.VITE_API_URL}/booking/orders/:id`, ({ params }) => {
-	// 	const { id } = params;
-	// 	const order = BOOKING_ORDERS_MOCK.find((o) => o.orderId === id);
-	// 	if (!order) {
-	// 		return new HttpResponse(null, { status: 404 });
-	// 	}
-	// 	return HttpResponse.json(mapBookingOrderToBackend(order));
-	// }),
-	// http.post(
-	// 	`${ENV.VITE_API_URL}/booking/orders/apply-review`,
-	// 	async ({ request }) => {
-	// 		const { id, parent_id: parentId } =
-	// 			(await request.json()) as IApplyReviewItemBackend;
-	// 		BOOKING_ORDERS_MOCK.forEach((order) => {
-	// 			const findAndApply = (items: ITourReviewItem[]): boolean => {
-	// 				for (const item of items) {
-	// 					// Если есть parentId и мы нашли этого родителя
-	// 					if (parentId && item.id === parentId) {
-	// 						if (item.subRows) {
-	// 							item.subRows.forEach((child) => {
-	// 								child.isApplied = child.id === id;
-	// 							});
-	// 							return true;
-	// 						}
-	// 					}
-	// 					// Если parentId нет (или это корневой элемент) и мы нашли нужный id
-	// 					if (!parentId && item.id === id) {
-	// 						item.isApplied = true;
-	// 						return true;
-	// 					}
-	// 					// Рекурсивный поиск
-	// 					if (item.subRows && findAndApply(item.subRows)) {
-	// 						return true;
-	// 					}
-	// 				}
-	// 				return false;
-	// 			};
-	// 			if (order.tourReview) {
-	// 				findAndApply(order.tourReview);
-	// 			}
-	// 		});
-	// 		return HttpResponse.json({ success: true });
-	// 	}
-	// )
+	createMockHandler(BOOKING_ORDER_PATHS.listMyBookings, async ({ request }) => {
+		const url = new URL(request.url);
+		const booking_status = url.searchParams.get("booking_status");
+		const q = url.searchParams.get("q");
+		const skip = Number(url.searchParams.get("skip")) || 0;
+		const limit = Number(url.searchParams.get("limit")) || 10;
+
+		return HttpResponse.json(
+			listBookingOrders({
+				booking_status,
+				q,
+				skip,
+				limit
+			})
+		);
+	}),
+	createMockHandler(
+		{
+			url: "/booking/order/:bookingId",
+			method: "GET"
+		},
+		async ({ params }) => {
+			const detail = getBookingOrderDetail(String(params.bookingId));
+
+			if (!detail) {
+				return new HttpResponse(null, { status: 404 });
+			}
+
+			return HttpResponse.json(detail);
+		}
+	),
+	createMockHandler(
+		{
+			url: "/booking/order/:bookingId/status/:transition",
+			method: "PATCH"
+		},
+		async ({ params }) => {
+			const bookingId = String(params.bookingId);
+			const transition = String(params.transition) as BookingTransition;
+			const updated = transitionBookingStatusInStore(bookingId, transition);
+
+			if (!updated) {
+				return new HttpResponse(null, { status: 404 });
+			}
+
+			ensureBookingAvailabilityForBooking(bookingId);
+
+			return HttpResponse.json(updated);
+		}
+	)
 ];
