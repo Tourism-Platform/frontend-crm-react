@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
 
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
-import { formatToDollars } from "@/shared/utils";
+import { formatCompactAmount } from "@/shared/utils";
 
 import {
 	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
@@ -106,11 +106,14 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[80px]" />
 			},
 			accessorKey: "amount",
-			cell: ({ row }) => (
-				<div className="font-medium">
-					{formatToDollars(row.getValue("amount"))}
-				</div>
-			),
+			cell: ({ row }) => {
+				const { amount, currency } = row.original;
+				return (
+					<div className="font-medium">
+						{`${currency} ${formatCompactAmount(amount)}`}
+					</div>
+				);
+			},
 			size: 120
 		},
 		{

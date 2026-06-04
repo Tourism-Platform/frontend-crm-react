@@ -23,7 +23,8 @@ import {
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type ISupplierPayment,
-	useUpdateSupplierPaymentMutation
+	useUpdateSupplierPaymentMutation,
+	useUploadSupplierPaymentReceiptMutation
 } from "@/entities/finance";
 
 import {
@@ -40,7 +41,12 @@ interface IConfirmPaymentProps {
 export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 	const { t } = useTranslation("supplier_payments_page");
 	const [open, setOpen] = useState<boolean>(false);
-	const [updatePayment, { isLoading }] = useUpdateSupplierPaymentMutation();
+	const [updatePayment, { isLoading: isUpdating }] =
+		useUpdateSupplierPaymentMutation();
+	const [uploadReceipt, { isLoading: isUploading }] =
+		useUploadSupplierPaymentReceiptMutation();
+
+	const isLoading = isUpdating || isUploading;
 
 	const isConfirmed =
 		payment.status === ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED;
@@ -58,15 +64,36 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 
 	async function onSubmit(data: TConfirmPaymentSchema) {
 		try {
-			await updatePayment({
+			const fileCandidate = data.files?.[0]?.file ?? data.files?.[0];
+
+			if (!(fileCandidate instanceof Blob)) {
+				toast.error(t("form.toasts.error"));
+				return;
+			}
+
+			await uploadReceipt({
 				id: payment.id,
-				data
+				file: fileCandidate as File
 			}).unwrap();
+
+			const amountChanged = data.amount !== payment.amount;
+			const noteChanged = (data.note ?? "") !== (payment.note ?? "");
+
+			if (amountChanged || noteChanged) {
+				await updatePayment({
+					id: payment.id,
+					data: {
+						amount: data.amount,
+						note: data.note
+					}
+				}).unwrap();
+			}
+
 			toast.success(t("form.toasts.success"));
 			setOpen(false);
 		} catch (error) {
 			toast.error(t("form.toasts.error"));
-			console.error("Failed to update supplier payment:", error);
+			console.error("Failed to confirm supplier payment:", error);
 		}
 	}
 

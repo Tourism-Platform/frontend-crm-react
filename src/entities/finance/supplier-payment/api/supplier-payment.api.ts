@@ -1,19 +1,19 @@
-import { ENUM_API_TAGS } from "@/shared/api";
+import { ENUM_API_TAGS, OPERATOR_SUPPLIER_PAYMENT_PATHS } from "@/shared/api";
+import type { SupplierPaymentResponse } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
 	mapSupplierPaymentFiltersToBackend,
-	mapSupplierPaymentPaginatedToFrontend,
-	mapSupplierPaymentToBackend,
-	mapSupplierPaymentToFrontend
+	mapSupplierPaymentListToPaginated,
+	mapSupplierPaymentToFrontend,
+	mapUpdateSupplierPaymentToBackend
 } from "../converters";
 import type {
 	ISupplierPayment,
-	ISupplierPaymentBackend,
 	ISupplierPaymentFilters,
 	ISupplierPaymentPaginatedResponse,
-	ISupplierPaymentPaginatedResponseBackend
+	TSupplierPaymentBackend
 } from "../types";
 
 export const supplierPaymentApi = authApi.injectEndpoints({
@@ -23,12 +23,14 @@ export const supplierPaymentApi = authApi.injectEndpoints({
 			ISupplierPaymentFilters
 		>({
 			query: (filters) => ({
-				url: "/finance/supplier-payments",
+				...OPERATOR_SUPPLIER_PAYMENT_PATHS.listSupplierPayments,
 				params: mapSupplierPaymentFiltersToBackend(filters)
 			}),
 			transformResponse: (
-				response: ISupplierPaymentPaginatedResponseBackend
-			) => mapSupplierPaymentPaginatedToFrontend(response),
+				response: SupplierPaymentResponse[],
+				_meta,
+				filters
+			) => mapSupplierPaymentListToPaginated(response, filters),
 			providesTags: [ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS]
 		}),
 		updateSupplierPayment: builder.mutation<
@@ -36,16 +38,35 @@ export const supplierPaymentApi = authApi.injectEndpoints({
 			{ id: string; data: Partial<ISupplierPayment> }
 		>({
 			query: ({ id, data }) => ({
-				url: `/finance/supplier-payments/${id}`,
-				method: "PATCH",
-				body: mapSupplierPaymentToBackend(data)
+				...OPERATOR_SUPPLIER_PAYMENT_PATHS.updateSupplierPayment(id),
+				body: mapUpdateSupplierPaymentToBackend(data)
 			}),
-			transformResponse: (response: ISupplierPaymentBackend) =>
+			transformResponse: (response: TSupplierPaymentBackend) =>
+				mapSupplierPaymentToFrontend(response),
+			invalidatesTags: [ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS]
+		}),
+		uploadSupplierPaymentReceipt: builder.mutation<
+			ISupplierPayment,
+			{ id: string; file: File }
+		>({
+			query: ({ id, file }) => {
+				const formData = new FormData();
+				formData.append("file", file);
+
+				return {
+					...OPERATOR_SUPPLIER_PAYMENT_PATHS.uploadReceipt(id),
+					body: formData
+				};
+			},
+			transformResponse: (response: TSupplierPaymentBackend) =>
 				mapSupplierPaymentToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS]
 		})
 	})
 });
 
-export const { useGetSupplierPaymentsQuery, useUpdateSupplierPaymentMutation } =
-	supplierPaymentApi;
+export const {
+	useGetSupplierPaymentsQuery,
+	useUpdateSupplierPaymentMutation,
+	useUploadSupplierPaymentReceiptMutation
+} = supplierPaymentApi;

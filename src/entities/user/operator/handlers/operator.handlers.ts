@@ -1,4 +1,4 @@
-import { HttpResponse, delay, http } from "msw";
+import { HttpResponse, delay, http, passthrough } from "msw";
 
 import { OPERATOR_PATHS } from "@/shared/api";
 import { ENV } from "@/shared/config";
@@ -28,7 +28,7 @@ export const operatorHandlers = [
 	http.get(`${BASE_URL}/operator/:id`, async ({ params }) => {
 		const id = String(params.id);
 		if (!isOperatorEntityId(id)) {
-			return new HttpResponse(null, { status: 404 });
+			return passthrough();
 		}
 
 		await delay(500);
@@ -42,7 +42,7 @@ export const operatorHandlers = [
 	}),
 	http.patch(`${BASE_URL}/operator/:id`, async ({ params }) => {
 		if (!isOperatorEntityId(String(params.id))) {
-			return new HttpResponse(null, { status: 404 });
+			return passthrough();
 		}
 
 		await delay(500);
@@ -50,7 +50,7 @@ export const operatorHandlers = [
 	}),
 	http.delete(`${BASE_URL}/operator/:id`, async ({ params }) => {
 		if (!isOperatorEntityId(String(params.id))) {
-			return new HttpResponse(null, { status: 404 });
+			return passthrough();
 		}
 
 		await delay(500);

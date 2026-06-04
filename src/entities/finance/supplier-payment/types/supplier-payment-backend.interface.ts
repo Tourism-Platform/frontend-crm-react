@@ -1,25 +1,8 @@
-import { type TFileMetadata } from "@/shared/hooks";
-import { type IPaginationResponse } from "@/shared/types";
+import type {
+	SupplierPaymentResponse,
+	SupplierPaymentUpdate
+} from "@/shared/api";
 
-import type { ENUM_SUPPLIER_PAYMENT_STATUS_TYPE } from "./supplier-payment-status.types";
-import type { TSupplierPaymentStatusCounts } from "./supplier-payment.interface";
+export type TSupplierPaymentBackend = SupplierPaymentResponse;
 
-export interface ISupplierPaymentBackend {
-	id: string;
-	order_id: string;
-	component: string;
-	type: string;
-	supplier: string;
-	date_created: string;
-	amount: number;
-	currency: string;
-	manager: string;
-	status: ENUM_SUPPLIER_PAYMENT_STATUS_TYPE;
-	note?: string;
-	files?: TFileMetadata[];
-}
-
-export interface ISupplierPaymentPaginatedResponseBackend
-	extends IPaginationResponse<ISupplierPaymentBackend> {
-	status_counts: TSupplierPaymentStatusCounts;
-}
+export type TUpdateSupplierPaymentBackend = SupplierPaymentUpdate;

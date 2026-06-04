@@ -14,5 +14,7 @@ export const CONFIRM_PAYMENT_SCHEMA = z.object({
 		})
 		.min(1, "form.errors.amount.min"),
 	[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: z.string().optional(),
-	[ENUM_FORM_CONFIRM_PAYMENT.FILES]: z.any().array().optional()
+	[ENUM_FORM_CONFIRM_PAYMENT.FILES]: z
+		.array(z.any())
+		.min(1, "form.errors.files.required")
 });
