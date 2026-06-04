@@ -135,7 +135,7 @@
 							"placeholder": "Number of people",
 							"errors": {
 								"required": "Capacity is required",
-								"max": "Value is too long"
+								"max": "Value is too high"
 							}
 						}
 					},

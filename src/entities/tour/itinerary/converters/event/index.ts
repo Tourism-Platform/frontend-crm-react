@@ -1,6 +1,7 @@
 export * from "./accommodation.converters";
 export * from "./accommodation-rooms.converters";
 export * from "./accommodation-pricing.converters";
+export * from "./vehicle-body-type.converters";
 export * from "./transportation-cars.converters";
 export * from "./transportation.converters";
 export * from "./info.converters";

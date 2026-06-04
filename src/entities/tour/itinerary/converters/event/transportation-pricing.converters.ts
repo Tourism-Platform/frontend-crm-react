@@ -29,10 +29,7 @@ import {
 } from "../../types";
 import { ENUM_FORM_CARS, type TCarsSchema } from "../../types";
 
-import {
-	mapCarNameToVehicleType,
-	mapPaxToBackend
-} from "./transportation-cars.converters";
+import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
 type TCarsList = TCarsSchema[typeof ENUM_FORM_CARS.CARS_LIST];
 
@@ -402,8 +399,10 @@ export const mapTransportationPricingToBackend = (
 					expenses: {
 						typ: "per_car_category",
 						cars: carsList.map((car, index) => ({
-							typ: mapCarNameToVehicleType(car.car_name),
-							pax: mapPaxToBackend(car.pax),
+							typ:
+								vehicleBodyTypeConverter.to(car.car_name) ??
+								null,
+							pax: car.pax,
 							description: car.description || null,
 							categories: (
 								cars[index]?.[
@@ -468,8 +467,10 @@ export const mapTransportationPricingToBackend = (
 								ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY
 							];
 						return {
-							typ: mapCarNameToVehicleType(car.car_name),
-							pax: mapPaxToBackend(car.pax),
+							typ:
+								vehicleBodyTypeConverter.to(car.car_name) ??
+								null,
+							pax: car.pax,
 							description: car.description || null,
 							expenses: mapAmountToFixed(
 								priceRow[

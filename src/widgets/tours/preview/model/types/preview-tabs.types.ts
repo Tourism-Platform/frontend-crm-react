@@ -41,12 +41,12 @@ export interface IPreviewOptionTab {
 
 export type TPreviewTourSingleOptionTab =
 	| {
-		type: typeof ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION;
-		label: TPreviewTourPageKeys;
-		slot: FC<IPreviewTourInformationSlotProps>;
-	}
+			type: typeof ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION;
+			label: TPreviewTourPageKeys;
+			slot: FC<IPreviewTourInformationSlotProps>;
+	  }
 	| {
-		type: TPreviewOptionTabType;
-		label: TPreviewTourPageKeys;
-		slot: FC<IPreviewOptionTabSlotProps>;
-	};
+			type: TPreviewOptionTabType;
+			label: TPreviewTourPageKeys;
+			slot: FC<IPreviewOptionTabSlotProps>;
+	  };

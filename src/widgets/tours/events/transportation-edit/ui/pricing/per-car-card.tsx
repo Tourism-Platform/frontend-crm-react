@@ -15,14 +15,15 @@ import {
 	ENUM_FORM_CARS,
 	ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD,
 	ENUM_TRANSPORTATION_PRICING_FIELD,
-	type TTransportationEditSchema
+	type ENUM_VEHICLE_BODY_TYPE_TYPE,
+	type TTransportationEditSchema,
+	VEHICLE_BODY_TYPE_LABELS
 } from "@/entities/tour";
 
 import {
 	ENUM_FORM_SECTION,
 	PER_CAR_MARKUP_FIELD,
-	PER_CAR_ROW_FIELDS_LIST,
-	getCarDisplayName
+	PER_CAR_ROW_FIELDS_LIST
 } from "../../model";
 
 interface IPerCarCardProps {
@@ -37,16 +38,19 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 	addMarginSeparately
 }) => {
 	const { t } = useTranslation("transportation_edit_page");
+	const carName = form.watch(
+		`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${ENUM_FORM_CARS.CAR_NAME}`
+	) as ENUM_VEHICLE_BODY_TYPE_TYPE | undefined;
 
 	return (
 		<Card>
 			<CardHeader>
 				<h4 className="font-semibold">
-					{getCarDisplayName(
-						form.watch(
-							`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${ENUM_FORM_CARS.CAR_NAME}`
-						) ?? ""
-					)}
+					{carName
+						? t(VEHICLE_BODY_TYPE_LABELS[carName], {
+								ns: "options"
+							})
+						: null}
 				</h4>
 			</CardHeader>
 			<CardContent className="grid gap-4">

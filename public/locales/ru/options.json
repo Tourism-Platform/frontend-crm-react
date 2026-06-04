@@ -104,6 +104,15 @@
 			"phone_calls": "Телефонные звонки",
 			"medical_expenses": "Медицинские расходы"
 		},
+		"vehicleBodyTypes": {
+			"sedan": "Седан",
+			"suv": "Внедорожник",
+			"minivan": "Минивэн",
+			"minibus": "Микроавтобус",
+			"minibus_plus": "Микроавтобус+",
+			"bus": "Автобус",
+			"coach": "Туристический автобус"
+		},
 		"transferTypes": {
 			"city_tour": "Обзорная экскурсия",
 			"city_transfer": "Городской трансфер",

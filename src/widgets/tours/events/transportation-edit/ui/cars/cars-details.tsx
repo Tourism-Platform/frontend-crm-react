@@ -7,6 +7,7 @@ import { Button, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_FORM_CARS,
+	ENUM_VEHICLE_BODY_TYPE,
 	type TTransportationEditSchema
 } from "@/entities/tour";
 
@@ -28,8 +29,8 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 
 	const handleAddCar = () => {
 		append({
-			[ENUM_FORM_CARS.CAR_NAME]: "",
-			[ENUM_FORM_CARS.PAX]: "",
+			[ENUM_FORM_CARS.CAR_NAME]: ENUM_VEHICLE_BODY_TYPE.SEDAN,
+			[ENUM_FORM_CARS.PAX]: null,
 			[ENUM_FORM_CARS.DESCRIPTION]: ""
 		});
 	};

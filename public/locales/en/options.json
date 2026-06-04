@@ -104,6 +104,15 @@
 			"phone_calls": "Phone calls",
 			"medical_expenses": "Medical expenses"
 		},
+		"vehicleBodyTypes": {
+			"sedan": "Sedan",
+			"suv": "SUV",
+			"minivan": "Minivan",
+			"minibus": "Minibus",
+			"minibus_plus": "Minibus Plus",
+			"bus": "Bus",
+			"coach": "Coach"
+		},
 		"transferTypes": {
 			"city_tour": "City tour",
 			"city_transfer": "City transfer",
