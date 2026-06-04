@@ -3,6 +3,7 @@ import { z } from "zod";
 import { type TAccountSettingsPageKeys, i18nKey } from "@/shared/config";
 
 import { ENUM_FORM_ACCOUNT } from "../types";
+import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 
 const msg = i18nKey<TAccountSettingsPageKeys>();
 
@@ -16,33 +17,36 @@ export const ACCOUNT_SCHEMA = z.object({
 
 	[ENUM_FORM_ACCOUNT.FIRST_NAME]: z
 		.string()
-		.min(1, {
-			message: msg("form.personal.fields.first_name.errors.required")
-		})
-		.min(2, { message: msg("form.personal.fields.first_name.errors.min") })
+		// .min(1, {
+		// 	message: msg("form.personal.fields.first_name.errors.required")
+		// })
+		// .min(2, { message: msg("form.personal.fields.first_name.errors.min") })
 		.max(50, {
 			message: msg("form.personal.fields.first_name.errors.max")
-		}),
+		})
+		.optional(),
 
 	[ENUM_FORM_ACCOUNT.LAST_NAME]: z
 		.string()
-		.min(1, {
-			message: msg("form.personal.fields.last_name.errors.required")
-		})
-		.min(2, { message: msg("form.personal.fields.last_name.errors.min") })
-		.max(50, { message: msg("form.personal.fields.last_name.errors.max") }),
+		// .min(1, {
+		// 	message: msg("form.personal.fields.last_name.errors.required")
+		// })
+		// .min(2, { message: msg("form.personal.fields.last_name.errors.min") })
+		.max(50, { message: msg("form.personal.fields.last_name.errors.max") })
+		.optional(),
 
 	[ENUM_FORM_ACCOUNT.TITLE]: z
 		.string()
-		.min(1, { message: msg("form.personal.fields.title.errors.required") })
-		.min(2, { message: msg("form.personal.fields.title.errors.min") })
-		.max(100, { message: msg("form.personal.fields.title.errors.max") }),
+		// .min(1, { message: msg("form.personal.fields.title.errors.required") })
+		// .min(2, { message: msg("form.personal.fields.title.errors.min") })
+		.max(100, { message: msg("form.personal.fields.title.errors.max") })
+		.optional(),
 
 	[ENUM_FORM_ACCOUNT.PHONE_NUMBER]: z
 		.string()
-		.min(1, {
-			message: msg("form.personal.fields.phone_number.errors.required")
-		})
+		// .min(1, {
+		// 	message: msg("form.personal.fields.phone_number.errors.required")
+		// })
 		.min(10, {
 			message: msg("form.personal.fields.phone_number.errors.min")
 		})
@@ -51,21 +55,24 @@ export const ACCOUNT_SCHEMA = z.object({
 		})
 		.regex(/^\+?[1-9]\d{7,14}$/, {
 			message: msg("form.personal.fields.phone_number.errors.pattern")
-		}),
+		})
+		.or(z.literal(""))
+		.optional(),
 
 	[ENUM_FORM_ACCOUNT.LOCATION]: z
 		.string()
-		.min(1, {
-			message: msg("form.general.fields.location.errors.required")
-		})
-		.min(2, { message: msg("form.general.fields.location.errors.min") })
-		.max(100, { message: msg("form.general.fields.location.errors.max") }),
+		// .min(1, {
+		// 	message: msg("form.general.fields.location.errors.required")
+		// })
+		// .min(2, { message: msg("form.general.fields.location.errors.min") })
+		.max(100, { message: msg("form.general.fields.location.errors.max") })
+		.optional(),
 
 	[ENUM_FORM_ACCOUNT.CURRENCY]: z
-		.string()
-		.min(1, {
-			message: msg("form.general.fields.currency.errors.required")
-		})
-		.min(3, { message: msg("form.general.fields.currency.errors.min") })
-		.max(3, { message: msg("form.general.fields.currency.errors.max") })
+		.enum(ENUM_CURRENCY_OPTIONS)
+		// .min(1, {
+		// 	message: msg("form.general.fields.currency.errors.required")
+		// })
+		// .min(3, { message: msg("form.general.fields.currency.errors.min") })
+		.optional()
 });
