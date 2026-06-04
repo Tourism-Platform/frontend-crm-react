@@ -1,3 +1,5 @@
+import { LanguageCode } from "@/shared/api";
+
 import type { TTourEventUpdateBackend } from "../../../types/event-backend.types";
 import { ENUM_FLIGHT_TRANSPORT_TYPE } from "../../../types/flight/flight-enum.types";
 import type { TFlightEditSchema } from "../../../types/flight/flight.types";
@@ -17,15 +19,16 @@ export { mapFlyEventToForm as mapFlightEventToForm } from "./fly.converters";
 export { mapFlyFormToUpdate as mapFlightFormToUpdate } from "./fly.converters";
 
 export const mapTransportFormToUpdate = (
-	frontend: Partial<TFlightEditSchema>
+	frontend: Partial<TFlightEditSchema>,
+	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
 	const transportType = frontend.general?.transport_type;
 
 	switch (transportType) {
 		case ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN:
-			return mapTrainFormToUpdate(frontend);
+			return mapTrainFormToUpdate(frontend, lang);
 		case ENUM_FLIGHT_TRANSPORT_TYPE.BUS:
-			return mapBusFormToUpdate(frontend);
+			return mapBusFormToUpdate(frontend, lang);
 		case ENUM_FLIGHT_TRANSPORT_TYPE.FLY:
 		default:
 			return mapFlyFormToUpdate(frontend);

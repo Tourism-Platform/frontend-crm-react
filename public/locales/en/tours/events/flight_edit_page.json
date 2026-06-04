@@ -293,6 +293,7 @@
 						"departure_station": {
 							"label": "Departure station",
 							"placeholder": "Enter departure station",
+							"empty": "No locations found",
 							"errors": {
 								"required": "Departure station is required",
 								"length": "Station code must be 3 characters",
@@ -302,6 +303,7 @@
 						"arrival_station": {
 							"label": "Arrival station",
 							"placeholder": "Enter arrival station",
+							"empty": "No locations found",
 							"errors": {
 								"required": "Arrival station is required",
 								"length": "Station code must be 3 characters",
@@ -383,6 +385,7 @@
 						"departure_point": {
 							"label": "Departure point",
 							"placeholder": "Enter departure point",
+							"empty": "No locations found",
 							"errors": {
 								"required": "Departure point is required",
 								"length": "Point code must be 3 characters",
@@ -392,6 +395,7 @@
 						"arrival_point": {
 							"label": "Arrival point",
 							"placeholder": "Enter arrival point",
+							"empty": "No locations found",
 							"errors": {
 								"required": "Arrival point is required",
 								"length": "Point code must be 3 characters",

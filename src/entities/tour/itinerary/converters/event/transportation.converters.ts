@@ -1,4 +1,9 @@
 import type { TransferEventSchemaOutput } from "@/shared/api";
+import { LanguageCode } from "@/shared/api";
+import {
+	mapBackendLocationToGeoForm,
+	mapGeoFormToBackendLocation
+} from "@/shared/converters";
 
 import {
 	ENUM_TRANSPORTATION_PRICING_INVOICING,
@@ -44,8 +49,12 @@ export const mapTransferEventToForm = (
 		general: {
 			description: event.description || "",
 			transfer_type: transferTypeMapper.from(event?.details?.typ),
-			meet_point: "",
-			end_point: "",
+			meet_point: mapBackendLocationToGeoForm(
+				event?.details?.departure?.location
+			),
+			end_point: mapBackendLocationToGeoForm(
+				event?.details?.arrival?.location
+			),
 			departure_date: event?.details?.departure?.date || "",
 			arrival_date: event?.details?.departure?.date || "",
 			departure_time: event?.details?.departure?.time?.time || null,
@@ -63,7 +72,8 @@ export const mapTransferEventToForm = (
 };
 
 export const mapTransferFormToUpdate = (
-	frontend: Partial<TTransportationEditSchema>
+	frontend: Partial<TTransportationEditSchema>,
+	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
 	const g = frontend?.general;
 	const carsList = frontend?.cars?.cars ?? [];
@@ -89,7 +99,9 @@ export const mapTransferFormToUpdate = (
 			...(g?.transfer_type && {
 				typ: transferTypeMapper.to(g.transfer_type)
 			}),
-			...((g?.departure_date || g?.departure_time || g?.meet_point) && {
+			...((g?.departure_date ||
+				g?.departure_time ||
+				g?.meet_point !== undefined) && {
 				departure: {
 					...(g?.departure_date && { date: g.departure_date }),
 					...(g?.departure_time &&
@@ -99,10 +111,16 @@ export const mapTransferFormToUpdate = (
 								timezone: String(g.departure_timezone)
 							}
 						}),
-					...(g?.meet_point && { location: { name: g.meet_point } })
+					...(g?.meet_point !== undefined && {
+						location: g.meet_point
+							? mapGeoFormToBackendLocation(g.meet_point, lang)
+							: null
+					})
 				}
 			}),
-			...((g?.arrival_date || g?.arrival_time || g?.end_point) && {
+			...((g?.arrival_date ||
+				g?.arrival_time ||
+				g?.end_point !== undefined) && {
 				arrival: {
 					...(g?.arrival_date && { date: g.arrival_date }),
 					...(g?.arrival_time &&
@@ -112,7 +130,11 @@ export const mapTransferFormToUpdate = (
 								timezone: String(g.arrival_timezone)
 							}
 						}),
-					...(g?.end_point && { location: { name: g.end_point } })
+					...(g?.end_point !== undefined && {
+						location: g.end_point
+							? mapGeoFormToBackendLocation(g.end_point, lang)
+							: null
+					})
 				}
 			}),
 			...pricingDetails.details,

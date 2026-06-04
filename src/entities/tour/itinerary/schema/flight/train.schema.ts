@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { type TTourEventFlightEditPageKeys, i18nKey } from "@/shared/config";
+import { GEO_FORM_VALUE_SCHEMA } from "@/shared/schema/geo-form.schema";
 
 import { ENUM_FLIGHT_TRANSPORT_TYPE, ENUM_FORM_TRAIN } from "../../types";
 
@@ -28,25 +29,11 @@ export const TRAIN_SEGMENT_SCHEMA = z
 			.optional()
 			.nullable(),
 
-		[ENUM_FORM_TRAIN.DEPARTURE_STATION]: z
-			.string()
-			.max(200, {
-				message: msg(
-					"general.flights.form.train.fields.departure_station.errors.length"
-				)
-			})
-			.optional()
-			.nullable(),
+		[ENUM_FORM_TRAIN.DEPARTURE_STATION]:
+			GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 
-		[ENUM_FORM_TRAIN.ARRIVAL_STATION]: z
-			.string()
-			.max(200, {
-				message: msg(
-					"general.flights.form.train.fields.arrival_station.errors.length"
-				)
-			})
-			.optional()
-			.nullable(),
+		[ENUM_FORM_TRAIN.ARRIVAL_STATION]:
+			GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 
 		[ENUM_FORM_TRAIN.DEPARTURE_DATE]: z.string().optional().nullable(),
 

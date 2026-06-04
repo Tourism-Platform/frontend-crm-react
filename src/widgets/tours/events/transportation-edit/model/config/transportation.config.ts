@@ -1,6 +1,9 @@
+import { MapPin } from "lucide-react";
+
 import { UTC_OPTIONS } from "@/shared/config";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
+import type { TGeoFieldProps } from "@/entities/geo";
 import {
 	ENUM_FORM_TRANSPORTATION,
 	TRANSFER_TYPE_LABELS
@@ -8,7 +11,15 @@ import {
 
 import { type TForm } from "../types";
 
-export const TRANSPORTATION_DATA_LIST = (): TForm[] => [
+type TTransportationGeoProps = {
+	meetPoint: TGeoFieldProps;
+	endPoint: TGeoFieldProps;
+};
+
+export const TRANSPORTATION_DATA_LIST = ({
+	meetPoint,
+	endPoint
+}: TTransportationGeoProps): TForm[] => [
 	{
 		label: "form.general.details.form.fields.transfer_type.label",
 		placeholder:
@@ -21,16 +32,22 @@ export const TRANSPORTATION_DATA_LIST = (): TForm[] => [
 	{
 		label: "form.general.details.form.fields.meet_point.label",
 		placeholder: "form.general.details.form.fields.meet_point.placeholder",
+		emptyText: "form.general.details.form.fields.meet_point.empty",
 		key: ENUM_FORM_TRANSPORTATION.MEET_POINT,
-		fieldType: "input",
-		className: "col-span-2"
+		fieldType: "geo",
+		className: "col-span-2",
+		icon: MapPin,
+		...meetPoint
 	},
 	{
 		label: "form.general.details.form.fields.end_point.label",
 		placeholder: "form.general.details.form.fields.end_point.placeholder",
+		emptyText: "form.general.details.form.fields.end_point.empty",
 		key: ENUM_FORM_TRANSPORTATION.END_POINT,
-		fieldType: "input",
-		className: "col-span-2"
+		fieldType: "geo",
+		className: "col-span-2",
+		icon: MapPin,
+		...endPoint
 	},
 	{
 		label: "form.general.details.form.fields.departure_date.label",

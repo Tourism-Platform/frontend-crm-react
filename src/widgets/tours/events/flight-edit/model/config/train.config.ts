@@ -1,10 +1,21 @@
+import { MapPin } from "lucide-react";
+
 import { UTC_OPTIONS } from "@/shared/config";
 
+import type { TGeoFieldProps } from "@/entities/geo";
 import { ENUM_FORM_TRAIN } from "@/entities/tour";
 
 import { type TForm } from "../types";
 
-export const TRAIN_DATA_LIST: TForm[] = [
+type TSegmentGeoProps = {
+	departure: TGeoFieldProps;
+	arrival: TGeoFieldProps;
+};
+
+export const TRAIN_DATA_LIST = ({
+	departure,
+	arrival
+}: TSegmentGeoProps): TForm[] => [
 	{
 		label: "general.flights.form.train.fields.carrier.label",
 		placeholder: "general.flights.form.train.fields.carrier.placeholder",
@@ -24,17 +35,23 @@ export const TRAIN_DATA_LIST: TForm[] = [
 		label: "general.flights.form.train.fields.departure_station.label",
 		placeholder:
 			"general.flights.form.train.fields.departure_station.placeholder",
+		emptyText: "general.flights.form.train.fields.departure_station.empty",
 		key: ENUM_FORM_TRAIN.DEPARTURE_STATION,
-		fieldType: "input",
-		className: "col-span-2"
+		fieldType: "geo",
+		className: "col-span-2",
+		icon: MapPin,
+		...departure
 	},
 	{
 		label: "general.flights.form.train.fields.arrival_station.label",
 		placeholder:
 			"general.flights.form.train.fields.arrival_station.placeholder",
+		emptyText: "general.flights.form.train.fields.arrival_station.empty",
 		key: ENUM_FORM_TRAIN.ARRIVAL_STATION,
-		fieldType: "input",
-		className: "col-span-2"
+		fieldType: "geo",
+		className: "col-span-2",
+		icon: MapPin,
+		...arrival
 	},
 	{
 		label: "general.flights.form.train.fields.departure_date.label",

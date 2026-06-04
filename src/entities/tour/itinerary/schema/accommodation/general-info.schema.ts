@@ -1,23 +1,15 @@
 import { z } from "zod";
 
 import { type TTourAccommodationEditPageKeys, i18nKey } from "@/shared/config";
+import { GEO_FORM_VALUE_SCHEMA } from "@/shared/schema/geo-form.schema";
 
 import { ENUM_FORM_ACCOMMODATION } from "../../types";
 
 const msg = i18nKey<TTourAccommodationEditPageKeys>();
 
 export const GENERAL_INFO_SCHEMA = z.object({
-	[ENUM_FORM_ACCOMMODATION.PROPERTY]: z
-		.string()
-		// .min(2, {
-		// 	message: msg("general.properties.form.fields.property.errors.min")
-		// })
-		.max(200, {
-			message: msg(
-				"form.general.properties.form.fields.property.errors.max"
-			)
-		})
-		.optional(),
+	[ENUM_FORM_ACCOMMODATION.PROPERTY]:
+		GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 
 	[ENUM_FORM_ACCOMMODATION.AMENITIES]: z
 		.string()

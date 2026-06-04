@@ -1,17 +1,14 @@
 import { MapPin } from "lucide-react";
 
 import { UTC_OPTIONS } from "@/shared/config";
-import type { TFormGeo } from "@/shared/types";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
+import type { TGeoFieldProps } from "@/entities/geo";
 import { ACTIVITY_TYPE_LABELS, ENUM_FORM_ACTIVITY } from "@/entities/tour";
 
 import type { TForm } from "../types";
 
-export type TGeoFieldProps = Pick<
-	TFormGeo,
-	"options" | "onQueryChange" | "isLoading"
->;
+export type { TGeoFieldProps };
 
 export const EVENT_DATA_LIST = (geo: TGeoFieldProps): TForm[] => [
 	{

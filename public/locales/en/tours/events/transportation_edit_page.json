@@ -39,6 +39,7 @@
 						"meet_point": {
 							"label": "Meet point",
 							"placeholder": "Enter meet point",
+							"empty": "No locations found",
 							"errors": {
 								"required": "Meet point is required",
 								"max": "Meet point is too long"
@@ -47,6 +48,7 @@
 						"end_point": {
 							"label": "End point",
 							"placeholder": "Enter end point",
+							"empty": "No locations found",
 							"errors": {
 								"required": "End point is required",
 								"max": "End point is too long"

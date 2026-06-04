@@ -1,4 +1,5 @@
 import type { TrainEventSchemaOutput } from "@/shared/api";
+import { LanguageCode } from "@/shared/api";
 
 import type {
 	TFlightEditSchema,
@@ -19,8 +20,8 @@ const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 	[ENUM_FORM_TRAIN.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
 	[ENUM_FORM_TRAIN.CARRIER]: "",
 	[ENUM_FORM_TRAIN.TRAIN_NUMBER]: "",
-	[ENUM_FORM_TRAIN.DEPARTURE_STATION]: "",
-	[ENUM_FORM_TRAIN.ARRIVAL_STATION]: "",
+	[ENUM_FORM_TRAIN.DEPARTURE_STATION]: null,
+	[ENUM_FORM_TRAIN.ARRIVAL_STATION]: null,
 	[ENUM_FORM_TRAIN.DEPARTURE_DATE]: null,
 	[ENUM_FORM_TRAIN.ARRIVAL_DATE]: null,
 	[ENUM_FORM_TRAIN.DEPARTURE_TIME]: null,
@@ -62,7 +63,8 @@ export const mapTrainEventToForm = (
 };
 
 export const mapTrainFormToUpdate = (
-	frontend: Partial<TFlightEditSchema>
+	frontend: Partial<TFlightEditSchema>,
+	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
 	const g = frontend.general;
 	const trainRoute = g?.route?.filter(
@@ -82,7 +84,9 @@ export const mapTrainFormToUpdate = (
 		...(g?.description !== undefined && { description: g.description }),
 		details: {
 			...(trainRoute?.length && {
-				hop: trainRoute.map(mapTrainSegmentToHop)
+				hop: trainRoute.map((segment) =>
+					mapTrainSegmentToHop(segment, lang)
+				)
 			}),
 			...pricingDetails.details
 		}

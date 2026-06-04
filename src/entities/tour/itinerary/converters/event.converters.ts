@@ -98,13 +98,17 @@ export const mapEventUpdateToBackend = (
 	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 
 	if (type === ENUM_EVENT.FLIGHT)
-		return mapTransportFormToUpdate(frontend as TFlightEditSchema);
+		return mapTransportFormToUpdate(frontend as TFlightEditSchema, lang);
 	else if (type === ENUM_EVENT.TRANSPORTATION)
-		return mapTransferFormToUpdate(frontend as TTransportationEditSchema);
+		return mapTransferFormToUpdate(
+			frontend as TTransportationEditSchema,
+			lang
+		);
 	else if (type === ENUM_EVENT.INFO) return mapInfoFormToUpdate(frontend);
 	else if (type === ENUM_EVENT.ACCOMMODATION)
 		return mapAccommodationFormToUpdate(
-			frontend as TAccommodationEditSchema
+			frontend as TAccommodationEditSchema,
+			lang
 		);
 	else if (type === ENUM_EVENT.ACTIVITY)
 		return mapActivityFormToUpdate(frontend as TActivityEditSchema, lang);

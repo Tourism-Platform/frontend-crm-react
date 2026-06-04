@@ -1,4 +1,5 @@
 import type { BusEventSchemaOutput } from "@/shared/api";
+import { LanguageCode } from "@/shared/api";
 
 import type {
 	TBusRouteSegment,
@@ -19,8 +20,8 @@ const createEmptyBusSegment = (): TBusRouteSegment => ({
 	[ENUM_FORM_BUS.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
 	[ENUM_FORM_BUS.BUS_COMPANY]: "",
 	[ENUM_FORM_BUS.BUS_NUMBER]: "",
-	[ENUM_FORM_BUS.DEPARTURE_POINT]: "",
-	[ENUM_FORM_BUS.ARRIVAL_POINT]: "",
+	[ENUM_FORM_BUS.DEPARTURE_POINT]: null,
+	[ENUM_FORM_BUS.ARRIVAL_POINT]: null,
 	[ENUM_FORM_BUS.DEPARTURE_DATE]: null,
 	[ENUM_FORM_BUS.ARRIVAL_DATE]: null,
 	[ENUM_FORM_BUS.DEPARTURE_TIME]: null,
@@ -60,7 +61,8 @@ export const mapBusEventToForm = (
 };
 
 export const mapBusFormToUpdate = (
-	frontend: Partial<TFlightEditSchema>
+	frontend: Partial<TFlightEditSchema>,
+	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
 	const g = frontend.general;
 	const busRoute = g?.route?.filter(
@@ -80,7 +82,9 @@ export const mapBusFormToUpdate = (
 		...(g?.description !== undefined && { description: g.description }),
 		details: {
 			...(busRoute?.length && {
-				hop: busRoute.map(mapBusSegmentToHop)
+				hop: busRoute.map((segment) =>
+					mapBusSegmentToHop(segment, lang)
+				)
 			}),
 			...pricingDetails.details
 		}

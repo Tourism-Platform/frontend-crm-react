@@ -13,7 +13,13 @@ import type {
 	IGeoSelectOption,
 	TGeoFormValue
 } from "@/shared/types/geo-form.types";
-import { Input, Popover, PopoverAnchor, PopoverContent } from "@/shared/ui";
+import {
+	Input,
+	Popover,
+	PopoverAnchor,
+	PopoverContent,
+	ScrollArea
+} from "@/shared/ui";
 import { encodeGeoOptionValue } from "@/shared/utils/geo-option.utils";
 
 export interface CustomGeoSelectProps {
@@ -145,20 +151,24 @@ export const CustomGeoSelect: FC<CustomGeoSelectProps> = ({
 					</p>
 				) : null}
 				{showOptions ? (
-					<ul className="max-h-60 overflow-y-auto">
-						{options.map((option) => (
-							<li key={option.value}>
-								<button
-									type="button"
-									className="w-full rounded-sm px-2 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground"
-									onMouseDown={(e) => e.preventDefault()}
-									onClick={() => handleSelect(option.feature)}
-								>
-									{option.label}
-								</button>
-							</li>
-						))}
-					</ul>
+					<ScrollArea className="h-60 w-full">
+						<ul className="flex flex-col gap-0.5 p-0.5 pr-3">
+							{options.map((option) => (
+								<li key={option.value}>
+									<button
+										type="button"
+										className="w-full rounded-sm px-2 py-1.5 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+										onMouseDown={(e) => e.preventDefault()}
+										onClick={() =>
+											handleSelect(option.feature)
+										}
+									>
+										{option.label}
+									</button>
+								</li>
+							))}
+						</ul>
+					</ScrollArea>
 				) : null}
 			</PopoverContent>
 		</Popover>

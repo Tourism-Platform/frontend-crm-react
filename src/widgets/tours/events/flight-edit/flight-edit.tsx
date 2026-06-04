@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { PlaneIcon } from "@/shared/assets";
+import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
 import {
 	Card,
 	CardContent,
@@ -30,7 +31,7 @@ import { EventTitleInput } from "../ui";
 import { type ENUM_FORM_SECTION_TYPE, FLIGHT_EDIT_TABS_LIST } from "./model";
 
 export const FlightEdit: FC = () => {
-	const { t } = useTranslation("flight_edit_page");
+	const { t, i18n } = useTranslation("flight_edit_page");
 	const {
 		tourId = "",
 		optionId = "",
@@ -76,6 +77,9 @@ export const FlightEdit: FC = () => {
 					optionId,
 					eventId,
 					type: ENUM_EVENT.FLIGHT,
+					language:
+						i18nLanguageMapper.to(i18n.language) ??
+						ENUM_LANGUAGES.EN,
 					data: form.getValues()
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));

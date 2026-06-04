@@ -38,7 +38,8 @@
 					"fields": {
 						"property": {
 							"label": "Property",
-							"placeholder": "Enter...",
+							"placeholder": "Enter location",
+							"empty": "No locations found",
 							"errors": {
 								"required": "Property is required",
 								"min": "Property name is too short",

@@ -1,8 +1,9 @@
-import type {
-	HousingDetailsSchemaOutput,
-	HousingEventSchemaOutput
-} from "@/shared/api";
-import { AmenitiesTypes } from "@/shared/api";
+import type { HousingEventSchemaOutput } from "@/shared/api";
+import { AmenitiesTypes, LanguageCode } from "@/shared/api";
+import {
+	mapBackendLocationToGeoForm,
+	mapGeoFormToBackendLocation
+} from "@/shared/converters";
 
 import {
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
@@ -41,15 +42,6 @@ const mapAmenitiesToBackend = (
 	return [amenities as AmenitiesTypes];
 };
 
-const mapPropertyFromBackend = (
-	location?: HousingDetailsSchemaOutput["location"] | null
-): string => {
-	if (!location || typeof location !== "object") return "";
-	if ("address" in location && location.address) return location.address;
-	if ("city" in location && location.city) return location.city;
-	return "";
-};
-
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce
 ): TAccommodationEditSchema => {
@@ -67,7 +59,7 @@ export const mapAccommodationEventToForm = (
 		day: event.day,
 		position: event.position,
 		general: {
-			property: mapPropertyFromBackend(details?.location),
+			property: mapBackendLocationToGeoForm(details?.location),
 			amenities: mapAmenitiesFromBackend(details?.amenities),
 			description: event.description || "",
 			length_of_stay: String(event.details?.duration ?? ""),
@@ -82,7 +74,8 @@ export const mapAccommodationEventToForm = (
 };
 
 export const mapAccommodationFormToUpdate = (
-	frontend: Partial<TAccommodationEditSchema>
+	frontend: Partial<TAccommodationEditSchema>,
+	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
 	const g = frontend?.general;
 	const roomsList = frontend?.rooms?.rooms ?? [];
@@ -111,8 +104,10 @@ export const mapAccommodationFormToUpdate = (
 		details: {
 			...(Number.isFinite(duration) && duration > 0 && { duration }),
 			...(amenities && { amenities }),
-			...(g?.property?.trim() && {
-				location: { address: g.property.trim() }
+			...(g !== undefined && {
+				location: g.property
+					? mapGeoFormToBackendLocation(g.property, lang)
+					: null
 			}),
 			...(g?.check_in_time && {
 				check_in: {
