@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
-import type { IDownloadFile } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import { Badge, Button } from "@/shared/ui";
 
@@ -17,19 +16,19 @@ import {
 import { ExportInvoiceButton } from "@/features/finance";
 
 interface IInvoiceHeaderProps {
+	invoiceId: string;
 	paymentId: string;
 	status: ENUM_INVOICE_STATUS_TYPE;
 	issueDate: string;
 	dueDate: string;
-	file?: IDownloadFile;
 }
 
 export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
+	invoiceId,
 	paymentId,
 	status,
 	issueDate,
-	dueDate,
-	file
+	dueDate
 }) => {
 	const { t } = useTranslation(["invoice_id_page", "options"]);
 
@@ -61,7 +60,10 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 							})}
 						</Badge>
 					</div>
-					<ExportInvoiceButton file={file} />
+					<ExportInvoiceButton
+						invoiceId={invoiceId}
+						fileName={paymentId}
+					/>
 				</div>
 				<div className="flex gap-4 text-sm text-muted-foreground font-medium">
 					<span>

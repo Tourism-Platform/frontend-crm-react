@@ -3,7 +3,10 @@ import { type IPaginationResponse } from "@/shared/types";
 import type { ENUM_INVOICE_STATUS_TYPE } from "./invoice-status.types";
 
 export interface IInvoice {
+	id: string;
+	/** Display: invoice_number */
 	paymentId: string;
+	/** Display: order_number */
 	orderId: string;
 	issueDate: string;
 	amount: number;

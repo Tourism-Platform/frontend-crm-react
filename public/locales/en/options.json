@@ -146,9 +146,12 @@
 	"finance": {
 		"invoice": {
 			"statuses": {
+				"draft": "Draft",
+				"sent": "Sent",
+				"partial": "Partially paid",
 				"paid": "Paid",
-				"unpaid": "Unpaid",
-				"partially_paid": "Partially paid"
+				"overdue": "Overdue",
+				"cancelled": "Cancelled"
 			}
 		},
 		"client_payment": {

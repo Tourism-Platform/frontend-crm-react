@@ -6,7 +6,8 @@
 	},
 	"buttons": {
 		"back": "Back",
-		"export": "Export"
+		"export": "Export",
+		"export_error": "Failed to download invoice PDF"
 	},
 	"header": {
 		"issue_date": "Issue date",

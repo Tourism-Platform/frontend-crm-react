@@ -146,9 +146,12 @@
 	"finance": {
 		"invoice": {
 			"statuses": {
-				"paid": "Оплачено",
-				"unpaid": "Не оплачено",
-				"partially_paid": "Частично оплачено"
+				"draft": "Черновик",
+				"sent": "Отправлен",
+				"partial": "Частично оплачен",
+				"paid": "Оплачен",
+				"overdue": "Просрочен",
+				"cancelled": "Отменён"
 			}
 		},
 		"client_payment": {

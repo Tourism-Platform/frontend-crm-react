@@ -33,11 +33,11 @@ export const InvoiceId: FC = () => {
 	return (
 		<div className="flex flex-col gap-6">
 			<InvoiceHeader
+				invoiceId={invoice.id}
 				paymentId={invoice.paymentId}
 				status={invoice.status}
 				issueDate={invoice.issueDate}
 				dueDate={invoice.dueDate}
-				file={invoice.file}
 			/>
 
 			<InvoicePaymentTable invoice={invoice} />

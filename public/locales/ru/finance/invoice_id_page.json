@@ -6,7 +6,8 @@
 	},
 	"buttons": {
 		"back": "Назад",
-		"export": "Экспорт"
+		"export": "Экспорт",
+		"export_error": "Не удалось скачать PDF счёта"
 	},
 	"header": {
 		"issue_date": "Дата выставления",

@@ -33,7 +33,7 @@ export const COLUMNS = (
 			cell: ({ row }) => (
 				<Link
 					to={buildRoute(ENUM_PATH.FINANCE.INVOICE_ID, {
-						invoiceId: row.getValue("paymentId")
+						invoiceId: row.original.id
 					})}
 					className="font-medium text-primary hover:underline"
 				>

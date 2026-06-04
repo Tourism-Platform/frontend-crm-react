@@ -1,77 +1,116 @@
+import {
+	type InvoiceDetailResponse,
+	type InvoiceListItem,
+	type InvoiceListResponse,
+	InvoiceStatus
+} from "@/shared/api";
 import { formatDate } from "@/shared/utils";
 
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
+import { INVOICE_NO_DATA } from "../constants";
 import type {
 	IInvoice,
-	IInvoiceBackend,
 	IInvoiceDetail,
-	IInvoiceDetailBackend,
 	IInvoiceFilters,
 	IInvoicePaginatedResponse,
-	IInvoicePaginatedResponseBackend
+	TInvoiceStatusCounts
 } from "../types";
 
-export const mapInvoiceToFrontend = (data: IInvoiceBackend): IInvoice => ({
-	paymentId: data.payment_id,
-	orderId: data.order_id,
-	issueDate: formatDate(data.issue_date),
-	amount: data.amount,
+type TInvoiceListResponseInput = InvoiceListResponse & {
+	status_counts?: Partial<Record<InvoiceStatus, number>>;
+};
+
+const parseAmount = (value: string | number): number => {
+	if (typeof value === "number") {
+		return Number.isFinite(value) ? value : 0;
+	}
+
+	const cleaned = value.replace(/^\+/, "").trim();
+	const parsed = Number.parseFloat(cleaned);
+
+	return Number.isFinite(parsed) ? parsed : 0;
+};
+
+const emptyBilling = () => ({
+	company: INVOICE_NO_DATA,
+	address: INVOICE_NO_DATA,
+	contact: INVOICE_NO_DATA,
+	email: INVOICE_NO_DATA,
+	phone: INVOICE_NO_DATA
+});
+
+const emptyBookingInfo = () => ({
+	tour: INVOICE_NO_DATA,
+	pax: 0,
+	dates: INVOICE_NO_DATA,
+	duration: INVOICE_NO_DATA
+});
+
+const emptyStatusCounts = (): TInvoiceStatusCounts =>
+	Object.values(InvoiceStatus).reduce((acc, status) => {
+		acc[status] = 0;
+		return acc;
+	}, {} as TInvoiceStatusCounts);
+
+const mapStatusCounts = (
+	counts?: Partial<Record<InvoiceStatus, number>>
+): TInvoiceStatusCounts => {
+	if (!counts) {
+		return emptyStatusCounts();
+	}
+
+	return Object.values(InvoiceStatus).reduce((acc, status) => {
+		acc[status] = counts[status] ?? 0;
+		return acc;
+	}, {} as TInvoiceStatusCounts);
+};
+
+export const mapInvoiceListItemToFrontend = (
+	data: InvoiceListItem
+): IInvoice => ({
+	id: data.id,
+	paymentId: data.invoice_number,
+	orderId: data.order_number ?? INVOICE_NO_DATA,
+	issueDate: data.issue_date ? formatDate(data.issue_date) : INVOICE_NO_DATA,
+	amount: data.total_amount,
 	paidAmount: data.paid_amount,
 	status: data.status
 });
 
 export const mapInvoiceDetailToFrontend = (
-	data: IInvoiceDetailBackend
+	data: InvoiceDetailResponse
 ): IInvoiceDetail => ({
-	...mapInvoiceToFrontend(data),
-	dueDate: formatDate(data.due_date),
-	remainingAmount: data.remaining_amount,
-	currency: data.currency,
-	billingInfo: {
-		company: data.billing_info.company,
-		address: data.billing_info.address,
-		contact: data.billing_info.contact,
-		email: data.billing_info.email,
-		phone: data.billing_info.phone
-	},
-	bookingInfo: {
-		tour: data.booking_info.tour,
-		pax: data.booking_info.pax,
-		dates: data.booking_info.dates,
-		duration: data.booking_info.duration
-	},
-	payments: data.payments.map((p) => ({
-		no: p.no,
-		amount: p.amount,
-		date: formatDate(p.date),
-		file: p.file
-			? {
-					url: p.file.url,
-					fileName: p.file.file_name
-				}
-			: undefined
-	})),
-	file: data.export_file
-		? {
-				url: data.export_file.url,
-				fileName: data.export_file.file_name
-			}
-		: undefined
+	id: data.id,
+	paymentId: data.invoice_number,
+	orderId: data.order_number ?? INVOICE_NO_DATA,
+	issueDate: data.issued_at ? formatDate(data.issued_at) : INVOICE_NO_DATA,
+	amount: parseAmount(data.total),
+	paidAmount: parseAmount(data.paid_amount),
+	status: data.status,
+	dueDate: INVOICE_NO_DATA,
+	remainingAmount: parseAmount(data.balance),
+	currency: data.currency as ENUM_CURRENCY_OPTIONS_TYPE,
+	billingInfo: emptyBilling(),
+	bookingInfo: emptyBookingInfo(),
+	payments: [],
+	file: undefined
 });
 
-export const mapInvoiceListToFrontend = (data: IInvoiceBackend[]): IInvoice[] =>
-	data.map(mapInvoiceToFrontend);
+export const mapInvoiceListToFrontend = (data: InvoiceListItem[]): IInvoice[] =>
+	data.map(mapInvoiceListItemToFrontend);
 
 export const mapInvoicePaginatedToFrontend = (
-	response: IInvoicePaginatedResponseBackend
+	response: TInvoiceListResponseInput
 ): IInvoicePaginatedResponse => ({
 	data: mapInvoiceListToFrontend(response.data),
-	total: response.total,
-	statusCounts: response.status_counts
+	total: response.total_count,
+	statusCounts: mapStatusCounts(response.status_counts)
 });
 
 export const mapInvoiceFiltersToBackend = (filters: IInvoiceFilters) => ({
-	page: filters.page,
+	skip: (filters.page - 1) * filters.limit,
 	limit: filters.limit,
-	search: filters.search || undefined,
-	status: filters.status.length > 0 ? filters.status.join(",") : undefined
+	q: filters.search.trim() || undefined,
+	statuses: filters.status.length > 0 ? filters.status : undefined
 });
