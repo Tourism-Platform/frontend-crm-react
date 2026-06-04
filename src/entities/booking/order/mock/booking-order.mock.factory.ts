@@ -7,8 +7,10 @@ import {
 } from "@/shared/api";
 
 import {
+	MOCK_AGENCY_ID,
 	MOCK_BOOKING_DEFAULTS,
 	MOCK_CLIENT_NAMES,
+	MOCK_ORDER_AGENCY_TEMPLATE,
 	MOCK_TOUR_INFO_TEMPLATE,
 	MOCK_TOUR_NAMES,
 	buildBookingUuid
@@ -135,6 +137,12 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 				pax: listItem.pax,
 				status: row.status,
 				...amounts,
+				agency: {
+					...MOCK_ORDER_AGENCY_TEMPLATE,
+					id: MOCK_AGENCY_ID,
+					name: clientName,
+					contact_person: clientName
+				},
 				comment:
 					row.status === BookingStatus.Cancelled
 						? null

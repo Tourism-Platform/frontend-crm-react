@@ -1,4 +1,8 @@
 import type {
+	ExcludedDateCreate,
+	ExcludedDateModel,
+	ExcludedDatesBulkCreate,
+	ExcludedDatesBulkDelete,
 	FixedDateCreate,
 	FixedDateModel,
 	FixedDatesBulkCreate,
@@ -20,7 +24,7 @@ export const TOUR_SCHEDULE_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: void;
+				query: { from?: string | null; to?: string | null };
 				response: FullScheduleSchema;
 			}
 		}) as const,
@@ -70,6 +74,42 @@ export const TOUR_SCHEDULE_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
+	addExcludedDate: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/exclude`,
+			method: "POST",
+			_types: {} as {
+				body: ExcludedDateCreate;
+				query: void;
+				response: ExcludedDateModel;
+			}
+		}) as const,
+	bulkAddExcludedDates: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/exclude/bulk`,
+			method: "POST",
+			_types: {} as {
+				body: ExcludedDatesBulkCreate;
+				query: void;
+				response: ExcludedDateModel[];
+			}
+		}) as const,
+	bulkRemoveExcludedDates: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/exclude/bulk`,
+			method: "DELETE",
+			_types: {} as {
+				body: ExcludedDatesBulkDelete;
+				query: void;
+				response: void;
+			}
+		}) as const,
+	removeExcludedDate: (tourId: string, dateId: string) =>
+		({
+			url: `/tour/${tourId}/schedule/exclude/${dateId}`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
 	addRecurrenceRule: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/schedule/rule`,
@@ -95,15 +135,5 @@ export const TOUR_SCHEDULE_PATHS = {
 			url: `/tour/${tourId}/schedule/rule/${ruleId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
-		}) as const,
-	getScheduleOccurrences: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/schedule/occurrences`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: { from: string; to: string };
-				response: string[];
-			}
 		}) as const
 } as const;

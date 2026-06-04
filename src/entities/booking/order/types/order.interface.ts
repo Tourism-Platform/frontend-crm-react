@@ -43,6 +43,15 @@ export interface IOrderTourInfo {
 	duration: string;
 }
 
+export interface IOrderAgencyInfo {
+	id: string;
+	name: string;
+	businessName?: string | null;
+	contactPerson?: string | null;
+	contactEmail?: string | null;
+	contactPhone?: string | null;
+}
+
 export interface IOrder {
 	orderId: string;
 	orderNumber?: string;
@@ -60,6 +69,7 @@ export interface IOrder {
 
 export interface IOrderDetail extends IOrder {
 	agencyId: string;
+	agency: IOrderAgencyInfo;
 	tourOptionId: string;
 	tour: IOrderTourInfo;
 	duration: string;

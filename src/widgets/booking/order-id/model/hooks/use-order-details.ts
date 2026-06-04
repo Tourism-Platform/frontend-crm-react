@@ -14,7 +14,6 @@ import {
 	useListPassengerInfoQuery
 } from "@/entities/booking";
 import { useGetTourSummaryQuery } from "@/entities/tour";
-import { useGetAgencyInfoByIdQuery } from "@/entities/user";
 
 import { getContactItems, getOrderItems } from "../helpers";
 
@@ -28,10 +27,6 @@ export const useOrderDetails = (orderId: string) => {
 	const order = orderQuery.data;
 
 	const isInProcessing = order?.status === ENUM_ORDER_STATUS.IN_PROCESSING;
-
-	const agencyQuery = useGetAgencyInfoByIdQuery(order?.agencyId ?? "", {
-		skip: !order?.agencyId
-	});
 
 	const paxQuery = useListPassengerInfoQuery(orderId, {
 		skip: !orderId
@@ -69,8 +64,8 @@ export const useOrderDetails = (orderId: string) => {
 	);
 
 	const contactItems = useMemo(
-		() => getContactItems(agencyQuery.data, t),
-		[agencyQuery.data, t]
+		() => getContactItems(order?.agency, t),
+		[order?.agency, t]
 	);
 
 	const paxDetails = useMemo(
@@ -100,7 +95,6 @@ export const useOrderDetails = (orderId: string) => {
 
 	const isLoading =
 		orderQuery.isLoading ||
-		agencyQuery.isLoading ||
 		paxQuery.isLoading ||
 		pricingQuery.isLoading ||
 		(isInProcessing && availabilityQuery.isLoading);
@@ -113,7 +107,6 @@ export const useOrderDetails = (orderId: string) => {
 		tourReview,
 		isLoading,
 		isOrderLoading: orderQuery.isLoading,
-		isAgencyLoading: agencyQuery.isLoading,
 		isPaxLoading: paxQuery.isLoading,
 		isPricingLoading: pricingQuery.isLoading
 	};

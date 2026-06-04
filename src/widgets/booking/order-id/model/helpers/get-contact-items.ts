@@ -1,17 +1,14 @@
 import type { TFunction } from "i18next";
 
-import {
-	AGENCY_BUSINESS_TYPE_LABELS,
-	ENUM_ROLE,
-	type TAgencyBusinessSchema
-} from "@/entities/user";
+import { type IOrderAgencyInfo } from "@/entities/booking";
+import { AGENCY_BUSINESS_TYPE_LABELS, ENUM_ROLE } from "@/entities/user";
 
 import { type IInfoItem } from "../types";
 
 const empty = "-";
 
 export const getContactItems = (
-	agency: TAgencyBusinessSchema | null | undefined,
+	agency: IOrderAgencyInfo | null | undefined,
 	t: TFunction<"order_id_page" | "options">
 ): IInfoItem[] => {
 	if (!agency) {
@@ -36,8 +33,9 @@ export const getContactItems = (
 	}
 
 	const clientName =
-		agency.business.business_name?.trim() ||
-		agency.contact.contact_person?.trim() ||
+		agency.businessName?.trim() ||
+		agency.contactPerson?.trim() ||
+		agency.name?.trim() ||
 		empty;
 
 	return [
@@ -53,11 +51,11 @@ export const getContactItems = (
 		},
 		{
 			label: t("contact_info.fields.email", { ns: "order_id_page" }),
-			value: agency.contact.email || empty
+			value: agency.contactEmail || empty
 		},
 		{
 			label: t("contact_info.fields.phone", { ns: "order_id_page" }),
-			value: agency.contact.phone_number || empty
+			value: agency.contactPhone || empty
 		}
 	];
 };

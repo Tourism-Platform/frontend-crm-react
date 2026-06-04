@@ -11,6 +11,14 @@ import { ENUM_EVENT } from "@/entities/tour";
 
 const MOCK_ORDER_DETAIL_DEFAULTS = {
 	agencyId: "00000000-0000-0000-0000-000000000001",
+	agency: {
+		id: "00000000-0000-0000-0000-000000000001",
+		name: "Global Travel Co",
+		businessName: "Global Travel Co",
+		contactPerson: "Jane Smith",
+		contactEmail: "jane@globaltravel.com",
+		contactPhone: "+79012345678"
+	},
 	tourOptionId: "00000000-0000-0000-0000-000000000002",
 	tourAmount: "0",
 	paidAmount: "0",
@@ -24,7 +32,7 @@ const MOCK_ORDER_DETAIL_DEFAULTS = {
 	}
 } satisfies Pick<
 	IOrderDetail,
-	"agencyId" | "tourOptionId" | "tour" | "tourAmount" | "paidAmount"
+	"agencyId" | "agency" | "tourOptionId" | "tour" | "tourAmount" | "paidAmount"
 >;
 
 const BOOKING_ORDERS_MOCK_RAW = [

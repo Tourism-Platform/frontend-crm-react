@@ -3,7 +3,8 @@ import type {
 	BookingPaxFilesModel,
 	BookingPaxModel,
 	PaxCreate,
-	PaxUpdate
+	PaxUpdate,
+	PaxWithFiles
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -17,7 +18,7 @@ export const BOOKING_PASSENGER_PATHS = {
 			_types: {} as {
 				body: void;
 				query: { skip?: number; limit?: number };
-				response: BookingPaxModel[];
+				response: PaxWithFiles[];
 			}
 		}) as const,
 	addPassengerInfo: (bookingId: string) =>

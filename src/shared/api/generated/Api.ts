@@ -1086,6 +1086,7 @@ export interface BookingOrderDetail {
 	/** Voucher Path */
 	voucher_path?: string | null;
 	tour: OrderTourInfo;
+	agency: OrderAgencyInfo;
 }
 
 /** BookingOrderListItem */
@@ -1610,6 +1611,52 @@ export interface EventReorderSchema {
 	 * @min 0
 	 */
 	position: number;
+}
+
+/** ExcludedDateCreate */
+export interface ExcludedDateCreate {
+	/**
+	 * Value
+	 * @format date
+	 */
+	value: string;
+}
+
+/** ExcludedDateModel */
+export interface ExcludedDateModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Schedule Id
+	 * @format uuid
+	 */
+	schedule_id: string;
+	/**
+	 * Value
+	 * @format date
+	 */
+	value: string;
+}
+
+/** ExcludedDatesBulkCreate */
+export interface ExcludedDatesBulkCreate {
+	/**
+	 * Dates
+	 * @minItems 1
+	 */
+	dates: string[];
+}
+
+/** ExcludedDatesBulkDelete */
+export interface ExcludedDatesBulkDelete {
+	/**
+	 * Date Ids
+	 * @minItems 1
+	 */
+	date_ids: string[];
 }
 
 /** FixedDateCreate */
@@ -2179,8 +2226,25 @@ export interface FullScheduleSchema {
 	schedule: TourScheduleModel;
 	/** Fixed Dates */
 	fixed_dates: FixedDateModel[];
+	/** Excluded Dates */
+	excluded_dates: ExcludedDateModel[];
 	/** Recurrence Rules */
 	recurrence_rules: RecurrenceDateModel[];
+	/**
+	 * Occurrences
+	 * Materialised bookable dates (fixed ∪ recurrence) − excluded, within the requested window.
+	 */
+	occurrences?: string[];
+	/**
+	 * Window From
+	 * @format date
+	 */
+	window_from: string;
+	/**
+	 * Window Until
+	 * @format date
+	 */
+	window_until: string;
 }
 
 /** FxRateCreateSchema */
@@ -3532,8 +3596,52 @@ export interface OperatorPreviewPubSchema {
 	logo_url: string | null;
 }
 
+/** OrderAgencyInfo */
+export interface OrderAgencyInfo {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/** Business Name */
+	business_name?: string | null;
+	/** Legal Name */
+	legal_name?: string | null;
+	/** Director Name */
+	director_name?: string | null;
+	/** Contact Person */
+	contact_person?: string | null;
+	/** Contact Position */
+	contact_position?: string | null;
+	/** Contact Email */
+	contact_email?: string | null;
+	/** Contact Phone */
+	contact_phone?: string | null;
+	/** Tax Id */
+	tax_id?: string | null;
+	/** Address Line */
+	address_line?: string | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
+	/** Website Url */
+	website_url?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Logo Url */
+	logo_url?: string | null;
+}
+
 /** OrderTourInfo */
 export interface OrderTourInfo {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
 	/** Name */
 	name: string;
 	typ: TourType;
@@ -3663,6 +3771,15 @@ export interface PaxCreate {
 	comment?: string | null;
 }
 
+/** PaxFileRef */
+export interface PaxFileRef {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+}
+
 /** PaxUpdate */
 export interface PaxUpdate {
 	/** Full Name */
@@ -3678,6 +3795,51 @@ export interface PaxUpdate {
 	expired_date?: string | null;
 	/** Comment */
 	comment?: string | null;
+}
+
+/** PaxWithFiles */
+export interface PaxWithFiles {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	booking_id: string;
+	/** Full Name */
+	full_name: string;
+	gender: Gender;
+	/** Nationality */
+	nationality: string;
+	/**
+	 * Date Of Birth
+	 * @format date
+	 */
+	date_of_birth: string;
+	/** Passport Number */
+	passport_number: string;
+	/**
+	 * Expired Date
+	 * @format date
+	 */
+	expired_date: string;
+	/** Comment */
+	comment: string | null;
+	/**
+	 * Created At
+	 * @format date-time
+	 */
+	created_at: string;
+	/**
+	 * Updated At
+	 * @format date-time
+	 */
+	updated_at: string;
+	/** Files */
+	files: PaxFileRef[];
 }
 
 /** PaymentRouteCreate */
@@ -6303,6 +6465,10 @@ export interface RemoveCommissionTourTourIdSeasonalityRemoveCommissionIdDeletePa
 }
 
 export interface GetTourScheduleTourTourIdScheduleGetParams {
+	/** From */
+	from?: string | null;
+	/** To */
+	to?: string | null;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -6355,6 +6521,43 @@ export interface RemoveFixedDateTourTourIdScheduleDateDateIdDeleteParams {
 	tourId: string;
 }
 
+export interface AddExcludedDateTourTourIdScheduleExcludePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface BulkAddExcludedDatesTourTourIdScheduleExcludeBulkPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface BulkRemoveExcludedDatesTourTourIdScheduleExcludeBulkDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface RemoveExcludedDateTourTourIdScheduleExcludeDateIdDeleteParams {
+	/**
+	 * Date Id
+	 * @format uuid
+	 */
+	dateId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface AddRecurrenceRuleTourTourIdScheduleRulePostParams {
 	/**
 	 * Tour Id
@@ -6377,24 +6580,6 @@ export interface RemoveRecurrenceRuleTourTourIdScheduleRuleRuleIdDeleteParams {
 	 * @format uuid
 	 */
 	ruleId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetScheduleOccurrencesTourTourIdScheduleOccurrencesGetParams {
-	/**
-	 * From
-	 * @format date
-	 */
-	from: string;
-	/**
-	 * To
-	 * @format date
-	 */
-	to: string;
 	/**
 	 * Tour Id
 	 * @format uuid

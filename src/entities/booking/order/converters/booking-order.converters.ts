@@ -6,6 +6,7 @@ import {
 	ENUM_CLIENT_TYPE_OPTIONS,
 	type IBookingOrderFilters,
 	type IOrder,
+	type IOrderAgencyInfo,
 	type IOrderDetail,
 	type IOrderTourInfo,
 	type TBookingOrderBackend,
@@ -21,6 +22,17 @@ import { orderStatusMapper } from "./order-status.convert";
 
 const formatTourDuration = (days: number, nights: number): string =>
 	`${days} days / ${nights} nights`;
+
+const mapOrderAgencyInfo = (
+	agency: BookingOrderDetail["agency"]
+): IOrderAgencyInfo => ({
+	id: agency.id,
+	name: agency.name,
+	businessName: agency.business_name,
+	contactPerson: agency.contact_person,
+	contactEmail: agency.contact_email,
+	contactPhone: agency.contact_phone
+});
 
 const mapOrderTourInfo = (tour: BookingOrderDetail["tour"]): IOrderTourInfo => {
 	const orderType = bookingTourTypeMapper.from(tour.typ)!;
@@ -78,6 +90,7 @@ export const mapBookingOrderDetailToFrontend = (
 		tourName: tour.name,
 		status: orderStatusMapper.from(data.status)!,
 		agencyId: data.agency_id,
+		agency: mapOrderAgencyInfo(data.agency),
 		tourOptionId: data.tour_option_id,
 		tour,
 		duration: tour.duration,
