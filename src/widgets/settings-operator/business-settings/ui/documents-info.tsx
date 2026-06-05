@@ -103,6 +103,7 @@ const DocumentsInfoBase: FC = () => {
 				onFileRemove={handleFileRemove}
 				isLoading={isUploading || isDeleting}
 				loadingId={loadingId}
+				showAllRemoveButton={false}
 			/>
 		</div>
 	);

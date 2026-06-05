@@ -4,7 +4,6 @@ import type { FC } from "react";
 import type { TFileWithPreview } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
-import { formatBytes } from "@/shared/utils";
 
 import { getFileIcon } from "../model";
 
@@ -46,13 +45,13 @@ export const FileCard: FC<IFileCardProps> = ({
 							? file.file.name
 							: file.file.name}
 					</p>
-					<p className="text-muted-foreground text-xs">
+					{/* <p className="text-muted-foreground text-xs">
 						{formatBytes(
 							file.file instanceof File
 								? file.file.size
 								: file.file.size
 						)}
-					</p>
+					</p> */}
 				</div>
 			</div>
 
