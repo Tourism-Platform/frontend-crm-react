@@ -70,11 +70,11 @@ export const FORM_NEW_PAYMENT_ROUTE_WISE_LIST: TForm[] = [
 		fieldType: "input"
 	},
 	{
-		label: "payment_settings.form.modal.fields.bank_address.label",
-		placeholder:
-			"payment_settings.form.modal.fields.bank_address.placeholder",
-		key: ENUM_FORM_OPERATOR_PAYMENT_SETTINGS.BANK_ADDRESS,
-		fieldType: "input"
+		label: "payment_settings.form.modal.fields.currency.label",
+		placeholder: "payment_settings.form.modal.fields.currency.placeholder",
+		key: ENUM_FORM_OPERATOR_PAYMENT_SETTINGS.CURRENCY,
+		fieldType: "select",
+		options: CURRENCY_OPTIONS
 	},
 	{
 		label: "payment_settings.form.modal.fields.payment_link.label",

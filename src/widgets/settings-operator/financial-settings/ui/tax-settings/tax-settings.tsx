@@ -60,7 +60,6 @@ const TaxSettingsBase: FC = () => {
 	}, [isTaxSettingsError, t]);
 
 	async function handleSave(data: TOperatorTaxSettingsSchema) {
-		console.log(data);
 		try {
 			await updateOperatorFinanceInfo(data).unwrap();
 			toast.success(t("tax_settings.form.toasts.save.success"));

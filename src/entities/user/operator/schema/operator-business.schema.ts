@@ -53,11 +53,11 @@ export const OPERATOR_BUSINESS_SCHEMA = z.object({
 			.max(100, {
 				message: msg("form.business.fields.business_website.errors.max")
 			})
-			.regex(/^(\/\/)?([\w-]+\.)+[\w-]{2,}(\/\S*)?$/, {
-				message: msg(
-					"form.business.fields.business_website.errors.pattern"
-				)
-			})
+			// .regex(/^(\/\/)?([\w-]+\.)+[\w-]{2,}(\/\S*)?$/, {
+			// 	message: msg(
+			// 		"form.business.fields.business_website.errors.pattern"
+			// 	)
+			// })
 			.or(z.literal(""))
 			.optional()
 	}),
