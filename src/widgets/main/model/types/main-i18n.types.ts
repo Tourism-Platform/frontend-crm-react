@@ -36,4 +36,28 @@ export type TTestimonialItem = {
 	role: string;
 };
 
-export type TAudienceTabId = "operator" | "agency";
+export type TAudienceTabId = "operator" | "agency" | "supplier";
+
+export type TOperatorFeatureId =
+	| "visual-constructor"
+	| "auto-vouchers"
+	| "auto-translation"
+	| "staff-permissions"
+	| "task-management"
+	| "sales-dashboard";
+
+export type TAgencyFeatureId =
+	| "live-catalog"
+	| "downloadable-previews"
+	| "custom-tour-requests"
+	| "real-time-bookings"
+	| "commission-control"
+	| "client-crm";
+
+export type TSupplierFeatureId =
+	| "availability-management"
+	| "booking-requests"
+	| "calendar-sync"
+	| "payouts"
+	| "operator-network"
+	| "service-profile";

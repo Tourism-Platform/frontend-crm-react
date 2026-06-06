@@ -1,36 +1,43 @@
-import { ArrowRight } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, CometCardTilt, Safari } from "@/shared/ui";
+import { Badge, Button, CometCardTilt, Safari } from "@/shared/ui";
 
-import { OPERATOR_FEATURE_ITEMS_LIST } from "../../model";
+import { SUPPLIER_FEATURE_ITEMS_LIST } from "../../model";
 import type { TFeatureItem, TMockupDay } from "../../model";
 
 import { FeatureItemCard } from "./feature-item-card";
 
-export const OperatorPanel: FC = () => {
+export const SupplierPanel: FC = () => {
 	const { t } = useTranslation("main");
-	const sidebarItems = t("operator.mockup.sidebar_items", {
+	const sidebarItems = t("supplier.mockup.sidebar_items", {
 		returnObjects: true
 	}) as string[];
-	const days = t("operator.mockup.days", {
+	const days = t("supplier.mockup.days", {
 		returnObjects: true
 	}) as TMockupDay[];
 
 	return (
 		<div className="grid items-center gap-10 lg:grid-cols-2">
 			<div>
-				<h3 className="text-3xl font-bold tracking-tight">
-					{t("operator.title")}
-				</h3>
+				<div className="flex flex-wrap items-center gap-3">
+					<h3 className="text-3xl font-bold tracking-tight">
+						{t("supplier.title")}
+					</h3>
+					<Badge
+						variant="secondary"
+						className="h-6 border-none px-2 py-0 text-[11px] font-medium"
+					>
+						{t("coming_soon")}
+					</Badge>
+				</div>
 				<p className="mt-4 text-muted-foreground">
-					{t("operator.subtitle")}
+					{t("supplier.subtitle")}
 				</p>
 
 				<div className="mt-8 grid gap-4 sm:grid-cols-2">
-					{OPERATOR_FEATURE_ITEMS_LIST.map(({ id, icon, isSoon }) => {
-						const { name, desc } = t(`operator.features.${id}`, {
+					{SUPPLIER_FEATURE_ITEMS_LIST.map(({ id, icon, isSoon }) => {
+						const { name, desc } = t(`supplier.features.${id}`, {
 							returnObjects: true
 						}) as TFeatureItem;
 
@@ -46,9 +53,8 @@ export const OperatorPanel: FC = () => {
 					})}
 				</div>
 
-				<Button size="lg" className="mt-8">
-					{t("operator.cta")}
-					<ArrowRight className="size-4" />
+				<Button size="lg" className="mt-8" disabled>
+					{t("coming_soon")}
 				</Button>
 			</div>
 
@@ -57,11 +63,11 @@ export const OperatorPanel: FC = () => {
 				initialRotateX={2.5}
 				initialRotateY={-5}
 			>
-				<Safari url={t("operator.mockup.url")}>
+				<Safari url={t("supplier.mockup.url")}>
 					<div className="grid min-h-0 gap-4 p-4 sm:grid-cols-[160px_1fr]">
 						<div className="space-y-2 rounded-md bg-muted/40 pr-3 sm:p-2">
 							<p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-								{t("operator.mockup.sidebar_title")}
+								{t("supplier.mockup.sidebar_title")}
 							</p>
 							{sidebarItems.map((item, index) => (
 								<div

@@ -14,9 +14,6 @@ import { FeatureItemCard } from "./feature-item-card";
 
 export const AgencyPanel: FC = () => {
 	const { t } = useTranslation("main");
-	const features = t("agency.features", {
-		returnObjects: true
-	}) as TFeatureItem[];
 	const tours = t("agency.mockup.tours", {
 		returnObjects: true
 	}) as TCatalogTour[];
@@ -80,14 +77,21 @@ export const AgencyPanel: FC = () => {
 				</p>
 
 				<div className="mt-8 grid gap-4 sm:grid-cols-2">
-					{features.map((feature, index) => (
-						<FeatureItemCard
-							key={feature.name}
-							icon={AGENCY_FEATURE_ITEMS_LIST[index].icon}
-							name={feature.name}
-							desc={feature.desc}
-						/>
-					))}
+					{AGENCY_FEATURE_ITEMS_LIST.map(({ id, icon, isSoon }) => {
+						const { name, desc } = t(`agency.features.${id}`, {
+							returnObjects: true
+						}) as TFeatureItem;
+
+						return (
+							<FeatureItemCard
+								key={id}
+								icon={icon}
+								name={name}
+								desc={desc}
+								isSoon={isSoon}
+							/>
+						);
+					})}
 				</div>
 
 				<Button size="lg" className="mt-8">

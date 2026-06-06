@@ -3,7 +3,7 @@ import type { IMainAgencyTourItem } from "../types/main-config.types";
 export const MAIN_AGENCY_TOUR_ITEMS_LIST: IMainAgencyTourItem[] = [
 	{
 		name: "samarkand",
-		image: "https://images.unsplash.com/photo-1601063476271-a159569d3aa3?w=400"
+		image: "https://ak-d.tripcdn.com/images/0104w120008b2lj9zDB39.jpg?w=400"
 	},
 	{
 		name: "bukhara",

@@ -1,4 +1,4 @@
-import { Building2, Users } from "lucide-react";
+import { Building2, Truck, Users } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,6 +9,7 @@ import { SectionHeader } from "../section-header";
 
 import { AgencyPanel } from "./agency-panel";
 import { OperatorPanel } from "./operator-panel";
+import { SupplierPanel } from "./supplier-panel";
 
 interface IAudienceSectionProps {
 	activeTab: TAudienceTabId;
@@ -18,8 +19,15 @@ interface IAudienceSectionProps {
 
 const TAB_ICONS = {
 	operator: Building2,
-	agency: Users
+	agency: Users,
+	supplier: Truck
 } as const;
+
+const AUDIENCE_PANELS: Record<TAudienceTabId, FC> = {
+	operator: OperatorPanel,
+	agency: AgencyPanel,
+	supplier: SupplierPanel
+};
 
 export const AudienceSection: FC<IAudienceSectionProps> = ({
 	activeTab,
@@ -28,6 +36,7 @@ export const AudienceSection: FC<IAudienceSectionProps> = ({
 }) => {
 	const { t } = useTranslation("main");
 	const tabs = t("audience.tabs", { returnObjects: true }) as TAudienceTab[];
+	const ActivePanel = AUDIENCE_PANELS[activeTab];
 
 	return (
 		<section
@@ -52,7 +61,7 @@ export const AudienceSection: FC<IAudienceSectionProps> = ({
 								key={tab.id}
 								type="button"
 								className={cn(
-									"inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm font-semibold transition",
+									"inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition cursor-pointer sm:px-5",
 									isActive
 										? "bg-primary text-primary-foreground shadow-sm"
 										: "text-muted-foreground hover:text-foreground"
@@ -70,7 +79,7 @@ export const AudienceSection: FC<IAudienceSectionProps> = ({
 			</div>
 
 			<div className="mx-auto max-w-6xl">
-				{activeTab === "operator" ? <OperatorPanel /> : <AgencyPanel />}
+				<ActivePanel />
 			</div>
 		</section>
 	);

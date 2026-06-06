@@ -1,5 +1,6 @@
 {
 	"page_name": "TourLink",
+	"coming_soon": "Soon",
 	"hero": {
 		"badge": "Now onboarding operators across Central Asia",
 		"title": {
@@ -11,7 +12,7 @@
 			"operator": "I'm a tour operator",
 			"agency": "I'm a travel agency"
 		},
-		"meta": ["No credit card", "Free during beta", "Set up in minutes"],
+		"meta": ["Free during beta", "Set up in minutes"],
 		"visual": {
 			"builder": {
 				"title": "Tour builder",
@@ -48,19 +49,19 @@
 		"items": [
 			{
 				"name": "Built for Central Asia",
-				"desc": "Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan"
+				"desc": "Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan"
 			},
 			{
 				"name": "Verified operators",
 				"desc": "Every supplier vetted before going live"
 			},
 			{
-				"name": "Auto-translated",
-				"desc": "EN, RU, UZ — every tour, every booking"
+				"name": "Automatic translation",
+				"desc": "Translation into any language - every tour, book now"
 			},
 			{
 				"name": "Real-time bookings",
-				"desc": "No more WhatsApp threads or lost emails"
+				"desc": "No messengers or lost emails"
 			}
 		]
 	},
@@ -101,39 +102,40 @@
 		"subtitle": "Whether you build tours or sell them, we've designed the workflow around how your team actually works.",
 		"tabs": [
 			{ "id": "operator", "label": "For tour operators" },
-			{ "id": "agency", "label": "For travel agencies" }
+			{ "id": "agency", "label": "For travel agencies" },
+			{ "id": "supplier", "label": "Suppliers" }
 		]
 	},
 	"operator": {
 		"title": "Build tours visually. Sell them everywhere.",
 		"subtitle": "Stop assembling itineraries in Word documents. Drag and drop hotels, transfers, dining and attractions into a beautiful tour your clients will want to book.",
 		"cta": "Become an operator",
-		"features": [
-			{
+		"features": {
+			"visual-constructor": {
 				"name": "Visual tour constructor",
 				"desc": "Drag-and-drop builder with pre-connected suppliers"
 			},
-			{
+			"auto-vouchers": {
 				"name": "Auto-generated vouchers",
 				"desc": "Invoices and vouchers built from each booking"
 			},
-			{
-				"name": "Sales dashboard",
-				"desc": "Financial reporting and live booking analytics"
-			},
-			{
+			"auto-translation": {
 				"name": "Auto-translation",
-				"desc": "One tour, three languages — EN, RU, UZ"
+				"desc": "One tour, all languages — Available in all languages"
 			},
-			{
+			"staff-permissions": {
+				"name": "Staff & permissions",
+				"desc": "Manage team access, audit logs for every action"
+			},
+			"task-management": {
 				"name": "Task management",
 				"desc": "Assign tasks to staff, track progress in real-time"
 			},
-			{
-				"name": "Staff & permissions",
-				"desc": "Manage team access, audit logs for every action"
+			"sales-dashboard": {
+				"name": "Sales dashboard",
+				"desc": "Financial reporting and live booking analytics"
 			}
-		],
+		},
 		"mockup": {
 			"url": "tourlink.uz/builder",
 			"sidebar_title": "Components",
@@ -163,56 +165,113 @@
 		"title": "Sell verified tours without the back-and-forth",
 		"subtitle": "Browse a live catalog of guaranteed tours from verified operators. Customize on request. Book in real time. Track every sale in one dashboard.",
 		"cta": "Join as an agency",
-		"features": [
-			{
+		"features": {
+			"live-catalog": {
 				"name": "Live tour catalog",
 				"desc": "First in Central Asia — grows weekly with new tours"
 			},
-			{
+			"downloadable-previews": {
 				"name": "Downloadable previews",
 				"desc": "Branded PDF tour previews to send your clients"
 			},
-			{
+			"custom-tour-requests": {
 				"name": "Custom tour requests",
 				"desc": "Build custom itineraries with platform operators"
 			},
-			{
+			"real-time-bookings": {
 				"name": "Real-time bookings",
 				"desc": "Live availability, instant confirmations"
 			},
-			{
+			"commission-control": {
 				"name": "Commission control",
 				"desc": "Set and manage your markup on every tour"
 			},
-			{
+			"client-crm": {
 				"name": "Client contact CRM",
 				"desc": "Capture leads, manage clients, never lose contact"
 			}
-		],
+		},
 		"mockup": {
 			"url": "tourlink.uz/catalogue",
 			"search_placeholder": "🔍 Silk Road tours...",
 			"filter": "Filter",
 			"tours": [
 				{
-					"name": "Samarkand · 3 days",
+					"name": "Samarkand · 1 day",
 					"operator": "Orientstar ✓",
-					"price": "$934"
+					"price": "from $934"
 				},
 				{
-					"name": "Bukhara classic",
+					"name": "Bukhara classic · 3 days",
 					"operator": "Asiatica ✓",
-					"price": "$620"
+					"price": "from $620"
 				},
 				{
-					"name": "Khiva heritage",
+					"name": "Khiva heritage · 7 days",
 					"operator": "Orientstar ✓",
-					"price": "$780"
+					"price": "from $780"
 				},
 				{
-					"name": "Full Silk Road",
+					"name": "Full Silk Road · 14 days",
 					"operator": "Asiatica ✓",
-					"price": "$1,840"
+					"price": "from $1,840"
+				}
+			]
+		}
+	},
+	"supplier": {
+		"title": "Tools for suppliers",
+		"subtitle": "Manage availability and receive bookings from operators — no calls or spreadsheets.",
+		"features": {
+			"availability-management": {
+				"name": "Availability management",
+				"desc": "Room, seat and slot calendar in one place"
+			},
+			"booking-requests": {
+				"name": "Booking requests",
+				"desc": "Confirm or decline requests from operators"
+			},
+			"calendar-sync": {
+				"name": "Calendar sync",
+				"desc": "Up-to-date occupancy without double bookings"
+			},
+			"payouts": {
+				"name": "Payouts",
+				"desc": "Transparent tracking and payment history"
+			},
+			"operator-network": {
+				"name": "Operator network",
+				"desc": "Work with verified partners across the region"
+			},
+			"service-profile": {
+				"name": "Service profile",
+				"desc": "Description, photos and terms for the catalog"
+			}
+		},
+		"mockup": {
+			"url": "tourlink.uz/supplier",
+			"sidebar_title": "Sections",
+			"sidebar_items": ["Bookings", "Calendar", "Payouts", "Profile"],
+			"days": [
+				{
+					"label": "Today",
+					"city": "3 requests",
+					"blocks": [
+						{
+							"name": "Hyatt Regency · 2 nights",
+							"time": "pending"
+						},
+						{ "name": "Transfer TAS → SAM", "time": "pending" },
+						{ "name": "Plov Centre · dinner", "time": "pending" }
+					]
+				},
+				{
+					"label": "This week",
+					"city": "5 bookings",
+					"blocks": [
+						{ "name": "Minorai Kalon · tour", "time": "—" },
+						{ "name": "Afrosiyob · tickets", "time": "—" }
+					]
 				}
 			]
 		}
@@ -288,11 +347,11 @@
 	},
 	"cta": {
 		"title": "Ready to grow your tour business?",
-		"subtitle": "Join Central Asia's first B2B tour platform. Free during our public beta. No credit card. Set up in minutes.",
+		"subtitle": "Join Central Asia's first B2B tour platform. Free during our public beta. Set up in minutes.",
 		"buttons": {
 			"operator": "Become an operator",
 			"agency": "Join as an agency"
 		},
-		"footnote": "No credit card required · Free during beta · Cancel anytime"
+		"footnote": "Free during beta · Cancel anytime"
 	}
 }

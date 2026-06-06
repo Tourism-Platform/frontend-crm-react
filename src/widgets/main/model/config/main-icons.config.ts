@@ -1,5 +1,6 @@
 import {
 	Building2,
+	Calendar,
 	Car,
 	CircleDollarSign,
 	ClipboardCheck,
@@ -16,7 +17,12 @@ import {
 	Utensils
 } from "lucide-react";
 
-import type { IMainIconItem } from "../types/main-config.types";
+import type {
+	IAgencyFeatureItem,
+	IMainIconItem,
+	IOperatorFeatureItem,
+	ISupplierFeatureItem
+} from "../types/main-config.types";
 
 export const TRUST_ITEMS_LIST: IMainIconItem[] = [
 	{ name: "central-asia", icon: MapPin },
@@ -25,22 +31,31 @@ export const TRUST_ITEMS_LIST: IMainIconItem[] = [
 	{ name: "real-time-bookings", icon: Timer }
 ];
 
-export const OPERATOR_FEATURE_ITEMS_LIST: IMainIconItem[] = [
-	{ name: "visual-constructor", icon: Hotel },
-	{ name: "auto-vouchers", icon: FileText },
-	{ name: "sales-dashboard", icon: Building2 },
-	{ name: "auto-translation", icon: Languages },
-	{ name: "task-management", icon: ClipboardCheck },
-	{ name: "staff-permissions", icon: Users }
+export const OPERATOR_FEATURE_ITEMS_LIST: IOperatorFeatureItem[] = [
+	{ id: "visual-constructor", icon: Hotel },
+	{ id: "auto-vouchers", icon: FileText },
+	{ id: "auto-translation", icon: Languages },
+	{ id: "task-management", icon: ClipboardCheck, isSoon: true },
+	{ id: "staff-permissions", icon: Users },
+	{ id: "sales-dashboard", icon: Building2, isSoon: true }
 ];
 
-export const AGENCY_FEATURE_ITEMS_LIST: IMainIconItem[] = [
-	{ name: "live-catalog", icon: Search },
-	{ name: "downloadable-previews", icon: FileText },
-	{ name: "custom-tour-requests", icon: MessageSquare },
-	{ name: "real-time-bookings", icon: Timer },
-	{ name: "commission-control", icon: CircleDollarSign },
-	{ name: "client-crm", icon: Users }
+export const AGENCY_FEATURE_ITEMS_LIST: IAgencyFeatureItem[] = [
+	{ id: "live-catalog", icon: Search },
+	{ id: "downloadable-previews", icon: FileText },
+	{ id: "custom-tour-requests", icon: MessageSquare },
+	{ id: "commission-control", icon: CircleDollarSign, isSoon: true },
+	{ id: "real-time-bookings", icon: Timer },
+	{ id: "client-crm", icon: Users, isSoon: true }
+];
+
+export const SUPPLIER_FEATURE_ITEMS_LIST: ISupplierFeatureItem[] = [
+	{ id: "availability-management", icon: Calendar, isSoon: true },
+	{ id: "booking-requests", icon: ClipboardCheck, isSoon: true },
+	{ id: "calendar-sync", icon: Timer, isSoon: true },
+	{ id: "payouts", icon: CircleDollarSign, isSoon: true },
+	{ id: "operator-network", icon: Building2, isSoon: true },
+	{ id: "service-profile", icon: Hotel, isSoon: true }
 ];
 
 export const NETWORK_SUPPLIER_ITEMS_LIST: IMainIconItem[] = [
