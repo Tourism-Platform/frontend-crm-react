@@ -45,7 +45,7 @@ export const AgencyPanel: FC = () => {
 									className="overflow-hidden rounded-lg bg-card shadow-sm transition hover:bg-muted/50"
 								>
 									<div
-										className="h-16 bg-cover bg-center"
+										className="h-20 bg-cover bg-center sm:h-24"
 										style={{
 											backgroundImage: `url('${MAIN_AGENCY_TOUR_ITEMS_LIST[index].image}')`
 										}}

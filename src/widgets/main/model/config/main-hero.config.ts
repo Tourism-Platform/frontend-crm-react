@@ -7,6 +7,8 @@ import type {
 	IMainHeroTourItem
 } from "../types/main-config.types";
 
+import { MAIN_PAGE_IMAGES } from "./main-network.config";
+
 export const MAIN_HERO_TOUR_ITEMS_LIST: IMainHeroTourItem[] = [
 	{
 		name: "flight",
@@ -39,8 +41,8 @@ export const MAIN_HERO_FLOAT_ITEMS_LIST: IMainHeroFloatItem[] = [
 
 export const MAIN_HERO_CATALOG_ITEMS_LIST: IMainHeroCatalogItem[] = [
 	{
-		name: "catalog",
-		image: "https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=600"
+		name: "silk-road",
+		image: MAIN_PAGE_IMAGES.silkRoad
 	}
 ];
 

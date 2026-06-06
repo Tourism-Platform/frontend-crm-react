@@ -6,17 +6,20 @@ import { cn } from "@/shared/lib";
 import { Card, CardContent, FloatingCard, Safari } from "@/shared/ui";
 
 import {
-	MAIN_HERO_CATALOG_ITEMS_LIST,
 	MAIN_HERO_CHART_BARS_LIST,
 	MAIN_HERO_FLOAT_ITEMS_LIST,
 	MAIN_HERO_TOUR_ITEMS_LIST
 } from "../../model";
 import type { THeroTourItem } from "../../model";
 
+interface IHeroVisualProps {
+	catalogImage: string;
+}
+
 const heroCardClass =
 	"gap-0 overflow-hidden rounded-2xl border-border/60 py-0 shadow-xl";
 
-export const HeroVisual: FC = () => {
+export const HeroVisual: FC<IHeroVisualProps> = ({ catalogImage }) => {
 	const { t } = useTranslation("main");
 	const builderTitle = t("hero.visual.builder.title");
 	const tours = t("hero.visual.builder.tours", {
@@ -40,7 +43,7 @@ export const HeroVisual: FC = () => {
 				<Card className={heroCardClass}>
 					<div className="relative h-28 overflow-hidden">
 						<img
-							src={MAIN_HERO_CATALOG_ITEMS_LIST[0].image}
+							src={catalogImage}
 							alt=""
 							className="size-full object-cover object-center"
 							loading="lazy"

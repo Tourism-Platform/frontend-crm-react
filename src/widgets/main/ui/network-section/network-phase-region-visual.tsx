@@ -3,7 +3,10 @@ import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 
-import { ROADMAP_REGION_CITIES_LIST } from "../../model";
+import {
+	NETWORK_REGION_MAP_IMAGE,
+	ROADMAP_REGION_CITIES_LIST
+} from "../../model";
 import type { TRoadmapRegionStat } from "../../model";
 
 import { NetworkPhaseVisualCard } from "./network-phase-visual-card";
@@ -23,8 +26,19 @@ export const NetworkPhaseRegionVisual: FC<INetworkPhaseRegionVisualProps> = ({
 	return (
 		<NetworkPhaseVisualCard label={visualLabel}>
 			<div className="relative h-[320px] overflow-hidden rounded-xl bg-background">
+				<div
+					className="absolute inset-0 bg-cover bg-center opacity-25"
+					style={{
+						backgroundImage: `url('${NETWORK_REGION_MAP_IMAGE}')`
+					}}
+					aria-hidden="true"
+				/>
+				<div
+					className="absolute inset-0 bg-background/60"
+					aria-hidden="true"
+				/>
 				<svg
-					className="pointer-events-none absolute inset-0 size-full"
+					className="pointer-events-none absolute inset-0 z-[1] size-full"
 					viewBox="0 0 400 320"
 					preserveAspectRatio="none"
 					aria-hidden="true"

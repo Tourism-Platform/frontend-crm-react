@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@/shared/ui";
 
-import type { TAudienceTabId } from "../../model";
+import { MAIN_HERO_CATALOG_ITEMS_LIST, type TAudienceTabId } from "../../model";
 
 import { HeroVisual } from "./hero-visual";
 
@@ -64,7 +64,9 @@ export const HeroSection: FC<IHeroSectionProps> = ({ onAudienceCta }) => {
 					</ul>
 				</div>
 
-				<HeroVisual />
+				<HeroVisual
+					catalogImage={MAIN_HERO_CATALOG_ITEMS_LIST[0].image}
+				/>
 			</div>
 		</section>
 	);
