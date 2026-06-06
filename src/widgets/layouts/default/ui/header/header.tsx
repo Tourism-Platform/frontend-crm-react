@@ -4,10 +4,11 @@ import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
 import { useAppSelector } from "@/shared/hooks";
-import { Button, LanguageToggle, NavMenu, ThemeToggle } from "@/shared/ui";
+import { Button, LanguageToggle, ThemeToggle } from "@/shared/ui";
 
 import logo from "./../../../../../../public/assets/logo.svg";
-import { NAV_ITEMS_LIST } from "./model";
+import { PUBLIC_NAV_ITEMS } from "./model";
+import { PublicNavMenu } from "./ui/public-nav-menu";
 
 export const HeaderDefault: FC = () => {
 	const { t } = useTranslation("header");
@@ -25,7 +26,7 @@ export const HeaderDefault: FC = () => {
 						>
 							<img src={logo} className="w-12 h-12" alt="logo" />
 						</Link>
-						<NavMenu navItems={NAV_ITEMS_LIST} />
+						<PublicNavMenu items={PUBLIC_NAV_ITEMS} />
 					</div>
 				</div>
 				<div className="grid grid-cols-[auto_auto_1fr] items-center gap-2">
