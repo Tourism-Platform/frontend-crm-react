@@ -303,30 +303,174 @@
 			]
 		}
 	},
-	"network": {
-		"eyebrow": "The unique value",
-		"title": "One network. Every supplier.",
-		"subtitle": "We're building the connective tissue of Central Asian tourism — hotels, transfers, dining and attractions all in one network, ready to plug into any tour.",
-		"hub": {
-			"label": "The hub",
-			"name": "TourLink"
-		},
-		"suppliers_title": "Suppliers",
-		"users_title": "Users",
-		"suppliers": [
-			{ "label": "Hotels" },
-			{ "label": "Transfers" },
-			{ "label": "Dining" },
-			{ "label": "Attractions" },
-			{ "label": "Transport" }
+	"roadmap": {
+		"eyebrow": "Product roadmap",
+		"title": "Building the future of Central Asian tourism",
+		"subtitle": "Four phases from operational tool to industry operating system.",
+		"steps": [
+			{
+				"period": "Now",
+				"title": "B2B Operations",
+				"tagline": "Tour builder, bookings, CRM, documents, analytics",
+				"periodVariant": "now"
+			},
+			{
+				"period": "2026",
+				"title": "AI & Automation",
+				"tagline": "Smart bookings, AI responses, external integrations",
+				"periodVariant": "soon"
+			},
+			{
+				"period": "2026–27",
+				"title": "Supplier Network",
+				"tagline": "Hotel SRM, auto-confirmation, reconciliation",
+				"periodVariant": "soon"
+			},
+			{
+				"period": "2027+",
+				"title": "Industry OS",
+				"tagline": "TOS-level platform — infrastructure for the region",
+				"periodVariant": "soon"
+			}
 		],
-		"users": [
-			{ "label": "Operators" },
-			{ "label": "Agencies" },
-			{ "label": "Guides" },
-			{ "label": "Travelers" },
-			{ "label": "B2B partners" }
-		]
+		"phases": [
+			{
+				"badge": "Live now",
+				"badgeVariant": "now",
+				"title": {
+					"before": "The ",
+					"highlight": "operational backbone",
+					"after": " of your business"
+				},
+				"description": "Everything an operator or agency needs to run day-to-day: build tours visually, take bookings, send documents, manage clients and see the numbers.",
+				"bullets": [
+					"Visual tour constructor with drag-and-drop components",
+					"Real-time booking system with auto-confirmations",
+					"Client CRM, finance and reporting in one place",
+					"Auto-generated invoices, vouchers and reports"
+				],
+				"visualLabel": "Operator workspace · live modules"
+			},
+			{
+				"badge": "Phase 2 · 2026",
+				"badgeVariant": "soon",
+				"banner": "Coming 2026",
+				"title": {
+					"before": "AI does the ",
+					"highlight": "repetitive work",
+					"after": " for you"
+				},
+				"description": "Smart booking flows that pre-fill themselves. AI-powered responses to client inquiries in three languages. Connections to external systems your business already uses.",
+				"bullets": [
+					"AI assistant for client conversations and quotes",
+					"Smart booking flows — recommend, price, confirm automatically",
+					"External integrations: 1C, Bitrix, payment gateways",
+					"Advanced finance: multi-currency, automated reconciliation"
+				],
+				"visualLabel": "AI assistant · pre-arrival reply"
+			},
+			{
+				"badge": "Phase 3 · 2026–27",
+				"badgeVariant": "soon",
+				"banner": "Coming 2026–27",
+				"title": {
+					"before": "One ",
+					"highlight": "connected network",
+					"after": " across the region"
+				},
+				"description": "Direct integration with hotel SRMs, transfer companies, restaurants and attractions. Auto-confirmation of availability. Full reconciliation of every tour component.",
+				"bullets": [
+					"Direct API to hotel SRM systems across Central Asia",
+					"Auto-confirmation of every tour component",
+					"Real-time reconciliation between operators and suppliers",
+					"Suppliers join free — they get tools, you get inventory"
+				],
+				"visualLabel": "Supplier network · all categories"
+			},
+			{
+				"badge": "Phase 4 · 2027+",
+				"badgeVariant": "future",
+				"banner": "Vision 2027+",
+				"title": {
+					"before": "The ",
+					"highlight": "operating system",
+					"after": " for the whole region"
+				},
+				"description": "A TOS-level platform — the standard infrastructure layer that every Central Asian tour business runs on. From booking to billing to government reporting, all in one stack.",
+				"bullets": [
+					"Public API used by everyone in tourism — like Stripe for payments",
+					"Cross-border tours across Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan",
+					"Direct integration with government reporting and tax authorities",
+					"App marketplace — third-party tools building on TourLink"
+				],
+				"visualLabel": "Central Asia · the network"
+			}
+		],
+		"modules": {
+			"tour-builder": { "name": "Tour builder" },
+			"bookings": { "name": "Bookings" },
+			"client-crm": { "name": "Client CRM" },
+			"documents": { "name": "Documents" },
+			"finance": { "name": "Finance" },
+			"analytics": { "name": "Analytics" }
+		},
+		"integrations": {
+			"1c": "1C",
+			"bitrix": "Bitrix",
+			"click": "Click",
+			"payme": "Payme"
+		},
+		"ai": {
+			"userMessage": "Hi! What documents are needed for the \"Silk Road · 3 days\" tour?",
+			"botName": "TourLink AI · drafting",
+			"botMessage": "Hello! You'll need a passport valid for at least 6 months and a visa if you're not from CIS countries. I've prepared a draft reply with all details — send it?",
+			"integrationsLabel": "Connected:",
+			"integrationsMore": "+4 more"
+		},
+		"region": {
+			"cities": {
+				"tashkent": "Tashkent",
+				"bukhara": "Bukhara",
+				"samarkand": "Samarkand",
+				"khiva": "Khiva",
+				"almaty": "Almaty · soon",
+				"bishkek": "Bishkek · soon",
+				"dushanbe": "Dushanbe · soon"
+			},
+			"stats": [
+				{ "value": "5", "label": "countries" },
+				{ "value": "30+", "label": "cities" },
+				{ "value": "1", "label": "platform" }
+			]
+		},
+		"network": {
+			"hub": {
+				"label": "The hub",
+				"name": "TourLink"
+			},
+			"suppliers_title": "Suppliers",
+			"users_title": "Users",
+			"suppliers": [
+				{ "label": "Hotels" },
+				{ "label": "Transfers" },
+				{ "label": "Dining" },
+				{ "label": "Attractions" },
+				{ "label": "Transport" }
+			],
+			"users": [
+				{ "label": "Operators" },
+				{ "label": "Agencies" },
+				{ "label": "Guides" },
+				{ "label": "Travelers" },
+				{ "label": "B2B partners" }
+			]
+		},
+		"controls": {
+			"autoplay": "Auto-playing",
+			"paused": "Paused · resumes in 10s",
+			"hint": "Click any phase to focus on it",
+			"live": "Live"
+		}
 	},
 	"how_it_works": {
 		"eyebrow": "Start in minutes",

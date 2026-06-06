@@ -4,6 +4,7 @@ import { cn } from "@/shared/lib";
 
 interface ISectionHeaderProps {
 	eyebrow?: string;
+	eyebrowClassName?: string;
 	title: string;
 	subtitle?: string;
 	className?: string;
@@ -11,13 +12,19 @@ interface ISectionHeaderProps {
 
 export const SectionHeader: FC<ISectionHeaderProps> = ({
 	eyebrow,
+	eyebrowClassName,
 	title,
 	subtitle,
 	className
 }) => (
 	<div className={cn("mx-auto mb-12 max-w-3xl text-center", className)}>
 		{eyebrow ? (
-			<p className="mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground">
+			<p
+				className={cn(
+					"mb-3 text-sm font-semibold uppercase tracking-widest text-muted-foreground",
+					eyebrowClassName
+				)}
+			>
 				{eyebrow}
 			</p>
 		) : null}

@@ -27,6 +27,52 @@ export type TCatalogTour = {
 
 export type TNetworkNode = { label: string };
 
+export type TRoadmapStep = {
+	period: string;
+	title: string;
+	tagline: string;
+	periodVariant: "now" | "soon";
+};
+
+export type TRoadmapPhaseTitle = {
+	before: string;
+	highlight: string;
+	after: string;
+};
+
+export type TRoadmapPhase = {
+	badge: string;
+	badgeVariant: "now" | "soon" | "future";
+	banner?: string;
+	title: TRoadmapPhaseTitle;
+	description: string;
+	bullets: string[];
+	visualLabel: string;
+};
+
+export type TRoadmapRegionStat = { value: string; label: string };
+
+export type TRoadmapModuleItem = { name: string };
+
+export type TRoadmapModuleId =
+	| "tour-builder"
+	| "bookings"
+	| "client-crm"
+	| "documents"
+	| "finance"
+	| "analytics";
+
+export type TRoadmapIntegrationId = "1c" | "bitrix" | "click" | "payme";
+
+export type TRoadmapRegionCityId =
+	| "tashkent"
+	| "bukhara"
+	| "samarkand"
+	| "khiva"
+	| "almaty"
+	| "bishkek"
+	| "dushanbe";
+
 export type THowStep = { title: string; desc: string };
 
 export type TTestimonialItem = {

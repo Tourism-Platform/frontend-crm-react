@@ -1,4 +1,5 @@
 import {
+	BarChart3,
 	Bell,
 	Building2,
 	Calendar,
@@ -29,6 +30,9 @@ import type {
 	IMainIconItem,
 	IOperatorFeatureItem,
 	IProblemToolItem,
+	IRoadmapIntegrationItem,
+	IRoadmapModuleItem,
+	IRoadmapRegionCityItem,
 	ISupplierFeatureItem
 } from "../types/main-config.types";
 
@@ -80,6 +84,56 @@ export const NETWORK_USER_ITEMS_LIST: IMainIconItem[] = [
 	{ name: "guides", icon: MessageSquare },
 	{ name: "travelers", icon: Users },
 	{ name: "b2b-partners", icon: CircleDollarSign }
+];
+
+export const ROADMAP_MODULE_ITEMS_LIST: IRoadmapModuleItem[] = [
+	{
+		id: "tour-builder",
+		icon: Hotel,
+		iconClassName: "bg-primary/10 text-primary"
+	},
+	{
+		id: "bookings",
+		icon: ClipboardCheck,
+		iconClassName: "bg-purple-500/10 text-purple-600"
+	},
+	{
+		id: "client-crm",
+		icon: Users,
+		iconClassName: "bg-pink-500/10 text-pink-600"
+	},
+	{
+		id: "documents",
+		icon: FileText,
+		iconClassName: "bg-amber-500/10 text-amber-600"
+	},
+	{
+		id: "finance",
+		icon: CircleDollarSign,
+		iconClassName: "bg-emerald-500/10 text-emerald-600"
+	},
+	{
+		id: "analytics",
+		icon: BarChart3,
+		iconClassName: "bg-primary/10 text-primary"
+	}
+];
+
+export const ROADMAP_INTEGRATION_ITEMS_LIST: IRoadmapIntegrationItem[] = [
+	{ id: "1c" },
+	{ id: "bitrix" },
+	{ id: "click" },
+	{ id: "payme" }
+];
+
+export const ROADMAP_REGION_CITIES_LIST: IRoadmapRegionCityItem[] = [
+	{ id: "tashkent", left: "50%", top: "41%" },
+	{ id: "bukhara", left: "41%", top: "47%" },
+	{ id: "samarkand", left: "51%", top: "55%" },
+	{ id: "khiva", left: "62%", top: "45%" },
+	{ id: "almaty", left: "25%", top: "31%", isFuture: true },
+	{ id: "bishkek", left: "72%", top: "69%", isFuture: true },
+	{ id: "dushanbe", left: "77%", top: "31%", isFuture: true }
 ];
 
 export const PROBLEM_APP_ICON_CLASS =

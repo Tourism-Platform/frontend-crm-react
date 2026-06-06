@@ -49,6 +49,17 @@
   }
 }
 
+@keyframes region-pin-pulse {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+
 @layer utilities {
   .animate-hero-float {
     animation: hero-float var(--float-duration, 5s) ease-in-out var(--float-delay, 0s)
@@ -57,8 +68,13 @@
     backface-visibility: hidden;
   }
 
+  .animate-region-pin-pulse {
+    animation: region-pin-pulse 2s ease-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .animate-hero-float {
+    .animate-hero-float,
+    .animate-region-pin-pulse {
       animation: none;
     }
   }

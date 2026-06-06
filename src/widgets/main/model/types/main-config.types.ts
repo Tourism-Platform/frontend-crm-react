@@ -3,6 +3,9 @@ import { type LucideIcon } from "lucide-react";
 import type {
 	TAgencyFeatureId,
 	TOperatorFeatureId,
+	TRoadmapIntegrationId,
+	TRoadmapModuleId,
+	TRoadmapRegionCityId,
 	TSupplierFeatureId
 } from "./main-i18n.types";
 
@@ -61,6 +64,23 @@ export interface IMainNetworkBeamItem {
 	name: string;
 	curvature: number;
 	endYOffset: number;
+}
+
+export interface IRoadmapModuleItem {
+	id: TRoadmapModuleId;
+	icon: LucideIcon;
+	iconClassName: string;
+}
+
+export interface IRoadmapIntegrationItem {
+	id: TRoadmapIntegrationId;
+}
+
+export interface IRoadmapRegionCityItem {
+	id: TRoadmapRegionCityId;
+	left: string;
+	top: string;
+	isFuture?: boolean;
 }
 
 export type TProblemToolId =
