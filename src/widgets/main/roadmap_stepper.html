@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TourLink · Product roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F6F8;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+    --border-strong: #D1D5DB;
+    --text: #0F1419;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    --brand: #1EA7FD;
+    --brand-hover: #0E96EC;
+    --brand-soft: #E6F4FF;
+    --brand-dark: #0B6FAF;
+    --success: #16A34A;
+    --success-soft: #ECFDF5;
+    --warning: #F59E0B;
+    --warning-soft: #FEF3C7;
+    --purple-soft: #F3E8FF;
+    --purple: #7C3AED;
+    --pink-soft: #FCE7F3;
+    --pink: #DB2777;
+    --shadow-sm: 0 1px 2px rgba(15, 20, 25, 0.04);
+    --shadow-md: 0 4px 16px rgba(15, 20, 25, 0.06);
+    --shadow-lg: 0 12px 40px rgba(15, 20, 25, 0.08);
+    --shadow-xl: 0 24px 60px rgba(15, 20, 25, 0.12);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+  /* === SECTION === */
+  .section { padding: 100px 0; }
+  .section-alt { background: var(--bg); }
+  .section-eyebrow {
+    text-align: center;
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+  }
+  .section-title {
+    text-align: center;
+    font-size: 42px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 16px;
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .section-sub {
+    text-align: center;
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0 auto 64px;
+    line-height: 1.55;
+  }
+
+  /* === ROADMAP CONTAINER === */
+  .roadmap {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* === STEPPER === */
+  .stepper {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-bottom: 56px;
+    padding: 0 30px;
+  }
+
+  /* Track behind */
+  .stepper-track {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    right: 30px;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+    border-radius: 1px;
+    transform: translateY(-50%);
+  }
+
+  /* Animated fill of the track */
+  .stepper-track-fill {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand), var(--purple));
+    z-index: 1;
+    border-radius: 1px;
+    transform: translateY(-50%);
+    transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+    width: 0;
+  }
+
+  .step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    padding: 0;
+  }
+
+  .step-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    margin-bottom: 12px;
+    transition: all 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+    position: relative;
+  }
+  .step.done .step-circle {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+    box-shadow: 0 4px 14px rgba(30, 167, 253, 0.25);
+  }
+  .step.active .step-circle {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: white;
+    transform: scale(1.08);
+    box-shadow: 0 8px 24px rgba(30, 167, 253, 0.35);
+  }
+  /* Pulse ring on the active step */
+  .step.active .step-circle::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px solid var(--brand);
+    opacity: 0;
+    animation: ringPulse 2s ease-out infinite;
+  }
+  @keyframes ringPulse {
+    0% { opacity: 0.6; transform: scale(0.96); }
+    100% { opacity: 0; transform: scale(1.2); }
+  }
+  /* Progress dial inside active step that visualizes the auto-play timer */
+  .step-progress {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .step.active .step-progress {
+    opacity: 1;
+  }
+  .step-progress svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .step-progress-bg {
+    fill: none;
+    stroke: var(--brand-soft);
+    stroke-width: 2;
+  }
+  .step-progress-fg {
+    fill: none;
+    stroke: var(--brand);
+    stroke-width: 2;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.1s linear;
+  }
+
+  .step-period {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--bg);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    margin-bottom: 8px;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .step.done .step-period {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+  .step.active .step-period {
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+  .step-period.soon {
+    background: var(--warning-soft);
+    color: var(--warning);
+  }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    text-align: center;
+    letter-spacing: -0.01em;
+    transition: color 0.3s;
+  }
+  .step:not(.active):not(.done) .step-title {
+    color: var(--text-secondary);
+  }
+
+  .step-tagline {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-align: center;
+    line-height: 1.4;
+    max-width: 180px;
+    padding: 0 8px;
+  }
+
+  /* === PHASE PANEL === */
+  .phase-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-md);
+  }
+
+  .phase-content {
+    display: none;
+    padding: 56px 56px;
+    animation: fadeSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .phase-content.active {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === LEFT: TEXT === */
+  .phase-text { }
+  .phase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 18px;
+  }
+  .phase-badge.now {
+    background: var(--success-soft);
+    color: var(--success);
+  }
+  .phase-badge.now::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(22, 163, 74, 0.05); }
+  }
+  .phase-badge.soon {
+    background: var(--warning-soft);
+    color: var(--warning);
+  }
+  .phase-badge.future {
+    background: var(--purple-soft);
+    color: var(--purple);
+  }
+
+  .phase-title {
+    font-size: 38px;
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 14px;
+  }
+  .phase-title .gradient {
+    background: linear-gradient(135deg, var(--brand), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .phase-desc {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  .phase-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .phase-bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .phase-bullets li svg {
+    color: var(--brand);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+
+  /* === RIGHT: VISUAL CARD === */
+  .phase-visual {
+    position: relative;
+  }
+  .vcard {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-md);
+    position: relative;
+  }
+  .vcard-label {
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    margin-bottom: 22px;
+  }
+
+  /* Phase 1: Modules grid (operator dashboard) */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .module-tile {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 16px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    transition: all 0.2s;
+  }
+  .module-tile:hover {
+    border-color: var(--brand);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+  }
+  .module-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .module-icon.b { background: var(--brand-soft); color: var(--brand); }
+  .module-icon.p { background: var(--purple-soft); color: var(--purple); }
+  .module-icon.pi { background: var(--pink-soft); color: var(--pink); }
+  .module-icon.w { background: var(--warning-soft); color: var(--warning); }
+  .module-icon.s { background: var(--success-soft); color: var(--success); }
+  .module-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .module-status {
+    font-size: 10px;
+    color: var(--success);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .module-status::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--success);
+  }
+
+  /* Phase 2: AI conversation + integrations */
+  .ai-block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ai-msg {
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 88%;
+  }
+  .ai-msg.user {
+    background: var(--brand);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .ai-msg.bot {
+    background: var(--bg);
+    color: var(--text);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .ai-bot-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .ai-bot-avatar {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand), var(--purple));
+    color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+  }
+  .ai-bot-name {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .ai-typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 8px 12px;
+    background: var(--bg);
+    border-radius: 12px;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .ai-typing span {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--text-tertiary);
+    animation: typing 1.4s infinite ease-in-out;
+  }
+  .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+    30% { opacity: 1; transform: translateY(-3px); }
+  }
+  .integrations-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+    flex-wrap: wrap;
+  }
+  .integrations-label {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-right: 4px;
+    font-weight: 500;
+  }
+  .integration-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 9px;
+    background: var(--bg);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .integration-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+  }
+
+  /* Phase 3: Supplier network (the unique style we're matching) */
+  .network-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 50px;
+    align-items: center;
+    position: relative;
+  }
+  .net-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+  }
+  .net-col-title {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+  .net-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+  }
+  .net-node-icon {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .net-node-icon.b { background: var(--brand-soft); color: var(--brand); }
+  .net-node-icon.p { background: var(--purple-soft); color: var(--purple); }
+  .net-node-icon.pi { background: var(--pink-soft); color: var(--pink); }
+  .net-node-icon.w { background: var(--warning-soft); color: var(--warning); }
+  .net-node-icon.s { background: var(--success-soft); color: var(--success); }
+  .net-node-icon svg { width: 12px; height: 12px; }
+  .net-hub {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand), var(--purple));
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 30px rgba(30, 167, 253, 0.35);
+    position: relative;
+    z-index: 3;
+  }
+  .net-hub::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border: 1px solid rgba(30, 167, 253, 0.3);
+    border-radius: 50%;
+    animation: hubPulse 3s ease-in-out infinite;
+  }
+  .net-hub::after {
+    content: '';
+    position: absolute;
+    inset: -18px;
+    border: 1px solid rgba(30, 167, 253, 0.2);
+    border-radius: 50%;
+    animation: hubPulse 3s ease-in-out infinite 1.5s;
+  }
+  @keyframes hubPulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 0.1; transform: scale(1.06); }
+  }
+  .net-hub-label {
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.85;
+  }
+  .net-hub-name {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .net-svg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Phase 4: Region map */
+  .region-map {
+    position: relative;
+    height: 320px;
+    background: var(--bg);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .region-svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+  }
+  .region-node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+  .region-node-pin {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--brand);
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    position: relative;
+  }
+  .region-node-pin::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid var(--brand);
+    opacity: 0.5;
+    animation: pinPulse 2s ease-out infinite;
+  }
+  @keyframes pinPulse {
+    0% { opacity: 0.7; transform: scale(0.8); }
+    100% { opacity: 0; transform: scale(2); }
+  }
+  .region-node-pin.purple { background: var(--purple); }
+  .region-node-pin.purple::before { border-color: var(--purple); }
+  .region-node-pin.future {
+    background: var(--surface);
+    border-color: var(--text-tertiary);
+  }
+  .region-node-pin.future::before { display: none; }
+  .region-node-label {
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+  }
+  .region-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .region-stat {
+    text-align: center;
+    padding: 10px;
+    background: var(--bg);
+    border-radius: 8px;
+  }
+  .region-stat-num {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    background: linear-gradient(135deg, var(--brand), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .region-stat-label {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  /* === COMING SOON OVERLAY ELEMENTS === */
+  .coming-soon-banner {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    padding: 5px 11px;
+    background: var(--warning);
+    color: white;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  }
+  .coming-soon-banner.purple {
+    background: var(--purple);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  }
+
+  /* === CONTROLS BELOW === */
+  .roadmap-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 28px;
+    color: var(--text-tertiary);
+    font-size: 12px;
+  }
+  .control-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .control-status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+  }
+  .control-status-dot.paused {
+    background: var(--warning);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+  }
+  .control-divider {
+    width: 1px;
+    height: 12px;
+    background: var(--border);
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 980px) {
+    .section { padding: 60px 0; }
+    .section-title { font-size: 28px; }
+    .stepper { grid-template-columns: 1fr; gap: 0; padding: 0; }
+    .stepper-track, .stepper-track-fill { display: none; }
+    .step { flex-direction: row; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .step-tagline { text-align: left; max-width: none; padding: 0; }
+    .step-title, .step-period { text-align: left; }
+    .phase-content.active { grid-template-columns: 1fr; gap: 32px; padding: 32px 24px; }
+    .phase-title { font-size: 28px; }
+    .network-grid { grid-template-columns: 1fr; gap: 16px; }
+    .net-svg { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-eyebrow">Product roadmap</div>
+    <h2 class="section-title">Building the future of Central Asian tourism</h2>
+    <p class="section-sub">Four phases from operational tool to industry operating system.</p>
+
+    <div class="roadmap">
+
+      <!-- ============================== -->
+      <!-- STEPPER -->
+      <!-- ============================== -->
+      <div class="stepper" id="stepper">
+        <div class="stepper-track"></div>
+        <div class="stepper-track-fill" id="stepperFill"></div>
+
+        <button class="step" data-phase="0">
+          <div class="step-circle">
+            1
+            <div class="step-progress">
+              <svg viewBox="0 0 76 76">
+                <circle class="step-progress-bg" cx="38" cy="38" r="36"/>
+                <circle class="step-progress-fg" cx="38" cy="38" r="36" stroke-dasharray="226.19" stroke-dashoffset="226.19"/>
+              </svg>
+            </div>
+          </div>
+          <span class="step-period">Now</span>
+          <span class="step-title">B2B Operations</span>
+          <span class="step-tagline">Tour builder, bookings, CRM, documents, analytics</span>
+        </button>
+
+        <button class="step" data-phase="1">
+          <div class="step-circle">
+            2
+            <div class="step-progress">
+              <svg viewBox="0 0 76 76">
+                <circle class="step-progress-bg" cx="38" cy="38" r="36"/>
+                <circle class="step-progress-fg" cx="38" cy="38" r="36" stroke-dasharray="226.19" stroke-dashoffset="226.19"/>
+              </svg>
+            </div>
+          </div>
+          <span class="step-period soon">2025</span>
+          <span class="step-title">AI &amp; Automation</span>
+          <span class="step-tagline">Smart bookings, AI responses, external integrations</span>
+        </button>
+
+        <button class="step" data-phase="2">
+          <div class="step-circle">
+            3
+            <div class="step-progress">
+              <svg viewBox="0 0 76 76">
+                <circle class="step-progress-bg" cx="38" cy="38" r="36"/>
+                <circle class="step-progress-fg" cx="38" cy="38" r="36" stroke-dasharray="226.19" stroke-dashoffset="226.19"/>
+              </svg>
+            </div>
+          </div>
+          <span class="step-period soon">2025–26</span>
+          <span class="step-title">Supplier Network</span>
+          <span class="step-tagline">Hotel SRM, auto-confirmation, reconciliation</span>
+        </button>
+
+        <button class="step" data-phase="3">
+          <div class="step-circle">
+            4
+            <div class="step-progress">
+              <svg viewBox="0 0 76 76">
+                <circle class="step-progress-bg" cx="38" cy="38" r="36"/>
+                <circle class="step-progress-fg" cx="38" cy="38" r="36" stroke-dasharray="226.19" stroke-dashoffset="226.19"/>
+              </svg>
+            </div>
+          </div>
+          <span class="step-period soon">2026+</span>
+          <span class="step-title">Industry OS</span>
+          <span class="step-tagline">TOS-level platform — infrastructure for the region</span>
+        </button>
+      </div>
+
+      <!-- ============================== -->
+      <!-- PHASE PANEL -->
+      <!-- ============================== -->
+      <div class="phase-panel">
+
+        <!-- PHASE 1 -->
+        <div class="phase-content active" data-content="0">
+          <div class="phase-text">
+            <span class="phase-badge now">Live now</span>
+            <h3 class="phase-title">The <span class="gradient">operational backbone</span> of your business</h3>
+            <p class="phase-desc">Everything an operator or agency needs to run day-to-day: build tours visually, take bookings, send documents, manage clients and see the numbers.</p>
+            <ul class="phase-bullets">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Visual tour constructor with drag-and-drop components</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Real-time booking system with auto-confirmations</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Client CRM, finance and reporting in one place</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Auto-generated invoices, vouchers and reports</span>
+              </li>
+            </ul>
+          </div>
+          <div class="phase-visual">
+            <div class="vcard">
+              <div class="vcard-label">Operator workspace · live modules</div>
+              <div class="modules-grid">
+                <div class="module-tile">
+                  <div class="module-icon b">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></svg>
+                  </div>
+                  <div>
+                    <div class="module-name">Tour builder</div>
+                    <span class="module-status">Live</span>
+                  </div>
+                </div>
+                <div class="module-tile">
+                  <div class="module-icon p">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                  </div>
+                  <div>
+                    <div class="module-name">Bookings</div>
+                    <span class="module-status">Live</span>
+                  </div>
+                </div>
+                <div class="module-tile">
+                  <div class="module-icon pi">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                  </div>
+                  <div>
+                    <div class="module-name">Client CRM</div>
+                    <span class="module-status">Live</span>
+                  </div>
+                </div>
+                <div class="module-tile">
+                  <div class="module-icon w">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                  </div>
+                  <div>
+                    <div class="module-name">Documents</div>
+                    <span class="module-status">Live</span>
+                  </div>
+                </div>
+                <div class="module-tile">
+                  <div class="module-icon s">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                  </div>
+                  <div>
+                    <div class="module-name">Finance</div>
+                    <span class="module-status">Live</span>
+                  </div>
+                </div>
+                <div class="module-tile">
+                  <div class="module-icon b">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  </div>
+                  <div>
+                    <div class="module-name">Analytics</div>
+                    <span class="module-status">Live</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHASE 2 -->
+        <div class="phase-content" data-content="1">
+          <div class="phase-text">
+            <span class="coming-soon-banner">Coming 2025</span>
+            <span class="phase-badge soon">Phase 2 · 2025</span>
+            <h3 class="phase-title">AI does the <span class="gradient">repetitive work</span> for you</h3>
+            <p class="phase-desc">Smart booking flows that pre-fill themselves. AI-powered responses to client inquiries in three languages. Connections to external systems your business already uses.</p>
+            <ul class="phase-bullets">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>AI assistant for client conversations and quotes</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Smart booking flows — recommend, price, confirm automatically</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>External integrations: 1C, Bitrix, payment gateways</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Advanced finance: multi-currency, automated reconciliation</span>
+              </li>
+            </ul>
+          </div>
+          <div class="phase-visual">
+            <div class="vcard">
+              <div class="vcard-label">AI assistant · pre-arrival reply</div>
+              <div class="ai-block">
+                <div class="ai-msg user">
+                  Привет! Можно узнать, какие документы нужны на тур "Шёлковый путь · 3 дня"?
+                </div>
+                <div>
+                  <div class="ai-bot-head">
+                    <div class="ai-bot-avatar">T</div>
+                    <span class="ai-bot-name">TourLink AI · drafting</span>
+                  </div>
+                  <div class="ai-msg bot">
+                    Здравствуйте! Для тура нужны паспорт со сроком действия от 6 месяцев и виза, если вы не из стран СНГ. Я подготовил черновик ответа клиенту со всеми деталями — отправить?
+                  </div>
+                </div>
+                <div class="ai-typing">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="integrations-row">
+                <span class="integrations-label">Connected:</span>
+                <span class="integration-chip"><span class="integration-dot"></span>1C</span>
+                <span class="integration-chip"><span class="integration-dot"></span>Bitrix</span>
+                <span class="integration-chip"><span class="integration-dot"></span>Click</span>
+                <span class="integration-chip"><span class="integration-dot"></span>Payme</span>
+                <span class="integration-chip" style="color: var(--text-tertiary);">+4 more</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHASE 3 -->
+        <div class="phase-content" data-content="2">
+          <div class="phase-text">
+            <span class="coming-soon-banner">Coming 2025–26</span>
+            <span class="phase-badge soon">Phase 3 · 2025–26</span>
+            <h3 class="phase-title">One <span class="gradient">connected network</span> across the region</h3>
+            <p class="phase-desc">Direct integration with hotel SRMs, transfer companies, restaurants and attractions. Auto-confirmation of availability. Full reconciliation of every tour component.</p>
+            <ul class="phase-bullets">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Direct API to hotel SRM systems across Central Asia</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Auto-confirmation of every tour component</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Real-time reconciliation between operators and suppliers</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Suppliers join free — they get tools, you get inventory</span>
+              </li>
+            </ul>
+          </div>
+          <div class="phase-visual">
+            <div class="vcard">
+              <div class="vcard-label">Supplier network · all categories</div>
+              <div class="network-grid">
+                <svg class="net-svg" viewBox="0 0 380 300" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="phaseLineGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stop-color="#1EA7FD" stop-opacity="0.4"/>
+                      <stop offset="50%" stop-color="#7C3AED" stop-opacity="0.6"/>
+                      <stop offset="100%" stop-color="#1EA7FD" stop-opacity="0.4"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M 100 40 Q 170 50 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                  <path d="M 100 110 Q 160 130 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                  <path d="M 100 190 Q 160 170 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                  <path d="M 100 260 Q 170 250 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                  <path d="M 280 40 Q 210 50 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                  <path d="M 280 110 Q 220 130 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                  <path d="M 280 190 Q 220 170 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                  <path d="M 280 260 Q 210 250 190 150" stroke="url(#phaseLineGrad)" stroke-width="1.2" fill="none"/>
+                </svg>
+
+                <div class="net-col">
+                  <div class="net-col-title">Suppliers</div>
+                  <div class="net-node">
+                    <div class="net-node-icon b">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/></svg>
+                    </div>
+                    <span>Hotels</span>
+                  </div>
+                  <div class="net-node">
+                    <div class="net-node-icon p">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 16H9m10 0h3v-3.15L16 11l-2.7-3.6H5.24L3.44 9A6 6 0 0 0 2 12.42V16h2"/></svg>
+                    </div>
+                    <span>Transfers</span>
+                  </div>
+                  <div class="net-node">
+                    <div class="net-node-icon w">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4z"/></svg>
+                    </div>
+                    <span>Dining</span>
+                  </div>
+                  <div class="net-node">
+                    <div class="net-node-icon pi">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 9 22 9 17 14 18 21 12 17 6 21 7 14 2 9 9 9 12 2"/></svg>
+                    </div>
+                    <span>Attractions</span>
+                  </div>
+                </div>
+
+                <div class="net-hub">
+                  <span class="net-hub-label">The hub</span>
+                  <span class="net-hub-name">TourLink</span>
+                </div>
+
+                <div class="net-col">
+                  <div class="net-col-title">Users</div>
+                  <div class="net-node">
+                    <div class="net-node-icon b">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    </div>
+                    <span>Operators</span>
+                  </div>
+                  <div class="net-node">
+                    <div class="net-node-icon p">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <span>Agencies</span>
+                  </div>
+                  <div class="net-node">
+                    <div class="net-node-icon w">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </div>
+                    <span>Guides</span>
+                  </div>
+                  <div class="net-node">
+                    <div class="net-node-icon pi">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    </div>
+                    <span>Travelers</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHASE 4 -->
+        <div class="phase-content" data-content="3">
+          <div class="phase-text">
+            <span class="coming-soon-banner purple">Vision 2026+</span>
+            <span class="phase-badge future">Phase 4 · 2026+</span>
+            <h3 class="phase-title">The <span class="gradient">operating system</span> for the whole region</h3>
+            <p class="phase-desc">A TOS-level platform — the standard infrastructure layer that every Central Asian tour business runs on. From booking to billing to government reporting, all in one stack.</p>
+            <ul class="phase-bullets">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Public API used by everyone in tourism — like Stripe for payments</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Cross-border tours across Uzbekistan, Kazakhstan, Kyrgyzstan, Tajikistan</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Direct integration with government reporting and tax authorities</span>
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>App marketplace — third-party tools building on TourLink</span>
+              </li>
+            </ul>
+          </div>
+          <div class="phase-visual">
+            <div class="vcard">
+              <div class="vcard-label">Central Asia · the network</div>
+              <div class="region-map">
+                <svg class="region-svg" viewBox="0 0 400 320" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="regionLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#1EA7FD" stop-opacity="0.5"/>
+                      <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.5"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Subtle region outline -->
+                  <path d="M 60 80 Q 120 50 200 60 Q 280 70 340 100 Q 360 160 320 220 Q 250 270 180 260 Q 100 250 70 200 Q 40 140 60 80 Z"
+                        fill="none" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="3 4"/>
+                  <!-- Connecting lines between active cities -->
+                  <path d="M 200 130 L 165 150 L 205 175 L 250 145 L 200 130" stroke="url(#regionLineGrad)" stroke-width="1.5" fill="none"/>
+                  <!-- Lines to future cities (dashed) -->
+                  <line x1="200" y1="130" x2="100" y2="100" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 3"/>
+                  <line x1="205" y1="175" x2="290" y2="220" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 3"/>
+                  <line x1="250" y1="145" x2="310" y2="100" stroke="var(--border-strong)" stroke-width="1" stroke-dasharray="2 3"/>
+                </svg>
+
+                <!-- Active: Uzbekistan cities -->
+                <div class="region-node" style="left: 50%; top: 41%;">
+                  <div class="region-node-pin"></div>
+                  <div class="region-node-label">Tashkent</div>
+                </div>
+                <div class="region-node" style="left: 41%; top: 47%;">
+                  <div class="region-node-pin"></div>
+                  <div class="region-node-label">Bukhara</div>
+                </div>
+                <div class="region-node" style="left: 51%; top: 55%;">
+                  <div class="region-node-pin"></div>
+                  <div class="region-node-label">Samarkand</div>
+                </div>
+                <div class="region-node" style="left: 62%; top: 45%;">
+                  <div class="region-node-pin"></div>
+                  <div class="region-node-label">Khiva</div>
+                </div>
+                <!-- Future: other countries -->
+                <div class="region-node" style="left: 25%; top: 31%;">
+                  <div class="region-node-pin future"></div>
+                  <div class="region-node-label" style="opacity: 0.6;">Almaty · soon</div>
+                </div>
+                <div class="region-node" style="left: 72%; top: 69%;">
+                  <div class="region-node-pin future"></div>
+                  <div class="region-node-label" style="opacity: 0.6;">Bishkek · soon</div>
+                </div>
+                <div class="region-node" style="left: 77%; top: 31%;">
+                  <div class="region-node-pin future"></div>
+                  <div class="region-node-label" style="opacity: 0.6;">Dushanbe · soon</div>
+                </div>
+              </div>
+              <div class="region-stats">
+                <div class="region-stat">
+                  <div class="region-stat-num">4</div>
+                  <div class="region-stat-label">countries</div>
+                </div>
+                <div class="region-stat">
+                  <div class="region-stat-num">12+</div>
+                  <div class="region-stat-label">cities</div>
+                </div>
+                <div class="region-stat">
+                  <div class="region-stat-num">1</div>
+                  <div class="region-stat-label">platform</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ============================== -->
+      <!-- CONTROLS -->
+      <!-- ============================== -->
+      <div class="roadmap-controls">
+        <span class="control-status">
+          <span class="control-status-dot" id="statusDot"></span>
+          <span id="statusLabel">Auto-playing</span>
+        </span>
+        <span class="control-divider"></span>
+        <span>Click any phase to focus on it</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  // === Stepper controller ===
+  const PHASE_COUNT = 4;
+  const AUTO_DURATION = 5000;   // 5s per phase in auto mode
+  const PAUSE_RESUME = 10000;   // resume autoplay 10s after manual click
+
+  let currentPhase = 0;
+  let isPaused = false;
+  let autoTimer = null;
+  let resumeTimer = null;
+  let progressStart = 0;
+  let rafId = null;
+
+  const steps = document.querySelectorAll('.step');
+  const contents = document.querySelectorAll('.phase-content');
+  const fill = document.getElementById('stepperFill');
+  const statusDot = document.getElementById('statusDot');
+  const statusLabel = document.getElementById('statusLabel');
+
+  // CIRCUMFERENCE of the progress ring: 2 * pi * r where r = 36 → ~226.19
+  const CIRCUMFERENCE = 2 * Math.PI * 36;
+
+  function setPhase(idx) {
+    currentPhase = idx;
+
+    // Update step circle states
+    steps.forEach((step, i) => {
+      step.classList.remove('active', 'done');
+      if (i < idx) step.classList.add('done');
+      if (i === idx) step.classList.add('active');
+      // Reset progress dial on all but active
+      const fg = step.querySelector('.step-progress-fg');
+      if (i !== idx) {
+        fg.style.strokeDashoffset = CIRCUMFERENCE;
+      }
+    });
+
+    // Update progress fill of the horizontal track
+    // 4 phases → 0%, 33%, 66%, 100%
+    const fillPct = idx === 0 ? 0 : (idx / (PHASE_COUNT - 1)) * 100;
+    fill.style.width = fillPct + '%';
+
+    // Update content panels
+    contents.forEach((c, i) => {
+      c.classList.toggle('active', i === idx);
+    });
+
+    // Reset progress dial timing
+    progressStart = performance.now();
+  }
+
+  function runProgressDial(now) {
+    if (isPaused) {
+      // Stop the loop while paused
+      rafId = null;
+      return;
+    }
+
+    const elapsed = now - progressStart;
+    const progress = Math.min(elapsed / AUTO_DURATION, 1);
+
+    const activeStep = steps[currentPhase];
+    const fg = activeStep.querySelector('.step-progress-fg');
+    fg.style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+
+    if (progress >= 1) {
+      // Move to next phase
+      const next = (currentPhase + 1) % PHASE_COUNT;
+      setPhase(next);
+    }
+
+    rafId = requestAnimationFrame(runProgressDial);
+  }
+
+  function startAutoplay() {
+    isPaused = false;
+    statusDot.classList.remove('paused');
+    statusLabel.textContent = 'Auto-playing';
+    progressStart = performance.now();
+    if (!rafId) rafId = requestAnimationFrame(runProgressDial);
+  }
+
+  function pauseAutoplay() {
+    isPaused = true;
+    statusDot.classList.add('paused');
+    statusLabel.textContent = 'Paused · resumes in 10s';
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    // Clear progress dial visually
+    const activeStep = steps[currentPhase];
+    const fg = activeStep.querySelector('.step-progress-fg');
+    fg.style.strokeDashoffset = CIRCUMFERENCE;
+  }
+
+  function handleManualClick(idx) {
+    setPhase(idx);
+    pauseAutoplay();
+
+    // Clear any existing resume timer
+    if (resumeTimer) clearTimeout(resumeTimer);
+
+    // Schedule resume
+    resumeTimer = setTimeout(() => {
+      startAutoplay();
+    }, PAUSE_RESUME);
+  }
+
+  // Wire up clicks
+  steps.forEach((step, i) => {
+    step.addEventListener('click', () => handleManualClick(i));
+  });
+
+  // Initialize
+  setPhase(0);
+  startAutoplay();
+</script>
+
+</body>
+</html>

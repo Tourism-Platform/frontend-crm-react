@@ -84,6 +84,33 @@
 			"Счета в Word"
 		],
 		"visual": {
+			"beforeBadge": "Сейчас",
+			"afterBadge": "С TourLink",
+			"chaosLabel": "Слишком много инструментов на один тур",
+			"beforeSummary": "Excel, мессенджеры, почта и звонки — каждый шаг отдельно",
+			"solutionHeadline": "Соберите тур в одном окне",
+			"solutionSubtitle": "Конструктор, брони и документы — без переключений между сервисами",
+			"resolution": "TourLink заменяет весь этот хаос одной платформой",
+			"tourlinkUrl": "app.tourlink.uz",
+			"benefits": [
+				"Отель, трансфер и активности — в одном конструкторе",
+				"Подтверждения и ваучеры формируются автоматически"
+			],
+			"sidebar_title": "Туры",
+			"sidebar_items": ["Самарканд 3д", "Бухара 5д", "Ташкент city"],
+			"tour_row": "Hyatt Regency · 1 ночь",
+			"tour_row_secondary": "Plov Centre · 19:00",
+			"tools": {
+				"email": "Email",
+				"whatsapp": "WhatsApp",
+				"telegram": "Telegram",
+				"notes": "Заметки",
+				"phone": "Звонки",
+				"excel": "Excel",
+				"word": "Word",
+				"calendar": "Календарь",
+				"bell": "Уведомления"
+			},
 			"messages": [
 				{
 					"text": "«Какой отель свободен 5 мая?»",

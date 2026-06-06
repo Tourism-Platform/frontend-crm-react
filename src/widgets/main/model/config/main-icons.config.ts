@@ -1,17 +1,24 @@
 import {
+	Bell,
 	Building2,
 	Calendar,
 	Car,
 	CircleDollarSign,
 	ClipboardCheck,
+	FileSpreadsheet,
 	FileText,
 	Globe,
 	Hotel,
 	Languages,
+	Mail,
 	MapPin,
+	MessageCircle,
 	MessageSquare,
+	Phone,
 	Search,
+	Send,
 	ShieldCheck,
+	StickyNote,
 	Timer,
 	Users,
 	Utensils
@@ -21,6 +28,7 @@ import type {
 	IAgencyFeatureItem,
 	IMainIconItem,
 	IOperatorFeatureItem,
+	IProblemToolItem,
 	ISupplierFeatureItem
 } from "../types/main-config.types";
 
@@ -72,4 +80,74 @@ export const NETWORK_USER_ITEMS_LIST: IMainIconItem[] = [
 	{ name: "guides", icon: MessageSquare },
 	{ name: "travelers", icon: Users },
 	{ name: "b2b-partners", icon: CircleDollarSign }
+];
+
+export const PROBLEM_APP_ICON_CLASS =
+	"border border-border/80 bg-card shadow-sm";
+
+export const PROBLEM_TOOL_ITEMS_LIST: IProblemToolItem[] = [
+	{
+		id: "whatsapp",
+		icon: MessageCircle,
+		badgeCount: 70,
+		rotate: 0,
+		iconClass: "text-emerald-500",
+		isAnchor: true
+	},
+	{
+		id: "email",
+		icon: Mail,
+		badgeCount: 120,
+		rotate: -6,
+		iconClass: "text-red-500"
+	},
+	{
+		id: "bell",
+		icon: Bell,
+		badgeCount: 140,
+		rotate: 8,
+		iconClass: "text-orange-500"
+	},
+	{
+		id: "notes",
+		icon: StickyNote,
+		badgeCount: 50,
+		rotate: 5,
+		iconClass: "text-amber-500"
+	},
+	{
+		id: "excel",
+		icon: FileSpreadsheet,
+		badgeCount: 90,
+		rotate: 6,
+		iconClass: "text-green-600"
+	},
+	{
+		id: "word",
+		icon: FileText,
+		badgeCount: 45,
+		rotate: -5,
+		iconClass: "text-blue-600"
+	},
+	{
+		id: "phone",
+		icon: Phone,
+		badgeCount: 20,
+		rotate: -4,
+		iconClass: "text-violet-500"
+	},
+	{
+		id: "telegram",
+		icon: Send,
+		badgeCount: 30,
+		rotate: 7,
+		iconClass: "text-sky-500"
+	},
+	{
+		id: "calendar",
+		icon: Calendar,
+		badgeCount: 85,
+		rotate: -3,
+		iconClass: "text-rose-500"
+	}
 ];

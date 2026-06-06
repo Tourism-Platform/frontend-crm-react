@@ -84,6 +84,33 @@
 			"Word invoices"
 		],
 		"visual": {
+			"beforeBadge": "Today",
+			"afterBadge": "With TourLink",
+			"chaosLabel": "Too many tools for one tour",
+			"beforeSummary": "Excel, messengers, email and calls — every step in a different app",
+			"solutionHeadline": "Build a tour in one window",
+			"solutionSubtitle": "Constructor, bookings and documents — no switching between services",
+			"resolution": "TourLink replaces all this chaos with one platform",
+			"tourlinkUrl": "app.tourlink.uz",
+			"benefits": [
+				"Hotel, transfer and activities in one builder",
+				"Confirmations and vouchers generated automatically"
+			],
+			"sidebar_title": "Tours",
+			"sidebar_items": ["Samarkand 3d", "Bukhara 5d", "Tashkent city"],
+			"tour_row": "Hyatt Regency · 1 night",
+			"tour_row_secondary": "Plov Centre · 7 PM",
+			"tools": {
+				"email": "Email",
+				"whatsapp": "WhatsApp",
+				"telegram": "Telegram",
+				"notes": "Notes",
+				"phone": "Calls",
+				"excel": "Excel",
+				"word": "Word",
+				"calendar": "Calendar",
+				"bell": "Notifications"
+			},
 			"messages": [
 				{
 					"text": "\"Which hotel is free on May 5?\"",

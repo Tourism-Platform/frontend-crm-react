@@ -62,3 +62,23 @@ export interface IMainNetworkBeamItem {
 	curvature: number;
 	endYOffset: number;
 }
+
+export type TProblemToolId =
+	| "email"
+	| "whatsapp"
+	| "telegram"
+	| "notes"
+	| "phone"
+	| "excel"
+	| "word"
+	| "calendar"
+	| "bell";
+
+export interface IProblemToolItem {
+	id: TProblemToolId;
+	icon: LucideIcon;
+	badgeCount: number;
+	rotate: number;
+	iconClass: string;
+	isAnchor?: boolean;
+}
