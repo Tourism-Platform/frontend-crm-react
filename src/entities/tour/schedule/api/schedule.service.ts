@@ -3,6 +3,8 @@ import { TOUR_SCHEDULE_PATHS } from "@/shared/api";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapExcludedDateToBackend,
+	mapExcludedDateToFrontend,
 	mapFixedDateToBackend,
 	mapFixedDateToFrontend,
 	mapFullScheduleToFrontend,
@@ -12,12 +14,16 @@ import {
 	mapScheduleToFrontend
 } from "../converters";
 import type {
+	IExcludedDate,
+	IExcludedDateCreate,
 	IFixedDate,
 	IFixedDateCreate,
 	IFullSchedule,
+	IGetScheduleArgs,
 	IRecurrenceRule,
 	IRecurrenceRuleCreate,
 	ISchedule,
+	TExcludedDateBackend,
 	TFixedDateBackend,
 	TFullScheduleBackend,
 	TRecurrenceRuleBackend
@@ -25,9 +31,10 @@ import type {
 
 export const tourScheduleApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getSchedule: builder.query<IFullSchedule, string>({
-			query: (tourId) => ({
-				...TOUR_SCHEDULE_PATHS.getTourSchedule(tourId)
+		getSchedule: builder.query<IFullSchedule, IGetScheduleArgs>({
+			query: ({ tourId, from, to }) => ({
+				...TOUR_SCHEDULE_PATHS.getTourSchedule(tourId),
+				params: from && to ? { from, to } : undefined
 			}),
 			transformResponse: (response: TFullScheduleBackend) =>
 				mapFullScheduleToFrontend(response)
@@ -41,7 +48,42 @@ export const tourScheduleApi = authApi.injectEndpoints({
 				body: mapScheduleToBackend(data)
 			}),
 			transformResponse: (response: TFullScheduleBackend) =>
-				mapScheduleToFrontend(response.schedule)
+				mapScheduleToFrontend(response.schedule),
+			async onQueryStarted(
+				{ tourId },
+				{ dispatch, getState, queryFulfilled }
+			) {
+				try {
+					const { data: updated } = await queryFulfilled;
+					const queries = getState().authApi.queries;
+
+					for (const entry of Object.values(queries)) {
+						const args = entry?.originalArgs as
+							| IGetScheduleArgs
+							| undefined;
+
+						if (
+							entry?.endpointName !== "getSchedule" ||
+							args?.tourId !== tourId
+						) {
+							continue;
+						}
+
+						dispatch(
+							tourScheduleApi.util.updateQueryData(
+								"getSchedule",
+								args,
+								(draft) => {
+									draft.schedule.isSeasonal =
+										updated.isSeasonal;
+								}
+							)
+						);
+					}
+				} catch (error) {
+					console.error(error);
+				}
+			}
 		}),
 		addFixedDate: builder.mutation<
 			IFixedDate,
@@ -53,18 +95,13 @@ export const tourScheduleApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TFixedDateBackend) =>
 				mapFixedDateToFrontend(response),
-			async onQueryStarted({ tourId }, { dispatch, queryFulfilled }) {
+			async onQueryStarted(
+				{ tourId },
+				{ dispatch, getState, queryFulfilled }
+			) {
 				try {
-					const { data: newDate } = await queryFulfilled;
-					dispatch(
-						tourScheduleApi.util.updateQueryData(
-							"getSchedule",
-							tourId,
-							(draft) => {
-								draft.fixedDates.push(newDate);
-							}
-						)
-					);
+					await queryFulfilled;
+					refetchAllScheduleQueries(dispatch, getState, tourId);
 				} catch (error) {
 					console.error(error);
 				}
@@ -78,22 +115,53 @@ export const tourScheduleApi = authApi.injectEndpoints({
 				...TOUR_SCHEDULE_PATHS.removeFixedDate(tourId, dateId)
 			}),
 			async onQueryStarted(
-				{ tourId, dateId },
-				{ dispatch, queryFulfilled }
+				{ tourId },
+				{ dispatch, getState, queryFulfilled }
 			) {
 				try {
 					await queryFulfilled;
-					dispatch(
-						tourScheduleApi.util.updateQueryData(
-							"getSchedule",
-							tourId,
-							(draft) => {
-								draft.fixedDates = draft.fixedDates.filter(
-									(date) => date.id !== dateId
-								);
-							}
-						)
-					);
+					refetchAllScheduleQueries(dispatch, getState, tourId);
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		}),
+		addExcludedDate: builder.mutation<
+			IExcludedDate,
+			{ tourId: string; data: IExcludedDateCreate }
+		>({
+			query: ({ tourId, data }) => ({
+				...TOUR_SCHEDULE_PATHS.addExcludedDate(tourId),
+				body: mapExcludedDateToBackend(data)
+			}),
+			transformResponse: (response: TExcludedDateBackend) =>
+				mapExcludedDateToFrontend(response),
+			async onQueryStarted(
+				{ tourId },
+				{ dispatch, getState, queryFulfilled }
+			) {
+				try {
+					await queryFulfilled;
+					refetchAllScheduleQueries(dispatch, getState, tourId);
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		}),
+		removeExcludedDate: builder.mutation<
+			void,
+			{ tourId: string; dateId: string }
+		>({
+			query: ({ tourId, dateId }) => ({
+				...TOUR_SCHEDULE_PATHS.removeExcludedDate(tourId, dateId)
+			}),
+			async onQueryStarted(
+				{ tourId },
+				{ dispatch, getState, queryFulfilled }
+			) {
+				try {
+					await queryFulfilled;
+					refetchAllScheduleQueries(dispatch, getState, tourId);
 				} catch (error) {
 					console.error(error);
 				}
@@ -108,23 +176,20 @@ export const tourScheduleApi = authApi.injectEndpoints({
 				body: mapRecurrenceRuleToBackend(data)
 			}),
 			transformResponse: (response: TRecurrenceRuleBackend) =>
-				mapRecurrenceRuleToFrontend(response),
-			async onQueryStarted({ tourId }, { dispatch, queryFulfilled }) {
-				try {
-					const { data: newRule } = await queryFulfilled;
-					dispatch(
-						tourScheduleApi.util.updateQueryData(
-							"getSchedule",
-							tourId,
-							(draft) => {
-								draft.recurrenceRules.push(newRule);
-							}
-						)
-					);
-				} catch (error) {
-					console.error(error);
+				mapRecurrenceRuleToFrontend(response)
+		}),
+		bulkAddRecurrenceRules: builder.mutation<
+			IRecurrenceRule[],
+			{ tourId: string; rules: IRecurrenceRuleCreate[] }
+		>({
+			query: ({ tourId, rules }) => ({
+				...TOUR_SCHEDULE_PATHS.bulkAddRecurrenceRules(tourId),
+				body: {
+					rules: rules.map(mapRecurrenceRuleToBackend)
 				}
-			}
+			}),
+			transformResponse: (response: TRecurrenceRuleBackend[]) =>
+				response.map(mapRecurrenceRuleToFrontend)
 		}),
 		removeRecurrenceRule: builder.mutation<
 			void,
@@ -132,38 +197,60 @@ export const tourScheduleApi = authApi.injectEndpoints({
 		>({
 			query: ({ tourId, ruleId }) => ({
 				...TOUR_SCHEDULE_PATHS.removeRecurrenceRule(tourId, ruleId)
-			}),
-			async onQueryStarted(
-				{ tourId, ruleId },
-				{ dispatch, queryFulfilled }
-			) {
-				try {
-					await queryFulfilled;
-					dispatch(
-						tourScheduleApi.util.updateQueryData(
-							"getSchedule",
-							tourId,
-							(draft) => {
-								draft.recurrenceRules =
-									draft.recurrenceRules.filter(
-										(rule) => rule.id !== ruleId
-									);
-							}
-						)
-					);
-				} catch (error) {
-					console.error(error);
-				}
-			}
+			})
 		})
 	})
 });
+
+type TScheduleRefetchAction = ReturnType<
+	typeof tourScheduleApi.endpoints.getSchedule.initiate
+>;
+
+type TScheduleQueriesState = {
+	authApi: {
+		queries: Record<string, unknown>;
+	};
+};
+
+export function refetchAllScheduleQueries(
+	dispatch: (action: TScheduleRefetchAction) => void,
+	getState: () => TScheduleQueriesState,
+	tourId: string
+): void {
+	const queries = getState().authApi.queries;
+
+	for (const entry of Object.values(queries)) {
+		const queryEntry = entry as
+			| {
+					endpointName?: string;
+					originalArgs?: IGetScheduleArgs;
+			  }
+			| undefined;
+		const args = queryEntry?.originalArgs;
+
+		if (
+			queryEntry?.endpointName !== "getSchedule" ||
+			args?.tourId !== tourId
+		) {
+			continue;
+		}
+
+		dispatch(
+			tourScheduleApi.endpoints.getSchedule.initiate(args, {
+				forceRefetch: true
+			})
+		);
+	}
+}
 
 export const {
 	useGetScheduleQuery,
 	useUpdateScheduleMutation,
 	useAddFixedDateMutation,
 	useRemoveFixedDateMutation,
+	useAddExcludedDateMutation,
+	useRemoveExcludedDateMutation,
 	useAddRecurrenceRuleMutation,
+	useBulkAddRecurrenceRulesMutation,
 	useRemoveRecurrenceRuleMutation
 } = tourScheduleApi;

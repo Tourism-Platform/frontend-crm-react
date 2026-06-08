@@ -3,11 +3,73 @@
 
 	"tabs": {
 		"fixed_dates": "Fixed Dates",
-		"recurring_dates": "Recurring Dates"
+		"recurring_dates": "Recurring pattern"
 	},
 
 	"selected_dates": {
 		"title": "Selected Dates"
+	},
+
+	"fixed_dates": {
+		"toasts": {
+			"add": {
+				"loading": "Adding date...",
+				"success": "Date added",
+				"error": "Failed to add date"
+			},
+			"remove": {
+				"loading": "Removing date...",
+				"success": "Date removed",
+				"error": "Failed to remove date"
+			}
+		}
+	},
+
+	"removed_days": {
+		"title": "Removed days"
+	},
+
+	"excluded_dates": {
+		"toasts": {
+			"add": {
+				"loading": "Excluding date...",
+				"success": "Date excluded",
+				"error": "Failed to exclude date"
+			},
+			"remove": {
+				"loading": "Restoring date...",
+				"success": "Date restored",
+				"error": "Failed to restore date"
+			}
+		}
+	},
+
+	"recurring": {
+		"repeat_on": {
+			"label": "Repeat on",
+			"placeholder": "Select weekdays"
+		},
+		"period": {
+			"label": "Period of"
+		},
+		"weekdays": {
+			"monday": "Monday",
+			"tuesday": "Tuesday",
+			"wednesday": "Wednesday",
+			"thursday": "Thursday",
+			"friday": "Friday",
+			"saturday": "Saturday",
+			"sunday": "Sunday"
+		},
+		"buttons": {
+			"apply": "Apply pattern"
+		},
+		"toasts": {
+			"loading": "Saving pattern…",
+			"success": "Pattern updated",
+			"error": "An error occurred",
+			"validation_error": "Select weekdays and a period"
+		}
 	},
 
 	"switcher": "Seasonality",
@@ -22,7 +84,9 @@
 		},
 
 		"buttons": {
-			"add": "Add new rule"
+			"add": "Add new rule",
+			"save_rule": "Save rule",
+			"saved_rule": "Saved"
 		},
 
 		"toasts": {

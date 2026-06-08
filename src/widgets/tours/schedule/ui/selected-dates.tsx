@@ -2,31 +2,56 @@ import { XIcon } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import { Badge, withErrorBoundary } from "@/shared/ui";
 
-import type { IFixedDate } from "@/entities/tour";
-import { useRemoveFixedDateMutation } from "@/entities/tour";
+import type { IExcludedDate, IFixedDate } from "@/entities/tour";
+
+type TSelectedDatesVariant = "fixed" | "recurring";
 
 interface ISelectedDatesProps {
-	tourId: string;
-	fixedDates: IFixedDate[];
+	variant: TSelectedDatesVariant;
+	fixedDates?: IFixedDate[];
+	excludedDates?: IExcludedDate[];
+	onRemove: (id: string) => void;
 }
 
-const SelectedDatesBase: FC<ISelectedDatesProps> = ({ tourId, fixedDates }) => {
+const SelectedDatesBase: FC<ISelectedDatesProps> = ({
+	variant,
+	fixedDates = [],
+	excludedDates = [],
+	onRemove
+}) => {
 	const { t } = useTranslation("tour_schedule_page");
-	const [removeFixedDate] = useRemoveFixedDateMutation();
+
+	const isRecurring = variant === "recurring";
+	const title = isRecurring
+		? t("removed_days.title")
+		: t("selected_dates.title");
+	const items = isRecurring
+		? excludedDates.map((item) => ({
+				id: item.id,
+				value: item.value
+			}))
+		: fixedDates.map((item) => ({
+				id: item.id,
+				value: item.value
+			}));
 
 	return (
 		<div className="grid gap-2">
-			<h2>{t("selected_dates.title")}</h2>
+			<h2>{title}</h2>
 			<div className="flex flex-wrap gap-2">
-				{fixedDates?.map((item) => (
-					<Badge className="p-2 text-base flex gap-2" key={item.id}>
+				{items.map((item) => (
+					<Badge
+						className={cn("p-2 text-base flex gap-2")}
+						key={item.id}
+						variant={isRecurring ? "destructive" : "default"}
+					>
 						<p>{item.value.toLocaleDateString()}</p>
 						<button
-							onClick={() =>
-								removeFixedDate({ tourId, dateId: item.id })
-							}
+							type="button"
+							onClick={() => onRemove(item.id)}
 							className="cursor-pointer"
 						>
 							<XIcon />

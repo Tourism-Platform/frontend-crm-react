@@ -15,7 +15,7 @@ interface IDatePickerProps {
 	onChange?: (date: { from?: Date; to?: Date }) => void;
 }
 
-export default function DatePicker({ from, to, onChange }: IDatePickerProps) {
+export const DatePicker = ({ from, to, onChange }: IDatePickerProps) => {
 	const { t } = useTranslation("common");
 	const defaultDate: DateRange = {
 		from: from,
@@ -90,4 +90,4 @@ export default function DatePicker({ from, to, onChange }: IDatePickerProps) {
 			</PopoverContent>
 		</Popover>
 	);
-}
+};

@@ -1,14 +1,18 @@
-import { Check, Loader2, Trash } from "lucide-react";
-import { type FC, useEffect } from "react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Check, Loader2, Save, Trash } from "lucide-react";
+import { type FC, useEffect, useRef } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Form, Input, withErrorBoundary } from "@/shared/ui";
-import DatePicker from "@/shared/ui/date-picker";
+import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
 
-import { type ISeasonality, useGetSeasonalityQuery } from "@/entities/tour";
+import { useGetSeasonalityQuery } from "@/entities/tour";
 
-import { useSeasonalityRemove, useSeasonalitySave } from "../model";
+import {
+	type TSeasonalityFormValues,
+	useSeasonalityRemove,
+	useSeasonalitySave
+} from "../model";
+import { areCalendarDatesEqual } from "../model/lib";
 
 interface ISeasonalityInfoProps {
 	tourId: string;
@@ -21,9 +25,7 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 		skip: !tourId
 	});
 
-	const form = useForm<{
-		seasonality: Partial<ISeasonality>[];
-	}>({
+	const form = useForm<TSeasonalityFormValues>({
 		defaultValues: {
 			seasonality: []
 		},
@@ -35,29 +37,40 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 		name: "seasonality"
 	});
 
-	const { handleSave, isCheckedPending } = useSeasonalitySave({
+	const { handleSave, pendingSaveIndex } = useSeasonalitySave({
 		tourId,
 		form
 	});
 
-	const { handleRemove, isRemoving } = useSeasonalityRemove({
+	const { handleRemove, pendingRemoveIndex } = useSeasonalityRemove({
 		tourId,
 		form,
 		remove
 	});
 
+	const isFormSyncedRef = useRef(false);
+
 	useEffect(() => {
-		if (seasonalityData) {
-			form.reset({
-				seasonality: seasonalityData
-			});
+		isFormSyncedRef.current = false;
+	}, [tourId]);
+
+	useEffect(() => {
+		if (!seasonalityData || isFormSyncedRef.current) {
+			return;
 		}
-	}, [seasonalityData, form]);
+
+		form.reset({
+			seasonality: seasonalityData.map(({ from, to, ...rest }) => ({
+				...rest,
+				period: { from, to }
+			}))
+		});
+		isFormSyncedRef.current = true;
+	}, [seasonalityData, form, tourId]);
 
 	return (
 		<Form {...form}>
-			<form>
-				{/* Заголовки */}
+			<form className="grid gap-4">
 				<div className="flex items-center  col-span-2 justify-between">
 					<div className="grid grid-cols-2 font-medium gap-5">
 						<p className="w-[350px]">
@@ -68,84 +81,103 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 					<Button
 						type="button"
 						variant="outline"
-						onClick={() => append({})}
+						onClick={() =>
+							append({
+								period: { from: undefined, to: undefined }
+							})
+						}
 					>
 						{t("seasonality.buttons.add")}
 					</Button>
 				</div>
 
-				{/* Список правил */}
 				<div className="col-span-2 flex flex-col gap-4">
-					{fields.map((item, index) => (
-						<div
-							key={item.id}
-							className="flex items-center gap-3  "
-						>
-							{/* Дата */}
-							<div className="grid grid-cols-2 gap-5">
-								<DatePicker
-									from={form.watch(
-										`seasonality.${index}.from`
-									)}
-									to={form.watch(`seasonality.${index}.to`)}
-									onChange={({ from, to }) => {
-										form.setValue(
-											`seasonality.${index}.from`,
-											from
-										);
-										form.setValue(
-											`seasonality.${index}.to`,
-											to
-										);
-									}}
-								/>
+					{fields.map((item, index) => {
+						const rowId = form.watch(`seasonality.${index}.id`);
+						const period = form.watch(
+							`seasonality.${index}.period`
+						);
+						const from = period?.from;
+						const to = period?.to;
+						const commission = form.watch(
+							`seasonality.${index}.commission`
+						);
+						const serverRow =
+							rowId &&
+							seasonalityData?.find((s) => s.id === rowId);
+						const isPersisted = Boolean(
+							serverRow &&
+								from &&
+								to &&
+								Number(commission) === serverRow.commission &&
+								areCalendarDatesEqual(from, serverRow.from) &&
+								areCalendarDatesEqual(to, serverRow.to)
+						);
 
-								{/* Процент */}
-								<Controller
-									control={form.control}
-									name={`seasonality.${index}.commission`}
-									render={({ field }) => (
-										<Input
-											{...field}
-											placeholder={t(
-												"seasonality.percent.placeholder"
-											)}
-											type="number"
-										/>
+						return (
+							<div
+								key={item.id}
+								className="flex items-center gap-3  "
+							>
+								<div className="grid grid-cols-2 gap-5">
+									<CustomField
+										control={form.control}
+										name={`seasonality.${index}.period`}
+										fieldType="datePicker"
+										hideLabel
+										className="mb-0"
+										t={t}
+									/>
+									<CustomField
+										control={form.control}
+										name={`seasonality.${index}.commission`}
+										fieldType="input"
+										type="number"
+										placeholder="seasonality.percent.placeholder"
+										hideLabel
+										className="mb-0"
+										t={t}
+									/>
+								</div>
+								<Button
+									type="button"
+									variant="outline"
+									size={"icon"}
+									disabled={pendingSaveIndex === index}
+									aria-label={
+										isPersisted
+											? t(
+													"seasonality.buttons.saved_rule"
+												)
+											: t("seasonality.buttons.save_rule")
+									}
+									onClick={() => handleSave(index)}
+								>
+									{pendingSaveIndex === index ? (
+										<Loader2 className="h-4 w-4 animate-spin" />
+									) : isPersisted ? (
+										<Check className="text-green-600" />
+									) : (
+										<Save className="text-muted-foreground" />
 									)}
-								/>
+								</Button>
+
+								<Button
+									type="button"
+									variant="destructive"
+									size={"icon"}
+									disabled={pendingRemoveIndex === index}
+									onClick={() => handleRemove(index)}
+								>
+									{pendingRemoveIndex === index ? (
+										<Loader2 className="h-4 w-4 animate-spin" />
+									) : (
+										<Trash />
+									)}
+								</Button>
 							</div>
-							{/* Сохранить правило */}
-							<Button
-								type="button"
-								variant="outline"
-								size={"icon"}
-								disabled={isRemoving}
-								onClick={() => handleSave(index)}
-							>
-								{isCheckedPending ? (
-									<Loader2 className="h-4 w-4 animate-spin" />
-								) : (
-									<Check className="text-green-600" />
-								)}
-							</Button>
-
-							{/* Удалить правило */}
-							<Button
-								type="button"
-								variant="destructive"
-								size={"icon"}
-								disabled={isCheckedPending}
-								onClick={() => handleRemove(index)}
-							>
-								{isRemoving ? (
-									<Loader2 className="h-4 w-4 animate-spin" />
-								) : (
-									<Trash />
-								)}
-							</Button>
-						</div>
-					))}
+						);
+					})}
 				</div>
 			</form>
 		</Form>

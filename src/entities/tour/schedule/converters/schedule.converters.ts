@@ -1,12 +1,18 @@
-import { formatISO } from "date-fns";
+import { format } from "date-fns";
+
+import { parseLocalDateString } from "@/shared/lib";
 
 import type {
+	IExcludedDate,
+	IExcludedDateCreate,
 	IFixedDate,
 	IFixedDateCreate,
 	IFullSchedule,
 	IRecurrenceRule,
 	IRecurrenceRuleCreate,
 	ISchedule,
+	TExcludedDateBackend,
+	TExcludedDateCreateBackend,
 	TFixedDateBackend,
 	TFixedDateCreateBackend,
 	TFullScheduleBackend,
@@ -31,22 +37,39 @@ export const mapScheduleToFrontend = (
 export const mapFixedDateToBackend = (
 	frontend: IFixedDateCreate
 ): TFixedDateCreateBackend => ({
-	value: formatISO(frontend.value)
+	value: format(frontend.value, "yyyy-MM-dd")
 });
 
 export const mapFixedDateToFrontend = (
 	backend: TFixedDateBackend
 ): IFixedDate => ({
 	id: backend.id,
-	value: new Date(backend.value)
+	value: parseLocalDateString(backend.value)
+});
+
+export const mapExcludedDateToBackend = (
+	frontend: IExcludedDateCreate
+): TExcludedDateCreateBackend => ({
+	value: format(frontend.value, "yyyy-MM-dd")
+});
+
+export const mapExcludedDateToFrontend = (
+	backend: TExcludedDateBackend
+): IExcludedDate => ({
+	id: backend.id,
+	value: parseLocalDateString(backend.value)
 });
 
 export const mapRecurrenceRuleToBackend = (
 	frontend: IRecurrenceRuleCreate
 ): TRecurrenceRuleCreateBackend => ({
 	day: frontend.day ?? null,
-	valid_from: frontend.validFrom ? formatISO(frontend.validFrom) : null,
-	valid_until: frontend.validUntil ? formatISO(frontend.validUntil) : null
+	valid_from: frontend.validFrom
+		? format(frontend.validFrom, "yyyy-MM-dd")
+		: null,
+	valid_until: frontend.validUntil
+		? format(frontend.validUntil, "yyyy-MM-dd")
+		: null
 });
 
 export const mapRecurrenceRuleToFrontend = (
@@ -54,8 +77,12 @@ export const mapRecurrenceRuleToFrontend = (
 ): IRecurrenceRule => ({
 	id: backend.id,
 	day: backend.day,
-	validFrom: backend.valid_from ? new Date(backend.valid_from) : null,
-	validUntil: backend.valid_until ? new Date(backend.valid_until) : null
+	validFrom: backend.valid_from
+		? parseLocalDateString(backend.valid_from)
+		: null,
+	validUntil: backend.valid_until
+		? parseLocalDateString(backend.valid_until)
+		: null
 });
 
 export const mapFullScheduleToFrontend = (
@@ -63,5 +90,15 @@ export const mapFullScheduleToFrontend = (
 ): IFullSchedule => ({
 	schedule: mapScheduleToFrontend(backend.schedule),
 	fixedDates: backend.fixed_dates.map(mapFixedDateToFrontend),
-	recurrenceRules: backend.recurrence_rules.map(mapRecurrenceRuleToFrontend)
+	excludedDates: backend.excluded_dates.map(mapExcludedDateToFrontend),
+	recurrenceRules: backend.recurrence_rules.map(mapRecurrenceRuleToFrontend),
+	occurrences: (backend.occurrences ?? []).map((d) =>
+		parseLocalDateString(d)
+	),
+	windowFrom: backend.window_from
+		? parseLocalDateString(backend.window_from)
+		: null,
+	windowUntil: backend.window_until
+		? parseLocalDateString(backend.window_until)
+		: null
 });

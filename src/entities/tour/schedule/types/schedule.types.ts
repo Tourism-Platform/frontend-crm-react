@@ -11,6 +11,15 @@ export interface IFixedDateCreate {
 	value: Date;
 }
 
+export interface IExcludedDate {
+	id: string;
+	value: Date;
+}
+
+export interface IExcludedDateCreate {
+	value: Date;
+}
+
 export interface IRecurrenceRule {
 	id: string;
 	day: number | null;
@@ -24,8 +33,18 @@ export interface IRecurrenceRuleCreate {
 	validUntil?: Date | null;
 }
 
+export interface IGetScheduleArgs {
+	tourId: string;
+	from?: string;
+	to?: string;
+}
+
 export interface IFullSchedule {
 	schedule: ISchedule;
 	fixedDates: IFixedDate[];
+	excludedDates: IExcludedDate[];
 	recurrenceRules: IRecurrenceRule[];
+	occurrences: Date[];
+	windowFrom: Date | null;
+	windowUntil: Date | null;
 }

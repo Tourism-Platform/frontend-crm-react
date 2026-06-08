@@ -1,61 +1,30 @@
+import { startOfToday } from "date-fns";
 import { type FC, useMemo } from "react";
 
 import { Calendar, withErrorBoundary } from "@/shared/ui";
 
 import type { IFixedDate } from "@/entities/tour";
-import {
-	useAddFixedDateMutation,
-	useRemoveFixedDateMutation
-} from "@/entities/tour";
 
 interface ICalendarInfoProps {
-	tourId: string;
 	fixedDates: IFixedDate[];
+	onSelect: (dates: Date[] | undefined) => void;
 }
 
-const CalendarInfoBase: FC<ICalendarInfoProps> = ({ tourId, fixedDates }) => {
-	const [addFixedDate] = useAddFixedDateMutation();
-	const [removeFixedDate] = useRemoveFixedDateMutation();
+const CalendarInfoBase: FC<ICalendarInfoProps> = ({ fixedDates, onSelect }) => {
+	const today = startOfToday();
 
-	const dateArray = useMemo(() => {
-		return fixedDates.map((fd) => fd.value);
-	}, [fixedDates]);
-
-	const handleSelect = (newDates: Date[] | undefined) => {
-		if (!newDates) return;
-		const prevTimestamps = dateArray.map((d) => d.getTime());
-		const newTimestamps = newDates.map((d) => d.getTime());
-
-		const addedDates = newDates.filter(
-			(d) => !prevTimestamps.includes(d.getTime())
-		);
-		const removedDates = dateArray.filter(
-			(d) => !newTimestamps.includes(d.getTime())
-		);
-
-		addedDates.forEach((d) => {
-			addFixedDate({
-				tourId,
-				data: { value: d }
-			});
-		});
-
-		removedDates.forEach((d) => {
-			const fd = fixedDates.find(
-				(f) => f.value.getTime() === d.getTime()
-			);
-			if (fd) {
-				removeFixedDate({ tourId, dateId: fd.id });
-			}
-		});
-	};
+	const dateArray = useMemo(
+		() => fixedDates.map((fd) => fd.value),
+		[fixedDates]
+	);
 
 	return (
 		<div>
 			<Calendar
 				mode="multiple"
 				selected={dateArray}
-				onSelect={handleSelect}
+				onSelect={onSelect}
+				disabled={{ before: today }}
 				numberOfMonths={3}
 				pagedNavigation
 				showOutsideDays={false}

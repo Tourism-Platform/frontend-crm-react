@@ -87,6 +87,10 @@ type TFormDateRange<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	placeholder?: L;
 };
 
+type TFormDatePicker<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "datePicker";
+};
+
 type TFormSwitch<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: "switch";
 	description?: L;
@@ -125,4 +129,5 @@ export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormSwitch<L, K>
 	| TFormAutocomplete<L, K>
 	| TFormGeo<L, K>
-	| TFormDateRange<L, K>;
+	| TFormDateRange<L, K>
+	| TFormDatePicker<L, K>;

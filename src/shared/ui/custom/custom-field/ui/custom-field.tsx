@@ -6,6 +6,7 @@ import type { Control } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
 import type {
+	BadgeSize,
 	BadgeVariant,
 	CustomAutocompleteProps,
 	CustomGeoSelectProps,
@@ -36,6 +37,7 @@ import {
 	type TimePickerInputProps
 } from "@/shared/ui";
 import { CustomEditor } from "@/shared/ui/custom/custom-editor";
+import { DatePicker } from "@/shared/ui/date-picker";
 import { PhoneInput } from "@/shared/ui/shadcn-ui/phone-input";
 
 export type CustomFieldVariant =
@@ -52,6 +54,7 @@ export type CustomFieldVariant =
 	| "autocomplete"
 	| "geo"
 	| "dateRange"
+	| "datePicker"
 	| "switch";
 
 type BaseFieldProps = {
@@ -62,6 +65,7 @@ type BaseFieldProps = {
 	className?: string;
 	disabled?: boolean;
 	externalError?: string;
+	hideLabel?: boolean;
 };
 
 type TextFieldVariant = BaseFieldProps & {
@@ -105,6 +109,7 @@ type MultiselectFieldVariant = BaseFieldProps & {
 	placeholder?: string;
 	displayMode?: MultipleSelectorDisplayMode;
 	badgeVariant?: BadgeVariant;
+	badgeSize?: BadgeSize;
 	hideClearAllButton?: boolean;
 };
 
@@ -123,6 +128,10 @@ type GeoFieldVariant = BaseFieldProps & {
 type DateRangeFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "dateRange">;
 	placeholder?: string;
+};
+
+type DatePickerFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "datePicker">;
 };
 
 type SwitchFieldVariant = BaseFieldProps & {
@@ -144,6 +153,7 @@ type CustomFieldProps =
 	| AutocompleteFieldVariant
 	| GeoFieldVariant
 	| DateRangeFieldVariant
+	| DatePickerFieldVariant
 	| SwitchFieldVariant;
 
 // helpers
@@ -174,6 +184,7 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 		className,
 		fieldType,
 		externalError,
+		hideLabel,
 		...rest
 	} = props;
 
@@ -294,6 +305,7 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						}
 						displayMode={props.displayMode}
 						badgeVariant={props.badgeVariant}
+						badgeSize={props.badgeSize}
 						hideClearAllButton={props.hideClearAllButton}
 					/>
 				);
@@ -332,6 +344,20 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...field}
 					/>
 				);
+			case "datePicker": {
+				const value = field.value as
+					| { from?: Date; to?: Date }
+					| null
+					| undefined;
+
+				return (
+					<DatePicker
+						from={value?.from}
+						to={value?.to}
+						onChange={field.onChange}
+					/>
+				);
+			}
 			case "switch":
 				return (
 					<Switch
@@ -389,8 +415,12 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 			control={control}
 			name={name}
 			render={({ field }) => (
-				<FormItem className={cn("relative mb-5", className)}>
-					<FormLabel className="ml-1">{t(label)}:</FormLabel>
+				<FormItem
+					className={cn("relative", !hideLabel && "mb-5", className)}
+				>
+					{label && !hideLabel ? (
+						<FormLabel className="ml-1">{t(label)}:</FormLabel>
+					) : null}
 					<FormControl>{renderInput(field)}</FormControl>
 					<FormMessage
 						t={t}

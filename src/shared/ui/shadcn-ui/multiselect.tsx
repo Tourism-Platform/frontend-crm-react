@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 import { useDebounce } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
-import { Badge, type BadgeVariant } from "@/shared/ui";
+import { Badge, type BadgeSize, type BadgeVariant } from "@/shared/ui";
 import {
 	Command,
 	CommandGroup,
@@ -89,6 +89,7 @@ interface MultipleSelectorProps {
 	displayMode?: MultipleSelectorDisplayMode;
 	/** Badge variant for badge display mode */
 	badgeVariant?: BadgeVariant;
+	badgeSize?: BadgeSize;
 	/** aria-invalid for form validation */
 	"aria-invalid"?: boolean;
 }
@@ -189,6 +190,7 @@ export const MultipleSelector = ({
 	hideClearAllButton = false,
 	displayMode = "default",
 	badgeVariant,
+	badgeSize,
 	"aria-invalid": ariaInvalid
 }: MultipleSelectorProps) => {
 	const { t } = useTranslation("common");
@@ -452,8 +454,9 @@ export const MultipleSelector = ({
 						<Badge
 							key={option.value}
 							variant={badgeVariant}
+							size={badgeSize}
 							onClick={() => handleUnselect(option)}
-							className="pl-3 pr-8 py-2 text-sm relative"
+							className="pl-3 pr-8 text-sm relative"
 						>
 							{option.label}
 							{!option.fixed && (
@@ -476,7 +479,7 @@ export const MultipleSelector = ({
 			)}
 			<div
 				className={cn(
-					"relative min-h-[38px] rounded-md border border-input text-sm outline-none transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 cursor-text p-1",
+					"relative min-h-[36px] rounded-md border border-input text-sm outline-none transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 cursor-text p-1",
 					ariaInvalid &&
 						"border-destructive ring-destructive/20 dark:ring-destructive/40",
 					!hideClearAllButton && "pe-9",
@@ -495,8 +498,9 @@ export const MultipleSelector = ({
 								<Badge
 									key={option.value}
 									variant={badgeVariant}
+									size={badgeSize}
 									onClick={() => handleUnselect(option)}
-									className="pl-3 pr-8 py-2 text-sm relative"
+									className="pl-3 pr-8 text-sm relative"
 								>
 									{option.label}
 									{!option.fixed && (
@@ -525,7 +529,7 @@ export const MultipleSelector = ({
 					<CommandPrimitive.Input
 						{...inputProps}
 						className={cn(
-							"flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground/70 disabled:cursor-not-allowed px-2 py-1.5",
+							"flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground/70 disabled:cursor-not-allowed px-2 py-0.5",
 							hidePlaceholderWhenSelected && "w-full",
 							inputProps?.className
 						)}
@@ -586,7 +590,7 @@ export const MultipleSelector = ({
 			<div className="relative">
 				<div
 					className={cn(
-						"absolute top-2 z-10 w-full overflow-hidden rounded-md border border-input",
+						"absolute top-2 z-50 w-full overflow-hidden rounded-md border border-input",
 						"data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=open]:animate-in",
 						!open && "hidden"
 					)}
