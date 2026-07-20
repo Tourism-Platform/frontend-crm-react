@@ -59,7 +59,7 @@ const mapMultiplyOptionEvent = (
 };
 
 const mapSinglePubEvent = (event: TPubEvent): IOptionEvent => {
-	if (event.typ === "8") {
+	if (event.typ === "10") {
 		return mapMultiplyOptionEvent(event);
 	}
 

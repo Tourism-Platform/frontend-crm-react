@@ -1,4 +1,5 @@
 import {
+	EventTypes,
 	type SupplierPaymentResponse,
 	SupplierPaymentStatus
 } from "@/shared/api";
@@ -223,6 +224,10 @@ export const createSupplierPaymentMocks = (): ISupplierPaymentMockBundle => {
 		const rate = MOCK_SUPPLIER_PAYMENT_DEFAULTS.rate;
 
 		payments.push({
+			order_number: booking.order_number,
+			event_name: row.component,
+			event_typ: row.type as EventTypes,
+			supplier_name: row.supplier,
 			id,
 			operator_id: MOCK_SUPPLIER_PAYMENT_DEFAULTS.operator_id,
 			booking_id: booking.id,

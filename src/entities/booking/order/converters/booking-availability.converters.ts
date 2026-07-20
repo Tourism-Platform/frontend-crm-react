@@ -1,9 +1,10 @@
-import type { BookingEventAvailabilityModel } from "@/shared/api";
-
-import type { IBookingEventAvailability } from "../types/booking-availability.types";
+import type {
+	IBookingEventAvailability,
+	TBookingEventAvailabilityBackend
+} from "../types";
 
 export const mapBookingAvailabilityToFrontend = (
-	data: BookingEventAvailabilityModel
+	data: TBookingEventAvailabilityBackend
 ): IBookingEventAvailability => ({
 	id: data.id,
 	bookingId: data.booking_id,
@@ -13,5 +14,5 @@ export const mapBookingAvailabilityToFrontend = (
 });
 
 export const mapBookingAvailabilityListToFrontend = (
-	data: BookingEventAvailabilityModel[]
+	data: TBookingEventAvailabilityBackend[]
 ): IBookingEventAvailability[] => data.map(mapBookingAvailabilityToFrontend);

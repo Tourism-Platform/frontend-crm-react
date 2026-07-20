@@ -1,8 +1,6 @@
-import {
-	AvailabilityStatus,
-	type BookingEventAvailabilityModel,
-	BookingStatus
-} from "@/shared/api";
+import { AvailabilityStatus, BookingStatus, EventTypes } from "@/shared/api";
+
+import type { TBookingEventAvailabilityBackend } from "../types";
 
 import { getPendingBookingIds } from "./booking-order-pax.mock";
 import { MOCK_EVENT_IDS } from "./booking-order.mock.constants";
@@ -10,42 +8,50 @@ import { bookingOrderDetailStore } from "./booking-order.store";
 
 const buildAvailabilityRows = (
 	bookingId: string
-): BookingEventAvailabilityModel[] => [
+): TBookingEventAvailabilityBackend[] => [
 	{
 		id: `a1${bookingId.slice(1, 9)}-0001-4000-8000-000000000001`,
 		booking_id: bookingId,
 		event_id: MOCK_EVENT_IDS.flight,
 		option_index: 0,
-		status: AvailabilityStatus.Selected
+		status: AvailabilityStatus.Selected,
+		event_name: "Flight",
+		event_typ: EventTypes.Value1
 	},
 	{
 		id: `a2${bookingId.slice(1, 9)}-0002-4000-8000-000000000002`,
 		booking_id: bookingId,
 		event_id: MOCK_EVENT_IDS.multiply,
 		option_index: 0,
-		status: AvailabilityStatus.Available
+		status: AvailabilityStatus.Available,
+		event_name: "Flight",
+		event_typ: EventTypes.Value1
 	},
 	{
 		id: `a3${bookingId.slice(1, 9)}-0003-4000-8000-000000000003`,
 		booking_id: bookingId,
 		event_id: MOCK_EVENT_IDS.multiply,
 		option_index: 1,
-		status: AvailabilityStatus.Pending
+		status: AvailabilityStatus.Pending,
+		event_name: "Flight",
+		event_typ: EventTypes.Value1
 	},
 	{
 		id: `a4${bookingId.slice(1, 9)}-0004-4000-8000-000000000004`,
 		booking_id: bookingId,
 		event_id: MOCK_EVENT_IDS.activity,
 		option_index: 0,
-		status: AvailabilityStatus.Available
+		status: AvailabilityStatus.Available,
+		event_name: "Flight",
+		event_typ: EventTypes.Value1
 	}
 ];
 
 const buildInitialAvailabilityStore = (): Map<
 	string,
-	BookingEventAvailabilityModel[]
+	TBookingEventAvailabilityBackend[]
 > => {
-	const store = new Map<string, BookingEventAvailabilityModel[]>();
+	const store = new Map<string, TBookingEventAvailabilityBackend[]>();
 
 	for (const bookingId of getPendingBookingIds()) {
 		const detail = bookingOrderDetailStore.get(bookingId);
@@ -61,7 +67,7 @@ export const bookingAvailabilityStore = buildInitialAvailabilityStore();
 
 export const getBookingAvailabilityList = (
 	bookingId: string
-): BookingEventAvailabilityModel[] => {
+): TBookingEventAvailabilityBackend[] => {
 	const detail = bookingOrderDetailStore.get(bookingId);
 	if (detail?.status !== BookingStatus.Pending) return [];
 	return bookingAvailabilityStore.get(bookingId) ?? [];
@@ -81,7 +87,7 @@ export const updateBookingAvailabilityRow = (
 	eventId: string,
 	optionIndex: number,
 	status: AvailabilityStatus
-): BookingEventAvailabilityModel | undefined => {
+): TBookingEventAvailabilityBackend | undefined => {
 	const rows = bookingAvailabilityStore.get(bookingId);
 	if (!rows) return undefined;
 

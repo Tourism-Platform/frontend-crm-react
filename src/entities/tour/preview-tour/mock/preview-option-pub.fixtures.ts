@@ -227,7 +227,7 @@ export const multiplyHotels = (
 	day: number,
 	position: number
 ): MultipleOptionEventPubOutput => ({
-	typ: "8",
+	typ: "10",
 	name: "Overnight in Tashkent (choose one)",
 	description:
 		"Stay in one of our partner hotels of the same category. Exact property is confirmed before departure.",
@@ -281,7 +281,7 @@ export const multiplyEvening = (
 	day: number,
 	position: number
 ): MultipleOptionEventPubOutput => ({
-	typ: "8",
+	typ: "10",
 	name: "Evening experience (choose one)",
 	description:
 		"Select one included evening activity. Tell your guide by 12:00 on day 1.",

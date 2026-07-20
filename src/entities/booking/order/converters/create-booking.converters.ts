@@ -5,7 +5,7 @@ import type {
 	ICreateBookingRequest,
 	ICreatedBooking,
 	TBookingModelBackend
-} from "../types/create-booking.types";
+} from "../types";
 
 export const mapCreateBookingToBackend = (
 	data: ICreateBookingRequest

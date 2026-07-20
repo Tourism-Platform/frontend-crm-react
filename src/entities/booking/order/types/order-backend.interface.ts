@@ -1,11 +1,10 @@
 import type {
 	BOOKING_ORDER_PATHS,
-	BookingModel,
 	BookingOrderDetail,
 	BookingOrderListItem
 } from "@/shared/api";
 
-export type TBookingOrderBackend = BookingModel;
+export type TBookingOrderBackend = BookingOrderDetail;
 
 export type TBookingOrderListItemBackend = BookingOrderListItem;
 

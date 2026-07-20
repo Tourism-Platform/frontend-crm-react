@@ -19,7 +19,7 @@ export const mapPreviewBackendTypToEventType = (
 			return ENUM_PREVIEW_OPTION_EVENT.ACTIVITY;
 		case "7":
 			return ENUM_PREVIEW_OPTION_EVENT.INFO;
-		case "8":
+		case "10":
 			return ENUM_PREVIEW_OPTION_EVENT.MULTIPLY_OPTION;
 		default:
 			return ENUM_PREVIEW_OPTION_EVENT.INFO;

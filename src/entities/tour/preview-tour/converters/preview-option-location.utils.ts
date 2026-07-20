@@ -22,7 +22,7 @@ export const formatLocation = (location: unknown): string => {
 export const extractCityFromPubEvent = (
 	event: TPubEvent
 ): string | undefined => {
-	if (event.typ === "8") {
+	if (event.typ === "10") {
 		const first = event.details[0];
 		if (first && "details" in first && first.details) {
 			const details = first.details as { location?: unknown };

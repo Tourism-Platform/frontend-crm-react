@@ -1,4 +1,4 @@
-import type { FxRateCreateSchema, OperatorFxRateModel } from "../Api";
+import type { Currency, FxRateCreateSchema, OperatorFxRateModel } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -9,7 +9,12 @@ export const OPERATOR_FX_RATE_PATHS = {
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: { skip?: number; limit?: number };
+			query: {
+				from_currency?: Currency | null;
+				to_currency?: Currency | null;
+				skip?: number;
+				limit?: number;
+			};
 			response: OperatorFxRateModel[];
 		}
 	} as const,
@@ -22,16 +27,6 @@ export const OPERATOR_FX_RATE_PATHS = {
 			response: OperatorFxRateModel | null;
 		}
 	} as const,
-	deleteFxRate: (fxRateId: string) =>
-		({
-			url: `/operator/fx-rate${fxRateId}`,
-			method: "DELETE",
-			_types: {} as {
-				body: FxRateCreateSchema;
-				query: void;
-				response: OperatorFxRateModel | null;
-			}
-		}) as const,
 	getFxRate: (fxRateId: string) =>
 		({
 			url: `/operator/fx-rate/${fxRateId}`,

@@ -1,15 +1,42 @@
+import type { ClassicSwiftDetails, CustomDetails } from "@/shared/api";
+
 import { currencyConverter } from "@/entities/commission";
 
 import type { TOperatorPayoutDetailsSchema } from "../schema";
 import type {
+	TClassicSwiftDetails,
 	TOperatorPaymentRoute,
 	TOperatorPaymentRouteBackend,
 	TOperatorPaymentRouteCreateBackend,
-	TOperatorPaymentRouteUpdateBackend
+	TOperatorPaymentRouteUpdateBackend,
+	TWiseDetails
 } from "../types";
 import { ENUM_PAYMENT_ROUTE_METHODS } from "../types";
 
 import { paymentRouteMethodConverter } from "./operator-payment-route-method.converters";
+
+const mapWiseDetailsToFrontend = (data: CustomDetails): TWiseDetails => {
+	return {
+		typ: ENUM_PAYMENT_ROUTE_METHODS.WISE,
+		accountIdEmail:
+			data?.items?.find((item) => item.key === "account_id_email")?.val ??
+			"",
+		paymentLink:
+			data?.items?.find((item) => item.key === "payment_link")?.val ?? ""
+	};
+};
+
+const mapClassicSwiftDetailsToFrontend = (
+	data: ClassicSwiftDetails
+): TClassicSwiftDetails => {
+	return {
+		typ: ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT,
+		accountNameIban: data.account_name_iban,
+		swiftBic: data.swift_bic,
+		bankName: data.bank_name,
+		bankAddress: data.bank_address
+	};
+};
 
 export const mapOperatorPaymentRouteToFrontend = (
 	backend: TOperatorPaymentRouteBackend
@@ -25,18 +52,8 @@ export const mapOperatorPaymentRouteToFrontend = (
 		methodType,
 		details:
 			backend.details.typ === "classic_swift"
-				? {
-						typ: ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT,
-						accountNameIban: backend.details.account_name_iban,
-						swiftBic: backend.details.swift_bic,
-						bankName: backend.details.bank_name,
-						bankAddress: backend.details.bank_address
-					}
-				: {
-						typ: ENUM_PAYMENT_ROUTE_METHODS.WISE,
-						accountIdEmail: backend.details.account_id_email,
-						paymentLink: backend.details.payment_link
-					}
+				? mapClassicSwiftDetailsToFrontend(backend.details)
+				: mapWiseDetailsToFrontend(backend.details)
 	};
 };
 
@@ -68,9 +85,11 @@ export const mapFormToPaymentRouteCreateBackend = (
 		currency: currencyConverter.to(frontend.currency)!,
 		note: frontend.note || null,
 		details: {
-			typ: "wise",
-			account_id_email: frontend.account_id_email,
-			payment_link: frontend.payment_link
+			typ: "custom",
+			items: [
+				{ key: "account_id_email", val: frontend.account_id_email },
+				{ key: "payment_link", val: frontend.payment_link }
+			]
 		}
 	};
 };
@@ -98,9 +117,11 @@ export const mapFormToPaymentRouteUpdateBackend = (
 		currency: currencyConverter.to(frontend.currency),
 		note: frontend.note || null,
 		details: {
-			typ: "wise",
-			account_id_email: frontend.account_id_email,
-			payment_link: frontend.payment_link
+			typ: "custom",
+			items: [
+				{ key: "account_id_email", val: frontend.account_id_email },
+				{ key: "payment_link", val: frontend.payment_link }
+			]
 		}
 	};
 };

@@ -1,9 +1,10 @@
 import type {
 	BookingCancel,
 	BookingCreate,
-	BookingModel,
+	BookingItineraryResponse,
 	BookingOrderDetail,
 	BookingOrderListResponse,
+	BookingOrderResponse,
 	BookingStatus,
 	BookingUpdate,
 	LanguageCode
@@ -19,7 +20,7 @@ export const BOOKING_ORDER_PATHS = {
 		_types: {} as {
 			body: BookingCreate;
 			query: void;
-			response: BookingModel;
+			response: BookingOrderResponse;
 		}
 	} as const,
 	listMyBookings: {
@@ -56,7 +57,7 @@ export const BOOKING_ORDER_PATHS = {
 			_types: {} as {
 				body: BookingUpdate;
 				query: void;
-				response: BookingModel;
+				response: BookingOrderResponse;
 			}
 		}) as const,
 	deleteBookingOrder: (bookingId: string) =>
@@ -65,17 +66,35 @@ export const BOOKING_ORDER_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
+	getBookingItinerary: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/itinerary`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: BookingItineraryResponse;
+			}
+		}) as const,
 	submitBookingOrder: (bookingId: string) =>
 		({
 			url: `/booking/order/${bookingId}/submit`,
 			method: "PATCH",
-			_types: {} as { body: void; query: void; response: BookingModel }
+			_types: {} as {
+				body: void;
+				query: void;
+				response: BookingOrderResponse;
+			}
 		}) as const,
 	transitionBookingStatus: (bookingId: string, transition: string) =>
 		({
 			url: `/booking/order/${bookingId}/status/${transition}`,
 			method: "PATCH",
-			_types: {} as { body: void; query: void; response: BookingModel }
+			_types: {} as {
+				body: void;
+				query: void;
+				response: BookingOrderResponse;
+			}
 		}) as const,
 	declineBooking: (bookingId: string) =>
 		({
@@ -84,7 +103,7 @@ export const BOOKING_ORDER_PATHS = {
 			_types: {} as {
 				body: BookingCancel;
 				query: void;
-				response: BookingModel;
+				response: BookingOrderResponse;
 			}
 		}) as const,
 	cancelBooking: (bookingId: string) =>
@@ -94,7 +113,7 @@ export const BOOKING_ORDER_PATHS = {
 			_types: {} as {
 				body: BookingCancel;
 				query: void;
-				response: BookingModel;
+				response: BookingOrderResponse;
 			}
 		}) as const
 } as const;

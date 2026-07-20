@@ -52,23 +52,26 @@ const parseOptionIndexFromSuffix = (idSuffix: string): number => {
 };
 
 type TSummaryEvent = AnyEventWithCostOutput["event"];
+type TNestedMultiDetail = NonNullable<
+	MultipleOptionEventOutput["details"]
+>[number];
 
 const mapSummaryEventToReviewItem = (
-	event: TSummaryEvent,
+	event: TSummaryEvent | TNestedMultiDetail,
 	cost?: TourMinMaxCostSchemaOutput,
 	markup?: TourMinMaxCostSchemaOutput,
 	idSuffix = ""
 ): ITourReviewItem => {
 	const optionIndex = parseOptionIndexFromSuffix(idSuffix);
 
-	if ("typ" in event && event.typ === "8") {
-		const multi = event as MultipleOptionEventOutput;
+	if (event.typ === "10") {
+		const multi = event;
 		const parentId = getEventKey(multi);
 
 		return {
 			id: `${parentId}${idSuffix}`,
-			item: multi.name ?? "",
-			supplier: multi.supplier_id ?? "-",
+			item: "",
+			supplier: "-",
 			plannedCost: cost ? mapMinMaxCostToDisplay(cost) : "-",
 			estimatedRevenue: markup ? mapMinMaxCostToDisplay(markup) : "-",
 			type: ENUM_EVENT.MULTIPLY_OPTION,
@@ -93,18 +96,19 @@ const mapSummaryEventToReviewItem = (
 		};
 	}
 
-	const typ = "typ" in event ? event.typ : undefined;
-	const positioned = event as { day: number; position: number };
+	const typ = event.typ;
+	const day = "day" in event ? event.day : 0;
+	const position = "position" in event ? event.position : 0;
 
 	return {
-		id: `${getEventKey(positioned)}${idSuffix}`,
-		item: (event as { name?: string | null }).name ?? "",
-		supplier: (event as { supplier_id?: string | null }).supplier_id ?? "-",
+		id: `${getEventKey({ day, position, typ })}${idSuffix}`,
+		item: event.name ?? "",
+		supplier: event.supplier_id ?? "-",
 		plannedCost: cost ? mapMinMaxCostToDisplay(cost) : "-",
 		estimatedRevenue: markup ? mapMinMaxCostToDisplay(markup) : "-",
 		type: mapBackendTypToEventType(typ),
-		day: positioned.day,
-		position: positioned.position,
+		day,
+		position,
 		optionIndex
 	};
 };

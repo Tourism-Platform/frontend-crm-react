@@ -144,17 +144,6 @@ export enum LanguageCode {
 	Uz = "uz"
 }
 
-/** Language */
-export enum Language {
-	Uzbek = "uzbek",
-	Russian = "russian",
-	English = "english",
-	Italian = "italian",
-	German = "german",
-	Spanish = "spanish",
-	Portuguese = "portuguese"
-}
-
 /** InvoiceType */
 export enum InvoiceType {
 	OperatorToAgency = "operator_to_agency",
@@ -186,6 +175,27 @@ export enum HousingRoomTypes {
 export enum Gender {
 	M = "M",
 	F = "F"
+}
+
+/** EventTypes */
+export enum EventTypes {
+	Value1 = "1",
+	Value2 = "2",
+	Value3 = "3",
+	Value4 = "4",
+	Value5 = "5",
+	Value6 = "6",
+	Value7 = "7",
+	Value8 = "8",
+	Value9 = "9",
+	Value10 = "10"
+}
+
+/** EditOp */
+export enum EditOp {
+	Create = "create",
+	Update = "update",
+	Delete = "delete"
 }
 
 /** Currency */
@@ -401,6 +411,142 @@ export interface ActivityDetailsSchemaOutput {
 		| null;
 }
 
+/** ActivityEvent */
+export interface ActivityEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details?: ActivityDetailsSchemaInput | null;
+}
+
+/** ActivityEvent */
+export interface ActivityEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details?: ActivityDetailsSchemaOutput | null;
+}
+
+/** ActivityEventCreateSchema */
+export interface ActivityEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details?: ActivityDetailsSchemaInput | null;
+}
+
+/** ActivityEventCreateSchema */
+export interface ActivityEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details?: ActivityDetailsSchemaOutput | null;
+}
+
 /** ActivityEventPubRead */
 export interface ActivityEventPubReadInput {
 	/** Name */
@@ -435,113 +581,6 @@ export interface ActivityEventPubReadOutput {
 	 */
 	typ?: "6";
 	details: ActivityDetailsPubSchemaOutput;
-}
-
-/** ActivityEventSchema */
-export interface ActivityEventSchemaInput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "6"
-	 */
-	typ?: "6";
-	details?: ActivityDetailsSchemaInput | null;
-}
-
-/** ActivityEventSchema */
-export interface ActivityEventSchemaOutput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "6"
-	 */
-	typ?: "6";
-	details?: ActivityDetailsSchemaOutput | null;
-}
-
-/** ActivityEventUpdate */
-export interface ActivityEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Typ
-	 * @default "6"
-	 */
-	typ?: "6";
-	details?: ActivityDetailsSchemaInput | null;
 }
 
 /** AdminUserView */
@@ -669,25 +708,31 @@ export interface AnyEventWithCostInput {
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventSchemaInput)
+				  } & FlightEventCreateSchemaInput)
 				| ({
 						typ: "2";
-				  } & TrainEventSchemaInput)
+				  } & TrainEventCreateSchemaInput)
 				| ({
 						typ: "3";
-				  } & BusEventSchemaInput)
+				  } & BusEventCreateSchemaInput)
 				| ({
 						typ: "4";
-				  } & TransferEventSchemaInput)
+				  } & TransferEventCreateSchemaInput)
 				| ({
 						typ: "5";
-				  } & HousingEventSchemaInput)
+				  } & HousingEventCreateSchemaInput)
 				| ({
 						typ: "6";
-				  } & ActivityEventSchemaInput)
+				  } & ActivityEventCreateSchemaInput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventCreateSchemaInput)
+				| ({
+						typ: "8";
+				  } & GuideEventCreateSchemaInput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventCreateSchemaInput)
 		  )
 		| MultipleOptionEventInput;
 	cost: TourMinMaxCostSchemaInput;
@@ -701,25 +746,31 @@ export interface AnyEventWithCostOutput {
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventSchemaOutput)
+				  } & FlightEventCreateSchemaOutput)
 				| ({
 						typ: "2";
-				  } & TrainEventSchemaOutput)
+				  } & TrainEventCreateSchemaOutput)
 				| ({
 						typ: "3";
-				  } & BusEventSchemaOutput)
+				  } & BusEventCreateSchemaOutput)
 				| ({
 						typ: "4";
-				  } & TransferEventSchemaOutput)
+				  } & TransferEventCreateSchemaOutput)
 				| ({
 						typ: "5";
-				  } & HousingEventSchemaOutput)
+				  } & HousingEventCreateSchemaOutput)
 				| ({
 						typ: "6";
-				  } & ActivityEventSchemaOutput)
+				  } & ActivityEventCreateSchemaOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventCreateSchemaOutput)
+				| ({
+						typ: "8";
+				  } & GuideEventCreateSchemaOutput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventCreateSchemaOutput)
 		  )
 		| MultipleOptionEventOutput;
 	cost: TourMinMaxCostSchemaOutput;
@@ -868,6 +919,12 @@ export interface BodyUploadLandingImagesTourTourIdLandingImagesPost {
 	images: File[];
 }
 
+/** Body_upload_library_images_tour_event_library__library_id__images_post */
+export interface BodyUploadLibraryImagesTourEventLibraryLibraryIdImagesPost {
+	/** Images */
+	images: File[];
+}
+
 /** Body_upload_option_cover_tour__tour_id__option__option_id__cover_post */
 export interface BodyUploadOptionCoverTourTourIdOptionOptionIdCoverPost {
 	/**
@@ -938,22 +995,12 @@ export interface BookingCreate {
 	pax: number;
 	/** Comment */
 	comment?: string | null;
+	/** @default "en" */
+	lang?: LanguageCode;
 }
 
-/**
- * BookingEventAvailabilityModel
- * Per-booking, per-event-option availability assessed by the operator while
- * the booking is being processed (``BookingStatus.PENDING``).
- *
- * One row per option: a singular event has a single row at ``option_index`` 0;
- * a ``MultipleOptionEvent`` has one row per alternative. Each row records
- * whether that supplier can provide the service (AVAILABLE / UNAVAILABLE) and,
- * for exactly one option per event, SELECTED — the operator-chosen alternative
- * the booking is priced and confirmed against. Every event resolving to one
- * SELECTED gates the transition to CONFIRMED; an event with no available option
- * auto-declines the booking.
- */
-export interface BookingEventAvailabilityModel {
+/** BookingEventAvailabilityResponse */
+export interface BookingEventAvailabilityResponse {
 	/**
 	 * Id
 	 * @format uuid
@@ -972,71 +1019,48 @@ export interface BookingEventAvailabilityModel {
 	/** Option Index */
 	option_index: number;
 	status: AvailabilityStatus;
+	/** Event Name */
+	event_name: string | null;
+	event_typ: EventTypes | null;
 }
 
-/** BookingModel */
-export interface BookingModel {
+/** BookingItineraryResponse */
+export interface BookingItineraryResponse {
 	/**
-	 * Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	id: string;
-	/**
-	 * Agency Id
-	 * @format uuid
-	 */
-	agency_id: string;
-	/**
-	 * Operator Id
-	 * @format uuid
-	 */
-	operator_id: string;
-	/**
-	 * Tour Option Id
-	 * @format uuid
-	 */
-	tour_option_id: string;
-	/** Snapshot Id */
-	snapshot_id: string | null;
-	/**
-	 * Date
-	 * @format date
-	 */
-	date: string;
-	/**
-	 * End Date
-	 * @format date
-	 */
-	end_date: string;
-	/** Pax */
-	pax: number;
-	status: BookingStatus;
-	/**
-	 * Paid Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	paid_amount: string;
-	paid_currency: Currency;
-	/**
-	 * Tour Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	tour_amount: string;
-	tour_currency: Currency;
-	/** Fx Rate Id */
-	fx_rate_id: string | null;
-	/** Fx Rate Applied */
-	fx_rate_applied: string | null;
-	/** Agreed Price */
-	agreed_price: string | null;
-	/** Cancelled At */
-	cancelled_at: string | null;
-	/** Cancellation Reason */
-	cancellation_reason: string | null;
-	/** Comment */
-	comment: string | null;
-	/** Voucher Path */
-	voucher_path: string | null;
+	booking_id: string;
+	/** Order Number */
+	order_number: string;
+	display_lang: LanguageCode;
+	/** Events */
+	events: (
+		| (
+				| ({
+						typ: "1";
+				  } & FlightEventPubReadOutput)
+				| ({
+						typ: "2";
+				  } & TrainEventPubReadOutput)
+				| ({
+						typ: "3";
+				  } & BusEventPubReadOutput)
+				| ({
+						typ: "4";
+				  } & TransferEventPubReadOutput)
+				| ({
+						typ: "5";
+				  } & HousingEventPubReadOutput)
+				| ({
+						typ: "6";
+				  } & ActivityEventPubReadOutput)
+				| ({
+						typ: "7";
+				  } & InformationEventPubRead)
+		  )
+		| MultipleOptionEventPubOutput
+	)[];
 }
 
 /** BookingOrderDetail */
@@ -1102,6 +1126,8 @@ export interface BookingOrderDetail {
 	comment?: string | null;
 	/** Voucher Path */
 	voucher_path?: string | null;
+	/** Order Number */
+	order_number: string;
 	tour: OrderTourInfo;
 	agency: OrderAgencyInfo;
 }
@@ -1147,6 +1173,73 @@ export interface BookingOrderListResponse {
 	total_count: number;
 	/** Data */
 	data: BookingOrderListItem[];
+}
+
+/** BookingOrderResponse */
+export interface BookingOrderResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agency_id: string;
+	/**
+	 * Operator Id
+	 * @format uuid
+	 */
+	operator_id: string;
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/** Snapshot Id */
+	snapshot_id?: string | null;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/**
+	 * End Date
+	 * @format date
+	 */
+	end_date: string;
+	/** Pax */
+	pax: number;
+	status: BookingStatus;
+	/**
+	 * Paid Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	paid_amount: string;
+	paid_currency: Currency;
+	/**
+	 * Tour Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	tour_amount: string;
+	tour_currency: Currency;
+	/** Fx Rate Id */
+	fx_rate_id?: string | null;
+	/** Fx Rate Applied */
+	fx_rate_applied?: string | null;
+	/** Agreed Price */
+	agreed_price?: string | null;
+	/** Cancelled At */
+	cancelled_at?: string | null;
+	/** Cancellation Reason */
+	cancellation_reason?: string | null;
+	/** Comment */
+	comment?: string | null;
+	/** Voucher Path */
+	voucher_path?: string | null;
+	/** Order Number */
+	order_number: string;
 }
 
 /** BookingPaxFilesModel */
@@ -1290,6 +1383,142 @@ export interface BusDetailSchemaOutput {
 		| null;
 }
 
+/** BusEvent */
+export interface BusEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details?: BusDetailSchemaInput | null;
+}
+
+/** BusEvent */
+export interface BusEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details?: BusDetailSchemaOutput | null;
+}
+
+/** BusEventCreateSchema */
+export interface BusEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details?: BusDetailSchemaInput | null;
+}
+
+/** BusEventCreateSchema */
+export interface BusEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details?: BusDetailSchemaOutput | null;
+}
+
 /** BusEventPubRead */
 export interface BusEventPubReadInput {
 	/** Name */
@@ -1324,113 +1553,6 @@ export interface BusEventPubReadOutput {
 	 */
 	typ?: "3";
 	details: BusDetailPubSchemaOutput;
-}
-
-/** BusEventSchema */
-export interface BusEventSchemaInput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "3"
-	 */
-	typ?: "3";
-	details?: BusDetailSchemaInput | null;
-}
-
-/** BusEventSchema */
-export interface BusEventSchemaOutput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "3"
-	 */
-	typ?: "3";
-	details?: BusDetailSchemaOutput | null;
-}
-
-/** BusEventUpdate */
-export interface BusEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Typ
-	 * @default "3"
-	 */
-	typ?: "3";
-	details?: BusDetailSchemaInput | null;
 }
 
 /** BusHopPubSchema */
@@ -1560,6 +1682,10 @@ export interface ClientPaymentResponse {
 	 * @format uuid
 	 */
 	operator_id: string;
+	/** Client Name */
+	client_name: string;
+	/** Tour Name */
+	tour_name: string;
 	/** Amount */
 	amount: number;
 	currency: Currency;
@@ -1607,11 +1733,67 @@ export interface CreateFinancialSchema {
 		| null;
 }
 
+/** CustomDetails */
+export interface CustomDetails {
+	/**
+	 * Typ
+	 * @default "custom"
+	 */
+	typ?: "custom";
+	/** Items */
+	items: KeyValItem[];
+}
+
 /** EmptyDetails */
-export type EmptyDetails = object;
+export interface EmptyDetails {
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event start time */
+	end_time?: TimeSchema | null;
+}
 
 /** EmptyDetailsPub */
 export type EmptyDetailsPub = object;
+
+/**
+ * EventEditOp
+ * Append-only revision log. CREATE and UPDATE carry the full snapshot event
+ * UPDATE and DELETE name the existing snapshot event by ``target_id``. ``seq`` is the order and
+ * ``at`` the server-set time — together they answer "how many / how long".
+ */
+export interface EventEditOpInput {
+	op: EditOp;
+	/** Seq */
+	seq: number;
+	/**
+	 * At
+	 * @format date-time
+	 */
+	at: string;
+	/** Target Id */
+	target_id?: string | null;
+	event?: TourEventResponseInput | null;
+}
+
+/**
+ * EventEditOp
+ * Append-only revision log. CREATE and UPDATE carry the full snapshot event
+ * UPDATE and DELETE name the existing snapshot event by ``target_id``. ``seq`` is the order and
+ * ``at`` the server-set time — together they answer "how many / how long".
+ */
+export interface EventEditOpOutput {
+	op: EditOp;
+	/** Seq */
+	seq: number;
+	/**
+	 * At
+	 * @format date-time
+	 */
+	at: string;
+	/** Target Id */
+	target_id?: string | null;
+	event?: TourEventResponseOutput | null;
+}
 
 /** EventImageModel */
 export interface EventImageModel {
@@ -1629,6 +1811,56 @@ export interface EventImageModel {
 	image_path: string;
 	/** Is Primary */
 	is_primary: boolean;
+}
+
+/** EventLibraryListResponse */
+export interface EventLibraryListResponse {
+	/** Total Count */
+	total_count: number;
+	/** Data */
+	data: EventLibraryResponse[];
+}
+
+/** EventLibraryResponse */
+export interface EventLibraryResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Event */
+	event:
+		| ({
+				typ: "1";
+		  } & FlightEventOutput)
+		| ({
+				typ: "2";
+		  } & TrainEventOutput)
+		| ({
+				typ: "3";
+		  } & BusEventOutput)
+		| ({
+				typ: "4";
+		  } & TransferEventOutput)
+		| ({
+				typ: "5";
+		  } & HousingEventOutput)
+		| ({
+				typ: "6";
+		  } & ActivityEventOutput)
+		| ({
+				typ: "7";
+		  } & InformationEventOutput)
+		| ({
+				typ: "8";
+		  } & GuideEventOutput)
+		| ({
+				typ: "9";
+		  } & SupplementaryEventOutput);
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
 }
 
 /** EventReorderSchema */
@@ -1873,6 +2105,142 @@ export interface FlightDetailsSchemaOutput {
 		| null;
 }
 
+/** FlightEvent */
+export interface FlightEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details?: FlightDetailsSchemaInput | null;
+}
+
+/** FlightEvent */
+export interface FlightEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details?: FlightDetailsSchemaOutput | null;
+}
+
+/** FlightEventCreateSchema */
+export interface FlightEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details?: FlightDetailsSchemaInput | null;
+}
+
+/** FlightEventCreateSchema */
+export interface FlightEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details?: FlightDetailsSchemaOutput | null;
+}
+
 /** FlightEventPubRead */
 export interface FlightEventPubReadInput {
 	/** Name */
@@ -1907,113 +2275,6 @@ export interface FlightEventPubReadOutput {
 	 */
 	typ?: "1";
 	details: FlightDetailsPubSchemaOutput;
-}
-
-/** FlightEventSchema */
-export interface FlightEventSchemaInput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "1"
-	 */
-	typ?: "1";
-	details?: FlightDetailsSchemaInput | null;
-}
-
-/** FlightEventSchema */
-export interface FlightEventSchemaOutput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "1"
-	 */
-	typ?: "1";
-	details?: FlightDetailsSchemaOutput | null;
-}
-
-/** FlightEventUpdate */
-export interface FlightEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Typ
-	 * @default "1"
-	 */
-	typ?: "1";
-	details?: FlightDetailsSchemaInput | null;
 }
 
 /** FlightHopDetailsSchema */
@@ -2270,6 +2531,107 @@ export interface FlightHopPubSchemaOutput {
 	amenities?: AmenitiesTypes[];
 }
 
+/** FrozenFxRate */
+export interface FrozenFxRateInput {
+	from_currency: Currency;
+	to_currency: Currency;
+	/** Rate */
+	rate: number | string;
+}
+
+/** FrozenFxRate */
+export interface FrozenFxRateOutput {
+	from_currency: Currency;
+	to_currency: Currency;
+	/**
+	 * Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	rate: string;
+}
+
+/** FrozenTourFin */
+export interface FrozenTourFinInput {
+	currency_type: Currency;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/** FrozenTourFin */
+export interface FrozenTourFinOutput {
+	currency_type: Currency;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/** FrozenTourMeta */
+export interface FrozenTourMeta {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/** Cover Image Path */
+	cover_image_path?: string | null;
+	/** Group Size */
+	group_size: number;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours?: number | null;
+	/** Age From */
+	age_from?: number | null;
+	/** Age To */
+	age_to?: number | null;
+	typ: TourType;
+	status: TourStatus;
+	/** Categories */
+	categories?: TourCategory[];
+}
+
+/** FrozenTourOption */
+export interface FrozenTourOption {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Cover Image Path */
+	cover_image_path?: string | null;
+}
+
 /** FullScheduleSchema */
 export interface FullScheduleSchema {
 	schedule: TourScheduleModel;
@@ -2329,6 +2691,214 @@ export interface GeoFeature {
 	country?: string | null;
 	/** Country Code */
 	country_code?: string | null;
+}
+
+/** GuideByLanguageCategory */
+export interface GuideByLanguageCategoryInput {
+	lang?: LanguageCode | null;
+	expenses?: PerPersonExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/** GuideByLanguageCategory */
+export interface GuideByLanguageCategoryOutput {
+	lang?: LanguageCode | null;
+	expenses?: PerPersonExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/** GuideDetails */
+export interface GuideDetailsInput {
+	/** Name */
+	name?: string | null;
+	/**
+	 * Duration
+	 * Length of guide activity in days
+	 */
+	duration?: number | null;
+	/**
+	 * Categories
+	 * @default []
+	 */
+	categories?: GuideByLanguageCategoryInput[];
+}
+
+/** GuideDetails */
+export interface GuideDetailsOutput {
+	/** Name */
+	name?: string | null;
+	/**
+	 * Duration
+	 * Length of guide activity in days
+	 */
+	duration?: number | null;
+	/**
+	 * Categories
+	 * @default []
+	 */
+	categories?: GuideByLanguageCategoryOutput[];
+}
+
+/** GuideEvent */
+export interface GuideEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "8"
+	 */
+	typ?: "8";
+	details?: GuideDetailsInput | null;
+}
+
+/** GuideEvent */
+export interface GuideEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "8"
+	 */
+	typ?: "8";
+	details?: GuideDetailsOutput | null;
+}
+
+/** GuideEventCreateSchema */
+export interface GuideEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "8"
+	 */
+	typ?: "8";
+	details?: GuideDetailsInput | null;
+}
+
+/** GuideEventCreateSchema */
+export interface GuideEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "8"
+	 */
+	typ?: "8";
+	details?: GuideDetailsOutput | null;
 }
 
 /** HTTPValidationError */
@@ -2397,6 +2967,8 @@ export interface HousingDetailsSchemaInput {
 				  } & PerRoomCategoryExpensesInput)
 		  )
 		| null;
+	/** Stars */
+	stars?: number | null;
 }
 
 /** HousingDetailsSchema */
@@ -2435,6 +3007,144 @@ export interface HousingDetailsSchemaOutput {
 				  } & PerRoomCategoryExpensesOutput)
 		  )
 		| null;
+	/** Stars */
+	stars?: number | null;
+}
+
+/** HousingEvent */
+export interface HousingEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details?: HousingDetailsSchemaInput | null;
+}
+
+/** HousingEvent */
+export interface HousingEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details?: HousingDetailsSchemaOutput | null;
+}
+
+/** HousingEventCreateSchema */
+export interface HousingEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details?: HousingDetailsSchemaInput | null;
+}
+
+/** HousingEventCreateSchema */
+export interface HousingEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details?: HousingDetailsSchemaOutput | null;
 }
 
 /** HousingEventPubRead */
@@ -2471,113 +3181,6 @@ export interface HousingEventPubReadOutput {
 	 */
 	typ?: "5";
 	details: HousingDetailsPubSchemaOutput;
-}
-
-/** HousingEventSchema */
-export interface HousingEventSchemaInput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "5"
-	 */
-	typ?: "5";
-	details?: HousingDetailsSchemaInput | null;
-}
-
-/** HousingEventSchema */
-export interface HousingEventSchemaOutput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "5"
-	 */
-	typ?: "5";
-	details?: HousingDetailsSchemaOutput | null;
-}
-
-/** HousingEventUpdate */
-export interface HousingEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Typ
-	 * @default "5"
-	 */
-	typ?: "5";
-	details?: HousingDetailsSchemaInput | null;
 }
 
 /** HousingRoomCategoryExpensesSchema */
@@ -2716,6 +3319,142 @@ export interface HousingRoomExpensesSchemaOutput {
 		| null;
 }
 
+/** InformationEvent */
+export interface InformationEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	details?: EmptyDetails | null;
+}
+
+/** InformationEvent */
+export interface InformationEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	details?: EmptyDetails | null;
+}
+
+/** InformationEventCreateSchema */
+export interface InformationEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	details?: EmptyDetails | null;
+}
+
+/** InformationEventCreateSchema */
+export interface InformationEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	details?: EmptyDetails | null;
+}
+
 /** InformationEventPubRead */
 export interface InformationEventPubRead {
 	/** Name */
@@ -2733,74 +3472,6 @@ export interface InformationEventPubRead {
 	typ?: "7";
 	/** @default {} */
 	details?: EmptyDetailsPub;
-}
-
-/** InformationEventSchema */
-export interface InformationEventSchema {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "7"
-	 */
-	typ?: "7";
-	details?: EmptyDetails | null;
-}
-
-/** InformationEventUpdate */
-export interface InformationEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Typ
-	 * @default "7"
-	 */
-	typ?: "7";
-	details?: EmptyDetails | null;
 }
 
 /** InvoiceDetailResponse */
@@ -2849,8 +3520,8 @@ export interface InvoiceDetailResponse {
 						typ: "classic_swift";
 				  } & ClassicSwiftDetails)
 				| ({
-						typ: "wise";
-				  } & WiseDetails)
+						typ: "custom";
+				  } & CustomDetails)
 		  )
 		| null;
 }
@@ -2878,6 +3549,7 @@ export interface InvoiceListItem {
 	id: string;
 	/** Booking Id */
 	booking_id: string | null;
+	typ: InvoiceType;
 	status: InvoiceStatus;
 	/** Total Amount */
 	total_amount: number;
@@ -2887,6 +3559,8 @@ export interface InvoiceListItem {
 	currency: string;
 	/** Issue Date */
 	issue_date: string | null;
+	/** Counterparty Name */
+	counterparty_name: string | null;
 	/** Invoice Number */
 	invoice_number: string;
 	/** Order Number */
@@ -2913,6 +3587,14 @@ export interface InvoicePaymentCreate {
 export interface InvoicePdfResponse {
 	/** Url */
 	url: string;
+}
+
+/** KeyValItem */
+export interface KeyValItem {
+	/** Key */
+	key?: string | null;
+	/** Val */
+	val?: string | null;
 }
 
 /** LandingPageImageModel */
@@ -2946,37 +3628,6 @@ export interface LandingPageImagePubSchema {
 	is_primary: boolean;
 }
 
-/** LandingPageModel */
-export interface LandingPageModel {
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Title */
-	title: string | null;
-	/** Overview */
-	overview: string | null;
-	/** Description */
-	description: string | null;
-	/** Overview Description */
-	overview_description: string | null;
-	/** Pickup Description */
-	pickup_description: string | null;
-	/** Additional Information */
-	additional_information: string | null;
-	/** Cancellation Policy */
-	cancellation_policy: string | null;
-	/** Languages */
-	languages: Language[];
-	/** Pickup Type */
-	pickup_type: PickupType[];
-	/** Amenities Included */
-	amenities_included: string[];
-	/** Amenities Not Included */
-	amenities_not_included: string[];
-}
-
 /** LandingPagePubSchema */
 export interface LandingPagePubSchema {
 	/** Title */
@@ -2994,7 +3645,7 @@ export interface LandingPagePubSchema {
 	/** Cancellation Policy */
 	cancellation_policy: string | null;
 	/** Languages */
-	languages: Language[];
+	languages: LanguageCode[];
 	/** Pickup Type */
 	pickup_type: PickupType[];
 	/** Amenities Included */
@@ -3003,6 +3654,41 @@ export interface LandingPagePubSchema {
 	amenities_not_included: string[];
 	/** Images */
 	images: LandingPageImagePubSchema[];
+}
+
+/** LandingPageResponse */
+export interface LandingPageResponse {
+	/** Title */
+	title?: string | null;
+	/** Overview */
+	overview?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Overview Description */
+	overview_description?: string | null;
+	/** Pickup Description */
+	pickup_description?: string | null;
+	/** Cancellation Policy */
+	cancellation_policy?: string | null;
+	/** Additional Information */
+	additional_information?: string | null;
+	/** Languages */
+	languages?: LanguageCode[];
+	/** Pickup Type */
+	pickup_type?: PickupType[];
+	/** Amenities Included */
+	amenities_included?: string[];
+	/** Amenities Not Included */
+	amenities_not_included?: string[];
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Created At */
+	created_at?: string | null;
+	/** Updated At */
+	updated_at?: string | null;
 }
 
 /** LandingPageUpdate */
@@ -3022,7 +3708,7 @@ export interface LandingPageUpdate {
 	/** Additional Information */
 	additional_information?: string | null;
 	/** Languages */
-	languages?: Language[] | null;
+	languages?: LanguageCode[] | null;
 	/** Pickup Type */
 	pickup_type?: PickupType[] | null;
 	/** Amenities Included */
@@ -3135,25 +3821,6 @@ export interface MonetaryValueSchema {
 /** MultipleOptionEvent */
 export interface MultipleOptionEventInput {
 	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -3163,32 +3830,43 @@ export interface MultipleOptionEventInput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/** Typ */
-	typ: "8";
+	typ: "10";
 	/** Details */
 	details?:
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventSchemaInput)
+				  } & FlightEventInput)
 				| ({
 						typ: "2";
-				  } & TrainEventSchemaInput)
+				  } & TrainEventInput)
 				| ({
 						typ: "3";
-				  } & BusEventSchemaInput)
+				  } & BusEventInput)
 				| ({
 						typ: "4";
-				  } & TransferEventSchemaInput)
+				  } & TransferEventInput)
 				| ({
 						typ: "5";
-				  } & HousingEventSchemaInput)
+				  } & HousingEventInput)
 				| ({
 						typ: "6";
-				  } & ActivityEventSchemaInput)
+				  } & ActivityEventInput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventInput)
+				| ({
+						typ: "8";
+				  } & GuideEventInput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventInput)
 		  )[]
 		| null;
 }
@@ -3196,25 +3874,6 @@ export interface MultipleOptionEventInput {
 /** MultipleOptionEvent */
 export interface MultipleOptionEventOutput {
 	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
 	 * Day
 	 * Event's day number in a tour
 	 */
@@ -3224,32 +3883,43 @@ export interface MultipleOptionEventOutput {
 	 * Event's order number in a tour
 	 */
 	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 	/** Typ */
-	typ: "8";
+	typ: "10";
 	/** Details */
 	details?:
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventSchemaOutput)
+				  } & FlightEventOutput)
 				| ({
 						typ: "2";
-				  } & TrainEventSchemaOutput)
+				  } & TrainEventOutput)
 				| ({
 						typ: "3";
-				  } & BusEventSchemaOutput)
+				  } & BusEventOutput)
 				| ({
 						typ: "4";
-				  } & TransferEventSchemaOutput)
+				  } & TransferEventOutput)
 				| ({
 						typ: "5";
-				  } & HousingEventSchemaOutput)
+				  } & HousingEventOutput)
 				| ({
 						typ: "6";
-				  } & ActivityEventSchemaOutput)
+				  } & ActivityEventOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventOutput)
+				| ({
+						typ: "8";
+				  } & GuideEventOutput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventOutput)
 		  )[]
 		| null;
 }
@@ -3265,7 +3935,7 @@ export interface MultipleOptionEventPubInput {
 	/** Position */
 	position: number;
 	/** Typ */
-	typ: "8";
+	typ: "10";
 	/**
 	 * Details
 	 * @minItems 1
@@ -3306,7 +3976,7 @@ export interface MultipleOptionEventPubOutput {
 	/** Position */
 	position: number;
 	/** Typ */
-	typ: "8";
+	typ: "10";
 	/**
 	 * Details
 	 * @minItems 1
@@ -3334,57 +4004,6 @@ export interface MultipleOptionEventPubOutput {
 				typ: "7";
 		  } & InformationEventPubRead)
 	)[];
-}
-
-/** MultipleOptionEventUpdate */
-export interface MultipleOptionEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/** Typ */
-	typ: "8";
-	/** Details */
-	details?:
-		| (
-				| ({
-						typ: "1";
-				  } & FlightEventUpdate)
-				| ({
-						typ: "2";
-				  } & TrainEventUpdate)
-				| ({
-						typ: "3";
-				  } & BusEventUpdate)
-				| ({
-						typ: "4";
-				  } & TransferEventUpdate)
-				| ({
-						typ: "5";
-				  } & HousingEventUpdate)
-				| ({
-						typ: "6";
-				  } & ActivityEventUpdate)
-				| ({
-						typ: "7";
-				  } & InformationEventUpdate)
-		  )[]
-		| null;
 }
 
 /** MyAccountRead */
@@ -3654,8 +4273,8 @@ export interface OperatorPaymentRouteModel {
 				typ: "classic_swift";
 		  } & ClassicSwiftDetails)
 		| ({
-				typ: "wise";
-		  } & WiseDetails);
+				typ: "custom";
+		  } & CustomDetails);
 }
 
 /** OperatorPreviewPubSchema */
@@ -3947,8 +4566,8 @@ export interface PaymentRouteCreate {
 				typ: "classic_swift";
 		  } & ClassicSwiftDetails)
 		| ({
-				typ: "wise";
-		  } & WiseDetails);
+				typ: "custom";
+		  } & CustomDetails);
 }
 
 /** PaymentRouteUpdate */
@@ -3965,8 +4584,8 @@ export interface PaymentRouteUpdate {
 						typ: "classic_swift";
 				  } & ClassicSwiftDetails)
 				| ({
-						typ: "wise";
-				  } & WiseDetails)
+						typ: "custom";
+				  } & CustomDetails)
 		  )
 		| null;
 }
@@ -4148,6 +4767,142 @@ export interface PriceRangeSchema {
 	currency: Currency | null;
 }
 
+/**
+ * PricingFinancials
+ * Pure markup inputs — built from live operator settings or frozen.
+ */
+export interface PricingFinancialsInput {
+	/**
+	 * Default Markup
+	 * The markup calculation strategy.
+	 */
+	default_markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * PricingFinancials
+ * Pure markup inputs — built from live operator settings or frozen.
+ */
+export interface PricingFinancialsOutput {
+	/**
+	 * Default Markup
+	 * The markup calculation strategy.
+	 */
+	default_markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * PricingPackage
+ * Pure pricing input for one package — built from the live ``TourPackageModel``
+ * (``model_validate`` with ``from_attributes``) or read straight from a frozen
+ * booking snapshot. Owned by pricing so the snapshot can reuse it.
+ */
+export interface PricingPackageInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Name
+	 * @default ""
+	 */
+	name?: string;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseInput)
+		| ({
+				typ: "per_person";
+		  } & PerPersonExpenseInput);
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * PricingPackage
+ * Pure pricing input for one package — built from the live ``TourPackageModel``
+ * (``model_validate`` with ``from_attributes``) or read straight from a frozen
+ * booking snapshot. Owned by pricing so the snapshot can reuse it.
+ */
+export interface PricingPackageOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Name
+	 * @default ""
+	 */
+	name?: string;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseOutput)
+		| ({
+				typ: "per_person";
+		  } & PerPersonExpenseOutput);
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
 /** PublicTourCatalogSchema */
 export interface PublicTourCatalogSchemaInput {
 	/**
@@ -4183,7 +4938,7 @@ export interface PublicTourCatalogSchemaInput {
 	/** Cities */
 	cities: string[];
 	/** Languages */
-	languages: Language[];
+	languages: LanguageCode[];
 	price_range: PriceRangeSchema | null;
 	price_per_person: PriceRangeSchema | null;
 	/** Option Count */
@@ -4225,7 +4980,7 @@ export interface PublicTourCatalogSchemaOutput {
 	/** Cities */
 	cities: string[];
 	/** Languages */
-	languages: Language[];
+	languages: LanguageCode[];
 	price_range: PriceRangeSchema | null;
 	price_per_person: PriceRangeSchema | null;
 	/** Option Count */
@@ -4274,6 +5029,19 @@ export interface RecurrenceRulesBulkCreate {
 	rules: RecurrenceRuleCreate[];
 }
 
+/**
+ * RevisionPreview
+ * Effective itinerary for a booking (original snapshot folded with its edit log
+ */
+export interface RevisionPreview {
+	/** Pure-Pydantic snapshot of everything a booking's price depends on, frozen at creation. */
+	snapshot: TourSnapshotSchemaOutput;
+	/** Cost */
+	cost?: string | null;
+	/** Revenue */
+	revenue?: string | null;
+}
+
 /** SeasonalityCommissionCreate */
 export interface SeasonalityCommissionCreate {
 	/**
@@ -4317,6 +5085,21 @@ export interface SeasonalityCommissionModel {
 	 * @format date
 	 */
 	valid_until: string;
+}
+
+/** SignInIn */
+export interface SignInIn {
+	/**
+	 * Email
+	 * @format email
+	 */
+	email: string;
+	/**
+	 * Password
+	 * @minLength 1
+	 * @maxLength 128
+	 */
+	password: string;
 }
 
 /** StaffInvite */
@@ -4405,6 +5188,228 @@ export interface StaffUpdate {
 	commission_percent?: number | null;
 }
 
+/** SupplementaryDetails */
+export interface SupplementaryDetailsInput {
+	/**
+	 * Item
+	 * @default []
+	 */
+	item?: SupplementaryItemInput[];
+}
+
+/** SupplementaryDetails */
+export interface SupplementaryDetailsOutput {
+	/**
+	 * Item
+	 * @default []
+	 */
+	item?: SupplementaryItemOutput[];
+}
+
+/** SupplementaryEvent */
+export interface SupplementaryEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "9"
+	 */
+	typ?: "9";
+	details?: SupplementaryDetailsInput | null;
+}
+
+/** SupplementaryEvent */
+export interface SupplementaryEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "9"
+	 */
+	typ?: "9";
+	details?: SupplementaryDetailsOutput | null;
+}
+
+/** SupplementaryEventCreateSchema */
+export interface SupplementaryEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "9"
+	 */
+	typ?: "9";
+	details?: SupplementaryDetailsInput | null;
+}
+
+/** SupplementaryEventCreateSchema */
+export interface SupplementaryEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "9"
+	 */
+	typ?: "9";
+	details?: SupplementaryDetailsOutput | null;
+}
+
+/** SupplementaryItem */
+export interface SupplementaryItemInput {
+	/** Name */
+	name?: string | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseInput)
+		  )
+		| null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/** SupplementaryItem */
+export interface SupplementaryItemOutput {
+	/** Name */
+	name?: string | null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseOutput)
+		  )
+		| null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
 /** SupplierCreateSchema */
 export interface SupplierCreateSchema {
 	/**
@@ -4478,13 +5483,20 @@ export interface SupplierPaymentResponse {
 	 * @format uuid
 	 */
 	booking_id: string;
+	/** Order Number */
+	order_number: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	event_id: string;
+	/** Event Name */
+	event_name: string | null;
+	event_typ: EventTypes | null;
 	/** Supplier Id */
 	supplier_id: string | null;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/**
 	 * Amount
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -4559,13 +5571,33 @@ export interface TimeSchema {
 	timezone?: number;
 }
 
-/** TourEventResponse */
-export interface TourEventResponse {
+/** TourEventLibraryImageModel */
+export interface TourEventLibraryImageModel {
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	library_id: string;
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
+}
+
+/** TourEventResponse */
+export interface TourEventResponseInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Origin Event Id */
+	origin_event_id?: string | null;
 	/** Tour Option Id */
 	tour_option_id: string | null;
 	/** Event */
@@ -4573,25 +5605,80 @@ export interface TourEventResponse {
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventSchemaOutput)
+				  } & FlightEventCreateSchemaInput)
 				| ({
 						typ: "2";
-				  } & TrainEventSchemaOutput)
+				  } & TrainEventCreateSchemaInput)
 				| ({
 						typ: "3";
-				  } & BusEventSchemaOutput)
+				  } & BusEventCreateSchemaInput)
 				| ({
 						typ: "4";
-				  } & TransferEventSchemaOutput)
+				  } & TransferEventCreateSchemaInput)
 				| ({
 						typ: "5";
-				  } & HousingEventSchemaOutput)
+				  } & HousingEventCreateSchemaInput)
 				| ({
 						typ: "6";
-				  } & ActivityEventSchemaOutput)
+				  } & ActivityEventCreateSchemaInput)
 				| ({
 						typ: "7";
-				  } & InformationEventSchema)
+				  } & InformationEventCreateSchemaInput)
+				| ({
+						typ: "8";
+				  } & GuideEventCreateSchemaInput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventCreateSchemaInput)
+		  )
+		| MultipleOptionEventInput;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/** TourEventResponse */
+export interface TourEventResponseOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Origin Event Id */
+	origin_event_id?: string | null;
+	/** Tour Option Id */
+	tour_option_id: string | null;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "1";
+				  } & FlightEventCreateSchemaOutput)
+				| ({
+						typ: "2";
+				  } & TrainEventCreateSchemaOutput)
+				| ({
+						typ: "3";
+				  } & BusEventCreateSchemaOutput)
+				| ({
+						typ: "4";
+				  } & TransferEventCreateSchemaOutput)
+				| ({
+						typ: "5";
+				  } & HousingEventCreateSchemaOutput)
+				| ({
+						typ: "6";
+				  } & ActivityEventCreateSchemaOutput)
+				| ({
+						typ: "7";
+				  } & InformationEventCreateSchemaOutput)
+				| ({
+						typ: "8";
+				  } & GuideEventCreateSchemaOutput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventCreateSchemaOutput)
 		  )
 		| MultipleOptionEventOutput;
 	/** Image Paths */
@@ -4670,6 +5757,11 @@ export interface TourMetaCreateSchema {
 	agency_id?: string | null;
 	/** Categories */
 	categories?: TourCategory[];
+	/**
+	 * Languages
+	 * @minItems 1
+	 */
+	languages?: LanguageCode[];
 }
 
 /** TourMetaModel */
@@ -4712,6 +5804,8 @@ export interface TourMetaModel {
 	status: TourStatus;
 	/** Categories */
 	categories: TourCategory[];
+	/** Languages */
+	languages: LanguageCode[];
 }
 
 /** TourMetaUpdateSchema */
@@ -4737,6 +5831,8 @@ export interface TourMetaUpdateSchema {
 	group_size_min?: number | null;
 	/** Categories */
 	categories?: TourCategory[] | null;
+	/** Languages */
+	languages?: LanguageCode[] | null;
 }
 
 /** TourMinMaxCostSchema */
@@ -5088,6 +6184,20 @@ export interface TourPackageModel {
 		| null;
 }
 
+/** TourRegenerateResponse */
+export interface TourRegenerateResponse {
+	/** Scheduled */
+	scheduled: boolean;
+	/** Landing */
+	landing: boolean;
+	/** Events Scheduled */
+	events_scheduled: number;
+	/** Events Skipped */
+	events_skipped: number;
+	/** Target Languages */
+	target_languages: number;
+}
+
 /** TourScheduleModel */
 export interface TourScheduleModel {
 	/**
@@ -5103,6 +6213,48 @@ export interface TourScheduleModel {
 export interface TourScheduleUpdate {
 	/** Is Seasonal */
 	is_seasonal?: boolean | null;
+}
+
+/**
+ * TourSnapshotSchema
+ * Pure-Pydantic snapshot of everything a booking's price depends on, frozen at creation.
+ */
+export interface TourSnapshotSchemaInput {
+	tour_meta: FrozenTourMeta;
+	tour_option: FrozenTourOption;
+	tour_financial_settings?: FrozenTourFinInput | null;
+	/** Events */
+	events: TourEventResponseInput[];
+	/** @default "en" */
+	display_lang?: LanguageCode;
+	/** Events Localized */
+	events_localized?: TourEventResponseInput[] | null;
+	/** Packages */
+	packages?: PricingPackageInput[];
+	operator_financials?: PricingFinancialsInput | null;
+	/** Fx Rates */
+	fx_rates?: FrozenFxRateInput[];
+}
+
+/**
+ * TourSnapshotSchema
+ * Pure-Pydantic snapshot of everything a booking's price depends on, frozen at creation.
+ */
+export interface TourSnapshotSchemaOutput {
+	tour_meta: FrozenTourMeta;
+	tour_option: FrozenTourOption;
+	tour_financial_settings?: FrozenTourFinOutput | null;
+	/** Events */
+	events: TourEventResponseOutput[];
+	/** @default "en" */
+	display_lang?: LanguageCode;
+	/** Events Localized */
+	events_localized?: TourEventResponseOutput[] | null;
+	/** Packages */
+	packages?: PricingPackageOutput[];
+	operator_financials?: PricingFinancialsOutput | null;
+	/** Fx Rates */
+	fx_rates?: FrozenFxRateOutput[];
 }
 
 /**
@@ -5220,8 +6372,6 @@ export interface TourSummaryResponse {
 	events: AnyEventWithCostOutput[];
 	cost: TourMinMaxCostSchemaOutput;
 	markup: TourMinMaxCostSchemaOutput;
-	profit_tax: TourMinMaxCostSchemaOutput;
-	vat: TourMinMaxCostSchemaOutput;
 	fees: TourMinMaxCostSchemaOutput;
 	total: TourMinMaxCostSchemaOutput;
 }
@@ -5308,6 +6458,142 @@ export interface TrainDetailSchemaOutput {
 		| null;
 }
 
+/** TrainEvent */
+export interface TrainEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details?: TrainDetailSchemaInput | null;
+}
+
+/** TrainEvent */
+export interface TrainEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details?: TrainDetailSchemaOutput | null;
+}
+
+/** TrainEventCreateSchema */
+export interface TrainEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details?: TrainDetailSchemaInput | null;
+}
+
+/** TrainEventCreateSchema */
+export interface TrainEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details?: TrainDetailSchemaOutput | null;
+}
+
 /** TrainEventPubRead */
 export interface TrainEventPubReadInput {
 	/** Name */
@@ -5342,113 +6628,6 @@ export interface TrainEventPubReadOutput {
 	 */
 	typ?: "2";
 	details: TrainDetailPubSchemaOutput;
-}
-
-/** TrainEventSchema */
-export interface TrainEventSchemaInput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "2"
-	 */
-	typ?: "2";
-	details?: TrainDetailSchemaInput | null;
-}
-
-/** TrainEventSchema */
-export interface TrainEventSchemaOutput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "2"
-	 */
-	typ?: "2";
-	details?: TrainDetailSchemaOutput | null;
-}
-
-/** TrainEventUpdate */
-export interface TrainEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Typ
-	 * @default "2"
-	 */
-	typ?: "2";
-	details?: TrainDetailSchemaInput | null;
 }
 
 /** TrainHopPubSchema */
@@ -5739,6 +6918,142 @@ export interface TransferDetailsSchemaOutput {
 		| null;
 }
 
+/** TransferEvent */
+export interface TransferEventInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details?: TransferDetailsSchemaInput | null;
+}
+
+/** TransferEvent */
+export interface TransferEventOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details?: TransferDetailsSchemaOutput | null;
+}
+
+/** TransferEventCreateSchema */
+export interface TransferEventCreateSchemaInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details?: TransferDetailsSchemaInput | null;
+}
+
+/** TransferEventCreateSchema */
+export interface TransferEventCreateSchemaOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details?: TransferDetailsSchemaOutput | null;
+}
+
 /** TransferEventPubRead */
 export interface TransferEventPubReadInput {
 	/** Name */
@@ -5773,113 +7088,6 @@ export interface TransferEventPubReadOutput {
 	 */
 	typ?: "4";
 	details: TransferDetailsPubSchemaOutput;
-}
-
-/** TransferEventSchema */
-export interface TransferEventSchemaInput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "4"
-	 */
-	typ?: "4";
-	details?: TransferDetailsSchemaInput | null;
-}
-
-/** TransferEventSchema */
-export interface TransferEventSchemaOutput {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "4"
-	 */
-	typ?: "4";
-	details?: TransferDetailsSchemaOutput | null;
-}
-
-/** TransferEventUpdate */
-export interface TransferEventUpdate {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Typ
-	 * @default "4"
-	 */
-	typ?: "4";
-	details?: TransferDetailsSchemaInput | null;
 }
 
 /**
@@ -5974,27 +7182,6 @@ export interface VoucherResponse {
 	order_number: string;
 	/** Url */
 	url: string;
-}
-
-/** WiseDetails */
-export interface WiseDetails {
-	/**
-	 * Typ
-	 * @default "wise"
-	 */
-	typ?: "wise";
-	/**
-	 * Account Id Email
-	 * @maxLength 255
-	 */
-	account_id_email: string;
-	/**
-	 * Payment Link
-	 * @format uri
-	 * @minLength 1
-	 * @maxLength 2083
-	 */
-	payment_link: string;
 }
 
 /** Role */
@@ -6104,7 +7291,7 @@ export interface ListPublicCatalogTourCatalogPublicGetParams {
 	/** Country */
 	country?: string | null;
 	/** Language */
-	language?: Language | null;
+	language?: LanguageCode | null;
 	/**
 	 * Skip
 	 * @min 0
@@ -6136,7 +7323,7 @@ export interface ListAgencyCatalogTourCatalogAgencyGetParams {
 	/** Country */
 	country?: string | null;
 	/** Language */
-	language?: Language | null;
+	language?: LanguageCode | null;
 	/**
 	 * Skip
 	 * @min 0
@@ -6277,29 +7464,194 @@ export interface UpdateTourFinancialsTourTourIdFinancePatchParams {
 }
 
 /** Event */
+export type CreateLibraryEventTourEventLibraryPostPayload =
+	| ({
+			typ: "1";
+	  } & FlightEventInput)
+	| ({
+			typ: "2";
+	  } & TrainEventInput)
+	| ({
+			typ: "3";
+	  } & BusEventInput)
+	| ({
+			typ: "4";
+	  } & TransferEventInput)
+	| ({
+			typ: "5";
+	  } & HousingEventInput)
+	| ({
+			typ: "6";
+	  } & ActivityEventInput)
+	| ({
+			typ: "7";
+	  } & InformationEventInput)
+	| ({
+			typ: "8";
+	  } & GuideEventInput)
+	| ({
+			typ: "9";
+	  } & SupplementaryEventInput);
+
+export interface ListLibraryEventsTourEventLibraryGetParams {
+	/** Typ */
+	typ?: EventTypes | null;
+	/** Q */
+	q?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface GetLibraryEventTourEventLibraryLibraryIdGetParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+/** Event */
+export type UpdateLibraryEventTourEventLibraryLibraryIdPatchPayload =
+	| ({
+			typ: "1";
+	  } & FlightEventInput)
+	| ({
+			typ: "2";
+	  } & TrainEventInput)
+	| ({
+			typ: "3";
+	  } & BusEventInput)
+	| ({
+			typ: "4";
+	  } & TransferEventInput)
+	| ({
+			typ: "5";
+	  } & HousingEventInput)
+	| ({
+			typ: "6";
+	  } & ActivityEventInput)
+	| ({
+			typ: "7";
+	  } & InformationEventInput)
+	| ({
+			typ: "8";
+	  } & GuideEventInput)
+	| ({
+			typ: "9";
+	  } & SupplementaryEventInput);
+
+export interface UpdateLibraryEventTourEventLibraryLibraryIdPatchParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface DeleteLibraryEventTourEventLibraryLibraryIdDeleteParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface UploadLibraryImagesTourEventLibraryLibraryIdImagesPostParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface ListLibraryImagesTourEventLibraryLibraryIdImagesAllGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface DeleteLibraryImageTourEventLibraryLibraryIdImagesImageIdDeleteParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface SetPrimaryLibraryImageTourEventLibraryLibraryIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+/** Event */
 export type CreateEventTourTourIdOptionIdEventPostPayload =
 	| (
 			| ({
 					typ: "1";
-			  } & FlightEventSchemaInput)
+			  } & FlightEventCreateSchemaInput)
 			| ({
 					typ: "2";
-			  } & TrainEventSchemaInput)
+			  } & TrainEventCreateSchemaInput)
 			| ({
 					typ: "3";
-			  } & BusEventSchemaInput)
+			  } & BusEventCreateSchemaInput)
 			| ({
 					typ: "4";
-			  } & TransferEventSchemaInput)
+			  } & TransferEventCreateSchemaInput)
 			| ({
 					typ: "5";
-			  } & HousingEventSchemaInput)
+			  } & HousingEventCreateSchemaInput)
 			| ({
 					typ: "6";
-			  } & ActivityEventSchemaInput)
+			  } & ActivityEventCreateSchemaInput)
 			| ({
 					typ: "7";
-			  } & InformationEventSchema)
+			  } & InformationEventCreateSchemaInput)
+			| ({
+					typ: "8";
+			  } & GuideEventCreateSchemaInput)
+			| ({
+					typ: "9";
+			  } & SupplementaryEventCreateSchemaInput)
 	  )
 	| MultipleOptionEventInput;
 
@@ -6373,27 +7725,33 @@ export type UpdateTourEventTourTourIdOptionIdEventEventIdPatchPayload =
 	| (
 			| ({
 					typ: "1";
-			  } & FlightEventUpdate)
+			  } & FlightEventInput)
 			| ({
 					typ: "2";
-			  } & TrainEventUpdate)
+			  } & TrainEventInput)
 			| ({
 					typ: "3";
-			  } & BusEventUpdate)
+			  } & BusEventInput)
 			| ({
 					typ: "4";
-			  } & TransferEventUpdate)
+			  } & TransferEventInput)
 			| ({
 					typ: "5";
-			  } & HousingEventUpdate)
+			  } & HousingEventInput)
 			| ({
 					typ: "6";
-			  } & ActivityEventUpdate)
+			  } & ActivityEventInput)
 			| ({
 					typ: "7";
-			  } & InformationEventUpdate)
+			  } & InformationEventInput)
+			| ({
+					typ: "8";
+			  } & GuideEventInput)
+			| ({
+					typ: "9";
+			  } & SupplementaryEventInput)
 	  )
-	| MultipleOptionEventUpdate;
+	| MultipleOptionEventInput;
 
 export interface UpdateTourEventTourTourIdOptionIdEventEventIdPatchParams {
 	/** @default "en" */
@@ -6707,6 +8065,8 @@ export interface RemoveRecurrenceRuleTourTourIdScheduleRuleRuleIdDeleteParams {
 }
 
 export interface GetLandingPageTourTourIdLandingGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -6811,6 +8171,8 @@ export interface ListPublicTourOptionsTourTourIdPublicOptionAllGetParams {
 export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdGetParams {
 	/** @default "USD" */
 	currency?: Currency;
+	/** @default "en" */
+	lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -6824,6 +8186,8 @@ export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdGetParams {
 }
 
 export interface GetPublicLandingPageTourTourIdPublicLandingGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -7036,6 +8400,19 @@ export interface GetTourStatisticsTourTourIdStatisticsGetParams {
 	tourId: string;
 }
 
+export interface RegenerateTourTranslationsTourComputedI18NTourTourIdRegeneratePostParams {
+	/**
+	 * Force
+	 * @default false
+	 */
+	force?: boolean;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface ListFilesOperatorMeFilesGetParams {
 	/**
 	 * Skip
@@ -7105,6 +8482,10 @@ export interface DeleteStaffMemberOperatorStaffUserIdDeleteParams {
 }
 
 export interface ListFxRatesOperatorFxRateGetParams {
+	/** From Currency */
+	from_currency?: Currency | null;
+	/** To Currency */
+	to_currency?: Currency | null;
 	/**
 	 * Skip
 	 * @min 0
@@ -7118,10 +8499,6 @@ export interface ListFxRatesOperatorFxRateGetParams {
 	 * @default 10
 	 */
 	limit?: number;
-}
-
-export interface DeleteFxRateOperatorFxRateFxRateIdDeleteParams {
-	fxRateId: string;
 }
 
 export interface GetFxRateOperatorFxRateFxRateIdGetParams {
@@ -7139,6 +8516,10 @@ export interface ListSupplierPaymentsOperatorSupplierPaymentGetParams {
 	supplier_id?: string | null;
 	/** Event Id */
 	event_id?: string | null;
+	/** Status */
+	status?: SupplierPaymentStatus | null;
+	/** Q */
+	q?: string | null;
 	/**
 	 * Skip
 	 * @min 0
@@ -7399,6 +8780,14 @@ export interface DeleteBookingOrderBookingOrderBookingIdDeleteParams {
 	bookingId: string;
 }
 
+export interface GetBookingItineraryBookingOrderBookingIdItineraryGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
 export interface SubmitBookingOrderBookingOrderBookingIdSubmitPatchParams {
 	/**
 	 * Booking Id
@@ -7453,6 +8842,122 @@ export interface ApplyEventAvailabilityBookingOrderBookingIdEventsEventIdOptions
 	eventId: string;
 	/** Option Index */
 	optionIndex: number;
+}
+
+/** Event */
+export type AddEventBookingRevisionBookingIdEventPostPayload =
+	| (
+			| ({
+					typ: "1";
+			  } & FlightEventCreateSchemaInput)
+			| ({
+					typ: "2";
+			  } & TrainEventCreateSchemaInput)
+			| ({
+					typ: "3";
+			  } & BusEventCreateSchemaInput)
+			| ({
+					typ: "4";
+			  } & TransferEventCreateSchemaInput)
+			| ({
+					typ: "5";
+			  } & HousingEventCreateSchemaInput)
+			| ({
+					typ: "6";
+			  } & ActivityEventCreateSchemaInput)
+			| ({
+					typ: "7";
+			  } & InformationEventCreateSchemaInput)
+			| ({
+					typ: "8";
+			  } & GuideEventCreateSchemaInput)
+			| ({
+					typ: "9";
+			  } & SupplementaryEventCreateSchemaInput)
+	  )
+	| MultipleOptionEventInput;
+
+export interface AddEventBookingRevisionBookingIdEventPostParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+/** Event */
+export type UpdateEventBookingRevisionBookingIdEventEventIdPatchPayload =
+	| (
+			| ({
+					typ: "1";
+			  } & FlightEventCreateSchemaInput)
+			| ({
+					typ: "2";
+			  } & TrainEventCreateSchemaInput)
+			| ({
+					typ: "3";
+			  } & BusEventCreateSchemaInput)
+			| ({
+					typ: "4";
+			  } & TransferEventCreateSchemaInput)
+			| ({
+					typ: "5";
+			  } & HousingEventCreateSchemaInput)
+			| ({
+					typ: "6";
+			  } & ActivityEventCreateSchemaInput)
+			| ({
+					typ: "7";
+			  } & InformationEventCreateSchemaInput)
+			| ({
+					typ: "8";
+			  } & GuideEventCreateSchemaInput)
+			| ({
+					typ: "9";
+			  } & SupplementaryEventCreateSchemaInput)
+	  )
+	| MultipleOptionEventInput;
+
+export interface UpdateEventBookingRevisionBookingIdEventEventIdPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface RemoveEventBookingRevisionBookingIdEventEventIdDeleteParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface ListEditsBookingRevisionBookingIdEditsGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface PreviewBookingRevisionBookingIdPreviewGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
 }
 
 export interface AddPassengerInfoBookingOrderBookingIdPaxPostParams {

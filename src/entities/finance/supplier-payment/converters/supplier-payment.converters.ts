@@ -140,15 +140,15 @@ export const mapSupplierPaymentFiltersToBackend = (
 	filters: ISupplierPaymentFilters
 ): typeof OPERATOR_SUPPLIER_PAYMENT_PATHS.listSupplierPayments._types.query & {
 	q?: string;
-	status?: string;
+	status?: SupplierPaymentStatus;
 } => {
 	const search = filters.search.trim();
-
+	// !!! TODO: check if this is correct
 	return {
 		skip: (filters.page - 1) * filters.limit,
 		limit: filters.limit,
 		...(filters.status.length > 0
-			? { status: filters.status.join(",") }
+			? { status: filters.status?.join(",") as SupplierPaymentStatus }
 			: {}),
 		...(search ? { q: search } : {})
 	};

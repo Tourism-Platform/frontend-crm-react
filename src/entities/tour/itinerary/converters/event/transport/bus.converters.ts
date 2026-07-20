@@ -1,4 +1,4 @@
-import type { BusEventSchemaOutput } from "@/shared/api";
+import type { BusEventCreateSchemaInput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 
 import type {
@@ -32,7 +32,7 @@ const createEmptyBusSegment = (): TBusRouteSegment => ({
 
 const assertBusEvent = (
 	data: TTourEventBackendResponce
-): BusEventSchemaOutput => {
+): BusEventCreateSchemaInput => {
 	if (!("typ" in data.event) || data.event.typ !== "3") {
 		throw new Error('mapBusEventToForm: expected bus event with typ "3"');
 	}

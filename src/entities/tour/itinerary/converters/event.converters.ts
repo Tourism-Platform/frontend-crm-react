@@ -41,17 +41,30 @@ import {
 
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
-): ITourEvent => ({
-	id: backend.id,
-	tourOptionId: backend.tour_option_id,
-	name: backend.event.name || "",
-	description: backend.event.description || "",
-	day: backend.event.day,
-	position: backend.event.position,
-	eventType:
-		mapBackendTypToEventType(backend.event.typ) || ENUM_EVENT.TOUR_DETAILS,
-	details: backend.event.details as Record<string, unknown>
-});
+): ITourEvent => {
+	const event = {
+		id: backend.id,
+		tourOptionId: backend.tour_option_id,
+		name: "",
+		description: "",
+		day: backend.event.day,
+		position: backend.event.position,
+		eventType:
+			mapBackendTypToEventType(backend.event.typ) ||
+			ENUM_EVENT.TOUR_DETAILS,
+		details: backend.event.details as Record<string, unknown>
+	};
+
+	if ("name" in backend.event) {
+		event.name = backend.event.name || "";
+	}
+
+	if ("description" in backend.event) {
+		event.description = backend.event.description || "";
+	}
+
+	return event;
+};
 
 // export const mapAllEventsToFrontend = (backend: TTourEventBackend): ITourEvent => ({
 // 	id: backend.id,
@@ -127,14 +140,18 @@ export const mapEventReorderToBackend = (
 
 export const mapEventCreateToBackend = (
 	frontend: ITourEventCreate
-): TTourEventCreateBackend => ({
-	name: frontend.name,
-	description: frontend.description,
-	day: frontend.day,
-	position: frontend.position,
-	typ: eventTypeMapper.to(frontend.eventType) as any,
-	details:
-		eventTypeMapper.to(frontend.eventType) !== "8"
-			? frontend.details || {}
-			: []
-});
+): TTourEventCreateBackend => {
+	const typ = eventTypeMapper.to(frontend.eventType);
+	const isMultipleOption = typ === "10";
+
+	return {
+		name: frontend.name,
+		description: frontend.description,
+		day: frontend.day,
+		position: frontend.position,
+		typ,
+		details: isMultipleOption
+			? (frontend.details ?? [])
+			: frontend.details || {}
+	} as TTourEventCreateBackend;
+};

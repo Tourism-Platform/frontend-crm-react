@@ -1,11 +1,11 @@
 import type { BookingUpdate } from "@/shared/api";
 import { formatDateToISO } from "@/shared/utils";
 
-import type { TBookingModelBackend } from "../types/create-booking.types";
 import type {
 	IUpdateBookingRequest,
-	IUpdatedBooking
-} from "../types/update-booking.types";
+	IUpdatedBooking,
+	TBookingModelBackend
+} from "../types";
 
 export const mapUpdateBookingToBackend = (
 	data: IUpdateBookingRequest

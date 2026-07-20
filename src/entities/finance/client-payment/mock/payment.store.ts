@@ -147,6 +147,12 @@ export const createPaymentFromFormData = (
 	const now = new Date().toISOString();
 
 	const created: ClientPaymentResponse = {
+		client_name:
+			bookingOrderListItems.find((item) => item.id === bookingId)
+				?.client_name ?? "",
+		tour_name:
+			bookingOrderListItems.find((item) => item.id === bookingId)
+				?.tour_name ?? "",
 		id: buildPaymentUuid(payments.length + 1),
 		booking_id: bookingId,
 		order_number:

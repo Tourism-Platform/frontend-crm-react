@@ -1,6 +1,7 @@
 import type {
 	BodyUploadReceiptOperatorSupplierPaymentPaymentIdReceiptPost,
 	SupplierPaymentResponse,
+	SupplierPaymentStatus,
 	SupplierPaymentUpdate
 } from "../Api";
 
@@ -17,6 +18,8 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 				booking_id?: string | null;
 				supplier_id?: string | null;
 				event_id?: string | null;
+				status?: SupplierPaymentStatus | null;
+				q?: string | null;
 				skip?: number;
 				limit?: number;
 			};

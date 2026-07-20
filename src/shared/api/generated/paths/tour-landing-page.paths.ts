@@ -1,8 +1,9 @@
 import type {
 	BodyUploadLandingImagesTourTourIdLandingImagesPost,
 	LandingPageImageModel,
-	LandingPageModel,
-	LandingPageUpdate
+	LandingPageResponse,
+	LandingPageUpdate,
+	LanguageCode
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -15,8 +16,8 @@ export const TOUR_LANDING_PAGE_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: void;
-				response: LandingPageModel;
+				query: { lang?: LanguageCode };
+				response: LandingPageResponse;
 			}
 		}) as const,
 	updateLandingPage: (tourId: string) =>
@@ -26,7 +27,7 @@ export const TOUR_LANDING_PAGE_PATHS = {
 			_types: {} as {
 				body: LandingPageUpdate;
 				query: void;
-				response: LandingPageModel;
+				response: LandingPageResponse;
 			}
 		}) as const,
 	listLandingImages: (tourId: string) =>

@@ -71,13 +71,15 @@ export const createInvoiceMocks = (): IInvoiceMockBundle => {
 				MOCK_ORDER_NUMBERS[
 					(statusIndex + invoiceIndex - 1) % MOCK_ORDER_NUMBERS.length
 				];
-
+			// !!! TODO: add counterparty_name
 			const listItem: InvoiceListItem = {
 				id,
 				booking_id,
 				status: row.status,
 				total_amount: amounts.total_amount,
 				paid_amount: amounts.paid_amount,
+				typ: MOCK_INVOICE_DEFAULTS.typ,
+				counterparty_name: "Tour Firm",
 				currency: MOCK_INVOICE_DEFAULTS.currency,
 				issue_date,
 				invoice_number,

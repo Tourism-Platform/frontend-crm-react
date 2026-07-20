@@ -1,4 +1,4 @@
-import type { BookingModel, Currency } from "@/shared/api";
+import type { Currency } from "@/shared/api";
 
 export interface ICreateBookingRequest {
 	tourOptionId: string;
@@ -18,5 +18,3 @@ export interface ICreatedBooking {
 }
 
 export type TSubmittedBooking = ICreatedBooking;
-
-export type TBookingModelBackend = BookingModel;

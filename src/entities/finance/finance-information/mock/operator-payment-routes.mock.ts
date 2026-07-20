@@ -40,9 +40,11 @@ export const OPERATOR_PAYMENT_ROUTES_MOCK: TOperatorPaymentRouteBackend[] = [
 		currency: Currency.USD,
 		note: "Online payment link",
 		details: {
-			typ: "wise",
-			account_id_email: "payments@tourfirm.example",
-			payment_link: "https://wise.com/pay/me/tourfirm"
+			typ: "custom",
+			items: [
+				{ key: "account_id_email", val: "payments@tourfirm.example" },
+				{ key: "payment_link", val: "https://wise.com/pay/me/tourfirm" }
+			]
 		}
 	}
 ];

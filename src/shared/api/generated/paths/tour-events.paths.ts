@@ -1,23 +1,26 @@
 import type {
-	ActivityEventSchemaInput,
-	ActivityEventUpdate,
-	BusEventSchemaInput,
-	BusEventUpdate,
+	ActivityEventCreateSchemaInput,
+	ActivityEventInput,
+	BusEventCreateSchemaInput,
+	BusEventInput,
 	EventReorderSchema,
-	FlightEventSchemaInput,
-	FlightEventUpdate,
-	HousingEventSchemaInput,
-	HousingEventUpdate,
-	InformationEventSchema,
-	InformationEventUpdate,
+	FlightEventCreateSchemaInput,
+	FlightEventInput,
+	GuideEventCreateSchemaInput,
+	GuideEventInput,
+	HousingEventCreateSchemaInput,
+	HousingEventInput,
+	InformationEventCreateSchemaInput,
+	InformationEventInput,
 	LanguageCode,
 	MultipleOptionEventInput,
-	MultipleOptionEventUpdate,
-	TourEventResponse,
-	TrainEventSchemaInput,
-	TrainEventUpdate,
-	TransferEventSchemaInput,
-	TransferEventUpdate
+	SupplementaryEventCreateSchemaInput,
+	SupplementaryEventInput,
+	TourEventResponseOutput,
+	TrainEventCreateSchemaInput,
+	TrainEventInput,
+	TransferEventCreateSchemaInput,
+	TransferEventInput
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -36,7 +39,7 @@ export const TOUR_EVENTS_PATHS = {
 					skip?: number;
 					limit?: number;
 				};
-				response: TourEventResponse[];
+				response: TourEventResponseOutput[];
 			}
 		}) as const,
 	createEvent: (tourId: string, optionId: string) =>
@@ -45,16 +48,18 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationEventSchema
-					| BusEventSchemaInput
-					| TrainEventSchemaInput
-					| TransferEventSchemaInput
-					| ActivityEventSchemaInput
-					| HousingEventSchemaInput
-					| FlightEventSchemaInput
+					| InformationEventCreateSchemaInput
+					| BusEventCreateSchemaInput
+					| TrainEventCreateSchemaInput
+					| TransferEventCreateSchemaInput
+					| ActivityEventCreateSchemaInput
+					| HousingEventCreateSchemaInput
+					| FlightEventCreateSchemaInput
+					| GuideEventCreateSchemaInput
+					| SupplementaryEventCreateSchemaInput
 					| MultipleOptionEventInput;
 				query: { lang?: LanguageCode };
-				response: TourEventResponse;
+				response: TourEventResponseOutput;
 			}
 		}) as const,
 	getTourEvent: (tourId: string, optionId: string, eventId: string) =>
@@ -64,7 +69,7 @@ export const TOUR_EVENTS_PATHS = {
 			_types: {} as {
 				body: void;
 				query: { lang?: LanguageCode };
-				response: TourEventResponse;
+				response: TourEventResponseOutput;
 			}
 		}) as const,
 	updateTourEvent: (tourId: string, optionId: string, eventId: string) =>
@@ -73,16 +78,18 @@ export const TOUR_EVENTS_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| InformationEventUpdate
-					| BusEventUpdate
-					| TrainEventUpdate
-					| TransferEventUpdate
-					| ActivityEventUpdate
-					| HousingEventUpdate
-					| FlightEventUpdate
-					| MultipleOptionEventUpdate;
+					| InformationEventInput
+					| BusEventInput
+					| TrainEventInput
+					| TransferEventInput
+					| ActivityEventInput
+					| HousingEventInput
+					| FlightEventInput
+					| GuideEventInput
+					| SupplementaryEventInput
+					| MultipleOptionEventInput;
 				query: { lang?: LanguageCode };
-				response: TourEventResponse;
+				response: TourEventResponseOutput;
 			}
 		}) as const,
 	deleteTourEvent: (tourId: string, optionId: string, eventId: string) =>
@@ -98,7 +105,7 @@ export const TOUR_EVENTS_PATHS = {
 			_types: {} as {
 				body: EventReorderSchema;
 				query: { lang?: LanguageCode };
-				response: TourEventResponse;
+				response: TourEventResponseOutput;
 			}
 		}) as const
 } as const;

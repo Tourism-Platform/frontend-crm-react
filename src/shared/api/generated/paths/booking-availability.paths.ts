@@ -1,4 +1,7 @@
-import type { AvailabilityApply, BookingEventAvailabilityModel } from "../Api";
+import type {
+	AvailabilityApply,
+	BookingEventAvailabilityResponse
+} from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
@@ -11,7 +14,7 @@ export const BOOKING_AVAILABILITY_PATHS = {
 			_types: {} as {
 				body: void;
 				query: void;
-				response: BookingEventAvailabilityModel[];
+				response: BookingEventAvailabilityResponse[];
 			}
 		}) as const,
 	applyEventAvailability: (
@@ -25,7 +28,7 @@ export const BOOKING_AVAILABILITY_PATHS = {
 			_types: {} as {
 				body: AvailabilityApply;
 				query: void;
-				response: BookingEventAvailabilityModel;
+				response: BookingEventAvailabilityResponse;
 			}
 		}) as const
 } as const;

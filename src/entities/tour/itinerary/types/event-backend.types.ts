@@ -1,6 +1,6 @@
-import type { TOUR_EVENTS_PATHS, TourEventResponse } from "@/shared/api";
+import type { TOUR_EVENTS_PATHS, TourEventResponseInput } from "@/shared/api";
 
-export type TTourEventBackendResponce = TourEventResponse;
+export type TTourEventBackendResponce = TourEventResponseInput;
 export type TTourEventUpdateBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.updateTourEvent
 >["_types"]["body"];

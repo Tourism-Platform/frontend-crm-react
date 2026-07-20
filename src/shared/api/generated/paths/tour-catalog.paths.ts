@@ -1,5 +1,4 @@
 import type {
-	Language,
 	LanguageCode,
 	LocationSuggestionSchema,
 	PublicTourCatalogSchemaOutput,
@@ -33,7 +32,7 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_max?: number | null;
 				city?: string | null;
 				country?: string | null;
-				language?: Language | null;
+				language?: LanguageCode | null;
 				skip?: number;
 				limit?: number;
 			};
@@ -53,7 +52,7 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_max?: number | null;
 				city?: string | null;
 				country?: string | null;
-				language?: Language | null;
+				language?: LanguageCode | null;
 				skip?: number;
 				limit?: number;
 			};

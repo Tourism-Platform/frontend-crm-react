@@ -1,4 +1,7 @@
-import { type ActivityEventSchemaOutput, LanguageCode } from "@/shared/api";
+import {
+	type ActivityEventCreateSchemaInput,
+	LanguageCode
+} from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
@@ -19,7 +22,7 @@ import { activityTypeMapper } from "./activity-type.converters";
 export const mapActivityEventToForm = (
 	data: TTourEventBackendResponce
 ): TActivityEditSchema => {
-	const event = data?.event as ActivityEventSchemaOutput;
+	const event = data?.event as ActivityEventCreateSchemaInput;
 	return {
 		name: event?.name || "",
 		day: event.day,

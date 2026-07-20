@@ -2,7 +2,8 @@ import type {
 	AdminUserView,
 	AuthUserIn,
 	MeSchema,
-	PasswordChangeIn
+	PasswordChangeIn,
+	SignInIn
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -22,7 +23,7 @@ export const AUTH_PATHS = {
 	authUser: {
 		url: "/auth/signin",
 		method: "POST",
-		_types: {} as { body: AuthUserIn; query: void; response: string }
+		_types: {} as { body: SignInIn; query: void; response: string }
 	} as const,
 	logoutUser: {
 		url: "/auth/signout",

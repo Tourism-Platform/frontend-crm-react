@@ -1,4 +1,4 @@
-import { AmenitiesTypes, Language, PickupType } from "@/shared/api";
+import { AmenitiesTypes, LanguageCode, PickupType } from "@/shared/api";
 
 import type { TPreviewTourBackend } from "../types";
 import { ENUM_PREVIEW_OPTION_EVENT } from "../types/preview-option-event.types";
@@ -43,7 +43,7 @@ export const TOUR_PREVIEW_TOUR_MOCK: TPreviewTourBackend = {
 	description:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Embark on an unforgettable journey through the ancient cities of Uzbekistan."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"Discover the rich history, stunning architecture, and warm hospitality of the Silk Road."}]}]}',
 	// cities: ["Tashkent", "Samarkand", "Bukhara", "Khiva"],
-	languages: [Language.English, Language.Russian],
+	languages: [LanguageCode.En, LanguageCode.Ru],
 	amenities_included: [AmenitiesTypes.Wifi],
 	amenities_not_included: [AmenitiesTypes.Wifi],
 	pickup_type: [PickupType.AirportPickup],

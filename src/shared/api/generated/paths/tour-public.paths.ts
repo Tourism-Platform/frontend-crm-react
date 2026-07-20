@@ -1,6 +1,7 @@
 import type {
 	Currency,
 	LandingPagePubSchema,
+	LanguageCode,
 	OperatorPreviewPubSchema,
 	TourMetaModel,
 	TourOptionPreviewSchemaOutput,
@@ -33,7 +34,7 @@ export const TOUR_PUBLIC_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { currency?: Currency };
+				query: { currency?: Currency; lang?: LanguageCode };
 				response: TourOptionPublicResponse;
 			}
 		}) as const,
@@ -43,7 +44,7 @@ export const TOUR_PUBLIC_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: void;
+				query: { lang?: LanguageCode };
 				response: LandingPagePubSchema;
 			}
 		}) as const,

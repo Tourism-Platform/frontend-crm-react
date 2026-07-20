@@ -1,4 +1,4 @@
-import type { TrainEventSchemaOutput } from "@/shared/api";
+import type { TrainEventCreateSchemaInput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 
 import type {
@@ -32,7 +32,7 @@ const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 
 const assertTrainEvent = (
 	data: TTourEventBackendResponce
-): TrainEventSchemaOutput => {
+): TrainEventCreateSchemaInput => {
 	if (!("typ" in data.event) || data.event.typ !== "2") {
 		throw new Error(
 			'mapTrainEventToForm: expected train event with typ "2"'

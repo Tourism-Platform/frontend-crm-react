@@ -1,10 +1,4 @@
-import {
-	BOOKING_ORDER_PATHS,
-	type BookingCancel,
-	type BookingModel,
-	type BookingOrderDetail,
-	ENUM_API_TAGS
-} from "@/shared/api";
+import { BOOKING_ORDER_PATHS, ENUM_API_TAGS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -26,8 +20,10 @@ import type {
 	IOrderDetail,
 	IUpdateBookingRequest,
 	IUpdatedBooking,
+	TBookingCancelBackend,
 	TBookingModelBackend,
 	TBookingOrderBackendResponse,
+	TBookingOrderDetailBackend,
 	TBookingOrderPaginatedResponse,
 	TSubmittedBooking
 } from "../types";
@@ -74,7 +70,7 @@ export const bookingOrderApi = authApi.injectEndpoints({
 			query: (bookingId) => ({
 				...BOOKING_ORDER_PATHS.submitBookingOrder(bookingId)
 			}),
-			transformResponse: (response: BookingModel) =>
+			transformResponse: (response: TBookingModelBackend) =>
 				mapBookingModelToCreated(response),
 			invalidatesTags: (_result, _error, bookingId) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id: bookingId },
@@ -85,14 +81,14 @@ export const bookingOrderApi = authApi.injectEndpoints({
 			query: (id) => ({
 				...BOOKING_ORDER_PATHS.getBookingOrder(id)
 			}),
-			transformResponse: (response: BookingOrderDetail) =>
+			transformResponse: (response: TBookingOrderDetailBackend) =>
 				mapBookingOrderDetailToFrontend(response),
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
 			]
 		}),
 		updateBookingStatus: builder.mutation<
-			BookingModel,
+			TBookingModelBackend,
 			{ id: string; status: ENUM_ORDER_STATUS_TYPE }
 		>({
 			query: ({ id, status }) => {
@@ -117,8 +113,8 @@ export const bookingOrderApi = authApi.injectEndpoints({
 			]
 		}),
 		cancelBooking: builder.mutation<
-			BookingModel,
-			{ id: string; data: BookingCancel }
+			TBookingModelBackend,
+			{ id: string; data: TBookingCancelBackend }
 		>({
 			query: ({ id, data }) => ({
 				...BOOKING_ORDER_PATHS.cancelBooking(id),

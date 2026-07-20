@@ -1,4 +1,7 @@
-import type { LandingPageModel, TOUR_LANDING_PAGE_PATHS } from "@/shared/api";
+import type {
+	LandingPagePubSchema,
+	TOUR_LANDING_PAGE_PATHS
+} from "@/shared/api";
 
 import type {
 	ENUM_AMENITIES_TYPE,
@@ -18,7 +21,7 @@ export interface ILandingBackend {
 	additionalInfo: string;
 }
 
-export type TLandingBackend = LandingPageModel;
+export type TLandingBackend = LandingPagePubSchema;
 
 export type TGetLandingBackendResponse = ReturnType<
 	typeof TOUR_LANDING_PAGE_PATHS.getLandingPage

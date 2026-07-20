@@ -24,6 +24,20 @@ export const ENUM_PAYMENT_ROUTE_METHODS = {
 export type ENUM_PAYMENT_ROUTE_METHODS_TYPE =
 	(typeof ENUM_PAYMENT_ROUTE_METHODS)[keyof typeof ENUM_PAYMENT_ROUTE_METHODS];
 
+export type TWiseDetails = {
+	typ: typeof ENUM_PAYMENT_ROUTE_METHODS.WISE;
+	accountIdEmail: string;
+	paymentLink: string;
+};
+
+export type TClassicSwiftDetails = {
+	typ: typeof ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT;
+	accountNameIban: string;
+	swiftBic: string;
+	bankName: string;
+	bankAddress: string;
+};
+
 // Frontend абстракция сущности
 export type TOperatorPaymentRoute = {
 	id: string;
@@ -32,17 +46,5 @@ export type TOperatorPaymentRoute = {
 	currency: ENUM_CURRENCY_OPTIONS_TYPE;
 	note: string | null;
 	methodType: ENUM_PAYMENT_ROUTE_METHODS_TYPE;
-	details:
-		| {
-				typ: typeof ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT;
-				accountNameIban: string;
-				swiftBic: string;
-				bankName: string;
-				bankAddress: string;
-		  }
-		| {
-				typ: typeof ENUM_PAYMENT_ROUTE_METHODS.WISE;
-				accountIdEmail: string;
-				paymentLink: string;
-		  };
+	details: TClassicSwiftDetails | TWiseDetails;
 };

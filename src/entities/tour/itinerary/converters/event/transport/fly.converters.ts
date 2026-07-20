@@ -1,5 +1,5 @@
 import type {
-	FlightEventSchemaOutput,
+	FlightEventCreateSchemaInput,
 	FlightHopDetailsSchemaInput,
 	FlightHopDetailsSchemaOutput
 } from "@/shared/api";
@@ -99,7 +99,7 @@ const mapFlySegmentToHop = (
 
 const assertFlyEvent = (
 	data: TTourEventBackendResponce
-): FlightEventSchemaOutput => {
+): FlightEventCreateSchemaInput => {
 	if (!("typ" in data.event) || data.event.typ !== "1") {
 		throw new Error(
 			'mapFlyEventToForm: expected flight event with typ "1"'

@@ -31,9 +31,7 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 	},
 	{
 		event: {
-			typ: "8",
-			name: "Hotel Selection: Tashkent",
-			supplier_id: null,
+			typ: "10",
 			day: 2,
 			position: 1,
 			details: [
@@ -41,16 +39,12 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 					typ: "5",
 					name: "Central Hotel",
 					supplier_id: "Central Group",
-					day: 2,
-					position: 1,
 					details: null
 				},
 				{
 					typ: "5",
 					name: "Hyatt Regency",
 					supplier_id: "Hyatt Group",
-					day: 2,
-					position: 1,
 					details: null
 				}
 			]
@@ -80,8 +74,6 @@ export const TOUR_SUMMARY_MOCK: TourSummaryResponse = {
 	events: MOCK_EVENTS,
 	cost: MOCK_COST_TOTAL,
 	markup: MOCK_MARKUP_TOTAL,
-	profit_tax: costRange(0, 0),
-	vat: costRange(0, 0),
 	fees: costRange(0, 0),
 	total: costRange(2270, 3020)
 };

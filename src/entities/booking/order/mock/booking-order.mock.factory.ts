@@ -6,6 +6,8 @@ import {
 	TourType
 } from "@/shared/api";
 
+import type { TBookingOrderDetailBackend } from "../types";
+
 import {
 	MOCK_AGENCY_ID,
 	MOCK_BOOKING_DEFAULTS,
@@ -130,8 +132,9 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 				client_type: row.clientType
 			};
 
-			const detail: BookingOrderDetail = {
+			const detail: TBookingOrderDetailBackend = {
 				...MOCK_BOOKING_DEFAULTS,
+				order_number: orderNumber,
 				id,
 				...dates,
 				pax: listItem.pax,

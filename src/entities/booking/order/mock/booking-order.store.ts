@@ -1,22 +1,25 @@
 import {
-	type BookingModel,
-	type BookingOrderDetail,
-	type BookingOrderListItem,
 	type BookingOrderListResponse,
 	BookingStatus,
 	BookingTransition
 } from "@/shared/api";
 
+import type {
+	TBookingModelBackend,
+	TBookingOrderBackend,
+	TBookingOrderListItemBackend
+} from "../types";
+
 import { createBookingOrderMocks } from "./booking-order.mock.factory";
 
 const { listItems, detailsById } = createBookingOrderMocks();
 
-export const bookingOrderListItems: BookingOrderListItem[] = listItems;
+export const bookingOrderListItems: TBookingOrderListItemBackend[] = listItems;
 export const bookingOrderDetailStore = detailsById;
 
 export const detailToBookingModel = (
-	detail: BookingOrderDetail
-): BookingModel => ({
+	detail: TBookingOrderBackend
+): TBookingModelBackend => ({
 	id: detail.id,
 	agency_id: detail.agency_id,
 	operator_id: detail.operator_id,
@@ -36,12 +39,15 @@ export const detailToBookingModel = (
 	cancelled_at: detail.cancelled_at ?? null,
 	cancellation_reason: detail.cancellation_reason ?? null,
 	comment: detail.comment ?? null,
-	voucher_path: detail.voucher_path ?? null
+	voucher_path: detail.voucher_path ?? null,
+	order_number: detail.order_number,
+	tour: detail.tour,
+	agency: detail.agency
 });
 
 export const getBookingOrderDetail = (
 	bookingId: string
-): BookingOrderDetail | undefined => bookingOrderDetailStore.get(bookingId);
+): TBookingOrderBackend | undefined => bookingOrderDetailStore.get(bookingId);
 
 export interface IListBookingOrdersQuery {
 	booking_status: string | null;
@@ -109,7 +115,7 @@ const resolveStatusAfterTransition = (
 export const transitionBookingStatusInStore = (
 	bookingId: string,
 	transition: BookingTransition
-): BookingModel | null => {
+): TBookingModelBackend | null => {
 	const detail = bookingOrderDetailStore.get(bookingId);
 	if (!detail) return null;
 
