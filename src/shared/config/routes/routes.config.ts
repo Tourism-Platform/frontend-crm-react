@@ -49,6 +49,8 @@ export const ENUM_PATH = {
 			EVENT: "/tours/:tourId/itinerary/:optionId/events/:eventId/event",
 			TRANSFER:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/transfer",
+			SUPPLEMENT:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/supplement",
 			ACCOMMODATION:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/accommodation",
 			MULTIPLY_OPTION:

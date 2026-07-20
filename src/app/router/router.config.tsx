@@ -189,6 +189,11 @@ const TransportationEditPage = React.lazy(() =>
 		"@/pages/tours/events/transportation-edit-page/ui/transportation-edit-page"
 	).then((m) => ({ default: m.TransportationEditPage }))
 );
+const SupplementEditPage = React.lazy(() =>
+	import(
+		"@/pages/tours/events/supplement-edit-page/ui/supplement-edit-page"
+	).then((m) => ({ default: m.SupplementEditPage }))
+);
 const AccommodationEditPage = React.lazy(() =>
 	import(
 		"@/pages/tours/events/accommodation-edit-page/ui/accommodation-edit-page"
@@ -676,6 +681,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.TOURS.EVENTS.TRANSFER,
 		component: TransportationEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.SUPPLEMENT,
+		component: SupplementEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [

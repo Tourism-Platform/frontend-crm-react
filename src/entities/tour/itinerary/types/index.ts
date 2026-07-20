@@ -10,6 +10,7 @@ export * from "./event-media-backend.types";
 export * from "./event-enum.types";
 export * from "./transfer-type.types";
 export * from "./transportation";
+export * from "./supplement";
 export * from "./common";
 export * from "./info";
 export * from "./activity";

@@ -1,0 +1,148 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Enter supplement title or it will be generated automatically",
+			"errors": {
+				"required": "Title is required",
+				"min": "Title is too short",
+				"max": "Title is too long"
+			}
+		}
+	},
+	"tabs": {
+		"items": "Items",
+		"media": "Media",
+		"pricing": "Pricing & booking"
+	},
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Error while loading data"
+			},
+			"save": {
+				"success": "Successfully saved",
+				"error": "Error while saving"
+			}
+		},
+		"items": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			},
+			"details": {
+				"title": "Supplement items",
+				"item": "Item {{index}}",
+				"form": {
+					"buttons": {
+						"add": "Add item"
+					},
+					"fields": {
+						"name": {
+							"label": "Name",
+							"placeholder": "e.g. Water",
+							"errors": {
+								"required": "Name is required",
+								"max": "Name is too long"
+							}
+						},
+						"description": {
+							"label": "Description",
+							"placeholder": "Enter description"
+						}
+					}
+				}
+			}
+		},
+		"pricing": {
+			"title": "Pricing",
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			},
+			"invoicing": {
+				"title": "How will this activity be invoiced?",
+				"tabs": {
+					"individual": "Individual",
+					"part_of_package": "Part of package"
+				}
+			},
+			"pricing_type": {
+				"title": "How is this activity priced?",
+				"tabs": {
+					"flat_rate": "Flat rate",
+					"per_item": "Per item",
+					"per_person": "Per person"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Pricing details",
+					"fields": {
+						"total_price": {
+							"label": "Total cost",
+							"placeholder": "Enter...",
+							"errors": {
+								"required": "Total cost is required"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Total cost per person",
+							"placeholder": "Enter..."
+						},
+						"taxes_and_fees": {
+							"label": "Taxes & Fees",
+							"placeholder": "Enter..."
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Taxes & Fees per person",
+							"placeholder": "Enter..."
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose",
+							"errors": {
+								"required": "Currency is required"
+							}
+						}
+					}
+				},
+				"per_item": {
+					"empty_items": "Add items first to set pricing",
+					"checkboxes": {
+						"add_margin_separately": "Add margin separately"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Total cost",
+							"placeholder": "Enter..."
+						},
+						"taxes_fees": {
+							"label": "Taxes & Fees",
+							"placeholder": "Enter..."
+						},
+						"markup": {
+							"value": {
+								"label": "Markup",
+								"placeholder": "0"
+							}
+						}
+					}
+				},
+				"package": {
+					"title": "Package",
+					"fields": {
+						"package": {
+							"label": "Package type"
+						}
+					}
+				}
+			}
+		},
+		"media": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			}
+		}
+	}
+}

@@ -4,6 +4,8 @@ export * from "./accommodation-pricing.converters";
 export * from "./vehicle-body-type.converters";
 export * from "./transportation-cars.converters";
 export * from "./transportation.converters";
+export * from "./supplementary.converters";
+export * from "./supplementary-pricing.converters";
 export * from "./info.converters";
 export * from "./activity.converters";
 export * from "./activity-pricing.converters";

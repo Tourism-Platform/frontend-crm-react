@@ -1,0 +1,148 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Введите название допа или оно будет сгенерировано автоматически",
+			"errors": {
+				"required": "Название обязательно",
+				"min": "Название слишком короткое",
+				"max": "Название слишком длинное"
+			}
+		}
+	},
+	"tabs": {
+		"items": "Позиции",
+		"media": "Медиа",
+		"pricing": "Прайсинг и бронирование"
+	},
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Ошибка при загрузке данных"
+			},
+			"save": {
+				"success": "Успешно сохранено",
+				"error": "Ошибка при сохранении"
+			}
+		},
+		"items": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение ..."
+			},
+			"details": {
+				"title": "Позиции допов",
+				"item": "Позиция {{index}}",
+				"form": {
+					"buttons": {
+						"add": "Добавить позицию"
+					},
+					"fields": {
+						"name": {
+							"label": "Название",
+							"placeholder": "например, Вода",
+							"errors": {
+								"required": "Название обязательно",
+								"max": "Название слишком длинное"
+							}
+						},
+						"description": {
+							"label": "Описание",
+							"placeholder": "Введите описание"
+						}
+					}
+				}
+			}
+		},
+		"pricing": {
+			"title": "Прайсинг",
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение ..."
+			},
+			"invoicing": {
+				"title": "Как будет выставляться счёт?",
+				"tabs": {
+					"individual": "Отдельно",
+					"part_of_package": "В составе пакета"
+				}
+			},
+			"pricing_type": {
+				"title": "Как формируется цена?",
+				"tabs": {
+					"flat_rate": "Фикс",
+					"per_item": "За позицию",
+					"per_person": "За человека"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Детали прайсинга",
+					"fields": {
+						"total_price": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите...",
+							"errors": {
+								"required": "Стоимость обязательна"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
+						"taxes_and_fees": {
+							"label": "Налоги и сборы",
+							"placeholder": "Введите..."
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Налоги и сборы за человека",
+							"placeholder": "Введите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Валюта обязательна"
+							}
+						}
+					}
+				},
+				"per_item": {
+					"empty_items": "Сначала добавьте позиции, чтобы задать прайс",
+					"checkboxes": {
+						"add_margin_separately": "Добавить маржу отдельно"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите..."
+						},
+						"taxes_fees": {
+							"label": "Налоги и сборы",
+							"placeholder": "Введите..."
+						},
+						"markup": {
+							"value": {
+								"label": "Наценка",
+								"placeholder": "0"
+							}
+						}
+					}
+				},
+				"package": {
+					"title": "Пакет",
+					"fields": {
+						"package": {
+							"label": "Тип пакета"
+						}
+					}
+				}
+			}
+		},
+		"media": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение ..."
+			}
+		}
+	}
+}

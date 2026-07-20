@@ -1,6 +1,7 @@
 import { Calendar } from "lucide-react";
 
 import {
+	BoxOutlineIcon,
 	DrivingIcon,
 	HouseIcon,
 	InfoCircleIcon,
@@ -45,6 +46,12 @@ export const EVENT_METADATA: Record<
 		color_text: "text-emerald-600",
 		color_bg: "bg-emerald-600"
 	},
+	[ENUM_EVENT.SUPPLEMENT]: {
+		title: "Supplement",
+		icon: BoxOutlineIcon,
+		color_text: "text-violet-600",
+		color_bg: "bg-violet-600"
+	},
 	[ENUM_EVENT.MULTIPLY_OPTION]: {
 		title: "Multiply-option",
 		icon: TaskSquareIcon,
@@ -70,6 +77,7 @@ const COMPONENT_TYPES: ENUM_EVENT_TYPE[] = [
 	ENUM_EVENT.ACTIVITY,
 	ENUM_EVENT.ACCOMMODATION,
 	ENUM_EVENT.TRANSPORTATION,
+	ENUM_EVENT.SUPPLEMENT,
 	ENUM_EVENT.MULTIPLY_OPTION,
 	ENUM_EVENT.INFO
 ];
@@ -93,6 +101,7 @@ export const EVENT_TYPE_TO_PATH: Record<string, TTourEventPath> = {
 	[ENUM_EVENT.ACTIVITY]: ENUM_PATH.TOURS.EVENTS.EVENT,
 	[ENUM_EVENT.ACCOMMODATION]: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION,
 	[ENUM_EVENT.TRANSPORTATION]: ENUM_PATH.TOURS.EVENTS.TRANSFER,
+	[ENUM_EVENT.SUPPLEMENT]: ENUM_PATH.TOURS.EVENTS.SUPPLEMENT,
 	[ENUM_EVENT.MULTIPLY_OPTION]: ENUM_PATH.TOURS.EVENTS.MULTIPLY_OPTION,
 	[ENUM_EVENT.INFO]: ENUM_PATH.TOURS.EVENTS.INFO
 };

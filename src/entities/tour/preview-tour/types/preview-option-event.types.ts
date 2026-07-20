@@ -2,6 +2,7 @@ export const ENUM_PREVIEW_OPTION_EVENT = {
 	ACCOMMODATION: "accommodation",
 	FLIGHT: "flight",
 	TRANSPORTATION: "transportation",
+	SUPPLEMENT: "supplement",
 	MULTIPLY_OPTION: "multiply-option",
 	INFO: "info",
 	ACTIVITY: "activity"

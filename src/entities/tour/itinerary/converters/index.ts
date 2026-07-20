@@ -6,3 +6,5 @@ export * from "./event-type.converters";
 export * from "./event/transfer-type.converters";
 export * from "./event/transportation-pricing.converters";
 export * from "./event/accommodation-pricing.converters";
+export * from "./event/supplementary.converters";
+export * from "./event/supplementary-pricing.converters";

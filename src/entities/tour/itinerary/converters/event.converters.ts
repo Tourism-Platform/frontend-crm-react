@@ -11,6 +11,7 @@ import {
 	type TAccommodationEditSchema,
 	type TActivityEditSchema,
 	type TFlightEditSchema,
+	type TSupplementEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
 	type TTourEventCreateBackend,
@@ -29,6 +30,8 @@ import {
 	mapFlyEventToForm,
 	mapInfoEventToForm,
 	mapInfoFormToUpdate,
+	mapSupplementaryEventToForm,
+	mapSupplementaryFormToUpdate,
 	mapTrainEventToForm,
 	mapTransferEventToForm,
 	mapTransferFormToUpdate,
@@ -66,19 +69,6 @@ export const mapAllEventsToFrontend = (
 	return event;
 };
 
-// export const mapAllEventsToFrontend = (backend: TTourEventBackend): ITourEvent => ({
-// 	id: backend.id,
-// 	tourOptionId: backend.tour_option_id,
-// 	name: backend.event.name,
-// 	description: backend.event.description,
-// 	day: backend.event.day,
-// 	position: backend.event.position,
-// 	eventType:
-// 		eventTypeMapper.from(backend.event.typ as string) ||
-// 		ENUM_EVENT.TOUR_DETAILS,
-// 	details: backend.event.details as Record<string, unknown>
-// });
-
 export const mapEventToFrontend = (
 	backend: TTourEventBackendResponce
 ): TTourEvent => {
@@ -97,6 +87,8 @@ export const mapEventToFrontend = (
 			return mapActivityEventToForm(backend);
 		case "7":
 			return mapInfoEventToForm(backend);
+		case "9":
+			return mapSupplementaryEventToForm(backend);
 
 		default:
 			return backend as unknown as TTransportationEditSchema;
@@ -117,6 +109,8 @@ export const mapEventUpdateToBackend = (
 			frontend as TTransportationEditSchema,
 			lang
 		);
+	else if (type === ENUM_EVENT.SUPPLEMENT)
+		return mapSupplementaryFormToUpdate(frontend as TSupplementEditSchema);
 	else if (type === ENUM_EVENT.INFO) return mapInfoFormToUpdate(frontend);
 	else if (type === ENUM_EVENT.ACCOMMODATION)
 		return mapAccommodationFormToUpdate(

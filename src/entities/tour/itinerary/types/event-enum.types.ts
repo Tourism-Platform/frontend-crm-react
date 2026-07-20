@@ -5,6 +5,7 @@ export const ENUM_EVENT = {
 	FLIGHT: "flight",
 	TOUR_DETAILS: "tour-details",
 	TRANSPORTATION: "transportation",
+	SUPPLEMENT: "supplement",
 	MULTIPLY_OPTION: "multiply-option",
 	INFO: "info",
 	ACTIVITY: "activity",
