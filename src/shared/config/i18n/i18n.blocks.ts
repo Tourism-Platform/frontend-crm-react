@@ -70,6 +70,11 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 		namespaces: ["orders_page", "order_id_page"]
 	},
 
+	library: {
+		folder: "library",
+		namespaces: ["event_templates_page"]
+	},
+
 	shared: {
 		folder: "", // пустая строка = корень
 		namespaces: [

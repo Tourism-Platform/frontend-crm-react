@@ -63,6 +63,17 @@
 					"reconciliation": "Сверка"
 				}
 			}
+		},
+		"library": {
+			"title": "Библиотека",
+			"general": {
+				"title": "Компоненты тура",
+				"menu": {
+					"events": "События",
+					"itineraries": "Маршруты",
+					"suppliers": "Поставщики"
+				}
+			}
 		}
 	},
 	"agency": {

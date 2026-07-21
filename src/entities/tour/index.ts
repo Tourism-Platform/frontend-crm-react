@@ -7,3 +7,4 @@ export * from "./schedule";
 export * from "./preview-tour";
 export * from "./preview-booking";
 export * from "./itinerary";
+export * from "./event-library";

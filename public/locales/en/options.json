@@ -205,5 +205,15 @@
 				}
 			}
 		}
+	},
+	"event_library": {
+		"types": {
+			"flight": "Flights",
+			"transportation": "Transportation",
+			"accommodation": "Accommodation",
+			"activity": "Activities",
+			"info": "Info",
+			"supplement": "Supplement"
+		}
 	}
 }

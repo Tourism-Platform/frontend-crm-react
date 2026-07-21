@@ -1,0 +1,56 @@
+{
+	"page_name": "Events templates",
+	"templates_title": "Templates",
+	"new_template": {
+		"button": "New template"
+	},
+	"table": {
+		"name": "Name",
+		"type": "Type",
+		"supplier": "Property/supplier",
+		"empty_supplier": "—"
+	},
+	"menu": {
+		"edit": {
+			"button": "Edit",
+			"unavailable": "Edit is not available for this type yet"
+		},
+		"delete": {
+			"button": "Delete",
+			"form": {
+				"title": "Delete template",
+				"warning": "Are you sure you want to delete this event template? This action cannot be undone.",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting ..."
+				},
+				"toasts": {
+					"success": "Template deleted",
+					"error": "Failed to delete template"
+				}
+			}
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load templates"
+		},
+		"create": {
+			"success": "Template created",
+			"error": "Failed to create template"
+		},
+		"update": {
+			"success": "Template saved",
+			"error": "Failed to save template"
+		}
+	},
+	"create": {
+		"title": "New template",
+		"subtitle": "Choose event type",
+		"transfer": {
+			"title": "Transfer",
+			"description": "Airport / hotel transfer template"
+		}
+	}
+}

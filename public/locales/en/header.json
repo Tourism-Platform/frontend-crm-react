@@ -144,6 +144,7 @@
 		"library": {
 			"title": "Library",
 			"menu": {
+				"events": "Events",
 				"overview": "Overview",
 				"analytics": "Analytics",
 				"reports": "Reports"

@@ -144,6 +144,7 @@
 		"library": {
 			"title": "Библиотека",
 			"menu": {
+				"events": "События",
 				"overview": "Обзор",
 				"analytics": "Аналитика",
 				"reports": "Отчёты"

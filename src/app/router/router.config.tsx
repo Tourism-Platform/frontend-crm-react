@@ -8,6 +8,7 @@ import {
 	ENUM_PATH,
 	FINANCE_SIDEBAR_LIST,
 	type IRouting,
+	LIBRARY_SIDEBAR_LIST,
 	OPERATOR_SETTINGS_SIDEBAR_LIST,
 	TOURS_SIDEBAR_LIST
 } from "@/shared/config";
@@ -17,6 +18,7 @@ import {
 	DefaultOperatorLayout,
 	EventOperatorLayout,
 	FinanceOperatorLayout,
+	LibraryOperatorLayout,
 	SettingsAgencyLayout,
 	SettingsOperatorLayout,
 	SideBarAgencyLayout,
@@ -257,6 +259,27 @@ const ReconciliationIdPage = React.lazy(() =>
 	import(
 		"@/pages/finance/reconciliation-id-page/ui/reconciliation-details-page"
 	).then((m) => ({ default: m.ReconciliationIdPage }))
+);
+
+const EventTemplatesPage = React.lazy(() =>
+	import("@/pages/library/event-templates-page/ui/event-templates-page").then(
+		(m) => ({ default: m.EventTemplatesPage })
+	)
+);
+const LibraryTransferEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/transfer-edit-page/ui/library-transfer-edit-page"
+	).then((m) => ({ default: m.LibraryTransferEditPage }))
+);
+const LibraryItinerariesStubPage = React.lazy(() =>
+	import(
+		"@/pages/library/itineraries-stub-page/ui/library-itineraries-stub-page"
+	).then((m) => ({ default: m.LibraryItinerariesStubPage }))
+);
+const LibrarySuppliersStubPage = React.lazy(() =>
+	import(
+		"@/pages/library/suppliers-stub-page/ui/library-suppliers-stub-page"
+	).then((m) => ({ default: m.LibrarySuppliersStubPage }))
 );
 
 // Preview tours pages
@@ -871,6 +894,64 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [DefaultOperatorLayout]
+	},
+
+	// library
+	{
+		path: ENUM_PATH.LIBRARY.EVENTS,
+		component: EventTemplatesPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.EVENT_TRANSFER,
+		component: LibraryTransferEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.ITINERARIES,
+		component: LibraryItinerariesStubPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIERS,
+		component: LibrarySuppliersStubPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
 	},
 
 	// 404

@@ -63,6 +63,17 @@
 					"reconciliation": "Reconciliation"
 				}
 			}
+		},
+		"library": {
+			"title": "Library",
+			"general": {
+				"title": "Tour component",
+				"menu": {
+					"events": "Events",
+					"itineraries": "Itineraries",
+					"suppliers": "Suppliers"
+				}
+			}
 		}
 	},
 	"agency": {

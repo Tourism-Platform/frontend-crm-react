@@ -74,5 +74,12 @@ export const ENUM_PATH = {
 		SUPPLIER_PAYMENTS: "/finance/supplier-payments",
 		RECONCILIATION: "/finance/reconciliation",
 		RECONCILIATION_ID: "/finance/reconciliation/:reconciliationId"
+	},
+	LIBRARY: {
+		ROOT: "/library",
+		EVENTS: "/library/events",
+		EVENT_TRANSFER: "/library/events/:libraryId/transfer",
+		ITINERARIES: "/library/itineraries",
+		SUPPLIERS: "/library/suppliers"
 	}
 } as const;

@@ -205,5 +205,15 @@
 				}
 			}
 		}
+	},
+	"event_library": {
+		"types": {
+			"flight": "Перелёты",
+			"transportation": "Трансфер",
+			"accommodation": "Проживание",
+			"activity": "Активности",
+			"info": "Инфо",
+			"supplement": "Допы"
+		}
 	}
 }

@@ -69,5 +69,13 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.FINANCE.RECONCILIATION]:
 		"operator.finance.general.menu.reconciliation",
 	[ENUM_PATH.FINANCE.RECONCILIATION_ID]:
-		"operator.finance.general.menu.reconciliation"
+		"operator.finance.general.menu.reconciliation",
+
+	// Library
+	[ENUM_PATH.LIBRARY.ROOT]: "operator.library.title",
+	[ENUM_PATH.LIBRARY.EVENTS]: "operator.library.general.menu.events",
+	[ENUM_PATH.LIBRARY.EVENT_TRANSFER]: "operator.library.general.menu.events",
+	[ENUM_PATH.LIBRARY.ITINERARIES]:
+		"operator.library.general.menu.itineraries",
+	[ENUM_PATH.LIBRARY.SUPPLIERS]: "operator.library.general.menu.suppliers"
 };

@@ -11,6 +11,7 @@ import reconciliation_page from "../../../../public/locales/en/finance/reconcili
 import supplier_payments_page from "../../../../public/locales/en/finance/supplier_payments_page.json";
 import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
+import event_templates_page from "../../../../public/locales/en/library/event_templates_page.json";
 import login_page from "../../../../public/locales/en/login_page.json";
 import main from "../../../../public/locales/en/main.json";
 import not_found_page from "../../../../public/locales/en/not_found_page.json";
@@ -90,6 +91,7 @@ export type TToursSearchPage = typeof tours_search_page;
 export type TPreviewTourPage = typeof preview_tour_page;
 export type TPreviewOptionPage = typeof preview_option_page;
 export type TPreviewBookingPage = typeof preview_booking_page;
+export type TEventTemplatesPage = typeof event_templates_page;
 
 export type TOrderIdPage = typeof order_id_page;
 export type TLandingPage = typeof landing_page;
@@ -140,6 +142,7 @@ export type TResources = {
 	preview_tour_page: TPreviewTourPage;
 	preview_option_page: TPreviewOptionPage;
 	preview_booking_page: TPreviewBookingPage;
+	event_templates_page: TEventTemplatesPage;
 	not_found_page: TNotFoundPage;
 
 	options: TOptions;
@@ -190,6 +193,7 @@ export const NS = [
 	"preview_tour_page",
 	"preview_option_page",
 	"preview_booking_page",
+	"event_templates_page",
 	"not_found_page",
 
 	"options"
@@ -257,4 +261,5 @@ export type TToursSearchPageKeys = TNestedKeyOf<TToursSearchPage>;
 export type TPreviewTourPageKeys = TNestedKeyOf<TPreviewTourPage>;
 export type TPreviewOptionPageKeys = TNestedKeyOf<TPreviewOptionPage>;
 export type TPreviewBookingPageKeys = TNestedKeyOf<TPreviewBookingPage>;
+export type TEventTemplatesPageKeys = TNestedKeyOf<TEventTemplatesPage>;
 export type TTourItineraryPageKeys = TNestedKeyOf<TTourItineraryPage>;

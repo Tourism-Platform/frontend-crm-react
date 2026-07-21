@@ -97,6 +97,12 @@ export const NAV_ITEMS_LIST: INavItemBase[] = [
 	{
 		label: "operator.library.title",
 		submenu: true,
-		items: [{ href: "#", label: "operator.library.menu.analytics" }]
+		items: [
+			{
+				href: ENUM_PATH.LIBRARY.EVENTS,
+				label: "operator.library.menu.events",
+				icon: TaskSquareIcon
+			}
+		]
 	}
 ];
