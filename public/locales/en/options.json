@@ -213,7 +213,14 @@
 			"accommodation": "Accommodation",
 			"activity": "Activities",
 			"info": "Info",
-			"supplement": "Supplement"
+			"supplement": "Supplement",
+			"guide": "Guide"
+		}
+	},
+	"guide": {
+		"types": {
+			"local": "Local guide",
+			"accompanying": "Tour guide"
 		}
 	}
 }

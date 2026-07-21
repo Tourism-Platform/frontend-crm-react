@@ -10,6 +10,7 @@ import {
 	type TAccommodationEditSchema,
 	type TActivityEditSchema,
 	type TFlightEditSchema,
+	type TGuideEditSchema,
 	type TInfoEditSchema,
 	type TSupplementEditSchema,
 	type TTourEvent,
@@ -25,6 +26,8 @@ import {
 	mapActivityEventToForm,
 	mapActivityFormToUpdate,
 	mapFlyEventToForm,
+	mapGuideEventToForm,
+	mapGuideFormToUpdate,
 	mapInfoEventToForm,
 	mapInfoFormToUpdate,
 	mapSupplementaryEventToForm,
@@ -101,6 +104,8 @@ export const mapEventTypeToLibraryPathSegment = (
 			return "transfer";
 		case ENUM_EVENT.SUPPLEMENT:
 			return "supplement";
+		case ENUM_EVENT.GUIDE:
+			return "guide";
 		case ENUM_EVENT.FLIGHT:
 			return "flight";
 		case ENUM_EVENT.ACCOMMODATION:
@@ -122,6 +127,8 @@ export const mapEventTypeToLibraryEditPath = (
 			return ENUM_PATH.LIBRARY.EVENT_TRANSFER;
 		case ENUM_EVENT.SUPPLEMENT:
 			return ENUM_PATH.LIBRARY.EVENT_SUPPLEMENT;
+		case ENUM_EVENT.GUIDE:
+			return ENUM_PATH.LIBRARY.EVENT_GUIDE;
 		case ENUM_EVENT.FLIGHT:
 			return ENUM_PATH.LIBRARY.EVENT_FLIGHT;
 		case ENUM_EVENT.ACCOMMODATION:
@@ -176,6 +183,8 @@ export const mapEventLibraryToForm = (
 			return mapInfoEventToForm(adapted);
 		case "9":
 			return mapSupplementaryEventToForm(adapted);
+		case "8":
+			return mapGuideEventToForm(adapted);
 		default:
 			return backend as unknown as TTransportationEditSchema;
 	}
@@ -221,6 +230,18 @@ export const mapEventLibraryUpdateToBackend = (
 		} = mapSupplementaryFormToUpdate(
 			frontend as TSupplementEditSchema
 		) as Record<string, unknown>;
+		return body as TUpdateEventLibraryBackend;
+	}
+
+	if (type === ENUM_EVENT.GUIDE) {
+		const {
+			// day: _day,
+			// position: _position,
+			...body
+		} = mapGuideFormToUpdate(frontend as TGuideEditSchema) as Record<
+			string,
+			unknown
+		>;
 		return body as TUpdateEventLibraryBackend;
 	}
 

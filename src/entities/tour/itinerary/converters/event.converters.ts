@@ -11,6 +11,7 @@ import {
 	type TAccommodationEditSchema,
 	type TActivityEditSchema,
 	type TFlightEditSchema,
+	type TGuideEditSchema,
 	type TSupplementEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
@@ -28,6 +29,8 @@ import {
 	mapActivityFormToUpdate,
 	mapBusEventToForm,
 	mapFlyEventToForm,
+	mapGuideEventToForm,
+	mapGuideFormToUpdate,
 	mapInfoEventToForm,
 	mapInfoFormToUpdate,
 	mapSupplementaryEventToForm,
@@ -87,6 +90,8 @@ export const mapEventToFrontend = (
 			return mapActivityEventToForm(backend);
 		case "7":
 			return mapInfoEventToForm(backend);
+		case "8":
+			return mapGuideEventToForm(backend);
 		case "9":
 			return mapSupplementaryEventToForm(backend);
 
@@ -119,6 +124,8 @@ export const mapEventUpdateToBackend = (
 		);
 	else if (type === ENUM_EVENT.ACTIVITY)
 		return mapActivityFormToUpdate(frontend as TActivityEditSchema, lang);
+	else if (type === ENUM_EVENT.GUIDE)
+		return mapGuideFormToUpdate(frontend as TGuideEditSchema);
 
 	return {
 		name: frontend.name

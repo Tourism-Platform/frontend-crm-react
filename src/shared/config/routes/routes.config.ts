@@ -51,6 +51,7 @@ export const ENUM_PATH = {
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/transfer",
 			SUPPLEMENT:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/supplement",
+			GUIDE: "/tours/:tourId/itinerary/:optionId/events/:eventId/guide",
 			ACCOMMODATION:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/accommodation",
 			MULTIPLY_OPTION:
@@ -80,6 +81,7 @@ export const ENUM_PATH = {
 		EVENTS: "/library/events",
 		EVENT_TRANSFER: "/library/events/:libraryId/transfer",
 		EVENT_SUPPLEMENT: "/library/events/:libraryId/supplement",
+		EVENT_GUIDE: "/library/events/:libraryId/guide",
 		EVENT_FLIGHT: "/library/events/:libraryId/flight",
 		EVENT_ACCOMMODATION: "/library/events/:libraryId/accommodation",
 		EVENT_ACTIVITY: "/library/events/:libraryId/activity",

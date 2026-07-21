@@ -9,6 +9,7 @@ export const ENUM_EVENT = {
 	MULTIPLY_OPTION: "multiply-option",
 	INFO: "info",
 	ACTIVITY: "activity",
+	GUIDE: "guide",
 	EVENT_LIBRARY: "event-library",
 	ITINERARY_LIBRARY: "itinerary-library"
 } as const;

@@ -56,6 +56,10 @@
 			"title": "Supplement",
 			"description": "Extra services and add-ons template"
 		},
+		"guide": {
+			"title": "Guide",
+			"description": "Local and tour guide services template"
+		},
 		"flight": {
 			"title": "Flight",
 			"description": "Flight, train or bus transport template"

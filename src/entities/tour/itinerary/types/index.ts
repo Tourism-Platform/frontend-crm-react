@@ -16,4 +16,5 @@ export * from "./info";
 export * from "./activity";
 export * from "./accommodation";
 export * from "./flight";
+export * from "./guide";
 export * from "./activity-type.types";

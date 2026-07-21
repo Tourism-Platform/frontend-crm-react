@@ -44,6 +44,7 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"flight_edit_page",
 			"transportation_edit_page",
 			"supplement_edit_page",
+			"guide_edit_page",
 			"activity_edit_page",
 			"accommodation_edit_page",
 			"information_edit_page",

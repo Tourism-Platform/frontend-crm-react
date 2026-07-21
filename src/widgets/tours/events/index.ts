@@ -4,4 +4,5 @@ export * from "./activity-edit";
 export * from "./multiply-option-edit";
 export * from "./transportation-edit";
 export * from "./supplement-edit";
+export * from "./guide-edit";
 export * from "./information-edit";

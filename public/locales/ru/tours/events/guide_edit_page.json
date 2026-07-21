@@ -1,0 +1,157 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Введите название гида или оно будет сгенерировано автоматически",
+			"errors": {
+				"required": "Название обязательно",
+				"min": "Название слишком короткое",
+				"max": "Название слишком длинное"
+			}
+		}
+	},
+	"tabs": {
+		"guides": "Гиды",
+		"media": "Медиа",
+		"pricing": "Цены и бронирование"
+	},
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Ошибка при загрузке данных"
+			},
+			"save": {
+				"success": "Успешно сохранено",
+				"error": "Ошибка при сохранении"
+			}
+		},
+		"guides": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение..."
+			},
+			"details": {
+				"title": "Детали гида",
+				"guide_item": "Гид {{index}}",
+				"form": {
+					"buttons": {
+						"add": "Добавить гида"
+					},
+					"fields": {
+						"guides_list": {
+							"errors": {
+								"min": "Добавьте хотя бы одного гида"
+							}
+						},
+						"guide_type": {
+							"label": "Тип гида",
+							"placeholder": "Выберите тип гида",
+							"errors": {
+								"required": "Тип гида обязателен"
+							}
+						},
+						"duration_days": {
+							"label": "Длительность (дней)",
+							"placeholder": "напр. 8.5",
+							"errors": {
+								"required": "Длительность обязательна"
+							}
+						}
+					}
+				}
+			}
+		},
+		"media": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение..."
+			}
+		},
+		"pricing": {
+			"title": "Цены",
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение..."
+			},
+			"invoicing": {
+				"title": "Как будет выставляться счёт за это событие?",
+				"tabs": {
+					"individual": "Отдельно",
+					"part_of_package": "Часть пакета"
+				}
+			},
+			"pricing_type": {
+				"title": "Как формируется цена?",
+				"tabs": {
+					"per_guide": "За гида"
+				}
+			},
+			"form": {
+				"package": {
+					"title": "Пакет",
+					"fields": {
+						"package": {
+							"label": "Тип пакета"
+						}
+					}
+				},
+				"pricing_details": {
+					"title": "Детали цены"
+				},
+				"per_guide": {
+					"empty_guides": "Добавьте хотя бы одного гида на вкладке «Гиды»",
+					"checkboxes": {
+						"price_by_language": "Цена по языку",
+						"add_margin_separately": "Добавить маржу к этому компоненту отдельно"
+					},
+					"table": {
+						"language": "Язык",
+						"cost": "Стоимость",
+						"fees": "Сборы",
+						"currency": "Валюта"
+					},
+					"buttons": {
+						"add_language": "Добавить язык"
+					},
+					"fields": {
+						"language": {
+							"placeholder": "Выберите язык",
+							"errors": {
+								"required": "Язык обязателен"
+							}
+						},
+						"categories": {
+							"errors": {
+								"min": "Добавьте хотя бы один язык"
+							}
+						},
+						"total_cost": {
+							"label": "Стоимость",
+							"placeholder": "Введите..."
+						},
+						"taxes_fees": {
+							"label": "Сборы",
+							"placeholder": "Введите..."
+						},
+						"markup": {
+							"value": {
+								"label": "Уникальная маржа",
+								"placeholder": "Введите...",
+								"errors": {
+									"required": "Маржа обязательна"
+								}
+							}
+						},
+						"currency": {
+							"placeholder": "Выберите"
+						}
+					}
+				}
+			}
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Ошибка при загрузке данных"
+		}
+	}
+}

@@ -9,7 +9,8 @@ export const EVENT_LIBRARY_FILTER_TYPES: ENUM_EVENT_TYPE[] = [
 	ENUM_EVENT.ACCOMMODATION,
 	ENUM_EVENT.ACTIVITY,
 	ENUM_EVENT.INFO,
-	ENUM_EVENT.SUPPLEMENT
+	ENUM_EVENT.SUPPLEMENT,
+	ENUM_EVENT.GUIDE
 ];
 
 export const EVENT_LIBRARY_TYPE_LABELS: Partial<
@@ -20,5 +21,6 @@ export const EVENT_LIBRARY_TYPE_LABELS: Partial<
 	[ENUM_EVENT.ACCOMMODATION]: "event_library.types.accommodation",
 	[ENUM_EVENT.ACTIVITY]: "event_library.types.activity",
 	[ENUM_EVENT.INFO]: "event_library.types.info",
-	[ENUM_EVENT.SUPPLEMENT]: "event_library.types.supplement"
+	[ENUM_EVENT.SUPPLEMENT]: "event_library.types.supplement",
+	[ENUM_EVENT.GUIDE]: "event_library.types.guide"
 };

@@ -7,7 +7,8 @@ import {
 	InfoCircleIcon,
 	PlaneIcon,
 	TaskSquareIcon,
-	TicketStarIcon
+	TicketStarIcon,
+	UsersIcon
 } from "@/shared/assets";
 import { ENUM_PATH, type TTourEventPath } from "@/shared/config";
 
@@ -52,6 +53,12 @@ export const EVENT_METADATA: Record<
 		color_text: "text-violet-600",
 		color_bg: "bg-violet-600"
 	},
+	[ENUM_EVENT.GUIDE]: {
+		title: "Guide",
+		icon: UsersIcon,
+		color_text: "text-orange-600",
+		color_bg: "bg-orange-600"
+	},
 	[ENUM_EVENT.MULTIPLY_OPTION]: {
 		title: "Multiply-option",
 		icon: TaskSquareIcon,
@@ -78,6 +85,7 @@ const COMPONENT_TYPES: ENUM_EVENT_TYPE[] = [
 	ENUM_EVENT.ACCOMMODATION,
 	ENUM_EVENT.TRANSPORTATION,
 	ENUM_EVENT.SUPPLEMENT,
+	ENUM_EVENT.GUIDE,
 	ENUM_EVENT.MULTIPLY_OPTION,
 	ENUM_EVENT.INFO
 ];
@@ -102,6 +110,7 @@ export const EVENT_TYPE_TO_PATH: Record<string, TTourEventPath> = {
 	[ENUM_EVENT.ACCOMMODATION]: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION,
 	[ENUM_EVENT.TRANSPORTATION]: ENUM_PATH.TOURS.EVENTS.TRANSFER,
 	[ENUM_EVENT.SUPPLEMENT]: ENUM_PATH.TOURS.EVENTS.SUPPLEMENT,
+	[ENUM_EVENT.GUIDE]: ENUM_PATH.TOURS.EVENTS.GUIDE,
 	[ENUM_EVENT.MULTIPLY_OPTION]: ENUM_PATH.TOURS.EVENTS.MULTIPLY_OPTION,
 	[ENUM_EVENT.INFO]: ENUM_PATH.TOURS.EVENTS.INFO
 };

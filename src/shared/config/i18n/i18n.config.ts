@@ -28,6 +28,7 @@ import accommodation_edit_page from "../../../../public/locales/en/tours/events/
 import activity_edit_page from "../../../../public/locales/en/tours/events/activity_edit_page.json";
 import common_events from "../../../../public/locales/en/tours/events/common_events.json";
 import flight_edit_page from "../../../../public/locales/en/tours/events/flight_edit_page.json";
+import guide_edit_page from "../../../../public/locales/en/tours/events/guide_edit_page.json";
 import information_edit_page from "../../../../public/locales/en/tours/events/information_edit_page.json";
 import multiply_option_edit_page from "../../../../public/locales/en/tours/events/multiply_option_edit_page.json";
 import supplement_edit_page from "../../../../public/locales/en/tours/events/supplement_edit_page.json";
@@ -73,6 +74,7 @@ export type TTourOrderHistoryPage = typeof tour_order_history_page;
 export type TTourEventFlightEditPage = typeof flight_edit_page;
 export type TTourEventTransportationEditPage = typeof transportation_edit_page;
 export type TTourEventSupplementEditPage = typeof supplement_edit_page;
+export type TTourEventGuideEditPage = typeof guide_edit_page;
 export type TTourActivityEditPage = typeof activity_edit_page;
 export type TTourInformationEditPage = typeof information_edit_page;
 export type TTourEventMultiplyOptionEditPage = typeof multiply_option_edit_page;
@@ -123,6 +125,7 @@ export type TResources = {
 	flight_edit_page: TTourEventFlightEditPage;
 	transportation_edit_page: TTourEventTransportationEditPage;
 	supplement_edit_page: TTourEventSupplementEditPage;
+	guide_edit_page: TTourEventGuideEditPage;
 	activity_edit_page: TTourActivityEditPage;
 	accommodation_edit_page: TTourAccommodationEditPage;
 	information_edit_page: TTourInformationEditPage;
@@ -173,6 +176,7 @@ export const NS = [
 	"flight_edit_page",
 	"transportation_edit_page",
 	"supplement_edit_page",
+	"guide_edit_page",
 	"event_edit_page",
 	"accommodation_edit_page",
 	"information_edit_page",
@@ -230,6 +234,8 @@ export type TTourEventTransportationEditPageKeys =
 
 export type TTourEventSupplementEditPageKeys =
 	TNestedKeyOf<TTourEventSupplementEditPage>;
+
+export type TTourEventGuideEditPageKeys = TNestedKeyOf<TTourEventGuideEditPage>;
 
 export type TTourActivityEditPageKeys = TNestedKeyOf<TTourActivityEditPage>;
 

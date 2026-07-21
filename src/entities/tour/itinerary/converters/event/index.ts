@@ -11,5 +11,8 @@ export * from "./activity.converters";
 export * from "./activity-pricing.converters";
 export * from "./transportation-pricing.converters";
 export * from "./flight-pricing.converters";
+export * from "./guide.converters";
+export * from "./guide-pricing.converters";
+export * from "./guides.converters";
 export * from "./flight-transport-type.converters";
 export * from "./transport";

@@ -4,7 +4,8 @@ import {
 	HouseIcon,
 	InfoCircleIcon,
 	PlaneIcon,
-	TicketStarIcon
+	TicketStarIcon,
+	UsersIcon
 } from "@/shared/assets";
 import { ENUM_PATH } from "@/shared/config";
 
@@ -28,6 +29,14 @@ export const CREATE_EVENT_TEMPLATE_OPTIONS: ICreateEventTemplateOption[] = [
 		icon: BoxOutlineIcon,
 		iconBgClassName: "bg-violet-600",
 		path: ENUM_PATH.LIBRARY.EVENT_SUPPLEMENT
+	},
+	{
+		type: ENUM_EVENT.GUIDE,
+		title: "create.guide.title",
+		description: "create.guide.description",
+		icon: UsersIcon,
+		iconBgClassName: "bg-orange-600",
+		path: ENUM_PATH.LIBRARY.EVENT_GUIDE
 	},
 	{
 		type: ENUM_EVENT.FLIGHT,

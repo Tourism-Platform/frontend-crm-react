@@ -213,7 +213,14 @@
 			"accommodation": "Проживание",
 			"activity": "Активности",
 			"info": "Инфо",
-			"supplement": "Допы"
+			"supplement": "Допы",
+			"guide": "Гид"
+		}
+	},
+	"guide": {
+		"types": {
+			"local": "Местный гид",
+			"accompanying": "Сопровождающий гид"
 		}
 	}
 }

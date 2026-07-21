@@ -4,6 +4,7 @@ import type { TAccommodationEditSchema } from "./accommodation";
 import type { TActivityEditSchema } from "./activity";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
 import type { TFlightEditSchema } from "./flight";
+import type { TGuideEditSchema } from "./guide";
 import type { TInfoEditSchema } from "./info";
 import type { TSupplementEditSchema } from "./supplement";
 import type { TTransportationEditSchema } from "./transportation";
@@ -44,7 +45,8 @@ export type TTourEvent =
 	| TSupplementEditSchema
 	| TInfoEditSchema
 	| TAccommodationEditSchema
-	| TActivityEditSchema;
+	| TActivityEditSchema
+	| TGuideEditSchema;
 
 export type TTourEventUpdate = Partial<
 	| TFlightEditSchema
@@ -53,6 +55,7 @@ export type TTourEventUpdate = Partial<
 	| TInfoEditSchema
 	| TAccommodationEditSchema
 	| TActivityEditSchema
+	| TGuideEditSchema
 >;
 
 export interface ITourEventReorder {

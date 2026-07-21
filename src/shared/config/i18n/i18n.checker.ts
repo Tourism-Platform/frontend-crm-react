@@ -26,6 +26,7 @@ import accommodation_edit_page_ru from "../../../../public/locales/ru/tours/even
 import activity_edit_page_ru from "../../../../public/locales/ru/tours/events/activity_edit_page.json";
 import common_events_ru from "../../../../public/locales/ru/tours/events/common_events.json";
 import flight_edit_page_ru from "../../../../public/locales/ru/tours/events/flight_edit_page.json";
+import guide_edit_page_ru from "../../../../public/locales/ru/tours/events/guide_edit_page.json";
 import information_edit_page_ru from "../../../../public/locales/ru/tours/events/information_edit_page.json";
 import multiply_option_edit_page_ru from "../../../../public/locales/ru/tours/events/multiply_option_edit_page.json";
 import supplement_edit_page_ru from "../../../../public/locales/ru/tours/events/supplement_edit_page.json";
@@ -75,6 +76,7 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	flight_edit_page: flight_edit_page_ru,
 	transportation_edit_page: transportation_edit_page_ru,
 	supplement_edit_page: supplement_edit_page_ru,
+	guide_edit_page: guide_edit_page_ru,
 	information_edit_page: information_edit_page_ru,
 	multiply_option_edit_page: multiply_option_edit_page_ru,
 	landing_page: landing_page_ru,

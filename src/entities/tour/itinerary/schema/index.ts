@@ -6,3 +6,4 @@ export * from "./supplement";
 export * from "./info";
 export * from "./accommodation";
 export * from "./flight";
+export * from "./guide";

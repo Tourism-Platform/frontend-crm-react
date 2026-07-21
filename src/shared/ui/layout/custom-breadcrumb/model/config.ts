@@ -77,6 +77,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.LIBRARY.EVENT_TRANSFER]: "operator.library.general.menu.events",
 	[ENUM_PATH.LIBRARY.EVENT_SUPPLEMENT]:
 		"operator.library.general.menu.events",
+	[ENUM_PATH.LIBRARY.EVENT_GUIDE]: "operator.library.general.menu.events",
 	[ENUM_PATH.LIBRARY.EVENT_FLIGHT]: "operator.library.general.menu.events",
 	[ENUM_PATH.LIBRARY.EVENT_ACCOMMODATION]:
 		"operator.library.general.menu.events",

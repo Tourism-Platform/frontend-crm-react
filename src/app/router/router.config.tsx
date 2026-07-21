@@ -196,6 +196,11 @@ const SupplementEditPage = React.lazy(() =>
 		"@/pages/tours/events/supplement-edit-page/ui/supplement-edit-page"
 	).then((m) => ({ default: m.SupplementEditPage }))
 );
+const GuideEditPage = React.lazy(() =>
+	import("@/pages/tours/events/guide-edit-page/ui/guide-edit-page").then(
+		(m) => ({ default: m.GuideEditPage })
+	)
+);
 const AccommodationEditPage = React.lazy(() =>
 	import(
 		"@/pages/tours/events/accommodation-edit-page/ui/accommodation-edit-page"
@@ -275,6 +280,11 @@ const LibrarySupplementEditPage = React.lazy(() =>
 	import(
 		"@/pages/library/supplement-edit-page/ui/library-supplement-edit-page"
 	).then((m) => ({ default: m.LibrarySupplementEditPage }))
+);
+const LibraryGuideEditPage = React.lazy(() =>
+	import("@/pages/library/guide-edit-page/ui/library-guide-edit-page").then(
+		(m) => ({ default: m.LibraryGuideEditPage })
+	)
 );
 const LibraryFlightEditPage = React.lazy(() =>
 	import("@/pages/library/flight-edit-page/ui/library-flight-edit-page").then(
@@ -755,6 +765,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		]
 	},
 	{
+		path: ENUM_PATH.TOURS.EVENTS.GUIDE,
+		component: GuideEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
 		path: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION,
 		component: AccommodationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
@@ -953,6 +977,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_SUPPLEMENT,
 		component: LibrarySupplementEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.EVENT_GUIDE,
+		component: LibraryGuideEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
