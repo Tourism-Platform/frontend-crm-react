@@ -1,12 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type FC } from "react";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 
 import { TicketStarIcon } from "@/shared/assets";
-import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
 import {
 	Card,
 	CardContent,
@@ -19,76 +15,32 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import {
-	ACTIVITY_EDIT_SCHEMA,
-	ENUM_EVENT,
-	type TActivityEditSchema,
-	useGetTourEventQuery,
-	useUpdateTourEventMutation
-} from "@/entities/tour";
+import type { TActivityEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import { type ENUM_FORM_SECTION_TYPE, EVENT_EDIT_TABS_LIST } from "./model";
+import {
+	type ENUM_FORM_SECTION_TYPE,
+	EVENT_EDIT_TABS_LIST,
+	type IActivityEditTabs
+} from "./model";
 
-const ActivityEditBase: FC = () => {
-	const { t, i18n } = useTranslation("activity_edit_page");
-	const {
-		tourId = "",
-		optionId = "",
-		eventId = ""
-	} = useParams<{
-		tourId: string;
-		eventId: string;
-		optionId: string;
-	}>();
-	const { data: eventData, isError: isLoadError } = useGetTourEventQuery(
-		{ tourId, optionId, eventId },
-		{ skip: !tourId || !optionId || !eventId }
-	);
+export interface IActivityEditProps {
+	form: UseFormReturn<TActivityEditSchema>;
+	createSectionSubmit: (
+		section: ENUM_FORM_SECTION_TYPE
+	) => () => Promise<void>;
+	isLoading: boolean;
+	tabs?: IActivityEditTabs[];
+}
 
-	const [updateTourEvent, { isLoading: isUpdateLoading }] =
-		useUpdateTourEventMutation();
-
-	const form = useForm<TActivityEditSchema>({
-		resolver: zodResolver(ACTIVITY_EDIT_SCHEMA),
-		mode: "onSubmit"
-	});
-
-	useEffect(() => {
-		if (isLoadError) {
-			toast.error(t("form.toasts.load.error"));
-		}
-	}, [isLoadError, t]);
-
-	useEffect(() => {
-		if (eventData) {
-			form.reset(eventData as TActivityEditSchema);
-		}
-	}, [eventData, form]);
-
-	const createSectionSubmit =
-		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const isValid = await form.trigger(section);
-			if (!isValid) return;
-
-			try {
-				await updateTourEvent({
-					tourId,
-					optionId,
-					eventId,
-					type: ENUM_EVENT.ACTIVITY,
-					language:
-						i18nLanguageMapper.to(i18n.language) ??
-						ENUM_LANGUAGES.EN,
-					data: form.getValues()
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-			} catch (error) {
-				toast.error(t("form.toasts.save.error"));
-				console.log(error);
-			}
-		};
+const ActivityEditBase: FC<IActivityEditProps> = ({
+	form,
+	createSectionSubmit,
+	isLoading,
+	tabs = EVENT_EDIT_TABS_LIST
+}) => {
+	const { t } = useTranslation("activity_edit_page");
 
 	return (
 		<Form {...form}>
@@ -101,11 +53,13 @@ const ActivityEditBase: FC = () => {
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs
-							defaultValue={EVENT_EDIT_TABS_LIST[0]?.type}
-						>
-							<CustomOptionTabsList className="grid-cols-3">
-								{EVENT_EDIT_TABS_LIST.map((item) => (
+						<CustomOptionTabs defaultValue={tabs[0]?.type}>
+							<CustomOptionTabsList
+								style={{
+									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
+								}}
+							>
+								{tabs.map((item) => (
 									<CustomOptionTabsTrigger
 										key={item.type}
 										value={item.type}
@@ -116,7 +70,7 @@ const ActivityEditBase: FC = () => {
 								))}
 							</CustomOptionTabsList>
 							<Separator className="mb-6" />
-							{EVENT_EDIT_TABS_LIST.map((item) => (
+							{tabs.map((item) => (
 								<CustomOptionTabsContent
 									key={item.type}
 									value={item.type}
@@ -129,7 +83,7 @@ const ActivityEditBase: FC = () => {
 											)
 										})}
 										{...(item?.ns && { ns: item.ns })}
-										isLoading={isUpdateLoading}
+										isLoading={isLoading}
 									/>
 								</CustomOptionTabsContent>
 							))}

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { ENUM_PATH, buildRoute } from "@/shared/config";
+import { buildRoute } from "@/shared/config";
 import {
 	Button,
 	DropdownMenu,
@@ -14,9 +14,8 @@ import {
 } from "@/shared/ui";
 
 import {
-	ENUM_EVENT,
 	type IEventLibraryItem,
-	mapEventTypeToLibraryPathSegment
+	mapEventTypeToLibraryEditPath
 } from "@/entities/tour";
 
 import { DeleteEventTemplate } from "@/features/library";
@@ -34,16 +33,13 @@ export const EventTemplatesActions: FC<IEventTemplatesActionsProps> = ({
 	if (!item) return null;
 
 	const handleEdit = () => {
-		const segment = mapEventTypeToLibraryPathSegment(item.eventType);
-		if (item.eventType === ENUM_EVENT.TRANSPORTATION && segment) {
-			navigate(
-				buildRoute(ENUM_PATH.LIBRARY.EVENT_TRANSFER, {
-					libraryId: item.id
-				})
-			);
+		const path = mapEventTypeToLibraryEditPath(item.eventType);
+		if (!path) {
+			toast.info(t("menu.edit.unavailable"));
 			return;
 		}
-		toast.info(t("menu.edit.unavailable"));
+
+		navigate(buildRoute(path, { libraryId: item.id }));
 	};
 
 	return (

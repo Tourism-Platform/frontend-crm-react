@@ -1,9 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type FC } from "react";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 
 import { InfoCircleIcon } from "@/shared/assets";
 import {
@@ -17,77 +14,32 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import {
-	ENUM_EVENT,
-	INFO_EDIT_SCHEMA,
-	type TInfoEditSchema,
-	useGetTourEventQuery,
-	useUpdateTourEventMutation
-} from "@/entities/tour";
+import type { TInfoEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
 import {
 	type ENUM_FORM_SECTION_TYPE,
+	type IInformationEditTabs,
 	INFORMATION_EDIT_TABS_LIST
 } from "./model";
 
-export const InformationEdit: FC = () => {
+export interface IInformationEditProps {
+	form: UseFormReturn<TInfoEditSchema>;
+	createSectionSubmit: (
+		section: ENUM_FORM_SECTION_TYPE
+	) => () => Promise<void>;
+	isLoading: boolean;
+	tabs?: IInformationEditTabs[];
+}
+
+export const InformationEdit: FC<IInformationEditProps> = ({
+	form,
+	createSectionSubmit,
+	isLoading,
+	tabs = INFORMATION_EDIT_TABS_LIST
+}) => {
 	const { t } = useTranslation("information_edit_page");
-	const {
-		tourId = "",
-		optionId = "",
-		eventId = ""
-	} = useParams<{
-		tourId: string;
-		eventId: string;
-		optionId: string;
-	}>();
-
-	const { data: eventData, isError: isLoadError } = useGetTourEventQuery(
-		{ tourId, optionId, eventId },
-		{ skip: !tourId || !optionId || !eventId }
-	);
-
-	const [updateTourEvent, { isLoading: isUpdateLoading }] =
-		useUpdateTourEventMutation();
-
-	const form = useForm<TInfoEditSchema>({
-		resolver: zodResolver(INFO_EDIT_SCHEMA),
-		mode: "onSubmit"
-	});
-
-	useEffect(() => {
-		if (isLoadError) {
-			toast.error(t("form.toasts.load.error"));
-		}
-	}, [isLoadError, t]);
-
-	useEffect(() => {
-		if (eventData) {
-			form.reset(eventData as TInfoEditSchema);
-		}
-	}, [eventData, form]);
-
-	const createSectionSubmit =
-		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const isValid = await form.trigger(section);
-			if (!isValid) return;
-
-			try {
-				await updateTourEvent({
-					tourId,
-					optionId,
-					eventId,
-					type: ENUM_EVENT.INFO,
-					data: form.getValues()
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-			} catch (error) {
-				toast.error(t("form.toasts.save.error"));
-				console.log(error);
-			}
-		};
 
 	return (
 		<Form {...form}>
@@ -100,11 +52,13 @@ export const InformationEdit: FC = () => {
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs
-							defaultValue={INFORMATION_EDIT_TABS_LIST[0]?.type}
-						>
-							<CustomOptionTabsList className="grid-cols-3">
-								{INFORMATION_EDIT_TABS_LIST.map((item) => (
+						<CustomOptionTabs defaultValue={tabs[0]?.type}>
+							<CustomOptionTabsList
+								style={{
+									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
+								}}
+							>
+								{tabs.map((item) => (
 									<CustomOptionTabsTrigger
 										key={item.type}
 										value={item.type}
@@ -115,7 +69,7 @@ export const InformationEdit: FC = () => {
 								))}
 							</CustomOptionTabsList>
 							<Separator className="mb-6" />
-							{INFORMATION_EDIT_TABS_LIST.map((item) => (
+							{tabs.map((item) => (
 								<CustomOptionTabsContent
 									key={item.type}
 									value={item.type}
@@ -128,7 +82,7 @@ export const InformationEdit: FC = () => {
 											)
 										})}
 										{...(item?.ns && { ns: item.ns })}
-										isLoading={isUpdateLoading}
+										isLoading={isLoading}
 									/>
 								</CustomOptionTabsContent>
 							))}

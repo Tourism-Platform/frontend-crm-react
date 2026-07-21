@@ -1,12 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type FC } from "react";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import { toast } from "sonner";
 
 import { PlaneIcon } from "@/shared/assets";
-import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
 import {
 	Card,
 	CardContent,
@@ -18,76 +14,32 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import {
-	ENUM_EVENT,
-	FLIGHT_EDIT_SCHEMA,
-	type TFlightEditSchema,
-	useGetTourEventQuery,
-	useUpdateTourEventMutation
-} from "@/entities/tour";
+import type { TFlightEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import { type ENUM_FORM_SECTION_TYPE, FLIGHT_EDIT_TABS_LIST } from "./model";
+import {
+	type ENUM_FORM_SECTION_TYPE,
+	FLIGHT_EDIT_TABS_LIST,
+	type IFlightEditTabs
+} from "./model";
 
-export const FlightEdit: FC = () => {
-	const { t, i18n } = useTranslation("flight_edit_page");
-	const {
-		tourId = "",
-		optionId = "",
-		eventId = ""
-	} = useParams<{
-		tourId: string;
-		eventId: string;
-		optionId: string;
-	}>();
-	const { data: eventData, isError: isLoadError } = useGetTourEventQuery(
-		{ tourId, optionId, eventId },
-		{ skip: !tourId || !optionId || !eventId }
-	);
+export interface IFlightEditProps {
+	form: UseFormReturn<TFlightEditSchema>;
+	createSectionSubmit: (
+		section: ENUM_FORM_SECTION_TYPE
+	) => () => Promise<void>;
+	isLoading: boolean;
+	tabs?: IFlightEditTabs[];
+}
 
-	const [updateTourEvent, { isLoading: isUpdateLoading }] =
-		useUpdateTourEventMutation();
-
-	const form = useForm<TFlightEditSchema>({
-		resolver: zodResolver(FLIGHT_EDIT_SCHEMA),
-		mode: "onSubmit"
-	});
-
-	useEffect(() => {
-		if (isLoadError) {
-			toast.error(t("form.toasts.load.error"));
-		}
-	}, [isLoadError, t]);
-
-	useEffect(() => {
-		if (eventData) {
-			form.reset(eventData as TFlightEditSchema);
-		}
-	}, [eventData, form]);
-
-	const createSectionSubmit =
-		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const isValid = await form.trigger(section);
-			if (!isValid) return;
-
-			try {
-				await updateTourEvent({
-					tourId,
-					optionId,
-					eventId,
-					type: ENUM_EVENT.FLIGHT,
-					language:
-						i18nLanguageMapper.to(i18n.language) ??
-						ENUM_LANGUAGES.EN,
-					data: form.getValues()
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-			} catch (error) {
-				toast.error(t("form.toasts.save.error"));
-				console.log(error);
-			}
-		};
+export const FlightEdit: FC<IFlightEditProps> = ({
+	form,
+	createSectionSubmit,
+	isLoading,
+	tabs = FLIGHT_EDIT_TABS_LIST
+}) => {
+	const { t } = useTranslation("flight_edit_page");
 
 	return (
 		<Form {...form}>
@@ -99,11 +51,13 @@ export const FlightEdit: FC = () => {
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs
-							defaultValue={FLIGHT_EDIT_TABS_LIST[0]?.type}
-						>
-							<CustomOptionTabsList className="grid-cols-3">
-								{FLIGHT_EDIT_TABS_LIST.map((item) => (
+						<CustomOptionTabs defaultValue={tabs[0]?.type}>
+							<CustomOptionTabsList
+								style={{
+									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
+								}}
+							>
+								{tabs.map((item) => (
 									<CustomOptionTabsTrigger
 										key={item.type}
 										value={item.type}
@@ -114,7 +68,7 @@ export const FlightEdit: FC = () => {
 								))}
 							</CustomOptionTabsList>
 							<Separator className="mb-6" />
-							{FLIGHT_EDIT_TABS_LIST.map((item) => (
+							{tabs.map((item) => (
 								<CustomOptionTabsContent
 									key={item.type}
 									value={item.type}
@@ -127,7 +81,7 @@ export const FlightEdit: FC = () => {
 											)
 										})}
 										{...(item?.ns && { ns: item.ns })}
-										isLoading={isUpdateLoading}
+										isLoading={isLoading}
 									/>
 								</CustomOptionTabsContent>
 							))}

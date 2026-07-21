@@ -79,6 +79,11 @@ export const ENUM_PATH = {
 		ROOT: "/library",
 		EVENTS: "/library/events",
 		EVENT_TRANSFER: "/library/events/:libraryId/transfer",
+		EVENT_SUPPLEMENT: "/library/events/:libraryId/supplement",
+		EVENT_FLIGHT: "/library/events/:libraryId/flight",
+		EVENT_ACCOMMODATION: "/library/events/:libraryId/accommodation",
+		EVENT_ACTIVITY: "/library/events/:libraryId/activity",
+		EVENT_INFO: "/library/events/:libraryId/info",
 		ITINERARIES: "/library/itineraries",
 		SUPPLIERS: "/library/suppliers"
 	}

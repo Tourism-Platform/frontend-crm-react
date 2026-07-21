@@ -271,6 +271,31 @@ const LibraryTransferEditPage = React.lazy(() =>
 		"@/pages/library/transfer-edit-page/ui/library-transfer-edit-page"
 	).then((m) => ({ default: m.LibraryTransferEditPage }))
 );
+const LibrarySupplementEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/supplement-edit-page/ui/library-supplement-edit-page"
+	).then((m) => ({ default: m.LibrarySupplementEditPage }))
+);
+const LibraryFlightEditPage = React.lazy(() =>
+	import("@/pages/library/flight-edit-page/ui/library-flight-edit-page").then(
+		(m) => ({ default: m.LibraryFlightEditPage })
+	)
+);
+const LibraryAccommodationEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/accommodation-edit-page/ui/library-accommodation-edit-page"
+	).then((m) => ({ default: m.LibraryAccommodationEditPage }))
+);
+const LibraryActivityEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/activity-edit-page/ui/library-activity-edit-page"
+	).then((m) => ({ default: m.LibraryActivityEditPage }))
+);
+const LibraryInfoEditPage = React.lazy(() =>
+	import("@/pages/library/info-edit-page/ui/library-info-edit-page").then(
+		(m) => ({ default: m.LibraryInfoEditPage })
+	)
+);
 const LibraryItinerariesStubPage = React.lazy(() =>
 	import(
 		"@/pages/library/itineraries-stub-page/ui/library-itineraries-stub-page"
@@ -914,6 +939,76 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_TRANSFER,
 		component: LibraryTransferEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.EVENT_SUPPLEMENT,
+		component: LibrarySupplementEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.EVENT_FLIGHT,
+		component: LibraryFlightEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.EVENT_ACCOMMODATION,
+		component: LibraryAccommodationEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.EVENT_ACTIVITY,
+		component: LibraryActivityEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			LibraryOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.LIBRARY.EVENT_INFO,
+		component: LibraryInfoEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [

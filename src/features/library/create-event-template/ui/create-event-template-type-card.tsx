@@ -29,18 +29,21 @@ export const CreateEventTemplateTypeCard: FC<
 	return (
 		<Card
 			className={cn(
-				"cursor-pointer py-4 transition-colors hover:bg-accent",
+				"flex h-full cursor-pointer py-4 transition-colors hover:bg-accent",
 				className
 			)}
 			{...props}
 		>
-			<CardContent className="flex items-center gap-3">
+			<CardContent className="flex h-full items-center gap-3">
 				<div
-					className={cn("rounded-md p-2 text-white", iconBgClassName)}
+					className={cn(
+						"shrink-0 rounded-md p-2 text-white",
+						iconBgClassName
+					)}
 				>
 					<Icon className="size-5" />
 				</div>
-				<div>
+				<div className="min-w-0">
 					<p className="font-semibold">{title}</p>
 					<p className="text-sm text-muted-foreground">
 						{description}

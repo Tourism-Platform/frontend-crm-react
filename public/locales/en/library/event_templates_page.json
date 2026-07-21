@@ -51,6 +51,26 @@
 		"transfer": {
 			"title": "Transfer",
 			"description": "Airport / hotel transfer template"
+		},
+		"supplement": {
+			"title": "Supplement",
+			"description": "Extra services and add-ons template"
+		},
+		"flight": {
+			"title": "Flight",
+			"description": "Flight, train or bus transport template"
+		},
+		"accommodation": {
+			"title": "Accommodation",
+			"description": "Hotel and lodging template"
+		},
+		"activity": {
+			"title": "Activity",
+			"description": "Excursion and activity template"
+		},
+		"info": {
+			"title": "Info",
+			"description": "Informational block template"
 		}
 	}
 }
