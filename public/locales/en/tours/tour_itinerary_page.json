@@ -18,7 +18,13 @@
 	"sidebar": {
 		"title": "Let's build your tour",
 		"library": "Library",
-		"components": "Components"
+		"components": "Components",
+		"event_library": {
+			"entry": "Event library",
+			"sheet_title": "Event library",
+			"search_placeholder": "Search templates...",
+			"empty": "No templates found"
+		}
 	},
 
 	"option": {

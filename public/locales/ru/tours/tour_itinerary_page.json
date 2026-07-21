@@ -18,7 +18,13 @@
 	"sidebar": {
 		"title": "Давай составим твой тур",
 		"library": "Библиотека",
-		"components": "Компоненты"
+		"components": "Компоненты",
+		"event_library": {
+			"entry": "Библиотека событий",
+			"sheet_title": "Библиотека событий",
+			"search_placeholder": "Поиск шаблонов...",
+			"empty": "Шаблоны не найдены"
+		}
 	},
 
 	"option": {

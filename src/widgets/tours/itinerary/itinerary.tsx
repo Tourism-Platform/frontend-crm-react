@@ -1,5 +1,5 @@
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import React from "react";
+import { DndContext, DragOverlay, type DragStartEvent } from "@dnd-kit/core";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { Separator, withErrorBoundary } from "@/shared/ui";
@@ -22,6 +22,7 @@ import {
 
 const ItineraryBase: React.FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
+	const [librarySheetOpen, setLibrarySheetOpen] = useState(false);
 
 	const {
 		options,
@@ -55,6 +56,13 @@ const ItineraryBase: React.FC = () => {
 		emptyOptionData: EMPTY_OPTION_DATA
 	});
 
+	const handleDragStart = (event: DragStartEvent) => {
+		onDragStart(event);
+		if (String(event.active.id).startsWith("library:")) {
+			setLibrarySheetOpen(false);
+		}
+	};
+
 	if (isLoading) {
 		return <div>Loading...</div>;
 	}
@@ -63,7 +71,7 @@ const ItineraryBase: React.FC = () => {
 		<DndContext
 			sensors={sensors}
 			collisionDetection={customCollisionDetection}
-			onDragStart={onDragStart}
+			onDragStart={handleDragStart}
 			onDragOver={onDragOver}
 			onDragEnd={onDragEnd}
 		>
@@ -84,7 +92,11 @@ const ItineraryBase: React.FC = () => {
 						optionId={activeOption}
 						onRemoveItem={handleRemoveItem}
 					/>
-					<ItinerarySidebar libraryItems={libraryItems} />
+					<ItinerarySidebar
+						libraryItems={libraryItems}
+						librarySheetOpen={librarySheetOpen}
+						onLibrarySheetOpenChange={setLibrarySheetOpen}
+					/>
 				</div>
 
 				<DragOverlay adjustScale={false}>

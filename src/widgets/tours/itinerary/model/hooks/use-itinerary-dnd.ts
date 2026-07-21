@@ -1,4 +1,4 @@
-import type { DragEndEvent } from "@dnd-kit/core";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -295,7 +295,7 @@ export const useItineraryDnd = ({
 		}
 	};
 
-	const onDragStart = (event: DragEndEvent) => {
+	const onDragStart = (event: DragStartEvent) => {
 		const state = handleDragStart(event, optionsData, libraryItemsById);
 		setActiveDayItem(state.activeDayItem);
 		setActiveTemplateItem(state.activeTemplateItem);

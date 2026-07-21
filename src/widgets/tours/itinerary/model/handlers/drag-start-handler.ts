@@ -1,4 +1,4 @@
-import type { DragEndEvent } from "@dnd-kit/core";
+import type { DragStartEvent } from "@dnd-kit/core";
 
 import {
 	EVENT_TEMPLATES_LIST,
@@ -17,7 +17,7 @@ export interface IDragStartState {
 }
 
 export const handleDragStart = (
-	event: DragEndEvent,
+	event: DragStartEvent,
 	optionsData: TOptionsData,
 	libraryItemsById: Record<string, IEventLibraryItem> = {}
 ): IDragStartState => {
