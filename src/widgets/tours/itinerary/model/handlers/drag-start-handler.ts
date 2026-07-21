@@ -1,6 +1,10 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 
-import { EVENT_TEMPLATES_LIST, type ITemplateItem } from "@/entities/tour";
+import {
+	EVENT_TEMPLATES_LIST,
+	type IEventLibraryItem,
+	type ITemplateItem
+} from "@/entities/tour";
 
 import { findItemLocation } from "../helpers";
 import type { IDayItem, TOptionsData } from "../types";
@@ -8,17 +12,20 @@ import type { IDayItem, TOptionsData } from "../types";
 export interface IDragStartState {
 	activeDayItem: IDayItem | null;
 	activeTemplateItem: ITemplateItem | null;
+	activeLibraryItem: IEventLibraryItem | null;
 	activeColumn: number | null;
 }
 
 export const handleDragStart = (
 	event: DragEndEvent,
-	optionsData: TOptionsData
+	optionsData: TOptionsData,
+	libraryItemsById: Record<string, IEventLibraryItem> = {}
 ): IDragStartState => {
 	const id = event.active.id as string;
 	const state: IDragStartState = {
 		activeDayItem: null,
 		activeTemplateItem: null,
+		activeLibraryItem: null,
 		activeColumn: null
 	};
 
@@ -52,6 +59,16 @@ export const handleDragStart = (
 		if (found) {
 			state.activeTemplateItem = found;
 		}
+	} else if (id.startsWith("library:")) {
+		const templateId = id.replace("library:", "");
+		const fromData = event.active.data.current as
+			| { type?: string; templateId?: string }
+			| undefined;
+		const resolvedId =
+			fromData?.type === "event-library" && fromData.templateId
+				? fromData.templateId
+				: templateId;
+		state.activeLibraryItem = libraryItemsById[resolvedId] ?? null;
 	} else if (id.startsWith("column:")) {
 		const day = Number(id.replace("column:", ""));
 		state.activeColumn = day;

@@ -1,14 +1,18 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import {
+	type IEventLibraryItem,
 	type ITemplateItem,
+	mapLibraryTemplateToCreateEvent,
 	useCreateEventMutation,
 	useDeleteTourEventMutation,
+	useLazyGetEventLibraryTemplateQuery,
+	useListEventLibraryQuery,
 	useReorderEventMutation
 } from "@/entities/tour";
 
@@ -32,6 +36,37 @@ interface IUseItineraryDndParams {
 	eventsAsOptionData: IOptionData;
 	emptyOptionData: IOptionData;
 }
+
+const patchBackendId = (
+	optionsData: TOptionsData,
+	activeOption: string,
+	day: number,
+	tempBlockId: string,
+	backendId: string
+): IOptionData | null => {
+	const optData = optionsData[activeOption];
+	if (!optData) return null;
+
+	const dayItems = optData.days[day];
+	if (!dayItems) return null;
+
+	const idx = dayItems.findIndex((item) => item.block_id === tempBlockId);
+	if (idx === -1) return null;
+
+	const newDayItems = [...dayItems];
+	newDayItems[idx] = {
+		...dayItems[idx],
+		backendId
+	};
+
+	return {
+		...optData,
+		days: {
+			...optData.days,
+			[day]: newDayItems
+		}
+	};
+};
 
 export const useItineraryDnd = ({
 	tourId,
@@ -59,16 +94,40 @@ export const useItineraryDnd = ({
 	const optionsData = watch("optionsData");
 	const currentData = optionsData[activeOption] ?? emptyOptionData;
 
+	const { data: libraryList } = useListEventLibraryQuery({
+		search: "",
+		types: [],
+		page: 1,
+		limit: 100
+	});
+
+	const libraryItems = libraryList?.data ?? [];
+	const libraryItemsById = useMemo(() => {
+		const map: Record<string, IEventLibraryItem> = {};
+		for (const item of libraryItems) {
+			map[item.id] = item;
+		}
+		return map;
+	}, [libraryItems]);
+
+	const pendingLibraryCreatesRef = useRef(new Set<string>());
+
 	// DND sensors
-	const sensors = useSensors(useSensor(PointerSensor));
+	const sensors = useSensors(
+		useSensor(PointerSensor, {
+			activationConstraint: { distance: 8 }
+		})
+	);
 	const [activeDayItem, setActiveDayItem] = useState<IDayItem | null>(null);
 	const [activeTemplateItem, setActiveTemplateItem] =
 		useState<ITemplateItem | null>(null);
+	const [activeLibraryItem, setActiveLibraryItem] =
+		useState<IEventLibraryItem | null>(null);
 	const [activeColumn, setActiveColumn] = useState<number | null>(null);
 
 	// Мутации
 	const [createEvent] = useCreateEventMutation();
-	// const [updateEvent] = useUpdateTourEventMutation();
+	const [getEventLibraryTemplate] = useLazyGetEventLibraryTemplateQuery();
 	const [reorderEvent] = useReorderEventMutation();
 	const [deleteEvent] = useDeleteTourEventMutation();
 
@@ -94,39 +153,73 @@ export const useItineraryDnd = ({
 			toast.promise(createPromise, {
 				loading: t("toasts.event.create.loading"),
 				success: (newEvent) => {
-					// Сохраняем backendId в карточку
 					const current = watch("optionsData");
-					const optData = current[activeOption];
-					if (optData) {
-						const dayItems = optData.days[action.day];
-						if (dayItems) {
-							const idx = dayItems.findIndex(
-								(item) => item.block_id === action.tempBlockId
-							);
-							if (idx !== -1) {
-								const newDayItems = [...dayItems];
-								newDayItems[idx] = {
-									...dayItems[idx],
-									backendId: newEvent.id
-								};
-								const updatedOptData: IOptionData = {
-									...optData,
-									days: {
-										...optData.days,
-										[action.day]: newDayItems
-									}
-								};
-								setValue(
-									`optionsData.${activeOption}` as `optionsData.${string}`,
-									updatedOptData
-								);
-							}
-						}
+					const updated = patchBackendId(
+						current,
+						activeOption,
+						action.day,
+						action.tempBlockId,
+						newEvent.id
+					);
+					if (updated) {
+						setValue(
+							`optionsData.${activeOption}` as `optionsData.${string}`,
+							updated
+						);
 					}
 					return t("toasts.event.create.success");
 				},
 				error: () => {
-					// Rollback
+					setValue("optionsData", prevOptionsData);
+					return t("toasts.event.create.error");
+				}
+			});
+		} else if (action.type === "createFromLibrary") {
+			if (pendingLibraryCreatesRef.current.has(action.templateId)) {
+				setValue("optionsData", prevOptionsData);
+				return;
+			}
+
+			pendingLibraryCreatesRef.current.add(action.templateId);
+
+			const createFromLibraryPromise = (async () => {
+				const template = await getEventLibraryTemplate(
+					action.templateId
+				).unwrap();
+				const data = mapLibraryTemplateToCreateEvent(
+					template,
+					action.day,
+					action.position
+				);
+				return createEvent({
+					tourId,
+					optionId: activeOption,
+					data
+				}).unwrap();
+			})();
+
+			toast.promise(createFromLibraryPromise, {
+				loading: t("toasts.event.create.loading"),
+				success: (newEvent) => {
+					pendingLibraryCreatesRef.current.delete(action.templateId);
+					const current = watch("optionsData");
+					const updated = patchBackendId(
+						current,
+						activeOption,
+						action.day,
+						action.tempBlockId,
+						newEvent.id
+					);
+					if (updated) {
+						setValue(
+							`optionsData.${activeOption}` as `optionsData.${string}`,
+							updated
+						);
+					}
+					return t("toasts.event.create.success");
+				},
+				error: () => {
+					pendingLibraryCreatesRef.current.delete(action.templateId);
 					setValue("optionsData", prevOptionsData);
 					return t("toasts.event.create.error");
 				}
@@ -179,10 +272,8 @@ export const useItineraryDnd = ({
 			item = optData.tripDetails[loc.index];
 		}
 
-		// Сохраняем предыдущее состояние для rollback
 		const prevOptionsData = { ...optionsData };
 
-		// Оптимистичное удаление
 		const resultData = removeItemFromData(optionsData, loc);
 		setValue("optionsData", resultData);
 
@@ -205,17 +296,22 @@ export const useItineraryDnd = ({
 	};
 
 	const onDragStart = (event: DragEndEvent) => {
-		const state = handleDragStart(event, optionsData);
+		const state = handleDragStart(event, optionsData, libraryItemsById);
 		setActiveDayItem(state.activeDayItem);
 		setActiveTemplateItem(state.activeTemplateItem);
+		setActiveLibraryItem(state.activeLibraryItem);
 		setActiveColumn(state.activeColumn);
 	};
 
 	const onDragEnd = (event: DragEndEvent) => {
-		// Сохраняем предыдущее состояние для rollback
 		const prevOptionsData = { ...optionsData };
 
-		const result = handleDragEnd(event, optionsData, activeOption);
+		const result = handleDragEnd(
+			event,
+			optionsData,
+			activeOption,
+			libraryItemsById
+		);
 
 		if (result.shouldUpdate && result.newData) {
 			setValue("optionsData", result.newData);
@@ -224,6 +320,7 @@ export const useItineraryDnd = ({
 		if (result.clearState) {
 			setActiveDayItem(null);
 			setActiveTemplateItem(null);
+			setActiveLibraryItem(null);
 			setActiveColumn(null);
 		}
 
@@ -244,7 +341,9 @@ export const useItineraryDnd = ({
 		currentData,
 		activeDayItem,
 		activeTemplateItem,
+		activeLibraryItem,
 		activeColumn,
+		libraryItems,
 		onDragStart,
 		onDragEnd,
 		onDragOver,

@@ -15,6 +15,7 @@ import {
 	BoardTabs,
 	DayColumn,
 	DraggableDayItem,
+	DraggableLibraryItem,
 	DraggableTemplateItem,
 	ItinerarySidebar
 } from "./ui";
@@ -40,7 +41,9 @@ const ItineraryBase: React.FC = () => {
 		currentData,
 		activeDayItem,
 		activeTemplateItem,
+		activeLibraryItem,
 		activeColumn,
+		libraryItems,
 		onDragStart,
 		onDragEnd,
 		onDragOver,
@@ -81,7 +84,7 @@ const ItineraryBase: React.FC = () => {
 						optionId={activeOption}
 						onRemoveItem={handleRemoveItem}
 					/>
-					<ItinerarySidebar />
+					<ItinerarySidebar libraryItems={libraryItems} />
 				</div>
 
 				<DragOverlay adjustScale={false}>
@@ -95,6 +98,12 @@ const ItineraryBase: React.FC = () => {
 					{!!activeTemplateItem && (
 						<DraggableTemplateItem
 							template={activeTemplateItem}
+							isOverlay
+						/>
+					)}
+					{!!activeLibraryItem && (
+						<DraggableLibraryItem
+							item={activeLibraryItem}
 							isOverlay
 						/>
 					)}

@@ -25,6 +25,8 @@ export interface ITourEventCreate {
 	position: number;
 	eventType: ENUM_EVENT_TYPE;
 	details?: Record<string, unknown>;
+	supplierId?: string | null;
+	packageId?: string | null;
 }
 
 export interface ITourEventUpdate {

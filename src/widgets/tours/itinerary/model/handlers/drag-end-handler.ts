@@ -2,11 +2,12 @@ import type { DragEndEvent } from "@dnd-kit/core";
 import { v4 as uuidv4 } from "uuid";
 
 import { ENUM_EVENT, EVENT_TEMPLATES_LIST } from "@/entities/tour";
-import type { ENUM_EVENT_TYPE } from "@/entities/tour";
+import type { ENUM_EVENT_TYPE, IEventLibraryItem } from "@/entities/tour";
 
 import {
 	addItemToData,
 	findItemLocation,
+	isValidKanbanDropTarget,
 	moveItemInData,
 	reorderDaysInData
 } from "../helpers";
@@ -24,6 +25,15 @@ export type TDragAction =
 			title: string;
 			tempBlockId: string;
 			details: Record<string, unknown>;
+	  }
+	| {
+			type: "createFromLibrary";
+			templateId: string;
+			day: number;
+			position: number;
+			eventType: ENUM_EVENT_TYPE;
+			title: string;
+			tempBlockId: string;
 	  }
 	| {
 			type: "move";
@@ -76,6 +86,26 @@ const createItemFromTemplate = (
 	return newItem;
 };
 
+const createItemFromLibrarySummary = (
+	summary: IEventLibraryItem,
+	targetContainer: ReturnType<typeof getTargetContainer>["container"]
+): IDayItem | null => {
+	if (
+		summary.eventType === ENUM_EVENT.MULTIPLY_OPTION &&
+		targetContainer?.nestedIndex !== undefined
+	) {
+		return null;
+	}
+
+	return {
+		id: uuidv4(),
+		block_id: `library-${summary.eventType}-${Date.now()}`,
+		eventType: summary.eventType,
+		title: summary.name || "Untitled",
+		subtitle: "Information"
+	};
+};
+
 const getMovedItem = (
 	from: IItemLocation,
 	optionsData: TOptionsData
@@ -97,7 +127,8 @@ const getMovedItem = (
 export const handleDragEnd = (
 	event: DragEndEvent,
 	optionsData: TOptionsData,
-	activeOption: string
+	activeOption: string,
+	libraryItemsById: Record<string, IEventLibraryItem> = {}
 ): IDragEndResult => {
 	const { active, over } = event;
 
@@ -130,6 +161,15 @@ export const handleDragEnd = (
 		return { shouldUpdate: false, clearState: false };
 	}
 
+	// Sidebar create sources must land on a real kanban droppable
+	if (
+		(activeIdStr.startsWith("library:") ||
+			activeIdStr.startsWith("template:")) &&
+		!isValidKanbanDropTarget(overIdStr)
+	) {
+		return { shouldUpdate: false, clearState: true };
+	}
+
 	// Determine target container
 	const { container: targetContainer, toIndex } = getTargetContainer(
 		overIdStr,
@@ -139,6 +179,50 @@ export const handleDragEnd = (
 
 	if (!targetContainer) {
 		return { shouldUpdate: false, clearState: true };
+	}
+
+	// Event Library template -> create from full GET (async later)
+	if (activeIdStr.startsWith("library:")) {
+		const fromData = active.data.current as
+			| { type?: string; templateId?: string }
+			| undefined;
+		const templateId =
+			fromData?.type === "event-library" && fromData.templateId
+				? fromData.templateId
+				: activeIdStr.replace("library:", "");
+		const summary = libraryItemsById[templateId];
+		if (!summary) {
+			return { shouldUpdate: false, clearState: true };
+		}
+
+		const newItem = createItemFromLibrarySummary(summary, targetContainer);
+		if (!newItem) {
+			return { shouldUpdate: false, clearState: true };
+		}
+
+		const targetDay = targetContainer.day ?? 1;
+		const resultData = addItemToData(
+			optionsData,
+			targetContainer,
+			toIndex,
+			newItem,
+			activeOption
+		);
+
+		return {
+			shouldUpdate: true,
+			newData: resultData,
+			clearState: true,
+			action: {
+				type: "createFromLibrary",
+				templateId,
+				day: targetDay,
+				position: toIndex,
+				eventType: newItem.eventType,
+				title: newItem.title,
+				tempBlockId: newItem.block_id
+			}
+		};
 	}
 
 	// Template -> create new item

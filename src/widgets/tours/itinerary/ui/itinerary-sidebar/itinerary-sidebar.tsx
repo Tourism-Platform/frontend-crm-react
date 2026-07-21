@@ -5,13 +5,21 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Card, withErrorBoundary } from "@/shared/ui";
 
-import { EVENT_TEMPLATES_LIST } from "@/entities/tour";
+import { EVENT_TEMPLATES_LIST, type IEventLibraryItem } from "@/entities/tour";
 
+import { DraggableLibraryItem } from "./draggable-library-item";
 import { DraggableTemplateItem } from "./draggable-template-item";
 
-const ItinerarySidebarBase: FC = () => {
+interface IItinerarySidebarProps {
+	libraryItems?: IEventLibraryItem[];
+}
+
+const ItinerarySidebarBase: FC<IItinerarySidebarProps> = ({
+	libraryItems = []
+}) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const [sidebarOpen, setSidebarOpen] = useState(true);
+
 	return (
 		<Card
 			className={cn(
@@ -36,19 +44,23 @@ const ItinerarySidebarBase: FC = () => {
 			</button>
 
 			{sidebarOpen && (
-				<div className="flex-1  p-4">
+				<div className="flex-1 overflow-y-auto p-4">
 					<div className="mb-6">
 						<h3 className="text-sm font-medium text-gray-500 mb-3 truncate">
 							{t("sidebar.library")}
 						</h3>
 						<div className="space-y-2">
-							{[...EVENT_TEMPLATES_LIST.library].map(
-								(template) => (
-									<DraggableTemplateItem
-										key={template.eventType}
-										template={template}
+							{libraryItems.length === 0 ? (
+								<p className="text-sm text-muted-foreground">
+									—
+								</p>
+							) : (
+								libraryItems.map((item) => (
+									<DraggableLibraryItem
+										key={item.id}
+										item={item}
 									/>
-								)
+								))
 							)}
 						</div>
 					</div>

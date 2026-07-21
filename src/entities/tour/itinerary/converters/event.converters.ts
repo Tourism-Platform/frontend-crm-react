@@ -146,6 +146,12 @@ export const mapEventCreateToBackend = (
 		typ,
 		details: isMultipleOption
 			? (frontend.details ?? [])
-			: frontend.details || {}
+			: frontend.details || {},
+		...(frontend.supplierId !== undefined && {
+			supplier_id: frontend.supplierId
+		}),
+		...(frontend.packageId !== undefined && {
+			package_id: frontend.packageId
+		})
 	} as TTourEventCreateBackend;
 };

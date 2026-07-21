@@ -58,6 +58,19 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
 			]
 		}),
+		/** Full library item for create-from-template (backend shape, not form). */
+		getEventLibraryTemplate: builder.query<
+			TEventLibraryItemBackend,
+			string
+		>({
+			query: (libraryId) => ({
+				...TOUR_EVENT_LIBRARY_PATHS.getLibraryEvent(libraryId)
+			}),
+			transformResponse: (response: TEventLibraryItemBackend) => response,
+			providesTags: (_result, _error, libraryId) => [
+				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
+			]
+		}),
 		createEventLibrary: builder.mutation<
 			IEventLibraryItem,
 			IEventLibraryCreate
@@ -98,6 +111,7 @@ export const {
 	useListEventLibraryQuery,
 	useGetEventLibraryQuery,
 	useGetEventLibraryRawQuery,
+	useLazyGetEventLibraryTemplateQuery,
 	useCreateEventLibraryMutation,
 	useUpdateEventLibraryMutation,
 	useDeleteEventLibraryMutation
