@@ -43,11 +43,13 @@ export const SelectPicker = React.forwardRef<
 		},
 		ref
 	) => {
+		const resolvedValue = value ?? defaultValue ?? "";
+
 		return (
 			<Select
+				key={resolvedValue}
+				value={resolvedValue}
 				onValueChange={onChange}
-				defaultValue={defaultValue}
-				value={value}
 				disabled={disabled}
 			>
 				<SelectTrigger
