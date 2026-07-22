@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
+
 import {
 	useGetTourSummaryQuery,
 	useListAllTourOptionsQuery
 } from "@/entities/tour";
 
 export const usePricingReview = (tourId: string) => {
+	const optionsQuery = useListAllTourOptionsQuery(tourId, { skip: !tourId });
 	const {
 		data: options = [],
 		isLoading: isOptionsLoading,
-		isError: isOptionsError
-	} = useListAllTourOptionsQuery(tourId, { skip: !tourId });
+		isFetching: isOptionsFetching,
+		isSuccess: isOptionsSuccess,
+		isNotFound: isOptionsNotFound,
+		isRealError: isOptionsRealError
+	} = useOptionalResourceQuery(optionsQuery);
 
 	const [activeOptionId, setActiveOptionId] = useState("");
 
@@ -30,15 +36,18 @@ export const usePricingReview = (tourId: string) => {
 		}
 	}, [options, activeOptionId]);
 
+	const summaryQuery = useGetTourSummaryQuery(
+		{ tourId, optionId: activeOptionId },
+		{ skip: !tourId || !activeOptionId }
+	);
 	const {
 		data: pricingReview,
 		isLoading: isSummaryLoading,
 		isFetching: isSummaryFetching,
-		isError: isSummaryError
-	} = useGetTourSummaryQuery(
-		{ tourId, optionId: activeOptionId },
-		{ skip: !tourId || !activeOptionId }
-	);
+		isSuccess: isSummarySuccess,
+		isNotFound: isSummaryNotFound,
+		isRealError: isSummaryRealError
+	} = useOptionalResourceQuery(summaryQuery);
 
 	return {
 		options,
@@ -46,10 +55,15 @@ export const usePricingReview = (tourId: string) => {
 		setActiveOptionId,
 		pricingReview,
 		isOptionsLoading,
-		isOptionsError,
+		isOptionsFetching,
+		isOptionsSuccess,
+		isOptionsNotFound,
+		isOptionsRealError,
 		isSummaryLoading,
 		isSummaryFetching,
-		isSummaryError,
+		isSummarySuccess,
+		isSummaryNotFound,
+		isSummaryRealError,
 		hasOptions: options.length > 0
 	};
 };

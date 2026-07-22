@@ -7,6 +7,8 @@ type TQueryLike<T> = {
 	isError: boolean;
 	error?: unknown;
 	isLoading: boolean;
+	isFetching: boolean;
+	isSuccess: boolean;
 };
 
 export function useOptionalResourceQuery<T>(

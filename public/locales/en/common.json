@@ -2,6 +2,15 @@
 	"actions": {
 		"show_more": "Show more"
 	},
+	"empty_state": {
+		"title": "Nothing here yet",
+		"description": "There is no data to display at the moment"
+	},
+	"error_state": {
+		"title": "Something went wrong",
+		"description": "We couldn't load the data. Please try again later"
+	},
+
 	"upload_files": {
 		"title": "Upload files",
 		"empty": "No files attached",
