@@ -6,9 +6,9 @@ import { ENUM_LANGUAGES, type ENUM_LANGUAGES_TYPE } from "../types";
 const MAP_LANGUAGES: Partial<Record<ENUM_LANGUAGES_TYPE, LanguageCode>> = {
 	[ENUM_LANGUAGES.RUSSIAN]: LanguageCode.Ru,
 	[ENUM_LANGUAGES.ENGLISH]: LanguageCode.En,
-	[ENUM_LANGUAGES.SPANISH]: LanguageCode.En,
-	[ENUM_LANGUAGES.ITALIAN]: LanguageCode.En,
-	[ENUM_LANGUAGES.PORTUGUESE]: LanguageCode.En,
+	[ENUM_LANGUAGES.SPANISH]: LanguageCode.Es,
+	[ENUM_LANGUAGES.ITALIAN]: LanguageCode.It,
+	[ENUM_LANGUAGES.PORTUGUESE]: LanguageCode.Pt,
 	[ENUM_LANGUAGES.UZBEK]: LanguageCode.Uz
 };
 

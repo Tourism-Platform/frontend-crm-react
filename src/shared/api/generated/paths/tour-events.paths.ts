@@ -14,6 +14,7 @@ import type {
 	InformationEventInput,
 	LanguageCode,
 	MultipleOptionEventInput,
+	OptionReorderSchema,
 	SupplementaryEventCreateSchemaInput,
 	SupplementaryEventInput,
 	TourEventResponseOutput,
@@ -37,7 +38,7 @@ export const TOUR_EVENTS_PATHS = {
 					day?: number | null;
 					lang?: LanguageCode;
 					skip?: number;
-					limit?: number;
+					limit?: number | null;
 				};
 				response: TourEventResponseOutput[];
 			}
@@ -104,6 +105,16 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: EventReorderSchema;
+				query: { lang?: LanguageCode };
+				response: TourEventResponseOutput;
+			}
+		}) as const,
+	reorderEventOptions: (tourId: string, optionId: string, eventId: string) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/reorder`,
+			method: "POST",
+			_types: {} as {
+				body: OptionReorderSchema;
 				query: { lang?: LanguageCode };
 				response: TourEventResponseOutput;
 			}

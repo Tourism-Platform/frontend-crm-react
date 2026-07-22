@@ -141,7 +141,25 @@ export enum PaymentMethod {
 export enum LanguageCode {
 	En = "en",
 	Ru = "ru",
-	Uz = "uz"
+	Uz = "uz",
+	It = "it",
+	De = "de",
+	Es = "es",
+	Pt = "pt",
+	Kk = "kk",
+	Ky = "ky",
+	Tg = "tg",
+	Tk = "tk",
+	Zh = "zh",
+	Ja = "ja",
+	Ar = "ar",
+	Tr = "tr",
+	Hi = "hi",
+	Jp = "jp",
+	Ch = "ch",
+	Fr = "fr",
+	Ko = "ko",
+	ZhHans = "zh-Hans"
 }
 
 /** InvoiceType */
@@ -1731,6 +1749,7 @@ export interface CreateFinancialSchema {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc?: FocPolicy | null;
 }
 
 /** CustomDetails */
@@ -2531,6 +2550,40 @@ export interface FlightHopPubSchemaOutput {
 	amenities?: AmenitiesTypes[];
 }
 
+/**
+ * FocPolicy
+ * Tiered free-of-charge allowance — each tier frees the pax above its base,
+ * capped at that tier's ``free``, and the tiers' max applies (never dips, keeps at
+ * least the base paying). ``[10->1, 30->3]``: 25 pax -> 1 free, 33 -> 3, 50 -> 3.
+ */
+export interface FocPolicy {
+	/**
+	 * Tiers
+	 * @minItems 1
+	 */
+	tiers: FocTier[];
+}
+
+/**
+ * FocTier
+ * One free-of-charge threshold: ``min_pax`` are the paying base, above which up
+ * to ``free`` extra heads ride free (so full ``free`` needs ``min_pax + free``).
+ */
+export interface FocTier {
+	/**
+	 * Min Pax
+	 * Paying base; free pax count from here up.
+	 * @min 1
+	 */
+	min_pax: number;
+	/**
+	 * Free
+	 * Max free pax granted above the base.
+	 * @min 1
+	 */
+	free: number;
+}
+
 /** FrozenFxRate */
 export interface FrozenFxRateInput {
 	from_currency: Currency;
@@ -2567,6 +2620,7 @@ export interface FrozenTourFinInput {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc?: FocPolicy | null;
 }
 
 /** FrozenTourFin */
@@ -2586,6 +2640,7 @@ export interface FrozenTourFinOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc?: FocPolicy | null;
 }
 
 /** FrozenTourMeta */
@@ -4304,6 +4359,16 @@ export interface OperatorPreviewPubSchema {
 	logo_url: string | null;
 }
 
+/** OptionReorderSchema */
+export interface OptionReorderSchema {
+	/**
+	 * Order
+	 * New sequence of the event's current 0-based option positions.
+	 * @minItems 2
+	 */
+	order: number[];
+}
+
 /** OrderAgencyInfo */
 export interface OrderAgencyInfo {
 	/**
@@ -5711,6 +5776,7 @@ export interface TourFinSettingsModel {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc: FocPolicy | null;
 }
 
 /** TourListResponse */
@@ -7139,6 +7205,7 @@ export interface UpdateFinancialSchema {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc?: FocPolicy | null;
 }
 
 /** UpdateUserSchema */
@@ -7681,13 +7748,8 @@ export interface ListTourEventsTourTourIdOptionIdEventGetParams {
 	 * @default 0
 	 */
 	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
+	/** Limit */
+	limit?: number | null;
 	/**
 	 * Option Id
 	 * @format uuid
@@ -7792,6 +7854,26 @@ export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
 }
 
 export interface ReorderEventTourTourIdOptionIdEventEventIdReorderPostParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ReorderEventOptionsTourTourIdOptionIdEventEventIdOptionReorderPostParams {
 	/** @default "en" */
 	lang?: LanguageCode;
 	/**
