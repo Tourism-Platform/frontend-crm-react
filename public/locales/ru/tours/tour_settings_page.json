@@ -94,23 +94,38 @@
 					"label": "Валюта",
 					"placeholder": "Выберите..."
 				},
-				"pricingVisibility": {
-					"label": "Отображение цены",
-					"placeholder": "Выберите..."
+				"foc": {
+					"title": "FOC (бесплатные места)",
+					"tierItem": "Уровень {{index}}",
+					"minPax": {
+						"label": "Мин. платящих",
+						"placeholder": "10"
+					},
+					"free": {
+						"label": "Бесплатных",
+						"placeholder": "1"
+					}
 				}
 			},
 			"errors": {
 				"currencyType": {
 					"required": "Выберите валюту"
 				},
-				"pricingVisibility": {
-					"required": "Выберите видимость"
+				"foc": {
+					"minPax": {
+						"min": "Минимум 1"
+					},
+					"free": {
+						"min": "Минимум 1"
+					}
 				}
 			},
 			"buttons": {
 				"save": "Сохранить",
 				"loading": "Загрузка ...",
-				"saving": "Сохранение ..."
+				"saving": "Сохранение ...",
+				"addFocTier": "Добавить уровень",
+				"removeFocTier": "Удалить"
 			},
 			"toasts": {
 				"save": {

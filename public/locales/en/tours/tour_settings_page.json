@@ -94,23 +94,38 @@
 					"label": "Currency type",
 					"placeholder": "Select..."
 				},
-				"pricingVisibility": {
-					"label": "Pricing visibility",
-					"placeholder": "Select..."
+				"foc": {
+					"title": "FOC (free of charge)",
+					"tierItem": "Tier {{index}}",
+					"minPax": {
+						"label": "Min paying pax",
+						"placeholder": "10"
+					},
+					"free": {
+						"label": "Free pax",
+						"placeholder": "1"
+					}
 				}
 			},
 			"errors": {
 				"currencyType": {
 					"required": "Select currency"
 				},
-				"pricingVisibility": {
-					"required": "Select visibility"
+				"foc": {
+					"minPax": {
+						"min": "Minimum is 1"
+					},
+					"free": {
+						"min": "Minimum is 1"
+					}
 				}
 			},
 			"buttons": {
 				"save": "Save",
 				"loading": "Loading ...",
-				"saving": "Saving ..."
+				"saving": "Saving ...",
+				"addFocTier": "Add tier",
+				"removeFocTier": "Remove"
 			},
 			"toasts": {
 				"save": {

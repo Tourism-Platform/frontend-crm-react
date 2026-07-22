@@ -159,6 +159,7 @@ export const {
 	useGetTourGeneralQuery,
 	useUpdateTourGeneralMutation,
 	useGetTourFinanceQuery,
+	useCreateTourFinanceMutation,
 	useUpdateTourFinanceMutation,
 	useGetTourStatisticsQuery,
 	usePublishTourMutation,
