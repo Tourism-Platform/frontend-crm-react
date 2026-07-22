@@ -1,8 +1,6 @@
-import { Plus } from "lucide-react";
 import { type FC } from "react";
 
 import {
-	Button,
 	CustomOptionTabs,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger
@@ -30,16 +28,15 @@ export const PricingReviewTabs: FC<IPricingReviewTabsProps> = ({
 							key={option.id}
 							value={option.id}
 							variant="tongue"
-							className="min-w-[120px]"
+							className="min-w-[120px] max-w-[200px] truncate"
 						>
-							{option.name}
+							<div className="truncate">
+								<p>{option.name || option.id}</p>
+							</div>
 						</CustomOptionTabsTrigger>
 					))}
 				</CustomOptionTabsList>
 			</CustomOptionTabs>
-			<Button variant="ghost" size="icon" className="h-10 w-10">
-				<Plus className="h-5 w-5 text-muted-foreground" />
-			</Button>
 		</div>
 	);
 };
