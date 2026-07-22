@@ -11,6 +11,7 @@ import {
 	buildRoute,
 	i18nLanguageMapper
 } from "@/shared/config";
+import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
@@ -24,7 +25,6 @@ import {
 
 import { GuideEdit } from "@/widgets/tours";
 import {
-	type ENUM_FORM_SECTION_TYPE,
 	ENUM_GUIDE_EDIT_TAB,
 	GUIDE_EDIT_TABS_LIST
 } from "@/widgets/tours/events/guide-edit/model";
@@ -70,47 +70,48 @@ export const LibraryGuideEditPage: FC = () => {
 		}
 	}, [libraryEvent, form, isCreate]);
 
-	const createSectionSubmit =
-		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			if (!(await form.trigger(section))) {
-				return;
-			}
+	const createSectionSubmit = async () => {
+		if (
+			!(await validateFormWithSectionToast(form, t, {
+				keyPrefix: "toasts.validation.error"
+			}))
+		) {
+			return;
+		}
 
-			const language =
-				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
+		const language =
+			i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 
-			try {
-				if (isCreate) {
-					const created = await createEventLibrary({
-						type: ENUM_EVENT.GUIDE,
-						language,
-						data: form.getValues()
-					}).unwrap();
-					toast.success(t("toasts.create.success"));
-					navigate(
-						buildRoute(ENUM_PATH.LIBRARY.EVENT_GUIDE, {
-							libraryId: created.id
-						})
-					);
-					return;
-				}
-
-				await updateEventLibrary({
-					libraryId,
+		try {
+			if (isCreate) {
+				const created = await createEventLibrary({
 					type: ENUM_EVENT.GUIDE,
 					language,
 					data: form.getValues()
 				}).unwrap();
-				toast.success(t("toasts.update.success"));
-			} catch (error) {
-				toast.error(
-					isCreate
-						? t("toasts.create.error")
-						: t("toasts.update.error")
+				toast.success(t("toasts.create.success"));
+				navigate(
+					buildRoute(ENUM_PATH.LIBRARY.EVENT_GUIDE, {
+						libraryId: created.id
+					})
 				);
-				console.log(error);
+				return;
 			}
-		};
+
+			await updateEventLibrary({
+				libraryId,
+				type: ENUM_EVENT.GUIDE,
+				language,
+				data: form.getValues()
+			}).unwrap();
+			toast.success(t("toasts.update.success"));
+		} catch (error) {
+			toast.error(
+				isCreate ? t("toasts.create.error") : t("toasts.update.error")
+			);
+			console.log(error);
+		}
+	};
 
 	return (
 		<GuideEdit

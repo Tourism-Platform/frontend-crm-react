@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
+import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
@@ -16,7 +17,6 @@ import {
 } from "@/entities/tour";
 
 import { FlightEdit } from "@/widgets/tours";
-import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/flight-edit/model";
 
 export const FlightEditPage: FC = () => {
 	const { t, i18n } = useTranslation("flight_edit_page");
@@ -55,28 +55,28 @@ export const FlightEditPage: FC = () => {
 		}
 	}, [eventData, form]);
 
-	const createSectionSubmit =
-		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const isValid = await form.trigger(section);
-			if (!isValid) return;
+	const createSectionSubmit = async () => {
+		const isValid = await validateFormWithSectionToast(form, t, {
+			keyPrefix: "form.toasts.validation.error"
+		});
+		if (!isValid) return;
 
-			try {
-				await updateTourEvent({
-					tourId,
-					optionId,
-					eventId,
-					type: ENUM_EVENT.FLIGHT,
-					language:
-						i18nLanguageMapper.to(i18n.language) ??
-						ENUM_LANGUAGES.EN,
-					data: form.getValues()
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-			} catch (error) {
-				toast.error(t("form.toasts.save.error"));
-				console.log(error);
-			}
-		};
+		try {
+			await updateTourEvent({
+				tourId,
+				optionId,
+				eventId,
+				type: ENUM_EVENT.FLIGHT,
+				language:
+					i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN,
+				data: form.getValues()
+			}).unwrap();
+			toast.success(t("form.toasts.save.success"));
+		} catch (error) {
+			toast.error(t("form.toasts.save.error"));
+			console.log(error);
+		}
+	};
 
 	return (
 		<FlightEdit

@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { validateFormWithSectionToast } from "@/shared/lib";
+
 import {
 	ENUM_EVENT,
 	INFO_EDIT_SCHEMA,
@@ -14,7 +16,6 @@ import {
 } from "@/entities/tour";
 
 import { InformationEdit } from "@/widgets/tours";
-import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/information-edit/model";
 
 export const InformationEditPage: FC = () => {
 	const { t } = useTranslation("information_edit_page");
@@ -53,25 +54,26 @@ export const InformationEditPage: FC = () => {
 		}
 	}, [eventData, form]);
 
-	const createSectionSubmit =
-		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			const isValid = await form.trigger(section);
-			if (!isValid) return;
+	const createSectionSubmit = async () => {
+		const isValid = await validateFormWithSectionToast(form, t, {
+			keyPrefix: "form.toasts.validation.error"
+		});
+		if (!isValid) return;
 
-			try {
-				await updateTourEvent({
-					tourId,
-					optionId,
-					eventId,
-					type: ENUM_EVENT.INFO,
-					data: form.getValues()
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-			} catch (error) {
-				toast.error(t("form.toasts.save.error"));
-				console.log(error);
-			}
-		};
+		try {
+			await updateTourEvent({
+				tourId,
+				optionId,
+				eventId,
+				type: ENUM_EVENT.INFO,
+				data: form.getValues()
+			}).unwrap();
+			toast.success(t("form.toasts.save.success"));
+		} catch (error) {
+			toast.error(t("form.toasts.save.error"));
+			console.log(error);
+		}
+	};
 
 	return (
 		<InformationEdit

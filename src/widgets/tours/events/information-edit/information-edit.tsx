@@ -18,17 +18,11 @@ import type { TInfoEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import {
-	type ENUM_FORM_SECTION_TYPE,
-	type IInformationEditTabs,
-	INFORMATION_EDIT_TABS_LIST
-} from "./model";
+import { type IInformationEditTabs, INFORMATION_EDIT_TABS_LIST } from "./model";
 
 export interface IInformationEditProps {
 	form: UseFormReturn<TInfoEditSchema>;
-	createSectionSubmit: (
-		section: ENUM_FORM_SECTION_TYPE
-	) => () => Promise<void>;
+	createSectionSubmit: () => Promise<void>;
 	isLoading: boolean;
 	tabs?: IInformationEditTabs[];
 }
@@ -77,9 +71,7 @@ export const InformationEdit: FC<IInformationEditProps> = ({
 									<item.slot
 										form={form}
 										{...(item?.section && {
-											onSubmit: createSectionSubmit(
-												item.section
-											)
+											onSubmit: createSectionSubmit
 										})}
 										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}

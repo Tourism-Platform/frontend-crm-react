@@ -18,17 +18,11 @@ import type { TGuideEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import {
-	type ENUM_FORM_SECTION_TYPE,
-	GUIDE_EDIT_TABS_LIST,
-	type IGuideEditTabs
-} from "./model";
+import { GUIDE_EDIT_TABS_LIST, type IGuideEditTabs } from "./model";
 
 export interface IGuideEditProps {
 	form: UseFormReturn<TGuideEditSchema>;
-	createSectionSubmit: (
-		section: ENUM_FORM_SECTION_TYPE
-	) => () => Promise<void>;
+	createSectionSubmit: () => Promise<void>;
 	isLoading: boolean;
 	tabs?: IGuideEditTabs[];
 }
@@ -77,9 +71,7 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 									<item.slot
 										form={form}
 										{...(item?.section && {
-											onSubmit: createSectionSubmit(
-												item.section
-											)
+											onSubmit: createSectionSubmit
 										})}
 										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}

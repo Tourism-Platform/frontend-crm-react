@@ -213,20 +213,23 @@ const hasAnyMarkup = (
 	}[]
 ) => rows.some((row) => row[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]?.value);
 
+const toFiniteNumber = (value: unknown): number | null => {
+	if (value == null || value === "") return null;
+	const parsed = typeof value === "number" ? value : Number(value);
+	return Number.isFinite(parsed) ? parsed : null;
+};
+
 const mapRowToBackendCategory = (
 	row: IGuidePerGuidePriceRow | IGuideCategoryPriceRow,
 	addMargin: boolean,
 	lang?: string
 ): GuideByLanguageCategoryInput | null => {
-	const rowCurrency = row[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY];
-	const cost = row[ENUM_GUIDE_PRICE_ROW_FIELD.COST];
-	const fees = row[ENUM_GUIDE_PRICE_ROW_FIELD.FEES];
+	const rowCurrency = row[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]?.trim() ?? "";
+	const cost = toFiniteNumber(row[ENUM_GUIDE_PRICE_ROW_FIELD.COST]);
+	const fees = toFiniteNumber(row[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]);
 	const total =
 		cost != null && fees != null ? cost + fees : cost != null ? cost : fees;
-
-	if (total == null || !Number.isFinite(total) || !rowCurrency) {
-		return null;
-	}
+	const hasExpenses = total != null;
 
 	const langCode =
 		"lang" in row && row.lang
@@ -235,20 +238,30 @@ const mapRowToBackendCategory = (
 				? languageMapper.to(lang as typeof ENUM_LANGUAGES.ENGLISH)
 				: undefined;
 
+	const markup = mapMarkupToBackend(
+		row[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP],
+		rowCurrency,
+		addMargin
+	);
+
+	// Backend: lang/expenses/markup are all optional. Skip fully empty synced rows.
+	if (!langCode && !hasExpenses && !markup) {
+		return null;
+	}
+
 	return {
 		...(langCode && { lang: langCode }),
-		expenses: {
-			typ: "per_person",
-			cost_per_person: {
-				val: total,
-				currency: rowCurrency as Currency
+		...(hasExpenses && {
+			expenses: {
+				typ: "per_person" as const,
+				cost_per_person: {
+					val: total as number,
+					// currency optional on backend (default USD)
+					...(rowCurrency && { currency: rowCurrency as Currency })
+				}
 			}
-		},
-		markup: mapMarkupToBackend(
-			row[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP],
-			rowCurrency,
-			addMargin
-		)
+		}),
+		...(markup && { markup })
 	};
 };
 

@@ -18,17 +18,11 @@ import type { TSupplementEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import {
-	type ENUM_FORM_SECTION_TYPE,
-	type ISupplementEditTabs,
-	SUPPLEMENT_EDIT_TABS_LIST
-} from "./model";
+import { type ISupplementEditTabs, SUPPLEMENT_EDIT_TABS_LIST } from "./model";
 
 export interface ISupplementEditProps {
 	form: UseFormReturn<TSupplementEditSchema>;
-	createSectionSubmit: (
-		section: ENUM_FORM_SECTION_TYPE
-	) => () => Promise<void>;
+	createSectionSubmit: () => Promise<void>;
 	isLoading: boolean;
 	tabs?: ISupplementEditTabs[];
 }
@@ -77,9 +71,7 @@ export const SupplementEdit: FC<ISupplementEditProps> = ({
 									<item.slot
 										form={form}
 										{...(item?.section && {
-											onSubmit: createSectionSubmit(
-												item.section
-											)
+											onSubmit: createSectionSubmit
 										})}
 										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}

@@ -11,6 +11,7 @@ import {
 	buildRoute,
 	i18nLanguageMapper
 } from "@/shared/config";
+import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
@@ -25,7 +26,6 @@ import {
 import { FlightEdit } from "@/widgets/tours";
 import {
 	ENUM_FLIGHT_EDIT_TAB,
-	type ENUM_FORM_SECTION_TYPE,
 	FLIGHT_EDIT_TABS_LIST
 } from "@/widgets/tours/events/flight-edit/model";
 
@@ -70,49 +70,50 @@ export const LibraryFlightEditPage: FC = () => {
 		}
 	}, [libraryEvent, form, isCreate]);
 
-	const createSectionSubmit =
-		(section: ENUM_FORM_SECTION_TYPE) => async () => {
-			if (!(await form.trigger(section))) {
-				return;
-			}
+	const createSectionSubmit = async () => {
+		if (
+			!(await validateFormWithSectionToast(form, t, {
+				keyPrefix: "toasts.validation.error"
+			}))
+		) {
+			return;
+		}
 
-			const language =
-				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
-			const data = form.getValues();
+		const language =
+			i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
+		const data = form.getValues();
 
-			try {
-				if (isCreate) {
-					const created = await createEventLibrary({
-						type: ENUM_EVENT.FLIGHT,
-						language,
-						data
-					}).unwrap();
-					toast.success(t("toasts.create.success"));
-					navigate(
-						buildRoute(ENUM_PATH.LIBRARY.EVENT_FLIGHT, {
-							libraryId: created.id
-						}),
-						{ replace: true }
-					);
-					return;
-				}
-
-				await updateEventLibrary({
-					libraryId,
+		try {
+			if (isCreate) {
+				const created = await createEventLibrary({
 					type: ENUM_EVENT.FLIGHT,
 					language,
 					data
 				}).unwrap();
-				toast.success(t("toasts.update.success"));
-			} catch (error) {
-				toast.error(
-					isCreate
-						? t("toasts.create.error")
-						: t("toasts.update.error")
+				toast.success(t("toasts.create.success"));
+				navigate(
+					buildRoute(ENUM_PATH.LIBRARY.EVENT_FLIGHT, {
+						libraryId: created.id
+					}),
+					{ replace: true }
 				);
-				console.log(error);
+				return;
 			}
-		};
+
+			await updateEventLibrary({
+				libraryId,
+				type: ENUM_EVENT.FLIGHT,
+				language,
+				data
+			}).unwrap();
+			toast.success(t("toasts.update.success"));
+		} catch (error) {
+			toast.error(
+				isCreate ? t("toasts.create.error") : t("toasts.update.error")
+			);
+			console.log(error);
+		}
+	};
 
 	return (
 		<FlightEdit

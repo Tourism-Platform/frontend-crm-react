@@ -35,11 +35,8 @@ const perGuidePriceRowSchema = z.object({
 });
 
 const categoryRowSchema = z.object({
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: z.string().min(1, {
-		message: msg(
-			"form.pricing.form.per_guide.fields.language.errors.required"
-		)
-	}),
+	// Empty lang is allowed — sync creates blank rows when a guide is added
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: z.string(),
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: nullableNumber,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: nullableNumber,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: z.string(),
@@ -57,13 +54,8 @@ const perGuideCategoryExpensesSchema = z.object({
 	typ: z.literal(ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE_CATEGORY),
 	[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: z.array(
 		z.object({
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]: z
-				.array(categoryRowSchema)
-				.min(1, {
-					message: msg(
-						"form.pricing.form.per_guide.fields.categories.errors.min"
-					)
-				})
+			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]:
+				z.array(categoryRowSchema)
 		})
 	)
 });
@@ -77,7 +69,9 @@ const validateMarkupRows = (
 ) => {
 	rows.forEach((row, index) => {
 		const markup = row[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP];
-		if (!markup?.value?.trim()) {
+		// Skip empty synced rows (markup null). Require value only if markup is set.
+		if (!markup) return;
+		if (!markup.value?.trim()) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
 				message: msg(
@@ -119,6 +113,11 @@ export const GUIDE_PRICING_SCHEMA = z
 			return;
 		}
 
+		// Pricing rows are optional — null/undefined expenses must not block save
+		if (data.expenses == null) {
+			return;
+		}
+
 		const expensesResult = data.price_by_language
 			? perGuideCategoryExpensesSchema.safeParse(data.expenses)
 			: perGuideExpensesSchema.safeParse(data.expenses);
@@ -130,9 +129,10 @@ export const GUIDE_PRICING_SCHEMA = z
 					path: [ENUM_GUIDE_PRICING_FIELD.EXPENSES, ...issue.path]
 				});
 			});
+			return;
 		}
 
-		if (data.add_margin_separately && expensesResult.success) {
+		if (data.add_margin_separately) {
 			const expenses = expensesResult.data;
 			if (expenses.typ === ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE) {
 				validateMarkupRows(

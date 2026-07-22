@@ -20,15 +20,12 @@ import { EventTitleInput } from "../ui";
 
 import {
 	ACCOMMODATION_EDIT_TABS_LIST,
-	type ENUM_FORM_SECTION_TYPE,
 	type IAccommodationEditTabs
 } from "./model";
 
 export interface IAccommodationEditProps {
 	form: UseFormReturn<TAccommodationEditSchema>;
-	createSectionSubmit: (
-		section: ENUM_FORM_SECTION_TYPE
-	) => () => Promise<void>;
+	createSectionSubmit: () => Promise<void>;
 	isLoading: boolean;
 	tabs?: IAccommodationEditTabs[];
 }
@@ -77,9 +74,7 @@ export const AccommodationEdit: FC<IAccommodationEditProps> = ({
 									<item.slot
 										form={form}
 										{...(item?.section && {
-											onSubmit: createSectionSubmit(
-												item.section
-											)
+											onSubmit: createSectionSubmit
 										})}
 										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}

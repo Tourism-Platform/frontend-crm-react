@@ -17,6 +17,28 @@
 			"save": {
 				"success": "Successfully saved",
 				"error": "Error while saving"
+			},
+			"validation": {
+				"error": {
+					"general": "Go to the General info tab and fill in the required fields or clear invalid values",
+					"pricing": "Go to the Pricing tab and fill in the required fields or remove incomplete price data",
+					"rooms": "Go to the Rooms tab and fill in the required fields or remove incomplete rooms",
+					"cars": "Go to the Cars tab and fill in the required fields or remove incomplete cars",
+					"guides": "Go to the Guides tab and fill in the required fields or remove incomplete guides",
+					"items": "Go to the Items tab and fill in the required fields or remove incomplete items",
+					"name": "Check the event title and fix the validation error",
+					"multiple": "Fix validation errors in these tabs: {{sections}}",
+					"fallback": "Fix the validation errors before saving",
+					"section_names": {
+						"general": "General info",
+						"pricing": "Pricing",
+						"rooms": "Rooms",
+						"cars": "Cars",
+						"guides": "Guides",
+						"items": "Items",
+						"name": "Title"
+					}
+				}
 			}
 		},
 		"general": {

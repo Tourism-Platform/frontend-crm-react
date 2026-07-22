@@ -42,7 +42,13 @@ export const mapGuideFormToUpdate = (
 ): TTourEventUpdateBackend => {
 	const guidesList = frontend.guides?.guides_list;
 	const pricing = frontend.pricing;
-	const hasDetails = guidesList !== undefined || pricing !== undefined;
+	const categories =
+		pricing !== undefined
+			? mapGuideCategoriesToBackend(pricing, guidesList?.length ?? 0)
+			: undefined;
+	const hasDetails =
+		guidesList !== undefined ||
+		(categories !== undefined && categories.length > 0);
 
 	return {
 		typ: "8",
@@ -58,12 +64,9 @@ export const mapGuideFormToUpdate = (
 				...(guidesList !== undefined && {
 					duration: mapGuidesDurationToBackend(guidesList)
 				}),
-				...(pricing !== undefined && {
-					categories: mapGuideCategoriesToBackend(
-						pricing,
-						guidesList?.length ?? 0
-					)
-				})
+				// Omit empty categories — [] would wipe prices on backend
+				...(categories !== undefined &&
+					categories.length > 0 && { categories })
 			}
 		})
 	};
