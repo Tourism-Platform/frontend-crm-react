@@ -1,9 +1,8 @@
-import type { AmenitiesTypes } from "@/shared/api";
-
 import { amenitiesMapper } from "@/entities/tour/landing/converters/amenities.converters";
 import { languageMapper } from "@/entities/tour/landing/converters/languages.converters";
 import { pickupMapper } from "@/entities/tour/landing/converters/pickup.converters";
 
+import type { ENUM_AMENITIES_TYPE } from "../../landing";
 import type { IPreviewTourData, TPreviewTourBackend } from "../types";
 
 const mapPreviewImagesToUrls = (
@@ -22,10 +21,10 @@ export const mapPreviewTourToFrontend = (
 	cities: [],
 	languages: languageMapper.fromMany(backend.languages),
 	included: amenitiesMapper.fromMany(
-		backend.amenities_included as AmenitiesTypes[]
+		backend.amenities_included as ENUM_AMENITIES_TYPE[]
 	),
 	not_included: amenitiesMapper.fromMany(
-		backend.amenities_not_included as AmenitiesTypes[]
+		backend.amenities_not_included as ENUM_AMENITIES_TYPE[]
 	),
 	pickup_type: pickupMapper.fromMany(backend.pickup_type),
 	pickup_description: backend.pickup_description || "",

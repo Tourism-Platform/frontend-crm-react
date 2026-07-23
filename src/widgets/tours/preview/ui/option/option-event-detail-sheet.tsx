@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import { type FC } from "react";
+import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
@@ -67,14 +67,22 @@ const DetailSheetTrigger: FC<IDetailSheetTriggerProps> = ({ variant }) => {
 interface IOptionEventDetailSheetProps {
 	source: TOptionSheetSource;
 	variant?: TTriggerVariant;
+	trigger?: ReactNode;
 }
 
 export const OptionEventDetailSheet: FC<IOptionEventDetailSheetProps> = ({
 	source,
-	variant = "sm"
+	variant = "sm",
+	trigger
 }) => (
 	<Sheet>
-		<DetailSheetTrigger variant={variant} />
+		{trigger ? (
+			<SheetTrigger asChild className="cursor-pointer">
+				{trigger}
+			</SheetTrigger>
+		) : (
+			<DetailSheetTrigger variant={variant} />
+		)}
 		<DetailSheetPanel source={source} />
 	</Sheet>
 );

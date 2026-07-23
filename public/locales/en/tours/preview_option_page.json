@@ -37,11 +37,9 @@
 	"pricing": {
 		"title": "Pricing Breakdown",
 		"total_price": "Total price",
-		"est_cost": "Est. per person cost",
 		"details": "Details",
 		"accomodation": "Accomodation",
 		"activity": "Activity",
-		"transportation": "Transportation",
-		"transfer": "Transfer"
+		"transportation": "Transportation"
 	}
 }

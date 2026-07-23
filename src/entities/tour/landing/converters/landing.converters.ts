@@ -1,6 +1,5 @@
-import type { AmenitiesTypes } from "@/shared/api";
-
 import {
+	type ENUM_AMENITIES_TYPE,
 	type TGetLandingBackendResponse,
 	type TLandingSchema,
 	type TUpdateLandingBackendResponse,
@@ -14,7 +13,6 @@ import { pickupMapper } from "./pickup.converters";
 export const mapUpdateLandingToBackend = (
 	frontend: TLandingSchema
 ): TUpdateLandingImageBackendBody => ({
-	// description: frontend.description,
 	description: frontend.description,
 	languages: languageMapper.toMany(frontend.languages ?? []),
 	amenities_included: amenitiesMapper.toMany(frontend.included ?? []),
@@ -31,10 +29,10 @@ export const mapLandingToFrontend = (
 	description: backend.description || "",
 	languages: languageMapper.fromMany(backend.languages ?? []),
 	included: amenitiesMapper.fromMany(
-		backend.amenities_included as AmenitiesTypes[]
+		(backend.amenities_included ?? []) as ENUM_AMENITIES_TYPE[]
 	),
 	not_included: amenitiesMapper.fromMany(
-		backend.amenities_not_included as AmenitiesTypes[]
+		(backend.amenities_not_included ?? []) as ENUM_AMENITIES_TYPE[]
 	),
 	pickup_type: pickupMapper.fromMany(backend.pickup_type ?? []),
 	pickup_description: backend.pickup_description || "",

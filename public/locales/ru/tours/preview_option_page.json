@@ -37,11 +37,9 @@
 	"pricing": {
 		"title": "Детализация цен",
 		"total_price": "Итоговая цена",
-		"est_cost": "Примерная стоимость на человека",
 		"details": "Детали",
 		"accomodation": "Проживание",
 		"activity": "Активности",
-		"transportation": "Транспорт",
-		"transfer": "Трансфер"
+		"transportation": "Транспорт"
 	}
 }
