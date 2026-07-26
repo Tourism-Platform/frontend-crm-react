@@ -4,6 +4,7 @@ import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
@@ -64,9 +65,13 @@ export const mapAccommodationEventToForm = (
 			description: event.description || "",
 			length_of_stay: String(event.details?.duration ?? ""),
 			check_in_time: event.details?.check_in?.time || "",
-			check_in_timezone: String(event.details?.check_in?.timezone ?? ""),
+			check_in_timezone: String(
+				event.details?.check_in?.timezone ?? getDeviceUtcOffset()
+			),
 			check_out_time: event.details?.check_out?.time || "",
-			check_out_timezone: String(event.details?.check_out?.timezone ?? "")
+			check_out_timezone: String(
+				event.details?.check_out?.timezone ?? getDeviceUtcOffset()
+			)
 		},
 		rooms,
 		pricing: mapAccommodationPricingFromBackend(details, rooms.rooms)

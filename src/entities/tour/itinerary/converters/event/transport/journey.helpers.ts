@@ -10,6 +10,7 @@ import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 
 import type { TBusRouteSegment, TTrainRouteSegment } from "../../../types";
@@ -54,10 +55,10 @@ export const mapTrainHopToSegment = (
 		[ENUM_FORM_TRAIN.DEPARTURE_TIME]: departure?.time?.time ?? null,
 		[ENUM_FORM_TRAIN.ARRIVAL_TIME]: arrival?.time?.time ?? null,
 		[ENUM_FORM_TRAIN.DEPARTURE_TIMEZONE]: String(
-			departure?.time?.timezone ?? ""
+			departure?.time?.timezone ?? getDeviceUtcOffset()
 		),
 		[ENUM_FORM_TRAIN.ARRIVAL_TIMEZONE]: String(
-			arrival?.time?.timezone ?? ""
+			arrival?.time?.timezone ?? getDeviceUtcOffset()
 		)
 	};
 };
@@ -83,9 +84,11 @@ export const mapBusHopToSegment = (
 		[ENUM_FORM_BUS.DEPARTURE_TIME]: departure?.time?.time ?? null,
 		[ENUM_FORM_BUS.ARRIVAL_TIME]: arrival?.time?.time ?? null,
 		[ENUM_FORM_BUS.DEPARTURE_TIMEZONE]: String(
-			departure?.time?.timezone ?? ""
+			departure?.time?.timezone ?? getDeviceUtcOffset()
 		),
-		[ENUM_FORM_BUS.ARRIVAL_TIMEZONE]: String(arrival?.time?.timezone ?? "")
+		[ENUM_FORM_BUS.ARRIVAL_TIMEZONE]: String(
+			arrival?.time?.timezone ?? getDeviceUtcOffset()
+		)
 	};
 };
 

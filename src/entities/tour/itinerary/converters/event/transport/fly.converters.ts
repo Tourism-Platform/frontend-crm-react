@@ -3,6 +3,7 @@ import type {
 	FlightHopDetailsSchemaInput,
 	FlightHopDetailsSchemaOutput
 } from "@/shared/api";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import type {
 	TFlightEditSchema,
@@ -18,23 +19,26 @@ import {
 
 import { mapEventMetaToForm } from "./shared.helpers";
 
-const createEmptyFlySegment = (): TFlyRouteSegment => ({
-	[ENUM_FORM_FLIGHT.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
-	[ENUM_FORM_FLIGHT.AIRLINE_CODE]: "",
-	[ENUM_FORM_FLIGHT.FLIGHT_NUMBER]: "",
-	[ENUM_FORM_FLIGHT.DEPARTURE_AIRPORT_CODE]: "",
-	[ENUM_FORM_FLIGHT.ARRIVAL_AIRPORT_CODE]: "",
-	// [ENUM_FORM_FLIGHT.DEPARTURE_DATE]: null,
-	// [ENUM_FORM_FLIGHT.ARRIVAL_DATE]: null,
-	[ENUM_FORM_FLIGHT.DEPARTURE_TIME]: null,
-	[ENUM_FORM_FLIGHT.ARRIVAL_TIME]: null,
-	[ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE]: "",
-	[ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE]: "",
-	[ENUM_FORM_FLIGHT.DEPARTURE_TERMINAL]: "",
-	[ENUM_FORM_FLIGHT.DEPARTURE_GATE]: "",
-	[ENUM_FORM_FLIGHT.ARRIVAL_TERMINAL]: "",
-	[ENUM_FORM_FLIGHT.ARRIVAL_GATE]: ""
-});
+const createEmptyFlySegment = (): TFlyRouteSegment => {
+	const timezone = getDeviceUtcOffset();
+	return {
+		[ENUM_FORM_FLIGHT.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
+		[ENUM_FORM_FLIGHT.AIRLINE_CODE]: "",
+		[ENUM_FORM_FLIGHT.FLIGHT_NUMBER]: "",
+		[ENUM_FORM_FLIGHT.DEPARTURE_AIRPORT_CODE]: "",
+		[ENUM_FORM_FLIGHT.ARRIVAL_AIRPORT_CODE]: "",
+		// [ENUM_FORM_FLIGHT.DEPARTURE_DATE]: null,
+		// [ENUM_FORM_FLIGHT.ARRIVAL_DATE]: null,
+		[ENUM_FORM_FLIGHT.DEPARTURE_TIME]: null,
+		[ENUM_FORM_FLIGHT.ARRIVAL_TIME]: null,
+		[ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE]: timezone,
+		[ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE]: timezone,
+		[ENUM_FORM_FLIGHT.DEPARTURE_TERMINAL]: "",
+		[ENUM_FORM_FLIGHT.DEPARTURE_GATE]: "",
+		[ENUM_FORM_FLIGHT.ARRIVAL_TERMINAL]: "",
+		[ENUM_FORM_FLIGHT.ARRIVAL_GATE]: ""
+	};
+};
 
 const mapHopToFlySegment = (
 	hop: FlightHopDetailsSchemaOutput
@@ -49,10 +53,10 @@ const mapHopToFlySegment = (
 	[ENUM_FORM_FLIGHT.DEPARTURE_TIME]: hop.departure_time?.time ?? null,
 	[ENUM_FORM_FLIGHT.ARRIVAL_TIME]: hop.arrival_time?.time ?? null,
 	[ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE]: String(
-		hop.departure_time?.timezone ?? ""
+		hop.departure_time?.timezone ?? getDeviceUtcOffset()
 	),
 	[ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE]: String(
-		hop.arrival_time?.timezone ?? ""
+		hop.arrival_time?.timezone ?? getDeviceUtcOffset()
 	),
 	[ENUM_FORM_FLIGHT.DEPARTURE_TERMINAL]: hop.departure_terminal ?? "",
 	[ENUM_FORM_FLIGHT.DEPARTURE_GATE]: hop.departure_gate ?? "",

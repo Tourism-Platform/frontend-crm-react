@@ -4,6 +4,7 @@ import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
 	ENUM_TRANSPORTATION_PRICING_INVOICING,
@@ -60,10 +61,11 @@ export const mapTransferEventToForm = (
 			departure_time: event?.details?.departure?.time?.time || null,
 			arrival_time: event?.details?.arrival?.time?.time || null,
 			departure_timezone: String(
-				event?.details?.departure?.time?.timezone ?? ""
+				event?.details?.departure?.time?.timezone ??
+					getDeviceUtcOffset()
 			),
 			arrival_timezone: String(
-				event?.details?.arrival?.time?.timezone ?? ""
+				event?.details?.arrival?.time?.timezone ?? getDeviceUtcOffset()
 			)
 		},
 		cars,

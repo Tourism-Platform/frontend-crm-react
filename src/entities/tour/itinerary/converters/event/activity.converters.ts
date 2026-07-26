@@ -3,6 +3,7 @@ import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
 	type TActivityEditSchema,
@@ -29,11 +30,11 @@ export const mapActivityEventToForm = (
 			activity_subtype: activityTypeMapper.from(event?.details?.typ),
 			activity_start_time: event.details?.start_time?.time || "",
 			activity_start_timezone: String(
-				event.details?.start_time?.timezone || ""
+				event.details?.start_time?.timezone ?? getDeviceUtcOffset()
 			),
 			activity_end_time: event.details?.end_time?.time || "",
 			activity_end_timezone: String(
-				event.details?.end_time?.timezone || ""
+				event.details?.end_time?.timezone ?? getDeviceUtcOffset()
 			),
 			location: mapBackendLocationToGeoForm(event.details?.location)
 		},
