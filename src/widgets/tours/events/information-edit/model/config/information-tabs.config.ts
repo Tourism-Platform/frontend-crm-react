@@ -14,6 +14,7 @@ export const INFORMATION_EDIT_TABS_LIST: IInformationEditTabs[] = [
 	{
 		label: "tabs.media",
 		type: ENUM_INFORMATION_EDIT_TAB.MEDIA,
-		slot: Media
+		slot: Media,
+		ns: "information_edit_page"
 	}
 ];

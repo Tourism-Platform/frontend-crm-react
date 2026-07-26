@@ -36,7 +36,7 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 }) => {
 	const { t } = useTranslation("flight_edit_page");
 	const allowedTabs = tabs.map((item) => item.type);
-	const [tab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
+	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	return (
 		<Form {...form}>
@@ -48,7 +48,10 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs value={tab} onValueChange={setTab}>
+						<CustomOptionTabs
+							defaultValue={initialTab}
+							onValueChange={setTab}
+						>
 							<CustomOptionTabsList
 								style={{
 									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`

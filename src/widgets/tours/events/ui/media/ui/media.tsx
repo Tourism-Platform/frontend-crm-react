@@ -23,6 +23,9 @@ export interface IMediaProps {
 	ns?: keyof TResources;
 }
 
+const EMPTY_IMAGES: { id: string; imagePath: string; isPrimary: boolean }[] =
+	[];
+
 const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 	const { t } = useTranslation(ns);
 	const { tourId = "", eventId = "" } = useParams<{
@@ -31,7 +34,7 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 	}>();
 
 	const {
-		data: serverImages = [],
+		data: serverImages = EMPTY_IMAGES,
 		isLoading: isListLoading,
 		isError
 	} = useListEventImagesQuery(

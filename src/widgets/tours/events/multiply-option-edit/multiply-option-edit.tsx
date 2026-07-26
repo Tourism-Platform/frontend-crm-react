@@ -20,7 +20,7 @@ import { MULTIPLY_OPTION_EDIT_TABS_LIST } from "./model";
 export const MultiplyOptionEdit: FC = () => {
 	const { t } = useTranslation("multiply_option_edit_page");
 	const allowedTabs = MULTIPLY_OPTION_EDIT_TABS_LIST.map((item) => item.type);
-	const [tab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
+	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	return (
 		<section className="flex flex-col gap-6">
@@ -31,7 +31,10 @@ export const MultiplyOptionEdit: FC = () => {
 			/>
 			<Card>
 				<CardContent>
-					<CustomOptionTabs value={tab} onValueChange={setTab}>
+					<CustomOptionTabs
+						defaultValue={initialTab}
+						onValueChange={setTab}
+					>
 						<CustomOptionTabsList className="grid-cols-2">
 							{MULTIPLY_OPTION_EDIT_TABS_LIST.map((item) => (
 								<CustomOptionTabsTrigger

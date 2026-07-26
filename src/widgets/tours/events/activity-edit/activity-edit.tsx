@@ -37,7 +37,7 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 }) => {
 	const { t } = useTranslation("activity_edit_page");
 	const allowedTabs = tabs.map((item) => item.type);
-	const [tab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
+	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	return (
 		<Form {...form}>
@@ -50,7 +50,10 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs value={tab} onValueChange={setTab}>
+						<CustomOptionTabs
+							defaultValue={initialTab}
+							onValueChange={setTab}
+						>
 							<CustomOptionTabsList
 								style={{
 									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
