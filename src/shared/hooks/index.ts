@@ -5,3 +5,4 @@ export * from "./useMobile";
 export * from "./useDebounce";
 export * from "./useFormatDateRange";
 export * from "./use-optional-resource-query";
+export * from "./use-query-tab";

@@ -1,10 +1,8 @@
+import { ENUM_GUIDE_EDIT_TAB } from "@/entities/tour";
+
 import { Media } from "../../../ui";
 import { GuidesInfo, Pricing } from "../../ui";
-import {
-	ENUM_FORM_SECTION,
-	ENUM_GUIDE_EDIT_TAB,
-	type IGuideEditTabs
-} from "../types";
+import { ENUM_FORM_SECTION, type IGuideEditTabs } from "../types";
 
 export const GUIDE_EDIT_TABS_LIST: IGuideEditTabs[] = [
 	{

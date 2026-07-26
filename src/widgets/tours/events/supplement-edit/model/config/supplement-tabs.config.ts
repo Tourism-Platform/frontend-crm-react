@@ -1,10 +1,8 @@
+import { ENUM_SUPPLEMENT_EDIT_TAB } from "@/entities/tour";
+
 import { Media } from "../../../ui";
 import { ItemsInfo, Pricing } from "../../ui";
-import {
-	ENUM_FORM_SECTION,
-	ENUM_SUPPLEMENT_EDIT_TAB,
-	type ISupplementEditTabs
-} from "../types";
+import { ENUM_FORM_SECTION, type ISupplementEditTabs } from "../types";
 
 export const SUPPLEMENT_EDIT_TABS_LIST: ISupplementEditTabs[] = [
 	{

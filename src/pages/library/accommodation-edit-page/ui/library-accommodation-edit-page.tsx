@@ -15,6 +15,7 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ACCOMMODATION_EDIT_SCHEMA,
+	ENUM_ACCOMMODATION_EDIT_TAB,
 	ENUM_EVENT,
 	LIBRARY_EVENT_CREATE_ID,
 	type TAccommodationEditSchema,
@@ -24,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { AccommodationEdit } from "@/widgets/tours";
-import {
-	ACCOMMODATION_EDIT_TABS_LIST,
-	ENUM_ACCOMMODATION_EDIT_TAB
-} from "@/widgets/tours/events/accommodation-edit/model";
+import { ACCOMMODATION_EDIT_TABS_LIST } from "@/widgets/tours/events/accommodation-edit/model";
 
 export const LibraryAccommodationEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");

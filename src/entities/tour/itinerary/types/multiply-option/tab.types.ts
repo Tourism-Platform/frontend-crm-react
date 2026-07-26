@@ -1,0 +1,7 @@
+export const ENUM_MULTIPLY_OPTION_EDIT_TAB = {
+	GENERAL: "general",
+	MEDIA: "media"
+} as const;
+
+export type ENUM_MULTIPLY_OPTION_EDIT_TAB_TYPE =
+	(typeof ENUM_MULTIPLY_OPTION_EDIT_TAB)[keyof typeof ENUM_MULTIPLY_OPTION_EDIT_TAB];

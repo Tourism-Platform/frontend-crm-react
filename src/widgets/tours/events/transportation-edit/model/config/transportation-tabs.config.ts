@@ -1,10 +1,8 @@
+import { ENUM_TRANSPORTATION_EDIT_TAB } from "@/entities/tour";
+
 import { Media } from "../../../ui";
 import { CarsInfo, GeneralInfo, Pricing } from "../../ui";
-import {
-	ENUM_FORM_SECTION,
-	ENUM_TRANSPORTATION_EDIT_TAB,
-	type ITransportationEditTabs
-} from "../types";
+import { ENUM_FORM_SECTION, type ITransportationEditTabs } from "../types";
 
 export const TRANSPORTATION_EDIT_TABS_LIST: ITransportationEditTabs[] = [
 	{
@@ -23,7 +21,6 @@ export const TRANSPORTATION_EDIT_TABS_LIST: ITransportationEditTabs[] = [
 		label: "tabs.media",
 		type: ENUM_TRANSPORTATION_EDIT_TAB.MEDIA,
 		slot: Media,
-		// section: ENUM_FORM_SECTION.MEDIA,
 		ns: "transportation_edit_page"
 	},
 	{

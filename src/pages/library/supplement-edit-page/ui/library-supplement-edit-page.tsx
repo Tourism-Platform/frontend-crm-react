@@ -15,6 +15,7 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
+	ENUM_SUPPLEMENT_EDIT_TAB,
 	LIBRARY_EVENT_CREATE_ID,
 	SUPPLEMENT_EDIT_SCHEMA,
 	type TSupplementEditSchema,
@@ -24,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { SupplementEdit } from "@/widgets/tours";
-import {
-	ENUM_SUPPLEMENT_EDIT_TAB,
-	SUPPLEMENT_EDIT_TABS_LIST
-} from "@/widgets/tours/events/supplement-edit/model";
+import { SUPPLEMENT_EDIT_TABS_LIST } from "@/widgets/tours/events/supplement-edit/model";
 
 export const LibrarySupplementEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");

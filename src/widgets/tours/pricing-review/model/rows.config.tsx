@@ -8,6 +8,14 @@ import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
 import {
+	ENUM_ACCOMMODATION_EDIT_TAB,
+	ENUM_ACTIVITY_EDIT_TAB,
+	ENUM_EVENT,
+	type ENUM_EVENT_TYPE,
+	ENUM_FLIGHT_EDIT_TAB,
+	ENUM_GUIDE_EDIT_TAB,
+	ENUM_SUPPLEMENT_EDIT_TAB,
+	ENUM_TRANSPORTATION_EDIT_TAB,
 	EVENT_METADATA,
 	EVENT_TYPE_TO_PATH,
 	type ITourReviewItem
@@ -17,6 +25,15 @@ interface IPricingReviewColumnsParams {
 	tourId: string;
 	optionId: string;
 }
+
+const EVENT_PRICING_TAB: Partial<Record<ENUM_EVENT_TYPE, string>> = {
+	[ENUM_EVENT.ACTIVITY]: ENUM_ACTIVITY_EDIT_TAB.PRICING,
+	[ENUM_EVENT.FLIGHT]: ENUM_FLIGHT_EDIT_TAB.PRICING,
+	[ENUM_EVENT.ACCOMMODATION]: ENUM_ACCOMMODATION_EDIT_TAB.PRICING,
+	[ENUM_EVENT.TRANSPORTATION]: ENUM_TRANSPORTATION_EDIT_TAB.PRICING,
+	[ENUM_EVENT.SUPPLEMENT]: ENUM_SUPPLEMENT_EDIT_TAB.PRICING,
+	[ENUM_EVENT.GUIDE]: ENUM_GUIDE_EDIT_TAB.PRICING
+};
 
 export const PRICING_REVIEW_COLUMNS = (
 	t: TFunction<"tour_pricing_review_page", undefined>,
@@ -40,13 +57,18 @@ export const PRICING_REVIEW_COLUMNS = (
 				const Icon = metadata?.icon;
 				const title = getValue() as string;
 				const eventPath = type ? EVENT_TYPE_TO_PATH[type] : undefined;
+				const pricingTab = type ? EVENT_PRICING_TAB[type] : undefined;
 				const href =
 					eventPath && id
-						? buildRoute(eventPath, {
-								tourId,
-								optionId,
-								eventId: id
-							})
+						? buildRoute(
+								eventPath,
+								{
+									tourId,
+									optionId,
+									eventId: id
+								},
+								pricingTab ? { tab: pricingTab } : undefined
+							)
 						: undefined;
 
 				return (

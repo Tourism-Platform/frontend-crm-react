@@ -1,9 +1,8 @@
+import { ENUM_MULTIPLY_OPTION_EDIT_TAB } from "@/entities/tour";
+
 import { Media } from "../../../ui";
 import { GeneralInfo } from "../../ui";
-import {
-	ENUM_MULTIPLY_OPTION_EDIT_TAB,
-	type IMultiplyOptionEditTabs
-} from "../types";
+import { type IMultiplyOptionEditTabs } from "../types";
 
 export const MULTIPLY_OPTION_EDIT_TABS_LIST: IMultiplyOptionEditTabs[] = [
 	{

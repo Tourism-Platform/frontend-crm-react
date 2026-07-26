@@ -6,18 +6,12 @@ import type {
 	TTourEventSupplementEditPageKeys
 } from "@/shared/config";
 
-import type { TSupplementEditSchema } from "@/entities/tour";
+import {
+	type ENUM_SUPPLEMENT_EDIT_TAB_TYPE,
+	type TSupplementEditSchema
+} from "@/entities/tour";
 
 import type { ENUM_FORM_SECTION_TYPE } from "./form-section.types";
-
-export const ENUM_SUPPLEMENT_EDIT_TAB = {
-	ITEMS: "items",
-	MEDIA: "media",
-	PRICING: "pricing"
-} as const;
-
-export type ENUM_SUPPLEMENT_EDIT_TAB_TYPE =
-	(typeof ENUM_SUPPLEMENT_EDIT_TAB)[keyof typeof ENUM_SUPPLEMENT_EDIT_TAB];
 
 export interface ISlotProps {
 	form: UseFormReturn<TSupplementEditSchema>;

@@ -3,6 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { TicketStarIcon } from "@/shared/assets";
+import { useQueryTab } from "@/shared/hooks";
 import {
 	Card,
 	CardContent,
@@ -35,6 +36,8 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 	tabs = EVENT_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("activity_edit_page");
+	const allowedTabs = tabs.map((item) => item.type);
+	const [tab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	return (
 		<Form {...form}>
@@ -47,7 +50,7 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs defaultValue={tabs[0]?.type}>
+						<CustomOptionTabs value={tab} onValueChange={setTab}>
 							<CustomOptionTabsList
 								style={{
 									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`

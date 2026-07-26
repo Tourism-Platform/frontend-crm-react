@@ -15,6 +15,7 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
+	ENUM_TRANSPORTATION_EDIT_TAB,
 	LIBRARY_EVENT_CREATE_ID,
 	TRANSPORTATION_EDIT_SCHEMA,
 	type TTransportationEditSchema,
@@ -24,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { TransportationEdit } from "@/widgets/tours";
-import {
-	ENUM_TRANSPORTATION_EDIT_TAB,
-	TRANSPORTATION_EDIT_TABS_LIST
-} from "@/widgets/tours/events/transportation-edit/model";
+import { TRANSPORTATION_EDIT_TABS_LIST } from "@/widgets/tours/events/transportation-edit/model";
 
 export const LibraryTransferEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");

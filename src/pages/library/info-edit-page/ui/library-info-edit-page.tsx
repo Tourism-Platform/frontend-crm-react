@@ -15,6 +15,7 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
+	ENUM_INFORMATION_EDIT_TAB,
 	INFO_EDIT_SCHEMA,
 	LIBRARY_EVENT_CREATE_ID,
 	type TInfoEditSchema,
@@ -24,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { InformationEdit } from "@/widgets/tours";
-import {
-	ENUM_INFORMATION_EDIT_TAB,
-	INFORMATION_EDIT_TABS_LIST
-} from "@/widgets/tours/events/information-edit/model";
+import { INFORMATION_EDIT_TABS_LIST } from "@/widgets/tours/events/information-edit/model";
 
 export const LibraryInfoEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");

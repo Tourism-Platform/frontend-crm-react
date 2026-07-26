@@ -15,6 +15,7 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
+	ENUM_GUIDE_EDIT_TAB,
 	GUIDE_EDIT_SCHEMA,
 	LIBRARY_EVENT_CREATE_ID,
 	type TGuideEditSchema,
@@ -24,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { GuideEdit } from "@/widgets/tours";
-import {
-	ENUM_GUIDE_EDIT_TAB,
-	GUIDE_EDIT_TABS_LIST
-} from "@/widgets/tours/events/guide-edit/model";
+import { GUIDE_EDIT_TABS_LIST } from "@/widgets/tours/events/guide-edit/model";
 
 export const LibraryGuideEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");

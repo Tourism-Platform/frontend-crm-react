@@ -15,6 +15,7 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
+	ENUM_FLIGHT_EDIT_TAB,
 	FLIGHT_EDIT_SCHEMA,
 	LIBRARY_EVENT_CREATE_ID,
 	type TFlightEditSchema,
@@ -24,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { FlightEdit } from "@/widgets/tours";
-import {
-	ENUM_FLIGHT_EDIT_TAB,
-	FLIGHT_EDIT_TABS_LIST
-} from "@/widgets/tours/events/flight-edit/model";
+import { FLIGHT_EDIT_TABS_LIST } from "@/widgets/tours/events/flight-edit/model";
 
 export const LibraryFlightEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");

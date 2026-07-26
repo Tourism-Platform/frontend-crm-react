@@ -1,8 +1,11 @@
-import { ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION } from "@/entities/tour";
+import {
+	ENUM_FLIGHT_EDIT_TAB,
+	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION
+} from "@/entities/tour";
 
 import { Media } from "../../../ui";
 import { GeneralInfo, Pricing } from "../../ui";
-import { ENUM_FLIGHT_EDIT_TAB, type IFlightEditTabs } from "../types";
+import { type IFlightEditTabs } from "../types";
 
 export const FLIGHT_EDIT_TABS_LIST: IFlightEditTabs[] = [
 	{

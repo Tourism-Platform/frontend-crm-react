@@ -1,10 +1,8 @@
+import { ENUM_ACCOMMODATION_EDIT_TAB } from "@/entities/tour";
+
 import { Media } from "../../../ui";
 import { GeneralInfo, Pricing, RoomsInfo } from "../../ui";
-import {
-	ENUM_ACCOMMODATION_EDIT_TAB,
-	ENUM_FORM_SECTION,
-	type IAccommodationEditTabs
-} from "../types";
+import { ENUM_FORM_SECTION, type IAccommodationEditTabs } from "../types";
 
 export const ACCOMMODATION_EDIT_TABS_LIST: IAccommodationEditTabs[] = [
 	{

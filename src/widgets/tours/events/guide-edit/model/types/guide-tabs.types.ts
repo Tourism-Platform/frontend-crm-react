@@ -6,6 +6,7 @@ import type { TFormField } from "@/shared/types";
 
 import {
 	type ENUM_GUIDE_CATEGORY_ROW_FIELD_TYPE,
+	type ENUM_GUIDE_EDIT_TAB_TYPE,
 	type ENUM_GUIDE_PRICE_ROW_FIELD_TYPE,
 	type ENUM_GUIDE_PRICING_FIELD_TYPE,
 	ENUM_GUIDE_PRICING_TYPE,
@@ -14,15 +15,6 @@ import {
 } from "@/entities/tour";
 
 import type { ENUM_FORM_SECTION_TYPE } from "./form-section.types";
-
-export const ENUM_GUIDE_EDIT_TAB = {
-	GUIDES: "guides",
-	MEDIA: "media",
-	PRICING: "pricing"
-} as const;
-
-export type ENUM_GUIDE_EDIT_TAB_TYPE =
-	(typeof ENUM_GUIDE_EDIT_TAB)[keyof typeof ENUM_GUIDE_EDIT_TAB];
 
 export interface ISlotProps {
 	form: UseFormReturn<TGuideEditSchema>;

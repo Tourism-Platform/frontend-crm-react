@@ -1,10 +1,8 @@
+import { ENUM_ACTIVITY_EDIT_TAB } from "@/entities/tour";
+
 import { Media } from "../../../ui";
 import { GeneralInfo, Pricing } from "../../ui";
-import {
-	ENUM_ACTIVITY_EDIT_TAB,
-	ENUM_FORM_SECTION,
-	type IActivityEditTabs
-} from "../types";
+import { ENUM_FORM_SECTION, type IActivityEditTabs } from "../types";
 
 export const EVENT_EDIT_TABS_LIST: IActivityEditTabs[] = [
 	{

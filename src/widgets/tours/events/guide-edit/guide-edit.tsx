@@ -3,6 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { UsersIcon } from "@/shared/assets";
+import { useQueryTab } from "@/shared/hooks";
 import {
 	Card,
 	CardContent,
@@ -34,6 +35,8 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 	tabs = GUIDE_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("guide_edit_page");
+	const allowedTabs = tabs.map((item) => item.type);
+	const [tab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	return (
 		<Form {...form}>
@@ -46,7 +49,7 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs defaultValue={tabs[0]?.type}>
+						<CustomOptionTabs value={tab} onValueChange={setTab}>
 							<CustomOptionTabsList
 								style={{
 									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`

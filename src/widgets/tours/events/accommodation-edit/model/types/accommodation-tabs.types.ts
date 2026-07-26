@@ -6,19 +6,12 @@ import type {
 	TTourAccommodationEditPageKeys
 } from "@/shared/config";
 
-import type { TAccommodationEditSchema } from "@/entities/tour";
+import {
+	type ENUM_ACCOMMODATION_EDIT_TAB_TYPE,
+	type TAccommodationEditSchema
+} from "@/entities/tour";
 
 import type { ENUM_FORM_SECTION_TYPE } from "./form-section.types";
-
-export const ENUM_ACCOMMODATION_EDIT_TAB = {
-	GENERAL: "general",
-	ROOMS: "rooms",
-	MEDIA: "media",
-	PRICING: "pricing"
-} as const;
-
-export type ENUM_ACCOMMODATION_EDIT_TAB_TYPE =
-	(typeof ENUM_ACCOMMODATION_EDIT_TAB)[keyof typeof ENUM_ACCOMMODATION_EDIT_TAB];
 
 export interface ISlotProps {
 	form: UseFormReturn<TAccommodationEditSchema>;
