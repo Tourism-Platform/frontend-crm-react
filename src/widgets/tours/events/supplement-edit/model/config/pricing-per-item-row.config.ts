@@ -1,4 +1,4 @@
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_OPTIONS, ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_SUPPLEMENT_PRICE_ROW_FIELD } from "@/entities/tour";
 
 import type { TSupplementPricingFormField } from "../types";
@@ -25,6 +25,7 @@ export const PER_ITEM_ROW_FIELDS_LIST: TSupplementPricingFormField[] = [
 		placeholder:
 			"form.pricing.form.pricing_details.fields.currency.placeholder",
 		fieldType: "select",
-		options: CURRENCY_OPTIONS
+		options: CURRENCY_OPTIONS,
+		defaultValue: ENUM_CURRENCY_OPTIONS.USD
 	}
 ];

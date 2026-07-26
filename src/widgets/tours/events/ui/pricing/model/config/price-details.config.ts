@@ -1,4 +1,4 @@
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_OPTIONS, ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_FORM_PRICE_DETAILS } from "@/entities/tour";
 
 import { type TForm } from "../types";
@@ -25,6 +25,6 @@ export const PRICE_DETAILS_DATA_LIST: TForm[] = [
 		key: ENUM_FORM_PRICE_DETAILS.CURRENCY,
 		fieldType: "select",
 		options: CURRENCY_OPTIONS,
-		defaultValue: CURRENCY_OPTIONS?.[0]?.value
+		defaultValue: ENUM_CURRENCY_OPTIONS.USD
 	}
 ];

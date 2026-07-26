@@ -1,6 +1,6 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_OPTIONS, ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_PRICE_ROW_FIELD,
@@ -41,7 +41,8 @@ export const PER_GUIDE_CATEGORY_ROW_FIELDS_LIST =
 			placeholder:
 				"form.pricing.form.per_guide.fields.currency.placeholder",
 			fieldType: "select",
-			options: CURRENCY_OPTIONS
+			options: CURRENCY_OPTIONS,
+			defaultValue: ENUM_CURRENCY_OPTIONS.USD
 		}
 	];
 
@@ -67,6 +68,7 @@ export const PER_GUIDE_ROW_FIELDS_LIST: TGuidePricingFormField[] = [
 		label: "form.pricing.form.per_guide.table.currency",
 		placeholder: "form.pricing.form.per_guide.fields.currency.placeholder",
 		fieldType: "select",
-		options: CURRENCY_OPTIONS
+		options: CURRENCY_OPTIONS,
+		defaultValue: ENUM_CURRENCY_OPTIONS.USD
 	}
 ];
