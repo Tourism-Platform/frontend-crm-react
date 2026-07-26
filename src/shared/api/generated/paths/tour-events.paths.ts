@@ -1,26 +1,28 @@
 import type {
-	ActivityEventCreateSchemaInput,
+	ActivityEventCreate,
 	ActivityEventInput,
-	BusEventCreateSchemaInput,
+	BusEventCreate,
 	BusEventInput,
 	EventReorderSchema,
-	FlightEventCreateSchemaInput,
+	FlightEventCreate,
 	FlightEventInput,
-	GuideEventCreateSchemaInput,
+	GuideEventCreate,
 	GuideEventInput,
-	HousingEventCreateSchemaInput,
+	HousingEventCreate,
 	HousingEventInput,
-	InformationEventCreateSchemaInput,
+	InformationEventCreate,
 	InformationEventInput,
 	LanguageCode,
-	MultipleOptionEventInput,
+	MoveToMultiResult,
+	MoveToSingleResult,
+	MultipleOptionEvent,
 	OptionReorderSchema,
-	SupplementaryEventCreateSchemaInput,
+	SupplementaryEventCreate,
 	SupplementaryEventInput,
-	TourEventResponseOutput,
-	TrainEventCreateSchemaInput,
+	TourEventResponse,
+	TrainEventCreate,
 	TrainEventInput,
-	TransferEventCreateSchemaInput,
+	TransferEventCreate,
 	TransferEventInput
 } from "../Api";
 
@@ -28,6 +30,26 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const TOUR_EVENTS_PATHS = {
+	createEvent: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/create`,
+			method: "POST",
+			_types: {} as {
+				body:
+					| InformationEventCreate
+					| BusEventCreate
+					| TrainEventCreate
+					| TransferEventCreate
+					| ActivityEventCreate
+					| HousingEventCreate
+					| FlightEventCreate
+					| GuideEventCreate
+					| SupplementaryEventCreate
+					| MultipleOptionEvent;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
 	listTourEvents: (tourId: string, optionId: string) =>
 		({
 			url: `/tour/${tourId}/${optionId}/event`,
@@ -40,27 +62,7 @@ export const TOUR_EVENTS_PATHS = {
 					skip?: number;
 					limit?: number | null;
 				};
-				response: TourEventResponseOutput[];
-			}
-		}) as const,
-	createEvent: (tourId: string, optionId: string) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event`,
-			method: "POST",
-			_types: {} as {
-				body:
-					| InformationEventCreateSchemaInput
-					| BusEventCreateSchemaInput
-					| TrainEventCreateSchemaInput
-					| TransferEventCreateSchemaInput
-					| ActivityEventCreateSchemaInput
-					| HousingEventCreateSchemaInput
-					| FlightEventCreateSchemaInput
-					| GuideEventCreateSchemaInput
-					| SupplementaryEventCreateSchemaInput
-					| MultipleOptionEventInput;
-				query: { lang?: LanguageCode };
-				response: TourEventResponseOutput;
+				response: TourEventResponse[];
 			}
 		}) as const,
 	getTourEvent: (tourId: string, optionId: string, eventId: string) =>
@@ -70,27 +72,7 @@ export const TOUR_EVENTS_PATHS = {
 			_types: {} as {
 				body: void;
 				query: { lang?: LanguageCode };
-				response: TourEventResponseOutput;
-			}
-		}) as const,
-	updateTourEvent: (tourId: string, optionId: string, eventId: string) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}`,
-			method: "PATCH",
-			_types: {} as {
-				body:
-					| InformationEventInput
-					| BusEventInput
-					| TrainEventInput
-					| TransferEventInput
-					| ActivityEventInput
-					| HousingEventInput
-					| FlightEventInput
-					| GuideEventInput
-					| SupplementaryEventInput
-					| MultipleOptionEventInput;
-				query: { lang?: LanguageCode };
-				response: TourEventResponseOutput;
+				response: TourEventResponse;
 			}
 		}) as const,
 	deleteTourEvent: (tourId: string, optionId: string, eventId: string) =>
@@ -106,17 +88,124 @@ export const TOUR_EVENTS_PATHS = {
 			_types: {} as {
 				body: EventReorderSchema;
 				query: { lang?: LanguageCode };
-				response: TourEventResponseOutput;
+				response: TourEventResponse;
+			}
+		}) as const,
+	updateSingleEvent: (tourId: string, optionId: string, eventId: string) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/update`,
+			method: "PATCH",
+			_types: {} as {
+				body:
+					| InformationEventInput
+					| BusEventInput
+					| TrainEventInput
+					| TransferEventInput
+					| ActivityEventInput
+					| HousingEventInput
+					| FlightEventInput
+					| GuideEventInput
+					| SupplementaryEventInput;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	moveEventToMulti: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		targetEventId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/move-to-multi/${targetEventId}`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: { lang?: LanguageCode };
+				response: MoveToMultiResult;
 			}
 		}) as const,
 	reorderEventOptions: (tourId: string, optionId: string, eventId: string) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/reorder`,
+			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/reorder-options`,
 			method: "POST",
 			_types: {} as {
 				body: OptionReorderSchema;
 				query: { lang?: LanguageCode };
-				response: TourEventResponseOutput;
+				response: TourEventResponse;
+			}
+		}) as const,
+	addEventOption: (tourId: string, optionId: string, eventId: string) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/add-option`,
+			method: "POST",
+			_types: {} as {
+				body:
+					| InformationEventInput
+					| BusEventInput
+					| TrainEventInput
+					| TransferEventInput
+					| ActivityEventInput
+					| HousingEventInput
+					| FlightEventInput
+					| GuideEventInput
+					| SupplementaryEventInput;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	updateEventOption: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/update-option/${eventOptionId}`,
+			method: "PATCH",
+			_types: {} as {
+				body:
+					| InformationEventInput
+					| BusEventInput
+					| TrainEventInput
+					| TransferEventInput
+					| ActivityEventInput
+					| HousingEventInput
+					| FlightEventInput
+					| GuideEventInput
+					| SupplementaryEventInput;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	deleteEventOption: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/remove-option/${eventOptionId}`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	moveEventOptionToSingle: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/move-to-single/${eventOptionId}`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: { lang?: LanguageCode };
+				response: MoveToSingleResult;
 			}
 		}) as const
 } as const;

@@ -1,6 +1,6 @@
 import type {
-	SupplementaryEventCreateSchemaOutput,
-	TourEventResponseOutput
+	SupplementaryEventReadOutput,
+	TourEventResponse
 } from "@/shared/api";
 
 import type {
@@ -16,7 +16,7 @@ import {
 	mapPricingFromBackend
 } from "./supplementary-pricing.converters";
 
-type TSupplementaryEvent = SupplementaryEventCreateSchemaOutput;
+type TSupplementaryEvent = SupplementaryEventReadOutput;
 
 export const mapSupplementaryEventToForm = (
 	data: TTourEventBackendResponce
@@ -60,5 +60,5 @@ export const mapSupplementaryFormToUpdate = (
 	};
 };
 
-// keep TourEventResponseOutput reference for type clarity in call sites
-export type TSupplementaryTourEventResponse = TourEventResponseOutput;
+// keep TourEventResponse reference for type clarity in call sites
+export type TSupplementaryTourEventResponse = TourEventResponse;

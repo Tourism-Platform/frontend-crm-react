@@ -53,9 +53,9 @@ export const FLY_SEGMENT_SCHEMA = z
 			.optional()
 			.nullable(),
 
-		[ENUM_FORM_FLIGHT.DEPARTURE_DATE]: z.string().optional().nullable(),
+		// [ENUM_FORM_FLIGHT.DEPARTURE_DATE]: z.string().optional().nullable(),
 
-		[ENUM_FORM_FLIGHT.ARRIVAL_DATE]: z.string().optional().nullable(),
+		// [ENUM_FORM_FLIGHT.ARRIVAL_DATE]: z.string().optional().nullable(),
 
 		[ENUM_FORM_FLIGHT.DEPARTURE_TIME]: z.string().optional().nullable(),
 

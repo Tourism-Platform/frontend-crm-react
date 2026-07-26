@@ -1,10 +1,31 @@
-# Multiply-option (typ 8): модели и примеры объектов
+# Multiply-option (typ 10): модели и примеры объектов
 
-Наглядное сравнение **текущего API**, **целевой схемы** и **как это лежит во фронте**.
+Наглядное сравнение **исторического API**, **целевой схемы** и **как это лежит во фронте**.
 
 ---
 
-## 1. Сейчас: один UUID на родителя, дети в `details[]`
+## 0. Фактический контракт (сгенерированные paths)
+
+- Backend typ: **`"10"`** → frontend `ENUM_EVENT.MULTIPLY_OPTION`.
+- Parent `TourEventResponse.id` = слот на доске (`day` + `position`).
+- Alternatives: `event.details[]`; у каждого на **read** есть свой `id` (`eventOptionId`). Day/position живут на parent, не на option.
+- Не плоский список с `parent_event_id` — nested `details` + dedicated endpoints:
+
+| UI | Path |
+|----|------|
+| Update single (typ 1–9) | `PATCH .../event/single/{eventId}/update` |
+| Add option into multi | `POST .../event/multi/{eventId}/add-option` |
+| Update option | `PATCH .../event/multi/{eventId}/update-option/{eventOptionId}` |
+| Remove option | `DELETE .../event/multi/{eventId}/remove-option/{eventOptionId}` |
+| Reorder options | `POST .../event/multi/{eventId}/reorder-options` body `{ order: number[] }` |
+| Single → multi | `POST .../event/single/{eventId}/move-to-multi/{targetEventId}` |
+| Option → single | `POST .../event/multi/{eventId}/move-to-single/{eventOptionId}` |
+
+Фронт: `mapAllEventsToFrontend` → `ITourEvent.options[]`; виджет → `IDayItem.items` с `backendId = details[i].id`.
+
+---
+
+## 1. Исторически: один UUID на родителя, дети в `details[]` без id
 
 ### Ответ `GET /tour/{tourId}/{optionId}/event` (фрагмент)
 

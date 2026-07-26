@@ -62,8 +62,8 @@ const mapTransferSheet = (
 	event: { typ: "4" } & TransferEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "transfer",
-	pickup: formatJourneyPoint(event.details.departure),
-	dropoff: formatJourneyPoint(event.details.arrival)
+	pickup: formatJourneyPoint(event?.details?.departure ?? undefined),
+	dropoff: formatJourneyPoint(event?.details?.arrival ?? undefined)
 });
 
 const mapHousingSheet = (
@@ -72,17 +72,17 @@ const mapHousingSheet = (
 	kind: "accommodation",
 	amenities: event.details.amenities ?? [],
 	nights: `${event.details.duration} night${event.details.duration === 1 ? "" : "s"}`,
-	checkIn: formatPubTime(event.details.check_in),
-	checkOut: formatPubTime(event.details.check_out)
+	checkIn: formatPubTime(event.details.check_in ?? undefined),
+	checkOut: formatPubTime(event.details.check_out ?? undefined)
 });
 
 const mapActivitySheet = (
 	event: { typ: "6" } & ActivityEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "activity",
-	location: formatLocation(event.details.location) || "—",
-	startTime: formatPubTime(event.details.start_time),
-	endTime: formatPubTime(event.details.end_time)
+	location: formatLocation(event.details.location ?? undefined) || "—",
+	startTime: formatPubTime(event.details.start_time ?? undefined),
+	endTime: formatPubTime(event.details.end_time ?? undefined)
 });
 
 const mapHopToSegment = (
@@ -125,11 +125,11 @@ const mapHopToSegment = (
 			route: routeLabel,
 			dateRange: [depDate, arrDate].filter(Boolean).join(" - "),
 			departureCode: hop.departure_airport_code,
-			departureTime: formatPubTime(hop.departure_time),
-			departurePlace: `${formatLocation(hop.departure_location)}${hop.departure_terminal ? `, Terminal ${hop.departure_terminal}` : ""}${hop.departure_gate ? ` • Gate ${hop.departure_gate}` : ""}`,
+			departureTime: formatPubTime(hop.departure_time ?? undefined),
+			departurePlace: `${formatLocation(hop.departure_location ?? undefined)}${hop.departure_terminal ? `, Terminal ${hop.departure_terminal}` : ""}${hop.departure_gate ? ` • Gate ${hop.departure_gate}` : ""}`,
 			arrivalCode: hop.arrival_airport_code ?? "",
-			arrivalTime: formatPubTime(hop.arrival_time),
-			arrivalPlace: formatLocation(hop.arrival_location)
+			arrivalTime: formatPubTime(hop.arrival_time ?? undefined),
+			arrivalPlace: formatLocation(hop.arrival_location ?? undefined)
 		};
 	}
 
@@ -144,11 +144,11 @@ const mapHopToSegment = (
 			.map((d) => format(new Date(d), "d MMM, yyyy"))
 			.join(" - "),
 		departureCode: "—",
-		departureTime: formatPubTime(dep?.time),
-		departurePlace: formatLocation(dep?.location),
+		departureTime: formatPubTime(dep?.time ?? undefined),
+		departurePlace: formatLocation(dep?.location ?? undefined),
 		arrivalCode: "—",
-		arrivalTime: formatPubTime(arr?.time),
-		arrivalPlace: formatLocation(arr?.location)
+		arrivalTime: formatPubTime(arr?.time ?? undefined),
+		arrivalPlace: formatLocation(arr?.location ?? undefined)
 	};
 };
 
@@ -157,7 +157,10 @@ const mapFlightSheet = (
 	routeLabel: string
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
-	segments: event.details.hop.map((hop) => mapHopToSegment(hop, routeLabel))
+	segments:
+		event.details.hop?.map((hop) =>
+			mapHopToSegment(hop as any, routeLabel)
+		) ?? []
 });
 
 const mapTrainBusSheet = (
@@ -167,9 +170,10 @@ const mapTrainBusSheet = (
 	routeLabel: string
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
-	segments: event.details.hop.map((hop) =>
-		mapHopToSegment(hop as any, routeLabel)
-	)
+	segments:
+		event.details.hop?.map((hop) =>
+			mapHopToSegment(hop as any, routeLabel)
+		) ?? []
 });
 
 const mapSheetExtraFromPub = (
@@ -193,17 +197,17 @@ const mapSheetExtraFromPub = (
 		case "1":
 			return mapFlightSheet(
 				event as { typ: "1" } & FlightEventPubReadOutput,
-				event.name
+				event.name || ""
 			);
 		case "2":
 			return mapTrainBusSheet(
 				event as { typ: "2" } & TrainEventPubReadOutput,
-				event.name
+				event.name || ""
 			);
 		case "3":
 			return mapTrainBusSheet(
 				event as { typ: "3" } & BusEventPubReadOutput,
-				event.name
+				event.name || ""
 			);
 		default:
 			return { kind: "info" };
@@ -215,7 +219,7 @@ export const buildSheetFromPubEvent = (
 ): IOptionEventSheet => {
 	return {
 		images: resolveEventImagePaths(event),
-		description: event.description,
+		description: event.description || "",
 		extra: mapSheetExtraFromPub(event)
 	};
 };
@@ -224,6 +228,6 @@ export const buildSheetFromMultiplyChild = (
 	detail: TPubDetail
 ): IOptionEventSheet => ({
 	images: resolveEventImagePaths(detail),
-	description: detail.description,
+	description: detail.description || "",
 	extra: mapSheetExtraFromPub(detail)
 });

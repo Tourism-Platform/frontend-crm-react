@@ -5,13 +5,21 @@ import { languageCodeMapper } from "@/shared/converters";
 import {
 	ENUM_EVENT,
 	type ENUM_EVENT_TYPE,
+	type IEventOptionReorder,
+	type IMoveToMultiResult,
+	type IMoveToSingleResult,
 	type ITourEvent,
 	type ITourEventCreate,
+	type ITourEventOption,
 	type ITourEventReorder,
 	type TAccommodationEditSchema,
 	type TActivityEditSchema,
+	type TEventOptionBodyBackend,
+	type TEventOptionReorderBackend,
 	type TFlightEditSchema,
 	type TGuideEditSchema,
+	type TMoveToMultiResultBackend,
+	type TMoveToSingleResultBackend,
 	type TSupplementEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
@@ -45,10 +53,31 @@ import {
 	mapBackendTypToEventType
 } from "./event-type.converters";
 
+const mapEventOptionFromDetail = (
+	detail: Record<string, unknown> & {
+		id?: string | null;
+		typ?: string;
+		name?: string | null;
+		description?: string | null;
+		details?: unknown;
+	}
+): ITourEventOption | null => {
+	if (!detail.id) return null;
+
+	return {
+		id: detail.id,
+		name: detail.name || "",
+		description: detail.description || "",
+		eventType:
+			mapBackendTypToEventType(detail.typ) || ENUM_EVENT.TOUR_DETAILS,
+		details: (detail.details as Record<string, unknown>) || {}
+	};
+};
+
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
 ): ITourEvent => {
-	const event = {
+	const event: ITourEvent = {
 		id: backend.id,
 		tourOptionId: backend.tour_option_id,
 		name: "",
@@ -58,7 +87,7 @@ export const mapAllEventsToFrontend = (
 		eventType:
 			mapBackendTypToEventType(backend.event.typ) ||
 			ENUM_EVENT.TOUR_DETAILS,
-		details: backend.event.details as Record<string, unknown>
+		details: (backend.event.details as Record<string, unknown>) || {}
 	};
 
 	if ("name" in backend.event) {
@@ -67,6 +96,22 @@ export const mapAllEventsToFrontend = (
 
 	if ("description" in backend.event) {
 		event.description = backend.event.description || "";
+	}
+
+	if (backend.event.typ === "10" && Array.isArray(backend.event.details)) {
+		const details = backend.event.details as Array<
+			Record<string, unknown> & {
+				id?: string | null;
+				typ?: string;
+				name?: string | null;
+				description?: string | null;
+				details?: unknown;
+			}
+		>;
+		event.options = details
+			.map(mapEventOptionFromDetail)
+			.filter((opt): opt is ITourEventOption => opt !== null);
+		event.details = {};
 	}
 
 	return event;
@@ -137,6 +182,57 @@ export const mapEventReorderToBackend = (
 ): TTourEventReorderBackend => ({
 	day: frontend.day,
 	position: frontend.position
+});
+
+export const mapOptionReorderToBackend = (
+	frontend: IEventOptionReorder
+): TEventOptionReorderBackend => ({
+	order: frontend.order
+});
+
+/** Body for addEventOption / updateEventOption (no day/position). */
+export const mapEventOptionCreateToBackend = (
+	frontend: ITourEventCreate
+): TEventOptionBodyBackend => {
+	const typ = eventTypeMapper.to(frontend.eventType);
+
+	return {
+		name: frontend.name,
+		description: frontend.description,
+		typ,
+		details: frontend.details || {},
+		...(frontend.supplierId !== undefined && {
+			supplier_id: frontend.supplierId
+		}),
+		...(frontend.packageId !== undefined && {
+			package_id: frontend.packageId
+		})
+	} as TEventOptionBodyBackend;
+};
+
+export const mapEventOptionUpdateToBackend = (
+	type: ENUM_EVENT_TYPE,
+	frontend: TTourEventUpdate,
+	language?: ENUM_LANGUAGES_TYPE
+): TEventOptionBodyBackend =>
+	mapEventUpdateToBackend(
+		type,
+		frontend,
+		language
+	) as TEventOptionBodyBackend;
+
+export const mapMoveToMultiResultToFrontend = (
+	backend: TMoveToMultiResultBackend
+): IMoveToMultiResult => ({
+	targetEvent: mapAllEventsToFrontend(backend.target_event),
+	removedEventId: backend.removed_event_id
+});
+
+export const mapMoveToSingleResultToFrontend = (
+	backend: TMoveToSingleResultBackend
+): IMoveToSingleResult => ({
+	newEvent: mapAllEventsToFrontend(backend.new_event),
+	sourceEvent: mapAllEventsToFrontend(backend.source_event)
 });
 
 export const mapEventCreateToBackend = (

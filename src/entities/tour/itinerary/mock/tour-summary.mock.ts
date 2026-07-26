@@ -18,6 +18,8 @@ const costRange = (min: number, max: number): TourMinMaxCostSchemaOutput => ({
 
 const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 	{
+		event_id: "event_1",
+		option_id: MOCK_TOUR_OPTION_ID,
 		event: {
 			typ: "1",
 			name: "International Flight: London - Tashkent",
@@ -30,6 +32,8 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 		markup: costRange(100, 150)
 	},
 	{
+		event_id: "event_2",
+		option_id: MOCK_TOUR_OPTION_ID,
 		event: {
 			typ: "10",
 			day: 2,
@@ -53,6 +57,8 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 		markup: costRange(80, 120)
 	},
 	{
+		event_id: "event_3",
+		option_id: MOCK_TOUR_OPTION_ID,
 		event: {
 			typ: "6",
 			name: "City Sightseeing Tour",

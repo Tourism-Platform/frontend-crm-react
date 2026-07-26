@@ -74,43 +74,36 @@ graph TD
 
 ---
 
-## 5. Выявленные ошибки логики и проблемные места
+## 5. Multi-option API (фактический контракт)
 
-### 1. Ошибка обновления ID при создании ивента (Сломанные ссылки и DND во вложенных структурах)
-* **Где**: `useItineraryDnd.ts` (колбэк `success` при создании события).
-* **Суть**:
-  - Бэкенд возвращает созданный объект с реальным `newEvent.id`.
-  - Код пытается обновить `backendId` только у элементов первого уровня в `optData.days[action.day]`.
-  - **Баг A**: Если событие добавлено во вложенный контейнер (`items` внутри `MULTIPLY_OPTION`) или в `tripDetails`, его `backendId` **никогда не обновится**. При попытке его переместить/удалить бэкенд вернет ошибку.
-  - **Баг B**: Обновляется только `backendId`, а `item.id` остается временным `uuidv4()`. Ссылки на карточках ведут на `buildRoute(..., { eventId: item.id })`. Это приведет к ошибке 404 при попытке открыть только что созданную карточку до полной перезагрузки страницы.
+- Parent: `event.typ === "10"` (`ENUM_EVENT.MULTIPLY_OPTION`), слот = `day` + `position`.
+- Children: `event.details[]` с собственным `id` (= `eventOptionId`).
+- Single update: `PATCH .../event/single/{eventId}/update` (`updateTourEvent` RTK → `updateSingleEvent` path).
+- Nested CRUD: `addEventOption` / `updateEventOption` / `deleteEventOption` / `reorderEventOptions` / `moveEventToMulti` / `moveEventOptionToSingle`.
+- Hydration: `useItineraryEvents` → `IDayItem.items` из `ITourEvent.options`.
+- DND: `TDragAction` ветвит root vs nested (`addOption`, `reorderOptions`, `moveToMulti`, `moveToSingle`).
 
-### 2. Отсутствие синхронизации при действиях с Trip Details
+## 6. Выявленные ошибки логики и проблемные места
+
+### Исправлено (multi API)
+
+1. **`patchBackendId`** — ищет temp card в `days`, `tripDetails` и nested `items`; обновляет и `backendId`, и `id`.
+2. **Удаление nested** — `deleteEventOption(parentId, eventOptionId)`, не `deleteTourEvent` родителя.
+3. **`reorderEvent` / multi-мутации** — `invalidatesTags` на `TOURS_EVENTS` (кэш списка обновляется после reorder).
+
+### Остаётся
+
+### 1. Отсутствие синхронизации при действиях с Trip Details
 * **Где**: `drag-end-handler.ts`.
 * **Суть**:
-  - `action` для мутации `move` или `reorder` формируется только в ветке `else if (targetContainer.location === "day")`.
-  - При перемещении элемента в контейнер `tripDetails` (или внутри него) `action` возвращается как `undefined`.
-  - **Результат**: Визуально элемент перемещается в UI (в локальном стейте формы), но запрос на бэкенд не отправляется. После перезагрузки страницы перемещение сбрасывается.
+  - Root move/reorder action для `tripDetails` по-прежнему не всегда формируется (ветка только для `location === "day"`).
+  - **Результат**: визуальный move в tripDetails может не уйти на бэкенд.
 
-### 3. Ошибка удаления вложенных ивентов
-* **Где**: `useItineraryDnd.ts` -> `handleRemoveItem`.
-* **Суть**:
-  - При удалении элемента хук пытается найти удаляемый объект по индексу: `optData.days[loc.day]?.[loc.index]`.
-  - Если удаляется вложенный элемент (`nestedIndex !== undefined`), этот код вернет родительский элемент (группу `MULTIPLY_OPTION`), и бэкенду будет отправлен запрос на удаление **всей группы** вместо конкретного вложенного события.
-
-### 4. Некорректная обработка `day === 0` (Trip Details)
+### 2. Некорректная обработка `day === 0` (Trip Details) — частично
 * **Где**: `use-itinerary-events.ts`.
-* **Суть**:
-  - События с `day === 0` (относящиеся к Trip Details) добавляются в общий цикл, из-за чего `0` попадает в `allDays` и в `dayOrder`. На доске рендерится колонка "День 0".
-  - Контейнер `tripDetails` в возвращаемом объекте всегда остается пустым (`tripDetails: []`).
-  - При отсутствии дневных событий (`allDays.size === 0`) код возвращает `EMPTY_OPTION_DATA`, полностью стирая `tripDetails`, даже если они были загружены.
+* **Суть**: `day === 0` теперь кладётся в `tripDetails`, но краевые кейсы с пустым списком дневных событий стоит перепроверить вручную.
 
-### 5. Инвалидация кэша при реордере (`reorderEvent`)
-* **Где**: `event.service.ts` -> `reorderEvent`.
-* **Суть**:
-  - В отличие от `createEvent` и `updateTourEvent`, мутация `reorderEvent` не имеет обработчика `onQueryStarted` для ручного обновления кэша `listTourEvents`.
-  - **Результат**: После успешного реордера на бэкенде, кэш RTK-Query хранит старый порядок элементов. Любое действие, провоцирующее ререндер или чтение кэша, вернет старый порядок и сбросит UI.
-
-### 6. Нарушение спецификации HTML и баги кликов (Nested Links)
+### 3. Нарушение спецификации HTML и баги кликов (Nested Links)
 * **Где**: `draggable-day-item.tsx`.
 * **Суть**:
   - Карточка `Card` целиком обернута в `<Link to={href}>`.

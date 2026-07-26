@@ -1,5 +1,5 @@
 import type {
-	FlightEventCreateSchemaInput,
+	FlightEventReadOutput,
 	FlightHopDetailsSchemaInput,
 	FlightHopDetailsSchemaOutput
 } from "@/shared/api";
@@ -24,8 +24,8 @@ const createEmptyFlySegment = (): TFlyRouteSegment => ({
 	[ENUM_FORM_FLIGHT.FLIGHT_NUMBER]: "",
 	[ENUM_FORM_FLIGHT.DEPARTURE_AIRPORT_CODE]: "",
 	[ENUM_FORM_FLIGHT.ARRIVAL_AIRPORT_CODE]: "",
-	[ENUM_FORM_FLIGHT.DEPARTURE_DATE]: null,
-	[ENUM_FORM_FLIGHT.ARRIVAL_DATE]: null,
+	// [ENUM_FORM_FLIGHT.DEPARTURE_DATE]: null,
+	// [ENUM_FORM_FLIGHT.ARRIVAL_DATE]: null,
 	[ENUM_FORM_FLIGHT.DEPARTURE_TIME]: null,
 	[ENUM_FORM_FLIGHT.ARRIVAL_TIME]: null,
 	[ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE]: "",
@@ -44,8 +44,8 @@ const mapHopToFlySegment = (
 	[ENUM_FORM_FLIGHT.FLIGHT_NUMBER]: String(hop.flight_number ?? ""),
 	[ENUM_FORM_FLIGHT.DEPARTURE_AIRPORT_CODE]: hop.departure_airport_code ?? "",
 	[ENUM_FORM_FLIGHT.ARRIVAL_AIRPORT_CODE]: hop.arrival_airport_code ?? "",
-	[ENUM_FORM_FLIGHT.DEPARTURE_DATE]: hop.departure_date ?? null,
-	[ENUM_FORM_FLIGHT.ARRIVAL_DATE]: hop.arrival_date ?? null,
+	// [ENUM_FORM_FLIGHT.DEPARTURE_DATE]: hop.departure_date ?? null,
+	// [ENUM_FORM_FLIGHT.ARRIVAL_DATE]: hop.arrival_date ?? null,
 	[ENUM_FORM_FLIGHT.DEPARTURE_TIME]: hop.departure_time?.time ?? null,
 	[ENUM_FORM_FLIGHT.ARRIVAL_TIME]: hop.arrival_time?.time ?? null,
 	[ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE]: String(
@@ -67,9 +67,9 @@ const mapFlySegmentToHop = (
 		airline_code: segment.airline_code,
 		flight_number: Number(segment.flight_number) || null,
 		departure_airport_code: segment.departure_airport_code,
-		arrival_airport_code: segment.arrival_airport_code,
-		departure_date: segment.departure_date,
-		arrival_date: segment.arrival_date
+		arrival_airport_code: segment.arrival_airport_code
+		// departure_date: segment.departure_date,
+		// arrival_date: segment.arrival_date
 	};
 
 	if (segment.departure_time && segment.departure_timezone) {
@@ -99,7 +99,7 @@ const mapFlySegmentToHop = (
 
 const assertFlyEvent = (
 	data: TTourEventBackendResponce
-): FlightEventCreateSchemaInput => {
+): FlightEventReadOutput => {
 	if (!("typ" in data.event) || data.event.typ !== "1") {
 		throw new Error(
 			'mapFlyEventToForm: expected flight event with typ "1"'

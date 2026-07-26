@@ -1,4 +1,4 @@
-import type { TransferEventCreateSchemaInput } from "@/shared/api";
+import type { TransferEventReadOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
@@ -34,7 +34,7 @@ const hasPerCarPricingInPayload = (
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce
 ): TTransportationEditSchema => {
-	const event = data?.event as TransferEventCreateSchemaInput;
+	const event = data?.event as TransferEventReadOutput;
 	const details = event?.details;
 	const expenses = details?.expenses;
 	const perCarCars = expenses?.typ === "per_car" ? expenses.cars : undefined;
@@ -55,8 +55,8 @@ export const mapTransferEventToForm = (
 			end_point: mapBackendLocationToGeoForm(
 				event?.details?.arrival?.location
 			),
-			departure_date: event?.details?.departure?.date || "",
-			arrival_date: event?.details?.departure?.date || "",
+			// departure_date: event?.details?.departure?.date || "",
+			// arrival_date: event?.details?.departure?.date || "",
 			departure_time: event?.details?.departure?.time?.time || null,
 			arrival_time: event?.details?.arrival?.time?.time || null,
 			departure_timezone: String(

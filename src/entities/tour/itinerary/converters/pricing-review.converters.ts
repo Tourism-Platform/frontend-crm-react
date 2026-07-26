@@ -1,6 +1,6 @@
 import type {
 	AnyEventWithCostOutput,
-	MultipleOptionEventOutput,
+	MultipleOptionEventReadOutput,
 	TourMinMaxCostSchemaOutput,
 	TourSummaryResponse
 } from "@/shared/api";
@@ -53,7 +53,7 @@ const parseOptionIndexFromSuffix = (idSuffix: string): number => {
 
 type TSummaryEvent = AnyEventWithCostOutput["event"];
 type TNestedMultiDetail = NonNullable<
-	MultipleOptionEventOutput["details"]
+	MultipleOptionEventReadOutput["details"]
 >[number];
 
 const mapSummaryEventToReviewItem = (

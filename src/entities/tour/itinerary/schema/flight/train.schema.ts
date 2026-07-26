@@ -35,9 +35,9 @@ export const TRAIN_SEGMENT_SCHEMA = z
 		[ENUM_FORM_TRAIN.ARRIVAL_STATION]:
 			GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 
-		[ENUM_FORM_TRAIN.DEPARTURE_DATE]: z.string().optional().nullable(),
+		// [ENUM_FORM_TRAIN.DEPARTURE_DATE]: z.string().optional().nullable(),
 
-		[ENUM_FORM_TRAIN.ARRIVAL_DATE]: z.string().optional().nullable(),
+		// [ENUM_FORM_TRAIN.ARRIVAL_DATE]: z.string().optional().nullable(),
 
 		[ENUM_FORM_TRAIN.DEPARTURE_TIME]: z.string().optional().nullable(),
 

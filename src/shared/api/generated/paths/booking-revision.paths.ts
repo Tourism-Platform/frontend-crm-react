@@ -1,16 +1,16 @@
 import type {
-	ActivityEventCreateSchemaInput,
-	BusEventCreateSchemaInput,
+	ActivityEventCreate,
+	BusEventCreate,
 	EventEditOpOutput,
-	FlightEventCreateSchemaInput,
-	GuideEventCreateSchemaInput,
-	HousingEventCreateSchemaInput,
-	InformationEventCreateSchemaInput,
-	MultipleOptionEventInput,
+	FlightEventCreate,
+	GuideEventCreate,
+	HousingEventCreate,
+	InformationEventCreate,
+	MultipleOptionEvent,
 	RevisionPreview,
-	SupplementaryEventCreateSchemaInput,
-	TrainEventCreateSchemaInput,
-	TransferEventCreateSchemaInput
+	SupplementaryEventCreate,
+	TrainEventCreate,
+	TransferEventCreate
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -23,16 +23,16 @@ export const BOOKING_REVISION_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationEventCreateSchemaInput
-					| BusEventCreateSchemaInput
-					| TrainEventCreateSchemaInput
-					| TransferEventCreateSchemaInput
-					| ActivityEventCreateSchemaInput
-					| HousingEventCreateSchemaInput
-					| FlightEventCreateSchemaInput
-					| GuideEventCreateSchemaInput
-					| SupplementaryEventCreateSchemaInput
-					| MultipleOptionEventInput;
+					| InformationEventCreate
+					| BusEventCreate
+					| TrainEventCreate
+					| TransferEventCreate
+					| ActivityEventCreate
+					| HousingEventCreate
+					| FlightEventCreate
+					| GuideEventCreate
+					| SupplementaryEventCreate
+					| MultipleOptionEvent;
 				query: void;
 				response: RevisionPreview;
 			}
@@ -43,16 +43,16 @@ export const BOOKING_REVISION_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| InformationEventCreateSchemaInput
-					| BusEventCreateSchemaInput
-					| TrainEventCreateSchemaInput
-					| TransferEventCreateSchemaInput
-					| ActivityEventCreateSchemaInput
-					| HousingEventCreateSchemaInput
-					| FlightEventCreateSchemaInput
-					| GuideEventCreateSchemaInput
-					| SupplementaryEventCreateSchemaInput
-					| MultipleOptionEventInput;
+					| InformationEventCreate
+					| BusEventCreate
+					| TrainEventCreate
+					| TransferEventCreate
+					| ActivityEventCreate
+					| HousingEventCreate
+					| FlightEventCreate
+					| GuideEventCreate
+					| SupplementaryEventCreate
+					| MultipleOptionEvent;
 				query: void;
 				response: RevisionPreview;
 			}

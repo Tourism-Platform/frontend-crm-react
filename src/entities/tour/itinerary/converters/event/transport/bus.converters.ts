@@ -1,4 +1,4 @@
-import type { BusEventCreateSchemaInput } from "@/shared/api";
+import type { BusEventReadOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 
 import type {
@@ -22,8 +22,8 @@ const createEmptyBusSegment = (): TBusRouteSegment => ({
 	[ENUM_FORM_BUS.BUS_NUMBER]: "",
 	[ENUM_FORM_BUS.DEPARTURE_POINT]: null,
 	[ENUM_FORM_BUS.ARRIVAL_POINT]: null,
-	[ENUM_FORM_BUS.DEPARTURE_DATE]: null,
-	[ENUM_FORM_BUS.ARRIVAL_DATE]: null,
+	// [ENUM_FORM_BUS.DEPARTURE_DATE]: null,
+	// [ENUM_FORM_BUS.ARRIVAL_DATE]: null,
 	[ENUM_FORM_BUS.DEPARTURE_TIME]: null,
 	[ENUM_FORM_BUS.ARRIVAL_TIME]: null,
 	[ENUM_FORM_BUS.DEPARTURE_TIMEZONE]: "",
@@ -32,7 +32,7 @@ const createEmptyBusSegment = (): TBusRouteSegment => ({
 
 const assertBusEvent = (
 	data: TTourEventBackendResponce
-): BusEventCreateSchemaInput => {
+): BusEventReadOutput => {
 	if (!("typ" in data.event) || data.event.typ !== "3") {
 		throw new Error('mapBusEventToForm: expected bus event with typ "3"');
 	}

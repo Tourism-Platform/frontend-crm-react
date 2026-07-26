@@ -1,8 +1,8 @@
-import type { TOUR_EVENTS_PATHS, TourEventResponseInput } from "@/shared/api";
+import type { TOUR_EVENTS_PATHS, TourEventResponse } from "@/shared/api";
 
-export type TTourEventBackendResponce = TourEventResponseInput;
+export type TTourEventBackendResponce = TourEventResponse;
 export type TTourEventUpdateBackend = ReturnType<
-	typeof TOUR_EVENTS_PATHS.updateTourEvent
+	typeof TOUR_EVENTS_PATHS.updateSingleEvent
 >["_types"]["body"];
 
 export type TTourEventCreateBackend = ReturnType<
@@ -18,7 +18,22 @@ export interface ITourEventCreateBackend {
 	details: Record<string, unknown>;
 }
 
-// EventReorderSchema не сгенерирован в Api.ts — определён локально по контракту эндпоинта
 export type TTourEventReorderBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.reorderEvent
 >["_types"]["body"];
+
+export type TEventOptionBodyBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.addEventOption
+>["_types"]["body"];
+
+export type TEventOptionReorderBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.reorderEventOptions
+>["_types"]["body"];
+
+export type TMoveToMultiResultBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.moveEventToMulti
+>["_types"]["response"];
+
+export type TMoveToSingleResultBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.moveEventOptionToSingle
+>["_types"]["response"];

@@ -53,22 +53,22 @@ export const TRAIN_DATA_LIST = ({
 		icon: MapPin,
 		...arrival
 	},
-	{
-		label: "general.flights.form.train.fields.departure_date.label",
-		placeholder:
-			"general.flights.form.train.fields.departure_date.placeholder",
-		key: ENUM_FORM_TRAIN.DEPARTURE_DATE,
-		fieldType: "date",
-		className: "col-span-2"
-	},
-	{
-		label: "general.flights.form.train.fields.arrival_date.label",
-		placeholder:
-			"general.flights.form.train.fields.arrival_date.placeholder",
-		key: ENUM_FORM_TRAIN.ARRIVAL_DATE,
-		fieldType: "date",
-		className: "col-span-2"
-	},
+	// {
+	// 	label: "general.flights.form.train.fields.departure_date.label",
+	// 	placeholder:
+	// 		"general.flights.form.train.fields.departure_date.placeholder",
+	// 	key: ENUM_FORM_TRAIN.DEPARTURE_DATE,
+	// 	fieldType: "date",
+	// 	className: "col-span-2"
+	// },
+	// {
+	// 	label: "general.flights.form.train.fields.arrival_date.label",
+	// 	placeholder:
+	// 		"general.flights.form.train.fields.arrival_date.placeholder",
+	// 	key: ENUM_FORM_TRAIN.ARRIVAL_DATE,
+	// 	fieldType: "date",
+	// 	className: "col-span-2"
+	// },
 	{
 		label: "general.flights.form.train.fields.arrival_time.label",
 		placeholder:

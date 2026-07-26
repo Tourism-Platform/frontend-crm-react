@@ -36,21 +36,21 @@ export const FLY_DATA_LIST: TForm[] = [
 		fieldType: "input",
 		className: "col-span-2"
 	},
-	{
-		label: "general.flights.form.fly.fields.departure_date.label",
-		placeholder:
-			"general.flights.form.fly.fields.departure_date.placeholder",
-		key: ENUM_FORM_FLIGHT.DEPARTURE_DATE,
-		fieldType: "date",
-		className: "col-span-2"
-	},
-	{
-		label: "general.flights.form.fly.fields.arrival_date.label",
-		placeholder: "general.flights.form.fly.fields.arrival_date.placeholder",
-		key: ENUM_FORM_FLIGHT.ARRIVAL_DATE,
-		fieldType: "date",
-		className: "col-span-2"
-	},
+	// {
+	// 	label: "general.flights.form.fly.fields.departure_date.label",
+	// 	placeholder:
+	// 		"general.flights.form.fly.fields.departure_date.placeholder",
+	// 	key: ENUM_FORM_FLIGHT.DEPARTURE_DATE,
+	// 	fieldType: "date",
+	// 	className: "col-span-2"
+	// },
+	// {
+	// 	label: "general.flights.form.fly.fields.arrival_date.label",
+	// 	placeholder: "general.flights.form.fly.fields.arrival_date.placeholder",
+	// 	key: ENUM_FORM_FLIGHT.ARRIVAL_DATE,
+	// 	fieldType: "date",
+	// 	className: "col-span-2"
+	// },
 	{
 		label: "general.flights.form.fly.fields.arrival_time.label",
 		placeholder: "general.flights.form.fly.fields.arrival_time.placeholder",

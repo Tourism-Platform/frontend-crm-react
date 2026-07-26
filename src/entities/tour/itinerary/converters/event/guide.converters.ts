@@ -1,4 +1,4 @@
-import type { GuideEventCreateSchemaOutput } from "@/shared/api";
+import type { GuideEventReadOutput } from "@/shared/api";
 
 import {
 	ENUM_GUIDE_FORM_SECTION,
@@ -16,7 +16,7 @@ import {
 	mapGuidesFromBackend
 } from "./guides.converters";
 
-type TGuideEvent = GuideEventCreateSchemaOutput;
+type TGuideEvent = GuideEventReadOutput;
 
 export const mapGuideEventToForm = (
 	data: TTourEventBackendResponce

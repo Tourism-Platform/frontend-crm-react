@@ -38,9 +38,9 @@ export const BUS_SEGMENT_SCHEMA = z
 		[ENUM_FORM_BUS.ARRIVAL_POINT]:
 			GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 
-		[ENUM_FORM_BUS.DEPARTURE_DATE]: z.string().optional().nullable(),
+		// [ENUM_FORM_BUS.DEPARTURE_DATE]: z.string().optional().nullable(),
 
-		[ENUM_FORM_BUS.ARRIVAL_DATE]: z.string().optional().nullable(),
+		// [ENUM_FORM_BUS.ARRIVAL_DATE]: z.string().optional().nullable(),
 
 		[ENUM_FORM_BUS.DEPARTURE_TIME]: z.string().optional().nullable(),
 

@@ -325,20 +325,20 @@ export interface AccountTypeRead {
 
 /** ActivityDetailsPubSchema */
 export interface ActivityDetailsPubSchemaInput {
-	typ: ActivityType;
+	typ?: ActivityType | null;
 	/** Location */
-	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
-	start_time: TimeSchema;
-	end_time: TimeSchema;
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	start_time?: TimeSchema | null;
+	end_time?: TimeSchema | null;
 }
 
 /** ActivityDetailsPubSchema */
 export interface ActivityDetailsPubSchemaOutput {
-	typ: ActivityType;
+	typ?: ActivityType | null;
 	/** Location */
-	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
-	start_time: TimeSchema;
-	end_time: TimeSchema;
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	start_time?: TimeSchema | null;
+	end_time?: TimeSchema | null;
 }
 
 /** ActivityDetailsSchema */
@@ -487,8 +487,8 @@ export interface ActivityEventOutput {
 	details?: ActivityDetailsSchemaOutput | null;
 }
 
-/** ActivityEventCreateSchema */
-export interface ActivityEventCreateSchemaInput {
+/** ActivityEventCreate */
+export interface ActivityEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -526,8 +526,156 @@ export interface ActivityEventCreateSchemaInput {
 	details?: ActivityDetailsSchemaInput | null;
 }
 
-/** ActivityEventCreateSchema */
-export interface ActivityEventCreateSchemaOutput {
+/** ActivityEventOptionRead */
+export interface ActivityEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details?: ActivityDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** ActivityEventOptionRead */
+export interface ActivityEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details?: ActivityDetailsSchemaOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** ActivityEventPubRead */
+export interface ActivityEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details: ActivityDetailsPubSchemaInput;
+}
+
+/** ActivityEventPubRead */
+export interface ActivityEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details: ActivityDetailsPubSchemaOutput;
+}
+
+/** ActivityEventRead */
+export interface ActivityEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "6"
+	 */
+	typ?: "6";
+	details?: ActivityDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** ActivityEventRead */
+export interface ActivityEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -563,42 +711,11 @@ export interface ActivityEventCreateSchemaOutput {
 	 */
 	typ?: "6";
 	details?: ActivityDetailsSchemaOutput | null;
-}
-
-/** ActivityEventPubRead */
-export interface ActivityEventPubReadInput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
 	/**
-	 * Typ
-	 * @default "6"
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
 	 */
-	typ?: "6";
-	details: ActivityDetailsPubSchemaInput;
-}
-
-/** ActivityEventPubRead */
-export interface ActivityEventPubReadOutput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
-	/**
-	 * Typ
-	 * @default "6"
-	 */
-	typ?: "6";
-	details: ActivityDetailsPubSchemaOutput;
+	id?: string | null;
 }
 
 /** AdminUserView */
@@ -721,76 +838,90 @@ export interface AgencyModel {
 
 /** AnyEventWithCost */
 export interface AnyEventWithCostInput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Option Id */
+	option_id?: string | null;
 	/** Event */
 	event:
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventCreateSchemaInput)
+				  } & FlightEventReadInput)
 				| ({
 						typ: "2";
-				  } & TrainEventCreateSchemaInput)
+				  } & TrainEventReadInput)
 				| ({
 						typ: "3";
-				  } & BusEventCreateSchemaInput)
+				  } & BusEventReadInput)
 				| ({
 						typ: "4";
-				  } & TransferEventCreateSchemaInput)
+				  } & TransferEventReadInput)
 				| ({
 						typ: "5";
-				  } & HousingEventCreateSchemaInput)
+				  } & HousingEventReadInput)
 				| ({
 						typ: "6";
-				  } & ActivityEventCreateSchemaInput)
+				  } & ActivityEventReadInput)
 				| ({
 						typ: "7";
-				  } & InformationEventCreateSchemaInput)
+				  } & InformationEventReadInput)
 				| ({
 						typ: "8";
-				  } & GuideEventCreateSchemaInput)
+				  } & GuideEventReadInput)
 				| ({
 						typ: "9";
-				  } & SupplementaryEventCreateSchemaInput)
+				  } & SupplementaryEventReadInput)
 		  )
-		| MultipleOptionEventInput;
+		| MultipleOptionEventReadInput;
 	cost: TourMinMaxCostSchemaInput;
 	markup: TourMinMaxCostSchemaInput;
 }
 
 /** AnyEventWithCost */
 export interface AnyEventWithCostOutput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Option Id */
+	option_id?: string | null;
 	/** Event */
 	event:
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventCreateSchemaOutput)
+				  } & FlightEventReadOutput)
 				| ({
 						typ: "2";
-				  } & TrainEventCreateSchemaOutput)
+				  } & TrainEventReadOutput)
 				| ({
 						typ: "3";
-				  } & BusEventCreateSchemaOutput)
+				  } & BusEventReadOutput)
 				| ({
 						typ: "4";
-				  } & TransferEventCreateSchemaOutput)
+				  } & TransferEventReadOutput)
 				| ({
 						typ: "5";
-				  } & HousingEventCreateSchemaOutput)
+				  } & HousingEventReadOutput)
 				| ({
 						typ: "6";
-				  } & ActivityEventCreateSchemaOutput)
+				  } & ActivityEventReadOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventCreateSchemaOutput)
+				  } & InformationEventReadOutput)
 				| ({
 						typ: "8";
-				  } & GuideEventCreateSchemaOutput)
+				  } & GuideEventReadOutput)
 				| ({
 						typ: "9";
-				  } & SupplementaryEventCreateSchemaOutput)
+				  } & SupplementaryEventReadOutput)
 		  )
-		| MultipleOptionEventOutput;
+		| MultipleOptionEventReadOutput;
 	cost: TourMinMaxCostSchemaOutput;
 	markup: TourMinMaxCostSchemaOutput;
 }
@@ -1322,33 +1453,19 @@ export interface BookingUpdate {
 /** BusDetailPubSchema */
 export interface BusDetailPubSchemaInput {
 	/** Hop */
-	hop: BusHopPubSchemaInput[];
+	hop?: BusHopPubSchemaInput[] | null;
 }
 
 /** BusDetailPubSchema */
 export interface BusDetailPubSchemaOutput {
 	/** Hop */
-	hop: BusHopPubSchemaOutput[];
+	hop?: BusHopPubSchemaOutput[] | null;
 }
 
 /** BusDetailSchema */
 export interface BusDetailSchemaInput {
 	/** Hop */
 	hop?: BusHopSchemaInput[] | null;
-	/**
-	 * Expenses
-	 * The expense calculation strategy.
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
 	fees?: FixedExpenseInput | null;
 	/**
 	 * Markup
@@ -1364,12 +1481,6 @@ export interface BusDetailSchemaInput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-}
-
-/** BusDetailSchema */
-export interface BusDetailSchemaOutput {
-	/** Hop */
-	hop?: BusHopSchemaOutput[] | null;
 	/**
 	 * Expenses
 	 * The expense calculation strategy.
@@ -1378,12 +1489,18 @@ export interface BusDetailSchemaOutput {
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedExpenseInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
+				  } & PerPersonExpenseInput)
 		  )
 		| null;
+}
+
+/** BusDetailSchema */
+export interface BusDetailSchemaOutput {
+	/** Hop */
+	hop?: BusHopSchemaOutput[] | null;
 	fees?: FixedExpenseOutput | null;
 	/**
 	 * Markup
@@ -1397,6 +1514,20 @@ export interface BusDetailSchemaOutput {
 				| ({
 						typ: "percentage";
 				  } & PercentageMarkup)
+		  )
+		| null;
+	/**
+	 * Expenses
+	 * The expense calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseOutput)
 		  )
 		| null;
 }
@@ -1459,8 +1590,8 @@ export interface BusEventOutput {
 	details?: BusDetailSchemaOutput | null;
 }
 
-/** BusEventCreateSchema */
-export interface BusEventCreateSchemaInput {
+/** BusEventCreate */
+export interface BusEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -1498,8 +1629,156 @@ export interface BusEventCreateSchemaInput {
 	details?: BusDetailSchemaInput | null;
 }
 
-/** BusEventCreateSchema */
-export interface BusEventCreateSchemaOutput {
+/** BusEventOptionRead */
+export interface BusEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details?: BusDetailSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** BusEventOptionRead */
+export interface BusEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details?: BusDetailSchemaOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** BusEventPubRead */
+export interface BusEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details: BusDetailPubSchemaInput;
+}
+
+/** BusEventPubRead */
+export interface BusEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details: BusDetailPubSchemaOutput;
+}
+
+/** BusEventRead */
+export interface BusEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "3"
+	 */
+	typ?: "3";
+	details?: BusDetailSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** BusEventRead */
+export interface BusEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -1535,58 +1814,23 @@ export interface BusEventCreateSchemaOutput {
 	 */
 	typ?: "3";
 	details?: BusDetailSchemaOutput | null;
-}
-
-/** BusEventPubRead */
-export interface BusEventPubReadInput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
 	/**
-	 * Typ
-	 * @default "3"
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
 	 */
-	typ?: "3";
-	details: BusDetailPubSchemaInput;
-}
-
-/** BusEventPubRead */
-export interface BusEventPubReadOutput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
-	/**
-	 * Typ
-	 * @default "3"
-	 */
-	typ?: "3";
-	details: BusDetailPubSchemaOutput;
+	id?: string | null;
 }
 
 /** BusHopPubSchema */
 export interface BusHopPubSchemaInput {
-	/** Represents either a departure or arrival point for the bus journey. */
-	departure: BusJourneyPointSchemaInput;
-	/** Represents either a departure or arrival point for the bus journey. */
-	arrival: BusJourneyPointSchemaInput;
+	departure?: BusJourneyPointPubSchemaInput | null;
+	arrival?: BusJourneyPointPubSchemaInput | null;
 }
 
 /** BusHopPubSchema */
 export interface BusHopPubSchemaOutput {
-	/** Represents either a departure or arrival point for the bus journey. */
-	departure: BusJourneyPointSchemaOutput;
-	/** Represents either a departure or arrival point for the bus journey. */
-	arrival: BusJourneyPointSchemaOutput;
+	departure?: BusJourneyPointPubSchemaOutput | null;
+	arrival?: BusJourneyPointPubSchemaOutput | null;
 }
 
 /**
@@ -1611,16 +1855,29 @@ export interface BusHopSchemaOutput {
 	arrival?: BusJourneyPointSchemaOutput | null;
 }
 
+/** BusJourneyPointPubSchema */
+export interface BusJourneyPointPubSchemaInput {
+	/** Date */
+	date?: string | null;
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+}
+
+/** BusJourneyPointPubSchema */
+export interface BusJourneyPointPubSchemaOutput {
+	/** Date */
+	date?: string | null;
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+}
+
 /**
  * BusJourneyPointSchema
  * Represents either a departure or arrival point for the bus journey.
  */
 export interface BusJourneyPointSchemaInput {
-	/**
-	 * Date
-	 * The date of departure or arrival.
-	 */
-	date?: string | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
@@ -1632,11 +1889,6 @@ export interface BusJourneyPointSchemaInput {
  * Represents either a departure or arrival point for the bus journey.
  */
 export interface BusJourneyPointSchemaOutput {
-	/**
-	 * Date
-	 * The date of departure or arrival.
-	 */
-	date?: string | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
@@ -1791,7 +2043,7 @@ export interface EventEditOpInput {
 	at: string;
 	/** Target Id */
 	target_id?: string | null;
-	event?: TourEventResponseInput | null;
+	event?: OrderTourEventSchemaInput | null;
 }
 
 /**
@@ -1811,7 +2063,7 @@ export interface EventEditOpOutput {
 	at: string;
 	/** Target Id */
 	target_id?: string | null;
-	event?: TourEventResponseOutput | null;
+	event?: OrderTourEventSchemaOutput | null;
 }
 
 /** EventImageModel */
@@ -2045,13 +2297,13 @@ export interface FixedExpenseOutput {
 /** FlightDetailsPubSchema */
 export interface FlightDetailsPubSchemaInput {
 	/** Hop */
-	hop: FlightHopPubSchemaInput[];
+	hop?: FlightHopPubSchemaInput[] | null;
 }
 
 /** FlightDetailsPubSchema */
 export interface FlightDetailsPubSchemaOutput {
 	/** Hop */
-	hop: FlightHopPubSchemaOutput[];
+	hop?: FlightHopPubSchemaOutput[] | null;
 }
 
 /** FlightDetailsSchema */
@@ -2182,8 +2434,8 @@ export interface FlightEventOutput {
 	details?: FlightDetailsSchemaOutput | null;
 }
 
-/** FlightEventCreateSchema */
-export interface FlightEventCreateSchemaInput {
+/** FlightEventCreate */
+export interface FlightEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2221,8 +2473,156 @@ export interface FlightEventCreateSchemaInput {
 	details?: FlightDetailsSchemaInput | null;
 }
 
-/** FlightEventCreateSchema */
-export interface FlightEventCreateSchemaOutput {
+/** FlightEventOptionRead */
+export interface FlightEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details?: FlightDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** FlightEventOptionRead */
+export interface FlightEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details?: FlightDetailsSchemaOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** FlightEventPubRead */
+export interface FlightEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details: FlightDetailsPubSchemaInput;
+}
+
+/** FlightEventPubRead */
+export interface FlightEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details: FlightDetailsPubSchemaOutput;
+}
+
+/** FlightEventRead */
+export interface FlightEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "1"
+	 */
+	typ?: "1";
+	details?: FlightDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** FlightEventRead */
+export interface FlightEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2258,42 +2658,11 @@ export interface FlightEventCreateSchemaOutput {
 	 */
 	typ?: "1";
 	details?: FlightDetailsSchemaOutput | null;
-}
-
-/** FlightEventPubRead */
-export interface FlightEventPubReadInput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
 	/**
-	 * Typ
-	 * @default "1"
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
 	 */
-	typ?: "1";
-	details: FlightDetailsPubSchemaInput;
-}
-
-/** FlightEventPubRead */
-export interface FlightEventPubReadOutput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
-	/**
-	 * Typ
-	 * @default "1"
-	 */
-	typ?: "1";
-	details: FlightDetailsPubSchemaOutput;
+	id?: string | null;
 }
 
 /** FlightHopDetailsSchema */
@@ -2330,16 +2699,6 @@ export interface FlightHopDetailsSchemaInput {
 		| LocationRefSchema
 		| LocationOutSchema
 		| null;
-	/**
-	 * Departure Date
-	 * Scheduled departure date (YYYY-MM-DD)
-	 */
-	departure_date?: string | null;
-	/**
-	 * Arrival Date
-	 * Scheduled arrival date (YYYY-MM-DD)
-	 */
-	arrival_date?: string | null;
 	departure_time?: TimeSchema | null;
 	arrival_time?: TimeSchema | null;
 	/**
@@ -2393,16 +2752,6 @@ export interface FlightHopDetailsSchemaOutput {
 		| LocationRefSchema
 		| LocationOutSchema
 		| null;
-	/**
-	 * Departure Date
-	 * Scheduled departure date (YYYY-MM-DD)
-	 */
-	departure_date?: string | null;
-	/**
-	 * Arrival Date
-	 * Scheduled arrival date (YYYY-MM-DD)
-	 */
-	arrival_date?: string | null;
 	departure_time?: TimeSchema | null;
 	arrival_time?: TimeSchema | null;
 	/**
@@ -2424,130 +2773,66 @@ export interface FlightHopDetailsSchemaOutput {
 
 /** FlightHopPubSchema */
 export interface FlightHopPubSchemaInput {
-	/**
-	 * Airline Code
-	 * @minLength 2
-	 * @maxLength 3
-	 * @pattern ^[A-Z0-9]{2,3}$
-	 */
-	airline_code: string;
-	/**
-	 * Flight Number
-	 * @min 1
-	 * @max 9999
-	 */
-	flight_number: number;
-	/**
-	 * Departure Airport Code
-	 * @minLength 3
-	 * @maxLength 3
-	 * @pattern ^[A-Z]{3}$
-	 */
-	departure_airport_code: string;
-	/**
-	 * Arrival Airport Code
-	 * @minLength 3
-	 * @maxLength 3
-	 * @pattern ^[A-Z]{3}$
-	 */
-	arrival_airport_code: string;
+	/** Airline Code */
+	airline_code?: string | null;
+	/** Flight Number */
+	flight_number?: number | null;
+	/** Departure Airport Code */
+	departure_airport_code?: string | null;
+	/** Arrival Airport Code */
+	arrival_airport_code?: string | null;
 	/** Departure Location */
-	departure_location:
+	departure_location?:
 		| LocationInSchema
 		| LocationRefSchema
-		| LocationOutSchema;
+		| LocationOutSchema
+		| null;
 	/** Arrival Location */
 	arrival_location: LocationInSchema | LocationRefSchema | LocationOutSchema;
-	/**
-	 * Departure Date
-	 * @format date
-	 */
-	departure_date: string;
-	/**
-	 * Arrival Date
-	 * @format date
-	 */
-	arrival_date: string;
-	departure_time: TimeSchema;
+	/** Departure Date */
+	departure_date?: string | null;
+	/** Arrival Date */
+	arrival_date?: string | null;
+	departure_time?: TimeSchema | null;
 	arrival_time: TimeSchema;
-	/**
-	 * Departure Terminal
-	 * @minLength 1
-	 * @maxLength 5
-	 */
-	departure_terminal: string;
-	/**
-	 * Departure Gate
-	 * @minLength 1
-	 * @maxLength 5
-	 */
-	departure_gate: string;
+	/** Departure Terminal */
+	departure_terminal?: string | null;
+	/** Departure Gate */
+	departure_gate?: string | null;
 	/** Amenities */
-	amenities?: AmenitiesTypes[];
+	amenities?: AmenitiesTypes[] | null;
 }
 
 /** FlightHopPubSchema */
 export interface FlightHopPubSchemaOutput {
-	/**
-	 * Airline Code
-	 * @minLength 2
-	 * @maxLength 3
-	 * @pattern ^[A-Z0-9]{2,3}$
-	 */
-	airline_code: string;
-	/**
-	 * Flight Number
-	 * @min 1
-	 * @max 9999
-	 */
-	flight_number: number;
-	/**
-	 * Departure Airport Code
-	 * @minLength 3
-	 * @maxLength 3
-	 * @pattern ^[A-Z]{3}$
-	 */
-	departure_airport_code: string;
-	/**
-	 * Arrival Airport Code
-	 * @minLength 3
-	 * @maxLength 3
-	 * @pattern ^[A-Z]{3}$
-	 */
-	arrival_airport_code: string;
+	/** Airline Code */
+	airline_code?: string | null;
+	/** Flight Number */
+	flight_number?: number | null;
+	/** Departure Airport Code */
+	departure_airport_code?: string | null;
+	/** Arrival Airport Code */
+	arrival_airport_code?: string | null;
 	/** Departure Location */
-	departure_location:
+	departure_location?:
 		| LocationInSchema
 		| LocationRefSchema
-		| LocationOutSchema;
+		| LocationOutSchema
+		| null;
 	/** Arrival Location */
 	arrival_location: LocationInSchema | LocationRefSchema | LocationOutSchema;
-	/**
-	 * Departure Date
-	 * @format date
-	 */
-	departure_date: string;
-	/**
-	 * Arrival Date
-	 * @format date
-	 */
-	arrival_date: string;
-	departure_time: TimeSchema;
+	/** Departure Date */
+	departure_date?: string | null;
+	/** Arrival Date */
+	arrival_date?: string | null;
+	departure_time?: TimeSchema | null;
 	arrival_time: TimeSchema;
-	/**
-	 * Departure Terminal
-	 * @minLength 1
-	 * @maxLength 5
-	 */
-	departure_terminal: string;
-	/**
-	 * Departure Gate
-	 * @minLength 1
-	 * @maxLength 5
-	 */
-	departure_gate: string;
+	/** Departure Terminal */
+	departure_terminal?: string | null;
+	/** Departure Gate */
+	departure_gate?: string | null;
 	/** Amenities */
-	amenities?: AmenitiesTypes[];
+	amenities?: AmenitiesTypes[] | null;
 }
 
 /**
@@ -2878,8 +3163,8 @@ export interface GuideEventOutput {
 	details?: GuideDetailsOutput | null;
 }
 
-/** GuideEventCreateSchema */
-export interface GuideEventCreateSchemaInput {
+/** GuideEventCreate */
+export interface GuideEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2917,8 +3202,120 @@ export interface GuideEventCreateSchemaInput {
 	details?: GuideDetailsInput | null;
 }
 
-/** GuideEventCreateSchema */
-export interface GuideEventCreateSchemaOutput {
+/** GuideEventOptionRead */
+export interface GuideEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "8"
+	 */
+	typ?: "8";
+	details?: GuideDetailsInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** GuideEventOptionRead */
+export interface GuideEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "8"
+	 */
+	typ?: "8";
+	details?: GuideDetailsOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** GuideEventRead */
+export interface GuideEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "8"
+	 */
+	typ?: "8";
+	details?: GuideDetailsInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** GuideEventRead */
+export interface GuideEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -2954,6 +3351,11 @@ export interface GuideEventCreateSchemaOutput {
 	 */
 	typ?: "8";
 	details?: GuideDetailsOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
 }
 
 /** HTTPValidationError */
@@ -2965,25 +3367,25 @@ export interface HTTPValidationError {
 /** HousingDetailsPubSchema */
 export interface HousingDetailsPubSchemaInput {
 	/** Location */
-	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
 	/** Amenities */
-	amenities: AmenitiesTypes[];
+	amenities?: AmenitiesTypes[] | null;
 	/** Duration */
-	duration: number;
-	check_in: TimeSchema;
-	check_out: TimeSchema;
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
 }
 
 /** HousingDetailsPubSchema */
 export interface HousingDetailsPubSchemaOutput {
 	/** Location */
-	location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
 	/** Amenities */
-	amenities: AmenitiesTypes[];
+	amenities?: AmenitiesTypes[] | null;
 	/** Duration */
-	duration: number;
-	check_in: TimeSchema;
-	check_out: TimeSchema;
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
 }
 
 /** HousingDetailsSchema */
@@ -3124,8 +3526,8 @@ export interface HousingEventOutput {
 	details?: HousingDetailsSchemaOutput | null;
 }
 
-/** HousingEventCreateSchema */
-export interface HousingEventCreateSchemaInput {
+/** HousingEventCreate */
+export interface HousingEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -3163,8 +3565,156 @@ export interface HousingEventCreateSchemaInput {
 	details?: HousingDetailsSchemaInput | null;
 }
 
-/** HousingEventCreateSchema */
-export interface HousingEventCreateSchemaOutput {
+/** HousingEventOptionRead */
+export interface HousingEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details?: HousingDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** HousingEventOptionRead */
+export interface HousingEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details?: HousingDetailsSchemaOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** HousingEventPubRead */
+export interface HousingEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details: HousingDetailsPubSchemaInput;
+}
+
+/** HousingEventPubRead */
+export interface HousingEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details: HousingDetailsPubSchemaOutput;
+}
+
+/** HousingEventRead */
+export interface HousingEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "5"
+	 */
+	typ?: "5";
+	details?: HousingDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** HousingEventRead */
+export interface HousingEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -3200,42 +3750,11 @@ export interface HousingEventCreateSchemaOutput {
 	 */
 	typ?: "5";
 	details?: HousingDetailsSchemaOutput | null;
-}
-
-/** HousingEventPubRead */
-export interface HousingEventPubReadInput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
 	/**
-	 * Typ
-	 * @default "5"
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
 	 */
-	typ?: "5";
-	details: HousingDetailsPubSchemaInput;
-}
-
-/** HousingEventPubRead */
-export interface HousingEventPubReadOutput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
-	/**
-	 * Typ
-	 * @default "5"
-	 */
-	typ?: "5";
-	details: HousingDetailsPubSchemaOutput;
+	id?: string | null;
 }
 
 /** HousingRoomCategoryExpensesSchema */
@@ -3432,8 +3951,8 @@ export interface InformationEventOutput {
 	details?: EmptyDetails | null;
 }
 
-/** InformationEventCreateSchema */
-export interface InformationEventCreateSchemaInput {
+/** InformationEventCreate */
+export interface InformationEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -3471,23 +3990,8 @@ export interface InformationEventCreateSchemaInput {
 	details?: EmptyDetails | null;
 }
 
-/** InformationEventCreateSchema */
-export interface InformationEventCreateSchemaOutput {
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
+/** InformationEventOptionRead */
+export interface InformationEventOptionReadInput {
 	/**
 	 * Name
 	 * Event's name
@@ -3503,23 +4007,67 @@ export interface InformationEventCreateSchemaOutput {
 	/** Package Id */
 	package_id?: string | null;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
 	 * Typ
 	 * @default "7"
 	 */
 	typ?: "7";
 	details?: EmptyDetails | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** InformationEventOptionRead */
+export interface InformationEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	details?: EmptyDetails | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
 }
 
 /** InformationEventPubRead */
 export interface InformationEventPubRead {
 	/** Name */
-	name: string;
+	name?: string | null;
 	/** Description */
-	description: string;
+	description?: string | null;
 	/** Day */
-	day: number;
+	day?: number | null;
 	/** Position */
-	position: number;
+	position?: number | null;
 	/**
 	 * Typ
 	 * @default "7"
@@ -3527,6 +4075,94 @@ export interface InformationEventPubRead {
 	typ?: "7";
 	/** @default {} */
 	details?: EmptyDetailsPub;
+}
+
+/** InformationEventRead */
+export interface InformationEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	details?: EmptyDetails | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** InformationEventRead */
+export interface InformationEventReadOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "7"
+	 */
+	typ?: "7";
+	details?: EmptyDetails | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
 }
 
 /** InvoiceDetailResponse */
@@ -3873,8 +4509,24 @@ export interface MonetaryValueSchema {
 	currency?: Currency;
 }
 
+/** MoveToMultiResult */
+export interface MoveToMultiResult {
+	target_event: TourEventResponse;
+	/**
+	 * Removed Event Id
+	 * @format uuid
+	 */
+	removed_event_id: string;
+}
+
+/** MoveToSingleResult */
+export interface MoveToSingleResult {
+	new_event: TourEventResponse;
+	source_event: TourEventResponse;
+}
+
 /** MultipleOptionEvent */
-export interface MultipleOptionEventInput {
+export interface MultipleOptionEvent {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -3926,69 +4578,16 @@ export interface MultipleOptionEventInput {
 		| null;
 }
 
-/** MultipleOptionEvent */
-export interface MultipleOptionEventOutput {
-	/**
-	 * Day
-	 * Event's day number in a tour
-	 */
-	day: number;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 */
-	position: number;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/** Typ */
-	typ: "10";
-	/** Details */
-	details?:
-		| (
-				| ({
-						typ: "1";
-				  } & FlightEventOutput)
-				| ({
-						typ: "2";
-				  } & TrainEventOutput)
-				| ({
-						typ: "3";
-				  } & BusEventOutput)
-				| ({
-						typ: "4";
-				  } & TransferEventOutput)
-				| ({
-						typ: "5";
-				  } & HousingEventOutput)
-				| ({
-						typ: "6";
-				  } & ActivityEventOutput)
-				| ({
-						typ: "7";
-				  } & InformationEventOutput)
-				| ({
-						typ: "8";
-				  } & GuideEventOutput)
-				| ({
-						typ: "9";
-				  } & SupplementaryEventOutput)
-		  )[]
-		| null;
-}
-
 /** MultipleOptionEventPub */
 export interface MultipleOptionEventPubInput {
 	/** Name */
-	name: string;
+	name?: string | null;
 	/** Description */
-	description: string;
+	description?: string | null;
 	/** Day */
-	day: number;
+	day?: number | null;
 	/** Position */
-	position: number;
+	position?: number | null;
 	/** Typ */
 	typ: "10";
 	/**
@@ -4023,13 +4622,13 @@ export interface MultipleOptionEventPubInput {
 /** MultipleOptionEventPub */
 export interface MultipleOptionEventPubOutput {
 	/** Name */
-	name: string;
+	name?: string | null;
 	/** Description */
-	description: string;
+	description?: string | null;
 	/** Day */
-	day: number;
+	day?: number | null;
 	/** Position */
-	position: number;
+	position?: number | null;
 	/** Typ */
 	typ: "10";
 	/**
@@ -4059,6 +4658,120 @@ export interface MultipleOptionEventPubOutput {
 				typ: "7";
 		  } & InformationEventPubRead)
 	)[];
+}
+
+/**
+ * MultipleOptionEventRead
+ * Alternatives as stored: each carries its own id, none carry day/position
+ * (those live on the slot).
+ */
+export interface MultipleOptionEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/** Typ */
+	typ: "10";
+	/** Details */
+	details?:
+		| (
+				| ({
+						typ: "1";
+				  } & FlightEventOptionReadInput)
+				| ({
+						typ: "2";
+				  } & TrainEventOptionReadInput)
+				| ({
+						typ: "3";
+				  } & BusEventOptionReadInput)
+				| ({
+						typ: "4";
+				  } & TransferEventOptionReadInput)
+				| ({
+						typ: "5";
+				  } & HousingEventOptionReadInput)
+				| ({
+						typ: "6";
+				  } & ActivityEventOptionReadInput)
+				| ({
+						typ: "7";
+				  } & InformationEventOptionReadInput)
+				| ({
+						typ: "8";
+				  } & GuideEventOptionReadInput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventOptionReadInput)
+		  )[]
+		| null;
+}
+
+/**
+ * MultipleOptionEventRead
+ * Alternatives as stored: each carries its own id, none carry day/position
+ * (those live on the slot).
+ */
+export interface MultipleOptionEventReadOutput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/** Typ */
+	typ: "10";
+	/** Details */
+	details?:
+		| (
+				| ({
+						typ: "1";
+				  } & FlightEventOptionReadOutput)
+				| ({
+						typ: "2";
+				  } & TrainEventOptionReadOutput)
+				| ({
+						typ: "3";
+				  } & BusEventOptionReadOutput)
+				| ({
+						typ: "4";
+				  } & TransferEventOptionReadOutput)
+				| ({
+						typ: "5";
+				  } & HousingEventOptionReadOutput)
+				| ({
+						typ: "6";
+				  } & ActivityEventOptionReadOutput)
+				| ({
+						typ: "7";
+				  } & InformationEventOptionReadOutput)
+				| ({
+						typ: "8";
+				  } & GuideEventOptionReadOutput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventOptionReadOutput)
+		  )[]
+		| null;
 }
 
 /** MyAccountRead */
@@ -4406,6 +5119,116 @@ export interface OrderAgencyInfo {
 	description?: string | null;
 	/** Logo Url */
 	logo_url?: string | null;
+}
+
+/**
+ * OrderTourEventSchema
+ * A snapshot event: the operator ``TourEventResponse`` plus the booking-only
+ * ``origin_event_id`` that pairs a canonical event with its localized twin
+ * (``events`` ↔ ``events_localized``). Kept out of the operator response so that
+ * surface stays free of this booking concern.
+ */
+export interface OrderTourEventSchemaInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Tour Option Id */
+	tour_option_id: string | null;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "1";
+				  } & FlightEventReadInput)
+				| ({
+						typ: "2";
+				  } & TrainEventReadInput)
+				| ({
+						typ: "3";
+				  } & BusEventReadInput)
+				| ({
+						typ: "4";
+				  } & TransferEventReadInput)
+				| ({
+						typ: "5";
+				  } & HousingEventReadInput)
+				| ({
+						typ: "6";
+				  } & ActivityEventReadInput)
+				| ({
+						typ: "7";
+				  } & InformationEventReadInput)
+				| ({
+						typ: "8";
+				  } & GuideEventReadInput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventReadInput)
+		  )
+		| MultipleOptionEventReadInput;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/** Origin Event Id */
+	origin_event_id?: string | null;
+}
+
+/**
+ * OrderTourEventSchema
+ * A snapshot event: the operator ``TourEventResponse`` plus the booking-only
+ * ``origin_event_id`` that pairs a canonical event with its localized twin
+ * (``events`` ↔ ``events_localized``). Kept out of the operator response so that
+ * surface stays free of this booking concern.
+ */
+export interface OrderTourEventSchemaOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Tour Option Id */
+	tour_option_id: string | null;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "1";
+				  } & FlightEventReadOutput)
+				| ({
+						typ: "2";
+				  } & TrainEventReadOutput)
+				| ({
+						typ: "3";
+				  } & BusEventReadOutput)
+				| ({
+						typ: "4";
+				  } & TransferEventReadOutput)
+				| ({
+						typ: "5";
+				  } & HousingEventReadOutput)
+				| ({
+						typ: "6";
+				  } & ActivityEventReadOutput)
+				| ({
+						typ: "7";
+				  } & InformationEventReadOutput)
+				| ({
+						typ: "8";
+				  } & GuideEventReadOutput)
+				| ({
+						typ: "9";
+				  } & SupplementaryEventReadOutput)
+		  )
+		| MultipleOptionEventReadOutput;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/** Origin Event Id */
+	origin_event_id?: string | null;
 }
 
 /** OrderTourInfo */
@@ -5329,8 +6152,8 @@ export interface SupplementaryEventOutput {
 	details?: SupplementaryDetailsOutput | null;
 }
 
-/** SupplementaryEventCreateSchema */
-export interface SupplementaryEventCreateSchemaInput {
+/** SupplementaryEventCreate */
+export interface SupplementaryEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -5368,8 +6191,120 @@ export interface SupplementaryEventCreateSchemaInput {
 	details?: SupplementaryDetailsInput | null;
 }
 
-/** SupplementaryEventCreateSchema */
-export interface SupplementaryEventCreateSchemaOutput {
+/** SupplementaryEventOptionRead */
+export interface SupplementaryEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "9"
+	 */
+	typ?: "9";
+	details?: SupplementaryDetailsInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** SupplementaryEventOptionRead */
+export interface SupplementaryEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "9"
+	 */
+	typ?: "9";
+	details?: SupplementaryDetailsOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** SupplementaryEventRead */
+export interface SupplementaryEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "9"
+	 */
+	typ?: "9";
+	details?: SupplementaryDetailsInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** SupplementaryEventRead */
+export interface SupplementaryEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -5405,6 +6340,11 @@ export interface SupplementaryEventCreateSchemaOutput {
 	 */
 	typ?: "9";
 	details?: SupplementaryDetailsOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
 }
 
 /** SupplementaryItem */
@@ -5655,14 +6595,12 @@ export interface TourEventLibraryImageModel {
 }
 
 /** TourEventResponse */
-export interface TourEventResponseInput {
+export interface TourEventResponse {
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Origin Event Id */
-	origin_event_id?: string | null;
 	/** Tour Option Id */
 	tour_option_id: string | null;
 	/** Event */
@@ -5670,82 +6608,33 @@ export interface TourEventResponseInput {
 		| (
 				| ({
 						typ: "1";
-				  } & FlightEventCreateSchemaInput)
+				  } & FlightEventReadOutput)
 				| ({
 						typ: "2";
-				  } & TrainEventCreateSchemaInput)
+				  } & TrainEventReadOutput)
 				| ({
 						typ: "3";
-				  } & BusEventCreateSchemaInput)
+				  } & BusEventReadOutput)
 				| ({
 						typ: "4";
-				  } & TransferEventCreateSchemaInput)
+				  } & TransferEventReadOutput)
 				| ({
 						typ: "5";
-				  } & HousingEventCreateSchemaInput)
+				  } & HousingEventReadOutput)
 				| ({
 						typ: "6";
-				  } & ActivityEventCreateSchemaInput)
+				  } & ActivityEventReadOutput)
 				| ({
 						typ: "7";
-				  } & InformationEventCreateSchemaInput)
+				  } & InformationEventReadOutput)
 				| ({
 						typ: "8";
-				  } & GuideEventCreateSchemaInput)
+				  } & GuideEventReadOutput)
 				| ({
 						typ: "9";
-				  } & SupplementaryEventCreateSchemaInput)
+				  } & SupplementaryEventReadOutput)
 		  )
-		| MultipleOptionEventInput;
-	/** Image Paths */
-	image_paths?: string[];
-	/** Primary Image Path */
-	primary_image_path?: string | null;
-}
-
-/** TourEventResponse */
-export interface TourEventResponseOutput {
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Origin Event Id */
-	origin_event_id?: string | null;
-	/** Tour Option Id */
-	tour_option_id: string | null;
-	/** Event */
-	event:
-		| (
-				| ({
-						typ: "1";
-				  } & FlightEventCreateSchemaOutput)
-				| ({
-						typ: "2";
-				  } & TrainEventCreateSchemaOutput)
-				| ({
-						typ: "3";
-				  } & BusEventCreateSchemaOutput)
-				| ({
-						typ: "4";
-				  } & TransferEventCreateSchemaOutput)
-				| ({
-						typ: "5";
-				  } & HousingEventCreateSchemaOutput)
-				| ({
-						typ: "6";
-				  } & ActivityEventCreateSchemaOutput)
-				| ({
-						typ: "7";
-				  } & InformationEventCreateSchemaOutput)
-				| ({
-						typ: "8";
-				  } & GuideEventCreateSchemaOutput)
-				| ({
-						typ: "9";
-				  } & SupplementaryEventCreateSchemaOutput)
-		  )
-		| MultipleOptionEventOutput;
+		| MultipleOptionEventReadOutput;
 	/** Image Paths */
 	image_paths?: string[];
 	/** Primary Image Path */
@@ -6290,11 +7179,11 @@ export interface TourSnapshotSchemaInput {
 	tour_option: FrozenTourOption;
 	tour_financial_settings?: FrozenTourFinInput | null;
 	/** Events */
-	events: TourEventResponseInput[];
+	events: OrderTourEventSchemaInput[];
 	/** @default "en" */
 	display_lang?: LanguageCode;
 	/** Events Localized */
-	events_localized?: TourEventResponseInput[] | null;
+	events_localized?: OrderTourEventSchemaInput[] | null;
 	/** Packages */
 	packages?: PricingPackageInput[];
 	operator_financials?: PricingFinancialsInput | null;
@@ -6311,11 +7200,11 @@ export interface TourSnapshotSchemaOutput {
 	tour_option: FrozenTourOption;
 	tour_financial_settings?: FrozenTourFinOutput | null;
 	/** Events */
-	events: TourEventResponseOutput[];
+	events: OrderTourEventSchemaOutput[];
 	/** @default "en" */
 	display_lang?: LanguageCode;
 	/** Events Localized */
-	events_localized?: TourEventResponseOutput[] | null;
+	events_localized?: OrderTourEventSchemaOutput[] | null;
 	/** Packages */
 	packages?: PricingPackageOutput[];
 	operator_financials?: PricingFinancialsOutput | null;
@@ -6445,13 +7334,13 @@ export interface TourSummaryResponse {
 /** TrainDetailPubSchema */
 export interface TrainDetailPubSchemaInput {
 	/** Hop */
-	hop: TrainHopPubSchemaInput[];
+	hop?: TrainHopPubSchemaInput[] | null;
 }
 
 /** TrainDetailPubSchema */
 export interface TrainDetailPubSchemaOutput {
 	/** Hop */
-	hop: TrainHopPubSchemaOutput[];
+	hop?: TrainHopPubSchemaOutput[] | null;
 }
 
 /** TrainDetailSchema */
@@ -6582,8 +7471,8 @@ export interface TrainEventOutput {
 	details?: TrainDetailSchemaOutput | null;
 }
 
-/** TrainEventCreateSchema */
-export interface TrainEventCreateSchemaInput {
+/** TrainEventCreate */
+export interface TrainEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -6621,8 +7510,156 @@ export interface TrainEventCreateSchemaInput {
 	details?: TrainDetailSchemaInput | null;
 }
 
-/** TrainEventCreateSchema */
-export interface TrainEventCreateSchemaOutput {
+/** TrainEventOptionRead */
+export interface TrainEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details?: TrainDetailSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** TrainEventOptionRead */
+export interface TrainEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details?: TrainDetailSchemaOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** TrainEventPubRead */
+export interface TrainEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details: TrainDetailPubSchemaInput;
+}
+
+/** TrainEventPubRead */
+export interface TrainEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details: TrainDetailPubSchemaOutput;
+}
+
+/** TrainEventRead */
+export interface TrainEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "2"
+	 */
+	typ?: "2";
+	details?: TrainDetailSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** TrainEventRead */
+export interface TrainEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -6658,58 +7695,23 @@ export interface TrainEventCreateSchemaOutput {
 	 */
 	typ?: "2";
 	details?: TrainDetailSchemaOutput | null;
-}
-
-/** TrainEventPubRead */
-export interface TrainEventPubReadInput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
 	/**
-	 * Typ
-	 * @default "2"
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
 	 */
-	typ?: "2";
-	details: TrainDetailPubSchemaInput;
-}
-
-/** TrainEventPubRead */
-export interface TrainEventPubReadOutput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
-	/**
-	 * Typ
-	 * @default "2"
-	 */
-	typ?: "2";
-	details: TrainDetailPubSchemaOutput;
+	id?: string | null;
 }
 
 /** TrainHopPubSchema */
 export interface TrainHopPubSchemaInput {
-	/** Represents either a departure or arrival point for the train journey. */
-	departure: TrainJourneyPointSchemaInput;
-	/** Represents either a departure or arrival point for the train journey. */
-	arrival: TrainJourneyPointSchemaInput;
+	departure?: TrainJourneyPointPubSchemaInput | null;
+	arrival?: TrainJourneyPointPubSchemaInput | null;
 }
 
 /** TrainHopPubSchema */
 export interface TrainHopPubSchemaOutput {
-	/** Represents either a departure or arrival point for the train journey. */
-	departure: TrainJourneyPointSchemaOutput;
-	/** Represents either a departure or arrival point for the train journey. */
-	arrival: TrainJourneyPointSchemaOutput;
+	departure?: TrainJourneyPointPubSchemaOutput | null;
+	arrival?: TrainJourneyPointPubSchemaOutput | null;
 }
 
 /**
@@ -6734,16 +7736,29 @@ export interface TrainHopSchemaOutput {
 	arrival?: TrainJourneyPointSchemaOutput | null;
 }
 
+/** TrainJourneyPointPubSchema */
+export interface TrainJourneyPointPubSchemaInput {
+	/** Date */
+	date?: string | null;
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+}
+
+/** TrainJourneyPointPubSchema */
+export interface TrainJourneyPointPubSchemaOutput {
+	/** Date */
+	date?: string | null;
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+}
+
 /**
  * TrainJourneyPointSchema
  * Represents either a departure or arrival point for the train journey.
  */
 export interface TrainJourneyPointSchemaInput {
-	/**
-	 * Date
-	 * The date of departure or arrival.
-	 */
-	date?: string | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
@@ -6755,11 +7770,6 @@ export interface TrainJourneyPointSchemaInput {
  * Represents either a departure or arrival point for the train journey.
  */
 export interface TrainJourneyPointSchemaOutput {
-	/**
-	 * Date
-	 * The date of departure or arrival.
-	 */
-	date?: string | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
@@ -6910,20 +7920,16 @@ export interface TransferCarVariantOutput {
 
 /** TransferDetailsPubSchema */
 export interface TransferDetailsPubSchemaInput {
-	typ: TransferTypes;
-	/** Represents either a departure or arrival point for the journey. */
-	departure: TransferJourneyPointSchemaInput;
-	/** Represents either a departure or arrival point for the journey. */
-	arrival: TransferJourneyPointSchemaInput;
+	typ?: TransferTypes | null;
+	departure?: TransferJourneyPointPubSchemaInput | null;
+	arrival?: TransferJourneyPointPubSchemaInput | null;
 }
 
 /** TransferDetailsPubSchema */
 export interface TransferDetailsPubSchemaOutput {
-	typ: TransferTypes;
-	/** Represents either a departure or arrival point for the journey. */
-	departure: TransferJourneyPointSchemaOutput;
-	/** Represents either a departure or arrival point for the journey. */
-	arrival: TransferJourneyPointSchemaOutput;
+	typ?: TransferTypes | null;
+	departure?: TransferJourneyPointPubSchemaOutput | null;
+	arrival?: TransferJourneyPointPubSchemaOutput | null;
 }
 
 /**
@@ -7042,8 +8048,8 @@ export interface TransferEventOutput {
 	details?: TransferDetailsSchemaOutput | null;
 }
 
-/** TransferEventCreateSchema */
-export interface TransferEventCreateSchemaInput {
+/** TransferEventCreate */
+export interface TransferEventCreate {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -7081,8 +8087,156 @@ export interface TransferEventCreateSchemaInput {
 	details?: TransferDetailsSchemaInput | null;
 }
 
-/** TransferEventCreateSchema */
-export interface TransferEventCreateSchemaOutput {
+/** TransferEventOptionRead */
+export interface TransferEventOptionReadInput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details?: TransferDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** TransferEventOptionRead */
+export interface TransferEventOptionReadOutput {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details?: TransferDetailsSchemaOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** TransferEventPubRead */
+export interface TransferEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details: TransferDetailsPubSchemaInput;
+}
+
+/** TransferEventPubRead */
+export interface TransferEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details: TransferDetailsPubSchemaOutput;
+}
+
+/** TransferEventRead */
+export interface TransferEventReadInput {
+	/**
+	 * Day
+	 * Event's day number in a tour
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "4"
+	 */
+	typ?: "4";
+	details?: TransferDetailsSchemaInput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
+}
+
+/** TransferEventRead */
+export interface TransferEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
@@ -7118,42 +8272,29 @@ export interface TransferEventCreateSchemaOutput {
 	 */
 	typ?: "4";
 	details?: TransferDetailsSchemaOutput | null;
+	/**
+	 * Id
+	 * Option (alternative) id; populated on read, ignored on write.
+	 */
+	id?: string | null;
 }
 
-/** TransferEventPubRead */
-export interface TransferEventPubReadInput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
-	/**
-	 * Typ
-	 * @default "4"
-	 */
-	typ?: "4";
-	details: TransferDetailsPubSchemaInput;
+/** TransferJourneyPointPubSchema */
+export interface TransferJourneyPointPubSchemaInput {
+	/** Date */
+	date?: string | null;
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
 }
 
-/** TransferEventPubRead */
-export interface TransferEventPubReadOutput {
-	/** Name */
-	name: string;
-	/** Description */
-	description: string;
-	/** Day */
-	day: number;
-	/** Position */
-	position: number;
-	/**
-	 * Typ
-	 * @default "4"
-	 */
-	typ?: "4";
-	details: TransferDetailsPubSchemaOutput;
+/** TransferJourneyPointPubSchema */
+export interface TransferJourneyPointPubSchemaOutput {
+	/** Date */
+	date?: string | null;
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
 }
 
 /**
@@ -7161,11 +8302,6 @@ export interface TransferEventPubReadOutput {
  * Represents either a departure or arrival point for the journey.
  */
 export interface TransferJourneyPointSchemaInput {
-	/**
-	 * Date
-	 * The date of departure or arrival.
-	 */
-	date?: string | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
@@ -7177,11 +8313,6 @@ export interface TransferJourneyPointSchemaInput {
  * Represents either a departure or arrival point for the journey.
  */
 export interface TransferJourneyPointSchemaOutput {
-	/**
-	 * Date
-	 * The date of departure or arrival.
-	 */
-	date?: string | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
@@ -7690,39 +8821,39 @@ export interface SetPrimaryLibraryImageTourEventLibraryLibraryIdImagesImageIdSet
 }
 
 /** Event */
-export type CreateEventTourTourIdOptionIdEventPostPayload =
+export type CreateEventTourTourIdOptionIdEventCreatePostPayload =
 	| (
 			| ({
 					typ: "1";
-			  } & FlightEventCreateSchemaInput)
+			  } & FlightEventCreate)
 			| ({
 					typ: "2";
-			  } & TrainEventCreateSchemaInput)
+			  } & TrainEventCreate)
 			| ({
 					typ: "3";
-			  } & BusEventCreateSchemaInput)
+			  } & BusEventCreate)
 			| ({
 					typ: "4";
-			  } & TransferEventCreateSchemaInput)
+			  } & TransferEventCreate)
 			| ({
 					typ: "5";
-			  } & HousingEventCreateSchemaInput)
+			  } & HousingEventCreate)
 			| ({
 					typ: "6";
-			  } & ActivityEventCreateSchemaInput)
+			  } & ActivityEventCreate)
 			| ({
 					typ: "7";
-			  } & InformationEventCreateSchemaInput)
+			  } & InformationEventCreate)
 			| ({
 					typ: "8";
-			  } & GuideEventCreateSchemaInput)
+			  } & GuideEventCreate)
 			| ({
 					typ: "9";
-			  } & SupplementaryEventCreateSchemaInput)
+			  } & SupplementaryEventCreate)
 	  )
-	| MultipleOptionEventInput;
+	| MultipleOptionEvent;
 
-export interface CreateEventTourTourIdOptionIdEventPostParams {
+export interface CreateEventTourTourIdOptionIdEventCreatePostParams {
 	/** @default "en" */
 	lang?: LanguageCode;
 	/**
@@ -7782,59 +8913,6 @@ export interface GetTourEventTourTourIdOptionIdEventEventIdGetParams {
 	tourId: string;
 }
 
-/** Event */
-export type UpdateTourEventTourTourIdOptionIdEventEventIdPatchPayload =
-	| (
-			| ({
-					typ: "1";
-			  } & FlightEventInput)
-			| ({
-					typ: "2";
-			  } & TrainEventInput)
-			| ({
-					typ: "3";
-			  } & BusEventInput)
-			| ({
-					typ: "4";
-			  } & TransferEventInput)
-			| ({
-					typ: "5";
-			  } & HousingEventInput)
-			| ({
-					typ: "6";
-			  } & ActivityEventInput)
-			| ({
-					typ: "7";
-			  } & InformationEventInput)
-			| ({
-					typ: "8";
-			  } & GuideEventInput)
-			| ({
-					typ: "9";
-			  } & SupplementaryEventInput)
-	  )
-	| MultipleOptionEventInput;
-
-export interface UpdateTourEventTourTourIdOptionIdEventEventIdPatchParams {
-	/** @default "en" */
-	lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-}
-
 export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
 	/**
 	 * Tour Id
@@ -7873,7 +8951,83 @@ export interface ReorderEventTourTourIdOptionIdEventEventIdReorderPostParams {
 	tourId: string;
 }
 
-export interface ReorderEventOptionsTourTourIdOptionIdEventEventIdOptionReorderPostParams {
+/** Event */
+export type UpdateSingleEventTourTourIdOptionIdEventSingleEventIdUpdatePatchPayload =
+
+		| ({
+				typ: "1";
+		  } & FlightEventInput)
+		| ({
+				typ: "2";
+		  } & TrainEventInput)
+		| ({
+				typ: "3";
+		  } & BusEventInput)
+		| ({
+				typ: "4";
+		  } & TransferEventInput)
+		| ({
+				typ: "5";
+		  } & HousingEventInput)
+		| ({
+				typ: "6";
+		  } & ActivityEventInput)
+		| ({
+				typ: "7";
+		  } & InformationEventInput)
+		| ({
+				typ: "8";
+		  } & GuideEventInput)
+		| ({
+				typ: "9";
+		  } & SupplementaryEventInput);
+
+export interface UpdateSingleEventTourTourIdOptionIdEventSingleEventIdUpdatePatchParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMultiTargetEventIdPostParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Target Event Id
+	 * @format uuid
+	 */
+	targetEventId: string;
+}
+
+export interface ReorderEventOptionsTourTourIdOptionIdEventMultiEventIdReorderOptionsPostParams {
 	/** @default "en" */
 	lang?: LanguageCode;
 	/**
@@ -7891,6 +9045,163 @@ export interface ReorderEventOptionsTourTourIdOptionIdEventEventIdOptionReorderP
 	 * @format uuid
 	 */
 	tourId: string;
+}
+
+/** Option */
+export type AddEventOptionTourTourIdOptionIdEventMultiEventIdAddOptionPostPayload =
+
+		| ({
+				typ: "1";
+		  } & FlightEventInput)
+		| ({
+				typ: "2";
+		  } & TrainEventInput)
+		| ({
+				typ: "3";
+		  } & BusEventInput)
+		| ({
+				typ: "4";
+		  } & TransferEventInput)
+		| ({
+				typ: "5";
+		  } & HousingEventInput)
+		| ({
+				typ: "6";
+		  } & ActivityEventInput)
+		| ({
+				typ: "7";
+		  } & InformationEventInput)
+		| ({
+				typ: "8";
+		  } & GuideEventInput)
+		| ({
+				typ: "9";
+		  } & SupplementaryEventInput);
+
+export interface AddEventOptionTourTourIdOptionIdEventMultiEventIdAddOptionPostParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+/** Option */
+export type UpdateEventOptionTourTourIdOptionIdEventMultiEventIdUpdateOptionEventOptionIdPatchPayload =
+
+		| ({
+				typ: "1";
+		  } & FlightEventInput)
+		| ({
+				typ: "2";
+		  } & TrainEventInput)
+		| ({
+				typ: "3";
+		  } & BusEventInput)
+		| ({
+				typ: "4";
+		  } & TransferEventInput)
+		| ({
+				typ: "5";
+		  } & HousingEventInput)
+		| ({
+				typ: "6";
+		  } & ActivityEventInput)
+		| ({
+				typ: "7";
+		  } & InformationEventInput)
+		| ({
+				typ: "8";
+		  } & GuideEventInput)
+		| ({
+				typ: "9";
+		  } & SupplementaryEventInput);
+
+export interface UpdateEventOptionTourTourIdOptionIdEventMultiEventIdUpdateOptionEventOptionIdPatchParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export interface DeleteEventOptionTourTourIdOptionIdEventMultiEventIdRemoveOptionEventOptionIdDeleteParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export interface MoveEventOptionToSingleTourTourIdOptionIdEventMultiEventIdMoveToSingleEventOptionIdPostParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
 }
 
 export interface UploadEventImagesTourTourIdEventEventIdImagesPostParams {
@@ -8931,33 +10242,33 @@ export type AddEventBookingRevisionBookingIdEventPostPayload =
 	| (
 			| ({
 					typ: "1";
-			  } & FlightEventCreateSchemaInput)
+			  } & FlightEventCreate)
 			| ({
 					typ: "2";
-			  } & TrainEventCreateSchemaInput)
+			  } & TrainEventCreate)
 			| ({
 					typ: "3";
-			  } & BusEventCreateSchemaInput)
+			  } & BusEventCreate)
 			| ({
 					typ: "4";
-			  } & TransferEventCreateSchemaInput)
+			  } & TransferEventCreate)
 			| ({
 					typ: "5";
-			  } & HousingEventCreateSchemaInput)
+			  } & HousingEventCreate)
 			| ({
 					typ: "6";
-			  } & ActivityEventCreateSchemaInput)
+			  } & ActivityEventCreate)
 			| ({
 					typ: "7";
-			  } & InformationEventCreateSchemaInput)
+			  } & InformationEventCreate)
 			| ({
 					typ: "8";
-			  } & GuideEventCreateSchemaInput)
+			  } & GuideEventCreate)
 			| ({
 					typ: "9";
-			  } & SupplementaryEventCreateSchemaInput)
+			  } & SupplementaryEventCreate)
 	  )
-	| MultipleOptionEventInput;
+	| MultipleOptionEvent;
 
 export interface AddEventBookingRevisionBookingIdEventPostParams {
 	/**
@@ -8972,33 +10283,33 @@ export type UpdateEventBookingRevisionBookingIdEventEventIdPatchPayload =
 	| (
 			| ({
 					typ: "1";
-			  } & FlightEventCreateSchemaInput)
+			  } & FlightEventCreate)
 			| ({
 					typ: "2";
-			  } & TrainEventCreateSchemaInput)
+			  } & TrainEventCreate)
 			| ({
 					typ: "3";
-			  } & BusEventCreateSchemaInput)
+			  } & BusEventCreate)
 			| ({
 					typ: "4";
-			  } & TransferEventCreateSchemaInput)
+			  } & TransferEventCreate)
 			| ({
 					typ: "5";
-			  } & HousingEventCreateSchemaInput)
+			  } & HousingEventCreate)
 			| ({
 					typ: "6";
-			  } & ActivityEventCreateSchemaInput)
+			  } & ActivityEventCreate)
 			| ({
 					typ: "7";
-			  } & InformationEventCreateSchemaInput)
+			  } & InformationEventCreate)
 			| ({
 					typ: "8";
-			  } & GuideEventCreateSchemaInput)
+			  } & GuideEventCreate)
 			| ({
 					typ: "9";
-			  } & SupplementaryEventCreateSchemaInput)
+			  } & SupplementaryEventCreate)
 	  )
-	| MultipleOptionEventInput;
+	| MultipleOptionEvent;
 
 export interface UpdateEventBookingRevisionBookingIdEventEventIdPatchParams {
 	/**

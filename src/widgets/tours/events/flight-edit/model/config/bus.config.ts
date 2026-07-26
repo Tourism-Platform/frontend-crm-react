@@ -52,21 +52,21 @@ export const BUS_DATA_LIST = ({
 		icon: MapPin,
 		...arrival
 	},
-	{
-		label: "general.flights.form.bus.fields.departure_date.label",
-		placeholder:
-			"general.flights.form.bus.fields.departure_date.placeholder",
-		key: ENUM_FORM_BUS.DEPARTURE_DATE,
-		fieldType: "date",
-		className: "col-span-2"
-	},
-	{
-		label: "general.flights.form.bus.fields.arrival_date.label",
-		placeholder: "general.flights.form.bus.fields.arrival_date.placeholder",
-		key: ENUM_FORM_BUS.ARRIVAL_DATE,
-		fieldType: "date",
-		className: "col-span-2"
-	},
+	// {
+	// 	label: "general.flights.form.bus.fields.departure_date.label",
+	// 	placeholder:
+	// 		"general.flights.form.bus.fields.departure_date.placeholder",
+	// 	key: ENUM_FORM_BUS.DEPARTURE_DATE,
+	// 	fieldType: "date",
+	// 	className: "col-span-2"
+	// },
+	// {
+	// 	label: "general.flights.form.bus.fields.arrival_date.label",
+	// 	placeholder: "general.flights.form.bus.fields.arrival_date.placeholder",
+	// 	key: ENUM_FORM_BUS.ARRIVAL_DATE,
+	// 	fieldType: "date",
+	// 	className: "col-span-2"
+	// },
 	{
 		label: "general.flights.form.bus.fields.arrival_time.label",
 		placeholder: "general.flights.form.bus.fields.arrival_time.placeholder",

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 
 import {
+	ENUM_EVENT,
 	type ITourEvent,
 	useGetTourGeneralQuery,
 	useListTourEventsQuery
@@ -9,6 +10,30 @@ import {
 import type { IDayItem, IOptionData } from "../types";
 
 const DEFAULT_EVENTS: ITourEvent[] = [];
+
+const toDayItem = (ev: ITourEvent): IDayItem => {
+	const item: IDayItem = {
+		id: ev.id,
+		block_id: ev.id,
+		eventType: ev.eventType,
+		title: ev.name,
+		subtitle: ev.description || "Information",
+		backendId: ev.id
+	};
+
+	if (ev.eventType === ENUM_EVENT.MULTIPLY_OPTION && ev.options?.length) {
+		item.items = ev.options.map((opt) => ({
+			id: opt.id,
+			block_id: opt.id,
+			eventType: opt.eventType,
+			title: opt.name,
+			subtitle: opt.description || "Information",
+			backendId: opt.id
+		}));
+	}
+
+	return item;
+};
 
 export const useItineraryEvents = (tourId: string, activeOption: string) => {
 	const { data: tour } = useGetTourGeneralQuery(tourId, {
@@ -65,14 +90,7 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 		}
 
 		for (const ev of backendEvents) {
-			const item: IDayItem = {
-				id: ev.id,
-				block_id: ev.id,
-				eventType: ev.eventType,
-				title: ev.name,
-				subtitle: ev.description || "Information",
-				backendId: ev.id
-			};
+			const item = toDayItem(ev);
 
 			if (ev.day === 0) {
 				tripDetails.push(item);
@@ -81,7 +99,6 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 			}
 		}
 
-		// Сортировка tripDetails по position
 		tripDetails.sort((a, b) => {
 			const posA =
 				backendEvents.find((e) => e.id === a.backendId)?.position ?? 0;
@@ -90,7 +107,6 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 			return posA - posB;
 		});
 
-		// Сортировка по position внутри каждого дня
 		for (const day of dayOrder) {
 			days[day].sort((a, b) => {
 				const posA =

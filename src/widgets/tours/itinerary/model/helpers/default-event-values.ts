@@ -17,7 +17,7 @@ const DEFAULT_LOCATION = { lat: 0, long: 0 } as const;
 
 const DEFAULT_TIME = { time: "00:00:00", timezone: 5 } as const;
 
-const DEFAULT_DATE = "2025-01-01";
+// const DEFAULT_DATE = "2025-01-01";
 
 const DEFAULT_FIXED_EXPENSE = {
 	typ: "fixed" as const,
@@ -50,12 +50,12 @@ const ACTIVITY_DETAILS: ActivityDetailsSchemaInput = {
 const TRANSFER_DETAILS: TransferDetailsSchemaInput = {
 	typ: TransferTypes.AirportTransfer,
 	departure: {
-		date: DEFAULT_DATE,
+		// date: DEFAULT_DATE,
 		time: { ...DEFAULT_TIME, time: "09:00:00" },
 		location: DEFAULT_LOCATION
 	},
 	arrival: {
-		date: DEFAULT_DATE,
+		// date: DEFAULT_DATE,
 		time: { ...DEFAULT_TIME, time: "10:00:00" },
 		location: DEFAULT_LOCATION
 	},

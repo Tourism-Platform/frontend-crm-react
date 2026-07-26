@@ -34,8 +34,8 @@ const mapDetailToSubOption = (
 
 	return {
 		id: `${parentKey}-sub-${index}`,
-		title: detail.name,
-		description: detail.description,
+		title: detail.name || "",
+		description: detail.description || "",
 		sheet
 	};
 };
@@ -49,8 +49,8 @@ const mapMultiplyOptionEvent = (
 	return {
 		id: eventKey,
 		type: ENUM_PREVIEW_OPTION_EVENT.MULTIPLY_OPTION,
-		title: event.name,
-		description: event.description,
+		title: event.name || "",
+		description: event.description || "",
 		sheet,
 		sub_options: event.details.map((detail, index) =>
 			mapDetailToSubOption(eventKey, index, detail)
@@ -71,8 +71,8 @@ const mapSinglePubEvent = (event: TPubEvent): IOptionEvent => {
 	return {
 		id: eventKey,
 		type,
-		title: event.name,
-		description: event.description,
+		title: event.name || "",
+		description: event.description || "",
 		sheet
 	};
 };
@@ -81,7 +81,7 @@ const groupEventsIntoDays = (events: TPubEvent[]): IOptionDay[] => {
 	const byDay = new Map<number, TPubEvent[]>();
 
 	for (const event of events) {
-		const day = event.day;
+		const day = event.day ?? 0;
 		const list = byDay.get(day) ?? [];
 		list.push(event);
 		byDay.set(day, list);
@@ -91,7 +91,7 @@ const groupEventsIntoDays = (events: TPubEvent[]): IOptionDay[] => {
 		.sort(([a], [b]) => a - b)
 		.map(([dayNumber, dayEvents]) => {
 			const sorted = [...dayEvents].sort(
-				(a, b) => a.position - b.position
+				(a, b) => (a.position ?? 0) - (b.position ?? 0)
 			);
 			const location =
 				sorted.map(extractCityFromPubEvent).find(Boolean) ?? "";
