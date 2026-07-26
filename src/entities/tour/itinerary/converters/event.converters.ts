@@ -1,4 +1,4 @@
-import { LanguageCode } from "@/shared/api";
+import { LanguageCode, type MultipleOptionEventReadOutput } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
 
@@ -53,14 +53,12 @@ import {
 	mapBackendTypToEventType
 } from "./event-type.converters";
 
+type TMultiEventOptionDetail = NonNullable<
+	MultipleOptionEventReadOutput["details"]
+>[number];
+
 const mapEventOptionFromDetail = (
-	detail: Record<string, unknown> & {
-		id?: string | null;
-		typ?: string;
-		name?: string | null;
-		description?: string | null;
-		details?: unknown;
-	}
+	detail: TMultiEventOptionDetail
 ): ITourEventOption | null => {
 	if (!detail.id) return null;
 
@@ -98,17 +96,9 @@ export const mapAllEventsToFrontend = (
 		event.description = backend.event.description || "";
 	}
 
-	if (backend.event.typ === "10" && Array.isArray(backend.event.details)) {
-		const details = backend.event.details as Array<
-			Record<string, unknown> & {
-				id?: string | null;
-				typ?: string;
-				name?: string | null;
-				description?: string | null;
-				details?: unknown;
-			}
-		>;
-		event.options = details
+	if (backend.event.typ === "10") {
+		const multiEvent = backend.event as MultipleOptionEventReadOutput;
+		event.options = (multiEvent.details ?? [])
 			.map(mapEventOptionFromDetail)
 			.filter((opt): opt is ITourEventOption => opt !== null);
 		event.details = {};
@@ -143,6 +133,35 @@ export const mapEventToFrontend = (
 		default:
 			return backend as unknown as TTransportationEditSchema;
 	}
+};
+
+export const mapEventOptionToFrontend = (
+	backend: TTourEventBackendResponce,
+	eventOptionId: string
+): TTourEvent => {
+	if (backend.event?.typ !== "10") {
+		throw new Error("Event is not a multiply option");
+	}
+
+	const multiEvent = backend.event as MultipleOptionEventReadOutput;
+	const option = (multiEvent.details ?? []).find(
+		(detail) => detail.id === eventOptionId
+	);
+	if (!option) {
+		throw new Error(`Event option ${eventOptionId} not found`);
+	}
+
+	const asResponse = {
+		id: eventOptionId,
+		tour_option_id: backend.tour_option_id,
+		event: {
+			...option,
+			day: multiEvent.day,
+			position: multiEvent.position
+		}
+	} as TTourEventBackendResponce;
+
+	return mapEventToFrontend(asResponse);
 };
 
 export const mapEventUpdateToBackend = (

@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { validateFormWithSectionToast } from "@/shared/lib";
@@ -11,31 +10,15 @@ import {
 	ENUM_EVENT,
 	INFO_EDIT_SCHEMA,
 	type TInfoEditSchema,
-	useGetTourEventQuery,
-	useUpdateTourEventMutation
+	useTourEventEdit
 } from "@/entities/tour";
 
 import { InformationEdit } from "@/widgets/tours";
 
 export const InformationEditPage: FC = () => {
 	const { t } = useTranslation("information_edit_page");
-	const {
-		tourId = "",
-		optionId = "",
-		eventId = ""
-	} = useParams<{
-		tourId: string;
-		eventId: string;
-		optionId: string;
-	}>();
-
-	const { data: eventData, isError: isLoadError } = useGetTourEventQuery(
-		{ tourId, optionId, eventId },
-		{ skip: !tourId || !optionId || !eventId }
-	);
-
-	const [updateTourEvent, { isLoading: isUpdateLoading }] =
-		useUpdateTourEventMutation();
+	const { data, isError, isLoading, update } =
+		useTourEventEdit<TInfoEditSchema>(ENUM_EVENT.INFO);
 
 	const form = useForm<TInfoEditSchema>({
 		resolver: zodResolver(INFO_EDIT_SCHEMA),
@@ -43,16 +26,16 @@ export const InformationEditPage: FC = () => {
 	});
 
 	useEffect(() => {
-		if (isLoadError) {
+		if (isError) {
 			toast.error(t("form.toasts.load.error"));
 		}
-	}, [isLoadError, t]);
+	}, [isError, t]);
 
 	useEffect(() => {
-		if (eventData) {
-			form.reset(eventData as TInfoEditSchema);
+		if (data) {
+			form.reset(data);
 		}
-	}, [eventData, form]);
+	}, [data, form]);
 
 	const createSectionSubmit = async () => {
 		const isValid = await validateFormWithSectionToast(form, t, {
@@ -61,13 +44,7 @@ export const InformationEditPage: FC = () => {
 		if (!isValid) return;
 
 		try {
-			await updateTourEvent({
-				tourId,
-				optionId,
-				eventId,
-				type: ENUM_EVENT.INFO,
-				data: form.getValues()
-			}).unwrap();
+			await update(form.getValues());
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
 			toast.error(t("form.toasts.save.error"));
@@ -79,7 +56,7 @@ export const InformationEditPage: FC = () => {
 		<InformationEdit
 			form={form}
 			createSectionSubmit={createSectionSubmit}
-			isLoading={isUpdateLoading}
+			isLoading={isLoading}
 		/>
 	);
 };

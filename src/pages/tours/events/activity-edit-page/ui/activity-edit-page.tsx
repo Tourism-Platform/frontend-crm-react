@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
@@ -12,31 +11,15 @@ import {
 	ACTIVITY_EDIT_SCHEMA,
 	ENUM_EVENT,
 	type TActivityEditSchema,
-	useGetTourEventQuery,
-	useUpdateTourEventMutation
+	useTourEventEdit
 } from "@/entities/tour";
 
 import { ActivityEdit } from "@/widgets/tours";
 
 export const ActivityEditPage: FC = () => {
 	const { t, i18n } = useTranslation("activity_edit_page");
-	const {
-		tourId = "",
-		optionId = "",
-		eventId = ""
-	} = useParams<{
-		tourId: string;
-		eventId: string;
-		optionId: string;
-	}>();
-
-	const { data: eventData, isError: isLoadError } = useGetTourEventQuery(
-		{ tourId, optionId, eventId },
-		{ skip: !tourId || !optionId || !eventId }
-	);
-
-	const [updateTourEvent, { isLoading: isUpdateLoading }] =
-		useUpdateTourEventMutation();
+	const { data, isError, isLoading, update } =
+		useTourEventEdit<TActivityEditSchema>(ENUM_EVENT.ACTIVITY);
 
 	const form = useForm<TActivityEditSchema>({
 		resolver: zodResolver(ACTIVITY_EDIT_SCHEMA),
@@ -44,16 +27,16 @@ export const ActivityEditPage: FC = () => {
 	});
 
 	useEffect(() => {
-		if (isLoadError) {
+		if (isError) {
 			toast.error(t("form.toasts.load.error"));
 		}
-	}, [isLoadError, t]);
+	}, [isError, t]);
 
 	useEffect(() => {
-		if (eventData) {
-			form.reset(eventData as TActivityEditSchema);
+		if (data) {
+			form.reset(data);
 		}
-	}, [eventData, form]);
+	}, [data, form]);
 
 	const createSectionSubmit = async () => {
 		const isValid = await validateFormWithSectionToast(form, t, {
@@ -62,15 +45,10 @@ export const ActivityEditPage: FC = () => {
 		if (!isValid) return;
 
 		try {
-			await updateTourEvent({
-				tourId,
-				optionId,
-				eventId,
-				type: ENUM_EVENT.ACTIVITY,
-				language:
-					i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN,
-				data: form.getValues()
-			}).unwrap();
+			await update(
+				form.getValues(),
+				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
+			);
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
 			toast.error(t("form.toasts.save.error"));
@@ -82,7 +60,7 @@ export const ActivityEditPage: FC = () => {
 		<ActivityEdit
 			form={form}
 			createSectionSubmit={createSectionSubmit}
-			isLoading={isUpdateLoading}
+			isLoading={isLoading}
 		/>
 	);
 };

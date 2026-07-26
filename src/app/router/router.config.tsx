@@ -723,7 +723,35 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		]
 	},
 	{
+		path: ENUM_PATH.TOURS.EVENTS.FLIGHT_OPTION,
+		component: FlightEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
 		path: ENUM_PATH.TOURS.EVENTS.EVENT,
+		component: ActivityEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.EVENT_OPTION,
 		component: ActivityEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
@@ -751,7 +779,35 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		]
 	},
 	{
+		path: ENUM_PATH.TOURS.EVENTS.TRANSFER_OPTION,
+		component: TransportationEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
 		path: ENUM_PATH.TOURS.EVENTS.SUPPLEMENT,
+		component: SupplementEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.SUPPLEMENT_OPTION,
 		component: SupplementEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
@@ -779,7 +835,35 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		]
 	},
 	{
+		path: ENUM_PATH.TOURS.EVENTS.GUIDE_OPTION,
+		component: GuideEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
 		path: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION,
+		component: AccommodationEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION_OPTION,
 		component: AccommodationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
@@ -808,6 +892,20 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.INFO,
+		component: InformationEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
+					{children}
+				</SideBarOperatorLayout>
+			),
+			EventOperatorLayout
+		]
+	},
+	{
+		path: ENUM_PATH.TOURS.EVENTS.INFO_OPTION,
 		component: InformationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,

@@ -6,6 +6,7 @@ import {
 	mapAllEventsToFrontend,
 	mapEventCreateToBackend,
 	mapEventOptionCreateToBackend,
+	mapEventOptionToFrontend,
 	mapEventOptionUpdateToBackend,
 	mapEventReorderToBackend,
 	mapEventToFrontend,
@@ -61,13 +62,24 @@ export const tourEventApi = authApi.injectEndpoints({
 		}),
 		getTourEvent: builder.query<
 			TTourEvent,
-			{ tourId: string; optionId: string; eventId: string }
+			{
+				tourId: string;
+				optionId: string;
+				eventId: string;
+				eventOptionId?: string;
+			}
 		>({
 			query: ({ tourId, optionId, eventId }) => ({
 				...TOUR_EVENTS_PATHS.getTourEvent(tourId, optionId, eventId)
 			}),
-			transformResponse: (response: TTourEventBackendResponce) =>
-				mapEventToFrontend(response)
+			transformResponse: (
+				response: TTourEventBackendResponce,
+				_meta,
+				arg
+			) =>
+				arg.eventOptionId
+					? mapEventOptionToFrontend(response, arg.eventOptionId)
+					: mapEventToFrontend(response)
 		}),
 		createEvent: builder.mutation<
 			ITourEvent,

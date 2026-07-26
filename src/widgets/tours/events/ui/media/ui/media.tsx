@@ -28,18 +28,24 @@ const EMPTY_IMAGES: { id: string; imagePath: string; isPrimary: boolean }[] =
 
 const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 	const { t } = useTranslation(ns);
-	const { tourId = "", eventId = "" } = useParams<{
+	const {
+		tourId = "",
+		eventId = "",
+		eventOptionId
+	} = useParams<{
 		tourId: string;
 		eventId: string;
+		eventOptionId?: string;
 	}>();
+	const mediaEventId = eventOptionId || eventId;
 
 	const {
 		data: serverImages = EMPTY_IMAGES,
 		isLoading: isListLoading,
 		isError
 	} = useListEventImagesQuery(
-		{ tourId, eventId },
-		{ skip: !tourId || !eventId }
+		{ tourId, eventId: mediaEventId },
+		{ skip: !tourId || !mediaEventId }
 	);
 
 	const [uploadImagesMutation, { isLoading: isUploading }] =
@@ -62,11 +68,23 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 		images: serverImages,
 		isServerLoading: isListLoading || isMutating,
 		addImages: (files) =>
-			uploadImagesMutation({ tourId, eventId, files }).unwrap(),
+			uploadImagesMutation({
+				tourId,
+				eventId: mediaEventId,
+				files
+			}).unwrap(),
 		removeImage: (imageId) =>
-			deleteImageMutation({ tourId, eventId, imageId }).unwrap(),
+			deleteImageMutation({
+				tourId,
+				eventId: mediaEventId,
+				imageId
+			}).unwrap(),
 		setPrimaryImage: (imageId) =>
-			setPrimaryImageMutation({ tourId, eventId, imageId }).unwrap(),
+			setPrimaryImageMutation({
+				tourId,
+				eventId: mediaEventId,
+				imageId
+			}).unwrap(),
 		onSuccess: () => toast.success(t("form.toasts.save.success")),
 		onError: () => toast.error(t("form.toasts.save.error"))
 	});

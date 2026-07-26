@@ -16,6 +16,14 @@ export const ENUM_EVENT = {
 
 export type ENUM_EVENT_TYPE = (typeof ENUM_EVENT)[keyof typeof ENUM_EVENT];
 
+export const ENUM_EVENT_MODE = {
+	SINGLE: "single",
+	MULTI: "multi"
+} as const;
+
+export type ENUM_EVENT_MODE_TYPE =
+	(typeof ENUM_EVENT_MODE)[keyof typeof ENUM_EVENT_MODE];
+
 export interface ITemplateItem {
 	id?: string;
 	eventType: ENUM_EVENT_TYPE;

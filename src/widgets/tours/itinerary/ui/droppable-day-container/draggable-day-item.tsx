@@ -19,6 +19,7 @@ import {
 import {
 	ENUM_EVENT,
 	EVENT_TEMPLATES_LIST,
+	EVENT_TYPE_TO_OPTION_PATH,
 	EVENT_TYPE_TO_PATH,
 	type ITemplateItem
 } from "@/entities/tour";
@@ -42,12 +43,21 @@ interface IDraggableDayItemProps {
 	optionId: string;
 	index?: number;
 	isOverlay?: boolean;
+	parentEventId?: string;
 	onRemove?: (index: number) => void;
 	onRemoveNested?: (index: number, nestedIndex: number) => void;
 }
 
 const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
-	({ item, optionId, index = 0, isOverlay, onRemove, onRemoveNested }) => {
+	({
+		item,
+		optionId,
+		index = 0,
+		isOverlay,
+		parentEventId,
+		onRemove,
+		onRemoveNested
+	}) => {
 		const {
 			attributes,
 			listeners,
@@ -74,11 +84,19 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 
 		const { tourId } = useParams<{ tourId: string }>();
 		const eventId = item.backendId ?? item.id;
-		const href = buildRoute(EVENT_TYPE_TO_PATH[item.eventType] || "", {
-			tourId: tourId || "",
-			optionId: optionId || "",
-			eventId
-		});
+		const href =
+			parentEventId && EVENT_TYPE_TO_OPTION_PATH[item.eventType]
+				? buildRoute(EVENT_TYPE_TO_OPTION_PATH[item.eventType], {
+						tourId: tourId || "",
+						optionId: optionId || "",
+						eventId: parentEventId,
+						eventOptionId: eventId
+					})
+				: buildRoute(EVENT_TYPE_TO_PATH[item.eventType] || "", {
+						tourId: tourId || "",
+						optionId: optionId || "",
+						eventId
+					});
 
 		const content = (
 			<Card
@@ -133,6 +151,7 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 							items={item.items || []}
 							optionId={optionId}
 							parentBlockId={item.block_id}
+							parentEventId={item.backendId}
 							onRemoveNested={
 								onRemoveNested
 									? (nestedIndex) =>

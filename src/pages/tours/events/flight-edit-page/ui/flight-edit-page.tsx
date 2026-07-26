@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
@@ -12,31 +11,15 @@ import {
 	ENUM_EVENT,
 	FLIGHT_EDIT_SCHEMA,
 	type TFlightEditSchema,
-	useGetTourEventQuery,
-	useUpdateTourEventMutation
+	useTourEventEdit
 } from "@/entities/tour";
 
 import { FlightEdit } from "@/widgets/tours";
 
 export const FlightEditPage: FC = () => {
 	const { t, i18n } = useTranslation("flight_edit_page");
-	const {
-		tourId = "",
-		optionId = "",
-		eventId = ""
-	} = useParams<{
-		tourId: string;
-		eventId: string;
-		optionId: string;
-	}>();
-
-	const { data: eventData, isError: isLoadError } = useGetTourEventQuery(
-		{ tourId, optionId, eventId },
-		{ skip: !tourId || !optionId || !eventId }
-	);
-
-	const [updateTourEvent, { isLoading: isUpdateLoading }] =
-		useUpdateTourEventMutation();
+	const { data, isError, isLoading, update } =
+		useTourEventEdit<TFlightEditSchema>(ENUM_EVENT.FLIGHT);
 
 	const form = useForm<TFlightEditSchema>({
 		resolver: zodResolver(FLIGHT_EDIT_SCHEMA),
@@ -44,16 +27,16 @@ export const FlightEditPage: FC = () => {
 	});
 
 	useEffect(() => {
-		if (isLoadError) {
+		if (isError) {
 			toast.error(t("form.toasts.load.error"));
 		}
-	}, [isLoadError, t]);
+	}, [isError, t]);
 
 	useEffect(() => {
-		if (eventData) {
-			form.reset(eventData as TFlightEditSchema);
+		if (data) {
+			form.reset(data);
 		}
-	}, [eventData, form]);
+	}, [data, form]);
 
 	const createSectionSubmit = async () => {
 		const isValid = await validateFormWithSectionToast(form, t, {
@@ -62,15 +45,10 @@ export const FlightEditPage: FC = () => {
 		if (!isValid) return;
 
 		try {
-			await updateTourEvent({
-				tourId,
-				optionId,
-				eventId,
-				type: ENUM_EVENT.FLIGHT,
-				language:
-					i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN,
-				data: form.getValues()
-			}).unwrap();
+			await update(
+				form.getValues(),
+				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
+			);
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
 			toast.error(t("form.toasts.save.error"));
@@ -82,7 +60,7 @@ export const FlightEditPage: FC = () => {
 		<FlightEdit
 			form={form}
 			createSectionSubmit={createSectionSubmit}
-			isLoading={isUpdateLoading}
+			isLoading={isLoading}
 		/>
 	);
 };

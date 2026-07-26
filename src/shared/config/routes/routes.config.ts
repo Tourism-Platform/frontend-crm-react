@@ -46,19 +46,33 @@ export const ENUM_PATH = {
 		EVENTS: {
 			ROOT: "/tours/:tourId/itinerary/:optionId/events",
 			FLIGHT: "/tours/:tourId/itinerary/:optionId/events/:eventId/flight",
+			FLIGHT_OPTION:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/flight",
 			EVENT: "/tours/:tourId/itinerary/:optionId/events/:eventId/event",
+			EVENT_OPTION:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/event",
 			TRANSFER:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/transfer",
+			TRANSFER_OPTION:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/transfer",
 			SUPPLEMENT:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/supplement",
+			SUPPLEMENT_OPTION:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/supplement",
 			GUIDE: "/tours/:tourId/itinerary/:optionId/events/:eventId/guide",
+			GUIDE_OPTION:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/guide",
 			ACCOMMODATION:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/accommodation",
+			ACCOMMODATION_OPTION:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/accommodation",
 			MULTIPLY_OPTION:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/multiply-option",
 			TOUR_DETAILS:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/tour-details",
-			INFO: "/tours/:tourId/itinerary/:optionId/events/:eventId/info"
+			INFO: "/tours/:tourId/itinerary/:optionId/events/:eventId/info",
+			INFO_OPTION:
+				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/info"
 		}
 	},
 	BOOKING: {

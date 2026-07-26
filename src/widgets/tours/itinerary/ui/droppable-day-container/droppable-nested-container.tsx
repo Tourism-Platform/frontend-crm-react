@@ -17,6 +17,7 @@ interface IDroppableNestedContainerProps {
 	items: IDayItem[];
 	optionId: string;
 	parentBlockId: string;
+	parentEventId?: string;
 	onRemoveNested: (index: number) => void;
 }
 
@@ -24,6 +25,7 @@ const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
 	items,
 	optionId,
 	parentBlockId,
+	parentEventId,
 	onRemoveNested
 }) => {
 	const { t } = useTranslation("tour_itinerary_page");
@@ -56,6 +58,7 @@ const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
 							<DraggableDayItem
 								optionId={optionId}
 								item={item}
+								parentEventId={parentEventId}
 								onRemove={() => onRemoveNested(index)}
 							/>
 						</div>
