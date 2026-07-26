@@ -114,8 +114,7 @@ const mapSummaryEventToReviewItem = (
 };
 
 const mapEventWithCostToReviewItem = (
-	backend: AnyEventWithCostOutput,
-	index: number
+	backend: AnyEventWithCostOutput
 ): ITourReviewItem => {
 	const item = mapSummaryEventToReviewItem(
 		backend.event,
@@ -123,7 +122,7 @@ const mapEventWithCostToReviewItem = (
 		backend.markup
 	);
 
-	return { ...item, id: item.id || String(index) };
+	return { ...item, id: backend.event_id };
 };
 
 export const mapTourSummaryToFrontend = (

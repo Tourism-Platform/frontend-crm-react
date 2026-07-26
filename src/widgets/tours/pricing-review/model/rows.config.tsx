@@ -1,14 +1,26 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
+import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
-import { EVENT_METADATA, type ITourReviewItem } from "@/entities/tour";
+import {
+	EVENT_METADATA,
+	EVENT_TYPE_TO_PATH,
+	type ITourReviewItem
+} from "@/entities/tour";
+
+interface IPricingReviewColumnsParams {
+	tourId: string;
+	optionId: string;
+}
 
 export const PRICING_REVIEW_COLUMNS = (
-	t: TFunction<"tour_pricing_review_page", undefined>
+	t: TFunction<"tour_pricing_review_page", undefined>,
+	{ tourId, optionId }: IPricingReviewColumnsParams
 ): ColumnDef<ITourReviewItem>[] => {
 	return [
 		{
@@ -16,7 +28,7 @@ export const PRICING_REVIEW_COLUMNS = (
 			header: t("table.item"),
 			cell: ({
 				row: {
-					original: { type, subRows },
+					original: { id, type, subRows },
 					depth,
 					getIsExpanded,
 					getToggleExpandedHandler
@@ -26,10 +38,20 @@ export const PRICING_REVIEW_COLUMNS = (
 				const hasSubRows = !!subRows?.length;
 				const metadata = type ? EVENT_METADATA[type] : null;
 				const Icon = metadata?.icon;
+				const title = getValue() as string;
+				const eventPath = type ? EVENT_TYPE_TO_PATH[type] : undefined;
+				const href =
+					eventPath && id
+						? buildRoute(eventPath, {
+								tourId,
+								optionId,
+								eventId: id
+							})
+						: undefined;
 
 				return (
 					<div
-						className="flex items-center gap-2"
+						className="flex w-full min-w-0 items-center gap-2"
 						style={{ paddingLeft: `${depth * 2}rem` }}
 					>
 						{hasSubRows ? (
@@ -37,6 +59,7 @@ export const PRICING_REVIEW_COLUMNS = (
 								onClick={getToggleExpandedHandler()}
 								variant="ghost"
 								size="icon"
+								className="shrink-0"
 							>
 								{getIsExpanded() ? (
 									<ChevronDown className="size-4 text-muted-foreground" />
@@ -45,7 +68,7 @@ export const PRICING_REVIEW_COLUMNS = (
 								)}
 							</Button>
 						) : (
-							<div className="w-9" />
+							<div className="w-9 shrink-0" />
 						)}
 						<div
 							className={cn(
@@ -55,24 +78,52 @@ export const PRICING_REVIEW_COLUMNS = (
 						>
 							{Icon && <Icon className="size-4" />}
 						</div>
-						<span className="font-medium whitespace-nowrap">
-							{getValue() as string}
-						</span>
+						{href ? (
+							<Link
+								to={href}
+								title={title}
+								className="min-w-0 truncate font-medium hover:underline"
+							>
+								{title}
+							</Link>
+						) : (
+							<span
+								title={title}
+								className="min-w-0 truncate font-medium"
+							>
+								{title}
+							</span>
+						)}
 					</div>
 				);
-			}
+			},
+			size: 200
 		},
 		{
 			accessorKey: "supplier",
-			header: t("table.supplier")
+			header: t("table.supplier"),
+			cell: ({
+				row: {
+					original: { supplier }
+				}
+			}) => (
+				<div className="min-w-0 w-full">
+					<span title={supplier} className="block truncate">
+						{supplier}
+					</span>
+				</div>
+			),
+			size: 200
 		},
 		{
 			accessorKey: "plannedCost",
-			header: t("table.total_cost")
+			header: t("table.total_cost"),
+			size: 100
 		},
 		{
 			accessorKey: "estimatedRevenue",
-			header: t("table.estimated_revenue")
+			header: t("table.estimated_revenue"),
+			size: 100
 		}
 	];
 };

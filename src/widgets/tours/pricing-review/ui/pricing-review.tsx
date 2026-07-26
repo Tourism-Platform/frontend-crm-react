@@ -108,7 +108,11 @@ const PricingReviewBase: FC = () => {
 			/>
 
 			<PricingReviewSummary summary={pricingReview.summary} />
-			<PricingReviewTable items={pricingReview.items} />
+			<PricingReviewTable
+				items={pricingReview.items}
+				tourId={tourId}
+				optionId={activeOptionId}
+			/>
 		</section>
 	);
 };

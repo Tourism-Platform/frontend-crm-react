@@ -10,6 +10,8 @@ import { PRICING_REVIEW_COLUMNS } from "../model";
 
 interface IPricingReviewTableProps {
 	items: ITourReviewItem[];
+	tourId: string;
+	optionId: string;
 }
 
 const TABLE_LAYOUT = {
@@ -19,9 +21,16 @@ const TABLE_LAYOUT = {
 
 const getSubRowsFn = (row: ITourReviewItem) => row.subRows;
 
-const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({ items }) => {
+const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
+	items,
+	tourId,
+	optionId
+}) => {
 	const { t } = useTranslation("tour_pricing_review_page");
-	const columns = useMemo(() => PRICING_REVIEW_COLUMNS(t), [t]);
+	const columns = useMemo(
+		() => PRICING_REVIEW_COLUMNS(t, { tourId, optionId }),
+		[t, tourId, optionId]
+	);
 
 	const actionsJsx = useMemo(
 		() => <Button variant="default">{t("table.buttons.add_item")}</Button>,
