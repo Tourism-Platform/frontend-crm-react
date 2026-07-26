@@ -92,7 +92,7 @@ export const FlightCard: FC<IFlightCardProps> = React.memo(
 			if (transportType === ENUM_FLIGHT_TRANSPORT_TYPE.BUS) {
 				return BUS_DATA_LIST(segmentGeo);
 			}
-			return FLY_DATA_LIST;
+			return FLY_DATA_LIST();
 		}, [transportType, segmentGeo]);
 
 		return (

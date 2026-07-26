@@ -3,6 +3,7 @@ import React, { type FC } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { getDeviceUtcOffset } from "@/shared/hooks";
 import {
 	Button,
 	CustomOptionTabs,
@@ -41,6 +42,8 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 		(
 			transportType: ENUM_FLIGHT_TRANSPORT_TYPE_TYPE | undefined
 		): TFlightEditSchema["general"]["route"][number] => {
+			const timezone = getDeviceUtcOffset();
+
 			if (transportType === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN) {
 				return {
 					transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
@@ -52,8 +55,8 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 					// arrival_date: null,
 					departure_time: null,
 					arrival_time: null,
-					departure_timezone: "",
-					arrival_timezone: ""
+					departure_timezone: timezone,
+					arrival_timezone: timezone
 				};
 			}
 
@@ -68,8 +71,8 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 					// arrival_date: null,
 					departure_time: null,
 					arrival_time: null,
-					departure_timezone: "",
-					arrival_timezone: ""
+					departure_timezone: timezone,
+					arrival_timezone: timezone
 				};
 			}
 
@@ -83,8 +86,8 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 				// arrival_date: null,
 				departure_time: null,
 				arrival_time: null,
-				departure_timezone: "",
-				arrival_timezone: "",
+				departure_timezone: timezone,
+				arrival_timezone: timezone,
 				departure_terminal: "",
 				departure_gate: "",
 				arrival_terminal: "",

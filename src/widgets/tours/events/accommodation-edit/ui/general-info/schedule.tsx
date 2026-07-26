@@ -18,7 +18,7 @@ const ScheduleBase: FC<IScheduleProps> = ({ form }) => {
 		<div className="grid gap-5">
 			<h2 className="text-xl">{t("form.general.schedule.title")}</h2>
 			<div className="grid grid-cols-4 gap-x-4 gap-y-1">
-				{SCHEDULE_LIST.map(({ key, ...item }, index) => (
+				{SCHEDULE_LIST().map(({ key, ...item }, index) => (
 					<Fragment key={key}>
 						<CustomField
 							key={key}

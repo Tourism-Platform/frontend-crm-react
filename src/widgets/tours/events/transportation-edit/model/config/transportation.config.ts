@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 
 import { UTC_OPTIONS } from "@/shared/config";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import type { TGeoFieldProps } from "@/entities/geo";
@@ -14,11 +15,13 @@ import { type TForm } from "../types";
 type TTransportationGeoProps = {
 	meetPoint: TGeoFieldProps;
 	endPoint: TGeoFieldProps;
+	timezoneOffset?: string;
 };
 
 export const TRANSPORTATION_DATA_LIST = ({
 	meetPoint,
-	endPoint
+	endPoint,
+	timezoneOffset = getDeviceUtcOffset()
 }: TTransportationGeoProps): TForm[] => [
 	{
 		label: "form.general.details.form.fields.transfer_type.label",
@@ -66,21 +69,6 @@ export const TRANSPORTATION_DATA_LIST = ({
 		className: "col-span-2"
 	},
 	{
-		label: "form.general.details.form.fields.arrival_time.label",
-		placeholder:
-			"form.general.details.form.fields.arrival_time.placeholder",
-		key: ENUM_FORM_TRANSPORTATION.ARRIVAL_TIME,
-		fieldType: "time"
-	},
-	{
-		label: "form.general.details.form.fields.arrival_timezone.label",
-		placeholder:
-			"form.general.details.form.fields.arrival_timezone.placeholder",
-		key: ENUM_FORM_TRANSPORTATION.ARRIVAL_TIMEZONE,
-		fieldType: "select",
-		options: UTC_OPTIONS
-	},
-	{
 		label: "form.general.details.form.fields.departure_time.label",
 		placeholder:
 			"form.general.details.form.fields.departure_time.placeholder",
@@ -93,6 +81,23 @@ export const TRANSPORTATION_DATA_LIST = ({
 			"form.general.details.form.fields.departure_timezone.placeholder",
 		key: ENUM_FORM_TRANSPORTATION.DEPARTURE_TIMEZONE,
 		fieldType: "select",
-		options: UTC_OPTIONS
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
+	},
+	{
+		label: "form.general.details.form.fields.arrival_time.label",
+		placeholder:
+			"form.general.details.form.fields.arrival_time.placeholder",
+		key: ENUM_FORM_TRANSPORTATION.ARRIVAL_TIME,
+		fieldType: "time"
+	},
+	{
+		label: "form.general.details.form.fields.arrival_timezone.label",
+		placeholder:
+			"form.general.details.form.fields.arrival_timezone.placeholder",
+		key: ENUM_FORM_TRANSPORTATION.ARRIVAL_TIMEZONE,
+		fieldType: "select",
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
 	}
 ];

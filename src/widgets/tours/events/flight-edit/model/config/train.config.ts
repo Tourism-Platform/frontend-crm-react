@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 
 import { UTC_OPTIONS } from "@/shared/config";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import type { TGeoFieldProps } from "@/entities/geo";
 import { ENUM_FORM_TRAIN } from "@/entities/tour";
@@ -10,11 +11,13 @@ import { type TForm } from "../types";
 type TSegmentGeoProps = {
 	departure: TGeoFieldProps;
 	arrival: TGeoFieldProps;
+	timezoneOffset?: string;
 };
 
 export const TRAIN_DATA_LIST = ({
 	departure,
-	arrival
+	arrival,
+	timezoneOffset = getDeviceUtcOffset()
 }: TSegmentGeoProps): TForm[] => [
 	{
 		label: "general.flights.form.train.fields.carrier.label",
@@ -53,37 +56,6 @@ export const TRAIN_DATA_LIST = ({
 		icon: MapPin,
 		...arrival
 	},
-	// {
-	// 	label: "general.flights.form.train.fields.departure_date.label",
-	// 	placeholder:
-	// 		"general.flights.form.train.fields.departure_date.placeholder",
-	// 	key: ENUM_FORM_TRAIN.DEPARTURE_DATE,
-	// 	fieldType: "date",
-	// 	className: "col-span-2"
-	// },
-	// {
-	// 	label: "general.flights.form.train.fields.arrival_date.label",
-	// 	placeholder:
-	// 		"general.flights.form.train.fields.arrival_date.placeholder",
-	// 	key: ENUM_FORM_TRAIN.ARRIVAL_DATE,
-	// 	fieldType: "date",
-	// 	className: "col-span-2"
-	// },
-	{
-		label: "general.flights.form.train.fields.arrival_time.label",
-		placeholder:
-			"general.flights.form.train.fields.arrival_time.placeholder",
-		key: ENUM_FORM_TRAIN.ARRIVAL_TIME,
-		fieldType: "time"
-	},
-	{
-		label: "general.flights.form.train.fields.arrival_timezone.label",
-		placeholder:
-			"general.flights.form.train.fields.arrival_timezone.placeholder",
-		key: ENUM_FORM_TRAIN.ARRIVAL_TIMEZONE,
-		fieldType: "select",
-		options: UTC_OPTIONS
-	},
 	{
 		label: "general.flights.form.train.fields.departure_time.label",
 		placeholder:
@@ -97,6 +69,23 @@ export const TRAIN_DATA_LIST = ({
 			"general.flights.form.train.fields.departure_timezone.placeholder",
 		key: ENUM_FORM_TRAIN.DEPARTURE_TIMEZONE,
 		fieldType: "select",
-		options: UTC_OPTIONS
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
+	},
+	{
+		label: "general.flights.form.train.fields.arrival_time.label",
+		placeholder:
+			"general.flights.form.train.fields.arrival_time.placeholder",
+		key: ENUM_FORM_TRAIN.ARRIVAL_TIME,
+		fieldType: "time"
+	},
+	{
+		label: "general.flights.form.train.fields.arrival_timezone.label",
+		placeholder:
+			"general.flights.form.train.fields.arrival_timezone.placeholder",
+		key: ENUM_FORM_TRAIN.ARRIVAL_TIMEZONE,
+		fieldType: "select",
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
 	}
 ];

@@ -1,10 +1,13 @@
 import { UTC_OPTIONS } from "@/shared/config";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import { ENUM_FORM_FLIGHT } from "@/entities/tour";
 
 import { type TForm } from "../types";
 
-export const FLY_DATA_LIST: TForm[] = [
+export const FLY_DATA_LIST = (
+	timezoneOffset: string = getDeviceUtcOffset()
+): TForm[] => [
 	{
 		label: "general.flights.form.fly.fields.airline_code.label",
 		placeholder: "general.flights.form.fly.fields.airline_code.placeholder",
@@ -36,35 +39,6 @@ export const FLY_DATA_LIST: TForm[] = [
 		fieldType: "input",
 		className: "col-span-2"
 	},
-	// {
-	// 	label: "general.flights.form.fly.fields.departure_date.label",
-	// 	placeholder:
-	// 		"general.flights.form.fly.fields.departure_date.placeholder",
-	// 	key: ENUM_FORM_FLIGHT.DEPARTURE_DATE,
-	// 	fieldType: "date",
-	// 	className: "col-span-2"
-	// },
-	// {
-	// 	label: "general.flights.form.fly.fields.arrival_date.label",
-	// 	placeholder: "general.flights.form.fly.fields.arrival_date.placeholder",
-	// 	key: ENUM_FORM_FLIGHT.ARRIVAL_DATE,
-	// 	fieldType: "date",
-	// 	className: "col-span-2"
-	// },
-	{
-		label: "general.flights.form.fly.fields.arrival_time.label",
-		placeholder: "general.flights.form.fly.fields.arrival_time.placeholder",
-		key: ENUM_FORM_FLIGHT.ARRIVAL_TIME,
-		fieldType: "time"
-	},
-	{
-		label: "general.flights.form.fly.fields.arrival_timezone.label",
-		placeholder:
-			"general.flights.form.fly.fields.arrival_timezone.placeholder",
-		key: ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE,
-		fieldType: "select",
-		options: UTC_OPTIONS
-	},
 	{
 		label: "general.flights.form.fly.fields.departure_time.label",
 		placeholder:
@@ -78,7 +52,23 @@ export const FLY_DATA_LIST: TForm[] = [
 			"general.flights.form.fly.fields.departure_timezone.placeholder",
 		key: ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE,
 		fieldType: "select",
-		options: UTC_OPTIONS
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
+	},
+	{
+		label: "general.flights.form.fly.fields.arrival_time.label",
+		placeholder: "general.flights.form.fly.fields.arrival_time.placeholder",
+		key: ENUM_FORM_FLIGHT.ARRIVAL_TIME,
+		fieldType: "time"
+	},
+	{
+		label: "general.flights.form.fly.fields.arrival_timezone.label",
+		placeholder:
+			"general.flights.form.fly.fields.arrival_timezone.placeholder",
+		key: ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE,
+		fieldType: "select",
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
 	},
 	{
 		label: "general.flights.form.fly.fields.departure_terminal.label",

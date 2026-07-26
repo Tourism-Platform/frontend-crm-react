@@ -1,6 +1,7 @@
 import { MapPin } from "lucide-react";
 
 import { UTC_OPTIONS } from "@/shared/config";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import type { TGeoFieldProps } from "@/entities/geo";
@@ -10,7 +11,10 @@ import type { TForm } from "../types";
 
 export type { TGeoFieldProps };
 
-export const EVENT_DATA_LIST = (geo: TGeoFieldProps): TForm[] => [
+export const EVENT_DATA_LIST = (
+	geo: TGeoFieldProps,
+	timezoneOffset: string = getDeviceUtcOffset()
+): TForm[] => [
 	{
 		label: "form.general.details.form.fields.activity_subtype.label",
 		placeholder:
@@ -43,7 +47,8 @@ export const EVENT_DATA_LIST = (geo: TGeoFieldProps): TForm[] => [
 			"form.general.details.form.fields.start_timezone.placeholder",
 		key: ENUM_FORM_ACTIVITY.ACTIVITY_START_TIMEZONE,
 		options: UTC_OPTIONS,
-		fieldType: "select"
+		fieldType: "select",
+		defaultValue: timezoneOffset
 	},
 	{
 		label: "form.general.details.form.fields.event_end_time.label",
@@ -58,7 +63,8 @@ export const EVENT_DATA_LIST = (geo: TGeoFieldProps): TForm[] => [
 			"form.general.details.form.fields.end_timezone.placeholder",
 		key: ENUM_FORM_ACTIVITY.ACTIVITY_END_TIMEZONE,
 		options: UTC_OPTIONS,
-		fieldType: "select"
+		fieldType: "select",
+		defaultValue: timezoneOffset
 	},
 	{
 		label: "form.general.description.label",

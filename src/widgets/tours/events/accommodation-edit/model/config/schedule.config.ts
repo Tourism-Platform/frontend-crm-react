@@ -1,10 +1,13 @@
 import { LENGTH_OF_STAY_OPTIONS, UTC_OPTIONS } from "@/shared/config";
+import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import { ENUM_FORM_ACCOMMODATION } from "@/entities/tour";
 
 import type { TForm } from "../types";
 
-export const SCHEDULE_LIST: TForm[] = [
+export const SCHEDULE_LIST = (
+	timezoneOffset: string = getDeviceUtcOffset()
+): TForm[] => [
 	{
 		label: "form.general.schedule.form.fields.length_of_stay.label",
 		placeholder:
@@ -27,7 +30,8 @@ export const SCHEDULE_LIST: TForm[] = [
 			"form.general.schedule.form.fields.check_in_timezone.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.CHECK_IN_TIMEZONE,
 		fieldType: "select",
-		options: UTC_OPTIONS
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
 	},
 	{
 		label: "form.general.schedule.form.fields.check_out_time.label",
@@ -42,6 +46,7 @@ export const SCHEDULE_LIST: TForm[] = [
 			"form.general.schedule.form.fields.check_out_timezone.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.CHECK_OUT_TIMEZONE,
 		fieldType: "select",
-		options: UTC_OPTIONS
+		options: UTC_OPTIONS,
+		defaultValue: timezoneOffset
 	}
 ];
