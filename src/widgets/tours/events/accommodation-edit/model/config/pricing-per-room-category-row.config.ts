@@ -1,6 +1,7 @@
-import { CURRENCY_OPTIONS, ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD } from "@/entities/tour";
 
+import { DEFAULT_EVENT_CURRENCY } from "../../../model";
 import type { TAccommodationPricingFormField } from "../types";
 
 export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST: TAccommodationPricingFormField[] =
@@ -35,6 +36,14 @@ export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST: TAccommodationPricingFormField[]
 				"form.pricing.form.pricing_details.fields.currency.placeholder",
 			fieldType: "select",
 			options: CURRENCY_OPTIONS,
-			defaultValue: ENUM_CURRENCY_OPTIONS.USD
+			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];
+
+export const createEmptyPerRoomCategoryRow = () => ({
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: "",
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: null,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: null,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: null
+});

@@ -15,7 +15,6 @@ import {
 
 import {
 	ENUM_FORM_GUIDES,
-	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD,
 	ENUM_GUIDE_PRICING_FIELD,
 	type ENUM_GUIDE_TYPE_TYPE,
@@ -26,7 +25,8 @@ import {
 import {
 	ENUM_FORM_SECTION,
 	PER_GUIDE_CATEGORY_ROW_FIELDS_LIST,
-	PER_GUIDE_MARKUP_FIELD
+	PER_GUIDE_MARKUP_FIELD,
+	createEmptyPerGuideCategoryRow
 } from "../../model";
 
 interface IPerGuideByLanguageCardProps {
@@ -114,15 +114,7 @@ export const PerGuideByLanguageCard: FC<IPerGuideByLanguageCardProps> = ({
 					type="button"
 					variant="outline"
 					className="w-fit"
-					onClick={() =>
-						append({
-							[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: "",
-							[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
-							[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: null,
-							[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: "",
-							[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
-						})
-					}
+					onClick={() => append(createEmptyPerGuideCategoryRow())}
 				>
 					<Plus className="mr-2 h-4 w-4" />
 					{t("form.pricing.form.per_guide.buttons.add_language")}

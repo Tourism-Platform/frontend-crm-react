@@ -1,6 +1,7 @@
-import { CURRENCY_OPTIONS, ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_ACCOMMODATION_PRICING_FIELD } from "@/entities/tour";
 
+import { DEFAULT_EVENT_CURRENCY } from "../../../model";
 import type { TAccommodationPricingFormField } from "../types";
 
 export const PRICING_FLAT_RATE_PRICE_DETAILS_LIST: TAccommodationPricingFormField[] =
@@ -28,6 +29,6 @@ export const PRICING_FLAT_RATE_PRICE_DETAILS_LIST: TAccommodationPricingFormFiel
 			key: ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY,
 			fieldType: "select",
 			options: CURRENCY_OPTIONS,
-			defaultValue: ENUM_CURRENCY_OPTIONS.USD
+			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];

@@ -14,7 +14,6 @@ import {
 } from "@/shared/ui";
 
 import {
-	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
 	ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD,
 	ENUM_ACCOMMODATION_PRICING_FIELD,
 	ENUM_FORM_ROOMS,
@@ -25,6 +24,7 @@ import {
 	ENUM_FORM_SECTION,
 	PER_ROOM_CATEGORY_ROW_FIELDS_LIST,
 	PER_ROOM_MARKUP_FIELD,
+	createEmptyPerRoomCategoryRow,
 	getRoomDisplayName
 } from "../../model";
 
@@ -111,16 +111,7 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 					type="button"
 					variant="outline"
 					className="w-fit"
-					onClick={() =>
-						append({
-							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: "",
-							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: null,
-							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: null,
-							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]:
-								"",
-							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: null
-						})
-					}
+					onClick={() => append(createEmptyPerRoomCategoryRow())}
 				>
 					<Plus className="mr-2 h-4 w-4" />
 					{t("form.pricing.form.per_room.buttons.add_category")}

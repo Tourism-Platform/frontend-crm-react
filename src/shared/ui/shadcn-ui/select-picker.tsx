@@ -18,7 +18,6 @@ export interface SelectPickerOption {
 
 export interface SelectPickerProps {
 	value?: string;
-	defaultValue?: string;
 	onChange?: (value: string) => void;
 	options: SelectPickerOption[];
 	placeholder?: string;
@@ -33,7 +32,6 @@ export const SelectPicker = React.forwardRef<
 	(
 		{
 			value,
-			defaultValue,
 			onChange,
 			options,
 			placeholder,
@@ -43,7 +41,7 @@ export const SelectPicker = React.forwardRef<
 		},
 		ref
 	) => {
-		const resolvedValue = value ?? defaultValue ?? "";
+		const resolvedValue = value ?? "";
 
 		return (
 			<Select

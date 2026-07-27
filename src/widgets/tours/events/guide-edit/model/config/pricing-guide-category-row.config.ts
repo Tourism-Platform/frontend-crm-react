@@ -1,12 +1,13 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { CURRENCY_OPTIONS, ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_PRICE_ROW_FIELD,
 	LANGUAGES_LABELS
 } from "@/entities/tour";
 
+import { DEFAULT_EVENT_CURRENCY } from "../../../model";
 import type { TGuidePricingFormField } from "../types";
 
 export const PER_GUIDE_CATEGORY_ROW_FIELDS_LIST =
@@ -42,9 +43,17 @@ export const PER_GUIDE_CATEGORY_ROW_FIELDS_LIST =
 				"form.pricing.form.per_guide.fields.currency.placeholder",
 			fieldType: "select",
 			options: CURRENCY_OPTIONS,
-			defaultValue: ENUM_CURRENCY_OPTIONS.USD
+			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];
+
+export const createEmptyPerGuideCategoryRow = () => ({
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: "",
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: null,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
+});
 
 export const PER_GUIDE_ROW_FIELDS_LIST: TGuidePricingFormField[] = [
 	{
@@ -69,6 +78,6 @@ export const PER_GUIDE_ROW_FIELDS_LIST: TGuidePricingFormField[] = [
 		placeholder: "form.pricing.form.per_guide.fields.currency.placeholder",
 		fieldType: "select",
 		options: CURRENCY_OPTIONS,
-		defaultValue: ENUM_CURRENCY_OPTIONS.USD
+		defaultValue: DEFAULT_EVENT_CURRENCY
 	}
 ];

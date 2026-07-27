@@ -1,6 +1,7 @@
-import { CURRENCY_OPTIONS, ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_SUPPLEMENT_PRICING_FIELD } from "@/entities/tour";
 
+import { DEFAULT_EVENT_CURRENCY } from "../../../model";
 import type { TSupplementPricingFormField } from "../types";
 
 export const PRICING_PER_PERSON_PRICE_DETAILS_LIST: TSupplementPricingFormField[] =
@@ -29,6 +30,6 @@ export const PRICING_PER_PERSON_PRICE_DETAILS_LIST: TSupplementPricingFormField[
 			key: ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY,
 			fieldType: "select",
 			options: CURRENCY_OPTIONS,
-			defaultValue: ENUM_CURRENCY_OPTIONS.USD
+			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];

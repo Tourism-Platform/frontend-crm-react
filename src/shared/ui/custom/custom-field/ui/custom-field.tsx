@@ -68,6 +68,8 @@ type BaseFieldProps = {
 	disabled?: boolean;
 	externalError?: string;
 	hideLabel?: boolean;
+	/** Пишется в RHF через FormField/Controller при регистрации поля */
+	defaultValue?: unknown;
 };
 
 type TextFieldVariant = BaseFieldProps & {
@@ -102,7 +104,6 @@ type SelectFieldVariant = BaseFieldProps & {
 
 type EditorFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "editor">;
-	defaultValue?: string;
 };
 
 type MultiselectFieldVariant = BaseFieldProps & {
@@ -195,6 +196,7 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 		fieldType,
 		externalError,
 		hideLabel,
+		defaultValue,
 		...rest
 	} = props;
 
@@ -291,12 +293,7 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 					/>
 				);
 			case "editor":
-				return (
-					<CustomEditor
-						field={field}
-						defaultValue={props?.defaultValue}
-					/>
-				);
+				return <CustomEditor field={field} />;
 			case "multiselect":
 				return (
 					<MultipleSelector
@@ -411,11 +408,15 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 		}
 	};
 
+	const formFieldDefaultValueProps =
+		defaultValue !== undefined ? { defaultValue } : {};
+
 	if (fieldType === "switch") {
 		return (
 			<FormField
 				control={control}
 				name={name}
+				{...formFieldDefaultValueProps}
 				render={({ field }) => (
 					<FormItem
 						className={cn(
@@ -437,6 +438,7 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 		<FormField
 			control={control}
 			name={name}
+			{...formFieldDefaultValueProps}
 			render={({ field }) => (
 				<FormItem
 					className={cn("relative", !hideLabel && "mb-5", className)}

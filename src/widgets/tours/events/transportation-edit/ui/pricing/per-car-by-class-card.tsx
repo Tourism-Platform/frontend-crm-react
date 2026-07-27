@@ -15,7 +15,6 @@ import {
 
 import {
 	ENUM_FORM_CARS,
-	ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD,
 	ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD,
 	ENUM_TRANSPORTATION_PRICING_FIELD,
 	type ENUM_VEHICLE_BODY_TYPE_TYPE,
@@ -26,7 +25,8 @@ import {
 import {
 	ENUM_FORM_SECTION,
 	PER_CAR_CATEGORY_ROW_FIELDS_LIST,
-	PER_CAR_MARKUP_FIELD
+	PER_CAR_MARKUP_FIELD,
+	createEmptyPerCarCategoryRow
 } from "../../model";
 
 interface IPerCarByClassCardProps {
@@ -115,17 +115,7 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 					type="button"
 					variant="outline"
 					className="w-fit"
-					onClick={() =>
-						append({
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: "",
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: null,
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: null,
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]:
-								"",
-							[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]:
-								null
-						})
-					}
+					onClick={() => append(createEmptyPerCarCategoryRow())}
 				>
 					<Plus className="mr-2 h-4 w-4" />
 					{t("form.pricing.form.per_car.buttons.add_category")}

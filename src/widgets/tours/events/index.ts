@@ -1,3 +1,4 @@
+export * from "./model";
 export * from "./flight-edit";
 export * from "./accommodation-edit";
 export * from "./activity-edit";
