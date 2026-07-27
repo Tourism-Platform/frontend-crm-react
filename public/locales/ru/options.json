@@ -121,6 +121,28 @@
 			"station_transfer": "Трансфер с вокзала",
 			"custom": "Другое"
 		},
+		"accommodationAmenities": {
+			"wifi": "Бесплатный Wi-Fi",
+			"pool": "Бассейн",
+			"breakfast": "Завтрак включён",
+			"parking": "Парковка",
+			"gym": "Тренажёрный зал / фитнес-центр",
+			"spa": "СПА",
+			"restaurant": "Ресторан",
+			"bar": "Бар",
+			"airport_shuttle": "Трансфер из аэропорта",
+			"air_conditioning": "Кондиционер",
+			"room_service": "Обслуживание номеров",
+			"laundry": "Услуги прачечной",
+			"concierge": "Консьерж",
+			"business_center": "Бизнес-центр",
+			"kids_club": "Детский клуб",
+			"beach_access": "Выход к пляжу",
+			"sauna": "Сауна",
+			"jacuzzi": "Джакузи",
+			"pet_friendly": "Можно с животными",
+			"wheelchair_accessible": "Доступно для инвалидных колясок"
+		},
 		"activityTypes": {
 			"food": "Рестораны, кафе, чайханы и уличная еда",
 			"master_class": "Любой мастер-класс или воркшоп (кулинария, керамика, ткачество, каллиграфия)",

@@ -7,6 +7,7 @@ import {
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
+	type ENUM_ACCOMMODATION_AMENITY_TYPE,
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
 	ENUM_ACCOMMODATION_PRICING_TYPE,
 	type TAccommodationEditSchema,
@@ -31,16 +32,19 @@ const hasPerRoomPricingInPayload = (
 	pricing?.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM &&
 	Boolean(pricingDetails.details?.expenses);
 
-const mapAmenitiesFromBackend = (amenities?: AmenitiesTypes[] | null): string =>
-	amenities?.[0] ?? "";
+const mapAmenitiesFromBackend = (
+	amenities?: AmenitiesTypes[] | null
+): ENUM_ACCOMMODATION_AMENITY_TYPE[] => amenities ?? [];
 
 const mapAmenitiesToBackend = (
-	amenities?: string
+	amenities?: ENUM_ACCOMMODATION_AMENITY_TYPE[]
 ): AmenitiesTypes[] | undefined => {
-	if (!amenities?.trim()) return undefined;
-	const values = Object.values(AmenitiesTypes) as string[];
-	if (!values.includes(amenities)) return undefined;
-	return [amenities as AmenitiesTypes];
+	if (!amenities?.length) return undefined;
+
+	const allowed = Object.values(AmenitiesTypes) as string[];
+	const filtered = amenities.filter((item) => allowed.includes(item));
+
+	return filtered.length ? (filtered as AmenitiesTypes[]) : undefined;
 };
 
 export const mapAccommodationEventToForm = (

@@ -121,6 +121,28 @@
 			"station_transfer": "Station transfer",
 			"custom": "Custom"
 		},
+		"accommodationAmenities": {
+			"wifi": "Free Wi-Fi",
+			"pool": "Swimming pool",
+			"breakfast": "Breakfast included",
+			"parking": "Parking",
+			"gym": "Gym / Fitness center",
+			"spa": "Spa",
+			"restaurant": "Restaurant",
+			"bar": "Bar",
+			"airport_shuttle": "Airport shuttle",
+			"air_conditioning": "Air conditioning",
+			"room_service": "Room service",
+			"laundry": "Laundry service",
+			"concierge": "Concierge",
+			"business_center": "Business center",
+			"kids_club": "Kids club",
+			"beach_access": "Beach access",
+			"sauna": "Sauna",
+			"jacuzzi": "Jacuzzi",
+			"pet_friendly": "Pet friendly",
+			"wheelchair_accessible": "Wheelchair accessible"
+		},
 		"activityTypes": {
 			"food": "Restaurants, cafes, teahouses, and street food",
 			"master_class": "Any workshop or master class (cooking, ceramics, weaving, calligraphy)",

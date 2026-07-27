@@ -1,17 +1,22 @@
-import { ACCOMMODATION_AMENITIES_OPTIONS } from "@/shared/config";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { ENUM_FORM_ACCOMMODATION } from "@/entities/tour";
+import {
+	ACCOMMODATION_AMENITIES_LABELS,
+	ENUM_FORM_ACCOMMODATION
+} from "@/entities/tour";
 
 import { type TForm } from "../types";
 
-export const ACCOMMODATION_DETAILS_LIST: TForm[] = [
+export const ACCOMMODATION_DETAILS_LIST = (): TForm[] => [
 	{
 		label: "form.general.details.form.fields.amenities.label",
 		placeholder: "form.general.details.form.fields.amenities.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.AMENITIES,
-		fieldType: "select",
-		options: ACCOMMODATION_AMENITIES_OPTIONS,
-		className: "col-span-1"
+		fieldType: "multiselect",
+		options: useValueToTranslateLabel(ACCOMMODATION_AMENITIES_LABELS),
+		className: "col-span-2",
+		badgeVariant: "secondary",
+		badgeSize: "lg"
 	},
 	{
 		label: "form.general.details.form.fields.description.label",

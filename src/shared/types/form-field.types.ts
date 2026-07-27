@@ -70,6 +70,7 @@ type TFormMultiSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	placeholder?: string;
 	displayMode?: MultipleSelectorDisplayMode;
 	badgeVariant?: BadgeVariant;
+	badgeSize?: BadgeSize;
 	hideClearAllButton?: boolean;
 };
 

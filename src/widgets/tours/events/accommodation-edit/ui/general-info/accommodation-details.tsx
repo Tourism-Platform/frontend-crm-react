@@ -18,7 +18,7 @@ const AccommodationDetailsBase: FC<IAccommodationDetailsProps> = ({ form }) => {
 		<div className="grid gap-5">
 			<h2 className="text-xl">{t("form.general.details.title")}</h2>
 			<div className="grid grid-cols-2 gap-y-1">
-				{ACCOMMODATION_DETAILS_LIST.map(({ key, ...item }) => (
+				{ACCOMMODATION_DETAILS_LIST().map(({ key, ...item }) => (
 					<CustomField
 						key={key}
 						control={form?.control}
