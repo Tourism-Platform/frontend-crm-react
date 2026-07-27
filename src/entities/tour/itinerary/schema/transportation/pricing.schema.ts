@@ -13,7 +13,8 @@ import {
 	ENUM_TRANSPORTATION_PRICE_ROW_FIELD,
 	ENUM_TRANSPORTATION_PRICING_FIELD,
 	ENUM_TRANSPORTATION_PRICING_INVOICING,
-	ENUM_TRANSPORTATION_PRICING_TYPE
+	ENUM_TRANSPORTATION_PRICING_TYPE,
+	type ITransportationPriceRowMarkup
 } from "../../types";
 
 const msg = i18nKey<TTourEventTransportationEditPageKeys>();
@@ -72,9 +73,7 @@ const perCarCategoryExpensesSchema = z.object({
 
 const validateMarkupRows = (
 	rows: {
-		[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: z.infer<
-			typeof markupSchema
-		>;
+		[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: ITransportationPriceRowMarkup | null;
 	}[],
 	ctx: z.RefinementCtx,
 	pathPrefix: (string | number)[]
@@ -98,6 +97,53 @@ const validateMarkupRows = (
 	});
 };
 
+const validateFlatOrPerPersonPricing = (
+	data: {
+		total_price?: number | null;
+		currency?: string;
+		add_margin_separately: boolean;
+		markup?: ITransportationPriceRowMarkup | null;
+	},
+	ctx: z.RefinementCtx
+) => {
+	if (data.total_price == null || data.total_price < 1) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.total_price.errors.min"
+			),
+			path: [ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]
+		});
+	}
+	if (data.total_price != null && data.total_price > 100000) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.total_price.errors.max"
+			),
+			path: [ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]
+		});
+	}
+	if (!data.currency?.trim()) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.currency.errors.required"
+			),
+			path: [ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]
+		});
+	}
+	if (data.add_margin_separately && !data.markup?.value?.trim()) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.per_car.fields.markup.value.errors.required"
+			),
+			path: [ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP, "value"]
+		});
+	}
+};
+
 export const TRANSPORTATION_PRICING_SCHEMA = z
 	.object({
 		[ENUM_TRANSPORTATION_PRICING_FIELD.INVOICING]: z.enum(
@@ -116,6 +162,7 @@ export const TRANSPORTATION_PRICING_SCHEMA = z
 			nullableNumber.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.TAXES]: nullableNumber.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]: z.string().optional(),
+		[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.PACKAGE_TYPE]: z.string()
 	})
 	.superRefine((data, ctx) => {
@@ -179,48 +226,11 @@ export const TRANSPORTATION_PRICING_SCHEMA = z
 			return;
 		}
 
-		const hasFlatRatePricing =
-			data.total_price != null ||
-			data.taxes != null ||
-			Boolean(data.currency?.trim());
-
-		if (!hasFlatRatePricing) {
-			return;
-		}
-
 		if (
-			data.total_price == null ||
-			data.total_price < 1 ||
-			data.total_price > 10000 ||
-			!data.currency?.trim()
+			data.pricing_type === ENUM_TRANSPORTATION_PRICING_TYPE.FLAT_RATE ||
+			data.pricing_type === ENUM_TRANSPORTATION_PRICING_TYPE.PER_PERSON
 		) {
-			if (data.total_price == null || data.total_price < 1) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: msg(
-						"form.pricing.form.pricing_details.fields.total_price.errors.min"
-					),
-					path: [ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]
-				});
-			}
-			if (data.total_price != null && data.total_price > 10000) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: msg(
-						"form.pricing.form.pricing_details.fields.total_price.errors.max"
-					),
-					path: [ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]
-				});
-			}
-			if (!data.currency?.trim()) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: msg(
-						"form.pricing.form.pricing_details.fields.currency.errors.required"
-					),
-					path: [ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]
-				});
-			}
+			validateFlatOrPerPersonPricing(data, ctx);
 		}
 	});
 

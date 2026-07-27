@@ -300,6 +300,7 @@ export const getDefaultTransportationPricing = (
 		priceBasedOnClass: false,
 		carsListLength: carsList.length
 	}),
+	markup: null,
 	package_type: ""
 });
 
@@ -356,9 +357,12 @@ export const mapTransportationPricingFromBackend = (
 	}
 
 	if (expenses.typ === "fixed") {
+		const markup = mapMarkupFromBackend(expenses.markup);
 		return {
 			...defaults,
 			pricing_type: ENUM_TRANSPORTATION_PRICING_TYPE.FLAT_RATE,
+			add_margin_separately: Boolean(markup?.value),
+			[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: markup,
 			...(expenses.cost?.val != null && {
 				total_price: expenses.cost.val
 			}),
@@ -369,9 +373,12 @@ export const mapTransportationPricingFromBackend = (
 		};
 	}
 
+	const perPersonMarkup = mapMarkupFromBackend(expenses.markup);
 	return {
 		...defaults,
 		pricing_type: ENUM_TRANSPORTATION_PRICING_TYPE.PER_PERSON,
+		add_margin_separately: Boolean(perPersonMarkup?.value),
+		[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: perPersonMarkup,
 		...(expenses.cost_per_person?.val != null && {
 			total_price: expenses.cost_per_person.val
 		}),
@@ -525,18 +532,23 @@ export const mapTransportationPricingToBackend = (
 					cost: { val: taxes, currency: currency as Currency }
 				}
 			: null;
+	const markup = mapMarkupToBackend(
+		pricing[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP] ?? null,
+		currency,
+		pricing.add_margin_separately
+	);
 
 	if (pricing.pricing_type === ENUM_TRANSPORTATION_PRICING_TYPE.FLAT_RATE) {
 		return {
 			details: {
-				expenses: { typ: "fixed", cost, fees }
+				expenses: { typ: "fixed", cost, fees, markup }
 			}
 		};
 	}
 
 	return {
 		details: {
-			expenses: { typ: "per_person", cost_per_person: cost, fees }
+			expenses: { typ: "per_person", cost_per_person: cost, fees, markup }
 		}
 	};
 };

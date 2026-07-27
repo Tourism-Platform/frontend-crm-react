@@ -19,7 +19,12 @@ import { mapAccommodationPricingToBackend } from "./accommodation-pricing.conver
 
 vi.mock("@/shared/config", () => ({
 	ENV: { VITE_API_URL: "http://localhost" },
-	i18nKey: () => (key: string) => key
+	i18nKey: () => (key: string) => key,
+	ENUM_LOCAL_STORAGE: { IS_AUTH: "is_auth" }
+}));
+
+vi.mock("@/entities/commission", () => ({
+	DEFAULT_EVENT_CURRENCY: "USD"
 }));
 
 const roomsList = [
@@ -200,13 +205,13 @@ describe("mapAccommodationPricingToBackend", () => {
 							description: "Double",
 							expenses: {
 								typ: "fixed",
-								cost: { val: 150, currency: Currency.USD }
-							},
-							fees: {
-								typ: "fixed",
-								cost: { val: 10, currency: Currency.USD }
-							},
-							markup: null
+								cost: { val: 150, currency: Currency.USD },
+								fees: {
+									typ: "fixed",
+									cost: { val: 10, currency: Currency.USD }
+								},
+								markup: null
+							}
 						}
 					]
 				}
@@ -244,9 +249,7 @@ describe("mapAccommodationPricingToBackend", () => {
 						{
 							typ: HousingRoomTypes.Double,
 							description: "Double",
-							expenses: undefined,
-							fees: undefined,
-							markup: null
+							expenses: undefined
 						}
 					]
 				}
@@ -301,10 +304,10 @@ describe("mapAccommodationPricingToBackend", () => {
 										cost: {
 											val: 200,
 											currency: Currency.USD
-										}
-									},
-									fees: undefined,
-									markup: null
+										},
+										fees: null,
+										markup: null
+									}
 								}
 							]
 						}

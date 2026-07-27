@@ -20,13 +20,14 @@ import type { TTransportationEditSchema } from "@/entities/tour";
 import { EventTitleInput } from "../ui";
 
 import {
+	type ENUM_FORM_SECTION_TYPE,
 	type ITransportationEditTabs,
 	TRANSPORTATION_EDIT_TABS_LIST
 } from "./model";
 
 export interface ITransportationEditProps {
 	form: UseFormReturn<TTransportationEditSchema>;
-	createSectionSubmit: () => Promise<void>;
+	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
 	tabs?: ITransportationEditTabs[];
 }
@@ -80,7 +81,10 @@ export const TransportationEdit: FC<ITransportationEditProps> = ({
 									<item.slot
 										form={form}
 										{...(item?.section && {
-											onSubmit: createSectionSubmit
+											onSubmit: () =>
+												createSectionSubmit(
+													item.section
+												)
 										})}
 										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}

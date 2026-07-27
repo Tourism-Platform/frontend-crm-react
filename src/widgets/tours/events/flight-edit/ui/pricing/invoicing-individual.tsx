@@ -1,12 +1,16 @@
 import { type FC } from "react";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
+	Checkbox,
 	CustomField,
+	CustomInputSelect,
 	CustomOptionTabs,
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
+	Label,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -18,13 +22,32 @@ import {
 import {
 	ENUM_FORM_SECTION,
 	type ISlotProps,
-	PRICING_INDIVIDUAL_TABS_LIST
+	PRICING_INDIVIDUAL_TABS_LIST,
+	PRICING_MARKUP_FIELD,
+	createEmptyPricingMarkup
 } from "../../model";
-
-// import { BookingDetails } from "./booking-details";
 
 const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 	const { t } = useTranslation("flight_edit_page");
+	const pricingType = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.PRICING_TYPE}`
+	});
+	const addMarginSeparately = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
+	});
+
+	const handleAddMarginSeparatelyChange = (checked: boolean) => {
+		form.setValue(
+			`${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`,
+			checked
+		);
+		form.setValue(
+			`${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.MARKUP}`,
+			checked ? createEmptyPricingMarkup() : null
+		);
+	};
 
 	return (
 		<div className="grid gap-5">
@@ -33,11 +56,7 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 					{t("form.pricing.pricing_type.title")}
 				</h3>
 				<CustomOptionTabs
-					defaultValue={
-						form.getValues(
-							`${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.PRICING_TYPE}`
-						) ?? ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE
-					}
+					value={pricingType ?? ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE}
 					onValueChange={(val) =>
 						form.setValue(
 							`${ENUM_FORM_SECTION.PRICING}.${ENUM_FLIGHT_PRICING_FIELD.PRICING_TYPE}`,
@@ -61,22 +80,73 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 							key={tab.type}
 							value={tab.type}
 						>
-							<div className="grid gap-1 mb-8">
-								<h3 className="text-lg">
-									{t(
-										"form.pricing.form.pricing_details.title"
-									)}
-								</h3>
-								<div className="grid grid-cols-3 gap-5">
+							<div className="grid gap-4 mb-8">
+								<div className="flex flex-wrap items-center justify-between gap-4">
+									<h3 className="text-lg">
+										{t(
+											"form.pricing.form.pricing_details.title"
+										)}
+									</h3>
+									<div className="flex items-center gap-2">
+										<Checkbox
+											id={`add-margin-separately-${tab.type}`}
+											checked={Boolean(
+												addMarginSeparately
+											)}
+											onCheckedChange={(checked) =>
+												handleAddMarginSeparatelyChange(
+													Boolean(checked)
+												)
+											}
+										/>
+										<Label
+											htmlFor={`add-margin-separately-${tab.type}`}
+										>
+											{t(
+												"form.pricing.form.pricing_details.checkboxes.add_margin_separately"
+											)}
+										</Label>
+									</div>
+								</div>
+								<div
+									className={
+										addMarginSeparately
+											? "grid grid-cols-[1fr_1fr_1.5fr_0.5fr] gap-5"
+											: "grid grid-cols-3 gap-5"
+									}
+								>
 									{tab.priceDetailsList.map(
-										({ key, ...item }) => (
-											<CustomField
-												key={key}
-												name={`${ENUM_FORM_SECTION.PRICING}.${key}`}
-												control={form?.control}
-												t={t}
-												{...item}
-											/>
+										({ key, ...item }, fieldIndex) => (
+											<>
+												{addMarginSeparately &&
+												fieldIndex ===
+													tab.priceDetailsList
+														.length -
+														1 ? (
+													<CustomInputSelect
+														key={`${key}-markup`}
+														control={form.control}
+														name={`${ENUM_FORM_SECTION.PRICING}.${PRICING_MARKUP_FIELD.key}`}
+														label={
+															PRICING_MARKUP_FIELD.label
+														}
+														placeholder={
+															PRICING_MARKUP_FIELD.placeholder
+														}
+														selectOptions={[
+															...PRICING_MARKUP_FIELD.selectOptions
+														]}
+														t={t}
+													/>
+												) : null}
+												<CustomField
+													key={key}
+													name={`${ENUM_FORM_SECTION.PRICING}.${key}`}
+													control={form.control}
+													t={t}
+													{...item}
+												/>
+											</>
 										)
 									)}
 								</div>
@@ -85,8 +155,6 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 					))}
 				</CustomOptionTabs>
 			</div>
-			{/* <Separator className="mb-12" />
-			<BookingDetails form={form} className="mb-12" /> */}
 		</div>
 	);
 };

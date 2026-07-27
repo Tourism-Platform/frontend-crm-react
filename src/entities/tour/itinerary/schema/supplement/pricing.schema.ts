@@ -11,7 +11,8 @@ import {
 	ENUM_SUPPLEMENT_PRICE_ROW_FIELD,
 	ENUM_SUPPLEMENT_PRICING_FIELD,
 	ENUM_SUPPLEMENT_PRICING_INVOICING,
-	ENUM_SUPPLEMENT_PRICING_TYPE
+	ENUM_SUPPLEMENT_PRICING_TYPE,
+	type ISupplementPriceRowMarkup
 } from "../../types";
 
 const msg = i18nKey<TTourEventSupplementEditPageKeys>();
@@ -42,6 +43,53 @@ const perItemExpensesSchema = z.object({
 	)
 });
 
+const validateFlatOrPerPersonPricing = (
+	data: {
+		total_price?: number | null;
+		currency?: string;
+		add_margin_separately: boolean;
+		markup?: ISupplementPriceRowMarkup | null;
+	},
+	ctx: z.RefinementCtx
+) => {
+	if (data.total_price == null || !Number.isFinite(data.total_price)) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.total_price.errors.required"
+			),
+			path: [ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]
+		});
+	}
+	if (data.total_price != null && data.total_price > 100000) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.total_price.errors.max"
+			),
+			path: [ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]
+		});
+	}
+	if (!data.currency?.trim()) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.currency.errors.required"
+			),
+			path: [ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]
+		});
+	}
+	if (data.add_margin_separately && !data.markup?.value?.trim()) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.per_item.fields.markup.value.errors.required"
+			),
+			path: [ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP, "value"]
+		});
+	}
+};
+
 export const SUPPLEMENT_PRICING_SCHEMA = z
 	.object({
 		[ENUM_SUPPLEMENT_PRICING_FIELD.INVOICING]: z.enum(
@@ -56,6 +104,7 @@ export const SUPPLEMENT_PRICING_SCHEMA = z
 		[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: nullableNumber.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]: nullableNumber.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: z.string().optional(),
+		[ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.PACKAGE_TYPE]: z.string()
 	})
 	.superRefine((data, ctx) => {
@@ -78,24 +127,11 @@ export const SUPPLEMENT_PRICING_SCHEMA = z
 			return;
 		}
 
-		if (data.total_price == null || !Number.isFinite(data.total_price)) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: msg(
-					"form.pricing.form.pricing_details.fields.total_price.errors.required"
-				),
-				path: [ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]
-			});
-		}
-
-		if (!data.currency?.trim()) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: msg(
-					"form.pricing.form.pricing_details.fields.currency.errors.required"
-				),
-				path: [ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]
-			});
+		if (
+			data.pricing_type === ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE ||
+			data.pricing_type === ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON
+		) {
+			validateFlatOrPerPersonPricing(data, ctx);
 		}
 	});
 

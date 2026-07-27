@@ -14,14 +14,13 @@ export const PER_ITEM_ROW_FIELDS_LIST: TSupplementPricingFormField[] = [
 		fieldType: "input",
 		type: "number"
 	},
-	// Backend SupplementaryItem has no `fees` — hide until API supports it
-	// {
-	// 	key: ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES,
-	// 	label: "form.pricing.form.per_item.fields.taxes_fees.label",
-	// 	placeholder: "form.pricing.form.per_item.fields.taxes_fees.placeholder",
-	// 	fieldType: "input",
-	// 	type: "number"
-	// },
+	{
+		key: ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES,
+		label: "form.pricing.form.per_item.fields.taxes_fees.label",
+		placeholder: "form.pricing.form.per_item.fields.taxes_fees.placeholder",
+		fieldType: "input",
+		type: "number"
+	},
 	{
 		key: ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY,
 		label: "form.pricing.form.pricing_details.fields.currency.label",

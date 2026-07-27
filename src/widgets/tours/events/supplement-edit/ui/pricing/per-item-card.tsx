@@ -48,8 +48,8 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 			<CardContent className="grid gap-4">
 				<div
 					className={cn(
-						"grid grid-cols-[1fr_1fr] gap-5",
-						addMarginSeparately && "grid-cols-[1fr_1.5fr_1fr]"
+						"grid grid-cols-[1fr_1fr_1fr] gap-5",
+						addMarginSeparately && "grid-cols-[1fr_1fr_1.5fr_0.5fr]"
 					)}
 				>
 					{PER_ITEM_ROW_FIELDS_LIST.map(

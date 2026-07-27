@@ -25,7 +25,10 @@ import {
 } from "@/entities/tour";
 
 import { TransportationEdit } from "@/widgets/tours";
-import { TRANSPORTATION_EDIT_TABS_LIST } from "@/widgets/tours/events/transportation-edit/model";
+import {
+	type ENUM_FORM_SECTION_TYPE,
+	TRANSPORTATION_EDIT_TABS_LIST
+} from "@/widgets/tours/events/transportation-edit/model";
 
 export const LibraryTransferEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
@@ -68,10 +71,11 @@ export const LibraryTransferEditPage: FC = () => {
 		}
 	}, [libraryEvent, form, isCreate]);
 
-	const createSectionSubmit = async () => {
+	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
 		if (
 			!(await validateFormWithSectionToast(form, t, {
-				keyPrefix: "toasts.validation.error"
+				keyPrefix: "toasts.validation.error",
+				...(section && { fields: section })
 			}))
 		) {
 			return;

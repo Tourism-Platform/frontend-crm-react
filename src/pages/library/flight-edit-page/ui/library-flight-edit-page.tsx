@@ -25,7 +25,10 @@ import {
 } from "@/entities/tour";
 
 import { FlightEdit } from "@/widgets/tours";
-import { FLIGHT_EDIT_TABS_LIST } from "@/widgets/tours/events/flight-edit/model";
+import {
+	type ENUM_FORM_SECTION_TYPE,
+	FLIGHT_EDIT_TABS_LIST
+} from "@/widgets/tours/events/flight-edit/model";
 
 export const LibraryFlightEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
@@ -68,10 +71,11 @@ export const LibraryFlightEditPage: FC = () => {
 		}
 	}, [libraryEvent, form, isCreate]);
 
-	const createSectionSubmit = async () => {
+	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
 		if (
 			!(await validateFormWithSectionToast(form, t, {
-				keyPrefix: "toasts.validation.error"
+				keyPrefix: "toasts.validation.error",
+				...(section && { fields: section })
 			}))
 		) {
 			return;

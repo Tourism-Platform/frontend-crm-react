@@ -19,11 +19,15 @@ import type { TFlightEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import { FLIGHT_EDIT_TABS_LIST, type IFlightEditTabs } from "./model";
+import {
+	type ENUM_FORM_SECTION_TYPE,
+	FLIGHT_EDIT_TABS_LIST,
+	type IFlightEditTabs
+} from "./model";
 
 export interface IFlightEditProps {
 	form: UseFormReturn<TFlightEditSchema>;
-	createSectionSubmit: () => Promise<void>;
+	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
 	tabs?: IFlightEditTabs[];
 }
@@ -76,7 +80,10 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 									<item.slot
 										form={form}
 										{...(item?.section && {
-											onSubmit: createSectionSubmit
+											onSubmit: () =>
+												createSectionSubmit(
+													item.section
+												)
 										})}
 										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}

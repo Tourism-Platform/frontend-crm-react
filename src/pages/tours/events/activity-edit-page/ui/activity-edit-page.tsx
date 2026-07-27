@@ -15,6 +15,7 @@ import {
 } from "@/entities/tour";
 
 import { ActivityEdit } from "@/widgets/tours";
+import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/activity-edit/model";
 
 export const ActivityEditPage: FC = () => {
 	const { t, i18n } = useTranslation("activity_edit_page");
@@ -38,11 +39,15 @@ export const ActivityEditPage: FC = () => {
 		}
 	}, [data, form]);
 
-	const createSectionSubmit = async () => {
-		const isValid = await validateFormWithSectionToast(form, t, {
-			keyPrefix: "form.toasts.validation.error"
-		});
-		if (!isValid) return;
+	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
+		if (
+			!(await validateFormWithSectionToast(form, t, {
+				keyPrefix: "form.toasts.validation.error",
+				...(section && { fields: section })
+			}))
+		) {
+			return;
+		}
 
 		try {
 			await update(

@@ -15,6 +15,7 @@ import {
 } from "@/entities/tour";
 
 import { SupplementEdit } from "@/widgets/tours";
+import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/supplement-edit/model";
 
 export const SupplementEditPage: FC = () => {
 	const { t, i18n } = useTranslation("supplement_edit_page");
@@ -38,10 +39,11 @@ export const SupplementEditPage: FC = () => {
 		}
 	}, [data, form]);
 
-	const createSectionSubmit = async () => {
+	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
 		if (
 			!(await validateFormWithSectionToast(form, t, {
-				keyPrefix: "form.toasts.validation.error"
+				keyPrefix: "form.toasts.validation.error",
+				...(section && { fields: section })
 			}))
 		) {
 			return;

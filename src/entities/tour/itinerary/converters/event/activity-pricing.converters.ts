@@ -1,51 +1,105 @@
 import { Currency } from "@/shared/api";
 
 import {
+	ENUM_ACTIVITY_MARKUP_TYP,
+	ENUM_ACTIVITY_PRICING_FIELD,
 	ENUM_ACTIVITY_PRICING_INVOICING,
 	ENUM_ACTIVITY_PRICING_TYPE,
+	type IActivityPriceRowMarkup,
 	type TActivityDetailsBackend,
-	type TActivityPricingSchema
+	type TActivityPricingSchema,
+	type TCommissionMarkupBackend,
+	type TCommissionMarkupInputBackend
 } from "../../types";
+
+const mapMarkupFromBackend = (
+	markup?: TCommissionMarkupBackend | null
+): IActivityPriceRowMarkup | null => {
+	if (!markup) return null;
+	if (markup.typ === "percentage") {
+		return {
+			typ: ENUM_ACTIVITY_MARKUP_TYP.PERCENTAGE,
+			value: String((markup.percentage ?? 0) * 100)
+		};
+	}
+	return {
+		typ: ENUM_ACTIVITY_MARKUP_TYP.FIXED,
+		value: String(markup.cost?.val ?? "")
+	};
+};
+
+const mapMarkupToBackend = (
+	markup: IActivityPriceRowMarkup | null,
+	rowCurrency: string,
+	addMarginSeparately: boolean
+): TCommissionMarkupInputBackend | null => {
+	if (!addMarginSeparately || !markup?.value) return null;
+	if (markup.typ === ENUM_ACTIVITY_MARKUP_TYP.PERCENTAGE) {
+		return {
+			typ: "percentage",
+			percentage: Number(markup.value) / 100
+		};
+	}
+	if (!rowCurrency) return null;
+	return {
+		typ: "fixed",
+		cost: {
+			val: Number(markup.value),
+			currency: rowCurrency as Currency
+		}
+	};
+};
+
+const getDefaultActivityPricing = (): TActivityPricingSchema => ({
+	invoicing: ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL,
+	pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
+	add_margin_separately: false,
+	markup: null,
+	package_type: ""
+});
 
 export const mapActivityPricingFromBackend = (
 	details?: TActivityDetailsBackend | null
 ): TActivityPricingSchema => {
 	const expenses = details?.expenses;
+	const defaults = getDefaultActivityPricing();
 
 	if (!expenses) {
-		return {
-			invoicing: ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL,
-			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
-			package_type: ""
-		};
+		return defaults;
 	}
 
 	const feesVal = expenses.fees?.cost?.val;
 
 	if (expenses.typ === "fixed") {
+		const markup = mapMarkupFromBackend(expenses.markup);
 		return {
-			invoicing: ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL,
+			...defaults,
 			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
-			...(!!expenses.cost?.val && { total_price: expenses.cost.val }),
-			...(!!feesVal && { taxes: feesVal }),
-			...(!!expenses.cost?.currency && {
-				currency: expenses.cost.currency
+			add_margin_separately: Boolean(markup?.value),
+			[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: markup,
+			...(expenses.cost?.val != null && {
+				total_price: expenses.cost.val
 			}),
-			package_type: ""
+			...(feesVal != null && { taxes: feesVal }),
+			...(expenses.cost?.currency && {
+				currency: expenses.cost.currency
+			})
 		};
 	}
 
+	const perPersonMarkup = mapMarkupFromBackend(expenses.markup);
 	return {
-		invoicing: ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL,
+		...defaults,
 		pricing_type: ENUM_ACTIVITY_PRICING_TYPE.PER_PERSON,
-		...(!!expenses.cost_per_person?.val && {
+		add_margin_separately: Boolean(perPersonMarkup?.value),
+		[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: perPersonMarkup,
+		...(expenses.cost_per_person?.val != null && {
 			total_price: expenses.cost_per_person.val
 		}),
-		...(!!feesVal && { taxes: feesVal }),
-		...(!!expenses.cost_per_person?.currency && {
+		...(feesVal != null && { taxes: feesVal }),
+		...(expenses.cost_per_person?.currency && {
 			currency: expenses.cost_per_person.currency
-		}),
-		package_type: ""
+		})
 	};
 };
 
@@ -54,34 +108,47 @@ export const mapActivityPricingToBackend = (
 ): { details?: Pick<TActivityDetailsBackend, "expenses"> } => {
 	if (
 		!pricing ||
-		pricing.invoicing !== ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL ||
-		!pricing.total_price ||
-		!pricing.taxes ||
-		!pricing.currency
+		pricing.invoicing !== ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL
 	) {
 		return {};
 	}
 
+	const totalPrice = pricing[ENUM_ACTIVITY_PRICING_FIELD.TOTAL_PRICE];
+	const currency = pricing[ENUM_ACTIVITY_PRICING_FIELD.CURRENCY];
+	const taxes = pricing[ENUM_ACTIVITY_PRICING_FIELD.TAXES];
+
+	if (totalPrice == null || !currency) {
+		return {};
+	}
+
 	const cost = {
-		val: pricing.total_price,
-		currency: pricing.currency as Currency
+		val: totalPrice,
+		currency: currency as Currency
 	};
-	const fees = {
-		typ: "fixed" as const,
-		cost: { val: pricing.taxes, currency: pricing.currency as Currency }
-	};
+	const fees =
+		taxes != null
+			? {
+					typ: "fixed" as const,
+					cost: { val: taxes, currency: currency as Currency }
+				}
+			: null;
+	const markup = mapMarkupToBackend(
+		pricing[ENUM_ACTIVITY_PRICING_FIELD.MARKUP] ?? null,
+		currency,
+		pricing.add_margin_separately
+	);
 
 	if (pricing.pricing_type === ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE) {
 		return {
 			details: {
-				expenses: { typ: "fixed", cost, fees }
+				expenses: { typ: "fixed", cost, fees, markup }
 			}
 		};
 	}
 
 	return {
 		details: {
-			expenses: { typ: "per_person", cost_per_person: cost, fees }
+			expenses: { typ: "per_person", cost_per_person: cost, fees, markup }
 		}
 	};
 };

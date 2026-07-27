@@ -1,6 +1,7 @@
 import {
 	ENUM_TRANSPORTATION_MARKUP_TYP,
-	ENUM_TRANSPORTATION_PRICE_ROW_FIELD
+	ENUM_TRANSPORTATION_PRICE_ROW_FIELD,
+	ENUM_TRANSPORTATION_PRICING_FIELD
 } from "@/entities/tour";
 
 export const MARKUP_TYPE_OPTIONS = [
@@ -10,6 +11,18 @@ export const MARKUP_TYPE_OPTIONS = [
 
 export const PER_CAR_MARKUP_FIELD = {
 	key: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP,
+	label: "form.pricing.form.per_car.fields.markup.value.label",
+	placeholder: "form.pricing.form.per_car.fields.markup.value.placeholder",
+	selectOptions: MARKUP_TYPE_OPTIONS
+} as const;
+
+export const createEmptyPricingMarkup = () => ({
+	typ: ENUM_TRANSPORTATION_MARKUP_TYP.FIXED,
+	value: ""
+});
+
+export const PRICING_MARKUP_FIELD = {
+	key: ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP,
 	label: "form.pricing.form.per_car.fields.markup.value.label",
 	placeholder: "form.pricing.form.per_car.fields.markup.value.placeholder",
 	selectOptions: MARKUP_TYPE_OPTIONS

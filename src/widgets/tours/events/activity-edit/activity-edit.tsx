@@ -20,11 +20,15 @@ import type { TActivityEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import { EVENT_EDIT_TABS_LIST, type IActivityEditTabs } from "./model";
+import {
+	type ENUM_FORM_SECTION_TYPE,
+	EVENT_EDIT_TABS_LIST,
+	type IActivityEditTabs
+} from "./model";
 
 export interface IActivityEditProps {
 	form: UseFormReturn<TActivityEditSchema>;
-	createSectionSubmit: () => Promise<void>;
+	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
 	tabs?: IActivityEditTabs[];
 }
@@ -78,7 +82,10 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 									<item.slot
 										form={form}
 										{...(item?.section && {
-											onSubmit: createSectionSubmit
+											onSubmit: () =>
+												createSectionSubmit(
+													item.section
+												)
 										})}
 										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}

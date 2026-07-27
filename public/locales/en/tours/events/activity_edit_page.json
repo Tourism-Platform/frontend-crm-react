@@ -145,13 +145,16 @@
 			"form": {
 				"pricing_details": {
 					"title": "Pricing details",
+					"checkboxes": {
+						"add_margin_separately": "Add margin to this component separately"
+					},
 					"fields": {
 						"total_price": {
 							"label": "Total cost",
 							"placeholder": "Enter...",
 							"errors": {
 								"min": "Price must be at least 1",
-								"max": "Price must not exceed 10000"
+								"max": "Price must not exceed 100000"
 							}
 						},
 						"total_price_per_person": {
@@ -176,6 +179,15 @@
 							"errors": {
 								"required": "Currency is required",
 								"max": "Currency code is too long"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Unique margin",
+								"placeholder": "Enter...",
+								"errors": {
+									"required": "Margin is required"
+								}
 							}
 						}
 					}
