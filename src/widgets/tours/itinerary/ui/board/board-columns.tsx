@@ -62,13 +62,13 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 								key={day}
 								className="w-100 flex-shrink-0 flex flex-col"
 							>
-								<h3 className="font-semibold mb-3">
+								<h3 className="font-semibold mb-3 text-center">
 									{t("day_details.title", {
 										day: index + 1
 									})}
-									<span className="text-sm text-muted-foreground font-normal ml-2">
+									{/* <span className="text-sm text-muted-foreground font-normal ml-2">
 										• Uzbekistan, Tashkent
-									</span>
+									</span> */}
 								</h3>
 								<SortableDayColumn
 									day={day}
