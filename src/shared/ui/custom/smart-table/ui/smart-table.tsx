@@ -131,6 +131,8 @@ function SmartTableInner<TData extends object>({
 		getFilteredRowModel: getFilteredRowModel(),
 		getFacetedUniqueValues: getFacetedUniqueValues(),
 		getExpandedRowModel: getExpandedRowModel(),
+		// Keep expanded children on the same page as their parent
+		paginateExpandedRows: false,
 		getRowCanExpand: getRowCanExpand as any,
 		getSubRows,
 		columnResizeMode: "onChange",
