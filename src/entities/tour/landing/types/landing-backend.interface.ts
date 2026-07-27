@@ -3,18 +3,14 @@ import type {
 	TOUR_LANDING_PAGE_PATHS
 } from "@/shared/api";
 
-import type {
-	ENUM_AMENITIES_TYPE,
-	ENUM_LANGUAGES_TYPE,
-	ENUM_PICKUP_TYPE_TYPE
-} from "./index";
+import type { ENUM_LANGUAGES_TYPE, ENUM_PICKUP_TYPE_TYPE } from "./index";
 
 export interface ILandingBackend {
 	photos: string;
 	description: string;
 	languages: ENUM_LANGUAGES_TYPE[];
-	includedAmenities: ENUM_AMENITIES_TYPE[];
-	notIncludedAmenities: ENUM_AMENITIES_TYPE[];
+	includedAmenities: string[];
+	notIncludedAmenities: string[];
 	pickupType: ENUM_PICKUP_TYPE_TYPE[];
 	pickupDescription: string;
 	cancellationPolicy: string;

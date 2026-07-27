@@ -2,12 +2,7 @@ import { z } from "zod";
 
 import { type TLandingPageKeys, i18nKey } from "@/shared/config";
 
-import {
-	ENUM_AMENITIES,
-	ENUM_FORM_LANDING,
-	ENUM_LANGUAGES,
-	ENUM_PICKUP_TYPE
-} from "../types";
+import { ENUM_FORM_LANDING, ENUM_LANGUAGES, ENUM_PICKUP_TYPE } from "../types";
 
 const msg = i18nKey<TLandingPageKeys>();
 
@@ -20,10 +15,8 @@ export const LANDING_SCHEMA = z.object({
 		})
 		.optional(),
 	[ENUM_FORM_LANDING.LANGUAGES]: z.array(z.enum(ENUM_LANGUAGES)).optional(),
-	[ENUM_FORM_LANDING.INCLUDED]: z.array(z.enum(ENUM_AMENITIES)).optional(),
-	[ENUM_FORM_LANDING.NOT_INCLUDED]: z
-		.array(z.enum(ENUM_AMENITIES))
-		.optional(),
+	[ENUM_FORM_LANDING.INCLUDED]: z.array(z.string()).optional(),
+	[ENUM_FORM_LANDING.NOT_INCLUDED]: z.array(z.string()).optional(),
 	[ENUM_FORM_LANDING.PICKUP_TYPE]: z
 		.array(z.enum(ENUM_PICKUP_TYPE))
 		.optional(),

@@ -3,13 +3,8 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { withErrorBoundary } from "@/shared/ui";
-import { useValueToTranslateLabel } from "@/shared/utils";
 
-import {
-	AMENITIES_INCLUDED_LABELS,
-	AMENITIES_NOT_INCLUDED_LABELS,
-	type IPreviewTourData
-} from "@/entities/tour";
+import { type IPreviewTourData } from "@/entities/tour";
 
 interface IPreviewTourAmenitiesProps {
 	data?: IPreviewTourData;
@@ -17,18 +12,6 @@ interface IPreviewTourAmenitiesProps {
 
 const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
 	const { t } = useTranslation("preview_tour_page");
-
-	const allAmenitiesMap = {
-		...AMENITIES_NOT_INCLUDED_LABELS,
-		...AMENITIES_INCLUDED_LABELS
-	};
-
-	const allLabels = useValueToTranslateLabel(allAmenitiesMap);
-
-	const getLabel = (
-		value: string,
-		labels: { value: string; label: string }[]
-	) => labels.find((l) => l.value === value)?.label ?? value;
 
 	if (!data) return null;
 
@@ -43,9 +26,7 @@ const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
 						return (
 							<li key={item} className="flex items-center gap-2">
 								<Check className="text-green-500 w-5 h-5 shrink-0" />
-								<span className="text-sm">
-									{getLabel(item, allLabels)}
-								</span>
+								<span className="text-sm">{item}</span>
 							</li>
 						);
 					})}
@@ -60,9 +41,7 @@ const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
 						return (
 							<li key={item} className="flex items-center gap-2">
 								<X className="text-red-500 w-5 h-5 shrink-0" />
-								<span className="text-sm">
-									{getLabel(item, allLabels)}
-								</span>
+								<span className="text-sm">{item}</span>
 							</li>
 						);
 					})}

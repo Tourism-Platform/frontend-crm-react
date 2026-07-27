@@ -16,6 +16,7 @@ import {
 	CustomAutocomplete,
 	CustomCalendarRange,
 	CustomGeoSelect,
+	CustomTagInput,
 	CustomUploadFilesField,
 	DatePickerInput,
 	type DatePickerInputProps,
@@ -49,6 +50,7 @@ export type CustomFieldVariant =
 	| "date"
 	| "select"
 	| "multiselect"
+	| "tags"
 	| "editor"
 	| "upload"
 	| "autocomplete"
@@ -113,6 +115,13 @@ type MultiselectFieldVariant = BaseFieldProps & {
 	hideClearAllButton?: boolean;
 };
 
+type TagsFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "tags">;
+	placeholder?: string;
+	badgeVariant?: BadgeVariant;
+	badgeSize?: BadgeSize;
+};
+
 type UploadFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "upload">;
 } & ICustomUploadFilesProps;
@@ -148,6 +157,7 @@ type CustomFieldProps =
 	| DateFieldVariant
 	| SelectFieldVariant
 	| MultiselectFieldVariant
+	| TagsFieldVariant
 	| EditorFieldVariant
 	| UploadFieldVariant
 	| AutocompleteFieldVariant
@@ -307,6 +317,19 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						badgeVariant={props.badgeVariant}
 						badgeSize={props.badgeSize}
 						hideClearAllButton={props.hideClearAllButton}
+					/>
+				);
+			case "tags":
+				return (
+					<CustomTagInput
+						value={Array.isArray(field.value) ? field.value : []}
+						onChange={field.onChange}
+						placeholder={
+							props.placeholder ? t(props.placeholder) : undefined
+						}
+						disabled={props.disabled}
+						badgeVariant={props.badgeVariant}
+						badgeSize={props.badgeSize}
 					/>
 				);
 			case "upload":

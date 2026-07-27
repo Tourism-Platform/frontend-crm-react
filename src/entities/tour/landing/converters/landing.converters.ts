@@ -1,12 +1,10 @@
 import {
-	type ENUM_AMENITIES_TYPE,
 	type TGetLandingBackendResponse,
 	type TLandingSchema,
 	type TUpdateLandingBackendResponse,
 	type TUpdateLandingImageBackendBody
 } from "../types";
 
-import { amenitiesMapper } from "./amenities.converters";
 import { languageMapper } from "./languages.converters";
 import { pickupMapper } from "./pickup.converters";
 
@@ -15,8 +13,8 @@ export const mapUpdateLandingToBackend = (
 ): TUpdateLandingImageBackendBody => ({
 	description: frontend.description,
 	languages: languageMapper.toMany(frontend.languages ?? []),
-	amenities_included: amenitiesMapper.toMany(frontend.included ?? []),
-	amenities_not_included: amenitiesMapper.toMany(frontend.not_included ?? []),
+	amenities_included: frontend.included ?? [],
+	amenities_not_included: frontend.not_included ?? [],
 	pickup_type: pickupMapper.toMany(frontend.pickup_type ?? []),
 	pickup_description: frontend.pickup_description,
 	cancellation_policy: frontend.cancellation_policy,
@@ -28,12 +26,8 @@ export const mapLandingToFrontend = (
 ): TLandingSchema => ({
 	description: backend.description || "",
 	languages: languageMapper.fromMany(backend.languages ?? []),
-	included: amenitiesMapper.fromMany(
-		(backend.amenities_included ?? []) as ENUM_AMENITIES_TYPE[]
-	),
-	not_included: amenitiesMapper.fromMany(
-		(backend.amenities_not_included ?? []) as ENUM_AMENITIES_TYPE[]
-	),
+	included: backend.amenities_included ?? [],
+	not_included: backend.amenities_not_included ?? [],
 	pickup_type: pickupMapper.fromMany(backend.pickup_type ?? []),
 	pickup_description: backend.pickup_description || "",
 	cancellation_policy: backend.cancellation_policy || "",

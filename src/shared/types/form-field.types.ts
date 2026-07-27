@@ -5,6 +5,7 @@ import type {
 	TGeoFormValue
 } from "@/shared/types/geo-form.types";
 import type {
+	BadgeSize,
 	BadgeVariant,
 	CustomAutocompleteOption,
 	CustomGeoSelectProps,
@@ -72,6 +73,13 @@ type TFormMultiSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	hideClearAllButton?: boolean;
 };
 
+type TFormTags<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "tags";
+	placeholder?: L;
+	badgeVariant?: BadgeVariant;
+	badgeSize?: BadgeSize;
+};
+
 type TFormUploadFiles<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: "upload";
 	maxFiles?: number;
@@ -125,6 +133,7 @@ export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormOptional<L, K>
 	| TFormSelect<L, K>
 	| TFormMultiSelect<L, K>
+	| TFormTags<L, K>
 	| TFormUploadFiles<L, K>
 	| TFormSwitch<L, K>
 	| TFormAutocomplete<L, K>

@@ -3,14 +3,8 @@ import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { CustomField, withErrorBoundary } from "@/shared/ui";
-import { useValueToTranslateLabel } from "@/shared/utils";
 
-import {
-	AMENITIES_INCLUDED_LABELS,
-	AMENITIES_NOT_INCLUDED_LABELS,
-	ENUM_FORM_LANDING,
-	type TLandingSchema
-} from "@/entities/tour";
+import { ENUM_FORM_LANDING, type TLandingSchema } from "@/entities/tour";
 
 interface IAmenitiesInfoProps {
 	form: UseFormReturn<TLandingSchema>;
@@ -32,11 +26,8 @@ const AmenitiesInfoBase: FC<IAmenitiesInfoProps> = ({ form }) => {
 				control={control}
 				label={t("form.amenities.fields.included.label")}
 				placeholder="form.amenities.fields.included.placeholder"
-				fieldType="multiselect"
-				options={useValueToTranslateLabel(AMENITIES_INCLUDED_LABELS)}
-				displayMode="badge"
+				fieldType="tags"
 				badgeVariant="green"
-				hideClearAllButton
 				t={t}
 			/>
 
@@ -45,13 +36,8 @@ const AmenitiesInfoBase: FC<IAmenitiesInfoProps> = ({ form }) => {
 				control={control}
 				label={t("form.amenities.fields.not_included.label")}
 				placeholder="form.amenities.fields.not_included.placeholder"
-				fieldType="multiselect"
-				options={useValueToTranslateLabel(
-					AMENITIES_NOT_INCLUDED_LABELS
-				)}
-				displayMode="badge"
+				fieldType="tags"
 				badgeVariant="red"
-				hideClearAllButton
 				t={t}
 			/>
 		</div>
