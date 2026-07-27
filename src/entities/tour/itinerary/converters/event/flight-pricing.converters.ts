@@ -1,25 +1,15 @@
-import type {
-	BusDetailSchemaOutput,
-	FlightDetailsSchemaOutput,
-	TrainDetailSchemaOutput
-} from "@/shared/api";
 import { Currency } from "@/shared/api";
 
 import {
 	ENUM_FLIGHT_PRICING_INVOICING,
 	ENUM_FLIGHT_PRICING_TYPE,
-	type TFlightPricingSchema
+	type TFlightDetailsBackend,
+	type TFlightPricingSchema,
+	type TTransportDetailsWithPricingBackend
 } from "../../types";
 
-type TTransportDetailsWithPricing =
-	| FlightDetailsSchemaOutput
-	| TrainDetailSchemaOutput
-	| BusDetailSchemaOutput
-	| null
-	| undefined;
-
 export const mapFlightPricingFromBackend = (
-	details?: TTransportDetailsWithPricing
+	details?: TTransportDetailsWithPricingBackend | null
 ): TFlightPricingSchema => {
 	const expenses = details?.expenses;
 
@@ -31,7 +21,7 @@ export const mapFlightPricingFromBackend = (
 		};
 	}
 
-	const feesVal = details?.fees?.cost?.val;
+	const feesVal = expenses.fees?.cost?.val;
 
 	if (expenses.typ === "fixed") {
 		return {
@@ -63,7 +53,7 @@ export const mapFlightPricingFromBackend = (
 export const mapFlightPricingToBackend = (
 	pricing?: TFlightPricingSchema
 ): {
-	details?: Pick<FlightDetailsSchemaOutput, "expenses" | "fees">;
+	details?: Pick<TFlightDetailsBackend, "expenses">;
 } => {
 	if (
 		!pricing ||
@@ -87,16 +77,14 @@ export const mapFlightPricingToBackend = (
 	if (pricing.pricing_type === ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE) {
 		return {
 			details: {
-				expenses: { typ: "fixed", cost },
-				fees
+				expenses: { typ: "fixed", cost, fees }
 			}
 		};
 	}
 
 	return {
 		details: {
-			expenses: { typ: "per_person", cost_per_person: cost },
-			fees
+			expenses: { typ: "per_person", cost_per_person: cost, fees }
 		}
 	};
 };

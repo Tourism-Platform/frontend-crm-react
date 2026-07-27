@@ -238,6 +238,7 @@ export const createSupplierPaymentMocks = (): ISupplierPaymentMockBundle => {
 			rate,
 			base_amount: amount,
 			file: row.file ?? null,
+			file_name: row.file ? (row.file.split("/").pop() ?? null) : null,
 			note: row.note ?? null,
 			status: row.status,
 			paid_at: row.paid_at ?? null

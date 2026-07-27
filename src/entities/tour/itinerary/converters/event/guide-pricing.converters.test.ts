@@ -165,7 +165,11 @@ describe("mapGuideCategoriesToBackend", () => {
 			{
 				expenses: {
 					typ: "per_person",
-					cost_per_person: { val: 60, currency: "EUR" }
+					cost_per_person: { val: 50, currency: "EUR" },
+					fees: {
+						typ: "fixed",
+						cost: { val: 10, currency: "EUR" }
+					}
 				}
 			}
 		]);

@@ -36,7 +36,8 @@ export const agencyBusinessDocumentsHandlers = [
 				(file) => ({
 					id: crypto.randomUUID(),
 					agency_id: agencyInfoStoreId(),
-					url: URL.createObjectURL(file)
+					url: URL.createObjectURL(file),
+					file_name: file.name
 				})
 			);
 

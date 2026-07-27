@@ -3,5 +3,6 @@ export * from "./amenities-type.types";
 export * from "./accommodation.types";
 export * from "./rooms.types";
 export * from "./pricing.types";
+export * from "./pricing-backend.types";
 export * from "./tab.types";
 export type { TAccommodationPricingSchema } from "../../schema/accommodation/pricing.schema";

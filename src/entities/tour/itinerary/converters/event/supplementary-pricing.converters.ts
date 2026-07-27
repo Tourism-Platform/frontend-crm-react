@@ -1,8 +1,4 @@
 import { Currency } from "@/shared/api";
-import type {
-	SupplementaryItemInput,
-	SupplementaryItemOutput
-} from "@/shared/api";
 
 import {
 	ENUM_FORM_SUPPLEMENT_ITEMS,
@@ -15,9 +11,13 @@ import {
 	type ISupplementPerItemExpenses,
 	type ISupplementPerItemPriceRow,
 	type ISupplementPriceRowMarkup,
+	type TCommissionMarkupBackend,
+	type TCommissionMarkupInputBackend,
 	type TSupplementEditSchema,
 	type TSupplementItemsSchema,
-	type TSupplementPricingSchema
+	type TSupplementPricingSchema,
+	type TSupplementaryItemBackend,
+	type TSupplementaryItemInputBackend
 } from "../../types";
 
 type TItemsList =
@@ -100,7 +100,7 @@ export const getDefaultSupplementPricing = (
 });
 
 const mapMarkupFromBackend = (
-	markup: SupplementaryItemOutput["markup"]
+	markup?: TCommissionMarkupBackend | null
 ): ISupplementPriceRowMarkup | null => {
 	if (!markup) return null;
 	if (markup.typ === "percentage") {
@@ -118,7 +118,7 @@ const mapMarkupFromBackend = (
 const mapMarkupToBackend = (
 	markup: ISupplementPriceRowMarkup | null | undefined,
 	currency: string
-): SupplementaryItemInput["markup"] => {
+): TCommissionMarkupInputBackend | null => {
 	if (!markup?.value?.trim()) return null;
 	const num = Number(markup.value);
 	if (!Number.isFinite(num)) return null;
@@ -134,7 +134,7 @@ const mapMarkupToBackend = (
 };
 
 export const mapItemsFromBackend = (
-	backendItems: SupplementaryItemOutput[] | null | undefined
+	backendItems: TSupplementaryItemBackend[] | null | undefined
 ): TSupplementEditSchema["items"] => ({
 	[ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST]: (backendItems ?? []).map(
 		(item) => ({
@@ -145,7 +145,7 @@ export const mapItemsFromBackend = (
 });
 
 export const mapPricingFromBackend = (
-	backendItems: SupplementaryItemOutput[] | null | undefined
+	backendItems: TSupplementaryItemBackend[] | null | undefined
 ): TSupplementPricingSchema => {
 	const list = backendItems ?? [];
 	const defaults = getDefaultSupplementPricing(
@@ -220,10 +220,11 @@ export const mapPricingFromBackend = (
 
 		return {
 			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: cost,
-			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: null,
+			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]:
+				expenses?.fees?.cost?.val ?? null,
 			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: currency,
 			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
-				item.markup
+				expenses?.markup
 			)
 		};
 	});
@@ -245,13 +246,12 @@ export const mapPricingFromBackend = (
 export const mapItemsAndPricingToBackend = (
 	items: TItemsList | undefined,
 	pricing: TSupplementPricingSchema | undefined
-): SupplementaryItemInput[] => {
+): TSupplementaryItemInputBackend[] => {
 	const list = items ?? [];
 	if (!pricing) {
 		return list.map((item) => ({
 			name: item[ENUM_FORM_SUPPLEMENT_ITEMS.NAME] || null,
-			expenses: null,
-			markup: null
+			expenses: null
 		}));
 	}
 
@@ -267,8 +267,7 @@ export const mapItemsAndPricingToBackend = (
 			expenses:
 				total != null
 					? { typ: "fixed" as const, cost: { val: total, currency } }
-					: null,
-			markup: null
+					: null
 		}));
 	}
 
@@ -281,8 +280,7 @@ export const mapItemsAndPricingToBackend = (
 							typ: "per_person" as const,
 							cost_per_person: { val: total, currency }
 						}
-					: null,
-			markup: null
+					: null
 		}));
 	}
 
@@ -300,6 +298,11 @@ export const mapItemsAndPricingToBackend = (
 			(row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY] as Currency) ||
 			Currency.USD;
 		const cost = row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST];
+		const fees = row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES];
+		const markup = mapMarkupToBackend(
+			row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP],
+			rowCurrency
+		);
 
 		return {
 			name: item[ENUM_FORM_SUPPLEMENT_ITEMS.NAME] || null,
@@ -307,13 +310,20 @@ export const mapItemsAndPricingToBackend = (
 				cost != null
 					? {
 							typ: "fixed" as const,
-							cost: { val: cost, currency: rowCurrency }
+							cost: { val: cost, currency: rowCurrency },
+							fees:
+								fees != null
+									? {
+											typ: "fixed" as const,
+											cost: {
+												val: fees,
+												currency: rowCurrency
+											}
+										}
+									: null,
+							markup
 						}
-					: null,
-			markup: mapMarkupToBackend(
-				row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP],
-				rowCurrency
-			)
+					: null
 		};
 	});
 };

@@ -39,7 +39,8 @@ export const operatorBusinessDocumentsHandlers = [
 				(file) => ({
 					id: crypto.randomUUID(),
 					operator_id: operatorStoreId(),
-					url: URL.createObjectURL(file)
+					url: URL.createObjectURL(file),
+					file_name: file.name
 				})
 			);
 

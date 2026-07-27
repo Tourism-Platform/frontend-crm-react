@@ -356,31 +356,16 @@ export interface ActivityDetailsSchemaInput {
 	end_time?: TimeSchema | null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseInput)
+				  } & FixedChargeInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeInput)
 		  )
 		| null;
 }
@@ -400,31 +385,16 @@ export interface ActivityDetailsSchemaOutput {
 	end_time?: TimeSchema | null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedChargeOutput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
-		  )
-		| null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeOutput)
 		  )
 		| null;
 }
@@ -751,6 +721,8 @@ export interface AgencyFilesModel {
 	agency_id: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** AgencyInfoModel */
@@ -1405,6 +1377,8 @@ export interface BookingPaxFilesModel {
 	booking_pax_id: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** BookingPaxModel */
@@ -1466,33 +1440,18 @@ export interface BusDetailPubSchemaOutput {
 export interface BusDetailSchemaInput {
 	/** Hop */
 	hop?: BusHopSchemaInput[] | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseInput)
+				  } & FixedChargeInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseInput)
+				  } & PerPersonChargeInput)
 		  )
 		| null;
 }
@@ -1501,33 +1460,18 @@ export interface BusDetailSchemaInput {
 export interface BusDetailSchemaOutput {
 	/** Hop */
 	hop?: BusHopSchemaOutput[] | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedChargeOutput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
+				  } & PerPersonChargeOutput)
 		  )
 		| null;
 }
@@ -2196,6 +2140,88 @@ export interface ExcludedDatesBulkDelete {
 	date_ids: string[];
 }
 
+/**
+ * FixedCharge
+ * A fixed cost together with its own fee and markup.
+ */
+export interface FixedChargeInput {
+	/**
+	 * Typ
+	 * @default "fixed"
+	 */
+	typ?: "fixed";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost: MonetaryValueSchema;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * FixedCharge
+ * A fixed cost together with its own fee and markup.
+ */
+export interface FixedChargeOutput {
+	/**
+	 * Typ
+	 * @default "fixed"
+	 */
+	typ?: "fixed";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost: MonetaryValueSchema;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
 /** FixedDateCreate */
 export interface FixedDateCreate {
 	/**
@@ -2318,25 +2344,10 @@ export interface FlightDetailsSchemaInput {
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseInput)
+				  } & FixedChargeInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeInput)
 		  )
 		| null;
 }
@@ -2353,25 +2364,10 @@ export interface FlightDetailsSchemaOutput {
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedChargeOutput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
-		  )
-		| null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeOutput)
 		  )
 		| null;
 }
@@ -3036,41 +3032,13 @@ export interface GeoFeature {
 /** GuideByLanguageCategory */
 export interface GuideByLanguageCategoryInput {
 	lang?: LanguageCode | null;
-	expenses?: PerPersonExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	expenses?: PerPersonChargeInput | null;
 }
 
 /** GuideByLanguageCategory */
 export interface GuideByLanguageCategoryOutput {
 	lang?: LanguageCode | null;
-	expenses?: PerPersonExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	expenses?: PerPersonChargeOutput | null;
 }
 
 /** GuideDetails */
@@ -3412,10 +3380,10 @@ export interface HousingDetailsSchemaInput {
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseInput)
+				  } & FixedChargeInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseInput)
+				  } & PerPersonChargeInput)
 				| ({
 						typ: "per_room";
 				  } & PerRoomExpensesInput)
@@ -3452,10 +3420,10 @@ export interface HousingDetailsSchemaOutput {
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedChargeOutput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
+				  } & PerPersonChargeOutput)
 				| ({
 						typ: "per_room";
 				  } & PerRoomExpensesOutput)
@@ -3792,23 +3760,8 @@ export interface HousingRoomCategorySchemaInput {
 	 * Room category, i.e. single, double e.t.c.
 	 */
 	name?: string | null;
-	/** Expenses for this car of this category. */
-	expenses?: FixedExpenseInput | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Charge for this room of this category. */
+	expenses?: FixedChargeInput | null;
 }
 
 /** HousingRoomCategorySchema */
@@ -3818,23 +3771,8 @@ export interface HousingRoomCategorySchemaOutput {
 	 * Room category, i.e. single, double e.t.c.
 	 */
 	name?: string | null;
-	/** Expenses for this car of this category. */
-	expenses?: FixedExpenseOutput | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Charge for this room of this category. */
+	expenses?: FixedChargeOutput | null;
 }
 
 /** HousingRoomExpensesSchema */
@@ -3847,22 +3785,7 @@ export interface HousingRoomExpensesSchemaInput {
 	 * Room description
 	 */
 	description?: string | null;
-	expenses?: FixedExpenseInput | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	expenses?: FixedChargeInput | null;
 }
 
 /** HousingRoomExpensesSchema */
@@ -3875,22 +3798,7 @@ export interface HousingRoomExpensesSchemaOutput {
 	 * Room description
 	 */
 	description?: string | null;
-	expenses?: FixedExpenseOutput | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	expenses?: FixedChargeOutput | null;
 }
 
 /** InformationEvent */
@@ -4590,10 +4498,7 @@ export interface MultipleOptionEventPubInput {
 	position?: number | null;
 	/** Typ */
 	typ: "10";
-	/**
-	 * Details
-	 * @minItems 1
-	 */
+	/** Details */
 	details: (
 		| ({
 				typ: "1";
@@ -4631,10 +4536,7 @@ export interface MultipleOptionEventPubOutput {
 	position?: number | null;
 	/** Typ */
 	typ: "10";
-	/**
-	 * Details
-	 * @minItems 1
-	 */
+	/** Details */
 	details: (
 		| ({
 				typ: "1";
@@ -4813,6 +4715,8 @@ export interface OperatorFilesModel {
 	operator_id: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** OperatorFinancialSettingsRead */
@@ -4951,6 +4855,8 @@ export interface OperatorInfoModel {
 	logo_path: string | null;
 	/** Description */
 	description: string | null;
+	/** Default Language */
+	default_language: string;
 	/** Business Name */
 	business_name: string | null;
 	/** Website Url */
@@ -5520,6 +5426,88 @@ export interface PerCarExpenseOutput {
 	 * All types of cars and their categories
 	 */
 	cars?: TransferCarVariantOutput[] | null;
+}
+
+/**
+ * PerPersonCharge
+ * A per-person cost together with its own fee and markup.
+ */
+export interface PerPersonChargeInput {
+	/**
+	 * Typ
+	 * @default "per_person"
+	 */
+	typ?: "per_person";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost_per_person: MonetaryValueSchema;
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * PerPersonCharge
+ * A per-person cost together with its own fee and markup.
+ */
+export interface PerPersonChargeOutput {
+	/**
+	 * Typ
+	 * @default "per_person"
+	 */
+	typ?: "per_person";
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost_per_person: MonetaryValueSchema;
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /**
@@ -6353,30 +6341,16 @@ export interface SupplementaryItemInput {
 	name?: string | null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseInput)
+				  } & FixedChargeInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeInput)
 		  )
 		| null;
 }
@@ -6387,30 +6361,16 @@ export interface SupplementaryItemOutput {
 	name?: string | null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedChargeOutput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
-		  )
-		| null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeOutput)
 		  )
 		| null;
 }
@@ -6520,6 +6480,8 @@ export interface SupplierPaymentResponse {
 	base_amount: string;
 	/** File */
 	file: string | null;
+	/** File Name */
+	file_name: string | null;
 	/** Note */
 	note: string | null;
 	status: SupplierPaymentStatus;
@@ -7349,31 +7311,16 @@ export interface TrainDetailSchemaInput {
 	hop?: TrainHopSchemaInput[] | null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseInput)
+				  } & FixedChargeInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseInput)
-		  )
-		| null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeInput)
 		  )
 		| null;
 }
@@ -7384,31 +7331,16 @@ export interface TrainDetailSchemaOutput {
 	hop?: TrainHopSchemaOutput[] | null;
 	/**
 	 * Expenses
-	 * The expense calculation strategy.
+	 * The charge calculation strategy.
 	 */
 	expenses?:
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedChargeOutput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
-		  )
-		| null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PerPersonChargeOutput)
 		  )
 		| null;
 }
@@ -7814,23 +7746,8 @@ export interface TransferCarPackageCategorySchemaInput {
 	 * Car category, i.e. standard, premium e.t.c.
 	 */
 	name?: string | null;
-	/** Expenses for this car of this category. */
-	expenses?: FixedExpenseInput | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Charge for this car of this category. */
+	expenses?: FixedChargeInput | null;
 }
 
 /**
@@ -7843,23 +7760,8 @@ export interface TransferCarPackageCategorySchemaOutput {
 	 * Car category, i.e. standard, premium e.t.c.
 	 */
 	name?: string | null;
-	/** Expenses for this car of this category. */
-	expenses?: FixedExpenseOutput | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	/** Charge for this car of this category. */
+	expenses?: FixedChargeOutput | null;
 }
 
 /** TransferCarVariant */
@@ -7872,22 +7774,7 @@ export interface TransferCarVariantInput {
 	 * Car description
 	 */
 	description?: string | null;
-	expenses?: FixedExpenseInput | null;
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	expenses?: FixedChargeInput | null;
 }
 
 /** TransferCarVariant */
@@ -7900,22 +7787,7 @@ export interface TransferCarVariantOutput {
 	 * Car description
 	 */
 	description?: string | null;
-	expenses?: FixedExpenseOutput | null;
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	expenses?: FixedChargeOutput | null;
 }
 
 /** TransferDetailsPubSchema */
@@ -7947,7 +7819,7 @@ export interface TransferDetailsSchemaInput {
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseInput)
+				  } & FixedChargeInput)
 				| ({
 						typ: "per_car";
 				  } & PerCarExpenseInput)
@@ -7956,7 +7828,7 @@ export interface TransferDetailsSchemaInput {
 				  } & PerCarCategoryExpenseInput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseInput)
+				  } & PerPersonChargeInput)
 		  )
 		| null;
 }
@@ -7976,7 +7848,7 @@ export interface TransferDetailsSchemaOutput {
 		| (
 				| ({
 						typ: "fixed";
-				  } & FixedExpenseOutput)
+				  } & FixedChargeOutput)
 				| ({
 						typ: "per_car";
 				  } & PerCarExpenseOutput)
@@ -7985,7 +7857,7 @@ export interface TransferDetailsSchemaOutput {
 				  } & PerCarCategoryExpenseOutput)
 				| ({
 						typ: "per_person";
-				  } & PerPersonExpenseOutput)
+				  } & PerPersonChargeOutput)
 		  )
 		| null;
 }
@@ -8380,6 +8252,8 @@ export interface VoucherResponse {
 	order_number: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string | null;
 }
 
 /** Role */

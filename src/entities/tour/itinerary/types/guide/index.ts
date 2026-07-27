@@ -3,4 +3,5 @@ export * from "./guide-type.types";
 export * from "./section.types";
 export * from "./guides.types";
 export * from "./pricing.types";
+export * from "./pricing-backend.types";
 export * from "./tab.types";

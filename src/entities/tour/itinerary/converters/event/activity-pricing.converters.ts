@@ -1,14 +1,14 @@
-import type { ActivityDetailsSchemaOutput } from "@/shared/api";
 import { Currency } from "@/shared/api";
 
 import {
 	ENUM_ACTIVITY_PRICING_INVOICING,
 	ENUM_ACTIVITY_PRICING_TYPE,
+	type TActivityDetailsBackend,
 	type TActivityPricingSchema
 } from "../../types";
 
 export const mapActivityPricingFromBackend = (
-	details?: ActivityDetailsSchemaOutput | null
+	details?: TActivityDetailsBackend | null
 ): TActivityPricingSchema => {
 	const expenses = details?.expenses;
 
@@ -20,7 +20,7 @@ export const mapActivityPricingFromBackend = (
 		};
 	}
 
-	const feesVal = details?.fees?.cost?.val;
+	const feesVal = expenses.fees?.cost?.val;
 
 	if (expenses.typ === "fixed") {
 		return {
@@ -51,7 +51,7 @@ export const mapActivityPricingFromBackend = (
 
 export const mapActivityPricingToBackend = (
 	pricing?: TActivityPricingSchema
-): { details?: ActivityDetailsSchemaOutput } => {
+): { details?: Pick<TActivityDetailsBackend, "expenses"> } => {
 	if (
 		!pricing ||
 		pricing.invoicing !== ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL ||
@@ -74,16 +74,14 @@ export const mapActivityPricingToBackend = (
 	if (pricing.pricing_type === ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE) {
 		return {
 			details: {
-				expenses: { typ: "fixed", cost },
-				fees
-			} as ActivityDetailsSchemaOutput
+				expenses: { typ: "fixed", cost, fees }
+			}
 		};
 	}
 
 	return {
 		details: {
-			expenses: { typ: "per_person", cost_per_person: cost },
-			fees
-		} as ActivityDetailsSchemaOutput
+			expenses: { typ: "per_person", cost_per_person: cost, fees }
+		}
 	};
 };
