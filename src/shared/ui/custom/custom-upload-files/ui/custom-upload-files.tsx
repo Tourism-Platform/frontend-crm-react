@@ -22,6 +22,7 @@ export interface ICustomUploadFilesProps {
 	maxFiles?: number;
 	initialFiles?: TFileMetadata[];
 	onFilesChange?: (files: TFileWithPreview[]) => void;
+	onFilesAdded?: (addedFiles: TFileWithPreview[]) => void;
 	onFileRemove?: (fileId: string) => void;
 	isLoading?: boolean;
 	loadingId?: string;
@@ -36,6 +37,7 @@ export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 	maxFiles = 10,
 	initialFiles = [],
 	onFilesChange,
+	onFilesAdded,
 	onFileRemove,
 	isLoading = false,
 	loadingId,
@@ -64,7 +66,8 @@ export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 		maxFiles,
 		maxSize,
 		initialFiles,
-		onFilesChange
+		onFilesChange,
+		onFilesAdded
 	});
 
 	const handleRemoveFile = (fileId: string) => {

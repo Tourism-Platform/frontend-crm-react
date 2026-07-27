@@ -45,26 +45,19 @@ const DocumentsInfoBase: FC = () => {
 		}
 	}, [isDocumentsError, t]);
 
-	const handleFilesChange = useCallback(
-		async (files: TFileWithPreview[]) => {
-			// Находим новые файлы (те, что являются File объектами, а не TFileMetadata)
-			const newFiles = files.filter(
-				(f) => f.file instanceof File
-			) as TFileWithPreview[];
+	const handleFilesAdded = useCallback(
+		async (addedFiles: TFileWithPreview[]) => {
+			for (const fileWrapper of addedFiles) {
+				if (!(fileWrapper.file instanceof File)) continue;
 
-			for (const fileWrapper of newFiles) {
-				if (fileWrapper.file instanceof File) {
-					try {
-						await uploadDocument({
-							file: fileWrapper.file
-						}).unwrap();
-						toast.success(
-							t("form.documents.toasts.upload.success")
-						);
-					} catch (error) {
-						toast.error(t("form.documents.toasts.upload.error"));
-						console.error(error);
-					}
+				try {
+					await uploadDocument({
+						file: fileWrapper.file
+					}).unwrap();
+					toast.success(t("form.documents.toasts.upload.success"));
+				} catch (error) {
+					toast.error(t("form.documents.toasts.upload.error"));
+					console.error(error);
 				}
 			}
 		},
@@ -99,7 +92,7 @@ const DocumentsInfoBase: FC = () => {
 			<h2 className="text-xl">{t("form.documents.title")}</h2>
 			<CustomUploadFiles
 				initialFiles={initialFiles}
-				onFilesChange={handleFilesChange}
+				onFilesAdded={handleFilesAdded}
 				onFileRemove={handleFileRemove}
 				isLoading={isUploading || isDeleting}
 				loadingId={loadingId}
