@@ -1,7 +1,9 @@
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import {
+	CURRENCY_OPTIONS,
+	DEFAULT_EVENT_CURRENCY
+} from "@/entities/commission";
 import { ENUM_TRANSPORTATION_PRICING_FIELD } from "@/entities/tour";
 
-import { DEFAULT_EVENT_CURRENCY } from "../../../model";
 import type { TTransportationPricingFormField } from "../types";
 
 export const PRICING_PER_PERSON_PRICE_DETAILS_LIST: TTransportationPricingFormField[] =

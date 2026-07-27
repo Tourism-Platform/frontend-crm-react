@@ -1,6 +1,7 @@
 import {
 	ENUM_ACCOMMODATION_MARKUP_TYP,
-	ENUM_ACCOMMODATION_PRICE_ROW_FIELD
+	ENUM_ACCOMMODATION_PRICE_ROW_FIELD,
+	ENUM_ACCOMMODATION_PRICING_FIELD
 } from "@/entities/tour";
 
 export const MARKUP_TYPE_OPTIONS = [
@@ -10,6 +11,18 @@ export const MARKUP_TYPE_OPTIONS = [
 
 export const PER_ROOM_MARKUP_FIELD = {
 	key: ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP,
+	label: "form.pricing.form.per_room.fields.markup.value.label",
+	placeholder: "form.pricing.form.per_room.fields.markup.value.placeholder",
+	selectOptions: MARKUP_TYPE_OPTIONS
+} as const;
+
+export const createEmptyPricingMarkup = () => ({
+	typ: ENUM_ACCOMMODATION_MARKUP_TYP.FIXED,
+	value: ""
+});
+
+export const PRICING_MARKUP_FIELD = {
+	key: ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP,
 	label: "form.pricing.form.per_room.fields.markup.value.label",
 	placeholder: "form.pricing.form.per_room.fields.markup.value.placeholder",
 	selectOptions: MARKUP_TYPE_OPTIONS

@@ -1,7 +1,9 @@
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import {
+	CURRENCY_OPTIONS,
+	DEFAULT_EVENT_CURRENCY
+} from "@/entities/commission";
 import { ENUM_SUPPLEMENT_PRICING_FIELD } from "@/entities/tour";
 
-import { DEFAULT_EVENT_CURRENCY } from "../../../model";
 import type { TSupplementPricingFormField } from "../types";
 
 export const PRICING_FLAT_RATE_PRICE_DETAILS_LIST: TSupplementPricingFormField[] =

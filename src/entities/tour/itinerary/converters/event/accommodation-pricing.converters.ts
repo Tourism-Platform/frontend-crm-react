@@ -1,5 +1,7 @@
 import { Currency } from "@/shared/api";
 
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+
 import {
 	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
 	ENUM_ACCOMMODATION_EXPENSE_TYP,
@@ -38,7 +40,7 @@ type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 const createEmptyPerRoomPriceRow = (): IAccommodationPerRoomPriceRow => ({
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: null,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: null,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: Currency.USD,
+	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: null
 });
 
@@ -46,7 +48,7 @@ const createEmptyCategoryRow = (): IAccommodationCategoryPriceRow => ({
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: "",
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: null,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: null,
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: Currency.USD,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: null
 });
 
@@ -68,7 +70,9 @@ const mapPriceRowFromFixedCharge = (
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: charge?.cost?.val ?? null,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: charge?.fees?.cost?.val ?? null,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
-		charge?.cost?.currency ?? charge?.fees?.cost?.currency ?? ""
+		charge?.cost?.currency ??
+		charge?.fees?.cost?.currency ??
+		DEFAULT_EVENT_CURRENCY
 });
 
 const mapMarkupFromBackend = (
@@ -248,7 +252,10 @@ const hasAnyMarkup = (
 export const alignAccommodationPerRoomExpenses = (options: {
 	priceBasedOnClass: boolean;
 	roomsListLength: number;
-	current?: TAccommodationPricingSchema["expenses"] | null;
+	current?:
+		| IAccommodationPerRoomExpenses
+		| IAccommodationPerRoomCategoryExpenses
+		| null;
 	addMarginSeparately?: boolean;
 }): IAccommodationPerRoomExpenses | IAccommodationPerRoomCategoryExpenses => {
 	const { priceBasedOnClass, roomsListLength, current, addMarginSeparately } =
@@ -300,6 +307,7 @@ export const getDefaultAccommodationPricing = (
 		priceBasedOnClass: false,
 		roomsListLength: roomsList.length
 	}),
+	[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: null,
 	package_type: ""
 });
 
@@ -361,9 +369,12 @@ export const mapAccommodationPricingFromBackend = (
 	}
 
 	if (expenses.typ === "fixed") {
+		const markup = mapMarkupFromBackend(expenses.markup);
 		return {
 			...defaults,
 			pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
+			add_margin_separately: Boolean(markup?.value),
+			[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markup,
 			...(expenses.cost?.val != null && {
 				total_price: expenses.cost.val
 			}),
@@ -374,9 +385,12 @@ export const mapAccommodationPricingFromBackend = (
 		};
 	}
 
+	const perPersonMarkup = mapMarkupFromBackend(expenses.markup);
 	return {
 		...defaults,
 		pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.PER_PERSON,
+		add_margin_separately: Boolean(perPersonMarkup?.value),
+		[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: perPersonMarkup,
 		...(expenses.cost_per_person?.val != null && {
 			total_price: expenses.cost_per_person.val
 		}),
@@ -524,18 +538,23 @@ export const mapAccommodationPricingToBackend = (
 					cost: { val: taxes, currency: currency as Currency }
 				}
 			: null;
+	const markup = mapMarkupToBackend(
+		pricing[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP] ?? null,
+		currency,
+		pricing.add_margin_separately
+	);
 
 	if (pricing.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE) {
 		return {
 			details: {
-				expenses: { typ: "fixed", cost, fees }
+				expenses: { typ: "fixed", cost, fees, markup }
 			}
 		};
 	}
 
 	return {
 		details: {
-			expenses: { typ: "per_person", cost_per_person: cost, fees }
+			expenses: { typ: "per_person", cost_per_person: cost, fees, markup }
 		}
 	};
 };

@@ -10,7 +10,8 @@ import {
 	ENUM_ACCOMMODATION_PRICE_ROW_FIELD,
 	ENUM_ACCOMMODATION_PRICING_FIELD,
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
-	ENUM_ACCOMMODATION_PRICING_TYPE
+	ENUM_ACCOMMODATION_PRICING_TYPE,
+	type IAccommodationPriceRowMarkup
 } from "../../types";
 
 const msg = i18nKey<TTourAccommodationEditPageKeys>();
@@ -70,9 +71,7 @@ const perRoomCategoryExpensesSchema = z.object({
 
 const validateMarkupRows = (
 	rows: {
-		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: z.infer<
-			typeof markupSchema
-		>;
+		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: IAccommodationPriceRowMarkup | null;
 	}[],
 	ctx: z.RefinementCtx,
 	pathPrefix: (string | number)[]
@@ -96,6 +95,117 @@ const validateMarkupRows = (
 	});
 };
 
+const validateFlatOrPerPersonPricing = (
+	data: {
+		total_price?: number | null;
+		currency?: string;
+		add_margin_separately: boolean;
+		markup?: IAccommodationPriceRowMarkup | null;
+	},
+	ctx: z.RefinementCtx
+) => {
+	if (data.total_price == null || data.total_price < 1) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.total_price.errors.min"
+			),
+			path: [ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]
+		});
+	}
+	if (data.total_price != null && data.total_price > 100000) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.total_price.errors.max"
+			),
+			path: [ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]
+		});
+	}
+	if (!data.currency?.trim()) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.currency.errors.required"
+			),
+			path: [ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]
+		});
+	}
+	if (data.add_margin_separately && !data.markup?.value?.trim()) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.per_room.fields.markup.value.errors.required"
+			),
+			path: [ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP, "value"]
+		});
+	}
+};
+
+const validatePerRoomPricing = (
+	data: {
+		price_based_on_class: boolean;
+		add_margin_separately: boolean;
+		expenses?:
+			| z.infer<typeof perRoomExpensesSchema>
+			| z.infer<typeof perRoomCategoryExpensesSchema>
+			| null;
+	},
+	ctx: z.RefinementCtx
+) => {
+	const expensesResult = data.price_based_on_class
+		? perRoomCategoryExpensesSchema.safeParse(data.expenses)
+		: perRoomExpensesSchema.safeParse(data.expenses);
+
+	if (!expensesResult.success) {
+		expensesResult.error.issues.forEach((issue) => {
+			ctx.addIssue({
+				...issue,
+				path: [ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES, ...issue.path]
+			});
+		});
+		return;
+	}
+
+	if (!data.add_margin_separately) {
+		return;
+	}
+
+	const expenses = expensesResult.data;
+	if (expenses.typ === ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM) {
+		validateMarkupRows(
+			expenses[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS],
+			ctx,
+			[
+				ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES,
+				ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS
+			]
+		);
+		return;
+	}
+
+	expenses[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS].forEach(
+		(room, roomIndex) => {
+			validateMarkupRows(
+				room[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES],
+				ctx,
+				[
+					ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES,
+					ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS,
+					roomIndex,
+					ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES
+				]
+			);
+		}
+	);
+};
+
+/**
+ * Validates only the active pricing tab:
+ * - part_of_package → no individual price checks
+ * - per_room → expenses only (via superRefine + per-room schemas)
+ * - flat_rate / per_person → total_price + currency (+ markup when enabled)
+ */
 export const ACCOMMODATION_PRICING_SCHEMA = z
 	.object({
 		[ENUM_ACCOMMODATION_PRICING_FIELD.INVOICING]: z.enum(
@@ -114,6 +224,7 @@ export const ACCOMMODATION_PRICING_SCHEMA = z
 			nullableNumber.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.TAXES]: nullableNumber.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: z.string().optional(),
+		[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_TYPE]: z.string()
 	})
 	.superRefine((data, ctx) => {
@@ -124,101 +235,15 @@ export const ACCOMMODATION_PRICING_SCHEMA = z
 		}
 
 		if (data.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM) {
-			const expensesResult = data.price_based_on_class
-				? perRoomCategoryExpensesSchema.safeParse(data.expenses)
-				: perRoomExpensesSchema.safeParse(data.expenses);
-
-			if (!expensesResult.success) {
-				expensesResult.error.issues.forEach((issue) => {
-					ctx.addIssue({
-						...issue,
-						path: [
-							ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES,
-							...issue.path
-						]
-					});
-				});
-			}
-
-			if (data.add_margin_separately && expensesResult.success) {
-				const expenses = expensesResult.data;
-				if (expenses.typ === ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM) {
-					validateMarkupRows(
-						expenses[
-							ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS
-						],
-						ctx,
-						[
-							ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES,
-							ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS
-						]
-					);
-				} else {
-					expenses[
-						ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS
-					].forEach((room, roomIndex) => {
-						validateMarkupRows(
-							room[
-								ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD
-									.CATEGORIES
-							],
-							ctx,
-							[
-								ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES,
-								ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS,
-								roomIndex,
-								ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES
-							]
-						);
-					});
-				}
-			}
-
-			return;
-		}
-
-		const hasFlatRatePricing =
-			data.total_price != null ||
-			data.taxes != null ||
-			Boolean(data.currency?.trim());
-
-		if (!hasFlatRatePricing) {
+			validatePerRoomPricing(data, ctx);
 			return;
 		}
 
 		if (
-			data.total_price == null ||
-			data.total_price < 1 ||
-			data.total_price > 10000 ||
-			!data.currency?.trim()
+			data.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE ||
+			data.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.PER_PERSON
 		) {
-			if (data.total_price == null || data.total_price < 1) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: msg(
-						"form.pricing.form.pricing_details.fields.total_price.errors.min"
-					),
-					path: [ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]
-				});
-			}
-			if (data.total_price != null && data.total_price > 10000) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: msg(
-						"form.pricing.form.pricing_details.fields.total_price.errors.max"
-					),
-					path: [ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]
-				});
-			}
-			if (!data.currency?.trim()) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: msg(
-						"form.pricing.form.pricing_details.fields.currency.errors.required"
-					),
-					path: [ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]
-				});
-			}
+			validateFlatOrPerPersonPricing(data, ctx);
 		}
 	});
 

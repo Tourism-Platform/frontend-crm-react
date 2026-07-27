@@ -207,7 +207,7 @@
 							"placeholder": "Enter...",
 							"errors": {
 								"min": "Price must be at least 1",
-								"max": "Price must not exceed 10000"
+								"max": "Price must not exceed 100 000"
 							}
 						},
 						"total_price_per_person": {

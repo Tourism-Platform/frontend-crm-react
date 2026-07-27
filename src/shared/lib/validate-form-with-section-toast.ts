@@ -13,6 +13,8 @@ const FORM_SECTION_KEYS = [
 type TValidateFormWithSectionToastOptions = {
 	/** e.g. "form.toasts.validation.error" or "toasts.validation.error" */
 	keyPrefix: string;
+	/** Limit RHF trigger to a section / fields (e.g. "pricing") */
+	fields?: string | string[];
 };
 
 type TValidateTranslate = (key: string, options?: object) => string;
@@ -28,10 +30,10 @@ export async function validateFormWithSectionToast(
 		formState: { errors: object };
 	},
 	tInput: unknown,
-	{ keyPrefix }: TValidateFormWithSectionToastOptions
+	{ keyPrefix, fields }: TValidateFormWithSectionToastOptions
 ): Promise<boolean> {
 	const t = tInput as TValidateTranslate;
-	const isValid = await form.trigger();
+	const isValid = await form.trigger(fields);
 	if (isValid) return true;
 
 	const errors = form.formState.errors as Record<string, unknown>;

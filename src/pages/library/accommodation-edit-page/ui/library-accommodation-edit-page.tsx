@@ -25,7 +25,10 @@ import {
 } from "@/entities/tour";
 
 import { AccommodationEdit } from "@/widgets/tours";
-import { ACCOMMODATION_EDIT_TABS_LIST } from "@/widgets/tours/events/accommodation-edit/model";
+import {
+	ACCOMMODATION_EDIT_TABS_LIST,
+	type ENUM_FORM_SECTION_TYPE
+} from "@/widgets/tours/events/accommodation-edit/model";
 
 export const LibraryAccommodationEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
@@ -68,10 +71,11 @@ export const LibraryAccommodationEditPage: FC = () => {
 		}
 	}, [libraryEvent, form, isCreate]);
 
-	const createSectionSubmit = async () => {
+	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
 		if (
 			!(await validateFormWithSectionToast(form, t, {
-				keyPrefix: "toasts.validation.error"
+				keyPrefix: "toasts.validation.error",
+				...(section && { fields: section })
 			}))
 		) {
 			return;

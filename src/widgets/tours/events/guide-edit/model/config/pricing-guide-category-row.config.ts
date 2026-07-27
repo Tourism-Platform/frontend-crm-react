@@ -1,13 +1,15 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import {
+	CURRENCY_OPTIONS,
+	DEFAULT_EVENT_CURRENCY
+} from "@/entities/commission";
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_PRICE_ROW_FIELD,
 	LANGUAGES_LABELS
 } from "@/entities/tour";
 
-import { DEFAULT_EVENT_CURRENCY } from "../../../model";
 import type { TGuidePricingFormField } from "../types";
 
 export const PER_GUIDE_CATEGORY_ROW_FIELDS_LIST =

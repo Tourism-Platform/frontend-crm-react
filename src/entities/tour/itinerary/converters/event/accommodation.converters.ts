@@ -8,8 +8,6 @@ import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
 	type ENUM_ACCOMMODATION_AMENITY_TYPE,
-	ENUM_ACCOMMODATION_PRICING_INVOICING,
-	ENUM_ACCOMMODATION_PRICING_TYPE,
 	type TAccommodationEditSchema,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
@@ -23,14 +21,6 @@ import {
 	mapRoomsFromBackend,
 	mapRoomsToBackend
 } from "./accommodation-rooms.converters";
-
-const hasPerRoomPricingInPayload = (
-	pricing: TAccommodationEditSchema["pricing"] | undefined,
-	pricingDetails: ReturnType<typeof mapAccommodationPricingToBackend>
-) =>
-	pricing?.invoicing === ENUM_ACCOMMODATION_PRICING_INVOICING.INDIVIDUAL &&
-	pricing?.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM &&
-	Boolean(pricingDetails.details?.expenses);
 
 const mapAmenitiesFromBackend = (
 	amenities?: AmenitiesTypes[] | null
@@ -93,8 +83,7 @@ export const mapAccommodationFormToUpdate = (
 		roomsList
 	);
 	const roomsDetails =
-		frontend?.rooms !== undefined &&
-		!hasPerRoomPricingInPayload(frontend?.pricing, pricingDetails)
+		frontend?.rooms !== undefined && !pricingDetails.details?.expenses
 			? mapRoomsToBackend(roomsList).details
 			: undefined;
 	const duration = Number(g?.length_of_stay);
@@ -130,8 +119,8 @@ export const mapAccommodationFormToUpdate = (
 					timezone: g.check_out_timezone
 				}
 			}),
-			...pricingDetails.details,
-			...roomsDetails
+			...roomsDetails,
+			...pricingDetails.details
 		}
 	} as unknown as TTourEventUpdateBackend;
 };

@@ -7,8 +7,6 @@ import {
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
-	ENUM_TRANSPORTATION_PRICING_INVOICING,
-	ENUM_TRANSPORTATION_PRICING_TYPE,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend,
 	type TTransportationEditSchema
@@ -23,14 +21,6 @@ import {
 	mapTransportationPricingFromBackend,
 	mapTransportationPricingToBackend
 } from "./transportation-pricing.converters";
-
-const hasPerCarPricingInPayload = (
-	pricing: TTransportationEditSchema["pricing"] | undefined,
-	pricingDetails: ReturnType<typeof mapTransportationPricingToBackend>
-) =>
-	pricing?.invoicing === ENUM_TRANSPORTATION_PRICING_INVOICING.INDIVIDUAL &&
-	pricing?.pricing_type === ENUM_TRANSPORTATION_PRICING_TYPE.PER_CAR &&
-	Boolean(pricingDetails.details?.expenses);
 
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce
@@ -84,8 +74,7 @@ export const mapTransferFormToUpdate = (
 		carsList
 	);
 	const carsDetails =
-		frontend?.cars !== undefined &&
-		!hasPerCarPricingInPayload(frontend?.pricing, pricingDetails)
+		frontend?.cars !== undefined && !pricingDetails.details?.expenses
 			? mapCarsToBackend(carsList).details
 			: undefined;
 
@@ -139,8 +128,8 @@ export const mapTransferFormToUpdate = (
 					})
 				}
 			}),
-			...pricingDetails.details,
-			...carsDetails
+			...carsDetails,
+			...pricingDetails.details
 		}
 	} as unknown as TTourEventUpdateBackend;
 };

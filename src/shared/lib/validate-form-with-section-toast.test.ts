@@ -28,7 +28,24 @@ describe("validateFormWithSectionToast", () => {
 			validateFormWithSectionToast(form, t, { keyPrefix })
 		).resolves.toBe(true);
 
+		expect(form.trigger).toHaveBeenCalledWith(undefined);
 		expect(toast.error).not.toHaveBeenCalled();
+	});
+
+	it("triggers only the requested section fields", async () => {
+		const form = {
+			trigger: vi.fn().mockResolvedValue(true),
+			formState: { errors: {} }
+		};
+
+		await expect(
+			validateFormWithSectionToast(form, t, {
+				keyPrefix,
+				fields: "pricing"
+			})
+		).resolves.toBe(true);
+
+		expect(form.trigger).toHaveBeenCalledWith("pricing");
 	});
 
 	it("toasts guides section when only guides has errors", async () => {

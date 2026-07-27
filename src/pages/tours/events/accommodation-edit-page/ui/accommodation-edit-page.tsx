@@ -15,6 +15,7 @@ import {
 } from "@/entities/tour";
 
 import { AccommodationEdit } from "@/widgets/tours";
+import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/accommodation-edit/model";
 
 export const AccommodationEditPage: FC = () => {
 	const { t, i18n } = useTranslation("accommodation_edit_page");
@@ -38,10 +39,11 @@ export const AccommodationEditPage: FC = () => {
 		}
 	}, [data, form]);
 
-	const createSectionSubmit = async () => {
+	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
 		if (
 			!(await validateFormWithSectionToast(form, t, {
-				keyPrefix: "form.toasts.validation.error"
+				keyPrefix: "form.toasts.validation.error",
+				...(section && { fields: section })
 			}))
 		) {
 			return;

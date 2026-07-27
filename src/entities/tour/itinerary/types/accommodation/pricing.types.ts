@@ -40,6 +40,7 @@ export const ENUM_ACCOMMODATION_PRICING_FIELD = {
 	TOTAL_PRICE: "total_price",
 	TAXES: "taxes",
 	CURRENCY: "currency",
+	MARKUP: "markup",
 	PACKAGE_TYPE: "package_type"
 } as const;
 
