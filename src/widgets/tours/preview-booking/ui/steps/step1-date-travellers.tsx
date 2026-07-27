@@ -1,8 +1,10 @@
+import { isBefore, startOfToday } from "date-fns";
 import { Loader2, Minus, Plus } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import type { TPreviewBookingPageKeys } from "@/shared/config";
 import { Button, Calendar } from "@/shared/ui";
 
 import {
@@ -17,6 +19,7 @@ interface IStep1Props {
 	onNext: () => void;
 	isLoading: boolean;
 	options: IPreviewOptionCard[];
+	availableDates: Date[];
 	isOptionsLoading: boolean;
 	isOptionLocked?: boolean;
 }
@@ -25,6 +28,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 	onNext,
 	isLoading,
 	options,
+	availableDates,
 	isOptionsLoading,
 	isOptionLocked = false
 }) => {
@@ -73,7 +77,17 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 								);
 							}
 						}}
-						numberOfMonths={1}
+						disabled={(date) =>
+							isBefore(date, startOfToday()) ||
+							!availableDates.some(
+								(d) =>
+									d.getFullYear() === date.getFullYear() &&
+									d.getMonth() === date.getMonth() &&
+									d.getDate() === date.getDate()
+							)
+						}
+						showOutsideDays={false}
+						numberOfMonths={2}
 						pagedNavigation
 						classNames={{
 							months: "sm:flex-col md:flex-row gap-20",
@@ -83,11 +97,11 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 				</div>
 				{form.formState.errors[ENUM_FORM_PREVIEW_BOOKING.DATE] && (
 					<p className="text-sm text-destructive text-center">
-						{
+						{t(
 							form.formState.errors[
 								ENUM_FORM_PREVIEW_BOOKING.DATE
-							]?.message
-						}
+							]?.message as TPreviewBookingPageKeys
+						)}
 					</p>
 				)}
 			</div>
@@ -152,11 +166,11 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 					ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT
 				] && (
 					<p className="text-sm text-destructive">
-						{
+						{t(
 							form.formState.errors[
 								ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT
-							]?.message
-						}
+							]?.message as TPreviewBookingPageKeys
+						)}
 					</p>
 				)}
 			</div>
@@ -199,11 +213,11 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 
 				{form.formState.errors[ENUM_FORM_PREVIEW_BOOKING.OPTION_ID] && (
 					<p className="text-sm text-destructive mt-2">
-						{
+						{t(
 							form.formState.errors[
 								ENUM_FORM_PREVIEW_BOOKING.OPTION_ID
-							]?.message
-						}
+							]?.message as TPreviewBookingPageKeys
+						)}
 					</p>
 				)}
 			</div>

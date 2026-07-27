@@ -27,6 +27,7 @@ import {
 	mapTravellerToPaxUpdate
 } from "@/entities/booking/order/converters/booking-pax.converters";
 import type { TSubmittedBooking } from "@/entities/booking/order/types/create-booking.types";
+import { useGetScheduleQuery } from "@/entities/tour";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	PREVIEW_BOOKING_DEFAULT_VALUES,
@@ -84,6 +85,13 @@ export const usePreviewBooking = () => {
 		isLoading: isOptionsLoading,
 		isError: isOptionsError
 	} = useGetPreviewTourOptionsQuery(tourId, { skip: !tourId });
+
+	const { data: scheduleData } = useGetScheduleQuery(
+		{ tourId },
+		{ skip: !tourId }
+	);
+
+	const availableDates = scheduleData?.occurrences ?? [];
 
 	const { data: paxList, isLoading: isPaxLoading } =
 		useListPassengerInfoQuery(bookingIdParam ?? "", {
@@ -341,6 +349,7 @@ export const usePreviewBooking = () => {
 		submittedBooking,
 		tourData,
 		options,
+		availableDates,
 		isTourLoading,
 		isOptionsLoading,
 		isOptionsError

@@ -66,6 +66,7 @@ const PreviewBookingBase: FC = () => {
 		submittedBooking,
 		tourData,
 		options,
+		availableDates,
 		isOptionsLoading,
 		bookingId
 	} = usePreviewBooking();
@@ -133,6 +134,7 @@ const PreviewBookingBase: FC = () => {
 								onNext={handleNextStep}
 								isLoading={isCreating || isUpdating}
 								options={options}
+								availableDates={availableDates}
 								isOptionsLoading={isOptionsLoading}
 								isOptionLocked={!!bookingId}
 							/>
