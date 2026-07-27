@@ -39,7 +39,12 @@ const eventsTag = (tourId: string, optionId: string) => ({
 	id: `${tourId}-${optionId}`
 });
 
-const eventDetailTag = (tourId: string, optionId: string, eventId: string, eventOptionId?: string) => ({
+const eventDetailTag = (
+	tourId: string,
+	optionId: string,
+	eventId: string,
+	eventOptionId?: string
+) => ({
 	type: ENUM_API_TAGS.TOURS_EVENTS,
 	id: `${tourId}-${optionId}-${eventId}-${eventOptionId || ""}`
 });
@@ -85,9 +90,11 @@ export const tourEventApi = authApi.injectEndpoints({
 				arg.eventOptionId
 					? mapEventOptionToFrontend(response, arg.eventOptionId)
 					: mapEventToFrontend(response),
-			providesTags: (_result, _error, { tourId, optionId, eventId, eventOptionId }) => [
-				eventDetailTag(tourId, optionId, eventId, eventOptionId)
-			]
+			providesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [eventDetailTag(tourId, optionId, eventId, eventOptionId)]
 		}),
 		createEvent: builder.mutation<
 			ITourEvent,
@@ -133,7 +140,11 @@ export const tourEventApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
-			invalidatesTags: (_result, _error, { tourId, optionId, eventId }) => [
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId }
+			) => [
 				eventsTag(tourId, optionId),
 				eventDetailTag(tourId, optionId, eventId),
 				pricingTag(tourId, optionId)
@@ -221,7 +232,11 @@ export const tourEventApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
-			invalidatesTags: (_result, _error, { tourId, optionId, eventId, eventOptionId }) => [
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
 				eventsTag(tourId, optionId),
 				eventDetailTag(tourId, optionId, eventId, eventOptionId),
 				pricingTag(tourId, optionId)

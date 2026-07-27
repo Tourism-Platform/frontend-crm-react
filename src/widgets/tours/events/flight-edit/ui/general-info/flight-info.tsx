@@ -123,7 +123,7 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 	return (
 		<div className="grid gap-6">
 			<div className="flex flex-col gap-4">
-				<h2 className="text-xl">{t("general.flights.title")}</h2>
+				<h2 className="text-xl">{t("form.general.flights.title")}</h2>
 				<CustomOptionTabs
 					value={formState?.general?.transport_type}
 					onValueChange={(value) =>
@@ -166,7 +166,7 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 						type="button"
 						onClick={handleAddFlight}
 					>
-						<p>{t("general.flights.buttons.add")}</p>
+						<p>{t("form.general.flights.buttons.add")}</p>
 						<PlusIcon />
 					</Button>
 				</div>

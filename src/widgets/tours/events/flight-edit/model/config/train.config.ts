@@ -20,25 +20,27 @@ export const TRAIN_DATA_LIST = ({
 	timezoneOffset = getDeviceUtcOffset()
 }: TSegmentGeoProps): TForm[] => [
 	{
-		label: "general.flights.form.train.fields.carrier.label",
-		placeholder: "general.flights.form.train.fields.carrier.placeholder",
+		label: "form.general.flights.form.train.fields.carrier.label",
+		placeholder:
+			"form.general.flights.form.train.fields.carrier.placeholder",
 		key: ENUM_FORM_TRAIN.CARRIER,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
-		label: "general.flights.form.train.fields.train_number.label",
+		label: "form.general.flights.form.train.fields.train_number.label",
 		placeholder:
-			"general.flights.form.train.fields.train_number.placeholder",
+			"form.general.flights.form.train.fields.train_number.placeholder",
 		key: ENUM_FORM_TRAIN.TRAIN_NUMBER,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
-		label: "general.flights.form.train.fields.departure_station.label",
+		label: "form.general.flights.form.train.fields.departure_station.label",
 		placeholder:
-			"general.flights.form.train.fields.departure_station.placeholder",
-		emptyText: "general.flights.form.train.fields.departure_station.empty",
+			"form.general.flights.form.train.fields.departure_station.placeholder",
+		emptyText:
+			"form.general.flights.form.train.fields.departure_station.empty",
 		key: ENUM_FORM_TRAIN.DEPARTURE_STATION,
 		fieldType: "geo",
 		className: "col-span-2",
@@ -46,10 +48,11 @@ export const TRAIN_DATA_LIST = ({
 		...departure
 	},
 	{
-		label: "general.flights.form.train.fields.arrival_station.label",
+		label: "form.general.flights.form.train.fields.arrival_station.label",
 		placeholder:
-			"general.flights.form.train.fields.arrival_station.placeholder",
-		emptyText: "general.flights.form.train.fields.arrival_station.empty",
+			"form.general.flights.form.train.fields.arrival_station.placeholder",
+		emptyText:
+			"form.general.flights.form.train.fields.arrival_station.empty",
 		key: ENUM_FORM_TRAIN.ARRIVAL_STATION,
 		fieldType: "geo",
 		className: "col-span-2",
@@ -57,32 +60,32 @@ export const TRAIN_DATA_LIST = ({
 		...arrival
 	},
 	{
-		label: "general.flights.form.train.fields.departure_time.label",
+		label: "form.general.flights.form.train.fields.departure_time.label",
 		placeholder:
-			"general.flights.form.train.fields.departure_time.placeholder",
+			"form.general.flights.form.train.fields.departure_time.placeholder",
 		key: ENUM_FORM_TRAIN.DEPARTURE_TIME,
 		fieldType: "time"
 	},
 	{
-		label: "general.flights.form.train.fields.departure_timezone.label",
+		label: "form.general.flights.form.train.fields.departure_timezone.label",
 		placeholder:
-			"general.flights.form.train.fields.departure_timezone.placeholder",
+			"form.general.flights.form.train.fields.departure_timezone.placeholder",
 		key: ENUM_FORM_TRAIN.DEPARTURE_TIMEZONE,
 		fieldType: "select",
 		options: UTC_OPTIONS,
 		defaultValue: timezoneOffset
 	},
 	{
-		label: "general.flights.form.train.fields.arrival_time.label",
+		label: "form.general.flights.form.train.fields.arrival_time.label",
 		placeholder:
-			"general.flights.form.train.fields.arrival_time.placeholder",
+			"form.general.flights.form.train.fields.arrival_time.placeholder",
 		key: ENUM_FORM_TRAIN.ARRIVAL_TIME,
 		fieldType: "time"
 	},
 	{
-		label: "general.flights.form.train.fields.arrival_timezone.label",
+		label: "form.general.flights.form.train.fields.arrival_timezone.label",
 		placeholder:
-			"general.flights.form.train.fields.arrival_timezone.placeholder",
+			"form.general.flights.form.train.fields.arrival_timezone.placeholder",
 		key: ENUM_FORM_TRAIN.ARRIVAL_TIMEZONE,
 		fieldType: "select",
 		options: UTC_OPTIONS,

@@ -13,7 +13,7 @@ export const TRAIN_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.train.fields.carrier.errors.max"
+					"form.general.flights.form.train.fields.carrier.errors.max"
 				)
 			})
 			.optional()
@@ -23,7 +23,7 @@ export const TRAIN_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.train.fields.train_number.errors.max"
+					"form.general.flights.form.train.fields.train_number.errors.max"
 				)
 			})
 			.optional()
@@ -47,7 +47,7 @@ export const TRAIN_SEGMENT_SCHEMA = z
 			.string()
 			.max(100, {
 				message: msg(
-					"general.flights.form.train.fields.departure_timezone.errors.max"
+					"form.general.flights.form.train.fields.departure_timezone.errors.max"
 				)
 			})
 			.optional()
@@ -57,7 +57,7 @@ export const TRAIN_SEGMENT_SCHEMA = z
 			.string()
 			.max(100, {
 				message: msg(
-					"general.flights.form.train.fields.arrival_timezone.errors.max"
+					"form.general.flights.form.train.fields.arrival_timezone.errors.max"
 				)
 			})
 			.optional()
@@ -76,7 +76,7 @@ export const TRAIN_SEGMENT_SCHEMA = z
 				code: "custom",
 				path: [ENUM_FORM_TRAIN.DEPARTURE_TIMEZONE],
 				message: msg(
-					"general.flights.form.train.fields.departure_timezone.errors.required"
+					"form.general.flights.form.train.fields.departure_timezone.errors.required"
 				)
 			});
 		}
@@ -89,7 +89,7 @@ export const TRAIN_SEGMENT_SCHEMA = z
 				code: "custom",
 				path: [ENUM_FORM_TRAIN.ARRIVAL_TIMEZONE],
 				message: msg(
-					"general.flights.form.train.fields.arrival_timezone.errors.required"
+					"form.general.flights.form.train.fields.arrival_timezone.errors.required"
 				)
 			});
 		}

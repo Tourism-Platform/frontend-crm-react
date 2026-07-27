@@ -16,7 +16,7 @@ export const BUS_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.bus.fields.bus_company.errors.max"
+					"form.general.flights.form.bus.fields.bus_company.errors.max"
 				)
 			})
 			.optional()
@@ -26,7 +26,7 @@ export const BUS_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.bus.fields.bus_number.errors.max"
+					"form.general.flights.form.bus.fields.bus_number.errors.max"
 				)
 			})
 			.optional()
@@ -50,7 +50,7 @@ export const BUS_SEGMENT_SCHEMA = z
 			.string()
 			.max(100, {
 				message: msg(
-					"general.flights.form.bus.fields.departure_timezone.errors.max"
+					"form.general.flights.form.bus.fields.departure_timezone.errors.max"
 				)
 			})
 			.optional()
@@ -60,7 +60,7 @@ export const BUS_SEGMENT_SCHEMA = z
 			.string()
 			.max(100, {
 				message: msg(
-					"general.flights.form.bus.fields.arrival_timezone.errors.max"
+					"form.general.flights.form.bus.fields.arrival_timezone.errors.max"
 				)
 			})
 			.optional()
@@ -79,7 +79,7 @@ export const BUS_SEGMENT_SCHEMA = z
 				code: "custom",
 				path: [ENUM_FORM_BUS.DEPARTURE_TIMEZONE],
 				message: msg(
-					"general.flights.form.bus.fields.departure_timezone.errors.required"
+					"form.general.flights.form.bus.fields.departure_timezone.errors.required"
 				)
 			});
 		}
@@ -92,7 +92,7 @@ export const BUS_SEGMENT_SCHEMA = z
 				code: "custom",
 				path: [ENUM_FORM_BUS.ARRIVAL_TIMEZONE],
 				message: msg(
-					"general.flights.form.bus.fields.arrival_timezone.errors.required"
+					"form.general.flights.form.bus.fields.arrival_timezone.errors.required"
 				)
 			});
 		}

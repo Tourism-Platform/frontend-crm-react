@@ -15,10 +15,10 @@ export const GENERAL_INFO_SCHEMA = z.object({
 	[ENUM_FORM_FLIGHT.DESCRIPTION]: z
 		.string()
 		// .min(1, {
-		// 	message: msg("general.description.description.errors.required")
+		// 	message: msg("form.general.description.description.errors.required")
 		// })
 		.max(1000, {
-			message: msg("general.description.description.errors.max")
+			message: msg("form.general.description.description.errors.max")
 		})
 		.optional(),
 
@@ -31,6 +31,6 @@ export const GENERAL_INFO_SCHEMA = z.object({
 			])
 		)
 		.min(1, {
-			message: msg("general.flights.form.errors.min_segments")
+			message: msg("form.general.flights.form.errors.min_segments")
 		})
 });

@@ -19,7 +19,7 @@ const DescriptionInfoBase: FC<IDescriptionInfoProps> = ({ form }) => {
 	const { t } = useTranslation("flight_edit_page");
 	return (
 		<div className="grid gap-6">
-			<h2 className="text-xl">{t("general.description.title")}</h2>
+			<h2 className="text-xl">{t("form.general.description.title")}</h2>
 			{FLIGHT_DESCRIPTION.map(({ key, ...item }) => (
 				<CustomField
 					key={key}

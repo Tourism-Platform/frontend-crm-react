@@ -20,24 +20,26 @@ export const BUS_DATA_LIST = ({
 	timezoneOffset = getDeviceUtcOffset()
 }: TSegmentGeoProps): TForm[] => [
 	{
-		label: "general.flights.form.bus.fields.bus_company.label",
-		placeholder: "general.flights.form.bus.fields.bus_company.placeholder",
+		label: "form.general.flights.form.bus.fields.bus_company.label",
+		placeholder:
+			"form.general.flights.form.bus.fields.bus_company.placeholder",
 		key: ENUM_FORM_BUS.BUS_COMPANY,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
-		label: "general.flights.form.bus.fields.bus_number.label",
-		placeholder: "general.flights.form.bus.fields.bus_number.placeholder",
+		label: "form.general.flights.form.bus.fields.bus_number.label",
+		placeholder:
+			"form.general.flights.form.bus.fields.bus_number.placeholder",
 		key: ENUM_FORM_BUS.BUS_NUMBER,
 		fieldType: "input",
 		className: "col-span-2"
 	},
 	{
-		label: "general.flights.form.bus.fields.departure_point.label",
+		label: "form.general.flights.form.bus.fields.departure_point.label",
 		placeholder:
-			"general.flights.form.bus.fields.departure_point.placeholder",
-		emptyText: "general.flights.form.bus.fields.departure_point.empty",
+			"form.general.flights.form.bus.fields.departure_point.placeholder",
+		emptyText: "form.general.flights.form.bus.fields.departure_point.empty",
 		key: ENUM_FORM_BUS.DEPARTURE_POINT,
 		fieldType: "geo",
 		className: "col-span-2",
@@ -45,10 +47,10 @@ export const BUS_DATA_LIST = ({
 		...departure
 	},
 	{
-		label: "general.flights.form.bus.fields.arrival_point.label",
+		label: "form.general.flights.form.bus.fields.arrival_point.label",
 		placeholder:
-			"general.flights.form.bus.fields.arrival_point.placeholder",
-		emptyText: "general.flights.form.bus.fields.arrival_point.empty",
+			"form.general.flights.form.bus.fields.arrival_point.placeholder",
+		emptyText: "form.general.flights.form.bus.fields.arrival_point.empty",
 		key: ENUM_FORM_BUS.ARRIVAL_POINT,
 		fieldType: "geo",
 		className: "col-span-2",
@@ -56,31 +58,32 @@ export const BUS_DATA_LIST = ({
 		...arrival
 	},
 	{
-		label: "general.flights.form.bus.fields.departure_time.label",
+		label: "form.general.flights.form.bus.fields.departure_time.label",
 		placeholder:
-			"general.flights.form.bus.fields.departure_time.placeholder",
+			"form.general.flights.form.bus.fields.departure_time.placeholder",
 		key: ENUM_FORM_BUS.DEPARTURE_TIME,
 		fieldType: "time"
 	},
 	{
-		label: "general.flights.form.bus.fields.departure_timezone.label",
+		label: "form.general.flights.form.bus.fields.departure_timezone.label",
 		placeholder:
-			"general.flights.form.bus.fields.departure_timezone.placeholder",
+			"form.general.flights.form.bus.fields.departure_timezone.placeholder",
 		key: ENUM_FORM_BUS.DEPARTURE_TIMEZONE,
 		fieldType: "select",
 		options: UTC_OPTIONS,
 		defaultValue: timezoneOffset
 	},
 	{
-		label: "general.flights.form.bus.fields.arrival_time.label",
-		placeholder: "general.flights.form.bus.fields.arrival_time.placeholder",
+		label: "form.general.flights.form.bus.fields.arrival_time.label",
+		placeholder:
+			"form.general.flights.form.bus.fields.arrival_time.placeholder",
 		key: ENUM_FORM_BUS.ARRIVAL_TIME,
 		fieldType: "time"
 	},
 	{
-		label: "general.flights.form.bus.fields.arrival_timezone.label",
+		label: "form.general.flights.form.bus.fields.arrival_timezone.label",
 		placeholder:
-			"general.flights.form.bus.fields.arrival_timezone.placeholder",
+			"form.general.flights.form.bus.fields.arrival_timezone.placeholder",
 		key: ENUM_FORM_BUS.ARRIVAL_TIMEZONE,
 		fieldType: "select",
 		options: UTC_OPTIONS,

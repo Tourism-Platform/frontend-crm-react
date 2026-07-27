@@ -12,7 +12,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.regex(/^[A-Z0-9]{2,3}$/, {
 				message: msg(
-					"general.flights.form.fly.fields.airline_code.errors.pattern"
+					"form.general.flights.form.fly.fields.airline_code.errors.pattern"
 				)
 			})
 			.optional()
@@ -22,12 +22,12 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			// .min(1, {
 			// 	message: msg(
-			// 		"general.flights.form.fly.fields.flight_number.errors.min"
+			// 		"form.general.flights.form.fly.fields.flight_number.errors.min"
 			// 	)
 			// })
 			.max(10, {
 				message: msg(
-					"general.flights.form.fly.fields.flight_number.errors.max"
+					"form.general.flights.form.fly.fields.flight_number.errors.max"
 				)
 			})
 			.optional()
@@ -37,7 +37,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.regex(/^[A-Z]{3}$/, {
 				message: msg(
-					"general.flights.form.fly.fields.departure_airport_code.errors.pattern"
+					"form.general.flights.form.fly.fields.departure_airport_code.errors.pattern"
 				)
 			})
 			.optional()
@@ -47,7 +47,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.regex(/^[A-Z]{3}$/, {
 				message: msg(
-					"general.flights.form.fly.fields.arrival_airport_code.errors.pattern"
+					"form.general.flights.form.fly.fields.arrival_airport_code.errors.pattern"
 				)
 			})
 			.optional()
@@ -65,7 +65,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.max(100, {
 				message: msg(
-					"general.flights.form.fly.fields.departure_timezone.errors.max"
+					"form.general.flights.form.fly.fields.departure_timezone.errors.max"
 				)
 			})
 			.optional()
@@ -75,7 +75,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.max(100, {
 				message: msg(
-					"general.flights.form.fly.fields.arrival_timezone.errors.max"
+					"form.general.flights.form.fly.fields.arrival_timezone.errors.max"
 				)
 			})
 			.optional()
@@ -85,7 +85,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.fly.fields.departure_terminal.errors.max"
+					"form.general.flights.form.fly.fields.departure_terminal.errors.max"
 				)
 			})
 			.optional()
@@ -95,7 +95,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.fly.fields.departure_gate.errors.max"
+					"form.general.flights.form.fly.fields.departure_gate.errors.max"
 				)
 			})
 			.optional()
@@ -105,7 +105,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.fly.fields.arrival_terminal.errors.max"
+					"form.general.flights.form.fly.fields.arrival_terminal.errors.max"
 				)
 			})
 			.optional()
@@ -115,7 +115,7 @@ export const FLY_SEGMENT_SCHEMA = z
 			.string()
 			.max(10, {
 				message: msg(
-					"general.flights.form.fly.fields.arrival_gate.errors.max"
+					"form.general.flights.form.fly.fields.arrival_gate.errors.max"
 				)
 			})
 			.optional()
@@ -134,7 +134,7 @@ export const FLY_SEGMENT_SCHEMA = z
 				code: "custom",
 				path: [ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE],
 				message: msg(
-					"general.flights.form.fly.fields.departure_timezone.errors.required"
+					"form.general.flights.form.fly.fields.departure_timezone.errors.required"
 				)
 			});
 		}
@@ -147,7 +147,7 @@ export const FLY_SEGMENT_SCHEMA = z
 				code: "custom",
 				path: [ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE],
 				message: msg(
-					"general.flights.form.fly.fields.arrival_timezone.errors.required"
+					"form.general.flights.form.fly.fields.arrival_timezone.errors.required"
 				)
 			});
 		}
