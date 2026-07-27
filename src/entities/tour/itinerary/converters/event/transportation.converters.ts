@@ -81,6 +81,8 @@ export const mapTransferFormToUpdate = (
 	return {
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
+		...(g?.description !== undefined &&
+			g.description !== "" && { description: g.description }),
 		typ: "4",
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position

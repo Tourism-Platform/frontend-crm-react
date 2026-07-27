@@ -52,13 +52,14 @@ export const mapActivityFormToUpdate = (
 	return {
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
+		...(g?.description !== undefined &&
+			g.description !== "" && { description: g.description }),
 		typ: "6",
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),
 		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		details: {
-			...(g?.description && { description: g.description }),
 			...(g?.activity_subtype && {
 				typ: activityTypeMapper.to(g.activity_subtype)
 			}),
