@@ -52,7 +52,8 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 		defaultValues: {
 			[ENUM_FORM_EDIT_COMMISSION_TYPE.FROM_CURRENCY]:
 				commission.from_currency,
-			[ENUM_FORM_EDIT_COMMISSION_TYPE.TO_CURRENCY]: commission.to_currency,
+			[ENUM_FORM_EDIT_COMMISSION_TYPE.TO_CURRENCY]:
+				commission.to_currency,
 			[ENUM_FORM_EDIT_COMMISSION_TYPE.RATE]: commission.rate
 		},
 		mode: "onSubmit"

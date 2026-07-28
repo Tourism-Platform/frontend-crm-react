@@ -9,9 +9,12 @@ export const EDIT_COMMISSION_TYPE_SCHEMA = z.object({
 		ENUM_CURRENCY_OPTIONS
 	),
 	[ENUM_FORM_EDIT_COMMISSION_TYPE.TO_CURRENCY]: z.enum(ENUM_CURRENCY_OPTIONS),
-	[ENUM_FORM_EDIT_COMMISSION_TYPE.RATE]: z.number({
-		message: "currency.commission_type.menu.edit.form.errors.rate.required"
-	}).min(0.000001, {
-		message: "currency.currency_rate.form.fields.rate.errors.min"
-	})
+	[ENUM_FORM_EDIT_COMMISSION_TYPE.RATE]: z
+		.number({
+			message:
+				"currency.commission_type.menu.edit.form.errors.rate.required"
+		})
+		.min(0.000001, {
+			message: "currency.currency_rate.form.fields.rate.errors.min"
+		})
 });
