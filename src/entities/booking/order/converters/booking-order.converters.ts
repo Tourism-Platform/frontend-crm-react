@@ -26,12 +26,12 @@ const formatTourDuration = (days: number, nights: number): string =>
 const mapOrderAgencyInfo = (
 	agency: BookingOrderDetail["agency"]
 ): IOrderAgencyInfo => ({
-	id: agency.id,
-	name: agency.name,
-	businessName: agency.business_name,
-	contactPerson: agency.contact_person,
-	contactEmail: agency.contact_email,
-	contactPhone: agency.contact_phone
+	id: agency?.id ?? "",
+	name: agency?.name ?? "",
+	businessName: agency?.business_name ?? "",
+	contactPerson: agency?.contact_person ?? "",
+	contactEmail: agency?.contact_email ?? "",
+	contactPhone: agency?.contact_phone ?? ""
 });
 
 const mapOrderTourInfo = (tour: BookingOrderDetail["tour"]): IOrderTourInfo => {
@@ -89,7 +89,7 @@ export const mapBookingOrderDetailToFrontend = (
 		},
 		tourName: tour.name,
 		status: orderStatusMapper.from(data.status)!,
-		agencyId: data.agency_id,
+		agencyId: data.agency_id ?? "",
 		agency: mapOrderAgencyInfo(data.agency),
 		tourOptionId: data.tour_option_id,
 		tour,

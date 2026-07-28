@@ -14,7 +14,8 @@ export type TForm = TFormField<
 >;
 
 export const ENUM_FORM_EDIT_COMMISSION_TYPE = {
-	CURRENCY: "currency",
+	FROM_CURRENCY: "from_currency",
+	TO_CURRENCY: "to_currency",
 	RATE: "rate"
 } as const;
 

@@ -22,7 +22,7 @@ import {
 
 import {
 	type IOperatorCurrencyRate,
-	useUpdateCommissionMutation
+	useUpdateOperatorCurrencyRateMutation
 } from "@/entities/commission";
 
 import {
@@ -45,11 +45,14 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("financial_settings_page_operator");
-	const [updateCommission, { isLoading }] = useUpdateCommissionMutation();
+	const [updateCurrencyRate, { isLoading }] =
+		useUpdateOperatorCurrencyRateMutation();
 	const form = useForm<TEditCommissionTypeSchema>({
 		resolver: zodResolver(EDIT_COMMISSION_TYPE_SCHEMA),
 		defaultValues: {
-			[ENUM_FORM_EDIT_COMMISSION_TYPE.CURRENCY]: commission.from_currency,
+			[ENUM_FORM_EDIT_COMMISSION_TYPE.FROM_CURRENCY]:
+				commission.from_currency,
+			[ENUM_FORM_EDIT_COMMISSION_TYPE.TO_CURRENCY]: commission.to_currency,
 			[ENUM_FORM_EDIT_COMMISSION_TYPE.RATE]: commission.rate
 		},
 		mode: "onSubmit"
@@ -57,7 +60,12 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 
 	async function onSubmit(data: TEditCommissionTypeSchema) {
 		try {
-			await updateCommission({ id: commission.id, data }).unwrap();
+			await updateCurrencyRate({
+				id: commission.id,
+				data: {
+					rate: data.rate
+				}
+			}).unwrap();
 			toast.success(
 				t("currency.commission_type.menu.edit.form.toasts.success")
 			);
@@ -66,7 +74,7 @@ export const EditCommissionType: FC<IEditCommissionTypeProps> = ({
 			toast.error(
 				t("currency.commission_type.menu.edit.form.toasts.error")
 			);
-			console.error("Failed to update commission:", error);
+			console.error("Failed to update currency rate:", error);
 		}
 	}
 

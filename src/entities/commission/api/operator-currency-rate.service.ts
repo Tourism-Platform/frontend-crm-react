@@ -10,7 +10,8 @@ import {
 import type {
 	IOperatorCurrencyRate,
 	TOperatorCurrencyRateCreateSchema,
-	TOperatorCurrencyRateResponse
+	TOperatorCurrencyRateResponse,
+	TOperatorCurrencyRateUpdateSchema
 } from "../types";
 
 export const operatorCurrencyRateApi = authApi.injectEndpoints({
@@ -35,11 +36,29 @@ export const operatorCurrencyRateApi = authApi.injectEndpoints({
 				body: mapOperatorCurrencyRateToBackend(data)
 			}),
 			invalidatesTags: [ENUM_API_TAGS.OPERATOR.CURRENCY_RATES]
+		}),
+		updateOperatorCurrencyRate: builder.mutation<
+			IOperatorCurrencyRate,
+			{ id: string; data: TOperatorCurrencyRateUpdateSchema }
+		>({
+			query: ({ id, data }) => ({
+				...OPERATOR_FX_RATE_PATHS.updateFxRate(id),
+				body: data
+			}),
+			invalidatesTags: [ENUM_API_TAGS.OPERATOR.CURRENCY_RATES]
+		}),
+		deleteOperatorCurrencyRate: builder.mutation<void, string>({
+			query: (id) => ({
+				...OPERATOR_FX_RATE_PATHS.deleteFxRate(id)
+			}),
+			invalidatesTags: [ENUM_API_TAGS.OPERATOR.CURRENCY_RATES]
 		})
 	})
 });
 
 export const {
 	useGetOperatorCurrencyRatesQuery,
-	useCreateOperatorCurrencyRateMutation
+	useCreateOperatorCurrencyRateMutation,
+	useUpdateOperatorCurrencyRateMutation,
+	useDeleteOperatorCurrencyRateMutation
 } = operatorCurrencyRateApi;

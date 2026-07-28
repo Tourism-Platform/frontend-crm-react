@@ -14,3 +14,8 @@ export type ENUM_FORM_OPERATOR_CREATE_CURRENCY_RATE_TYPE =
 export type TOperatorCurrencyRateCreateSchema = z.infer<
 	typeof OPERATOR_CURRENCY_RATE_CREATE_SCHEMA
 >;
+
+export type TOperatorCurrencyRateUpdateSchema = Pick<
+	TOperatorCurrencyRateCreateSchema,
+	"rate"
+>;

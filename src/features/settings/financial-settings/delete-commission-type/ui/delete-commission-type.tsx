@@ -16,7 +16,7 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useDeleteCommissionMutation } from "@/entities/commission";
+import { useDeleteOperatorCurrencyRateMutation } from "@/entities/commission";
 
 interface IDeleteCommissionTypeProps {
 	id: string;
@@ -31,11 +31,12 @@ export const DeleteCommissionType: FC<IDeleteCommissionTypeProps> = ({
 }) => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("financial_settings_page_operator");
-	const [deleteCommission, { isLoading }] = useDeleteCommissionMutation();
+	const [deleteCurrencyRate, { isLoading }] =
+		useDeleteOperatorCurrencyRateMutation();
 
 	async function handleDelete() {
 		try {
-			await deleteCommission(id).unwrap();
+			await deleteCurrencyRate(id).unwrap();
 			toast.success(
 				t("currency.commission_type.menu.delete.form.toasts.success")
 			);
@@ -44,7 +45,7 @@ export const DeleteCommissionType: FC<IDeleteCommissionTypeProps> = ({
 			toast.error(
 				t("currency.commission_type.menu.delete.form.toasts.error")
 			);
-			console.error("Failed to delete commission:", error);
+			console.error("Failed to delete currency rate:", error);
 		}
 	}
 
