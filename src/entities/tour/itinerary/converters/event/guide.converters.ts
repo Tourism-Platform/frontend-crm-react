@@ -13,7 +13,8 @@ import {
 } from "./guide-pricing.converters";
 import {
 	mapGuidesDurationToBackend,
-	mapGuidesFromBackend
+	mapGuidesFromBackend,
+	mapGuidesTypeToBackend
 } from "./guides.converters";
 
 type TGuideEvent = GuideEventReadOutput;
@@ -60,7 +61,10 @@ export const mapGuideFormToUpdate = (
 		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		...(hasDetails && {
 			details: {
-				// TODO: backend supports single duration only — first guide block wins
+				// Backend supports a single guide block — first item wins.
+				...(guidesList !== undefined && {
+					typ: mapGuidesTypeToBackend(guidesList)
+				}),
 				...(guidesList !== undefined && {
 					duration: mapGuidesDurationToBackend(guidesList)
 				}),

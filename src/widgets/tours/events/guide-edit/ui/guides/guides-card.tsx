@@ -11,7 +11,6 @@ import { ENUM_FORM_SECTION, GUIDES_DATA_LIST } from "../../model";
 interface IGuidesCardProps {
 	form: UseFormReturn<TGuideEditSchema>;
 	index: number;
-	onRemove: () => void;
 }
 
 export const GuidesCard: FC<IGuidesCardProps> = ({ form, index }) => {

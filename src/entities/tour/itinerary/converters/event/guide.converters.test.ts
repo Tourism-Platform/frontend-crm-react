@@ -65,7 +65,7 @@ describe("mapGuideFormToUpdate", () => {
 			name: "Guide",
 			day: 1,
 			position: 0,
-			details: { duration: 1 }
+			details: { typ: "local", duration: 1 }
 		});
 		expect(result.details).not.toHaveProperty("categories");
 	});
@@ -106,6 +106,7 @@ describe("mapGuideFormToUpdate", () => {
 		});
 
 		expect(result.details).toEqual({
+			typ: "local",
 			duration: 1,
 			categories: [
 				{

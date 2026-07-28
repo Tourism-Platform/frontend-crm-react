@@ -74,8 +74,11 @@ const mapCategoryRowFromBackend = (
 	category: TGuideByLanguageCategoryBackend
 ): IGuideCategoryPriceRow => {
 	const expenses = category.expenses;
-	const cost = expenses?.cost_per_person?.val ?? null;
-	const currency = expenses?.cost_per_person?.currency ?? "";
+	const perPersonExpenses =
+		expenses?.typ === "per_person" ? expenses : undefined;
+	const cost = perPersonExpenses?.cost_per_person?.val ?? null;
+	const currency = (perPersonExpenses?.cost_per_person?.currency ??
+		undefined) as unknown as string;
 
 	return {
 		[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]:
@@ -266,7 +269,9 @@ const mapRowToBackendCategory = (
 		return null;
 	}
 
-	const expenses: TPerPersonChargeInputBackend | undefined =
+	const expenses:
+		| ({ typ: "per_person" } & TPerPersonChargeInputBackend)
+		| undefined =
 		hasCost || hasFees || markup
 			? {
 					typ: "per_person",
