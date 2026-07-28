@@ -41,6 +41,8 @@ import {
 	mapGuideFormToUpdate,
 	mapInfoEventToForm,
 	mapInfoFormToUpdate,
+	mapMultiplyOptionDetailToOption,
+	mapMultiplyOptionEventToForm,
 	mapSupplementaryEventToForm,
 	mapSupplementaryFormToUpdate,
 	mapTrainEventToForm,
@@ -52,25 +54,6 @@ import {
 	eventTypeMapper,
 	mapBackendTypToEventType
 } from "./event-type.converters";
-
-type TMultiEventOptionDetail = NonNullable<
-	MultipleOptionEventReadOutput["details"]
->[number];
-
-const mapEventOptionFromDetail = (
-	detail: TMultiEventOptionDetail
-): ITourEventOption | null => {
-	if (!detail.id) return null;
-
-	return {
-		id: detail.id,
-		name: detail.name || "",
-		description: detail.description || "",
-		eventType:
-			mapBackendTypToEventType(detail.typ) || ENUM_EVENT.TOUR_DETAILS,
-		details: (detail.details as Record<string, unknown>) || {}
-	};
-};
 
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
@@ -96,10 +79,10 @@ export const mapAllEventsToFrontend = (
 		event.description = backend.event.description || "";
 	}
 
-	if (backend.event.typ === "10") {
+	if (String(backend.event.typ) === "10") {
 		const multiEvent = backend.event as MultipleOptionEventReadOutput;
 		event.options = (multiEvent.details ?? [])
-			.map(mapEventOptionFromDetail)
+			.map(mapMultiplyOptionDetailToOption)
 			.filter((opt): opt is ITourEventOption => opt !== null);
 		event.details = {};
 	}
@@ -110,7 +93,7 @@ export const mapAllEventsToFrontend = (
 export const mapEventToFrontend = (
 	backend: TTourEventBackendResponce
 ): TTourEvent => {
-	switch (backend?.event?.typ) {
+	switch (String(backend?.event?.typ)) {
 		case "1":
 			return mapFlyEventToForm(backend);
 		case "2":
@@ -129,6 +112,8 @@ export const mapEventToFrontend = (
 			return mapGuideEventToForm(backend);
 		case "9":
 			return mapSupplementaryEventToForm(backend);
+		case "10":
+			return mapMultiplyOptionEventToForm(backend);
 
 		default:
 			return backend as unknown as TTransportationEditSchema;
@@ -139,7 +124,7 @@ export const mapEventOptionToFrontend = (
 	backend: TTourEventBackendResponce,
 	eventOptionId: string
 ): TTourEvent => {
-	if (backend.event?.typ !== "10") {
+	if (String(backend.event?.typ) !== "10") {
 		throw new Error("Event is not a multiply option");
 	}
 
@@ -209,7 +194,7 @@ export const mapOptionReorderToBackend = (
 	order: frontend.order
 });
 
-/** Body for addEventOption / updateEventOption (no day/position). */
+/** Body for addEventOption / updateEventOption kind:"option" (no day/position). */
 export const mapEventOptionCreateToBackend = (
 	frontend: ITourEventCreate
 ): TEventOptionBodyBackend => {
@@ -225,20 +210,10 @@ export const mapEventOptionCreateToBackend = (
 		}),
 		...(frontend.packageId !== undefined && {
 			package_id: frontend.packageId
-		})
+		}),
+		is_optional: Boolean(frontend.isOptional)
 	} as TEventOptionBodyBackend;
 };
-
-export const mapEventOptionUpdateToBackend = (
-	type: ENUM_EVENT_TYPE,
-	frontend: TTourEventUpdate,
-	language?: ENUM_LANGUAGES_TYPE
-): TEventOptionBodyBackend =>
-	mapEventUpdateToBackend(
-		type,
-		frontend,
-		language
-	) as TEventOptionBodyBackend;
 
 export const mapMoveToMultiResultToFrontend = (
 	backend: TMoveToMultiResultBackend
@@ -266,9 +241,11 @@ export const mapEventCreateToBackend = (
 		day: frontend.day,
 		position: frontend.position,
 		typ,
-		details: isMultipleOption
-			? (frontend.details ?? [])
-			: frontend.details || {},
+		...(isMultipleOption &&
+			frontend.details && { details: frontend.details }),
+		...(!isMultipleOption
+			? { details: frontend.details }
+			: { details: [] }),
 		...(frontend.supplierId !== undefined && {
 			supplier_id: frontend.supplierId
 		}),

@@ -1,4 +1,6 @@
-import { ENUM_FORM_MULTIPLY_OPTION, type TForm } from "../types";
+import { ENUM_FORM_MULTIPLY_OPTION } from "@/entities/tour";
+
+import { type TForm } from "../types";
 
 export const MULTIPLY_OPTION_DESCRIPTION: TForm[] = [
 	{

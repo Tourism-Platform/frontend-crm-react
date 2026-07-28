@@ -7,3 +7,4 @@ export * from "./info";
 export * from "./accommodation";
 export * from "./flight";
 export * from "./guide";
+export * from "./multiply-option";

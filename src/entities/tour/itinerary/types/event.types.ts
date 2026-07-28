@@ -6,6 +6,7 @@ import type { ENUM_EVENT_TYPE } from "./event-enum.types";
 import type { TFlightEditSchema } from "./flight";
 import type { TGuideEditSchema } from "./guide";
 import type { TInfoEditSchema } from "./info";
+import type { TMultiplyOptionEditSchema } from "./multiply-option";
 import type { TSupplementEditSchema } from "./supplement";
 import type { TTransportationEditSchema } from "./transportation";
 
@@ -15,6 +16,7 @@ export interface ITourEventOption {
 	description: string;
 	eventType: ENUM_EVENT_TYPE;
 	details: Record<string, unknown>;
+	isOptional: boolean;
 }
 
 export interface ITourEvent {
@@ -39,6 +41,7 @@ export interface ITourEventCreate {
 	details?: Record<string, unknown>;
 	supplierId?: string | null;
 	packageId?: string | null;
+	isOptional?: boolean;
 }
 
 export interface ITourEventUpdate {
@@ -58,7 +61,8 @@ export type TTourEvent =
 	| TInfoEditSchema
 	| TAccommodationEditSchema
 	| TActivityEditSchema
-	| TGuideEditSchema;
+	| TGuideEditSchema
+	| TMultiplyOptionEditSchema;
 
 export type TTourEventUpdate = Partial<
 	| TFlightEditSchema
@@ -68,6 +72,7 @@ export type TTourEventUpdate = Partial<
 	| TAccommodationEditSchema
 	| TActivityEditSchema
 	| TGuideEditSchema
+	| TMultiplyOptionEditSchema
 >;
 
 export interface ITourEventReorder {
@@ -96,6 +101,15 @@ export interface IUpdateEventOption {
 	type: ENUM_EVENT_TYPE;
 	data: TTourEventUpdate;
 	language?: ENUM_LANGUAGES_TYPE;
+}
+
+/** Same endpoint as updateEventOption, body via mapEventOptionCreateToBackend. */
+export interface IUpdateEventOptionContent {
+	tourId: string;
+	optionId: string;
+	eventId: string;
+	eventOptionId: string;
+	data: ITourEventCreate;
 }
 
 export interface IDeleteEventOption {

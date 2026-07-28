@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import {
-	MULTIPLY_OPTION_DESCRIPTION,
-	type TGeneralInfoSchema
-} from "../../model";
+import type { TMultiplyOptionEditSchema } from "@/entities/tour";
+
+import { MULTIPLY_OPTION_DESCRIPTION } from "../../model";
 
 interface IDescriptionInfoProps {
-	form: UseFormReturn<TGeneralInfoSchema>;
+	form: UseFormReturn<TMultiplyOptionEditSchema>;
 }
 
 const DescriptionInfoBase: FC<IDescriptionInfoProps> = ({ form }) => {

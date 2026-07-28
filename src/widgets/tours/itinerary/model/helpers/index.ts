@@ -1,4 +1,5 @@
 export * from "./add-item";
+export * from "./add-option-queue";
 export * from "./find-item-location";
 export * from "./id-convention";
 export * from "./move-item";

@@ -3,6 +3,17 @@
 		"general": "General",
 		"media": "Media"
 	},
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Error while loading data"
+			},
+			"save": {
+				"success": "Successfully saved",
+				"error": "Error while saving"
+			}
+		}
+	},
 	"general": {
 		"buttons": {
 			"save": "Save"
@@ -10,8 +21,7 @@
 		"description": {
 			"description": {
 				"errors": {
-					"required": "Description is required",
-					"max": "Description must not exceed 50 characters"
+					"max": "Description must not exceed 1000 characters"
 				}
 			}
 		},
@@ -34,6 +44,8 @@
 		"options": {
 			"title": "Options",
 			"placeholder": "Option name",
+			"optional": "Optional",
+			"remove": "Remove",
 			"errors": {
 				"name_required": "Option name is required"
 			}

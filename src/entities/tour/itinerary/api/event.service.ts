@@ -7,7 +7,6 @@ import {
 	mapEventCreateToBackend,
 	mapEventOptionCreateToBackend,
 	mapEventOptionToFrontend,
-	mapEventOptionUpdateToBackend,
 	mapEventReorderToBackend,
 	mapEventToFrontend,
 	mapEventUpdateToBackend,
@@ -28,6 +27,7 @@ import type {
 	ITourEventReorder,
 	ITourEventUpdate,
 	IUpdateEventOption,
+	IUpdateEventOptionContent,
 	TMoveToMultiResultBackend,
 	TMoveToSingleResultBackend,
 	TTourEvent,
@@ -106,26 +106,8 @@ export const tourEventApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
-			async onQueryStarted(
-				{ tourId, optionId },
-				{ dispatch, queryFulfilled }
-			) {
-				try {
-					const { data: newEvent } = await queryFulfilled;
-					dispatch(
-						tourEventApi.util.updateQueryData(
-							"listTourEvents",
-							{ tourId, optionId },
-							(draft) => {
-								draft.push(newEvent);
-							}
-						)
-					);
-				} catch (error) {
-					console.error(error);
-				}
-			},
 			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+				eventsTag(tourId, optionId),
 				pricingTag(tourId, optionId)
 			]
 		}),
@@ -157,26 +139,13 @@ export const tourEventApi = authApi.injectEndpoints({
 			query: ({ tourId, optionId, eventId }) => ({
 				...TOUR_EVENTS_PATHS.deleteTourEvent(tourId, optionId, eventId)
 			}),
-			async onQueryStarted(
-				{ tourId, optionId, eventId },
-				{ dispatch, queryFulfilled }
-			) {
-				try {
-					await queryFulfilled;
-					dispatch(
-						tourEventApi.util.updateQueryData(
-							"listTourEvents",
-							{ tourId, optionId },
-							(draft) => {
-								return draft.filter((e) => e.id !== eventId);
-							}
-						)
-					);
-				} catch (error) {
-					console.error(error);
-				}
-			},
-			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
 				pricingTag(tourId, optionId)
 			]
 		}),
@@ -207,8 +176,13 @@ export const tourEventApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
-			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId }
+			) => [
 				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
 				pricingTag(tourId, optionId)
 			]
 		}),
@@ -228,7 +202,7 @@ export const tourEventApi = authApi.injectEndpoints({
 					eventId,
 					eventOptionId
 				),
-				body: mapEventOptionUpdateToBackend(type, data, language)
+				body: mapEventUpdateToBackend(type, data, language)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
@@ -238,6 +212,33 @@ export const tourEventApi = authApi.injectEndpoints({
 				{ tourId, optionId, eventId, eventOptionId }
 			) => [
 				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId)
+			]
+		}),
+		updateEventOptionContent: builder.mutation<
+			ITourEvent,
+			IUpdateEventOptionContent
+		>({
+			query: ({ tourId, optionId, eventId, eventOptionId, data }) => ({
+				...TOUR_EVENTS_PATHS.updateEventOption(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId
+				),
+				body: mapEventOptionCreateToBackend(data)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
 				eventDetailTag(tourId, optionId, eventId, eventOptionId),
 				pricingTag(tourId, optionId)
 			]
@@ -270,8 +271,13 @@ export const tourEventApi = authApi.injectEndpoints({
 				}),
 				transformResponse: (response: TTourEventBackendResponce) =>
 					mapAllEventsToFrontend(response),
-				invalidatesTags: (_result, _error, { tourId, optionId }) => [
-					eventsTag(tourId, optionId)
+				invalidatesTags: (
+					_result,
+					_error,
+					{ tourId, optionId, eventId }
+				) => [
+					eventsTag(tourId, optionId),
+					eventDetailTag(tourId, optionId, eventId)
 				]
 			}
 		),
@@ -325,6 +331,7 @@ export const {
 	useReorderEventMutation,
 	useAddEventOptionMutation,
 	useUpdateEventOptionMutation,
+	useUpdateEventOptionContentMutation,
 	useDeleteEventOptionMutation,
 	useReorderEventOptionsMutation,
 	useMoveEventToMultiMutation,

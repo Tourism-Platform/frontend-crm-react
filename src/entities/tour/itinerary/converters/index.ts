@@ -10,3 +10,4 @@ export * from "./event/supplementary.converters";
 export * from "./event/supplementary-pricing.converters";
 export * from "./event/guide.converters";
 export * from "./event/guide-pricing.converters";
+export * from "./event/multiply-option.converters";

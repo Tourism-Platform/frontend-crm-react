@@ -1,45 +1,88 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { MULTIPLY_OPTIONS_MOCK } from "@/shared/config";
-import { Button, Form, Separator, withErrorBoundary } from "@/shared/ui";
+import { Button, Separator, withErrorBoundary } from "@/shared/ui";
 
-import { GENERAL_INFO_SCHEMA, type TGeneralInfoSchema } from "../../model";
+import {
+	ENUM_FORM_MULTIPLY_OPTION,
+	type ITourEventOption,
+	type TMultiplyOptionEditSchema
+} from "@/entities/tour";
 
 import { DescriptionInfo } from "./description-info";
 import { OptionsDetails } from "./options-details";
 
-const GeneralInfoBase: FC = () => {
-	const { t } = useTranslation("multiply_option_edit_page");
-	const form = useForm<TGeneralInfoSchema>({
-		resolver: zodResolver(GENERAL_INFO_SCHEMA),
-		defaultValues: {
-			description: "",
-			options: MULTIPLY_OPTIONS_MOCK
-		},
-		mode: "onSubmit"
-	});
+interface IGeneralInfoProps {
+	form: UseFormReturn<TMultiplyOptionEditSchema>;
+	onSubmit: () => Promise<void>;
+	isLoading?: boolean;
+}
 
-	function onSubmit(data: TGeneralInfoSchema) {
-		console.log("Form submitted:", data);
-	}
+const GeneralInfoBase: FC<IGeneralInfoProps> = ({
+	form,
+	onSubmit,
+	isLoading = false
+}) => {
+	const { t } = useTranslation("multiply_option_edit_page");
+	const options =
+		(useWatch({
+			control: form.control,
+			name: ENUM_FORM_MULTIPLY_OPTION.OPTIONS
+		}) as ITourEventOption[] | undefined) ?? [];
+
+	const handleReorder = (nextOptions: ITourEventOption[]) => {
+		form.setValue(
+			ENUM_FORM_MULTIPLY_OPTION.OPTIONS,
+			nextOptions as TMultiplyOptionEditSchema["options"],
+			{
+				shouldDirty: true
+			}
+		);
+	};
+
+	const handleToggleOptional = (optionId: string, isOptional: boolean) => {
+		const nextOptions = options.map((option) =>
+			option.id === optionId ? { ...option, isOptional } : option
+		);
+		form.setValue(
+			ENUM_FORM_MULTIPLY_OPTION.OPTIONS,
+			nextOptions as TMultiplyOptionEditSchema["options"],
+			{ shouldDirty: true }
+		);
+	};
+
+	const handleRemove = (optionId: string) => {
+		const nextOptions = options.filter((option) => option.id !== optionId);
+		form.setValue(
+			ENUM_FORM_MULTIPLY_OPTION.OPTIONS,
+			nextOptions as TMultiplyOptionEditSchema["options"],
+			{ shouldDirty: true }
+		);
+	};
 
 	return (
-		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="grid gap-10"
-			>
-				<OptionsDetails form={form} />
-				<Separator />
-				<DescriptionInfo form={form} />
-				<div className="flex justify-end mt-6">
-					<Button type="submit">{t("general.buttons.save")}</Button>
-				</div>
-			</form>
-		</Form>
+		<div className="grid gap-10">
+			<OptionsDetails
+				options={options}
+				onReorder={handleReorder}
+				onToggleOptional={handleToggleOptional}
+				onRemove={handleRemove}
+			/>
+			<Separator />
+			<DescriptionInfo form={form} />
+			<div className="flex justify-end mt-6">
+				<Button
+					type="button"
+					disabled={isLoading}
+					onClick={() => {
+						void onSubmit();
+					}}
+				>
+					{t("general.buttons.save")}
+				</Button>
+			</div>
+		</div>
 	);
 };
 

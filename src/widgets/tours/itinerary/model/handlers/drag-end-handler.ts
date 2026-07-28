@@ -1,7 +1,6 @@
 import type { DragEndEvent } from "@dnd-kit/core";
-import { v4 as uuidv4 } from "uuid";
 
-import { ENUM_EVENT, EVENT_TEMPLATES_LIST } from "@/entities/tour";
+import { ENUM_EVENT } from "@/entities/tour";
 import type { ENUM_EVENT_TYPE, IEventLibraryItem } from "@/entities/tour";
 
 import {
@@ -11,6 +10,10 @@ import {
 	moveItemInData,
 	reorderDaysInData
 } from "../helpers";
+import {
+	createItemFromLibrarySummary,
+	createItemFromTemplate
+} from "../helpers/create-day-item";
 import {
 	type IDayItem,
 	type IItemBaseLocation,
@@ -98,54 +101,6 @@ export interface IDragEndResult {
 	clearState: boolean;
 	action?: TDragAction;
 }
-
-const createItemFromTemplate = (
-	tplId: string,
-	targetContainer: ReturnType<typeof getTargetContainer>["container"]
-): IDayItem | null => {
-	const tpl = [
-		...EVENT_TEMPLATES_LIST.library,
-		...EVENT_TEMPLATES_LIST.components
-	].find((t) => t.eventType === tplId);
-	if (!tpl) return null;
-
-	const newItem: IDayItem = {
-		id: uuidv4(),
-		block_id: `${tpl.eventType}-${Date.now()}`,
-		eventType: tpl.eventType,
-		title: tpl.title,
-		subtitle: "Information"
-	};
-
-	if (
-		newItem.eventType === ENUM_EVENT.MULTIPLY_OPTION &&
-		targetContainer?.nestedIndex !== undefined
-	) {
-		return null;
-	}
-
-	return newItem;
-};
-
-const createItemFromLibrarySummary = (
-	summary: IEventLibraryItem,
-	targetContainer: ReturnType<typeof getTargetContainer>["container"]
-): IDayItem | null => {
-	if (
-		summary.eventType === ENUM_EVENT.MULTIPLY_OPTION &&
-		targetContainer?.nestedIndex !== undefined
-	) {
-		return null;
-	}
-
-	return {
-		id: uuidv4(),
-		block_id: `library-${summary.eventType}-${Date.now()}`,
-		eventType: summary.eventType,
-		title: summary.name || "Untitled",
-		subtitle: "Information"
-	};
-};
 
 const getMovedItem = (
 	from: IItemLocation,

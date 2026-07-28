@@ -27,7 +27,12 @@ import {
 	handleDragOver,
 	handleDragStart
 } from "../handlers";
-import { removeItemFromData } from "../helpers";
+import {
+	enqueueByKey,
+	findItemLocation,
+	findNewestOptionId,
+	removeItemFromData
+} from "../helpers";
 import type {
 	IDayItem,
 	IItemLocation,
@@ -103,12 +108,19 @@ const patchBackendId = (
 	};
 };
 
-const findNewestOptionId = (
-	prevIds: Set<string>,
-	options: { id: string }[] | undefined
-): string | undefined => {
-	if (!options?.length) return undefined;
-	return options.find((opt) => !prevIds.has(opt.id))?.id;
+const collectParentOptionBackendIds = (
+	optionsData: TOptionsData,
+	activeOption: string,
+	parentBackendId: string
+): Set<string> => {
+	const parent = Object.values(optionsData[activeOption]?.days || {})
+		.flat()
+		.concat(optionsData[activeOption]?.tripDetails || [])
+		.find((item) => item.backendId === parentBackendId);
+
+	return new Set(
+		parent?.items?.map((i) => i.backendId!).filter(Boolean) || []
+	);
 };
 
 export const useItineraryDnd = ({
@@ -154,7 +166,7 @@ export const useItineraryDnd = ({
 		return map;
 	}, [libraryItems]);
 
-	const pendingLibraryCreatesRef = useRef(new Set<string>());
+	const addOptionQueuesRef = useRef(new Map<string, Promise<void>>());
 
 	const sensors = useSensors(
 		useSensor(PointerSensor, {
@@ -194,6 +206,13 @@ export const useItineraryDnd = ({
 		}
 	};
 
+	const rollbackTempItem = (tempBlockId: string) => {
+		const current = watch("optionsData");
+		const loc = findItemLocation(current, tempBlockId);
+		if (!loc) return;
+		setValue("optionsData", removeItemFromData(current, loc));
+	};
+
 	const executeDragAction = (
 		action: TDragAction,
 		prevOptionsData: TOptionsData
@@ -221,18 +240,11 @@ export const useItineraryDnd = ({
 					return t("toasts.event.create.success");
 				},
 				error: () => {
-					rollback();
+					rollbackTempItem(action.tempBlockId);
 					return t("toasts.event.create.error");
 				}
 			});
 		} else if (action.type === "createFromLibrary") {
-			if (pendingLibraryCreatesRef.current.has(action.templateId)) {
-				rollback();
-				return;
-			}
-
-			pendingLibraryCreatesRef.current.add(action.templateId);
-
 			const createFromLibraryPromise = (async () => {
 				const template = await getEventLibraryTemplate(
 					action.templateId
@@ -252,111 +264,106 @@ export const useItineraryDnd = ({
 			toast.promise(createFromLibraryPromise, {
 				loading: t("toasts.event.create.loading"),
 				success: (newEvent) => {
-					pendingLibraryCreatesRef.current.delete(action.templateId);
 					applyBackendIdPatch(action.tempBlockId, newEvent.id);
 					return t("toasts.event.create.success");
 				},
 				error: () => {
-					pendingLibraryCreatesRef.current.delete(action.templateId);
-					rollback();
+					rollbackTempItem(action.tempBlockId);
 					return t("toasts.event.create.error");
 				}
 			});
 		} else if (action.type === "addOption") {
-			const prevIds = new Set(
-				Object.values(prevOptionsData[activeOption]?.days || {})
-					.flat()
-					.concat(prevOptionsData[activeOption]?.tripDetails || [])
-					.find((item) => item.backendId === action.parentBackendId)
-					?.items?.map((i) => i.backendId!)
-					.filter(Boolean) || []
-			);
+			const addPromise = enqueueByKey(
+				addOptionQueuesRef.current,
+				action.parentBackendId,
+				async () => {
+					const prevIds = collectParentOptionBackendIds(
+						watch("optionsData"),
+						activeOption,
+						action.parentBackendId
+					);
 
-			const addPromise = addEventOption({
-				tourId,
-				optionId: activeOption,
-				eventId: action.parentBackendId,
-				type: action.eventType,
-				data: {
-					name: action.title,
-					description: "",
-					day: action.day,
-					position: action.position,
-					eventType: action.eventType,
-					details: action.details
+					try {
+						const parentEvent = await addEventOption({
+							tourId,
+							optionId: activeOption,
+							eventId: action.parentBackendId,
+							type: action.eventType,
+							data: {
+								name: action.title,
+								description: "",
+								day: action.day,
+								position: action.position,
+								eventType: action.eventType,
+								details: action.details
+							}
+						}).unwrap();
+
+						const newId = findNewestOptionId(
+							prevIds,
+							parentEvent.options
+						);
+						if (newId) {
+							applyBackendIdPatch(action.tempBlockId, newId);
+						}
+					} catch (error) {
+						rollbackTempItem(action.tempBlockId);
+						throw error;
+					}
 				}
-			}).unwrap();
+			);
 
 			toast.promise(addPromise, {
 				loading: t("toasts.event.create.loading"),
-				success: (parentEvent) => {
-					const newId = findNewestOptionId(
-						prevIds,
-						parentEvent.options
-					);
-					if (newId) {
-						applyBackendIdPatch(action.tempBlockId, newId);
-					}
-					return t("toasts.event.create.success");
-				},
-				error: () => {
-					rollback();
-					return t("toasts.event.create.error");
-				}
+				success: t("toasts.event.create.success"),
+				error: t("toasts.event.create.error")
 			});
 		} else if (action.type === "addOptionFromLibrary") {
-			if (pendingLibraryCreatesRef.current.has(action.templateId)) {
-				rollback();
-				return;
-			}
+			const addFromLibraryPromise = enqueueByKey(
+				addOptionQueuesRef.current,
+				action.parentBackendId,
+				async () => {
+					const prevIds = collectParentOptionBackendIds(
+						watch("optionsData"),
+						activeOption,
+						action.parentBackendId
+					);
 
-			pendingLibraryCreatesRef.current.add(action.templateId);
+					try {
+						const template = await getEventLibraryTemplate(
+							action.templateId
+						).unwrap();
+						const data = mapLibraryTemplateToCreateEvent(
+							template,
+							action.day,
+							action.position
+						);
+						const parentEvent = await addEventOption({
+							tourId,
+							optionId: activeOption,
+							eventId: action.parentBackendId,
+							type: data.eventType,
+							data
+						}).unwrap();
 
-			const prevIds = new Set(
-				Object.values(prevOptionsData[activeOption]?.days || {})
-					.flat()
-					.concat(prevOptionsData[activeOption]?.tripDetails || [])
-					.find((item) => item.backendId === action.parentBackendId)
-					?.items?.map((i) => i.backendId!)
-					.filter(Boolean) || []
+						const newId = findNewestOptionId(
+							prevIds,
+							parentEvent.options
+						);
+						if (newId) {
+							applyBackendIdPatch(action.tempBlockId, newId);
+						}
+					} catch (error) {
+						rollbackTempItem(action.tempBlockId);
+						throw error;
+					}
+				}
 			);
-
-			const addFromLibraryPromise = (async () => {
-				const template = await getEventLibraryTemplate(
-					action.templateId
-				).unwrap();
-				const data = mapLibraryTemplateToCreateEvent(
-					template,
-					action.day,
-					action.position
-				);
-				return addEventOption({
-					tourId,
-					optionId: activeOption,
-					eventId: action.parentBackendId,
-					type: data.eventType,
-					data
-				}).unwrap();
-			})();
 
 			toast.promise(addFromLibraryPromise, {
 				loading: t("toasts.event.create.loading"),
-				success: (parentEvent) => {
-					pendingLibraryCreatesRef.current.delete(action.templateId);
-					const newId = findNewestOptionId(
-						prevIds,
-						parentEvent.options
-					);
-					if (newId) {
-						applyBackendIdPatch(action.tempBlockId, newId);
-					}
-					return t("toasts.event.create.success");
-				},
-				error: () => {
-					pendingLibraryCreatesRef.current.delete(action.templateId);
-					rollback();
-					return t("toasts.event.create.error");
-				}
+				success: t("toasts.event.create.success"),
+				error: t("toasts.event.create.error")
 			});
 		} else if (action.type === "move" || action.type === "reorder") {
 			const movePromise = reorderEvent({
