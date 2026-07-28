@@ -1,6 +1,6 @@
 import type {
-	AdminUserView,
 	AuthUserIn,
+	BaseUser,
 	MeSchema,
 	PasswordChangeIn,
 	SignInIn
@@ -30,9 +30,19 @@ export const AUTH_PATHS = {
 		method: "POST",
 		_types: {} as { body: void; query: void; response: void }
 	} as const,
-	registerUserAsAdmin: {
-		url: "/auth/signup/as/admin",
+	registerUser: {
+		url: "/auth/register",
 		method: "POST",
-		_types: {} as { body: AuthUserIn; query: void; response: AdminUserView }
+		_types: {} as { body: AuthUserIn; query: void; response: BaseUser }
+	} as const,
+	googleLogin: {
+		url: "/auth/google/login",
+		method: "GET",
+		_types: {} as { body: void; query: void; response: void }
+	} as const,
+	googleCallback: {
+		url: "/auth/google/callback",
+		method: "GET",
+		_types: {} as { body: void; query: void; response: void }
 	} as const
 } as const;

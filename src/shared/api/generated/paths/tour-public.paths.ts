@@ -5,7 +5,8 @@ import type {
 	OperatorPreviewPubSchema,
 	TourMetaModel,
 	TourOptionPreviewSchemaOutput,
-	TourOptionPublicResponse
+	TourOptionPublicResponse,
+	TourSchedulePubSchema
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -56,6 +57,16 @@ export const TOUR_PUBLIC_PATHS = {
 				body: void;
 				query: void;
 				response: OperatorPreviewPubSchema;
+			}
+		}) as const,
+	getPublicTourSchedule: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/public/schedule`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { from?: string | null; to?: string | null };
+				response: TourSchedulePubSchema;
 			}
 		}) as const
 } as const;

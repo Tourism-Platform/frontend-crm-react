@@ -14,6 +14,7 @@ import type {
 	InformationEventInput,
 	LanguageCode,
 	MoveToMultiResult,
+	MoveToMultiSchema,
 	MoveToSingleResult,
 	MultipleOptionEvent,
 	OptionReorderSchema,
@@ -120,7 +121,7 @@ export const TOUR_EVENTS_PATHS = {
 			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/move-to-multi/${targetEventId}`,
 			method: "POST",
 			_types: {} as {
-				body: void;
+				body: MoveToMultiSchema | null;
 				query: { lang?: LanguageCode };
 				response: MoveToMultiResult;
 			}
@@ -203,7 +204,7 @@ export const TOUR_EVENTS_PATHS = {
 			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/move-to-single/${eventOptionId}`,
 			method: "POST",
 			_types: {} as {
-				body: void;
+				body: EventReorderSchema | null;
 				query: { lang?: LanguageCode };
 				response: MoveToSingleResult;
 			}

@@ -46,7 +46,7 @@ export const mapAccommodationEventToForm = (
 	const perRoomRooms =
 		expenses?.typ === "per_room" ? expenses.rooms : undefined;
 	const perRoomCategoryRooms =
-		expenses?.typ === "per_room_category" ? expenses.rooms : undefined;
+		expenses?.typ === "per_room_category" ? expenses.categories : undefined;
 	const rooms = mapRoomsFromBackend(perRoomRooms, perRoomCategoryRooms);
 
 	return {

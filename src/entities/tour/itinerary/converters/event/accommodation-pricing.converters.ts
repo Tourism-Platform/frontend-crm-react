@@ -101,21 +101,31 @@ const mapPerRoomPriceFromBackend = (
 });
 
 const mapCategoryRowFromBackend = (
-	category: THousingRoomCategoryBackend
+	categoryName?: string | null,
+	room?: THousingRoomCategoryBackend | null
 ): IAccommodationCategoryPriceRow => ({
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: category.name ?? "",
-	...mapPriceRowFromFixedCharge(category.expenses),
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: categoryName ?? "",
+	...mapPriceRowFromFixedCharge(room?.expenses),
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
-		category.expenses?.markup
+		room?.expenses?.markup
 	)
 });
 
 const mapPerRoomByClassPriceFromBackend = (
-	room: THousingRoomCategoryExpensesBackend
+	room: TRoomsList[number],
+	categories?: THousingRoomCategoryExpensesBackend[] | null
 ): IAccommodationPerRoomByClassPriceRow => ({
-	[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]: room?.categories
-		?.length
-		? room.categories.map(mapCategoryRowFromBackend)
+	[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]: categories?.length
+		? categories.map((category) =>
+				mapCategoryRowFromBackend(
+					category.name,
+					category.rooms?.find(
+						(categoryRoom) =>
+							categoryRoom.typ ===
+							mapRoomNameToHousingType(room.room_name)
+					)
+				)
+			)
 		: [createEmptyCategoryRow()]
 });
 
@@ -137,15 +147,16 @@ const alignPerRoomPriceRows = (
 const alignPerRoomByClassPriceRows = (
 	roomsListLength: number,
 	existing: IAccommodationPerRoomByClassPriceRow[] = [],
-	apiRows?: THousingRoomCategoryExpensesBackend[] | null
+	apiRows?: THousingRoomCategoryExpensesBackend[] | null,
+	roomsList: TRoomsList = []
 ): IAccommodationPerRoomByClassPriceRow[] =>
 	Array.from({ length: roomsListLength }, (_, index) => {
 		const row = existing[index];
 		if (row) {
 			return row;
 		}
-		if (apiRows?.[index]) {
-			return mapPerRoomByClassPriceFromBackend(apiRows[index]);
+		if (apiRows?.length && roomsList[index]) {
+			return mapPerRoomByClassPriceFromBackend(roomsList[index], apiRows);
 		}
 		return createEmptyPerRoomByClassPriceRow();
 	});
@@ -350,7 +361,8 @@ export const mapAccommodationPricingFromBackend = (
 		const rooms = alignPerRoomByClassPriceRows(
 			roomsList.length,
 			[],
-			perRoomCategory.rooms
+			perRoomCategory.categories,
+			roomsList
 		);
 		const categories = rooms.flatMap(
 			(room) =>
@@ -430,10 +442,9 @@ export const mapAccommodationPricingToBackend = (
 				details: {
 					expenses: {
 						typ: "per_room_category",
-						rooms: roomsList.map((room, index) => ({
-							typ: mapRoomNameToHousingType(room.room_name),
-							description: room.description || null,
-							categories: (
+						categories: roomsList.map((room, index) => ({
+							name: room.room_name || null,
+							rooms: (
 								rooms[index]?.[
 									ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD
 										.CATEGORIES
@@ -445,10 +456,12 @@ export const mapAccommodationPricingToBackend = (
 											.CURRENCY
 									];
 								return {
-									name: category[
-										ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
-											.NAME
-									],
+									typ: mapRoomNameToHousingType(
+										category[
+											ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
+												.NAME
+										]
+									),
 									expenses: mapToFixedCharge(
 										category[
 											ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD

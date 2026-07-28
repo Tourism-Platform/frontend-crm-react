@@ -189,6 +189,12 @@ export enum HousingRoomTypes {
 	Family = "family"
 }
 
+/** GuideType */
+export enum GuideType {
+	Local = "local",
+	Route = "route"
+}
+
 /** Gender */
 export enum Gender {
 	M = "M",
@@ -945,6 +951,15 @@ export interface AvailabilityApply {
 	status: ApplyAvailabilityInput;
 }
 
+/** BaseUser */
+export interface BaseUser {
+	/**
+	 * Email
+	 * @format email
+	 */
+	email: string;
+}
+
 /** Body_add_agency_documents_agency_me_documents_post */
 export interface BodyAddAgencyDocumentsAgencyMeDocumentsPost {
 	/** Files */
@@ -1191,11 +1206,10 @@ export interface BookingOrderDetail {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Agency Id
-	 * @format uuid
-	 */
-	agency_id: string;
+	/** Agency Id */
+	agency_id?: string | null;
+	/** User Id */
+	user_id?: string | null;
 	/**
 	 * Operator Id
 	 * @format uuid
@@ -1250,7 +1264,8 @@ export interface BookingOrderDetail {
 	/** Order Number */
 	order_number: string;
 	tour: OrderTourInfo;
-	agency: OrderAgencyInfo;
+	agency?: OrderAgencyInfo | null;
+	user?: OrderUserInfo | null;
 }
 
 /** BookingOrderListItem */
@@ -1262,6 +1277,7 @@ export interface BookingOrderListItem {
 	id: string;
 	/** Client Name */
 	client_name: string;
+	client_type: BookingClientType;
 	/** Tour Name */
 	tour_name: string;
 	tour_type: TourType;
@@ -1285,7 +1301,6 @@ export interface BookingOrderListItem {
 	pax: number;
 	/** Order Number */
 	order_number: string;
-	client_type: BookingClientType;
 }
 
 /** BookingOrderListResponse */
@@ -1303,11 +1318,10 @@ export interface BookingOrderResponse {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Agency Id
-	 * @format uuid
-	 */
-	agency_id: string;
+	/** Agency Id */
+	agency_id?: string | null;
+	/** User Id */
+	user_id?: string | null;
 	/**
 	 * Operator Id
 	 * @format uuid
@@ -3003,6 +3017,16 @@ export interface FxRateCreateSchema {
 }
 
 /**
+ * FxRateUpdateSchema
+ * Correct a recorded rate in place. The currency pair is immutable — a
+ * different pair is a different ledger entry, so record a new one.
+ */
+export interface FxRateUpdateSchema {
+	/** Rate */
+	rate: number | string;
+}
+
+/**
  * GeoFeature
  * Provider-neutral geocoded place.
  */
@@ -3029,22 +3053,106 @@ export interface GeoFeature {
 	country_code?: string | null;
 }
 
+/**
+ * GroupSizeTier
+ * One group-size pricing step: the flat ``cost`` applies to any headcount
+ * from the previous tier's bound + 1 up to ``up_to_pax`` inclusive.
+ */
+export interface GroupSizeTierInput {
+	/**
+	 * Up To Pax
+	 * Inclusive upper headcount bound.
+	 * @min 1
+	 */
+	up_to_pax: number;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost: MonetaryValueSchema;
+}
+
+/**
+ * GroupSizeTier
+ * One group-size pricing step: the flat ``cost`` applies to any headcount
+ * from the previous tier's bound + 1 up to ``up_to_pax`` inclusive.
+ */
+export interface GroupSizeTierOutput {
+	/**
+	 * Up To Pax
+	 * Inclusive upper headcount bound.
+	 * @min 1
+	 */
+	up_to_pax: number;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost: MonetaryValueSchema;
+}
+
 /** GuideByLanguageCategory */
 export interface GuideByLanguageCategoryInput {
 	lang?: LanguageCode | null;
-	expenses?: PerPersonChargeInput | null;
+	/**
+	 * Expenses
+	 * The guide charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "per_group";
+				  } & PerGroupChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
 }
 
 /** GuideByLanguageCategory */
 export interface GuideByLanguageCategoryOutput {
 	lang?: LanguageCode | null;
-	expenses?: PerPersonChargeOutput | null;
+	/**
+	 * Expenses
+	 * The guide charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "per_group";
+				  } & PerGroupChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
 }
 
 /** GuideDetails */
 export interface GuideDetailsInput {
 	/** Name */
 	name?: string | null;
+	/** Guide kind: route (whole-tour) or local (on-site) */
+	typ?: GuideType | null;
 	/**
 	 * Duration
 	 * Length of guide activity in days
@@ -3061,6 +3169,8 @@ export interface GuideDetailsInput {
 export interface GuideDetailsOutput {
 	/** Name */
 	name?: string | null;
+	/** Guide kind: route (whole-tour) or local (on-site) */
+	typ?: GuideType | null;
 	/**
 	 * Duration
 	 * Length of guide activity in days
@@ -3727,77 +3837,71 @@ export interface HousingEventReadOutput {
 
 /** HousingRoomCategoryExpensesSchema */
 export interface HousingRoomCategoryExpensesSchemaInput {
-	typ?: HousingRoomTypes | null;
-	/** Pax */
-	pax?: number | null;
-	/**
-	 * Description
-	 * Room description
-	 */
-	description?: string | null;
-	/** Categories */
-	categories?: HousingRoomCategorySchemaInput[] | null;
+	/** Name */
+	name?: string | null;
+	/** Rooms */
+	rooms?: HousingRoomSchemaInput[] | null;
 }
 
 /** HousingRoomCategoryExpensesSchema */
 export interface HousingRoomCategoryExpensesSchemaOutput {
-	typ?: HousingRoomTypes | null;
-	/** Pax */
-	pax?: number | null;
+	/** Name */
+	name?: string | null;
+	/** Rooms */
+	rooms?: HousingRoomSchemaOutput[] | null;
+}
+
+/**
+ * HousingRoomDoubleSchema
+ * per room always counts as double
+ */
+export interface HousingRoomDoubleSchemaInput {
+	/**
+	 * Name
+	 * Room name Standard, Suite .e.t.c.
+	 */
+	name?: string | null;
 	/**
 	 * Description
 	 * Room description
 	 */
 	description?: string | null;
-	/** Categories */
-	categories?: HousingRoomCategorySchemaOutput[] | null;
-}
-
-/** HousingRoomCategorySchema */
-export interface HousingRoomCategorySchemaInput {
-	/**
-	 * Name
-	 * Room category, i.e. single, double e.t.c.
-	 */
-	name?: string | null;
-	/** Charge for this room of this category. */
 	expenses?: FixedChargeInput | null;
 }
 
-/** HousingRoomCategorySchema */
-export interface HousingRoomCategorySchemaOutput {
+/**
+ * HousingRoomDoubleSchema
+ * per room always counts as double
+ */
+export interface HousingRoomDoubleSchemaOutput {
 	/**
 	 * Name
-	 * Room category, i.e. single, double e.t.c.
+	 * Room name Standard, Suite .e.t.c.
 	 */
 	name?: string | null;
-	/** Charge for this room of this category. */
+	/**
+	 * Description
+	 * Room description
+	 */
+	description?: string | null;
 	expenses?: FixedChargeOutput | null;
 }
 
-/** HousingRoomExpensesSchema */
-export interface HousingRoomExpensesSchemaInput {
+/** HousingRoomSchema */
+export interface HousingRoomSchemaInput {
 	typ?: HousingRoomTypes | null;
 	/** Pax */
 	pax?: number | null;
-	/**
-	 * Description
-	 * Room description
-	 */
-	description?: string | null;
+	/** Charge for this room of this category. */
 	expenses?: FixedChargeInput | null;
 }
 
-/** HousingRoomExpensesSchema */
-export interface HousingRoomExpensesSchemaOutput {
+/** HousingRoomSchema */
+export interface HousingRoomSchemaOutput {
 	typ?: HousingRoomTypes | null;
 	/** Pax */
 	pax?: number | null;
-	/**
-	 * Description
-	 * Room description
-	 */
-	description?: string | null;
+	/** Charge for this room of this category. */
 	expenses?: FixedChargeOutput | null;
 }
 
@@ -4425,6 +4529,16 @@ export interface MoveToMultiResult {
 	 * @format uuid
 	 */
 	removed_event_id: string;
+}
+
+/** MoveToMultiSchema */
+export interface MoveToMultiSchema {
+	/**
+	 * Option Position
+	 * Insert index among the target's alternatives, clamped to last.
+	 * @min 0
+	 */
+	option_position: number;
 }
 
 /** MoveToSingleResult */
@@ -5157,6 +5271,23 @@ export interface OrderTourInfo {
 	route?: string[];
 }
 
+/** OrderUserInfo */
+export interface OrderUserInfo {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Email */
+	email: string;
+	/** First Name */
+	first_name?: string | null;
+	/** Last Name */
+	last_name?: string | null;
+	/** Phone Number */
+	phone_number?: string | null;
+}
+
 /** PackageCreate */
 export interface PackageCreate {
 	/** Name */
@@ -5429,6 +5560,70 @@ export interface PerCarExpenseOutput {
 }
 
 /**
+ * PerGroupCharge
+ * A group-size-tiered cost together with its own fee and markup.
+ */
+export interface PerGroupChargeInput {
+	/**
+	 * Typ
+	 * @default "per_group"
+	 */
+	typ?: "per_group";
+	/**
+	 * Tiers
+	 * @minItems 1
+	 */
+	tiers: GroupSizeTierInput[];
+	fees?: FixedExpenseInput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * PerGroupCharge
+ * A group-size-tiered cost together with its own fee and markup.
+ */
+export interface PerGroupChargeOutput {
+	/**
+	 * Typ
+	 * @default "per_group"
+	 */
+	typ?: "per_group";
+	/**
+	 * Tiers
+	 * @minItems 1
+	 */
+	tiers: GroupSizeTierOutput[];
+	fees?: FixedExpenseOutput | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
  * PerPersonCharge
  * A per-person cost together with its own fee and markup.
  */
@@ -5570,10 +5765,10 @@ export interface PerRoomCategoryExpensesInput {
 	/** Typ */
 	typ: "per_room_category";
 	/**
-	 * Rooms
-	 * All rooms with categories
+	 * Categories
+	 * All room categories with their rooms
 	 */
-	rooms?: HousingRoomCategoryExpensesSchemaInput[] | null;
+	categories?: HousingRoomCategoryExpensesSchemaInput[] | null;
 }
 
 /**
@@ -5584,10 +5779,10 @@ export interface PerRoomCategoryExpensesOutput {
 	/** Typ */
 	typ: "per_room_category";
 	/**
-	 * Rooms
-	 * All rooms with categories
+	 * Categories
+	 * All room categories with their rooms
 	 */
-	rooms?: HousingRoomCategoryExpensesSchemaOutput[] | null;
+	categories?: HousingRoomCategoryExpensesSchemaOutput[] | null;
 }
 
 /**
@@ -5601,7 +5796,7 @@ export interface PerRoomExpensesInput {
 	 * Rooms
 	 * All rooms
 	 */
-	rooms?: HousingRoomExpensesSchemaInput[] | null;
+	rooms?: HousingRoomDoubleSchemaInput[] | null;
 }
 
 /**
@@ -5615,7 +5810,7 @@ export interface PerRoomExpensesOutput {
 	 * Rooms
 	 * All rooms
 	 */
-	rooms?: HousingRoomExpensesSchemaOutput[] | null;
+	rooms?: HousingRoomDoubleSchemaOutput[] | null;
 }
 
 /**
@@ -7124,6 +7319,28 @@ export interface TourScheduleModel {
 	id: string;
 	/** Is Seasonal */
 	is_seasonal: boolean;
+}
+
+/**
+ * TourSchedulePubSchema
+ * Bookable dates for a published tour.
+ *
+ * Only the materialised ``occurrences`` cross the public boundary — the raw
+ * fixed/excluded/recurrence rows and the seasonal commissions stay operator-only.
+ */
+export interface TourSchedulePubSchema {
+	/** Occurrences */
+	occurrences: string[];
+	/**
+	 * Window From
+	 * @format date
+	 */
+	window_from: string;
+	/**
+	 * Window Until
+	 * @format date
+	 */
+	window_until: string;
 }
 
 /** TourScheduleUpdate */
@@ -8876,6 +9093,10 @@ export interface UpdateSingleEventTourTourIdOptionIdEventSingleEventIdUpdatePatc
 	eventId: string;
 }
 
+/** Move */
+export type MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMultiTargetEventIdPostPayload =
+	MoveToMultiSchema | null;
+
 export interface MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMultiTargetEventIdPostParams {
 	/** @default "en" */
 	lang?: LanguageCode;
@@ -9052,6 +9273,10 @@ export interface DeleteEventOptionTourTourIdOptionIdEventMultiEventIdRemoveOptio
 	 */
 	eventOptionId: string;
 }
+
+/** Move */
+export type MoveEventOptionToSingleTourTourIdOptionIdEventMultiEventIdMoveToSingleEventOptionIdPostPayload =
+	EventReorderSchema | null;
 
 export interface MoveEventOptionToSingleTourTourIdOptionIdEventMultiEventIdMoveToSingleEventOptionIdPostParams {
 	/** @default "en" */
@@ -9470,6 +9695,18 @@ export interface GetPublicOperatorPreviewTourTourIdPublicOperatorGetParams {
 	tourId: string;
 }
 
+export interface GetPublicTourScheduleTourTourIdPublicScheduleGetParams {
+	/** From */
+	from?: string | null;
+	/** To */
+	to?: string | null;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface CreatePackageTourTourIdOptionIdPackagePostParams {
 	/**
 	 * Option Id
@@ -9769,6 +10006,22 @@ export interface ListFxRatesOperatorFxRateGetParams {
 }
 
 export interface GetFxRateOperatorFxRateFxRateIdGetParams {
+	/**
+	 * Fx Rate Id
+	 * @format uuid
+	 */
+	fxRateId: string;
+}
+
+export interface UpdateFxRateOperatorFxRateFxRateIdPatchParams {
+	/**
+	 * Fx Rate Id
+	 * @format uuid
+	 */
+	fxRateId: string;
+}
+
+export interface DeleteFxRateOperatorFxRateFxRateIdDeleteParams {
 	/**
 	 * Fx Rate Id
 	 * @format uuid

@@ -1,6 +1,7 @@
 import type {
 	HousingRoomCategoryExpensesSchemaOutput,
-	HousingRoomExpensesSchemaOutput
+	HousingRoomDoubleSchemaInput,
+	HousingRoomDoubleSchemaOutput
 } from "@/shared/api";
 import { HousingRoomTypes } from "@/shared/api";
 
@@ -17,29 +18,41 @@ export const mapRoomNameToHousingType = (
 
 const mapRoomToBackendInput = (
 	room: TRoomsList[number]
-): Pick<HousingRoomExpensesSchemaOutput, "typ" | "description"> => ({
-	typ: mapRoomNameToHousingType(room.room_name),
+): Pick<HousingRoomDoubleSchemaInput, "name" | "description"> => ({
+	name: room.room_name || null,
 	description: room.description || null
 });
 
 export const mapRoomsFromBackend = (
-	perRoomRooms?: HousingRoomExpensesSchemaOutput[] | null,
+	perRoomRooms?: HousingRoomDoubleSchemaOutput[] | null,
 	perRoomCategoryRooms?: HousingRoomCategoryExpensesSchemaOutput[] | null
 ) => {
-	const source = perRoomRooms?.length
-		? perRoomRooms
-		: perRoomCategoryRooms?.length
-			? perRoomCategoryRooms
-			: [];
+	if (perRoomRooms?.length) {
+		return {
+			rooms: perRoomRooms.map((room) => ({
+				room_name: room.name ?? "",
+				description: room.description ?? ""
+			}))
+		};
+	}
 
-	if (!source.length) {
+	if (!perRoomCategoryRooms?.length) {
 		return { rooms: [] };
 	}
 
+	const uniqueRoomTypes = new Set<string>();
+	perRoomCategoryRooms.forEach((category) => {
+		category.rooms?.forEach((room) => {
+			if (room.typ) {
+				uniqueRoomTypes.add(room.typ);
+			}
+		});
+	});
+
 	return {
-		rooms: source.map((room) => ({
-			room_name: room.typ ?? "",
-			description: room.description ?? ""
+		rooms: Array.from(uniqueRoomTypes).map((roomName) => ({
+			room_name: roomName,
+			description: ""
 		}))
 	};
 };
