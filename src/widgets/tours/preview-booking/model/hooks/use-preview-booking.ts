@@ -6,62 +6,39 @@ import { toast } from "sonner";
 
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
 
-import {
-	useCreateBookingOrderMutation,
-	useSubmitBookingOrderMutation,
-	useUpdateBookingOrderMutation
-} from "@/entities/booking/order/api/booking-order.service";
-import {
-	useAddPassengerInfoMutation,
-	useDeletePassengerInfoMutation,
-	useListPassengerInfoQuery,
-	useUpdatePassengerInfoMutation,
-	useUploadPassengerPassportMutation
-} from "@/entities/booking/order/api/booking-pax.service";
+import type { TSubmittedBooking } from "@/entities/booking";
 import {
 	type ITravellerPaxInput,
 	getTravellerPassportFile,
 	isTravellerComplete,
 	mapBookingPaxToTravellerForm,
 	mapTravellerToPaxCreate,
-	mapTravellerToPaxUpdate
-} from "@/entities/booking/order/converters/booking-pax.converters";
-import type { TSubmittedBooking } from "@/entities/booking/order/types/create-booking.types";
-import { useGetScheduleQuery } from "@/entities/tour";
+	mapTravellerToPaxUpdate,
+	useAddPassengerInfoMutation,
+	useCreateBookingOrderMutation,
+	useDeletePassengerInfoMutation,
+	useListPassengerInfoQuery,
+	useSubmitBookingOrderMutation,
+	useUpdateBookingOrderMutation,
+	useUpdatePassengerInfoMutation,
+	useUploadPassengerPassportMutation
+} from "@/entities/booking";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	PREVIEW_BOOKING_DEFAULT_VALUES,
 	PREVIEW_BOOKING_SCHEMA,
-	type TPreviewBookingSchema
-} from "@/entities/tour/preview-booking";
-import {
+	type TPreviewBookingSchema,
 	useGetPreviewTourGeneralQuery,
-	useGetPreviewTourOptionsQuery
-} from "@/entities/tour/preview-tour";
+	useGetPreviewTourOptionsQuery,
+	useGetPreviewTourScheduleQuery
+} from "@/entities/tour";
 
-const getStorageKey = (bookingId: string) => `preview-booking-${bookingId}`;
-
-interface IBookingDraft {
-	date: string;
-	travellers_count: number;
-	option_id: string;
-	tourId: string;
-}
-
-const saveBookingDraft = (bookingId: string, draft: IBookingDraft) => {
-	sessionStorage.setItem(getStorageKey(bookingId), JSON.stringify(draft));
-};
-
-const loadBookingDraft = (bookingId: string): IBookingDraft | null => {
-	const raw = sessionStorage.getItem(getStorageKey(bookingId));
-	if (!raw) return null;
-
-	try {
-		return JSON.parse(raw) as IBookingDraft;
-	} catch {
-		return null;
-	}
-};
+import {
+	getInitialPreviewCalendarRange,
+	getPreviewCalendarRangeForMonth,
+	loadBookingDraft,
+	saveBookingDraft
+} from "../lib";
 
 export const usePreviewBooking = () => {
 	const navigate = useNavigate();
@@ -75,6 +52,9 @@ export const usePreviewBooking = () => {
 	);
 	const [submittedBooking, setSubmittedBooking] =
 		useState<TSubmittedBooking | null>(null);
+	const [calendarRange, setCalendarRange] = useState(
+		getInitialPreviewCalendarRange
+	);
 	const hasSyncedPax = useRef(false);
 
 	const { data: tourData, isLoading: isTourLoading } =
@@ -86,8 +66,12 @@ export const usePreviewBooking = () => {
 		isError: isOptionsError
 	} = useGetPreviewTourOptionsQuery(tourId, { skip: !tourId });
 
-	const { data: scheduleData } = useGetScheduleQuery(
-		{ tourId },
+	const { data: scheduleData } = useGetPreviewTourScheduleQuery(
+		{
+			tourId,
+			from: calendarRange.from,
+			to: calendarRange.to
+		},
 		{ skip: !tourId }
 	);
 
@@ -237,6 +221,10 @@ export const usePreviewBooking = () => {
 		setCurrentStep((prev) => Math.max(1, prev - 1));
 	};
 
+	const handleCalendarMonthChange = (month: Date) => {
+		setCalendarRange(getPreviewCalendarRangeForMonth(month));
+	};
+
 	const handleAddTraveller = () => {
 		const current =
 			form.getValues(ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS) ?? [];
@@ -350,6 +338,7 @@ export const usePreviewBooking = () => {
 		tourData,
 		options,
 		availableDates,
+		handleCalendarMonthChange,
 		isTourLoading,
 		isOptionsLoading,
 		isOptionsError

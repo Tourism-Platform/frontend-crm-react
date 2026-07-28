@@ -67,6 +67,7 @@ const PreviewBookingBase: FC = () => {
 		tourData,
 		options,
 		availableDates,
+		handleCalendarMonthChange,
 		isOptionsLoading,
 		bookingId
 	} = usePreviewBooking();
@@ -132,6 +133,7 @@ const PreviewBookingBase: FC = () => {
 						{currentStep === 1 && (
 							<Step1DateTravellers
 								onNext={handleNextStep}
+								onMonthChange={handleCalendarMonthChange}
 								isLoading={isCreating || isUpdating}
 								options={options}
 								availableDates={availableDates}

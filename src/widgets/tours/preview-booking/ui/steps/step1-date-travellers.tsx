@@ -17,6 +17,7 @@ import { PreviewBookingOptionCard } from "../preview-booking-option-card";
 
 interface IStep1Props {
 	onNext: () => void;
+	onMonthChange: (month: Date) => void;
 	isLoading: boolean;
 	options: IPreviewOptionCard[];
 	availableDates: Date[];
@@ -26,6 +27,7 @@ interface IStep1Props {
 
 export const Step1DateTravellers: FC<IStep1Props> = ({
 	onNext,
+	onMonthChange,
 	isLoading,
 	options,
 	availableDates,
@@ -89,6 +91,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 						showOutsideDays={false}
 						numberOfMonths={2}
 						pagedNavigation
+						onMonthChange={onMonthChange}
 						classNames={{
 							months: "sm:flex-col md:flex-row gap-20",
 							month: "relative first-of-type:before:hidden before:absolute max-md:before:inset-x-2 max-md:before:h-px max-md:before:-top-4 md:before:inset-y-2 md:before:w-px md:before:-left-4"

@@ -7,6 +7,7 @@ import {
 	mapPreviewOptionToFrontend,
 	mapPreviewOptionsListToFrontend,
 	mapPreviewTourGeneralToFrontend,
+	mapPreviewTourScheduleToFrontend,
 	mapPreviewTourToFrontend
 } from "../converters";
 import type {
@@ -15,11 +16,13 @@ import type {
 	IPreviewOptionCard,
 	IPreviewTourData,
 	IPreviewTourGeneral,
+	IPreviewTourSchedule,
 	TGetPreviewTourBackendResponse,
 	TOptionDetailBackend,
 	TPreviewOperatorBackend,
 	TPreviewOptionListItemBackend,
-	TPreviewTourBackend
+	TPreviewTourBackend,
+	TPreviewTourScheduleBackend
 } from "../types";
 
 export const tourPreviewTourApi = authApi.injectEndpoints({
@@ -61,6 +64,20 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TPreviewOptionListItemBackend[]) =>
 				mapPreviewOptionsListToFrontend(response)
+		}),
+		getPreviewTourSchedule: builder.query<
+			IPreviewTourSchedule,
+			{ tourId: string; from?: string; to?: string }
+		>({
+			query: ({ tourId, from, to }) => ({
+				...TOUR_PUBLIC_PATHS.getPublicTourSchedule(tourId),
+				params:
+					from || to
+						? { from: from ?? null, to: to ?? null }
+						: undefined
+			}),
+			transformResponse: (response: TPreviewTourScheduleBackend) =>
+				mapPreviewTourScheduleToFrontend(response)
 		})
 	})
 });
@@ -70,5 +87,6 @@ export const {
 	useGetPreviewTourQuery,
 	useGetPreviewOperatorQuery,
 	useGetPreviewOptionQuery,
-	useGetPreviewTourOptionsQuery
+	useGetPreviewTourOptionsQuery,
+	useGetPreviewTourScheduleQuery
 } = tourPreviewTourApi;
