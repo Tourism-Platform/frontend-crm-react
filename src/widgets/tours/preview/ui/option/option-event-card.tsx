@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { withErrorBoundary } from "@/shared/ui";
+import { Previewer, withErrorBoundary } from "@/shared/ui";
 
 import type { IOptionEvent } from "@/entities/tour/preview-tour";
 
@@ -39,14 +39,13 @@ const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 					</h4>
 				</div>
 
-				<p
+				<Previewer
+					text={event.description}
 					className={cn(
 						"text-sm text-muted-foreground leading-relaxed",
 						!isMultiply && "line-clamp-6"
 					)}
-				>
-					{event.description}
-				</p>
+				/>
 
 				{isMultiply ? (
 					<div className="flex flex-col gap-3">
@@ -58,9 +57,10 @@ const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 								<h5 className="font-semibold text-sm">
 									{subOption.title}
 								</h5>
-								<p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-									{subOption.description}
-								</p>
+								<Previewer
+									text={subOption.description}
+									className="text-xs text-muted-foreground line-clamp-3 leading-relaxed"
+								/>
 								<OptionEventDetailSheet
 									source={subOption}
 									variant="xs"

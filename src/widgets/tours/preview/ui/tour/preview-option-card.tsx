@@ -8,6 +8,7 @@ import {
 	CardContent,
 	CardDescription,
 	CardTitle,
+	Previewer,
 	withErrorBoundary
 } from "@/shared/ui";
 import { Badge } from "@/shared/ui/shadcn-ui/badge";
@@ -44,7 +45,10 @@ export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
 								<CardTitle>{option.title}</CardTitle>
 							</Badge>
 							<CardDescription>
-								{option.description}
+								<Previewer
+									text={option.description}
+									className="text-sm text-muted-foreground leading-relaxed"
+								/>
 							</CardDescription>
 						</div>
 

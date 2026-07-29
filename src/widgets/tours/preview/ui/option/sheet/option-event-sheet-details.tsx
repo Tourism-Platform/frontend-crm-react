@@ -1,6 +1,8 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import { Previewer } from "@/shared/ui";
+
 interface IOptionEventSheetDetailsProps {
 	description: string;
 }
@@ -15,9 +17,10 @@ export const OptionEventSheetDetails: FC<IOptionEventSheetDetailsProps> = ({
 			<h4 className="font-semibold mb-3">
 				{t("sections.option.details")}
 			</h4>
-			<p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
-				{description}
-			</p>
+			<Previewer
+				text={description}
+				className="text-sm text-muted-foreground leading-relaxed"
+			/>
 		</div>
 	);
 };
