@@ -6,13 +6,17 @@ import {
 } from "@/shared/config";
 
 import {
+	ENUM_CURRENCY_OPTIONS,
+	type ENUM_CURRENCY_OPTIONS_TYPE
+} from "@/entities/commission";
+
+import {
 	ENUM_SUPPLEMENT_MARKUP_TYP,
 	ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD,
 	ENUM_SUPPLEMENT_PRICE_ROW_FIELD,
 	ENUM_SUPPLEMENT_PRICING_FIELD,
 	ENUM_SUPPLEMENT_PRICING_INVOICING,
-	ENUM_SUPPLEMENT_PRICING_TYPE,
-	type ISupplementPriceRowMarkup
+	ENUM_SUPPLEMENT_PRICING_TYPE
 } from "../../types";
 
 const msg = i18nKey<TTourEventSupplementEditPageKeys>();
@@ -21,6 +25,8 @@ const nullableNumber = z
 	.number()
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
+
+const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const markupSchema = z
 	.object({
@@ -32,7 +38,7 @@ const markupSchema = z
 const perItemPriceRowSchema = z.object({
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: nullableNumber,
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: nullableNumber,
-	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: z.string(),
+	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
 
@@ -46,9 +52,8 @@ const perItemExpensesSchema = z.object({
 const validateFlatOrPerPersonPricing = (
 	data: {
 		total_price?: number | null;
-		currency?: string;
+		currency?: ENUM_CURRENCY_OPTIONS_TYPE;
 		add_margin_separately: boolean;
-		markup?: ISupplementPriceRowMarkup | null;
 	},
 	ctx: z.RefinementCtx
 ) => {
@@ -79,15 +84,6 @@ const validateFlatOrPerPersonPricing = (
 			path: [ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]
 		});
 	}
-	if (data.add_margin_separately && !data.markup?.value?.trim()) {
-		ctx.addIssue({
-			code: z.ZodIssueCode.custom,
-			message: msg(
-				"form.pricing.form.per_item.fields.markup.value.errors.required"
-			),
-			path: [ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP, "value"]
-		});
-	}
 };
 
 export const SUPPLEMENT_PRICING_SCHEMA = z
@@ -103,7 +99,7 @@ export const SUPPLEMENT_PRICING_SCHEMA = z
 			perItemExpensesSchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: nullableNumber.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]: nullableNumber.optional(),
-		[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: z.string().optional(),
+		[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.PACKAGE_TYPE]: z.string()
 	})

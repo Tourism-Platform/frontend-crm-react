@@ -45,7 +45,7 @@ describe("mapGuideCategoriesToBackend", () => {
 						{
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "",
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 						}
 					]
@@ -66,7 +66,7 @@ describe("mapGuideCategoriesToBackend", () => {
 						{
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: 100,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "",
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 						}
 					]
@@ -129,7 +129,7 @@ describe("mapGuideCategoriesToBackend", () => {
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: null,
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]:
-										"",
+										undefined,
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
 								}
 							]

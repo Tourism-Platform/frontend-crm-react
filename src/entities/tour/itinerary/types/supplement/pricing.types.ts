@@ -1,3 +1,5 @@
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
 export const ENUM_SUPPLEMENT_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -64,7 +66,7 @@ export interface ISupplementPriceRowMarkup {
 export interface ISupplementPerItemPriceRow {
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: number | null;
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: number | null;
-	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: string;
+	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]?: ENUM_CURRENCY_OPTIONS_TYPE;
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: ISupplementPriceRowMarkup | null;
 }
 

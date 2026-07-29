@@ -1,6 +1,7 @@
-import { Currency } from "@/shared/api";
-
-import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import {
+	type ENUM_CURRENCY_OPTIONS_TYPE,
+	currencyConverter
+} from "@/entities/commission";
 
 import {
 	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
@@ -40,7 +41,7 @@ type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 const createEmptyPerRoomPriceRow = (): IAccommodationPerRoomPriceRow => ({
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: null,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: null,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
+	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: null
 });
 
@@ -48,7 +49,7 @@ const createEmptyCategoryRow = (): IAccommodationCategoryPriceRow => ({
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: "",
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: null,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: null,
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: null
 });
 
@@ -69,10 +70,9 @@ const mapPriceRowFromFixedCharge = (
 > => ({
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: charge?.cost?.val ?? null,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: charge?.fees?.cost?.val ?? null,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
-		charge?.cost?.currency ??
-		charge?.fees?.cost?.currency ??
-		DEFAULT_EVENT_CURRENCY
+	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: currencyConverter.from(
+		charge?.cost?.currency ?? charge?.fees?.cost?.currency
+	)
 });
 
 const mapMarkupFromBackend = (
@@ -163,7 +163,7 @@ const alignPerRoomByClassPriceRows = (
 
 const mapAmountToFixedExpense = (
 	amount: number | null,
-	currency: string
+	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined
 ): TFixedExpenseInputBackend | undefined => {
 	if (amount == null || !Number.isFinite(amount) || !amount || !currency) {
 		return undefined;
@@ -172,14 +172,14 @@ const mapAmountToFixedExpense = (
 		typ: "fixed",
 		cost: {
 			val: amount,
-			currency: currency as Currency
+			currency: currencyConverter.to(currency)!
 		}
 	};
 };
 
 const mapMarkupToBackend = (
 	markup: IAccommodationPriceRowMarkup | null,
-	rowCurrency: string,
+	rowCurrency: ENUM_CURRENCY_OPTIONS_TYPE | undefined,
 	addMarginSeparately: boolean
 ): TCommissionMarkupInputBackend | null => {
 	if (!addMarginSeparately || !markup?.value) return null;
@@ -194,7 +194,7 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: rowCurrency as Currency
+			currency: currencyConverter.to(rowCurrency)!
 		}
 	};
 };
@@ -202,7 +202,7 @@ const mapMarkupToBackend = (
 const mapToFixedCharge = (
 	cost: number | null,
 	fees: number | null,
-	currency: string,
+	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined,
 	markup: TCommissionMarkupInputBackend | null
 ): TFixedChargeInputBackend | undefined => {
 	const costExpense = mapAmountToFixedExpense(cost, currency);
@@ -542,13 +542,16 @@ export const mapAccommodationPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currency as Currency
+		currency: currencyConverter.to(currency)!
 	};
 	const fees =
 		taxes != null
 			? {
 					typ: "fixed" as const,
-					cost: { val: taxes, currency: currency as Currency }
+					cost: {
+						val: taxes,
+						currency: currencyConverter.to(currency)!
+					}
 				}
 			: null;
 	const markup = mapMarkupToBackend(

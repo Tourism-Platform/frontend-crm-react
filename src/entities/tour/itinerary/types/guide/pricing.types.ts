@@ -1,3 +1,5 @@
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
 export const ENUM_GUIDE_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -78,7 +80,7 @@ export interface IGuidePriceRowMarkup {
 export interface IGuidePerGuidePriceRow {
 	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: number | null;
 	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: number | null;
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: string;
+	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]?: ENUM_CURRENCY_OPTIONS_TYPE;
 	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: IGuidePriceRowMarkup | null;
 }
 

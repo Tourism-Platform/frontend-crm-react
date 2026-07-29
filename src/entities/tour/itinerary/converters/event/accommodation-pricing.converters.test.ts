@@ -24,7 +24,18 @@ vi.mock("@/shared/config", () => ({
 }));
 
 vi.mock("@/entities/commission", () => ({
-	DEFAULT_EVENT_CURRENCY: "USD"
+	DEFAULT_EVENT_CURRENCY: "USD",
+	ENUM_CURRENCY_OPTIONS: {
+		UZS: "UZS",
+		USD: "USD",
+		EUR: "EUR",
+		RUB: "RUB",
+		GBP: "GBP"
+	},
+	currencyConverter: {
+		from: (v: unknown) => v,
+		to: (v: unknown) => v
+	}
 }));
 
 const roomsList = [
@@ -132,7 +143,7 @@ describe("mapAccommodationPricingToBackend", () => {
 			mapAccommodationPricingToBackend(
 				basePricing({
 					[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 250,
-					[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: ""
+					[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: undefined
 				}),
 				roomsList
 			)
@@ -232,7 +243,7 @@ describe("mapAccommodationPricingToBackend", () => {
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: 150,
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: null,
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
-									"",
+									undefined,
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]:
 									null
 							}

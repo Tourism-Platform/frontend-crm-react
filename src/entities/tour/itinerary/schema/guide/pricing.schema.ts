@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { type TTourEventGuideEditPageKeys, i18nKey } from "@/shared/config";
+import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
@@ -13,12 +13,12 @@ import {
 	ENUM_GUIDE_PRICING_TYPE
 } from "../../types";
 
-const msg = i18nKey<TTourEventGuideEditPageKeys>();
-
 const nullableNumber = z
 	.number()
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
+
+const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const markupSchema = z
 	.object({
@@ -30,7 +30,7 @@ const markupSchema = z
 const perGuidePriceRowSchema = z.object({
 	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: nullableNumber,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: nullableNumber,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: z.string(),
+	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
 
@@ -39,7 +39,7 @@ const categoryRowSchema = z.object({
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: z.string(),
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: nullableNumber,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: nullableNumber,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: z.string(),
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: markupSchema
 });
 
@@ -59,34 +59,6 @@ const perGuideCategoryExpensesSchema = z.object({
 		})
 	)
 });
-
-const validateMarkupRows = (
-	rows: {
-		[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: z.infer<typeof markupSchema>;
-	}[],
-	ctx: z.RefinementCtx,
-	pathPrefix: (string | number)[]
-) => {
-	rows.forEach((row, index) => {
-		const markup = row[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP];
-		// Skip empty synced rows (markup null). Require value only if markup is set.
-		if (!markup) return;
-		if (!markup.value?.trim()) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: msg(
-					"form.pricing.form.per_guide.fields.markup.value.errors.required"
-				),
-				path: [
-					...pathPrefix,
-					index,
-					ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP,
-					"value"
-				]
-			});
-		}
-	});
-};
 
 export const GUIDE_PRICING_SCHEMA = z
 	.object({
@@ -130,37 +102,6 @@ export const GUIDE_PRICING_SCHEMA = z
 				});
 			});
 			return;
-		}
-
-		if (data.add_margin_separately) {
-			const expenses = expensesResult.data;
-			if (expenses.typ === ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE) {
-				validateMarkupRows(
-					expenses[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES],
-					ctx,
-					[
-						ENUM_GUIDE_PRICING_FIELD.EXPENSES,
-						ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES
-					]
-				);
-			} else {
-				expenses[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES].forEach(
-					(guide, guideIndex) => {
-						validateMarkupRows(
-							guide[
-								ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES
-							],
-							ctx,
-							[
-								ENUM_GUIDE_PRICING_FIELD.EXPENSES,
-								ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES,
-								guideIndex,
-								ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES
-							]
-						);
-					}
-				);
-			}
 		}
 	});
 

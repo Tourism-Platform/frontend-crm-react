@@ -1,4 +1,7 @@
-import { Currency } from "@/shared/api";
+import {
+	type ENUM_CURRENCY_OPTIONS_TYPE,
+	currencyConverter
+} from "@/entities/commission";
 
 import {
 	ENUM_ACTIVITY_MARKUP_TYP,
@@ -30,7 +33,7 @@ const mapMarkupFromBackend = (
 
 const mapMarkupToBackend = (
 	markup: IActivityPriceRowMarkup | null,
-	rowCurrency: string,
+	rowCurrency: ENUM_CURRENCY_OPTIONS_TYPE,
 	addMarginSeparately: boolean
 ): TCommissionMarkupInputBackend | null => {
 	if (!addMarginSeparately || !markup?.value) return null;
@@ -40,12 +43,11 @@ const mapMarkupToBackend = (
 			percentage: Number(markup.value) / 100
 		};
 	}
-	if (!rowCurrency) return null;
 	return {
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: rowCurrency as Currency
+			currency: currencyConverter.to(rowCurrency)!
 		}
 	};
 };
@@ -82,7 +84,7 @@ export const mapActivityPricingFromBackend = (
 			}),
 			...(feesVal != null && { taxes: feesVal }),
 			...(expenses.cost?.currency && {
-				currency: expenses.cost.currency
+				currency: currencyConverter.from(expenses.cost.currency)
 			})
 		};
 	}
@@ -98,7 +100,7 @@ export const mapActivityPricingFromBackend = (
 		}),
 		...(feesVal != null && { taxes: feesVal }),
 		...(expenses.cost_per_person?.currency && {
-			currency: expenses.cost_per_person.currency
+			currency: currencyConverter.from(expenses.cost_per_person.currency)
 		})
 	};
 };
@@ -123,13 +125,16 @@ export const mapActivityPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currency as Currency
+		currency: currencyConverter.to(currency)!
 	};
 	const fees =
 		taxes != null
 			? {
 					typ: "fixed" as const,
-					cost: { val: taxes, currency: currency as Currency }
+					cost: {
+						val: taxes,
+						currency: currencyConverter.to(currency)!
+					}
 				}
 			: null;
 	const markup = mapMarkupToBackend(

@@ -1,4 +1,8 @@
-import { Currency } from "@/shared/api";
+import {
+	DEFAULT_EVENT_CURRENCY,
+	type ENUM_CURRENCY_OPTIONS_TYPE,
+	currencyConverter
+} from "@/entities/commission";
 
 import {
 	ENUM_FORM_CARS,
@@ -38,7 +42,7 @@ type TCarsList = TCarsSchema[typeof ENUM_FORM_CARS.CARS_LIST];
 const createEmptyPerCarPriceRow = (): ITransportationPerCarPriceRow => ({
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: null,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: null,
-	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]: Currency.USD,
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: null
 });
 
@@ -46,7 +50,7 @@ const createEmptyCategoryRow = (): ITransportationCategoryPriceRow => ({
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: "",
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: null,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: null,
-	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]: Currency.USD,
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]: null
 });
 
@@ -67,8 +71,9 @@ const mapPriceRowFromFixedCharge = (
 > => ({
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: charge?.cost?.val ?? null,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: charge?.fees?.cost?.val ?? null,
-	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]:
-		charge?.cost?.currency ?? charge?.fees?.cost?.currency ?? ""
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]: currencyConverter.from(
+		charge?.cost?.currency ?? charge?.fees?.cost?.currency
+	)
 });
 
 const mapMarkupFromBackend = (
@@ -148,7 +153,7 @@ const alignPerCarByClassPriceRows = (
 
 const mapAmountToFixedExpense = (
 	amount: number | null,
-	currency: string
+	currency: ENUM_CURRENCY_OPTIONS_TYPE
 ): TFixedExpenseInputBackend | undefined => {
 	if (amount == null || !Number.isFinite(amount) || !amount || !currency) {
 		return undefined;
@@ -157,14 +162,14 @@ const mapAmountToFixedExpense = (
 		typ: "fixed",
 		cost: {
 			val: amount,
-			currency: currency as Currency
+			currency: currencyConverter.to(currency)!
 		}
 	};
 };
 
 const mapMarkupToBackend = (
 	markup: ITransportationPriceRowMarkup | null,
-	rowCurrency: string,
+	rowCurrency: ENUM_CURRENCY_OPTIONS_TYPE,
 	addMarginSeparately: boolean
 ): TCommissionMarkupInputBackend | null => {
 	if (!addMarginSeparately || !markup?.value) return null;
@@ -179,7 +184,7 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: rowCurrency as Currency
+			currency: currencyConverter.to(rowCurrency)!
 		}
 	};
 };
@@ -187,7 +192,7 @@ const mapMarkupToBackend = (
 const mapToFixedCharge = (
 	cost: number | null,
 	fees: number | null,
-	currency: string,
+	currency: ENUM_CURRENCY_OPTIONS_TYPE,
 	markup: TCommissionMarkupInputBackend | null
 ): TFixedChargeInputBackend | undefined => {
 	const costExpense = mapAmountToFixedExpense(cost, currency);
@@ -449,13 +454,13 @@ export const mapTransportationPricingToBackend = (
 											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
 												.FEES
 										],
-										rowCurrency,
+										rowCurrency!,
 										mapMarkupToBackend(
 											category[
 												ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
 													.MARKUP
 											],
-											rowCurrency,
+											rowCurrency!,
 											addMargin
 										)
 									)
@@ -496,13 +501,13 @@ export const mapTransportationPricingToBackend = (
 								priceRow[
 									ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES
 								],
-								rowCurrency,
+								rowCurrency ?? DEFAULT_EVENT_CURRENCY,
 								mapMarkupToBackend(
 									priceRow[
 										ENUM_TRANSPORTATION_PRICE_ROW_FIELD
 											.MARKUP
 									],
-									rowCurrency,
+									rowCurrency ?? DEFAULT_EVENT_CURRENCY,
 									addMargin
 								)
 							)
@@ -523,13 +528,16 @@ export const mapTransportationPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currency as Currency
+		currency: currencyConverter.to(currency)!
 	};
 	const fees =
 		taxes != null
 			? {
 					typ: "fixed" as const,
-					cost: { val: taxes, currency: currency as Currency }
+					cost: {
+						val: taxes,
+						currency: currencyConverter.to(currency)!
+					}
 				}
 			: null;
 	const markup = mapMarkupToBackend(

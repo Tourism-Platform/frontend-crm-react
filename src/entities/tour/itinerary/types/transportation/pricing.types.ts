@@ -1,3 +1,5 @@
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
 export const ENUM_TRANSPORTATION_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -84,7 +86,7 @@ export interface ITransportationPriceRowMarkup {
 export interface ITransportationPerCarPriceRow {
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: number | null;
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: number | null;
-	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]: string;
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]?: ENUM_CURRENCY_OPTIONS_TYPE;
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: ITransportationPriceRowMarkup | null;
 }
 

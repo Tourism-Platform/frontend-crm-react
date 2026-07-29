@@ -3,11 +3,15 @@ import { z } from "zod";
 import { type TTourActivityEditPageKeys, i18nKey } from "@/shared/config";
 
 import {
+	ENUM_CURRENCY_OPTIONS,
+	type ENUM_CURRENCY_OPTIONS_TYPE
+} from "@/entities/commission";
+
+import {
 	ENUM_ACTIVITY_MARKUP_TYP,
 	ENUM_ACTIVITY_PRICING_FIELD,
 	ENUM_ACTIVITY_PRICING_INVOICING,
-	ENUM_ACTIVITY_PRICING_TYPE,
-	type IActivityPriceRowMarkup
+	ENUM_ACTIVITY_PRICING_TYPE
 } from "../../types";
 
 const msg = i18nKey<TTourActivityEditPageKeys>();
@@ -16,6 +20,8 @@ const nullableNumber = z
 	.number()
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
+
+const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const markupSchema = z
 	.object({
@@ -27,9 +33,8 @@ const markupSchema = z
 const validateFlatOrPerPersonPricing = (
 	data: {
 		total_price?: number | null;
-		currency?: string;
+		currency?: ENUM_CURRENCY_OPTIONS_TYPE;
 		add_margin_separately: boolean;
-		markup?: IActivityPriceRowMarkup | null;
 	},
 	ctx: z.RefinementCtx
 ) => {
@@ -60,15 +65,6 @@ const validateFlatOrPerPersonPricing = (
 			path: [ENUM_ACTIVITY_PRICING_FIELD.CURRENCY]
 		});
 	}
-	if (data.add_margin_separately && !data.markup?.value?.trim()) {
-		ctx.addIssue({
-			code: z.ZodIssueCode.custom,
-			message: msg(
-				"form.pricing.form.pricing_details.fields.markup.value.errors.required"
-			),
-			path: [ENUM_ACTIVITY_PRICING_FIELD.MARKUP, "value"]
-		});
-	}
 };
 
 export const ACTIVITY_PRICING_SCHEMA = z
@@ -82,7 +78,7 @@ export const ACTIVITY_PRICING_SCHEMA = z
 		[ENUM_ACTIVITY_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: z.boolean(),
 		[ENUM_ACTIVITY_PRICING_FIELD.TOTAL_PRICE]: nullableNumber.optional(),
 		[ENUM_ACTIVITY_PRICING_FIELD.TAXES]: nullableNumber.optional(),
-		[ENUM_ACTIVITY_PRICING_FIELD.CURRENCY]: z.string().optional(),
+		[ENUM_ACTIVITY_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_ACTIVITY_PRICING_FIELD.PACKAGE_TYPE]: z.string()
 	})

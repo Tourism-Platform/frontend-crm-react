@@ -19,6 +19,36 @@ type TValidateFormWithSectionToastOptions = {
 
 type TValidateTranslate = (key: string, options?: object) => string;
 
+type TFlattenFormError = {
+	path: string;
+	message?: string;
+};
+
+function flattenFormErrors(
+	value: unknown,
+	path: string[] = [],
+	acc: TFlattenFormError[] = []
+): TFlattenFormError[] {
+	if (!value || typeof value !== "object") return acc;
+
+	const maybeFieldError = value as { message?: unknown };
+	if (typeof maybeFieldError.message === "string") {
+		acc.push({
+			path: path.join("."),
+			message: maybeFieldError.message
+		});
+	}
+
+	for (const [key, nestedValue] of Object.entries(
+		value as Record<string, unknown>
+	)) {
+		if (key === "message" || key === "type" || key === "ref") continue;
+		flattenFormErrors(nestedValue, [...path, key], acc);
+	}
+
+	return acc;
+}
+
 /**
  * Accepts RHF form + i18next `t` via loose params so tsc does not crash on
  * UseFormReturn / TFunction overload resolution at call sites.
@@ -40,6 +70,15 @@ export async function validateFormWithSectionToast(
 	const errorSections = FORM_SECTION_KEYS.filter(
 		(key) => errors[key] != null
 	);
+	const flatErrors = flattenFormErrors(errors);
+
+	console.error("[form-validation] submit blocked", {
+		fields,
+		keyPrefix,
+		errorSections,
+		flatErrors,
+		errors
+	});
 
 	if (errorSections.length === 0) {
 		toast.error(t(`${keyPrefix}.fallback`));

@@ -3,6 +3,11 @@ import { z } from "zod";
 import { type TTourAccommodationEditPageKeys, i18nKey } from "@/shared/config";
 
 import {
+	ENUM_CURRENCY_OPTIONS,
+	type ENUM_CURRENCY_OPTIONS_TYPE
+} from "@/entities/commission";
+
+import {
 	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
 	ENUM_ACCOMMODATION_EXPENSE_TYP,
 	ENUM_ACCOMMODATION_MARKUP_TYP,
@@ -10,8 +15,7 @@ import {
 	ENUM_ACCOMMODATION_PRICE_ROW_FIELD,
 	ENUM_ACCOMMODATION_PRICING_FIELD,
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
-	ENUM_ACCOMMODATION_PRICING_TYPE,
-	type IAccommodationPriceRowMarkup
+	ENUM_ACCOMMODATION_PRICING_TYPE
 } from "../../types";
 
 const msg = i18nKey<TTourAccommodationEditPageKeys>();
@@ -20,6 +24,8 @@ const nullableNumber = z
 	.number()
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
+
+const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const markupSchema = z
 	.object({
@@ -31,7 +37,7 @@ const markupSchema = z
 const perRoomPriceRowSchema = z.object({
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: nullableNumber,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: nullableNumber,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: z.string(),
+	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
 
@@ -43,7 +49,7 @@ const categoryRowSchema = z.object({
 	}),
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: nullableNumber,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: nullableNumber,
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: z.string(),
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: markupSchema
 });
 
@@ -69,38 +75,11 @@ const perRoomCategoryExpensesSchema = z.object({
 	)
 });
 
-const validateMarkupRows = (
-	rows: {
-		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: IAccommodationPriceRowMarkup | null;
-	}[],
-	ctx: z.RefinementCtx,
-	pathPrefix: (string | number)[]
-) => {
-	rows.forEach((row, index) => {
-		const markup = row[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP];
-		if (!markup?.value?.trim()) {
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: msg(
-					"form.pricing.form.per_room.fields.markup.value.errors.required"
-				),
-				path: [
-					...pathPrefix,
-					index,
-					ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP,
-					"value"
-				]
-			});
-		}
-	});
-};
-
 const validateFlatOrPerPersonPricing = (
 	data: {
 		total_price?: number | null;
-		currency?: string;
+		currency?: ENUM_CURRENCY_OPTIONS_TYPE;
 		add_margin_separately: boolean;
-		markup?: IAccommodationPriceRowMarkup | null;
 	},
 	ctx: z.RefinementCtx
 ) => {
@@ -131,15 +110,6 @@ const validateFlatOrPerPersonPricing = (
 			path: [ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]
 		});
 	}
-	if (data.add_margin_separately && !data.markup?.value?.trim()) {
-		ctx.addIssue({
-			code: z.ZodIssueCode.custom,
-			message: msg(
-				"form.pricing.form.per_room.fields.markup.value.errors.required"
-			),
-			path: [ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP, "value"]
-		});
-	}
 };
 
 const validatePerRoomPricing = (
@@ -166,38 +136,6 @@ const validatePerRoomPricing = (
 		});
 		return;
 	}
-
-	if (!data.add_margin_separately) {
-		return;
-	}
-
-	const expenses = expensesResult.data;
-	if (expenses.typ === ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM) {
-		validateMarkupRows(
-			expenses[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS],
-			ctx,
-			[
-				ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES,
-				ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS
-			]
-		);
-		return;
-	}
-
-	expenses[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS].forEach(
-		(room, roomIndex) => {
-			validateMarkupRows(
-				room[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES],
-				ctx,
-				[
-					ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES,
-					ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS,
-					roomIndex,
-					ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES
-				]
-			);
-		}
-	);
 };
 
 /**
@@ -223,7 +161,7 @@ export const ACCOMMODATION_PRICING_SCHEMA = z
 		[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]:
 			nullableNumber.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.TAXES]: nullableNumber.optional(),
-		[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: z.string().optional(),
+		[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_TYPE]: z.string()
 	})

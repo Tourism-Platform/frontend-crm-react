@@ -49,7 +49,7 @@ describe("mapGuideFormToUpdate", () => {
 									lang: "",
 									cost: null,
 									fees: null,
-									currency: "",
+									currency: undefined,
 									markup: null
 								}
 							]
@@ -96,7 +96,7 @@ describe("mapGuideFormToUpdate", () => {
 						{
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: 120,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "",
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 						}
 					]
