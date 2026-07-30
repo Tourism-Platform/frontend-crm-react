@@ -1,5 +1,6 @@
-import type { InformationEventReadOutput } from "@/shared/api";
+import type { InformationSingleEventReadOutput } from "@/shared/api";
 
+import { ENUM_EVENT_BACKEND } from "../../types";
 import {
 	type TInfoEditSchema,
 	type TTourEventBackendResponce,
@@ -9,7 +10,7 @@ import {
 export const mapInfoEventToForm = (
 	data: TTourEventBackendResponce
 ): TInfoEditSchema => {
-	const event = data?.event as InformationEventReadOutput;
+	const event = data?.event as InformationSingleEventReadOutput;
 	return {
 		name: event?.name || "",
 		day: event.day,
@@ -27,7 +28,7 @@ export const mapInfoFormToUpdate = (
 	return {
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
-		typ: "7",
+		typ: ENUM_EVENT_BACKEND.REF,
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),

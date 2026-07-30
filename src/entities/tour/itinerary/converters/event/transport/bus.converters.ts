@@ -1,6 +1,7 @@
-import type { BusEventReadOutput } from "@/shared/api";
+import type { BusSingleEventReadOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 
+import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
 	TBusRouteSegment,
 	TFlightEditSchema,
@@ -32,9 +33,9 @@ const createEmptyBusSegment = (): TBusRouteSegment => ({
 
 const assertBusEvent = (
 	data: TTourEventBackendResponce
-): BusEventReadOutput => {
-	if (!("typ" in data.event) || data.event.typ !== "3") {
-		throw new Error('mapBusEventToForm: expected bus event with typ "3"');
+): BusSingleEventReadOutput => {
+	if (!("typ" in data.event) || data.event.typ !== ENUM_EVENT_BACKEND.BUS) {
+		throw new Error('mapBusEventToForm: expected bus event with typ "bus"');
 	}
 	return data.event;
 };
@@ -72,7 +73,7 @@ export const mapBusFormToUpdate = (
 	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
 
 	return {
-		typ: "3",
+		typ: ENUM_EVENT_BACKEND.BUS,
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(Number.isFinite(frontend.position) && {

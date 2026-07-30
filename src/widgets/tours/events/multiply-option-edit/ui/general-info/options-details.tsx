@@ -27,14 +27,12 @@ import { OptionCard } from "./option-card";
 interface IOptionsDetailsProps {
 	options: ITourEventOption[];
 	onReorder: (options: ITourEventOption[]) => void;
-	onToggleOptional: (optionId: string, isOptional: boolean) => void;
 	onRemove: (optionId: string) => void;
 }
 
 const OptionsDetailsBase: FC<IOptionsDetailsProps> = ({
 	options,
 	onReorder,
-	onToggleOptional,
 	onRemove
 }) => {
 	const { t } = useTranslation("multiply_option_edit_page");
@@ -99,7 +97,6 @@ const OptionsDetailsBase: FC<IOptionsDetailsProps> = ({
 							<OptionCard
 								key={option.id}
 								option={option}
-								onToggleOptional={onToggleOptional}
 								onRemove={onRemove}
 							/>
 						))}

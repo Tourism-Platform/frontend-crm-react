@@ -1,5 +1,7 @@
 import type { LocationOutSchema } from "@/shared/api";
 
+import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary";
+
 import type { TOptionDetailBackend } from "../types";
 
 type TPubEvent = TOptionDetailBackend["events"][number];
@@ -22,7 +24,7 @@ export const formatLocation = (location: unknown): string => {
 export const extractCityFromPubEvent = (
 	event: TPubEvent
 ): string | undefined => {
-	if (event.typ === "10") {
+	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
 		const first = event.details[0];
 		if (first && "details" in first && first.details) {
 			const details = first.details as { location?: unknown };

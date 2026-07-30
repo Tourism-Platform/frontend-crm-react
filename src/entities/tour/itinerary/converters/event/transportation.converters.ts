@@ -1,4 +1,4 @@
-import type { TransferEventReadOutput } from "@/shared/api";
+import type { TransferSingleEventReadOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
@@ -6,6 +6,7 @@ import {
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
+import { ENUM_EVENT_BACKEND } from "../../types";
 import {
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend,
@@ -25,7 +26,7 @@ import {
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce
 ): TTransportationEditSchema => {
-	const event = data?.event as TransferEventReadOutput;
+	const event = data?.event as TransferSingleEventReadOutput;
 	const details = event?.details;
 	const expenses = details?.expenses;
 	const perCarCars = expenses?.typ === "per_car" ? expenses.cars : undefined;
@@ -83,7 +84,7 @@ export const mapTransferFormToUpdate = (
 			frontend.name !== "" && { name: frontend.name }),
 		...(g?.description !== undefined &&
 			g.description !== "" && { description: g.description }),
-		typ: "4",
+		typ: ENUM_EVENT_BACKEND.TRANSFER,
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),

@@ -9,7 +9,7 @@ import {
 	type InformationEventPubRead,
 	LanguageCode,
 	type LocationOutSchema,
-	type MultipleOptionEventPubOutput,
+	type MultiEventPubOutput,
 	type TimeSchema,
 	type TourOptionPreviewSchemaOutput,
 	type TourOptionPublicResponse,
@@ -64,8 +64,8 @@ export const infoEvent = (
 	position: number,
 	name: string,
 	description: string
-): InformationEventPubRead & { typ: "7" } => ({
-	typ: "7",
+): InformationEventPubRead & { typ: "ref" } => ({
+	typ: "ref",
 	name,
 	description,
 	day,
@@ -78,8 +78,8 @@ export const flightEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "1" } & FlightEventPubReadOutput => ({
-	typ: "1",
+): { typ: "flight" } & FlightEventPubReadOutput => ({
+	typ: "flight",
 	name,
 	description,
 	day,
@@ -109,8 +109,8 @@ export const transferEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "4" } & TransferEventPubReadOutput => ({
-	typ: "4",
+): { typ: "transfer" } & TransferEventPubReadOutput => ({
+	typ: "transfer",
 	name,
 	description,
 	day,
@@ -135,8 +135,8 @@ export const trainEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "2" } & TrainEventPubReadOutput => ({
-	typ: "2",
+): { typ: "train" } & TrainEventPubReadOutput => ({
+	typ: "train",
 	name,
 	description,
 	day,
@@ -164,8 +164,8 @@ export const busEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "3" } & BusEventPubReadOutput => ({
-	typ: "3",
+): { typ: "bus" } & BusEventPubReadOutput => ({
+	typ: "bus",
 	name,
 	description,
 	day,
@@ -194,8 +194,8 @@ export const housingEvent = (
 	name: string,
 	description: string,
 	city: LocationOutSchema
-): { typ: "5" } & HousingEventPubReadOutput => ({
-	typ: "5",
+): { typ: "housing" } & HousingEventPubReadOutput => ({
+	typ: "housing",
 	name,
 	description,
 	day,
@@ -209,8 +209,8 @@ export const activityEvent = (
 	name: string,
 	description: string,
 	city: LocationOutSchema
-): { typ: "6" } & ActivityEventPubReadOutput => ({
-	typ: "6",
+): { typ: "activity" } & ActivityEventPubReadOutput => ({
+	typ: "activity",
 	name,
 	description,
 	day,
@@ -226,8 +226,8 @@ export const activityEvent = (
 export const multiplyHotels = (
 	day: number,
 	position: number
-): MultipleOptionEventPubOutput => ({
-	typ: "10",
+): MultiEventPubOutput => ({
+	typ: "options",
 	name: "Overnight in Tashkent (choose one)",
 	description:
 		"Stay in one of our partner hotels of the same category. Exact property is confirmed before departure.",
@@ -280,8 +280,8 @@ export const multiplyHotels = (
 export const multiplyEvening = (
 	day: number,
 	position: number
-): MultipleOptionEventPubOutput => ({
-	typ: "10",
+): MultiEventPubOutput => ({
+	typ: "options",
 	name: "Evening experience (choose one)",
 	description:
 		"Select one included evening activity. Tell your guide by 12:00 on day 1.",

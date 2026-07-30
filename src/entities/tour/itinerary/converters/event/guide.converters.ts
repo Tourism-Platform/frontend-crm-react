@@ -1,5 +1,6 @@
-import type { GuideEventReadOutput } from "@/shared/api";
+import type { GuideSingleEventReadOutput } from "@/shared/api/generated/Api";
 
+import { ENUM_EVENT_BACKEND } from "../../types";
 import {
 	ENUM_GUIDE_FORM_SECTION,
 	type TGuideEditSchema,
@@ -17,7 +18,7 @@ import {
 	mapGuidesTypeToBackend
 } from "./guides.converters";
 
-type TGuideEvent = GuideEventReadOutput;
+type TGuideEvent = GuideSingleEventReadOutput;
 
 export const mapGuideEventToForm = (
 	data: TTourEventBackendResponce
@@ -52,7 +53,7 @@ export const mapGuideFormToUpdate = (
 		(categories !== undefined && categories.length > 0);
 
 	return {
-		typ: "8",
+		typ: ENUM_EVENT_BACKEND.GUIDE,
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(Number.isFinite(frontend.position) && {

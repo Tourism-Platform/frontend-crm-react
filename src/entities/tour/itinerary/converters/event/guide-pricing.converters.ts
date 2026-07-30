@@ -73,7 +73,7 @@ const mapMarkupFromBackend = (
 };
 
 const mapCategoryRowFromBackend = (
-	category: TGuideByLanguageCategoryBackend
+	category: TGuideByLanguageCategoryBackend | any
 ): IGuideCategoryPriceRow => {
 	const expenses = category.expenses;
 	const perPersonExpenses =
@@ -248,7 +248,7 @@ const mapRowToBackendCategory = (
 	row: IGuidePerGuidePriceRow | IGuideCategoryPriceRow,
 	addMargin: boolean,
 	lang?: string
-): TGuideByLanguageCategoryInputBackend | null => {
+): TGuideByLanguageCategoryInputBackend | null | any => {
 	const rowCurrency = row[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY];
 	const cost = toFiniteNumber(row[ENUM_GUIDE_PRICE_ROW_FIELD.COST]);
 	const fees = toFiniteNumber(row[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]);

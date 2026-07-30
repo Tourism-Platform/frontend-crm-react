@@ -1,16 +1,19 @@
 import { createEnumMapper } from "@/shared/utils";
 
 import type { ENUM_FLIGHT_TRANSPORT_TYPE_TYPE } from "../../types";
-import { ENUM_FLIGHT_TRANSPORT_TYPE } from "../../types";
+import { ENUM_EVENT_BACKEND, ENUM_FLIGHT_TRANSPORT_TYPE } from "../../types";
 
-type TBackendTransportTyp = "1" | "2" | "3";
+type TBackendTransportTyp =
+	| typeof ENUM_EVENT_BACKEND.FLIGHT
+	| typeof ENUM_EVENT_BACKEND.TRAIN
+	| typeof ENUM_EVENT_BACKEND.BUS;
 
 const MAP_FLIGHT_TRANSPORT_TYPE_TO_BACKEND: Partial<
 	Record<ENUM_FLIGHT_TRANSPORT_TYPE_TYPE, TBackendTransportTyp>
 > = {
-	[ENUM_FLIGHT_TRANSPORT_TYPE.FLY]: "1",
-	[ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN]: "2",
-	[ENUM_FLIGHT_TRANSPORT_TYPE.BUS]: "3"
+	[ENUM_FLIGHT_TRANSPORT_TYPE.FLY]: ENUM_EVENT_BACKEND.FLIGHT,
+	[ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN]: ENUM_EVENT_BACKEND.TRAIN,
+	[ENUM_FLIGHT_TRANSPORT_TYPE.BUS]: ENUM_EVENT_BACKEND.BUS
 };
 
 export const flightTransportTypeMapper = createEnumMapper<
@@ -21,8 +24,10 @@ export const flightTransportTypeMapper = createEnumMapper<
 export const backendTransportTypToTransportType = (
 	typ: TBackendTransportTyp | undefined
 ): ENUM_FLIGHT_TRANSPORT_TYPE_TYPE | undefined => {
-	if (typ === "1") return ENUM_FLIGHT_TRANSPORT_TYPE.FLY;
-	if (typ === "2") return ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN;
-	if (typ === "3") return ENUM_FLIGHT_TRANSPORT_TYPE.BUS;
+	if (typ === ENUM_EVENT_BACKEND.FLIGHT)
+		return ENUM_FLIGHT_TRANSPORT_TYPE.FLY;
+	if (typ === ENUM_EVENT_BACKEND.TRAIN)
+		return ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN;
+	if (typ === ENUM_EVENT_BACKEND.BUS) return ENUM_FLIGHT_TRANSPORT_TYPE.BUS;
 	return flightTransportTypeMapper.from(typ);
 };

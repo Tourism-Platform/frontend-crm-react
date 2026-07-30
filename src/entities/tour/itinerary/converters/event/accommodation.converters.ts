@@ -1,4 +1,4 @@
-import type { HousingEventReadOutput } from "@/shared/api";
+import type { HousingSingleEventReadOutput } from "@/shared/api";
 import { AmenitiesTypes, LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
@@ -6,6 +6,7 @@ import {
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
+import { ENUM_EVENT_BACKEND } from "../../types";
 import {
 	type ENUM_ACCOMMODATION_AMENITY_TYPE,
 	type TAccommodationEditSchema,
@@ -40,7 +41,7 @@ const mapAmenitiesToBackend = (
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce
 ): TAccommodationEditSchema => {
-	const event = data?.event as HousingEventReadOutput;
+	const event = data?.event as HousingSingleEventReadOutput;
 	const details = event?.details;
 	const expenses = details?.expenses;
 	const perRoomRooms =
@@ -94,7 +95,7 @@ export const mapAccommodationFormToUpdate = (
 			frontend.name !== "" && { name: frontend.name }),
 		...(g?.description !== undefined &&
 			g.description !== "" && { description: g.description }),
-		typ: "5",
+		typ: ENUM_EVENT_BACKEND.HOUSING,
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),

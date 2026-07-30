@@ -1,27 +1,32 @@
 import {
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE
+} from "@/entities/tour/itinerary";
+
+import {
 	ENUM_PREVIEW_OPTION_EVENT,
 	type TPreviewOptionEventType
 } from "../types/preview-option-event.types";
 
 export const mapPreviewBackendTypToEventType = (
-	typ: string | undefined
+	typ: ENUM_EVENT_BACKEND_TYPE | undefined
 ): TPreviewOptionEventType => {
 	switch (typ) {
-		case "1":
+		case ENUM_EVENT_BACKEND.FLIGHT:
 			return ENUM_PREVIEW_OPTION_EVENT.FLIGHT;
-		case "2":
-		case "3":
-		case "4":
+		case ENUM_EVENT_BACKEND.TRAIN:
+		case ENUM_EVENT_BACKEND.BUS:
+		case ENUM_EVENT_BACKEND.TRANSFER:
 			return ENUM_PREVIEW_OPTION_EVENT.TRANSPORTATION;
-		case "5":
+		case ENUM_EVENT_BACKEND.HOUSING:
 			return ENUM_PREVIEW_OPTION_EVENT.ACCOMMODATION;
-		case "6":
+		case ENUM_EVENT_BACKEND.ACTIVITY:
 			return ENUM_PREVIEW_OPTION_EVENT.ACTIVITY;
-		case "7":
+		case ENUM_EVENT_BACKEND.REF:
 			return ENUM_PREVIEW_OPTION_EVENT.INFO;
-		case "9":
+		case ENUM_EVENT_BACKEND.SUPPLEMENTARY:
 			return ENUM_PREVIEW_OPTION_EVENT.SUPPLEMENT;
-		case "10":
+		case ENUM_EVENT_BACKEND.OPTIONS:
 			return ENUM_PREVIEW_OPTION_EVENT.MULTIPLY_OPTION;
 		default:
 			return ENUM_PREVIEW_OPTION_EVENT.INFO;

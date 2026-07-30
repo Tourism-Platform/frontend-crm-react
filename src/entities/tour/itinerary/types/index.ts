@@ -9,6 +9,7 @@ export * from "./event-backend.types";
 export * from "./event-media.types";
 export * from "./event-media-backend.types";
 export * from "./event-enum.types";
+export * from "./event-backend-enum.types";
 export * from "./transfer-type.types";
 export * from "./transportation";
 export * from "./supplement";

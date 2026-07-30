@@ -1,9 +1,10 @@
-import { LanguageCode, type MultipleOptionEventReadOutput } from "@/shared/api";
+import { LanguageCode, type MultiEventReadOutput } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
 
 import {
 	ENUM_EVENT,
+	type ENUM_EVENT_BACKEND_TYPE,
 	type ENUM_EVENT_TYPE,
 	type IEventOptionReorder,
 	type IMoveToMultiResult,
@@ -29,6 +30,7 @@ import {
 	type TTourEventUpdateBackend,
 	type TTransportationEditSchema
 } from "../types";
+import { ENUM_EVENT_BACKEND } from "../types";
 
 import {
 	mapAccommodationEventToForm,
@@ -66,8 +68,9 @@ export const mapAllEventsToFrontend = (
 		day: backend.event.day,
 		position: backend.event.position,
 		eventType:
-			mapBackendTypToEventType(backend.event.typ) ||
-			ENUM_EVENT.TOUR_DETAILS,
+			mapBackendTypToEventType(
+				backend.event.typ as ENUM_EVENT_BACKEND_TYPE | undefined
+			) || ENUM_EVENT.TOUR_DETAILS,
 		details: (backend.event.details as Record<string, unknown>) || {}
 	};
 
@@ -79,8 +82,8 @@ export const mapAllEventsToFrontend = (
 		event.description = backend.event.description || "";
 	}
 
-	if (String(backend.event.typ) === "10") {
-		const multiEvent = backend.event as MultipleOptionEventReadOutput;
+	if (backend.event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
+		const multiEvent = backend.event as MultiEventReadOutput;
 		event.options = (multiEvent.details ?? [])
 			.map(mapMultiplyOptionDetailToOption)
 			.filter((opt): opt is ITourEventOption => opt !== null);
@@ -93,26 +96,26 @@ export const mapAllEventsToFrontend = (
 export const mapEventToFrontend = (
 	backend: TTourEventBackendResponce
 ): TTourEvent => {
-	switch (String(backend?.event?.typ)) {
-		case "1":
+	switch (backend?.event?.typ) {
+		case ENUM_EVENT_BACKEND.FLIGHT:
 			return mapFlyEventToForm(backend);
-		case "2":
+		case ENUM_EVENT_BACKEND.TRAIN:
 			return mapTrainEventToForm(backend);
-		case "3":
+		case ENUM_EVENT_BACKEND.BUS:
 			return mapBusEventToForm(backend);
-		case "4":
+		case ENUM_EVENT_BACKEND.TRANSFER:
 			return mapTransferEventToForm(backend);
-		case "5":
+		case ENUM_EVENT_BACKEND.HOUSING:
 			return mapAccommodationEventToForm(backend);
-		case "6":
+		case ENUM_EVENT_BACKEND.ACTIVITY:
 			return mapActivityEventToForm(backend);
-		case "7":
+		case ENUM_EVENT_BACKEND.REF:
 			return mapInfoEventToForm(backend);
-		case "8":
+		case ENUM_EVENT_BACKEND.GUIDE:
 			return mapGuideEventToForm(backend);
-		case "9":
+		case ENUM_EVENT_BACKEND.SUPPLEMENTARY:
 			return mapSupplementaryEventToForm(backend);
-		case "10":
+		case ENUM_EVENT_BACKEND.OPTIONS:
 			return mapMultiplyOptionEventToForm(backend);
 
 		default:
@@ -124,11 +127,11 @@ export const mapEventOptionToFrontend = (
 	backend: TTourEventBackendResponce,
 	eventOptionId: string
 ): TTourEvent => {
-	if (String(backend.event?.typ) !== "10") {
+	if (backend.event?.typ !== ENUM_EVENT_BACKEND.OPTIONS) {
 		throw new Error("Event is not a multiply option");
 	}
 
-	const multiEvent = backend.event as MultipleOptionEventReadOutput;
+	const multiEvent = backend.event as MultiEventReadOutput;
 	const option = (multiEvent.details ?? []).find(
 		(detail) => detail.id === eventOptionId
 	);
@@ -233,7 +236,7 @@ export const mapEventCreateToBackend = (
 	frontend: ITourEventCreate
 ): TTourEventCreateBackend => {
 	const typ = eventTypeMapper.to(frontend.eventType);
-	const isMultipleOption = typ === "10";
+	const isMultipleOption = typ === ENUM_EVENT_BACKEND.OPTIONS;
 
 	return {
 		name: frontend.name,

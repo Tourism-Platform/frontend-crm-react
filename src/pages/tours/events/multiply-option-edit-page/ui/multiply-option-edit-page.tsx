@@ -101,8 +101,8 @@ export const MultiplyOptionEditPage: FC = () => {
 						day: data?.day ?? 0,
 						position: data?.position ?? 0,
 						eventType: option.eventType,
-						details: option.details,
-						isOptional: option.isOptional
+						details: option.details
+						// isOptional: option.isOptional
 					}
 				}).unwrap();
 			}

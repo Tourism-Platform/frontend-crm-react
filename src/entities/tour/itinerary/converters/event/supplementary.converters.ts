@@ -1,8 +1,9 @@
 import type {
-	SupplementaryEventReadOutput,
+	SupplementarySingleEventReadOutput,
 	TourEventResponse
 } from "@/shared/api";
 
+import { ENUM_EVENT_BACKEND } from "../../types";
 import type {
 	TSupplementEditSchema,
 	TTourEventBackendResponce,
@@ -16,7 +17,7 @@ import {
 	mapPricingFromBackend
 } from "./supplementary-pricing.converters";
 
-type TSupplementaryEvent = SupplementaryEventReadOutput;
+type TSupplementaryEvent = SupplementarySingleEventReadOutput;
 
 export const mapSupplementaryEventToForm = (
 	data: TTourEventBackendResponce
@@ -42,7 +43,7 @@ export const mapSupplementaryFormToUpdate = (
 	const hasDetails = itemsList !== undefined || pricing !== undefined;
 
 	return {
-		typ: "9",
+		typ: ENUM_EVENT_BACKEND.SUPPLEMENTARY,
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(frontend.description !== undefined && {

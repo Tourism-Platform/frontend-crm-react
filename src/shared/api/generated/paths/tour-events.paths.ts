@@ -1,30 +1,31 @@
 import type {
-	ActivityEventCreate,
 	ActivityEventInput,
-	BusEventCreate,
+	ActivitySingleEvent,
 	BusEventInput,
+	BusSingleEvent,
+	EventOptionalSchema,
 	EventReorderSchema,
-	FlightEventCreate,
 	FlightEventInput,
-	GuideEventCreate,
+	FlightSingleEvent,
 	GuideEventInput,
-	HousingEventCreate,
+	GuideSingleEvent,
 	HousingEventInput,
-	InformationEventCreate,
+	HousingSingleEvent,
 	InformationEventInput,
+	InformationSingleEvent,
 	LanguageCode,
 	MoveToMultiResult,
 	MoveToMultiSchema,
 	MoveToSingleResult,
-	MultipleOptionEvent,
+	MultiEvent,
 	OptionReorderSchema,
-	SupplementaryEventCreate,
 	SupplementaryEventInput,
+	SupplementarySingleEvent,
 	TourEventResponse,
-	TrainEventCreate,
 	TrainEventInput,
-	TransferEventCreate,
-	TransferEventInput
+	TrainSingleEvent,
+	TransferEventInput,
+	TransferSingleEvent
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -37,16 +38,16 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationEventCreate
-					| BusEventCreate
-					| TrainEventCreate
-					| TransferEventCreate
-					| ActivityEventCreate
-					| HousingEventCreate
-					| FlightEventCreate
-					| GuideEventCreate
-					| SupplementaryEventCreate
-					| MultipleOptionEvent;
+					| InformationSingleEvent
+					| BusSingleEvent
+					| TrainSingleEvent
+					| TransferSingleEvent
+					| ActivitySingleEvent
+					| HousingSingleEvent
+					| FlightSingleEvent
+					| GuideSingleEvent
+					| SupplementarySingleEvent
+					| MultiEvent;
 				query: { lang?: LanguageCode };
 				response: TourEventResponse;
 			}
@@ -88,6 +89,16 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: EventReorderSchema;
+				query: { lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	setEventOptional: (tourId: string, optionId: string, eventId: string) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/optional`,
+			method: "PATCH",
+			_types: {} as {
+				body: EventOptionalSchema;
 				query: { lang?: LanguageCode };
 				response: TourEventResponse;
 			}

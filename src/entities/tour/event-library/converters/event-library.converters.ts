@@ -1,4 +1,4 @@
-import { type EventTypes, LanguageCode } from "@/shared/api";
+import { LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE, TLibraryPath } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
@@ -6,6 +6,8 @@ import { type IPaginationResponse } from "@/shared/types";
 
 import {
 	ENUM_EVENT,
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE,
 	type ENUM_EVENT_TYPE,
 	type TAccommodationEditSchema,
 	type TActivityEditSchema,
@@ -50,7 +52,7 @@ import type {
 export const mapEventLibraryItemToFrontend = (
 	data: TEventLibraryItemBackend
 ): IEventLibraryItem => {
-	const typ = data.event?.typ;
+	const typ = data.event?.typ as ENUM_EVENT_BACKEND_TYPE | undefined;
 	const eventType =
 		mapBackendTypToEventType(typ) ?? ENUM_EVENT.TRANSPORTATION;
 
@@ -85,7 +87,9 @@ export const mapEventLibraryFiltersToBackend = (
 ): TListEventLibraryQuery => {
 	const typ =
 		filters.types.length === 1
-			? (eventTypeMapper.to(filters.types[0]) as EventTypes | undefined)
+			? (eventTypeMapper.to(filters.types[0]) as
+					| ENUM_EVENT_BACKEND_TYPE
+					| undefined)
 			: undefined;
 
 	return {
@@ -157,7 +161,7 @@ const adaptLibraryEventToTourResponse = (
 			description: backend.event.description,
 			supplier_id: backend.event.supplier_id,
 			package_id: backend.event.package_id,
-			is_optional: backend.event.is_optional,
+			// is_optional: backend.event.is_optional,
 			details: backend.event.details
 		},
 		image_paths: backend.image_paths ?? [],
@@ -171,19 +175,19 @@ export const mapEventLibraryToForm = (
 	const adapted = adaptLibraryEventToTourResponse(backend);
 
 	switch (backend.event?.typ) {
-		case "1":
+		case ENUM_EVENT_BACKEND.FLIGHT:
 			return mapFlyEventToForm(adapted);
-		case "4":
+		case ENUM_EVENT_BACKEND.TRANSFER:
 			return mapTransferEventToForm(adapted);
-		case "5":
+		case ENUM_EVENT_BACKEND.HOUSING:
 			return mapAccommodationEventToForm(adapted);
-		case "6":
+		case ENUM_EVENT_BACKEND.ACTIVITY:
 			return mapActivityEventToForm(adapted);
-		case "7":
+		case ENUM_EVENT_BACKEND.REF:
 			return mapInfoEventToForm(adapted);
-		case "9":
+		case ENUM_EVENT_BACKEND.SUPPLEMENTARY:
 			return mapSupplementaryEventToForm(adapted);
-		case "8":
+		case ENUM_EVENT_BACKEND.GUIDE:
 			return mapGuideEventToForm(adapted);
 		default:
 			return backend as unknown as TTransportationEditSchema;

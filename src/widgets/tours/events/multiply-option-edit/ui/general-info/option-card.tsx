@@ -13,7 +13,6 @@ import {
 	Button,
 	Card,
 	CardContent,
-	Checkbox,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
@@ -40,14 +39,12 @@ const variants = cva("p-3 bg-background hover:text-primary", {
 interface IOptionCardProps {
 	option: ITourEventOption;
 	isOverlay?: boolean;
-	onToggleOptional?: (optionId: string, isOptional: boolean) => void;
 	onRemove?: (optionId: string) => void;
 }
 
 export const OptionCard: FC<IOptionCardProps> = ({
 	option,
 	isOverlay,
-	onToggleOptional,
 	onRemove
 }) => {
 	const { t } = useTranslation("multiply_option_edit_page");
@@ -132,7 +129,7 @@ export const OptionCard: FC<IOptionCardProps> = ({
 
 					{!isOverlay ? (
 						<>
-							<Checkbox
+							{/* <Checkbox
 								checked={option.isOptional}
 								onCheckedChange={(checked) => {
 									onToggleOptional?.(
@@ -141,7 +138,7 @@ export const OptionCard: FC<IOptionCardProps> = ({
 									);
 								}}
 								className="shrink-0"
-							/>
+							/> */}
 							<Button
 								type="button"
 								variant="ghost"

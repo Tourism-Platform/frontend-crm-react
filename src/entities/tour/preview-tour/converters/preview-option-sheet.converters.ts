@@ -5,7 +5,7 @@ import type {
 	BusEventPubReadOutput,
 	FlightEventPubReadOutput,
 	HousingEventPubReadOutput,
-	MultipleOptionEventPubOutput,
+	MultiEventPubOutput,
 	TimeSchema,
 	TrainEventPubReadOutput,
 	TransferEventPubReadOutput
@@ -24,7 +24,7 @@ import { formatLocation } from "./preview-option-location.utils";
 import { toPublicImageUrl } from "./preview-option-media.utils";
 
 type TPubEvent = TOptionDetailBackend["events"][number];
-type TPubDetail = MultipleOptionEventPubOutput["details"][number];
+type TPubDetail = MultiEventPubOutput["details"][number];
 type TPubEventWithMedia = (TPubEvent | TPubDetail) & TPubEventMediaFields;
 
 export const resolveEventImagePaths = (
@@ -59,7 +59,7 @@ const formatJourneyPoint = (point?: {
 };
 
 const mapTransferSheet = (
-	event: { typ: "4" } & TransferEventPubReadOutput
+	event: { typ: "transfer" } & TransferEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "transfer",
 	pickup: formatJourneyPoint(event?.details?.departure ?? undefined),
@@ -67,7 +67,7 @@ const mapTransferSheet = (
 });
 
 const mapHousingSheet = (
-	event: { typ: "5" } & HousingEventPubReadOutput
+	event: { typ: "housing" } & HousingEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "accommodation",
 	amenities: event.details.amenities ?? [],
@@ -77,7 +77,7 @@ const mapHousingSheet = (
 });
 
 const mapActivitySheet = (
-	event: { typ: "6" } & ActivityEventPubReadOutput
+	event: { typ: "activity" } & ActivityEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "activity",
 	location: formatLocation(event.details.location ?? undefined) || "—",
@@ -153,7 +153,7 @@ const mapHopToSegment = (
 };
 
 const mapFlightSheet = (
-	event: { typ: "1" } & FlightEventPubReadOutput,
+	event: { typ: "flight" } & FlightEventPubReadOutput,
 	routeLabel: string
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
@@ -165,8 +165,8 @@ const mapFlightSheet = (
 
 const mapTrainBusSheet = (
 	event:
-		| ({ typ: "2" } & TrainEventPubReadOutput)
-		| ({ typ: "3" } & BusEventPubReadOutput),
+		| ({ typ: "train" } & TrainEventPubReadOutput)
+		| ({ typ: "bus" } & BusEventPubReadOutput),
 	routeLabel: string
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
@@ -182,31 +182,31 @@ const mapSheetExtraFromPub = (
 	const typ = event.typ;
 
 	switch (typ) {
-		case "4":
+		case "transfer":
 			return mapTransferSheet(
-				event as { typ: "4" } & TransferEventPubReadOutput
+				event as { typ: "transfer" } & TransferEventPubReadOutput
 			);
-		case "5":
+		case "housing":
 			return mapHousingSheet(
-				event as { typ: "5" } & HousingEventPubReadOutput
+				event as { typ: "housing" } & HousingEventPubReadOutput
 			);
-		case "6":
+		case "activity":
 			return mapActivitySheet(
-				event as { typ: "6" } & ActivityEventPubReadOutput
+				event as { typ: "activity" } & ActivityEventPubReadOutput
 			);
-		case "1":
+		case "flight":
 			return mapFlightSheet(
-				event as { typ: "1" } & FlightEventPubReadOutput,
+				event as { typ: "flight" } & FlightEventPubReadOutput,
 				event.name || ""
 			);
-		case "2":
+		case "train":
 			return mapTrainBusSheet(
-				event as { typ: "2" } & TrainEventPubReadOutput,
+				event as { typ: "train" } & TrainEventPubReadOutput,
 				event.name || ""
 			);
-		case "3":
+		case "bus":
 			return mapTrainBusSheet(
-				event as { typ: "3" } & BusEventPubReadOutput,
+				event as { typ: "bus" } & BusEventPubReadOutput,
 				event.name || ""
 			);
 		default:

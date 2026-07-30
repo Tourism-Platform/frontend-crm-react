@@ -16,7 +16,7 @@ export interface ITourEventOption {
 	description: string;
 	eventType: ENUM_EVENT_TYPE;
 	details: Record<string, unknown>;
-	isOptional: boolean;
+	// isOptional: boolean;
 }
 
 export interface ITourEvent {

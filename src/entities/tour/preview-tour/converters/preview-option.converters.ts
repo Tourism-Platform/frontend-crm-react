@@ -1,5 +1,10 @@
-import type { MultipleOptionEventPubOutput } from "@/shared/api";
+import type { MultiEventPubOutput } from "@/shared/api";
 import { formatToDollars } from "@/shared/utils";
+
+import {
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE
+} from "@/entities/tour/itinerary";
 
 import type {
 	IOptionDay,
@@ -28,7 +33,7 @@ type TPubEvent = TOptionDetailBackend["events"][number];
 const mapDetailToSubOption = (
 	parentKey: string,
 	index: number,
-	detail: MultipleOptionEventPubOutput["details"][number]
+	detail: MultiEventPubOutput["details"][number]
 ): ISubOption => {
 	const sheet = buildSheetFromMultiplyChild(detail);
 
@@ -40,9 +45,7 @@ const mapDetailToSubOption = (
 	};
 };
 
-const mapMultiplyOptionEvent = (
-	event: MultipleOptionEventPubOutput
-): IOptionEvent => {
+const mapMultiplyOptionEvent = (event: MultiEventPubOutput): IOptionEvent => {
 	const eventKey = `d${event.day}-p${event.position}`;
 	const sheet = buildSheetFromPubEvent(event);
 
@@ -59,12 +62,14 @@ const mapMultiplyOptionEvent = (
 };
 
 const mapSinglePubEvent = (event: TPubEvent): IOptionEvent => {
-	if (event.typ === "10") {
+	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
 		return mapMultiplyOptionEvent(event);
 	}
 
-	const typ = event.typ ?? "7";
-	const type: TPreviewOptionEventType = mapPreviewBackendTypToEventType(typ);
+	const typ = event.typ ?? ENUM_EVENT_BACKEND.REF;
+	const type: TPreviewOptionEventType = mapPreviewBackendTypToEventType(
+		typ as ENUM_EVENT_BACKEND_TYPE | undefined
+	);
 	const eventKey = `d${event.day}-p${event.position}`;
 	const sheet = buildSheetFromPubEvent(event);
 

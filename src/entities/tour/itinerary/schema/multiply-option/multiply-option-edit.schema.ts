@@ -5,8 +5,8 @@ export const MULTIPLY_OPTION_ITEM_SCHEMA = z.object({
 	name: z.string(),
 	description: z.string(),
 	eventType: z.string(),
-	details: z.record(z.string(), z.unknown()),
-	isOptional: z.boolean()
+	details: z.record(z.string(), z.unknown())
+	// isOptional: z.boolean()
 });
 
 export const MULTIPLY_OPTION_EDIT_SCHEMA = z.object({

@@ -10,6 +10,7 @@ import {
 	MOCK_TOUR_ID,
 	MOCK_TOUR_OPTION_ID
 } from "@/entities/booking/order/mock/booking-order.mock.constants";
+import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary";
 
 const costRange = (min: number, max: number): TourMinMaxCostSchemaOutput => ({
 	min: { val: min, currency: Currency.USD },
@@ -21,7 +22,7 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 		event_id: "event_1",
 		option_id: MOCK_TOUR_OPTION_ID,
 		event: {
-			typ: "1",
+			typ: ENUM_EVENT_BACKEND.FLIGHT,
 			name: "International Flight: London - Tashkent",
 			supplier_id: "Emirates",
 			day: 1,
@@ -35,18 +36,18 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 		event_id: "event_2",
 		option_id: MOCK_TOUR_OPTION_ID,
 		event: {
-			typ: "10",
+			typ: ENUM_EVENT_BACKEND.OPTIONS,
 			day: 2,
 			position: 1,
 			details: [
 				{
-					typ: "5",
+					typ: ENUM_EVENT_BACKEND.HOUSING,
 					name: "Central Hotel",
 					supplier_id: "Central Group",
 					details: null
 				},
 				{
-					typ: "5",
+					typ: ENUM_EVENT_BACKEND.HOUSING,
 					name: "Hyatt Regency",
 					supplier_id: "Hyatt Group",
 					details: null
@@ -60,7 +61,7 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 		event_id: "event_3",
 		option_id: MOCK_TOUR_OPTION_ID,
 		event: {
-			typ: "6",
+			typ: ENUM_EVENT_BACKEND.ACTIVITY,
 			name: "City Sightseeing Tour",
 			supplier_id: "Local Tours LLC",
 			day: 3,

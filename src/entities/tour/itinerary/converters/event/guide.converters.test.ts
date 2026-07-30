@@ -11,13 +11,18 @@ import {
 	ENUM_GUIDE_PRICING_TYPE,
 	ENUM_GUIDE_TYPE
 } from "../../types";
+import { ENUM_EVENT_BACKEND } from "../../types/event-backend-enum.types";
 
 import { mapGuideFormToUpdate } from "./guide.converters";
 
-vi.mock("@/shared/config", () => ({
-	ENV: { VITE_API_URL: "http://localhost" },
-	i18nKey: () => (key: string) => key
-}));
+vi.mock("@/shared/config", async (importOriginal) => {
+	const actual = await importOriginal<typeof import("@/shared/config")>();
+	return {
+		...actual,
+		ENV: { VITE_API_URL: "http://localhost" },
+		i18nKey: () => (key: string) => key
+	};
+});
 
 describe("mapGuideFormToUpdate", () => {
 	it("omits empty categories so PATCH does not wipe backend prices", () => {
@@ -61,7 +66,7 @@ describe("mapGuideFormToUpdate", () => {
 		});
 
 		expect(result).toEqual({
-			typ: "8",
+			typ: ENUM_EVENT_BACKEND.GUIDE,
 			name: "Guide",
 			day: 1,
 			position: 0,

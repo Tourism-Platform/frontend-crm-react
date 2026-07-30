@@ -1,7 +1,8 @@
-import type { MultipleOptionEventReadOutput } from "@/shared/api";
+import type { MultiEventReadOutput } from "@/shared/api";
 
 import {
 	ENUM_EVENT,
+	type ENUM_EVENT_BACKEND_TYPE,
 	type IEventOptionReorder,
 	type ITourEventOption,
 	type TMultiplyOptionEditSchema,
@@ -10,7 +11,7 @@ import {
 import { mapBackendTypToEventType } from "../event-type.converters";
 
 type TMultiEventOptionDetail = NonNullable<
-	MultipleOptionEventReadOutput["details"]
+	MultiEventReadOutput["details"]
 >[number];
 
 export const mapMultiplyOptionDetailToOption = (
@@ -23,16 +24,18 @@ export const mapMultiplyOptionDetailToOption = (
 		name: detail.name || "",
 		description: detail.description || "",
 		eventType:
-			mapBackendTypToEventType(detail.typ) || ENUM_EVENT.TOUR_DETAILS,
-		details: (detail.details as Record<string, unknown>) || {},
-		isOptional: Boolean(detail.is_optional)
+			mapBackendTypToEventType(
+				detail.typ as ENUM_EVENT_BACKEND_TYPE | undefined
+			) || ENUM_EVENT.TOUR_DETAILS,
+		details: (detail.details as Record<string, unknown>) || {}
+		// isOptional: Boolean(detail.is_optional)
 	};
 };
 
 export const mapMultiplyOptionEventToForm = (
 	data: TTourEventBackendResponce
 ): TMultiplyOptionEditSchema => {
-	const event = data?.event as MultipleOptionEventReadOutput;
+	const event = data?.event as MultiEventReadOutput;
 
 	const options = (event?.details ?? [])
 		.map(mapMultiplyOptionDetailToOption)

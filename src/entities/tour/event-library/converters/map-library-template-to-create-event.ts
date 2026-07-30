@@ -1,4 +1,7 @@
-import type { ITourEventCreate } from "@/entities/tour/itinerary";
+import type {
+	ENUM_EVENT_BACKEND_TYPE,
+	ITourEventCreate
+} from "@/entities/tour/itinerary";
 import {
 	ENUM_EVENT,
 	mapBackendTypToEventType
@@ -17,7 +20,9 @@ export const mapLibraryTemplateToCreateEvent = (
 ): ITourEventCreate => {
 	const event = template.event;
 	const eventType =
-		mapBackendTypToEventType(event?.typ) ?? ENUM_EVENT.TRANSPORTATION;
+		mapBackendTypToEventType(
+			event?.typ as ENUM_EVENT_BACKEND_TYPE | undefined
+		) ?? ENUM_EVENT.TRANSPORTATION;
 
 	const description =
 		event && "description" in event && event.description != null

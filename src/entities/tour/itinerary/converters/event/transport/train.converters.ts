@@ -1,6 +1,7 @@
-import type { TrainEventReadOutput } from "@/shared/api";
+import type { TrainSingleEventReadOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 
+import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
 	TFlightEditSchema,
 	TTourEventBackendResponce,
@@ -32,10 +33,10 @@ const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 
 const assertTrainEvent = (
 	data: TTourEventBackendResponce
-): TrainEventReadOutput => {
-	if (!("typ" in data.event) || data.event.typ !== "2") {
+): TrainSingleEventReadOutput => {
+	if (!("typ" in data.event) || data.event.typ !== ENUM_EVENT_BACKEND.TRAIN) {
 		throw new Error(
-			'mapTrainEventToForm: expected train event with typ "2"'
+			'mapTrainEventToForm: expected train event with typ "train"'
 		);
 	}
 	return data.event;
@@ -74,7 +75,7 @@ export const mapTrainFormToUpdate = (
 	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
 
 	return {
-		typ: "2",
+		typ: ENUM_EVENT_BACKEND.TRAIN,
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(Number.isFinite(frontend.position) && {

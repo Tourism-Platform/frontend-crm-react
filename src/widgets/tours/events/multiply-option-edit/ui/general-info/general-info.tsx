@@ -41,17 +41,6 @@ const GeneralInfoBase: FC<IGeneralInfoProps> = ({
 		);
 	};
 
-	const handleToggleOptional = (optionId: string, isOptional: boolean) => {
-		const nextOptions = options.map((option) =>
-			option.id === optionId ? { ...option, isOptional } : option
-		);
-		form.setValue(
-			ENUM_FORM_MULTIPLY_OPTION.OPTIONS,
-			nextOptions as TMultiplyOptionEditSchema["options"],
-			{ shouldDirty: true }
-		);
-	};
-
 	const handleRemove = (optionId: string) => {
 		const nextOptions = options.filter((option) => option.id !== optionId);
 		form.setValue(
@@ -66,7 +55,6 @@ const GeneralInfoBase: FC<IGeneralInfoProps> = ({
 			<OptionsDetails
 				options={options}
 				onReorder={handleReorder}
-				onToggleOptional={handleToggleOptional}
 				onRemove={handleRemove}
 			/>
 			<Separator />

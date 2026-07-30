@@ -1,10 +1,11 @@
-import { type ActivityEventReadOutput, LanguageCode } from "@/shared/api";
+import { type ActivitySingleEventReadOutput, LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
+import { ENUM_EVENT_BACKEND } from "../../types";
 import {
 	type TActivityEditSchema,
 	type TTourEventBackendResponce,
@@ -20,7 +21,7 @@ import { activityTypeMapper } from "./activity-type.converters";
 export const mapActivityEventToForm = (
 	data: TTourEventBackendResponce
 ): TActivityEditSchema => {
-	const event = data?.event as ActivityEventReadOutput;
+	const event = data?.event as ActivitySingleEventReadOutput;
 	return {
 		name: event?.name || "",
 		day: event.day,
@@ -54,7 +55,7 @@ export const mapActivityFormToUpdate = (
 			frontend.name !== "" && { name: frontend.name }),
 		...(g?.description !== undefined &&
 			g.description !== "" && { description: g.description }),
-		typ: "6",
+		typ: ENUM_EVENT_BACKEND.ACTIVITY,
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),

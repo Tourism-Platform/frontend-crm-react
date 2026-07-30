@@ -21,7 +21,7 @@ export const getDefaultGuidesList = (): TGuidesList => [
 ];
 
 export const mapGuidesFromBackend = (
-	details?: GuideDetailsOutput | null
+	details?: GuideDetailsOutput | null | any
 ): TGuidesSchema => ({
 	[ENUM_FORM_GUIDES.GUIDES_LIST]: [
 		{
@@ -41,7 +41,7 @@ export const mapGuidesDurationToBackend = (
 
 export const mapGuidesTypeToBackend = (
 	guidesList: TGuidesList = []
-): GuideDetailsOutput["typ"] | undefined => {
+): any | undefined => {
 	const guideType = guidesList[0]?.[ENUM_FORM_GUIDES.GUIDE_TYPE];
 	return guideTypeMapper.to(guideType);
 };

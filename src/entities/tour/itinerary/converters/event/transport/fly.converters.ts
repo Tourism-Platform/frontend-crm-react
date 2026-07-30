@@ -1,10 +1,11 @@
 import type {
-	FlightEventReadOutput,
 	FlightHopDetailsSchemaInput,
-	FlightHopDetailsSchemaOutput
+	FlightHopDetailsSchemaOutput,
+	FlightSingleEventReadOutput
 } from "@/shared/api";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
+import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
 	TFlightEditSchema,
 	TFlyRouteSegment,
@@ -103,10 +104,13 @@ const mapFlySegmentToHop = (
 
 const assertFlyEvent = (
 	data: TTourEventBackendResponce
-): FlightEventReadOutput => {
-	if (!("typ" in data.event) || data.event.typ !== "1") {
+): FlightSingleEventReadOutput => {
+	if (
+		!("typ" in data.event) ||
+		data.event.typ !== ENUM_EVENT_BACKEND.FLIGHT
+	) {
 		throw new Error(
-			'mapFlyEventToForm: expected flight event with typ "1"'
+			'mapFlyEventToForm: expected flight event with typ "flight"'
 		);
 	}
 	return data.event;
@@ -144,7 +148,7 @@ export const mapFlyFormToUpdate = (
 	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
 
 	return {
-		typ: "1",
+		typ: ENUM_EVENT_BACKEND.FLIGHT,
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(Number.isFinite(frontend.position) && {

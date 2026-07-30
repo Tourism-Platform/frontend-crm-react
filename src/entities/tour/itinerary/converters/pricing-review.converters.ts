@@ -1,6 +1,6 @@
 import type {
 	AnyEventWithCostOutput,
-	MultipleOptionEventReadOutput,
+	MultiEventReadOutput,
 	TourMinMaxCostSchemaOutput,
 	TourSummaryResponse
 } from "@/shared/api";
@@ -11,6 +11,7 @@ import type {
 	ITourSummaryRange
 } from "@/entities/tour/tour/types/tour-review.interface";
 
+import { ENUM_EVENT_BACKEND, type ENUM_EVENT_BACKEND_TYPE } from "../types";
 import { ENUM_EVENT } from "../types";
 import type { ITourPricingReview } from "../types/pricing-review.types";
 
@@ -52,9 +53,7 @@ const parseOptionIndexFromSuffix = (idSuffix: string): number => {
 };
 
 type TSummaryEvent = AnyEventWithCostOutput["event"];
-type TNestedMultiDetail = NonNullable<
-	MultipleOptionEventReadOutput["details"]
->[number];
+type TNestedMultiDetail = NonNullable<MultiEventReadOutput["details"]>[number];
 
 const mapSummaryEventToReviewItem = (
 	event: TSummaryEvent | TNestedMultiDetail,
@@ -64,7 +63,7 @@ const mapSummaryEventToReviewItem = (
 ): ITourReviewItem => {
 	const optionIndex = parseOptionIndexFromSuffix(idSuffix);
 
-	if (event.typ === "10") {
+	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
 		const multi = event;
 		const parentId = getEventKey(multi);
 
@@ -106,7 +105,9 @@ const mapSummaryEventToReviewItem = (
 		supplier: event.supplier_id ?? "-",
 		plannedCost: cost ? mapMinMaxCostToDisplay(cost) : "-",
 		estimatedRevenue: markup ? mapMinMaxCostToDisplay(markup) : "-",
-		type: mapBackendTypToEventType(typ),
+		type: mapBackendTypToEventType(
+			typ as ENUM_EVENT_BACKEND_TYPE | undefined
+		),
 		day,
 		position,
 		optionIndex
