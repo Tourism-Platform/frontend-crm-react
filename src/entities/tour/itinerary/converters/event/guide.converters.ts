@@ -15,7 +15,7 @@ import {
 import {
 	mapGuidesDurationToBackend,
 	mapGuidesFromBackend,
-	mapGuidesTypeToBackend
+	mapGuidesTypTiersToBackend
 } from "./guides.converters";
 
 type TGuideEvent = GuideSingleEventReadOutput;
@@ -64,7 +64,7 @@ export const mapGuideFormToUpdate = (
 			details: {
 				// Backend supports a single guide block — first item wins.
 				...(guidesList !== undefined && {
-					typ: mapGuidesTypeToBackend(guidesList)
+					typ_tiers: mapGuidesTypTiersToBackend(guidesList)
 				}),
 				...(guidesList !== undefined && {
 					duration: mapGuidesDurationToBackend(guidesList)

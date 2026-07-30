@@ -1,12 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { LanguageCode } from "@/shared/api";
+import { Currency, LanguageCode } from "@/shared/api";
 
 import { ENUM_LANGUAGES } from "@/entities/tour/landing/types/languages.types";
 
+import { DEFAULT_GUIDE_UP_TO_PAX } from "../../config";
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_EXPENSE_TYP,
+	ENUM_GUIDE_MARKUP_TYP,
 	ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD,
 	ENUM_GUIDE_PRICE_ROW_FIELD,
 	ENUM_GUIDE_PRICING_FIELD,
@@ -19,7 +21,8 @@ import { mapGuideCategoriesToBackend } from "./guide-pricing.converters";
 
 vi.mock("@/shared/config", () => ({
 	ENV: { VITE_API_URL: "http://localhost" },
-	i18nKey: () => (key: string) => key
+	i18nKey: () => (key: string) => key,
+	ENUM_LOCAL_STORAGE: { IS_AUTH: "is_auth" }
 }));
 
 const basePricing = (
@@ -78,8 +81,13 @@ describe("mapGuideCategoriesToBackend", () => {
 		expect(result).toEqual([
 			{
 				expenses: {
-					typ: "per_person",
-					cost_per_person: { val: 100 }
+					typ: "per_group",
+					tiers: [
+						{
+							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+							cost: { val: 100 }
+						}
+					]
 				}
 			}
 		]);
@@ -107,8 +115,13 @@ describe("mapGuideCategoriesToBackend", () => {
 		expect(result).toEqual([
 			{
 				expenses: {
-					typ: "per_person",
-					cost_per_person: { val: 80, currency: "USD" }
+					typ: "per_group",
+					tiers: [
+						{
+							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+							cost: { val: 80, currency: Currency.USD }
+						}
+					]
 				}
 			}
 		]);
@@ -143,9 +156,10 @@ describe("mapGuideCategoriesToBackend", () => {
 		expect(result).toEqual([{ lang: LanguageCode.En }]);
 	});
 
-	it("includes currency when provided", () => {
+	it("includes currency, fees and markup when provided", () => {
 		const result = mapGuideCategoriesToBackend(
 			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 				[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: {
 					typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
@@ -153,7 +167,10 @@ describe("mapGuideCategoriesToBackend", () => {
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: 50,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: 10,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "EUR",
-							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
+							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: {
+								typ: ENUM_GUIDE_MARKUP_TYP.PERCENTAGE,
+								value: "15"
+							}
 						}
 					]
 				}
@@ -164,12 +181,18 @@ describe("mapGuideCategoriesToBackend", () => {
 		expect(result).toEqual([
 			{
 				expenses: {
-					typ: "per_person",
-					cost_per_person: { val: 50, currency: "EUR" },
+					typ: "per_group",
+					tiers: [
+						{
+							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+							cost: { val: 50, currency: Currency.EUR }
+						}
+					],
 					fees: {
 						typ: "fixed",
-						cost: { val: 10, currency: "EUR" }
-					}
+						cost: { val: 10, currency: Currency.EUR }
+					},
+					markup: { typ: "percentage", percentage: 0.15 }
 				}
 			}
 		]);

@@ -1,8 +1,10 @@
 import type {
 	GuideByLanguageCategoryOutput,
-	GuideDetailsOutput
+	GuideDetailsOutput,
+	GuideTypeTier
 } from "@/shared/api";
 
+import { DEFAULT_GUIDE_UP_TO_PAX } from "../../config";
 import {
 	ENUM_FORM_GUIDES,
 	ENUM_GUIDE_TYPE,
@@ -21,12 +23,13 @@ export const getDefaultGuidesList = (): TGuidesList => [
 ];
 
 export const mapGuidesFromBackend = (
-	details?: GuideDetailsOutput | null | any
+	details?: GuideDetailsOutput | null
 ): TGuidesSchema => ({
 	[ENUM_FORM_GUIDES.GUIDES_LIST]: [
 		{
 			[ENUM_FORM_GUIDES.GUIDE_TYPE]:
-				guideTypeMapper.from(details?.typ) ?? ENUM_GUIDE_TYPE.LOCAL,
+				guideTypeMapper.from(details?.typ_tiers?.[0]?.typ) ??
+				ENUM_GUIDE_TYPE.LOCAL,
 			[ENUM_FORM_GUIDES.DURATION_DAYS]: details?.duration ?? 1
 		}
 	]
@@ -39,11 +42,19 @@ export const mapGuidesDurationToBackend = (
 	return duration != null && Number.isFinite(duration) ? duration : null;
 };
 
-export const mapGuidesTypeToBackend = (
+export const mapGuidesTypTiersToBackend = (
 	guidesList: TGuidesList = []
-): any | undefined => {
+): GuideTypeTier[] | undefined => {
 	const guideType = guidesList[0]?.[ENUM_FORM_GUIDES.GUIDE_TYPE];
-	return guideTypeMapper.to(guideType);
+	const typ = guideTypeMapper.to(guideType);
+	if (!typ) return undefined;
+
+	return [
+		{
+			up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+			typ
+		}
+	];
 };
 
 export type { GuideByLanguageCategoryOutput };
