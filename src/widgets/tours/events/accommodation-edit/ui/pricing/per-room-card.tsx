@@ -21,8 +21,7 @@ import {
 import {
 	ENUM_FORM_SECTION,
 	PER_ROOM_MARKUP_FIELD,
-	PER_ROOM_ROW_FIELDS_LIST,
-	getRoomDisplayName
+	PER_ROOM_ROW_FIELDS_LIST
 } from "../../model";
 
 interface IPerRoomCardProps {
@@ -42,11 +41,9 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 		<Card>
 			<CardHeader>
 				<h4 className="font-semibold">
-					{getRoomDisplayName(
-						form.watch(
-							`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_ROOMS.ROOM_NAME}`
-						) ?? ""
-					)}
+					{form.watch(
+						`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_ROOMS.ROOM_NAME}`
+					) ?? ""}
 				</h4>
 			</CardHeader>
 			<CardContent className="grid gap-4">

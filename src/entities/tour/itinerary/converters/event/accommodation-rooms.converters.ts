@@ -9,6 +9,7 @@ import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../types";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
+/** Parses HousingRoomTypes from pricing row name (already an enum value from select). */
 export const mapRoomNameToHousingType = (
 	roomName: string
 ): HousingRoomTypes | null => {
@@ -40,18 +41,9 @@ export const mapRoomsFromBackend = (
 		return { rooms: [] };
 	}
 
-	const uniqueRoomTypes = new Set<string>();
-	perRoomCategoryRooms.forEach((category) => {
-		category.rooms?.forEach((room) => {
-			if (room.typ) {
-				uniqueRoomTypes.add(room.typ);
-			}
-		});
-	});
-
 	return {
-		rooms: Array.from(uniqueRoomTypes).map((roomName) => ({
-			room_name: roomName,
+		rooms: perRoomCategoryRooms.map((category) => ({
+			room_name: category.name ?? "",
 			description: ""
 		}))
 	};

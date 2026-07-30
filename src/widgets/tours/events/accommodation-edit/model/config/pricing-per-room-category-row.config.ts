@@ -1,3 +1,5 @@
+import { ROOM_NAME_OPTIONS } from "@/shared/config";
+
 import {
 	CURRENCY_OPTIONS,
 	DEFAULT_EVENT_CURRENCY
@@ -13,7 +15,8 @@ export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST: TAccommodationPricingFormField[]
 			label: "form.pricing.form.per_room.table.type",
 			placeholder:
 				"form.pricing.form.per_room.fields.category_name.placeholder",
-			fieldType: "input"
+			fieldType: "select",
+			options: ROOM_NAME_OPTIONS
 		},
 		{
 			key: ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST,

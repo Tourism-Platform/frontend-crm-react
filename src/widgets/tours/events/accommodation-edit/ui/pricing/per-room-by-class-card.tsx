@@ -24,8 +24,7 @@ import {
 	ENUM_FORM_SECTION,
 	PER_ROOM_CATEGORY_ROW_FIELDS_LIST,
 	PER_ROOM_MARKUP_FIELD,
-	createEmptyPerRoomCategoryRow,
-	getRoomDisplayName
+	createEmptyPerRoomCategoryRow
 } from "../../model";
 
 interface IPerRoomByClassCardProps {
@@ -50,11 +49,9 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 		<Card>
 			<CardHeader>
 				<h4 className="font-semibold">
-					{getRoomDisplayName(
-						form.watch(
-							`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_ROOMS.ROOM_NAME}`
-						) ?? ""
-					)}
+					{form.watch(
+						`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_ROOMS.ROOM_NAME}`
+					) ?? ""}
 				</h4>
 			</CardHeader>
 			<CardContent className="grid">

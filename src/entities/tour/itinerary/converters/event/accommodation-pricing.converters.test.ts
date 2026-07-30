@@ -15,7 +15,10 @@ import {
 	type TAccommodationPricingSchema
 } from "../../types";
 
-import { mapAccommodationPricingToBackend } from "./accommodation-pricing.converters";
+import {
+	mapAccommodationPricingFromBackend,
+	mapAccommodationPricingToBackend
+} from "./accommodation-pricing.converters";
 
 vi.mock("@/shared/config", () => ({
 	ENV: { VITE_API_URL: "http://localhost" },
@@ -40,8 +43,8 @@ vi.mock("@/entities/commission", () => ({
 
 const roomsList = [
 	{
-		[ENUM_FORM_ROOMS.ROOM_NAME]: HousingRoomTypes.Double,
-		[ENUM_FORM_ROOMS.DESCRIPTION]: "Double"
+		[ENUM_FORM_ROOMS.ROOM_NAME]: "Deluxe",
+		[ENUM_FORM_ROOMS.DESCRIPTION]: "Deluxe class"
 	}
 ];
 
@@ -57,6 +60,53 @@ const basePricing = (
 	[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
 	[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_TYPE]: "",
 	...overrides
+});
+
+describe("mapAccommodationPricingFromBackend", () => {
+	it("maps categories[].rooms[].typ into pricing category name only", () => {
+		const result = mapAccommodationPricingFromBackend(
+			{
+				expenses: {
+					typ: "per_room_category",
+					categories: [
+						{
+							name: "Deluxe",
+							rooms: [
+								{
+									typ: HousingRoomTypes.Double,
+									pax: 2,
+									expenses: {
+										typ: "fixed",
+										cost: {
+											val: 200,
+											currency: Currency.USD
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			},
+			roomsList
+		);
+
+		expect(result.price_based_on_class).toBe(true);
+		expect(result.expenses).toMatchObject({
+			typ: ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM_CATEGORY,
+			[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: [
+				{
+					[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]: [
+						{
+							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
+								HousingRoomTypes.Double,
+							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 200
+						}
+					]
+				}
+			]
+		});
+	});
 });
 
 describe("mapAccommodationPricingToBackend", () => {
@@ -184,7 +234,7 @@ describe("mapAccommodationPricingToBackend", () => {
 		});
 	});
 
-	it("maps per_room with cost and currency", () => {
+	it("maps per_room with class name and currency", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -212,8 +262,8 @@ describe("mapAccommodationPricingToBackend", () => {
 					typ: "per_room",
 					rooms: [
 						{
-							typ: HousingRoomTypes.Double,
-							description: "Double",
+							name: "Deluxe",
+							description: "Deluxe class",
 							expenses: {
 								typ: "fixed",
 								cost: { val: 150, currency: Currency.USD },
@@ -258,8 +308,8 @@ describe("mapAccommodationPricingToBackend", () => {
 					typ: "per_room",
 					rooms: [
 						{
-							typ: HousingRoomTypes.Double,
-							description: "Double",
+							name: "Deluxe",
+							description: "Deluxe class",
 							expenses: undefined
 						}
 					]
@@ -268,7 +318,7 @@ describe("mapAccommodationPricingToBackend", () => {
 		});
 	});
 
-	it("maps per_room by class into per_room_category", () => {
+	it("maps class room_name and HousingRoomType category into per_room_category", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -283,7 +333,7 @@ describe("mapAccommodationPricingToBackend", () => {
 									[
 										{
 											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
-												"Standard",
+												HousingRoomTypes.Double,
 											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 200,
 											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]:
 												null,
@@ -303,13 +353,12 @@ describe("mapAccommodationPricingToBackend", () => {
 			details: {
 				expenses: {
 					typ: "per_room_category",
-					rooms: [
+					categories: [
 						{
-							typ: HousingRoomTypes.Double,
-							description: "Double",
-							categories: [
+							name: "Deluxe",
+							rooms: [
 								{
-									name: "Standard",
+									typ: HousingRoomTypes.Double,
 									expenses: {
 										typ: "fixed",
 										cost: {
@@ -326,6 +375,50 @@ describe("mapAccommodationPricingToBackend", () => {
 				}
 			}
 		});
+	});
+
+	it("never puts HousingRoomTypes into backend category.name", () => {
+		const result = mapAccommodationPricingToBackend(
+			basePricing({
+				[ENUM_ACCOMMODATION_PRICING_FIELD.PRICING_TYPE]:
+					ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.PRICE_BASED_ON_CLASS]: true,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: {
+					typ: ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM_CATEGORY,
+					[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: [
+						{
+							[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]:
+								[
+									{
+										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
+											HousingRoomTypes.Double,
+										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 100,
+										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]:
+											null,
+										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]:
+											Currency.USD,
+										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]:
+											null
+									}
+								]
+						}
+					]
+				}
+			}),
+			roomsList
+		);
+
+		const expenses = result.details?.expenses;
+		expect(expenses).toMatchObject({ typ: "per_room_category" });
+		if (expenses && "categories" in expenses) {
+			expect(expenses.categories?.[0]?.name).toBe("Deluxe");
+			expect(expenses.categories?.[0]?.name).not.toBe(
+				HousingRoomTypes.Double
+			);
+			expect(expenses.categories?.[0]?.rooms?.[0]?.typ).toBe(
+				HousingRoomTypes.Double
+			);
+		}
 	});
 
 	it("does not send flat_rate fields when active tab is per_room", () => {

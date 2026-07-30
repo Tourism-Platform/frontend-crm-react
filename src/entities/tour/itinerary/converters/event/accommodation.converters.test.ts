@@ -16,11 +16,13 @@ import {
 	ENUM_FORM_ROOMS
 } from "../../types";
 
+import { mapRoomsFromBackend } from "./accommodation-rooms.converters";
 import { mapAccommodationFormToUpdate } from "./accommodation.converters";
 
 vi.mock("@/shared/config", () => ({
 	ENV: { VITE_API_URL: "http://localhost" },
-	i18nKey: () => (key: string) => key
+	i18nKey: () => (key: string) => key,
+	ENUM_LOCAL_STORAGE: { IS_AUTH: "is_auth" }
 }));
 
 vi.mock("@/shared/converters", () => ({
@@ -34,14 +36,51 @@ vi.mock("@/shared/hooks", () => ({
 
 const roomsList = [
 	{
-		[ENUM_FORM_ROOMS.ROOM_NAME]: HousingRoomTypes.Double,
-		[ENUM_FORM_ROOMS.DESCRIPTION]: "Double"
+		[ENUM_FORM_ROOMS.ROOM_NAME]: "Deluxe",
+		[ENUM_FORM_ROOMS.DESCRIPTION]: "Deluxe class"
 	}
 ];
 
 const getHousingExpenses = (
 	details: ReturnType<typeof mapAccommodationFormToUpdate>["details"]
 ) => (details as HousingDetailsSchemaInput | null | undefined)?.expenses;
+
+describe("mapRoomsFromBackend", () => {
+	it("maps per_room_category category.name to rooms.rooms[].room_name", () => {
+		expect(
+			mapRoomsFromBackend(undefined, [
+				{
+					name: "Deluxe",
+					rooms: [
+						{
+							typ: HousingRoomTypes.Double,
+							pax: 2
+						}
+					]
+				}
+			])
+		).toEqual({
+			rooms: [
+				{
+					room_name: "Deluxe",
+					description: ""
+				}
+			]
+		});
+	});
+
+	it("does not map room.typ into rooms.rooms[].room_name", () => {
+		const result = mapRoomsFromBackend(undefined, [
+			{
+				name: "Deluxe",
+				rooms: [{ typ: HousingRoomTypes.Double }]
+			}
+		]);
+
+		expect(result.rooms[0]?.room_name).toBe("Deluxe");
+		expect(result.rooms[0]?.room_name).not.toBe(HousingRoomTypes.Double);
+	});
+});
 
 describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 	it("keeps flat_rate expenses when rooms are also in the form", () => {
@@ -66,7 +105,9 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 
 		expect(getHousingExpenses(result.details)).toEqual({
 			typ: "fixed",
-			cost: { val: 300, currency: Currency.USD }
+			cost: { val: 300, currency: Currency.USD },
+			fees: null,
+			markup: null
 		});
 	});
 
@@ -92,11 +133,13 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 
 		expect(getHousingExpenses(result.details)).toEqual({
 			typ: "per_person",
-			cost_per_person: { val: 80, currency: Currency.EUR }
+			cost_per_person: { val: 80, currency: Currency.EUR },
+			fees: null,
+			markup: null
 		});
 	});
 
-	it("keeps per_room expenses from pricing tab", () => {
+	it("keeps per_room expenses from pricing tab with class name", () => {
 		const result = mapAccommodationFormToUpdate({
 			name: "Hotel",
 			day: 1,
@@ -128,12 +171,19 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 		expect(getHousingExpenses(result.details)).toMatchObject({
 			typ: "per_room",
 			rooms: [
-				expect.objectContaining({
+				{
+					name: "Deluxe",
+					description: "Deluxe class",
 					expenses: {
 						typ: "fixed",
-						cost: { val: 120, currency: Currency.USD }
+						cost: { val: 120, currency: Currency.USD },
+						fees: {
+							typ: "fixed",
+							cost: { val: 0, currency: Currency.USD }
+						},
+						markup: null
 					}
-				})
+				}
 			]
 		});
 	});
@@ -162,8 +212,8 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 			typ: "per_room",
 			rooms: [
 				{
-					typ: HousingRoomTypes.Double,
-					description: "Double"
+					name: "Deluxe",
+					description: "Deluxe class"
 				}
 			]
 		});
