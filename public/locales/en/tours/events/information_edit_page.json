@@ -53,6 +53,38 @@
 			"info": {
 				"form": {
 					"fields": {
+						"event_start_time": {
+							"label": "Event start time",
+							"placeholder": "Enter start time",
+							"errors": {
+								"required": "Event start time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"start_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "Start timezone is required",
+								"max": "Timezone is too long"
+							}
+						},
+						"event_end_time": {
+							"label": "Event end time",
+							"placeholder": "Enter end time",
+							"errors": {
+								"required": "Event end time is required",
+								"invalid": "Invalid time format"
+							}
+						},
+						"end_timezone": {
+							"label": "Timezone",
+							"placeholder": "Choose timezone",
+							"errors": {
+								"required": "End timezone is required",
+								"max": "Timezone is too long"
+							}
+						},
 						"description": {
 							"label": "Info description",
 							"placeholder": "Enter info description",

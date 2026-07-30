@@ -14,16 +14,18 @@ const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("information_edit_page");
 	return (
 		<div className="grid gap-12">
-			<div>
-				{INFORMATION_DATA_LIST.map(({ key, ...item }) => (
-					<CustomField
-						key={key}
-						control={form?.control}
-						name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
-						t={t}
-						{...item}
-					/>
-				))}
+			<div className="grid gap-8">
+				<div className="grid grid-cols-4 gap-x-4 gap-y-1">
+					{INFORMATION_DATA_LIST().map(({ key, ...item }) => (
+						<CustomField
+							key={key}
+							control={form?.control}
+							name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
+							t={t}
+							{...item}
+						/>
+					))}
+				</div>
 				<div className="flex justify-end mt-6">
 					<Button
 						type="button"
