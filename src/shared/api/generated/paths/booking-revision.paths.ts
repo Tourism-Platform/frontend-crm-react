@@ -1,16 +1,16 @@
 import type {
-	ActivitySingleEvent,
-	BusSingleEvent,
+	ActivitySingleEventInput,
+	BusSingleEventInput,
 	EventEditOpOutput,
-	FlightSingleEvent,
-	GuideSingleEvent,
-	HousingSingleEvent,
-	InformationSingleEvent,
+	FlightSingleEventInput,
+	GuideSingleEventInput,
+	HousingSingleEventInput,
+	InformationSingleEventInput,
 	MultiEvent,
 	RevisionPreview,
-	SupplementarySingleEvent,
-	TrainSingleEvent,
-	TransferSingleEvent
+	SupplementarySingleEventInput,
+	TrainSingleEventInput,
+	TransferSingleEventInput
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -23,15 +23,15 @@ export const BOOKING_REVISION_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationSingleEvent
-					| BusSingleEvent
-					| TrainSingleEvent
-					| TransferSingleEvent
-					| ActivitySingleEvent
-					| HousingSingleEvent
-					| FlightSingleEvent
-					| GuideSingleEvent
-					| SupplementarySingleEvent
+					| InformationSingleEventInput
+					| BusSingleEventInput
+					| TrainSingleEventInput
+					| TransferSingleEventInput
+					| ActivitySingleEventInput
+					| HousingSingleEventInput
+					| FlightSingleEventInput
+					| GuideSingleEventInput
+					| SupplementarySingleEventInput
 					| MultiEvent;
 				query: void;
 				response: RevisionPreview;
@@ -43,15 +43,15 @@ export const BOOKING_REVISION_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| InformationSingleEvent
-					| BusSingleEvent
-					| TrainSingleEvent
-					| TransferSingleEvent
-					| ActivitySingleEvent
-					| HousingSingleEvent
-					| FlightSingleEvent
-					| GuideSingleEvent
-					| SupplementarySingleEvent
+					| InformationSingleEventInput
+					| BusSingleEventInput
+					| TrainSingleEventInput
+					| TransferSingleEventInput
+					| ActivitySingleEventInput
+					| HousingSingleEventInput
+					| FlightSingleEventInput
+					| GuideSingleEventInput
+					| SupplementarySingleEventInput
 					| MultiEvent;
 				query: void;
 				response: RevisionPreview;

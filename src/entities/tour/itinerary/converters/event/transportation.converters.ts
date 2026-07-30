@@ -1,4 +1,4 @@
-import type { TransferSingleEventReadOutput } from "@/shared/api";
+import type { TransferSingleEventOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
@@ -26,7 +26,7 @@ import {
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce
 ): TTransportationEditSchema => {
-	const event = data?.event as TransferSingleEventReadOutput;
+	const event = data?.event as TransferSingleEventOutput;
 	const details = event?.details;
 	const expenses = details?.expenses;
 	const perCarCars = expenses?.typ === "per_car" ? expenses.cars : undefined;

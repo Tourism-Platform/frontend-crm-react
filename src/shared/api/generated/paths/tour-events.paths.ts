@@ -1,18 +1,18 @@
 import type {
 	ActivityEventInput,
-	ActivitySingleEvent,
+	ActivitySingleEventInput,
 	BusEventInput,
-	BusSingleEvent,
+	BusSingleEventInput,
 	EventOptionalSchema,
 	EventReorderSchema,
 	FlightEventInput,
-	FlightSingleEvent,
+	FlightSingleEventInput,
 	GuideEventInput,
-	GuideSingleEvent,
+	GuideSingleEventInput,
 	HousingEventInput,
-	HousingSingleEvent,
+	HousingSingleEventInput,
 	InformationEventInput,
-	InformationSingleEvent,
+	InformationSingleEventInput,
 	LanguageCode,
 	MoveToMultiResult,
 	MoveToMultiSchema,
@@ -20,12 +20,12 @@ import type {
 	MultiEvent,
 	OptionReorderSchema,
 	SupplementaryEventInput,
-	SupplementarySingleEvent,
+	SupplementarySingleEventInput,
 	TourEventResponse,
 	TrainEventInput,
-	TrainSingleEvent,
+	TrainSingleEventInput,
 	TransferEventInput,
-	TransferSingleEvent
+	TransferSingleEventInput
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -38,15 +38,15 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationSingleEvent
-					| BusSingleEvent
-					| TrainSingleEvent
-					| TransferSingleEvent
-					| ActivitySingleEvent
-					| HousingSingleEvent
-					| FlightSingleEvent
-					| GuideSingleEvent
-					| SupplementarySingleEvent
+					| InformationSingleEventInput
+					| BusSingleEventInput
+					| TrainSingleEventInput
+					| TransferSingleEventInput
+					| ActivitySingleEventInput
+					| HousingSingleEventInput
+					| FlightSingleEventInput
+					| GuideSingleEventInput
+					| SupplementarySingleEventInput
 					| MultiEvent;
 				query: { lang?: LanguageCode };
 				response: TourEventResponse;

@@ -1,4 +1,4 @@
-import type { TrainSingleEventReadOutput } from "@/shared/api";
+import type { TrainSingleEventOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 
 import { ENUM_EVENT_BACKEND } from "../../../types";
@@ -33,7 +33,7 @@ const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 
 const assertTrainEvent = (
 	data: TTourEventBackendResponce
-): TrainSingleEventReadOutput => {
+): TrainSingleEventOutput => {
 	if (!("typ" in data.event) || data.event.typ !== ENUM_EVENT_BACKEND.TRAIN) {
 		throw new Error(
 			'mapTrainEventToForm: expected train event with typ "train"'

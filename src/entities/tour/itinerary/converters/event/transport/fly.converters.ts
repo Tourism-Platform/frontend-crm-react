@@ -1,7 +1,7 @@
 import type {
 	FlightHopDetailsSchemaInput,
 	FlightHopDetailsSchemaOutput,
-	FlightSingleEventReadOutput
+	FlightSingleEventOutput
 } from "@/shared/api";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
@@ -104,7 +104,7 @@ const mapFlySegmentToHop = (
 
 const assertFlyEvent = (
 	data: TTourEventBackendResponce
-): FlightSingleEventReadOutput => {
+): FlightSingleEventOutput => {
 	if (
 		!("typ" in data.event) ||
 		data.event.typ !== ENUM_EVENT_BACKEND.FLIGHT

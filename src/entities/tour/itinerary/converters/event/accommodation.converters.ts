@@ -1,4 +1,4 @@
-import type { HousingSingleEventReadOutput } from "@/shared/api";
+import type { HousingSingleEventOutput } from "@/shared/api";
 import { AmenitiesTypes, LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
@@ -41,7 +41,7 @@ const mapAmenitiesToBackend = (
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce
 ): TAccommodationEditSchema => {
-	const event = data?.event as HousingSingleEventReadOutput;
+	const event = data?.event as HousingSingleEventOutput;
 	const details = event?.details;
 	const expenses = details?.expenses;
 	const perRoomRooms =

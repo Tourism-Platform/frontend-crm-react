@@ -1,4 +1,4 @@
-import type { BusSingleEventReadOutput } from "@/shared/api";
+import type { BusSingleEventOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
 
 import { ENUM_EVENT_BACKEND } from "../../../types";
@@ -33,7 +33,7 @@ const createEmptyBusSegment = (): TBusRouteSegment => ({
 
 const assertBusEvent = (
 	data: TTourEventBackendResponce
-): BusSingleEventReadOutput => {
+): BusSingleEventOutput => {
 	if (!("typ" in data.event) || data.event.typ !== ENUM_EVENT_BACKEND.BUS) {
 		throw new Error('mapBusEventToForm: expected bus event with typ "bus"');
 	}

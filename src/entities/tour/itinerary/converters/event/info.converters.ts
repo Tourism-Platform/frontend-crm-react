@@ -1,4 +1,4 @@
-import type { InformationSingleEventReadOutput } from "@/shared/api";
+import type { InformationSingleEventOutput } from "@/shared/api";
 
 import { ENUM_EVENT_BACKEND } from "../../types";
 import {
@@ -10,7 +10,7 @@ import {
 export const mapInfoEventToForm = (
 	data: TTourEventBackendResponce
 ): TInfoEditSchema => {
-	const event = data?.event as InformationSingleEventReadOutput;
+	const event = data?.event as InformationSingleEventOutput;
 	return {
 		name: event?.name || "",
 		day: event.day,

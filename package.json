@@ -7,7 +7,7 @@
     "dev": "vite",
     "codegen:types": "tsx --env-file=.env scripts/generate-api-types.ts",
     "codegen:paths": "tsx --env-file=.env scripts/generate-api-paths.ts",
-    "codegen": "npm run codegen:types && npm run codegen:paths && npm run format",
+    "codegen": "npm run codegen:types && npm run codegen:paths && prettier --write \"src/shared/api/**/*.{js,jsx,ts,tsx,scss}\"",
     "seed:tour": "tsx --env-file=.env scripts/seeders/tour-seeder.ts",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss}\" \"public/locales/**/*.json\"",
     "lint": "eslint .",

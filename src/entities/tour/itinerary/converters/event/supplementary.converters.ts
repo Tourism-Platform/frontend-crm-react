@@ -1,5 +1,5 @@
 import type {
-	SupplementarySingleEventReadOutput,
+	SupplementarySingleEventOutput,
 	TourEventResponse
 } from "@/shared/api";
 
@@ -17,7 +17,7 @@ import {
 	mapPricingFromBackend
 } from "./supplementary-pricing.converters";
 
-type TSupplementaryEvent = SupplementarySingleEventReadOutput;
+type TSupplementaryEvent = SupplementarySingleEventOutput;
 
 export const mapSupplementaryEventToForm = (
 	data: TTourEventBackendResponce
