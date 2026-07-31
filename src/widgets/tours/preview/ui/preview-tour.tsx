@@ -25,7 +25,8 @@ import {
 
 import {
 	ENUM_PREVIEW_TOUR_TAB,
-	PREVIEW_TOUR_SINGLE_OPTION_TABS
+	PREVIEW_TOUR_SINGLE_OPTION_TABS,
+	useIsDraftPreview
 } from "../model";
 
 import {
@@ -37,6 +38,7 @@ import {
 
 const PreviewTourBase: FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
+	const isDraftPreview = useIsDraftPreview();
 	const { t, ready } = useTranslation([
 		"preview_tour_page",
 		"preview_option_page"
@@ -109,15 +111,27 @@ const PreviewTourBase: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-8 container pb-12 max-w-6xl mx-auto relative">
-			<Link
-				to={ENUM_PATH.TOURS.CATALOG.ROOT}
-				className="absolute top-0 left-0"
-			>
-				<Button variant="ghost" size="sm">
+			{isDraftPreview ? (
+				<Button
+					variant="ghost"
+					size="sm"
+					disabled
+					className="absolute top-0 left-0"
+				>
 					<ArrowLeft className="w-4 h-4" />
 					{t("back", { ns: "preview_tour_page" })}
 				</Button>
-			</Link>
+			) : (
+				<Link
+					to={ENUM_PATH.TOURS.CATALOG.ROOT}
+					className="absolute top-0 left-0"
+				>
+					<Button variant="ghost" size="sm">
+						<ArrowLeft className="w-4 h-4" />
+						{t("back", { ns: "preview_tour_page" })}
+					</Button>
+				</Link>
+			)}
 
 			<div className="grid grid-cols-[1fr_auto] gap-8 items-start">
 				<PreviewTourHero tour={tourData} />

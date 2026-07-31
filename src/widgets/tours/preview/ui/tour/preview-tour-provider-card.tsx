@@ -14,12 +14,13 @@ import {
 
 import { useGetPreviewOperatorQuery } from "@/entities/tour";
 
-import { PROVIDER_CONTACTS } from "../../model";
+import { PROVIDER_CONTACTS, useIsDraftPreview } from "../../model";
 
 const PreviewTourProviderCardBase: FC = () => {
 	const { t } = useTranslation("preview_tour_page");
 	const navigate = useNavigate();
 	const { tourId = "" } = useParams<{ tourId: string }>();
+	const isDraftPreview = useIsDraftPreview();
 	const {
 		data,
 		isError: isPreviewError,
@@ -29,6 +30,8 @@ const PreviewTourProviderCardBase: FC = () => {
 	const providerData = PROVIDER_CONTACTS(data);
 
 	const handleBooking = () => {
+		if (isDraftPreview) return;
+
 		const path = generatePath(ENUM_PATH.TOURS.CATALOG.BOOKING, {
 			tourId,
 			bookingId: null
@@ -77,7 +80,9 @@ const PreviewTourProviderCardBase: FC = () => {
 					))}
 				</div>
 
-				<Button onClick={handleBooking}>{t("book_now")} </Button>
+				<Button onClick={handleBooking} disabled={isDraftPreview}>
+					{t("book_now")}{" "}
+				</Button>
 			</CardContent>
 		</Card>
 	);

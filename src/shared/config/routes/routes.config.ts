@@ -34,6 +34,8 @@ export const ENUM_PATH = {
 			BOOKING: "/tours/catalog/preview/:tourId/booking/:bookingId?"
 		},
 		SEARCH: "/tours/search",
+		DRAFT_PREVIEW: "/tours/:tourId/draft-preview",
+		DRAFT_PREVIEW_OPTION: "/tours/:tourId/draft-preview/option/:optionId",
 		OVERVIEW: "/tours/:tourId/overview",
 		ITINERARY: "/tours/:tourId/itinerary",
 		SCHEDULE: "/tours/:tourId/schedule",

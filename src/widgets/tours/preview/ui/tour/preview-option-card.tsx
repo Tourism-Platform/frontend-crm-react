@@ -1,8 +1,7 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
-import { generatePath, useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-import { ENUM_PATH } from "@/shared/config/routes/routes.config";
 import {
 	Card,
 	CardContent,
@@ -16,6 +15,8 @@ import { Button } from "@/shared/ui/shadcn-ui/button";
 
 import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 
+import { buildPreviewOptionPath, useIsDraftPreview } from "../../model";
+
 interface IPreviewOptionCardProps {
 	option: IPreviewOptionCard;
 }
@@ -26,13 +27,10 @@ export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
 	const { t } = useTranslation("preview_tour_page");
 	const navigate = useNavigate();
 	const { tourId = "" } = useParams<{ tourId: string }>();
+	const isDraftPreview = useIsDraftPreview();
 
 	const handleNavigate = () => {
-		const path = generatePath(ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION, {
-			tourId,
-			optionId: option.id
-		});
-		navigate(path);
+		navigate(buildPreviewOptionPath(tourId, option.id, isDraftPreview));
 	};
 
 	return (

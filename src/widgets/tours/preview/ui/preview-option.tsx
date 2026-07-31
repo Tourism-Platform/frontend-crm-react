@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import {
 	Button,
@@ -21,7 +20,11 @@ import {
 	usePreviewOptionDetail
 } from "@/entities/tour/preview-tour";
 
-import { PREVIEW_OPTION_TABS_LIST } from "../model";
+import {
+	PREVIEW_OPTION_TABS_LIST,
+	buildPreviewTourPath,
+	useIsDraftPreview
+} from "../model";
 
 import { PreviewTourHero, PreviewTourProviderCard } from "./tour";
 
@@ -30,6 +33,7 @@ export const PreviewOptionBase: FC = () => {
 		tourId: string;
 		optionId: string;
 	}>();
+	const isDraftPreview = useIsDraftPreview();
 	const { t, ready } = useTranslation("preview_option_page");
 
 	const {
@@ -67,9 +71,7 @@ export const PreviewOptionBase: FC = () => {
 	return (
 		<section className="flex flex-col gap-8 container pb-12 mt-6 max-w-6xl mx-auto relative">
 			<Link
-				to={buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
-					tourId
-				})}
+				to={buildPreviewTourPath(tourId, isDraftPreview)}
 				className="absolute top-0 left-0"
 			>
 				<Button variant="ghost" size="sm">
