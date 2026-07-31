@@ -19,7 +19,11 @@ export interface IOptionFlightSegment {
 }
 
 export type TOptionEventSheetExtra =
-	| { kind: "info" }
+	| {
+			kind: "info";
+			startTime: string;
+			endTime: string;
+	  }
 	| {
 			kind: "transfer";
 			pickup: IOptionEventSheetPoint;

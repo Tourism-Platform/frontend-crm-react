@@ -70,7 +70,10 @@ export const infoEvent = (
 	description,
 	day,
 	position,
-	details: {}
+	details: {
+		start_time: time("13:00:00"),
+		end_time: time("13:15:00")
+	} as InformationEventPubRead["details"]
 });
 
 export const flightEvent = (

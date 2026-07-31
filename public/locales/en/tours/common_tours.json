@@ -5,7 +5,10 @@
 		},
 		"publish": {
 			"success": "Tour published successfully",
-			"error": "Error publishing tour"
+			"error": "Error publishing tour",
+			"errors": {
+				"SCHEDULE_REQUIRED": "Add at least one fixed date or recurrence rule in the schedule"
+			}
 		},
 		"archive": {
 			"success": "Tour archived successfully",

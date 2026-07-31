@@ -6,6 +6,11 @@ import { type FC, useMemo } from "react";
 
 import { cn } from "@/shared/lib";
 
+import {
+	plainTextToTipTapDoc,
+	resolveTipTapDoc
+} from "./model/parse-tiptap-doc";
+
 const extensions = [
 	StarterKit,
 	TextAlign.configure({
@@ -18,14 +23,11 @@ interface IPreviewerProps {
 	className?: string;
 }
 
-const parseTipTapHtml = (value: string) => {
+const parseTipTapHtml = (value: string): string => {
 	try {
-		return generateHTML(JSON.parse(value), extensions);
+		return generateHTML(resolveTipTapDoc(value), extensions);
 	} catch {
-		return generateHTML(
-			JSON.parse('{ type: "doc", content: [] }'),
-			extensions
-		);
+		return generateHTML(plainTextToTipTapDoc(value), extensions);
 	}
 };
 

@@ -1,13 +1,6 @@
 import type { JSONContent } from "@tiptap/core";
 
-const parseTipTapDoc = (value: string): JSONContent | null => {
-	try {
-		const doc = JSON.parse(value) as JSONContent;
-		return doc?.type === "doc" ? doc : null;
-	} catch {
-		return null;
-	}
-};
+import { tryParseTipTapDoc } from "./parse-tiptap-doc";
 
 const nodeToPlainText = (node: JSONContent): string => {
 	if (node.type === "text" && node.text) return node.text;
@@ -27,7 +20,7 @@ export const tiptapToPlainText = (value?: string | null): string | null => {
 	const trimmed = value?.trim();
 	if (!trimmed) return null;
 
-	const doc = parseTipTapDoc(trimmed);
+	const doc = tryParseTipTapDoc(trimmed);
 	const plain = doc
 		? docToPlainText(doc)
 		: trimmed.replace(/\s+/g, " ").trim();

@@ -2,6 +2,7 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { withErrorBoundary } from "@/shared/ui";
+import { Badge } from "@/shared/ui/shadcn-ui/badge";
 
 import type { IOptionDay } from "@/entities/tour/preview-tour";
 
@@ -18,35 +19,31 @@ const OptionDaySectionBase: FC<IOptionDaySectionProps> = ({
 }) => {
 	const { t } = useTranslation("preview_option_page");
 
-	const locationLabel = day.location || t("day.title", { n: day.day_number });
-
 	return (
-		<div className="flex gap-4">
-			<div className="flex flex-col items-center gap-2">
-				<div className="w-12 h-8 rounded-full bg-foreground text-background flex items-center justify-center text-sm font-medium z-10 shrink-0">
-					{t("sections.option.day")} {day.day_number}
-				</div>
-				<div className="w-[1px] h-full bg-border border-dashed border-l last:hidden" />
+		<div className="pb-12 w-full min-w-0">
+			<div className="flex items-center gap-2 mb-8">
+				<Badge size="md" className="text-base shrink-0" variant="black">
+					{t("day.title", { n: day.day_number })}
+				</Badge>
+				{day.location ? (
+					<>
+						<span className="w-1 h-1 rounded-full bg-primary shrink-0" />
+						<span className="text-muted-foreground shrink-0">
+							{day.location}
+						</span>
+					</>
+				) : null}
+				<div className="flex-1 border-t border-dashed ml-2 min-w-0" />
 			</div>
 
-			<div className="flex-1 pb-12 w-full min-w-0">
-				<div className="flex items-center gap-2 mb-8">
-					<span className="w-1 h-1 rounded-full bg-primary" />
-					<span className="text-muted-foreground">
-						{locationLabel}
-					</span>
-					<div className="flex-1 border-t border-dashed ml-4" />
-				</div>
-
-				<div className="flex flex-col gap-8 w-full">
-					{day.events.map((event, index) => (
-						<OptionEventCard
-							key={event.id}
-							event={event}
-							index={globalEventIndex + index}
-						/>
-					))}
-				</div>
+			<div className="flex flex-col gap-8 w-full">
+				{day.events.map((event, index) => (
+					<OptionEventCard
+						key={event.id}
+						event={event}
+						index={globalEventIndex + index}
+					/>
+				))}
 			</div>
 		</div>
 	);

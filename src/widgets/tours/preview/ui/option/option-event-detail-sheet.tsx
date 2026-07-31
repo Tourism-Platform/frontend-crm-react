@@ -53,12 +53,12 @@ const DetailSheetTrigger: FC<IDetailSheetTriggerProps> = ({ variant }) => {
 			<button
 				type="button"
 				className={cn(
-					"text-primary hover:underline underline-offset-4 w-fit",
-					isCompact ? "text-xs flex items-center gap-1" : "text-sm"
+					"inline-flex items-center gap-1 text-primary hover:underline underline-offset-4 w-fit",
+					isCompact ? "text-xs" : "text-sm"
 				)}
 			>
 				{t("sections.option.view_details")}
-				{isCompact && <ArrowRight className="w-3 h-3" />}
+				<ArrowRight className={isCompact ? "w-3 h-3" : "w-4 h-4"} />
 			</button>
 		</SheetTrigger>
 	);

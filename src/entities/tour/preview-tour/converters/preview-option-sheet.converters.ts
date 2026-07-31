@@ -3,8 +3,10 @@ import { format } from "date-fns";
 import type {
 	ActivityEventPubReadOutput,
 	BusEventPubReadOutput,
+	EmptyDetails,
 	FlightEventPubReadOutput,
 	HousingEventPubReadOutput,
+	InformationEventPubRead,
 	MultiEventPubOutput,
 	TimeSchema,
 	TrainEventPubReadOutput,
@@ -84,6 +86,18 @@ const mapActivitySheet = (
 	startTime: formatPubTime(event.details.start_time ?? undefined),
 	endTime: formatPubTime(event.details.end_time ?? undefined)
 });
+
+const mapInfoSheet = (
+	event: { typ: "ref" } & InformationEventPubRead
+): TOptionEventSheetExtra => {
+	// Pub OpenAPI still types details as EmptyDetailsPub; runtime has start/end.
+	const details = event.details as EmptyDetails | undefined;
+	return {
+		kind: "info",
+		startTime: formatPubTime(details?.start_time ?? undefined),
+		endTime: formatPubTime(details?.end_time ?? undefined)
+	};
+};
 
 const mapHopToSegment = (
 	hop: {
@@ -209,8 +223,12 @@ const mapSheetExtraFromPub = (
 				event as { typ: "bus" } & BusEventPubReadOutput,
 				event.name || ""
 			);
+		case "ref":
+			return mapInfoSheet(
+				event as { typ: "ref" } & InformationEventPubRead
+			);
 		default:
-			return { kind: "info" };
+			return { kind: "info", startTime: "", endTime: "" };
 	}
 };
 

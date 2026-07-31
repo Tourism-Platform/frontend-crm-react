@@ -29,6 +29,7 @@
 		"check_in": "Check in",
 		"check_out": "Check out",
 		"activity_info": "Activity info",
+		"info_time": "Time",
 		"location": "Location",
 		"start_time": "Start time",
 		"end_time": "End time",
@@ -37,9 +38,24 @@
 	"pricing": {
 		"title": "Pricing Breakdown",
 		"total_price": "Total price",
-		"details": "Details",
-		"accomodation": "Accomodation",
-		"activity": "Activity",
-		"transportation": "Transportation"
+		"total_hint": "Per person · depends on dates and selected options",
+		"details": "What's included",
+		"details_hint": "Open “View details” to see what’s included",
+		"choice_of": "Your choice",
+		"or": "or",
+		"accomodation": "Accommodation",
+		"activity": "Activities",
+		"transportation": "Transportation",
+		"sections": {
+			"accommodation": {
+				"blurb": "Comfortable stays along the route — already in the price"
+			},
+			"activity": {
+				"blurb": "Guided experiences and entries included"
+			},
+			"transportation": {
+				"blurb": "Transfers and intercity travel with no extras"
+			}
+		}
 	}
 }

@@ -8,10 +8,11 @@ import { Button } from "@/shared/ui";
 
 import {
 	ENUM_TOUR_STATUS,
-	// useArchiveTourMutation,
 	useGetTourGeneralQuery,
 	usePublishTourMutation
 } from "@/entities/tour";
+
+import { resolvePublishErrorCode } from "../model";
 
 export const PublishTourButton: FC = () => {
 	const { t } = useTranslation("common_tours");
@@ -25,13 +26,11 @@ export const PublishTourButton: FC = () => {
 
 	const [publishTour, { isLoading: isPublishLoading }] =
 		usePublishTourMutation();
-	// const [archiveTour, { isLoading: isArchiveLoading }] =
-	// 	useArchiveTourMutation();
 
 	const isPublished = tour?.status === ENUM_TOUR_STATUS.PUBLISHED;
 
 	const { action, label, loadingLabel, tostMessage } = {
-		action: isPublished ? publishTour : publishTour,
+		action: publishTour,
 		label: isPublished ? t("actions.archive") : t("actions.publish"),
 		loadingLabel: isPublished
 			? t("actions.archiving")
@@ -50,11 +49,14 @@ export const PublishTourButton: FC = () => {
 		try {
 			await action(tourId).unwrap();
 			toast.success(tostMessage.success);
-		} catch {
-			toast.error(tostMessage.error);
+		} catch (error) {
+			const code = resolvePublishErrorCode(error);
+			toast.error(
+				code ? t(`toast.publish.errors.${code}`) : tostMessage.error
+			);
 		}
 	};
-	const isLoading = isPublishLoading || isPublishLoading || isTourLoading;
+	const isLoading = isPublishLoading || isTourLoading;
 
 	return (
 		<Button onClick={handlePublish} disabled={isLoading}>

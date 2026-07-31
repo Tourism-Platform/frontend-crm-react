@@ -20,6 +20,11 @@ const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 	const isMultiply = Boolean(event.sub_options?.length);
 	const isReversed = index % 2 !== 0;
 	const cardImage = event.sheet.images[0];
+	const infoTimes =
+		event.sheet.extra.kind === "info" ? event.sheet.extra : null;
+	const hasInfoTimes = Boolean(
+		infoTimes && (infoTimes.startTime || infoTimes.endTime)
+	);
 
 	return (
 		<div className="grid grid-cols-2 gap-0 bg-card rounded-xl border overflow-hidden shadow-sm">
@@ -38,6 +43,30 @@ const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 						{isMultiply && ` ${t("sections.option.one_of_them")}`}
 					</h4>
 				</div>
+
+				{hasInfoTimes && infoTimes && (
+					<div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-end text-sm">
+						<div>
+							<span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+								{t("sheet.start_time")}
+							</span>
+							<p className="font-medium mt-1">
+								{infoTimes.startTime || "—"}
+							</p>
+						</div>
+						<span className="text-xs text-primary pb-0.5">
+							{t("sheet.to")}
+						</span>
+						<div className="text-right">
+							<span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
+								{t("sheet.end_time")}
+							</span>
+							<p className="font-medium mt-1">
+								{infoTimes.endTime || "—"}
+							</p>
+						</div>
+					</div>
+				)}
 
 				<Previewer
 					text={event.description}
