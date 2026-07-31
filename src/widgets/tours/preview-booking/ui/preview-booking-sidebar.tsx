@@ -152,7 +152,7 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 							{total.toFixed(2)}
 						</span>
 						{travellersCount > 0 && pricePerPerson > 0 && (
-							<span className="text-xs text-muted-foreground text-blue-400">
+							<span className="text-xs text-muted-foreground">
 								{travellersCount} {t("sidebar.person")} X{" "}
 								{submittedBooking?.tourCurrency ?? "$"}
 								{pricePerPerson.toFixed(2)}

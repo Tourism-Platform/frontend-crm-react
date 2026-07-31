@@ -59,6 +59,8 @@
 		"lead": "Lead",
 		"make_lead": "Make lead",
 		"optional_hint": "Passport scan is required for each filled traveller",
+		"show_all": "Show all",
+		"hide_all": "Hide all",
 		"add_traveller": "Add traveller",
 		"filled": "Filled",
 		"fields": {
