@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { Gender } from "@/shared/api";
 import { type TPreviewBookingPageKeys, i18nKey } from "@/shared/config";
+import { isValidCountryCode } from "@/shared/lib/countries";
 
 import { hasTravellerPassportFile } from "@/entities/booking/order/converters/booking-pax.converters";
 
@@ -38,6 +39,19 @@ const isTravellerFieldsComplete = (traveller: {
 			traveller.passport_expiry
 	);
 
+const nationalitySchema = z
+	.string()
+	.optional()
+	.refine(
+		(value) =>
+			value == null ||
+			value === "" ||
+			(/^[A-Z]{2}$/.test(value) && isValidCountryCode(value)),
+		{
+			message: msg("step_2.fields.nationality.errors.invalid")
+		}
+	);
+
 export const TRAVELLER_DETAILS_SCHEMA = z
 	.object({
 		[ENUM_FORM_PREVIEW_BOOKING.PAX_ID]: z.string().optional(),
@@ -45,7 +59,7 @@ export const TRAVELLER_DETAILS_SCHEMA = z
 		[ENUM_FORM_PREVIEW_BOOKING.LAST_NAME]: z.string().optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.GENDER]: z.nativeEnum(Gender).optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.DATE_OF_BIRTH]: z.coerce.date().optional(),
-		[ENUM_FORM_PREVIEW_BOOKING.NATIONALITY]: z.string().optional(),
+		[ENUM_FORM_PREVIEW_BOOKING.NATIONALITY]: nationalitySchema,
 		[ENUM_FORM_PREVIEW_BOOKING.PASSPORT_NUMBER]: z.string().optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.PASSPORT_EXPIRY]: z.coerce.date().optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.NOTE]: z.string().optional(),

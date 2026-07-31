@@ -6,7 +6,7 @@ const PAX_TEMPLATES = [
 	{
 		full_name: "Saimon Bill",
 		gender: Gender.M,
-		nationality: "USA",
+		nationality: "US",
 		date_of_birth: "1988-05-13",
 		passport_number: "13213467",
 		expired_date: "2029-05-13",
@@ -15,7 +15,7 @@ const PAX_TEMPLATES = [
 	{
 		full_name: "Amanda Jally",
 		gender: Gender.F,
-		nationality: "USA",
+		nationality: "US",
 		date_of_birth: "1999-01-17",
 		passport_number: "13289067",
 		expired_date: "2029-01-17",
@@ -24,7 +24,7 @@ const PAX_TEMPLATES = [
 	{
 		full_name: "Amad Diallo",
 		gender: Gender.M,
-		nationality: "Ivory Coast",
+		nationality: "CI",
 		date_of_birth: "2002-07-11",
 		passport_number: "AD998877",
 		expired_date: "2032-07-11",

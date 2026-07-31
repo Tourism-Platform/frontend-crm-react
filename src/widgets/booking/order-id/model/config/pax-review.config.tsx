@@ -3,6 +3,7 @@ import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
+import { getCountryLabel } from "@/shared/lib/countries";
 import { Button } from "@/shared/ui";
 
 import {
@@ -53,7 +54,8 @@ export const PAX_REVIEW_COLUMNS = (
 		},
 		{
 			accessorKey: "nationality",
-			header: t("pax_information.table.nationality")
+			header: t("pax_information.table.nationality"),
+			cell: ({ row }) => getCountryLabel(row.original.nationality, "en")
 		},
 		{
 			accessorKey: "dateOfBirth",

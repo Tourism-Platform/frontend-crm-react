@@ -56,7 +56,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 
 	return (
 		<div className="flex flex-col gap-6 w-full">
-			<div className="bg-white rounded-xl border p-6 flex flex-col gap-4">
+			<div className="bg-white rounded-xl border p-6 pb-8 flex flex-col gap-4">
 				<div>
 					<h3 className="text-lg font-semibold">
 						{t("step_2.title")}
@@ -79,11 +79,11 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 							<AccordionItem
 								key={field.id}
 								value={field.id}
-								className="border rounded-xl px-4 py-2"
+								className="border rounded-xl px-4 py-2 last:border-b"
 							>
-								<div className="flex w-full items-center gap-2">
-									<AccordionTrigger className="flex-1 hover:no-underline py-2">
-										<div className="flex flex-col items-start gap-1">
+								<div className="flex w-full items-center gap-1">
+									<AccordionTrigger className="flex-1 hover:no-underline py-3">
+										<div className="flex flex-col items-start gap-1 text-left">
 											<div className="flex items-center gap-2">
 												<span className="font-semibold text-base">
 													{t("step_2.traveller")}{" "}
@@ -98,7 +98,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 													</>
 												)}
 											</div>
-											<span className="text-xs text-muted-foreground">
+											<span className="text-xs text-muted-foreground font-normal">
 												{t("step_2.optional_hint")}
 											</span>
 										</div>
@@ -107,15 +107,15 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 										type="button"
 										variant="ghost"
 										size="icon"
-										className="shrink-0 text-muted-foreground hover:text-destructive"
+										className="size-8 shrink-0 text-muted-foreground hover:text-destructive"
 										disabled={isLoading}
 										onClick={() => onRemoveTraveller(index)}
 									>
-										<Trash2 className="h-4 w-4" />
+										<Trash2 className="size-4" />
 									</Button>
 								</div>
-								<AccordionContent className="pt-4 pb-4">
-									<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<AccordionContent className="px-1 pt-4 pb-4">
+									<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-1">
 										<CustomField
 											name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.FIRST_NAME}`}
 											control={form.control}
@@ -164,7 +164,9 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 											label={t(
 												"step_2.fields.nationality.label"
 											)}
-											fieldType="input"
+											fieldType="country"
+											placeholder="step_2.fields.nationality.placeholder"
+											emptyText="step_2.fields.nationality.empty"
 											t={t}
 										/>
 										<CustomField

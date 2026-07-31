@@ -113,6 +113,12 @@ type TFormAutocomplete<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	icon?: LucideIcon;
 };
 
+type TFormCountry<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "country";
+	placeholder?: string;
+	emptyText?: string;
+};
+
 export type TFormGeo<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: "geo";
 	options: IGeoSelectOption[];
@@ -138,6 +144,7 @@ export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormUploadFiles<L, K>
 	| TFormSwitch<L, K>
 	| TFormAutocomplete<L, K>
+	| TFormCountry<L, K>
 	| TFormGeo<L, K>
 	| TFormDateRange<L, K>
 	| TFormDatePicker<L, K>;

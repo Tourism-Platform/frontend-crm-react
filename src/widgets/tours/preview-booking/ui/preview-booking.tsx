@@ -7,6 +7,7 @@ import { generatePath, useNavigate, useParams } from "react-router";
 import type { TPreviewBookingPageKeys } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
 import {
+	Button,
 	Stepper,
 	StepperIndicator,
 	StepperItem,
@@ -76,7 +77,11 @@ const PreviewBookingBase: FC = () => {
 		<FormProvider {...form}>
 			<div className="container py-8 max-w-[1200px]">
 				{currentStep < LAST_STEP && (
-					<button
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						className="mb-8 w-fit"
 						onClick={() =>
 							navigate(
 								generatePath(
@@ -85,11 +90,10 @@ const PreviewBookingBase: FC = () => {
 								)
 							)
 						}
-						className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit mb-8"
 					>
 						<ArrowLeft className="w-4 h-4" />
 						{t("back_to_tour")}
-					</button>
+					</Button>
 				)}
 
 				<div

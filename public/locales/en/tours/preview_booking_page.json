@@ -83,7 +83,12 @@
 			},
 			"nationality": {
 				"label": "Nationality",
-				"errors": { "required": "Nationality is required" }
+				"placeholder": "Select country",
+				"empty": "No country found.",
+				"errors": {
+					"required": "Nationality is required",
+					"invalid": "Select a valid country"
+				}
 			},
 			"passport_number": {
 				"label": "Passport number",
