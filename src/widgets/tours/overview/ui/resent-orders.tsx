@@ -41,6 +41,7 @@ const LastOrdersBase: FC = () => {
 		isLoading,
 		isError
 	} = useGetBookingOrdersQuery({
+		tourId: filters.tourId,
 		search: filters.search,
 		page: filters.page,
 		limit: filters.limit

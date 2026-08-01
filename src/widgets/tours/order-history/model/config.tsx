@@ -6,25 +6,22 @@ import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Skeleton } from "@/shared/ui";
 
 import {
-	type ENUM_TOUR_ORDER_STATUS_TYPE,
-	type ITourOrder,
-	TOUR_ORDER_STATUS_LABELS,
-	TOUR_ORDER_STATUS_VARIANTS
-} from "@/entities/tour";
+	BOOKING_CLIENT_TYPE_LABELS,
+	BOOKING_CLIENT_TYPE_VARIANTS,
+	BOOKING_ORDER_STATUS_LABELS,
+	BOOKING_ORDER_STATUS_VARIANTS,
+	type ENUM_CLIENT_TYPE_OPTIONS_TYPE,
+	type ENUM_ORDER_STATUS_TYPE,
+	type IOrder
+} from "@/entities/booking";
 
 export const ORDER_HISTORY_COLUMNS = (
 	t: TFunction<["tour_order_history_page", "options"], undefined>
-): ColumnDef<ITourOrder>[] => {
+): ColumnDef<IOrder>[] => {
 	return [
 		{
-			id: "select",
-			size: 28,
-			enableSorting: false,
-			enableHiding: false
-		},
-		{
 			header: t("table.order_id", { ns: "tour_order_history_page" }),
-			accessorKey: "orderId",
+			accessorKey: "orderNumber",
 			meta: {
 				headerTitle: t("table.order_id", {
 					ns: "tour_order_history_page"
@@ -34,11 +31,11 @@ export const ORDER_HISTORY_COLUMNS = (
 			cell: ({ row }) => (
 				<Link
 					to={buildRoute(ENUM_PATH.BOOKING.ORDER_ID, {
-						orderId: row.getValue("orderId")
+						orderId: row.original.orderId
 					})}
 					className="font-medium text-primary hover:underline"
 				>
-					{row.getValue("orderId")}
+					{row.getValue("orderNumber") ?? row.original.orderId}
 				</Link>
 			),
 			size: 140
@@ -56,10 +53,23 @@ export const ORDER_HISTORY_COLUMNS = (
 		},
 		{
 			header: t("table.type", { ns: "tour_order_history_page" }),
-			accessorKey: "type",
+			accessorKey: "clientType",
 			meta: {
 				headerTitle: t("table.type", { ns: "tour_order_history_page" }),
 				skeleton: <Skeleton className="h-4 w-[120px]" />
+			},
+			cell: ({ row }) => {
+				const clientType = row.getValue(
+					"clientType"
+				) as ENUM_CLIENT_TYPE_OPTIONS_TYPE;
+
+				return (
+					<Badge variant={BOOKING_CLIENT_TYPE_VARIANTS[clientType]}>
+						{t(BOOKING_CLIENT_TYPE_LABELS[clientType], {
+							ns: "options"
+						})}
+					</Badge>
+				);
 			},
 			size: 120
 		},
@@ -104,12 +114,12 @@ export const ORDER_HISTORY_COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			cell: ({ row }) => {
-				const status = row.getValue(
-					"status"
-				) as ENUM_TOUR_ORDER_STATUS_TYPE;
+				const status = row.getValue("status") as ENUM_ORDER_STATUS_TYPE;
 				return (
-					<Badge variant={TOUR_ORDER_STATUS_VARIANTS[status]}>
-						{t(TOUR_ORDER_STATUS_LABELS[status], { ns: "options" })}
+					<Badge variant={BOOKING_ORDER_STATUS_VARIANTS[status]}>
+						{t(BOOKING_ORDER_STATUS_LABELS[status], {
+							ns: "options"
+						})}
 					</Badge>
 				);
 			},

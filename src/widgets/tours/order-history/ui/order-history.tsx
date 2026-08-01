@@ -10,11 +10,11 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
-	type ENUM_TOUR_ORDER_STATUS_TYPE,
-	type ITourOrderFilters,
-	TOUR_ORDER_STATUS_LABELS,
-	useGetTourOrdersQuery
-} from "@/entities/tour";
+	BOOKING_ORDER_STATUS_LABELS,
+	type ENUM_ORDER_STATUS_TYPE,
+	type IBookingOrderFilters,
+	useGetBookingOrdersQuery
+} from "@/entities/booking";
 
 import {
 	ConnectedTourHeader,
@@ -29,7 +29,7 @@ const OrderHistoryBase: FC = () => {
 	const { t: tCols } = useTranslation(["tour_order_history_page", "options"]);
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
-	const { watch, setValue } = useForm<ITourOrderFilters>({
+	const { watch, setValue } = useForm<IBookingOrderFilters>({
 		defaultValues: {
 			tourId,
 			status: [],
@@ -45,14 +45,20 @@ const OrderHistoryBase: FC = () => {
 		data,
 		isLoading,
 		isFetching,
-		isError: isLandingError
-	} = useGetTourOrdersQuery(filters);
+		isError: isOrdersError
+	} = useGetBookingOrdersQuery({
+		tourId: filters.tourId,
+		status: filters.status,
+		search: filters.search,
+		page: filters.page,
+		limit: filters.limit
+	});
 
 	useEffect(() => {
-		if (isLandingError) {
+		if (isOrdersError) {
 			toast.error(t("toasts.load.error"));
 		}
-	}, [isLandingError, t]);
+	}, [isOrdersError, t]);
 
 	const orders = useMemo(() => data?.data ?? [], [data]);
 	const totalCount = data?.total ?? 0;
@@ -85,13 +91,13 @@ const OrderHistoryBase: FC = () => {
 
 	const handleStatusChange = useCallback(
 		(val: string[]) => {
-			setValue("status", val as ENUM_TOUR_ORDER_STATUS_TYPE[]);
+			setValue("status", val as ENUM_ORDER_STATUS_TYPE[]);
 			setValue("page", 1);
 		},
 		[setValue]
 	);
 
-	const statusOptions = useValueToTranslateLabel(TOUR_ORDER_STATUS_LABELS);
+	const statusOptions = useValueToTranslateLabel(BOOKING_ORDER_STATUS_LABELS);
 	const columns = useMemo(() => ORDER_HISTORY_COLUMNS(tCols), [tCols]);
 
 	const paginationObj = useMemo(

@@ -125,6 +125,8 @@ export const mapBookingOrderFiltersToBackend = (
 	booking_status: orderStatusMapper.to(filters.status?.[0]),
 	tour_id: filters.tourId || null,
 	q: filters.search || null,
+	date_from: filters.dateFrom || null,
+	date_to: filters.dateTo || null,
 	skip: (filters.page - 1) * filters.limit,
 	limit: filters.limit
 });
