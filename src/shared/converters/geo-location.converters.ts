@@ -106,7 +106,7 @@ export const mapBackendLocationToGeoForm = (
 
 	if ("id" in location && !("lat" in location)) return null;
 
-	const raw = location as Record<string, unknown>;
+	const raw = location as unknown as Record<string, unknown>;
 	const lat = Number(raw.lat);
 	const long = Number(raw.long);
 

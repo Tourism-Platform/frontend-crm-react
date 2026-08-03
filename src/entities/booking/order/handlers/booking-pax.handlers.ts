@@ -18,8 +18,10 @@ export const bookingPaxHandlers = [
 			url: "/booking/order/:bookingId/pax",
 			method: "GET"
 		},
-		async ({ params }) =>
-			HttpResponse.json(getBookingPaxList(String(params.bookingId)))
+		async ({ params }) => {
+			const data = getBookingPaxList(String(params.bookingId));
+			return HttpResponse.json({ count: data.length, data });
+		}
 	),
 	createMockHandler(
 		{
@@ -30,6 +32,7 @@ export const bookingPaxHandlers = [
 			const bookingId = String(params.bookingId);
 			const data = body as PaxCreate;
 			const list = getBookingPaxList(bookingId);
+			const now = new Date().toISOString();
 			const created = {
 				id: `p${crypto.randomUUID()}`,
 				booking_id: bookingId,
@@ -39,7 +42,10 @@ export const bookingPaxHandlers = [
 				date_of_birth: data.date_of_birth ?? "1990-01-01",
 				passport_number: data.passport_number ?? "",
 				expired_date: data.expired_date ?? "2030-01-01",
-				comment: data.comment ?? null
+				comment: data.comment ?? null,
+				created_at: now,
+				updated_at: now,
+				files: [] as { id: string; file_name: string }[]
 			};
 			setBookingPaxList(bookingId, [...list, created]);
 			return HttpResponse.json(created, { status: 201 });
@@ -69,7 +75,8 @@ export const bookingPaxHandlers = [
 					data.passport_number ?? current.passport_number,
 				expired_date: data.expired_date ?? current.expired_date,
 				comment:
-					data.comment !== undefined ? data.comment : current.comment
+					data.comment !== undefined ? data.comment : current.comment,
+				updated_at: new Date().toISOString()
 			};
 			const next = [...list];
 			next[index] = updated;
@@ -97,11 +104,57 @@ export const bookingPaxHandlers = [
 			url: "/booking/order/:bookingId/pax/:paxId/passport",
 			method: "POST"
 		},
-		async () =>
-			HttpResponse.json({
-				id: crypto.randomUUID(),
-				booking_pax_id: crypto.randomUUID(),
-				url: "https://example.com/passport-mock.pdf"
-			})
+		async ({ params }) => {
+			const bookingId = String(params.bookingId);
+			const paxId = String(params.paxId);
+			const list = getBookingPaxList(bookingId);
+			const index = list.findIndex((p) => p.id === paxId);
+			const fileId = crypto.randomUUID();
+			const fileName = "passport.pdf";
+
+			if (index >= 0) {
+				const current = list[index];
+				const next = [...list];
+				next[index] = {
+					...current,
+					files: [
+						...current.files,
+						{ id: fileId, file_name: fileName }
+					],
+					updated_at: new Date().toISOString()
+				};
+				setBookingPaxList(bookingId, next);
+			}
+
+			return HttpResponse.json({
+				id: fileId,
+				booking_pax_id: paxId,
+				url: "https://example.com/passport-mock.pdf",
+				file_name: fileName
+			});
+		}
+	),
+	createMockHandler(
+		{
+			url: "/booking/order/pax/file/:fileId",
+			method: "GET"
+		},
+		async () => {
+			const content = "%PDF-1.4 mock passport file";
+			return new HttpResponse(content, {
+				status: 200,
+				headers: {
+					"Content-Type": "application/pdf",
+					"Content-Disposition": 'attachment; filename="passport.pdf"'
+				}
+			});
+		}
+	),
+	createMockHandler(
+		{
+			url: "/booking/order/pax/file/:fileId",
+			method: "DELETE"
+		},
+		async () => new HttpResponse(null, { status: 204 })
 	)
 ];

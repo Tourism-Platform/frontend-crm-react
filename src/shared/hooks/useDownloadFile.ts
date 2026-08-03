@@ -2,6 +2,8 @@
 
 import { useCallback, useState } from "react";
 
+import { downloadBlob as saveBlobToDisk } from "@/shared/utils";
+
 export type TDownloadProgress = {
 	loaded: number;
 	total: number;
@@ -14,14 +16,21 @@ export type TDownloadState = {
 	error: string | null;
 };
 
+export interface IDownloadBlob {
+	blob: Blob;
+	fileName: string;
+}
+
 export type TDownloadActions = {
 	download: (params: IDownloadFile) => Promise<void>;
+	downloadBlob: (params: IDownloadBlob) => Promise<void>;
 	reset: () => void;
 };
 
 export interface IDownloadFile {
 	url: string;
 	fileName: string;
+	id?: string;
 }
 
 export type TUseDownloadFileReturn = [TDownloadState, TDownloadActions];
@@ -43,6 +52,40 @@ export const useDownloadFile = (): TUseDownloadFileReturn => {
 			error: null
 		});
 	}, []);
+
+	const downloadBlob = useCallback(
+		async ({ blob, fileName }: IDownloadBlob) => {
+			setState({
+				isDownloading: true,
+				progress: { loaded: 0, total: blob.size, percent: 0 },
+				error: null
+			});
+
+			try {
+				saveBlobToDisk(blob, fileName);
+
+				setState({
+					isDownloading: false,
+					progress: {
+						loaded: blob.size,
+						total: blob.size,
+						percent: 100
+					},
+					error: null
+				});
+			} catch (error) {
+				setState({
+					isDownloading: false,
+					progress: null,
+					error:
+						error instanceof Error
+							? error.message
+							: "Download failed"
+				});
+			}
+		},
+		[]
+	);
 
 	const download = useCallback(async ({ url, fileName }: IDownloadFile) => {
 		if (!url) return;
@@ -92,16 +135,7 @@ export const useDownloadFile = (): TUseDownloadFileReturn => {
 			});
 
 			const blob = await downloadPromise;
-
-			// Создаём ссылку для скачивания
-			const blobUrl = URL.createObjectURL(blob);
-			const link = document.createElement("a");
-			link.href = blobUrl;
-			link.download = fileName;
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-			URL.revokeObjectURL(blobUrl);
+			saveBlobToDisk(blob, fileName);
 
 			setState({
 				isDownloading: false,
@@ -118,5 +152,5 @@ export const useDownloadFile = (): TUseDownloadFileReturn => {
 		}
 	}, []);
 
-	return [state, { download, reset }];
+	return [state, { download, downloadBlob, reset }];
 };

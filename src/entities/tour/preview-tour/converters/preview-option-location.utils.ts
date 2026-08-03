@@ -25,7 +25,7 @@ export const extractCityFromPubEvent = (
 	event: TPubEvent
 ): string | undefined => {
 	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		const first = event.details[0];
+		const first = event?.details?.[0];
 		if (first && "details" in first && first.details) {
 			const details = first.details as { location?: unknown };
 			if (isLocationOut(details.location)) {

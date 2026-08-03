@@ -11,14 +11,6 @@ import type {
 	TBookingPaxListBackendResponce
 } from "../types";
 
-/** TODO: заменить на files[] из API pax */
-const ORDER_PAX_PASSPORT_FILE_PLACEHOLDER: IPaxReviewDetail = {
-	id: "passport-file-placeholder",
-	type: "file",
-	value: "passport.pdf",
-	file: { url: "", fileName: "passport.pdf" }
-};
-
 const mapGenderToFrontend = (gender: Gender): ENUM_GENDER_OPTIONS_TYPE =>
 	gender === Gender.F ? ENUM_GENDER_OPTIONS.FEMALE : ENUM_GENDER_OPTIONS.MALE;
 
@@ -65,7 +57,11 @@ export const mapBookingPaxToFrontend = (
 	dateOfBirth: formatDate(data.date_of_birth),
 	passportNum: data.passport_number,
 	passportExpiryDate: formatDate(data.expired_date),
-	comment: data.comment
+	comment: data.comment,
+	files: (data.files ?? []).map((file) => ({
+		id: file.id,
+		fileName: file.file_name
+	}))
 });
 
 export const mapBookingPaxToTravellerForm = (
@@ -87,8 +83,8 @@ export const mapBookingPaxToTravellerForm = (
 };
 
 export const mapBookingPaxListToFrontend = (
-	data: TBookingPaxListBackendResponce
-): IBookingPax[] => data.map(mapBookingPaxToFrontend);
+	response: TBookingPaxListBackendResponce
+): IBookingPax[] => response.data.map(mapBookingPaxToFrontend);
 
 export const mapBookingPaxToPaxReviewItem = (
 	pax: IBookingPax
@@ -103,10 +99,14 @@ export const mapBookingPaxToPaxReviewItem = (
 		});
 	}
 
-	items.push({
-		...ORDER_PAX_PASSPORT_FILE_PLACEHOLDER,
-		id: `${pax.id}-passport-file`
-	});
+	for (const file of pax.files) {
+		items.push({
+			id: file.id,
+			type: "file",
+			value: file.fileName,
+			file: { id: file.id, url: "", fileName: file.fileName }
+		});
+	}
 
 	return {
 		id: pax.id,

@@ -208,6 +208,20 @@ export enum Gender {
 	F = "F"
 }
 
+/**
+ * ExpenseType
+ * Enumeration for different types of commissions.
+ */
+export enum ExpenseType {
+	Fixed = "fixed",
+	PerPerson = "per_person",
+	PerGroup = "per_group",
+	PerCar = "per_car",
+	PerCarCategory = "per_car_category",
+	PerRoom = "per_room",
+	PerRoomCategory = "per_room_category"
+}
+
 /** EventTypes */
 export enum EventTypes {
 	Flight = "flight",
@@ -340,18 +354,20 @@ export interface AccountTypeRead {
 export interface ActivityDetailsPubSchemaInput {
 	typ?: ActivityType | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	start_time?: TimeSchema | null;
 	end_time?: TimeSchema | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** ActivityDetailsPubSchema */
 export interface ActivityDetailsPubSchemaOutput {
 	typ?: ActivityType | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	start_time?: TimeSchema | null;
 	end_time?: TimeSchema | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** ActivityDetailsSchema */
@@ -362,7 +378,7 @@ export interface ActivityDetailsSchemaInput {
 	 * Location
 	 * Event location
 	 */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Event start time */
 	start_time?: TimeSchema | null;
 	/** Event start time */
@@ -391,7 +407,7 @@ export interface ActivityDetailsSchemaOutput {
 	 * Location
 	 * Event location
 	 */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Event start time */
 	start_time?: TimeSchema | null;
 	/** Event start time */
@@ -470,12 +486,14 @@ export interface ActivityEventPubReadInput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details: ActivityDetailsPubSchemaInput;
+	details?: ActivityDetailsPubSchemaInput | null;
 }
 
 /** ActivityEventPubRead */
@@ -488,12 +506,14 @@ export interface ActivityEventPubReadOutput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details: ActivityDetailsPubSchemaOutput;
+	details?: ActivityDetailsPubSchemaOutput | null;
 }
 
 /** ActivityEventTypeRead */
@@ -1125,11 +1145,17 @@ export interface BookingItineraryResponse {
 						typ: "flight";
 				  } & FlightEventPubReadOutput)
 				| ({
+						typ: "guide";
+				  } & GuideEventPubReadOutput)
+				| ({
 						typ: "housing";
 				  } & HousingEventPubReadOutput)
 				| ({
 						typ: "ref";
-				  } & InformationEventPubRead)
+				  } & InformationEventPubReadOutput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementaryEventPubReadOutput)
 				| ({
 						typ: "train";
 				  } & TrainEventPubReadOutput)
@@ -1241,6 +1267,14 @@ export interface BookingOrderListItem {
 	created_at: string;
 	/** Pax */
 	pax: number;
+	/**
+	 * Who to contact about this booking — the operator running the tour. Joined
+	 * into the listing rather than fetched per row so an agency or tourist can reach
+	 * the right person without a follow-up call per booking. Every field but ``id``
+	 * and ``name`` lives on ``operator_info``, which an operator may not have filled
+	 * in yet.
+	 */
+	operator: OrderOperatorInfo;
 	/** Order Number */
 	order_number: string;
 }
@@ -1384,12 +1418,14 @@ export interface BookingUpdate {
 export interface BusDetailPubSchemaInput {
 	/** Hop */
 	hop?: BusHopPubSchemaInput[] | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** BusDetailPubSchema */
 export interface BusDetailPubSchemaOutput {
 	/** Hop */
 	hop?: BusHopPubSchemaOutput[] | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** BusDetailSchema */
@@ -1490,12 +1526,14 @@ export interface BusEventPubReadInput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details: BusDetailPubSchemaInput;
+	details?: BusDetailPubSchemaInput | null;
 }
 
 /** BusEventPubRead */
@@ -1508,12 +1546,14 @@ export interface BusEventPubReadOutput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details: BusDetailPubSchemaOutput;
+	details?: BusDetailPubSchemaOutput | null;
 }
 
 /** BusEventTypeRead */
@@ -1614,7 +1654,7 @@ export interface BusJourneyPointPubSchemaInput {
 	date?: string | null;
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** BusJourneyPointPubSchema */
@@ -1623,7 +1663,7 @@ export interface BusJourneyPointPubSchemaOutput {
 	date?: string | null;
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -1634,7 +1674,7 @@ export interface BusJourneyPointSchemaInput {
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -1645,7 +1685,7 @@ export interface BusJourneyPointSchemaOutput {
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** BusSingleEvent */
@@ -1726,6 +1766,17 @@ export interface BusSingleEventOutput {
 	 */
 	typ?: "bus";
 	details?: BusDetailSchemaOutput | null;
+}
+
+/**
+ * ChargePubSchema
+ * Any charge with every monetary leaf removed: only the strategy and the
+ * structure it carries survive.
+ */
+export interface ChargePubSchema {
+	typ?: ExpenseType | null;
+	/** Tiers */
+	tiers?: GroupSizeTierPubSchema[] | null;
 }
 
 /** ClassicSwiftDetails */
@@ -1857,7 +1908,10 @@ export interface EmptyDetails {
 }
 
 /** EmptyDetailsPub */
-export type EmptyDetailsPub = object;
+export interface EmptyDetailsPub {
+	start_time?: TimeSchema | null;
+	end_time?: TimeSchema | null;
+}
 
 /**
  * EventEditOp
@@ -2219,12 +2273,14 @@ export interface FixedExpenseOutput {
 export interface FlightDetailsPubSchemaInput {
 	/** Hop */
 	hop?: FlightHopPubSchemaInput[] | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** FlightDetailsPubSchema */
 export interface FlightDetailsPubSchemaOutput {
 	/** Hop */
 	hop?: FlightHopPubSchemaOutput[] | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** FlightDetailsSchema */
@@ -2325,12 +2381,14 @@ export interface FlightEventPubReadInput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details: FlightDetailsPubSchemaInput;
+	details?: FlightDetailsPubSchemaInput | null;
 }
 
 /** FlightEventPubRead */
@@ -2343,12 +2401,14 @@ export interface FlightEventPubReadOutput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details: FlightDetailsPubSchemaOutput;
+	details?: FlightDetailsPubSchemaOutput | null;
 }
 
 /** FlightEventTypeRead */
@@ -2433,15 +2493,15 @@ export interface FlightHopDetailsSchemaInput {
 	arrival_airport_code?: string | null;
 	/** Departure Location */
 	departure_location?:
-		| LocationInSchema
-		| LocationRefSchema
 		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
 		| null;
 	/** Arrival Location */
 	arrival_location?:
-		| LocationInSchema
-		| LocationRefSchema
 		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
 		| null;
 	departure_time?: TimeSchema | null;
 	arrival_time?: TimeSchema | null;
@@ -2486,15 +2546,15 @@ export interface FlightHopDetailsSchemaOutput {
 	arrival_airport_code?: string | null;
 	/** Departure Location */
 	departure_location?:
-		| LocationInSchema
-		| LocationRefSchema
 		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
 		| null;
 	/** Arrival Location */
 	arrival_location?:
-		| LocationInSchema
-		| LocationRefSchema
 		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
 		| null;
 	departure_time?: TimeSchema | null;
 	arrival_time?: TimeSchema | null;
@@ -2527,18 +2587,22 @@ export interface FlightHopPubSchemaInput {
 	arrival_airport_code?: string | null;
 	/** Departure Location */
 	departure_location?:
-		| LocationInSchema
-		| LocationRefSchema
 		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
 		| null;
 	/** Arrival Location */
-	arrival_location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	arrival_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
 	/** Departure Date */
 	departure_date?: string | null;
 	/** Arrival Date */
 	arrival_date?: string | null;
 	departure_time?: TimeSchema | null;
-	arrival_time: TimeSchema;
+	arrival_time?: TimeSchema | null;
 	/** Departure Terminal */
 	departure_terminal?: string | null;
 	/** Departure Gate */
@@ -2559,18 +2623,22 @@ export interface FlightHopPubSchemaOutput {
 	arrival_airport_code?: string | null;
 	/** Departure Location */
 	departure_location?:
-		| LocationInSchema
-		| LocationRefSchema
 		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
 		| null;
 	/** Arrival Location */
-	arrival_location: LocationInSchema | LocationRefSchema | LocationOutSchema;
+	arrival_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
 	/** Departure Date */
 	departure_date?: string | null;
 	/** Arrival Date */
 	arrival_date?: string | null;
 	departure_time?: TimeSchema | null;
-	arrival_time: TimeSchema;
+	arrival_time?: TimeSchema | null;
 	/** Departure Terminal */
 	departure_terminal?: string | null;
 	/** Departure Gate */
@@ -2923,6 +2991,16 @@ export interface GroupSizeTierOutput {
 	cost: MonetaryValueSchema;
 }
 
+/**
+ * GroupSizeTierPubSchema
+ * A group-size band with its cost stripped — the bands themselves say how
+ * the offer is structured.
+ */
+export interface GroupSizeTierPubSchema {
+	/** Up To Pax */
+	up_to_pax?: number | null;
+}
+
 /** GuideByLanguageCategory */
 export interface GuideByLanguageCategoryInput {
 	lang?: LanguageCode | null;
@@ -2977,6 +3055,30 @@ export interface GuideDetailsOutput {
 	categories?: GuideByLanguageCategoryOutput[];
 }
 
+/** GuideDetailsPubSchema */
+export interface GuideDetailsPubSchemaInput {
+	/** Name */
+	name?: string | null;
+	/** Duration */
+	duration?: number | null;
+	/** Typ Tiers */
+	typ_tiers?: GuideTypeTierPubSchema[] | null;
+	/** Categories */
+	categories?: GuideLanguagePubSchema[] | null;
+}
+
+/** GuideDetailsPubSchema */
+export interface GuideDetailsPubSchemaOutput {
+	/** Name */
+	name?: string | null;
+	/** Duration */
+	duration?: number | null;
+	/** Typ Tiers */
+	typ_tiers?: GuideTypeTierPubSchema[] | null;
+	/** Categories */
+	categories?: GuideLanguagePubSchema[] | null;
+}
+
 /** GuideEvent */
 export interface GuideEventInput {
 	/**
@@ -3023,6 +3125,46 @@ export interface GuideEventOutput {
 	 */
 	typ?: "guide";
 	details?: GuideDetailsOutput | null;
+}
+
+/** GuideEventPubRead */
+export interface GuideEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
+	/**
+	 * Typ
+	 * @default "guide"
+	 */
+	typ?: "guide";
+	details?: GuideDetailsPubSchemaInput | null;
+}
+
+/** GuideEventPubRead */
+export interface GuideEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
+	/**
+	 * Typ
+	 * @default "guide"
+	 */
+	typ?: "guide";
+	details?: GuideDetailsPubSchemaOutput | null;
 }
 
 /** GuideEventTypeRead */
@@ -3081,6 +3223,11 @@ export interface GuideEventTypeReadOutput {
 	 * Option (alternative) id; populated on read, ignored on write.
 	 */
 	id?: string | null;
+}
+
+/** GuideLanguagePubSchema */
+export interface GuideLanguagePubSchema {
+	lang?: LanguageCode | null;
 }
 
 /** GuideSingleEvent */
@@ -3178,6 +3325,13 @@ export interface GuideTypeTier {
 	typ: GuideType;
 }
 
+/** GuideTypeTierPubSchema */
+export interface GuideTypeTierPubSchema {
+	/** Up To Pax */
+	up_to_pax?: number | null;
+	typ?: GuideType | null;
+}
+
 /** HTTPValidationError */
 export interface HTTPValidationError {
 	/** Detail */
@@ -3187,25 +3341,31 @@ export interface HTTPValidationError {
 /** HousingDetailsPubSchema */
 export interface HousingDetailsPubSchemaInput {
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Amenities */
 	amenities?: AmenitiesTypes[] | null;
 	/** Duration */
 	duration?: number | null;
 	check_in?: TimeSchema | null;
 	check_out?: TimeSchema | null;
+	/** Stars */
+	stars?: number | null;
+	expenses?: HousingExpensesPubSchemaInput | null;
 }
 
 /** HousingDetailsPubSchema */
 export interface HousingDetailsPubSchemaOutput {
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Amenities */
 	amenities?: AmenitiesTypes[] | null;
 	/** Duration */
 	duration?: number | null;
 	check_in?: TimeSchema | null;
 	check_out?: TimeSchema | null;
+	/** Stars */
+	stars?: number | null;
+	expenses?: HousingExpensesPubSchemaOutput | null;
 }
 
 /** HousingDetailsSchema */
@@ -3214,7 +3374,7 @@ export interface HousingDetailsSchemaInput {
 	 * Location
 	 * Housing location
 	 */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Amenities */
 	amenities?: AmenitiesTypes[] | null;
 	/**
@@ -3254,7 +3414,7 @@ export interface HousingDetailsSchemaOutput {
 	 * Location
 	 * Housing location
 	 */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Amenities */
 	amenities?: AmenitiesTypes[] | null;
 	/**
@@ -3346,12 +3506,14 @@ export interface HousingEventPubReadInput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details: HousingDetailsPubSchemaInput;
+	details?: HousingDetailsPubSchemaInput | null;
 }
 
 /** HousingEventPubRead */
@@ -3364,12 +3526,14 @@ export interface HousingEventPubReadOutput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details: HousingDetailsPubSchemaOutput;
+	details?: HousingDetailsPubSchemaOutput | null;
 }
 
 /** HousingEventTypeRead */
@@ -3430,6 +3594,28 @@ export interface HousingEventTypeReadOutput {
 	id?: string | null;
 }
 
+/** HousingExpensesPubSchema */
+export interface HousingExpensesPubSchemaInput {
+	typ?: ExpenseType | null;
+	/** Tiers */
+	tiers?: GroupSizeTierPubSchema[] | null;
+	/** Rooms */
+	rooms?: HousingRoomPubSchema[] | null;
+	/** Categories */
+	categories?: HousingRoomCategoryPubSchemaInput[] | null;
+}
+
+/** HousingExpensesPubSchema */
+export interface HousingExpensesPubSchemaOutput {
+	typ?: ExpenseType | null;
+	/** Tiers */
+	tiers?: GroupSizeTierPubSchema[] | null;
+	/** Rooms */
+	rooms?: HousingRoomPubSchema[] | null;
+	/** Categories */
+	categories?: HousingRoomCategoryPubSchemaOutput[] | null;
+}
+
 /** HousingRoomCategoryExpensesSchema */
 export interface HousingRoomCategoryExpensesSchemaInput {
 	/** Name */
@@ -3444,6 +3630,22 @@ export interface HousingRoomCategoryExpensesSchemaOutput {
 	name?: string | null;
 	/** Rooms */
 	rooms?: HousingRoomSchemaOutput[] | null;
+}
+
+/** HousingRoomCategoryPubSchema */
+export interface HousingRoomCategoryPubSchemaInput {
+	/** Name */
+	name?: string | null;
+	/** Rooms */
+	rooms?: HousingRoomPubSchema[] | null;
+}
+
+/** HousingRoomCategoryPubSchema */
+export interface HousingRoomCategoryPubSchemaOutput {
+	/** Name */
+	name?: string | null;
+	/** Rooms */
+	rooms?: HousingRoomPubSchema[] | null;
 }
 
 /**
@@ -3480,6 +3682,22 @@ export interface HousingRoomDoubleSchemaOutput {
 	 */
 	description?: string | null;
 	expenses?: FixedChargeOutput | null;
+}
+
+/**
+ * HousingRoomPubSchema
+ * One room, charge stripped. Flat across both room shapes the operator
+ * stores: categorised rooms carry ``typ``/``pax``, per-room ones carry
+ * ``name``/``description``.
+ */
+export interface HousingRoomPubSchema {
+	typ?: HousingRoomTypes | null;
+	/** Pax */
+	pax?: number | null;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /** HousingRoomSchema */
@@ -3629,7 +3847,7 @@ export interface InformationEventOutput {
 }
 
 /** InformationEventPubRead */
-export interface InformationEventPubRead {
+export interface InformationEventPubReadInput {
 	/** Name */
 	name?: string | null;
 	/** Description */
@@ -3638,13 +3856,34 @@ export interface InformationEventPubRead {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "ref"
 	 */
 	typ?: "ref";
-	/** @default {} */
-	details?: EmptyDetailsPub;
+	details?: EmptyDetailsPub | null;
+}
+
+/** InformationEventPubRead */
+export interface InformationEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
+	/**
+	 * Typ
+	 * @default "ref"
+	 */
+	typ?: "ref";
+	details?: EmptyDetailsPub | null;
 }
 
 /** InformationEventTypeRead */
@@ -4048,6 +4287,11 @@ export interface LocationInSchema {
 
 /** LocationOutSchema */
 export interface LocationOutSchema {
+	/**
+	 * Id
+	 * Stored location id; send it back to reuse this location.
+	 */
+	id?: string | null;
 	lang: LanguageCode;
 	/** City */
 	city?: string | null;
@@ -4219,32 +4463,42 @@ export interface MultiEventPubInput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/** Typ */
 	typ: "options";
 	/** Details */
-	details: (
-		| ({
-				typ: "activity";
-		  } & ActivityEventPubReadInput)
-		| ({
-				typ: "bus";
-		  } & BusEventPubReadInput)
-		| ({
-				typ: "flight";
-		  } & FlightEventPubReadInput)
-		| ({
-				typ: "housing";
-		  } & HousingEventPubReadInput)
-		| ({
-				typ: "ref";
-		  } & InformationEventPubRead)
-		| ({
-				typ: "train";
-		  } & TrainEventPubReadInput)
-		| ({
-				typ: "transfer";
-		  } & TransferEventPubReadInput)
-	)[];
+	details?:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivityEventPubReadInput)
+				| ({
+						typ: "bus";
+				  } & BusEventPubReadInput)
+				| ({
+						typ: "flight";
+				  } & FlightEventPubReadInput)
+				| ({
+						typ: "guide";
+				  } & GuideEventPubReadInput)
+				| ({
+						typ: "housing";
+				  } & HousingEventPubReadInput)
+				| ({
+						typ: "ref";
+				  } & InformationEventPubReadInput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementaryEventPubReadInput)
+				| ({
+						typ: "train";
+				  } & TrainEventPubReadInput)
+				| ({
+						typ: "transfer";
+				  } & TransferEventPubReadInput)
+		  )[]
+		| null;
 }
 
 /** MultiEventPub */
@@ -4257,32 +4511,42 @@ export interface MultiEventPubOutput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/** Typ */
 	typ: "options";
 	/** Details */
-	details: (
-		| ({
-				typ: "activity";
-		  } & ActivityEventPubReadOutput)
-		| ({
-				typ: "bus";
-		  } & BusEventPubReadOutput)
-		| ({
-				typ: "flight";
-		  } & FlightEventPubReadOutput)
-		| ({
-				typ: "housing";
-		  } & HousingEventPubReadOutput)
-		| ({
-				typ: "ref";
-		  } & InformationEventPubRead)
-		| ({
-				typ: "train";
-		  } & TrainEventPubReadOutput)
-		| ({
-				typ: "transfer";
-		  } & TransferEventPubReadOutput)
-	)[];
+	details?:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivityEventPubReadOutput)
+				| ({
+						typ: "bus";
+				  } & BusEventPubReadOutput)
+				| ({
+						typ: "flight";
+				  } & FlightEventPubReadOutput)
+				| ({
+						typ: "guide";
+				  } & GuideEventPubReadOutput)
+				| ({
+						typ: "housing";
+				  } & HousingEventPubReadOutput)
+				| ({
+						typ: "ref";
+				  } & InformationEventPubReadOutput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementaryEventPubReadOutput)
+				| ({
+						typ: "train";
+				  } & TrainEventPubReadOutput)
+				| ({
+						typ: "transfer";
+				  } & TransferEventPubReadOutput)
+		  )[]
+		| null;
 }
 
 /**
@@ -4638,6 +4902,225 @@ export interface OperatorInfoUpdate {
 	country?: string | null;
 }
 
+/**
+ * OperatorItineraryEvent
+ * One booking event as the operator sees it: the full ``AnyEventRead`` with
+ * every monetary field intact — the opposite of ``AnyEventPub``, which the
+ * agency-facing itinerary uses.
+ *
+ * ``date`` lives on this wrapper rather than inside ``event`` because the
+ * operator event schemas are the *write* shape persisted to JSONB; giving them
+ * calendar fields would let a client pin a date onto a reusable tour template.
+ * It resolves to ``booking.date + (day - 1)``.
+ *
+ * ``cost`` / ``markup`` / ``fees`` are this event's own share of the booking
+ * price, priced off the frozen snapshot at the booking's pax and currency. They
+ * read ``0`` when ``billed_via_package_id`` is set — the package is billed once
+ * at the booking level instead — and when the event is DESELECTED.
+ */
+export interface OperatorItineraryEventInput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Tour Option Id */
+	tour_option_id?: string | null;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivitySingleEventInput)
+				| ({
+						typ: "bus";
+				  } & BusSingleEventInput)
+				| ({
+						typ: "flight";
+				  } & FlightSingleEventInput)
+				| ({
+						typ: "guide";
+				  } & GuideSingleEventInput)
+				| ({
+						typ: "housing";
+				  } & HousingSingleEventInput)
+				| ({
+						typ: "ref";
+				  } & InformationSingleEventInput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementarySingleEventInput)
+				| ({
+						typ: "train";
+				  } & TrainSingleEventInput)
+				| ({
+						typ: "transfer";
+				  } & TransferSingleEventInput)
+		  )
+		| MultiEventReadInput;
+	availability?: AvailabilityStatus | null;
+	/** Selected Option Index */
+	selected_option_index?: number | null;
+	guide_typ?: GuideType | null;
+	/** Billed Via Package Id */
+	billed_via_package_id?: string | null;
+	cost: TourMinMaxCostSchemaInput;
+	markup: TourMinMaxCostSchemaInput;
+	fees: TourMinMaxCostSchemaInput;
+}
+
+/**
+ * OperatorItineraryEvent
+ * One booking event as the operator sees it: the full ``AnyEventRead`` with
+ * every monetary field intact — the opposite of ``AnyEventPub``, which the
+ * agency-facing itinerary uses.
+ *
+ * ``date`` lives on this wrapper rather than inside ``event`` because the
+ * operator event schemas are the *write* shape persisted to JSONB; giving them
+ * calendar fields would let a client pin a date onto a reusable tour template.
+ * It resolves to ``booking.date + (day - 1)``.
+ *
+ * ``cost`` / ``markup`` / ``fees`` are this event's own share of the booking
+ * price, priced off the frozen snapshot at the booking's pax and currency. They
+ * read ``0`` when ``billed_via_package_id`` is set — the package is billed once
+ * at the booking level instead — and when the event is DESELECTED.
+ */
+export interface OperatorItineraryEventOutput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Tour Option Id */
+	tour_option_id?: string | null;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivitySingleEventOutput)
+				| ({
+						typ: "bus";
+				  } & BusSingleEventOutput)
+				| ({
+						typ: "flight";
+				  } & FlightSingleEventOutput)
+				| ({
+						typ: "guide";
+				  } & GuideSingleEventOutput)
+				| ({
+						typ: "housing";
+				  } & HousingSingleEventOutput)
+				| ({
+						typ: "ref";
+				  } & InformationSingleEventOutput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementarySingleEventOutput)
+				| ({
+						typ: "train";
+				  } & TrainSingleEventOutput)
+				| ({
+						typ: "transfer";
+				  } & TransferSingleEventOutput)
+		  )
+		| MultiEventReadOutput;
+	availability?: AvailabilityStatus | null;
+	/** Selected Option Index */
+	selected_option_index?: number | null;
+	guide_typ?: GuideType | null;
+	/** Billed Via Package Id */
+	billed_via_package_id?: string | null;
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+}
+
+/**
+ * OperatorItineraryPackage
+ * A package billed once for the whole booking, listed separately so the sum
+ * of the event lines plus the package lines reconciles to the totals.
+ */
+export interface OperatorItineraryPackageInput {
+	/**
+	 * Package Id
+	 * @format uuid
+	 */
+	package_id: string;
+	/** Name */
+	name: string;
+	cost: TourMinMaxCostSchemaInput;
+	markup: TourMinMaxCostSchemaInput;
+	fees: TourMinMaxCostSchemaInput;
+}
+
+/**
+ * OperatorItineraryPackage
+ * A package billed once for the whole booking, listed separately so the sum
+ * of the event lines plus the package lines reconciles to the totals.
+ */
+export interface OperatorItineraryPackageOutput {
+	/**
+	 * Package Id
+	 * @format uuid
+	 */
+	package_id: string;
+	/** Name */
+	name: string;
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+}
+
+/**
+ * OperatorItineraryResponse
+ * Cost-bearing itinerary for the operator's order reconciliation board.
+ *
+ * Events are the canonical (operator-language) snapshot copy — the same one
+ * revision edits and the invoice price against — so figures here match what the
+ * booking will be billed. ``display_lang`` is what the agency sees, for
+ * reference only.
+ *
+ * Totals are pre-FOC, matching ``TourSummaryResponse`` semantics; FOC discounts
+ * agency revenue only and never supplier cost, so ``cost`` is unaffected.
+ */
+export interface OperatorItineraryResponse {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	booking_id: string;
+	/** Order Number */
+	order_number: string;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/** Pax */
+	pax: number;
+	currency: Currency;
+	display_lang: LanguageCode;
+	/** Events */
+	events: OperatorItineraryEventOutput[];
+	/** Packages */
+	packages: OperatorItineraryPackageOutput[];
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+	total: TourMinMaxCostSchemaOutput;
+}
+
 /** OperatorModel */
 export interface OperatorModel {
 	/**
@@ -4748,6 +5231,38 @@ export interface OrderAgencyInfo {
 	website_url?: string | null;
 	/** Description */
 	description?: string | null;
+	/** Logo Url */
+	logo_url?: string | null;
+}
+
+/**
+ * OrderOperatorInfo
+ * Who to contact about this booking — the operator running the tour. Joined
+ * into the listing rather than fetched per row so an agency or tourist can reach
+ * the right person without a follow-up call per booking. Every field but ``id``
+ * and ``name`` lives on ``operator_info``, which an operator may not have filled
+ * in yet.
+ */
+export interface OrderOperatorInfo {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/** Business Name */
+	business_name?: string | null;
+	/** Contact Person */
+	contact_person?: string | null;
+	/** Contact Position */
+	contact_position?: string | null;
+	/** Contact Email */
+	contact_email?: string | null;
+	/** Contact Phone */
+	contact_phone?: string | null;
+	/** Website Url */
+	website_url?: string | null;
 	/** Logo Url */
 	logo_url?: string | null;
 }
@@ -5026,6 +5541,16 @@ export interface PaxFileRef {
 	 * @format uuid
 	 */
 	id: string;
+	/** File Name */
+	file_name: string;
+}
+
+/** PaxListResponse */
+export interface PaxListResponse {
+	/** Count */
+	count: number;
+	/** Data */
+	data: PaxWithFiles[];
 }
 
 /** PaxUpdate */
@@ -5892,6 +6417,12 @@ export interface SupplementaryDetailsOutput {
 	item?: SupplementaryItemOutput[];
 }
 
+/** SupplementaryDetailsPubSchema */
+export interface SupplementaryDetailsPubSchema {
+	/** Item */
+	item?: SupplementaryItemPubSchema[] | null;
+}
+
 /** SupplementaryEvent */
 export interface SupplementaryEventInput {
 	/**
@@ -5938,6 +6469,46 @@ export interface SupplementaryEventOutput {
 	 */
 	typ?: "supplementary";
 	details?: SupplementaryDetailsOutput | null;
+}
+
+/** SupplementaryEventPubRead */
+export interface SupplementaryEventPubReadInput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
+	/**
+	 * Typ
+	 * @default "supplementary"
+	 */
+	typ?: "supplementary";
+	details?: SupplementaryDetailsPubSchema | null;
+}
+
+/** SupplementaryEventPubRead */
+export interface SupplementaryEventPubReadOutput {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Day */
+	day?: number | null;
+	/** Position */
+	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
+	/**
+	 * Typ
+	 * @default "supplementary"
+	 */
+	typ?: "supplementary";
+	details?: SupplementaryDetailsPubSchema | null;
 }
 
 /** SupplementaryEventTypeRead */
@@ -6036,6 +6607,12 @@ export interface SupplementaryItemOutput {
 				  } & PerPersonChargeOutput)
 		  )
 		| null;
+}
+
+/** SupplementaryItemPubSchema */
+export interface SupplementaryItemPubSchema {
+	/** Name */
+	name?: string | null;
 }
 
 /** SupplementarySingleEvent */
@@ -6273,12 +6850,9 @@ export interface TimeSchema {
 	time: string;
 	/**
 	 * Timezone
-	 * The UTC timezone offset (e.g., 5 for UTC+5).
-	 * @min -12
-	 * @max 14
-	 * @default 5
+	 * The UTC timezone offset (e.g., 5 for UTC+5). Unset means the offset was never supplied — never assume a fallback zone.
 	 */
-	timezone?: number;
+	timezone?: number | null;
 }
 
 /** TourEventLibraryImageModel */
@@ -6750,11 +7324,17 @@ export interface TourOptionPublicResponse {
 						typ: "flight";
 				  } & FlightEventPubReadOutput)
 				| ({
+						typ: "guide";
+				  } & GuideEventPubReadOutput)
+				| ({
 						typ: "housing";
 				  } & HousingEventPubReadOutput)
 				| ({
 						typ: "ref";
-				  } & InformationEventPubRead)
+				  } & InformationEventPubReadOutput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementaryEventPubReadOutput)
 				| ({
 						typ: "train";
 				  } & TrainEventPubReadOutput)
@@ -7064,12 +7644,14 @@ export interface TourSummaryResponse {
 export interface TrainDetailPubSchemaInput {
 	/** Hop */
 	hop?: TrainHopPubSchemaInput[] | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** TrainDetailPubSchema */
 export interface TrainDetailPubSchemaOutput {
 	/** Hop */
 	hop?: TrainHopPubSchemaOutput[] | null;
+	expenses?: ChargePubSchema | null;
 }
 
 /** TrainDetailSchema */
@@ -7170,12 +7752,14 @@ export interface TrainEventPubReadInput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "train"
 	 */
 	typ?: "train";
-	details: TrainDetailPubSchemaInput;
+	details?: TrainDetailPubSchemaInput | null;
 }
 
 /** TrainEventPubRead */
@@ -7188,12 +7772,14 @@ export interface TrainEventPubReadOutput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "train"
 	 */
 	typ?: "train";
-	details: TrainDetailPubSchemaOutput;
+	details?: TrainDetailPubSchemaOutput | null;
 }
 
 /** TrainEventTypeRead */
@@ -7294,7 +7880,7 @@ export interface TrainJourneyPointPubSchemaInput {
 	date?: string | null;
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** TrainJourneyPointPubSchema */
@@ -7303,7 +7889,7 @@ export interface TrainJourneyPointPubSchemaOutput {
 	date?: string | null;
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -7314,7 +7900,7 @@ export interface TrainJourneyPointSchemaInput {
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -7325,7 +7911,7 @@ export interface TrainJourneyPointSchemaOutput {
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** TrainSingleEvent */
@@ -7436,6 +8022,12 @@ export interface TransferCarCategoriesVariantOutput {
 	categories?: TransferCarPackageCategorySchemaOutput[] | null;
 }
 
+/** TransferCarCategoryPubSchema */
+export interface TransferCarCategoryPubSchema {
+	/** Name */
+	name?: string | null;
+}
+
 /**
  * TransferCarPackageCategorySchema
  * Represents a car variant.
@@ -7462,6 +8054,22 @@ export interface TransferCarPackageCategorySchemaOutput {
 	name?: string | null;
 	/** Charge for this car of this category. */
 	expenses?: FixedChargeOutput | null;
+}
+
+/**
+ * TransferCarPubSchema
+ * One car variant — body type, capacity and description survive; only its
+ * charge is stripped. Covers both ``PerCarExpense`` and
+ * ``PerCarCategoryExpense`` cars, hence ``categories``.
+ */
+export interface TransferCarPubSchema {
+	typ?: VehicleBodyType | null;
+	/** Pax */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+	/** Categories */
+	categories?: TransferCarCategoryPubSchema[] | null;
 }
 
 /** TransferCarVariant */
@@ -7495,6 +8103,7 @@ export interface TransferDetailsPubSchemaInput {
 	typ?: TransferTypes | null;
 	departure?: TransferJourneyPointPubSchemaInput | null;
 	arrival?: TransferJourneyPointPubSchemaInput | null;
+	expenses?: TransferExpensesPubSchemaInput | null;
 }
 
 /** TransferDetailsPubSchema */
@@ -7502,6 +8111,7 @@ export interface TransferDetailsPubSchemaOutput {
 	typ?: TransferTypes | null;
 	departure?: TransferJourneyPointPubSchemaOutput | null;
 	arrival?: TransferJourneyPointPubSchemaOutput | null;
+	expenses?: TransferExpensesPubSchemaOutput | null;
 }
 
 /**
@@ -7620,12 +8230,14 @@ export interface TransferEventPubReadInput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details: TransferDetailsPubSchemaInput;
+	details?: TransferDetailsPubSchemaInput | null;
 }
 
 /** TransferEventPubRead */
@@ -7638,12 +8250,14 @@ export interface TransferEventPubReadOutput {
 	day?: number | null;
 	/** Position */
 	position?: number | null;
+	/** Is Optional */
+	is_optional?: boolean | null;
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details: TransferDetailsPubSchemaOutput;
+	details?: TransferDetailsPubSchemaOutput | null;
 }
 
 /** TransferEventTypeRead */
@@ -7704,13 +8318,31 @@ export interface TransferEventTypeReadOutput {
 	id?: string | null;
 }
 
+/** TransferExpensesPubSchema */
+export interface TransferExpensesPubSchemaInput {
+	typ?: ExpenseType | null;
+	/** Tiers */
+	tiers?: GroupSizeTierPubSchema[] | null;
+	/** Cars */
+	cars?: TransferCarPubSchema[] | null;
+}
+
+/** TransferExpensesPubSchema */
+export interface TransferExpensesPubSchemaOutput {
+	typ?: ExpenseType | null;
+	/** Tiers */
+	tiers?: GroupSizeTierPubSchema[] | null;
+	/** Cars */
+	cars?: TransferCarPubSchema[] | null;
+}
+
 /** TransferJourneyPointPubSchema */
 export interface TransferJourneyPointPubSchemaInput {
 	/** Date */
 	date?: string | null;
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** TransferJourneyPointPubSchema */
@@ -7719,7 +8351,7 @@ export interface TransferJourneyPointPubSchemaOutput {
 	date?: string | null;
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -7730,7 +8362,7 @@ export interface TransferJourneyPointSchemaInput {
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -7741,7 +8373,7 @@ export interface TransferJourneyPointSchemaOutput {
 	/** The time of an event */
 	time?: TimeSchema | null;
 	/** Location */
-	location?: LocationInSchema | LocationRefSchema | LocationOutSchema | null;
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** TransferSingleEvent */
@@ -9684,6 +10316,54 @@ export interface RemoveAgencyDocumentAgencyMeDocumentsFileIdDeleteParams {
 	fileId: string;
 }
 
+export interface GetOperatorBookingItineraryBookingOrderOperatorBookingIdItineraryGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface TransitionBookingStatusBookingOrderOperatorBookingIdStatusTransitionPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	transition: BookingTransition;
+}
+
+export interface DeclineBookingBookingOrderOperatorBookingIdDeclinePostParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface ListBookingAvailabilityBookingOrderOperatorBookingIdAvailabilityGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface ApplyEventAvailabilityBookingOrderOperatorBookingIdEventsEventIdOptionsOptionIndexAvailabilityPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/** Option Index */
+	optionIndex: number;
+}
+
 export interface ListMyBookingsBookingOrderMyGetParams {
 	/** Booking Status */
 	booking_status?: BookingStatus | null;
@@ -9752,52 +10432,12 @@ export interface SubmitBookingOrderBookingOrderBookingIdSubmitPatchParams {
 	bookingId: string;
 }
 
-export interface TransitionBookingStatusBookingOrderBookingIdStatusTransitionPatchParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	transition: BookingTransition;
-}
-
-export interface DeclineBookingBookingOrderBookingIdDeclinePostParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
 export interface CancelBookingBookingOrderBookingIdCancelPostParams {
 	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	bookingId: string;
-}
-
-export interface ListBookingAvailabilityBookingOrderBookingIdAvailabilityGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface ApplyEventAvailabilityBookingOrderBookingIdEventsEventIdOptionsOptionIndexAvailabilityPatchParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/** Option Index */
-	optionIndex: number;
 }
 
 /** Event */

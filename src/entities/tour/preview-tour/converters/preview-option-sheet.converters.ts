@@ -6,7 +6,7 @@ import type {
 	EmptyDetails,
 	FlightEventPubReadOutput,
 	HousingEventPubReadOutput,
-	InformationEventPubRead,
+	InformationEventPubReadOutput,
 	MultiEventPubOutput,
 	TimeSchema,
 	TrainEventPubReadOutput,
@@ -26,7 +26,7 @@ import { formatLocation } from "./preview-option-location.utils";
 import { toPublicImageUrl } from "./preview-option-media.utils";
 
 type TPubEvent = TOptionDetailBackend["events"][number];
-type TPubDetail = MultiEventPubOutput["details"][number];
+type TPubDetail = NonNullable<MultiEventPubOutput["details"]>[number];
 type TPubEventWithMedia = (TPubEvent | TPubDetail) & TPubEventMediaFields;
 
 export const resolveEventImagePaths = (
@@ -72,23 +72,23 @@ const mapHousingSheet = (
 	event: { typ: "housing" } & HousingEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "accommodation",
-	amenities: event.details.amenities ?? [],
-	nights: `${event.details.duration} night${event.details.duration === 1 ? "" : "s"}`,
-	checkIn: formatPubTime(event.details.check_in ?? undefined),
-	checkOut: formatPubTime(event.details.check_out ?? undefined)
+	amenities: event?.details?.amenities ?? [],
+	nights: `${event?.details?.duration} night${event?.details?.duration === 1 ? "" : "s"}`,
+	checkIn: formatPubTime(event?.details?.check_in ?? undefined),
+	checkOut: formatPubTime(event?.details?.check_out ?? undefined)
 });
 
 const mapActivitySheet = (
 	event: { typ: "activity" } & ActivityEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "activity",
-	location: formatLocation(event.details.location ?? undefined) || "—",
-	startTime: formatPubTime(event.details.start_time ?? undefined),
-	endTime: formatPubTime(event.details.end_time ?? undefined)
+	location: formatLocation(event?.details?.location ?? undefined) || "—",
+	startTime: formatPubTime(event?.details?.start_time ?? undefined),
+	endTime: formatPubTime(event?.details?.end_time ?? undefined)
 });
 
 const mapInfoSheet = (
-	event: { typ: "ref" } & InformationEventPubRead
+	event: { typ: "ref" } & InformationEventPubReadOutput
 ): TOptionEventSheetExtra => {
 	// Pub OpenAPI still types details as EmptyDetailsPub; runtime has start/end.
 	const details = event.details as EmptyDetails | undefined;
@@ -172,7 +172,7 @@ const mapFlightSheet = (
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
 	segments:
-		event.details.hop?.map((hop) =>
+		event?.details?.hop?.map((hop) =>
 			mapHopToSegment(hop as any, routeLabel)
 		) ?? []
 });
@@ -185,7 +185,7 @@ const mapTrainBusSheet = (
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
 	segments:
-		event.details.hop?.map((hop) =>
+		event?.details?.hop?.map((hop) =>
 			mapHopToSegment(hop as any, routeLabel)
 		) ?? []
 });
@@ -225,7 +225,7 @@ const mapSheetExtraFromPub = (
 			);
 		case "ref":
 			return mapInfoSheet(
-				event as { typ: "ref" } & InformationEventPubRead
+				event as { typ: "ref" } & InformationEventPubReadOutput
 			);
 		default:
 			return { kind: "info", startTime: "", endTime: "" };

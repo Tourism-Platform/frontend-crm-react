@@ -113,5 +113,6 @@ export const {
 	useDeletePassengerInfoMutation,
 	useUploadPassengerPassportMutation,
 	useGetFileBinaryQuery,
+	useLazyGetFileBinaryQuery,
 	useRemoveFileMutation
 } = bookingPaxApi;

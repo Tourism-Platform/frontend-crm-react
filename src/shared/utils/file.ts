@@ -15,6 +15,15 @@ export const downloadFile = (url: string, fileName: string): void => {
 };
 
 /**
+ * Скачивание уже полученного Blob (после авторизованного API-запроса)
+ */
+export const downloadBlob = (blob: Blob, fileName: string): void => {
+	const blobUrl = URL.createObjectURL(blob);
+	downloadFile(blobUrl, fileName);
+	URL.revokeObjectURL(blobUrl);
+};
+
+/**
  * Форматирует размер файла из байтов в читаемый вид (KB, MB, GB...)
  */
 export const formatBytes = (bytes: number, decimals = 2): string => {

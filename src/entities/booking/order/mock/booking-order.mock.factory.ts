@@ -119,6 +119,10 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 			const createdMonth = String(statusIndex + 6).padStart(2, "0");
 
 			const listItem: BookingOrderListItem = {
+				operator: {
+					id: "23123123123",
+					name: "Mock Operator"
+				},
 				id,
 				client_name: clientName,
 				tour_name: tourName,

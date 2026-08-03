@@ -33,7 +33,7 @@ type TPubEvent = TOptionDetailBackend["events"][number];
 const mapDetailToSubOption = (
 	parentKey: string,
 	index: number,
-	detail: MultiEventPubOutput["details"][number]
+	detail: NonNullable<MultiEventPubOutput["details"]>[number]
 ): ISubOption => {
 	const sheet = buildSheetFromMultiplyChild(detail);
 
@@ -55,7 +55,7 @@ const mapMultiplyOptionEvent = (event: MultiEventPubOutput): IOptionEvent => {
 		title: event.name || "",
 		description: event.description || "",
 		sheet,
-		sub_options: event.details.map((detail, index) =>
+		sub_options: event?.details?.map((detail, index) =>
 			mapDetailToSubOption(eventKey, index, detail)
 		)
 	};

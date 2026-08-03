@@ -1,4 +1,4 @@
-import { type BookingPaxModel, BookingStatus, Gender } from "@/shared/api";
+import { BookingStatus, Gender, type PaxWithFiles } from "@/shared/api";
 
 import { bookingOrderDetailStore } from "./booking-order.store";
 
@@ -35,18 +35,34 @@ const PAX_TEMPLATES = [
 const buildPaxId = (bookingId: string, index: number) =>
 	`p${bookingId.slice(1, 9)}-${index.toString().padStart(4, "0")}-4000-8000-000000000001`;
 
+const buildFileId = (paxId: string) =>
+	`f${paxId.slice(1, 9)}-0001-4000-8000-000000000001`;
+
 const createPaxForBooking = (
 	bookingId: string,
 	count: number
-): BookingPaxModel[] =>
-	PAX_TEMPLATES.slice(0, count).map((template, index) => ({
-		id: buildPaxId(bookingId, index + 1),
-		booking_id: bookingId,
-		...template
-	}));
+): PaxWithFiles[] =>
+	PAX_TEMPLATES.slice(0, count).map((template, index) => {
+		const id = buildPaxId(bookingId, index + 1);
+		const now = new Date().toISOString();
 
-const buildInitialPaxStore = (): Map<string, BookingPaxModel[]> => {
-	const store = new Map<string, BookingPaxModel[]>();
+		return {
+			id,
+			booking_id: bookingId,
+			...template,
+			created_at: now,
+			updated_at: now,
+			files: [
+				{
+					id: buildFileId(id),
+					file_name: `passport_${template.full_name.toLowerCase().replace(/\s+/g, "_")}.pdf`
+				}
+			]
+		};
+	});
+
+const buildInitialPaxStore = (): Map<string, PaxWithFiles[]> => {
+	const store = new Map<string, PaxWithFiles[]>();
 
 	for (const detail of bookingOrderDetailStore.values()) {
 		if (detail.status === BookingStatus.Cancelled) continue;
@@ -59,12 +75,12 @@ const buildInitialPaxStore = (): Map<string, BookingPaxModel[]> => {
 
 export const bookingPaxStore = buildInitialPaxStore();
 
-export const getBookingPaxList = (bookingId: string): BookingPaxModel[] =>
+export const getBookingPaxList = (bookingId: string): PaxWithFiles[] =>
 	bookingPaxStore.get(bookingId) ?? [];
 
 export const setBookingPaxList = (
 	bookingId: string,
-	pax: BookingPaxModel[]
+	pax: PaxWithFiles[]
 ): void => {
 	bookingPaxStore.set(bookingId, pax);
 };

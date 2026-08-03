@@ -6,7 +6,7 @@ import {
 	Currency,
 	type FlightEventPubReadOutput,
 	type HousingEventPubReadOutput,
-	type InformationEventPubRead,
+	type InformationEventPubReadOutput,
 	LanguageCode,
 	type LocationOutSchema,
 	type MultiEventPubOutput,
@@ -64,7 +64,7 @@ export const infoEvent = (
 	position: number,
 	name: string,
 	description: string
-): InformationEventPubRead & { typ: "ref" } => ({
+): InformationEventPubReadOutput & { typ: "ref" } => ({
 	typ: "ref",
 	name,
 	description,
@@ -73,7 +73,7 @@ export const infoEvent = (
 	details: {
 		start_time: time("13:00:00"),
 		end_time: time("13:15:00")
-	} as InformationEventPubRead["details"]
+	} as InformationEventPubReadOutput["details"]
 });
 
 export const flightEvent = (

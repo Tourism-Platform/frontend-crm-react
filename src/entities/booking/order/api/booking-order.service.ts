@@ -1,4 +1,8 @@
-import { BOOKING_ORDER_PATHS, ENUM_API_TAGS } from "@/shared/api";
+import {
+	BOOKING_ORDER_OPERATOR_PATHS,
+	BOOKING_ORDER_PATHS,
+	ENUM_API_TAGS
+} from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -101,7 +105,7 @@ export const bookingOrderApi = authApi.injectEndpoints({
 				}
 
 				return {
-					...BOOKING_ORDER_PATHS.transitionBookingStatus(
+					...BOOKING_ORDER_OPERATOR_PATHS.transitionBookingStatus(
 						id,
 						transition
 					)

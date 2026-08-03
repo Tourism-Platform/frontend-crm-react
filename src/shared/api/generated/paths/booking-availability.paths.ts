@@ -9,7 +9,7 @@ import type {
 export const BOOKING_AVAILABILITY_PATHS = {
 	listBookingAvailability: (bookingId: string) =>
 		({
-			url: `/booking/order/${bookingId}/availability`,
+			url: `/booking/order/operator/${bookingId}/availability`,
 			method: "GET",
 			_types: {} as {
 				body: void;
@@ -23,7 +23,7 @@ export const BOOKING_AVAILABILITY_PATHS = {
 		optionIndex: string
 	) =>
 		({
-			url: `/booking/order/${bookingId}/events/${eventId}/options/${optionIndex}/availability`,
+			url: `/booking/order/operator/${bookingId}/events/${eventId}/options/${optionIndex}/availability`,
 			method: "PATCH",
 			_types: {} as {
 				body: AvailabilityApply;

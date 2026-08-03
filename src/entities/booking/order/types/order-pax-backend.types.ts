@@ -1,7 +1,11 @@
-import type { BookingPaxModel, OperatorFilesModel } from "@/shared/api";
-import type { BOOKING_PASSENGER_PATHS } from "@/shared/api";
+import type {
+	BOOKING_PASSENGER_PATHS,
+	OperatorFilesModel,
+	PaxFileRef,
+	PaxWithFiles
+} from "@/shared/api";
 
-export type TBookingPaxBackend = BookingPaxModel;
+export type TBookingPaxBackend = PaxWithFiles;
 
 export type TBookingPaxListBackendResponce = ReturnType<
 	typeof BOOKING_PASSENGER_PATHS.listPassengerInfo
@@ -21,17 +25,23 @@ export type TUploadPassengerPassportResponse = ReturnType<
 	typeof BOOKING_PASSENGER_PATHS.uploadPassengerPassport
 >["_types"]["response"];
 
+export type TBookingPaxFile = {
+	id: PaxFileRef["id"];
+	fileName: PaxFileRef["file_name"];
+};
+
 export interface IBookingPax {
 	id: string;
 	bookingId: string;
 	name: string;
 	surname: string;
 	gender: TBookingPaxBackend["gender"];
-	nationality: TBookingPaxBackend["nationality"];
+	nationality: string;
 	dateOfBirth: string;
 	passportNum: string;
 	passportExpiryDate: string;
 	comment: string | null;
+	files: TBookingPaxFile[];
 }
 
 export type TOperatorFile = OperatorFilesModel;

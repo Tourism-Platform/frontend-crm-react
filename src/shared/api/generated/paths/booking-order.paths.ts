@@ -86,26 +86,6 @@ export const BOOKING_ORDER_PATHS = {
 				response: BookingOrderResponse;
 			}
 		}) as const,
-	transitionBookingStatus: (bookingId: string, transition: string) =>
-		({
-			url: `/booking/order/${bookingId}/status/${transition}`,
-			method: "PATCH",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: BookingOrderResponse;
-			}
-		}) as const,
-	declineBooking: (bookingId: string) =>
-		({
-			url: `/booking/order/${bookingId}/decline`,
-			method: "POST",
-			_types: {} as {
-				body: BookingCancel;
-				query: void;
-				response: BookingOrderResponse;
-			}
-		}) as const,
 	cancelBooking: (bookingId: string) =>
 		({
 			url: `/booking/order/${bookingId}/cancel`,
