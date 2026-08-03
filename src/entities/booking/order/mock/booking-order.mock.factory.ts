@@ -13,6 +13,7 @@ import {
 	MOCK_BOOKING_DEFAULTS,
 	MOCK_CLIENT_NAMES,
 	MOCK_ORDER_AGENCY_TEMPLATE,
+	MOCK_ORDER_USER_TEMPLATE,
 	MOCK_TOUR_INFO_TEMPLATE,
 	MOCK_TOUR_NAMES,
 	buildBookingUuid
@@ -149,6 +150,11 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 					id: MOCK_AGENCY_ID,
 					name: clientName,
 					contact_person: clientName
+				},
+				user: {
+					...MOCK_ORDER_USER_TEMPLATE,
+					first_name: clientName.split(" ")[0] ?? "John",
+					last_name: clientName.split(" ").slice(1).join(" ") || "Doe"
 				},
 				comment:
 					row.status === BookingStatus.Cancelled

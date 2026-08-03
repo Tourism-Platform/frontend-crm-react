@@ -110,6 +110,13 @@
 	"agency": {
 		"catalog": {
 			"title": "Catalog"
+		},
+		"booking": {
+			"title": "Booking",
+			"menu": {
+				"orders": "Orders",
+				"appeals": "Appeals"
+			}
 		}
 	},
 	"operator": {

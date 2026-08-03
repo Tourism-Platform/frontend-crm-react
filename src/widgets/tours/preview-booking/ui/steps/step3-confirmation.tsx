@@ -234,7 +234,7 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 			<div className="flex justify-center gap-4">
 				<Button
 					type="button"
-					onClick={() => navigate(ENUM_PATH.BOOKING.ORDERS)}
+					onClick={() => navigate(ENUM_PATH.AGENCY.BOOKING.ORDERS)}
 				>
 					{t("step_3.view_my_bookings")}
 				</Button>

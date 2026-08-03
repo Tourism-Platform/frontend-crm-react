@@ -29,8 +29,13 @@ export type TToursPath =
 export type TTourEventsPath =
 	(typeof ENUM_PATH.TOURS.EVENTS)[keyof typeof ENUM_PATH.TOURS.EVENTS];
 
-export type TBookingPath =
-	(typeof ENUM_PATH.BOOKING)[keyof typeof ENUM_PATH.BOOKING];
+export type TOperatorBookingPath =
+	(typeof ENUM_PATH.OPERATOR.BOOKING)[keyof typeof ENUM_PATH.OPERATOR.BOOKING];
+
+export type TAgencyBookingPath =
+	(typeof ENUM_PATH.AGENCY.BOOKING)[keyof typeof ENUM_PATH.AGENCY.BOOKING];
+
+export type TBookingPath = TOperatorBookingPath | TAgencyBookingPath;
 
 export type TFinancePath =
 	(typeof ENUM_PATH.FINANCE)[keyof typeof ENUM_PATH.FINANCE];

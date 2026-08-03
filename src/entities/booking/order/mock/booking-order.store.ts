@@ -42,7 +42,9 @@ export const detailToBookingModel = (
 	voucher_path: detail.voucher_path ?? null,
 	order_number: detail.order_number,
 	tour: detail.tour,
-	agency: detail.agency
+	agency: detail.agency,
+	user_id: detail.user_id,
+	user: detail.user
 });
 
 export const getBookingOrderDetail = (

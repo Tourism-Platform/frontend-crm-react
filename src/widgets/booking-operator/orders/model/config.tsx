@@ -44,7 +44,7 @@ export const COLUMNS = (
 			},
 			cell: ({ row }) => (
 				<Link
-					to={buildRoute(ENUM_PATH.BOOKING.ORDER_ID, {
+					to={buildRoute(ENUM_PATH.OPERATOR.BOOKING.ORDER_ID, {
 						orderId: row.original.orderId
 					})}
 					className="font-medium text-primary hover:underline"

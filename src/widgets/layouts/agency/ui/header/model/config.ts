@@ -1,3 +1,4 @@
+import { CalendarDaysIcon, TaskSquareIcon } from "@/shared/assets";
 import { ENUM_PATH } from "@/shared/config";
 import type { INavItemBase } from "@/shared/ui";
 
@@ -5,23 +6,23 @@ export const NAV_ITEMS_LIST: INavItemBase[] = [
 	{
 		label: "agency.catalog.title",
 		href: ENUM_PATH.TOURS.CATALOG.ROOT
+	},
+	{
+		label: "agency.booking.title",
+		submenu: true,
+		items: [
+			{
+				href: ENUM_PATH.AGENCY.BOOKING.ORDERS,
+				label: "agency.booking.menu.orders",
+				icon: TaskSquareIcon
+			},
+			{
+				href: ENUM_PATH.AGENCY.BOOKING.APPEALS,
+				label: "agency.booking.menu.appeals",
+				icon: CalendarDaysIcon
+			}
+		]
 	}
-	// {
-	// 	label: "agency.booking.title",
-	// 	submenu: true,
-	// 	items: [
-	// 		{
-	// 			href: ENUM_PATH.BOOKING.ORDERS,
-	// 			label: "agency.booking.menu.orders",
-	// 			icon: TaskSquareIcon
-	// 		},
-	// 		{
-	// 			href: ENUM_PATH.BOOKING.APPEALS,
-	// 			label: "agency.booking.menu.appeals",
-	// 			icon: CalendarDaysIcon
-	// 		}
-	// 	]
-	// },
 	// {
 	// 	label: "agency.finance.title",
 	// 	submenu: true,

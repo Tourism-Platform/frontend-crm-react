@@ -8,6 +8,7 @@ import {
 	type IOrderAgencyInfo,
 	type IOrderDetail,
 	type IOrderTourInfo,
+	type IOrderUserInfo,
 	type TBookingOrderBackend,
 	type TBookingOrderBackendResponse,
 	type TBookingOrderDetailBackend,
@@ -33,6 +34,20 @@ const mapOrderAgencyInfo = (
 	contactEmail: agency?.contact_email ?? "",
 	contactPhone: agency?.contact_phone ?? ""
 });
+
+const mapOrderUserInfo = (
+	user: BookingOrderDetail["user"]
+): IOrderUserInfo | null => {
+	if (!user) return null;
+
+	return {
+		id: user.id,
+		email: user.email,
+		firstName: user.first_name ?? "",
+		lastName: user.last_name ?? "",
+		phoneNumber: user.phone_number ?? ""
+	};
+};
 
 const mapOrderTourInfo = (tour: BookingOrderDetail["tour"]): IOrderTourInfo => {
 	const orderType = bookingTourTypeMapper.from(tour.typ)!;
@@ -91,6 +106,8 @@ export const mapBookingOrderDetailToFrontend = (
 		status: orderStatusMapper.from(data.status)!,
 		agencyId: data.agency_id ?? "",
 		agency: mapOrderAgencyInfo(data.agency),
+		userId: data.user_id ?? null,
+		user: mapOrderUserInfo(data.user),
 		tourOptionId: data.tour_option_id,
 		tour,
 		duration: tour.duration,

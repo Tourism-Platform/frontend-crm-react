@@ -54,11 +54,19 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.TOURS.ACTIVITY_LOG]: "operator.tours.more.menu.activity_log",
 	[ENUM_PATH.TOURS.SETTINGS]: "operator.tours.more.menu.settings",
 
-	// Booking
-	[ENUM_PATH.BOOKING.ROOT]: "operator.booking.title",
-	[ENUM_PATH.BOOKING.ORDERS]: "operator.booking.general.menu.orders",
-	[ENUM_PATH.BOOKING.ORDER_ID]: "operator.booking.general.menu.orders",
-	[ENUM_PATH.BOOKING.APPEALS]: "operator.booking.general.menu.appeals",
+	// Booking — operator
+	[ENUM_PATH.OPERATOR.BOOKING.ROOT]: "operator.booking.title",
+	[ENUM_PATH.OPERATOR.BOOKING.ORDERS]: "operator.booking.general.menu.orders",
+	[ENUM_PATH.OPERATOR.BOOKING.ORDER_ID]:
+		"operator.booking.general.menu.orders",
+	[ENUM_PATH.OPERATOR.BOOKING.APPEALS]:
+		"operator.booking.general.menu.appeals",
+
+	// Booking — agency
+	[ENUM_PATH.AGENCY.BOOKING.ROOT]: "agency.booking.title",
+	[ENUM_PATH.AGENCY.BOOKING.ORDERS]: "agency.booking.general.menu.orders",
+	[ENUM_PATH.AGENCY.BOOKING.ORDER_ID]: "agency.booking.general.menu.orders",
+	[ENUM_PATH.AGENCY.BOOKING.APPEALS]: "agency.booking.general.menu.appeals",
 
 	// Finance
 	[ENUM_PATH.FINANCE.ROOT]: "operator.finance.title",

@@ -24,7 +24,7 @@ export const OrderNotFound: FC = () => {
 			</div>
 
 			<Button variant="ghost" size="sm" asChild className="text-primary">
-				<Link to={ENUM_PATH.BOOKING.ORDERS}>
+				<Link to={ENUM_PATH.OPERATOR.BOOKING.ORDERS}>
 					<ChevronLeft className="mr-2 h-4 w-4" />
 					{t("buttons.back")}
 				</Link>

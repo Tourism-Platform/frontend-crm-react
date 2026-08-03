@@ -52,6 +52,14 @@ export interface IOrderAgencyInfo {
 	contactPhone?: string | null;
 }
 
+export interface IOrderUserInfo {
+	id: string;
+	email: string;
+	firstName?: string | null;
+	lastName?: string | null;
+	phoneNumber?: string | null;
+}
+
 export interface IOrder {
 	orderId: string;
 	orderNumber?: string;
@@ -70,6 +78,8 @@ export interface IOrder {
 export interface IOrderDetail extends IOrder {
 	agencyId: string;
 	agency: IOrderAgencyInfo;
+	userId?: string | null;
+	user?: IOrderUserInfo | null;
 	tourOptionId: string;
 	tour: IOrderTourInfo;
 	duration: string;

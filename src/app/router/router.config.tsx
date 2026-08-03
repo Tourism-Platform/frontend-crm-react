@@ -1,20 +1,23 @@
 ﻿import React from "react";
 
 import {
+	AGENCY_BOOKING_SIDEBAR_LIST,
 	AGENCY_SETTINGS_SIDEBAR_LIST,
-	BOOKING_SIDEBAR_LIST,
 	ENUM_AUTH,
 	ENUM_LAYOUT,
 	ENUM_PATH,
 	FINANCE_SIDEBAR_LIST,
 	type IRouting,
 	LIBRARY_SIDEBAR_LIST,
+	OPERATOR_BOOKING_SIDEBAR_LIST,
 	OPERATOR_SETTINGS_SIDEBAR_LIST,
 	TOURS_SIDEBAR_LIST
 } from "@/shared/config";
 
 import {
+	BookingAgencyLayout,
 	BookingOperatorLayout,
+	DefaultAgencyLayout,
 	DefaultOperatorLayout,
 	EventOperatorLayout,
 	FinanceOperatorLayout,
@@ -217,21 +220,44 @@ const InformationEditPage = React.lazy(() =>
 	).then((m) => ({ default: m.InformationEditPage }))
 );
 
-// Booking pages
-const AppealsPage = React.lazy(() =>
-	import("@/pages/booking/appeals-page/ui/appeals-page").then((m) => ({
-		default: m.AppealsPage
-	}))
+// Booking pages — operator
+const OperatorAppealsPage = React.lazy(() =>
+	import("@/pages/booking-operator/appeals-page/ui/appeals-page").then(
+		(m) => ({
+			default: m.AppealsPage
+		})
+	)
 );
-const OrdersPage = React.lazy(() =>
-	import("@/pages/booking/orders-page/ui/orders-page").then((m) => ({
+const OperatorOrdersPage = React.lazy(() =>
+	import("@/pages/booking-operator/orders-page/ui/orders-page").then((m) => ({
 		default: m.OrdersPage
 	}))
 );
-const OrderIdPage = React.lazy(() =>
-	import("@/pages/booking/order-id-page/ui/order-id-page").then((m) => ({
-		default: m.OrderIdPage
+const OperatorOrderIdPage = React.lazy(() =>
+	import("@/pages/booking-operator/order-id-page/ui/order-id-page").then(
+		(m) => ({
+			default: m.OrderIdPage
+		})
+	)
+);
+
+// Booking pages — agency
+const AgencyAppealsPage = React.lazy(() =>
+	import("@/pages/booking-agency/appeals-page/ui/appeals-page").then((m) => ({
+		default: m.AppealsPage
 	}))
+);
+const AgencyOrdersPage = React.lazy(() =>
+	import("@/pages/booking-agency/orders-page/ui/orders-page").then((m) => ({
+		default: m.OrdersPage
+	}))
+);
+const AgencyOrderIdPage = React.lazy(() =>
+	import("@/pages/booking-agency/order-id-page/ui/order-id-page").then(
+		(m) => ({
+			default: m.OrderIdPage
+		})
+	)
 );
 
 // Finance pages
@@ -947,15 +973,15 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	// 	]
 	// },
 
-	// booking
+	// booking — operator
 	{
-		path: ENUM_PATH.BOOKING.APPEALS,
-		component: AppealsPage,
+		path: ENUM_PATH.OPERATOR.BOOKING.APPEALS,
+		component: OperatorAppealsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={BOOKING_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_BOOKING_SIDEBAR_LIST}>
 					{children}
 				</SideBarOperatorLayout>
 			),
@@ -963,13 +989,13 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		]
 	},
 	{
-		path: ENUM_PATH.BOOKING.ORDERS,
-		component: OrdersPage,
+		path: ENUM_PATH.OPERATOR.BOOKING.ORDERS,
+		component: OperatorOrdersPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [
 			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={BOOKING_SIDEBAR_LIST}>
+				<SideBarOperatorLayout items={OPERATOR_BOOKING_SIDEBAR_LIST}>
 					{children}
 				</SideBarOperatorLayout>
 			),
@@ -977,11 +1003,48 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		]
 	},
 	{
-		path: ENUM_PATH.BOOKING.ORDER_ID,
-		component: OrderIdPage,
+		path: ENUM_PATH.OPERATOR.BOOKING.ORDER_ID,
+		component: OperatorOrderIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		layout_cascade: [DefaultOperatorLayout]
+	},
+
+	// booking — agency
+	{
+		path: ENUM_PATH.AGENCY.BOOKING.APPEALS,
+		component: AgencyAppealsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarAgencyLayout items={AGENCY_BOOKING_SIDEBAR_LIST}>
+					{children}
+				</SideBarAgencyLayout>
+			),
+			BookingAgencyLayout
+		]
+	},
+	{
+		path: ENUM_PATH.AGENCY.BOOKING.ORDERS,
+		component: AgencyOrdersPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [
+			({ children }: { children: React.ReactNode }) => (
+				<SideBarAgencyLayout items={AGENCY_BOOKING_SIDEBAR_LIST}>
+					{children}
+				</SideBarAgencyLayout>
+			),
+			BookingAgencyLayout
+		]
+	},
+	{
+		path: ENUM_PATH.AGENCY.BOOKING.ORDER_ID,
+		component: AgencyOrderIdPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_AGENCY,
+		layout_cascade: [DefaultAgencyLayout]
 	},
 
 	// finance

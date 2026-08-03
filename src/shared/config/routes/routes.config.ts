@@ -13,6 +13,12 @@ export const ENUM_PATH = {
 			FINANCIAL_SETTINGS: "/operator/settings/financial-settings",
 			TOUR_SETTINGS: "/operator/settings/tour-settings",
 			TAGS: "/operator/settings/tags"
+		},
+		BOOKING: {
+			ROOT: "/operator/booking",
+			ORDERS: "/operator/booking/orders",
+			ORDER_ID: "/operator/booking/orders/:orderId",
+			APPEALS: "/operator/booking/appeals"
 		}
 	},
 	AGENCY: {
@@ -23,6 +29,12 @@ export const ENUM_PATH = {
 			NOTIFICATIONS: "/agency/settings/notifications",
 			BUSINESS_SETTINGS: "/agency/settings/business-settings",
 			FINANCIAL_SETTINGS: "/agency/settings/financial-settings"
+		},
+		BOOKING: {
+			ROOT: "/agency/booking",
+			ORDERS: "/agency/booking/orders",
+			ORDER_ID: "/agency/booking/orders/:orderId",
+			APPEALS: "/agency/booking/appeals"
 		}
 	},
 	TOURS: {
@@ -76,12 +88,6 @@ export const ENUM_PATH = {
 			INFO_OPTION:
 				"/tours/:tourId/itinerary/:optionId/events/:eventId/options/:eventOptionId/info"
 		}
-	},
-	BOOKING: {
-		ROOT: "/booking",
-		ORDERS: "/booking/orders",
-		ORDER_ID: "/booking/orders/:orderId",
-		APPEALS: "/booking/appeals"
 	},
 	FINANCE: {
 		ROOT: "/finance",

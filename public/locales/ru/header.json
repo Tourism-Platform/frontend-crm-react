@@ -110,6 +110,13 @@
 	"agency": {
 		"catalog": {
 			"title": "Каталог"
+		},
+		"booking": {
+			"title": "Бронирование",
+			"menu": {
+				"orders": "Заказы",
+				"appeals": "Обращения"
+			}
 		}
 	},
 	"operator": {
