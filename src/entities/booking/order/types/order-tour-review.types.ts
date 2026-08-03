@@ -1,13 +1,13 @@
-import type { AvailabilityStatus } from "@/shared/api";
-
 import type {
 	ITourReviewItem,
 	ITourSummaryRange
 } from "@/entities/tour/tour/types/tour-review.interface";
 
+import type { ENUM_AVAILABILITY_STATUS_TYPE } from "./availability-status.types";
+
 export interface IOrderTourReviewItem extends ITourReviewItem {
 	eventId?: string;
-	availabilityStatus?: AvailabilityStatus;
+	availabilityStatus?: ENUM_AVAILABILITY_STATUS_TYPE;
 	isApplied?: boolean;
 	subRows?: IOrderTourReviewItem[];
 }

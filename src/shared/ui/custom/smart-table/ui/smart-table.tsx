@@ -38,6 +38,7 @@ function SmartTableInner<TData extends object>({
 	columns,
 	data,
 	actions,
+	defaultExpanded = false,
 	showPagination = true,
 	showSearchFilter = true,
 	showStatusFilter = true,
@@ -117,6 +118,9 @@ function SmartTableInner<TData extends object>({
 			columnFilters,
 			columnVisibility,
 			columnOrder
+		},
+		initialState: {
+			expanded: defaultExpanded || {}
 		},
 		onSortingChange: setSorting,
 		onPaginationChange,

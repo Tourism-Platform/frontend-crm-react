@@ -1,9 +1,11 @@
-import { AvailabilityStatus } from "@/shared/api";
-
 import { ENUM_EVENT, eventTypeMapper } from "@/entities/tour";
 import type { ITourEvent } from "@/entities/tour/itinerary/types/event.types";
 import type { ITourReviewItem } from "@/entities/tour/tour/types/tour-review.interface";
 
+import {
+	ENUM_AVAILABILITY_STATUS,
+	type ENUM_AVAILABILITY_STATUS_TYPE
+} from "../types/availability-status.types";
 import type { IBookingEventAvailability } from "../types/booking-availability.types";
 import type { IOrderTourReviewItem } from "../types/order-tour-review.types";
 
@@ -75,7 +77,7 @@ const findAvailabilityStatus = (
 	availability: IBookingEventAvailability[],
 	eventId: string,
 	optionIndex: number
-): AvailabilityStatus | undefined =>
+): ENUM_AVAILABILITY_STATUS_TYPE | undefined =>
 	availability.find(
 		(row) => row.eventId === eventId && row.optionIndex === optionIndex
 	)?.status;
@@ -101,7 +103,7 @@ const enrichRow = (
 		eventId,
 		optionIndex,
 		availabilityStatus,
-		isApplied: availabilityStatus === AvailabilityStatus.Selected
+		isApplied: availabilityStatus === ENUM_AVAILABILITY_STATUS.SELECTED
 	};
 };
 

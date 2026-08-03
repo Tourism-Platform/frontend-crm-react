@@ -48,6 +48,7 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 					showPagination={true}
 					showStatusFilter={false}
 					tableLayout={TABLE_LAYOUT}
+					defaultExpanded={true}
 				/>
 			</CardContent>
 		</Card>

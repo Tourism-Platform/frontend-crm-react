@@ -2,10 +2,11 @@ import { Check, CircleCheckBig, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { AvailabilityStatus } from "@/shared/api";
 import { Button } from "@/shared/ui";
 
 import {
+	ENUM_AVAILABILITY_STATUS,
+	type ENUM_AVAILABILITY_STATUS_TYPE,
 	getNextAvailabilityApplyStatus,
 	useApplyEventAvailabilityMutation
 } from "@/entities/booking";
@@ -14,7 +15,7 @@ interface IApplyReviewActionProps {
 	bookingId: string;
 	eventId?: string;
 	optionIndex: number;
-	availabilityStatus?: AvailabilityStatus;
+	availabilityStatus?: ENUM_AVAILABILITY_STATUS_TYPE;
 }
 
 export const ApplyReviewAction = ({
@@ -27,7 +28,7 @@ export const ApplyReviewAction = ({
 	const [apply, { isLoading }] = useApplyEventAvailabilityMutation();
 
 	const nextStatus = getNextAvailabilityApplyStatus(availabilityStatus);
-	const isApplied = availabilityStatus === AvailabilityStatus.Selected;
+	const isApplied = availabilityStatus === ENUM_AVAILABILITY_STATUS.SELECTED;
 
 	async function handleApply() {
 		if (!eventId || !nextStatus || isApplied) return;

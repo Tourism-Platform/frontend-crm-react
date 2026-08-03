@@ -1,5 +1,6 @@
 export * from "./booking-order.converters";
 export * from "./booking-availability.converters";
+export * from "./availability-status.convert";
 export * from "./order-status.convert";
 export * from "./order-tour-review.converters";
 export * from "./booking-pax.converters";

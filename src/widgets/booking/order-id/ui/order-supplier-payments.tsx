@@ -53,6 +53,7 @@ const OrderSupplierPaymentsBase = ({
 					getSubRows={getSubRowsFn}
 					showTopFilters={false}
 					tableLayout={TABLE_LAYOUT}
+					defaultExpanded={true}
 				/>
 			</CardContent>
 		</Card>

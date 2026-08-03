@@ -63,6 +63,7 @@ export interface ISmartTableProps<TData extends object>
 	onRowsReorder?: (oldIndex: number, newIndex: number) => void;
 	searchKey?: keyof TData;
 	statusKey?: keyof TData;
+	defaultExpanded?: boolean;
 }
 
 export type TSmartTableProps<TData extends object> = ISmartTableProps<TData> &
