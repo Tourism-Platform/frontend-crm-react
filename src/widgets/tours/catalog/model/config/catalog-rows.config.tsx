@@ -3,13 +3,11 @@ import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Badge, Checkbox, Skeleton } from "@/shared/ui";
+import { Skeleton } from "@/shared/ui";
+import { formatMoney } from "@/shared/utils";
 
 import {
-	CATALOG_TOUR_STATUS_LABELS,
-	CATALOG_TOUR_STATUS_VARIANTS,
 	CATALOG_TOUR_TYPE_LABELS,
-	type ENUM_CATALOG_TOUR_STATUS_TYPE,
 	type ENUM_CATALOG_TOUR_TYPES_TYPE,
 	type ICatalogTourCard
 } from "@/entities/tour";
@@ -18,34 +16,6 @@ export const CATALOG_COLUMNS = (
 	t: TFunction<["tours_catalog_page", "options"], undefined>
 ): ColumnDef<ICatalogTourCard>[] => {
 	return [
-		{
-			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={
-						table.getIsAllPageRowsSelected() ||
-						(table.getIsSomePageRowsSelected() && "indeterminate")
-					}
-					onCheckedChange={(value) =>
-						table.toggleAllPageRowsSelected(!!value)
-					}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			meta: {
-				skeleton: <Skeleton className="size-4 rounded" />
-			},
-			size: 28,
-			enableSorting: false,
-			enableHiding: false
-		},
 		{
 			header: t("table.title", { ns: "tours_catalog_page" }),
 			meta: {
@@ -59,7 +29,7 @@ export const CATALOG_COLUMNS = (
 						tourId: row.original.id
 					})}
 				>
-					<div className="font-medium max-w-xs truncate text-blue-500 hover:text-blue-600 hover:underline">
+					<div className="max-w-xs truncate font-medium text-blue-500 hover:text-blue-600 hover:underline">
 						{row.getValue("title")}
 					</div>
 				</Link>
@@ -74,8 +44,8 @@ export const CATALOG_COLUMNS = (
 			},
 			accessorKey: "route",
 			cell: ({ row }) => (
-				<div className="text-sm">
-					{(row.getValue("route") as string[])?.join(" - ")}
+				<div className="max-w-[200px] truncate text-sm">
+					{(row.getValue("route") as string[])?.join(" → ")}
 				</div>
 			),
 			size: 200
@@ -108,31 +78,13 @@ export const CATALOG_COLUMNS = (
 			accessorKey: "priceFrom",
 			cell: ({ row }) => (
 				<div className="text-sm font-medium">
-					${row.original.priceFrom} - ${row.original.priceTo}
+					{formatMoney(row.original.priceFrom, {
+						currency: row.original.currency,
+						compact: false
+					})}
 				</div>
 			),
 			size: 140
-		},
-		{
-			header: t("table.status", { ns: "tours_catalog_page" }),
-			meta: {
-				headerTitle: t("table.status", { ns: "tours_catalog_page" }),
-				skeleton: <Skeleton className="h-5 w-[80px] rounded-full" />
-			},
-			accessorKey: "status",
-			cell: ({ row }) => {
-				const status = row.getValue(
-					"status"
-				) as ENUM_CATALOG_TOUR_STATUS_TYPE;
-				return (
-					<Badge variant={CATALOG_TOUR_STATUS_VARIANTS[status]}>
-						{t(CATALOG_TOUR_STATUS_LABELS[status], {
-							ns: "options"
-						})}
-					</Badge>
-				);
-			},
-			size: 120
 		}
 	];
 };

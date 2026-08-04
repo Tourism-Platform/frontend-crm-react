@@ -141,7 +141,7 @@ const CatalogToursBase: FC = () => {
 	return (
 		<section className="grid gap-12">
 			<SearchToursBar />
-			<div className="grid grid-cols-[400px_1fr] gap-6">
+			<div className="grid grid-cols-[minmax(280px,400px)_minmax(0,1fr)] gap-6">
 				<aside className="flex flex-col gap-4">
 					<Card>
 						<CardHeader className="flex items-center justify-between ">
@@ -161,7 +161,7 @@ const CatalogToursBase: FC = () => {
 						</CardContent>
 					</Card>
 				</aside>
-				<div className="flex flex-col gap-25">
+				<div className="flex min-w-0 flex-col gap-12">
 					<SmartTable
 						columns={columns}
 						data={tours}
@@ -175,7 +175,7 @@ const CatalogToursBase: FC = () => {
 						defaultViewMode="cards"
 						card={CatalogTourCard}
 						cardSkeleton={CatalogTourCardSkeleton}
-						CardsClassName="lg:grid-cols-3"
+						CardsClassName="lg:grid-cols-2 xl:grid-cols-3"
 						showTopFilters={true}
 						search={filters.search}
 						onSearchChange={handleSearchChange}

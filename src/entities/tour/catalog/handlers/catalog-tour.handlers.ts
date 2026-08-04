@@ -40,17 +40,26 @@ export const tourCatalogHandlers = [
 				days: t.duration,
 				nights: Math.max(t.duration - 1, 0),
 				duration_hours: null,
-				age_from: null,
-				age_to: null,
+				age_from: 12,
+				age_to: 70,
+				group_size: 20,
+				group_size_min: 2,
 				categories: [],
 				tour_type: TourType.Regular,
 				landing_photos: [],
+				cities: [],
+				languages: [],
 				price_range: {
 					min: t.price_from,
 					max: t.price_to,
-					currency: null
+					currency: "USD"
 				},
-				option_count: null
+				price_per_person: {
+					min: t.price_from,
+					max: t.price_to,
+					currency: "USD"
+				},
+				option_count: 1
 			}))
 		);
 	}),

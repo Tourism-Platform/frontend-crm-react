@@ -1,11 +1,12 @@
 {
 	"card": {
-		"duration": {
-			"days_one": "{{count}} day",
-			"days_few": "{{count}} days",
-			"days_many": "{{count}} days",
-			"days_other": "{{count}} days"
-		},
+		"duration": "{{days}} {{daysUnit}} / {{nights}} {{nightsUnit}}",
+		"group": "{{min}}–{{max}}",
+		"age": "{{from}}–{{to}} y.o.",
+		"options_one": "{{count}} option",
+		"options_few": "{{count}} options",
+		"options_many": "{{count}} options",
+		"options_other": "{{count}} options",
 		"price": {
 			"from": "From {{price}}"
 		}

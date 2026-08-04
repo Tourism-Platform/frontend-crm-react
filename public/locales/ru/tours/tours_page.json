@@ -104,5 +104,10 @@
 		"load": {
 			"error": "Не удалось загрузить туры"
 		}
+	},
+	"card": {
+		"duration": "{{days}} {{daysUnit}} / {{nights}} {{nightsUnit}}",
+		"group": "{{min}}–{{max}}",
+		"age": "{{from}}–{{to}} лет"
 	}
 }

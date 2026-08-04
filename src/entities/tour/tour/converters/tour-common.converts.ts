@@ -1,4 +1,5 @@
-import type { TOUR_PATHS } from "@/shared/api";
+import { type LanguageCode, type TOUR_PATHS } from "@/shared/api";
+import { languageCodeMapper } from "@/shared/converters";
 import type { IPaginationResponse } from "@/shared/types";
 
 import type {
@@ -16,6 +17,9 @@ import { tourCategoriesMapper } from "./tour-categories.converters";
 import { tourStatusMapper } from "./tour-status.converters";
 import { tourTypeMapper } from "./tour-type.converters";
 
+const mapTourLanguageBadge = (code: LanguageCode): string =>
+	(languageCodeMapper.from(code) ?? code).toUpperCase();
+
 export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
 	id: backend.id,
 	status: tourStatusMapper.from(backend.status)!,
@@ -24,7 +28,15 @@ export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
 	type: tourTypeMapper.from(backend.typ)!,
 	priceFrom: 0,
 	priceTo: 0,
-	imageUrl: ""
+	imageUrl: backend.cover_image_path ?? "",
+	categories: tourCategoriesMapper.fromMany(backend.categories ?? []),
+	languages: (backend.languages ?? []).map(mapTourLanguageBadge),
+	days: backend.days,
+	nights: backend.nights,
+	groupSizeMin: backend.group_size_min,
+	groupSizeMax: backend.group_size,
+	ageFrom: backend.age_from,
+	ageTo: backend.age_to
 });
 
 export const mapTourGeneralToFrontend = (

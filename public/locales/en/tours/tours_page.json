@@ -104,5 +104,10 @@
 		"load": {
 			"error": "Failed to load tours"
 		}
+	},
+	"card": {
+		"duration": "{{days}} {{daysUnit}} / {{nights}} {{nightsUnit}}",
+		"group": "{{min}}–{{max}}",
+		"age": "{{from}}–{{to}} y.o."
 	}
 }

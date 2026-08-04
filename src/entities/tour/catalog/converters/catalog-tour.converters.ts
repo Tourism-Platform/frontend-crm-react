@@ -1,19 +1,21 @@
-import { type IPaginationResponse } from "@/shared/types";
+import type { LanguageCode } from "@/shared/api";
+import { languageCodeMapper } from "@/shared/converters";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { languageMapper } from "../../landing";
-import { tourCategoriesMapper } from "../../tour";
+import { tourCategoriesMapper, tourTypeMapper } from "../../tour";
 import { CATALOG_DURATION_PRESETS } from "../config";
-import type {
-	ENUM_CATALOG_DURATION_TYPE,
-	TCatalogTourQueryBackend
-} from "../types";
-import type {
-	ICatalogTourCard,
-	ICatalogTourFilters,
-	ICatalogTourInfo,
-	ICatalogTourInfoBackend,
-	TCatalogTourBackend,
-	TListCatalogToursBackendResponse
+import {
+	type ENUM_CATALOG_DURATION_TYPE,
+	ENUM_CATALOG_TOUR_TYPES,
+	type ENUM_CATALOG_TOUR_TYPES_TYPE,
+	type ICatalogTourCard,
+	type ICatalogTourFilters,
+	type ICatalogTourInfo,
+	type ICatalogTourInfoBackend,
+	type TCatalogTourBackend,
+	type TCatalogTourQueryBackend,
+	type TListCatalogToursBackendResponse
 } from "../types";
 
 const mapDurationFiltersToQuery = (
@@ -32,6 +34,9 @@ const mapDurationFiltersToQuery = (
 	};
 };
 
+const mapTourLanguageBadge = (code: LanguageCode): string =>
+	(languageCodeMapper.from(code) ?? code).toUpperCase();
+
 export const mapCatalogTourStatsToFrontend = (
 	data: ICatalogTourInfoBackend
 ): ICatalogTourInfo => ({
@@ -45,15 +50,32 @@ export const mapCatalogTourStatsToFrontend = (
 
 export const mapCatalogTourToFrontend = (
 	data: TCatalogTourBackend
-): ICatalogTourCard => ({
-	id: data.tour_id,
-	title: data.name,
-	description: data.description ?? "",
-	duration: data.days,
-	priceFrom: data.price_range?.min ?? 0,
-	priceTo: data.price_range?.max ?? 0,
-	imageUrl: data.cover_image_url ?? ""
-});
+): ICatalogTourCard => {
+	const priceSource = data.price_per_person ?? data.price_range;
+	const mappedType = tourTypeMapper.from(data.tour_type);
+
+	return {
+		id: data.tour_id,
+		title: data.name,
+		description: data.description ?? "",
+		days: data.days,
+		nights: data.nights,
+		priceFrom: priceSource?.min ?? 0,
+		priceTo: priceSource?.max ?? 0,
+		currency: priceSource?.currency ?? "USD",
+		imageUrl: data.cover_image_url ?? "",
+		route: data.cities ?? [],
+		type: (mappedType ??
+			ENUM_CATALOG_TOUR_TYPES.GROUP) as ENUM_CATALOG_TOUR_TYPES_TYPE,
+		categories: tourCategoriesMapper.fromMany(data.categories ?? []),
+		languages: (data.languages ?? []).map(mapTourLanguageBadge),
+		groupSizeMin: data.group_size_min,
+		groupSizeMax: data.group_size,
+		ageFrom: data.age_from,
+		ageTo: data.age_to,
+		optionCount: data.option_count ?? null
+	};
+};
 
 export const mapCatalogTourPaginatedToFrontend = (
 	response: TListCatalogToursBackendResponse

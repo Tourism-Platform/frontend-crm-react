@@ -1,11 +1,12 @@
 {
 	"card": {
-		"duration": {
-			"days_one": "{{count}} день",
-			"days_few": "{{count}} дня",
-			"days_many": "{{count}} дней",
-			"days_other": "{{count}} дней"
-		},
+		"duration": "{{days}} {{daysUnit}} / {{nights}} {{nightsUnit}}",
+		"group": "{{min}}–{{max}}",
+		"age": "{{from}}–{{to}} лет",
+		"options_one": "{{count}} опция",
+		"options_few": "{{count}} опции",
+		"options_many": "{{count}} опций",
+		"options_other": "{{count}} опций",
 		"price": {
 			"from": "От {{price}}"
 		}
