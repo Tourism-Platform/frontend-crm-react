@@ -1,15 +1,21 @@
 import {
+	type BookingOrderClientDetail,
+	type BookingOrderDetail,
 	type BookingOrderListResponse,
+	type BookingOrderResponse,
 	BookingStatus,
 	BookingTransition
 } from "@/shared/api";
 
 import type {
 	TBookingModelBackend,
-	TBookingOrderBackend,
 	TBookingOrderListItemBackend
 } from "../types";
 
+import {
+	MOCK_OPERATOR_ID,
+	MOCK_ORDER_AGENCY_TEMPLATE
+} from "./booking-order.mock.constants";
 import { createBookingOrderMocks } from "./booking-order.mock.factory";
 
 const { listItems, detailsById } = createBookingOrderMocks();
@@ -18,38 +24,39 @@ export const bookingOrderListItems: TBookingOrderListItemBackend[] = listItems;
 export const bookingOrderDetailStore = detailsById;
 
 export const detailToBookingModel = (
-	detail: TBookingOrderBackend
-): TBookingModelBackend => ({
-	id: detail.id,
-	agency_id: detail.agency_id,
-	operator_id: detail.operator_id,
-	tour_option_id: detail.tour_option_id,
-	snapshot_id: detail.snapshot_id ?? null,
-	date: detail.date,
-	end_date: detail.end_date,
-	pax: detail.pax,
-	status: detail.status,
-	paid_amount: detail.paid_amount,
-	paid_currency: detail.paid_currency,
-	tour_amount: detail.tour_amount,
-	tour_currency: detail.tour_currency,
-	fx_rate_id: detail.fx_rate_id ?? null,
-	fx_rate_applied: detail.fx_rate_applied ?? null,
-	agreed_price: detail.agreed_price ?? null,
-	cancelled_at: detail.cancelled_at ?? null,
-	cancellation_reason: detail.cancellation_reason ?? null,
-	comment: detail.comment ?? null,
-	voucher_path: detail.voucher_path ?? null,
-	order_number: detail.order_number,
-	tour: detail.tour,
-	agency: detail.agency,
-	user_id: detail.user_id,
-	user: detail.user
-});
+	detail: BookingOrderDetail
+): TBookingModelBackend => ({ ...detail.order });
 
 export const getBookingOrderDetail = (
 	bookingId: string
-): TBookingOrderBackend | undefined => bookingOrderDetailStore.get(bookingId);
+): BookingOrderDetail | undefined => bookingOrderDetailStore.get(bookingId);
+
+export const getOperatorBookingOrderDetail = (
+	bookingId: string
+): BookingOrderDetail | undefined => getBookingOrderDetail(bookingId);
+
+export const getClientBookingOrderDetail = (
+	bookingId: string
+): BookingOrderClientDetail | undefined => {
+	const detail = getBookingOrderDetail(bookingId);
+	if (!detail) return undefined;
+
+	return {
+		order: detail.order,
+		tour: detail.tour,
+		operator: {
+			id: detail.order.operator_id || MOCK_OPERATOR_ID,
+			name: "Mock Operator",
+			business_name: MOCK_ORDER_AGENCY_TEMPLATE.business_name,
+			contact_person: MOCK_ORDER_AGENCY_TEMPLATE.contact_person,
+			contact_position: MOCK_ORDER_AGENCY_TEMPLATE.contact_position,
+			contact_email: MOCK_ORDER_AGENCY_TEMPLATE.contact_email,
+			contact_phone: MOCK_ORDER_AGENCY_TEMPLATE.contact_phone,
+			website_url: MOCK_ORDER_AGENCY_TEMPLATE.website_url,
+			logo_url: MOCK_ORDER_AGENCY_TEMPLATE.logo_url
+		}
+	};
+};
 
 export interface IListBookingOrdersQuery {
 	booking_status: string | null;
@@ -117,14 +124,17 @@ const resolveStatusAfterTransition = (
 export const transitionBookingStatusInStore = (
 	bookingId: string,
 	transition: BookingTransition
-): TBookingModelBackend | null => {
+): BookingOrderResponse | null => {
 	const detail = bookingOrderDetailStore.get(bookingId);
 	if (!detail) return null;
 
-	const nextStatus = resolveStatusAfterTransition(detail.status, transition);
+	const nextStatus = resolveStatusAfterTransition(
+		detail.order.status,
+		transition
+	);
 	if (!nextStatus) return null;
 
-	detail.status = nextStatus;
+	detail.order.status = nextStatus;
 
 	const listItem = bookingOrderListItems.find(
 		(item) => item.id === bookingId

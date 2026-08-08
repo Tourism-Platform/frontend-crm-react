@@ -1,14 +1,18 @@
 import { HttpResponse } from "msw";
 
 import {
+	BOOKING_ORDER_AGENCY_PATHS,
+	BOOKING_ORDER_OPERATOR_PATHS,
 	BOOKING_ORDER_PATHS,
+	BOOKING_ORDER_USER_PATHS,
 	BookingTransition,
 	createMockHandler
 } from "@/shared/api";
 
 import { ensureBookingAvailabilityForBooking } from "../mock/booking-order-availability.mock";
 import {
-	getBookingOrderDetail,
+	getClientBookingOrderDetail,
+	getOperatorBookingOrderDetail,
 	listBookingOrders,
 	transitionBookingStatusInStore
 } from "../mock/booking-order.store";
@@ -34,12 +38,11 @@ export const bookingOrderHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId",
-			method: "GET"
-		},
+		BOOKING_ORDER_AGENCY_PATHS.getAgencyBookingOrder(":bookingId"),
 		async ({ params }) => {
-			const detail = getBookingOrderDetail(String(params.bookingId));
+			const detail = getClientBookingOrderDetail(
+				String(params.bookingId)
+			);
 
 			if (!detail) {
 				return new HttpResponse(null, { status: 404 });
@@ -49,10 +52,38 @@ export const bookingOrderHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/status/:transition",
-			method: "PATCH"
-		},
+		BOOKING_ORDER_USER_PATHS.getUserBookingOrder(":bookingId"),
+		async ({ params }) => {
+			const detail = getClientBookingOrderDetail(
+				String(params.bookingId)
+			);
+
+			if (!detail) {
+				return new HttpResponse(null, { status: 404 });
+			}
+
+			return HttpResponse.json(detail);
+		}
+	),
+	createMockHandler(
+		BOOKING_ORDER_OPERATOR_PATHS.getOperatorBookingOrder(":bookingId"),
+		async ({ params }) => {
+			const detail = getOperatorBookingOrderDetail(
+				String(params.bookingId)
+			);
+
+			if (!detail) {
+				return new HttpResponse(null, { status: 404 });
+			}
+
+			return HttpResponse.json(detail);
+		}
+	),
+	createMockHandler(
+		BOOKING_ORDER_OPERATOR_PATHS.transitionBookingStatus(
+			":bookingId",
+			":transition"
+		),
 		async ({ params }) => {
 			const bookingId = String(params.bookingId);
 			const transition = String(params.transition) as BookingTransition;

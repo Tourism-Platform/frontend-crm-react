@@ -1,8 +1,8 @@
 import type {
+	IOrderTourReviewAmounts,
 	IOrderTourReviewData,
 	IOrderTourReviewItem
 } from "../types/order-tour-review.types";
-import type { IOrderDetail } from "../types/order.interface";
 
 export const EMPTY_ORDER_TOUR_REVIEW_SUMMARY: IOrderTourReviewData["summary"] =
 	{
@@ -15,7 +15,7 @@ export const EMPTY_ORDER_TOUR_REVIEW_SUMMARY: IOrderTourReviewData["summary"] =
 
 export const buildOrderTourReviewData = (
 	items: IOrderTourReviewItem[],
-	order: IOrderDetail
+	order: IOrderTourReviewAmounts
 ): IOrderTourReviewData => {
 	const tourAmount = Number(order.tourAmount) || 0;
 	const paidAmount = Number(order.paidAmount) || 0;

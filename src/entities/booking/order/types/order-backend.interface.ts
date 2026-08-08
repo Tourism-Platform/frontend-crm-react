@@ -1,14 +1,6 @@
-import type {
-	BOOKING_ORDER_PATHS,
-	BookingOrderDetail,
-	BookingOrderListItem
-} from "@/shared/api";
+import type { BOOKING_ORDER_PATHS, BookingOrderRowOutput } from "@/shared/api";
 
-export type TBookingOrderBackend = BookingOrderDetail;
-
-export type TBookingOrderListItemBackend = BookingOrderListItem;
-
-export type TBookingOrderDetailBackend = BookingOrderDetail;
+export type TBookingOrderListItemBackend = BookingOrderRowOutput;
 
 export interface IApplyReviewItemBackend {
 	id: string;

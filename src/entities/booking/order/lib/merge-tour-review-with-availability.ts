@@ -2,10 +2,6 @@ import { ENUM_EVENT, eventTypeMapper } from "@/entities/tour";
 import type { ITourEvent } from "@/entities/tour/itinerary/types/event.types";
 import type { ITourReviewItem } from "@/entities/tour/tour/types/tour-review.interface";
 
-import {
-	ENUM_AVAILABILITY_STATUS,
-	type ENUM_AVAILABILITY_STATUS_TYPE
-} from "../types/availability-status.types";
 import type { IBookingEventAvailability } from "../types/booking-availability.types";
 import type { IOrderTourReviewItem } from "../types/order-tour-review.types";
 
@@ -73,14 +69,14 @@ const findTourEvent = (
 	return atPosition.length === 1 ? atPosition[0] : undefined;
 };
 
-const findAvailabilityStatus = (
+const findAvailabilityRow = (
 	availability: IBookingEventAvailability[],
 	eventId: string,
 	optionIndex: number
-): ENUM_AVAILABILITY_STATUS_TYPE | undefined =>
+): IBookingEventAvailability | undefined =>
 	availability.find(
 		(row) => row.eventId === eventId && row.optionIndex === optionIndex
-	)?.status;
+	);
 
 const enrichRow = (
 	item: IOrderTourReviewItem,
@@ -92,18 +88,11 @@ const enrichRow = (
 		return { ...item, optionIndex };
 	}
 
-	const availabilityStatus = findAvailabilityStatus(
-		availability,
-		eventId,
-		optionIndex
-	);
-
 	return {
 		...item,
 		eventId,
 		optionIndex,
-		availabilityStatus,
-		isApplied: availabilityStatus === ENUM_AVAILABILITY_STATUS.SELECTED
+		availability: findAvailabilityRow(availability, eventId, optionIndex)
 	};
 };
 

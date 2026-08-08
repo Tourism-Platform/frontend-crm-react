@@ -262,7 +262,9 @@ export enum ClientPaymentStatus {
 export enum BookingTransition {
 	Submit = "submit",
 	MoveToPending = "move-to-pending",
-	MoveToConfirmed = "move-to-confirmed"
+	MoveToConfirmed = "move-to-confirmed",
+	MoveToInProgress = "move-to-in-progress",
+	MoveToCompleted = "move-to-completed"
 }
 
 /** BookingStatus */
@@ -489,6 +491,11 @@ export interface ActivityEventPubReadInput {
 	/** Is Optional */
 	is_optional?: boolean | null;
 	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
+	/**
 	 * Typ
 	 * @default "activity"
 	 */
@@ -508,6 +515,11 @@ export interface ActivityEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/**
 	 * Typ
 	 * @default "activity"
@@ -1145,17 +1157,11 @@ export interface BookingItineraryResponse {
 						typ: "flight";
 				  } & FlightEventPubReadOutput)
 				| ({
-						typ: "guide";
-				  } & GuideEventPubReadOutput)
-				| ({
 						typ: "housing";
 				  } & HousingEventPubReadOutput)
 				| ({
 						typ: "ref";
 				  } & InformationEventPubReadOutput)
-				| ({
-						typ: "supplementary";
-				  } & SupplementaryEventPubReadOutput)
 				| ({
 						typ: "train";
 				  } & TrainEventPubReadOutput)
@@ -1167,106 +1173,15 @@ export interface BookingItineraryResponse {
 	)[];
 }
 
-/** BookingOrderDetail */
-export interface BookingOrderDetail {
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Agency Id */
-	agency_id?: string | null;
-	/** User Id */
-	user_id?: string | null;
-	/**
-	 * Operator Id
-	 * @format uuid
-	 */
-	operator_id: string;
-	/**
-	 * Tour Option Id
-	 * @format uuid
-	 */
-	tour_option_id: string;
-	/** Snapshot Id */
-	snapshot_id?: string | null;
-	/**
-	 * Date
-	 * @format date
-	 */
-	date: string;
-	/**
-	 * End Date
-	 * @format date
-	 */
-	end_date: string;
-	/** Pax */
-	pax: number;
-	status: BookingStatus;
-	/**
-	 * Paid Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	paid_amount: string;
-	paid_currency: Currency;
-	/**
-	 * Tour Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	tour_amount: string;
-	tour_currency: Currency;
-	/** Fx Rate Id */
-	fx_rate_id?: string | null;
-	/** Fx Rate Applied */
-	fx_rate_applied?: string | null;
-	/** Agreed Price */
-	agreed_price?: string | null;
-	/** Cancelled At */
-	cancelled_at?: string | null;
-	/** Cancellation Reason */
-	cancellation_reason?: string | null;
-	/** Comment */
-	comment?: string | null;
-	/** Voucher Path */
-	voucher_path?: string | null;
-	/** Order Number */
-	order_number: string;
+/**
+ * BookingOrderClientDetail
+ * Agency/tourist-facing order detail: instead of echoing the caller's own
+ * identity it carries the ``operator`` contact block — who to reach about
+ * this booking.
+ */
+export interface BookingOrderClientDetail {
+	order: BookingOrderResponse;
 	tour: OrderTourInfo;
-	agency?: OrderAgencyInfo | null;
-	user?: OrderUserInfo | null;
-}
-
-/** BookingOrderListItem */
-export interface BookingOrderListItem {
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Client Name */
-	client_name: string;
-	client_type: BookingClientType;
-	/** Tour Name */
-	tour_name: string;
-	tour_type: TourType;
-	status: BookingStatus;
-	/**
-	 * Date
-	 * @format date
-	 */
-	date: string;
-	/**
-	 * End Date
-	 * @format date
-	 */
-	end_date: string;
-	/**
-	 * Created At
-	 * @format date-time
-	 */
-	created_at: string;
-	/** Pax */
-	pax: number;
 	/**
 	 * Who to contact about this booking — the operator running the tour. Joined
 	 * into the listing rather than fetched per row so an agency or tourist can reach
@@ -1275,8 +1190,18 @@ export interface BookingOrderListItem {
 	 * in yet.
 	 */
 	operator: OrderOperatorInfo;
-	/** Order Number */
-	order_number: string;
+}
+
+/**
+ * BookingOrderDetail
+ * Operator-facing order detail: who placed the booking — exactly one of
+ * ``agency`` / ``user`` is set, mirroring the booking's owner column.
+ */
+export interface BookingOrderDetail {
+	order: BookingOrderResponse;
+	tour: OrderTourInfo;
+	agency?: OrderAgencyInfo | null;
+	user?: OrderUserInfo | null;
 }
 
 /** BookingOrderListResponse */
@@ -1284,7 +1209,7 @@ export interface BookingOrderListResponse {
 	/** Total Count */
 	total_count: number;
 	/** Data */
-	data: BookingOrderListItem[];
+	data: BookingOrderRowOutput[];
 }
 
 /** BookingOrderResponse */
@@ -1349,6 +1274,90 @@ export interface BookingOrderResponse {
 	comment?: string | null;
 	/** Voucher Path */
 	voucher_path?: string | null;
+	/** Order Number */
+	order_number: string;
+}
+
+/** BookingOrderRow */
+export interface BookingOrderRowInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Client Name */
+	client_name: string;
+	client_type: BookingClientType;
+	/** Tour Name */
+	tour_name: string;
+	tour_type: TourType;
+	status: BookingStatus;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/**
+	 * End Date
+	 * @format date
+	 */
+	end_date: string;
+	/**
+	 * Created At
+	 * @format date-time
+	 */
+	created_at: string;
+	/** Pax */
+	pax: number;
+	/**
+	 * Who to contact about this booking — the operator running the tour. Joined
+	 * into the listing rather than fetched per row so an agency or tourist can reach
+	 * the right person without a follow-up call per booking. Every field but ``id``
+	 * and ``name`` lives on ``operator_info``, which an operator may not have filled
+	 * in yet.
+	 */
+	operator: OrderOperatorInfo;
+}
+
+/** BookingOrderRow */
+export interface BookingOrderRowOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Client Name */
+	client_name: string;
+	client_type: BookingClientType;
+	/** Tour Name */
+	tour_name: string;
+	tour_type: TourType;
+	status: BookingStatus;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/**
+	 * End Date
+	 * @format date
+	 */
+	end_date: string;
+	/**
+	 * Created At
+	 * @format date-time
+	 */
+	created_at: string;
+	/** Pax */
+	pax: number;
+	/**
+	 * Who to contact about this booking — the operator running the tour. Joined
+	 * into the listing rather than fetched per row so an agency or tourist can reach
+	 * the right person without a follow-up call per booking. Every field but ``id``
+	 * and ``name`` lives on ``operator_info``, which an operator may not have filled
+	 * in yet.
+	 */
+	operator: OrderOperatorInfo;
 	/** Order Number */
 	order_number: string;
 }
@@ -1529,6 +1538,11 @@ export interface BusEventPubReadInput {
 	/** Is Optional */
 	is_optional?: boolean | null;
 	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
+	/**
 	 * Typ
 	 * @default "bus"
 	 */
@@ -1548,6 +1562,11 @@ export interface BusEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/**
 	 * Typ
 	 * @default "bus"
@@ -2384,6 +2403,11 @@ export interface FlightEventPubReadInput {
 	/** Is Optional */
 	is_optional?: boolean | null;
 	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
+	/**
 	 * Typ
 	 * @default "flight"
 	 */
@@ -2403,6 +2427,11 @@ export interface FlightEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/**
 	 * Typ
 	 * @default "flight"
@@ -3055,30 +3084,6 @@ export interface GuideDetailsOutput {
 	categories?: GuideByLanguageCategoryOutput[];
 }
 
-/** GuideDetailsPubSchema */
-export interface GuideDetailsPubSchemaInput {
-	/** Name */
-	name?: string | null;
-	/** Duration */
-	duration?: number | null;
-	/** Typ Tiers */
-	typ_tiers?: GuideTypeTierPubSchema[] | null;
-	/** Categories */
-	categories?: GuideLanguagePubSchema[] | null;
-}
-
-/** GuideDetailsPubSchema */
-export interface GuideDetailsPubSchemaOutput {
-	/** Name */
-	name?: string | null;
-	/** Duration */
-	duration?: number | null;
-	/** Typ Tiers */
-	typ_tiers?: GuideTypeTierPubSchema[] | null;
-	/** Categories */
-	categories?: GuideLanguagePubSchema[] | null;
-}
-
 /** GuideEvent */
 export interface GuideEventInput {
 	/**
@@ -3125,46 +3130,6 @@ export interface GuideEventOutput {
 	 */
 	typ?: "guide";
 	details?: GuideDetailsOutput | null;
-}
-
-/** GuideEventPubRead */
-export interface GuideEventPubReadInput {
-	/** Name */
-	name?: string | null;
-	/** Description */
-	description?: string | null;
-	/** Day */
-	day?: number | null;
-	/** Position */
-	position?: number | null;
-	/** Is Optional */
-	is_optional?: boolean | null;
-	/**
-	 * Typ
-	 * @default "guide"
-	 */
-	typ?: "guide";
-	details?: GuideDetailsPubSchemaInput | null;
-}
-
-/** GuideEventPubRead */
-export interface GuideEventPubReadOutput {
-	/** Name */
-	name?: string | null;
-	/** Description */
-	description?: string | null;
-	/** Day */
-	day?: number | null;
-	/** Position */
-	position?: number | null;
-	/** Is Optional */
-	is_optional?: boolean | null;
-	/**
-	 * Typ
-	 * @default "guide"
-	 */
-	typ?: "guide";
-	details?: GuideDetailsPubSchemaOutput | null;
 }
 
 /** GuideEventTypeRead */
@@ -3223,11 +3188,6 @@ export interface GuideEventTypeReadOutput {
 	 * Option (alternative) id; populated on read, ignored on write.
 	 */
 	id?: string | null;
-}
-
-/** GuideLanguagePubSchema */
-export interface GuideLanguagePubSchema {
-	lang?: LanguageCode | null;
 }
 
 /** GuideSingleEvent */
@@ -3323,13 +3283,6 @@ export interface GuideTypeTier {
 	 */
 	up_to_pax: number;
 	typ: GuideType;
-}
-
-/** GuideTypeTierPubSchema */
-export interface GuideTypeTierPubSchema {
-	/** Up To Pax */
-	up_to_pax?: number | null;
-	typ?: GuideType | null;
 }
 
 /** HTTPValidationError */
@@ -3509,6 +3462,11 @@ export interface HousingEventPubReadInput {
 	/** Is Optional */
 	is_optional?: boolean | null;
 	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
+	/**
 	 * Typ
 	 * @default "housing"
 	 */
@@ -3528,6 +3486,11 @@ export interface HousingEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/**
 	 * Typ
 	 * @default "housing"
@@ -3859,6 +3822,11 @@ export interface InformationEventPubReadInput {
 	/** Is Optional */
 	is_optional?: boolean | null;
 	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
+	/**
 	 * Typ
 	 * @default "ref"
 	 */
@@ -3878,6 +3846,11 @@ export interface InformationEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/**
 	 * Typ
 	 * @default "ref"
@@ -4222,8 +4195,6 @@ export interface LandingPageResponse {
 	cancellation_policy?: string | null;
 	/** Additional Information */
 	additional_information?: string | null;
-	/** Languages */
-	languages?: LanguageCode[];
 	/** Pickup Type */
 	pickup_type?: PickupType[];
 	/** Amenities Included */
@@ -4235,6 +4206,8 @@ export interface LandingPageResponse {
 	 * @format uuid
 	 */
 	id: string;
+	/** Languages */
+	languages: LanguageCode[];
 	/** Created At */
 	created_at?: string | null;
 	/** Updated At */
@@ -4257,8 +4230,6 @@ export interface LandingPageUpdate {
 	cancellation_policy?: string | null;
 	/** Additional Information */
 	additional_information?: string | null;
-	/** Languages */
-	languages?: LanguageCode[] | null;
 	/** Pickup Type */
 	pickup_type?: PickupType[] | null;
 	/** Amenities Included */
@@ -4465,6 +4436,11 @@ export interface MultiEventPubInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/** Typ */
 	typ: "options";
 	/** Details */
@@ -4480,17 +4456,11 @@ export interface MultiEventPubInput {
 						typ: "flight";
 				  } & FlightEventPubReadInput)
 				| ({
-						typ: "guide";
-				  } & GuideEventPubReadInput)
-				| ({
 						typ: "housing";
 				  } & HousingEventPubReadInput)
 				| ({
 						typ: "ref";
 				  } & InformationEventPubReadInput)
-				| ({
-						typ: "supplementary";
-				  } & SupplementaryEventPubReadInput)
 				| ({
 						typ: "train";
 				  } & TrainEventPubReadInput)
@@ -4513,6 +4483,11 @@ export interface MultiEventPubOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/** Typ */
 	typ: "options";
 	/** Details */
@@ -4528,17 +4503,11 @@ export interface MultiEventPubOutput {
 						typ: "flight";
 				  } & FlightEventPubReadOutput)
 				| ({
-						typ: "guide";
-				  } & GuideEventPubReadOutput)
-				| ({
 						typ: "housing";
 				  } & HousingEventPubReadOutput)
 				| ({
 						typ: "ref";
 				  } & InformationEventPubReadOutput)
-				| ({
-						typ: "supplementary";
-				  } & SupplementaryEventPubReadOutput)
 				| ({
 						typ: "train";
 				  } & TrainEventPubReadOutput)
@@ -5130,6 +5099,47 @@ export interface OperatorModel {
 	id: string;
 	/** Name */
 	name: string;
+}
+
+/**
+ * OperatorOrderOverview
+ * The order page's financial header, all in the booking's tour currency.
+ *
+ * ``revenue`` is the planned gross agency price off the effective snapshot —
+ * the same figure the invoice bills — and ``expected_profit`` is that minus
+ * the planned supplier cost. ``paid`` sums CONFIRMED client payments
+ * FX-converted via the snapshot's frozen rate table; ``not_paid`` is the
+ * outstanding ``revenue - paid`` (negative when overpaid).
+ */
+export interface OperatorOrderOverview {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	booking_id: string;
+	/** Order Number */
+	order_number: string;
+	currency: Currency;
+	/**
+	 * Revenue
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	revenue: string;
+	/**
+	 * Expected Profit
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	expected_profit: string;
+	/**
+	 * Paid
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	paid: string;
+	/**
+	 * Not Paid
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	not_paid: string;
 }
 
 /** OperatorPaymentRouteModel */
@@ -6417,12 +6427,6 @@ export interface SupplementaryDetailsOutput {
 	item?: SupplementaryItemOutput[];
 }
 
-/** SupplementaryDetailsPubSchema */
-export interface SupplementaryDetailsPubSchema {
-	/** Item */
-	item?: SupplementaryItemPubSchema[] | null;
-}
-
 /** SupplementaryEvent */
 export interface SupplementaryEventInput {
 	/**
@@ -6469,46 +6473,6 @@ export interface SupplementaryEventOutput {
 	 */
 	typ?: "supplementary";
 	details?: SupplementaryDetailsOutput | null;
-}
-
-/** SupplementaryEventPubRead */
-export interface SupplementaryEventPubReadInput {
-	/** Name */
-	name?: string | null;
-	/** Description */
-	description?: string | null;
-	/** Day */
-	day?: number | null;
-	/** Position */
-	position?: number | null;
-	/** Is Optional */
-	is_optional?: boolean | null;
-	/**
-	 * Typ
-	 * @default "supplementary"
-	 */
-	typ?: "supplementary";
-	details?: SupplementaryDetailsPubSchema | null;
-}
-
-/** SupplementaryEventPubRead */
-export interface SupplementaryEventPubReadOutput {
-	/** Name */
-	name?: string | null;
-	/** Description */
-	description?: string | null;
-	/** Day */
-	day?: number | null;
-	/** Position */
-	position?: number | null;
-	/** Is Optional */
-	is_optional?: boolean | null;
-	/**
-	 * Typ
-	 * @default "supplementary"
-	 */
-	typ?: "supplementary";
-	details?: SupplementaryDetailsPubSchema | null;
 }
 
 /** SupplementaryEventTypeRead */
@@ -6607,12 +6571,6 @@ export interface SupplementaryItemOutput {
 				  } & PerPersonChargeOutput)
 		  )
 		| null;
-}
-
-/** SupplementaryItemPubSchema */
-export interface SupplementaryItemPubSchema {
-	/** Name */
-	name?: string | null;
 }
 
 /** SupplementarySingleEvent */
@@ -7324,17 +7282,11 @@ export interface TourOptionPublicResponse {
 						typ: "flight";
 				  } & FlightEventPubReadOutput)
 				| ({
-						typ: "guide";
-				  } & GuideEventPubReadOutput)
-				| ({
 						typ: "housing";
 				  } & HousingEventPubReadOutput)
 				| ({
 						typ: "ref";
 				  } & InformationEventPubReadOutput)
-				| ({
-						typ: "supplementary";
-				  } & SupplementaryEventPubReadOutput)
 				| ({
 						typ: "train";
 				  } & TrainEventPubReadOutput)
@@ -7755,6 +7707,11 @@ export interface TrainEventPubReadInput {
 	/** Is Optional */
 	is_optional?: boolean | null;
 	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
+	/**
 	 * Typ
 	 * @default "train"
 	 */
@@ -7774,6 +7731,11 @@ export interface TrainEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/**
 	 * Typ
 	 * @default "train"
@@ -8233,6 +8195,11 @@ export interface TransferEventPubReadInput {
 	/** Is Optional */
 	is_optional?: boolean | null;
 	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
+	/**
 	 * Typ
 	 * @default "transfer"
 	 */
@@ -8252,6 +8219,11 @@ export interface TransferEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date?: string | null;
 	/**
 	 * Typ
 	 * @default "transfer"
@@ -10316,6 +10288,67 @@ export interface RemoveAgencyDocumentAgencyMeDocumentsFileIdDeleteParams {
 	fileId: string;
 }
 
+export interface ListBookingAvailabilityBookingOrderOperatorBookingIdAvailabilityGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface ApplyEventAvailabilityBookingOrderOperatorBookingIdEventsEventIdOptionsOptionIndexAvailabilityPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/** Option Index */
+	optionIndex: number;
+}
+
+export interface GetUserBookingOrderBookingOrderUserBookingIdGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetAgencyBookingOrderBookingOrderAgencyBookingIdGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetOperatorBookingOrderBookingOrderOperatorBookingIdGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetOperatorOrderOverviewBookingOrderOperatorBookingIdOverviewGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
 export interface GetOperatorBookingItineraryBookingOrderOperatorBookingIdItineraryGetParams {
 	/**
 	 * Booking Id
@@ -10339,29 +10372,6 @@ export interface DeclineBookingBookingOrderOperatorBookingIdDeclinePostParams {
 	 * @format uuid
 	 */
 	bookingId: string;
-}
-
-export interface ListBookingAvailabilityBookingOrderOperatorBookingIdAvailabilityGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface ApplyEventAvailabilityBookingOrderOperatorBookingIdEventsEventIdOptionsOptionIndexAvailabilityPatchParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/** Option Index */
-	optionIndex: number;
 }
 
 export interface ListMyBookingsBookingOrderMyGetParams {
@@ -10390,9 +10400,15 @@ export interface ListMyBookingsBookingOrderMyGetParams {
 	limit?: number;
 }
 
-export interface GetBookingOrderBookingOrderBookingIdGetParams {
-	/** @default "en" */
-	lang?: LanguageCode;
+export interface GetBookingItineraryBookingOrderBookingIdItineraryGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface SubmitBookingOrderBookingOrderBookingIdSubmitPatchParams {
 	/**
 	 * Booking Id
 	 * @format uuid
@@ -10409,22 +10425,6 @@ export interface UpdateBookingOrderBookingOrderBookingIdPatchParams {
 }
 
 export interface DeleteBookingOrderBookingOrderBookingIdDeleteParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface GetBookingItineraryBookingOrderBookingIdItineraryGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface SubmitBookingOrderBookingOrderBookingIdSubmitPatchParams {
 	/**
 	 * Booking Id
 	 * @format uuid

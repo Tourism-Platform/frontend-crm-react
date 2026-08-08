@@ -93,12 +93,8 @@ export const TOUR_REVIEW_COLUMNS = (
 							</span>
 						),
 						cell: ({ row }) => {
-							const {
-								type,
-								eventId,
-								optionIndex,
-								availabilityStatus
-							} = row.original;
+							const { type, eventId, optionIndex, availability } =
+								row.original;
 							const depth = row.depth;
 							const parentRow = row.getParentRow?.();
 							const parentType = parentRow?.original?.type;
@@ -119,7 +115,7 @@ export const TOUR_REVIEW_COLUMNS = (
 									bookingId={bookingId}
 									eventId={eventId}
 									optionIndex={optionIndex}
-									availabilityStatus={availabilityStatus}
+									availabilityStatus={availability?.status}
 								/>
 							);
 						},

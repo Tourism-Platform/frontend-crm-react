@@ -36,9 +36,10 @@
 		"fields": {
 			"tour_name": "Tour name",
 			"type": "Type",
-			"pax": "PAX",
+			"pax": "Pax",
 			"route": "Route",
 			"duration": "Duration",
+			"duration_value": "{{days}} days / {{nights}} nights",
 			"dates": "Dates",
 			"comment": "Comment"
 		}

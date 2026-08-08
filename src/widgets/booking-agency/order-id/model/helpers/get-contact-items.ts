@@ -1,16 +1,16 @@
 import type { TFunction } from "i18next";
 
-import { type IOrderUserInfo } from "@/entities/booking";
+import { type IOrderOperatorInfo } from "@/entities/booking";
 
 import { type IInfoItem } from "../types";
 
 const empty = "-";
 
 export const getContactItems = (
-	user: IOrderUserInfo | null | undefined,
+	operator: IOrderOperatorInfo | null | undefined,
 	t: TFunction<"order_id_page" | "options">
 ): IInfoItem[] => {
-	if (!user) {
+	if (!operator) {
 		return [
 			{
 				label: t("contact_info.fields.client", { ns: "order_id_page" }),
@@ -28,10 +28,10 @@ export const getContactItems = (
 	}
 
 	const clientName =
-		[user.firstName, user.lastName]
-			.filter((part) => part?.trim())
-			.join(" ")
-			.trim() || empty;
+		operator.businessName?.trim() ||
+		operator.contactPerson?.trim() ||
+		operator.name?.trim() ||
+		empty;
 
 	return [
 		{
@@ -40,11 +40,11 @@ export const getContactItems = (
 		},
 		{
 			label: t("contact_info.fields.email", { ns: "order_id_page" }),
-			value: user.email || empty
+			value: operator.contactEmail || empty
 		},
 		{
 			label: t("contact_info.fields.phone", { ns: "order_id_page" }),
-			value: user.phoneNumber || empty
+			value: operator.contactPhone || empty
 		}
 	];
 };

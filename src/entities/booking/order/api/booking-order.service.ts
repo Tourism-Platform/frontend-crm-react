@@ -1,33 +1,24 @@
-import {
-	BOOKING_ORDER_OPERATOR_PATHS,
-	BOOKING_ORDER_PATHS,
-	ENUM_API_TAGS
-} from "@/shared/api";
+import { BOOKING_ORDER_PATHS, ENUM_API_TAGS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
 	mapBookingModelToCreated,
 	mapBookingModelToUpdated,
-	mapBookingOrderDetailToFrontend,
 	mapBookingOrderFiltersToBackend,
 	mapBookingOrderPaginatedToFrontend,
 	mapCreateBookingToBackend,
-	mapOrderStatusToTransition,
 	mapUpdateBookingToBackend
 } from "../converters";
 import type {
-	ENUM_ORDER_STATUS_TYPE,
 	IBookingOrderFilters,
 	ICreateBookingRequest,
 	ICreatedBooking,
-	IOrderDetail,
 	IUpdateBookingRequest,
 	IUpdatedBooking,
 	TBookingCancelBackend,
 	TBookingModelBackend,
 	TBookingOrderBackendResponse,
-	TBookingOrderDetailBackend,
 	TBookingOrderPaginatedResponse,
 	TSubmittedBooking
 } from "../types";
@@ -81,41 +72,6 @@ export const bookingOrderApi = authApi.injectEndpoints({
 				ENUM_API_TAGS.BOOKING_ORDERS
 			]
 		}),
-		getBookingOrderById: builder.query<IOrderDetail, string>({
-			query: (id) => ({
-				...BOOKING_ORDER_PATHS.getBookingOrder(id)
-			}),
-			transformResponse: (response: TBookingOrderDetailBackend) =>
-				mapBookingOrderDetailToFrontend(response),
-			providesTags: (_result, _error, id) => [
-				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
-			]
-		}),
-		updateBookingStatus: builder.mutation<
-			TBookingModelBackend,
-			{ id: string; status: ENUM_ORDER_STATUS_TYPE }
-		>({
-			query: ({ id, status }) => {
-				const transition = mapOrderStatusToTransition(status);
-
-				if (!transition) {
-					throw new Error(
-						`Unsupported booking status transition: ${status}`
-					);
-				}
-
-				return {
-					...BOOKING_ORDER_OPERATOR_PATHS.transitionBookingStatus(
-						id,
-						transition
-					)
-				};
-			},
-			invalidatesTags: (_result, _error, { id }) => [
-				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id },
-				ENUM_API_TAGS.BOOKING_ORDERS
-			]
-		}),
 		cancelBooking: builder.mutation<
 			TBookingModelBackend,
 			{ id: string; data: TBookingCancelBackend }
@@ -137,7 +93,5 @@ export const {
 	useCreateBookingOrderMutation,
 	useUpdateBookingOrderMutation,
 	useSubmitBookingOrderMutation,
-	useGetBookingOrderByIdQuery,
-	useUpdateBookingStatusMutation,
 	useCancelBookingMutation
 } = bookingOrderApi;

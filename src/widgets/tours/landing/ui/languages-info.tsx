@@ -25,22 +25,22 @@ interface ILanguagesInfoProps {
 
 const LanguagesInfoBase: FC<ILanguagesInfoProps> = ({ form }) => {
 	const { t } = useTranslation("landing_page");
-	const { watch, setValue, control } = form;
+	const { watch, control } = form;
 	const selectedLanguages =
 		(watch(
 			ENUM_FORM_LANDING.LANGUAGES
 		) as (typeof ENUM_LANGUAGES)[keyof typeof ENUM_LANGUAGES][]) || [];
 
-	const toggleLanguage = (
-		value: (typeof ENUM_LANGUAGES)[keyof typeof ENUM_LANGUAGES]
-	) => {
-		const newSelected = selectedLanguages.includes(value)
-			? selectedLanguages.filter((l) => l !== value)
-			: [...selectedLanguages, value];
-		setValue(ENUM_FORM_LANDING.LANGUAGES, newSelected, {
-			shouldValidate: true
-		});
-	};
+	// const toggleLanguage = (
+	// 	value: (typeof ENUM_LANGUAGES)[keyof typeof ENUM_LANGUAGES]
+	// ) => {
+	// 	const newSelected = selectedLanguages.includes(value)
+	// 		? selectedLanguages.filter((l) => l !== value)
+	// 		: [...selectedLanguages, value];
+	// 	setValue(ENUM_FORM_LANDING.LANGUAGES, newSelected, {
+	// 		shouldValidate: true
+	// 	});
+	// };
 
 	const languagesOptions = useValueToTranslateLabel(LANGUAGES_LABELS);
 
@@ -70,11 +70,11 @@ const LanguagesInfoBase: FC<ILanguagesInfoProps> = ({ form }) => {
 											? "outlineActive"
 											: "outline"
 									}
-									onClick={() =>
-										toggleLanguage(
-											lang.value as (typeof ENUM_LANGUAGES)[keyof typeof ENUM_LANGUAGES]
-										)
-									}
+									// onClick={() =>
+									// 	toggleLanguage(
+									// 		lang.value as (typeof ENUM_LANGUAGES)[keyof typeof ENUM_LANGUAGES]
+									// 	)
+									// }
 								>
 									{lang.label}
 								</Button>

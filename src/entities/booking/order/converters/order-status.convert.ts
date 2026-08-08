@@ -7,7 +7,9 @@ const MAP_ORDER_STATUS_TO_TRANSITION: Partial<
 	Record<ENUM_ORDER_STATUS_TYPE, BookingTransition>
 > = {
 	[ENUM_ORDER_STATUS.IN_PROCESSING]: BookingTransition.MoveToPending,
-	[ENUM_ORDER_STATUS.BOOKING]: BookingTransition.MoveToConfirmed
+	[ENUM_ORDER_STATUS.BOOKING]: BookingTransition.MoveToConfirmed,
+	[ENUM_ORDER_STATUS.IN_PROGRESS]: BookingTransition.MoveToInProgress,
+	[ENUM_ORDER_STATUS.COMPLETED]: BookingTransition.MoveToCompleted
 };
 
 export const mapOrderStatusToTransition = (

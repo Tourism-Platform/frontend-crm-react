@@ -3,7 +3,6 @@ import { mapBackendTypToEventType } from "@/entities/tour/itinerary/converters/e
 import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types";
 
 import type { TBookingEventAvailabilityBackend } from "../types";
-import { ENUM_AVAILABILITY_STATUS } from "../types/availability-status.types";
 import type { IBookingEventAvailability } from "../types/booking-availability.types";
 import type { IOrderTourReviewItem } from "../types/order-tour-review.types";
 
@@ -41,8 +40,7 @@ const mapRowToReviewItem = (
 	position: 0,
 	optionIndex: row.optionIndex,
 	eventId: row.eventId,
-	availabilityStatus: row.status,
-	isApplied: row.status === ENUM_AVAILABILITY_STATUS.SELECTED
+	availability: row
 });
 
 export const mapAvailabilityToTourReviewItems = (

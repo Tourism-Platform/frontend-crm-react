@@ -2,13 +2,13 @@ import type { TFunction } from "i18next";
 
 import {
 	BOOKING_ORDER_TYPE_LABELS,
-	type IOrderDetail
+	type IOperatorOrderDetail
 } from "@/entities/booking";
 
 import { type IInfoItem } from "../types";
 
 export const getOrderItems = (
-	order: IOrderDetail,
+	order: IOperatorOrderDetail,
 	t: TFunction<"order_id_page" | "options">
 ): IInfoItem[] => [
 	{
@@ -29,7 +29,11 @@ export const getOrderItems = (
 	},
 	{
 		label: t("order_info.fields.duration", { ns: "order_id_page" }),
-		value: order.duration
+		value: t("order_info.fields.duration_value", {
+			ns: "order_id_page",
+			days: order.tour.days,
+			nights: order.tour.nights
+		})
 	},
 	{
 		label: t("order_info.fields.dates", { ns: "order_id_page" }),

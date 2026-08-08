@@ -1,17 +1,18 @@
 import {
 	BookingClientType,
 	type BookingOrderDetail,
-	type BookingOrderListItem,
+	type BookingOrderResponse,
+	type BookingOrderRowOutput,
 	BookingStatus,
+	type OrderOperatorInfo,
 	TourType
 } from "@/shared/api";
-
-import type { TBookingOrderDetailBackend } from "../types";
 
 import {
 	MOCK_AGENCY_ID,
 	MOCK_BOOKING_DEFAULTS,
 	MOCK_CLIENT_NAMES,
+	MOCK_OPERATOR_ID,
 	MOCK_ORDER_AGENCY_TEMPLATE,
 	MOCK_ORDER_USER_TEMPLATE,
 	MOCK_TOUR_INFO_TEMPLATE,
@@ -94,13 +95,25 @@ const buildAmounts = (statusIndex: number, orderIndex: number) => {
 	};
 };
 
+const MOCK_OPERATOR_INFO: OrderOperatorInfo = {
+	id: MOCK_OPERATOR_ID,
+	name: "Mock Operator",
+	business_name: "Mock Operator LLC",
+	contact_person: "Alex Operator",
+	contact_position: "Manager",
+	contact_email: "operator@example.com",
+	contact_phone: "+998901112233",
+	website_url: null,
+	logo_url: null
+};
+
 export interface IBookingOrderMockBundle {
-	listItems: BookingOrderListItem[];
+	listItems: BookingOrderRowOutput[];
 	detailsById: Map<string, BookingOrderDetail>;
 }
 
 export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
-	const listItems: BookingOrderListItem[] = [];
+	const listItems: BookingOrderRowOutput[] = [];
 	const detailsById = new Map<string, BookingOrderDetail>();
 
 	STATUS_ROWS.forEach((row, statusIndex) => {
@@ -118,44 +131,34 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 				];
 			const orderNumber = `RQA-${row.label}-${padOrderNum(orderIndex)}`;
 			const createdMonth = String(statusIndex + 6).padStart(2, "0");
+			const pax = 2 + orderIndex;
+			const isAgencyClient = row.clientType === BookingClientType.Agency;
 
-			const listItem: BookingOrderListItem = {
-				operator: {
-					id: "23123123123",
-					name: "Mock Operator"
-				},
+			const listItem: BookingOrderRowOutput = {
 				id,
 				client_name: clientName,
+				client_type: row.clientType,
 				tour_name: tourName,
 				tour_type: row.tourType,
 				status: row.status,
 				date: dates.date,
 				end_date: dates.end_date,
 				created_at: `2025-${createdMonth}-${padOrderNum(orderIndex)}T10:00:00Z`,
-				pax: 2 + orderIndex,
+				pax,
 				order_number: orderNumber,
-				client_type: row.clientType
+				operator: MOCK_OPERATOR_INFO
 			};
 
-			const detail: TBookingOrderDetailBackend = {
+			const order: BookingOrderResponse = {
 				...MOCK_BOOKING_DEFAULTS,
-				order_number: orderNumber,
 				id,
+				order_number: orderNumber,
 				...dates,
-				pax: listItem.pax,
+				pax,
 				status: row.status,
 				...amounts,
-				agency: {
-					...MOCK_ORDER_AGENCY_TEMPLATE,
-					id: MOCK_AGENCY_ID,
-					name: clientName,
-					contact_person: clientName
-				},
-				user: {
-					...MOCK_ORDER_USER_TEMPLATE,
-					first_name: clientName.split(" ")[0] ?? "John",
-					last_name: clientName.split(" ").slice(1).join(" ") || "Doe"
-				},
+				agency_id: isAgencyClient ? MOCK_AGENCY_ID : null,
+				user_id: isAgencyClient ? null : MOCK_BOOKING_DEFAULTS.user_id,
 				comment:
 					row.status === BookingStatus.Cancelled
 						? null
@@ -167,12 +170,33 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 				cancellation_reason:
 					row.status === BookingStatus.Cancelled
 						? "Cancelled by client request (mock)."
-						: null,
+						: null
+			};
+
+			const detail: BookingOrderDetail = {
+				order,
 				tour: {
 					...MOCK_TOUR_INFO_TEMPLATE,
 					name: tourName,
 					typ: row.tourType
-				} as any
+				},
+				agency: isAgencyClient
+					? {
+							...MOCK_ORDER_AGENCY_TEMPLATE,
+							id: MOCK_AGENCY_ID,
+							name: clientName,
+							contact_person: clientName
+						}
+					: null,
+				user: isAgencyClient
+					? null
+					: {
+							...MOCK_ORDER_USER_TEMPLATE,
+							first_name: clientName.split(" ")[0] ?? "John",
+							last_name:
+								clientName.split(" ").slice(1).join(" ") ||
+								"Doe"
+						}
 			};
 
 			listItems.push(listItem);

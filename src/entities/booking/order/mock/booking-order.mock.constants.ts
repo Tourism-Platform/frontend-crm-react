@@ -1,6 +1,7 @@
 import {
 	Currency,
 	type OrderAgencyInfo,
+	type OrderTourInfo,
 	type OrderUserInfo,
 	TourType
 } from "@/shared/api";
@@ -63,14 +64,15 @@ export const MOCK_BOOKING_DEFAULTS = {
 	voucher_path: null
 } as const;
 
-export const MOCK_TOUR_INFO_TEMPLATE = {
+export const MOCK_TOUR_INFO_TEMPLATE: OrderTourInfo = {
+	id: MOCK_TOUR_OPTION_ID,
 	name: "Uzbekistan Cultural Tour",
 	typ: TourType.Regular,
 	days: 8,
 	nights: 7,
 	duration_hours: null,
 	route: ["Tashkent", "Samarkand", "Bukhara", "Tashkent"]
-} as const;
+};
 
 export const MOCK_CLIENT_NAMES = [
 	"Danda Fisher",

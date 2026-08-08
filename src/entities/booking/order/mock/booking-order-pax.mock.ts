@@ -65,9 +65,9 @@ const buildInitialPaxStore = (): Map<string, PaxWithFiles[]> => {
 	const store = new Map<string, PaxWithFiles[]>();
 
 	for (const detail of bookingOrderDetailStore.values()) {
-		if (detail.status === BookingStatus.Cancelled) continue;
-		const count = Math.min(3, Math.max(1, detail.pax - 1));
-		store.set(detail.id, createPaxForBooking(detail.id, count));
+		if (detail.order.status === BookingStatus.Cancelled) continue;
+		const count = Math.min(3, Math.max(1, detail.order.pax - 1));
+		store.set(detail.order.id, createPaxForBooking(detail.order.id, count));
 	}
 
 	return store;
@@ -89,8 +89,8 @@ export const setBookingPaxList = (
 export const getPendingBookingIds = (): string[] => {
 	const ids: string[] = [];
 	for (const detail of bookingOrderDetailStore.values()) {
-		if (detail.status === BookingStatus.Pending) {
-			ids.push(detail.id);
+		if (detail.order.status === BookingStatus.Pending) {
+			ids.push(detail.order.id);
 		}
 	}
 	return ids;

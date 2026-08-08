@@ -3,10 +3,14 @@ import { useTranslation } from "react-i18next";
 
 import {
 	EMPTY_ORDER_TOUR_REVIEW_SUMMARY,
-	buildOrderTourReviewData,
-	mapAvailabilityToTourReviewItems,
+	ENUM_ORDER_STATUS,
+	attachAvailabilityToItineraryItems,
 	mapBookingPaxListToPaxReview,
-	useGetBookingOrderByIdQuery,
+	mapOperatorItineraryToTourReviewItems,
+	mapOperatorOverviewToTourReviewSummary,
+	useGetOperatorBookingItineraryQuery,
+	useGetOperatorBookingOrderQuery,
+	useGetOperatorOrderOverviewQuery,
 	useListBookingAvailabilityQuery,
 	useListPassengerInfoQuery
 } from "@/entities/booking";
@@ -16,17 +20,25 @@ import { getContactItems, getOrderItems } from "../helpers";
 export const useOrderDetails = (orderId: string) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
 
-	const orderQuery = useGetBookingOrderByIdQuery(orderId, {
+	const orderQuery = useGetOperatorBookingOrderQuery(orderId, {
 		skip: !orderId
 	});
 	const order = orderQuery.data;
+
+	const overviewQuery = useGetOperatorOrderOverviewQuery(orderId, {
+		skip: !orderId
+	});
+
+	const itineraryQuery = useGetOperatorBookingItineraryQuery(orderId, {
+		skip: !orderId
+	});
 
 	const paxQuery = useListPassengerInfoQuery(orderId, {
 		skip: !orderId
 	});
 
 	const availabilityQuery = useListBookingAvailabilityQuery(orderId, {
-		skip: !orderId
+		skip: !orderId || order?.status === ENUM_ORDER_STATUS.CANCELLED
 	});
 
 	const orderItems = useMemo(
@@ -45,21 +57,22 @@ export const useOrderDetails = (orderId: string) => {
 	);
 
 	const tourReview = useMemo(() => {
-		if (!order) {
-			return { items: [], summary: EMPTY_ORDER_TOUR_REVIEW_SUMMARY };
-		}
-
-		const items = mapAvailabilityToTourReviewItems(
+		const items = attachAvailabilityToItineraryItems(
+			mapOperatorItineraryToTourReviewItems(itineraryQuery.data),
 			availabilityQuery.data ?? []
 		);
+		const summary = overviewQuery.data
+			? mapOperatorOverviewToTourReviewSummary(overviewQuery.data)
+			: EMPTY_ORDER_TOUR_REVIEW_SUMMARY;
 
-		return buildOrderTourReviewData(items, order);
-	}, [order, availabilityQuery.data]);
+		return { items, summary };
+	}, [itineraryQuery.data, availabilityQuery.data, overviewQuery.data]);
 
 	const isLoading =
 		orderQuery.isLoading ||
-		paxQuery.isLoading ||
-		availabilityQuery.isLoading;
+		overviewQuery.isLoading ||
+		itineraryQuery.isLoading ||
+		paxQuery.isLoading;
 
 	return {
 		order,

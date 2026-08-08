@@ -1,4 +1,7 @@
 export * from "./order.interface";
+export * from "./order-agency.interface";
+export * from "./order-user.interface";
+export * from "./order-operator.interface";
 export * from "./client-type.types";
 export * from "./gender.types";
 export * from "./invoice-status.types";
@@ -6,6 +9,9 @@ export * from "./order-status.types";
 export * from "./availability-status.types";
 export * from "./order-type.types";
 export * from "./order-backend.interface";
+export * from "./order-agency-backend.interface";
+export * from "./order-user-backend.interface";
+export * from "./order-operator-backend.interface";
 export * from "./order-filter.interface";
 export * from "./apply-review-item.types";
 export * from "./supplier-payment-status.types";

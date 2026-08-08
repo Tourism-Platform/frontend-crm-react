@@ -1,11 +1,11 @@
 import type { TFunction } from "i18next";
 
-import { type IOrderDetail } from "@/entities/booking";
+import { type IOperatorOrderDetail } from "@/entities/booking";
 
 import { type IInfoItem } from "../types";
 
 export const getOptionItems = (
-	order: IOrderDetail,
+	order: IOperatorOrderDetail,
 	t: TFunction<"order_id_page">
 ): IInfoItem[] => [
 	{

@@ -36,9 +36,10 @@
 		"fields": {
 			"tour_name": "Название тура",
 			"type": "Тип",
-			"pax": "PAX",
+			"pax": "Размер группы",
 			"route": "Маршрут",
 			"duration": "Длительность",
+			"duration_value": "{{days}} дн. / {{nights}} ноч.",
 			"dates": "Даты",
 			"comment": "Комментарий"
 		}

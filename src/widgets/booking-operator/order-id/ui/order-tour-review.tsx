@@ -13,7 +13,6 @@ import {
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import {
-	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
 	type IOrderTourReviewItem,
 	type TOrderTourReviewSummary
@@ -54,8 +53,8 @@ const OrderTourReviewBase = ({
 }: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
 	const summaryItems = useMemo(
-		() => getTourSummary(summary, orderStatus, t),
-		[summary, orderStatus, t]
+		() => getTourSummary(summary, t),
+		[summary, t]
 	);
 
 	const columns = useMemo(
@@ -69,14 +68,7 @@ const OrderTourReviewBase = ({
 				<CardTitle className="text-lg font-semibold">
 					{t("tour_review.title")}
 				</CardTitle>
-				<div
-					className={cn("grid items-center gap-8 w-fit", {
-						"grid-cols-[auto_1px_auto]":
-							orderStatus === ENUM_ORDER_STATUS.NEW,
-						"grid-cols-[auto_1px_auto_1px_auto_1px_auto]":
-							orderStatus !== ENUM_ORDER_STATUS.NEW
-					})}
-				>
+				<div className="grid w-fit grid-cols-[auto_1px_auto_1px_auto_1px_auto] items-center gap-8">
 					{summaryItems.map((item, index) => (
 						<Fragment key={item.label}>
 							<TourSummaryColumn {...item} />
@@ -97,6 +89,7 @@ const OrderTourReviewBase = ({
 					getSubRows={getSubRowsFn}
 					tableLayout={TABLE_LAYOUT}
 					showTopFilters={false}
+					defaultExpanded={true}
 				/>
 			</CardContent>
 		</Card>

@@ -57,7 +57,7 @@ const buildInitialAvailabilityStore = (): Map<
 
 	for (const bookingId of getPendingBookingIds()) {
 		const detail = bookingOrderDetailStore.get(bookingId);
-		if (detail?.status === BookingStatus.Pending) {
+		if (detail?.order.status === BookingStatus.Pending) {
 			store.set(bookingId, buildAvailabilityRows(bookingId));
 		}
 	}
@@ -71,7 +71,7 @@ export const getBookingAvailabilityList = (
 	bookingId: string
 ): TBookingEventAvailabilityBackend[] => {
 	const detail = bookingOrderDetailStore.get(bookingId);
-	if (detail?.status !== BookingStatus.Pending) return [];
+	if (detail?.order.status !== BookingStatus.Pending) return [];
 	return bookingAvailabilityStore.get(bookingId) ?? [];
 };
 
@@ -79,7 +79,7 @@ export const ensureBookingAvailabilityForBooking = (
 	bookingId: string
 ): void => {
 	const detail = bookingOrderDetailStore.get(bookingId);
-	if (detail?.status !== BookingStatus.Pending) return;
+	if (detail?.order.status !== BookingStatus.Pending) return;
 	if (bookingAvailabilityStore.has(bookingId)) return;
 	bookingAvailabilityStore.set(bookingId, buildAvailabilityRows(bookingId));
 };

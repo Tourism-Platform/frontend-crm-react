@@ -35,10 +35,11 @@ export const TOUR_REVIEW_COLUMNS = (
 				const hasSubRows = !!subRows?.length;
 				const metadata = type ? EVENT_METADATA[type] : null;
 				const Icon = metadata?.icon;
+				const title = getValue() as string;
 
 				return (
 					<div
-						className="flex items-center gap-2"
+						className="flex w-full min-w-0 items-center gap-2"
 						style={{ paddingLeft: `${depth * 2}rem` }}
 					>
 						{hasSubRows ? (
@@ -46,6 +47,7 @@ export const TOUR_REVIEW_COLUMNS = (
 								onClick={getToggleExpandedHandler()}
 								variant="ghost"
 								size="icon"
+								className="shrink-0"
 							>
 								{getIsExpanded() ? (
 									<ChevronDown className="size-4 text-muted-foreground" />
@@ -54,34 +56,52 @@ export const TOUR_REVIEW_COLUMNS = (
 								)}
 							</Button>
 						) : (
-							<div className="w-9" />
+							<div className="w-9 shrink-0" />
 						)}
 						<div
 							className={cn(
 								"size-8 rounded-full flex items-center justify-center text-white shrink-0",
-								metadata?.color_bg
+								metadata?.color_bg || "bg-slate-200"
 							)}
 						>
 							{Icon && <Icon className="size-4" />}
 						</div>
-						<span className="font-medium">
-							{getValue() as string}
+						<span
+							title={title}
+							className="min-w-0 truncate font-medium"
+						>
+							{title}
 						</span>
 					</div>
 				);
-			}
+			},
+			size: 200
 		},
 		{
 			accessorKey: "supplier",
-			header: t("tour_review.table.supplier")
+			header: t("tour_review.table.supplier"),
+			cell: ({
+				row: {
+					original: { supplier }
+				}
+			}) => (
+				<div className="min-w-0 w-full">
+					<span title={supplier} className="block truncate">
+						{supplier}
+					</span>
+				</div>
+			),
+			size: 200
 		},
 		{
 			accessorKey: "plannedCost",
-			header: t("tour_review.table.planned_cost")
+			header: t("tour_review.table.planned_cost"),
+			size: 100
 		},
 		{
 			accessorKey: "estimatedRevenue",
-			header: t("tour_review.table.estimated_revenue")
+			header: t("tour_review.table.estimated_revenue"),
+			size: 100
 		},
 		...(orderStatus === ENUM_ORDER_STATUS.IN_PROCESSING
 			? [
@@ -93,12 +113,8 @@ export const TOUR_REVIEW_COLUMNS = (
 							</span>
 						),
 						cell: ({ row }) => {
-							const {
-								type,
-								eventId,
-								optionIndex,
-								availabilityStatus
-							} = row.original;
+							const { type, eventId, optionIndex, availability } =
+								row.original;
 							const depth = row.depth;
 							const parentRow = row.getParentRow?.();
 							const parentType = parentRow?.original?.type;
@@ -119,7 +135,7 @@ export const TOUR_REVIEW_COLUMNS = (
 									bookingId={bookingId}
 									eventId={eventId}
 									optionIndex={optionIndex}
-									availabilityStatus={availabilityStatus}
+									availabilityStatus={availability?.status}
 								/>
 							);
 						},

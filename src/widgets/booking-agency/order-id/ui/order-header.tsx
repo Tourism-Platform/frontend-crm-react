@@ -18,13 +18,13 @@ import {
 } from "@/entities/booking";
 
 interface IOrderHeaderProps {
-	orderId: string;
+	orderNumber: string;
 	status: ENUM_ORDER_STATUS_TYPE;
 	invoiceStatus?: ENUM_INVOICE_STATUS_TYPE;
 }
 
 export const OrderHeader: FC<IOrderHeaderProps> = ({
-	orderId,
+	orderNumber,
 	status,
 	invoiceStatus
 }) => {
@@ -53,7 +53,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 			<div className="grid gap-2">
 				<div className="flex items-center justify-between">
 					<div className="flex flex-col gap-3">
-						<h1 className="text-3xl">{orderId}</h1>
+						<h1 className="text-3xl">{orderNumber}</h1>
 						<div className="flex items-center gap-4">
 							<div className="flex items-center gap-2">
 								<span className="text-sm font-medium">

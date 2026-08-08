@@ -1,15 +1,11 @@
 import type { IDownloadFile } from "@/shared/hooks";
 import { type IPaginationResponse } from "@/shared/types";
 
-import type { ITourSummary } from "@/entities/tour/tour/types/tour-review.interface";
-
 import { type ENUM_CLIENT_TYPE_OPTIONS_TYPE } from "./client-type.types";
 import { type ENUM_GENDER_OPTIONS_TYPE } from "./gender.types";
 import { type ENUM_INVOICE_STATUS_TYPE } from "./invoice-status.types";
 import { type ENUM_ORDER_STATUS_TYPE } from "./order-status.types";
-import type { IOrderTourReviewItem } from "./order-tour-review.types";
 import { type ENUM_ORDER_TYPE_OPTIONS_TYPE } from "./order-type.types";
-import type { ISupplierPaymentItem } from "./supplier-payment.interface";
 
 export interface IPaxReviewDetail {
 	id: string;
@@ -60,6 +56,18 @@ export interface IOrderUserInfo {
 	phoneNumber?: string | null;
 }
 
+export interface IOrderOperatorInfo {
+	id: string;
+	name: string;
+	businessName?: string | null;
+	contactPerson?: string | null;
+	contactPosition?: string | null;
+	contactEmail?: string | null;
+	contactPhone?: string | null;
+	websiteUrl?: string | null;
+	logoUrl?: string | null;
+}
+
 export interface IOrder {
 	orderId: string;
 	orderNumber?: string;
@@ -73,30 +81,6 @@ export interface IOrder {
 	manager?: string;
 	invoiceStatus?: ENUM_INVOICE_STATUS_TYPE;
 	status: ENUM_ORDER_STATUS_TYPE;
-}
-
-export interface IOrderDetail extends IOrder {
-	agencyId: string;
-	agency: IOrderAgencyInfo;
-	userId?: string | null;
-	user?: IOrderUserInfo | null;
-	tourOptionId: string;
-	tour: IOrderTourInfo;
-	duration: string;
-	route: string;
-	comment?: string;
-	tourAmount: string;
-	paidAmount: string;
-	email?: string;
-	phone?: string;
-	roomType?: string;
-	carClass?: string;
-	isAvailable?: boolean;
-	report?: string;
-	paxDetails?: IPaxReviewItem[];
-	tourReview?: IOrderTourReviewItem[];
-	supplierPayments?: ISupplierPaymentItem[];
-	tourSummary?: ITourSummary;
 }
 
 export type TBookingOrderPaginatedResponse = IPaginationResponse<IOrder>;

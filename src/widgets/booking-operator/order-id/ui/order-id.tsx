@@ -45,6 +45,7 @@ export const OrderId: FC = () => {
 		<div className="flex flex-col gap-8 text-foreground">
 			<OrderHeader
 				orderId={order.orderId}
+				orderNumber={order.orderNumber}
 				status={order.status}
 				invoiceStatus={order.invoiceStatus}
 			/>

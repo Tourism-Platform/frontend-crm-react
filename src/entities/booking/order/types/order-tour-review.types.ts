@@ -3,12 +3,11 @@ import type {
 	ITourSummaryRange
 } from "@/entities/tour/tour/types/tour-review.interface";
 
-import type { ENUM_AVAILABILITY_STATUS_TYPE } from "./availability-status.types";
+import type { IBookingEventAvailability } from "./booking-availability.types";
 
 export interface IOrderTourReviewItem extends ITourReviewItem {
 	eventId?: string;
-	availabilityStatus?: ENUM_AVAILABILITY_STATUS_TYPE;
-	isApplied?: boolean;
+	availability?: IBookingEventAvailability;
 	subRows?: IOrderTourReviewItem[];
 }
 
@@ -34,4 +33,9 @@ export type TOrderTourReviewSummary =
 export interface IOrderTourReviewData {
 	items: IOrderTourReviewItem[];
 	summary: TOrderTourReviewSummary;
+}
+
+export interface IOrderTourReviewAmounts {
+	tourAmount: string;
+	paidAmount: string;
 }

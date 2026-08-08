@@ -12,7 +12,7 @@ export const mapUpdateLandingToBackend = (
 	frontend: TLandingSchema
 ): TUpdateLandingImageBackendBody => ({
 	description: frontend.description,
-	languages: languageMapper.toMany(frontend.languages ?? []),
+	// languages: languageMapper.toMany(frontend.languages ?? []),
 	amenities_included: frontend.included ?? [],
 	amenities_not_included: frontend.not_included ?? [],
 	pickup_type: pickupMapper.toMany(frontend.pickup_type ?? []),
