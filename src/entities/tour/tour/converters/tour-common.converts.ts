@@ -2,15 +2,17 @@ import { type LanguageCode, type TOUR_PATHS } from "@/shared/api";
 import { languageCodeMapper } from "@/shared/converters";
 import type { IPaginationResponse } from "@/shared/types";
 
+import { languageMapper } from "../../landing/converters/languages.converters";
 import type {
 	ITourCard,
 	ITourFilters,
 	ITourGeneral,
-	TCreateTourCategoriesBackend,
 	TCreateTourSchema,
 	TGetTourBackendResponse,
 	TListToursBackendResponse,
-	TTourBackend
+	TTourBackend,
+	TTourSettingsGeneralFormSchema,
+	TTourUpdateBackendBody
 } from "../types";
 
 import { tourCategoriesMapper } from "./tour-categories.converters";
@@ -23,7 +25,7 @@ const mapTourLanguageBadge = (code: LanguageCode): string =>
 export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
 	id: backend.id,
 	status: tourStatusMapper.from(backend.status)!,
-	title: backend.name,
+	title: backend.title ?? "",
 	route: [],
 	type: tourTypeMapper.from(backend.typ)!,
 	priceFrom: 0,
@@ -44,7 +46,7 @@ export const mapTourGeneralToFrontend = (
 ): ITourGeneral => ({
 	id: backend.id,
 	status: tourStatusMapper.from(backend.status)!,
-	tourTitle: backend.name,
+	tourTitle: backend.title ?? "",
 	tourType: tourTypeMapper.from(backend.typ)!,
 	groupSize: backend.group_size,
 	duration: {
@@ -52,26 +54,38 @@ export const mapTourGeneralToFrontend = (
 		to: backend.nights
 	},
 	ageRequires: {
-		from: backend.age_from!,
-		to: backend.age_to!
+		from: backend.age_from ?? "",
+		to: backend.age_to ?? ""
 	},
-	tourCategories: tourCategoriesMapper.fromMany(backend.categories ?? [])
+	tourCategories: tourCategoriesMapper.fromMany(backend.categories ?? []),
+	languages: languageMapper.fromMany(backend.languages ?? [])
 });
 
-export const mapTourCreateToBackend = (
-	frontend: TCreateTourSchema
-): TCreateTourCategoriesBackend => ({
-	// !!! need to add all fields
-	name: frontend.tourTitle,
-	days: frontend.duration?.from,
-	nights: frontend.duration?.to,
+export const mapTourCreateToBackend = (frontend: TCreateTourSchema) => ({
+	title: frontend.tourTitle,
+	days: frontend.duration.from,
+	nights: frontend.duration.to,
 	age_from: frontend.ageRequires?.from || null,
 	age_to: frontend.ageRequires?.to || null,
 	group_size: frontend.groupSize,
-	categories: tourCategoriesMapper.toMany(frontend.tourCategories ?? [])
+	typ: tourTypeMapper.to(frontend.tourType)!,
+	categories: tourCategoriesMapper.toMany(frontend.tourCategories ?? []),
+	languages: languageMapper.toMany(frontend.languages)
 });
 
-// !!! Полностью переделать
+export const mapTourUpdateToBackend = (
+	frontend: TTourSettingsGeneralFormSchema
+): TTourUpdateBackendBody => ({
+	typ: tourTypeMapper.to(frontend.tourType),
+	days: frontend.duration.from,
+	nights: frontend.duration.to,
+	age_from: frontend.ageRequires?.from || null,
+	age_to: frontend.ageRequires?.to || null,
+	group_size: frontend.groupSize,
+	categories: tourCategoriesMapper.toMany(frontend.tourCategories ?? []),
+	languages: languageMapper.toMany(frontend.languages)
+});
+
 export const mapTourPaginatedToFrontend = (
 	response: TListToursBackendResponse
 ): IPaginationResponse<ITourCard> => ({

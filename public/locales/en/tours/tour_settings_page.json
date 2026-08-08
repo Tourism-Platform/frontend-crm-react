@@ -33,6 +33,10 @@
 				"tourCategories": {
 					"label": "Tour category",
 					"placeholder": "Select categories..."
+				},
+				"languages": {
+					"label": "Tour languages",
+					"placeholder": "Select languages"
 				}
 			},
 			"errors": {
@@ -68,6 +72,9 @@
 				},
 				"tourCategories": {
 					"required": "Select at least one category"
+				},
+				"languages": {
+					"required": "Select at least one language"
 				}
 			},
 			"buttons": {

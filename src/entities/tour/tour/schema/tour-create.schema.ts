@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { type TToursPageKeys, i18nKey } from "@/shared/config";
 
+import { ENUM_LANGUAGES } from "../../landing/types";
 import {
 	ENUM_TOUR_CREATE_FORM as ENUM_FORM,
 	ENUM_TOUR_CATEGORY,
@@ -73,5 +74,8 @@ export const TOUR_CREATE_SCHEMA = z.object({
 		}),
 	[ENUM_FORM.TOUR_CATEGORIES]: z
 		.array(z.enum(ENUM_TOUR_CATEGORY))
-		.min(1, msg("create.form.errors.tourCategories.required"))
+		.min(1, msg("create.form.errors.tourCategories.required")),
+	[ENUM_FORM.LANGUAGES]: z
+		.array(z.enum(ENUM_LANGUAGES))
+		.min(1, msg("create.form.errors.languages.required"))
 });

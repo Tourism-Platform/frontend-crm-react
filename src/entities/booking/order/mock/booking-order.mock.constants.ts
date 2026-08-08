@@ -66,7 +66,7 @@ export const MOCK_BOOKING_DEFAULTS = {
 
 export const MOCK_TOUR_INFO_TEMPLATE: OrderTourInfo = {
 	id: MOCK_TOUR_OPTION_ID,
-	name: "Uzbekistan Cultural Tour",
+	title: "Uzbekistan Cultural Tour",
 	typ: TourType.Regular,
 	days: 8,
 	nights: 7,

@@ -33,6 +33,10 @@
 				"tourCategories": {
 					"label": "Категория тура",
 					"placeholder": "Выберите категории..."
+				},
+				"languages": {
+					"label": "Языки тура",
+					"placeholder": "Выберите языки"
 				}
 			},
 			"errors": {
@@ -68,6 +72,9 @@
 				},
 				"tourCategories": {
 					"required": "Выберите хотя бы одну категорию"
+				},
+				"languages": {
+					"required": "Выберите хотя бы один язык"
 				}
 			},
 			"buttons": {

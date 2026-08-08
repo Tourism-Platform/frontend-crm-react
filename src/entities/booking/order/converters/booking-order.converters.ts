@@ -27,7 +27,7 @@ export const mapBookingOrderListItemToFrontend = (
 		from: formatDate(data.date),
 		to: formatDate(data.end_date)
 	},
-	tourName: data.tour_name,
+	tourName: data.tour_name ?? "",
 	status: orderStatusMapper.from(data.status)!
 });
 

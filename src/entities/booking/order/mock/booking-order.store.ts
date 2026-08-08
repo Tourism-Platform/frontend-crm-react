@@ -82,7 +82,7 @@ export const listBookingOrders = ({
 		filtered = filtered.filter(
 			(item) =>
 				item.client_name.toLowerCase().includes(query) ||
-				item.tour_name.toLowerCase().includes(query) ||
+				(item.tour_name ?? "").toLowerCase().includes(query) ||
 				item.order_number.toLowerCase().includes(query)
 		);
 	}

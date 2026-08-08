@@ -18,7 +18,8 @@ export const GENERAL_FORM_LIST = ({
 		placeholder: "general.form.fields.tourTitle.placeholder",
 		key: ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_TITLE,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "col-span-2",
+		disabled: true
 	},
 	{
 		label: "general.form.fields.tourType.label",

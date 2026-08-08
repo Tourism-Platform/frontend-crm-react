@@ -1,7 +1,9 @@
-import { TourCategory, TourStatus, TourType } from "@/shared/api";
+import { LanguageCode, TourCategory, TourStatus, TourType } from "@/shared/api";
 
 export const TOUR_GENERAL_MOCK = {
 	id: "9f2b3d82-5c4d-4b9f-9f7a-1a42e71d1b11",
+	created_at: "2026-08-04T13:02:41.923472",
+	updated_at: "2026-08-04T13:03:52.399499",
 	status: TourStatus.Archived,
 	operator_id: "123",
 	schedule_id: "123",
@@ -10,11 +12,13 @@ export const TOUR_GENERAL_MOCK = {
 	cover_image_path: "123",
 	duration_hours: 10,
 	typ: TourType.Regular,
-	name: "Embark on an Unforgettable Archaeological Journey",
+	title: "Embark on an Unforgettable Archaeological Journey",
 	group_size: 15,
+	group_size_min: 10,
 	days: 10,
 	nights: 10,
 	age_from: 18,
 	age_to: 65,
-	categories: [TourCategory.AdventureOutdoor]
+	categories: [TourCategory.AdventureOutdoor],
+	languages: [LanguageCode.En, LanguageCode.Ru]
 };

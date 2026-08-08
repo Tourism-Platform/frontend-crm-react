@@ -4,7 +4,6 @@ import type { LANDING_SCHEMA } from "../schema";
 
 export const ENUM_FORM_LANDING = {
 	DESCRIPTION: "description",
-	LANGUAGES: "languages",
 	INCLUDED: "included",
 	NOT_INCLUDED: "not_included",
 	PICKUP_TYPE: "pickup_type",

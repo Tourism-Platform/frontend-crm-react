@@ -25,6 +25,7 @@ import {
 	ENUM_TOUR_CREATE_FORM as ENUM_FORM,
 	type TCreateTourSchema,
 	TOUR_CREATE_SCHEMA,
+	TourLanguagesField,
 	useCreateTourMutation
 } from "@/entities/tour";
 
@@ -48,13 +49,13 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 			[ENUM_FORM.GROUP_SIZE]: undefined,
 			[ENUM_FORM.DURATION]: { from: undefined, to: undefined },
 			[ENUM_FORM.AGE_REQUIRES]: { from: undefined, to: undefined },
-			[ENUM_FORM.TOUR_CATEGORIES]: []
+			[ENUM_FORM.TOUR_CATEGORIES]: [],
+			[ENUM_FORM.LANGUAGES]: []
 		}
 	});
 
 	async function onSubmit(data: TCreateTourSchema) {
 		try {
-			console.log(data);
 			await createTour(data).unwrap();
 			toast.success(t("create.form.toasts.success"));
 			setOpen(false);
@@ -101,7 +102,7 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 									return (
 										<CustomRangeField
 											key={key}
-											control={form?.control}
+											control={form.control}
 											name={key}
 											label={`create.form.fields.${key}.label`}
 											placeholder_left={`create.form.fields.${key}.placeholder_left`}
@@ -113,13 +114,18 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 								return (
 									<CustomField
 										key={key}
-										control={form?.control}
+										control={form.control}
 										name={key}
 										t={t}
 										{...item}
 									/>
 								);
 							})}
+							<TourLanguagesField
+								control={form.control}
+								name={ENUM_FORM.LANGUAGES}
+								label={t("create.form.fields.languages.label")}
+							/>
 						</div>
 						<DialogFooter>
 							<DialogClose asChild onClick={() => setOpen(false)}>

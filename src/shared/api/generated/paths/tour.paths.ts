@@ -3,7 +3,7 @@ import type {
 	TourListResponse,
 	TourListSortField,
 	TourMetaCreateSchema,
-	TourMetaModel,
+	TourMetaResponse,
 	TourMetaUpdateSchema,
 	TourStatisticsResponse,
 	TourStatus,
@@ -37,7 +37,7 @@ export const TOUR_PATHS = {
 		_types: {} as {
 			body: TourMetaCreateSchema;
 			query: void;
-			response: TourMetaModel;
+			response: TourMetaResponse;
 		}
 	} as const,
 	listOneDayTours: {
@@ -46,14 +46,18 @@ export const TOUR_PATHS = {
 		_types: {} as {
 			body: void;
 			query: { skip?: number; limit?: number };
-			response: TourMetaModel[];
+			response: TourMetaResponse[];
 		}
 	} as const,
 	getTour: (tourId: string) =>
 		({
 			url: `/tour/${tourId}`,
 			method: "GET",
-			_types: {} as { body: void; query: void; response: TourMetaModel }
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
 		}) as const,
 	updateTour: (tourId: string) =>
 		({
@@ -62,7 +66,7 @@ export const TOUR_PATHS = {
 			_types: {} as {
 				body: TourMetaUpdateSchema;
 				query: void;
-				response: TourMetaModel;
+				response: TourMetaResponse;
 			}
 		}) as const,
 	deleteTour: (tourId: string) =>
@@ -75,19 +79,31 @@ export const TOUR_PATHS = {
 		({
 			url: `/tour/${tourId}/publish`,
 			method: "POST",
-			_types: {} as { body: void; query: void; response: TourMetaModel }
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
 		}) as const,
 	archiveTour: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/archive`,
 			method: "POST",
-			_types: {} as { body: void; query: void; response: TourMetaModel }
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
 		}) as const,
 	refreshTourProjection: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/refresh`,
 			method: "POST",
-			_types: {} as { body: void; query: void; response: TourMetaModel }
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
 		}) as const,
 	uploadTourCover: (tourId: string) =>
 		({
@@ -96,7 +112,7 @@ export const TOUR_PATHS = {
 			_types: {} as {
 				body: BodyUploadTourCoverTourTourIdCoverPost;
 				query: void;
-				response: TourMetaModel;
+				response: TourMetaResponse;
 			}
 		}) as const,
 	deleteTourCover: (tourId: string) =>

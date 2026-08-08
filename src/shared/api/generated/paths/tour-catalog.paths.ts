@@ -32,7 +32,8 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_max?: number | null;
 				city?: string | null;
 				country?: string | null;
-				language?: LanguageCode | null;
+				tour_lang?: LanguageCode | null;
+				read_lang?: LanguageCode;
 				skip?: number;
 				limit?: number;
 			};
@@ -52,7 +53,8 @@ export const TOUR_CATALOG_PATHS = {
 				duration_days_max?: number | null;
 				city?: string | null;
 				country?: string | null;
-				language?: LanguageCode | null;
+				tour_lang?: LanguageCode | null;
+				read_lang?: LanguageCode;
 				skip?: number;
 				limit?: number;
 			};

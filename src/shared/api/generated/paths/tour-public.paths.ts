@@ -3,7 +3,7 @@ import type {
 	LandingPagePubSchema,
 	LanguageCode,
 	OperatorPreviewPubSchema,
-	TourMetaModel,
+	TourMetaResponse,
 	TourOptionPreviewSchemaOutput,
 	TourOptionPublicResponse,
 	TourSchedulePubSchema
@@ -17,7 +17,11 @@ export const TOUR_PUBLIC_PATHS = {
 		({
 			url: `/tour/${tourId}/public`,
 			method: "GET",
-			_types: {} as { body: void; query: void; response: TourMetaModel }
+			_types: {} as {
+				body: void;
+				query: { read_lang?: LanguageCode };
+				response: TourMetaResponse;
+			}
 		}) as const,
 	listPublicTourOptions: (tourId: string) =>
 		({

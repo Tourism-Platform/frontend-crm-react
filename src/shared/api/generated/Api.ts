@@ -65,7 +65,7 @@ export enum TourStatus {
 
 /** TourListSortField */
 export enum TourListSortField {
-	Name = "name",
+	Title = "title",
 	Status = "status",
 	GroupSize = "group_size",
 	CreatedAt = "created_at"
@@ -1289,7 +1289,7 @@ export interface BookingOrderRowInput {
 	client_name: string;
 	client_type: BookingClientType;
 	/** Tour Name */
-	tour_name: string;
+	tour_name: string | null;
 	tour_type: TourType;
 	status: BookingStatus;
 	/**
@@ -1330,7 +1330,7 @@ export interface BookingOrderRowOutput {
 	client_name: string;
 	client_type: BookingClientType;
 	/** Tour Name */
-	tour_name: string;
+	tour_name: string | null;
 	tour_type: TourType;
 	status: BookingStatus;
 	/**
@@ -1858,7 +1858,7 @@ export interface ClientPaymentResponse {
 	/** Client Name */
 	client_name: string;
 	/** Tour Name */
-	tour_name: string;
+	tour_name: string | null;
 	/** Amount */
 	amount: number;
 	currency: Currency;
@@ -2856,8 +2856,8 @@ export interface FrozenTourMeta {
 	 * @format uuid
 	 */
 	id: string;
-	/** Name */
-	name: string;
+	/** Title */
+	title?: string | null;
 	/** Cover Image Path */
 	cover_image_path?: string | null;
 	/** Group Size */
@@ -5398,8 +5398,8 @@ export interface OrderTourInfo {
 	 * @format uuid
 	 */
 	id: string;
-	/** Name */
-	name: string;
+	/** Title */
+	title: string | null;
 	typ: TourType;
 	/** Days */
 	days: number;
@@ -6131,8 +6131,8 @@ export interface PublicTourCatalogSchemaInput {
 	 * @format uuid
 	 */
 	tour_id: string;
-	/** Name */
-	name: string;
+	/** Title */
+	title: string | null;
 	/** Cover Image Url */
 	cover_image_url: string | null;
 	/** Description */
@@ -6173,8 +6173,8 @@ export interface PublicTourCatalogSchemaOutput {
 	 * @format uuid
 	 */
 	tour_id: string;
-	/** Name */
-	name: string;
+	/** Title */
+	title: string | null;
 	/** Cover Image Url */
 	cover_image_url: string | null;
 	/** Description */
@@ -6912,13 +6912,17 @@ export interface TourListResponse {
 	/** Total Count */
 	total_count: number;
 	/** Data */
-	data: TourMetaModel[];
+	data: TourMetaResponse[];
 }
 
 /** TourMetaCreateSchema */
 export interface TourMetaCreateSchema {
-	/** Name */
-	name: string;
+	/**
+	 * Title
+	 * @minLength 1
+	 * @maxLength 255
+	 */
+	title: string;
 	/**
 	 * Days
 	 * @min 1
@@ -6958,13 +6962,28 @@ export interface TourMetaCreateSchema {
 	languages?: LanguageCode[];
 }
 
-/** TourMetaModel */
-export interface TourMetaModel {
+/**
+ * TourMetaResponse
+ * ``tour_meta`` joined to its landing page, which owns the tour title. The
+ * tour row itself carries no text — every reader that used to select
+ * ``tour_meta.name`` now reads ``landing_page.title`` through this shape.
+ */
+export interface TourMetaResponse {
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/**
+	 * Created At
+	 * @format date-time
+	 */
+	created_at: string;
+	/**
+	 * Updated At
+	 * @format date-time
+	 */
+	updated_at: string;
 	/**
 	 * Operator Id
 	 * @format uuid
@@ -6976,8 +6995,8 @@ export interface TourMetaModel {
 	agency_id: string | null;
 	/** Landing Id */
 	landing_id: string | null;
-	/** Name */
-	name: string;
+	/** Title */
+	title: string | null;
 	/** Cover Image Path */
 	cover_image_path: string | null;
 	/** Group Size */
@@ -7002,10 +7021,13 @@ export interface TourMetaModel {
 	languages: LanguageCode[];
 }
 
-/** TourMetaUpdateSchema */
+/**
+ * TourMetaUpdateSchema
+ * The tour title is not here on purpose: it lives on ``landing_page.title``
+ * and is renamed through ``PATCH /tour/{tour_id}/landing``, which is also where
+ * the per-operator uniqueness check and the translation re-run hang off.
+ */
 export interface TourMetaUpdateSchema {
-	/** Name */
-	name?: string | null;
 	typ?: TourType | null;
 	/** Agency Id */
 	agency_id?: string | null;
@@ -8599,8 +8621,10 @@ export interface ListPublicCatalogTourCatalogPublicGetParams {
 	city?: string | null;
 	/** Country */
 	country?: string | null;
-	/** Language */
-	language?: LanguageCode | null;
+	/** Tour Lang */
+	tour_lang?: LanguageCode | null;
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
 	 * Skip
 	 * @min 0
@@ -8631,8 +8655,10 @@ export interface ListAgencyCatalogTourCatalogAgencyGetParams {
 	city?: string | null;
 	/** Country */
 	country?: string | null;
-	/** Language */
-	language?: LanguageCode | null;
+	/** Tour Lang */
+	tour_lang?: LanguageCode | null;
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
 	 * Skip
 	 * @min 0
@@ -9670,6 +9696,8 @@ export interface SetPrimaryLandingImageTourTourIdLandingImagesImageIdSetPrimaryP
 }
 
 export interface GetTourTourTourIdPublicGetParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid

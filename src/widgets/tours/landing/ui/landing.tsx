@@ -36,7 +36,6 @@ import {
 import { AdditionalInfo } from "./additional-info";
 import { AmenitiesInfo } from "./amenities-info";
 import { CancellationPolicyInfo } from "./cancellation-policy-info";
-import { LanguagesInfo } from "./languages-info";
 import { OverviewInfo } from "./overview-info";
 import { type IPhotosChanges, PhotosInfo } from "./photos-info";
 import { PickupDetailsInfo } from "./pickup-details-info";
@@ -214,8 +213,6 @@ const LandingBase: FC = () => {
 							/>
 							<Separator />
 							<OverviewInfo form={form} />
-							<Separator />
-							<LanguagesInfo form={form} />
 							<Separator />
 							<AmenitiesInfo form={form} />
 							<Separator />

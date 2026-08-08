@@ -14,8 +14,7 @@ const mapOrderTourInfo = (
 	tour: TUserOrderDetailBackend["tour"]
 ): IOrderTourInfo => {
 	const orderType = bookingTourTypeMapper.from(tour.typ)!;
-	const tourName =
-		(tour as { title?: string }).title ?? tour.name ?? "";
+	const tourName = tour.title ?? "";
 
 	return {
 		name: tourName,

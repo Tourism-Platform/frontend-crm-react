@@ -11,7 +11,8 @@ import {
 	mapTourFinanceToFrontend,
 	mapTourGeneralToFrontend,
 	mapTourPaginatedToFrontend,
-	mapTourStatisticsToFrontend
+	mapTourStatisticsToFrontend,
+	mapTourUpdateToBackend
 } from "../converters";
 import type {
 	ITourCard,
@@ -65,7 +66,7 @@ export const tourApi = authApi.injectEndpoints({
 		>({
 			query: ({ id, data }) => ({
 				...TOUR_PATHS.updateTour(id),
-				body: mapTourCreateToBackend(data)
+				body: mapTourUpdateToBackend(data)
 			}),
 			transformResponse: (response: TUpdateTourBackendResponse) =>
 				mapTourGeneralToFrontend(response),

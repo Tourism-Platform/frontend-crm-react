@@ -20,6 +20,7 @@ import {
 	TOUR_CATEGORY_LABELS,
 	TOUR_SETTINGS_GENERAL_FORM_SCHEMA,
 	type TTourSettingsGeneralFormSchema,
+	TourLanguagesField,
 	useGetTourGeneralQuery,
 	useUpdateTourGeneralMutation
 } from "@/entities/tour";
@@ -80,7 +81,7 @@ const GeneralInfoBase: FC = () => {
 						({ key, ...item }) => (
 							<CustomField
 								key={key}
-								control={form?.control}
+								control={form.control}
 								name={key}
 								t={t}
 								{...item}
@@ -88,7 +89,7 @@ const GeneralInfoBase: FC = () => {
 						)
 					)}
 					<CustomRangeField
-						control={form?.control}
+						control={form.control}
 						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.DURATION}
 						label="general.form.fields.duration.label"
 						placeholder_left="general.form.fields.duration.placeholder_left"
@@ -96,7 +97,7 @@ const GeneralInfoBase: FC = () => {
 						t={t}
 					/>
 					<CustomRangeField
-						control={form?.control}
+						control={form.control}
 						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.AGE_REQUIRES}
 						label="general.form.fields.ageRequires.label"
 						placeholder_left="general.form.fields.ageRequires.placeholder_left"
@@ -104,7 +105,7 @@ const GeneralInfoBase: FC = () => {
 						t={t}
 					/>
 					<CustomField
-						control={form?.control}
+						control={form.control}
 						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES}
 						label="general.form.fields.tourCategories.label"
 						placeholder="general.form.fields.tourCategories.placeholder"
@@ -113,6 +114,11 @@ const GeneralInfoBase: FC = () => {
 						className="col-span-2"
 						badgeVariant="secondary"
 						t={t}
+					/>
+					<TourLanguagesField
+						control={form.control}
+						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.LANGUAGES}
+						label={t("general.form.fields.languages.label")}
 					/>
 				</div>
 				<div className="flex justify-end mt-6">

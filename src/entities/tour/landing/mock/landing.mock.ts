@@ -1,4 +1,4 @@
-import { ENUM_LANGUAGES, ENUM_PICKUP_TYPE } from "@/entities/tour";
+import { ENUM_PICKUP_TYPE } from "@/entities/tour";
 
 import type { ILandingBackend } from "../types";
 
@@ -6,7 +6,6 @@ export const TOUR_LANDING_MOCK: ILandingBackend = {
 	photos: "https://www.atorus.ru/sites/default/files/styles/head_carousel/public/2021-09/ca3023.jpg.webp?itok=Wg-lCwZ0",
 	description:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Embark on an unforgettable journey through the ancient cities of Uzbekistan."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"Discover the rich history, stunning architecture, and warm hospitality of the Silk Road."}]}]}',
-	languages: [ENUM_LANGUAGES.ENGLISH, ENUM_LANGUAGES.RUSSIAN],
 	includedAmenities: [
 		"professional_guide",
 		"hotel_accommodation",

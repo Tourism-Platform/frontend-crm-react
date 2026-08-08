@@ -177,7 +177,7 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 				order,
 				tour: {
 					...MOCK_TOUR_INFO_TEMPLATE,
-					name: tourName,
+					title: tourName,
 					typ: row.tourType
 				},
 				agency: isAgencyClient

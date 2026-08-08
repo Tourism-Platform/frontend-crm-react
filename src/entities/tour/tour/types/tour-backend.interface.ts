@@ -2,13 +2,13 @@ import type {
 	TOUR_FINANCIAL_PATHS,
 	TOUR_PATHS,
 	TourFinSettingsModel,
-	TourMetaCreateSchema,
-	TourMetaModel
+	TourMetaResponse,
+	TourMetaUpdateSchema
 } from "@/shared/api";
 
-export type TTourCreateBackend = TourMetaCreateSchema;
+export type TTourBackend = TourMetaResponse;
 
-export type TTourBackend = TourMetaModel;
+export type TTourUpdateBackendBody = TourMetaUpdateSchema;
 
 export type TCreateTourBackendResponse =
 	typeof TOUR_PATHS.createTour._types.response;
@@ -27,8 +27,5 @@ export type TListToursBackendResponse =
 export type TTourFinanceBackendResponse = ReturnType<
 	typeof TOUR_FINANCIAL_PATHS.getTourFinancials
 >["_types"]["response"];
-
-export type TCreateTourCategoriesBackend =
-	typeof TOUR_PATHS.createTour._types.body;
 
 export type TTourFinanceBackend = TourFinSettingsModel;
