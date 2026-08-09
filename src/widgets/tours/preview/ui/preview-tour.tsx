@@ -16,12 +16,7 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import {
-	useGetPreviewTourGeneralQuery,
-	useGetPreviewTourOptionsQuery,
-	useGetPreviewTourQuery,
-	usePreviewOptionDetail
-} from "@/entities/tour/preview-tour";
+import { usePreviewTourPageData } from "@/entities/tour/preview-tour";
 
 import {
 	ENUM_PREVIEW_TOUR_TAB,
@@ -45,55 +40,24 @@ const PreviewTourBase: FC = () => {
 	]);
 
 	const {
-		data: previewData,
-		isLoading: isPreviewLoading,
-		isError: isPreviewError
-	} = useGetPreviewTourQuery(tourId, {
-		skip: !tourId
-	});
+		tour: tourData,
+		landing: previewData,
+		options: optionsData,
+		singleOption,
+		optionDetail,
+		isLoading: isPageLoading,
+		isError,
+		isOptionDetailError
+	} = usePreviewTourPageData({ tourId, isDraft: isDraftPreview });
 
-	const {
-		data: tourData,
-		isLoading: isTourLoading,
-		isError: isTourError
-	} = useGetPreviewTourGeneralQuery(tourId, {
-		skip: !tourId
-	});
-
-	const {
-		data: optionsData,
-		isLoading: isOptionsLoading,
-		isError: isOptionsError
-	} = useGetPreviewTourOptionsQuery(tourId, {
-		skip: !tourId
-	});
-
-	const singleOption = optionsData?.length === 1 ? optionsData[0] : undefined;
-
-	const {
-		data: optionDetail,
-		isLoading: isOptionDetailLoading,
-		isError: isOptionDetailError
-	} = usePreviewOptionDetail({
-		tourId,
-		optionId: singleOption?.id ?? "",
-		skip: !singleOption
-	});
-
-	const isLoading =
-		!ready ||
-		isPreviewLoading ||
-		isTourLoading ||
-		isOptionsLoading ||
-		(Boolean(singleOption) && isOptionDetailLoading);
-
-	const showOptionsCards = (optionsData?.length ?? 0) > 1;
+	const isLoading = !ready || isPageLoading;
+	const showOptionsCards = optionsData.length > 1;
 
 	useEffect(() => {
-		if (isPreviewError || isTourError || isOptionsError) {
+		if (isError) {
 			toast.error(t("toasts.load.error"));
 		}
-	}, [isPreviewError, isTourError, isOptionsError, t]);
+	}, [isError, t]);
 
 	useEffect(() => {
 		if (singleOption && isOptionDetailError) {
@@ -177,9 +141,7 @@ const PreviewTourBase: FC = () => {
 						{showOptionsCards && (
 							<>
 								<Separator />
-								<PreviewOptionsCards
-									options={optionsData ?? []}
-								/>
+								<PreviewOptionsCards options={optionsData} />
 							</>
 						)}
 					</>

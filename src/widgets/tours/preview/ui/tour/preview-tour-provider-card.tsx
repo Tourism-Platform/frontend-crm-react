@@ -12,7 +12,7 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useGetPreviewOperatorQuery } from "@/entities/tour";
+import { usePreviewOperatorData } from "@/entities/tour";
 
 import { PROVIDER_CONTACTS, useIsDraftPreview } from "../../model";
 
@@ -22,10 +22,10 @@ const PreviewTourProviderCardBase: FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
 	const isDraftPreview = useIsDraftPreview();
 	const {
-		data,
+		operator: data,
 		isError: isPreviewError,
 		isLoading: isLoadingTourPreview
-	} = useGetPreviewOperatorQuery(tourId);
+	} = usePreviewOperatorData({ tourId, isDraft: isDraftPreview });
 
 	const providerData = PROVIDER_CONTACTS(data);
 

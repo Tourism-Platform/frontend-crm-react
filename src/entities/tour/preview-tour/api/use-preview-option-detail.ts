@@ -1,9 +1,11 @@
 import { useMemo } from "react";
 
 import { enrichOptionDetailTitle } from "../converters";
-import type { IOptionDetail } from "../types";
+import type { IOptionDetail, IPreviewOptionCard } from "../types";
 
 import {
+	useGetDraftPreviewOptionQuery,
+	useGetDraftPreviewOptionsQuery,
 	useGetPreviewOptionQuery,
 	useGetPreviewTourOptionsQuery
 } from "./preview-tour.service";
@@ -11,24 +13,41 @@ import {
 interface IUsePreviewOptionDetailArgs {
 	tourId: string;
 	optionId: string;
+	isDraft?: boolean;
 	skip?: boolean;
+	optionsList?: IPreviewOptionCard[];
 }
 
 export const usePreviewOptionDetail = ({
 	tourId,
 	optionId,
-	skip = false
+	isDraft = false,
+	skip = false,
+	optionsList: optionsListProp
 }: IUsePreviewOptionDetailArgs) => {
 	const shouldSkip = skip || !tourId || !optionId;
 
-	const query = useGetPreviewOptionQuery(
+	const publicQuery = useGetPreviewOptionQuery(
 		{ tourId, optionId },
-		{ skip: shouldSkip }
+		{ skip: shouldSkip || isDraft }
 	);
 
-	const { data: optionsList } = useGetPreviewTourOptionsQuery(tourId, {
-		skip: shouldSkip
+	const draftQuery = useGetDraftPreviewOptionQuery(
+		{ tourId, optionId },
+		{ skip: shouldSkip || !isDraft }
+	);
+
+	const { data: publicOptionsList } = useGetPreviewTourOptionsQuery(tourId, {
+		skip: shouldSkip || isDraft || Boolean(optionsListProp)
 	});
+
+	const { data: draftOptionsList } = useGetDraftPreviewOptionsQuery(tourId, {
+		skip: shouldSkip || !isDraft || Boolean(optionsListProp)
+	});
+
+	const query = isDraft ? draftQuery : publicQuery;
+	const optionsList =
+		optionsListProp ?? (isDraft ? draftOptionsList : publicOptionsList);
 
 	const data = useMemo((): IOptionDetail | undefined => {
 		if (!query.data) return undefined;

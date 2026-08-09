@@ -1,8 +1,28 @@
-import { TOUR_PUBLIC_PATHS } from "@/shared/api";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+
+import type {
+	LandingPageImageModel,
+	LandingPageResponse,
+	OperatorInfoModel,
+	TourMetaResponse,
+	TourOptionModel,
+	TourSummaryResponse
+} from "@/shared/api";
+import {
+	OPERATOR_PATHS,
+	TOUR_LANDING_PAGE_PATHS,
+	TOUR_OPTION_PATHS,
+	TOUR_PATHS,
+	TOUR_PUBLIC_PATHS
+} from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	composeDraftLandingToPreview,
+	mapDraftOperatorToFrontend,
+	mapDraftOptionCardToFrontend,
+	mapDraftPreviewOptionToFrontend,
 	mapPreviewOperatorToFrontend,
 	mapPreviewOptionToFrontend,
 	mapPreviewOptionsListToFrontend,
@@ -24,6 +44,20 @@ import type {
 	TPreviewTourBackend,
 	TPreviewTourScheduleBackend
 } from "../types";
+
+type TBaseQuery = (
+	arg: string | { url: string; method?: string; params?: unknown }
+) => Promise<{ data?: unknown; error?: FetchBaseQueryError }>;
+
+const toQueryArgs = (path: {
+	url: string;
+	method: string;
+	params?: unknown;
+}) => ({
+	url: path.url,
+	method: path.method,
+	...(path.params !== undefined ? { params: path.params } : {})
+});
 
 export const tourPreviewTourApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -78,6 +112,117 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TPreviewTourScheduleBackend) =>
 				mapPreviewTourScheduleToFrontend(response)
+		}),
+
+		getDraftPreviewTourGeneral: builder.query<IPreviewTourGeneral, string>({
+			query: (tourId) => ({
+				...TOUR_PATHS.getTour(tourId)
+			}),
+			transformResponse: (response: TourMetaResponse) =>
+				mapPreviewTourGeneralToFrontend(response)
+		}),
+		getDraftPreviewLanding: builder.query<IPreviewTourData, string>({
+			async queryFn(tourId, _api, _extraOptions, baseQuery) {
+				const query = baseQuery as TBaseQuery;
+
+				const landingResult = await query(
+					toQueryArgs(TOUR_LANDING_PAGE_PATHS.getLandingPage(tourId))
+				);
+				if (landingResult.error) {
+					return { error: landingResult.error };
+				}
+
+				const imagesResult = await query(
+					toQueryArgs(
+						TOUR_LANDING_PAGE_PATHS.listLandingImages(tourId)
+					)
+				);
+				if (imagesResult.error) {
+					return { error: imagesResult.error };
+				}
+
+				return {
+					data: composeDraftLandingToPreview(
+						landingResult.data as LandingPageResponse,
+						(imagesResult.data as LandingPageImageModel[]) ?? []
+					)
+				};
+			}
+		}),
+		getDraftPreviewOptions: builder.query<IPreviewOptionCard[], string>({
+			async queryFn(tourId, _api, _extraOptions, baseQuery) {
+				const query = baseQuery as TBaseQuery;
+
+				const listResult = await query(
+					toQueryArgs(TOUR_OPTION_PATHS.listAllTourOptions(tourId))
+				);
+				if (listResult.error) {
+					return { error: listResult.error };
+				}
+
+				const options = (listResult.data as TourOptionModel[]) ?? [];
+
+				const cards = await Promise.all(
+					options.map(async (option) => {
+						const summaryResult = await query(
+							toQueryArgs(
+								TOUR_OPTION_PATHS.getTourSummary(
+									tourId,
+									option.id
+								)
+							)
+						);
+
+						if (summaryResult.error || !summaryResult.data) {
+							return mapDraftOptionCardToFrontend(option);
+						}
+
+						const summary =
+							summaryResult.data as TourSummaryResponse;
+						return mapDraftOptionCardToFrontend(
+							option,
+							summary.total
+						);
+					})
+				);
+
+				return { data: cards };
+			}
+		}),
+		getDraftPreviewOption: builder.query<
+			IOptionDetail,
+			{ tourId: string; optionId: string }
+		>({
+			async queryFn(
+				{ tourId, optionId },
+				_api,
+				_extraOptions,
+				baseQuery
+			) {
+				const query = baseQuery as TBaseQuery;
+
+				const summaryResult = await query(
+					toQueryArgs(
+						TOUR_OPTION_PATHS.getTourSummary(tourId, optionId)
+					)
+				);
+				if (summaryResult.error) {
+					return { error: summaryResult.error };
+				}
+
+				return {
+					data: mapDraftPreviewOptionToFrontend(
+						summaryResult.data as TourSummaryResponse
+					)
+				};
+			}
+		}),
+		getDraftPreviewOperator: builder.query<IPreviewOperator, void>({
+			query: () => ({
+				...OPERATOR_PATHS.getOperatorInfo
+			}),
+			transformResponse: (response: OperatorInfoModel) =>
+				mapDraftOperatorToFrontend(response)
 		})
 	})
 });
@@ -88,5 +233,10 @@ export const {
 	useGetPreviewOperatorQuery,
 	useGetPreviewOptionQuery,
 	useGetPreviewTourOptionsQuery,
-	useGetPreviewTourScheduleQuery
+	useGetPreviewTourScheduleQuery,
+	useGetDraftPreviewTourGeneralQuery,
+	useGetDraftPreviewLandingQuery,
+	useGetDraftPreviewOptionsQuery,
+	useGetDraftPreviewOptionQuery,
+	useGetDraftPreviewOperatorQuery
 } = tourPreviewTourApi;

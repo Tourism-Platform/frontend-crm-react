@@ -15,10 +15,7 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import {
-	useGetPreviewTourGeneralQuery,
-	usePreviewOptionDetail
-} from "@/entities/tour/preview-tour";
+import { usePreviewOptionPageData } from "@/entities/tour/preview-tour";
 
 import {
 	PREVIEW_OPTION_TABS_LIST,
@@ -37,26 +34,23 @@ export const PreviewOptionBase: FC = () => {
 	const { t, ready } = useTranslation("preview_option_page");
 
 	const {
-		data: tourData,
-		isLoading: isTourLoading,
-		isError: isTourError
-	} = useGetPreviewTourGeneralQuery(tourId, {
-		skip: !tourId
+		tour: tourData,
+		optionDetail,
+		isLoading: isPageLoading,
+		isError
+	} = usePreviewOptionPageData({
+		tourId,
+		optionId,
+		isDraft: isDraftPreview
 	});
 
-	const {
-		data: optionDetail,
-		isLoading: isOptionLoading,
-		isError: isOptionError
-	} = usePreviewOptionDetail({ tourId, optionId });
-
-	const isLoading = !ready || isTourLoading || isOptionLoading;
+	const isLoading = !ready || isPageLoading;
 
 	useEffect(() => {
-		if (isTourError || isOptionError) {
+		if (isError) {
 			toast.error("Failed to load tour data");
 		}
-	}, [isTourError, isOptionError]);
+	}, [isError]);
 
 	if (isLoading) {
 		return (

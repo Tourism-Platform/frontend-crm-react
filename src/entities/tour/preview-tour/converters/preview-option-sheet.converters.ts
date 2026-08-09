@@ -40,14 +40,14 @@ export const resolveEventImagePaths = (
 	return paths.map(toPublicImageUrl).filter(Boolean).slice(0, 5);
 };
 
-const formatPubTime = (time?: TimeSchema | null): string => {
+export const formatPubTime = (time?: TimeSchema | null): string => {
 	if (!time?.time) return "";
 	const tz = time.timezone ?? 5;
 	const sign = tz >= 0 ? "+" : "";
 	return `${time.time.slice(0, 5)} UTC ${sign}${tz}`;
 };
 
-const formatJourneyPoint = (point?: {
+export const formatJourneyPoint = (point?: {
 	date?: string | null;
 	time?: TimeSchema | null;
 	location?: unknown;
