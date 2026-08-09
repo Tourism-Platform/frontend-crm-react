@@ -10,6 +10,8 @@ export interface IEventLibraryItem {
 	name: string;
 	eventType: ENUM_EVENT_TYPE;
 	supplierId: string | null;
+	/** Short details for table (route, time range). */
+	summary: string | null;
 	primaryImagePath: string | null;
 }
 

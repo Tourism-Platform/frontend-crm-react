@@ -49,6 +49,76 @@ import type {
 	TUpdateEventLibraryBackend
 } from "../types";
 
+const formatTimeHhMm = (time?: string | null): string | null => {
+	if (!time) return null;
+	return time.slice(0, 5);
+};
+
+const joinRange = (from: string | null, to: string | null): string | null => {
+	if (from && to) return `${from} – ${to}`;
+	return from ?? to;
+};
+
+const mapEventLibrarySummary = (
+	event: TEventLibraryItemBackend["event"]
+): string | null => {
+	switch (event.typ) {
+		case ENUM_EVENT_BACKEND.FLIGHT: {
+			const hop = event.details?.hop?.[0];
+			if (!hop) return null;
+
+			const flightCode = [
+				hop.airline_code,
+				hop.flight_number != null ? String(hop.flight_number) : null
+			]
+				.filter(Boolean)
+				.join("");
+
+			const from = hop.departure_airport_code ?? null;
+			const to = hop.arrival_airport_code ?? null;
+			const route =
+				from && to ? `${from} → ${to}` : (from ?? to ?? null);
+
+			const time = joinRange(
+				formatTimeHhMm(hop.departure_time?.time),
+				formatTimeHhMm(hop.arrival_time?.time)
+			);
+
+			const parts = [flightCode || null, route, time].filter(Boolean);
+			return parts.length ? parts.join(" · ") : null;
+		}
+		case ENUM_EVENT_BACKEND.TRAIN:
+		case ENUM_EVENT_BACKEND.BUS: {
+			const hop = event.details?.hop?.[0];
+			if (!hop) return null;
+			return joinRange(
+				formatTimeHhMm(hop.departure?.time?.time),
+				formatTimeHhMm(hop.arrival?.time?.time)
+			);
+		}
+		case ENUM_EVENT_BACKEND.TRANSFER: {
+			return joinRange(
+				formatTimeHhMm(event.details?.departure?.time?.time),
+				formatTimeHhMm(event.details?.arrival?.time?.time)
+			);
+		}
+		case ENUM_EVENT_BACKEND.ACTIVITY: {
+			return joinRange(
+				formatTimeHhMm(event.details?.start_time?.time),
+				formatTimeHhMm(event.details?.end_time?.time)
+			);
+		}
+		case ENUM_EVENT_BACKEND.HOUSING: {
+			return joinRange(
+				formatTimeHhMm(event.details?.check_in?.time),
+				formatTimeHhMm(event.details?.check_out?.time)
+			);
+		}
+		default:
+			return null;
+	}
+};
+
 export const mapEventLibraryItemToFrontend = (
 	data: TEventLibraryItemBackend
 ): IEventLibraryItem => {
@@ -61,6 +131,7 @@ export const mapEventLibraryItemToFrontend = (
 		name: data.event?.name ?? "",
 		eventType,
 		supplierId: data.event?.supplier_id ?? null,
+		summary: mapEventLibrarySummary(data.event),
 		primaryImagePath: data.primary_image_path ?? null
 	};
 };

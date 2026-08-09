@@ -7,8 +7,9 @@
 	"table": {
 		"name": "Название",
 		"type": "Тип",
-		"supplier": "Объект/поставщик",
-		"empty_supplier": "—"
+		"summary": "Детали",
+		"empty_summary": "—",
+		"untitled": "Без названия"
 	},
 	"menu": {
 		"edit": {

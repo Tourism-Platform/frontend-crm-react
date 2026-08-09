@@ -7,8 +7,9 @@
 	"table": {
 		"name": "Name",
 		"type": "Type",
-		"supplier": "Property/supplier",
-		"empty_supplier": "—"
+		"summary": "Details",
+		"empty_summary": "—",
+		"untitled": "Untitled"
 	},
 	"menu": {
 		"edit": {

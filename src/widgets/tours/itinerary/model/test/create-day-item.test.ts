@@ -74,6 +74,7 @@ describe("createItemFromLibrarySummary", () => {
 			name: "Library Activity",
 			eventType: ENUM_EVENT.ACTIVITY,
 			supplierId: null,
+			summary: null,
 			primaryImagePath: null,
 			...overrides
 		}) as IEventLibraryItem;
