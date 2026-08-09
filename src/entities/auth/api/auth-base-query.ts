@@ -8,7 +8,7 @@ import {
 import { ENV } from "@/shared/config";
 import { serializeParams } from "@/shared/helpers";
 
-import { logout } from "@/entities/user/account/slice/user.slice";
+import { sessionExpired } from "@/entities/auth/model/session-expired.action";
 
 export const authBaseQuery: BaseQueryFn<
 	string | FetchArgs,
@@ -21,14 +21,10 @@ export const authBaseQuery: BaseQueryFn<
 		paramsSerializer: serializeParams
 	});
 
-	// Выполняем базовый запрос
 	const result = await baseQuery(args, api, extraOptions);
 
-	// Проверяем на 401 ошибку
-	if (result.error && result.error.status === 401) {
-		// Вызов логаута
-		api.dispatch(logout());
-		// api.dispatch(logoutEcp());
+	if (result.error?.status === 401) {
+		api.dispatch(sessionExpired());
 	}
 
 	return result;

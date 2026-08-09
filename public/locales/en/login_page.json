@@ -40,5 +40,10 @@
 			"sign_up": "Sign Up",
 			"google": "Google"
 		}
+	},
+	"session_check_error": {
+		"title": "Unable to verify session",
+		"description": "A temporary error occurred while checking your session. Please try again.",
+		"retry": "Retry"
 	}
 }

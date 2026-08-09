@@ -9,10 +9,10 @@ export const useSignOutAction = () => {
 
 	const handleSignOut = async () => {
 		try {
+			await signOut().unwrap();
 			dispatch(logout());
-			await signOut();
 		} catch (error) {
-			console.log(error);
+			console.error("Sign out error:", error);
 		}
 	};
 

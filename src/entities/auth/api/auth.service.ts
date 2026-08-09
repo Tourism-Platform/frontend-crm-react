@@ -1,6 +1,9 @@
 import { AUTH_PATHS, ENUM_API_TAGS, baseApi } from "@/shared/api";
 
+import { login } from "@/entities/user";
+
 import { mapAuthAccountToFrontend, mapAuthUserToBackend } from "../converters";
+import { resetAllApiState } from "../lib/reset-api-state";
 import type { IAuthUser, TAuthAccountBackend } from "../types";
 
 export const AuthService = baseApi.injectEndpoints({
@@ -15,7 +18,7 @@ export const AuthService = baseApi.injectEndpoints({
 			}),
 			async onQueryStarted(_, { dispatch, queryFulfilled }) {
 				await queryFulfilled;
-				dispatch(baseApi.util.resetApiState());
+				resetAllApiState(dispatch);
 			}
 		}),
 		signOut: build.mutation<
@@ -27,7 +30,7 @@ export const AuthService = baseApi.injectEndpoints({
 			}),
 			async onQueryStarted(_, { dispatch, queryFulfilled }) {
 				await queryFulfilled;
-				dispatch(baseApi.util.resetApiState());
+				resetAllApiState(dispatch);
 			}
 		}),
 		getAuthAccount: build.query<TAuthAccountBackend, void>({
@@ -36,7 +39,15 @@ export const AuthService = baseApi.injectEndpoints({
 			}),
 			transformResponse: (response: TAuthAccountBackend) =>
 				mapAuthAccountToFrontend(response),
-			providesTags: [ENUM_API_TAGS.AUTH_ACCOUNT]
+			providesTags: [ENUM_API_TAGS.AUTH_ACCOUNT],
+			async onQueryStarted(_, { dispatch, queryFulfilled }) {
+				try {
+					await queryFulfilled;
+					dispatch(login());
+				} catch {
+					// 401 обрабатывается через sessionExpired listener
+				}
+			}
 		})
 	})
 });

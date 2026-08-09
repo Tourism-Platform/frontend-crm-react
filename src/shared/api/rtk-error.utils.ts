@@ -19,6 +19,10 @@ export function isNotFoundError(error: unknown): boolean {
 	return getHttpErrorStatus(error) === 404;
 }
 
+export function isUnauthorizedError(error: unknown): boolean {
+	return getHttpErrorStatus(error) === 401;
+}
+
 function getErrorPayload(error: unknown): unknown {
 	if (error == null || typeof error !== "object") {
 		return error;

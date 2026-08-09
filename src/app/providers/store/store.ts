@@ -3,6 +3,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
+import { authSessionListener } from "@/entities/auth/model/auth-session.listener";
 import { userSlice } from "@/entities/user";
 
 const rootReducer = combineReducers({
@@ -15,10 +16,9 @@ export const setupStore = () => {
 	return configureStore({
 		reducer: rootReducer,
 		middleware: (getDefaultMiddleware) =>
-			getDefaultMiddleware().concat(
-				baseApi.middleware,
-				authApi.middleware
-			)
+			getDefaultMiddleware()
+				.prepend(authSessionListener.middleware)
+				.concat(baseApi.middleware, authApi.middleware)
 	});
 };
 
