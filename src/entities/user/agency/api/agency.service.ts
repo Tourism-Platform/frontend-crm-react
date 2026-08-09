@@ -29,11 +29,11 @@ export const agencyApi = authApi.injectEndpoints({
 				body
 			})
 		}),
-		getAgencyInfoById: builder.query<TAgencyBusinessSchema | null, string>({
+		getAgencyInfoById: builder.query<TAgencyBusinessSchema, string>({
 			query: (agencyId) => ({
 				...AGENCY_PATHS.getAgencyInfoById(agencyId)
 			}),
-			transformResponse: (response: TAgencyBusinessInfoBackend) =>
+			transformResponse: (response: TAgencyBusinessInfoBackend | null) =>
 				mapAgencyBusinessInfoToFrontend(response),
 			providesTags: (_result, _error, agencyId) => [
 				{ type: ENUM_API_TAGS.BUSINESS, id: agencyId }

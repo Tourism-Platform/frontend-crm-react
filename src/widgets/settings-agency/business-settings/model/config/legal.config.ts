@@ -31,6 +31,7 @@ export const LEGAL_BUSINESS_DATA_LIST = (): TForm[] => [
 		placeholder: "form.legal.fields.type_of_business.placeholder",
 		key: ENUM_FORM_CHANGE_AGENCY_BUSINESS.LEGAL_TYPE_OF_BUSINESS,
 		fieldType: "select",
-		options: useValueToTranslateLabel(AGENCY_BUSINESS_TYPE_LABELS)
+		options: useValueToTranslateLabel(AGENCY_BUSINESS_TYPE_LABELS),
+		disabled: true
 	}
 ];

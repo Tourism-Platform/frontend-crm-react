@@ -7,8 +7,7 @@ import { type TAgencyBusinessSchema } from "../types";
 
 export const mapAgencyBusinessInfoToFrontend = (
 	backend: TAgencyBusinessInfoBackend | null
-): TAgencyBusinessSchema | null => {
-	if (!backend) return null;
+): TAgencyBusinessSchema => {
 	return {
 		business: {
 			business_description: backend?.description ?? "",

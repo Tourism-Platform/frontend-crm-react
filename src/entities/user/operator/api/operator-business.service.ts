@@ -22,13 +22,10 @@ export const operatorBusinessApi = authApi.injectEndpoints({
 				body: mapOperatorBusinessInfoToBackend(body)
 			}),
 			transformResponse: (response: TOperatorBusinessInfoBackend) =>
-				mapOperatorBusinessInfoToFrontend(response)!,
+				mapOperatorBusinessInfoToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
-		getOperatorBusinessInfo: builder.query<
-			TOperatorBusinessSchema | null,
-			void
-		>({
+		getOperatorBusinessInfo: builder.query<TOperatorBusinessSchema, void>({
 			query: () => ({
 				...OPERATOR_PATHS.getOperatorInfo
 			}),
@@ -46,7 +43,7 @@ export const operatorBusinessApi = authApi.injectEndpoints({
 				body: mapOperatorBusinessInfoToBackend(body)
 			}),
 			transformResponse: (response: TOperatorBusinessInfoBackend) =>
-				mapOperatorBusinessInfoToFrontend(response)!,
+				mapOperatorBusinessInfoToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		getOperatorLogo: builder.query<Blob, void>({
@@ -65,7 +62,7 @@ export const operatorBusinessApi = authApi.injectEndpoints({
 				};
 			},
 			transformResponse: (response: TOperatorBusinessInfoBackend) =>
-				mapOperatorBusinessInfoToFrontend(response)!,
+				mapOperatorBusinessInfoToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		deleteOperatorLogo: builder.mutation<void, void>({

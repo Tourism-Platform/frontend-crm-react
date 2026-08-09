@@ -7,9 +7,7 @@ import { type TOperatorBusinessSchema } from "../types";
 
 export const mapOperatorBusinessInfoToFrontend = (
 	backend: TOperatorBusinessInfoBackend | null
-): TOperatorBusinessSchema | null => {
-	if (!backend) return null;
-
+): TOperatorBusinessSchema => {
 	return {
 		business: {
 			business_description: backend?.description ?? "",

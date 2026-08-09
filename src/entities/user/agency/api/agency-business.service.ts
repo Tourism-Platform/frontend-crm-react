@@ -22,18 +22,15 @@ export const agencyBusinessApi = authApi.injectEndpoints({
 				body: mapAgencyBusinessInfoToBackend(body)
 			}),
 			transformResponse: (response: TAgencyBusinessInfoBackend) =>
-				mapAgencyBusinessInfoToFrontend(response)!,
+				mapAgencyBusinessInfoToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
-		getAgencyBusinessInfo: builder.query<
-			TAgencyBusinessSchema | null,
-			void
-		>({
+		getAgencyBusinessInfo: builder.query<TAgencyBusinessSchema, void>({
 			query: () => ({
 				...AGENCY_PATHS.getAgencyInfo
 			}),
 			transformResponse: (response: TAgencyBusinessInfoBackend | null) =>
-				mapAgencyBusinessInfoToFrontend(response)!,
+				mapAgencyBusinessInfoToFrontend(response),
 			providesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		updateAgencyBusinessInfo: builder.mutation<
@@ -45,7 +42,7 @@ export const agencyBusinessApi = authApi.injectEndpoints({
 				body: mapAgencyBusinessInfoToBackend(body)
 			}),
 			transformResponse: (response: TAgencyBusinessInfoBackend) =>
-				mapAgencyBusinessInfoToFrontend(response)!,
+				mapAgencyBusinessInfoToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		getAgencyLogo: builder.query<Blob, void>({
@@ -64,7 +61,7 @@ export const agencyBusinessApi = authApi.injectEndpoints({
 				};
 			},
 			transformResponse: (response: TAgencyBusinessInfoBackend) =>
-				mapAgencyBusinessInfoToFrontend(response)!,
+				mapAgencyBusinessInfoToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		deleteAgencyLogo: builder.mutation<void, void>({
