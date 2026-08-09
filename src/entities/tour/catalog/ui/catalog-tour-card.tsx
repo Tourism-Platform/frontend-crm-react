@@ -49,29 +49,23 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 		0
 	);
 
-	const groupLabel =
-		tour.groupSizeMin != null && tour.groupSizeMin > 0
-			? t("card.group", {
-					min: tour.groupSizeMin,
-					max: tour.groupSizeMax
-				})
-			: String(tour.groupSizeMax);
+	const groupLabel = t("card.group", {
+		min: tour.groupSizeMin ?? 0,
+		max: tour.groupSizeMax ?? 0
+	});
 
-	const ageLabel =
-		tour.ageFrom != null && tour.ageTo != null
-			? t("card.age", {
-					from: tour.ageFrom,
-					to: tour.ageTo
-				})
-			: null;
+	const ageLabel = t("card.age", {
+		from: tour.ageFrom ?? 0,
+		to: tour.ageTo ?? 0
+	});
 
 	const metaItems: TMetaItem[] = [
 		{
 			key: "duration",
 			icon: <CalendarDaysIcon className="size-3.5 shrink-0" />,
 			label: t("card.duration", {
-				days: tour.days,
-				nights: tour.nights,
+				days: tour.days ?? 0,
+				nights: tour.nights ?? 0,
 				daysUnit: t("tour.duration.days", { ns: "options" }),
 				nightsUnit: t("tour.duration.nights", { ns: "options" })
 			})
@@ -81,24 +75,16 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 			icon: <UsersOutlineIcon className="size-3.5 shrink-0" />,
 			label: groupLabel
 		},
-		...(ageLabel
-			? [
-					{
-						key: "age",
-						icon: <HealthIcon className="size-3.5 shrink-0" />,
-						label: ageLabel
-					} satisfies TMetaItem
-				]
-			: []),
-		...(tour.optionCount != null && tour.optionCount > 0
-			? [
-					{
-						key: "options",
-						icon: <Layers className="size-3.5 shrink-0" />,
-						label: t("card.options", { count: tour.optionCount })
-					} satisfies TMetaItem
-				]
-			: [])
+		{
+			key: "age",
+			icon: <HealthIcon className="size-3.5 shrink-0" />,
+			label: ageLabel
+		},
+		{
+			key: "options",
+			icon: <Layers className="size-3.5 shrink-0" />,
+			label: t("card.options", { count: tour.optionCount ?? 0 })
+		}
 	];
 
 	const priceLabel = formatMoney(tour.priceFrom, {

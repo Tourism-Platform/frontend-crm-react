@@ -55,23 +55,17 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 		0
 	);
 
-	const groupLabel =
-		card.groupSizeMin != null && card.groupSizeMin > 0
-			? t("card.group", {
-					ns: "tours_page",
-					min: card.groupSizeMin,
-					max: card.groupSizeMax
-				})
-			: String(card.groupSizeMax);
+	const groupLabel = t("card.group", {
+		ns: "tours_page",
+		min: card.groupSizeMin ?? 0,
+		max: card.groupSizeMax ?? 0
+	});
 
-	const ageLabel =
-		card.ageFrom != null && card.ageTo != null
-			? t("card.age", {
-					ns: "tours_page",
-					from: card.ageFrom,
-					to: card.ageTo
-				})
-			: null;
+	const ageLabel = t("card.age", {
+		ns: "tours_page",
+		from: card.ageFrom ?? 0,
+		to: card.ageTo ?? 0
+	});
 
 	const metaItems: TMetaItem[] = [
 		{
@@ -79,8 +73,8 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 			icon: <CalendarMarkIcon className="size-3.5 shrink-0" />,
 			label: t("card.duration", {
 				ns: "tours_page",
-				days: card.days,
-				nights: card.nights,
+				days: card.days ?? 0,
+				nights: card.nights ?? 0,
 				daysUnit: t("tour.duration.days", { ns: "options" }),
 				nightsUnit: t("tour.duration.nights", { ns: "options" })
 			})
@@ -90,15 +84,11 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 			icon: <UsersGroupRoundedIcon className="size-3.5 shrink-0" />,
 			label: groupLabel
 		},
-		...(ageLabel
-			? [
-					{
-						key: "age",
-						icon: <HealthIcon className="size-3.5 shrink-0" />,
-						label: ageLabel
-					} satisfies TMetaItem
-				]
-			: []),
+		{
+			key: "age",
+			icon: <HealthIcon className="size-3.5 shrink-0" />,
+			label: ageLabel
+		},
 		{
 			key: "type",
 			icon: <TagIcon className="size-3.5 shrink-0" />,
