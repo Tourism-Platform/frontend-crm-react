@@ -74,10 +74,7 @@ export const OrderId: FC = () => {
 				/>
 			)}
 			{showSupplierPayments && (
-				<OrderSupplierPayments
-					items={order.supplierPayments || []}
-					orderStatus={order.status}
-				/>
+				<OrderSupplierPayments bookingId={orderId || ""} />
 			)}
 
 			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (

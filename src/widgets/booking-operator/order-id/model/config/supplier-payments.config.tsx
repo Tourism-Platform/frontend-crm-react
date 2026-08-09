@@ -3,43 +3,56 @@ import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { cn } from "@/shared/lib";
-import { Badge, Button } from "@/shared/ui";
+import { Badge, Button, Skeleton } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
-	ENUM_ORDER_STATUS,
-	type ENUM_ORDER_STATUS_TYPE,
-	ENUM_SUPPLIER_PAYMENT_STATUS,
-	type ISupplierPaymentItem,
+	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
+	type ISupplierPayment,
 	SUPPLIER_PAYMENT_STATUS_LABELS,
 	SUPPLIER_PAYMENT_STATUS_VARIANTS
-} from "@/entities/booking";
+} from "@/entities/finance";
 import { EVENT_METADATA } from "@/entities/tour";
+import {
+	type ENUM_EVENT_BACKEND_TYPE,
+	EVENT_BACKEND_TYPE_LABELS,
+	mapBackendTypToEventType
+} from "@/entities/tour/itinerary";
+
+import { ConfirmPayment } from "@/features/finance";
 
 export const SUPPLIER_PAYMENTS_COLUMNS = (
-	t: TFunction<["order_id_page", "options"], undefined>,
-	orderStatus?: ENUM_ORDER_STATUS_TYPE
-): ColumnDef<ISupplierPaymentItem>[] => {
+	t: TFunction<["order_id_page", "options"], undefined>
+): ColumnDef<ISupplierPayment>[] => {
 	return [
 		{
-			accessorKey: "item",
-			header: t("supplier_payments.table.item"),
+			header: t("supplier_payments.table.component"),
+			meta: {
+				headerTitle: t("supplier_payments.table.component"),
+				skeleton: <Skeleton className="h-4 w-[180px]" />
+			},
+			accessorKey: "component",
 			cell: ({
 				row: {
-					original: { type, subRows },
+					original: { type },
 					depth,
+					getCanExpand,
 					getIsExpanded,
 					getToggleExpandedHandler
 				},
 				getValue
 			}) => {
-				const hasSubRows = !!subRows?.length;
-				const metadata = type ? EVENT_METADATA[type] : null;
+				const hasSubRows = getCanExpand();
+				const eventType = mapBackendTypToEventType(
+					type as ENUM_EVENT_BACKEND_TYPE
+				);
+				const metadata = eventType ? EVENT_METADATA[eventType] : null;
 				const Icon = metadata?.icon;
+				const title = getValue() as string;
 
 				return (
 					<div
-						className="flex items-center gap-2"
+						className="flex w-full min-w-0 items-center gap-2"
 						style={{ paddingLeft: `${depth * 2}rem` }}
 					>
 						{hasSubRows ? (
@@ -47,6 +60,7 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 								onClick={getToggleExpandedHandler()}
 								variant="ghost"
 								size="icon"
+								className="shrink-0"
 							>
 								{getIsExpanded() ? (
 									<ChevronDown className="size-4 text-muted-foreground" />
@@ -55,18 +69,21 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 								)}
 							</Button>
 						) : (
-							<div className="w-9" />
+							<div className="w-9 shrink-0" />
 						)}
 						<div
 							className={cn(
 								"size-8 rounded-full flex items-center justify-center text-white shrink-0",
-								metadata?.color_bg
+								metadata?.color_bg || "bg-slate-200"
 							)}
 						>
 							{Icon && <Icon className="size-4" />}
 						</div>
-						<span className="font-medium">
-							{getValue() as string}
+						<span
+							title={title}
+							className="min-w-0 truncate font-medium"
+						>
+							{title}
 						</span>
 					</div>
 				);
@@ -74,43 +91,111 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 			size: 200
 		},
 		{
-			accessorKey: "confirmation",
-			header: t("supplier_payments.table.confirmation"),
+			header: t("supplier_payments.table.type"),
+			meta: {
+				headerTitle: t("supplier_payments.table.type"),
+				skeleton: <Skeleton className="h-4 w-[120px]" />
+			},
+			accessorKey: "type",
 			cell: ({ row }) => {
-				const confirmation = row.original.confirmation;
+				const type = row.getValue("type") as string;
+				const labelKey =
+					EVENT_BACKEND_TYPE_LABELS[type as ENUM_EVENT_BACKEND_TYPE];
 
-				if (!confirmation) {
+				return (
+					<div className="font-medium">
+						{labelKey ? t(labelKey, { ns: "options" }) : type}
+					</div>
+				);
+			},
+			size: 120
+		},
+		{
+			header: t("supplier_payments.table.supplier"),
+			meta: {
+				headerTitle: t("supplier_payments.table.supplier"),
+				skeleton: <Skeleton className="h-4 w-[140px]" />
+			},
+			accessorKey: "supplier",
+			cell: ({ row }) => (
+				<div className="min-w-0 w-full">
+					<span
+						title={row.original.supplier}
+						className="block truncate font-medium"
+					>
+						{row.getValue("supplier")}
+					</span>
+				</div>
+			),
+			size: 160
+		},
+		{
+			header: t("supplier_payments.table.amount"),
+			meta: {
+				headerTitle: t("supplier_payments.table.amount"),
+				skeleton: <Skeleton className="h-4 w-[80px]" />
+			},
+			accessorKey: "amount",
+			cell: ({ row }) => (
+				<div className="font-medium">
+					{formatToDollars(row.original.amount)}
+				</div>
+			),
+			size: 120
+		},
+		{
+			header: t("supplier_payments.table.confirmation"),
+			meta: {
+				headerTitle: t("supplier_payments.table.confirmation"),
+				skeleton: <Skeleton className="h-4 w-[140px]" />
+			},
+			accessorKey: "files",
+			cell: ({ row }) => {
+				const file = row.original.files?.[0];
+
+				if (!file) {
 					return <div>-</div>;
 				}
 
 				return (
 					<a
-						href={confirmation.url}
+						href={file.url}
 						target="_blank"
 						rel="noreferrer"
 						className="flex items-center gap-2 text-primary hover:underline truncate"
 					>
-						{confirmation.fileName}
+						{file.name}
 					</a>
 				);
 			},
-			size: 200
+			size: 160
 		},
 		{
-			accessorKey: "supplierPayment",
-			header: t("supplier_payments.table.supplier_payment"),
+			header: t("supplier_payments.table.paidAt"),
+			meta: {
+				headerTitle: t("supplier_payments.table.paidAt"),
+				skeleton: <Skeleton className="h-4 w-[100px]" />
+			},
+			accessorKey: "dateCreated",
 			cell: ({ row }) => (
 				<div className="font-medium">
-					{formatToDollars(row.original.supplierPayment)}
+					{row.original.dateCreated || "-"}
 				</div>
 			),
-			size: 200
+			size: 120
 		},
 		{
-			accessorKey: "status",
 			header: t("supplier_payments.table.status"),
+			meta: {
+				headerTitle: t("supplier_payments.table.status"),
+				skeleton: <Skeleton className="h-5 w-[80px] rounded-full" />
+			},
+			accessorKey: "status",
 			cell: ({ row }) => {
-				const status = row.original.status;
+				const status = row.getValue(
+					"status"
+				) as ENUM_SUPPLIER_PAYMENT_STATUS_TYPE;
+
 				return (
 					<Badge variant={SUPPLIER_PAYMENT_STATUS_VARIANTS[status]}>
 						{t(SUPPLIER_PAYMENT_STATUS_LABELS[status], {
@@ -119,48 +204,21 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 					</Badge>
 				);
 			},
-			size: 200
+			size: 120
 		},
-
-		...(orderStatus === ENUM_ORDER_STATUS.BOOKING
-			? [
-					{
-						id: "actions",
-						header: () => (
-							<span className="sr-only">
-								{t("supplier_payments.table.actions")}
-							</span>
-						),
-						cell: ({ row }) => {
-							const status = row.original.status;
-
-							if (
-								status === ENUM_SUPPLIER_PAYMENT_STATUS.BOOKED
-							) {
-								return null;
-							} else if (
-								status === ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED
-							) {
-								return (
-									<Button
-										variant="outline"
-										size="sm"
-										className="min-w-24"
-									>
-										{t("buttons.edit")}
-									</Button>
-								);
-							} else {
-								return (
-									<Button size="sm" className="min-w-24">
-										{t("buttons.book")}
-									</Button>
-								);
-							}
-						},
-						size: 100
-					} as ColumnDef<ISupplierPaymentItem>
-				]
-			: [])
+		{
+			id: "actions",
+			header: () => (
+				<span className="sr-only">
+					{t("supplier_payments.table.actions")}
+				</span>
+			),
+			cell: ({ row }) => <ConfirmPayment payment={row.original} />,
+			meta: {
+				skeleton: <div className="size-9 rounded-md" />
+			},
+			size: 120,
+			enableHiding: false
+		}
 	];
 };

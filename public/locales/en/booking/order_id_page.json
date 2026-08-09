@@ -71,8 +71,13 @@
 		"title": "Booking & supplier payments",
 		"table": {
 			"item": "Item",
-			"confirmation": "Confirmation",
+			"component": "Component",
+			"type": "Type",
+			"supplier": "Supplier",
 			"supplier_payment": "Supplier payment",
+			"amount": "Amount",
+			"confirmation": "Confirmation",
+			"paidAt": "Paid at",
 			"status": "Status",
 			"actions": "Actions"
 		}

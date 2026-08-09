@@ -57,9 +57,7 @@ export const mapSupplierPaymentToFrontend = (
 		type: display?.type ?? data.event_typ ?? SUPPLIER_PAYMENT_NO_DATA,
 		supplier:
 			display?.supplier ?? data.supplier_name ?? SUPPLIER_PAYMENT_NO_DATA,
-		dateCreated: data.paid_at
-			? formatDate(data.paid_at)
-			: SUPPLIER_PAYMENT_NO_DATA,
+		dateCreated: data.paid_at ? formatDate(data.paid_at) : "",
 		amount: parseAmount(data.amount),
 		currency:
 			currencyConverter.from(data.currency) ?? String(data.currency),
@@ -122,9 +120,7 @@ export const mapSupplierPaymentListItemToFrontend = (
 		type: display?.type ?? data.event_typ ?? SUPPLIER_PAYMENT_NO_DATA,
 		supplier:
 			display?.supplier ?? data.supplier_name ?? SUPPLIER_PAYMENT_NO_DATA,
-		dateCreated: data.paid_at
-			? formatDate(data.paid_at)
-			: SUPPLIER_PAYMENT_NO_DATA,
+		dateCreated: data.paid_at ? formatDate(data.paid_at) : "",
 		amount: parseAmount(data.amount),
 		currency:
 			currencyConverter.from(data.currency) ?? String(data.currency),
@@ -165,6 +161,7 @@ export const mapSupplierPaymentFiltersToBackend = (
 			filters.status.length > 0
 				? supplierPaymentStatusConverter.to(filters.status[0])
 				: undefined,
+		...(filters.bookingId ? { booking_id: filters.bookingId } : {}),
 		...(search ? { q: search } : {})
 	};
 };

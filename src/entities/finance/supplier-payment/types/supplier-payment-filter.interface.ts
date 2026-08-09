@@ -1,6 +1,7 @@
 import type { ENUM_SUPPLIER_PAYMENT_STATUS_TYPE } from "./supplier-payment-status.types";
 
 export interface ISupplierPaymentFilters {
+	bookingId?: string;
 	search: string;
 	status: ENUM_SUPPLIER_PAYMENT_STATUS_TYPE[];
 	page: number;

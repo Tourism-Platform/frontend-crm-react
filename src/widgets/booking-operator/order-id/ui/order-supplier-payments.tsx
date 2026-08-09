@@ -1,4 +1,6 @@
-import { useMemo } from "react";
+import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
+import { type FC, useCallback, useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -10,16 +12,15 @@ import {
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
-import type {
-	ENUM_ORDER_STATUS_TYPE,
-	ISupplierPaymentItem
-} from "@/entities/booking";
+import {
+	type ISupplierPaymentFilters,
+	useGetSupplierPaymentsQuery
+} from "@/entities/finance";
 
 import { SUPPLIER_PAYMENTS_COLUMNS } from "../model";
 
 interface IOrderSupplierPaymentsProps {
-	items: ISupplierPaymentItem[];
-	orderStatus?: ENUM_ORDER_STATUS_TYPE;
+	bookingId: string;
 }
 
 const TABLE_LAYOUT = {
@@ -27,16 +28,69 @@ const TABLE_LAYOUT = {
 	headerBackground: false
 };
 
-const getSubRowsFn = (row: ISupplierPaymentItem) => row.subRows;
-
-const OrderSupplierPaymentsBase = ({
-	items,
-	orderStatus
-}: IOrderSupplierPaymentsProps) => {
+const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
+	bookingId
+}) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
-	const columns = useMemo(
-		() => SUPPLIER_PAYMENTS_COLUMNS(t, orderStatus),
-		[orderStatus, t]
+
+	const { watch, setValue } = useForm<ISupplierPaymentFilters>({
+		defaultValues: {
+			bookingId,
+			search: "",
+			status: [],
+			page: 1,
+			limit: 10
+		}
+	});
+
+	const filters = watch();
+	const queryFilters = useMemo(
+		() => ({ ...filters, bookingId }),
+		[filters, bookingId]
+	);
+
+	const { data, isLoading, isFetching } = useGetSupplierPaymentsQuery(
+		queryFilters,
+		{ skip: !bookingId }
+	);
+
+	const payments = useMemo(() => data?.data ?? [], [data]);
+	const totalCount = data?.total ?? 0;
+
+	const columns = useMemo(() => SUPPLIER_PAYMENTS_COLUMNS(t), [t]);
+
+	const paginationObj = useMemo(
+		() => ({
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		}),
+		[filters.page, filters.limit]
+	);
+
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
+
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
+
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
+
+	const handleSearchChange = useCallback(
+		(val: string) => {
+			setValue("search", val);
+			setValue("page", 1);
+		},
+		[setValue]
 	);
 
 	return (
@@ -48,12 +102,19 @@ const OrderSupplierPaymentsBase = ({
 			</CardHeader>
 			<CardContent>
 				<SmartTable
-					data={items}
+					data={payments}
 					columns={columns}
-					getSubRows={getSubRowsFn}
-					showTopFilters={false}
+					isLoading={isLoading || isFetching}
+					loadingMode="skeleton"
+					recordCount={totalCount}
+					pagination={paginationObj}
+					onPaginationChange={handlePaginationChange}
+					search={filters.search}
+					onSearchChange={handleSearchChange}
+					showTopFilters
+					showStatusFilter={false}
+					showVisibilityFilter
 					tableLayout={TABLE_LAYOUT}
-					defaultExpanded={true}
 				/>
 			</CardContent>
 		</Card>
