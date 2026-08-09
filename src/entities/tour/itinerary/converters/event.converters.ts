@@ -52,6 +52,7 @@ import {
 	mapTransferFormToUpdate,
 	mapTransportFormToUpdate
 } from "./event";
+import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
 import {
 	eventTypeMapper,
 	mapBackendTypToEventType
@@ -60,6 +61,9 @@ import {
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
 ): ITourEvent => {
+	const backendTyp = backend.event.typ as ENUM_EVENT_BACKEND_TYPE | undefined;
+	const details = (backend.event.details as Record<string, unknown>) || {};
+
 	const event: ITourEvent = {
 		id: backend.id,
 		tourOptionId: backend.tour_option_id,
@@ -68,10 +72,9 @@ export const mapAllEventsToFrontend = (
 		day: backend.event.day,
 		position: backend.event.position,
 		eventType:
-			mapBackendTypToEventType(
-				backend.event.typ as ENUM_EVENT_BACKEND_TYPE | undefined
-			) || ENUM_EVENT.TOUR_DETAILS,
-		details: (backend.event.details as Record<string, unknown>) || {}
+			mapBackendTypToEventType(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
+		details,
+		timeSubtitle: mapBackendEventToTimeSubtitle(backendTyp, details)
 	};
 
 	if ("name" in backend.event) {
@@ -88,6 +91,7 @@ export const mapAllEventsToFrontend = (
 			.map(mapMultiplyOptionDetailToOption)
 			.filter((opt): opt is ITourEventOption => opt !== null);
 		event.details = {};
+		event.timeSubtitle = undefined;
 	}
 
 	return event;

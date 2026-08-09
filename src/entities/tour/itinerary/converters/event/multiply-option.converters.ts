@@ -8,6 +8,7 @@ import {
 	type TMultiplyOptionEditSchema,
 	type TTourEventBackendResponce
 } from "../../types";
+import { mapBackendEventToTimeSubtitle } from "../event-time-range.converters";
 import { mapBackendTypToEventType } from "../event-type.converters";
 
 type TMultiEventOptionDetail = NonNullable<
@@ -19,15 +20,17 @@ export const mapMultiplyOptionDetailToOption = (
 ): ITourEventOption | null => {
 	if (!detail.id) return null;
 
+	const backendTyp = detail.typ as ENUM_EVENT_BACKEND_TYPE | undefined;
+	const details = (detail.details as Record<string, unknown>) || {};
+
 	return {
 		id: detail.id,
 		name: detail.name || "",
 		description: detail.description || "",
 		eventType:
-			mapBackendTypToEventType(
-				detail.typ as ENUM_EVENT_BACKEND_TYPE | undefined
-			) || ENUM_EVENT.TOUR_DETAILS,
-		details: (detail.details as Record<string, unknown>) || {}
+			mapBackendTypToEventType(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
+		details,
+		timeSubtitle: mapBackendEventToTimeSubtitle(backendTyp, details)
 		// isOptional: Boolean(detail.is_optional)
 	};
 };

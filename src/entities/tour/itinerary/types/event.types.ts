@@ -16,6 +16,8 @@ export interface ITourEventOption {
 	description: string;
 	eventType: ENUM_EVENT_TYPE;
 	details: Record<string, unknown>;
+	/** Preformatted start–end clock range for board cards */
+	timeSubtitle?: string;
 	// isOptional: boolean;
 }
 
@@ -28,6 +30,8 @@ export interface ITourEvent {
 	position: number;
 	eventType: ENUM_EVENT_TYPE;
 	details: Record<string, unknown>;
+	/** Preformatted start–end clock range for board cards */
+	timeSubtitle?: string;
 	/** Nested alternatives for multiply-option (typ 10) */
 	options?: ITourEventOption[];
 }

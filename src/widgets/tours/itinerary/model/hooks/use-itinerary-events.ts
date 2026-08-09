@@ -17,7 +17,7 @@ const toDayItem = (ev: ITourEvent): IDayItem => {
 		block_id: ev.id,
 		eventType: ev.eventType,
 		title: ev.name,
-		subtitle: ev.description || "Information",
+		subtitle: ev.timeSubtitle,
 		backendId: ev.id
 	};
 
@@ -27,7 +27,7 @@ const toDayItem = (ev: ITourEvent): IDayItem => {
 			block_id: opt.id,
 			eventType: opt.eventType,
 			title: opt.name,
-			subtitle: opt.description || "Information",
+			subtitle: opt.timeSubtitle,
 			backendId: opt.id
 		}));
 	}

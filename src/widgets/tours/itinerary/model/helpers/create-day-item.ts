@@ -20,8 +20,7 @@ export const createItemFromTemplate = (
 		id,
 		block_id: id,
 		eventType: tpl.eventType,
-		title: tpl.title,
-		subtitle: "Information"
+		title: tpl.title
 	};
 
 	if (
@@ -50,7 +49,6 @@ export const createItemFromLibrarySummary = (
 		id,
 		block_id: id,
 		eventType: summary.eventType,
-		title: summary.name || "Untitled",
-		subtitle: "Information"
+		title: summary.name || "Untitled"
 	};
 };
