@@ -13,8 +13,7 @@ import type {
 	TOperatorBookingItineraryBackend,
 	TOperatorBookingStatusResponseBackend,
 	TOperatorDeclineBookingResponseBackend,
-	TOperatorOrderDetailBackend,
-	TOperatorOrderOverviewBackend
+	TOperatorOrderDetailBackend
 } from "../types";
 
 export const bookingOrderOperatorApi = authApi.injectEndpoints({
@@ -27,19 +26,6 @@ export const bookingOrderOperatorApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TOperatorOrderDetailBackend) =>
 				mapOperatorBookingOrderToFrontend(response),
-			providesTags: (_result, _error, id) => [
-				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
-			]
-		}),
-		getOperatorOrderOverview: builder.query<
-			TOperatorOrderOverviewBackend,
-			string
-		>({
-			query: (bookingId) => ({
-				...BOOKING_ORDER_OPERATOR_PATHS.getOperatorOrderOverview(
-					bookingId
-				)
-			}),
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
 			]
@@ -100,7 +86,6 @@ export const bookingOrderOperatorApi = authApi.injectEndpoints({
 
 export const {
 	useGetOperatorBookingOrderQuery,
-	useGetOperatorOrderOverviewQuery,
 	useGetOperatorBookingItineraryQuery,
 	useUpdateBookingStatusMutation,
 	useDeclineBookingMutation

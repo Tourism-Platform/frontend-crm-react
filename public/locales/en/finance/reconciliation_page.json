@@ -1,13 +1,22 @@
 {
 	"page_name": "Reconciliation",
+	"totals": {
+		"receivable": "Receivable",
+		"payable": "Payable",
+		"settledProfit": "Settled profit",
+		"revenueAccrued": "Accrued",
+		"revenueSettled": "Settled",
+		"costAccrued": "Accrued",
+		"costSettled": "Settled",
+		"accrualProfit": "Accrual"
+	},
 	"table": {
-		"id": "ID",
 		"orderId": "Order id",
 		"client": "Client",
 		"plannedRevenue": "Planned revenue",
-		"actualRevenue": "Actual revenue",
+		"revenueAccrued": "Revenue accrued",
 		"plannedCost": "Planned cost",
-		"actualCost": "Actual cost",
+		"costAccrued": "Cost accrued",
 		"variance": "Variance",
 		"status": "Status",
 		"menu": {

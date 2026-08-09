@@ -77,6 +77,12 @@
 			"actions": "Действия"
 		}
 	},
+	"stats": {
+		"revenue": "Доход",
+		"cost": "Расход",
+		"margin": "Маржа",
+		"actual": "Факт"
+	},
 	"tour_review": {
 		"title": "Обзор тура",
 		"revenue": "Общий доход",

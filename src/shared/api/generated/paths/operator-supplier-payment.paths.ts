@@ -1,5 +1,6 @@
 import type {
 	BodyUploadReceiptOperatorSupplierPaymentPaymentIdReceiptPost,
+	SupplierPaymentListResponse,
 	SupplierPaymentResponse,
 	SupplierPaymentStatus,
 	SupplierPaymentUpdate
@@ -23,7 +24,7 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 				skip?: number;
 				limit?: number;
 			};
-			response: SupplierPaymentResponse[];
+			response: SupplierPaymentListResponse;
 		}
 	} as const,
 	getSupplierPayment: (paymentId: string) =>

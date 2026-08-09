@@ -1,7 +1,0 @@
-export const ENUM_RECONCILIATION_STATUS = {
-	IN_PROGRESS: "in_progress",
-	COMPLETED: "completed"
-} as const;
-
-export type ENUM_RECONCILIATION_STATUS_TYPE =
-	(typeof ENUM_RECONCILIATION_STATUS)[keyof typeof ENUM_RECONCILIATION_STATUS];

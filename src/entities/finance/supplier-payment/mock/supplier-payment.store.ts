@@ -1,40 +1,32 @@
-import {
-	type SupplierPaymentResponse,
-	SupplierPaymentStatus,
-	type SupplierPaymentUpdate
-} from "@/shared/api";
+import type { SupplierPaymentListRowOutput } from "@/shared/api/generated/Api";
 
+import { supplierPaymentStatusConverter } from "../converters/supplier-payment-status.converter";
 import { ENUM_SUPPLIER_PAYMENT_STATUS } from "../types";
-import type { TSupplierPaymentStatusCounts } from "../types";
+import type {
+	TSupplierPaymentBackend,
+	TSupplierPaymentListResponseInput,
+	TSupplierPaymentStatusCounts,
+	TUpdateSupplierPaymentBackend
+} from "../types";
 
 import { getSupplierPaymentMockDisplay } from "./supplier-payment.mock-display";
 import { MOCK_RECEIPT_URL } from "./supplier-payment.mock.constants";
 import { createSupplierPaymentMocks } from "./supplier-payment.mock.factory";
 
+const CONFIRMED_STATUS = supplierPaymentStatusConverter.to(
+	ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
+)!;
+
 const { payments: seedPayments } = createSupplierPaymentMocks();
 
-const payments: SupplierPaymentResponse[] = [...seedPayments];
+const payments: TSupplierPaymentBackend[] = [...seedPayments];
 
 export { getSupplierPaymentMockDisplay };
 
-export interface ISupplierPaymentListMeta {
-	total: number;
-	status_counts: TSupplierPaymentStatusCounts;
-}
-
-let lastListMeta: ISupplierPaymentListMeta | null = null;
-
-export const consumeLastSupplierPaymentListMeta =
-	(): ISupplierPaymentListMeta | null => {
-		const meta = lastListMeta;
-		lastListMeta = null;
-		return meta;
-	};
-
 export const getSupplierPayment = (
 	paymentId: string
-): SupplierPaymentResponse | undefined =>
-	payments.find((payment) => payment.id === paymentId);
+): TSupplierPaymentBackend | undefined =>
+	payments.find((payment) => payment.payment_id === paymentId);
 
 export interface IListSupplierPaymentsQuery {
 	booking_id: string | null;
@@ -46,16 +38,6 @@ export interface IListSupplierPaymentsQuery {
 	limit: number;
 }
 
-const uiStatusToApi = (status: string): SupplierPaymentStatus | null => {
-	if (status === ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED) {
-		return SupplierPaymentStatus.Paid;
-	}
-	if (status === ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED) {
-		return SupplierPaymentStatus.NotPaid;
-	}
-	return null;
-};
-
 const filterPayments = ({
 	booking_id,
 	supplier_id,
@@ -65,7 +47,7 @@ const filterPayments = ({
 }: Pick<
 	IListSupplierPaymentsQuery,
 	"booking_id" | "supplier_id" | "event_id" | "status" | "q"
->): SupplierPaymentResponse[] => {
+>): TSupplierPaymentBackend[] => {
 	let filtered = [...payments];
 
 	if (booking_id) {
@@ -81,22 +63,15 @@ const filterPayments = ({
 	}
 
 	if (status) {
-		const apiStatuses = status
-			.split(",")
-			.map(uiStatusToApi)
-			.filter((s): s is SupplierPaymentStatus => s != null);
-
-		if (apiStatuses.length > 0) {
-			filtered = filtered.filter((p) => apiStatuses.includes(p.status));
-		}
+		filtered = filtered.filter((p) => p.status === status);
 	}
 
 	if (q) {
 		const query = q.toLowerCase();
 		filtered = filtered.filter((p) => {
-			const display = getSupplierPaymentMockDisplay(p.id);
+			const display = getSupplierPaymentMockDisplay(p.payment_id);
 			return (
-				p.id.toLowerCase().includes(query) ||
+				p.payment_id.toLowerCase().includes(query) ||
 				p.booking_id.toLowerCase().includes(query) ||
 				(p.note?.toLowerCase().includes(query) ?? false) ||
 				(display?.component.toLowerCase().includes(query) ?? false) ||
@@ -109,7 +84,7 @@ const filterPayments = ({
 };
 
 const computeStatusCounts = (
-	items: SupplierPaymentResponse[]
+	items: TSupplierPaymentBackend[]
 ): TSupplierPaymentStatusCounts => {
 	const counts: TSupplierPaymentStatusCounts = {
 		[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED]: 0,
@@ -117,7 +92,9 @@ const computeStatusCounts = (
 	};
 
 	for (const item of items) {
-		if (item.status === SupplierPaymentStatus.Paid) {
+		const uiStatus = supplierPaymentStatusConverter.from(item.status);
+
+		if (uiStatus === ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED) {
 			counts[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED] += 1;
 		} else {
 			counts[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED] += 1;
@@ -127,21 +104,42 @@ const computeStatusCounts = (
 	return counts;
 };
 
+const toListRow = (
+	payment: TSupplierPaymentBackend
+): SupplierPaymentListRowOutput => ({
+	payment_id: payment.payment_id,
+	booking_id: payment.booking_id,
+	order_number: payment.order_number,
+	event_id: payment.event_id,
+	event_name: payment.event_name,
+	event_typ: payment.event_typ,
+	supplier_id: payment.supplier_id,
+	supplier_name: payment.supplier_name,
+	amount: payment.amount,
+	currency: payment.currency,
+	base_amount: payment.base_amount,
+	has_receipt: Boolean(payment.file),
+	status: payment.status,
+	paid_at: payment.paid_at
+});
+
 export const listSupplierPayments = (
 	query: IListSupplierPaymentsQuery
-): SupplierPaymentResponse[] => {
+): TSupplierPaymentListResponseInput => {
 	const filtered = filterPayments(query);
-	lastListMeta = {
-		total: filtered.length,
+
+	return {
+		total_count: filtered.length,
+		data: filtered
+			.slice(query.skip, query.skip + query.limit)
+			.map(toListRow),
 		status_counts: computeStatusCounts(filtered)
 	};
-
-	return filtered.slice(query.skip, query.skip + query.limit);
 };
 
 export const listSupplierPaymentsFromUrl = (
 	url: URL
-): SupplierPaymentResponse[] =>
+): TSupplierPaymentListResponseInput =>
 	listSupplierPayments({
 		booking_id: url.searchParams.get("booking_id"),
 		supplier_id: url.searchParams.get("supplier_id"),
@@ -154,9 +152,9 @@ export const listSupplierPaymentsFromUrl = (
 
 export const updateSupplierPaymentInStore = (
 	paymentId: string,
-	patch: SupplierPaymentUpdate
-): SupplierPaymentResponse | null => {
-	const index = payments.findIndex((p) => p.id === paymentId);
+	patch: TUpdateSupplierPaymentBackend
+): TSupplierPaymentBackend | null => {
+	const index = payments.findIndex((p) => p.payment_id === paymentId);
 
 	if (index === -1) {
 		return null;
@@ -165,7 +163,7 @@ export const updateSupplierPaymentInStore = (
 	const current = payments[index];
 	const amount = patch.amount != null ? String(patch.amount) : current.amount;
 
-	const updated: SupplierPaymentResponse = {
+	const updated: TSupplierPaymentBackend = {
 		...current,
 		supplier_id:
 			patch.supplier_id !== undefined
@@ -177,7 +175,9 @@ export const updateSupplierPaymentInStore = (
 		note: patch.note !== undefined ? patch.note : current.note,
 		status: patch.status ?? current.status,
 		paid_at:
-			patch.status === SupplierPaymentStatus.Paid
+			patch.status != null &&
+			supplierPaymentStatusConverter.from(patch.status) ===
+				ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
 				? new Date().toISOString()
 				: current.paid_at
 	};
@@ -189,17 +189,17 @@ export const updateSupplierPaymentInStore = (
 
 export const uploadReceiptInStore = (
 	paymentId: string
-): SupplierPaymentResponse | null => {
-	const index = payments.findIndex((p) => p.id === paymentId);
+): TSupplierPaymentBackend | null => {
+	const index = payments.findIndex((p) => p.payment_id === paymentId);
 
 	if (index === -1) {
 		return null;
 	}
 
-	const updated: SupplierPaymentResponse = {
+	const updated: TSupplierPaymentBackend = {
 		...payments[index],
 		file: MOCK_RECEIPT_URL,
-		status: SupplierPaymentStatus.Paid,
+		status: CONFIRMED_STATUS,
 		paid_at: new Date().toISOString()
 	};
 

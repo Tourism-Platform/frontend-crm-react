@@ -24,7 +24,8 @@ export const OrderId: FC = () => {
 		orderItems,
 		contactItems,
 		paxDetails,
-		tourReview,
+		tourReviewItems,
+		financials,
 		isLoading
 	} = useOrderDetails(orderId || "");
 
@@ -67,8 +68,8 @@ export const OrderId: FC = () => {
 			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (
 				<OrderTourReview
 					bookingId={orderId || ""}
-					items={tourReview.items}
-					summary={tourReview.summary}
+					items={tourReviewItems}
+					financials={financials}
 					orderStatus={order.status}
 				/>
 			)}

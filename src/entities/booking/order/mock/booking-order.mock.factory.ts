@@ -2,7 +2,7 @@ import {
 	BookingClientType,
 	type BookingOrderDetail,
 	type BookingOrderResponse,
-	type BookingOrderRowOutput,
+	type BookingOrderRow,
 	BookingStatus,
 	type OrderOperatorInfo,
 	TourType
@@ -108,12 +108,12 @@ const MOCK_OPERATOR_INFO: OrderOperatorInfo = {
 };
 
 export interface IBookingOrderMockBundle {
-	listItems: BookingOrderRowOutput[];
+	listItems: BookingOrderRow[];
 	detailsById: Map<string, BookingOrderDetail>;
 }
 
 export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
-	const listItems: BookingOrderRowOutput[] = [];
+	const listItems: BookingOrderRow[] = [];
 	const detailsById = new Map<string, BookingOrderDetail>();
 
 	STATUS_ROWS.forEach((row, statusIndex) => {
@@ -134,7 +134,7 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 			const pax = 2 + orderIndex;
 			const isAgencyClient = row.clientType === BookingClientType.Agency;
 
-			const listItem: BookingOrderRowOutput = {
+			const listItem: BookingOrderRow = {
 				id,
 				client_name: clientName,
 				client_type: row.clientType,

@@ -12,9 +12,7 @@ import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types";
 import type {
 	IBookingEventAvailability,
 	IOrderTourReviewItem,
-	IOrderTourReviewSummaryAmounts,
-	TOperatorBookingItineraryBackend,
-	TOperatorOrderOverviewBackend
+	TOperatorBookingItineraryBackend
 } from "../types";
 
 const formatCost = (cost: TourMinMaxCostSchemaOutput): string => {
@@ -115,16 +113,6 @@ export const mapOperatorItineraryToTourReviewItems = (
 		...data.packages.map(mapPackageToItem)
 	];
 };
-
-export const mapOperatorOverviewToTourReviewSummary = (
-	data: TOperatorOrderOverviewBackend
-): IOrderTourReviewSummaryAmounts => ({
-	kind: "amounts",
-	revenue: Number(data.revenue) || 0,
-	profit: Number(data.expected_profit) || 0,
-	paid: Number(data.paid) || 0,
-	unpaid: Number(data.not_paid) || 0
-});
 
 const findAvailability = (
 	availability: IBookingEventAvailability[],

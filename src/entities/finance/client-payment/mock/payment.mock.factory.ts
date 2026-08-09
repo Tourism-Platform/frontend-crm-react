@@ -15,7 +15,7 @@ export const createClientPaymentMocks = (): ClientPaymentResponse[] =>
 
 		return {
 			id: buildPaymentUuid(index + 1),
-			order_number: booking.order_number,
+			order_number: booking.order_number ?? "",
 			client_name: booking.client_name,
 			tour_name: booking.tour_name,
 			booking_id: booking.id,

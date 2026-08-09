@@ -77,6 +77,12 @@
 			"actions": "Actions"
 		}
 	},
+	"stats": {
+		"revenue": "Revenue",
+		"cost": "Cost",
+		"margin": "Margin",
+		"actual": "Actual"
+	},
 	"tour_review": {
 		"title": "Tour review",
 		"revenue": "Total Revenue",

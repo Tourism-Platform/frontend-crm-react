@@ -4,13 +4,13 @@ import type { TFunction } from "i18next";
 import { cn } from "@/shared/lib";
 import { formatToDollars } from "@/shared/utils";
 
-import { type IReconciliationSupplierPayment } from "@/entities/finance";
+import { type IEventVarianceLine } from "@/entities/finance";
 
 import { OpenReconciliation } from "@/features/finance";
 
 export const COLUMNS = (
 	t: TFunction<"reconciliation_id_page", undefined>
-): ColumnDef<IReconciliationSupplierPayment>[] => {
+): ColumnDef<IEventVarianceLine>[] => {
 	return [
 		{
 			id: "select",
@@ -20,33 +20,33 @@ export const COLUMNS = (
 		},
 		{
 			header: t("table.id"),
-			accessorKey: "id",
+			accessorKey: "eventId",
 			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("id")}</div>
+				<div className="font-medium">{row.original.eventId}</div>
 			),
 			size: 120
 		},
 		{
 			header: t("table.component"),
-			accessorKey: "component",
+			accessorKey: "eventName",
 			size: 200
 		},
 		{
 			header: t("table.plannedAmount"),
-			accessorKey: "plannedAmount",
+			accessorKey: "plannedMax",
 			cell: ({ row }) => (
 				<div className="font-medium">
-					{formatToDollars(row.getValue("plannedAmount"))}
+					{formatToDollars(row.original.plannedMax)}
 				</div>
 			),
 			size: 140
 		},
 		{
 			header: t("table.actualAmount"),
-			accessorKey: "actualAmount",
+			accessorKey: "accrued",
 			cell: ({ row }) => (
 				<div className="font-medium">
-					{formatToDollars(row.getValue("actualAmount"))}
+					{formatToDollars(row.original.accrued)}
 				</div>
 			),
 			size: 140
@@ -55,7 +55,7 @@ export const COLUMNS = (
 			header: t("table.variance"),
 			accessorKey: "variance",
 			cell: ({ row }) => {
-				const variance = parseFloat(row.getValue("variance"));
+				const variance = row.original.variance;
 				return (
 					<div
 						className={cn(
@@ -75,7 +75,9 @@ export const COLUMNS = (
 		},
 		{
 			id: "actions",
-			cell: ({ row }) => <OpenReconciliation payment={row.original} />,
+			cell: ({ row }) => (
+				<OpenReconciliation paymentId={row.original.paymentId} />
+			),
 			size: 80,
 			enableHiding: false
 		}

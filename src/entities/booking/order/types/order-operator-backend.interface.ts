@@ -4,10 +4,6 @@ export type TOperatorOrderDetailBackend = ReturnType<
 	typeof BOOKING_ORDER_OPERATOR_PATHS.getOperatorBookingOrder
 >["_types"]["response"];
 
-export type TOperatorOrderOverviewBackend = ReturnType<
-	typeof BOOKING_ORDER_OPERATOR_PATHS.getOperatorOrderOverview
->["_types"]["response"];
-
 export type TOperatorBookingItineraryBackend = ReturnType<
 	typeof BOOKING_ORDER_OPERATOR_PATHS.getOperatorBookingItinerary
 >["_types"]["response"];

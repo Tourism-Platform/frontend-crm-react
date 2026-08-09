@@ -96,7 +96,7 @@ export const ENUM_PATH = {
 		CLIENT_PAYMENTS: "/finance/client-payments",
 		SUPPLIER_PAYMENTS: "/finance/supplier-payments",
 		RECONCILIATION: "/finance/reconciliation",
-		RECONCILIATION_ID: "/finance/reconciliation/:reconciliationId"
+		RECONCILIATION_ID: "/finance/reconciliation/:bookingId"
 	},
 	LIBRARY: {
 		ROOT: "/library",

@@ -1,18 +1,20 @@
-import type { OPERATOR_SUPPLIER_PAYMENT_PATHS } from "@/shared/api";
-import { SupplierPaymentStatus } from "@/shared/api";
+import type {
+	OPERATOR_SUPPLIER_PAYMENT_PATHS,
+	SupplierPaymentListRowOutput
+} from "@/shared/api";
 import { formatDate, parseDecimalSafe } from "@/shared/utils";
 
 import { currencyConverter } from "@/entities/commission";
 
 import { SUPPLIER_PAYMENT_NO_DATA } from "../constants";
 import { getSupplierPaymentMockDisplay } from "../mock/supplier-payment.mock-display";
-import { consumeLastSupplierPaymentListMeta } from "../mock/supplier-payment.store";
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type ISupplierPayment,
 	type ISupplierPaymentFilters,
 	type ISupplierPaymentPaginatedResponse,
 	type TSupplierPaymentBackend,
+	type TSupplierPaymentListResponseInput,
 	type TSupplierPaymentStatusCounts,
 	type TUpdateSupplierPaymentBackend
 } from "../types";
@@ -31,7 +33,7 @@ const mapFileToMetadata = (
 
 	return [
 		{
-			id: payment.id,
+			id: payment.payment_id,
 			name: payment.file_name ?? "receipt.pdf",
 			size: 0,
 			type: "application/pdf",
@@ -43,11 +45,11 @@ const mapFileToMetadata = (
 export const mapSupplierPaymentToFrontend = (
 	data: TSupplierPaymentBackend
 ): ISupplierPayment => {
-	const display = getSupplierPaymentMockDisplay(data.id);
+	const display = getSupplierPaymentMockDisplay(data.payment_id);
 	const uiStatus = supplierPaymentStatusConverter.from(data.status);
 
 	return {
-		id: data.id,
+		id: data.payment_id,
 		orderId: data.order_number ?? SUPPLIER_PAYMENT_NO_DATA,
 		bookingId: data.booking_id,
 		component:
@@ -105,54 +107,64 @@ const emptyStatusCounts = (): TSupplierPaymentStatusCounts => ({
 	[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]: 0
 });
 
-const computeStatusCountsFromItems = (
-	items: TSupplierPaymentBackend[]
-): TSupplierPaymentStatusCounts => {
-	const counts = emptyStatusCounts();
-
-	for (const item of items) {
-		if (item.status === SupplierPaymentStatus.Paid) {
-			counts[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED] += 1;
-		} else {
-			counts[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED] += 1;
-		}
-	}
-
-	return counts;
-};
-
-export const mapSupplierPaymentListToPaginated = (
-	items: TSupplierPaymentBackend[],
-	filters: ISupplierPaymentFilters
-): ISupplierPaymentPaginatedResponse => {
-	const meta = consumeLastSupplierPaymentListMeta();
-	const skip = (filters.page - 1) * filters.limit;
+export const mapSupplierPaymentListItemToFrontend = (
+	data: SupplierPaymentListRowOutput
+): ISupplierPayment => {
+	const display = getSupplierPaymentMockDisplay(data.payment_id);
+	const uiStatus = supplierPaymentStatusConverter.from(data.status);
 
 	return {
-		data: items.map(mapSupplierPaymentToFrontend),
-		total:
-			meta?.total ??
-			(items.length < filters.limit
-				? skip + items.length
-				: skip + filters.limit + 1),
-		statusCounts: meta?.status_counts ?? computeStatusCountsFromItems(items)
+		id: data.payment_id,
+		orderId: data.order_number ?? SUPPLIER_PAYMENT_NO_DATA,
+		bookingId: data.booking_id,
+		component:
+			display?.component ?? data.event_name ?? SUPPLIER_PAYMENT_NO_DATA,
+		type: display?.type ?? data.event_typ ?? SUPPLIER_PAYMENT_NO_DATA,
+		supplier:
+			display?.supplier ?? data.supplier_name ?? SUPPLIER_PAYMENT_NO_DATA,
+		dateCreated: data.paid_at
+			? formatDate(data.paid_at)
+			: SUPPLIER_PAYMENT_NO_DATA,
+		amount: parseAmount(data.amount),
+		currency:
+			currencyConverter.from(data.currency) ?? String(data.currency),
+		manager: display?.manager ?? SUPPLIER_PAYMENT_NO_DATA,
+		status: uiStatus ?? ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED,
+		note: undefined,
+		files: data.has_receipt
+			? [
+					{
+						id: data.payment_id,
+						name: "receipt.pdf",
+						size: 0,
+						type: "application/pdf",
+						url: ""
+					}
+				]
+			: undefined
 	};
 };
 
+export const mapSupplierPaymentListToPaginated = (
+	response: TSupplierPaymentListResponseInput
+): ISupplierPaymentPaginatedResponse => ({
+	data: response.data.map(mapSupplierPaymentListItemToFrontend),
+	total: response.total_count,
+	statusCounts: response.status_counts ?? emptyStatusCounts()
+});
+
 export const mapSupplierPaymentFiltersToBackend = (
 	filters: ISupplierPaymentFilters
-): typeof OPERATOR_SUPPLIER_PAYMENT_PATHS.listSupplierPayments._types.query & {
-	q?: string;
-	status?: SupplierPaymentStatus;
-} => {
+): typeof OPERATOR_SUPPLIER_PAYMENT_PATHS.listSupplierPayments._types.query => {
 	const search = filters.search.trim();
-	// !!! TODO: check if this is correct
+
 	return {
 		skip: (filters.page - 1) * filters.limit,
 		limit: filters.limit,
-		...(filters.status.length > 0
-			? { status: filters.status?.join(",") as SupplierPaymentStatus }
-			: {}),
+		status:
+			filters.status.length > 0
+				? supplierPaymentStatusConverter.to(filters.status[0])
+				: undefined,
 		...(search ? { q: search } : {})
 	};
 };

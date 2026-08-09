@@ -10,12 +10,12 @@ import {
 } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
-import { type IReconciliationDetail } from "@/entities/finance";
+import { type IBookingFinancials } from "@/entities/finance";
 
 import { getStatsItems } from "../model";
 
 interface IReconciliationStatsProps {
-	data: IReconciliationDetail;
+	data: IBookingFinancials;
 }
 
 const ReconciliationStatsBase: FC<IReconciliationStatsProps> = ({ data }) => {

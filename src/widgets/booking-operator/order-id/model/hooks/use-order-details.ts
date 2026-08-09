@@ -2,18 +2,16 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-	EMPTY_ORDER_TOUR_REVIEW_SUMMARY,
 	ENUM_ORDER_STATUS,
 	attachAvailabilityToItineraryItems,
 	mapBookingPaxListToPaxReview,
 	mapOperatorItineraryToTourReviewItems,
-	mapOperatorOverviewToTourReviewSummary,
 	useGetOperatorBookingItineraryQuery,
 	useGetOperatorBookingOrderQuery,
-	useGetOperatorOrderOverviewQuery,
 	useListBookingAvailabilityQuery,
 	useListPassengerInfoQuery
 } from "@/entities/booking";
+import { useGetOperatorOrderFinancialsQuery } from "@/entities/finance";
 
 import { getContactItems, getOrderItems } from "../helpers";
 
@@ -25,7 +23,7 @@ export const useOrderDetails = (orderId: string) => {
 	});
 	const order = orderQuery.data;
 
-	const overviewQuery = useGetOperatorOrderOverviewQuery(orderId, {
+	const financialsQuery = useGetOperatorOrderFinancialsQuery(orderId, {
 		skip: !orderId
 	});
 
@@ -56,21 +54,18 @@ export const useOrderDetails = (orderId: string) => {
 		[paxQuery.data]
 	);
 
-	const tourReview = useMemo(() => {
-		const items = attachAvailabilityToItineraryItems(
-			mapOperatorItineraryToTourReviewItems(itineraryQuery.data),
-			availabilityQuery.data ?? []
-		);
-		const summary = overviewQuery.data
-			? mapOperatorOverviewToTourReviewSummary(overviewQuery.data)
-			: EMPTY_ORDER_TOUR_REVIEW_SUMMARY;
-
-		return { items, summary };
-	}, [itineraryQuery.data, availabilityQuery.data, overviewQuery.data]);
+	const tourReviewItems = useMemo(
+		() =>
+			attachAvailabilityToItineraryItems(
+				mapOperatorItineraryToTourReviewItems(itineraryQuery.data),
+				availabilityQuery.data ?? []
+			),
+		[itineraryQuery.data, availabilityQuery.data]
+	);
 
 	const isLoading =
 		orderQuery.isLoading ||
-		overviewQuery.isLoading ||
+		financialsQuery.isLoading ||
 		itineraryQuery.isLoading ||
 		paxQuery.isLoading;
 
@@ -79,7 +74,8 @@ export const useOrderDetails = (orderId: string) => {
 		orderItems,
 		contactItems,
 		paxDetails,
-		tourReview,
+		tourReviewItems,
+		financials: financialsQuery.data,
 		isLoading,
 		isOrderLoading: orderQuery.isLoading,
 		isPaxLoading: paxQuery.isLoading,

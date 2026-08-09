@@ -1,7 +1,6 @@
-import { Fragment, useMemo } from "react";
+import { type FC, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
@@ -14,16 +13,20 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import {
 	type ENUM_ORDER_STATUS_TYPE,
-	type IOrderTourReviewItem,
-	type TOrderTourReviewSummary
+	type IOrderTourReviewItem
 } from "@/entities/booking";
+import { type IBookingFinancials } from "@/entities/finance";
 
-import { type IInfoItem, TOUR_REVIEW_COLUMNS, getTourSummary } from "../model";
+import {
+	type IFinancialsStatColumn,
+	TOUR_REVIEW_COLUMNS,
+	getFinancialsStats
+} from "../model";
 
 interface IOrderTourReviewProps {
 	bookingId: string;
 	items: IOrderTourReviewItem[];
-	summary: TOrderTourReviewSummary;
+	financials?: IBookingFinancials;
 	orderStatus: ENUM_ORDER_STATUS_TYPE;
 }
 
@@ -34,13 +37,25 @@ const TABLE_LAYOUT = {
 
 const getSubRowsFn = (row: IOrderTourReviewItem) => row.subRows;
 
-const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
+const TourSummaryColumn: FC<IFinancialsStatColumn> = ({
+	label,
+	planned,
+	actual
+}) => {
+	const { t } = useTranslation("order_id_page");
+
 	return (
-		<div className="flex flex-col">
-			<span className={cn("text-sm text-muted-foreground", className)}>
-				{label}
+		<div className="flex min-w-[140px] flex-col gap-1">
+			<span className="text-sm text-muted-foreground">{label}</span>
+			<span className="text-lg font-medium tabular-nums text-foreground">
+				{planned}
 			</span>
-			<span className="text-lg text-foreground">{value}</span>
+			<span className="text-sm tabular-nums text-muted-foreground">
+				{t("stats.actual")}:{" "}
+				<span className="text-base font-medium text-foreground">
+					{actual}
+				</span>
+			</span>
 		</div>
 	);
 };
@@ -48,13 +63,14 @@ const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
 const OrderTourReviewBase = ({
 	bookingId,
 	items,
-	summary,
+	financials,
 	orderStatus
 }: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
-	const summaryItems = useMemo(
-		() => getTourSummary(summary, t),
-		[summary, t]
+
+	const summary = useMemo(
+		() => (financials ? getFinancialsStats(financials, t) : null),
+		[financials, t]
 	);
 
 	const columns = useMemo(
@@ -68,19 +84,22 @@ const OrderTourReviewBase = ({
 				<CardTitle className="text-lg font-semibold">
 					{t("tour_review.title")}
 				</CardTitle>
-				<div className="grid w-fit grid-cols-[auto_1px_auto_1px_auto_1px_auto] items-center gap-8">
-					{summaryItems.map((item, index) => (
-						<Fragment key={item.label}>
-							<TourSummaryColumn {...item} />
-							{index < summaryItems.length - 1 && (
-								<Separator
-									orientation="vertical"
-									className="h-10"
-								/>
-							)}
-						</Fragment>
-					))}
-				</div>
+
+				{summary && (
+					<div className="grid w-fit grid-cols-[auto_1px_auto_1px_auto] items-center gap-8">
+						{summary.map((item, index) => (
+							<Fragment key={item.label}>
+								<TourSummaryColumn {...item} />
+								{index < summary.length - 1 && (
+									<Separator
+										orientation="vertical"
+										className="h-14"
+									/>
+								)}
+							</Fragment>
+						))}
+					</div>
+				)}
 			</CardHeader>
 			<CardContent>
 				<SmartTable

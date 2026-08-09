@@ -10,17 +10,18 @@ import {
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
-import { type IReconciliationSupplierPayment } from "@/entities/finance";
+import { type IEventVarianceLine } from "@/entities/finance";
 
 import { COLUMNS } from "../model";
 
 interface IReconciliationSupplierPaymentsProps {
-	data: IReconciliationSupplierPayment[];
+	data: IEventVarianceLine[];
+	isLoading?: boolean;
 }
 
 const ReconciliationSupplierPaymentsBase: FC<
 	IReconciliationSupplierPaymentsProps
-> = ({ data }) => {
+> = ({ data, isLoading }) => {
 	const { t } = useTranslation("reconciliation_id_page");
 	const columns = useMemo(() => COLUMNS(t), [t]);
 
@@ -35,6 +36,8 @@ const ReconciliationSupplierPaymentsBase: FC<
 				<SmartTable
 					data={data}
 					columns={columns}
+					isLoading={isLoading}
+					loadingMode="skeleton"
 					showPagination={false}
 					showTopFilters={false}
 				/>

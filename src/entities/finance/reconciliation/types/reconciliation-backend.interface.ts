@@ -1,22 +1,24 @@
-import { type IPaginationResponse } from "@/shared/types";
+import type { BOOKING_ORDER_OPERATOR_PATHS } from "@/shared/api/generated/paths/booking-order-operator.paths";
+import type { BOOKING_RECONCILIATION_PATHS } from "@/shared/api/generated/paths/booking-reconciliation.paths";
 
-import type { TReconciliationStatusCounts } from "./reconciliation.interface";
-import type { ENUM_RECONCILIATION_STATUS_TYPE } from "./reconciliation.types";
+export type TReconciliationListBackend =
+	typeof BOOKING_RECONCILIATION_PATHS.listBookingReconciliation._types.response;
 
-export interface IReconciliationBackend {
-	id: string;
-	order_id: string;
-	client: string;
-	planned_revenue: number;
-	actual_revenue: number;
-	planned_cost: number;
-	actual_cost: number;
-	variance: number;
-	status: ENUM_RECONCILIATION_STATUS_TYPE;
-	currency: string;
-}
+export type TReconciliationListQuery =
+	typeof BOOKING_RECONCILIATION_PATHS.listBookingReconciliation._types.query;
 
-export interface IReconciliationPaginatedResponseBackend
-	extends IPaginationResponse<IReconciliationBackend> {
-	status_counts: TReconciliationStatusCounts;
-}
+export type TReconciliationRowBackend =
+	TReconciliationListBackend["data"][number];
+
+export type TReconciliationTotalsBackend = TReconciliationListBackend["totals"];
+
+export type TBookingFinancialsBackend = ReturnType<
+	typeof BOOKING_ORDER_OPERATOR_PATHS.getOperatorOrderFinancials
+>["_types"]["response"];
+
+export type TBookingVarianceBackend = ReturnType<
+	typeof BOOKING_ORDER_OPERATOR_PATHS.getOperatorOrderVariance
+>["_types"]["response"];
+
+export type TEventVarianceLineBackend =
+	TBookingVarianceBackend["events"][number];

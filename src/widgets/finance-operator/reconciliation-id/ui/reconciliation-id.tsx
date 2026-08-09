@@ -1,7 +1,10 @@
 import { type FC } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetReconciliationByIdQuery } from "@/entities/finance";
+import {
+	useGetOperatorOrderFinancialsQuery,
+	useGetOperatorOrderVarianceQuery
+} from "@/entities/finance";
 
 import { ReconciliationHeader } from "./reconciliation-header";
 import { ReconciliationIdSkeleton } from "./reconciliation-id-skeleton";
@@ -10,34 +13,44 @@ import { ReconciliationStats } from "./reconciliation-stats";
 import { ReconciliationSupplierPayments } from "./reconciliation-supplier-payments";
 
 export const ReconciliationId: FC = () => {
-	const { reconciliationId } = useParams<{ reconciliationId: string }>();
+	const { bookingId } = useParams<{ bookingId: string }>();
 
 	const {
-		data: reconciliation,
-		isLoading,
-		isError
-	} = useGetReconciliationByIdQuery(reconciliationId ?? "");
+		data: financials,
+		isLoading: isFinancialsLoading,
+		isError: isFinancialsError
+	} = useGetOperatorOrderFinancialsQuery(bookingId ?? "", {
+		skip: !bookingId
+	});
 
-	if (isLoading) {
+	const {
+		data: variance,
+		isLoading: isVarianceLoading,
+		isFetching: isVarianceFetching
+	} = useGetOperatorOrderVarianceQuery(bookingId ?? "", {
+		skip: !bookingId
+	});
+
+	if (isFinancialsLoading) {
 		return <ReconciliationIdSkeleton />;
 	}
 
-	if (isError || !reconciliation) {
+	if (isFinancialsError || !financials) {
 		return <ReconciliationNotFound />;
 	}
 
 	return (
 		<div className="flex flex-col gap-8">
 			<ReconciliationHeader
-				orderId={reconciliation.orderId}
-				client={reconciliation.client}
-				variance={reconciliation.variance}
+				orderId={financials.orderId}
+				variance={variance?.varianceTotal ?? 0}
 			/>
 
-			<ReconciliationStats data={reconciliation} />
+			<ReconciliationStats data={financials} />
 
 			<ReconciliationSupplierPayments
-				data={reconciliation.supplierPayments}
+				data={variance?.events ?? []}
+				isLoading={isVarianceLoading || isVarianceFetching}
 			/>
 		</div>
 	);

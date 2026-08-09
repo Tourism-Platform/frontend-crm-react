@@ -1,10 +1,11 @@
 import type {
 	BookingCancel,
+	BookingFinancialsResponse,
 	BookingOrderDetail,
 	BookingOrderResponse,
+	EventVarianceResponse,
 	LanguageCode,
-	OperatorItineraryResponse,
-	OperatorOrderOverview
+	OperatorItineraryResponse
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -21,14 +22,24 @@ export const BOOKING_ORDER_OPERATOR_PATHS = {
 				response: BookingOrderDetail;
 			}
 		}) as const,
-	getOperatorOrderOverview: (bookingId: string) =>
+	getOperatorOrderFinancials: (bookingId: string) =>
 		({
-			url: `/booking/order/operator/${bookingId}/overview`,
+			url: `/booking/order/operator/${bookingId}/financials`,
 			method: "GET",
 			_types: {} as {
 				body: void;
 				query: void;
-				response: OperatorOrderOverview;
+				response: BookingFinancialsResponse;
+			}
+		}) as const,
+	getOperatorOrderVariance: (bookingId: string) =>
+		({
+			url: `/booking/order/operator/${bookingId}/variance`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: EventVarianceResponse;
 			}
 		}) as const,
 	getOperatorBookingItinerary: (bookingId: string) =>

@@ -1,49 +1,68 @@
-import { ENUM_API_TAGS } from "@/shared/api";
+import { ENUM_API_TAGS } from "@/shared/api/backend/tags.config";
+import { BOOKING_ORDER_OPERATOR_PATHS } from "@/shared/api/generated/paths/booking-order-operator.paths";
+import { BOOKING_RECONCILIATION_PATHS } from "@/shared/api/generated/paths/booking-reconciliation.paths";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
-	mapReconciliationDetailToFrontend,
+	mapBookingFinancialsToFrontend,
+	mapBookingVarianceToFrontend,
 	mapReconciliationFiltersToBackend,
 	mapReconciliationPaginatedToFrontend
 } from "../converters";
 import type {
-	IReconciliationDetail,
-	IReconciliationDetailBackend,
+	IBookingFinancials,
+	IBookingVariance,
 	IReconciliationFilters,
 	IReconciliationPaginatedResponse,
-	IReconciliationPaginatedResponseBackend
+	TBookingFinancialsBackend,
+	TBookingVarianceBackend,
+	TReconciliationListBackend
 } from "../types";
 
 export const reconciliationApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getReconciliations: builder.query<
 			IReconciliationPaginatedResponse,
-			IReconciliationFilters | void
+			IReconciliationFilters
 		>({
 			query: (filters) => ({
-				url: "/finance/reconciliations",
-				params: filters
-					? mapReconciliationFiltersToBackend(filters)
-					: undefined
+				...BOOKING_RECONCILIATION_PATHS.listBookingReconciliation,
+				params: mapReconciliationFiltersToBackend(filters)
 			}),
-			transformResponse: (
-				response: IReconciliationPaginatedResponseBackend
-			) => mapReconciliationPaginatedToFrontend(response),
+			transformResponse: (response: TReconciliationListBackend) =>
+				mapReconciliationPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.FINANCE_RECONCILIATIONS]
 		}),
-		getReconciliationById: builder.query<IReconciliationDetail, string>({
-			query: (id) => ({
-				url: `/finance/reconciliations/${id}`
+		getOperatorOrderFinancials: builder.query<IBookingFinancials, string>({
+			query: (bookingId) => ({
+				...BOOKING_ORDER_OPERATOR_PATHS.getOperatorOrderFinancials(
+					bookingId
+				)
 			}),
-			transformResponse: (response: IReconciliationDetailBackend) =>
-				mapReconciliationDetailToFrontend(response),
-			providesTags: (_, __, id) => [
-				{ type: ENUM_API_TAGS.FINANCE_RECONCILIATIONS, id }
+			transformResponse: (response: TBookingFinancialsBackend) =>
+				mapBookingFinancialsToFrontend(response),
+			providesTags: (_result, _error, bookingId) => [
+				{ type: ENUM_API_TAGS.FINANCE_RECONCILIATIONS, id: bookingId }
+			]
+		}),
+		getOperatorOrderVariance: builder.query<IBookingVariance, string>({
+			query: (bookingId) => ({
+				...BOOKING_ORDER_OPERATOR_PATHS.getOperatorOrderVariance(
+					bookingId
+				)
+			}),
+			transformResponse: (response: TBookingVarianceBackend) =>
+				mapBookingVarianceToFrontend(response),
+			providesTags: (_result, _error, bookingId) => [
+				{ type: ENUM_API_TAGS.FINANCE_RECONCILIATIONS, id: bookingId }
 			]
 		})
 	})
 });
 
-export const { useGetReconciliationsQuery, useGetReconciliationByIdQuery } =
-	reconciliationApi;
+export const {
+	useGetReconciliationsQuery,
+	useGetOperatorOrderFinancialsQuery,
+	useGetOperatorOrderVarianceQuery
+} = reconciliationApi;

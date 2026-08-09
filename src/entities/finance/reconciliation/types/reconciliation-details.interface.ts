@@ -1,7 +1,5 @@
 import type { TFileMetadata } from "@/shared/hooks";
 
-import { type IReconciliation } from "./reconciliation.interface";
-
 export interface IReconciliationSupplierPayment {
 	id: string;
 	component: string;
@@ -13,7 +11,16 @@ export interface IReconciliationSupplierPayment {
 	files?: TFileMetadata[];
 }
 
-export interface IReconciliationDetail extends IReconciliation {
+export interface IReconciliationDetail {
+	id: string;
+	orderId: string;
+	client: string;
+	plannedRevenue: number;
+	actualRevenue: number;
+	plannedCost: number;
+	actualCost: number;
+	variance: number;
+	currency: string;
 	plannedMargin: number;
 	actualMargin: number;
 	supplierPayments: IReconciliationSupplierPayment[];

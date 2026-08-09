@@ -1,13 +1,22 @@
 {
 	"page_name": "Сверка",
+	"totals": {
+		"receivable": "К получению",
+		"payable": "К оплате",
+		"settledProfit": "Реализованная прибыль",
+		"revenueAccrued": "Начислено",
+		"revenueSettled": "Погашено",
+		"costAccrued": "Начислено",
+		"costSettled": "Погашено",
+		"accrualProfit": "По начислению"
+	},
 	"table": {
-		"id": "ID",
 		"orderId": "ID заказа",
 		"client": "Клиент",
 		"plannedRevenue": "План. доход",
-		"actualRevenue": "Факт. доход",
+		"revenueAccrued": "Начисленный доход",
 		"plannedCost": "План. расход",
-		"actualCost": "Факт. расход",
+		"costAccrued": "Начисленный расход",
 		"variance": "Разница",
 		"status": "Статус",
 		"menu": {

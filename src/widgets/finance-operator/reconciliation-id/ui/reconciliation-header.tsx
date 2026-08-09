@@ -9,13 +9,11 @@ import { formatToDollars } from "@/shared/utils";
 
 interface IReconciliationHeaderProps {
 	orderId: string;
-	client: string;
 	variance: number;
 }
 
 export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 	orderId,
-	client,
 	variance
 }) => {
 	const { t } = useTranslation("reconciliation_id_page");
@@ -54,9 +52,7 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 				</div>
 
 				<div className="flex justify-between items-center w-full">
-					<h1 className="text-3xl">
-						{orderId} - {client}
-					</h1>
+					<h1 className="text-3xl">{orderId}</h1>
 					<Badge
 						variant={variant}
 						className="text-lg px-4 py-1 flex items-center gap-1"

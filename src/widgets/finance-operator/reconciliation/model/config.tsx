@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Badge, Button, Checkbox, Skeleton } from "@/shared/ui";
+import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
+import { type ENUM_ORDER_STATUS_TYPE } from "@/entities/booking/order/types/order-status.types";
 import {
-	type ENUM_RECONCILIATION_STATUS_TYPE,
 	type IReconciliation,
 	RECONCILIATION_STATUS_LABELS,
 	RECONCILIATION_STATUS_VARIANTS
@@ -44,24 +44,30 @@ export const COLUMNS = (
 			enableHiding: false
 		},
 		{
-			header: t("table.id"),
-			meta: {
-				headerTitle: t("table.id", { ns: "reconciliation_page" }),
-				skeleton: <Skeleton className="h-4 w-[60px]" />
-			},
-			accessorKey: "id",
-			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("id")}</div>
-			),
-			size: 80
-		},
-		{
 			header: t("table.orderId"),
 			meta: {
 				headerTitle: t("table.orderId", { ns: "reconciliation_page" }),
 				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
 			accessorKey: "orderId",
+			cell: ({ row }) => {
+				const { bookingId, orderId } = row.original;
+
+				if (!bookingId) {
+					return <div className="font-medium">{orderId}</div>;
+				}
+
+				return (
+					<Link
+						to={buildRoute(ENUM_PATH.FINANCE.RECONCILIATION_ID, {
+							bookingId
+						})}
+						className="font-medium text-primary hover:underline"
+					>
+						{orderId}
+					</Link>
+				);
+			},
 			size: 120
 		},
 		{
@@ -87,20 +93,20 @@ export const COLUMNS = (
 					{formatToDollars(row.getValue("plannedRevenue"))}
 				</div>
 			),
-			size: 140
+			size: 100
 		},
 		{
-			header: t("table.actualRevenue"),
+			header: t("table.revenueAccrued"),
 			meta: {
-				headerTitle: t("table.actualRevenue", {
+				headerTitle: t("table.revenueAccrued", {
 					ns: "reconciliation_page"
 				}),
 				skeleton: <Skeleton className="h-4 w-[80px]" />
 			},
-			accessorKey: "actualRevenue",
+			accessorKey: "revenueAccrued",
 			cell: ({ row }) => (
 				<div className="font-medium">
-					{formatToDollars(row.getValue("actualRevenue"))}
+					{formatToDollars(row.getValue("revenueAccrued"))}
 				</div>
 			),
 			size: 140
@@ -122,17 +128,17 @@ export const COLUMNS = (
 			size: 140
 		},
 		{
-			header: t("table.actualCost"),
+			header: t("table.costAccrued"),
 			meta: {
-				headerTitle: t("table.actualCost", {
+				headerTitle: t("table.costAccrued", {
 					ns: "reconciliation_page"
 				}),
 				skeleton: <Skeleton className="h-4 w-[80px]" />
 			},
-			accessorKey: "actualCost",
+			accessorKey: "costAccrued",
 			cell: ({ row }) => (
 				<div className="font-medium">
-					{formatToDollars(row.getValue("actualCost"))}
+					{formatToDollars(row.getValue("costAccrued"))}
 				</div>
 			),
 			size: 140
@@ -167,9 +173,7 @@ export const COLUMNS = (
 			},
 			accessorKey: "status",
 			cell: ({ row }) => {
-				const status = row.getValue(
-					"status"
-				) as ENUM_RECONCILIATION_STATUS_TYPE;
+				const status = row.getValue("status") as ENUM_ORDER_STATUS_TYPE;
 
 				return (
 					<Badge variant={RECONCILIATION_STATUS_VARIANTS[status]}>
@@ -180,22 +184,6 @@ export const COLUMNS = (
 				);
 			},
 			size: 120
-		},
-		{
-			id: "actions",
-			cell: ({ row }) => (
-				<Button variant="outline" size="sm" asChild>
-					<Link
-						to={buildRoute(ENUM_PATH.FINANCE.RECONCILIATION_ID, {
-							reconciliationId: row.original.id
-						})}
-					>
-						{t("table.menu.open", { ns: "reconciliation_page" })}
-					</Link>
-				</Button>
-			),
-			size: 80,
-			enableHiding: false
 		}
 	];
 };

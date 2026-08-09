@@ -7,8 +7,8 @@ import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
+import { type ENUM_ORDER_STATUS_TYPE } from "@/entities/booking/order/types/order-status.types";
 import {
-	type ENUM_RECONCILIATION_STATUS_TYPE,
 	type IReconciliationFilters,
 	RECONCILIATION_STATUS_LABELS,
 	useGetReconciliationsQuery
@@ -42,7 +42,7 @@ const ReconciliationBase: FC = () => {
 		[reconciliationData]
 	);
 	const totalCount = reconciliationData?.total ?? 0;
-	const statusCounts = reconciliationData?.statusCounts;
+	const totals = reconciliationData?.totals;
 
 	const statusOptions = useValueToTranslateLabel(
 		RECONCILIATION_STATUS_LABELS
@@ -86,7 +86,7 @@ const ReconciliationBase: FC = () => {
 
 	const handleStatusChange = useCallback(
 		(val: string[]) => {
-			setValue("status", val as ENUM_RECONCILIATION_STATUS_TYPE[]);
+			setValue("status", val as ENUM_ORDER_STATUS_TYPE[]);
 			setValue("page", 1);
 		},
 		[setValue]
@@ -94,7 +94,7 @@ const ReconciliationBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<ReconciliationHeader statusCounts={statusCounts} />
+			<ReconciliationHeader totals={totals} />
 
 			<Card>
 				<CardContent>

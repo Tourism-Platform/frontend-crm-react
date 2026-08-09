@@ -1,5 +1,5 @@
-import { ENUM_API_TAGS, OPERATOR_SUPPLIER_PAYMENT_PATHS } from "@/shared/api";
-import type { SupplierPaymentResponse } from "@/shared/api";
+import { ENUM_API_TAGS } from "@/shared/api/backend/tags.config";
+import { OPERATOR_SUPPLIER_PAYMENT_PATHS } from "@/shared/api/generated/paths/operator-supplier-payment.paths";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -13,7 +13,8 @@ import type {
 	ISupplierPayment,
 	ISupplierPaymentFilters,
 	ISupplierPaymentPaginatedResponse,
-	TSupplierPaymentBackend
+	TSupplierPaymentBackend,
+	TSupplierPaymentListResponseInput
 } from "../types";
 
 export const supplierPaymentApi = authApi.injectEndpoints({
@@ -26,12 +27,19 @@ export const supplierPaymentApi = authApi.injectEndpoints({
 				...OPERATOR_SUPPLIER_PAYMENT_PATHS.listSupplierPayments,
 				params: mapSupplierPaymentFiltersToBackend(filters)
 			}),
-			transformResponse: (
-				response: SupplierPaymentResponse[],
-				_meta,
-				filters
-			) => mapSupplierPaymentListToPaginated(response, filters),
+			transformResponse: (response: TSupplierPaymentListResponseInput) =>
+				mapSupplierPaymentListToPaginated(response),
 			providesTags: [ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS]
+		}),
+		getSupplierPaymentById: builder.query<ISupplierPayment, string>({
+			query: (paymentId) => ({
+				...OPERATOR_SUPPLIER_PAYMENT_PATHS.getSupplierPayment(paymentId)
+			}),
+			transformResponse: (response: TSupplierPaymentBackend) =>
+				mapSupplierPaymentToFrontend(response),
+			providesTags: (_result, _error, paymentId) => [
+				{ type: ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS, id: paymentId }
+			]
 		}),
 		updateSupplierPayment: builder.mutation<
 			ISupplierPayment,
@@ -67,6 +75,7 @@ export const supplierPaymentApi = authApi.injectEndpoints({
 
 export const {
 	useGetSupplierPaymentsQuery,
+	useGetSupplierPaymentByIdQuery,
 	useUpdateSupplierPaymentMutation,
 	useUploadSupplierPaymentReceiptMutation
 } = supplierPaymentApi;

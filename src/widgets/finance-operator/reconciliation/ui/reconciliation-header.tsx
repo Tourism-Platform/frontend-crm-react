@@ -1,49 +1,92 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Badge } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
+import { formatToDollars } from "@/shared/utils";
 
-import {
-	ENUM_RECONCILIATION_STATUS,
-	RECONCILIATION_STATUS_LABELS,
-	RECONCILIATION_STATUS_VARIANTS,
-	type TReconciliationStatusCounts
-} from "@/entities/finance";
+import { type IReconciliationTotals } from "@/entities/finance";
 
 interface IReconciliationHeaderProps {
-	statusCounts?: TReconciliationStatusCounts;
+	totals?: IReconciliationTotals;
 }
 
-export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
-	statusCounts
-}) => {
-	const { t } = useTranslation(["reconciliation_page", "options"]);
+type TTotalKey = keyof IReconciliationTotals;
 
-	const statusEntries = Object.values(ENUM_RECONCILIATION_STATUS);
+interface IKpiCard {
+	primaryKey: TTotalKey;
+	secondary: readonly TTotalKey[];
+}
+
+const KPI_CARDS = [
+	{
+		primaryKey: "receivable",
+		secondary: ["revenueAccrued", "revenueSettled"]
+	},
+	{
+		primaryKey: "payable",
+		secondary: ["costAccrued", "costSettled"]
+	},
+	{
+		primaryKey: "settledProfit",
+		secondary: ["accrualProfit"]
+		// tone: "profit"
+	}
+] satisfies readonly IKpiCard[];
+
+export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
+	totals
+}) => {
+	const { t } = useTranslation("reconciliation_page");
 
 	return (
-		<div className="flex items-center justify-between">
-			<h1 className="text-3xl">
-				{t("page_name", { ns: "reconciliation_page" })}
-			</h1>
+		<div className="flex flex-col gap-5">
+			<h1 className="text-3xl">{t("page_name")}</h1>
 
-			<div className="flex gap-2">
-				{statusEntries.map((status) => {
-					const count = statusCounts?.[status] || 0;
-					const label = t(RECONCILIATION_STATUS_LABELS[status], "", {
-						ns: "options"
-					});
-					const variant = RECONCILIATION_STATUS_VARIANTS[status];
+			<div className="grid grid-cols-3 gap-6">
+				{KPI_CARDS.map(({ primaryKey, secondary }) => {
+					const primaryValue = totals?.[primaryKey] ?? 0;
+					const isProfit = primaryKey === "settledProfit";
 
 					return (
-						<Badge
-							key={status}
-							variant={variant}
-							className="p-3 flex gap-1 text-lg"
-						>
-							<span>{label}:</span>
-							<span>{count}</span>
-						</Badge>
+						<Card key={primaryKey} className="gap-3">
+							<CardHeader className="block">
+								<CardTitle className="text-lg font-medium text-muted-foreground">
+									{t(`totals.${primaryKey}`)}
+								</CardTitle>
+							</CardHeader>
+							<CardContent className="flex flex-col gap-3">
+								<span
+									className={cn(
+										"text-4xl tabular-nums",
+										isProfit &&
+											primaryValue < 0 &&
+											"text-red-500",
+										isProfit &&
+											primaryValue > 0 &&
+											"text-green-600"
+									)}
+								>
+									{formatToDollars(primaryValue)}
+								</span>
+
+								<div className="flex flex-wrap gap-x-4 gap-y-1">
+									{secondary.map((key) => (
+										<span
+											key={key}
+											className="text-sm text-muted-foreground tabular-nums"
+										>
+											{t(`totals.${key}`)}:{" "}
+											<span className="font-medium text-foreground">
+												{formatToDollars(
+													totals?.[key] ?? 0
+												)}
+											</span>
+										</span>
+									))}
+								</div>
+							</CardContent>
+						</Card>
 					);
 				})}
 			</div>
