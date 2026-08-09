@@ -228,6 +228,18 @@
 			}
 		}
 	},
+	"event_types": {
+		"flight": "Перелёт",
+		"train": "Поезд",
+		"bus": "Автобус",
+		"transfer": "Трансфер",
+		"housing": "Проживание",
+		"activity": "Активность",
+		"ref": "Справка",
+		"guide": "Гид",
+		"supplementary": "Дополнение",
+		"options": "Опции"
+	},
 	"event_library": {
 		"types": {
 			"flight": "Перелёты",

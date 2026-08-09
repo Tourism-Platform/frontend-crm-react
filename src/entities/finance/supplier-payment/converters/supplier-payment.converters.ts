@@ -32,7 +32,7 @@ const mapFileToMetadata = (
 	return [
 		{
 			id: payment.id,
-			name: "receipt.pdf",
+			name: payment.file_name ?? "receipt.pdf",
 			size: 0,
 			type: "application/pdf",
 			url: payment.file
@@ -48,10 +48,13 @@ export const mapSupplierPaymentToFrontend = (
 
 	return {
 		id: data.id,
-		orderId: data.booking_id,
-		component: display?.component ?? SUPPLIER_PAYMENT_NO_DATA,
-		type: display?.type ?? SUPPLIER_PAYMENT_NO_DATA,
-		supplier: display?.supplier ?? SUPPLIER_PAYMENT_NO_DATA,
+		orderId: data.order_number ?? SUPPLIER_PAYMENT_NO_DATA,
+		bookingId: data.booking_id,
+		component:
+			display?.component ?? data.event_name ?? SUPPLIER_PAYMENT_NO_DATA,
+		type: display?.type ?? data.event_typ ?? SUPPLIER_PAYMENT_NO_DATA,
+		supplier:
+			display?.supplier ?? data.supplier_name ?? SUPPLIER_PAYMENT_NO_DATA,
 		dateCreated: data.paid_at
 			? formatDate(data.paid_at)
 			: SUPPLIER_PAYMENT_NO_DATA,

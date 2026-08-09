@@ -5,7 +5,9 @@ import type { ENUM_SUPPLIER_PAYMENT_STATUS_TYPE } from "./supplier-payment-statu
 
 export interface ISupplierPayment {
 	id: string;
+	/** Display: order_number */
 	orderId: string;
+	bookingId: string;
 	component: string;
 	type: string;
 	supplier: string;

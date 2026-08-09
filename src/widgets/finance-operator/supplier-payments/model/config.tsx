@@ -1,6 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
+import { Link } from "react-router-dom";
 
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 import { formatCompactAmount } from "@/shared/utils";
 
@@ -10,6 +12,10 @@ import {
 	SUPPLIER_PAYMENT_STATUS_LABELS,
 	SUPPLIER_PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
+import {
+	type ENUM_EVENT_BACKEND_TYPE,
+	EVENT_BACKEND_TYPE_LABELS
+} from "@/entities/tour/itinerary";
 
 import { ConfirmPayment } from "@/features/finance";
 
@@ -52,7 +58,7 @@ export const COLUMNS = (
 			cell: ({ row }) => (
 				<div className="font-medium">{row.getValue("id")}</div>
 			),
-			size: 60
+			size: 200
 		},
 		{
 			header: t("table.orderId"),
@@ -61,6 +67,24 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
 			accessorKey: "orderId",
+			cell: ({ row }) => {
+				const { bookingId, orderId } = row.original;
+
+				if (!bookingId) {
+					return <div className="font-medium">{orderId}</div>;
+				}
+
+				return (
+					<Link
+						to={buildRoute(ENUM_PATH.OPERATOR.BOOKING.ORDER_ID, {
+							orderId: bookingId
+						})}
+						className="font-medium text-primary hover:underline"
+					>
+						{orderId}
+					</Link>
+				);
+			},
 			size: 120
 		},
 		{
@@ -70,6 +94,16 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[180px]" />
 			},
 			accessorKey: "component",
+			cell: ({ row }) => (
+				<div className="min-w-0 w-full">
+					<span
+						title={row.original.component}
+						className="block truncate font-medium"
+					>
+						{row.getValue("component")}
+					</span>
+				</div>
+			),
 			size: 200
 		},
 		{
@@ -79,7 +113,18 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[150px]" />
 			},
 			accessorKey: "type",
-			size: 180
+			cell: ({ row }) => {
+				const type = row.getValue("type") as string;
+				const labelKey =
+					EVENT_BACKEND_TYPE_LABELS[type as ENUM_EVENT_BACKEND_TYPE];
+
+				return (
+					<div className="font-medium">
+						{labelKey ? t(labelKey, { ns: "options" }) : type}
+					</div>
+				);
+			},
+			size: 100
 		},
 		{
 			header: t("table.supplier"),
@@ -88,6 +133,16 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			accessorKey: "supplier",
+			cell: ({ row }) => (
+				<div className="min-w-0 w-full">
+					<span
+						title={row.original.supplier}
+						className="block truncate font-medium"
+					>
+						{row.getValue("supplier")}
+					</span>
+				</div>
+			),
 			size: 140
 		},
 		{

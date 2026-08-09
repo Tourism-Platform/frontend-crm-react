@@ -1,8 +1,4 @@
-import {
-	type InvoiceDetailResponse,
-	type InvoiceListItem,
-	InvoiceStatus
-} from "@/shared/api";
+import { type InvoiceDetailResponse, type InvoiceListItem } from "@/shared/api";
 
 import {
 	MOCK_INVOICE_DEFAULTS,
@@ -10,15 +6,7 @@ import {
 	buildBookingIdForInvoice,
 	buildInvoiceUuid
 } from "./invoice.mock.constants";
-
-const STATUS_ROWS: { status: InvoiceStatus; label: string }[] = [
-	{ status: InvoiceStatus.Draft, label: "DRF" },
-	{ status: InvoiceStatus.Sent, label: "SNT" },
-	{ status: InvoiceStatus.Partial, label: "PRT" },
-	{ status: InvoiceStatus.Paid, label: "PAID" },
-	{ status: InvoiceStatus.Overdue, label: "OVD" },
-	{ status: InvoiceStatus.Cancelled, label: "CNL" }
-];
+import { INVOICES_PER_STATUS, INVOICE_STATUS_SEED } from "./invoice.seed";
 
 const padNum = (n: number) => String(n).padStart(2, "0");
 
@@ -56,8 +44,12 @@ export const createInvoiceMocks = (): IInvoiceMockBundle => {
 	const listItems: InvoiceListItem[] = [];
 	const detailsById = new Map<string, InvoiceDetailResponse>();
 
-	STATUS_ROWS.forEach((row, statusIndex) => {
-		for (let invoiceIndex = 1; invoiceIndex <= 4; invoiceIndex += 1) {
+	INVOICE_STATUS_SEED.forEach((row, statusIndex) => {
+		for (
+			let invoiceIndex = 1;
+			invoiceIndex <= INVOICES_PER_STATUS;
+			invoiceIndex += 1
+		) {
 			const id = buildInvoiceUuid(statusIndex, invoiceIndex);
 			const booking_id = buildBookingIdForInvoice(
 				statusIndex,

@@ -21,7 +21,9 @@ import { paymentStatusConverter } from "./payment-status.converter";
 export const mapPaymentToFrontend = (payment: TPaymentBackend): IPayment => ({
 	id: payment.id,
 	paymentId: payment.id,
-	orderId: payment.booking_id,
+	orderId: payment.order_number ?? PAYMENT_NO_DATA,
+	bookingId: payment.booking_id,
+	tourName: payment.tour_name ?? PAYMENT_NO_DATA,
 	dateCreated: payment.created_at
 		? formatDate(payment.created_at)
 		: PAYMENT_NO_DATA,

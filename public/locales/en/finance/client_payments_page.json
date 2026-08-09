@@ -159,6 +159,7 @@
 	"table": {
 		"paymentId": "Payment ID",
 		"orderId": "Order ID",
+		"tourName": "Tour",
 		"dateCreated": "Date created",
 		"amount": "Amount",
 		"status": "Status",

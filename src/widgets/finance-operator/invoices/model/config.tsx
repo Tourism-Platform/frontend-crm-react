@@ -49,9 +49,24 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			accessorKey: "orderId",
-			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("orderId")}</div>
-			),
+			cell: ({ row }) => {
+				const { bookingId, orderId } = row.original;
+
+				if (!bookingId) {
+					return <div className="font-medium">{orderId}</div>;
+				}
+
+				return (
+					<Link
+						to={buildRoute(ENUM_PATH.OPERATOR.BOOKING.ORDER_ID, {
+							orderId: bookingId
+						})}
+						className="font-medium text-primary hover:underline"
+					>
+						{orderId}
+					</Link>
+				);
+			},
 			size: 160
 		},
 		{

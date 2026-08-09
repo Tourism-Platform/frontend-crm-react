@@ -54,7 +54,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 	const form = useForm<TConfirmPaymentSchema>({
 		resolver: zodResolver(CONFIRM_PAYMENT_SCHEMA),
 		defaultValues: {
-			[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: payment.orderId,
+			[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: payment.bookingId,
 			[ENUM_FORM_CONFIRM_PAYMENT.AMOUNT]: payment.amount,
 			[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: payment.note || "",
 			[ENUM_FORM_CONFIRM_PAYMENT.FILES]: payment.files || []

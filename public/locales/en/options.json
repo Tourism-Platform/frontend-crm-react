@@ -228,6 +228,18 @@
 			}
 		}
 	},
+	"event_types": {
+		"flight": "Flight",
+		"train": "Train",
+		"bus": "Bus",
+		"transfer": "Transfer",
+		"housing": "Accommodation",
+		"activity": "Activity",
+		"ref": "Reference",
+		"guide": "Guide",
+		"supplementary": "Supplementary",
+		"options": "Options"
+	},
 	"event_library": {
 		"types": {
 			"flight": "Flights",

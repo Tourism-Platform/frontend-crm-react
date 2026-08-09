@@ -13,6 +13,7 @@
 		"seed:tourbuilder:all": "tsx --env-file=.env scripts/seeders/tourbuilder/index.ts --all --concurrency=3",
 		"seed:staff": "tsx --env-file=.env scripts/seeders/staff/index.ts",
 		"seed:finance-settings": "tsx --env-file=.env scripts/seeders/finance-settings/index.ts",
+		"seed:finance": "tsx --env-file=.env scripts/seeders/finance/index.ts",
 		"seed:booking": "tsx --env-file=.env scripts/seeders/booking/index.ts",
 		"format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss}\" \"public/locales/**/*.json\"",
 		"lint": "eslint .",

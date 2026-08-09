@@ -8,6 +8,7 @@ export interface IInvoice {
 	paymentId: string;
 	/** Display: order_number */
 	orderId: string;
+	bookingId: string | null;
 	issueDate: string;
 	amount: number;
 	paidAmount: number;

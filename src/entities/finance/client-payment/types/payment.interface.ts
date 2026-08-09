@@ -8,7 +8,10 @@ import type { ENUM_PAYMENT_STATUS_TYPE } from "./payment-status.types";
 export interface IPayment {
 	id: string;
 	paymentId: string;
+	/** Display: order_number */
 	orderId: string;
+	bookingId: string;
+	tourName: string;
 	dateCreated: string;
 	amount: number;
 	currency: ENUM_CURRENCY_OPTIONS_TYPE;

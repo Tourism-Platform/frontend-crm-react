@@ -59,7 +59,7 @@ export const UpdatePayment: FC<IUpdatePaymentProps> = ({
 	const form = useForm<TUpdatePaymentSchema>({
 		resolver: zodResolver(UPDATE_PAYMENT_SCHEMA),
 		defaultValues: {
-			orderId: payment.orderId,
+			orderId: payment.bookingId,
 			amount: payment.amount,
 			note: payment.note || "",
 			files: payment.files || []

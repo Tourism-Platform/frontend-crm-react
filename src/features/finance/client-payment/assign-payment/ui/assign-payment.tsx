@@ -61,7 +61,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 	const form = useForm<TAssignPaymentSchema>({
 		resolver: zodResolver(ASSIGN_PAYMENT_SCHEMA),
 		defaultValues: {
-			[ENUM_FORM_ASSIGN_PAYMENT.ORDER_ID]: payment.orderId,
+			[ENUM_FORM_ASSIGN_PAYMENT.ORDER_ID]: payment.bookingId,
 			[ENUM_FORM_ASSIGN_PAYMENT.AMOUNT]: payment.amount,
 			[ENUM_FORM_ASSIGN_PAYMENT.NOTE]: payment.note || "",
 			[ENUM_FORM_ASSIGN_PAYMENT.FILES]: payment.files || []

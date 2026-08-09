@@ -1,6 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
+import { Link } from "react-router-dom";
 
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 import { formatCompactAmount } from "@/shared/utils";
 
@@ -63,7 +65,46 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
 			accessorKey: "orderId",
+			cell: ({ row }) => {
+				const { bookingId, orderId } = row.original;
+
+				if (!bookingId) {
+					return <div className="font-medium">{orderId}</div>;
+				}
+
+				return (
+					<Link
+						to={buildRoute(ENUM_PATH.OPERATOR.BOOKING.ORDER_ID, {
+							orderId: bookingId
+						})}
+						className="font-medium text-primary hover:underline"
+					>
+						{orderId}
+					</Link>
+				);
+			},
 			size: 160
+		},
+		{
+			header: t("table.tourName", { ns: "client_payments_page" }),
+			meta: {
+				headerTitle: t("table.tourName", {
+					ns: "client_payments_page"
+				}),
+				skeleton: <Skeleton className="h-4 w-[160px]" />
+			},
+			accessorKey: "tourName",
+			cell: ({ row }) => (
+				<div className="min-w-0 w-full">
+					<span
+						title={row.original.tourName}
+						className="block truncate font-medium"
+					>
+						{row.getValue("tourName")}
+					</span>
+				</div>
+			),
+			size: 200
 		},
 		{
 			header: t("table.dateCreated", { ns: "client_payments_page" }),
@@ -74,7 +115,7 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[120px]" />
 			},
 			accessorKey: "dateCreated",
-			size: 160
+			size: 120
 		},
 		{
 			header: t("table.amount", { ns: "client_payments_page" }),
@@ -109,7 +150,7 @@ export const COLUMNS = (
 					</Badge>
 				);
 			},
-			size: 160
+			size: 100
 		},
 		{
 			id: "actions",

@@ -1,3 +1,4 @@
+export * from "./event-backend-type.config";
 export * from "./transfer-type.config";
 export * from "./vehicle-body-type.config";
 export * from "./activity-type.config";

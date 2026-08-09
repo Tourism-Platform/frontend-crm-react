@@ -159,6 +159,7 @@
 	"table": {
 		"paymentId": "ID платежа",
 		"orderId": "ID заказа",
+		"tourName": "Тур",
 		"dateCreated": "Дата создания",
 		"amount": "Сумма",
 		"status": "Статус",

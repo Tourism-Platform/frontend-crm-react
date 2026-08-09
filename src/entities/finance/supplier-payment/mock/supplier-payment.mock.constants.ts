@@ -1,4 +1,4 @@
-import { Currency } from "@/shared/api";
+import { Currency } from "../../../../shared/api/generated/Api";
 
 export const MOCK_SUPPLIER_OPERATOR_ID = "00000000-0000-4000-8000-000000000020";
 
