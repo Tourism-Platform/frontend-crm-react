@@ -6,6 +6,7 @@ import { generatePath, useNavigate, useParams } from "react-router";
 
 import type { TPreviewBookingPageKeys } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
+import { useIsMobile } from "@/shared/hooks";
 import {
 	Button,
 	Stepper,
@@ -18,10 +19,13 @@ import {
 
 import { usePreviewBooking } from "../model/hooks/use-preview-booking";
 
+import { BookingStepperCarousel } from "./booking-stepper-carousel";
 import { PreviewBookingSidebar } from "./preview-booking-sidebar";
 import { Step1DateTravellers } from "./steps/step1-date-travellers";
 import { Step2TravellerDetails } from "./steps/step2-traveller-details";
 import { Step3Confirmation } from "./steps/step3-confirmation";
+
+const BOOKING_FORM_ID = "preview-booking-form";
 
 const STEPS: Array<{
 	step: number;
@@ -50,6 +54,7 @@ const LAST_STEP = STEPS[STEPS.length - 1].step;
 const PreviewBookingBase: FC = () => {
 	const { t } = useTranslation("preview_booking_page");
 	const navigate = useNavigate();
+	const isMobile = useIsMobile();
 	const { tourId = "" } = useParams<{ tourId: string; bookingId?: string }>();
 	const {
 		form,
@@ -73,9 +78,35 @@ const PreviewBookingBase: FC = () => {
 		bookingId
 	} = usePreviewBooking();
 
+	const isStepActionLoading =
+		currentStep === 1 ? isCreating || isUpdating : isLoading;
+
+	const sidebarAction =
+		currentStep === 1
+			? {
+					label: t("step_1.continue"),
+					onClick: handleNextStep,
+					isLoading: isStepActionLoading,
+					type: "button" as const
+				}
+			: currentStep === 2
+				? {
+						label: t("step_2.submit"),
+						type: "submit" as const,
+						form: BOOKING_FORM_ID,
+						isLoading: isStepActionLoading
+					}
+				: undefined;
+
+	const stepperSteps = STEPS.map(({ step, labelKey, titleKey }) => ({
+		step,
+		label: t(labelKey),
+		title: t(titleKey)
+	}));
+
 	return (
 		<FormProvider {...form}>
-			<div className="container py-8 max-w-[1200px]">
+			<div className="w-full py-8">
 				{currentStep < LAST_STEP && (
 					<Button
 						type="button"
@@ -91,54 +122,62 @@ const PreviewBookingBase: FC = () => {
 							)
 						}
 					>
-						<ArrowLeft className="w-4 h-4" />
+						<ArrowLeft className="h-4 w-4" />
 						{t("back_to_tour")}
 					</Button>
 				)}
 
 				<div
-					className={`mb-8 ${currentStep === LAST_STEP ? "max-w-3xl mx-auto" : "max-w-3xl"}`}
+					className={`mb-8 ${currentStep === LAST_STEP ? "mx-auto max-w-3xl" : "w-full"}`}
 				>
-					<Stepper value={currentStep}>
-						{STEPS.map(({ step, labelKey, titleKey }, index) => (
-							<StepperItem
-								key={step}
-								step={step}
-								className="not-last:flex-1"
-							>
-								<StepperTrigger asChild>
-									<StepperIndicator />
-								</StepperTrigger>
-								<div className="ml-2 flex flex-col">
-									<span className="text-xs uppercase text-muted-foreground font-semibold tracking-wider">
-										{t(labelKey)}
-									</span>
-									<span
-										className={`text-sm font-medium ${step === currentStep ? "text-foreground" : "text-muted-foreground"}`}
+					{isMobile ? (
+						<BookingStepperCarousel
+							steps={stepperSteps}
+							currentStep={currentStep}
+						/>
+					) : (
+						<Stepper value={currentStep}>
+							{STEPS.map(
+								({ step, labelKey, titleKey }, index) => (
+									<StepperItem
+										key={step}
+										step={step}
+										className="not-last:flex-1"
 									>
-										{t(titleKey)}
-									</span>
-								</div>
-								{index < STEPS.length - 1 && (
-									<StepperSeparator />
-								)}
-							</StepperItem>
-						))}
-					</Stepper>
+										<StepperTrigger asChild>
+											<StepperIndicator />
+										</StepperTrigger>
+										<div className="ml-2 flex flex-col">
+											<span className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+												{t(labelKey)}
+											</span>
+											<span
+												className={`text-sm font-medium ${step === currentStep ? "text-foreground" : "text-muted-foreground"}`}
+											>
+												{t(titleKey)}
+											</span>
+										</div>
+										{index < STEPS.length - 1 && (
+											<StepperSeparator />
+										)}
+									</StepperItem>
+								)
+							)}
+						</Stepper>
+					)}
 				</div>
 
 				<div
-					className={`grid gap-8 items-start ${currentStep < LAST_STEP ? "grid-cols-1 lg:grid-cols-[1fr_360px]" : "grid-cols-1"}`}
+					className={`grid items-start gap-8 ${currentStep < LAST_STEP ? "grid-cols-1 lg:grid-cols-[1fr_360px]" : "grid-cols-1"}`}
 				>
 					<form
+						id={BOOKING_FORM_ID}
 						onSubmit={form.handleSubmit(onSubmit)}
-						className={`flex flex-col gap-8 w-full min-w-0 ${currentStep === LAST_STEP ? "max-w-3xl mx-auto" : ""}`}
+						className={`flex w-full min-w-0 flex-col gap-8 ${currentStep === LAST_STEP ? "mx-auto max-w-3xl" : ""}`}
 					>
 						{currentStep === 1 && (
 							<Step1DateTravellers
-								onNext={handleNextStep}
 								onMonthChange={handleCalendarMonthChange}
-								isLoading={isCreating || isUpdating}
 								options={options}
 								availableDates={availableDates}
 								isOptionsLoading={isOptionsLoading}
@@ -169,6 +208,7 @@ const PreviewBookingBase: FC = () => {
 							tourData={tourData}
 							options={options}
 							submittedBooking={submittedBooking}
+							action={sidebarAction}
 						/>
 					)}
 				</div>

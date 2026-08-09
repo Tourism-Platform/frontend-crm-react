@@ -5,6 +5,8 @@ import { generatePath, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
+import { parseStoredLocalDate } from "@/shared/lib";
+import { formatDateToISO } from "@/shared/utils";
 
 import type { TSubmittedBooking } from "@/entities/booking";
 import {
@@ -117,7 +119,7 @@ export const usePreviewBooking = () => {
 			if (!draft || draft.tourId !== tourId) return;
 
 			form.reset({
-				date: new Date(draft.date),
+				date: parseStoredLocalDate(draft.date),
 				travellers_count: draft.travellers_count,
 				option_id: draft.option_id,
 				travellers: Array.from(
@@ -175,7 +177,7 @@ export const usePreviewBooking = () => {
 				}).unwrap();
 
 				saveBookingDraft(bookingIdParam, {
-					date: new Date(formData.date).toISOString(),
+					date: formatDateToISO(formData.date),
 					travellers_count: formData.travellers_count,
 					option_id: formData.option_id,
 					tourId
@@ -193,7 +195,7 @@ export const usePreviewBooking = () => {
 			}).unwrap();
 
 			saveBookingDraft(created.id, {
-				date: new Date(formData.date).toISOString(),
+				date: formatDateToISO(formData.date),
 				travellers_count: formData.travellers_count,
 				option_id: formData.option_id,
 				tourId

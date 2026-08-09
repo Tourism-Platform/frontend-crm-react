@@ -1,10 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { MapPin, Search } from "lucide-react";
 import { type FC, useMemo } from "react";
 import { type UseFormReturn, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
-import { ENUM_PATH, buildRouteWithQuery } from "@/shared/config";
+import {
+	ENUM_LANGUAGES,
+	ENUM_PATH,
+	buildRouteWithQuery,
+	i18nLanguageMapper
+} from "@/shared/config";
 import {
 	Button,
 	Card,
@@ -13,60 +19,55 @@ import {
 	Form,
 	Separator
 } from "@/shared/ui";
-import { formatDateToISO } from "@/shared/utils";
 
+import { useGeoSearchFieldProps } from "@/entities/geo";
 import {
-	type ISearchTours,
-	useGetCatalogDestinationsQuery
+	type TSearchTours,
+	createSearchToursSchema,
+	mapSearchToursToSearchQuery
 } from "@/entities/tour";
 
 interface ISearchToursBarProps {
-	form?: UseFormReturn<ISearchTours>;
+	form?: UseFormReturn<TSearchTours>;
 }
 
 export const SearchToursBar: FC<ISearchToursBarProps> = ({
 	form: externalForm
 }) => {
-	const { t } = useTranslation("common_tours");
+	const { t, i18n } = useTranslation("common_tours");
 	const navigate = useNavigate();
+	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
+	const geoField = useGeoSearchFieldProps(language);
 
-	const { data: destinations = [] } = useGetCatalogDestinationsQuery();
+	const schema = useMemo(
+		() => createSearchToursSchema(t("search.form.fields.where.required")),
+		[t]
+	);
 
-	const destinationOptions = useMemo(() => {
-		return destinations.map((item) => ({
-			label: item.title,
-			value: item.id
-		}));
-	}, [destinations]);
-
-	const localForm = useForm<ISearchTours>({
+	const localForm = useForm<TSearchTours>({
+		resolver: zodResolver(schema),
 		defaultValues: {
-			destination: "",
-			dates: {
-				from: undefined,
-				to: undefined
-			}
+			destination: null,
+			dates: undefined
 		}
 	});
 
-	const form = externalForm || localForm;
-	const { destination, dates } = form.watch();
+	const form = externalForm ?? localForm;
 
-	const onSubmit = () => {
-		const route = buildRouteWithQuery(ENUM_PATH.TOURS.SEARCH, {
-			destination,
-			checkIn: formatDateToISO(dates.from),
-			checkOut: formatDateToISO(dates.to)
-		});
+	const onSubmit = (data: TSearchTours) => {
+		const route = buildRouteWithQuery(
+			ENUM_PATH.TOURS.SEARCH,
+			mapSearchToursToSearchQuery(data)
+		);
 		navigate(route);
 	};
 
 	return (
 		<Card>
-			<CardContent>
+			<CardContent className="px-4 sm:px-6">
 				<Form {...form}>
 					<form
-						className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr_auto] items-end gap-4"
+						className="grid grid-cols-1 items-end gap-3 md:grid-cols-[1fr_auto_1fr_auto] md:gap-4"
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<CustomField
@@ -75,14 +76,19 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 							name="destination"
 							label="search.form.fields.where.label"
 							placeholder="search.form.fields.where.placeholder"
-							fieldType="autocomplete"
+							fieldType="geo"
 							emptyText="search.form.fields.where.empty"
-							options={destinationOptions}
+							options={geoField.options}
+							onQueryChange={geoField.onQueryChange}
+							isLoading={geoField.isLoading}
 							t={t}
 							className="mb-0"
 						/>
 
-						<Separator orientation="vertical" className="h-8" />
+						<Separator
+							orientation="vertical"
+							className="bg-border/80 hidden h-10 md:block"
+						/>
 
 						<CustomField
 							control={form.control}
@@ -95,13 +101,12 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 						/>
 
 						<Button
-							className="text-xl px-5 py-4 h-auto"
 							type="submit"
+							size="lg"
+							className="h-12 gap-2 rounded-xl px-6 text-base font-semibold shadow-sm sm:min-w-40"
 						>
-							<div className="flex items-center gap-2">
-								<span>{t("search.form.buttons.search")}</span>
-								<Search className="size-6" />
-							</div>
+							{t("search.form.buttons.search")}
+							<Search className="size-5" />
 						</Button>
 					</form>
 				</Form>

@@ -5,6 +5,7 @@ import { type FC, useState } from "react";
 import { type DateRange } from "react-day-picker";
 import { useTranslation } from "react-i18next";
 
+import { useIsMobile } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import { Calendar, Popover, PopoverContent, PopoverTrigger } from "@/shared/ui";
 
@@ -27,6 +28,7 @@ export const CustomCalendarRange: FC<CustomCalendarRangeProps> = ({
 	className
 }) => {
 	const { i18n } = useTranslation();
+	const isMobile = useIsMobile();
 	const [open, setOpen] = useState(false);
 
 	const currentLocale =
@@ -44,33 +46,30 @@ export const CustomCalendarRange: FC<CustomCalendarRangeProps> = ({
 			<PopoverTrigger asChild>
 				<div
 					className={cn(
-						"flex items-center gap-2 cursor-pointer rounded-md py-1 px-3 h-9 justify-start",
+						"border-input flex h-9 w-full cursor-pointer items-center gap-2 rounded-md border bg-transparent px-3 py-1 shadow-xs outline-none",
+						"focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
 						className
 					)}
 				>
-					<CalendarIcon className="w-4 h-4 text-primary " />
+					<CalendarIcon className="size-4 shrink-0 text-primary opacity-50" />
 					<span
 						className={cn(
-							"text-sm font-medium text-muted-foreground leading-tight",
-							!!value?.from && "text-primary"
+							"text-sm font-medium leading-tight text-muted-foreground",
+							!!value?.from && "text-foreground"
 						)}
 					>
 						{formatDateRange(value)}
 					</span>
 				</div>
 			</PopoverTrigger>
-			<PopoverContent
-				className="flex justify-center"
-				align="center"
-				style={{ width: "var(--radix-popover-trigger-width)" }}
-			>
+			<PopoverContent className="w-auto p-0" align="center">
 				<Calendar
 					mode="range"
 					locale={currentLocale}
 					defaultMonth={value?.from}
 					selected={value ?? undefined}
 					onSelect={onChange}
-					numberOfMonths={2}
+					numberOfMonths={isMobile ? 1 : 2}
 				/>
 			</PopoverContent>
 		</Popover>

@@ -49,6 +49,8 @@ export type TTourEventPath =
 export type TQueryParams = {
 	[ENUM_PATH.TOURS.SEARCH]: {
 		destination?: string;
+		lat?: string;
+		long?: string;
 		checkIn?: string;
 		checkOut?: string;
 	};

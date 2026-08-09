@@ -1,12 +1,18 @@
-import { type FC, useCallback } from "react";
-import { useForm } from "react-hook-form";
-import { useLocation } from "react-router-dom";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type FC, useCallback, useMemo } from "react";
+import { type Resolver, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router";
 
 import { ENUM_PATH, parseQueryByRoute } from "@/shared/config";
 import { withErrorBoundary } from "@/shared/ui";
-import { fromatISOtoDate } from "@/shared/utils";
 
-import { type IRecentSearch, type ISearchTours } from "@/entities/tour";
+import {
+	type IRecentSearch,
+	type TSearchTours,
+	createSearchToursSchema,
+	mapSearchQueryToSearchTours
+} from "@/entities/tour";
 
 import { SearchToursBar } from "@/features/tours";
 
@@ -14,34 +20,29 @@ import { MostPopularTours } from "./most-popular-tours";
 import { RecentlySearch } from "./recently-search";
 
 const SearchToursBase: FC = () => {
+	const { t } = useTranslation("common_tours");
 	const location = useLocation();
-	const {
-		destination,
-		checkIn = "",
-		checkOut = ""
-	} = parseQueryByRoute<typeof ENUM_PATH.TOURS.SEARCH>(location.search);
-	const topSearchForm = useForm<ISearchTours>({
-		defaultValues: {
-			destination,
-			dates: {
-				from: fromatISOtoDate(checkIn),
-				to: fromatISOtoDate(checkOut)
-			}
-		}
+	const query = parseQueryByRoute<typeof ENUM_PATH.TOURS.SEARCH>(
+		location.search
+	);
+
+	const schema = useMemo(
+		() => createSearchToursSchema(t("search.form.fields.where.required")),
+		[t]
+	);
+
+	const topSearchForm = useForm<TSearchTours>({
+		resolver: zodResolver(schema) as Resolver<TSearchTours>,
+		defaultValues: mapSearchQueryToSearchTours(query)
 	});
 
 	const handleRecentSelect = useCallback(
 		(data: IRecentSearch) => {
-			topSearchForm.reset({
-				destination: data.destination,
-				dates: {
-					from: fromatISOtoDate(data.dates.from),
-					to: fromatISOtoDate(data.dates.to)
-				}
-			});
+			topSearchForm.reset(data.searchTours);
 		},
 		[topSearchForm]
 	);
+
 	return (
 		<section className="grid gap-12">
 			<SearchToursBar form={topSearchForm} />

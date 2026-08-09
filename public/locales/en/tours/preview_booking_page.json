@@ -66,14 +66,17 @@
 		"fields": {
 			"first_name": {
 				"label": "First name",
+				"placeholder": "First name",
 				"errors": { "required": "First name is required" }
 			},
 			"last_name": {
 				"label": "Last name",
+				"placeholder": "Last name",
 				"errors": { "required": "Last name is required" }
 			},
 			"gender": {
 				"label": "Gender",
+				"placeholder": "Select gender",
 				"options": {
 					"male": "Male",
 					"female": "Female"
@@ -94,6 +97,7 @@
 			},
 			"passport_number": {
 				"label": "Passport number",
+				"placeholder": "Passport number",
 				"errors": { "required": "Passport number is required" }
 			},
 			"passport_expiry": {
@@ -101,7 +105,8 @@
 				"errors": { "required": "Passport expiry is required" }
 			},
 			"note": {
-				"label": "Note"
+				"label": "Note",
+				"placeholder": "Note"
 			},
 			"file": {
 				"label": "Passport scan",

@@ -1,12 +1,11 @@
-export interface ISearchTours {
-	destination: string;
-	dates: {
-		from: string | Date;
-		to: string | Date;
-	};
-}
+import type { DateRange } from "react-day-picker";
 
-export interface IRecentSearch extends ISearchTours {
+import type { TSearchTours } from "../schema";
+
+export interface IRecentSearch {
 	id: string;
+	destination: string;
 	label?: string;
+	dates: DateRange;
+	searchTours: TSearchTours;
 }

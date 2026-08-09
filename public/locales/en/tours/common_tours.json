@@ -26,13 +26,14 @@
 		"form": {
 			"fields": {
 				"where": {
-					"label": "Where are you go",
-					"placeholder": "Select destination",
-					"empty": "No destinations found"
+					"label": "Where are you going?",
+					"placeholder": "Choose destination",
+					"empty": "No destinations found",
+					"required": "Please choose a destination"
 				},
 				"when": {
-					"label": "When",
-					"placeholder": "Select dates"
+					"label": "When?",
+					"placeholder": "Choose dates"
 				}
 			},
 			"buttons": {

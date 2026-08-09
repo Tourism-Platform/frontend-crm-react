@@ -88,32 +88,34 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 	return (
 		<div className="flex w-full flex-col items-center gap-8 py-4">
 			<Card className="w-full max-w-2xl">
-				<CardHeader className="items-center text-center">
-					<div className="mb-2 flex size-16 items-center justify-center rounded-full bg-primary/10">
-						<Check className="size-8 text-primary" />
+				<CardHeader className="justify-items-center text-center">
+					<div className="mb-2 flex size-16 items-center justify-center rounded-full bg-emerald-500/10">
+						<Check className="size-8 text-emerald-500" />
 					</div>
 					<CardTitle className="text-2xl font-bold">
 						{t("step_3.success_title")}
 					</CardTitle>
-					<CardDescription className="max-w-md">
+					<CardDescription className="mx-auto max-w-md text-center">
 						{t("step_3.success_desc")}
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex flex-col items-center gap-6">
-					<div className="flex items-center gap-3 rounded-full border bg-muted px-6 py-3">
-						<span className="text-sm font-medium text-muted-foreground">
+					<div className="flex max-w-full items-center gap-2 rounded-lg border bg-muted px-3 py-1.5">
+						<span className="shrink-0 text-xs font-medium text-muted-foreground">
 							{t("step_3.booking_id")}
 						</span>
-						<span className="font-bold">{bookingId}</span>
+						<span className="min-w-0 break-all font-mono text-xs font-semibold leading-snug">
+							{bookingId}
+						</span>
 						<Button
 							type="button"
 							variant="ghost"
 							size="icon"
-							className="size-6"
+							className="size-6 shrink-0"
 							onClick={handleCopy}
 						>
 							{copied ? (
-								<Check className="size-3 text-primary" />
+								<Check className="size-3 text-emerald-500" />
 							) : (
 								<Copy className="size-3 text-muted-foreground" />
 							)}
@@ -135,9 +137,9 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 										className={cn(
 											"flex size-7 shrink-0 items-center justify-center rounded-full border bg-card",
 											isActive &&
-												"border-primary text-primary",
+												"border-emerald-500 text-emerald-500",
 											isPending &&
-												"border-primary/50 text-primary/70",
+												"border-emerald-500/50 text-emerald-500/70",
 											!isActive &&
 												!isPending &&
 												"border-border text-muted-foreground"

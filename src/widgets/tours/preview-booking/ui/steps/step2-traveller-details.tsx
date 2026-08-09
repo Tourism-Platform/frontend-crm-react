@@ -84,15 +84,15 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 	}
 
 	return (
-		<div className="flex flex-col gap-6 w-full">
+		<div className="flex w-full flex-col gap-6">
 			<Card>
-				<CardHeader className="border-b">
+				<CardHeader className="border-b max-sm:has-data-[slot=card-action]:grid-cols-1">
 					<CardTitle className="text-lg">
 						{t("step_2.title")}
 					</CardTitle>
 					<CardDescription>{t("step_2.description")}</CardDescription>
 					{fields.length > 0 && (
-						<CardAction className="flex gap-2">
+						<CardAction className="flex flex-wrap gap-2 max-sm:col-span-1 max-sm:col-start-1 max-sm:row-span-1 max-sm:row-start-auto max-sm:mt-2 max-sm:justify-self-start">
 							<Button
 								type="button"
 								variant="outline"
@@ -189,27 +189,24 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 											<CustomField
 												name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.FIRST_NAME}`}
 												control={form.control}
-												label={t(
-													"step_2.fields.first_name.label"
-												)}
+												label="step_2.fields.first_name.label"
+												placeholder="step_2.fields.first_name.placeholder"
 												fieldType="input"
 												t={t}
 											/>
 											<CustomField
 												name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.LAST_NAME}`}
 												control={form.control}
-												label={t(
-													"step_2.fields.last_name.label"
-												)}
+												label="step_2.fields.last_name.label"
+												placeholder="step_2.fields.last_name.placeholder"
 												fieldType="input"
 												t={t}
 											/>
 											<CustomField
 												name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.GENDER}`}
 												control={form.control}
-												label={t(
-													"step_2.fields.gender.label"
-												)}
+												label="step_2.fields.gender.label"
+												placeholder="step_2.fields.gender.placeholder"
 												fieldType="select"
 												options={GENDER_OPTIONS.map(
 													(option) => ({
@@ -224,38 +221,31 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 											<CustomField
 												name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.DATE_OF_BIRTH}`}
 												control={form.control}
-												label={t(
-													"step_2.fields.date_of_birth.label"
-												)}
+												label="step_2.fields.date_of_birth.label"
 												fieldType="date"
 												t={t}
 											/>
 											<CustomField
 												name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.NATIONALITY}`}
 												control={form.control}
-												label={t(
-													"step_2.fields.nationality.label"
-												)}
-												fieldType="country"
+												label="step_2.fields.nationality.label"
 												placeholder="step_2.fields.nationality.placeholder"
 												emptyText="step_2.fields.nationality.empty"
+												fieldType="country"
 												t={t}
 											/>
 											<CustomField
 												name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.PASSPORT_NUMBER}`}
 												control={form.control}
-												label={t(
-													"step_2.fields.passport_number.label"
-												)}
+												label="step_2.fields.passport_number.label"
+												placeholder="step_2.fields.passport_number.placeholder"
 												fieldType="input"
 												t={t}
 											/>
 											<CustomField
 												name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.PASSPORT_EXPIRY}`}
 												control={form.control}
-												label={t(
-													"step_2.fields.passport_expiry.label"
-												)}
+												label="step_2.fields.passport_expiry.label"
 												fieldType="date"
 												t={t}
 											/>
@@ -263,9 +253,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 												<CustomField
 													name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.FILE}`}
 													control={form.control}
-													label={t(
-														"step_2.fields.file.label"
-													)}
+													label="step_2.fields.file.label"
 													fieldType="upload"
 													maxFiles={1}
 													showAllRemoveButton={false}
@@ -277,13 +265,9 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 												<CustomField
 													name={`${prefix}${ENUM_FORM_PREVIEW_BOOKING.NOTE}`}
 													control={form.control}
-													label={t(
-														"step_2.fields.note.label"
-													)}
+													label="step_2.fields.note.label"
+													placeholder="step_2.fields.note.placeholder"
 													fieldType="textarea"
-													placeholder={t(
-														"step_2.fields.note.label"
-													)}
 													t={t}
 												/>
 											</div>
@@ -309,7 +293,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 				</CardContent>
 			</Card>
 
-			<div className="flex justify-between">
+			<div className="flex justify-start">
 				<Button
 					type="button"
 					variant="outline"
@@ -317,12 +301,6 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 					className="w-32"
 				>
 					{t("step_2.back")}
-				</Button>
-				<Button type="submit" disabled={isLoading}>
-					{isLoading && (
-						<Loader2 className="mr-2 size-4 animate-spin" />
-					)}
-					{t("step_2.submit")}
 				</Button>
 			</div>
 		</div>

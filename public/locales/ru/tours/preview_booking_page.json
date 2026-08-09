@@ -66,14 +66,17 @@
 		"fields": {
 			"first_name": {
 				"label": "Имя",
+				"placeholder": "Имя",
 				"errors": { "required": "Имя обязательно" }
 			},
 			"last_name": {
 				"label": "Фамилия",
+				"placeholder": "Фамилия",
 				"errors": { "required": "Фамилия обязательна" }
 			},
 			"gender": {
 				"label": "Пол",
+				"placeholder": "Выберите пол",
 				"options": {
 					"male": "Мужской",
 					"female": "Женский"
@@ -94,6 +97,7 @@
 			},
 			"passport_number": {
 				"label": "Номер паспорта",
+				"placeholder": "Номер паспорта",
 				"errors": { "required": "Номер паспорта обязателен" }
 			},
 			"passport_expiry": {
@@ -101,7 +105,8 @@
 				"errors": { "required": "Срок действия обязателен" }
 			},
 			"note": {
-				"label": "Примечание"
+				"label": "Примечание",
+				"placeholder": "Примечание"
 			},
 			"file": {
 				"label": "Скан паспорта",

@@ -29,8 +29,8 @@ export const RecentSearchCard: FC<IRecentSearchCardProps> = memo(
 						</span>
 						<span className="text-sm text-muted-foreground truncate">
 							{formatDateRange({
-								from: new Date(data.dates.from),
-								to: new Date(data.dates.to)
+								from: data.dates.from,
+								to: data.dates.to
 							})}
 						</span>
 					</div>

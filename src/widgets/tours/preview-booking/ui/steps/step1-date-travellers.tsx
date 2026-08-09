@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import type { TPreviewBookingPageKeys } from "@/shared/config";
+import { useIsMobile } from "@/shared/hooks";
 import {
 	Button,
 	Calendar,
@@ -24,9 +25,7 @@ import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 import { PreviewBookingOptionCard } from "../preview-booking-option-card";
 
 interface IStep1Props {
-	onNext: () => void;
 	onMonthChange: (month: Date) => void;
-	isLoading: boolean;
 	options: IPreviewOptionCard[];
 	availableDates: Date[];
 	isOptionsLoading: boolean;
@@ -34,15 +33,14 @@ interface IStep1Props {
 }
 
 export const Step1DateTravellers: FC<IStep1Props> = ({
-	onNext,
 	onMonthChange,
-	isLoading,
 	options,
 	availableDates,
 	isOptionsLoading,
 	isOptionLocked = false
 }) => {
 	const { t } = useTranslation("preview_booking_page");
+	const isMobile = useIsMobile();
 	const form = useFormContext<TPreviewBookingSchema>();
 	const count = form.watch(ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT);
 	const selectedOptionId = form.watch(ENUM_FORM_PREVIEW_BOOKING.OPTION_ID);
@@ -64,7 +62,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 	}, [count, form]);
 
 	return (
-		<div className="flex flex-col gap-6 w-full">
+		<div className="flex w-full flex-col gap-6">
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-lg">
@@ -99,17 +97,17 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 								)
 							}
 							showOutsideDays={false}
-							numberOfMonths={2}
+							numberOfMonths={isMobile ? 1 : 2}
 							pagedNavigation
 							onMonthChange={onMonthChange}
 							classNames={{
-								months: "sm:flex-col md:flex-row gap-20",
+								months: "flex flex-col md:flex-row gap-8 md:gap-20",
 								month: "relative first-of-type:before:hidden before:absolute max-md:before:inset-x-2 max-md:before:h-px max-md:before:-top-4 md:before:inset-y-2 md:before:w-px md:before:-left-4"
 							}}
 						/>
 					</div>
 					{form.formState.errors[ENUM_FORM_PREVIEW_BOOKING.DATE] && (
-						<p className="text-sm text-destructive text-center">
+						<p className="text-center text-sm text-destructive">
 							{t(
 								form.formState.errors[
 									ENUM_FORM_PREVIEW_BOOKING.DATE
@@ -240,20 +238,6 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 					)}
 				</CardContent>
 			</Card>
-
-			<div className="flex justify-end">
-				<Button
-					type="button"
-					onClick={onNext}
-					disabled={isLoading}
-					className="min-w-32"
-				>
-					{isLoading && (
-						<Loader2 className="size-4 mr-2 animate-spin" />
-					)}
-					{t("step_1.continue")}
-				</Button>
-			</div>
 		</div>
 	);
 };

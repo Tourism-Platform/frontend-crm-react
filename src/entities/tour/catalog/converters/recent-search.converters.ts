@@ -1,16 +1,37 @@
-import { type IRecentSearch, type IRecentSearchBackend } from "../types";
+import type { TDateRange, TSearchTours } from "../schema/search-tours.schema";
+import type { IRecentSearch, IRecentSearchBackend } from "../types";
+
+import { mapBackendDatesToDateRange } from "./search-tours.converters";
+
+const mapRecentSearchToSearchTours = (
+	label: string,
+	dates: TDateRange
+): TSearchTours => ({
+	destination: {
+		lat: 0,
+		long: 0,
+		label,
+		name: label
+	},
+	dates: dates.from || dates.to ? { ...dates } : undefined
+});
 
 export const mapRecentlySearchToFrontend = (
 	data: IRecentSearchBackend
-): IRecentSearch => ({
-	id: data.id,
-	destination: data.id,
-	label: data.label,
-	dates: {
-		from: data.date_from,
-		to: data.date_to
-	}
-});
+): IRecentSearch => {
+	const dates = mapBackendDatesToDateRange(data.date_from, data.date_to);
+
+	return {
+		id: data.id,
+		destination: data.destination,
+		label: data.label,
+		dates,
+		searchTours: mapRecentSearchToSearchTours(
+			data.label ?? data.destination,
+			dates
+		)
+	};
+};
 
 export const mapRecentlySearchesToFrontend = (
 	data: IRecentSearchBackend[]

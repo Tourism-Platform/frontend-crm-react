@@ -1,9 +1,10 @@
 import { format } from "date-fns";
+import { Loader2 } from "lucide-react";
 import { type FC } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent } from "@/shared/ui";
+import { Button, Card, CardContent } from "@/shared/ui";
 
 import type { TSubmittedBooking } from "@/entities/booking";
 import {
@@ -13,10 +14,20 @@ import {
 import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 import type { IPreviewTourGeneral } from "@/entities/tour/preview-tour";
 
+type TSidebarAction = {
+	label: string;
+	isLoading?: boolean;
+	disabled?: boolean;
+	type?: "button" | "submit";
+	form?: string;
+	onClick?: () => void;
+};
+
 interface ISidebarProps {
 	tourData?: IPreviewTourGeneral;
 	options: IPreviewOptionCard[];
 	submittedBooking?: TSubmittedBooking | null;
+	action?: TSidebarAction;
 }
 
 const parsePrice = (price: string) =>
@@ -25,7 +36,8 @@ const parsePrice = (price: string) =>
 export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 	tourData,
 	options,
-	submittedBooking
+	submittedBooking,
+	action
 }) => {
 	const { t } = useTranslation("preview_booking_page");
 	const form = useFormContext<TPreviewBookingSchema>();
@@ -75,21 +87,21 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 	}
 
 	return (
-		<Card className="w-full shrink-0 sticky top-8">
+		<Card className="sticky top-24 w-full shrink-0">
 			<CardContent className="flex flex-col p-6">
-				<h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-widest mb-4">
+				<h3 className="mb-4 text-xs font-semibold tracking-widest text-muted-foreground uppercase">
 					{t("sidebar.title")}
 				</h3>
-				<p className="font-semibold text-base mb-6">
+				<p className="mb-6 text-base font-semibold">
 					{tourData?.tourTitle || "..."}
 				</p>
 
-				<div className="flex flex-col gap-3 text-sm mb-6">
+				<div className="mb-6 flex flex-col gap-3 text-sm">
 					<div className="flex justify-between">
 						<span className="text-muted-foreground">
 							{t("sidebar.start_date")}
 						</span>
-						<span className="font-medium text-right">
+						<span className="text-right font-medium">
 							{startDate
 								? format(startDate, "MMM dd, yyyy")
 								: t("sidebar.not_selected")}
@@ -99,7 +111,7 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 						<span className="text-muted-foreground">
 							{t("sidebar.end_date")}
 						</span>
-						<span className="font-medium text-right">
+						<span className="text-right font-medium">
 							{endDate
 								? format(endDate, "MMM dd, yyyy")
 								: t("sidebar.not_selected")}
@@ -109,7 +121,7 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 						<span className="text-muted-foreground">
 							{t("sidebar.duration")}
 						</span>
-						<span className="font-medium text-right">
+						<span className="text-right font-medium">
 							{durationDays} {t("sidebar.days")}
 						</span>
 					</div>
@@ -117,7 +129,7 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 						<span className="text-muted-foreground">
 							{t("sidebar.travellers")}
 						</span>
-						<span className="font-medium text-right">
+						<span className="text-right font-medium">
 							{travellersCount || t("sidebar.not_selected")}{" "}
 							{travellersCount ? t("sidebar.person") : ""}
 						</span>
@@ -126,13 +138,13 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 						<span className="text-muted-foreground">
 							{t("sidebar.package")}
 						</span>
-						<span className="font-medium text-right">
+						<span className="text-right font-medium">
 							{selectedOption?.title || t("sidebar.not_selected")}
 						</span>
 					</div>
 				</div>
 
-				<div className="flex justify-between border-y py-4 mb-4">
+				<div className="mb-4 flex justify-between border-y py-4">
 					<span className="text-sm text-muted-foreground">
 						{t("sidebar.price_per_person")}
 					</span>
@@ -142,7 +154,7 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 					</span>
 				</div>
 
-				<div className="flex justify-between items-end">
+				<div className="mb-6 flex items-end justify-between">
 					<span className="font-semibold">
 						{t("sidebar.estimated_total")}
 					</span>
@@ -160,6 +172,21 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 						)}
 					</div>
 				</div>
+
+				{action ? (
+					<Button
+						type={action.type ?? "button"}
+						form={action.form}
+						className="w-full"
+						disabled={action.disabled || action.isLoading}
+						onClick={action.onClick}
+					>
+						{action.isLoading ? (
+							<Loader2 className="mr-2 size-4 animate-spin" />
+						) : null}
+						{action.label}
+					</Button>
+				) : null}
 			</CardContent>
 		</Card>
 	);
