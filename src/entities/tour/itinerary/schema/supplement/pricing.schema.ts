@@ -26,6 +26,10 @@ const nullableNumber = z
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
 
+const nonNegativeNullableNumber = nullableNumber.refine(
+	(value) => value === null || value >= 0
+);
+
 const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const markupSchema = z
@@ -36,8 +40,8 @@ const markupSchema = z
 	.nullable();
 
 const perItemPriceRowSchema = z.object({
-	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: nullableNumber,
-	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: nullableNumber,
+	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: nonNegativeNullableNumber,
+	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: nonNegativeNullableNumber,
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -62,6 +66,15 @@ const validateFlatOrPerPersonPricing = (
 			code: z.ZodIssueCode.custom,
 			message: msg(
 				"form.pricing.form.pricing_details.fields.total_price.errors.required"
+			),
+			path: [ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]
+		});
+	}
+	if (data.total_price != null && data.total_price < 0) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.pricing_details.fields.total_price.errors.min"
 			),
 			path: [ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]
 		});
@@ -98,7 +111,8 @@ export const SUPPLEMENT_PRICING_SCHEMA = z
 		[ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES]:
 			perItemExpensesSchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: nullableNumber.optional(),
-		[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]: nullableNumber.optional(),
+		[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]:
+			nonNegativeNullableNumber.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.PACKAGE_TYPE]: z.string()

@@ -18,6 +18,10 @@ const nullableNumber = z
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
 
+const nonNegativeNullableNumber = nullableNumber.refine(
+	(value) => value === null || value >= 0
+);
+
 const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const markupSchema = z
@@ -28,8 +32,8 @@ const markupSchema = z
 	.nullable();
 
 const perGuidePriceRowSchema = z.object({
-	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: nullableNumber,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: nullableNumber,
+	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: nonNegativeNullableNumber,
+	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: nonNegativeNullableNumber,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -37,8 +41,8 @@ const perGuidePriceRowSchema = z.object({
 const categoryRowSchema = z.object({
 	// Empty lang is allowed — sync creates blank rows when a guide is added
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: z.string(),
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: nullableNumber,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: nullableNumber,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: nonNegativeNullableNumber,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: nonNegativeNullableNumber,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: markupSchema
 });

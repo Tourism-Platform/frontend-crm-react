@@ -28,6 +28,10 @@ const nullableNumber = z
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
 
+const nonNegativeNullableNumber = nullableNumber.refine(
+	(value) => value === null || value >= 0
+);
+
 const markupSchema = z
 	.object({
 		typ: z.enum(ENUM_TRANSPORTATION_MARKUP_TYP),
@@ -38,8 +42,8 @@ const markupSchema = z
 const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const perCarPriceRowSchema = z.object({
-	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: nullableNumber,
-	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: nullableNumber,
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: nonNegativeNullableNumber,
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: nonNegativeNullableNumber,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -50,8 +54,8 @@ const categoryRowSchema = z.object({
 			"form.pricing.form.per_car.fields.category_name.errors.required"
 		)
 	}),
-	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: nullableNumber,
-	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: nullableNumber,
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: nonNegativeNullableNumber,
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: nonNegativeNullableNumber,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -85,7 +89,7 @@ const validateFlatOrPerPersonPricing = (
 	},
 	ctx: z.RefinementCtx
 ) => {
-	if (data.total_price == null || data.total_price < 1) {
+	if (data.total_price == null || data.total_price < 0) {
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: msg(
@@ -130,7 +134,8 @@ export const TRANSPORTATION_PRICING_SCHEMA = z
 			.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]:
 			nullableNumber.optional(),
-		[ENUM_TRANSPORTATION_PRICING_FIELD.TAXES]: nullableNumber.optional(),
+		[ENUM_TRANSPORTATION_PRICING_FIELD.TAXES]:
+			nonNegativeNullableNumber.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.PACKAGE_TYPE]: z.string()

@@ -76,8 +76,7 @@ const mapEventLibrarySummary = (
 
 			const from = hop.departure_airport_code ?? null;
 			const to = hop.arrival_airport_code ?? null;
-			const route =
-				from && to ? `${from} → ${to}` : (from ?? to ?? null);
+			const route = from && to ? `${from} → ${to}` : (from ?? to ?? null);
 
 			const time = joinRange(
 				formatTimeHhMm(hop.departure_time?.time),

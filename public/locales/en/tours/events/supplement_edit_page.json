@@ -105,6 +105,7 @@
 							"placeholder": "Enter...",
 							"errors": {
 								"required": "Total cost is required",
+								"min": "Price must be at least 0",
 								"max": "Price must not exceed 100000"
 							}
 						},

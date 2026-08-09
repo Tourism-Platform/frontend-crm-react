@@ -215,7 +215,7 @@
 							"label": "Total cost",
 							"placeholder": "Enter...",
 							"errors": {
-								"min": "Price must be at least 1",
+								"min": "Price must be at least 0",
 								"max": "Price must not exceed 100000"
 							}
 						},
@@ -342,7 +342,7 @@
 						"label": "Total price",
 						"placeholder": "Enter...",
 						"errors": {
-							"min": "Price must be at least 1",
+							"min": "Price must be at least 0",
 							"max": "Price must not exceed 100000"
 						}
 					},
@@ -350,7 +350,7 @@
 						"label": "Taxes & fees",
 						"placeholder": "Enter...",
 						"errors": {
-							"min": "Taxes must be at least 1",
+							"min": "Taxes must be at least 0",
 							"max": "Taxes must not exceed 100"
 						}
 					},

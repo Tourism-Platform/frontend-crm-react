@@ -9,7 +9,7 @@ const msg = i18nKey<TTourAccommodationEditPageKeys>();
 export const PRICING_SCHEMA = z.object({
 	[ENUM_FORM_PRICE_DETAILS.TOTAL_PRICE]: z
 		.number()
-		.min(1, {
+		.min(0, {
 			message: msg(
 				"form.pricing.form.pricing_details.fields.total_price.errors.min"
 			)
@@ -21,7 +21,7 @@ export const PRICING_SCHEMA = z.object({
 		}),
 	[ENUM_FORM_PRICE_DETAILS.TAXES]: z
 		.number()
-		.min(1, {
+		.min(0, {
 			message: msg(
 				"form.pricing.form.pricing_details.fields.taxes_and_fees.errors.min"
 			)
