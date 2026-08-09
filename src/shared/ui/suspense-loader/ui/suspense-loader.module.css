@@ -1,7 +1,6 @@
 .wrapper {
 	 position: fixed;
-	 top: 0;
-	 left: 0;
+	 inset: 0;
 	 z-index: 999;
 	 display: grid;
 	 grid-auto-flow: row;
@@ -10,9 +9,7 @@
 	 justify-items: center;
 	 align-items: center;
 	 align-content: center;
-	 width: 100%;
-	 width: 100vw;
-	 height: 100dvh;
+	 width: auto;
 	 backdrop-filter: blur(30px);
 	 background: var(--background);
 }

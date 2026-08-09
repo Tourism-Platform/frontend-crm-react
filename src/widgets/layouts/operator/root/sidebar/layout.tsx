@@ -18,9 +18,7 @@ export const SideBarOperatorLayout = ({
 	return (
 		<SidebarProvider>
 			<CustomSidebar items={items} />
-			<SidebarInset className="!w-[calc(100vw-var(--sidebar-width))]">
-				{children}
-			</SidebarInset>
+			<SidebarInset className="min-w-0">{children}</SidebarInset>
 		</SidebarProvider>
 	);
 };

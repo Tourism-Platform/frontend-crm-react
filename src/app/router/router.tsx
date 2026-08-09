@@ -5,7 +5,8 @@ import { ENUM_LAYOUT } from "@/shared/config";
 import {
 	RootAgencyLayout,
 	RootDefaultLayout,
-	RootOperatorLayout
+	RootOperatorLayout,
+	RootPublicLayout
 } from "@/widgets/layouts";
 
 import { ProtectedRoute } from "./protected-route";
@@ -30,7 +31,7 @@ const DEFAULT_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
 	element: <ProtectedRoute route={route} />
 }));
 const PUBLIC_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
-	(route) => route.layout === null
+	(route) => route.layout === ENUM_LAYOUT.ROOT_PUBLIC
 ).map((route) => ({
 	path: route.path,
 	element: <ProtectedRoute route={route} />
@@ -39,6 +40,7 @@ const PUBLIC_ROUTES_LIST = ALL_APP_ROUTES_LIST.filter(
 export const router = createBrowserRouter(
 	[
 		{
+			element: <RootPublicLayout />,
 			children: PUBLIC_ROUTES_LIST
 		},
 		{

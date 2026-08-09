@@ -370,7 +370,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.LOGIN,
 		component: LoginPage,
 		auth: ENUM_AUTH.ONLY_PUBLIC,
-		layout: null
+		layout: ENUM_LAYOUT.ROOT_PUBLIC
 	},
 	{
 		path: ENUM_PATH.MAIN,
