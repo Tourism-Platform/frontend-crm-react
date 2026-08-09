@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Separator, withErrorBoundary } from "@/shared/ui";
+import { Button, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_FORM_MULTIPLY_OPTION,
@@ -10,7 +10,6 @@ import {
 	type TMultiplyOptionEditSchema
 } from "@/entities/tour";
 
-import { DescriptionInfo } from "./description-info";
 import { OptionsDetails } from "./options-details";
 
 interface IGeneralInfoProps {
@@ -57,8 +56,8 @@ const GeneralInfoBase: FC<IGeneralInfoProps> = ({
 				onReorder={handleReorder}
 				onRemove={handleRemove}
 			/>
-			<Separator />
-			<DescriptionInfo form={form} />
+			{/* <Separator />
+			<DescriptionInfo form={form} /> */}
 			<div className="flex justify-end mt-6">
 				<Button
 					type="button"

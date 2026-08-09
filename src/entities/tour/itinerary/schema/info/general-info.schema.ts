@@ -76,7 +76,7 @@ export const GENERAL_INFO_SCHEMA = z.object({
 		// .min(1, {
 		// 	message: msg("form.general.info.form.fields.description.errors.required")
 		// })
-		.max(1000, {
+		.max(3000, {
 			message: msg("form.general.info.form.fields.description.errors.max")
 		})
 		.optional()

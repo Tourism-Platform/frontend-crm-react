@@ -20,7 +20,7 @@ export const OPERATOR_BUSINESS_SCHEMA = z.object({
 			// 		"form.business.fields.business_description.errors.min"
 			// 	)
 			// })
-			.max(1000, {
+			.max(3000, {
 				message: msg(
 					"form.business.fields.business_description.errors.max"
 				)

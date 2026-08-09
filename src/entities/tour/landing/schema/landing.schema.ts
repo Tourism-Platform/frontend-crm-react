@@ -10,7 +10,7 @@ export const LANDING_SCHEMA = z.object({
 	[ENUM_FORM_LANDING.DESCRIPTION]: z
 		.string()
 		.trim()
-		.max(5000, {
+		.max(15000, {
 			message: msg("form.overview.fields.description.errors.max")
 		})
 		.optional(),
@@ -22,14 +22,14 @@ export const LANDING_SCHEMA = z.object({
 	[ENUM_FORM_LANDING.PICKUP_DESCRIPTION]: z
 		.string()
 		.trim()
-		.max(5000, {
+		.max(15000, {
 			message: msg("form.pickup.fields.pickup_description.errors.max")
 		})
 		.optional(),
 	[ENUM_FORM_LANDING.CANCELLATION_POLICY]: z
 		.string()
 		.trim()
-		.max(5000, {
+		.max(15000, {
 			message: msg(
 				"form.cancellation.fields.cancellation_policy.errors.max"
 			)
@@ -38,7 +38,7 @@ export const LANDING_SCHEMA = z.object({
 	[ENUM_FORM_LANDING.ADDITIONAL_INFO]: z
 		.string()
 		.trim()
-		.max(5000, {
+		.max(15000, {
 			message: msg(
 				"form.additional_info.fields.additional_info.errors.max"
 			)

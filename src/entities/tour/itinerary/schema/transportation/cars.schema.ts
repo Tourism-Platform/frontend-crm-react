@@ -43,7 +43,7 @@ export const CARS_SCHEMA = z.object({
 				// 		"form.cars.description.description.errors.required"
 				// 	)
 				// })
-				// .max(1000, {
+				// .max(3000, {
 				// 	message: msg("form.cars.description.description.errors.max")
 				// })
 				.optional()
