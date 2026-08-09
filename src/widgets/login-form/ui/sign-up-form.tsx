@@ -27,11 +27,10 @@ interface ISignUpFormProps {
 
 const SignUpFormBase: FC<ISignUpFormProps> = ({ form, isLoading, error }) => {
 	const { t } = useTranslation("login_page");
-	console.log("error", error);
 	return (
 		<div className="flex flex-col gap-6">
-			<div className="flex flex-col items-center gap-1 text-center">
-				<h1 className="text-2xl font-bold">
+			<div className="space-y-1 text-center">
+				<h1 className="text-2xl font-semibold tracking-tight">
 					{t("form.sign_up.title")}
 				</h1>
 				<p className="text-muted-foreground text-sm text-balance">

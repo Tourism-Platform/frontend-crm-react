@@ -1,8 +1,8 @@
 {
 	"form": {
 		"sign_in": {
-			"title": "Login to your account",
-			"description": "Enter your email and password below to login to your account",
+			"title": "Welcome back",
+			"description": "Sign in to manage bookings and continue your travel plans.",
 			"continue": "Or continue with",
 			"sign_up": "Don't have an account?"
 		},
@@ -38,8 +38,15 @@
 		"buttons": {
 			"sign_in": "Sign In",
 			"sign_up": "Sign Up",
-			"google": "Google"
+			"google": "Google",
+			"back_to_home": "Back to home"
 		}
+	},
+	"side_panel": {
+		"brand_label": "TourLink",
+		"title": "Discover Central Asia",
+		"subtitle": "Curated routes, trusted operators, seamless booking.",
+		"quote": "Your journey starts with one click."
 	},
 	"session_check_error": {
 		"title": "Unable to verify session",

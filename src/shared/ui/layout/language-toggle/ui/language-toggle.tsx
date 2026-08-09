@@ -1,48 +1,84 @@
-import { GlobeIcon } from "lucide-react";
-import { type FC, useId } from "react";
+import { hasFlag } from "country-flag-icons";
+import * as Flags from "country-flag-icons/react/3x2";
+import { type FC, type JSX, useId } from "react";
+import { useTranslation } from "react-i18next";
 
 import {
 	ENUM_LANGUAGES,
 	type ENUM_LANGUAGES_TYPE,
 	LANGUAGES_LIST,
 	changeLanguage,
-	i18n,
 	i18nLanguageMapper
 } from "@/shared/config";
+import { cn } from "@/shared/lib";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
-	SelectValue
+	buttonVariants
 } from "@/shared/ui";
+
+import { mapLocaleToFlagCountry } from "../lib/map-locale-to-flag-country";
+
+type TFlagComponent = (props: {
+	title?: string;
+	className?: string;
+}) => JSX.Element;
+
+function LocaleFlag({ code, title }: { code: string; title?: string }) {
+	const country = mapLocaleToFlagCountry(code);
+	if (!hasFlag(country)) return null;
+
+	const Flag = Flags[country as keyof typeof Flags] as
+		| TFlagComponent
+		| undefined;
+	if (!Flag) return null;
+
+	return (
+		<span className="flex h-3.5 w-5 shrink-0 overflow-hidden rounded-sm bg-foreground/10">
+			<Flag className="size-full" title={title ?? country} />
+		</span>
+	);
+}
 
 export const LanguageToggle: FC = () => {
 	const id = useId();
+	const { i18n } = useTranslation();
+	const locale = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
+	const activeCode = locale.toUpperCase();
 
 	return (
 		<Select
-			defaultValue={
-				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
-			}
+			value={locale}
 			onValueChange={(value) => {
 				changeLanguage(value as ENUM_LANGUAGES_TYPE);
 			}}
 		>
 			<SelectTrigger
 				id={`language-${id}`}
-				className="[&>svg]:text-muted-foreground/80 hover:bg-accent hover:text-accent-foreground h-8 border-none px-2 shadow-none [&>svg]:shrink-0"
+				className={cn(
+					buttonVariants({ variant: "outline", size: "sm" }),
+					"h-8 w-auto gap-1.5 px-2.5 shadow-xs hover:bg-primary/10",
+					"[&>svg]:size-4 [&>svg]:shrink-0 [&>svg]:opacity-50"
+				)}
 				aria-label="Select language"
 			>
-				<GlobeIcon size={16} aria-hidden="true" />
-				<SelectValue className="hidden sm:inline-flex" />
+				<LocaleFlag code={locale} title={activeCode} />
+				<span className="text-sm font-medium uppercase">
+					{activeCode}
+				</span>
 			</SelectTrigger>
 
-			<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2">
-				{LANGUAGES_LIST.map((lang) => (
-					<SelectItem key={lang.value} value={lang.value}>
+			<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:end-2 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:flex [&_*[role=option]>span]:items-center [&_*[role=option]>span]:gap-2">
+				{LANGUAGES_LIST.map((language) => (
+					<SelectItem key={language.value} value={language.value}>
 						<span className="flex items-center gap-2">
-							<span className="truncate">{lang.label}</span>
+							<LocaleFlag
+								code={language.value}
+								title={language.label}
+							/>
+							<span className="truncate">{language.label}</span>
 						</span>
 					</SelectItem>
 				))}
