@@ -68,7 +68,27 @@ export const supplierPaymentApi = authApi.injectEndpoints({
 			},
 			transformResponse: (response: TSupplierPaymentBackend) =>
 				mapSupplierPaymentToFrontend(response),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS]
+			invalidatesTags: (_result, _error, { id }) => [
+				ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS,
+				{ type: ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS, id }
+			]
+		}),
+		removeSupplierPaymentReceipt: builder.mutation<
+			ISupplierPayment,
+			{ paymentId: string; fileId: string }
+		>({
+			query: ({ paymentId, fileId }) => ({
+				...OPERATOR_SUPPLIER_PAYMENT_PATHS.removeReceipt(
+					paymentId,
+					fileId
+				)
+			}),
+			transformResponse: (response: TSupplierPaymentBackend) =>
+				mapSupplierPaymentToFrontend(response),
+			invalidatesTags: (_result, _error, { paymentId }) => [
+				ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS,
+				{ type: ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS, id: paymentId }
+			]
 		})
 	})
 });
@@ -77,5 +97,6 @@ export const {
 	useGetSupplierPaymentsQuery,
 	useGetSupplierPaymentByIdQuery,
 	useUpdateSupplierPaymentMutation,
-	useUploadSupplierPaymentReceiptMutation
+	useUploadSupplierPaymentReceiptMutation,
+	useRemoveSupplierPaymentReceiptMutation
 } = supplierPaymentApi;

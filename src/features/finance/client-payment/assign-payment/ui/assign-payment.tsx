@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
 	Button,
 	CustomField,
+	CustomUploadFiles,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -24,7 +25,8 @@ import {
 	ENUM_PAYMENT_STATUS,
 	type IPayment,
 	useConfirmPaymentMutation,
-	useGetAvailableOrderIdsQuery
+	useGetAvailableOrderIdsQuery,
+	usePaymentAttachments
 } from "@/entities/finance";
 
 import {
@@ -49,6 +51,19 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 	const [open, setOpen] = useState<boolean>(false);
 	const [confirmPayment, { isLoading }] = useConfirmPaymentMutation();
 
+	const isAssigned = payment.status === ENUM_PAYMENT_STATUS.ASSIGNED;
+
+	const {
+		initialFiles,
+		isLoading: isAttachmentsLoading,
+		loadingId,
+		addFiles,
+		removeFile
+	} = usePaymentAttachments({
+		paymentId: payment.id,
+		enabled: open
+	});
+
 	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
 
 	const orderOptions = useMemo(() => {
@@ -63,8 +78,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 		defaultValues: {
 			[ENUM_FORM_ASSIGN_PAYMENT.ORDER_ID]: payment.bookingId,
 			[ENUM_FORM_ASSIGN_PAYMENT.AMOUNT]: payment.amount,
-			[ENUM_FORM_ASSIGN_PAYMENT.NOTE]: payment.note || "",
-			[ENUM_FORM_ASSIGN_PAYMENT.FILES]: payment.files || []
+			[ENUM_FORM_ASSIGN_PAYMENT.NOTE]: payment.note || ""
 		},
 		mode: "onSubmit"
 	});
@@ -84,8 +98,6 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 			console.error("Failed to confirm payment:", error);
 		}
 	}
-
-	const isAssigned = payment.status === ENUM_PAYMENT_STATUS.ASSIGNED;
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -112,13 +124,31 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 							{formFields.map(({ key, ...item }) => (
 								<CustomField
 									key={key}
-									control={form?.control}
+									control={form.control}
 									name={key}
 									t={t}
 									disabled={isAssigned}
 									{...item}
 								/>
 							))}
+						</div>
+						<div className="flex flex-col gap-2">
+							<p className="ml-1 text-sm font-medium">
+								{t("menu.assign.form.fields.files.label")}:
+							</p>
+							<CustomUploadFiles
+								initialFiles={initialFiles}
+								maxFiles={1}
+								onFilesAdded={isAssigned ? undefined : addFiles}
+								onFileRemove={
+									isAssigned ? undefined : removeFile
+								}
+								isLoading={isAttachmentsLoading}
+								loadingId={loadingId}
+								readOnly={isAssigned}
+								showAllRemoveButton={false}
+								showTopTitle={false}
+							/>
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>

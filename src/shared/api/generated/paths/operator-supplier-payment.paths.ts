@@ -56,5 +56,15 @@ export const OPERATOR_SUPPLIER_PAYMENT_PATHS = {
 				query: void;
 				response: SupplierPaymentResponse;
 			}
+		}) as const,
+	removeReceipt: (paymentId: string, fileId: string) =>
+		({
+			url: `/operator/supplier-payment/${paymentId}/receipt/${fileId}`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: SupplierPaymentResponse;
+			}
 		}) as const
 } as const;

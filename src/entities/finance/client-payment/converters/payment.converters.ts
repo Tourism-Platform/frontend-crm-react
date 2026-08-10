@@ -1,4 +1,5 @@
-import { CLIENT_PAYMENT_PATHS } from "@/shared/api";
+import { CLIENT_PAYMENT_PATHS, type ClientPaymentFile } from "@/shared/api";
+import type { TFileMetadata } from "@/shared/hooks";
 import { formatDate } from "@/shared/utils";
 
 import { currencyConverter } from "@/entities/commission";
@@ -17,6 +18,16 @@ import {
 } from "../types";
 
 import { paymentStatusConverter } from "./payment-status.converter";
+
+export const mapAttachmentToFileMetadata = (
+	file: ClientPaymentFile
+): TFileMetadata => ({
+	id: file.file_id,
+	name: file.file_name,
+	size: 0,
+	type: "",
+	url: ""
+});
 
 export const mapPaymentToFrontend = (payment: TPaymentBackend): IPayment => ({
 	id: payment.id,

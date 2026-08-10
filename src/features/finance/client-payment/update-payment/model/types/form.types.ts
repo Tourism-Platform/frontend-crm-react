@@ -13,8 +13,7 @@ export type TUpdatePaymentForm = TFormField<
 export const ENUM_FORM_UPDATE_PAYMENT = {
 	ORDER_ID: "orderId",
 	AMOUNT: "amount",
-	NOTE: "note",
-	FILES: "files"
+	NOTE: "note"
 } as const;
 
 export type ENUM_FORM_UPDATE_PAYMENT_TYPE =

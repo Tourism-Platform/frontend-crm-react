@@ -1,4 +1,5 @@
 import {
+	type ClientPaymentFile,
 	type ClientPaymentListResponse,
 	type ClientPaymentResponse,
 	ClientPaymentStatus,
@@ -15,12 +16,18 @@ import {
 	MOCK_PAYMENT_DEFAULTS,
 	buildPaymentUuid
 } from "./payment.mock.constants";
-import { createClientPaymentMocks } from "./payment.mock.factory";
+import {
+	createClientPaymentAttachmentMocks,
+	createClientPaymentMocks
+} from "./payment.mock.factory";
 
 let payments: ClientPaymentResponse[] = createClientPaymentMocks();
+let attachmentsByPaymentId: Record<string, ClientPaymentFile[]> =
+	createClientPaymentAttachmentMocks(payments);
 
 export const resetClientPaymentsForTests = (): void => {
 	payments = createClientPaymentMocks();
+	attachmentsByPaymentId = createClientPaymentAttachmentMocks(payments);
 };
 
 export const getPayment = (
@@ -91,6 +98,18 @@ const computeStatusCounts = (
 	return counts;
 };
 
+const syncAttachmentCount = (paymentId: string): void => {
+	const index = payments.findIndex((payment) => payment.id === paymentId);
+	if (index === -1) return;
+
+	const count = attachmentsByPaymentId[paymentId]?.length ?? 0;
+	payments[index] = {
+		...payments[index],
+		attachment_count: count,
+		updated_at: new Date().toISOString()
+	};
+};
+
 export const listPayments = ({
 	status,
 	booking_id,
@@ -145,6 +164,12 @@ export const createPaymentFromFormData = (
 	const note = formData.get("note");
 	const file = formData.get("file");
 	const now = new Date().toISOString();
+	const paymentId = buildPaymentUuid(payments.length + 1);
+	const hasFile = file instanceof Blob && file.size > 0;
+	const fileName =
+		file instanceof File && file.name
+			? file.name
+			: `payment-${paymentId}.pdf`;
 
 	const created: ClientPaymentResponse = {
 		client_name:
@@ -153,7 +178,7 @@ export const createPaymentFromFormData = (
 		tour_name:
 			bookingOrderListItems.find((item) => item.id === bookingId)
 				?.tour_name ?? "",
-		id: buildPaymentUuid(payments.length + 1),
+		id: paymentId,
 		booking_id: bookingId,
 		order_number:
 			bookingOrderListItems.find((item) => item.id === bookingId)
@@ -163,12 +188,15 @@ export const createPaymentFromFormData = (
 		currency: MOCK_PAYMENT_DEFAULTS.currency,
 		status: ClientPaymentStatus.NotConfirmed,
 		note: typeof note === "string" && note.length > 0 ? note : null,
-		has_attachment: file instanceof Blob && file.size > 0,
+		attachment_count: hasFile ? 1 : 0,
 		created_at: now,
 		updated_at: now
 	};
 
 	payments = [created, ...payments];
+	attachmentsByPaymentId[paymentId] = hasFile
+		? [{ file_id: `${paymentId}-file-1`, file_name: fileName }]
+		: [];
 
 	return created;
 };
@@ -219,6 +247,78 @@ export const confirmPaymentInStore = (
 export const deletePaymentFromStore = (paymentId: string): boolean => {
 	const lengthBefore = payments.length;
 	payments = payments.filter((payment) => payment.id !== paymentId);
+	delete attachmentsByPaymentId[paymentId];
 
 	return payments.length < lengthBefore;
+};
+
+export const listAttachmentsInStore = (
+	paymentId: string
+): ClientPaymentFile[] | null => {
+	if (!getPayment(paymentId)) {
+		return null;
+	}
+
+	return attachmentsByPaymentId[paymentId] ?? [];
+};
+
+export const addAttachmentInStore = (
+	paymentId: string,
+	fileName: string
+): ClientPaymentFile | null => {
+	if (!getPayment(paymentId)) {
+		return null;
+	}
+
+	const current = attachmentsByPaymentId[paymentId] ?? [];
+	const created: ClientPaymentFile = {
+		file_id: `${paymentId}-file-${current.length + 1}-${Date.now()}`,
+		file_name: fileName
+	};
+
+	attachmentsByPaymentId[paymentId] = [...current, created];
+	syncAttachmentCount(paymentId);
+
+	return created;
+};
+
+export const getAttachmentInStore = (
+	paymentId: string,
+	fileId: string
+): ClientPaymentFile | null => {
+	const files = attachmentsByPaymentId[paymentId] ?? [];
+	return files.find((file) => file.file_id === fileId) ?? null;
+};
+
+export const removeAttachmentInStore = (
+	paymentId: string,
+	fileId: string
+): boolean => {
+	if (!getPayment(paymentId)) {
+		return false;
+	}
+
+	const current = attachmentsByPaymentId[paymentId] ?? [];
+	const next = current.filter((file) => file.file_id !== fileId);
+
+	if (next.length === current.length) {
+		return false;
+	}
+
+	attachmentsByPaymentId[paymentId] = next;
+	syncAttachmentCount(paymentId);
+
+	return true;
+};
+
+export const buildAttachmentBlob = (fileName: string): Blob => {
+	const content = `%PDF-1.4
+1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+2 0 obj<< /Type /Pages /Kids [3 0 R] /Count 1 >>endobj
+3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 300 144] >>endobj
+trailer<< /Root 1 0 R >>
+%%EOF
+${fileName}
+`;
+	return new Blob([content], { type: "application/pdf" });
 };

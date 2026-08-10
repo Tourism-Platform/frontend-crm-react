@@ -28,15 +28,5 @@ export const FORM_UPDATE_PAYMENT_LIST = ({
 		key: ENUM_FORM_UPDATE_PAYMENT.NOTE,
 		fieldType: "textarea",
 		className: "col-span-2"
-	},
-	{
-		label: "menu.update.form.fields.files.label",
-		key: ENUM_FORM_UPDATE_PAYMENT.FILES,
-		fieldType: "upload",
-		className: "col-span-2",
-		showAllRemoveButton: false,
-		showTopTitle: false,
-		maxFiles: 1,
-		disabled: true
 	}
 ];

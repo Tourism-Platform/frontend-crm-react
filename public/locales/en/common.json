@@ -20,6 +20,11 @@
 			"add": "Add file",
 			"remove": "Remove all",
 			"select": "Select files"
+		},
+		"errors": {
+			"upload": "Failed to upload file",
+			"remove": "Failed to remove file",
+			"download": "Failed to download file"
 		}
 	},
 	"table": {

@@ -45,13 +45,6 @@ export const FileCard: FC<IFileCardProps> = ({
 							? file.file.name
 							: file.file.name}
 					</p>
-					{/* <p className="text-muted-foreground text-xs">
-						{formatBytes(
-							file.file instanceof File
-								? file.file.size
-								: file.file.size
-						)}
-					</p> */}
 				</div>
 			</div>
 

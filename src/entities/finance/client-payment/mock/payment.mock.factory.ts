@@ -1,4 +1,7 @@
-import { type ClientPaymentResponse } from "@/shared/api";
+import {
+	type ClientPaymentFile,
+	type ClientPaymentResponse
+} from "@/shared/api";
 
 import { bookingOrderListItems } from "@/entities/booking/order/mock/booking-order.store";
 
@@ -24,8 +27,30 @@ export const createClientPaymentMocks = (): ClientPaymentResponse[] =>
 			currency: MOCK_PAYMENT_DEFAULTS.currency,
 			status: row.status,
 			note: row.note ?? null,
-			has_attachment: row.has_attachment,
+			attachment_count: row.attachment_count,
 			created_at: row.created_at,
 			updated_at: row.created_at
 		};
 	});
+
+export const createClientPaymentAttachmentMocks = (
+	payments: ClientPaymentResponse[]
+): Record<string, ClientPaymentFile[]> => {
+	const attachments: Record<string, ClientPaymentFile[]> = {};
+
+	for (const payment of payments) {
+		if (payment.attachment_count <= 0) {
+			attachments[payment.id] = [];
+			continue;
+		}
+
+		attachments[payment.id] = [
+			{
+				file_id: `${payment.id}-file-1`,
+				file_name: `payment-${payment.order_number || payment.id}.pdf`
+			}
+		];
+	}
+
+	return attachments;
+};

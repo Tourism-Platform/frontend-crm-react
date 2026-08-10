@@ -1,13 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC, useState } from "react";
+import { type FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import type { TFileMetadata, TFileWithPreview } from "@/shared/hooks";
 import {
 	Button,
 	CustomField,
+	CustomUploadFiles,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -23,6 +25,8 @@ import {
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type ISupplierPayment,
+	useGetSupplierPaymentByIdQuery,
+	useRemoveSupplierPaymentReceiptMutation,
 	useUpdateSupplierPaymentMutation,
 	useUploadSupplierPaymentReceiptMutation
 } from "@/entities/finance";
@@ -41,43 +45,102 @@ interface IConfirmPaymentProps {
 export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 	const { t } = useTranslation("supplier_payments_page");
 	const [open, setOpen] = useState<boolean>(false);
+	const [initialFiles, setInitialFiles] = useState<TFileMetadata[]>([]);
+	const [loadingId, setLoadingId] = useState<string | undefined>();
+
 	const [updatePayment, { isLoading: isUpdating }] =
 		useUpdateSupplierPaymentMutation();
 	const [uploadReceipt, { isLoading: isUploading }] =
 		useUploadSupplierPaymentReceiptMutation();
+	const [removeReceipt, { isLoading: isRemoving }] =
+		useRemoveSupplierPaymentReceiptMutation();
 
-	const isLoading = isUpdating || isUploading;
+	const { data: paymentDetail } = useGetSupplierPaymentByIdQuery(payment.id, {
+		skip: !open
+	});
+
+	const isLoading = isUpdating || isUploading || isRemoving;
 
 	const isConfirmed =
-		payment.status === ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED;
+		(paymentDetail?.status ?? payment.status) ===
+		ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED;
+
+	const detailFiles = paymentDetail?.files ?? [];
+
+	useEffect(() => {
+		if (paymentDetail?.files) {
+			setInitialFiles(paymentDetail.files);
+		}
+	}, [paymentDetail?.files]);
 
 	const form = useForm<TConfirmPaymentSchema>({
 		resolver: zodResolver(CONFIRM_PAYMENT_SCHEMA),
 		defaultValues: {
 			[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: payment.bookingId,
 			[ENUM_FORM_CONFIRM_PAYMENT.AMOUNT]: payment.amount,
-			[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: payment.note || "",
-			[ENUM_FORM_CONFIRM_PAYMENT.FILES]: payment.files || []
+			[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: payment.note || ""
 		},
 		mode: "onSubmit"
 	});
 
+	useEffect(() => {
+		if (!paymentDetail || !open) return;
+
+		form.reset({
+			[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: paymentDetail.bookingId,
+			[ENUM_FORM_CONFIRM_PAYMENT.AMOUNT]: paymentDetail.amount,
+			[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: paymentDetail.note || ""
+		});
+	}, [form, open, paymentDetail]);
+
+	const handleFilesAdded = useCallback(
+		async (addedFiles: TFileWithPreview[]) => {
+			for (const item of addedFiles) {
+				if (!(item.file instanceof File)) continue;
+
+				try {
+					await uploadReceipt({
+						id: payment.id,
+						file: item.file
+					}).unwrap();
+				} catch {
+					toast.error(t("form.toasts.error"));
+				}
+			}
+		},
+		[payment.id, t, uploadReceipt]
+	);
+
+	const handleFileRemove = useCallback(
+		async (fileId: string) => {
+			const isExisting = detailFiles.some((file) => file.id === fileId);
+			if (!isExisting) return;
+
+			setLoadingId(fileId);
+			try {
+				await removeReceipt({
+					paymentId: payment.id,
+					fileId
+				}).unwrap();
+			} catch {
+				toast.error(t("form.toasts.error"));
+			} finally {
+				setLoadingId(undefined);
+			}
+		},
+		[detailFiles, payment.id, removeReceipt, t]
+	);
+
 	async function onSubmit(data: TConfirmPaymentSchema) {
 		try {
-			const fileCandidate = data.files?.[0]?.file ?? data.files?.[0];
-
-			if (!(fileCandidate instanceof Blob)) {
-				toast.error(t("form.toasts.error"));
+			if (!isConfirmed && detailFiles.length === 0) {
+				toast.error(t("form.errors.files.required"));
 				return;
 			}
 
-			await uploadReceipt({
-				id: payment.id,
-				file: fileCandidate as File
-			}).unwrap();
-
-			const amountChanged = data.amount !== payment.amount;
-			const noteChanged = (data.note ?? "") !== (payment.note ?? "");
+			const amountChanged = data.amount !== paymentDetail?.amount;
+			const noteChanged =
+				(data.note ?? "") !== (paymentDetail?.note ?? "");
 
 			if (amountChanged || noteChanged) {
 				await updatePayment({
@@ -131,7 +194,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 								({ key, ...item }) => (
 									<CustomField
 										key={key}
-										control={form?.control}
+										control={form.control}
 										name={key}
 										t={t}
 										disabled={isConfirmed}
@@ -139,6 +202,26 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 									/>
 								)
 							)}
+						</div>
+						<div className="flex flex-col gap-2">
+							<p className="ml-1 text-sm font-medium">
+								{t("form.fields.files.label")}:
+							</p>
+							<CustomUploadFiles
+								initialFiles={initialFiles}
+								maxFiles={2}
+								onFilesAdded={
+									isConfirmed ? undefined : handleFilesAdded
+								}
+								onFileRemove={
+									isConfirmed ? undefined : handleFileRemove
+								}
+								isLoading={isUploading || isRemoving}
+								loadingId={loadingId}
+								readOnly={isConfirmed}
+								showAllRemoveButton={false}
+								showTopTitle={false}
+							/>
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>

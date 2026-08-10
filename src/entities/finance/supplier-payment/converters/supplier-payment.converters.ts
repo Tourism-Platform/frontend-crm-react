@@ -1,5 +1,6 @@
 import type {
 	OPERATOR_SUPPLIER_PAYMENT_PATHS,
+	SupplierPaymentFile,
 	SupplierPaymentListRowOutput
 } from "@/shared/api";
 import { formatDate, parseDecimalSafe } from "@/shared/utils";
@@ -24,22 +25,20 @@ import { supplierPaymentStatusConverter } from "./supplier-payment-status.conver
 const parseAmount = (value: string | number): number =>
 	parseDecimalSafe(value).toNumber();
 
-const mapFileToMetadata = (
-	payment: TSupplierPaymentBackend
+const mapFilesToMetadata = (
+	files: SupplierPaymentFile[]
 ): ISupplierPayment["files"] => {
-	if (!payment.file) {
+	if (files.length === 0) {
 		return undefined;
 	}
 
-	return [
-		{
-			id: payment.payment_id,
-			name: payment.file_name ?? "receipt.pdf",
-			size: 0,
-			type: "application/pdf",
-			url: payment.file
-		}
-	];
+	return files.map((file) => ({
+		id: file.file_id,
+		name: file.file_name,
+		size: 0,
+		type: "",
+		url: file.url
+	}));
 };
 
 export const mapSupplierPaymentToFrontend = (
@@ -64,7 +63,7 @@ export const mapSupplierPaymentToFrontend = (
 		manager: display?.manager ?? SUPPLIER_PAYMENT_NO_DATA,
 		status: uiStatus ?? ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED,
 		note: data.note ?? undefined,
-		files: mapFileToMetadata(data)
+		files: mapFilesToMetadata(data.files)
 	};
 };
 
@@ -127,17 +126,18 @@ export const mapSupplierPaymentListItemToFrontend = (
 		manager: display?.manager ?? SUPPLIER_PAYMENT_NO_DATA,
 		status: uiStatus ?? ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED,
 		note: undefined,
-		files: data.has_receipt
-			? [
-					{
-						id: data.payment_id,
-						name: "receipt.pdf",
-						size: 0,
-						type: "application/pdf",
-						url: ""
-					}
-				]
-			: undefined
+		files:
+			data.receipt_count > 0
+				? [
+						{
+							id: data.payment_id,
+							name: "receipt.pdf",
+							size: 0,
+							type: "application/pdf",
+							url: ""
+						}
+					]
+				: undefined
 	};
 };
 

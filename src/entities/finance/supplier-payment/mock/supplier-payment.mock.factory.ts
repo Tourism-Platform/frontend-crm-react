@@ -47,8 +47,16 @@ export const createSupplierPaymentMocks = (): ISupplierPaymentMockBundle => {
 			currency: MOCK_SUPPLIER_PAYMENT_DEFAULTS.currency,
 			rate,
 			base_amount: amount,
-			file: row.file ?? null,
-			file_name: row.file ? (row.file.split("/").pop() ?? null) : null,
+			files: row.file
+				? [
+						{
+							file_id: `${id}-receipt-1`,
+							file_name:
+								row.file.split("/").pop() ?? "receipt.pdf",
+							url: row.file
+						}
+					]
+				: [],
 			note: row.note ?? null,
 			status: row.status,
 			paid_at: row.paid_at ?? null

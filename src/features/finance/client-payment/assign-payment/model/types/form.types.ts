@@ -13,8 +13,7 @@ export type TForm = TFormField<
 export const ENUM_FORM_ASSIGN_PAYMENT = {
 	ORDER_ID: "orderId",
 	AMOUNT: "amount",
-	NOTE: "note",
-	FILES: "files"
+	NOTE: "note"
 } as const;
 
 export type ENUM_FORM_ASSIGN_PAYMENT_TYPE =

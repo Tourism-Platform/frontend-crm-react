@@ -4,7 +4,7 @@ export type TClientPaymentSeedItem = {
 	amount: number;
 	status: ClientPaymentStatus;
 	note?: string;
-	has_attachment: boolean;
+	attachment_count: number;
 	created_at: string;
 	amount_uzs?: number;
 	exchange_rate?: number;
@@ -15,7 +15,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 		amount: 1500,
 		status: ClientPaymentStatus.Confirmed,
 		note: "First payment",
-		has_attachment: true,
+		attachment_count: 1,
 		created_at: "2024-12-01T10:00:00Z",
 		amount_uzs: 19_200_000,
 		exchange_rate: 12_800
@@ -24,7 +24,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 		amount: 2300,
 		status: ClientPaymentStatus.NotConfirmed,
 		note: "Pending payment",
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-05T14:30:00Z",
 		amount_uzs: 29_440_000,
 		exchange_rate: 12_800
@@ -32,7 +32,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	{
 		amount: 750,
 		status: ClientPaymentStatus.Confirmed,
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-10T09:15:00Z",
 		amount_uzs: 9_600_000,
 		exchange_rate: 12_800
@@ -40,7 +40,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	{
 		amount: 3100,
 		status: ClientPaymentStatus.NotConfirmed,
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-15T16:45:00Z",
 		amount_uzs: 39_680_000,
 		exchange_rate: 12_800
@@ -48,7 +48,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	{
 		amount: 1250,
 		status: ClientPaymentStatus.Confirmed,
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-20T11:20:00Z",
 		amount_uzs: 16_000_000,
 		exchange_rate: 12_800
@@ -57,7 +57,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 		amount: 500,
 		status: ClientPaymentStatus.NotConfirmed,
 		note: "Partially paid",
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-21T09:00:00Z",
 		amount_uzs: 6_400_000,
 		exchange_rate: 12_800
@@ -65,7 +65,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	{
 		amount: 4200,
 		status: ClientPaymentStatus.Confirmed,
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-22T14:15:00Z",
 		amount_uzs: 53_760_000,
 		exchange_rate: 12_800
@@ -74,7 +74,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 		amount: 1100,
 		status: ClientPaymentStatus.NotConfirmed,
 		note: "Awaiting confirmation",
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-23T11:45:00Z",
 		amount_uzs: 14_080_000,
 		exchange_rate: 12_800
@@ -82,7 +82,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	{
 		amount: 2750,
 		status: ClientPaymentStatus.Confirmed,
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-24T16:30:00Z",
 		amount_uzs: 35_200_000,
 		exchange_rate: 12_800
@@ -90,7 +90,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	{
 		amount: 3500,
 		status: ClientPaymentStatus.NotConfirmed,
-		has_attachment: false,
+		attachment_count: 0,
 		created_at: "2024-12-25T10:00:00Z",
 		amount_uzs: 44_800_000,
 		exchange_rate: 12_800

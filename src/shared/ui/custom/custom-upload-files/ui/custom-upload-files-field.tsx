@@ -58,7 +58,9 @@ export const CustomUploadFilesField: FC<ICustomUploadFilesFieldProps> = ({
 			}}
 			onFileRemove={(fileId) => {
 				if (Array.isArray(value)) {
-					onChange(value.filter((f: any) => f.id !== fileId));
+					onChange(
+						value.filter((f: TFileMetadata) => f.id !== fileId)
+					);
 				}
 			}}
 			isLoading={isLoading}

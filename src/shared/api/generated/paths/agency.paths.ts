@@ -2,6 +2,7 @@ import type {
 	AgencyFilesModel,
 	AgencyInfoModel,
 	AgencyInfoUpdate,
+	AgencyListResponse,
 	AgencyModel,
 	BodyAddAgencyDocumentsAgencyMeDocumentsPost,
 	BodyAddAgencyLogoAgencyMeLogoPost,
@@ -19,6 +20,15 @@ export const AGENCY_PATHS = {
 			body: CreateAgencySchema;
 			query: void;
 			response: AgencyModel;
+		}
+	} as const,
+	listAgencies: {
+		url: "/agency",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { q?: string | null; skip?: number; limit?: number };
+			response: AgencyListResponse;
 		}
 	} as const,
 	getAgencyInfo: {

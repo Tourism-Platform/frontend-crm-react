@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
 	Button,
 	CustomField,
+	CustomUploadFiles,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -23,6 +24,7 @@ import {
 import {
 	type IPayment,
 	useGetAvailableOrderIdsQuery,
+	usePaymentAttachments,
 	useUpdatePaymentMutation
 } from "@/entities/finance";
 
@@ -47,6 +49,17 @@ export const UpdatePayment: FC<IUpdatePaymentProps> = ({
 	const [open, setOpen] = useState<boolean>(false);
 	const [updatePayment, { isLoading }] = useUpdatePaymentMutation();
 
+	const {
+		initialFiles,
+		isLoading: isAttachmentsLoading,
+		loadingId,
+		addFiles,
+		removeFile
+	} = usePaymentAttachments({
+		paymentId: payment.id,
+		enabled: open
+	});
+
 	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
 
 	const orderOptions = useMemo(() => {
@@ -61,8 +74,7 @@ export const UpdatePayment: FC<IUpdatePaymentProps> = ({
 		defaultValues: {
 			orderId: payment.bookingId,
 			amount: payment.amount,
-			note: payment.note || "",
-			files: payment.files || []
+			note: payment.note || ""
 		},
 		mode: "onSubmit"
 	});
@@ -114,13 +126,28 @@ export const UpdatePayment: FC<IUpdatePaymentProps> = ({
 							{formFields.map(({ key, disabled, ...item }) => (
 								<CustomField
 									key={key}
-									control={form?.control}
+									control={form.control}
 									name={key}
 									t={t}
 									disabled={disabled}
 									{...item}
 								/>
 							))}
+						</div>
+						<div className="flex flex-col gap-2">
+							<p className="ml-1 text-sm font-medium">
+								{t("menu.update.form.fields.files.label")}:
+							</p>
+							<CustomUploadFiles
+								initialFiles={initialFiles}
+								maxFiles={1}
+								onFilesAdded={addFiles}
+								onFileRemove={removeFile}
+								isLoading={isAttachmentsLoading}
+								loadingId={loadingId}
+								showAllRemoveButton={false}
+								showTopTitle={false}
+							/>
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>

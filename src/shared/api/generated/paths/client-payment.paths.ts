@@ -1,5 +1,7 @@
 import type {
+	BodyAddAttachmentBookingPaymentPaymentIdAttachmentPost,
 	BodyCreatePaymentBookingPaymentPost,
+	ClientPaymentFile,
 	ClientPaymentListResponse,
 	ClientPaymentResponse,
 	ClientPaymentStatus,
@@ -72,10 +74,36 @@ export const CLIENT_PAYMENT_PATHS = {
 				response: ClientPaymentResponse;
 			}
 		}) as const,
-	downloadAttachment: (paymentId: string) =>
+	listAttachments: (paymentId: string) =>
 		({
 			url: `/booking/payment/${paymentId}/attachment`,
 			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: ClientPaymentFile[];
+			}
+		}) as const,
+	addAttachment: (paymentId: string) =>
+		({
+			url: `/booking/payment/${paymentId}/attachment`,
+			method: "POST",
+			_types: {} as {
+				body: BodyAddAttachmentBookingPaymentPaymentIdAttachmentPost;
+				query: void;
+				response: ClientPaymentFile;
+			}
+		}) as const,
+	downloadAttachment: (paymentId: string, fileId: string) =>
+		({
+			url: `/booking/payment/${paymentId}/attachment/${fileId}`,
+			method: "GET",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	removeAttachment: (paymentId: string, fileId: string) =>
+		({
+			url: `/booking/payment/${paymentId}/attachment/${fileId}`,
+			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const
 } as const;

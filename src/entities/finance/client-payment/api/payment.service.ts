@@ -1,5 +1,5 @@
 import { CLIENT_PAYMENT_PATHS, ENUM_API_TAGS } from "@/shared/api";
-import type { ClientPaymentResponse } from "@/shared/api";
+import type { ClientPaymentFile, ClientPaymentResponse } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -18,6 +18,12 @@ import type {
 	TPaymentBackend,
 	TPaymentListResponseInput
 } from "../types";
+
+const attachmentTag = (paymentId: string) =>
+	({
+		type: ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS,
+		id: `ATTACH_${paymentId}`
+	}) as const;
 
 export const clientPaymentApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -89,10 +95,52 @@ export const clientPaymentApi = authApi.injectEndpoints({
 				mapPaymentToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
-		downloadAttachment: builder.query<string, string>({
-			query: (id) => ({
-				...CLIENT_PAYMENT_PATHS.downloadAttachment(id)
+		listAttachments: builder.query<ClientPaymentFile[], string>({
+			query: (paymentId) => ({
+				...CLIENT_PAYMENT_PATHS.listAttachments(paymentId)
+			}),
+			providesTags: (_result, _error, paymentId) => [
+				attachmentTag(paymentId)
+			]
+		}),
+		addAttachment: builder.mutation<
+			ClientPaymentFile,
+			{ paymentId: string; file: File }
+		>({
+			query: ({ paymentId, file }) => {
+				const formData = new FormData();
+				formData.append("file", file);
+
+				return {
+					...CLIENT_PAYMENT_PATHS.addAttachment(paymentId),
+					body: formData
+				};
+			},
+			invalidatesTags: (_result, _error, { paymentId }) => [
+				attachmentTag(paymentId),
+				ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS
+			]
+		}),
+		downloadAttachment: builder.query<
+			Blob,
+			{ paymentId: string; fileId: string }
+		>({
+			query: ({ paymentId, fileId }) => ({
+				...CLIENT_PAYMENT_PATHS.downloadAttachment(paymentId, fileId),
+				responseHandler: (response) => response.blob()
 			})
+		}),
+		removeAttachment: builder.mutation<
+			void,
+			{ paymentId: string; fileId: string }
+		>({
+			query: ({ paymentId, fileId }) => ({
+				...CLIENT_PAYMENT_PATHS.removeAttachment(paymentId, fileId)
+			}),
+			invalidatesTags: (_result, _error, { paymentId }) => [
+				attachmentTag(paymentId),
+				ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS
+			]
 		}),
 		deletePayment: builder.mutation<void, string>({
 			query: (id) => ({
@@ -111,6 +159,9 @@ export const {
 	useDeletePaymentMutation,
 	useGetPaymentByIdQuery,
 	useConfirmPaymentMutation,
+	useListAttachmentsQuery,
+	useAddAttachmentMutation,
 	useDownloadAttachmentQuery,
-	useLazyDownloadAttachmentQuery
+	useLazyDownloadAttachmentQuery,
+	useRemoveAttachmentMutation
 } = clientPaymentApi;

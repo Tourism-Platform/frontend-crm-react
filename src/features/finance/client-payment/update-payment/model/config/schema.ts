@@ -13,6 +13,5 @@ export const UPDATE_PAYMENT_SCHEMA = z.object({
 			message: msg("menu.update.form.errors.amount.required")
 		})
 		.min(1, msg("menu.update.form.errors.amount.min")),
-	[ENUM_FORM_UPDATE_PAYMENT.NOTE]: z.string().optional(),
-	[ENUM_FORM_UPDATE_PAYMENT.FILES]: z.any().array().optional()
+	[ENUM_FORM_UPDATE_PAYMENT.NOTE]: z.string().optional()
 });

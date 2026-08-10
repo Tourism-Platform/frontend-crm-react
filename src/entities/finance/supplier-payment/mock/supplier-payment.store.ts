@@ -118,7 +118,7 @@ const toListRow = (
 	amount: payment.amount,
 	currency: payment.currency,
 	base_amount: payment.base_amount,
-	has_receipt: Boolean(payment.file),
+	receipt_count: payment.files.length,
 	status: payment.status,
 	paid_at: payment.paid_at
 });
@@ -188,7 +188,8 @@ export const updateSupplierPaymentInStore = (
 };
 
 export const uploadReceiptInStore = (
-	paymentId: string
+	paymentId: string,
+	fileName = "receipt.pdf"
 ): TSupplierPaymentBackend | null => {
 	const index = payments.findIndex((p) => p.payment_id === paymentId);
 
@@ -196,11 +197,48 @@ export const uploadReceiptInStore = (
 		return null;
 	}
 
+	const current = payments[index];
+	const fileId = `${paymentId}-receipt-${current.files.length + 1}-${Date.now()}`;
+
 	const updated: TSupplierPaymentBackend = {
-		...payments[index],
-		file: MOCK_RECEIPT_URL,
+		...current,
+		files: [
+			...current.files,
+			{
+				file_id: fileId,
+				file_name: fileName,
+				url: MOCK_RECEIPT_URL
+			}
+		],
 		status: CONFIRMED_STATUS,
 		paid_at: new Date().toISOString()
+	};
+
+	payments[index] = updated;
+
+	return updated;
+};
+
+export const removeReceiptInStore = (
+	paymentId: string,
+	fileId: string
+): TSupplierPaymentBackend | null => {
+	const index = payments.findIndex((p) => p.payment_id === paymentId);
+
+	if (index === -1) {
+		return null;
+	}
+
+	const current = payments[index];
+	const nextFiles = current.files.filter((file) => file.file_id !== fileId);
+
+	if (nextFiles.length === current.files.length) {
+		return null;
+	}
+
+	const updated: TSupplierPaymentBackend = {
+		...current,
+		files: nextFiles
 	};
 
 	payments[index] = updated;

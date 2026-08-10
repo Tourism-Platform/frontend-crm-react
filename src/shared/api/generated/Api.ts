@@ -838,6 +838,45 @@ export interface AgencyInfoUpdate {
 	country?: string | null;
 }
 
+/** AgencyListItem */
+export interface AgencyListItem {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/** Business Name */
+	business_name?: string | null;
+	/** Legal Name */
+	legal_name?: string | null;
+	/** Contact Person */
+	contact_person?: string | null;
+	/** Contact Email */
+	contact_email?: string | null;
+	/** Contact Phone */
+	contact_phone?: string | null;
+	/** Tax Id */
+	tax_id?: string | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
+	/** Website Url */
+	website_url?: string | null;
+	/** Logo Url */
+	logo_url?: string | null;
+}
+
+/** AgencyListResponse */
+export interface AgencyListResponse {
+	/** Total Count */
+	total_count: number;
+	/** Data */
+	data: AgencyListItem[];
+}
+
 /** AgencyModel */
 export interface AgencyModel {
 	/**
@@ -1005,6 +1044,15 @@ export interface BodyAddAgencyDocumentsAgencyMeDocumentsPost {
 
 /** Body_add_agency_logo_agency_me_logo_post */
 export interface BodyAddAgencyLogoAgencyMeLogoPost {
+	/**
+	 * File
+	 * @format binary
+	 */
+	file: File;
+}
+
+/** Body_add_attachment_booking_payment__payment_id__attachment_post */
+export interface BodyAddAttachmentBookingPaymentPaymentIdAttachmentPost {
 	/**
 	 * File
 	 * @format binary
@@ -2185,6 +2233,20 @@ export interface ClassicSwiftDetails {
 	bank_address: string;
 }
 
+/**
+ * ClientPaymentFile
+ * One attached proof document, addressed for download and removal.
+ */
+export interface ClientPaymentFile {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	file_id: string;
+	/** File Name */
+	file_name: string;
+}
+
 /** ClientPaymentListResponse */
 export interface ClientPaymentListResponse {
 	/** Total Count */
@@ -2233,8 +2295,8 @@ export interface ClientPaymentResponse {
 	status: ClientPaymentStatus;
 	/** Note */
 	note?: string | null;
-	/** Has Attachment */
-	has_attachment: boolean;
+	/** Attachment Count */
+	attachment_count: number;
 	/** Created At */
 	created_at?: string | null;
 	/** Updated At */
@@ -7533,6 +7595,23 @@ export interface SupplierModel {
 	deleted_at: string | null;
 }
 
+/**
+ * SupplierPaymentFile
+ * One attached confirmation document. ``url`` is a presigned link that
+ * expires, so it is regenerated on every read rather than stored.
+ */
+export interface SupplierPaymentFile {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	file_id: string;
+	/** Url */
+	url: string;
+	/** File Name */
+	file_name: string;
+}
+
 /** SupplierPaymentListResponse */
 export interface SupplierPaymentListResponse {
 	/** Total Count */
@@ -7546,9 +7625,10 @@ export interface SupplierPaymentListResponse {
  * One row of the browse table — enough to render, filter and sort, nothing
  * more.
  *
- * The receipt is reduced to ``has_receipt`` because the signed URL expires in
- * 900s and a list can stay open far longer than that; ``rate``, ``note`` and
- * the receipt itself are read from the detail call when a row is opened.
+ * Receipts are reduced to a ``receipt_count`` because their signed URLs expire
+ * in 900s and a list can stay open far longer than that; ``rate``, ``note`` and
+ * the documents themselves are read from the detail call when a row is
+ * opened.
  *
  * Check:
  * - ``GET /operator/supplier-payment/{payment_id}`` for the full row
@@ -7583,8 +7663,8 @@ export interface SupplierPaymentListRowInput {
 	currency: Currency;
 	/** Base Amount */
 	base_amount: number | string;
-	/** Has Receipt */
-	has_receipt: boolean;
+	/** Receipt Count */
+	receipt_count: number;
 	status: SupplierPaymentStatus;
 	/** Paid At */
 	paid_at: string | null;
@@ -7595,9 +7675,10 @@ export interface SupplierPaymentListRowInput {
  * One row of the browse table — enough to render, filter and sort, nothing
  * more.
  *
- * The receipt is reduced to ``has_receipt`` because the signed URL expires in
- * 900s and a list can stay open far longer than that; ``rate``, ``note`` and
- * the receipt itself are read from the detail call when a row is opened.
+ * Receipts are reduced to a ``receipt_count`` because their signed URLs expire
+ * in 900s and a list can stay open far longer than that; ``rate``, ``note`` and
+ * the documents themselves are read from the detail call when a row is
+ * opened.
  *
  * Check:
  * - ``GET /operator/supplier-payment/{payment_id}`` for the full row
@@ -7638,8 +7719,8 @@ export interface SupplierPaymentListRowOutput {
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	base_amount: string;
-	/** Has Receipt */
-	has_receipt: boolean;
+	/** Receipt Count */
+	receipt_count: number;
 	status: SupplierPaymentStatus;
 	/** Paid At */
 	paid_at: string | null;
@@ -7697,10 +7778,8 @@ export interface SupplierPaymentResponse {
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	base_amount: string;
-	/** File */
-	file: string | null;
-	/** File Name */
-	file_name: string | null;
+	/** Files */
+	files: SupplierPaymentFile[];
 	/** Note */
 	note: string | null;
 	status: SupplierPaymentStatus;
@@ -11145,6 +11224,19 @@ export interface UploadReceiptOperatorSupplierPaymentPaymentIdReceiptPostParams 
 	paymentId: string;
 }
 
+export interface RemoveReceiptOperatorSupplierPaymentPaymentIdReceiptFileIdDeleteParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
 export interface ListPaymentRoutesOperatorPaymentRoutesGetParams {
 	/**
 	 * Skip
@@ -11272,6 +11364,24 @@ export interface DeleteLogoSupplierSupplierIdLogoDeleteParams {
 	 * @format uuid
 	 */
 	supplierId: string;
+}
+
+export interface ListAgenciesAgencyGetParams {
+	/** Q */
+	q?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
 }
 
 export interface GetAgencyInfoByIdAgencyAgencyIdInfoGetParams {
@@ -11729,12 +11839,46 @@ export interface ConfirmPaymentBookingPaymentPaymentIdConfirmPostParams {
 	paymentId: string;
 }
 
-export interface DownloadAttachmentBookingPaymentPaymentIdAttachmentGetParams {
+export interface ListAttachmentsBookingPaymentPaymentIdAttachmentGetParams {
 	/**
 	 * Payment Id
 	 * @format uuid
 	 */
 	paymentId: string;
+}
+
+export interface AddAttachmentBookingPaymentPaymentIdAttachmentPostParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface DownloadAttachmentBookingPaymentPaymentIdAttachmentFileIdGetParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface RemoveAttachmentBookingPaymentPaymentIdAttachmentFileIdDeleteParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
 }
 
 export interface ListBookingReconciliationBookingReconciliationGetParams {
