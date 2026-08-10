@@ -1,15 +1,17 @@
-import type { BookingUpdate } from "@/shared/api";
 import { formatDateToISO } from "@/shared/utils";
+
+import { currencyConverter } from "@/entities/commission";
 
 import type {
 	IUpdateBookingRequest,
 	IUpdatedBooking,
-	TBookingModelBackend
+	TBookingModelBackend,
+	TBookingUpdateBackend
 } from "../types";
 
 export const mapUpdateBookingToBackend = (
 	data: IUpdateBookingRequest
-): BookingUpdate => ({
+): TBookingUpdateBackend => ({
 	date: formatDateToISO(data.date),
 	pax: data.pax,
 	comment: data.comment ?? null
@@ -24,5 +26,5 @@ export const mapBookingModelToUpdated = (
 	endDate: data.end_date,
 	pax: data.pax,
 	tourAmount: data.tour_amount,
-	tourCurrency: data.tour_currency
+	tourCurrency: currencyConverter.from(data.tour_currency)!
 });

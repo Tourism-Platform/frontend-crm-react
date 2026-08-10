@@ -6,6 +6,7 @@ import { isValidCountryCode } from "@/shared/lib/countries";
 
 import { hasTravellerPassportFile } from "@/entities/booking/order/converters/booking-pax.converters";
 
+import { ENUM_LANGUAGES, type ENUM_LANGUAGES_TYPE } from "../../landing";
 import { ENUM_FORM_PREVIEW_BOOKING } from "../types";
 
 const msg = i18nKey<TPreviewBookingPageKeys>();
@@ -92,12 +93,18 @@ export const PREVIEW_BOOKING_SCHEMA = z.object({
 	[ENUM_FORM_PREVIEW_BOOKING.OPTION_ID]: z
 		.string()
 		.min(1, { message: msg("step_1.options.errors.required") }),
+	[ENUM_FORM_PREVIEW_BOOKING.LANGUAGE]: z.nativeEnum(ENUM_LANGUAGES, {
+		error: msg("step_1.language.errors.required")
+	}),
 	[ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS]: z.array(TRAVELLER_DETAILS_SCHEMA)
 });
 
 export const PREVIEW_BOOKING_DEFAULT_VALUES = {
-	[ENUM_FORM_PREVIEW_BOOKING.DATE]: undefined,
+	[ENUM_FORM_PREVIEW_BOOKING.DATE]: undefined as Date | undefined,
 	[ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT]: 1,
 	[ENUM_FORM_PREVIEW_BOOKING.OPTION_ID]: "",
+	[ENUM_FORM_PREVIEW_BOOKING.LANGUAGE]: undefined as
+		| ENUM_LANGUAGES_TYPE
+		| undefined,
 	[ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS]: [{}]
-} satisfies z.input<typeof PREVIEW_BOOKING_SCHEMA>;
+};

@@ -10,6 +10,7 @@ import { pickupMapper } from "./pickup.converters";
 export const mapUpdateLandingToBackend = (
 	frontend: TLandingSchema
 ): TUpdateLandingImageBackendBody => ({
+	title: frontend.title,
 	description: frontend.description,
 	amenities_included: frontend.included ?? [],
 	amenities_not_included: frontend.not_included ?? [],
@@ -22,6 +23,7 @@ export const mapUpdateLandingToBackend = (
 export const mapLandingToFrontend = (
 	backend: TGetLandingBackendResponse | TUpdateLandingBackendResponse
 ): TLandingSchema => ({
+	title: backend.title || "",
 	description: backend.description || "",
 	included: backend.amenities_included ?? [],
 	not_included: backend.amenities_not_included ?? [],

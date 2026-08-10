@@ -34,6 +34,14 @@
 				"max": "Maximum 20 travellers"
 			}
 		},
+		"language": {
+			"title": "Tour language",
+			"description": "Choose one of the languages offered for this tour.",
+			"locked": "Language cannot be changed after booking is created.",
+			"errors": {
+				"required": "Language must be selected"
+			}
+		},
 		"options": {
 			"title": "Choose option",
 			"description": "You can change this selection — it affects the final price.",
@@ -173,5 +181,11 @@
 		"not_selected": "Not selected",
 		"days": "days",
 		"person": "person"
+	},
+	"toasts": {
+		"create_failed": "Failed to create booking",
+		"update_failed": "Failed to update booking",
+		"remove_traveller_failed": "Failed to remove traveller",
+		"submit_failed": "Failed to submit booking"
 	}
 }

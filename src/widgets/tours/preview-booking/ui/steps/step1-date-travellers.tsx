@@ -13,9 +13,17 @@ import {
 	CardContent,
 	CardDescription,
 	CardHeader,
-	CardTitle
+	CardTitle,
+	CustomOptionTabs,
+	CustomOptionTabsList,
+	CustomOptionTabsTrigger
 } from "@/shared/ui";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
+import {
+	type ENUM_LANGUAGES_TYPE,
+	LANGUAGES_LABELS
+} from "@/entities/tour/landing";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	type TPreviewBookingSchema
@@ -28,6 +36,7 @@ interface IStep1Props {
 	onMonthChange: (month: Date) => void;
 	options: IPreviewOptionCard[];
 	availableDates: Date[];
+	availableLanguages: ENUM_LANGUAGES_TYPE[];
 	isOptionsLoading: boolean;
 	isOptionLocked?: boolean;
 }
@@ -36,15 +45,18 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 	onMonthChange,
 	options,
 	availableDates,
+	availableLanguages,
 	isOptionsLoading,
 	isOptionLocked = false
 }) => {
-	const { t } = useTranslation("preview_booking_page");
+	const { t } = useTranslation(["preview_booking_page", "options"]);
 	const isMobile = useIsMobile();
 	const form = useFormContext<TPreviewBookingSchema>();
+	const languagesLabels = useValueToTranslateLabel(LANGUAGES_LABELS);
 	const count = form.watch(ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT);
 	const selectedOptionId = form.watch(ENUM_FORM_PREVIEW_BOOKING.OPTION_ID);
 	const selectedDate = form.watch(ENUM_FORM_PREVIEW_BOOKING.DATE);
+	const selectedLanguage = form.watch(ENUM_FORM_PREVIEW_BOOKING.LANGUAGE);
 
 	useEffect(() => {
 		const currentArr =
@@ -63,6 +75,71 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 
 	return (
 		<div className="flex w-full flex-col gap-6">
+			{!!availableLanguages.length && (
+				<Card>
+					<CardHeader>
+						<CardTitle className="text-lg">
+							{t("step_1.language.title")}
+						</CardTitle>
+						<CardDescription>
+							{isOptionLocked
+								? t("step_1.language.locked")
+								: t("step_1.language.description")}
+						</CardDescription>
+					</CardHeader>
+					<CardContent className="flex flex-col gap-4 border-t pt-4">
+						<CustomOptionTabs
+							value={selectedLanguage}
+							onValueChange={(value) => {
+								if (isOptionLocked) return;
+								form.setValue(
+									ENUM_FORM_PREVIEW_BOOKING.LANGUAGE,
+									value as ENUM_LANGUAGES_TYPE,
+									{ shouldValidate: true }
+								);
+							}}
+						>
+							<CustomOptionTabsList
+								className="w-fit gap-1"
+								style={{
+									gridTemplateColumns: `repeat(${availableLanguages.length}, minmax(0, auto))`
+								}}
+							>
+								{availableLanguages.map((language) => {
+									const label =
+										languagesLabels.find(
+											(item) => item.value === language
+										)?.label ?? language;
+
+									return (
+										<CustomOptionTabsTrigger
+											key={language}
+											value={language}
+											variant="outline"
+											disabled={isOptionLocked}
+										>
+											{label}
+										</CustomOptionTabsTrigger>
+									);
+								})}
+							</CustomOptionTabsList>
+						</CustomOptionTabs>
+
+						{form.formState.errors[
+							ENUM_FORM_PREVIEW_BOOKING.LANGUAGE
+						] && (
+							<p className="text-sm text-destructive">
+								{t(
+									form.formState.errors[
+										ENUM_FORM_PREVIEW_BOOKING.LANGUAGE
+									]?.message as TPreviewBookingPageKeys
+								)}
+							</p>
+						)}
+					</CardContent>
+				</Card>
+			)}
+
 			<Card>
 				<CardHeader>
 					<CardTitle className="text-lg">

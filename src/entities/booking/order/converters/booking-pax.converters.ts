@@ -1,4 +1,4 @@
-import { Gender, type PaxCreate, type PaxUpdate } from "@/shared/api";
+import { Gender } from "@/shared/api";
 import type { TFileMetadata } from "@/shared/hooks";
 import { formatDate, formatDateToISO } from "@/shared/utils";
 
@@ -8,7 +8,9 @@ import type {
 	IPaxReviewDetail,
 	IPaxReviewItem,
 	TBookingPaxBackend,
-	TBookingPaxListBackendResponce
+	TBookingPaxListBackendResponce,
+	TPaxCreateBackend,
+	TPaxUpdateBackend
 } from "../types";
 
 const mapGenderToFrontend = (gender: Gender): ENUM_GENDER_OPTIONS_TYPE =>
@@ -170,7 +172,7 @@ export const mapTravellerToPaxCreate = (
 		>
 	> &
 		Pick<ITravellerPaxInput, "note">
-): PaxCreate => ({
+): TPaxCreateBackend => ({
 	full_name: `${traveller.first_name} ${traveller.last_name}`.trim(),
 	gender: traveller.gender,
 	nationality: traveller.nationality,
@@ -194,7 +196,7 @@ export const mapTravellerToPaxUpdate = (
 		>
 	> &
 		Pick<ITravellerPaxInput, "note">
-): PaxUpdate => ({
+): TPaxUpdateBackend => ({
 	full_name: `${traveller.first_name} ${traveller.last_name}`.trim(),
 	gender: traveller.gender,
 	nationality: traveller.nationality,

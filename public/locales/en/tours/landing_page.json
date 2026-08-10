@@ -14,6 +14,14 @@
 			"title": "Overview",
 			"description": "Brief description of the tour",
 			"fields": {
+				"title": {
+					"label": "Tour title",
+					"placeholder": "Enter tour title...",
+					"errors": {
+						"min": "Title is required",
+						"max": "Title is too long"
+					}
+				},
 				"description": {
 					"label": "Description",
 					"placeholder": "Enter tour description...",

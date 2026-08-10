@@ -1,4 +1,4 @@
-import type { Currency } from "@/shared/api";
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
 export interface IUpdateBookingRequest {
 	id: string;
@@ -14,5 +14,5 @@ export interface IUpdatedBooking {
 	endDate: string;
 	pax: number;
 	tourAmount: string;
-	tourCurrency: Currency;
+	tourCurrency: ENUM_CURRENCY_OPTIONS_TYPE;
 }

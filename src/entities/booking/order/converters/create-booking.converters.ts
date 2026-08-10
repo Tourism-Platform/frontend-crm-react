@@ -1,18 +1,22 @@
-import type { BookingCreate } from "@/shared/api";
 import { formatDateToISO } from "@/shared/utils";
+
+import { currencyConverter } from "@/entities/commission";
+import { languageMapper } from "@/entities/tour/landing";
 
 import type {
 	ICreateBookingRequest,
 	ICreatedBooking,
+	TBookingCreateBackend,
 	TBookingModelBackend
 } from "../types";
 
 export const mapCreateBookingToBackend = (
 	data: ICreateBookingRequest
-): BookingCreate => ({
+): TBookingCreateBackend => ({
 	tour_option_id: data.tourOptionId,
 	date: formatDateToISO(data.date),
 	pax: data.pax,
+	lang: languageMapper.to(data.lang)!,
 	comment: data.comment ?? null
 });
 
@@ -25,5 +29,5 @@ export const mapBookingModelToCreated = (
 	endDate: data.end_date,
 	pax: data.pax,
 	tourAmount: data.tour_amount,
-	tourCurrency: data.tour_currency
+	tourCurrency: currencyConverter.from(data.tour_currency)!
 });

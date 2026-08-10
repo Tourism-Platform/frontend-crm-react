@@ -7,6 +7,15 @@ import { ENUM_FORM_LANDING, ENUM_PICKUP_TYPE } from "../types";
 const msg = i18nKey<TLandingPageKeys>();
 
 export const LANDING_SCHEMA = z.object({
+	[ENUM_FORM_LANDING.TITLE]: z
+		.string()
+		.trim()
+		.min(1, {
+			message: msg("form.overview.fields.title.errors.min")
+		})
+		.max(255, {
+			message: msg("form.overview.fields.title.errors.max")
+		}),
 	[ENUM_FORM_LANDING.DESCRIPTION]: z
 		.string()
 		.trim()

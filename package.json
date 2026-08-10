@@ -9,6 +9,7 @@
 		"codegen:paths": "tsx --env-file=.env scripts/generate-api-paths.ts",
 		"codegen": "npm run codegen:types && npm run codegen:paths && prettier --write \"src/shared/api/**/*.{js,jsx,ts,tsx,scss}\"",
 		"seed:tour": "tsx --env-file=.env scripts/seeders/tour/index.ts",
+		"seed:tour-flow": "tsx --env-file=.env scripts/seeders/tour-flow/index.ts",
 		"seed:tourbuilder": "tsx --env-file=.env scripts/seeders/tourbuilder/index.ts",
 		"seed:tourbuilder:all": "tsx --env-file=.env scripts/seeders/tourbuilder/index.ts --all --concurrency=3",
 		"seed:staff": "tsx --env-file=.env scripts/seeders/staff/index.ts",

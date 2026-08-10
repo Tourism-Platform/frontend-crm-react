@@ -71,6 +71,7 @@ const PreviewBookingBase: FC = () => {
 		isUpdating,
 		submittedBooking,
 		tourData,
+		availableLanguages,
 		options,
 		availableDates,
 		handleCalendarMonthChange,
@@ -180,6 +181,7 @@ const PreviewBookingBase: FC = () => {
 								onMonthChange={handleCalendarMonthChange}
 								options={options}
 								availableDates={availableDates}
+								availableLanguages={availableLanguages}
 								isOptionsLoading={isOptionsLoading}
 								isOptionLocked={!!bookingId}
 							/>

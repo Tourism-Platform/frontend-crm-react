@@ -1,8 +1,3 @@
-import type {
-	OperatorItineraryEventOutput,
-	OperatorItineraryPackageOutput,
-	TourMinMaxCostSchemaOutput
-} from "@/shared/api";
 import { formatToDollars } from "@/shared/utils";
 
 import { ENUM_EVENT } from "@/entities/tour";
@@ -12,19 +7,22 @@ import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types";
 import type {
 	IBookingEventAvailability,
 	IOrderTourReviewItem,
-	TOperatorBookingItineraryBackend
+	TOperatorBookingItineraryBackend,
+	TOperatorItineraryEventBackend,
+	TOperatorItineraryPackageBackend,
+	TTourMinMaxCostBackend
 } from "../types";
 
-const formatCost = (cost: TourMinMaxCostSchemaOutput): string => {
+const formatCost = (cost: TTourMinMaxCostBackend): string => {
 	const { min, max } = cost;
 	if (min.val === max.val) return formatToDollars(min.val);
 	return `${formatToDollars(min.val)} - ${formatToDollars(max.val)}`;
 };
 
 const formatRevenue = (
-	cost: TourMinMaxCostSchemaOutput,
-	markup: TourMinMaxCostSchemaOutput,
-	fees: TourMinMaxCostSchemaOutput
+	cost: TTourMinMaxCostBackend,
+	markup: TTourMinMaxCostBackend,
+	fees: TTourMinMaxCostBackend
 ): string =>
 	formatCost({
 		min: {
@@ -38,7 +36,7 @@ const formatRevenue = (
 	});
 
 const mapEventToItem = (
-	backend: OperatorItineraryEventOutput
+	backend: TOperatorItineraryEventBackend
 ): IOrderTourReviewItem => {
 	const { event_id, event, cost, markup, fees, selected_option_index } =
 		backend;
@@ -91,7 +89,7 @@ const mapEventToItem = (
 };
 
 const mapPackageToItem = (
-	pkg: OperatorItineraryPackageOutput
+	pkg: TOperatorItineraryPackageBackend
 ): IOrderTourReviewItem => ({
 	id: pkg.package_id,
 	item: pkg.name,

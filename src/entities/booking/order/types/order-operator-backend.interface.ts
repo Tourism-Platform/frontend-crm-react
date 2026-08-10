@@ -8,6 +8,14 @@ export type TOperatorBookingItineraryBackend = ReturnType<
 	typeof BOOKING_ORDER_OPERATOR_PATHS.getOperatorBookingItinerary
 >["_types"]["response"];
 
+export type TOperatorItineraryEventBackend =
+	TOperatorBookingItineraryBackend["events"][number];
+
+export type TOperatorItineraryPackageBackend =
+	TOperatorBookingItineraryBackend["packages"][number];
+
+export type TTourMinMaxCostBackend = TOperatorBookingItineraryBackend["cost"];
+
 export type TOperatorBookingStatusResponseBackend = ReturnType<
 	typeof BOOKING_ORDER_OPERATOR_PATHS.transitionBookingStatus
 >["_types"]["response"];

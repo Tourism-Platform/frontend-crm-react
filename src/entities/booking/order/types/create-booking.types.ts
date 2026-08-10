@@ -1,9 +1,11 @@
-import type { Currency } from "@/shared/api";
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+import type { ENUM_LANGUAGES_TYPE } from "@/entities/tour/landing";
 
 export interface ICreateBookingRequest {
 	tourOptionId: string;
 	date: Date | string;
 	pax: number;
+	lang: ENUM_LANGUAGES_TYPE;
 	comment?: string | null;
 }
 
@@ -14,7 +16,7 @@ export interface ICreatedBooking {
 	endDate: string;
 	pax: number;
 	tourAmount: string;
-	tourCurrency: Currency;
+	tourCurrency: ENUM_CURRENCY_OPTIONS_TYPE;
 }
 
 export type TSubmittedBooking = ICreatedBooking;

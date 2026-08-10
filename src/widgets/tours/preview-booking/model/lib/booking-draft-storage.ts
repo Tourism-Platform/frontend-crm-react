@@ -5,6 +5,7 @@ export interface IBookingDraft {
 	date: string;
 	travellers_count: number;
 	option_id: string;
+	language: string;
 	tourId: string;
 }
 

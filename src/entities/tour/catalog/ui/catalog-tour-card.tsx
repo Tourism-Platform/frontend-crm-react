@@ -1,15 +1,14 @@
+import {
+	CalendarMarkIcon,
+	HealthIcon,
+	UsersGroupRoundedIcon
+} from "@solar-icons/react/outline";
 import { Image, Layers } from "lucide-react";
 import { type FC, type ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import {
-	CalendarDaysIcon,
-	HealthIcon,
-	MapPinIcon,
-	UsersOutlineIcon,
-	tourPlaceholder
-} from "@/shared/assets";
+import { MapPinIcon, tourPlaceholder } from "@/shared/assets";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import {
@@ -62,7 +61,7 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 	const metaItems: TMetaItem[] = [
 		{
 			key: "duration",
-			icon: <CalendarDaysIcon className="size-3.5 shrink-0" />,
+			icon: <CalendarMarkIcon className="size-3.5 shrink-0" />,
 			label: t("card.duration", {
 				days: tour.days ?? 0,
 				nights: tour.nights ?? 0,
@@ -72,7 +71,7 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 		},
 		{
 			key: "group",
-			icon: <UsersOutlineIcon className="size-3.5 shrink-0" />,
+			icon: <UsersGroupRoundedIcon className="size-3.5 shrink-0" />,
 			label: groupLabel
 		},
 		{

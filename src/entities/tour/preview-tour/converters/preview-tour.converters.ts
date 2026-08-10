@@ -17,7 +17,7 @@ export const mapPreviewTourToFrontend = (
 	description: backend.description || "",
 	images: mapPreviewImagesToUrls(backend.images ?? []),
 	cities: [],
-	languages: languageMapper.fromMany(backend.languages),
+	languages: languageMapper.fromMany(backend.languages ?? []),
 	included: backend.amenities_included ?? [],
 	not_included: backend.amenities_not_included ?? [],
 	pickup_type: pickupMapper.fromMany(backend.pickup_type),

@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
@@ -32,8 +33,10 @@ import {
 	type TPreviewBookingSchema,
 	useGetPreviewTourGeneralQuery,
 	useGetPreviewTourOptionsQuery,
+	useGetPreviewTourQuery,
 	useGetPreviewTourScheduleQuery
 } from "@/entities/tour";
+import type { ENUM_LANGUAGES_TYPE } from "@/entities/tour/landing";
 
 import {
 	getInitialPreviewCalendarRange,
@@ -43,6 +46,7 @@ import {
 } from "../lib";
 
 export const usePreviewBooking = () => {
+	const { t } = useTranslation("preview_booking_page");
 	const navigate = useNavigate();
 	const { tourId = "", bookingId: bookingIdParam } = useParams<{
 		tourId: string;
@@ -61,6 +65,12 @@ export const usePreviewBooking = () => {
 
 	const { data: tourData, isLoading: isTourLoading } =
 		useGetPreviewTourGeneralQuery(tourId, { skip: !tourId });
+
+	const { data: previewLanding } = useGetPreviewTourQuery(tourId, {
+		skip: !tourId
+	});
+
+	const availableLanguages = previewLanding?.languages ?? [];
 
 	const {
 		data: options = [],
@@ -122,6 +132,7 @@ export const usePreviewBooking = () => {
 				date: parseStoredLocalDate(draft.date),
 				travellers_count: draft.travellers_count,
 				option_id: draft.option_id,
+				language: draft.language as ENUM_LANGUAGES_TYPE,
 				travellers: Array.from(
 					{ length: draft.travellers_count },
 					() => ({})
@@ -136,6 +147,26 @@ export const usePreviewBooking = () => {
 			restoreDraft(bookingIdParam);
 		}
 	}, [bookingIdParam, restoreDraft]);
+
+	useEffect(() => {
+		if (bookingIdParam || !availableLanguages.length) return;
+
+		const currentLanguage = form.getValues(
+			ENUM_FORM_PREVIEW_BOOKING.LANGUAGE
+		);
+		if (
+			currentLanguage &&
+			availableLanguages.includes(currentLanguage as ENUM_LANGUAGES_TYPE)
+		) {
+			return;
+		}
+
+		form.setValue(
+			ENUM_FORM_PREVIEW_BOOKING.LANGUAGE,
+			availableLanguages[0],
+			{ shouldValidate: true }
+		);
+	}, [availableLanguages, bookingIdParam, form]);
 
 	useEffect(() => {
 		hasSyncedPax.current = false;
@@ -159,9 +190,10 @@ export const usePreviewBooking = () => {
 
 	const handleNextStep = async () => {
 		const isValid = await form.trigger([
-			"date",
-			"travellers_count",
-			"option_id"
+			ENUM_FORM_PREVIEW_BOOKING.DATE,
+			ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT,
+			ENUM_FORM_PREVIEW_BOOKING.OPTION_ID,
+			ENUM_FORM_PREVIEW_BOOKING.LANGUAGE
 		]);
 
 		if (!isValid) return;
@@ -180,6 +212,7 @@ export const usePreviewBooking = () => {
 					date: formatDateToISO(formData.date),
 					travellers_count: formData.travellers_count,
 					option_id: formData.option_id,
+					language: formData.language,
 					tourId
 				});
 
@@ -191,13 +224,15 @@ export const usePreviewBooking = () => {
 			const created = await createBookingOrder({
 				tourOptionId: formData.option_id,
 				date: formData.date,
-				pax: formData.travellers_count
+				pax: formData.travellers_count,
+				lang: formData.language
 			}).unwrap();
 
 			saveBookingDraft(created.id, {
 				date: formatDateToISO(formData.date),
 				travellers_count: formData.travellers_count,
 				option_id: formData.option_id,
+				language: formData.language,
 				tourId
 			});
 
@@ -213,8 +248,8 @@ export const usePreviewBooking = () => {
 		} catch {
 			toast.error(
 				bookingIdParam
-					? "Failed to update booking"
-					: "Failed to create booking"
+					? t("toasts.update_failed")
+					: t("toasts.create_failed")
 			);
 		}
 	};
@@ -260,7 +295,7 @@ export const usePreviewBooking = () => {
 				current.filter((_, i) => i !== index)
 			);
 		} catch {
-			toast.error("Failed to remove traveller");
+			toast.error(t("toasts.remove_traveller_failed"));
 		}
 	};
 
@@ -309,7 +344,7 @@ export const usePreviewBooking = () => {
 			setSubmittedBooking(submitted);
 			setCurrentStep(3);
 		} catch {
-			toast.error("Failed to submit booking");
+			toast.error(t("toasts.submit_failed"));
 		}
 	};
 
@@ -338,6 +373,7 @@ export const usePreviewBooking = () => {
 		bookingId: bookingIdParam,
 		submittedBooking,
 		tourData,
+		availableLanguages,
 		options,
 		availableDates,
 		handleCalendarMonthChange,

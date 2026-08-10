@@ -4,7 +4,7 @@ import { createEnumMapper } from "@/shared/utils";
 import {
 	ENUM_AVAILABILITY_STATUS,
 	type ENUM_AVAILABILITY_STATUS_TYPE
-} from "../types/availability-status.types";
+} from "../types";
 
 const MAP_AVAILABILITY_STATUS: Partial<
 	Record<ENUM_AVAILABILITY_STATUS_TYPE, AvailabilityStatus>

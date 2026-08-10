@@ -21,6 +21,14 @@ const OverviewInfoBase: FC<IOverviewInfoProps> = ({ form }) => {
 				{t("form.overview.description")}
 			</p>
 			<CustomField
+				name={ENUM_FORM_LANDING.TITLE}
+				control={control}
+				label={t("form.overview.fields.title.label")}
+				placeholder={t("form.overview.fields.title.placeholder")}
+				fieldType="input"
+				t={t}
+			/>
+			<CustomField
 				name={ENUM_FORM_LANDING.DESCRIPTION}
 				control={control}
 				label={t("form.overview.fields.description.label")}

@@ -2,6 +2,7 @@ import { ENUM_API_TAGS, TOUR_LANDING_PAGE_PATHS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
+import { getTourStatsTag } from "../../tour/constants/tour-stats-tag";
 import {
 	mapLandingImagesToFrontend,
 	mapLandingToFrontend,
@@ -34,7 +35,12 @@ export const tourLandingApi = authApi.injectEndpoints({
 				body: mapUpdateLandingToBackend(data)
 			}),
 			transformResponse: (response: TUpdateLandingBackendResponse) =>
-				mapLandingToFrontend(response)
+				mapLandingToFrontend(response),
+			invalidatesTags: (_result, _error, { tourId }) => [
+				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${tourId}` },
+				getTourStatsTag(tourId),
+				ENUM_API_TAGS.TOURS
+			]
 		}),
 		listLandingImages: builder.query<ILandingImageSchema[], string>({
 			query: (tourId) => ({

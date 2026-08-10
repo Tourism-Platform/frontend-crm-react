@@ -6,6 +6,7 @@ export const ENUM_FORM_PREVIEW_BOOKING = {
 	DATE: "date",
 	TRAVELLERS_COUNT: "travellers_count",
 	OPTION_ID: "option_id",
+	LANGUAGE: "language",
 	TRAVELLERS: "travellers",
 	FIRST_NAME: "first_name",
 	LAST_NAME: "last_name",

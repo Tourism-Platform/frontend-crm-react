@@ -1,11 +1,17 @@
 import type {
 	BOOKING_PASSENGER_PATHS,
 	OperatorFilesModel,
+	PaxCreate,
 	PaxFileRef,
+	PaxUpdate,
 	PaxWithFiles
 } from "@/shared/api";
 
 export type TBookingPaxBackend = PaxWithFiles;
+
+export type TPaxCreateBackend = PaxCreate;
+
+export type TPaxUpdateBackend = PaxUpdate;
 
 export type TBookingPaxListBackendResponce = ReturnType<
 	typeof BOOKING_PASSENGER_PATHS.listPassengerInfo
