@@ -12,6 +12,8 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
+import { GoogleLoginButton } from "@/features/auth";
+
 import {
 	ENUM_FORM_LOGIN,
 	ENUM_LOGIN,
@@ -27,6 +29,7 @@ interface ISignInFormProps {
 
 const SignInFormBase: FC<ISignInFormProps> = ({ form, isLoading, error }) => {
 	const { t } = useTranslation("login_page");
+
 	return (
 		<div className="flex flex-col gap-6">
 			<div className="space-y-1 text-center">
@@ -65,9 +68,7 @@ const SignInFormBase: FC<ISignInFormProps> = ({ form, isLoading, error }) => {
 				<p>{t("form.buttons.sign_in")}</p>
 			</Button>
 			<FieldSeparator>{t("form.sign_in.continue")}</FieldSeparator>
-			<Button variant="outline" type="button">
-				{t("form.buttons.google")}
-			</Button>
+			<GoogleLoginButton />
 			<div className="text-center">
 				{t("form.sign_in.sign_up")}{" "}
 				<span
