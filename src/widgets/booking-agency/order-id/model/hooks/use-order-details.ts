@@ -2,12 +2,10 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-	EMPTY_ORDER_TOUR_REVIEW_SUMMARY,
-	buildOrderTourReviewData,
-	mapAvailabilityToTourReviewItems,
+	mapBookingItineraryToTourReviewItems,
 	mapBookingPaxListToPaxReview,
 	useGetAgencyBookingOrderQuery,
-	useListBookingAvailabilityQuery,
+	useGetBookingItineraryQuery,
 	useListPassengerInfoQuery
 } from "@/entities/booking";
 
@@ -21,11 +19,11 @@ export const useOrderDetails = (orderId: string) => {
 	});
 	const order = orderQuery.data;
 
-	const paxQuery = useListPassengerInfoQuery(orderId, {
+	const itineraryQuery = useGetBookingItineraryQuery(orderId, {
 		skip: !orderId
 	});
 
-	const availabilityQuery = useListBookingAvailabilityQuery(orderId, {
+	const paxQuery = useListPassengerInfoQuery(orderId, {
 		skip: !orderId
 	});
 
@@ -44,32 +42,23 @@ export const useOrderDetails = (orderId: string) => {
 		[paxQuery.data]
 	);
 
-	const tourReview = useMemo(() => {
-		if (!order) {
-			return { items: [], summary: EMPTY_ORDER_TOUR_REVIEW_SUMMARY };
-		}
-
-		const items = mapAvailabilityToTourReviewItems(
-			availabilityQuery.data ?? []
-		);
-
-		return buildOrderTourReviewData(items, order);
-	}, [order, availabilityQuery.data]);
+	const tourReviewItems = useMemo(
+		() => mapBookingItineraryToTourReviewItems(itineraryQuery.data),
+		[itineraryQuery.data]
+	);
 
 	const isLoading =
-		orderQuery.isLoading ||
-		paxQuery.isLoading ||
-		availabilityQuery.isLoading;
+		orderQuery.isLoading || itineraryQuery.isLoading || paxQuery.isLoading;
 
 	return {
 		order,
 		orderItems,
 		contactItems,
 		paxDetails,
-		tourReview,
+		tourReviewItems,
 		isLoading,
 		isOrderLoading: orderQuery.isLoading,
 		isPaxLoading: paxQuery.isLoading,
-		isAvailabilityLoading: availabilityQuery.isLoading
+		isItineraryLoading: itineraryQuery.isLoading
 	};
 };

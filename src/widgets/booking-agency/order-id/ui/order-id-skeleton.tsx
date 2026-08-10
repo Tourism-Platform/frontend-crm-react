@@ -23,8 +23,8 @@ export const OrderIdSkeleton: FC = () => {
 				<Skeleton className="h-[280px] w-full rounded-xl" />
 			</div>
 
-			{/* Detailed Info Skeleton */}
-			<Skeleton className="h-[126px] w-full rounded-xl" />
+			{/* Tour review + pax */}
+			<Skeleton className="h-[400px] w-full rounded-xl" />
 			<Skeleton className="h-[400px] w-full rounded-xl" />
 		</div>
 	);

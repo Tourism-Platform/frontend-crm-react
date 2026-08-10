@@ -12,7 +12,6 @@ import { OrderInfoCard } from "./order-info-card";
 import { OrderNotFound } from "./order-not-found";
 import { OrderPaxReview } from "./order-pax-review";
 import { OrderReport } from "./order-report";
-import { OrderSupplierPayments } from "./order-supplier-payments";
 import { OrderTourReview } from "./order-tour-review";
 
 export const OrderId: FC = () => {
@@ -24,7 +23,7 @@ export const OrderId: FC = () => {
 		orderItems,
 		contactItems,
 		paxDetails,
-		tourReview,
+		tourReviewItems,
 		isLoading
 	} = useOrderDetails(orderId || "");
 
@@ -35,11 +34,6 @@ export const OrderId: FC = () => {
 	if (!order) {
 		return <OrderNotFound />;
 	}
-
-	const showSupplierPayments =
-		order.status === ENUM_ORDER_STATUS.BOOKING ||
-		order.status === ENUM_ORDER_STATUS.IN_PROGRESS ||
-		order.status === ENUM_ORDER_STATUS.COMPLETED;
 
 	return (
 		<div className="flex flex-col gap-8 text-foreground">
@@ -64,18 +58,7 @@ export const OrderId: FC = () => {
 			</div>
 
 			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (
-				<OrderTourReview
-					bookingId={orderId || ""}
-					items={tourReview.items}
-					summary={tourReview.summary}
-					orderStatus={order.status}
-				/>
-			)}
-			{showSupplierPayments && (
-				<OrderSupplierPayments
-					items={order.supplierPayments || []}
-					orderStatus={order.status}
-				/>
+				<OrderTourReview items={tourReviewItems} />
 			)}
 
 			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (

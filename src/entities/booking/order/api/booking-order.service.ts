@@ -17,6 +17,7 @@ import type {
 	IUpdateBookingRequest,
 	IUpdatedBooking,
 	TBookingCancelBackend,
+	TBookingItineraryBackend,
 	TBookingModelBackend,
 	TBookingOrderBackendResponse,
 	TBookingOrderPaginatedResponse,
@@ -36,6 +37,14 @@ export const bookingOrderApi = authApi.injectEndpoints({
 			transformResponse: (response: TBookingOrderBackendResponse) =>
 				mapBookingOrderPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.BOOKING_ORDERS]
+		}),
+		getBookingItinerary: builder.query<TBookingItineraryBackend, string>({
+			query: (bookingId) => ({
+				...BOOKING_ORDER_PATHS.getBookingItinerary(bookingId)
+			}),
+			providesTags: (_result, _error, id) => [
+				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
+			]
 		}),
 		createBookingOrder: builder.mutation<
 			ICreatedBooking,
@@ -90,6 +99,7 @@ export const bookingOrderApi = authApi.injectEndpoints({
 
 export const {
 	useGetBookingOrdersQuery,
+	useGetBookingItineraryQuery,
 	useCreateBookingOrderMutation,
 	useUpdateBookingOrderMutation,
 	useSubmitBookingOrderMutation,

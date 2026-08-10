@@ -5,19 +5,11 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
-import {
-	ENUM_ORDER_STATUS,
-	type ENUM_ORDER_STATUS_TYPE,
-	type IOrderTourReviewItem
-} from "@/entities/booking";
-import { ENUM_EVENT, EVENT_METADATA } from "@/entities/tour";
-
-import { ApplyReviewAction } from "@/features/booking";
+import { type IOrderTourReviewItem } from "@/entities/booking";
+import { EVENT_METADATA } from "@/entities/tour";
 
 export const TOUR_REVIEW_COLUMNS = (
-	t: TFunction<"order_id_page", undefined>,
-	orderStatus: ENUM_ORDER_STATUS_TYPE,
-	bookingId: string
+	t: TFunction<"order_id_page", undefined>
 ): ColumnDef<IOrderTourReviewItem>[] => {
 	return [
 		{
@@ -70,58 +62,6 @@ export const TOUR_REVIEW_COLUMNS = (
 					</div>
 				);
 			}
-		},
-		{
-			accessorKey: "supplier",
-			header: t("tour_review.table.supplier")
-		},
-		{
-			accessorKey: "plannedCost",
-			header: t("tour_review.table.planned_cost")
-		},
-		{
-			accessorKey: "estimatedRevenue",
-			header: t("tour_review.table.estimated_revenue")
-		},
-		...(orderStatus === ENUM_ORDER_STATUS.IN_PROCESSING
-			? [
-					{
-						id: "action",
-						header: () => (
-							<span className="sr-only">
-								{t("tour_review.table.action")}
-							</span>
-						),
-						cell: ({ row }) => {
-							const { type, eventId, optionIndex, availability } =
-								row.original;
-							const depth = row.depth;
-							const parentRow = row.getParentRow?.();
-							const parentType = parentRow?.original?.type;
-
-							if (type === ENUM_EVENT.MULTIPLY_OPTION) {
-								return null;
-							}
-
-							if (
-								depth > 0 &&
-								parentType !== ENUM_EVENT.MULTIPLY_OPTION
-							) {
-								return null;
-							}
-
-							return (
-								<ApplyReviewAction
-									bookingId={bookingId}
-									eventId={eventId}
-									optionIndex={optionIndex}
-									availabilityStatus={availability?.status}
-								/>
-							);
-						},
-						size: 100
-					} as ColumnDef<IOrderTourReviewItem>
-				]
-			: [])
+		}
 	];
 };

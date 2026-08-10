@@ -5,5 +5,4 @@ export * from "./lib/merge-tour-review-with-availability";
 export * from "./mock";
 export * from "./types";
 export * from "./utils/get-next-availability-status";
-export * from "./utils/is-order-tour-summary-amounts";
 export * from "./utils/resolve-order-tour-id";

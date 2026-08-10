@@ -1,31 +1,21 @@
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
-	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
-import {
-	ENUM_ORDER_STATUS,
-	type ENUM_ORDER_STATUS_TYPE,
-	type IOrderTourReviewItem,
-	type TOrderTourReviewSummary
-} from "@/entities/booking";
+import { type IOrderTourReviewItem } from "@/entities/booking";
 
-import { type IInfoItem, TOUR_REVIEW_COLUMNS, getTourSummary } from "../model";
+import { TOUR_REVIEW_COLUMNS } from "../model";
 
 interface IOrderTourReviewProps {
-	bookingId: string;
 	items: IOrderTourReviewItem[];
-	summary: TOrderTourReviewSummary;
-	orderStatus: ENUM_ORDER_STATUS_TYPE;
 }
 
 const TABLE_LAYOUT = {
@@ -35,33 +25,10 @@ const TABLE_LAYOUT = {
 
 const getSubRowsFn = (row: IOrderTourReviewItem) => row.subRows;
 
-const TourSummaryColumn = ({ label, value, className }: IInfoItem) => {
-	return (
-		<div className="flex flex-col">
-			<span className={cn("text-sm text-muted-foreground", className)}>
-				{label}
-			</span>
-			<span className="text-lg text-foreground">{value}</span>
-		</div>
-	);
-};
-
-const OrderTourReviewBase = ({
-	bookingId,
-	items,
-	summary,
-	orderStatus
-}: IOrderTourReviewProps) => {
+const OrderTourReviewBase = ({ items }: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
-	const summaryItems = useMemo(
-		() => getTourSummary(summary, orderStatus, t),
-		[summary, orderStatus, t]
-	);
 
-	const columns = useMemo(
-		() => TOUR_REVIEW_COLUMNS(t, orderStatus, bookingId),
-		[t, orderStatus, bookingId]
-	);
+	const columns = useMemo(() => TOUR_REVIEW_COLUMNS(t), [t]);
 
 	return (
 		<Card>
@@ -69,26 +36,6 @@ const OrderTourReviewBase = ({
 				<CardTitle className="text-lg font-semibold">
 					{t("tour_review.title")}
 				</CardTitle>
-				<div
-					className={cn("grid items-center gap-8 w-fit", {
-						"grid-cols-[auto_1px_auto]":
-							orderStatus === ENUM_ORDER_STATUS.NEW,
-						"grid-cols-[auto_1px_auto_1px_auto_1px_auto]":
-							orderStatus !== ENUM_ORDER_STATUS.NEW
-					})}
-				>
-					{summaryItems.map((item, index) => (
-						<Fragment key={item.label}>
-							<TourSummaryColumn {...item} />
-							{index < summaryItems.length - 1 && (
-								<Separator
-									orientation="vertical"
-									className="h-10"
-								/>
-							)}
-						</Fragment>
-					))}
-				</div>
 			</CardHeader>
 			<CardContent>
 				<SmartTable
@@ -97,6 +44,7 @@ const OrderTourReviewBase = ({
 					getSubRows={getSubRowsFn}
 					tableLayout={TABLE_LAYOUT}
 					showTopFilters={false}
+					defaultExpanded={true}
 				/>
 			</CardContent>
 		</Card>
