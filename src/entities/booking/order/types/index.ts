@@ -23,3 +23,4 @@ export * from "./order-pax-backend.types";
 export * from "./create-booking.types";
 export * from "./create-booking-backend.types";
 export * from "./update-booking.types";
+export * from "./booking-order-select.types";

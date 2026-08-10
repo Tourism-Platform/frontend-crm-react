@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC, useMemo, useState } from "react";
+import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -21,9 +21,15 @@ import {
 } from "@/shared/ui";
 
 import {
+	BookingOrderOptionCard,
+	BookingOrderOptionCardSkeleton,
+	type TBookingOrderSelectOption,
+	useBookingOrderSearchOptions
+} from "@/entities/booking";
+import {
+	ENUM_FORM_NEW_PAYMENT,
 	type TNewPaymentSchema,
-	useCreatePaymentMutation,
-	useGetAvailableOrderIdsQuery
+	useCreatePaymentMutation
 } from "@/entities/finance";
 
 import { FORM_NEW_PAYMENT_LIST, NEW_PAYMENT_SCHEMA } from "../model";
@@ -32,29 +38,12 @@ export const NewPayment: FC = () => {
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("client_payments_page");
 	const [createPayment, { isLoading }] = useCreatePaymentMutation();
-
-	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery(undefined, {
-		skip: !open
-	});
-
-	const orderOptions = useMemo(
-		() =>
-			orderIds.map((id) => ({
-				value: id,
-				label: id
-			})),
-		[orderIds]
-	);
+	const orders = useBookingOrderSearchOptions({ enabled: open });
 
 	const form = useForm<TNewPaymentSchema>({
 		resolver: zodResolver(NEW_PAYMENT_SCHEMA),
 		mode: "onSubmit"
 	});
-
-	const formFields = useMemo(
-		() => FORM_NEW_PAYMENT_LIST({ orderOptions }),
-		[orderOptions]
-	);
 
 	async function onSubmit(data: TNewPaymentSchema) {
 		try {
@@ -90,10 +79,36 @@ export const NewPayment: FC = () => {
 						className="space-y-6"
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{formFields.map(({ key, ...item }) => (
+							<CustomField
+								fieldType="asyncSelect"
+								control={form.control}
+								name={ENUM_FORM_NEW_PAYMENT.ORDER_ID}
+								t={t}
+								label="new_payment.form.fields.orderId.label"
+								placeholder="new_payment.form.fields.orderId.placeholder"
+								emptyText="new_payment.form.fields.orderId.empty"
+								className="col-span-2"
+								options={orders.options}
+								onQueryChange={orders.setQuery}
+								onLoadMore={orders.loadMore}
+								hasMore={orders.hasMore}
+								isLoading={orders.isLoading}
+								isLoadingMore={orders.isLoadingMore}
+								renderOption={(option) => (
+									<BookingOrderOptionCard
+										option={
+											option as TBookingOrderSelectOption
+										}
+									/>
+								)}
+								renderSkeleton={() => (
+									<BookingOrderOptionCardSkeleton />
+								)}
+							/>
+							{FORM_NEW_PAYMENT_LIST().map(({ key, ...item }) => (
 								<CustomField
 									key={key}
-									control={form?.control}
+									control={form.control}
 									name={key}
 									t={t}
 									{...item}

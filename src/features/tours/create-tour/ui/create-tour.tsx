@@ -67,7 +67,7 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 		name: ENUM_FORM.TOUR_TYPE
 	});
 	const isPrivateTour = tourType === ENUM_TOUR_TYPES.PRIVATE;
-	const agency = useAgencySearchOptions({ skip: !isPrivateTour });
+	const agency = useAgencySearchOptions({ enabled: isPrivateTour });
 
 	useEffect(() => {
 		if (!isPrivateTour) {

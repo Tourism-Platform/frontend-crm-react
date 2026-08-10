@@ -18,10 +18,11 @@ import type {
 } from "../types";
 
 export interface IAgencyCatalogQuery {
-	skip?: number;
+	page?: number;
 	limit?: number;
 	sort?: TourCatalogSort | null;
-	q?: string | null;
+	search?: string;
+	status?: string;
 }
 
 const mapAgencyListItemToFrontend = (
@@ -51,14 +52,19 @@ export const agencyApi = authApi.injectEndpoints({
 			{ total: number; data: TAgencyListItem[] },
 			TListAgenciesParams
 		>({
-			query: (params) => ({
-				...AGENCY_PATHS.listAgencies,
-				params: {
-					q: params.q ?? null,
-					skip: params.skip ?? 0,
-					limit: params.limit ?? 20
-				}
-			}),
+			query: (params) => {
+				const page = params.page ?? 1;
+				const limit = params.limit ?? 20;
+
+				return {
+					...AGENCY_PATHS.listAgencies,
+					params: {
+						q: params.search || null,
+						skip: (page - 1) * limit,
+						limit
+					}
+				};
+			},
 			transformResponse: (response: AgencyListResponse) => ({
 				total: response.total_count,
 				data: response.data.map(mapAgencyListItemToFrontend)

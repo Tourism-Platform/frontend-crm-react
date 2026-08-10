@@ -2,21 +2,27 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useDebounce } from "@/shared/hooks";
 
-import { useListAgenciesQuery } from "../api";
-import type { TAgencyListItem, TAgencySelectOption } from "../types";
+import { useGetBookingOrdersQuery } from "../api";
+import {
+	ENUM_ORDER_STATUS,
+	type ENUM_ORDER_STATUS_TYPE,
+	type IOrder,
+	type TBookingOrderSelectOption
+} from "../types";
 
 const DEFAULT_LIMIT = 20;
 const DEFAULT_DEBOUNCE_MS = 300;
+const DEFAULT_STATUS: ENUM_ORDER_STATUS_TYPE[] = [ENUM_ORDER_STATUS.BOOKING];
 
-type TUseAgencySearchOptionsParams = {
+type TUseBookingOrderSearchOptionsParams = {
 	limit?: number;
 	debounceMs?: number;
 	enabled?: boolean;
-	status?: string;
+	status?: ENUM_ORDER_STATUS_TYPE[];
 };
 
-type TUseAgencySearchOptionsResult = {
-	options: TAgencySelectOption[];
+type TUseBookingOrderSearchOptionsResult = {
+	options: TBookingOrderSelectOption[];
 	isLoading: boolean;
 	isLoadingMore: boolean;
 	hasMore: boolean;
@@ -25,47 +31,52 @@ type TUseAgencySearchOptionsResult = {
 	loadMore: () => void;
 };
 
-const toOption = (item: TAgencyListItem): TAgencySelectOption => ({
-	value: item.id,
-	label: item.businessName || item.name,
-	name: item.name,
-	contactPerson: item.contactPerson,
-	contactEmail: item.contactEmail,
-	contactPhone: item.contactPhone,
-	logoUrl: item.logoUrl
+const toOption = (item: IOrder): TBookingOrderSelectOption => ({
+	value: item.orderId,
+	label: item.orderNumber || item.orderId,
+	orderNumber: item.orderNumber,
+	client: item.client,
+	clientType: item.clientType,
+	tourName: item.tourName,
+	orderType: item.orderType,
+	dates: item.dates,
+	pax: item.pax,
+	status: item.status,
+	dateCreated: item.dateCreated
 });
 
-export const useAgencySearchOptions = (
-	params: TUseAgencySearchOptionsParams = {}
-): TUseAgencySearchOptionsResult => {
+export const useBookingOrderSearchOptions = (
+	params: TUseBookingOrderSearchOptionsParams = {}
+): TUseBookingOrderSearchOptionsResult => {
 	const {
 		limit = DEFAULT_LIMIT,
 		debounceMs = DEFAULT_DEBOUNCE_MS,
 		enabled = true,
-		status
+		status = DEFAULT_STATUS
 	} = params;
 
 	const [query, setQuery] = useState("");
 	const [page, setPage] = useState(1);
-	const [accumulated, setAccumulated] = useState<TAgencyListItem[]>([]);
+	const [accumulated, setAccumulated] = useState<IOrder[]>([]);
 	const [totalCount, setTotalCount] = useState(0);
 	const requestIdRef = useRef(0);
 	const debouncedQuery = useDebounce(query, debounceMs);
 	const trimmedQuery = debouncedQuery.trim();
+	const statusKey = status.join(",");
 
 	useEffect(() => {
 		requestIdRef.current += 1;
 		setPage(1);
 		setAccumulated([]);
 		setTotalCount(0);
-	}, [trimmedQuery, status]);
+	}, [trimmedQuery, statusKey]);
 
-	const { data, isLoading, isFetching, isSuccess } = useListAgenciesQuery(
+	const { data, isLoading, isFetching, isSuccess } = useGetBookingOrdersQuery(
 		{
-			search: trimmedQuery || undefined,
-			status,
+			search: trimmedQuery,
 			page,
-			limit
+			limit,
+			status
 		},
 		{ skip: !enabled }
 	);
@@ -87,9 +98,9 @@ export const useAgencySearchOptions = (
 				return data.data;
 			}
 
-			const existingIds = new Set(prev.map((item) => item.id));
+			const existingIds = new Set(prev.map((item) => item.orderId));
 			const nextItems = data.data.filter(
-				(item) => !existingIds.has(item.id)
+				(item) => !existingIds.has(item.orderId)
 			);
 			return [...prev, ...nextItems];
 		});

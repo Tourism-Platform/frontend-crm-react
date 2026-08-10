@@ -19,7 +19,15 @@
 				},
 				"orderId": {
 					"label": "Order ID",
-					"placeholder": "Enter order ID (e.g., RQA00001)"
+					"placeholder": "Select order...",
+					"empty": "No orders found",
+					"option": {
+						"order": "Order",
+						"client": "Client",
+						"tour": "Tour",
+						"pax": "Pax",
+						"created": "Created"
+					}
 				},
 				"note": {
 					"label": "Note",

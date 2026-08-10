@@ -1,3 +1,5 @@
+import type { IPaginationRequest } from "@/shared/types";
+
 export type TAgencyListItem = {
 	id: string;
 	name: string;
@@ -11,11 +13,7 @@ export type TAgencyListItem = {
 	logoUrl: string | null;
 };
 
-export type TListAgenciesParams = {
-	q?: string | null;
-	skip?: number;
-	limit?: number;
-};
+export type TListAgenciesParams = Partial<IPaginationRequest>;
 
 export type TAgencySelectOption = {
 	label: string;
