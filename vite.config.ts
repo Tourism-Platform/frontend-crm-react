@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), visualizer({ filename: "stats.html" })],
   server: {
     host: "127.0.0.1",
-    port: 3001,
+    port: 3000,
     strictPort: true,
   },
   resolve: {

@@ -28,6 +28,15 @@
 					"label": "Tour type",
 					"placeholder": "Select..."
 				},
+				"agencyId": {
+					"label": "Agency",
+					"placeholder": "Select agency...",
+					"empty": "No agencies found",
+					"option": {
+						"agent": "Agent",
+						"contactPerson": "Contact person"
+					}
+				},
 				"groupSize": {
 					"label": "Group size",
 					"placeholder": "Enter..."
@@ -67,6 +76,9 @@
 				},
 				"tourType": {
 					"required": "Select tour type"
+				},
+				"agencyId": {
+					"required": "Select an agency"
 				},
 				"groupSize": {
 					"required": "Specify group size",

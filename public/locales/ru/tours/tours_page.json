@@ -28,6 +28,15 @@
 					"label": "Тип тура",
 					"placeholder": "Выберите..."
 				},
+				"agencyId": {
+					"label": "Агентство",
+					"placeholder": "Выберите агентство...",
+					"empty": "Агентства не найдены",
+					"option": {
+						"agent": "Агент",
+						"contactPerson": "Контактное лицо"
+					}
+				},
 				"groupSize": {
 					"label": "Размер группы",
 					"placeholder": "Введите..."
@@ -67,6 +76,9 @@
 				},
 				"tourType": {
 					"required": "Выберите тип тура"
+				},
+				"agencyId": {
+					"required": "Выберите агентство"
 				},
 				"groupSize": {
 					"required": "Укажите размер группы",

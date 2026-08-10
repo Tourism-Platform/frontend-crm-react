@@ -45,7 +45,7 @@
 			"published": "Published"
 		},
 		"tourTypes": {
-			"private": "Private",
+			"private": "Custom",
 			"group": "Group"
 		},
 		"tourCategories": {

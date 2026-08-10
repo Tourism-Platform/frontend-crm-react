@@ -45,7 +45,7 @@
 			"published": "Опубликовано"
 		},
 		"tourTypes": {
-			"private": "Частный",
+			"private": "Кастомный",
 			"group": "Группа"
 		},
 		"tourCategories": {

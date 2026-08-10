@@ -9,6 +9,7 @@ export type TForm = TFormField<string, ENUM_TOUR_CREATE_FORM_TYPE>;
 export const ENUM_TOUR_CREATE_FORM = {
 	TOUR_TITLE: "tourTitle", // keeping internal key as camelCase but CONSTANT as PascalCase is standard
 	TOUR_TYPE: "tourType",
+	AGENCY_ID: "agencyId",
 	GROUP_SIZE: "groupSize",
 	DURATION: "duration",
 	AGE_REQUIRES: "ageRequires",

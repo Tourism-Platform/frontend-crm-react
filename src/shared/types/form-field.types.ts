@@ -11,7 +11,9 @@ import type {
 	CustomGeoSelectProps,
 	MultipleSelectorDisplayMode,
 	Option as MultipleSelectorOption,
-	SelectPickerOption
+	SelectPickerOption,
+	TAsyncSelectOption,
+	TCustomAsyncSelectProps
 } from "@/shared/ui";
 
 // Универсальные типы ключей и идентификаторов
@@ -131,6 +133,25 @@ export type TFormGeo<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	defaultValue?: TGeoFormValue | null;
 };
 
+export type TFormAsyncSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<
+	L,
+	K
+> & {
+	fieldType: "asyncSelect";
+	options: TAsyncSelectOption[];
+	onQueryChange?: TCustomAsyncSelectProps["onQueryChange"];
+	onLoadMore?: TCustomAsyncSelectProps["onLoadMore"];
+	hasMore?: boolean;
+	isLoading?: boolean;
+	isLoadingMore?: boolean;
+	placeholder?: L;
+	emptyText?: L;
+	selectedLabel?: string;
+	loadMoreThreshold?: number;
+	renderOption?: TCustomAsyncSelectProps["renderOption"];
+	renderSkeleton?: TCustomAsyncSelectProps["renderSkeleton"];
+};
+
 // Универсальный тип формы
 export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormInput<L, K>
@@ -146,5 +167,6 @@ export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormAutocomplete<L, K>
 	| TFormCountry<L, K>
 	| TFormGeo<L, K>
+	| TFormAsyncSelect<L, K>
 	| TFormDateRange<L, K>
 	| TFormDatePicker<L, K>;

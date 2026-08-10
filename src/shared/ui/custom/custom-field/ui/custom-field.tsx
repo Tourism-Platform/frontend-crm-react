@@ -11,9 +11,11 @@ import type {
 	CustomAutocompleteProps,
 	CustomCountrySelectProps,
 	CustomGeoSelectProps,
-	ICustomUploadFilesProps
+	ICustomUploadFilesProps,
+	TCustomAsyncSelectProps
 } from "@/shared/ui";
 import {
+	CustomAsyncSelect,
 	CustomAutocomplete,
 	CustomCalendarRange,
 	CustomCountrySelect,
@@ -58,6 +60,7 @@ export type CustomFieldVariant =
 	| "autocomplete"
 	| "country"
 	| "geo"
+	| "asyncSelect"
 	| "dateRange"
 	| "datePicker"
 	| "switch";
@@ -141,6 +144,10 @@ type GeoFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "geo">;
 } & Omit<CustomGeoSelectProps, "value" | "onChange">;
 
+type AsyncSelectFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "asyncSelect">;
+} & Omit<TCustomAsyncSelectProps, "value" | "onChange">;
+
 type DateRangeFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "dateRange">;
 	placeholder?: string;
@@ -170,6 +177,7 @@ type CustomFieldProps =
 	| AutocompleteFieldVariant
 	| CountryFieldVariant
 	| GeoFieldVariant
+	| AsyncSelectFieldVariant
 	| DateRangeFieldVariant
 	| DatePickerFieldVariant
 	| SwitchFieldVariant;
@@ -375,6 +383,20 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						emptyText={t(props.emptyText)}
 						value={field.value ?? null}
 						onChange={field.onChange}
+					/>
+				);
+			case "asyncSelect":
+				return (
+					<CustomAsyncSelect
+						{...props}
+						placeholder={
+							props.placeholder ? t(props.placeholder) : undefined
+						}
+						emptyText={
+							props.emptyText ? t(props.emptyText) : undefined
+						}
+						value={field.value ?? ""}
+						onChange={(value) => field.onChange(value || null)}
 					/>
 				);
 			case "dateRange":

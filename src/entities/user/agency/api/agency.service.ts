@@ -1,17 +1,20 @@
 import {
 	AGENCY_PATHS,
+	type AgencyListResponse,
 	type AgencyModel,
 	type CreateAgencySchema,
+	ENUM_API_TAGS,
 	type TourCatalogSort
 } from "@/shared/api";
-import { ENUM_API_TAGS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import { mapAgencyBusinessInfoToFrontend } from "../converters";
 import type {
 	TAgencyBusinessInfoBackend,
-	TAgencyBusinessSchema
+	TAgencyBusinessSchema,
+	TAgencyListItem,
+	TListAgenciesParams
 } from "../types";
 
 export interface IAgencyCatalogQuery {
@@ -21,6 +24,21 @@ export interface IAgencyCatalogQuery {
 	q?: string | null;
 }
 
+const mapAgencyListItemToFrontend = (
+	item: AgencyListResponse["data"][number]
+): TAgencyListItem => ({
+	id: item.id,
+	name: item.name,
+	businessName: item.business_name ?? null,
+	legalName: item.legal_name ?? null,
+	contactPerson: item.contact_person ?? null,
+	contactEmail: item.contact_email ?? null,
+	contactPhone: item.contact_phone ?? null,
+	city: item.city ?? null,
+	country: item.country ?? null,
+	logoUrl: item.logo_url ?? null
+});
+
 export const agencyApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		createAgency: builder.mutation<AgencyModel, CreateAgencySchema>({
@@ -28,6 +46,24 @@ export const agencyApi = authApi.injectEndpoints({
 				...AGENCY_PATHS.createAgency,
 				body
 			})
+		}),
+		listAgencies: builder.query<
+			{ total: number; data: TAgencyListItem[] },
+			TListAgenciesParams
+		>({
+			query: (params) => ({
+				...AGENCY_PATHS.listAgencies,
+				params: {
+					q: params.q ?? null,
+					skip: params.skip ?? 0,
+					limit: params.limit ?? 20
+				}
+			}),
+			transformResponse: (response: AgencyListResponse) => ({
+				total: response.total_count,
+				data: response.data.map(mapAgencyListItemToFrontend)
+			}),
+			providesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		getAgencyInfoById: builder.query<TAgencyBusinessSchema, string>({
 			query: (agencyId) => ({
@@ -42,4 +78,8 @@ export const agencyApi = authApi.injectEndpoints({
 	})
 });
 
-export const { useCreateAgencyMutation, useGetAgencyInfoByIdQuery } = agencyApi;
+export const {
+	useCreateAgencyMutation,
+	useListAgenciesQuery,
+	useGetAgencyInfoByIdQuery
+} = agencyApi;

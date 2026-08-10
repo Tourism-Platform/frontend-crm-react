@@ -69,6 +69,7 @@ export const mapTourCreateToBackend = (frontend: TCreateTourSchema) => ({
 	age_to: frontend.ageRequires?.to || null,
 	group_size: frontend.groupSize,
 	typ: tourTypeMapper.to(frontend.tourType)!,
+	agency_id: frontend.agencyId || null,
 	categories: tourCategoriesMapper.toMany(frontend.tourCategories ?? []),
 	languages: languageMapper.toMany(frontend.languages)
 });

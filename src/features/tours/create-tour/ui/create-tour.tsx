@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader, PlusIcon } from "lucide-react";
-import { type FC, useState } from "react";
-import { useForm } from "react-hook-form";
+import { type FC, Fragment, useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -23,11 +23,18 @@ import {
 
 import {
 	ENUM_TOUR_CREATE_FORM as ENUM_FORM,
+	ENUM_TOUR_TYPES,
 	type TCreateTourSchema,
 	TOUR_CREATE_SCHEMA,
 	TourLanguagesField,
 	useCreateTourMutation
 } from "@/entities/tour";
+import {
+	AgencyOptionCard,
+	AgencyOptionCardSkeleton,
+	type TAgencySelectOption,
+	useAgencySearchOptions
+} from "@/entities/user";
 
 import { FORM_CREATE_TOUR_LIST } from "../model";
 
@@ -46,6 +53,7 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 		defaultValues: {
 			[ENUM_FORM.TOUR_TITLE]: "",
 			[ENUM_FORM.TOUR_TYPE]: undefined,
+			[ENUM_FORM.AGENCY_ID]: null,
 			[ENUM_FORM.GROUP_SIZE]: undefined,
 			[ENUM_FORM.DURATION]: { from: undefined, to: undefined },
 			[ENUM_FORM.AGE_REQUIRES]: { from: undefined, to: undefined },
@@ -53,6 +61,19 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 			[ENUM_FORM.LANGUAGES]: []
 		}
 	});
+
+	const tourType = useWatch({
+		control: form.control,
+		name: ENUM_FORM.TOUR_TYPE
+	});
+	const isPrivateTour = tourType === ENUM_TOUR_TYPES.PRIVATE;
+	const agency = useAgencySearchOptions({ skip: !isPrivateTour });
+
+	useEffect(() => {
+		if (!isPrivateTour) {
+			form.setValue(ENUM_FORM.AGENCY_ID, null);
+		}
+	}, [isPrivateTour, form]);
 
 	async function onSubmit(data: TCreateTourSchema) {
 		try {
@@ -111,6 +132,52 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 										/>
 									);
 								}
+
+								if (key === ENUM_FORM.GROUP_SIZE) {
+									return (
+										<Fragment key={key}>
+											<CustomField
+												control={form.control}
+												name={key}
+												t={t}
+												{...item}
+											/>
+											{isPrivateTour ? (
+												<CustomField
+													fieldType="asyncSelect"
+													control={form.control}
+													className="col-span-2"
+													name={ENUM_FORM.AGENCY_ID}
+													t={t}
+													label="create.form.fields.agencyId.label"
+													placeholder="create.form.fields.agencyId.placeholder"
+													emptyText="create.form.fields.agencyId.empty"
+													options={agency.options}
+													onQueryChange={
+														agency.setQuery
+													}
+													onLoadMore={agency.loadMore}
+													hasMore={agency.hasMore}
+													isLoading={agency.isLoading}
+													isLoadingMore={
+														agency.isLoadingMore
+													}
+													renderOption={(option) => (
+														<AgencyOptionCard
+															option={
+																option as TAgencySelectOption
+															}
+														/>
+													)}
+													renderSkeleton={() => (
+														<AgencyOptionCardSkeleton />
+													)}
+												/>
+											) : null}
+										</Fragment>
+									);
+								}
+
 								return (
 									<CustomField
 										key={key}

@@ -109,7 +109,7 @@ const ToursBase: FC = () => {
 	// Переводим тексты табов
 	const translatedStatusTabs = useValueToTranslateLabel(TOUR_STATUS_LABELS);
 
-	const actionsJsx = useMemo(() => <CreateTour />, []);
+	const actionsJsx = <CreateTour />;
 	const paginationObj = useMemo(
 		() => ({
 			pageIndex: filters.page - 1,
