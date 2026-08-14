@@ -1,27 +1,28 @@
 import { ENUM_API_TAGS, TOUR_CATALOG_PATHS } from "@/shared/api";
-import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
-	mapCatalogFilterPaginatedToFrontend,
-	// mapCatalogTourFiltersToBackend,
+	mapCatalogListFiltersToFrontend,
 	mapCatalogTourFiltersToPublicCatalogQuery,
 	mapCatalogTourPaginatedToFrontend,
-	mapPriceHistogramToFrontend,
+	mapLocationSuggestParamsToBackend,
+	mapLocationSuggestionsToOptions,
 	mapRecentlySearchesToFrontend
 } from "../converters";
 import type {
+	ICatalogListFilters,
 	ICatalogTourCard,
 	ICatalogTourFilters,
-	IFilterOption,
-	IFilterOptionBackend,
-	IPriceHistogramItem,
-	IPriceHistogramItemBackend,
-	IPriceHistogramRequest,
 	IRecentSearch,
 	IRecentSearchBackend,
-	TListCatalogToursBackendResponse
+	TCatalogFiltersBackend,
+	TCatalogFiltersQuery,
+	TListCatalogToursBackendResponse,
+	TLocationSuggestOption,
+	TLocationSuggestParams,
+	TSuggestLocationsBackend
 } from "../types";
 
 export const catalogTourApi = authApi.injectEndpoints({
@@ -38,67 +39,29 @@ export const catalogTourApi = authApi.injectEndpoints({
 				mapCatalogTourPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		}),
-		getCatalogRegions: builder.query<
-			IPaginationResponse<IFilterOption>,
-			IPaginationRequest
+		getCatalogFilters: builder.query<
+			ICatalogListFilters,
+			TCatalogFiltersQuery
 		>({
 			query: (params) => ({
-				url: "/tours/catalog/filters/regions",
+				...TOUR_CATALOG_PATHS.listFilters,
 				params
 			}),
-			transformResponse: (
-				response: IPaginationResponse<IFilterOptionBackend>
-			) => mapCatalogFilterPaginatedToFrontend(response),
-			serializeQueryArgs: ({ queryArgs }) => {
-				const { page, ...rest } = queryArgs;
-				void page;
-				return rest;
-			},
-			merge: (currentCache, newItems) => {
-				currentCache.data.push(...newItems.data);
-				currentCache.total = newItems.total;
-			},
-			forceRefetch({ currentArg, previousArg }) {
-				return currentArg?.page !== previousArg?.page;
-			},
+			transformResponse: (response: TCatalogFiltersBackend) =>
+				mapCatalogListFiltersToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		}),
-		getCatalogPriceHistogram: builder.query<
-			IPriceHistogramItem[],
-			IPriceHistogramRequest
+		suggestLocations: builder.query<
+			TLocationSuggestOption[],
+			TLocationSuggestParams
 		>({
 			query: (params) => ({
-				url: "/tours/catalog/filters/price-histogram",
-				params
+				...TOUR_CATALOG_PATHS.suggestLocations,
+				params: mapLocationSuggestParamsToBackend(params)
 			}),
-			transformResponse: (response: IPriceHistogramItemBackend[]) =>
-				mapPriceHistogramToFrontend(response),
-			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
+			transformResponse: (response: TSuggestLocationsBackend) =>
+				mapLocationSuggestionsToOptions(response)
 		}),
-		getCatalogDestinations: builder.query<IFilterOption[], void>({
-			query: () => ({
-				url: "/tours/catalog/filters/destinations"
-			}),
-			transformResponse: (
-				response: IPaginationResponse<IFilterOptionBackend>
-			) => mapCatalogFilterPaginatedToFrontend(response).data,
-			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
-		}),
-		// getSearchTours: builder.query<
-		// 	IPaginationResponse<ICatalogTourCard>,
-		// 	ICatalogTourFilters | void
-		// >({
-		// 	query: (filters) => ({
-		// 		url: "/tours/search",
-		// 		params: filters
-		// 			? mapCatalogTourPaginatedToFrontend(filters)
-		// 			: undefined
-		// 	})
-		// 	// transformResponse: (
-		// 	// 	response: IPaginationResponse<ICatalogTourBackend>
-		// 	// ) => mapCatalogTourPaginatedToFrontend(response.data as any, response.total),
-		// 	// providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
-		// }),
 		getRecentlySearchedTours: builder.query<IRecentSearch[], void>({
 			query: () => ({
 				url: "/tours/recently-searched"
@@ -113,21 +76,18 @@ export const catalogTourApi = authApi.injectEndpoints({
 		>({
 			query: () => ({
 				url: "/tours/popular"
-			})
-			// transformResponse: (
-			// 	response: IPaginationResponse<ICatalogTourBackend>
-			// ) => mapCatalogTourPaginatedToFrontend(response.data as any, response.total),
-			// providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
+			}),
+			transformResponse: (response: TListCatalogToursBackendResponse) =>
+				mapCatalogTourPaginatedToFrontend(response),
+			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		})
 	})
 });
 
 export const {
 	useGetCatalogToursQuery,
-	useGetCatalogRegionsQuery,
-	useGetCatalogPriceHistogramQuery,
-	useGetCatalogDestinationsQuery,
-	// useGetSearchToursQuery,
+	useGetCatalogFiltersQuery,
+	useSuggestLocationsQuery,
 	useGetRecentlySearchedToursQuery,
 	useGetPopularToursQuery
 } = catalogTourApi;

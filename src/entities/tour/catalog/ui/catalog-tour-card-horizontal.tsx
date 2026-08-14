@@ -11,15 +11,7 @@ import { Link } from "react-router-dom";
 import { MapPinIcon, tourPlaceholder } from "@/shared/assets";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import {
-	Badge,
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-	PreviewerSimple,
-	Skeleton
-} from "@/shared/ui";
+import { Badge, Card, PreviewerSimple, Skeleton } from "@/shared/ui";
 import { formatMoney } from "@/shared/utils";
 
 import { TOUR_CATEGORY_LABELS } from "../../tour";
@@ -29,8 +21,9 @@ import type { ICatalogTourCard } from "../types";
 const VISIBLE_CATEGORIES = 2;
 const VISIBLE_LANGUAGES = 5;
 
-type TCatalogTourCardProps = {
+type TCatalogTourCardHorizontalProps = {
 	data: ICatalogTourCard;
+	className?: string;
 };
 
 type TMetaItem = {
@@ -39,9 +32,16 @@ type TMetaItem = {
 	label: string;
 };
 
-export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
+export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
+	data: tour,
+	className
+}) => {
 	const [isImageLoaded, setIsImageLoaded] = useState(false);
 	const { t } = useTranslation(["tours_catalog_page", "options"]);
+
+	const tourHref = buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
+		tourId: tour.id
+	});
 
 	const visibleCategories = tour.categories.slice(0, VISIBLE_CATEGORIES);
 	const hiddenCategoriesCount = Math.max(
@@ -98,18 +98,13 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 	});
 
 	return (
-		<Link
-			to={buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
-				tourId: tour.id
-			})}
-			className="block h-full min-w-0"
-		>
-			<Card className="relative h-full min-w-0 gap-0 overflow-hidden pt-0 pb-4 transition-shadow hover:shadow-md">
-				<div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted">
+		<Link to={tourHref} className={cn("block min-w-0", className)}>
+			<Card className="relative flex min-w-0 flex-row items-stretch gap-0 overflow-hidden py-0 transition-shadow hover:shadow-md">
+				<div className="relative min-h-40 w-1/2 shrink-0 self-stretch overflow-hidden bg-muted md:w-1/3">
 					{!isImageLoaded && (
 						<div className="absolute inset-0 z-0 flex items-center justify-center">
 							<Skeleton className="absolute inset-0 size-full" />
-							<Image className="size-10 animate-pulse text-muted-foreground/20" />
+							<Image className="size-8 animate-pulse text-muted-foreground/20" />
 						</div>
 					)}
 					<img
@@ -124,21 +119,21 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 							isImageLoaded ? "opacity-100" : "opacity-0"
 						)}
 					/>
-					<div className="absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-black/55 to-transparent" />
-					<div className="absolute left-3 top-3 z-10">
-						<Badge className="border-0 bg-background/95 text-foreground shadow-sm backdrop-blur-sm">
+					<div className="absolute inset-x-0 bottom-0 z-10 h-14 bg-gradient-to-t from-black/55 to-transparent" />
+					<div className="absolute left-2 top-2 z-10">
+						<Badge className="border-0 bg-background/95 text-xs text-foreground shadow-sm backdrop-blur-sm">
 							{t(CATALOG_TOUR_TYPE_LABELS[tour.type], {
 								ns: "options"
 							})}
 						</Badge>
 					</div>
 					{!!tour.languages.length && (
-						<div className="absolute bottom-3 left-3 z-10 flex flex-wrap gap-1">
+						<div className="absolute bottom-2 left-2 z-10 flex flex-wrap gap-1">
 							{visibleLanguages.map((lang) => (
 								<Badge
 									key={lang}
 									variant="secondary"
-									className="bg-background/95 text-foreground shadow-sm backdrop-blur-sm"
+									className="bg-background/95 text-xs text-foreground shadow-sm backdrop-blur-sm"
 								>
 									{lang}
 								</Badge>
@@ -146,7 +141,7 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 							{hiddenLanguagesCount > 0 && (
 								<Badge
 									variant="secondary"
-									className="bg-background/95 text-foreground shadow-sm backdrop-blur-sm"
+									className="bg-background/95 text-xs text-foreground shadow-sm backdrop-blur-sm"
 								>
 									+{hiddenLanguagesCount}
 								</Badge>
@@ -155,52 +150,56 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 					)}
 				</div>
 
-				<CardHeader className="grid gap-2.5 pb-3 pt-4">
-					<CardTitle className="line-clamp-2 leading-snug">
-						{tour.title}
-					</CardTitle>
+				<div className="flex min-w-0 flex-1 flex-col gap-2 px-3 py-3 sm:gap-2.5 sm:px-4 sm:py-4">
+					<div className="flex min-w-0 flex-col gap-1.5">
+						<span className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base">
+							{tour.title}
+						</span>
+						{!!tour.route.length && (
+							<div className="flex min-w-0 items-center gap-1 text-[11px] text-muted-foreground sm:text-xs">
+								<MapPinIcon className="size-3 shrink-0" />
+								<span className="truncate">
+									{tour.route.join(" → ")}
+								</span>
+							</div>
+						)}
+						{!!tour.categories.length && (
+							<div className="flex flex-wrap gap-1">
+								{visibleCategories.map((category) => (
+									<Badge
+										key={category}
+										variant="outline"
+										className="text-[10px] sm:text-xs"
+									>
+										{t(TOUR_CATEGORY_LABELS[category], {
+											ns: "options"
+										})}
+									</Badge>
+								))}
+								{hiddenCategoriesCount > 0 && (
+									<Badge
+										variant="outline"
+										className="text-[10px] sm:text-xs"
+									>
+										+{hiddenCategoriesCount}
+									</Badge>
+								)}
+							</div>
+						)}
+						{!!tour.description && (
+							<PreviewerSimple
+								text={tour.description}
+								lines={2}
+								className="text-[11px] text-muted-foreground sm:text-xs"
+							/>
+						)}
+					</div>
 
-					{!!tour.route.length && (
-						<div className="flex min-w-0 items-start gap-1.5 text-xs text-muted-foreground">
-							<MapPinIcon className="mt-0.5 size-3.5 shrink-0" />
-							<span className="line-clamp-2">
-								{tour.route.join(" → ")}
-							</span>
-						</div>
-					)}
-
-					{!!tour.categories.length && (
-						<div className="flex flex-wrap gap-1">
-							{visibleCategories.map((category) => (
-								<Badge key={category} variant="outline">
-									{t(TOUR_CATEGORY_LABELS[category], {
-										ns: "options"
-									})}
-								</Badge>
-							))}
-							{hiddenCategoriesCount > 0 && (
-								<Badge variant="outline">
-									+{hiddenCategoriesCount}
-								</Badge>
-							)}
-						</div>
-					)}
-
-					{!!tour.description && (
-						<PreviewerSimple
-							text={tour.description}
-							lines={2}
-							className="text-sm text-muted-foreground"
-						/>
-					)}
-				</CardHeader>
-
-				<CardContent className="mt-auto grid gap-3">
-					<div className="grid grid-cols-2 gap-2">
+					<div className="grid grid-cols-2 gap-1.5 sm:gap-2">
 						{metaItems.map((item) => (
 							<div
 								key={item.key}
-								className="flex min-w-0 items-center gap-1.5 rounded-md bg-accent px-2.5 py-2 text-xs text-muted-foreground"
+								className="flex min-w-0 items-center gap-1 rounded-md bg-accent px-2 py-1.5 text-[11px] text-muted-foreground sm:text-xs"
 							>
 								{item.icon}
 								<span className="truncate">{item.label}</span>
@@ -208,12 +207,12 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 						))}
 					</div>
 
-					<div className="flex min-w-0 items-baseline justify-end gap-2 border-t pt-3">
-						<span className="truncate text-right text-base font-semibold text-primary">
+					<div className="mt-auto border-t pt-2.5">
+						<span className="text-sm font-semibold text-primary sm:text-base">
 							{t("card.price.from", { price: priceLabel })}
 						</span>
 					</div>
-				</CardContent>
+				</div>
 			</Card>
 		</Link>
 	);

@@ -1,7 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MapPin, Search } from "lucide-react";
+import { MapPointIcon } from "@solar-icons/react/outline";
+import { Search } from "lucide-react";
 import { type FC, useMemo } from "react";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import {
+	Controller,
+	type Resolver,
+	type UseFormReturn,
+	useForm
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
@@ -20,32 +26,36 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import { useGeoSearchFieldProps } from "@/entities/geo";
 import {
+	LocationSuggestSelect,
+	type TCatalogLocationBar,
 	type TSearchTours,
 	createSearchToursSchema,
-	mapSearchToursToSearchQuery
+	mapSearchToursToSearchQuery,
+	useLocationSuggestFieldProps
 } from "@/entities/tour";
 
 interface ISearchToursBarProps {
-	form?: UseFormReturn<TSearchTours>;
+	form?: UseFormReturn<TCatalogLocationBar>;
+	onSubmit?: (data: TCatalogLocationBar) => void;
 }
 
 export const SearchToursBar: FC<ISearchToursBarProps> = ({
-	form: externalForm
+	form: externalForm,
+	onSubmit: onSubmitExternal
 }) => {
 	const { t, i18n } = useTranslation("common_tours");
 	const navigate = useNavigate();
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
-	const geoField = useGeoSearchFieldProps(language);
+	const suggestField = useLocationSuggestFieldProps(language);
 
 	const schema = useMemo(
 		() => createSearchToursSchema(t("search.form.fields.where.required")),
 		[t]
 	);
 
-	const localForm = useForm<TSearchTours>({
-		resolver: zodResolver(schema),
+	const localForm = useForm<TCatalogLocationBar>({
+		resolver: zodResolver(schema) as Resolver<TCatalogLocationBar>,
 		defaultValues: {
 			destination: null,
 			dates: undefined
@@ -54,11 +64,15 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 
 	const form = externalForm ?? localForm;
 
-	const onSubmit = (data: TSearchTours) => {
-		const route = buildRouteWithQuery(
-			ENUM_PATH.TOURS.SEARCH,
-			mapSearchToursToSearchQuery(data)
-		);
+	const handleSubmit = (data: TCatalogLocationBar) => {
+		if (onSubmitExternal) {
+			onSubmitExternal(data);
+			return;
+		}
+
+		const query = mapSearchToursToSearchQuery(data as TSearchTours);
+		const route = buildRouteWithQuery(ENUM_PATH.TOURS.SEARCH, query);
+
 		navigate(route);
 	};
 
@@ -68,21 +82,39 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 				<Form {...form}>
 					<form
 						className="grid grid-cols-1 items-end gap-3 md:grid-cols-[1fr_auto_1fr_auto] md:gap-4"
-						onSubmit={form.handleSubmit(onSubmit)}
+						onSubmit={form.handleSubmit(handleSubmit)}
 					>
-						<CustomField
-							icon={MapPin}
+						<Controller
 							control={form.control}
 							name="destination"
-							label="search.form.fields.where.label"
-							placeholder="search.form.fields.where.placeholder"
-							fieldType="geo"
-							emptyText="search.form.fields.where.empty"
-							options={geoField.options}
-							onQueryChange={geoField.onQueryChange}
-							isLoading={geoField.isLoading}
-							t={t}
-							className="mb-0"
+							render={({ field, fieldState }) => (
+								<div className="mb-0 grid gap-2">
+									<label className="text-sm font-medium leading-none">
+										{t("search.form.fields.where.label")}
+									</label>
+									<LocationSuggestSelect
+										icon={MapPointIcon}
+										value={field.value}
+										onChange={field.onChange}
+										options={suggestField.options}
+										onQueryChange={
+											suggestField.onQueryChange
+										}
+										isLoading={suggestField.isLoading}
+										placeholder={t(
+											"search.form.fields.where.placeholder"
+										)}
+										emptyText={t(
+											"search.form.fields.where.empty"
+										)}
+									/>
+									{fieldState.error ? (
+										<p className="text-sm text-destructive">
+											{fieldState.error.message}
+										</p>
+									) : null}
+								</div>
+							)}
 						/>
 
 						<Separator

@@ -2192,6 +2192,14 @@ export interface BusSingleEventOutput {
 	details?: BusDetailSchemaOutput | null;
 }
 
+/** CatalogFiltersSchema */
+export interface CatalogFiltersSchema {
+	/** Cities */
+	cities: string[];
+	/** Countries */
+	countries: string[];
+}
+
 /**
  * ChargePubSchema
  * Any charge with every monetary leaf removed: only the strategy and the
@@ -9683,6 +9691,11 @@ export interface SuggestLocationsTourCatalogSuggestGetParams {
 	limit?: number;
 }
 
+export interface ListFiltersTourCatalogFiltersGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+}
+
 export interface ListPublicCatalogTourCatalogPublicGetParams {
 	/** Sort */
 	sort?: TourCatalogSort | null;
@@ -9695,11 +9708,11 @@ export interface ListPublicCatalogTourCatalogPublicGetParams {
 	/** Duration Days Max */
 	duration_days_max?: number | null;
 	/** City */
-	city?: string | null;
+	city?: string[] | null;
 	/** Country */
-	country?: string | null;
+	country?: string[] | null;
 	/** Tour Lang */
-	tour_lang?: LanguageCode | null;
+	tour_lang?: LanguageCode[] | null;
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -9729,11 +9742,11 @@ export interface ListAgencyCatalogTourCatalogAgencyGetParams {
 	/** Duration Days Max */
 	duration_days_max?: number | null;
 	/** City */
-	city?: string | null;
+	city?: string[] | null;
 	/** Country */
-	country?: string | null;
+	country?: string[] | null;
 	/** Tour Lang */
-	tour_lang?: LanguageCode | null;
+	tour_lang?: LanguageCode[] | null;
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**

@@ -1,5 +1,6 @@
 export * from "./routes.config";
 export * from "./routes.enum";
+export * from "./query.types";
 export * from "./routes.types";
 export * from "./sidebar";
 export * from "./router.helper";

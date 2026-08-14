@@ -9,10 +9,12 @@ import {
 	type ENUM_CATALOG_DURATION_TYPE,
 	ENUM_CATALOG_TOUR_TYPES,
 	type ENUM_CATALOG_TOUR_TYPES_TYPE,
+	type ICatalogListFilters,
 	type ICatalogTourCard,
 	type ICatalogTourFilters,
 	type ICatalogTourInfo,
 	type ICatalogTourInfoBackend,
+	type TCatalogFiltersBackend,
 	type TCatalogTourBackend,
 	type TCatalogTourQueryBackend,
 	type TListCatalogToursBackendResponse
@@ -77,27 +79,53 @@ export const mapCatalogTourToFrontend = (
 	};
 };
 
+export const mapCatalogTourListToFrontend = (
+	data: TCatalogTourBackend[]
+): ICatalogTourCard[] => data.map(mapCatalogTourToFrontend);
+
 export const mapCatalogTourPaginatedToFrontend = (
 	response: TListCatalogToursBackendResponse
 ): IPaginationResponse<ICatalogTourCard> => ({
-	data: response.map(mapCatalogTourToFrontend),
-	total: response.length || 10
+	data: mapCatalogTourListToFrontend(response),
+	total: response.length
+});
+
+export const mapCatalogListFiltersToFrontend = (
+	data: TCatalogFiltersBackend
+): ICatalogListFilters => ({
+	countries: data.countries,
+	cities: data.cities
+});
+
+export const mapPopularToursPaginatedToFrontend = (
+	response: TListCatalogToursBackendResponse
+): IPaginationResponse<ICatalogTourCard> => ({
+	data: mapCatalogTourListToFrontend(response),
+	total: response.length
 });
 
 export const mapCatalogTourFiltersToPublicCatalogQuery = (
 	filters: ICatalogTourFilters
-): TCatalogTourQueryBackend => ({
-	...(filters?.page > 1 && { skip: (filters.page - 1) * filters?.limit }),
-	...(filters?.limit && { limit: filters.limit }),
-	...(!!filters?.filters?.category?.length && {
-		categories: tourCategoriesMapper.toMany(filters.filters.category)
-	}),
-	...(!!filters?.filters?.region?.length && {
-		city: filters.filters.region[0]
-	}),
-	...(!!filters?.filters?.language?.length && {
-		language: languageMapper.to(filters.filters.language[0])
-	}),
-	...mapDurationFiltersToQuery(filters?.filters?.duration),
-	...(!!filters?.search?.trim().length && { q: filters.search })
-});
+): TCatalogTourQueryBackend => {
+	const query: TCatalogTourQueryBackend = {
+		...(filters?.page > 1 && { skip: (filters.page - 1) * filters?.limit }),
+		...(filters?.limit && { limit: filters.limit }),
+		...(!!filters?.filters?.category?.length && {
+			categories: tourCategoriesMapper.toMany(filters.filters.category)
+		}),
+		...(!!filters?.filters?.country?.length && {
+			country: filters.filters.country
+		}),
+		...(!!filters?.filters?.city?.length && {
+			city: filters.filters.city
+		}),
+		...(!!filters?.filters?.language?.length && {
+			tour_lang: languageMapper.toMany(filters.filters.language)
+		}),
+		...(filters?.readLang && { read_lang: filters.readLang }),
+		...mapDurationFiltersToQuery(filters?.filters?.duration),
+		...(!!filters?.search?.trim().length && { q: filters.search })
+	};
+
+	return query;
+};

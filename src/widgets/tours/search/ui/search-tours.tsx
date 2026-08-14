@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, useCallback, useMemo } from "react";
-import { type Resolver, useForm } from "react-hook-form";
+import { type Resolver, type UseFormReturn, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router";
 
@@ -9,6 +9,7 @@ import { withErrorBoundary } from "@/shared/ui";
 
 import {
 	type IRecentSearch,
+	type TCatalogLocationBar,
 	type TSearchTours,
 	createSearchToursSchema,
 	mapSearchQueryToSearchTours
@@ -45,7 +46,11 @@ const SearchToursBase: FC = () => {
 
 	return (
 		<section className="grid gap-12">
-			<SearchToursBar form={topSearchForm} />
+			<SearchToursBar
+				form={
+					topSearchForm as unknown as UseFormReturn<TCatalogLocationBar>
+				}
+			/>
 			<RecentlySearch onSelect={handleRecentSelect} />
 			<MostPopularTours />
 		</section>

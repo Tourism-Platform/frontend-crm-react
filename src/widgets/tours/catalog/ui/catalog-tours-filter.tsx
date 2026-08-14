@@ -5,10 +5,14 @@ import { type FC, useCallback, useMemo } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { MoneysIcon } from "@/shared/assets";
-import type { TOptionsKeys } from "@/shared/config";
+import { LanguageCode } from "@/shared/api";
+import {
+	ENUM_LANGUAGES,
+	type TOptionsKeys,
+	i18nLanguageMapper
+} from "@/shared/config";
+import { languageCodeMapper } from "@/shared/converters";
 import { CustomAccordion, withErrorBoundary } from "@/shared/ui";
-import { CustomAccordionRange } from "@/shared/ui/custom/custom-accordion-range";
 
 import {
 	CATALOG_DURATION_KEYS,
@@ -18,52 +22,59 @@ import {
 	type ENUM_TOUR_CATEGORY_TYPE,
 	type ICatalogTourFilters,
 	buildCatalogFilterItems,
-	useGetCatalogPriceHistogramQuery,
-	useGetCatalogRegionsQuery
+	buildStringFilterItems,
+	useGetCatalogFiltersQuery
 } from "@/entities/tour";
-import { ENUM_LANGUAGES, LANGUAGES_LABELS } from "@/entities/tour/landing";
+import {
+	LANGUAGES_LABELS,
+	ENUM_LANGUAGES as TOUR_LANGUAGES
+} from "@/entities/tour/landing";
 import { ENUM_TOUR_CATEGORY, TOUR_CATEGORY_LABELS } from "@/entities/tour/tour";
-
-import { useCatalogFilter } from "../model";
 
 interface ICatalogToursFilterProps {
 	form: UseFormReturn<ICatalogTourFilters>;
 }
 
-const PRICE_STEP = 150;
-const PRICE_MIN = 0;
-const PRICE_MAX = 3600;
-
-const LANGUAGE_KEYS = Object.values(ENUM_LANGUAGES) as ENUM_LANGUAGES_TYPE[];
+const LANGUAGE_KEYS = Object.values(TOUR_LANGUAGES) as ENUM_LANGUAGES_TYPE[];
 const CATEGORY_KEYS = Object.values(
 	ENUM_TOUR_CATEGORY
 ) as ENUM_TOUR_CATEGORY_TYPE[];
 
 const CatalogToursFilterBase: FC<ICatalogToursFilterProps> = ({ form }) => {
 	const { t } = useTranslation("tours_catalog_page");
-	const { t: tOptions } = useTranslation("options");
+	const { t: tOptions, i18n } = useTranslation("options");
 	const { watch, setValue } = form;
 
 	const selectedFilters = watch("filters") || {};
 
-	const {
-		data: priceHistogramData = [],
-		isLoading: isPriceHistogramLoading
-	} = useGetCatalogPriceHistogramQuery({
-		min: PRICE_MIN,
-		max: PRICE_MAX,
-		step: PRICE_STEP
-	});
+	const readLang = useMemo(
+		() =>
+			languageCodeMapper.to(
+				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
+			) ?? LanguageCode.En,
+		[i18n.language]
+	);
 
-	const {
-		items: regionItems,
-		isLoading: isRegionsFetching,
-		hasMore: hasMoreRegions,
-		loadMore: loadMoreRegions
-	} = useCatalogFilter({
-		useQuery: useGetCatalogRegionsQuery,
-		selectedValues: selectedFilters.region
-	});
+	const { data: catalogFilters, isLoading: isCatalogFiltersLoading } =
+		useGetCatalogFiltersQuery({ lang: readLang });
+
+	const countryItems = useMemo(
+		() =>
+			buildStringFilterItems(
+				catalogFilters?.countries ?? [],
+				selectedFilters.country
+			),
+		[catalogFilters?.countries, selectedFilters.country]
+	);
+
+	const cityItems = useMemo(
+		() =>
+			buildStringFilterItems(
+				catalogFilters?.cities ?? [],
+				selectedFilters.city
+			),
+		[catalogFilters?.cities, selectedFilters.city]
+	);
 
 	const durationItems = useMemo(
 		() =>
@@ -102,25 +113,30 @@ const CatalogToursFilterBase: FC<ICatalogToursFilterProps> = ({ form }) => {
 		[selectedFilters.category, translateOption]
 	);
 
-	const handleRegionChange = useCallback(
+	const handleCountryChange = useCallback(
 		(id: string, checked: boolean) => {
-			const currentValues = form.getValues("filters.region") || [];
+			const currentValues = form.getValues("filters.country") || [];
 			const nextValues = checked
 				? [...currentValues, id]
 				: currentValues.filter((val) => val !== id);
 
-			setValue("filters.region", nextValues);
+			setValue("filters.country", nextValues);
 			setValue("page", 1);
 		},
 		[form, setValue]
 	);
 
-	const handlePriceChange = useCallback(
-		(value: { from: number; to: number }) => {
-			setValue("filters.price", value);
+	const handleCityChange = useCallback(
+		(id: string, checked: boolean) => {
+			const currentValues = form.getValues("filters.city") || [];
+			const nextValues = checked
+				? [...currentValues, id]
+				: currentValues.filter((val) => val !== id);
+
+			setValue("filters.city", nextValues);
 			setValue("page", 1);
 		},
-		[setValue]
+		[form, setValue]
 	);
 
 	const handleDurationChange = useCallback(
@@ -173,31 +189,29 @@ const CatalogToursFilterBase: FC<ICatalogToursFilterProps> = ({ form }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<CustomAccordionRange
+			{/* <CustomAccordionRange
 				id="price"
 				title={t("filters.fields.price")}
 				icon={MoneysIcon}
-				min={PRICE_MIN}
-				max={PRICE_MAX}
-				step={PRICE_STEP}
-				from={selectedFilters.price?.from}
-				to={selectedFilters.price?.to}
-				useHistogram
-				histogramData={priceHistogramData}
-				isLoading={isPriceHistogramLoading}
-				onChange={handlePriceChange}
+				...
+			/> */}
+
+			<CustomAccordion
+				id="country"
+				title={t("filters.fields.country")}
+				icon={MapPin}
+				items={countryItems}
+				isLoading={isCatalogFiltersLoading}
+				onChange={handleCountryChange}
 			/>
 
 			<CustomAccordion
-				id="region"
-				title={t("filters.fields.region")}
+				id="city"
+				title={t("filters.fields.city")}
 				icon={MapPin}
-				items={regionItems}
-				isLoading={isRegionsFetching}
-				hasMore={hasMoreRegions}
-				itemsLimit={5}
-				onChange={handleRegionChange}
-				onLoadMore={loadMoreRegions}
+				items={cityItems}
+				isLoading={isCatalogFiltersLoading}
+				onChange={handleCityChange}
 			/>
 
 			<CustomAccordion

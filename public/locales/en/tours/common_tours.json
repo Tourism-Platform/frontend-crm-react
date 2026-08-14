@@ -29,7 +29,12 @@
 					"label": "Where are you going?",
 					"placeholder": "Choose destination",
 					"empty": "No destinations found",
-					"required": "Please choose a destination"
+					"required": "Please choose a destination",
+					"kinds": {
+						"city": "City",
+						"country": "Country",
+						"place": "Place"
+					}
 				},
 				"when": {
 					"label": "When?",

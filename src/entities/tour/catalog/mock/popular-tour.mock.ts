@@ -1,6 +1,4 @@
-import type { ICatalogTourBackend } from "../types";
-
-export const POPULAR_TOURS_MOCK: ICatalogTourBackend[] = [
+export const POPULAR_TOURS_MOCK = [
 	{
 		id: "popular-tour-1",
 		title: "Popular: Samarkand Night Tour",

@@ -9,12 +9,21 @@ export type TListCatalogToursBackendResponse =
 export type TCatalogTourQueryBackend =
 	typeof TOUR_CATALOG_PATHS.listPublicCatalog._types.query;
 
-export interface ICatalogTourBackend {
-	id: string;
-	title: string;
-	price_from: number;
-	price_to: number;
-	image_url: string;
-	description: string;
-	duration: number;
-}
+export type TCatalogFiltersBackend =
+	typeof TOUR_CATALOG_PATHS.listFilters._types.response;
+
+export type TCatalogFiltersQuery =
+	typeof TOUR_CATALOG_PATHS.listFilters._types.query;
+
+export type TSuggestLocationsBackend =
+	typeof TOUR_CATALOG_PATHS.suggestLocations._types.response;
+
+export type TSuggestLocationsQuery =
+	typeof TOUR_CATALOG_PATHS.suggestLocations._types.query;
+
+export type TLocationSuggestionBackend = TSuggestLocationsBackend[number];
+
+export type TPopularToursBackendResponse = {
+	data: TCatalogTourBackend[];
+	total: number;
+};

@@ -1,4 +1,5 @@
 import type {
+	CatalogFiltersSchema,
 	LanguageCode,
 	LocationSuggestionSchema,
 	PublicTourCatalogSchemaOutput,
@@ -19,6 +20,15 @@ export const TOUR_CATALOG_PATHS = {
 			response: LocationSuggestionSchema[];
 		}
 	} as const,
+	listFilters: {
+		url: "/tour/catalog/filters",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { lang?: LanguageCode };
+			response: CatalogFiltersSchema;
+		}
+	} as const,
 	listPublicCatalog: {
 		url: "/tour/catalog/public",
 		method: "GET",
@@ -30,9 +40,9 @@ export const TOUR_CATALOG_PATHS = {
 				categories?: TourCategory[] | null;
 				duration_days_min?: number | null;
 				duration_days_max?: number | null;
-				city?: string | null;
-				country?: string | null;
-				tour_lang?: LanguageCode | null;
+				city?: string[] | null;
+				country?: string[] | null;
+				tour_lang?: LanguageCode[] | null;
 				read_lang?: LanguageCode;
 				skip?: number;
 				limit?: number;
@@ -51,9 +61,9 @@ export const TOUR_CATALOG_PATHS = {
 				categories?: TourCategory[] | null;
 				duration_days_min?: number | null;
 				duration_days_max?: number | null;
-				city?: string | null;
-				country?: string | null;
-				tour_lang?: LanguageCode | null;
+				city?: string[] | null;
+				country?: string[] | null;
+				tour_lang?: LanguageCode[] | null;
 				read_lang?: LanguageCode;
 				skip?: number;
 				limit?: number;

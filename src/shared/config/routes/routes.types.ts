@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import type { TTourSearchLocationQuery } from "./query.types";
 import type { ENUM_PATH } from "./routes.config";
 import { type ENUM_AUTH_TYPE, type ENUM_LAYOUT_TYPE } from "./routes.enum";
 
@@ -47,15 +48,9 @@ export type TTourEventPath =
 	(typeof ENUM_PATH.TOURS.EVENTS)[keyof typeof ENUM_PATH.TOURS.EVENTS];
 
 export type TQueryParams = {
-	[ENUM_PATH.TOURS.SEARCH]: {
-		destination?: string;
-		lat?: string;
-		long?: string;
-		checkIn?: string;
-		checkOut?: string;
-	};
+	[ENUM_PATH.TOURS.SEARCH]: TTourSearchLocationQuery;
 	[ENUM_PATH.TOURS.CATALOG.ROOT]: {
-		page: number;
-		limit: number;
+		page?: number;
+		limit?: number;
 	};
 };

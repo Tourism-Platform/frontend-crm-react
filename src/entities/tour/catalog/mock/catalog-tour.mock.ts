@@ -1,6 +1,4 @@
-import type { ICatalogTourBackend } from "../types";
-
-export const CATALOG_TOURS_MOCK: ICatalogTourBackend[] = [
+export const CATALOG_TOURS_MOCK = [
 	{
 		id: "0f042356-075c-4c44-a82d-e054108ea3f2",
 		title: "Catalog: Ancient Wonders of Samarkand",
