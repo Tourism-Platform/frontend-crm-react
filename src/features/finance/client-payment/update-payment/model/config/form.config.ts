@@ -1,18 +1,11 @@
-import type { SelectPickerOption } from "@/shared/ui";
-
 import { ENUM_FORM_UPDATE_PAYMENT, type TUpdatePaymentForm } from "../types";
 
-export const FORM_UPDATE_PAYMENT_LIST = ({
-	orderOptions
-}: {
-	orderOptions: SelectPickerOption[];
-}): TUpdatePaymentForm[] => [
+export const FORM_UPDATE_PAYMENT_LIST: TUpdatePaymentForm[] = [
 	{
 		label: "menu.update.form.fields.orderId.label",
 		placeholder: "menu.update.form.fields.orderId.placeholder",
 		key: ENUM_FORM_UPDATE_PAYMENT.ORDER_ID,
-		fieldType: "select",
-		options: orderOptions,
+		fieldType: "input",
 		disabled: true
 	},
 	{

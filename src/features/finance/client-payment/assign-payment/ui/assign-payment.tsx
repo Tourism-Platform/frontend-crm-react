@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC, type ReactNode, useMemo, useState } from "react";
+import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -25,7 +25,6 @@ import {
 	ENUM_PAYMENT_STATUS,
 	type IPayment,
 	useConfirmPaymentMutation,
-	useGetAvailableOrderIdsQuery,
 	usePaymentAttachments
 } from "@/entities/finance";
 
@@ -64,29 +63,15 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 		enabled: open
 	});
 
-	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
-
-	const orderOptions = useMemo(() => {
-		return orderIds.map((o) => ({
-			value: o,
-			label: o
-		}));
-	}, [orderIds]);
-
 	const form = useForm<TAssignPaymentSchema>({
 		resolver: zodResolver(ASSIGN_PAYMENT_SCHEMA),
 		defaultValues: {
-			[ENUM_FORM_ASSIGN_PAYMENT.ORDER_ID]: payment.bookingId,
+			[ENUM_FORM_ASSIGN_PAYMENT.ORDER_ID]: payment.orderId,
 			[ENUM_FORM_ASSIGN_PAYMENT.AMOUNT]: payment.amount,
 			[ENUM_FORM_ASSIGN_PAYMENT.NOTE]: payment.note || ""
 		},
 		mode: "onSubmit"
 	});
-
-	const formFields = useMemo(
-		() => FORM_ASSIGN_PAYMENT_LIST({ orderOptions }),
-		[orderOptions]
-	);
 
 	async function onSubmit() {
 		try {
@@ -121,16 +106,18 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{formFields.map(({ key, ...item }) => (
-								<CustomField
-									key={key}
-									control={form.control}
-									name={key}
-									t={t}
-									disabled={isAssigned}
-									{...item}
-								/>
-							))}
+							{FORM_ASSIGN_PAYMENT_LIST.map(
+								({ key, disabled, ...item }) => (
+									<CustomField
+										key={key}
+										control={form.control}
+										name={key}
+										t={t}
+										{...item}
+										disabled={isAssigned || disabled}
+									/>
+								)
+							)}
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="ml-1 text-sm font-medium">

@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import { type FC, type ReactNode, useMemo, useState } from "react";
+import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -23,7 +23,6 @@ import {
 
 import {
 	type IPayment,
-	useGetAvailableOrderIdsQuery,
 	usePaymentAttachments,
 	useUpdatePaymentMutation
 } from "@/entities/finance";
@@ -60,29 +59,15 @@ export const UpdatePayment: FC<IUpdatePaymentProps> = ({
 		enabled: open
 	});
 
-	const { data: orderIds = [] } = useGetAvailableOrderIdsQuery();
-
-	const orderOptions = useMemo(() => {
-		return orderIds.map((o) => ({
-			value: o,
-			label: o
-		}));
-	}, [orderIds]);
-
 	const form = useForm<TUpdatePaymentSchema>({
 		resolver: zodResolver(UPDATE_PAYMENT_SCHEMA),
 		defaultValues: {
-			orderId: payment.bookingId,
+			orderId: payment.orderId,
 			amount: payment.amount,
 			note: payment.note || ""
 		},
 		mode: "onSubmit"
 	});
-
-	const formFields = useMemo(
-		() => FORM_UPDATE_PAYMENT_LIST({ orderOptions }),
-		[orderOptions]
-	);
 
 	async function onSubmit(data: TUpdatePaymentSchema) {
 		try {
@@ -123,16 +108,18 @@ export const UpdatePayment: FC<IUpdatePaymentProps> = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{formFields.map(({ key, disabled, ...item }) => (
-								<CustomField
-									key={key}
-									control={form.control}
-									name={key}
-									t={t}
-									disabled={disabled}
-									{...item}
-								/>
-							))}
+							{FORM_UPDATE_PAYMENT_LIST.map(
+								({ key, disabled, ...item }) => (
+									<CustomField
+										key={key}
+										control={form.control}
+										name={key}
+										t={t}
+										{...item}
+										disabled={disabled}
+									/>
+								)
+							)}
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="ml-1 text-sm font-medium">
