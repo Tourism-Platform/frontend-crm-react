@@ -6,5 +6,7 @@ export * from "./lib/merge-tour-review-with-availability";
 export * from "./mock";
 export * from "./types";
 export * from "./ui";
+export * from "./utils/availability-readiness";
 export * from "./utils/get-next-availability-status";
+export * from "./utils/order-transition-gate";
 export * from "./utils/resolve-order-tour-id";

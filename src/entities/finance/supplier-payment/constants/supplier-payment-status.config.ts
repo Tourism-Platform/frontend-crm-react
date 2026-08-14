@@ -1,5 +1,6 @@
 import { type TOptionsKeys } from "@/shared/config";
 import type { BadgeVariant } from "@/shared/ui";
+import { valueToLabel } from "@/shared/utils";
 
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
@@ -23,3 +24,7 @@ export const SUPPLIER_PAYMENT_STATUS_VARIANTS: Record<
 	[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED]: "green",
 	[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]: "yellow"
 };
+
+export const SUPPLIER_PAYMENT_STATUS_OPTIONS = valueToLabel(
+	SUPPLIER_PAYMENT_STATUS_LABELS
+);

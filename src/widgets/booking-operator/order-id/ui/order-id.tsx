@@ -25,6 +25,7 @@ export const OrderId: FC = () => {
 		contactItems,
 		paxDetails,
 		tourReviewItems,
+		availability,
 		financials,
 		isLoading
 	} = useOrderDetails(orderId || "");
@@ -49,6 +50,7 @@ export const OrderId: FC = () => {
 				orderNumber={order.orderNumber}
 				status={order.status}
 				invoiceStatus={order.invoiceStatus}
+				availability={availability}
 			/>
 
 			{order.report && <OrderReport report={order.report} />}
@@ -71,6 +73,7 @@ export const OrderId: FC = () => {
 					items={tourReviewItems}
 					financials={financials}
 					orderStatus={order.status}
+					availability={availability}
 				/>
 			)}
 			{showSupplierPayments && (

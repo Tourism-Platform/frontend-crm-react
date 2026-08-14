@@ -21,10 +21,12 @@ import {
 	Form,
 	Separator
 } from "@/shared/ui";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type ISupplierPayment,
+	SUPPLIER_PAYMENT_STATUS_LABELS,
 	useGetSupplierPaymentByIdQuery,
 	useRemoveSupplierPaymentReceiptMutation,
 	useUpdateSupplierPaymentMutation,
@@ -43,7 +45,18 @@ interface IConfirmPaymentProps {
 }
 
 export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
-	const { t } = useTranslation("supplier_payments_page");
+	const { t } = useTranslation("supplier_payments_page", {
+		useSuspense: false
+	});
+	const statusOptions = useValueToTranslateLabel(
+		SUPPLIER_PAYMENT_STATUS_LABELS
+	);
+	const fields = FORM_CONFIRM_PAYMENT_LIST.map((item) =>
+		item.key === ENUM_FORM_CONFIRM_PAYMENT.STATUS &&
+		item.fieldType === "select"
+			? { ...item, options: statusOptions }
+			: item
+	);
 	const [open, setOpen] = useState<boolean>(false);
 	const [initialFiles, setInitialFiles] = useState<TFileMetadata[]>([]);
 	const [loadingId, setLoadingId] = useState<string | undefined>();
@@ -78,6 +91,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 		defaultValues: {
 			[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: payment.bookingId,
 			[ENUM_FORM_CONFIRM_PAYMENT.AMOUNT]: payment.amount,
+			[ENUM_FORM_CONFIRM_PAYMENT.STATUS]: payment.status,
 			[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: payment.note || ""
 		},
 		mode: "onSubmit"
@@ -89,6 +103,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 		form.reset({
 			[ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID]: paymentDetail.bookingId,
 			[ENUM_FORM_CONFIRM_PAYMENT.AMOUNT]: paymentDetail.amount,
+			[ENUM_FORM_CONFIRM_PAYMENT.STATUS]: paymentDetail.status,
 			[ENUM_FORM_CONFIRM_PAYMENT.NOTE]: paymentDetail.note || ""
 		});
 	}, [form, open, paymentDetail]);
@@ -133,7 +148,10 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 
 	async function onSubmit(data: TConfirmPaymentSchema) {
 		try {
-			if (!isConfirmed && detailFiles.length === 0) {
+			if (
+				data.status === ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED &&
+				detailFiles.length === 0
+			) {
 				toast.error(t("form.errors.files.required"));
 				return;
 			}
@@ -141,13 +159,15 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 			const amountChanged = data.amount !== paymentDetail?.amount;
 			const noteChanged =
 				(data.note ?? "") !== (paymentDetail?.note ?? "");
+			const statusChanged = data.status !== paymentDetail?.status;
 
-			if (amountChanged || noteChanged) {
+			if (amountChanged || noteChanged || statusChanged) {
 				await updatePayment({
 					id: payment.id,
 					data: {
 						amount: data.amount,
-						note: data.note
+						note: data.note,
+						status: data.status
 					}
 				}).unwrap();
 			}
@@ -190,18 +210,16 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_CONFIRM_PAYMENT_LIST.map(
-								({ key, ...item }) => (
-									<CustomField
-										key={key}
-										control={form.control}
-										name={key}
-										t={t}
-										disabled={isConfirmed}
-										{...item}
-									/>
-								)
-							)}
+							{fields.map(({ key, ...item }) => (
+								<CustomField
+									key={key}
+									control={form.control}
+									name={key}
+									t={t}
+									disabled={isConfirmed}
+									{...item}
+								/>
+							))}
 						</div>
 						<div className="flex flex-col gap-2">
 							<p className="ml-1 text-sm font-medium">

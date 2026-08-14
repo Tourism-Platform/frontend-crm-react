@@ -14,8 +14,11 @@ import {
 	type ENUM_INVOICE_STATUS_TYPE,
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
+	type IBookingEventAvailability,
 	INVOICE_STATUS_LABELS,
 	INVOICE_STATUS_VARIANTS,
+	NEXT_ORDER_STATUS,
+	getOrderTransitionGate,
 	useUpdateBookingStatusMutation
 } from "@/entities/booking";
 
@@ -26,16 +29,8 @@ interface IOrderHeaderProps {
 	orderNumber: string;
 	status: ENUM_ORDER_STATUS_TYPE;
 	invoiceStatus?: ENUM_INVOICE_STATUS_TYPE;
+	availability?: IBookingEventAvailability[];
 }
-
-const NEXT_ORDER_STATUS: Partial<
-	Record<ENUM_ORDER_STATUS_TYPE, ENUM_ORDER_STATUS_TYPE>
-> = {
-	[ENUM_ORDER_STATUS.NEW]: ENUM_ORDER_STATUS.IN_PROCESSING,
-	[ENUM_ORDER_STATUS.IN_PROCESSING]: ENUM_ORDER_STATUS.BOOKING,
-	[ENUM_ORDER_STATUS.BOOKING]: ENUM_ORDER_STATUS.IN_PROGRESS,
-	[ENUM_ORDER_STATUS.IN_PROGRESS]: ENUM_ORDER_STATUS.COMPLETED
-};
 
 const NEXT_STATUS_BUTTON_KEY: Partial<Record<ENUM_ORDER_STATUS_TYPE, string>> =
 	{
@@ -49,7 +44,8 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 	orderId,
 	orderNumber,
 	status,
-	invoiceStatus
+	invoiceStatus,
+	availability = []
 }) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
 	const [updateBookingStatus, { isLoading: isUpdatingStatus }] =
@@ -57,9 +53,11 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 
 	const nextStatus = NEXT_ORDER_STATUS[status];
 	const nextButtonKey = NEXT_STATUS_BUTTON_KEY[status];
+	const transitionGate = getOrderTransitionGate({ status, availability });
+	const isNextStatusDisabled = isUpdatingStatus || !transitionGate.allowed;
 
 	const handleNextStatus = async () => {
-		if (!nextStatus) return;
+		if (!nextStatus || !transitionGate.allowed) return;
 
 		try {
 			await updateBookingStatus({
@@ -81,7 +79,15 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 		status === ENUM_ORDER_STATUS.IN_PROGRESS;
 
 	const nextStatusButton = nextStatus && nextButtonKey && (
-		<Button onClick={handleNextStatus} disabled={isUpdatingStatus}>
+		<Button
+			onClick={handleNextStatus}
+			disabled={isNextStatusDisabled}
+			title={
+				!transitionGate.allowed
+					? transitionGate.reasons.join("; ")
+					: undefined
+			}
+		>
 			{isUpdatingStatus && (
 				<Loader2 className="mr-2 h-4 w-4 animate-spin" />
 			)}
@@ -173,6 +179,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 							<SendInvoice
 								orderId={orderId}
 								orderStatus={status}
+								availability={availability}
 							/>
 							{nextStatusButton}
 						</div>

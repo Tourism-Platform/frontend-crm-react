@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import {
 	Card,
+	CardAction,
 	CardContent,
 	CardHeader,
 	CardTitle,
@@ -13,11 +14,14 @@ import {
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import {
+	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type ISupplierPaymentFilters,
 	useGetSupplierPaymentsQuery
 } from "@/entities/finance";
 
 import { SUPPLIER_PAYMENTS_COLUMNS } from "../model";
+
+import { SelectionProgress } from "./selection-progress";
 
 interface IOrderSupplierPaymentsProps {
 	bookingId: string;
@@ -56,6 +60,18 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 
 	const payments = useMemo(() => data?.data ?? [], [data]);
 	const totalCount = data?.total ?? 0;
+	const paidCountFromApi =
+		data?.statusCounts?.[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED] ?? 0;
+	const recordedCountFromApi =
+		data?.statusCounts?.[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED] ?? 0;
+	const paidCount =
+		paidCountFromApi + recordedCountFromApi > 0
+			? paidCountFromApi
+			: payments.filter(
+					(payment) =>
+						payment.status ===
+						ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
+				).length;
 
 	const columns = useMemo(() => SUPPLIER_PAYMENTS_COLUMNS(t), [t]);
 
@@ -99,6 +115,19 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 				<CardTitle className="text-lg font-semibold">
 					{t("supplier_payments.title")}
 				</CardTitle>
+				{totalCount > 0 && (
+					<CardAction>
+						<SelectionProgress
+							selected={paidCount}
+							total={totalCount}
+							label={t("supplier_payments.paid")}
+							ariaLabel={t("supplier_payments.paid_progress", {
+								selected: paidCount,
+								total: totalCount
+							})}
+						/>
+					</CardAction>
+				)}
 			</CardHeader>
 			<CardContent>
 				<SmartTable

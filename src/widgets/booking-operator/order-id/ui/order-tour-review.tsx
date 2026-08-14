@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import {
 	Card,
+	CardAction,
 	CardContent,
 	CardHeader,
 	CardTitle,
@@ -12,8 +13,11 @@ import {
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import {
+	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
-	type IOrderTourReviewItem
+	type IBookingEventAvailability,
+	type IOrderTourReviewItem,
+	getAvailabilitySelectionProgress
 } from "@/entities/booking";
 import { type IBookingFinancials } from "@/entities/finance";
 
@@ -23,11 +27,14 @@ import {
 	getFinancialsStats
 } from "../model";
 
+import { SelectionProgress } from "./selection-progress";
+
 interface IOrderTourReviewProps {
 	bookingId: string;
 	items: IOrderTourReviewItem[];
 	financials?: IBookingFinancials;
 	orderStatus: ENUM_ORDER_STATUS_TYPE;
+	availability?: IBookingEventAvailability[];
 }
 
 const TABLE_LAYOUT = {
@@ -64,7 +71,8 @@ const OrderTourReviewBase = ({
 	bookingId,
 	items,
 	financials,
-	orderStatus
+	orderStatus,
+	availability = []
 }: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
 
@@ -78,12 +86,34 @@ const OrderTourReviewBase = ({
 		[t, orderStatus, bookingId]
 	);
 
+	const selectionProgress = useMemo(
+		() => getAvailabilitySelectionProgress(availability),
+		[availability]
+	);
+
+	const showSelectionProgress =
+		orderStatus === ENUM_ORDER_STATUS.IN_PROCESSING &&
+		selectionProgress.total > 0;
+
 	return (
 		<Card>
 			<CardHeader className="gap-4">
 				<CardTitle className="text-lg font-semibold">
 					{t("tour_review.title")}
 				</CardTitle>
+				{showSelectionProgress && (
+					<CardAction>
+						<SelectionProgress
+							selected={selectionProgress.selected}
+							total={selectionProgress.total}
+							label={t("tour_review.selected")}
+							ariaLabel={t("tour_review.selection_progress", {
+								selected: selectionProgress.selected,
+								total: selectionProgress.total
+							})}
+						/>
+					</CardAction>
+				)}
 
 				{summary && (
 					<div className="grid w-fit grid-cols-[auto_1px_auto_1px_auto] items-center gap-8">

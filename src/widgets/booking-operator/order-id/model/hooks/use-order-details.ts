@@ -75,6 +75,7 @@ export const useOrderDetails = (orderId: string) => {
 		contactItems,
 		paxDetails,
 		tourReviewItems,
+		availability: availabilityQuery.data ?? [],
 		financials: financialsQuery.data,
 		isLoading,
 		isOrderLoading: orderQuery.isLoading,

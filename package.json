@@ -16,6 +16,7 @@
 		"seed:finance-settings": "tsx --env-file=.env scripts/seeders/finance-settings/index.ts",
 		"seed:finance": "tsx --env-file=.env scripts/seeders/finance/index.ts",
 		"seed:booking": "tsx --env-file=.env scripts/seeders/booking/index.ts",
+		"audit:operator-booking": "tsx --env-file=.env scripts/audit/operator-booking-flow.ts",
 		"format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss}\" \"public/locales/**/*.json\"",
 		"lint": "eslint .",
 		"test": "vitest run",

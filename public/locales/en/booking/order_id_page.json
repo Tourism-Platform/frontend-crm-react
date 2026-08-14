@@ -69,6 +69,8 @@
 	},
 	"supplier_payments": {
 		"title": "Booking & supplier payments",
+		"paid": "paid",
+		"paid_progress": "{{selected}} / {{total}} paid",
 		"table": {
 			"item": "Item",
 			"component": "Component",
@@ -76,6 +78,7 @@
 			"supplier": "Supplier",
 			"supplier_payment": "Supplier payment",
 			"amount": "Amount",
+			"receipt_count": "Receipts",
 			"confirmation": "Confirmation",
 			"paidAt": "Paid at",
 			"status": "Status",
@@ -90,6 +93,8 @@
 	},
 	"tour_review": {
 		"title": "Tour review",
+		"selected": "selected",
+		"selection_progress": "{{selected}} / {{total}} selected",
 		"revenue": "Total Revenue",
 		"profit": "Estimated Profit",
 		"paid": "Paid",

@@ -1,28 +1,11 @@
 import { HttpResponse } from "msw";
 
-import {
-	ApplyAvailabilityInput,
-	AvailabilityStatus,
-	createMockHandler
-} from "@/shared/api";
+import { ApplyAvailabilityInput, createMockHandler } from "@/shared/api";
 
 import {
 	getBookingAvailabilityList,
 	updateBookingAvailabilityRow
 } from "../mock/booking-order-availability.mock";
-
-const mapApplyToAvailabilityStatus = (
-	input: ApplyAvailabilityInput
-): AvailabilityStatus => {
-	switch (input) {
-		case ApplyAvailabilityInput.Available:
-			return AvailabilityStatus.Selected;
-		case ApplyAvailabilityInput.Unavailable:
-			return AvailabilityStatus.Unavailable;
-		default:
-			return AvailabilityStatus.Pending;
-	}
-};
 
 export const bookingAvailabilityHandlers = [
 	createMockHandler(
@@ -45,13 +28,12 @@ export const bookingAvailabilityHandlers = [
 			const eventId = String(params.eventId);
 			const optionIndex = Number(params.optionIndex);
 			const { status } = body as { status: ApplyAvailabilityInput };
-			const nextStatus = mapApplyToAvailabilityStatus(status);
 
 			const updated = updateBookingAvailabilityRow(
 				bookingId,
 				eventId,
 				optionIndex,
-				nextStatus
+				status
 			);
 
 			if (!updated) {

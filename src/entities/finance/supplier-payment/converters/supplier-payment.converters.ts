@@ -1,7 +1,8 @@
-import type {
-	OPERATOR_SUPPLIER_PAYMENT_PATHS,
-	SupplierPaymentFile,
-	SupplierPaymentListRowOutput
+import {
+	type OPERATOR_SUPPLIER_PAYMENT_PATHS,
+	type SupplierPaymentFile,
+	type SupplierPaymentListRowOutput,
+	SupplierPaymentStatus
 } from "@/shared/api";
 import { formatDate, parseDecimalSafe } from "@/shared/utils";
 
@@ -62,6 +63,7 @@ export const mapSupplierPaymentToFrontend = (
 			currencyConverter.from(data.currency) ?? String(data.currency),
 		manager: display?.manager ?? SUPPLIER_PAYMENT_NO_DATA,
 		status: uiStatus ?? ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED,
+		receiptCount: data.files.length,
 		note: data.note ?? undefined,
 		files: mapFilesToMetadata(data.files)
 	};
@@ -104,6 +106,25 @@ const emptyStatusCounts = (): TSupplierPaymentStatusCounts => ({
 	[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]: 0
 });
 
+const mapStatusCounts = (
+	raw?: Record<string, number>
+): TSupplierPaymentStatusCounts => {
+	if (!raw) {
+		return emptyStatusCounts();
+	}
+
+	return {
+		[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED]:
+			raw[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED] ??
+			raw[SupplierPaymentStatus.Paid] ??
+			0,
+		[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]:
+			raw[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED] ??
+			raw[SupplierPaymentStatus.NotPaid] ??
+			0
+	};
+};
+
 export const mapSupplierPaymentListItemToFrontend = (
 	data: SupplierPaymentListRowOutput
 ): ISupplierPayment => {
@@ -125,6 +146,7 @@ export const mapSupplierPaymentListItemToFrontend = (
 			currencyConverter.from(data.currency) ?? String(data.currency),
 		manager: display?.manager ?? SUPPLIER_PAYMENT_NO_DATA,
 		status: uiStatus ?? ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED,
+		receiptCount: data.receipt_count,
 		note: undefined,
 		files:
 			data.receipt_count > 0
@@ -146,7 +168,7 @@ export const mapSupplierPaymentListToPaginated = (
 ): ISupplierPaymentPaginatedResponse => ({
 	data: response.data.map(mapSupplierPaymentListItemToFrontend),
 	total: response.total_count,
-	statusCounts: response.status_counts ?? emptyStatusCounts()
+	statusCounts: mapStatusCounts(response.status_counts)
 });
 
 export const mapSupplierPaymentFiltersToBackend = (

@@ -15,6 +15,10 @@
 				"label": "Note",
 				"placeholder": "Enter note"
 			},
+			"status": {
+				"label": "Status",
+				"placeholder": "Select status"
+			},
 			"files": {
 				"label": "Receipt scan/files"
 			}
@@ -30,6 +34,9 @@
 			},
 			"files": {
 				"required": "Receipt file is required"
+			},
+			"status": {
+				"required": "Status is required"
 			}
 		},
 		"buttons": {

@@ -141,6 +141,7 @@ function SmartTableInner<TData extends object>({
 		getSubRows,
 		columnResizeMode: "onChange",
 		enableSortingRemoval: false,
+		autoResetPageIndex: false,
 		manualPagination: recordCount !== undefined,
 		pageCount:
 			recordCount !== undefined

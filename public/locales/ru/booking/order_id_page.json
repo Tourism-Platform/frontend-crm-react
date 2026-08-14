@@ -69,6 +69,8 @@
 	},
 	"supplier_payments": {
 		"title": "Бронирование и платежи поставщикам",
+		"paid": "оплачено",
+		"paid_progress": "{{selected}} / {{total}} оплачено",
 		"table": {
 			"item": "Наименование",
 			"component": "Компонент",
@@ -76,6 +78,7 @@
 			"supplier": "Поставщик",
 			"supplier_payment": "Платеж поставщику",
 			"amount": "Сумма",
+			"receipt_count": "Чеки",
 			"confirmation": "Подтверждение",
 			"paidAt": "Дата оплаты",
 			"status": "Статус",
@@ -90,6 +93,8 @@
 	},
 	"tour_review": {
 		"title": "Обзор тура",
+		"selected": "выбрано",
+		"selection_progress": "{{selected}} / {{total}} выбрано",
 		"revenue": "Общий доход",
 		"profit": "Ожидаемая прибыль",
 		"paid": "Оплачено",

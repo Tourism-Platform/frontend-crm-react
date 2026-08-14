@@ -21,6 +21,8 @@ import {
 import {
 	ENUM_ORDER_STATUS,
 	type ENUM_ORDER_STATUS_TYPE,
+	type IBookingEventAvailability,
+	getOrderTransitionGate,
 	useUpdateBookingStatusMutation
 } from "@/entities/booking";
 import {
@@ -31,11 +33,14 @@ import {
 interface ISendInvoiceProps {
 	orderId: string;
 	orderStatus: ENUM_ORDER_STATUS_TYPE;
+	/** Backend availability rows — used to gate confirm (source of truth). */
+	availability?: IBookingEventAvailability[];
 }
 
 export const SendInvoice: FC<ISendInvoiceProps> = ({
 	orderId,
-	orderStatus
+	orderStatus,
+	availability = []
 }) => {
 	const { t } = useTranslation("order_id_page");
 	const isActive = orderStatus === ENUM_ORDER_STATUS.IN_PROCESSING;
@@ -68,8 +73,13 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 		setOpen(nextOpen);
 	};
 
+	const transitionGate = getOrderTransitionGate({
+		status: orderStatus,
+		availability
+	});
+
 	const handleConfirm = async () => {
-		if (!selectedRouteId) return;
+		if (!selectedRouteId || !transitionGate.allowed) return;
 
 		try {
 			await updateBookingStatus({
@@ -88,11 +98,20 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 		isLoading ||
 		isConfirming ||
 		isError ||
-		routes.length === 0;
+		routes.length === 0 ||
+		!transitionGate.allowed;
 
 	return (
 		<>
-			<Button onClick={() => setOpen(true)}>
+			<Button
+				onClick={() => setOpen(true)}
+				disabled={!transitionGate.allowed}
+				title={
+					!transitionGate.allowed
+						? transitionGate.reasons.join("; ")
+						: undefined
+				}
+			>
 				{t("buttons.send_invoice")}
 			</Button>
 

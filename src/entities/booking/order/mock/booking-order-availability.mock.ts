@@ -1,4 +1,8 @@
-import { AvailabilityStatus, BookingStatus } from "@/shared/api";
+import {
+	ApplyAvailabilityInput,
+	AvailabilityStatus,
+	BookingStatus
+} from "@/shared/api";
 
 import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary";
 
@@ -84,11 +88,32 @@ export const ensureBookingAvailabilityForBooking = (
 	bookingAvailabilityStore.set(bookingId, buildAvailabilityRows(bookingId));
 };
 
+const mapApplyInputToStatus = (
+	input: ApplyAvailabilityInput
+): AvailabilityStatus => {
+	switch (input) {
+		case ApplyAvailabilityInput.Available:
+			return AvailabilityStatus.Available;
+		case ApplyAvailabilityInput.Unavailable:
+			return AvailabilityStatus.Unavailable;
+		case ApplyAvailabilityInput.Selected:
+			return AvailabilityStatus.Selected;
+		case ApplyAvailabilityInput.Deselected:
+			return AvailabilityStatus.Deselected;
+		default:
+			return AvailabilityStatus.Pending;
+	}
+};
+
+/**
+ * Backend contract: within one eventId (multi-option) only one option may be SELECTED.
+ * Selecting an option deselects siblings.
+ */
 export const updateBookingAvailabilityRow = (
 	bookingId: string,
 	eventId: string,
 	optionIndex: number,
-	status: AvailabilityStatus
+	input: ApplyAvailabilityInput
 ): TBookingEventAvailabilityBackend | undefined => {
 	const rows = bookingAvailabilityStore.get(bookingId);
 	if (!rows) return undefined;
@@ -98,6 +123,19 @@ export const updateBookingAvailabilityRow = (
 	);
 	if (!row) return undefined;
 
-	row.status = status;
+	const nextStatus = mapApplyInputToStatus(input);
+	row.status = nextStatus;
+
+	if (nextStatus === AvailabilityStatus.Selected) {
+		for (const sibling of rows) {
+			if (
+				sibling.event_id === eventId &&
+				sibling.option_index !== optionIndex
+			) {
+				sibling.status = AvailabilityStatus.Deselected;
+			}
+		}
+	}
+
 	return row;
 };

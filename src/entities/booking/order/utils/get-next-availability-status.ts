@@ -1,4 +1,4 @@
-import { ApplyAvailabilityInput } from "@/shared/api";
+import { ApplyAvailabilityInput } from "@/shared/api/generated/Api";
 
 import {
 	ENUM_AVAILABILITY_STATUS,
@@ -16,6 +16,9 @@ export const getNextAvailabilityApplyStatus = (
 			return ApplyAvailabilityInput.Selected;
 		case ENUM_AVAILABILITY_STATUS.UNAVAILABLE:
 			return ApplyAvailabilityInput.Available;
+		// Backend may deselect siblings in multi-option; allow re-select via API.
+		case ENUM_AVAILABILITY_STATUS.DESELECTED:
+			return ApplyAvailabilityInput.Selected;
 		case ENUM_AVAILABILITY_STATUS.SELECTED:
 			return null;
 		default:

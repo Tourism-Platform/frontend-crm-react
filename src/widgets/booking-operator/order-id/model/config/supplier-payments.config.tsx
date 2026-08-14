@@ -144,6 +144,20 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 			size: 120
 		},
 		{
+			header: t("supplier_payments.table.receipt_count"),
+			meta: {
+				headerTitle: t("supplier_payments.table.receipt_count"),
+				skeleton: <Skeleton className="h-4 w-[48px]" />
+			},
+			accessorKey: "receiptCount",
+			cell: ({ row }) => (
+				<div className="font-medium tabular-nums">
+					{row.original.receiptCount || "–"}
+				</div>
+			),
+			size: 120
+		},
+		{
 			header: t("supplier_payments.table.confirmation"),
 			meta: {
 				headerTitle: t("supplier_payments.table.confirmation"),
@@ -204,7 +218,7 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 					</Badge>
 				);
 			},
-			size: 120
+			size: 100
 		},
 		{
 			id: "actions",

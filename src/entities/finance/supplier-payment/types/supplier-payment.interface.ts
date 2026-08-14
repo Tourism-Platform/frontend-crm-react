@@ -16,6 +16,7 @@ export interface ISupplierPayment {
 	currency: string;
 	manager: string;
 	status: ENUM_SUPPLIER_PAYMENT_STATUS_TYPE;
+	receiptCount: number;
 	note?: string;
 	files?: TFileMetadata[];
 }
