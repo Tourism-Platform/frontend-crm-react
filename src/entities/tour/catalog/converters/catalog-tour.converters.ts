@@ -86,8 +86,8 @@ export const mapCatalogTourListToFrontend = (
 export const mapCatalogTourPaginatedToFrontend = (
 	response: TListCatalogToursBackendResponse
 ): IPaginationResponse<ICatalogTourCard> => ({
-	data: mapCatalogTourListToFrontend(response),
-	total: response.length
+	data: mapCatalogTourListToFrontend(response.data),
+	total: response.total_count
 });
 
 export const mapCatalogListFiltersToFrontend = (
@@ -100,8 +100,8 @@ export const mapCatalogListFiltersToFrontend = (
 export const mapPopularToursPaginatedToFrontend = (
 	response: TListCatalogToursBackendResponse
 ): IPaginationResponse<ICatalogTourCard> => ({
-	data: mapCatalogTourListToFrontend(response),
-	total: response.length
+	data: mapCatalogTourListToFrontend(response.data),
+	total: response.total_count
 });
 
 export const mapCatalogTourFiltersToPublicCatalogQuery = (

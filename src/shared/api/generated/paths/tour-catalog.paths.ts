@@ -2,7 +2,7 @@ import type {
 	CatalogFiltersSchema,
 	LanguageCode,
 	LocationSuggestionSchema,
-	PublicTourCatalogSchemaOutput,
+	PublicTourCatalogListResponse,
 	TourCatalogSort,
 	TourCategory
 } from "../Api";
@@ -47,7 +47,7 @@ export const TOUR_CATALOG_PATHS = {
 				skip?: number;
 				limit?: number;
 			};
-			response: PublicTourCatalogSchemaOutput[];
+			response: PublicTourCatalogListResponse;
 		}
 	} as const,
 	listAgencyCatalog: {
@@ -68,7 +68,7 @@ export const TOUR_CATALOG_PATHS = {
 				skip?: number;
 				limit?: number;
 			};
-			response: PublicTourCatalogSchemaOutput[];
+			response: PublicTourCatalogListResponse;
 		}
 	} as const
 } as const;

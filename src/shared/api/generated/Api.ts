@@ -6926,6 +6926,14 @@ export interface PricingPackageOutput {
 		| null;
 }
 
+/** PublicTourCatalogListResponse */
+export interface PublicTourCatalogListResponse {
+	/** Total Count */
+	total_count: number;
+	/** Data */
+	data: PublicTourCatalogSchemaOutput[];
+}
+
 /** PublicTourCatalogSchema */
 export interface PublicTourCatalogSchemaInput {
 	/**

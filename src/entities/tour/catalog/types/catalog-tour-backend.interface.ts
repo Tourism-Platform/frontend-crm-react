@@ -1,7 +1,7 @@
 import type { TOUR_CATALOG_PATHS } from "@/shared/api";
 
 export type TCatalogTourBackend =
-	(typeof TOUR_CATALOG_PATHS.listPublicCatalog._types.response)[number];
+	(typeof TOUR_CATALOG_PATHS.listPublicCatalog._types.response.data)[number];
 
 export type TListCatalogToursBackendResponse =
 	typeof TOUR_CATALOG_PATHS.listPublicCatalog._types.response;
