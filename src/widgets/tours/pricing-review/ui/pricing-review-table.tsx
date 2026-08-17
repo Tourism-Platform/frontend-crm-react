@@ -1,6 +1,8 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
@@ -33,8 +35,14 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 	);
 
 	const actionsJsx = useMemo(
-		() => <Button variant="default">{t("table.buttons.add_item")}</Button>,
-		[t]
+		() => (
+			<Button variant="default" asChild>
+				<Link to={buildRoute(ENUM_PATH.TOURS.ITINERARY, { tourId })}>
+					{t("table.buttons.add_item")}
+				</Link>
+			</Button>
+		),
+		[t, tourId]
 	);
 
 	return (
@@ -45,8 +53,8 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 					actions={actionsJsx}
 					columns={columns}
 					getSubRows={getSubRowsFn}
-					showPagination={true}
-					showStatusFilter={false}
+					showPagination={false}
+					showTopFilters={false}
 					tableLayout={TABLE_LAYOUT}
 					defaultExpanded={true}
 				/>
