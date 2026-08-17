@@ -1,7 +1,10 @@
 import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 
-import { type TTourEventMultiplyOptionEditPageKeys } from "@/shared/config";
+import {
+	type TResources,
+	type TTourEventMultiplyOptionEditPageKeys
+} from "@/shared/config";
 import { type TFormField } from "@/shared/types";
 
 import {
@@ -25,4 +28,5 @@ export interface IMultiplyOptionEditTabs {
 	label: TTourEventMultiplyOptionEditPageKeys;
 	type: ENUM_MULTIPLY_OPTION_EDIT_TAB_TYPE;
 	slot: FC<IMultiplyOptionSlotProps | any>;
+	ns?: keyof TResources;
 }

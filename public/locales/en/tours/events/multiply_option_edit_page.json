@@ -12,6 +12,12 @@
 				"success": "Successfully saved",
 				"error": "Error while saving"
 			}
+		},
+		"media": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			}
 		}
 	},
 	"general": {

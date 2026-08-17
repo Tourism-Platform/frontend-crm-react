@@ -91,7 +91,7 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 
 	useEffect(() => {
 		if (isError) {
-			toast.error(t("toasts.load.error"));
+			toast.error(t("form.toasts.load.error"));
 		}
 	}, [isError, t]);
 

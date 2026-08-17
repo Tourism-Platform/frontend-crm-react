@@ -13,6 +13,7 @@ export const MULTIPLY_OPTION_EDIT_TABS_LIST: IMultiplyOptionEditTabs[] = [
 	{
 		label: "tabs.media",
 		type: ENUM_MULTIPLY_OPTION_EDIT_TAB.MEDIA,
-		slot: Media
+		slot: Media,
+		ns: "multiply_option_edit_page"
 	}
 ];

@@ -71,6 +71,7 @@ export const MultiplyOptionEdit: FC<IMultiplyOptionEditProps> = ({
 									<item.slot
 										form={form}
 										onSubmit={createSectionSubmit}
+										{...(item?.ns && { ns: item.ns })}
 										isLoading={isLoading}
 									/>
 								</CustomOptionTabsContent>
