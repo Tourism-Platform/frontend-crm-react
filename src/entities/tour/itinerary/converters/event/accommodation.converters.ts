@@ -44,7 +44,7 @@ export const mapAccommodationEventToForm = (
 				details?.amenities ?? []
 			),
 			description: event.description || "",
-			length_of_stay: String(event.details?.duration ?? ""),
+			length_of_stay: event.details?.duration ?? null,
 			check_in_time: event.details?.check_in?.time || "",
 			check_in_timezone: String(
 				event.details?.check_in?.timezone ?? getDeviceUtcOffset()

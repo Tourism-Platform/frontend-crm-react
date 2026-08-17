@@ -97,11 +97,11 @@
 				"form": {
 					"fields": {
 						"length_of_stay": {
-							"label": "Length of stay",
-							"placeholder": "Choose number of days...",
+							"label": "Length of stay (nights)",
+							"placeholder": "Enter number of nights...",
 							"errors": {
-								"required": "Length of stay is required",
-								"invalid": "Invalid length of stay"
+								"required": "Length of stay (nights) is required",
+								"invalid": "Invalid length of stay (nights)"
 							}
 						},
 						"check_in_time": {

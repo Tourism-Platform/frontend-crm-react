@@ -33,12 +33,13 @@ export const GENERAL_INFO_SCHEMA = z.object({
 		.optional(),
 
 	[ENUM_FORM_ACCOMMODATION.LENGTH_OF_STAY]: z
-		.string()
-		// .min(1, {
-		// 	message: msg(
-		// 		"general.schedule.form.fields.length_of_stay.errors.required"
-		// 	)
-		// })
+		.number()
+		.positive({
+			message: msg(
+				"form.general.schedule.form.fields.length_of_stay.errors.invalid"
+			)
+		})
+		.nullable()
 		.optional(),
 	[ENUM_FORM_ACCOMMODATION.CHECK_IN_TIME]: z
 		.string()

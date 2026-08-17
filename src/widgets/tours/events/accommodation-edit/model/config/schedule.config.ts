@@ -1,4 +1,4 @@
-import { LENGTH_OF_STAY_OPTIONS, UTC_OPTIONS } from "@/shared/config";
+import { UTC_OPTIONS } from "@/shared/config";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import { ENUM_FORM_ACCOMMODATION } from "@/entities/tour";
@@ -13,8 +13,10 @@ export const SCHEDULE_LIST = (
 		placeholder:
 			"form.general.schedule.form.fields.length_of_stay.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.LENGTH_OF_STAY,
-		fieldType: "select",
-		options: LENGTH_OF_STAY_OPTIONS,
+		fieldType: "input",
+		type: "number",
+		min: 1,
+		step: "1",
 		className: "col-span-2"
 	},
 	{
