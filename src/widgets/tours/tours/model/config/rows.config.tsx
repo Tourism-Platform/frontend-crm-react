@@ -1,6 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { type TFunction } from "i18next";
+import { Link } from "react-router-dom";
 
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Badge, Checkbox, Skeleton } from "@/shared/ui";
 
 import {
@@ -52,9 +54,14 @@ export const COLUMNS = (
 			},
 			accessorKey: "title",
 			cell: ({ row }) => (
-				<div className="font-medium max-w-xs truncate">
+				<Link
+					to={buildRoute(ENUM_PATH.TOURS.OVERVIEW, {
+						tourId: row.original.id
+					})}
+					className="block truncate font-medium text-primary hover:underline"
+				>
 					{row.getValue("title")}
-				</div>
+				</Link>
 			),
 			size: 300
 		},
