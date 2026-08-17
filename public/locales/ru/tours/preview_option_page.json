@@ -33,7 +33,17 @@
 		"location": "Локация",
 		"start_time": "Начало",
 		"end_time": "Окончание",
-		"flight_info": "Информация о рейсе"
+		"flight_info": "Информация о рейсе",
+		"cars": "Транспорт",
+		"rooms": "Номера",
+		"pax_one": "пассажир",
+		"pax_few": "пассажира",
+		"pax_many": "пассажиров",
+		"pax_other": "пассажиров",
+		"guests_one": "гость",
+		"guests_few": "гостя",
+		"guests_many": "гостей",
+		"guests_other": "гостей"
 	},
 	"pricing": {
 		"title": "Детализация цен",

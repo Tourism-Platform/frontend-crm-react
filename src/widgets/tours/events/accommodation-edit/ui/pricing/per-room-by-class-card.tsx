@@ -39,6 +39,7 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 	addMarginSeparately
 }) => {
 	const { t } = useTranslation("accommodation_edit_page");
+	const categoryRowFields = PER_ROOM_CATEGORY_ROW_FIELDS_LIST();
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
@@ -64,13 +65,12 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 								"grid-cols-[1fr_1fr_1fr_1.5fr_0.5fr_auto]"
 						)}
 					>
-						{PER_ROOM_CATEGORY_ROW_FIELDS_LIST.map(
+						{categoryRowFields.map(
 							({ key, ...item }, fieldIndex) => (
 								<Fragment key={key}>
 									{addMarginSeparately &&
 									fieldIndex ===
-										PER_ROOM_CATEGORY_ROW_FIELDS_LIST.length -
-											1 ? (
+										categoryRowFields.length - 1 ? (
 										<CustomInputSelect
 											control={form.control}
 											name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}.${PER_ROOM_MARKUP_FIELD.key}`}

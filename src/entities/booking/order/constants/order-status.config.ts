@@ -1,7 +1,10 @@
 import { type TOptionsKeys } from "@/shared/config";
 import type { BadgeVariant } from "@/shared/ui";
 
-import { ENUM_ORDER_STATUS, type ENUM_ORDER_STATUS_TYPE } from "../types";
+import {
+	ENUM_ORDER_STATUS,
+	type ENUM_ORDER_STATUS_TYPE
+} from "../types/order-status.types";
 
 export const BOOKING_ORDER_STATUS_LABELS: Record<
 	ENUM_ORDER_STATUS_TYPE,

@@ -1,8 +1,25 @@
-import type { AmenitiesTypes } from "@/shared/api";
+import type {
+	ENUM_ACCOMMODATION_AMENITY_TYPE,
+	ENUM_HOUSING_ROOM_TYPE_TYPE,
+	ENUM_VEHICLE_BODY_TYPE_TYPE
+} from "@/entities/tour/itinerary";
 
 export interface IOptionEventSheetPoint {
 	place: string;
 	dateTime: string;
+}
+
+export interface IOptionEventSheetCar {
+	typ: ENUM_VEHICLE_BODY_TYPE_TYPE | null;
+	pax: number | null;
+	description: string;
+}
+
+export interface IOptionEventSheetRoom {
+	name: string;
+	typ: ENUM_HOUSING_ROOM_TYPE_TYPE | null;
+	pax: number | null;
+	description: string;
 }
 
 export interface IOptionFlightSegment {
@@ -28,13 +45,15 @@ export type TOptionEventSheetExtra =
 			kind: "transfer";
 			pickup: IOptionEventSheetPoint;
 			dropoff: IOptionEventSheetPoint;
+			cars: IOptionEventSheetCar[];
 	  }
 	| {
 			kind: "accommodation";
-			amenities: AmenitiesTypes[];
+			amenities: ENUM_ACCOMMODATION_AMENITY_TYPE[];
 			nights: string;
 			checkIn: string;
 			checkOut: string;
+			rooms: IOptionEventSheetRoom[];
 	  }
 	| {
 			kind: "activity";

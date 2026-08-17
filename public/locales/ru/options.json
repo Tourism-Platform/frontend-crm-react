@@ -113,6 +113,15 @@
 			"bus": "Автобус",
 			"coach": "Туристический автобус"
 		},
+		"housingRoomTypes": {
+			"single": "Одноместный",
+			"double": "Двухместный",
+			"twin": "Твин",
+			"triple": "Трёхместный",
+			"quadruple": "Четырёхместный",
+			"suite": "Люкс",
+			"family": "Семейный"
+		},
 		"transferTypes": {
 			"city_tour": "Обзорная экскурсия",
 			"city_transfer": "Городской трансфер",

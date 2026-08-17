@@ -12,6 +12,7 @@ import {
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
 	ENUM_ACCOMMODATION_PRICING_TYPE,
 	ENUM_FORM_ROOMS,
+	ENUM_HOUSING_ROOM_TYPE,
 	type TAccommodationPricingSchema
 } from "../../types";
 
@@ -99,7 +100,7 @@ describe("mapAccommodationPricingFromBackend", () => {
 					[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]: [
 						{
 							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
-								HousingRoomTypes.Double,
+								ENUM_HOUSING_ROOM_TYPE.DOUBLE,
 							[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 200
 						}
 					]
@@ -391,7 +392,7 @@ describe("mapAccommodationPricingToBackend", () => {
 								[
 									{
 										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
-											HousingRoomTypes.Double,
+											ENUM_HOUSING_ROOM_TYPE.DOUBLE,
 										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 100,
 										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]:
 											null,

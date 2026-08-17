@@ -4,8 +4,10 @@ import {
 	AmenitiesTypes,
 	type BusEventPubReadOutput,
 	Currency,
+	ExpenseType,
 	type FlightEventPubReadOutput,
 	type HousingEventPubReadOutput,
+	HousingRoomTypes,
 	type InformationEventPubReadOutput,
 	LanguageCode,
 	type LocationOutSchema,
@@ -15,7 +17,8 @@ import {
 	type TourOptionPublicResponse,
 	type TrainEventPubReadOutput,
 	type TransferEventPubReadOutput,
-	TransferTypes
+	TransferTypes,
+	VehicleBodyType
 } from "@/shared/api";
 
 import {
@@ -56,7 +59,26 @@ const housingDetails = (city: LocationOutSchema) => ({
 	amenities: [AmenitiesTypes.Wifi, AmenitiesTypes.Breakfast],
 	duration: 1,
 	check_in: time("14:00:00"),
-	check_out: time("12:00:00")
+	check_out: time("12:00:00"),
+	expenses: {
+		typ: ExpenseType.PerRoom,
+		rooms: [
+			{
+				name: "Standard Double",
+				typ: HousingRoomTypes.Double,
+				pax: 2,
+				description:
+					"Comfortable double room with air conditioning, a private bathroom, and city views."
+			},
+			{
+				name: "Family Suite",
+				typ: HousingRoomTypes.Family,
+				pax: 4,
+				description:
+					"Spacious suite with two sleeping areas, suitable for families travelling together."
+			}
+		]
+	}
 });
 
 export const infoEvent = (
@@ -129,6 +151,29 @@ export const transferEvent = (
 			date: "2026-06-01",
 			time: time("16:00:00"),
 			location: locationTashkent()
+		},
+		expenses: {
+			typ: ExpenseType.PerCar,
+			cars: [
+				{
+					typ: VehicleBodyType.Sedan,
+					pax: 2,
+					description:
+						"Air-conditioned sedan for a private transfer with space for light luggage."
+				},
+				{
+					typ: VehicleBodyType.Minivan,
+					pax: 7,
+					description:
+						"Spacious minivan for a small group, with air conditioning and room for bags."
+				},
+				{
+					typ: VehicleBodyType.Minibus,
+					pax: 21,
+					description:
+						"Comfortable minibus for group transfers between the airport, hotel, and route stops."
+				}
+			]
 		}
 	}
 });

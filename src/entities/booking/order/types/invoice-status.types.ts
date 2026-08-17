@@ -1,4 +1,4 @@
 export {
 	ENUM_INVOICE_STATUS,
 	type ENUM_INVOICE_STATUS_TYPE
-} from "@/entities/finance";
+} from "@/entities/finance/invoice/types/invoice-status.types";

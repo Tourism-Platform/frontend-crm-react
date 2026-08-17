@@ -13,6 +13,7 @@ import {
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
 	ENUM_ACCOMMODATION_PRICING_TYPE,
 	ENUM_FORM_ROOMS,
+	type ENUM_HOUSING_ROOM_TYPE_TYPE,
 	type IAccommodationCategoryPriceRow,
 	type IAccommodationPerRoomByClassPriceRow,
 	type IAccommodationPerRoomCategoryExpenses,
@@ -34,7 +35,7 @@ import {
 	type TRoomsSchema
 } from "../../types";
 
-import { mapRoomNameToHousingType } from "./accommodation-rooms.converters";
+import { housingRoomTypeConverter } from "./housing-room-type.converters";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
@@ -101,10 +102,10 @@ const mapPerRoomPriceFromBackend = (
 });
 
 const mapCategoryRowFromBackend = (
-	roomType?: string | null,
 	room?: THousingRoomCategoryBackend | null
 ): IAccommodationCategoryPriceRow => ({
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: roomType ?? "",
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
+		housingRoomTypeConverter.from(room?.typ) ?? "",
 	...mapPriceRowFromFixedCharge(room?.expenses),
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
 		room?.expenses?.markup
@@ -116,9 +117,7 @@ const mapPerRoomByClassPriceFromBackend = (
 ): IAccommodationPerRoomByClassPriceRow => ({
 	[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]: category?.rooms
 		?.length
-		? category.rooms.map((room) =>
-				mapCategoryRowFromBackend(room.typ, room)
-			)
+		? category.rooms.map((room) => mapCategoryRowFromBackend(room))
 		: [createEmptyCategoryRow()]
 });
 
@@ -447,12 +446,13 @@ export const mapAccommodationPricingToBackend = (
 											.CURRENCY
 									];
 								return {
-									typ: mapRoomNameToHousingType(
-										category[
-											ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
-												.NAME
-										]
-									),
+									typ:
+										housingRoomTypeConverter.to(
+											category[
+												ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
+													.NAME
+											] as ENUM_HOUSING_ROOM_TYPE_TYPE
+										) ?? null,
 									expenses: mapToFixedCharge(
 										category[
 											ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD

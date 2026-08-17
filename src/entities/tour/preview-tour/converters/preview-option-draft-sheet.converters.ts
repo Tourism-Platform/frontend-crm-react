@@ -1,12 +1,15 @@
 import { format } from "date-fns";
 
 import type {
-	AmenitiesTypes,
 	AnyEventWithCostOutput,
 	EmptyDetails,
+	HousingDetailsSchemaOutput,
 	MultiEventReadOutput,
-	TimeSchema
+	TimeSchema,
+	TransferDetailsSchemaOutput
 } from "@/shared/api";
+
+import { accommodationAmenityConverter } from "@/entities/tour/itinerary";
 
 import type { TPubEventMediaFields } from "../types/preview-option-media.types";
 import type {
@@ -19,7 +22,9 @@ import { formatLocation } from "./preview-option-location.utils";
 import { toPublicImageUrl } from "./preview-option-media.utils";
 import {
 	formatJourneyPoint,
-	formatPubTime
+	formatPubTime,
+	mapSheetCarsFromExpenses,
+	mapSheetRoomsFromExpenses
 } from "./preview-option-sheet.converters";
 
 type TOperatorEvent = AnyEventWithCostOutput["event"];
@@ -114,18 +119,7 @@ const mapSheetExtraFromOperator = (
 	switch (typ) {
 		case "transfer": {
 			const transferDetails = details as
-				| {
-						departure?: {
-							date?: string | null;
-							time?: TimeSchema | null;
-							location?: unknown;
-						} | null;
-						arrival?: {
-							date?: string | null;
-							time?: TimeSchema | null;
-							location?: unknown;
-						} | null;
-				  }
+				| TransferDetailsSchemaOutput
 				| null
 				| undefined;
 			return {
@@ -135,25 +129,24 @@ const mapSheetExtraFromOperator = (
 				),
 				dropoff: formatJourneyPoint(
 					transferDetails?.arrival ?? undefined
-				)
+				),
+				cars: mapSheetCarsFromExpenses(transferDetails?.expenses)
 			};
 		}
 		case "housing": {
 			const housingDetails = details as
-				| {
-						amenities?: AmenitiesTypes[] | null;
-						duration?: number | null;
-						check_in?: TimeSchema | null;
-						check_out?: TimeSchema | null;
-				  }
+				| HousingDetailsSchemaOutput
 				| null
 				| undefined;
 			return {
 				kind: "accommodation",
-				amenities: housingDetails?.amenities ?? [],
+				amenities: accommodationAmenityConverter.fromMany(
+					housingDetails?.amenities ?? []
+				),
 				nights: `${housingDetails?.duration ?? 0} night${housingDetails?.duration === 1 ? "" : "s"}`,
 				checkIn: formatPubTime(housingDetails?.check_in ?? undefined),
-				checkOut: formatPubTime(housingDetails?.check_out ?? undefined)
+				checkOut: formatPubTime(housingDetails?.check_out ?? undefined),
+				rooms: mapSheetRoomsFromExpenses(housingDetails?.expenses)
 			};
 		}
 		case "activity": {

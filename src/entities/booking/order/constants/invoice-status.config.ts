@@ -1,4 +1,4 @@
 export {
 	INVOICE_STATUS_LABELS,
 	INVOICE_STATUS_VARIANTS
-} from "@/entities/finance";
+} from "@/entities/finance/invoice/constants/invoice-status.config";

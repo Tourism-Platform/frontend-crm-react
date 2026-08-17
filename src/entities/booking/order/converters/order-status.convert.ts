@@ -1,7 +1,10 @@
 import { BookingStatus, BookingTransition } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import { ENUM_ORDER_STATUS, type ENUM_ORDER_STATUS_TYPE } from "../types";
+import {
+	ENUM_ORDER_STATUS,
+	type ENUM_ORDER_STATUS_TYPE
+} from "../types/order-status.types";
 
 const MAP_ORDER_STATUS_TO_TRANSITION: Partial<
 	Record<ENUM_ORDER_STATUS_TYPE, BookingTransition>

@@ -33,7 +33,17 @@
 		"location": "Location",
 		"start_time": "Start time",
 		"end_time": "End time",
-		"flight_info": "Flight information"
+		"flight_info": "Flight information",
+		"cars": "Vehicles",
+		"rooms": "Rooms",
+		"pax_one": "passenger",
+		"pax_few": "passengers",
+		"pax_many": "passengers",
+		"pax_other": "passengers",
+		"guests_one": "guest",
+		"guests_few": "guests",
+		"guests_many": "guests",
+		"guests_other": "guests"
 	},
 	"pricing": {
 		"title": "Pricing Breakdown",

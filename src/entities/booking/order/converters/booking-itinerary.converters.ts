@@ -1,4 +1,4 @@
-import { ENUM_EVENT } from "@/entities/tour";
+import { ENUM_EVENT } from "@/entities/tour/itinerary";
 import { mapBackendTypToEventType } from "@/entities/tour/itinerary/converters/event-type.converters";
 import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types";
 

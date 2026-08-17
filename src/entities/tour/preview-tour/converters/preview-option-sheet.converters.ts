@@ -6,18 +6,28 @@ import type {
 	EmptyDetails,
 	FlightEventPubReadOutput,
 	HousingEventPubReadOutput,
+	HousingRoomTypes,
 	InformationEventPubReadOutput,
 	MultiEventPubOutput,
 	TimeSchema,
 	TrainEventPubReadOutput,
-	TransferEventPubReadOutput
+	TransferEventPubReadOutput,
+	VehicleBodyType
 } from "@/shared/api";
+
+import {
+	accommodationAmenityConverter,
+	housingRoomTypeConverter,
+	vehicleBodyTypeConverter
+} from "@/entities/tour/itinerary";
 
 import type { TOptionDetailBackend } from "../types";
 import type { TPubEventMediaFields } from "../types/preview-option-media.types";
 import type {
 	IOptionEventSheet,
+	IOptionEventSheetCar,
 	IOptionEventSheetPoint,
+	IOptionEventSheetRoom,
 	IOptionFlightSegment,
 	TOptionEventSheetExtra
 } from "../types/preview-option-sheet.types";
@@ -60,22 +70,109 @@ export const formatJourneyPoint = (point?: {
 	return { place, dateTime };
 };
 
+type TSheetCarSource = {
+	typ?: VehicleBodyType | null;
+	pax?: number | null;
+	description?: string | null;
+};
+
+type TSheetRoomSource = {
+	name?: string | null;
+	typ?: HousingRoomTypes | null;
+	pax?: number | null;
+	description?: string | null;
+};
+
+type TSheetRoomCategorySource = {
+	rooms?: TSheetRoomSource[] | null;
+};
+
+const hasCars = (
+	expenses: unknown
+): expenses is { cars?: TSheetCarSource[] | null } =>
+	Boolean(expenses && typeof expenses === "object" && "cars" in expenses);
+
+const hasRooms = (
+	expenses: unknown
+): expenses is {
+	rooms?: TSheetRoomSource[] | null;
+	categories?: TSheetRoomCategorySource[] | null;
+} =>
+	Boolean(
+		expenses &&
+			typeof expenses === "object" &&
+			("rooms" in expenses || "categories" in expenses)
+	);
+
+export const mapSheetCarsFromExpenses = (
+	expenses: unknown
+): IOptionEventSheetCar[] => {
+	if (!hasCars(expenses) || !expenses.cars?.length) return [];
+
+	return expenses.cars
+		.filter((car) => car.typ || car.description || car.pax)
+		.map((car) => ({
+			typ: vehicleBodyTypeConverter.from(car.typ) ?? null,
+			pax: car.pax ?? null,
+			description: car.description ?? ""
+		}));
+};
+
+export const mapSheetRoomsFromExpenses = (
+	expenses: unknown
+): IOptionEventSheetRoom[] => {
+	if (!hasRooms(expenses)) return [];
+
+	if (expenses.rooms?.length) {
+		return expenses.rooms
+			.filter(
+				(room) => room.name || room.typ || room.description || room.pax
+			)
+			.map((room) => ({
+				name: room.name ?? "",
+				typ: housingRoomTypeConverter.from(room.typ) ?? null,
+				pax: room.pax ?? null,
+				description: room.description ?? ""
+			}));
+	}
+
+	return (
+		expenses.categories?.flatMap((category) =>
+			(category.rooms ?? [])
+				.filter(
+					(room) =>
+						room.typ || room.description || room.pax || room.name
+				)
+				.map((room) => ({
+					name: room.name ?? "",
+					typ: housingRoomTypeConverter.from(room.typ) ?? null,
+					pax: room.pax ?? null,
+					description: room.description ?? ""
+				}))
+		) ?? []
+	);
+};
+
 const mapTransferSheet = (
 	event: { typ: "transfer" } & TransferEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "transfer",
 	pickup: formatJourneyPoint(event?.details?.departure ?? undefined),
-	dropoff: formatJourneyPoint(event?.details?.arrival ?? undefined)
+	dropoff: formatJourneyPoint(event?.details?.arrival ?? undefined),
+	cars: mapSheetCarsFromExpenses(event?.details?.expenses)
 });
 
 const mapHousingSheet = (
 	event: { typ: "housing" } & HousingEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "accommodation",
-	amenities: event?.details?.amenities ?? [],
+	amenities: accommodationAmenityConverter.fromMany(
+		event?.details?.amenities ?? []
+	),
 	nights: `${event?.details?.duration} night${event?.details?.duration === 1 ? "" : "s"}`,
 	checkIn: formatPubTime(event?.details?.check_in ?? undefined),
-	checkOut: formatPubTime(event?.details?.check_out ?? undefined)
+	checkOut: formatPubTime(event?.details?.check_out ?? undefined),
+	rooms: mapSheetRoomsFromExpenses(event?.details?.expenses)
 });
 
 const mapActivitySheet = (

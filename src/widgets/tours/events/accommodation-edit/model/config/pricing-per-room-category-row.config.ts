@@ -1,22 +1,25 @@
-import { ROOM_NAME_OPTIONS } from "@/shared/config";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
 	CURRENCY_OPTIONS,
 	DEFAULT_EVENT_CURRENCY
 } from "@/entities/commission";
-import { ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD } from "@/entities/tour";
+import {
+	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
+	HOUSING_ROOM_TYPE_LABELS
+} from "@/entities/tour";
 
 import type { TAccommodationPricingFormField } from "../types";
 
-export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST: TAccommodationPricingFormField[] =
-	[
+export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST =
+	(): TAccommodationPricingFormField[] => [
 		{
 			key: ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME,
 			label: "form.pricing.form.per_room.table.type",
 			placeholder:
 				"form.pricing.form.per_room.fields.category_name.placeholder",
 			fieldType: "select",
-			options: ROOM_NAME_OPTIONS
+			options: useValueToTranslateLabel(HOUSING_ROOM_TYPE_LABELS)
 		},
 		{
 			key: ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST,

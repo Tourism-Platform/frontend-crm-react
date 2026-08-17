@@ -113,6 +113,15 @@
 			"bus": "Bus",
 			"coach": "Coach"
 		},
+		"housingRoomTypes": {
+			"single": "Single",
+			"double": "Double",
+			"twin": "Twin",
+			"triple": "Triple",
+			"quadruple": "Quadruple",
+			"suite": "Suite",
+			"family": "Family"
+		},
 		"transferTypes": {
 			"city_tour": "City tour",
 			"city_transfer": "City transfer",

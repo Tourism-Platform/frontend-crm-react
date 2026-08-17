@@ -1,19 +1,18 @@
-import type { HousingSingleEventOutput } from "@/shared/api";
-import { AmenitiesTypes, LanguageCode } from "@/shared/api";
+import { type HousingSingleEventOutput, LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
-import { ENUM_EVENT_BACKEND } from "../../types";
 import {
-	type ENUM_ACCOMMODATION_AMENITY_TYPE,
+	ENUM_EVENT_BACKEND,
 	type TAccommodationEditSchema,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../types";
 
+import { accommodationAmenityConverter } from "./accommodation-amenity.converters";
 import {
 	mapAccommodationPricingFromBackend,
 	mapAccommodationPricingToBackend
@@ -22,21 +21,6 @@ import {
 	mapRoomsFromBackend,
 	mapRoomsToBackend
 } from "./accommodation-rooms.converters";
-
-const mapAmenitiesFromBackend = (
-	amenities?: AmenitiesTypes[] | null
-): ENUM_ACCOMMODATION_AMENITY_TYPE[] => amenities ?? [];
-
-const mapAmenitiesToBackend = (
-	amenities?: ENUM_ACCOMMODATION_AMENITY_TYPE[]
-): AmenitiesTypes[] | undefined => {
-	if (!amenities?.length) return undefined;
-
-	const allowed = Object.values(AmenitiesTypes) as string[];
-	const filtered = amenities.filter((item) => allowed.includes(item));
-
-	return filtered.length ? (filtered as AmenitiesTypes[]) : undefined;
-};
 
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce
@@ -56,7 +40,9 @@ export const mapAccommodationEventToForm = (
 		position: event.position,
 		general: {
 			property: mapBackendLocationToGeoForm(details?.location),
-			amenities: mapAmenitiesFromBackend(details?.amenities),
+			amenities: accommodationAmenityConverter.fromMany(
+				details?.amenities ?? []
+			),
 			description: event.description || "",
 			length_of_stay: String(event.details?.duration ?? ""),
 			check_in_time: event.details?.check_in?.time || "",
@@ -88,7 +74,10 @@ export const mapAccommodationFormToUpdate = (
 			? mapRoomsToBackend(roomsList).details
 			: undefined;
 	const duration = Number(g?.length_of_stay);
-	const amenities = mapAmenitiesToBackend(g?.amenities);
+	const mappedAmenities = accommodationAmenityConverter.toMany(
+		g?.amenities ?? []
+	);
+	const amenities = mappedAmenities.length ? mappedAmenities : undefined;
 
 	return {
 		...(frontend.name !== undefined &&

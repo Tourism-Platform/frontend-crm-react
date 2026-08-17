@@ -3,19 +3,10 @@ import type {
 	HousingRoomDoubleSchemaInput,
 	HousingRoomDoubleSchemaOutput
 } from "@/shared/api";
-import { HousingRoomTypes } from "@/shared/api";
 
 import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../types";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
-
-/** Parses HousingRoomTypes from pricing row name (already an enum value from select). */
-export const mapRoomNameToHousingType = (
-	roomName: string
-): HousingRoomTypes | null => {
-	const values = Object.values(HousingRoomTypes) as string[];
-	return values.includes(roomName) ? (roomName as HousingRoomTypes) : null;
-};
 
 const mapRoomToBackendInput = (
 	room: TRoomsList[number]
