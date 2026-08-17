@@ -94,7 +94,7 @@ const ItineraryBase: FC = () => {
 	}
 
 	return (
-		<section className="flex flex-col gap-6 container">
+		<section className="flex flex-col gap-6">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<DndContext
 				sensors={sensors}
