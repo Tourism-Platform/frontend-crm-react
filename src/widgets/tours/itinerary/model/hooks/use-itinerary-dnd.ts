@@ -149,7 +149,7 @@ export const useItineraryDnd = ({
 
 	const { data: libraryList } = useListEventLibraryQuery({
 		search: "",
-		types: [],
+		status: [],
 		page: 1,
 		limit: 100
 	});

@@ -22,7 +22,7 @@ import { COLUMNS } from "../model";
 
 const DEFAULT_FILTERS: IEventLibraryFilters = {
 	search: "",
-	types: [],
+	status: [],
 	page: 1,
 	limit: 10
 };
@@ -92,7 +92,7 @@ const EventTemplatesBase: FC = () => {
 
 	const handleStatusChange = useCallback(
 		(val: string[]) => {
-			setValue("types", val as ENUM_EVENT_TYPE[]);
+			setValue("status", val as ENUM_EVENT_TYPE[]);
 			setValue("page", 1);
 		},
 		[setValue]
@@ -119,7 +119,7 @@ const EventTemplatesBase: FC = () => {
 						onPaginationChange={handlePaginationChange}
 						search={filters.search}
 						onSearchChange={handleSearchChange}
-						status={filters.types}
+						status={filters.status}
 						onStatusChange={handleStatusChange}
 						statusOptions={statusOptions}
 						statusKey="eventType"

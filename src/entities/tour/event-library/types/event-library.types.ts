@@ -1,4 +1,5 @@
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
+import type { IPaginationRequest } from "@/shared/types";
 
 import type {
 	ENUM_EVENT_TYPE,
@@ -15,11 +16,9 @@ export interface IEventLibraryItem {
 	primaryImagePath: string | null;
 }
 
-export interface IEventLibraryFilters {
-	search: string;
-	types: ENUM_EVENT_TYPE[];
-	page: number;
-	limit: number;
+export interface IEventLibraryFilters
+	extends Omit<IPaginationRequest, "status"> {
+	status: ENUM_EVENT_TYPE[];
 }
 
 export interface IEventLibraryUpdate {

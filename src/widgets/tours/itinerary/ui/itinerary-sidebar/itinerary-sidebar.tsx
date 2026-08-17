@@ -8,21 +8,18 @@ import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import {
 	ENUM_EVENT,
 	EVENT_METADATA,
-	EVENT_TEMPLATES_LIST,
-	type IEventLibraryItem
+	EVENT_TEMPLATES_LIST
 } from "@/entities/tour";
 
 import { DraggableTemplateItem } from "./draggable-template-item";
 import { EventLibrarySheet } from "./event-library-sheet";
 
 interface IItinerarySidebarProps {
-	libraryItems?: IEventLibraryItem[];
 	librarySheetOpen: boolean;
 	onLibrarySheetOpenChange: (open: boolean) => void;
 }
 
 const ItinerarySidebarBase: FC<IItinerarySidebarProps> = ({
-	libraryItems = [],
 	librarySheetOpen,
 	onLibrarySheetOpenChange
 }) => {
@@ -110,7 +107,6 @@ const ItinerarySidebarBase: FC<IItinerarySidebarProps> = ({
 			<EventLibrarySheet
 				open={librarySheetOpen}
 				onOpenChange={onLibrarySheetOpenChange}
-				items={libraryItems}
 			/>
 		</>
 	);

@@ -53,7 +53,6 @@ const ItineraryBase: FC = () => {
 		activeTemplateItem,
 		activeLibraryItem,
 		activeColumn,
-		libraryItems,
 		onDragStart,
 		onDragEnd,
 		onDragOver,
@@ -122,7 +121,6 @@ const ItineraryBase: FC = () => {
 							onRemoveItem={handleRemoveItem}
 						/>
 						<ItinerarySidebar
-							libraryItems={libraryItems}
 							librarySheetOpen={librarySheetOpen}
 							onLibrarySheetOpenChange={setLibrarySheetOpen}
 						/>

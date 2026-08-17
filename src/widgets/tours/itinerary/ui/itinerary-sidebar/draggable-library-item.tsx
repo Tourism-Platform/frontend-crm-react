@@ -28,7 +28,8 @@ export const DraggableLibraryItem: FC<{
 		id: libraryId(item.id),
 		data: {
 			type: "event-library",
-			templateId: item.id
+			templateId: item.id,
+			item
 		},
 		disabled
 	});

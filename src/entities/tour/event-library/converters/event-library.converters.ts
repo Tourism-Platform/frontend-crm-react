@@ -19,8 +19,8 @@ import {
 	type TTourEventBackendResponce,
 	type TTourEventUpdate,
 	type TTransportationEditSchema,
-	eventTypeMapper,
-	mapBackendTypToEventType
+	mapBackendTypToEventType,
+	mapEventTypeToBackendTyps
 } from "@/entities/tour/itinerary";
 import {
 	mapAccommodationEventToForm,
@@ -135,14 +135,18 @@ export const mapEventLibraryItemToFrontend = (
 	};
 };
 
+const getFilterBackendTyps = (filters?: IEventLibraryFilters) =>
+	(filters?.status ?? []).flatMap(mapEventTypeToBackendTyps);
+
 export const mapEventLibraryListToFrontend = (
 	response: TEventLibraryListBackendResponse,
 	filters?: IEventLibraryFilters
 ): IPaginationResponse<IEventLibraryItem> => {
 	let data = response.data.map(mapEventLibraryItemToFrontend);
+	const backendTyps = getFilterBackendTyps(filters);
 
-	if (filters && filters.types.length > 1) {
-		const allowed = new Set(filters.types);
+	if (filters?.status.length && backendTyps.length !== 1) {
+		const allowed = new Set(filters.status);
 		data = data.filter((item) => allowed.has(item.eventType));
 	}
 
@@ -155,12 +159,8 @@ export const mapEventLibraryListToFrontend = (
 export const mapEventLibraryFiltersToBackend = (
 	filters: IEventLibraryFilters
 ): TListEventLibraryQuery => {
-	const typ =
-		filters.types.length === 1
-			? (eventTypeMapper.to(filters.types[0]) as
-					| ENUM_EVENT_BACKEND_TYPE
-					| undefined)
-			: undefined;
+	const backendTyps = getFilterBackendTyps(filters);
+	const typ = backendTyps.length === 1 ? backendTyps[0] : undefined;
 
 	return {
 		...(filters.page > 1 && { skip: (filters.page - 1) * filters.limit }),

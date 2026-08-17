@@ -62,13 +62,16 @@ export const handleDragStart = (
 	} else if (id.startsWith("library:")) {
 		const templateId = id.replace("library:", "");
 		const fromData = event.active.data.current as
-			| { type?: string; templateId?: string }
+			| { type?: string; templateId?: string; item?: IEventLibraryItem }
 			| undefined;
 		const resolvedId =
 			fromData?.type === "event-library" && fromData.templateId
 				? fromData.templateId
 				: templateId;
-		state.activeLibraryItem = libraryItemsById[resolvedId] ?? null;
+		state.activeLibraryItem =
+			(fromData?.type === "event-library" ? fromData.item : undefined) ??
+			libraryItemsById[resolvedId] ??
+			null;
 	} else if (id.startsWith("column:")) {
 		const day = Number(id.replace("column:", ""));
 		state.activeColumn = day;

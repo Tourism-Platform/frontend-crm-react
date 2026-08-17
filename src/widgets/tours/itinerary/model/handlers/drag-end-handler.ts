@@ -388,13 +388,15 @@ export const handleDragEnd = (
 
 	if (activeIdStr.startsWith("library:")) {
 		const fromData = active.data.current as
-			| { type?: string; templateId?: string }
+			| { type?: string; templateId?: string; item?: IEventLibraryItem }
 			| undefined;
 		const templateId =
 			fromData?.type === "event-library" && fromData.templateId
 				? fromData.templateId
 				: activeIdStr.replace("library:", "");
-		const summary = libraryItemsById[templateId];
+		const summary =
+			(fromData?.type === "event-library" ? fromData.item : undefined) ??
+			libraryItemsById[templateId];
 		if (!summary) {
 			return { shouldUpdate: false, clearState: true };
 		}

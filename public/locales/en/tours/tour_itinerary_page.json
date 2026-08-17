@@ -23,6 +23,8 @@
 			"entry": "Event library",
 			"sheet_title": "Event library",
 			"search_placeholder": "Search templates...",
+			"type_all": "All types",
+			"type_placeholder": "Event type",
 			"empty": "No templates found"
 		}
 	},

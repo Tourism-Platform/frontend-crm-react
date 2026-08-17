@@ -39,3 +39,18 @@ export const mapBackendTypToEventType = (
 	if (!typ) return undefined;
 	return BACKEND_TYP_TO_EVENT_TYPE[typ] ?? eventTypeMapper.from(typ);
 };
+
+export const mapEventTypeToBackendTyps = (
+	type: ENUM_EVENT_TYPE
+): ENUM_EVENT_BACKEND_TYPE[] => {
+	if (type === ENUM_EVENT.FLIGHT) {
+		return [
+			ENUM_EVENT_BACKEND.FLIGHT,
+			ENUM_EVENT_BACKEND.TRAIN,
+			ENUM_EVENT_BACKEND.BUS
+		];
+	}
+
+	const typ = eventTypeMapper.to(type);
+	return typ ? [typ] : [];
+};
