@@ -2,7 +2,11 @@ import { type FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import type { TFileMetadata, TFileWithPreview } from "@/shared/hooks";
+import {
+	type TFileMetadata,
+	type TFileWithPreview,
+	useOptionalResourceQuery
+} from "@/shared/hooks";
 import { CustomUploadFiles, withErrorBoundary } from "@/shared/ui";
 
 import {
@@ -14,8 +18,8 @@ import {
 const DocumentsInfoBase: FC = () => {
 	const { t } = useTranslation("business_settings_page");
 
-	const { data: documents, isError: isDocumentsError } =
-		useGetAgencyBusinessDocumentsQuery();
+	const { data: documents, isRealError: isDocumentsError } =
+		useOptionalResourceQuery(useGetAgencyBusinessDocumentsQuery());
 
 	const [uploadDocument, { isLoading: isUploading }] =
 		useUploadAgencyBusinessDocumentMutation();

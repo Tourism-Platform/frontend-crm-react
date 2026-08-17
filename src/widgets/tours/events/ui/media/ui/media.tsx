@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import { toast } from "sonner";
 
 import type { TResources } from "@/shared/config";
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	CustomUploadImages,
@@ -42,10 +43,12 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 	const {
 		data: serverImages = EMPTY_IMAGES,
 		isLoading: isListLoading,
-		isError
-	} = useListEventImagesQuery(
-		{ tourId, eventId: mediaEventId },
-		{ skip: !tourId || !mediaEventId }
+		isRealError: isError
+	} = useOptionalResourceQuery(
+		useListEventImagesQuery(
+			{ tourId, eventId: mediaEventId },
+			{ skip: !tourId || !mediaEventId }
+		)
 	);
 
 	const [uploadImagesMutation, { isLoading: isUploading }] =

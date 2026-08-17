@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -45,14 +46,16 @@ const OrderHistoryBase: FC = () => {
 		data,
 		isLoading,
 		isFetching,
-		isError: isOrdersError
-	} = useGetBookingOrdersQuery({
-		tourId: filters.tourId,
-		status: filters.status,
-		search: filters.search,
-		page: filters.page,
-		limit: filters.limit
-	});
+		isRealError: isOrdersError
+	} = useOptionalResourceQuery(
+		useGetBookingOrdersQuery({
+			tourId: filters.tourId,
+			status: filters.status,
+			search: filters.search,
+			page: filters.page,
+			limit: filters.limit
+		})
+	);
 
 	useEffect(() => {
 		if (isOrdersError) {

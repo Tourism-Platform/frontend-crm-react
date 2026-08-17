@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { LanguageCode } from "@/shared/api";
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
-import { useDebounce } from "@/shared/hooks";
+import { useDebounce, useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
 	type ICatalogTourFilters,
@@ -93,14 +93,16 @@ export const useCatalogTours = () => {
 		data: toursData,
 		isLoading: isLoadingTours,
 		isFetching: isFetchingTours,
-		isError
-	} = useGetCatalogToursQuery({
-		search,
-		page,
-		limit,
-		readLang,
-		filters: debouncedFilters
-	});
+		isRealError: isError
+	} = useOptionalResourceQuery(
+		useGetCatalogToursQuery({
+			search,
+			page,
+			limit,
+			readLang,
+			filters: debouncedFilters
+		})
+	);
 
 	useEffect(() => {
 		if (isError) {

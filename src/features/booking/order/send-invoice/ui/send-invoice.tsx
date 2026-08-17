@@ -3,6 +3,7 @@ import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	CustomSelectableCard,
@@ -50,8 +51,10 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 	const {
 		data: routes = [],
 		isLoading,
-		isError
-	} = useGetPaymentRoutesQuery(undefined, { skip: !isActive });
+		isRealError: isError
+	} = useOptionalResourceQuery(
+		useGetPaymentRoutesQuery(undefined, { skip: !isActive })
+	);
 
 	const [updateBookingStatus, { isLoading: isConfirming }] =
 		useUpdateBookingStatusMutation();

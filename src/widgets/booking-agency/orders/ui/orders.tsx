@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -35,13 +36,15 @@ const OrdersBase: FC = () => {
 		data: ordersData,
 		isLoading,
 		isFetching,
-		isError
-	} = useGetBookingOrdersQuery({
-		status: filters.status,
-		search: filters.search,
-		page: filters.page,
-		limit: filters.limit
-	});
+		isRealError: isError
+	} = useOptionalResourceQuery(
+		useGetBookingOrdersQuery({
+			status: filters.status,
+			search: filters.search,
+			page: filters.page,
+			limit: filters.limit
+		})
+	);
 
 	useEffect(() => {
 		if (isError) {

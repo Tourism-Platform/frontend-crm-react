@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Card,
 	CardContent,
@@ -39,13 +40,15 @@ const LastOrdersBase: FC = () => {
 	const {
 		data: data,
 		isLoading,
-		isError
-	} = useGetBookingOrdersQuery({
-		tourId: filters.tourId,
-		search: filters.search,
-		page: filters.page,
-		limit: filters.limit
-	});
+		isRealError: isError
+	} = useOptionalResourceQuery(
+		useGetBookingOrdersQuery({
+			tourId: filters.tourId,
+			search: filters.search,
+			page: filters.page,
+			limit: filters.limit
+		})
+	);
 
 	useEffect(() => {
 		if (isError) {

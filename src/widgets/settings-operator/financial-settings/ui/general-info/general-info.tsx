@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	CustomField,
@@ -26,9 +27,9 @@ const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page_operator");
 	const {
 		data: generalInfoData,
-		isError: isGeneralInfoError,
+		isRealError: isGeneralInfoError,
 		isLoading: isGeneralInfoLoading
-	} = useGetOperatorFinanceInfoQuery();
+	} = useOptionalResourceQuery(useGetOperatorFinanceInfoQuery());
 	const [updateOperatorFinanceInfo, { isLoading: isUpdating }] =
 		useUpdateOperatorFinanceInfoMutation();
 

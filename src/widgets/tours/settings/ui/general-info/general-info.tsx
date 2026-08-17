@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	CustomField,
@@ -34,10 +35,12 @@ const GeneralInfoBase: FC = () => {
 	const {
 		data: tour,
 		isLoading: isTourLoading,
-		isError: isTourError
-	} = useGetTourGeneralQuery(tourId, {
-		skip: !tourId
-	});
+		isRealError: isTourError
+	} = useOptionalResourceQuery(
+		useGetTourGeneralQuery(tourId, {
+			skip: !tourId
+		})
+	);
 	const [updateTour, { isLoading: isUpdating }] =
 		useUpdateTourGeneralMutation();
 

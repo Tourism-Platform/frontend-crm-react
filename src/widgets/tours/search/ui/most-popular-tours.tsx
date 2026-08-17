@@ -2,6 +2,7 @@ import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import { withErrorBoundary } from "@/shared/ui";
 import {
 	Carousel,
@@ -24,8 +25,8 @@ const MostPopularToursBase: FC = () => {
 		data: toursData,
 		isLoading,
 		isFetching,
-		isError
-	} = useGetPopularToursQuery();
+		isRealError: isError
+	} = useOptionalResourceQuery(useGetPopularToursQuery());
 
 	const tours = toursData?.data ?? [];
 	const isDataLoading = isLoading || isFetching;

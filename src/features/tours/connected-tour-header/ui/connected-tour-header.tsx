@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
+
 import {
 	type ENUM_TOUR_STATUS_TYPE,
 	type ENUM_TOUR_TYPES_TYPE,
@@ -26,10 +28,12 @@ export const ConnectedTourHeader: FC<IConnectedTourHeaderProps> = memo(
 		const {
 			data: tour,
 			isLoading,
-			isError
-		} = useGetTourGeneralQuery(tourId, {
-			skip: !tourId
-		});
+			isRealError: isError
+		} = useOptionalResourceQuery(
+			useGetTourGeneralQuery(tourId, {
+				skip: !tourId
+			})
+		);
 
 		useEffect(() => {
 			if (isError) {

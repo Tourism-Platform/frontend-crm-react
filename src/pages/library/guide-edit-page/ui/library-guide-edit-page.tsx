@@ -11,6 +11,7 @@ import {
 	buildRoute,
 	i18nLanguageMapper
 } from "@/shared/config";
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
@@ -33,10 +34,12 @@ export const LibraryGuideEditPage: FC = () => {
 	const { libraryId = "" } = useParams<{ libraryId: string }>();
 	const isCreate = libraryId === LIBRARY_EVENT_CREATE_ID;
 
-	const { data: libraryEvent, isError: isLoadError } =
-		useGetEventLibraryRawQuery(libraryId, {
-			skip: !libraryId || isCreate
-		});
+	const { data: libraryEvent, isRealError: isLoadError } =
+		useOptionalResourceQuery(
+			useGetEventLibraryRawQuery(libraryId, {
+				skip: !libraryId || isCreate
+			})
+		);
 
 	const [createEventLibrary, { isLoading: isCreateLoading }] =
 		useCreateEventLibraryMutation();

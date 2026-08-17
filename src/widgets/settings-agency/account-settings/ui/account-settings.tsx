@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	Card,
@@ -33,14 +34,14 @@ const AccountSettingsBase: FC = () => {
 	const {
 		data: accountData,
 		isLoading: isAccountLoading,
-		isError: isAccountError
-	} = useGetAccountQuery();
+		isRealError: isAccountError
+	} = useOptionalResourceQuery(useGetAccountQuery());
 
 	const {
 		data: authAccountData,
 		isLoading: isAuthAccountLoading,
-		isError: isAuthAccountError
-	} = useGetAuthAccountQuery();
+		isRealError: isAuthAccountError
+	} = useOptionalResourceQuery(useGetAuthAccountQuery());
 	const [updateAccount, { isLoading: isUpdating }] =
 		useUpdateAccountMutation();
 

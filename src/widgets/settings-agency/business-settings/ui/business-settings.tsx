@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	Card,
@@ -34,8 +35,8 @@ const BusinessSettingsBase: FC = () => {
 	const {
 		data: businessData,
 		isLoading: isBusinessLoading,
-		isError: isBusinessError
-	} = useGetAgencyBusinessInfoQuery();
+		isRealError: isBusinessError
+	} = useOptionalResourceQuery(useGetAgencyBusinessInfoQuery());
 	const [updateBusiness, { isLoading: isUpdating }] =
 		useUpdateAgencyBusinessInfoMutation();
 

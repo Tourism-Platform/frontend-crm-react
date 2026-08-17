@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Card,
 	CardContent,
@@ -23,17 +24,19 @@ const RecentActivityLogBase: FC = () => {
 
 	const {
 		data,
-		isError: isActivityError,
+		isRealError: isActivityError,
 		isLoading: isActivityLoading
-	} = useGetActivityLogQuery(
-		{
-			tourId,
-			page: 1,
-			limit: 5
-		},
-		{
-			skip: !tourId
-		}
+	} = useOptionalResourceQuery(
+		useGetActivityLogQuery(
+			{
+				tourId,
+				page: 1,
+				limit: 5
+			},
+			{
+				skip: !tourId
+			}
+		)
 	);
 
 	useEffect(() => {

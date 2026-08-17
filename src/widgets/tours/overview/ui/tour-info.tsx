@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import { withErrorBoundary } from "@/shared/ui";
 
 import { InfoCard, useGetTourStatisticsQuery } from "@/entities/tour";
@@ -19,10 +20,12 @@ const TourInfoBase: FC = () => {
 	const {
 		data: tourStats,
 		isLoading,
-		isError
-	} = useGetTourStatisticsQuery(tourId, {
-		skip: !tourId
-	});
+		isRealError: isError
+	} = useOptionalResourceQuery(
+		useGetTourStatisticsQuery(tourId, {
+			skip: !tourId
+		})
+	);
 
 	useEffect(() => {
 		if (isError) {

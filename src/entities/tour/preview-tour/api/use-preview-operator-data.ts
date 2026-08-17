@@ -1,5 +1,7 @@
 import { skipToken } from "@reduxjs/toolkit/query";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
+
 import type { IPreviewOperator } from "../types";
 
 import {
@@ -29,11 +31,11 @@ export const usePreviewOperatorData = ({
 		isDraft ? undefined : skipToken
 	);
 
-	const query = isDraft ? draftQuery : publicQuery;
+	const query = useOptionalResourceQuery(isDraft ? draftQuery : publicQuery);
 
 	return {
 		operator: query.data,
 		isLoading: query.isLoading,
-		isError: query.isError
+		isError: query.isRealError
 	};
 };

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	Card,
@@ -33,16 +34,18 @@ const ActivityLogBase: FC = () => {
 		data,
 		isLoading: isActivityLogLoading,
 		isFetching,
-		isError: isActivityLogError
-	} = useGetActivityLogQuery(
-		{
-			tourId,
-			page,
-			limit
-		},
-		{
-			skip: !tourId
-		}
+		isRealError: isActivityLogError
+	} = useOptionalResourceQuery(
+		useGetActivityLogQuery(
+			{
+				tourId,
+				page,
+				limit
+			},
+			{
+				skip: !tourId
+			}
+		)
 	);
 	const { t } = useTranslation("tour_activity_log_page");
 

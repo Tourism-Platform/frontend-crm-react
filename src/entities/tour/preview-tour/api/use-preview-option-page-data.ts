@@ -1,3 +1,5 @@
+import { useOptionalResourceQuery } from "@/shared/hooks";
+
 import type { IOptionDetail, IPreviewTourGeneral } from "../types";
 
 import {
@@ -34,19 +36,23 @@ export const usePreviewOptionPageData = ({
 		skip: skipDraft
 	});
 
-	const tourQuery = isDraft ? draftTour : publicTour;
+	const tourQuery = useOptionalResourceQuery(
+		isDraft ? draftTour : publicTour
+	);
 
-	const optionDetailQuery = usePreviewOptionDetail({
-		tourId,
-		optionId,
-		isDraft,
-		skip: !tourId || !optionId
-	});
+	const optionDetailQuery = useOptionalResourceQuery(
+		usePreviewOptionDetail({
+			tourId,
+			optionId,
+			isDraft,
+			skip: !tourId || !optionId
+		})
+	);
 
 	return {
 		tour: tourQuery.data,
 		optionDetail: optionDetailQuery.data,
 		isLoading: tourQuery.isLoading || optionDetailQuery.isLoading,
-		isError: tourQuery.isError || optionDetailQuery.isError
+		isError: tourQuery.isRealError || optionDetailQuery.isRealError
 	};
 };

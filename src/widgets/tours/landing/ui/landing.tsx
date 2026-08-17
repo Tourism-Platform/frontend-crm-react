@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
 	Card,
@@ -47,8 +48,8 @@ const LandingBase: FC = () => {
 	const {
 		data: landingData,
 		isLoading: isLandingLoading,
-		isError: isLandingError
-	} = useGetLandingQuery(tourId, { skip: !tourId });
+		isRealError: isLandingError
+	} = useOptionalResourceQuery(useGetLandingQuery(tourId, { skip: !tourId }));
 
 	const [updateLanding, { isLoading: isUpdating }] =
 		useUpdateLandingMutation();

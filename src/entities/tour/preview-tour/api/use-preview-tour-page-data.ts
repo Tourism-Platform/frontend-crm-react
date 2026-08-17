@@ -1,3 +1,5 @@
+import { useOptionalResourceQuery } from "@/shared/hooks";
+
 import type {
 	IOptionDetail,
 	IPreviewOptionCard,
@@ -57,20 +59,28 @@ export const usePreviewTourPageData = ({
 		skip: skipDraft
 	});
 
-	const landingQuery = isDraft ? draftLanding : publicLanding;
-	const tourQuery = isDraft ? draftTour : publicTour;
-	const optionsQuery = isDraft ? draftOptions : publicOptions;
+	const landingQuery = useOptionalResourceQuery(
+		isDraft ? draftLanding : publicLanding
+	);
+	const tourQuery = useOptionalResourceQuery(
+		isDraft ? draftTour : publicTour
+	);
+	const optionsQuery = useOptionalResourceQuery(
+		isDraft ? draftOptions : publicOptions
+	);
 
 	const options = optionsQuery.data ?? [];
 	const singleOption = options.length === 1 ? options[0] : undefined;
 
-	const optionDetailQuery = usePreviewOptionDetail({
-		tourId,
-		optionId: singleOption?.id ?? "",
-		isDraft,
-		skip: !singleOption,
-		optionsList: options
-	});
+	const optionDetailQuery = useOptionalResourceQuery(
+		usePreviewOptionDetail({
+			tourId,
+			optionId: singleOption?.id ?? "",
+			isDraft,
+			skip: !singleOption,
+			optionsList: options
+		})
+	);
 
 	return {
 		tour: tourQuery.data,
@@ -84,7 +94,10 @@ export const usePreviewTourPageData = ({
 			optionsQuery.isLoading ||
 			(Boolean(singleOption) && optionDetailQuery.isLoading),
 		isError:
-			landingQuery.isError || tourQuery.isError || optionsQuery.isError,
-		isOptionDetailError: Boolean(singleOption) && optionDetailQuery.isError
+			landingQuery.isRealError ||
+			tourQuery.isRealError ||
+			optionsQuery.isRealError,
+		isOptionDetailError:
+			Boolean(singleOption) && optionDetailQuery.isRealError
 	};
 };

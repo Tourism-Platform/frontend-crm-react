@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -38,8 +39,8 @@ const ClientPaymentsBase: FC = () => {
 		data: paymentsData,
 		isLoading,
 		isFetching,
-		isError
-	} = useGetPaymentsQuery(filters);
+		isRealError: isError
+	} = useOptionalResourceQuery(useGetPaymentsQuery(filters));
 
 	useEffect(() => {
 		if (isError) {

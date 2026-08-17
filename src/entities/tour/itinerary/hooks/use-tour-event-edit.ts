@@ -1,4 +1,5 @@
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
+import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
 	useGetTourEventQuery,
@@ -20,7 +21,7 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 	const { tourId, optionId, eventId, eventOptionId, mode } =
 		useEventEditIds();
 
-	const { data, isError } = useGetTourEventQuery(
+	const eventQuery = useGetTourEventQuery(
 		{
 			tourId,
 			optionId,
@@ -29,6 +30,7 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 		},
 		{ skip: !tourId || !optionId || !eventId }
 	);
+	const { data, isRealError: isError } = useOptionalResourceQuery(eventQuery);
 
 	const [updateTourEvent, { isLoading: isUpdateLoading }] =
 		useUpdateTourEventMutation();
