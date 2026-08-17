@@ -4,12 +4,34 @@ import type { TTourSearchLocationQuery } from "./query.types";
 import type { ENUM_PATH } from "./routes.config";
 import { type ENUM_AUTH_TYPE, type ENUM_LAYOUT_TYPE } from "./routes.enum";
 
+export type TRouteSection =
+	| "tour-detail"
+	| "tour-events"
+	| "finance"
+	| "booking-operator"
+	| "settings-operator"
+	| "library"
+	| "booking-agency"
+	| "settings-agency";
+
+export const SECTION_BASE_PATHS: Record<TRouteSection, string> = {
+	"tour-detail": "/tours/:tourId",
+	"tour-events": "/tours/:tourId/itinerary/:optionId/events/:eventId",
+	finance: "/finance",
+	"booking-operator": "/operator/booking",
+	"settings-operator": "/operator/settings",
+	library: "/library",
+	"booking-agency": "/agency/booking",
+	"settings-agency": "/agency/settings"
+};
+
 export interface IRouting {
 	path: string;
 	component: React.ComponentType;
 	auth: ENUM_AUTH_TYPE;
 	layout_cascade?: React.ComponentType<{ children: React.ReactNode }>[];
 	layout: ENUM_LAYOUT_TYPE | null;
+	section?: TRouteSection;
 }
 
 export type TOperatorSettingsPath =

@@ -2,30 +2,28 @@ import { type FC } from "react";
 
 import { Skeleton } from "@/shared/ui";
 
-export const OrderIdSkeleton: FC = () => {
-	return (
-		<div className="flex flex-col gap-8">
-			{/* Header Skeleton */}
-			<div className="flex justify-between items-center">
-				<div className="space-y-2">
-					<Skeleton className="h-9 w-[220px]" />
-					<div className="flex gap-2">
-						<Skeleton className="h-6 w-[200px]" />
-						<Skeleton className="h-6 w-[240px]" />
-					</div>
+export const OrderHeaderSkeleton: FC = () => (
+	<div className="flex flex-col gap-5">
+		<Skeleton className="h-9 w-32" />
+		<div className="flex items-center justify-between">
+			<div className="space-y-3">
+				<Skeleton className="h-9 w-[220px]" />
+				<div className="flex gap-2">
+					<Skeleton className="h-6 w-[200px]" />
+					<Skeleton className="h-6 w-[240px]" />
 				</div>
-				<Skeleton className="h-9 w-[150px]" />
 			</div>
-
-			{/* Info Cards Skeleton */}
-			<div className="grid grid-cols-2 gap-6">
-				<Skeleton className="h-[280px] w-full rounded-xl" />
-				<Skeleton className="h-[280px] w-full rounded-xl" />
-			</div>
-
-			{/* Tour review + pax */}
-			<Skeleton className="h-[400px] w-full rounded-xl" />
-			<Skeleton className="h-[400px] w-full rounded-xl" />
 		</div>
-	);
-};
+	</div>
+);
+
+export const OrderInfoCardsSkeleton: FC = () => (
+	<div className="grid grid-cols-2 gap-6">
+		<Skeleton className="h-[280px] w-full rounded-xl" />
+		<Skeleton className="h-[280px] w-full rounded-xl" />
+	</div>
+);
+
+export const OrderSectionCardSkeleton: FC<{ height?: string }> = ({
+	height = "h-[400px]"
+}) => <Skeleton className={`${height} w-full rounded-xl`} />;

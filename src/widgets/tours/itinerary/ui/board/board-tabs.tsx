@@ -22,7 +22,7 @@ const menuItemClassName =
 interface IBoardTabsProps {
 	tourId: string;
 	activeOption: string;
-	setActiveOption: React.Dispatch<React.SetStateAction<string>>;
+	setActiveOption: (optionId: string) => void;
 	options: IOption[];
 	onOptionDeleted: (optionId: string) => void;
 }

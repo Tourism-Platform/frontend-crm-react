@@ -7,3 +7,4 @@ export * from "./useFormatDateRange";
 export * from "./use-optional-resource-query";
 export * from "./use-query-tab";
 export * from "./use-device-utc-offset";
+export * from "./use-section-navigation";

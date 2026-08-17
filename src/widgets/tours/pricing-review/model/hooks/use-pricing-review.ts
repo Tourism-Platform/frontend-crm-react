@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
@@ -18,23 +18,24 @@ export const usePricingReview = (tourId: string) => {
 		isRealError: isOptionsRealError
 	} = useOptionalResourceQuery(optionsQuery);
 
-	const [activeOptionId, setActiveOptionId] = useState("");
+	const [selectedOptionId, setSelectedOptionId] = useState<string | null>(
+		null
+	);
 
-	useEffect(() => {
-		if (options.length > 0 && !activeOptionId) {
-			setActiveOptionId(options[0].id);
-		}
-	}, [options, activeOptionId]);
-
-	useEffect(() => {
+	const activeOptionId = useMemo(() => {
 		if (
-			activeOptionId &&
-			options.length > 0 &&
-			!options.some((o) => o.id === activeOptionId)
+			selectedOptionId &&
+			options.some((option) => option.id === selectedOptionId)
 		) {
-			setActiveOptionId(options[0]?.id ?? "");
+			return selectedOptionId;
 		}
-	}, [options, activeOptionId]);
+
+		return options[0]?.id ?? "";
+	}, [selectedOptionId, options]);
+
+	const setActiveOptionId = useCallback((optionId: string) => {
+		setSelectedOptionId(optionId);
+	}, []);
 
 	const summaryQuery = useGetTourSummaryQuery(
 		{ tourId, optionId: activeOptionId },

@@ -1,32 +1,15 @@
-﻿import React from "react";
+import React from "react";
 
 import {
-	AGENCY_BOOKING_SIDEBAR_LIST,
-	AGENCY_SETTINGS_SIDEBAR_LIST,
 	ENUM_AUTH,
 	ENUM_LAYOUT,
 	ENUM_PATH,
-	FINANCE_SIDEBAR_LIST,
-	type IRouting,
-	LIBRARY_SIDEBAR_LIST,
-	OPERATOR_BOOKING_SIDEBAR_LIST,
-	OPERATOR_SETTINGS_SIDEBAR_LIST,
-	TOURS_SIDEBAR_LIST
+	type IRouting
 } from "@/shared/config";
 
 import {
-	BookingAgencyLayout,
-	BookingOperatorLayout,
-	DefaultAgencyLayout,
-	DefaultOperatorLayout,
-	EventOperatorLayout,
-	FinanceOperatorLayout,
-	LibraryOperatorLayout,
 	SettingsAgencyLayout,
 	SettingsOperatorLayout,
-	SideBarAgencyLayout,
-	SideBarOperatorLayout,
-	TourOperatorLayout,
 	ToursOperatorLayout
 } from "@/widgets/layouts";
 
@@ -387,109 +370,61 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: OperatorAccountSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			SettingsOperatorLayout
-		]
+		section: "settings-operator",
+		layout_cascade: [SettingsOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.BUSINESS_SETTINGS,
 		component: OperatorBusinessSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			SettingsOperatorLayout
-		]
+		section: "settings-operator",
+		layout_cascade: [SettingsOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.FINANCIAL_SETTINGS,
 		component: OperatorFinancialSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			SettingsOperatorLayout
-		]
+		section: "settings-operator",
+		layout_cascade: [SettingsOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.NOTIFICATIONS,
 		component: OperatorNotificationsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			)
-		]
+		section: "settings-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.SECURITY,
 		component: OperatorSecurityPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			SettingsOperatorLayout
-		]
+		section: "settings-operator",
+		layout_cascade: [SettingsOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.STAFF_INFORMATION,
 		component: OperatorStaffInformationPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			SettingsOperatorLayout
-		]
+		section: "settings-operator",
+		layout_cascade: [SettingsOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.TAGS,
 		component: OperatorTagsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			)
-		]
+		section: "settings-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.TOUR_SETTINGS,
 		component: OperatorTourSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			)
-		]
+		section: "settings-operator"
 	},
 
 	// settings — agency
@@ -498,69 +433,39 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: AgencyAccountSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarAgencyLayout>
-			),
-			SettingsAgencyLayout
-		]
+		section: "settings-agency",
+		layout_cascade: [SettingsAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.AGENCY.SETTINGS.BUSINESS_SETTINGS,
 		component: AgencyBusinessSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarAgencyLayout>
-			),
-			SettingsAgencyLayout
-		]
+		section: "settings-agency",
+		layout_cascade: [SettingsAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.AGENCY.SETTINGS.FINANCIAL_SETTINGS,
 		component: AgencyFinancialSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarAgencyLayout>
-			),
-			SettingsAgencyLayout
-		]
+		section: "settings-agency",
+		layout_cascade: [SettingsAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.AGENCY.SETTINGS.NOTIFICATIONS,
 		component: AgencyNotificationsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarAgencyLayout>
-			)
-		]
+		section: "settings-agency"
 	},
 	{
 		path: ENUM_PATH.AGENCY.SETTINGS.SECURITY,
 		component: AgencySecurityPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
-					{children}
-				</SideBarAgencyLayout>
-			),
-			SettingsAgencyLayout
-		]
+		section: "settings-agency",
+		layout_cascade: [SettingsAgencyLayout]
 	},
 
 	// tours
@@ -625,126 +530,63 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: OverviewPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.ITINERARY,
 		component: ItineraryPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.SCHEDULE,
 		component: SchedulePage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.PRICING_REVIEW,
 		component: PricingReviewPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.ORDER_HISTORY,
 		component: OrderHistoryPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.MESSAGES,
 		component: MessagesPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.LANDING,
 		component: LandingPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.ACTIVITY_LOG,
 		component: ActivityLogPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 	{
 		path: ENUM_PATH.TOURS.SETTINGS,
 		component: SettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			TourOperatorLayout
-		]
+		section: "tour-detail"
 	},
 
 	// events
@@ -753,210 +595,105 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: FlightEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.FLIGHT_OPTION,
 		component: FlightEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.EVENT,
 		component: ActivityEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.EVENT_OPTION,
 		component: ActivityEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.TRANSFER,
 		component: TransportationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.TRANSFER_OPTION,
 		component: TransportationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.SUPPLEMENT,
 		component: SupplementEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.SUPPLEMENT_OPTION,
 		component: SupplementEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.GUIDE,
 		component: GuideEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.GUIDE_OPTION,
 		component: GuideEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION,
 		component: AccommodationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.ACCOMMODATION_OPTION,
 		component: AccommodationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.MULTIPLY_OPTION,
 		component: MultiplyOptionEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.INFO,
 		component: InformationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	{
 		path: ENUM_PATH.TOURS.EVENTS.INFO_OPTION,
 		component: InformationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			EventOperatorLayout
-		]
+		section: "tour-events"
 	},
 	// {
 	// 	path: ENUM_PATH.TOURS.EVENTS.TOUR_DETAILS,
@@ -979,35 +716,21 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: OperatorAppealsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_BOOKING_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			BookingOperatorLayout
-		]
+		section: "booking-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.BOOKING.ORDERS,
 		component: OperatorOrdersPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={OPERATOR_BOOKING_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			BookingOperatorLayout
-		]
+		section: "booking-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.BOOKING.ORDER_ID,
 		component: OperatorOrderIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [DefaultOperatorLayout]
+		section: "booking-operator"
 	},
 
 	// booking — agency
@@ -1016,35 +739,21 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: AgencyAppealsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarAgencyLayout items={AGENCY_BOOKING_SIDEBAR_LIST}>
-					{children}
-				</SideBarAgencyLayout>
-			),
-			BookingAgencyLayout
-		]
+		section: "booking-agency"
 	},
 	{
 		path: ENUM_PATH.AGENCY.BOOKING.ORDERS,
 		component: AgencyOrdersPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarAgencyLayout items={AGENCY_BOOKING_SIDEBAR_LIST}>
-					{children}
-				</SideBarAgencyLayout>
-			),
-			BookingAgencyLayout
-		]
+		section: "booking-agency"
 	},
 	{
 		path: ENUM_PATH.AGENCY.BOOKING.ORDER_ID,
 		component: AgencyOrderIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [DefaultAgencyLayout]
+		section: "booking-agency"
 	},
 
 	// finance
@@ -1053,63 +762,35 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: InvoicesPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			FinanceOperatorLayout
-		]
+		section: "finance"
 	},
 	{
 		path: ENUM_PATH.FINANCE.INVOICE_ID,
 		component: InvoiceIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [DefaultOperatorLayout]
+		section: "finance"
 	},
 	{
 		path: ENUM_PATH.FINANCE.CLIENT_PAYMENTS,
 		component: ClientPaymentsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			FinanceOperatorLayout
-		]
+		section: "finance"
 	},
 	{
 		path: ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS,
 		component: SupplierPaymentsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			FinanceOperatorLayout
-		]
+		section: "finance"
 	},
 	{
 		path: ENUM_PATH.FINANCE.RECONCILIATION,
 		component: ReconciliationPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={FINANCE_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			FinanceOperatorLayout
-		]
+		section: "finance"
 	},
 
 	{
@@ -1117,7 +798,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: ReconciliationIdPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [DefaultOperatorLayout]
+		section: "finance"
 	},
 
 	// library
@@ -1126,140 +807,70 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: EventTemplatesPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_TRANSFER,
 		component: LibraryTransferEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_SUPPLEMENT,
 		component: LibrarySupplementEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_GUIDE,
 		component: LibraryGuideEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_FLIGHT,
 		component: LibraryFlightEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_ACCOMMODATION,
 		component: LibraryAccommodationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_ACTIVITY,
 		component: LibraryActivityEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_INFO,
 		component: LibraryInfoEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.ITINERARIES,
 		component: LibraryItinerariesStubPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.SUPPLIERS,
 		component: LibrarySuppliersStubPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [
-			({ children }: { children: React.ReactNode }) => (
-				<SideBarOperatorLayout items={LIBRARY_SIDEBAR_LIST}>
-					{children}
-				</SideBarOperatorLayout>
-			),
-			LibraryOperatorLayout
-		]
+		section: "library"
 	},
 
 	// 404

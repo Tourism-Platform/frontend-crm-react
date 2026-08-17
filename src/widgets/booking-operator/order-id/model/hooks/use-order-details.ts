@@ -63,11 +63,8 @@ export const useOrderDetails = (orderId: string) => {
 		[itineraryQuery.data, availabilityQuery.data]
 	);
 
-	const isLoading =
-		orderQuery.isLoading ||
-		financialsQuery.isLoading ||
-		itineraryQuery.isLoading ||
-		paxQuery.isLoading;
+	const isItineraryLoading = itineraryQuery.isLoading;
+	const isFinancialsLoading = financialsQuery.isLoading;
 
 	return {
 		order,
@@ -77,9 +74,10 @@ export const useOrderDetails = (orderId: string) => {
 		tourReviewItems,
 		availability: availabilityQuery.data ?? [],
 		financials: financialsQuery.data,
-		isLoading,
 		isOrderLoading: orderQuery.isLoading,
 		isPaxLoading: paxQuery.isLoading,
-		isAvailabilityLoading: availabilityQuery.isLoading
+		isAvailabilityLoading: availabilityQuery.isLoading,
+		isItineraryLoading,
+		isFinancialsLoading
 	};
 };

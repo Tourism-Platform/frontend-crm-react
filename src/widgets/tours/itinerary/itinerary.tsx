@@ -19,6 +19,7 @@ import {
 	DraggableTemplateItem,
 	ItinerarySidebar
 } from "./ui";
+import { ItineraryLoadingSkeleton } from "./ui/itinerary-loading-skeleton";
 
 const ItineraryBase: React.FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
@@ -64,7 +65,7 @@ const ItineraryBase: React.FC = () => {
 	};
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return <ItineraryLoadingSkeleton />;
 	}
 
 	return (

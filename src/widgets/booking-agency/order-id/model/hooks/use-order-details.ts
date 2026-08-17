@@ -47,16 +47,12 @@ export const useOrderDetails = (orderId: string) => {
 		[itineraryQuery.data]
 	);
 
-	const isLoading =
-		orderQuery.isLoading || itineraryQuery.isLoading || paxQuery.isLoading;
-
 	return {
 		order,
 		orderItems,
 		contactItems,
 		paxDetails,
 		tourReviewItems,
-		isLoading,
 		isOrderLoading: orderQuery.isLoading,
 		isPaxLoading: paxQuery.isLoading,
 		isItineraryLoading: itineraryQuery.isLoading

@@ -7,7 +7,11 @@ import { ENUM_ORDER_STATUS } from "@/entities/booking";
 import { useOrderDetails } from "../model/hooks/use-order-details";
 
 import { OrderHeader } from "./order-header";
-import { OrderIdSkeleton } from "./order-id-skeleton";
+import {
+	OrderHeaderSkeleton,
+	OrderInfoCardsSkeleton,
+	OrderSectionCardSkeleton
+} from "./order-id-skeleton";
 import { OrderInfoCard } from "./order-info-card";
 import { OrderNotFound } from "./order-not-found";
 import { OrderPaxReview } from "./order-pax-review";
@@ -27,62 +31,78 @@ export const OrderId: FC = () => {
 		tourReviewItems,
 		availability,
 		financials,
-		isLoading
+		isOrderLoading,
+		isPaxLoading,
+		isItineraryLoading
 	} = useOrderDetails(orderId || "");
 
-	if (isLoading) {
-		return <OrderIdSkeleton />;
-	}
-
-	if (!order) {
+	if (!isOrderLoading && !order) {
 		return <OrderNotFound />;
 	}
 
 	const showSupplierPayments =
-		order.status === ENUM_ORDER_STATUS.BOOKING ||
-		order.status === ENUM_ORDER_STATUS.IN_PROGRESS ||
-		order.status === ENUM_ORDER_STATUS.COMPLETED;
+		order &&
+		(order.status === ENUM_ORDER_STATUS.BOOKING ||
+			order.status === ENUM_ORDER_STATUS.IN_PROGRESS ||
+			order.status === ENUM_ORDER_STATUS.COMPLETED);
 
 	return (
 		<div className="flex flex-col gap-8 text-foreground">
-			<OrderHeader
-				orderId={order.orderId}
-				orderNumber={order.orderNumber}
-				status={order.status}
-				invoiceStatus={order.invoiceStatus}
-				availability={availability}
-			/>
-
-			{order.report && <OrderReport report={order.report} />}
-
-			<div className="grid grid-cols-2 gap-6">
-				<OrderInfoCard
-					title={t("order_info.title")}
-					items={orderItems}
-				/>
-
-				<OrderInfoCard
-					title={t("contact_info.title")}
-					items={contactItems}
-				/>
-			</div>
-
-			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (
-				<OrderTourReview
-					bookingId={orderId || ""}
-					items={tourReviewItems}
-					financials={financials}
-					orderStatus={order.status}
+			{isOrderLoading || !order ? (
+				<OrderHeaderSkeleton />
+			) : (
+				<OrderHeader
+					orderId={order.orderId}
+					orderNumber={order.orderNumber}
+					status={order.status}
+					invoiceStatus={order.invoiceStatus}
 					availability={availability}
 				/>
 			)}
+
+			{order?.report && <OrderReport report={order.report} />}
+
+			{isOrderLoading || !order ? (
+				<OrderInfoCardsSkeleton />
+			) : (
+				<div className="grid grid-cols-2 gap-6">
+					<OrderInfoCard
+						title={t("order_info.title")}
+						items={orderItems}
+					/>
+
+					<OrderInfoCard
+						title={t("contact_info.title")}
+						items={contactItems}
+					/>
+				</div>
+			)}
+
+			{order &&
+				order.status !== ENUM_ORDER_STATUS.CANCELLED &&
+				(isItineraryLoading ? (
+					<OrderSectionCardSkeleton />
+				) : (
+					<OrderTourReview
+						bookingId={orderId || ""}
+						items={tourReviewItems}
+						financials={financials}
+						orderStatus={order.status}
+						availability={availability}
+					/>
+				))}
+
 			{showSupplierPayments && (
 				<OrderSupplierPayments bookingId={orderId || ""} />
 			)}
 
-			{order.status !== ENUM_ORDER_STATUS.CANCELLED && (
-				<OrderPaxReview items={paxDetails} />
-			)}
+			{order &&
+				order.status !== ENUM_ORDER_STATUS.CANCELLED &&
+				(isPaxLoading ? (
+					<OrderSectionCardSkeleton />
+				) : (
+					<OrderPaxReview items={paxDetails} />
+				))}
 		</div>
 	);
 };

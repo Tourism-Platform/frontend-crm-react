@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { useListAllTourOptionsQuery } from "@/entities/tour";
 
@@ -8,23 +8,25 @@ export const useItineraryOptions = (tourId: string) => {
 		{ skip: !tourId }
 	);
 
-	const [activeOption, setActiveOption] = useState<string>("");
+	const [selectedOptionId, setSelectedOptionId] = useState<string | null>(
+		null
+	);
 
-	useEffect(() => {
-		if (options.length > 0 && !activeOption) {
-			setActiveOption(options[0].id);
-		}
-	}, [options, activeOption]);
+	const activeOptionId = selectedOptionId ?? options[0]?.id ?? "";
+
+	const setActiveOption = useCallback((optionId: string) => {
+		setSelectedOptionId(optionId);
+	}, []);
 
 	const handleOptionDeleted = (optionId: string) => {
-		if (activeOption !== optionId) return;
+		if (activeOptionId !== optionId) return;
 		const remaining = options.filter((o) => o.id !== optionId);
-		setActiveOption(remaining.length > 0 ? remaining[0].id : "");
+		setSelectedOptionId(remaining.length > 0 ? remaining[0].id : null);
 	};
 
 	return {
 		options,
-		activeOption,
+		activeOption: activeOptionId,
 		setActiveOption,
 		isLoading,
 		handleOptionDeleted

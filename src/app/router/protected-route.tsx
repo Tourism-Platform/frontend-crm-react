@@ -64,7 +64,9 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 	} = useGetAuthAccountQuery(undefined, { skip: !shouldFetchAccount });
 
 	const isCheckingSession =
-		shouldFetchAccount && (isAuthAccountLoading || isAuthAccountFetching);
+		shouldFetchAccount &&
+		!authAccount &&
+		(isAuthAccountLoading || isAuthAccountFetching);
 
 	if (isPrivateRoute) {
 		if (isCheckingSession && !isAuthAccountError) {
