@@ -24,11 +24,17 @@ interface IPreviewerProps {
 }
 
 const parseTipTapHtml = (value: string): string => {
+	let html: string;
+
 	try {
-		return generateHTML(resolveTipTapDoc(value), extensions);
+		html = generateHTML(resolveTipTapDoc(value), extensions);
 	} catch {
-		return generateHTML(plainTextToTipTapDoc(value), extensions);
+		html = generateHTML(plainTextToTipTapDoc(value), extensions);
 	}
+
+	// generateHTML (XMLSerializer) emits empty <p></p> / <p xmlns="..."></p>
+	// without <br>, which collapse under Tailwind Preflight.
+	return html.replace(/<p(\s[^>]*)?><\/p>/g, "<p$1><br /></p>");
 };
 
 export const Previewer: FC<IPreviewerProps> = ({ text, className }) => {
@@ -42,7 +48,7 @@ export const Previewer: FC<IPreviewerProps> = ({ text, className }) => {
 	return (
 		<div
 			className={cn(
-				"prose dark:prose-invert [&_h1]:text-4xl",
+				"[&_h1]:text-4xl",
 				"[&_h1]:font-bold",
 				"[&_h2]:text-3xl",
 				"[&_h2]:font-semibold",
@@ -52,9 +58,11 @@ export const Previewer: FC<IPreviewerProps> = ({ text, className }) => {
 				"[&_h4]:font-semibold",
 				"[&_ul]:list-disc",
 				"[&_ul]:ml-4",
+				"[&_ul]:my-2",
 				"[&_ol]:list-decimal",
 				"[&_ol]:ml-4",
-				"prose-li:marker:text-primary",
+				"[&_ol]:my-2",
+				"[&_li]:my-0.5",
 				className
 			)}
 		>
