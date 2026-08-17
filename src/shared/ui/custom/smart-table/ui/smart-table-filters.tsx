@@ -19,6 +19,7 @@ interface SmartTableFiltersProps<TData extends object> {
 	showStatusTabsFilter?: boolean;
 	search?: string;
 	onSearchChange?: (value: string) => void;
+	minSearchLength?: number;
 	status?: string[];
 	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];
@@ -39,6 +40,7 @@ export function SmartTableFilters<TData extends object>({
 	showStatusTabsFilter,
 	search,
 	onSearchChange,
+	minSearchLength,
 	status: controlledStatus,
 	onStatusChange,
 	statusOptions,
@@ -103,6 +105,7 @@ export function SmartTableFilters<TData extends object>({
 			showStatusTabsFilter={showStatusTabsFilter}
 			search={search}
 			onSearchChange={onSearchChange}
+			minSearchLength={minSearchLength}
 			status={controlledStatus}
 			onStatusChange={onStatusChange}
 			statusOptions={statusOptions}

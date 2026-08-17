@@ -63,6 +63,7 @@ function SmartTableInner<TData extends object>({
 	onPaginationChange: externalOnPaginationChange,
 	search,
 	onSearchChange,
+	minSearchLength,
 	status,
 	onStatusChange,
 	statusOptions,
@@ -129,7 +130,7 @@ function SmartTableInner<TData extends object>({
 		onColumnOrderChange: setColumnOrder,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		...(showPagination || recordCount !== undefined
+		...(showPagination || recordCount !== undefined || Boolean(getSubRows)
 			? { getPaginationRowModel: getPaginationRowModel() }
 			: {}),
 		getFilteredRowModel: getFilteredRowModel(),
@@ -284,6 +285,7 @@ function SmartTableInner<TData extends object>({
 										onStatusTabChange={onStatusTabChange}
 										search={search}
 										onSearchChange={onSearchChange}
+										minSearchLength={minSearchLength}
 										status={status}
 										onStatusChange={onStatusChange}
 										statusOptions={statusOptions}

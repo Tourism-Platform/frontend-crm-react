@@ -1,4 +1,5 @@
-import { type FC, useMemo } from "react";
+import { type PaginationState } from "@tanstack/react-table";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,7 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { type ITourReviewItem } from "@/entities/tour";
 
-import { PRICING_REVIEW_COLUMNS } from "../model";
+import { PRICING_REVIEW_COLUMNS, filterReviewItemsByName } from "../model";
 
 interface IPricingReviewTableProps {
 	items: ITourReviewItem[];
@@ -29,10 +30,26 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 	optionId
 }) => {
 	const { t } = useTranslation("tour_pricing_review_page");
+	const [search, setSearch] = useState("");
 	const columns = useMemo(
 		() => PRICING_REVIEW_COLUMNS(t, { tourId, optionId }),
 		[t, tourId, optionId]
 	);
+	const filteredItems = useMemo(
+		() => filterReviewItemsByName(items, search),
+		[items, search]
+	);
+	const pagination = useMemo<PaginationState>(
+		() => ({
+			pageIndex: 0,
+			pageSize: Math.max(items.length, 1)
+		}),
+		[items.length]
+	);
+
+	useEffect(() => {
+		setSearch("");
+	}, [optionId]);
 
 	const actionsJsx = useMemo(
 		() => (
@@ -49,13 +66,18 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 		<Card>
 			<CardContent>
 				<SmartTable
-					data={items}
-					actions={actionsJsx}
+					data={filteredItems}
 					columns={columns}
 					getSubRows={getSubRowsFn}
-					showPagination={false}
-					showTopFilters={false}
+					actions={actionsJsx}
 					tableLayout={TABLE_LAYOUT}
+					showPagination={false}
+					pagination={pagination}
+					showStatusFilter={false}
+					showVisibilityFilter={false}
+					search={search}
+					onSearchChange={setSearch}
+					minSearchLength={1}
 					defaultExpanded={true}
 				/>
 			</CardContent>

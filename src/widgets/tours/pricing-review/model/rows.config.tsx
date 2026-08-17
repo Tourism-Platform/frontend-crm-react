@@ -17,6 +17,7 @@ import {
 	ENUM_SUPPLEMENT_EDIT_TAB,
 	ENUM_TRANSPORTATION_EDIT_TAB,
 	EVENT_METADATA,
+	EVENT_TYPE_TO_OPTION_PATH,
 	EVENT_TYPE_TO_PATH,
 	type ITourReviewItem
 } from "@/entities/tour";
@@ -35,6 +36,32 @@ const EVENT_PRICING_TAB: Partial<Record<ENUM_EVENT_TYPE, string>> = {
 	[ENUM_EVENT.GUIDE]: ENUM_GUIDE_EDIT_TAB.PRICING
 };
 
+const matchesItemName = (value: string, query: string) =>
+	value.toLowerCase().includes(query);
+
+export const filterReviewItemsByName = (
+	items: ITourReviewItem[],
+	search: string
+): ITourReviewItem[] => {
+	const query = search.trim().toLowerCase();
+	if (!query) return items;
+
+	return items.flatMap((item) => {
+		const selfMatch = matchesItemName(item.item, query);
+		if (!item.subRows?.length) {
+			return selfMatch ? [item] : [];
+		}
+
+		if (selfMatch) return [item];
+
+		const subRows = item.subRows.filter((subRow) =>
+			matchesItemName(subRow.item, query)
+		);
+
+		return subRows.length ? [{ ...item, subRows }] : [];
+	});
+};
+
 export const PRICING_REVIEW_COLUMNS = (
 	t: TFunction<"tour_pricing_review_page", undefined>,
 	{ tourId, optionId }: IPricingReviewColumnsParams
@@ -48,7 +75,8 @@ export const PRICING_REVIEW_COLUMNS = (
 					original: { id, type, subRows },
 					depth,
 					getIsExpanded,
-					getToggleExpandedHandler
+					getToggleExpandedHandler,
+					getParentRow
 				},
 				getValue
 			}) => {
@@ -56,19 +84,38 @@ export const PRICING_REVIEW_COLUMNS = (
 				const metadata = type ? EVENT_METADATA[type] : null;
 				const Icon = metadata?.icon;
 				const title = getValue() as string;
-				const eventPath = type ? EVENT_TYPE_TO_PATH[type] : undefined;
+				const parent = getParentRow?.();
+				const isNestedOption =
+					depth > 0 &&
+					parent?.original.type === ENUM_EVENT.MULTIPLY_OPTION;
+				const eventPath = type
+					? isNestedOption
+						? EVENT_TYPE_TO_OPTION_PATH[type]
+						: EVENT_TYPE_TO_PATH[type]
+					: undefined;
 				const pricingTab = type ? EVENT_PRICING_TAB[type] : undefined;
 				const href =
 					eventPath && id
-						? buildRoute(
-								eventPath,
-								{
-									tourId,
-									optionId,
-									eventId: id
-								},
-								pricingTab ? { tab: pricingTab } : undefined
-							)
+						? isNestedOption && parent
+							? buildRoute(
+									eventPath,
+									{
+										tourId,
+										optionId,
+										eventId: parent.original.id,
+										eventOptionId: id
+									},
+									pricingTab ? { tab: pricingTab } : undefined
+								)
+							: buildRoute(
+									eventPath,
+									{
+										tourId,
+										optionId,
+										eventId: id
+									},
+									pricingTab ? { tab: pricingTab } : undefined
+								)
 						: undefined;
 
 				return (

@@ -38,6 +38,7 @@ export interface ISmartTableFilters {
 	showVisibilityFilter?: boolean;
 	search?: string;
 	onSearchChange?: (value: string) => void;
+	minSearchLength?: number;
 	status?: string[];
 	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];

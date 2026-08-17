@@ -27,6 +27,7 @@ export interface IShowFilters {
 	onStatusTabChange?: (value: string) => void;
 	search?: string;
 	onSearchChange?: (value: string) => void;
+	minSearchLength?: number;
 	status?: string[];
 	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];
@@ -48,6 +49,7 @@ export const Filters = <TData extends object>({
 	onStatusTabChange,
 	search,
 	onSearchChange,
+	minSearchLength,
 	status: controlledStatus,
 	onStatusChange,
 	statusOptions,
@@ -75,6 +77,7 @@ export const Filters = <TData extends object>({
 						table={table}
 						search={search}
 						onSearchChange={onSearchChange}
+						minSearchLength={minSearchLength}
 						searchKey={searchKey}
 					/>
 				)}

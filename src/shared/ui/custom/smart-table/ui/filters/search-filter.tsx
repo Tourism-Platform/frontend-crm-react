@@ -15,6 +15,7 @@ interface ISearchFilterProps<TData extends object> {
 	search?: string;
 	onSearchChange?: (value: string) => void;
 	searchKey?: keyof TData;
+	minSearchLength?: number;
 }
 
 export const SearchFilter = <TData extends object>({
@@ -23,7 +24,8 @@ export const SearchFilter = <TData extends object>({
 	table,
 	search,
 	onSearchChange,
-	searchKey = "name" as keyof TData
+	searchKey = "name" as keyof TData,
+	minSearchLength = 3
 }: ISearchFilterProps<TData>) => {
 	const { t } = useTranslation("common");
 	const isControlled = search !== undefined;
@@ -44,9 +46,9 @@ export const SearchFilter = <TData extends object>({
 	useEffect(() => {
 		if (debouncedSearch === externalValue) return;
 
-		// Only apply search if it's empty (reset) or length >= 3
 		const shouldApply =
-			debouncedSearch.length === 0 || debouncedSearch.length >= 3;
+			debouncedSearch.length === 0 ||
+			debouncedSearch.length >= minSearchLength;
 
 		if (shouldApply) {
 			if (onSearchChange) {
@@ -57,7 +59,14 @@ export const SearchFilter = <TData extends object>({
 					?.setFilterValue(debouncedSearch);
 			}
 		}
-	}, [debouncedSearch, onSearchChange, table, externalValue]);
+	}, [
+		debouncedSearch,
+		onSearchChange,
+		table,
+		externalValue,
+		searchKey,
+		minSearchLength
+	]);
 
 	return (
 		<div className="relative">
