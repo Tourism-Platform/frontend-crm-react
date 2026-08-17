@@ -43,9 +43,13 @@ export interface IOrderAgencyInfo {
 	id: string;
 	name: string;
 	businessName?: string | null;
+	legalName?: string | null;
 	contactPerson?: string | null;
 	contactEmail?: string | null;
 	contactPhone?: string | null;
+	addressLine?: string | null;
+	city?: string | null;
+	country?: string | null;
 }
 
 export interface IOrderUserInfo {

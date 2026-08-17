@@ -46,9 +46,10 @@
 		"fields": {
 			"order": "Заказ",
 			"tour": "Тур",
-			"pax": "PAX",
+			"pax": "Размер группы",
 			"dates": "Даты",
-			"duration": "Продолжительность"
+			"duration": "Продолжительность",
+			"duration_value": "{{days}} дн. / {{nights}} ноч."
 		}
 	}
 }

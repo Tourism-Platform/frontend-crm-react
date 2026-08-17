@@ -6,7 +6,10 @@ import { toast } from "sonner";
 import { useDownloadFile } from "@/shared/hooks";
 import { Button } from "@/shared/ui";
 
-import { useLazyGetInvoicePdfQuery } from "@/entities/finance";
+import {
+	useGenerateInvoiceDocumentMutation,
+	useLazyGetInvoicePdfQuery
+} from "@/entities/finance";
 
 interface IExportInvoiceButtonProps {
 	invoiceId: string;
@@ -19,10 +22,15 @@ export const ExportInvoiceButton: FC<IExportInvoiceButtonProps> = ({
 }) => {
 	const { t } = useTranslation("invoice_id_page");
 	const [{ isDownloading }, { download }] = useDownloadFile();
+	const [generateInvoiceDocument, { isLoading: isGenerating }] =
+		useGenerateInvoiceDocumentMutation();
 	const [fetchPdf, { isFetching }] = useLazyGetInvoicePdfQuery();
+
+	const isBusy = isDownloading || isGenerating || isFetching;
 
 	const handleExport = async () => {
 		try {
+			await generateInvoiceDocument(invoiceId).unwrap();
 			const { url } = await fetchPdf(invoiceId).unwrap();
 			await download({
 				url,
@@ -34,10 +42,8 @@ export const ExportInvoiceButton: FC<IExportInvoiceButtonProps> = ({
 	};
 
 	return (
-		<Button onClick={handleExport} disabled={isDownloading || isFetching}>
-			{(isDownloading || isFetching) && (
-				<Loader className="mr-2 h-4 w-4 animate-spin" />
-			)}
+		<Button onClick={handleExport} disabled={isBusy}>
+			{isBusy && <Loader className="mr-2 h-4 w-4 animate-spin" />}
 			{t("buttons.export")}
 		</Button>
 	);

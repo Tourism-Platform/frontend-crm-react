@@ -2,6 +2,7 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { useGetOperatorBookingOrderQuery } from "@/entities/booking";
 import { useGetInvoiceByIdQuery } from "@/entities/finance";
 
 import { getBillingItems, getBookingItems } from "../model";
@@ -18,15 +19,21 @@ export const InvoiceId: FC = () => {
 
 	const {
 		data: invoice,
-		isLoading,
-		isError
+		isLoading: isInvoiceLoading,
+		isError: isInvoiceError
 	} = useGetInvoiceByIdQuery(invoiceId ?? "");
 
-	if (isLoading) {
+	const bookingId = invoice?.bookingId ?? "";
+	const { data: booking, isLoading: isBookingLoading } =
+		useGetOperatorBookingOrderQuery(bookingId, {
+			skip: !bookingId
+		});
+
+	if (isInvoiceLoading || (!!bookingId && isBookingLoading)) {
 		return <InvoiceIdSkeleton />;
 	}
 
-	if (isError || !invoice) {
+	if (isInvoiceError || !invoice) {
 		return <InvoiceNotFound />;
 	}
 
@@ -45,12 +52,12 @@ export const InvoiceId: FC = () => {
 			<div className="grid grid-cols-2 gap-6">
 				<InvoiceInfoCard
 					title={t("billing.title")}
-					items={getBillingItems(invoice, t)}
+					items={getBillingItems(invoice, t, booking)}
 				/>
 
 				<InvoiceInfoCard
 					title={t("booking.title")}
-					items={getBookingItems(invoice, t)}
+					items={getBookingItems(invoice, t, booking)}
 				/>
 			</div>
 		</div>

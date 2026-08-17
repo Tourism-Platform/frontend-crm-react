@@ -10,6 +10,8 @@ import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
 import { INVOICE_NO_DATA } from "../constants";
 import type {
+	IGenerateInvoiceDocument,
+	IGenerateInvoiceDocumentBackend,
 	IInvoice,
 	IInvoiceDetail,
 	IInvoiceFilters,
@@ -115,4 +117,10 @@ export const mapInvoiceFiltersToBackend = (filters: IInvoiceFilters) => ({
 	limit: filters.limit,
 	q: filters.search.trim() || undefined,
 	statuses: filters.status.length > 0 ? filters.status : undefined
+});
+
+export const mapGenerateInvoiceDocumentToFrontend = (
+	data: IGenerateInvoiceDocumentBackend
+): IGenerateInvoiceDocument => ({
+	documentId: data.documentId
 });

@@ -48,7 +48,8 @@
 			"tour": "Tour",
 			"pax": "PAX",
 			"dates": "Dates",
-			"duration": "Duration"
+			"duration": "Duration",
+			"duration_value": "{{days}} days / {{nights}} nights"
 		}
 	}
 }

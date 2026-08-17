@@ -36,9 +36,13 @@ const mapOrderAgencyInfo = (
 		id: agency.id,
 		name: agency.name,
 		businessName: agency.business_name ?? null,
+		legalName: agency.legal_name ?? null,
 		contactPerson: agency.contact_person ?? null,
 		contactEmail: agency.contact_email ?? null,
-		contactPhone: agency.contact_phone ?? null
+		contactPhone: agency.contact_phone ?? null,
+		addressLine: agency.address_line ?? null,
+		city: agency.city ?? null,
+		country: agency.country ?? null
 	};
 };
 
