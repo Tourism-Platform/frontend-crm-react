@@ -8,11 +8,11 @@ import { useTranslation } from "react-i18next";
 import {
 	Button,
 	CustomField,
-	FieldSeparator,
+	// FieldSeparator,
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { GoogleLoginButton } from "@/features/auth";
+// import { GoogleLoginButton } from "@/features/auth";
 
 import {
 	ENUM_FORM_LOGIN,
@@ -67,8 +67,8 @@ const SignUpFormBase: FC<ISignUpFormProps> = ({ form, isLoading, error }) => {
 				)}
 				<p>{t("form.buttons.sign_up")}</p>
 			</Button>
-			<FieldSeparator>{t("form.sign_up.continue")}</FieldSeparator>
-			<GoogleLoginButton />
+			{/* <FieldSeparator>{t("form.sign_up.continue")}</FieldSeparator>
+			<GoogleLoginButton /> */}
 			<div className="text-center">
 				{t("form.sign_up.sign_in")}{" "}
 				<span
