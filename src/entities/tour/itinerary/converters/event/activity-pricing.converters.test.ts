@@ -29,7 +29,7 @@ const basePricing = (
 		ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
 	[ENUM_ACTIVITY_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: false,
 	[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: null,
-	[ENUM_ACTIVITY_PRICING_FIELD.PACKAGE_TYPE]: "",
+	[ENUM_ACTIVITY_PRICING_FIELD.PACKAGE_ID]: "",
 	...overrides
 });
 
@@ -40,7 +40,7 @@ describe("mapActivityPricingFromBackend", () => {
 			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
 			add_margin_separately: false,
 			markup: null,
-			package_type: ""
+			package_id: ""
 		});
 	});
 

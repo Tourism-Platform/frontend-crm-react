@@ -12,6 +12,10 @@ import type {
 import { ENUM_SUPPLEMENT_FORM_SECTION as ENUM_FORM_SECTION } from "../../types";
 
 import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "./package-id.helpers";
+import {
 	mapItemsAndPricingToBackend,
 	mapItemsFromBackend,
 	mapPricingFromBackend
@@ -31,7 +35,10 @@ export const mapSupplementaryEventToForm = (
 		[ENUM_FORM_SECTION.DAY]: event.day,
 		[ENUM_FORM_SECTION.POSITION]: event.position,
 		[ENUM_FORM_SECTION.ITEMS]: mapItemsFromBackend(backendItems),
-		[ENUM_FORM_SECTION.PRICING]: mapPricingFromBackend(backendItems)
+		[ENUM_FORM_SECTION.PRICING]: applyEventPackageIdToPricing(
+			mapPricingFromBackend(backendItems),
+			event.package_id
+		)
 	};
 };
 
@@ -44,6 +51,7 @@ export const mapSupplementaryFormToUpdate = (
 
 	return {
 		typ: ENUM_EVENT_BACKEND.SUPPLEMENTARY,
+		package_id: mapEventPackageIdToBackend(frontend.pricing),
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(frontend.description !== undefined && {

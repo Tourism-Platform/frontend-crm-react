@@ -1,7 +1,9 @@
 {
 	"page_name": "Pricing and review of tour",
 	"tabs": {
-		"add": "Add option"
+		"add": "Add option",
+		"events": "Events",
+		"packages": "Tour packages"
 	},
 	"overview": {
 		"title": "Overview",
@@ -14,8 +16,16 @@
 		"supplier": "Supplier",
 		"total_cost": "Total cost",
 		"estimated_revenue": "Estimated revenue",
+		"name": "Name",
+		"untitled": "Untitled",
 		"buttons": {
-			"add_item": "Add item"
+			"add_item": "Add item",
+			"create_package": "Create package"
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load packages"
 		}
 	}
 }

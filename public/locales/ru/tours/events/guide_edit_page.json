@@ -112,8 +112,15 @@
 					"title": "Пакет",
 					"fields": {
 						"package": {
-							"label": "Тип пакета"
+							"label": "Тип пакета",
+							"placeholder": "Выберите пакет",
+							"errors": {
+								"required": "Выберите пакет"
+							}
 						}
+					},
+					"buttons": {
+						"create": "Создать"
 					}
 				},
 				"pricing_details": {

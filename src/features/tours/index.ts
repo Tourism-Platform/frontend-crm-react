@@ -6,3 +6,4 @@ export * from "./edit-option";
 export * from "./preview-tour";
 export * from "./publish-tour";
 export * from "./search-tours-bar";
+export * from "./select-tour-package";

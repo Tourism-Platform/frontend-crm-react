@@ -310,7 +310,7 @@ export const getDefaultAccommodationPricing = (
 		roomsListLength: roomsList.length
 	}),
 	[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: null,
-	package_type: ""
+	package_id: ""
 });
 
 export const mapAccommodationPricingFromBackend = (

@@ -17,6 +17,10 @@ import {
 	mapActivityPricingToBackend
 } from "./activity-pricing.converters";
 import { activityTypeMapper } from "./activity-type.converters";
+import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "./package-id.helpers";
 
 export const mapActivityEventToForm = (
 	data: TTourEventBackendResponce
@@ -39,7 +43,10 @@ export const mapActivityEventToForm = (
 			),
 			location: mapBackendLocationToGeoForm(event.details?.location)
 		},
-		pricing: mapActivityPricingFromBackend(event.details)
+		pricing: applyEventPackageIdToPricing(
+			mapActivityPricingFromBackend(event.details),
+			event.package_id
+		)
 	};
 };
 
@@ -56,6 +63,7 @@ export const mapActivityFormToUpdate = (
 		...(g?.description !== undefined &&
 			g.description !== "" && { description: g.description }),
 		typ: ENUM_EVENT_BACKEND.ACTIVITY,
+		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),

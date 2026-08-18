@@ -13,6 +13,10 @@ import {
 	type TTransportationEditSchema
 } from "../../types";
 
+import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "./package-id.helpers";
 import { transferTypeMapper } from "./transfer-type.converters";
 import {
 	mapCarsFromBackend,
@@ -60,7 +64,10 @@ export const mapTransferEventToForm = (
 			)
 		},
 		cars,
-		pricing: mapTransportationPricingFromBackend(details, cars.cars)
+		pricing: applyEventPackageIdToPricing(
+			mapTransportationPricingFromBackend(details, cars.cars),
+			event.package_id
+		)
 	};
 };
 
@@ -85,6 +92,7 @@ export const mapTransferFormToUpdate = (
 		...(g?.description !== undefined &&
 			g.description !== "" && { description: g.description }),
 		typ: ENUM_EVENT_BACKEND.TRANSFER,
+		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),

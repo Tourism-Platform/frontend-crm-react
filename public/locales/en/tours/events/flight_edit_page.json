@@ -496,8 +496,15 @@
 					"title": "Package type",
 					"fields": {
 						"package": {
-							"label": "Type"
+							"label": "Type",
+							"placeholder": "Select a package",
+							"errors": {
+								"required": "Select a package"
+							}
 						}
+					},
+					"buttons": {
+						"create": "Create"
 					}
 				}
 			}

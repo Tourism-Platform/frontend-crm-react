@@ -125,6 +125,11 @@ const PricingReviewPage = React.lazy(() =>
 		(m) => ({ default: m.PricingReviewPage })
 	)
 );
+const PackageEditPage = React.lazy(() =>
+	import("@/pages/tours/package-edit-page/ui/package-edit-page").then(
+		(m) => ({ default: m.PackageEditPage })
+	)
+);
 const OrderHistoryPage = React.lazy(() =>
 	import("@/pages/tours/order-history-page/ui/order-history-page").then(
 		(m) => ({ default: m.OrderHistoryPage })
@@ -549,6 +554,13 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.TOURS.PRICING_REVIEW,
 		component: PricingReviewPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "tour-detail"
+	},
+	{
+		path: ENUM_PATH.TOURS.PACKAGE,
+		component: PackageEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		section: "tour-detail"

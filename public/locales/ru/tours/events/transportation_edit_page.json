@@ -249,8 +249,15 @@
 					"title": "Пакет",
 					"fields": {
 						"package": {
-							"label": "Тип турпакета"
+							"label": "Тип турпакета",
+							"placeholder": "Выберите пакет",
+							"errors": {
+								"required": "Выберите пакет"
+							}
 						}
+					},
+					"buttons": {
+						"create": "Создать"
 					}
 				},
 				"per_car": {
@@ -401,8 +408,15 @@
 			"package": {
 				"fields": {
 					"package": {
-						"label": "Тип турпакета"
+						"label": "Тип турпакета",
+						"placeholder": "Выберите пакет",
+						"errors": {
+							"required": "Выберите пакет"
+						}
 					}
+				},
+				"buttons": {
+					"create": "Создать"
 				}
 			}
 		}

@@ -78,9 +78,21 @@ export const GUIDE_PRICING_SCHEMA = z
 			.union([perGuideExpensesSchema, perGuideCategoryExpensesSchema])
 			.nullable()
 			.optional(),
-		[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: z.string()
+		[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: z.string()
 	})
 	.superRefine((data, ctx) => {
+		if (data.invoicing === ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE) {
+			if (!data.package_id?.trim()) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message:
+						"form.pricing.form.package.fields.package.errors.required",
+					path: [ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]
+				});
+			}
+			return;
+		}
+
 		if (data.invoicing !== ENUM_GUIDE_PRICING_INVOICING.INDIVIDUAL) {
 			return;
 		}

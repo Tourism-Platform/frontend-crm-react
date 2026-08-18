@@ -7,6 +7,7 @@ export * from "./preview-tour-page";
 export * from "./preview-option-page";
 export * from "./overview-page";
 export * from "./pricing-review-page";
+export * from "./package-edit-page";
 export * from "./schedule-page";
 export * from "./tours-page";
 export * from "./settings-page";

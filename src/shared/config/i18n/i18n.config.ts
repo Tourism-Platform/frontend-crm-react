@@ -41,6 +41,7 @@ import tour_activity_log_page from "../../../../public/locales/en/tours/tour_act
 import tour_itinerary_page from "../../../../public/locales/en/tours/tour_itinerary_page.json";
 import tour_order_history_page from "../../../../public/locales/en/tours/tour_order_history_page.json";
 import tour_overview_page from "../../../../public/locales/en/tours/tour_overview_page.json";
+import tour_package_edit_page from "../../../../public/locales/en/tours/tour_package_edit_page.json";
 import tour_pricing_review_page from "../../../../public/locales/en/tours/tour_pricing_review_page.json";
 import tour_schedule_page from "../../../../public/locales/en/tours/tour_schedule_page.json";
 import tour_settings_page from "../../../../public/locales/en/tours/tour_settings_page.json";
@@ -86,6 +87,7 @@ export type TLoginPage = typeof login_page;
 export type TOrdersPage = typeof orders_page;
 export type TTourActivityLogPage = typeof tour_activity_log_page;
 export type TTourPricingReviewPage = typeof tour_pricing_review_page;
+export type TTourPackageEditPage = typeof tour_package_edit_page;
 export type TTourSettingsPage = typeof tour_settings_page;
 export type TCommonTours = typeof common_tours;
 export type TToursCatalogPage = typeof tours_catalog_page;
@@ -137,6 +139,7 @@ export type TResources = {
 	order_id_page: TOrderIdPage;
 	tour_activity_log_page: TTourActivityLogPage;
 	tour_pricing_review_page: TTourPricingReviewPage;
+	tour_package_edit_page: TTourPackageEditPage;
 	tour_settings_page: TTourSettingsPage;
 	landing_page: TLandingPage;
 	common_tours: TCommonTours;
@@ -189,6 +192,7 @@ export const NS = [
 	"order_id_page",
 	"tour_activity_log_page",
 	"tour_pricing_review_page",
+	"tour_package_edit_page",
 	"tour_settings_page",
 	"landing_page",
 	"common_tours",
@@ -256,6 +260,7 @@ export type TOrdersPageKeys = TNestedKeyOf<TOrdersPage>;
 export type TOrderIdPageKeys = TNestedKeyOf<TOrderIdPage>;
 export type TTourActivityLogPageKeys = TNestedKeyOf<TTourActivityLogPage>;
 export type TTourPricingReviewPageKeys = TNestedKeyOf<TTourPricingReviewPage>;
+export type TTourPackageEditPageKeys = TNestedKeyOf<TTourPackageEditPage>;
 export type TTourSettingsPageKeys = TNestedKeyOf<TTourSettingsPage>;
 export type TLandingPageKeys = TNestedKeyOf<TLandingPage>;
 export type TNotFoundPageKeys = TNestedKeyOf<TNotFoundPage>;

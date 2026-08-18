@@ -356,7 +356,7 @@ export const getDefaultGuidePricing = (
 		priceByLanguage: true,
 		guidesListLength: guidesList.length
 	}),
-	[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: ""
+	[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
 });
 
 export const mapGuidePricingFromBackend = (

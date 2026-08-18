@@ -249,8 +249,15 @@
 					"title": "Package",
 					"fields": {
 						"package": {
-							"label": "Package type"
+							"label": "Package type",
+							"placeholder": "Select a package",
+							"errors": {
+								"required": "Select a package"
+							}
 						}
+					},
+					"buttons": {
+						"create": "Create"
 					}
 				},
 				"per_car": {
@@ -401,8 +408,15 @@
 			"package": {
 				"fields": {
 					"package": {
-						"label": "Package type"
+						"label": "Package type",
+						"placeholder": "Select a package",
+						"errors": {
+							"required": "Select a package"
+						}
 					}
+				},
+				"buttons": {
+					"create": "Create"
 				}
 			}
 		}

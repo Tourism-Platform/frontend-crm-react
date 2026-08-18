@@ -39,6 +39,7 @@ import tour_activity_log_page_ru from "../../../../public/locales/ru/tours/tour_
 import tour_itinerary_page_ru from "../../../../public/locales/ru/tours/tour_itinerary_page.json";
 import tour_order_history_page_ru from "../../../../public/locales/ru/tours/tour_order_history_page.json";
 import tour_overview_page_ru from "../../../../public/locales/ru/tours/tour_overview_page.json";
+import tour_package_edit_page_ru from "../../../../public/locales/ru/tours/tour_package_edit_page.json";
 import tour_pricing_review_page_ru from "../../../../public/locales/ru/tours/tour_pricing_review_page.json";
 import tour_schedule_page_ru from "../../../../public/locales/ru/tours/tour_schedule_page.json";
 import tour_settings_page_ru from "../../../../public/locales/ru/tours/tour_settings_page.json";
@@ -85,6 +86,7 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	tour_order_history_page: tour_order_history_page_ru,
 	tour_overview_page: tour_overview_page_ru,
 	tour_pricing_review_page: tour_pricing_review_page_ru,
+	tour_package_edit_page: tour_package_edit_page_ru,
 	tour_schedule_page: tour_schedule_page_ru,
 	tour_settings_page: tour_settings_page_ru,
 	common_tours: common_tours_ru,

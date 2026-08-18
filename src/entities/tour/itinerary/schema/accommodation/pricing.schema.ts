@@ -168,9 +168,25 @@ export const ACCOMMODATION_PRICING_SCHEMA = z
 			nonNegativeNullableNumber.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markupSchema.optional(),
-		[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_TYPE]: z.string()
+		[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: z.string()
 	})
 	.superRefine((data, ctx) => {
+		if (
+			data.invoicing ===
+			ENUM_ACCOMMODATION_PRICING_INVOICING.PART_OF_PACKAGE
+		) {
+			if (!data.package_id?.trim()) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: msg(
+						"form.pricing.form.package.fields.package.errors.required"
+					),
+					path: [ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]
+				});
+			}
+			return;
+		}
+
 		if (
 			data.invoicing !== ENUM_ACCOMMODATION_PRICING_INVOICING.INDIVIDUAL
 		) {

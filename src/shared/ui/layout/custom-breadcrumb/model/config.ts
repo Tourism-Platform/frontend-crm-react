@@ -49,6 +49,7 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.TOURS.SCHEDULE]: "operator.tours.general.menu.schedule",
 	[ENUM_PATH.TOURS.PRICING_REVIEW]:
 		"operator.tours.general.menu.pricing_review",
+	[ENUM_PATH.TOURS.PACKAGE]: "operator.tours.general.menu.package_edit",
 	[ENUM_PATH.TOURS.ORDER_HISTORY]: "operator.tours.more.menu.order_history",
 	[ENUM_PATH.TOURS.MESSAGES]: "operator.tours.more.menu.messages",
 	[ENUM_PATH.TOURS.ACTIVITY_LOG]: "operator.tours.more.menu.activity_log",

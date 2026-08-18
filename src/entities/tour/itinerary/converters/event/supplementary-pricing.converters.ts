@@ -101,7 +101,7 @@ export const getDefaultSupplementPricing = (
 		itemsListLength: itemsList.length
 	}),
 	[ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP]: null,
-	[ENUM_SUPPLEMENT_PRICING_FIELD.PACKAGE_TYPE]: ""
+	[ENUM_SUPPLEMENT_PRICING_FIELD.PACKAGE_ID]: ""
 });
 
 const mapMarkupFromBackend = (
@@ -275,6 +275,15 @@ export const mapItemsAndPricingToBackend = (
 	pricing: TSupplementPricingSchema | undefined
 ): TSupplementaryItemInputBackend[] => {
 	const list = items ?? [];
+	if (
+		pricing?.[ENUM_SUPPLEMENT_PRICING_FIELD.INVOICING] ===
+		ENUM_SUPPLEMENT_PRICING_INVOICING.PART_OF_PACKAGE
+	) {
+		return list.map((item) => ({
+			name: item[ENUM_FORM_SUPPLEMENT_ITEMS.NAME] || null,
+			expenses: null
+		}));
+	}
 	if (!pricing) {
 		return list.map((item) => ({
 			name: item[ENUM_FORM_SUPPLEMENT_ITEMS.NAME] || null,

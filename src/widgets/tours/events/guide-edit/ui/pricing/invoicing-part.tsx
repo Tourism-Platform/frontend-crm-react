@@ -1,31 +1,65 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
-import { CustomField, withErrorBoundary } from "@/shared/ui";
-
-import { ENUM_GUIDE_PRICING_FIELD } from "@/entities/tour";
+import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
 
 import {
-	ENUM_FORM_SECTION,
-	GUIDE_PACKAGE_OPTIONS,
-	type ISlotProps
-} from "../../model";
+	ENUM_EVENT,
+	ENUM_GUIDE_PRICING_FIELD,
+	useEventEditIds,
+	useListPackagesQuery
+} from "@/entities/tour";
+
+import { buildPackageCreateRoute } from "@/features/tours";
+
+import { ENUM_FORM_SECTION, type ISlotProps } from "../../model";
 
 const InvoicingPartBase: FC<ISlotProps> = ({ form }) => {
 	const { t } = useTranslation("guide_edit_page");
+	const { tourId, optionId, eventId, eventOptionId } = useEventEditIds();
+	const { data: packages = [] } = useListPackagesQuery(
+		{ tourId, optionId },
+		{ skip: !tourId || !optionId }
+	);
+
+	const options = useMemo(
+		() =>
+			packages.map((item) => ({
+				label: item.name,
+				value: item.id
+			})),
+		[packages]
+	);
 
 	return (
 		<div className="grid gap-1">
 			<h3 className="text-lg">{t("form.pricing.form.package.title")}</h3>
-			<div className="grid grid-cols-3 mb-8">
+			<div className="grid grid-cols-2 mb-8 items-end gap-5">
 				<CustomField
 					control={form.control}
-					name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE}`}
+					name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID}`}
 					label="form.pricing.form.package.fields.package.label"
+					placeholder="form.pricing.form.package.fields.package.placeholder"
 					fieldType="select"
-					options={GUIDE_PACKAGE_OPTIONS}
+					options={options}
 					t={t}
 				/>
+				<div className="flex justify-start">
+					<Button variant="outline" className="mb-5" asChild>
+						<Link
+							to={buildPackageCreateRoute({
+								tourId,
+								optionId,
+								fromEventId: eventId,
+								fromEventType: ENUM_EVENT.GUIDE,
+								fromEventOptionId: eventOptionId || undefined
+							})}
+						>
+							{t("form.pricing.form.package.buttons.create")}
+						</Link>
+					</Button>
+				</div>
 			</div>
 		</div>
 	);

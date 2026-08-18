@@ -15,3 +15,5 @@ export * from "./event/supplementary-pricing.converters";
 export * from "./event/guide.converters";
 export * from "./event/guide-pricing.converters";
 export * from "./event/multiply-option.converters";
+export * from "./package.converters";
+export * from "./event/package-id.helpers";

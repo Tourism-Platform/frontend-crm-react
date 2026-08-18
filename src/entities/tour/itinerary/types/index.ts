@@ -21,3 +21,5 @@ export * from "./flight";
 export * from "./guide";
 export * from "./multiply-option";
 export * from "./activity-type.types";
+export * from "./package.types";
+export * from "./package-backend.types";

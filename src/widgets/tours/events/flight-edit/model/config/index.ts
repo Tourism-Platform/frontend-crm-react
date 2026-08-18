@@ -9,5 +9,3 @@ export * from "./pricing-individual-tabs.config";
 export * from "./pricing-price-details-flat-rate.config";
 export * from "./pricing-price-details-per-person.config";
 export * from "./pricing-markup.config";
-export * from "./pricing-package-options.config";
-export { FLIGHT_PACKAGE_OPTIONS } from "./pricing-package-options.config";

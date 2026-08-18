@@ -8,3 +8,4 @@ export * from "./accommodation";
 export * from "./flight";
 export * from "./guide";
 export * from "./multiply-option";
+export * from "./package.schema";

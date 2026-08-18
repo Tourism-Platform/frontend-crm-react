@@ -6,6 +6,7 @@ export * from "./tours";
 export * from "./events";
 export * from "./activity-log";
 export * from "./pricing-review";
+export * from "./package-edit";
 export * from "./landing";
 export * from "./settings";
 export * from "./catalog";

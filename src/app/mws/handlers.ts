@@ -14,6 +14,7 @@ import { geoHandlers } from "@/entities/geo/handlers";
 import { staffHandlers } from "@/entities/staff/handlers/staff.handlers";
 import { tourActivityLogHandlers } from "@/entities/tour/activity-log/handlers/activity-log.handlers";
 import { tourCatalogHandlers } from "@/entities/tour/catalog/handlers/catalog-tour.handlers";
+import { tourPackageHandlers } from "@/entities/tour/itinerary/handlers/package.handlers";
 import { pricingReviewHandlers } from "@/entities/tour/itinerary/handlers/pricing-review.handlers";
 import { tourLandingHandlers } from "@/entities/tour/landing/handlers/landing.handlers";
 import { tourOrderHandlers } from "@/entities/tour/order/handlers/tour-order.handlers";
@@ -57,5 +58,6 @@ export const handlers = [
 	...bookingPaxHandlers,
 	...bookingAvailabilityHandlers,
 	...pricingReviewHandlers,
+	...tourPackageHandlers,
 	...geoHandlers
 ];

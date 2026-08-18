@@ -17,6 +17,10 @@ import {
 	mapGuidesFromBackend,
 	mapGuidesTypTiersToBackend
 } from "./guides.converters";
+import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "./package-id.helpers";
 
 type TGuideEvent = GuideSingleEventOutput;
 
@@ -32,9 +36,9 @@ export const mapGuideEventToForm = (
 		[ENUM_GUIDE_FORM_SECTION.DAY]: event.day,
 		[ENUM_GUIDE_FORM_SECTION.POSITION]: event.position,
 		[ENUM_GUIDE_FORM_SECTION.GUIDES]: guides,
-		[ENUM_GUIDE_FORM_SECTION.PRICING]: mapGuidePricingFromBackend(
-			details,
-			guides.guides_list
+		[ENUM_GUIDE_FORM_SECTION.PRICING]: applyEventPackageIdToPricing(
+			mapGuidePricingFromBackend(details, guides.guides_list),
+			event.package_id
 		)
 	};
 };
@@ -54,6 +58,7 @@ export const mapGuideFormToUpdate = (
 
 	return {
 		typ: ENUM_EVENT_BACKEND.GUIDE,
+		package_id: mapEventPackageIdToBackend(frontend.pricing),
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(Number.isFinite(frontend.position) && {

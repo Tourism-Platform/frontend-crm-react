@@ -68,7 +68,7 @@ const baseForm = (
 				}
 			]
 		},
-		[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: ""
+		[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
 	},
 	...overrides
 });
@@ -173,13 +173,14 @@ describe("mapGuideFormToUpdate", () => {
 							}
 						]
 					},
-					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: ""
+					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
 				}
 			})
 		);
 
 		expect(result).toEqual({
 			typ: ENUM_EVENT_BACKEND.GUIDE,
+			package_id: null,
 			name: "Guide",
 			day: 1,
 			position: 0,
@@ -214,7 +215,7 @@ describe("mapGuideFormToUpdate", () => {
 							}
 						]
 					},
-					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: ""
+					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
 				}
 			})
 		);
@@ -284,7 +285,7 @@ describe("mapGuideFormToUpdate", () => {
 							}
 						]
 					},
-					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: ""
+					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
 				}
 			})
 		);
@@ -484,7 +485,7 @@ describe("guide converters round-trip", () => {
 						}
 					]
 				},
-				[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: ""
+				[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
 			}
 		});
 

@@ -52,6 +52,7 @@ export const ENUM_PATH = {
 		ITINERARY: "/tours/:tourId/itinerary",
 		SCHEDULE: "/tours/:tourId/schedule",
 		PRICING_REVIEW: "/tours/:tourId/pricing-review",
+		PACKAGE: "/tours/:tourId/pricing-review/:optionId/packages/:packageId",
 		ORDER_HISTORY: "/tours/:tourId/order-history",
 		MESSAGES: "/tours/:tourId/messages",
 		LANDING: "/tours/:tourId/landing",

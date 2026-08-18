@@ -29,6 +29,7 @@
 					"itinerary": "Itinerary",
 					"schedule": "Schedule",
 					"pricing_review": "Pricing & review",
+					"package_edit": "Package edit",
 					"landing": "Landing"
 				}
 			},
@@ -103,6 +104,7 @@
 					"itinerary": "Itinerary",
 					"schedule": "Schedule",
 					"pricing_review": "Pricing & review",
+					"package_edit": "Package edit",
 					"landing": "Landing"
 				}
 			},

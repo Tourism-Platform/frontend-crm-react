@@ -1,0 +1,118 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Введите название пакета",
+			"errors": {
+				"required": "Название обязательно",
+				"min": "Название слишком короткое",
+				"max": "Название слишком длинное"
+			}
+		}
+	},
+	"tabs": {
+		"pricing": "Цены и бронирование"
+	},
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Ошибка при загрузке пакета"
+			},
+			"create": {
+				"success": "Пакет создан",
+				"error": "Ошибка при создании пакета"
+			},
+			"save": {
+				"success": "Пакет сохранён",
+				"error": "Ошибка при сохранении пакета"
+			},
+			"validation": {
+				"error": {
+					"pricing": "Заполните обязательные поля цены",
+					"name": "Проверьте название пакета",
+					"multiple": "Исправьте ошибки валидации: {{sections}}",
+					"fallback": "Исправьте ошибки валидации перед сохранением",
+					"section_names": {
+						"pricing": "Цены",
+						"name": "Название"
+					}
+				}
+			}
+		},
+		"buttons": {
+			"save": "Сохранить",
+			"saving": "Сохранение ...",
+			"create": "Создать",
+			"back_to_event": "Назад к ивенту"
+		},
+		"select": {
+			"empty": "Пакетов пока нет",
+			"placeholder": "Выберите пакет"
+		},
+		"pricing": {
+			"title": "Цены и бронирование",
+			"pricing_type": {
+				"title": "Как тарифицируется эта услуга?",
+				"tabs": {
+					"flat_rate": "Фикс цена",
+					"per_person": "За человека"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Детали цены",
+					"checkboxes": {
+						"add_margin_separately": "Добавить наценку отдельно"
+					},
+					"fields": {
+						"total_price": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Цена должна быть не меньше 0",
+								"max": "Цена не должна превышать 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
+						"taxes_and_fees": {
+							"label": "Налоги и сборы",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Налоги должны быть не меньше 0",
+								"max": "Налоги не должны превышать 100000"
+							}
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Налоги и сборы за человека",
+							"placeholder": "Введите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Валюта обязательна"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Наценка",
+								"placeholder": "Введите..."
+							}
+						}
+					}
+				},
+				"booking_details": {
+					"title": "Детали бронирования",
+					"fields": {
+						"supplier": {
+							"label": "Выберите поставщика",
+							"placeholder": "Введите..."
+						}
+					}
+				}
+			}
+		}
+	}
+}

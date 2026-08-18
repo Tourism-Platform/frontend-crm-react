@@ -17,16 +17,20 @@ import { GUIDE_EDIT_SCHEMA } from "./guide-edit.schema";
 import { GUIDES_SCHEMA } from "./guides.schema";
 import { GUIDE_PRICING_SCHEMA } from "./pricing.schema";
 
-vi.mock("@/shared/config", () => ({
-	i18nKey: () => (key: string) => key
-}));
+vi.mock("@/shared/config", async () => {
+	const { ENV } = await import("@/shared/config/constants/env.config");
+	return {
+		ENV,
+		i18nKey: () => (key: string) => key
+	};
+});
 
 /** Mirrors empty row from alignGuidePerGuideExpenses / createEmptyCategoryRow */
 const emptyCategoryRow = () => ({
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: "",
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: null,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: "",
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
 });
 
@@ -34,7 +38,7 @@ const emptyCategoryRow = () => ({
 const emptyPerGuideRow = () => ({
 	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "",
+	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 });
 
@@ -74,7 +78,7 @@ const basePricing = (overrides: Record<string, unknown> = {}) => ({
 	[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: false,
 	[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: false,
 	[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: null,
-	[ENUM_GUIDE_PRICING_FIELD.PACKAGE_TYPE]: "",
+	[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: "",
 	...overrides
 });
 
@@ -123,11 +127,25 @@ describe("GUIDE_PRICING_SCHEMA", () => {
 			basePricing({
 				[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
 					ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE,
+				[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]:
+					"11111111-1111-1111-1111-111111111111",
 				[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: null
 			})
 		);
 
 		expect(result.success).toBe(true);
+	});
+
+	it("requires package_id when invoicing is part of package", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
+					ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE,
+				[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
+			})
+		);
+
+		expect(result.success).toBe(false);
 	});
 
 	it("allows empty language category after sync", () => {
@@ -157,6 +175,7 @@ describe("GUIDE_PRICING_SCHEMA", () => {
 					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 						{
 							...emptyPerGuideRow(),
+							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: -1,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: {
 								typ: "fixed",
 								value: ""
@@ -183,7 +202,9 @@ describe("GUIDE_EDIT_SCHEMA — add guide must not force pricing", () => {
 				guidesList: [validGuide()],
 				pricing: basePricing({
 					[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
-						ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE
+						ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE,
+					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]:
+						"11111111-1111-1111-1111-111111111111"
 				})
 			})
 		);
@@ -202,6 +223,7 @@ describe("GUIDE_EDIT_SCHEMA — add guide must not force pricing", () => {
 						[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 							{
 								...emptyPerGuideRow(),
+								[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: -1,
 								[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: {
 									typ: "percentage",
 									value: "   "

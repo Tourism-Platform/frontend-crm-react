@@ -306,7 +306,7 @@ export const getDefaultTransportationPricing = (
 		carsListLength: carsList.length
 	}),
 	markup: null,
-	package_type: ""
+	package_id: ""
 });
 
 export const mapTransportationPricingFromBackend = (

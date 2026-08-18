@@ -230,8 +230,15 @@
 					"title": "Тип пакета",
 					"fields": {
 						"package": {
-							"label": "Тип"
+							"label": "Тип",
+							"placeholder": "Выберите пакет",
+							"errors": {
+								"required": "Выберите пакет"
+							}
 						}
+					},
+					"buttons": {
+						"create": "Создать"
 					}
 				}
 			}

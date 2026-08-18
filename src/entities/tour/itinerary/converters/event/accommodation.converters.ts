@@ -21,6 +21,10 @@ import {
 	mapRoomsFromBackend,
 	mapRoomsToBackend
 } from "./accommodation-rooms.converters";
+import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "./package-id.helpers";
 
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce
@@ -55,7 +59,10 @@ export const mapAccommodationEventToForm = (
 			)
 		},
 		rooms,
-		pricing: mapAccommodationPricingFromBackend(details, rooms.rooms)
+		pricing: applyEventPackageIdToPricing(
+			mapAccommodationPricingFromBackend(details, rooms.rooms),
+			event.package_id
+		)
 	};
 };
 
@@ -85,6 +92,7 @@ export const mapAccommodationFormToUpdate = (
 		...(g?.description !== undefined &&
 			g.description !== "" && { description: g.description }),
 		typ: ENUM_EVENT_BACKEND.HOUSING,
+		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		...(Number.isFinite(frontend.position) && {
 			position: frontend.position
 		}),

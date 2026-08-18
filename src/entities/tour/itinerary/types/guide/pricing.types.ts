@@ -37,7 +37,7 @@ export const ENUM_GUIDE_PRICING_FIELD = {
 	PRICE_BY_LANGUAGE: "price_by_language",
 	ADD_MARGIN_SEPARATELY: "add_margin_separately",
 	EXPENSES: "expenses",
-	PACKAGE_TYPE: "package_type"
+	PACKAGE_ID: "package_id"
 } as const;
 
 export type ENUM_GUIDE_PRICING_FIELD_TYPE =

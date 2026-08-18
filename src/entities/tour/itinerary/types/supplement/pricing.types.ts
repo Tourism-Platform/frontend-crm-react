@@ -35,7 +35,7 @@ export const ENUM_SUPPLEMENT_PRICING_FIELD = {
 	TAXES: "taxes",
 	CURRENCY: "currency",
 	MARKUP: "markup",
-	PACKAGE_TYPE: "package_type"
+	PACKAGE_ID: "package_id"
 } as const;
 
 export type ENUM_SUPPLEMENT_PRICING_FIELD_TYPE =

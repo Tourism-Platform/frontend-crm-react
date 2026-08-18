@@ -13,6 +13,10 @@ import {
 	mapFlightPricingFromBackend,
 	mapFlightPricingToBackend
 } from "../flight-pricing.converters";
+import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "../package-id.helpers";
 
 import { mapBusHopToSegment, mapBusSegmentToHop } from "./journey.helpers";
 import { mapEventMetaToForm } from "./shared.helpers";
@@ -57,7 +61,10 @@ export const mapBusEventToForm = (
 			transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
 			route
 		},
-		pricing: mapFlightPricingFromBackend(event.details)
+		pricing: applyEventPackageIdToPricing(
+			mapFlightPricingFromBackend(event.details),
+			event.package_id
+		)
 	};
 };
 
@@ -74,6 +81,7 @@ export const mapBusFormToUpdate = (
 
 	return {
 		typ: ENUM_EVENT_BACKEND.BUS,
+		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
 		...(Number.isFinite(frontend.position) && {

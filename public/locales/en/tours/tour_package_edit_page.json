@@ -1,0 +1,118 @@
+{
+	"input": {
+		"title": {
+			"placeholder": "Enter package name",
+			"errors": {
+				"required": "Name is required",
+				"min": "Name is too short",
+				"max": "Name is too long"
+			}
+		}
+	},
+	"tabs": {
+		"pricing": "Price & Booking"
+	},
+	"form": {
+		"toasts": {
+			"load": {
+				"error": "Error while loading package"
+			},
+			"create": {
+				"success": "Package created",
+				"error": "Error while creating package"
+			},
+			"save": {
+				"success": "Package saved",
+				"error": "Error while saving package"
+			},
+			"validation": {
+				"error": {
+					"pricing": "Fill in the required pricing fields",
+					"name": "Check the package name",
+					"multiple": "Fix validation errors: {{sections}}",
+					"fallback": "Fix the validation errors before saving",
+					"section_names": {
+						"pricing": "Pricing",
+						"name": "Title"
+					}
+				}
+			}
+		},
+		"buttons": {
+			"save": "Save",
+			"saving": "Saving ...",
+			"create": "Create",
+			"back_to_event": "Back to event"
+		},
+		"select": {
+			"empty": "No packages yet",
+			"placeholder": "Select a package"
+		},
+		"pricing": {
+			"title": "Price & Booking",
+			"pricing_type": {
+				"title": "How is this activity priced?",
+				"tabs": {
+					"flat_rate": "Flat rate",
+					"per_person": "Per person"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Pricing details",
+					"checkboxes": {
+						"add_margin_separately": "Add margin to this component separately"
+					},
+					"fields": {
+						"total_price": {
+							"label": "Total cost",
+							"placeholder": "Enter...",
+							"errors": {
+								"min": "Price must be at least 0",
+								"max": "Price must not exceed 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Total cost per person",
+							"placeholder": "Enter..."
+						},
+						"taxes_and_fees": {
+							"label": "Taxes & Fees",
+							"placeholder": "Enter...",
+							"errors": {
+								"min": "Taxes must be at least 0",
+								"max": "Taxes must not exceed 100000"
+							}
+						},
+						"taxes_and_fees_per_person": {
+							"label": "Taxes & Fees per person",
+							"placeholder": "Enter..."
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose",
+							"errors": {
+								"required": "Currency is required"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Unique margin",
+								"placeholder": "Enter..."
+							}
+						}
+					}
+				},
+				"booking_details": {
+					"title": "Booking details",
+					"fields": {
+						"supplier": {
+							"label": "Select the supplier you'll book through",
+							"placeholder": "Enter..."
+						}
+					}
+				}
+			}
+		}
+	}
+}

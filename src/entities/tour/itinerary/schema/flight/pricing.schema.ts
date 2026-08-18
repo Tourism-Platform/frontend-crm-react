@@ -84,9 +84,22 @@ export const FLIGHT_PRICING_SCHEMA = z
 		[ENUM_FLIGHT_PRICING_FIELD.TAXES]: nonNegativeNullableNumber.optional(),
 		[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: markupSchema.optional(),
-		[ENUM_FLIGHT_PRICING_FIELD.PACKAGE_TYPE]: z.string()
+		[ENUM_FLIGHT_PRICING_FIELD.PACKAGE_ID]: z.string()
 	})
 	.superRefine((data, ctx) => {
+		if (data.invoicing === ENUM_FLIGHT_PRICING_INVOICING.PART_OF_PACKAGE) {
+			if (!data.package_id?.trim()) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: msg(
+						"form.pricing.form.package.fields.package.errors.required"
+					),
+					path: [ENUM_FLIGHT_PRICING_FIELD.PACKAGE_ID]
+				});
+			}
+			return;
+		}
+
 		if (data.invoicing !== ENUM_FLIGHT_PRICING_INVOICING.INDIVIDUAL) {
 			return;
 		}

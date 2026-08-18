@@ -58,7 +58,7 @@ const getDefaultFlightPricing = (): TFlightPricingSchema => ({
 	pricing_type: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
 	add_margin_separately: false,
 	markup: null,
-	package_type: ""
+	package_id: ""
 });
 
 export const mapFlightPricingFromBackend = (

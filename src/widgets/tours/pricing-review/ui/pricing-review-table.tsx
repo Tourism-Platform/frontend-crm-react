@@ -7,7 +7,7 @@ import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
-import { type ITourReviewItem } from "@/entities/tour";
+import { type ITourReviewItem, TOUR_PACKAGE_CREATE_ID } from "@/entities/tour";
 
 import { PRICING_REVIEW_COLUMNS, filterReviewItemsByName } from "../model";
 
@@ -53,13 +53,28 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 
 	const actionsJsx = useMemo(
 		() => (
-			<Button variant="default" asChild>
-				<Link to={buildRoute(ENUM_PATH.TOURS.ITINERARY, { tourId })}>
-					{t("table.buttons.add_item")}
-				</Link>
-			</Button>
+			<div className="flex gap-2">
+				<Button variant="default" asChild>
+					<Link
+						to={buildRoute(ENUM_PATH.TOURS.ITINERARY, { tourId })}
+					>
+						{t("table.buttons.add_item")}
+					</Link>
+				</Button>
+				<Button variant="default" asChild>
+					<Link
+						to={buildRoute(ENUM_PATH.TOURS.PACKAGE, {
+							tourId,
+							optionId,
+							packageId: TOUR_PACKAGE_CREATE_ID
+						})}
+					>
+						{t("table.buttons.create_package")}
+					</Link>
+				</Button>
+			</div>
 		),
-		[t, tourId]
+		[t, tourId, optionId]
 	);
 
 	return (
