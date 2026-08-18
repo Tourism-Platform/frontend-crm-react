@@ -1,7 +1,8 @@
 import type {
 	ENUM_ACCOMMODATION_AMENITY_TYPE,
 	ENUM_HOUSING_ROOM_TYPE_TYPE,
-	ENUM_VEHICLE_BODY_TYPE_TYPE
+	ENUM_VEHICLE_BODY_TYPE_TYPE,
+	IEventImage
 } from "@/entities/tour/itinerary";
 
 export interface IOptionEventSheetPoint {
@@ -67,7 +68,7 @@ export type TOptionEventSheetExtra =
 	  };
 
 export interface IOptionEventSheet {
-	images: string[];
+	images: IEventImage[];
 	description: string;
 	extra: TOptionEventSheetExtra;
 }

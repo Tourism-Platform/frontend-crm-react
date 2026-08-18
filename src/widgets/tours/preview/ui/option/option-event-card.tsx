@@ -104,18 +104,19 @@ const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 
 			<div
 				className={cn(
+					"relative aspect-[4/3] overflow-hidden",
 					isReversed ? "order-1" : "order-2",
 					!cardImage && "bg-muted"
 				)}
 			>
-				{cardImage ? (
+				{cardImage?.imagePath ? (
 					<img
-						src={cardImage}
+						src={cardImage.imagePath}
 						alt={event.title}
-						className="w-full h-full min-h-[240px] object-cover"
+						className="absolute inset-0 h-full w-full object-cover"
 					/>
 				) : (
-					<div className="w-full min-h-[240px] flex items-center justify-center text-muted-foreground">
+					<div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
 						{getOptionEventIcon(event.type, "lg")}
 					</div>
 				)}

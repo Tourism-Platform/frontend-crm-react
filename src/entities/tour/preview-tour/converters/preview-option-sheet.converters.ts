@@ -16,39 +16,27 @@ import type {
 } from "@/shared/api";
 
 import {
+	type TEventImageBackend,
 	accommodationAmenityConverter,
 	housingRoomTypeConverter,
+	mapEventImageToFrontend,
 	vehicleBodyTypeConverter
 } from "@/entities/tour/itinerary";
 
-import type { TOptionDetailBackend } from "../types";
-import type { TPubEventMediaFields } from "../types/preview-option-media.types";
 import type {
 	IOptionEventSheet,
 	IOptionEventSheetCar,
 	IOptionEventSheetPoint,
 	IOptionEventSheetRoom,
 	IOptionFlightSegment,
+	TOptionDetailBackend,
 	TOptionEventSheetExtra
-} from "../types/preview-option-sheet.types";
+} from "../types";
 
 import { formatLocation } from "./preview-option-location.utils";
-import { toPublicImageUrl } from "./preview-option-media.utils";
 
 type TPubEvent = TOptionDetailBackend["events"][number];
 type TPubDetail = NonNullable<MultiEventPubOutput["details"]>[number];
-type TPubEventWithMedia = (TPubEvent | TPubDetail) & TPubEventMediaFields;
-
-export const resolveEventImagePaths = (
-	event: TPubEvent | TPubDetail
-): string[] => {
-	const media = event as TPubEventWithMedia;
-	const paths =
-		media.image_paths ??
-		(media.primary_image_path ? [media.primary_image_path] : []);
-
-	return paths.map(toPublicImageUrl).filter(Boolean).slice(0, 5);
-};
 
 export const formatPubTime = (time?: TimeSchema | null): string => {
 	if (!time?.time) return "";
@@ -333,7 +321,10 @@ export const buildSheetFromPubEvent = (
 	event: TPubEvent | TPubDetail
 ): IOptionEventSheet => {
 	return {
-		images: resolveEventImagePaths(event),
+		images:
+			event?.images?.map((image) =>
+				mapEventImageToFrontend(image as TEventImageBackend)
+			) ?? [],
 		description: event.description || "",
 		extra: mapSheetExtraFromPub(event)
 	};
@@ -342,7 +333,10 @@ export const buildSheetFromPubEvent = (
 export const buildSheetFromMultiplyChild = (
 	detail: TPubDetail
 ): IOptionEventSheet => ({
-	images: resolveEventImagePaths(detail),
+	images:
+		detail?.images?.map((image) =>
+			mapEventImageToFrontend(image as TEventImageBackend)
+		) ?? [],
 	description: detail.description || "",
 	extra: mapSheetExtraFromPub(detail)
 });

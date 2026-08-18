@@ -9,17 +9,19 @@ import type {
 	TransferDetailsSchemaOutput
 } from "@/shared/api";
 
-import { accommodationAmenityConverter } from "@/entities/tour/itinerary";
+import {
+	type TEventImageBackend,
+	accommodationAmenityConverter,
+	mapEventImageToFrontend
+} from "@/entities/tour/itinerary";
 
-import type { TPubEventMediaFields } from "../types/preview-option-media.types";
 import type {
 	IOptionEventSheet,
 	IOptionFlightSegment,
 	TOptionEventSheetExtra
-} from "../types/preview-option-sheet.types";
+} from "../types";
 
 import { formatLocation } from "./preview-option-location.utils";
-import { toPublicImageUrl } from "./preview-option-media.utils";
 import {
 	formatJourneyPoint,
 	formatPubTime,
@@ -30,17 +32,6 @@ import {
 type TOperatorEvent = AnyEventWithCostOutput["event"];
 type TOperatorDetail = NonNullable<MultiEventReadOutput["details"]>[number];
 type TOperatorSheetSource = TOperatorEvent | TOperatorDetail;
-
-const resolveOperatorEventImagePaths = (
-	event: TOperatorSheetSource
-): string[] => {
-	const media = event as TOperatorSheetSource & TPubEventMediaFields;
-	const paths =
-		media.image_paths ??
-		(media.primary_image_path ? [media.primary_image_path] : []);
-
-	return paths.map(toPublicImageUrl).filter(Boolean).slice(0, 5);
-};
 
 const mapHopToSegment = (
 	hop: {
@@ -203,7 +194,12 @@ const mapSheetExtraFromOperator = (
 export const buildSheetFromOperatorEvent = (
 	event: TOperatorSheetSource
 ): IOptionEventSheet => ({
-	images: resolveOperatorEventImagePaths(event),
+	images:
+		"images" in event
+			? (event.images ?? []).map((image) =>
+					mapEventImageToFrontend(image as TEventImageBackend)
+				)
+			: [],
 	description: "description" in event ? event.description || "" : "",
 	extra: mapSheetExtraFromOperator(event)
 });
