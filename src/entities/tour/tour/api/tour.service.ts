@@ -143,6 +143,16 @@ export const tourApi = authApi.injectEndpoints({
 				ENUM_API_TAGS.TOURS
 			]
 		}),
+		unarchiveTour: builder.mutation<void, string>({
+			query: (id) => ({
+				...TOUR_PATHS.unarchiveTour(id)
+			}),
+			invalidatesTags: (_result, _error, id) => [
+				{ type: ENUM_API_TAGS.TOURS, id: `GENERAL_${id}` },
+				getTourStatsTag(id),
+				ENUM_API_TAGS.TOURS
+			]
+		}),
 		refreshTourProjection: builder.mutation<void, string>({
 			query: (id) => TOUR_PATHS.refreshTourProjection(id),
 			invalidatesTags: (_result, _error, id) => [
@@ -165,5 +175,6 @@ export const {
 	useGetTourStatisticsQuery,
 	usePublishTourMutation,
 	useArchiveTourMutation,
+	useUnarchiveTourMutation,
 	useRefreshTourProjectionMutation
 } = tourApi;

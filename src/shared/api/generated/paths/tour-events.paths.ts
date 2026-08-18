@@ -19,6 +19,7 @@ import type {
 	MoveToSingleResult,
 	MultiEvent,
 	OptionReorderSchema,
+	PublishBlockSchema,
 	SupplementaryEventInput,
 	SupplementarySingleEventInput,
 	TourEventResponse,
@@ -82,6 +83,16 @@ export const TOUR_EVENTS_PATHS = {
 			url: `/tour/${tourId}/${optionId}/event/${eventId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	validateEvent: (tourId: string, optionId: string, eventId: string) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/validate`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: PublishBlockSchema[];
+			}
 		}) as const,
 	reorderEvent: (tourId: string, optionId: string, eventId: string) =>
 		({

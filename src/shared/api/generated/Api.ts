@@ -128,6 +128,12 @@ export enum StaffStatus {
 	Inactive = "inactive"
 }
 
+/** RebuildState */
+export enum RebuildState {
+	Started = "started",
+	AlreadyRunning = "already_running"
+}
+
 /** PickupType */
 export enum PickupType {
 	AirportPickup = "airport_pickup",
@@ -553,6 +559,8 @@ export interface ActivityEventPubReadInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -578,6 +586,8 @@ export interface ActivityEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -668,6 +678,11 @@ export interface ActivitySingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -707,6 +722,11 @@ export interface ActivitySingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -1101,7 +1121,7 @@ export interface BodyCreatePaymentBookingPaymentPost {
 	 * @format binary
 	 */
 	file: File;
-	/** @default "UZS" */
+	/** @default "USD" */
 	currency?: Currency;
 	/** Exchange Rate */
 	exchange_rate?: number | null;
@@ -1942,6 +1962,8 @@ export interface BusEventPubReadInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -1967,6 +1989,8 @@ export interface BusEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -2131,6 +2155,11 @@ export interface BusSingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -2170,6 +2199,11 @@ export interface BusSingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -2511,6 +2545,38 @@ export interface EventImageModel {
 	 * @format uuid
 	 */
 	event_id: string;
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
+}
+
+/**
+ * EventImagePubSchema
+ * Public mirror of ``EventImageSchema`` with the row id dropped — internal
+ * identifiers never cross the boundary.
+ */
+export interface EventImagePubSchema {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
+}
+
+/**
+ * EventImageSchema
+ * One image attached to an event slot, in the shape ``GET
+ * /{tour_id}/event/{event_id}/images/all`` returns.
+ *
+ * Check: `src.tour.gallery.router.list_event_images`,
+ * `src.tour.gallery.router.upload_event_images`.
+ */
+export interface EventImageSchema {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
 	/** Image Path */
 	image_path: string;
 	/** Is Primary */
@@ -3084,6 +3150,8 @@ export interface FlightEventPubReadInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -3109,6 +3177,8 @@ export interface FlightEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -3377,6 +3447,11 @@ export interface FlightSingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -3416,6 +3491,11 @@ export interface FlightSingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -3891,6 +3971,11 @@ export interface GuideSingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -3930,6 +4015,11 @@ export interface GuideSingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -4143,6 +4233,8 @@ export interface HousingEventPubReadInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -4168,6 +4260,8 @@ export interface HousingEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -4382,6 +4476,11 @@ export interface HousingSingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -4421,6 +4520,11 @@ export interface HousingSingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -4503,6 +4607,8 @@ export interface InformationEventPubReadInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -4528,6 +4634,8 @@ export interface InformationEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -4618,6 +4726,11 @@ export interface InformationSingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -4657,6 +4770,11 @@ export interface InformationSingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -5127,6 +5245,11 @@ export interface LocationOutSchema {
 	long: number;
 }
 
+/** LocationRebuildResponse */
+export interface LocationRebuildResponse {
+	state: RebuildState;
+}
+
 /** LocationRefSchema */
 export interface LocationRefSchema {
 	/**
@@ -5141,6 +5264,8 @@ export interface LocationSuggestionSchema {
 	/** Value */
 	value: string;
 	kind: SuggestKind;
+	/** City */
+	city?: string | null;
 }
 
 /** MeSchema */
@@ -5231,6 +5356,11 @@ export interface MultiEvent {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/** Typ */
 	typ: "options";
 	/** Details */
@@ -5279,6 +5409,8 @@ export interface MultiEventPubInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -5326,6 +5458,8 @@ export interface MultiEventPubOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -5383,6 +5517,11 @@ export interface MultiEventReadInput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/** Typ */
 	typ: "options";
 	/** Details */
@@ -5441,6 +5580,11 @@ export interface MultiEventReadOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/** Typ */
 	typ: "options";
 	/** Details */
@@ -7019,6 +7163,47 @@ export interface PublicTourCatalogSchemaOutput {
 }
 
 /**
+ * PublishBlockSchema
+ * One reason a tour cannot be published, addressed to the exact input that
+ * has to change.
+ *
+ * ``event_id`` is the slot (the card in the day plan) and ``tour_option_id``
+ * the variant it belongs to — the gate scans every live option, so the block
+ * can point outside the one currently open. Everything else about the event
+ * (type, day, position) is read off the itinerary the client already holds.
+ * ``option_id`` is set only when the offender is an alternative inside a choice
+ * event; single events carry no separate option handle.
+ *
+ * ``path`` walks the event payload down to the offending input, list positions
+ * included — ``["details", "hop", 1, "arrival_time"]``. It is relative to the
+ * event, or to the alternative when ``option_id`` is set, so it addresses the
+ * same form the client already renders. The last segment names what is missing,
+ * so it need not resolve: an unpriced guide language reads
+ * ``["details", "categories", "en"]``, keyed by language rather than position
+ * because the row does not exist yet.
+ *
+ * Check: POST /tour/{tour_id}/publish
+ */
+export interface PublishBlockSchema {
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Option Id */
+	option_id?: string | null;
+	/** Path */
+	path?: (string | number)[];
+	/** Detail */
+	detail: string;
+}
+
+/**
  * ReconciliationTotals
  * Grand totals across the *whole filtered set*, not just the page.
  *
@@ -7480,6 +7665,11 @@ export interface SupplementarySingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -7519,6 +7709,11 @@ export interface SupplementarySingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -8821,6 +9016,8 @@ export interface TrainEventPubReadInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -8846,6 +9043,8 @@ export interface TrainEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -9010,6 +9209,11 @@ export interface TrainSingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -9049,6 +9253,11 @@ export interface TrainSingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -9309,6 +9518,8 @@ export interface TransferEventPubReadInput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -9334,6 +9545,8 @@ export interface TransferEventPubReadOutput {
 	position?: number | null;
 	/** Is Optional */
 	is_optional?: boolean | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
@@ -9482,6 +9695,11 @@ export interface TransferSingleEventInput {
 	 */
 	is_optional?: boolean;
 	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
 	 * Name
 	 * Event's name
 	 */
@@ -9521,6 +9739,11 @@ export interface TransferSingleEventOutput {
 	 * @default false
 	 */
 	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
 	/**
 	 * Name
 	 * Event's name
@@ -10149,6 +10372,24 @@ export interface GetTourEventTourTourIdOptionIdEventEventIdGetParams {
 }
 
 export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface ValidateEventTourTourIdOptionIdEventEventIdValidateGetParams {
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11022,6 +11263,14 @@ export interface DeleteTourTourTourIdDeleteParams {
 	tourId: string;
 }
 
+export interface ValidateTourTourTourIdValidateGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 export interface PublishTourTourTourIdPublishPostParams {
 	/**
 	 * Tour Id
@@ -11031,6 +11280,14 @@ export interface PublishTourTourTourIdPublishPostParams {
 }
 
 export interface ArchiveTourTourTourIdArchivePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UnarchiveTourTourTourIdUnarchivePostParams {
 	/**
 	 * Tour Id
 	 * @format uuid

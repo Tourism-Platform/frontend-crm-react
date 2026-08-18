@@ -1,5 +1,6 @@
 import type {
 	BodyUploadTourCoverTourTourIdCoverPost,
+	PublishBlockSchema,
 	TourListResponse,
 	TourListSortField,
 	TourMetaCreateSchema,
@@ -75,6 +76,16 @@ export const TOUR_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
+	validateTour: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/validate`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: PublishBlockSchema[];
+			}
+		}) as const,
 	publishTour: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/publish`,
@@ -88,6 +99,16 @@ export const TOUR_PATHS = {
 	archiveTour: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/archive`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
+		}) as const,
+	unarchiveTour: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/unarchive`,
 			method: "POST",
 			_types: {} as {
 				body: void;

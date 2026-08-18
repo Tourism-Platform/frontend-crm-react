@@ -48,5 +48,10 @@ export const ADMIN_PATHS = {
 			query: { role?: UserRoles };
 			response: AdminUserView;
 		}
+	} as const,
+	rebuildLocationProjection: {
+		url: "/admin/location/rebuild",
+		method: "POST",
+		_types: {} as { body: void; query: void; response: void }
 	} as const
 } as const;

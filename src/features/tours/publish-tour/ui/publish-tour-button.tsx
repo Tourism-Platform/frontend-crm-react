@@ -1,72 +1,50 @@
-import { Loader2 } from "lucide-react";
+import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/ui";
 
-import {
-	ENUM_TOUR_STATUS,
-	useGetTourGeneralQuery,
-	usePublishTourMutation
-} from "@/entities/tour";
+import { usePublishTourMutation } from "@/entities/tour";
 
 import { resolvePublishErrorCode } from "../model";
 
-export const PublishTourButton: FC = () => {
+interface IPublishTourButtonProps {
+	tourId: string;
+}
+
+export const PublishTourButton: FC<IPublishTourButtonProps> = ({ tourId }) => {
 	const { t } = useTranslation("common_tours");
-	const { tourId = "" } = useParams<{ tourId: string }>();
-	const { data: tour, isLoading: isTourLoading } = useGetTourGeneralQuery(
-		tourId,
-		{
-			skip: !tourId
-		}
-	);
+	const [publishTour, { isLoading }] = usePublishTourMutation();
 
-	const [publishTour, { isLoading: isPublishLoading }] =
-		usePublishTourMutation();
-
-	const isPublished = tour?.status === ENUM_TOUR_STATUS.PUBLISHED;
-
-	const { action, label, loadingLabel, tostMessage } = {
-		action: publishTour,
-		label: isPublished ? t("actions.archive") : t("actions.publish"),
-		loadingLabel: isPublished
-			? t("actions.archiving")
-			: t("actions.publishing"),
-		tostMessage: {
-			success: isPublished
-				? t("toast.archive.success")
-				: t("toast.publish.success"),
-			error: isPublished
-				? t("toast.archive.error")
-				: t("toast.publish.error")
-		}
-	};
 	const handlePublish = async () => {
 		if (!tourId) return;
 		try {
-			await action(tourId).unwrap();
-			toast.success(tostMessage.success);
+			await publishTour(tourId).unwrap();
+			toast.success(t("toast.publish.success"));
 		} catch (error) {
 			const code = resolvePublishErrorCode(error);
 			toast.error(
-				code ? t(`toast.publish.errors.${code}`) : tostMessage.error
+				code
+					? t(`toast.publish.errors.${code}`)
+					: t("toast.publish.error")
 			);
 		}
 	};
-	const isLoading = isPublishLoading || isTourLoading;
 
 	return (
-		<Button onClick={handlePublish} disabled={isLoading}>
+		<Button
+			variant="default"
+			onClick={handlePublish}
+			disabled={isLoading || !tourId}
+		>
 			{isLoading ? (
 				<>
-					<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-					{loadingLabel}
+					<Loader className="mr-2 h-4 w-4 animate-spin" />
+					{t("actions.publishing")}
 				</>
 			) : (
-				label
+				t("actions.publish")
 			)}
 		</Button>
 	);

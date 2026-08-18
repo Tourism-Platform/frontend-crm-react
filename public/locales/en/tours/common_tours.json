@@ -13,6 +13,10 @@
 		"archive": {
 			"success": "Tour archived successfully",
 			"error": "Error archiving tour"
+		},
+		"unarchive": {
+			"success": "Tour unarchived successfully",
+			"error": "Error unarchiving tour"
 		}
 	},
 	"actions": {
@@ -20,7 +24,9 @@
 		"publish": "Publish",
 		"publishing": "Publishing...",
 		"archive": "Archive",
-		"archiving": "Archiving..."
+		"archiving": "Archiving...",
+		"unarchive": "Unarchive",
+		"unarchiving": "Unarchiving..."
 	},
 	"search": {
 		"form": {
