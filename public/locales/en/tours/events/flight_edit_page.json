@@ -391,7 +391,8 @@
 		},
 		"pricing": {
 			"buttons": {
-				"save": "Save"
+				"save": "Save",
+				"saving": "Saving ..."
 			},
 			"title": "Pricing",
 			"invoicing": {

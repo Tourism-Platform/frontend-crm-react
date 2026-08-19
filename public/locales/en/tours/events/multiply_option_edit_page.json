@@ -22,7 +22,8 @@
 	},
 	"general": {
 		"buttons": {
-			"save": "Save"
+			"save": "Save",
+			"saving": "Saving ..."
 		},
 		"description": {
 			"description": {

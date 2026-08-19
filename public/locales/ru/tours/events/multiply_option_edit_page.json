@@ -22,7 +22,8 @@
 	},
 	"general": {
 		"buttons": {
-			"save": "Сохранить"
+			"save": "Сохранить",
+			"saving": "Сохранение..."
 		},
 		"description": {
 			"description": {

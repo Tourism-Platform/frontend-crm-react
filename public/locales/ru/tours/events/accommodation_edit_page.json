@@ -180,7 +180,8 @@
 		},
 		"pricing": {
 			"buttons": {
-				"save": "Сохранить"
+				"save": "Сохранить",
+				"saving": "Сохранение..."
 			},
 			"title": "Цены",
 			"invoicing": {
