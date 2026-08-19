@@ -1,7 +1,9 @@
 import type {
+	StaffAccessReplace,
 	StaffInvite,
 	StaffInviteResult,
 	StaffListResponse,
+	StaffPermissionsRead,
 	StaffRead,
 	StaffStatus,
 	StaffUpdate
@@ -49,5 +51,25 @@ export const OPERATOR_STAFF_PATHS = {
 			url: `/operator/staff/${userId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	replaceStaffMemberAccess: (userId: string) =>
+		({
+			url: `/operator/staff/${userId}/access`,
+			method: "POST",
+			_types: {} as {
+				body: StaffAccessReplace;
+				query: void;
+				response: StaffPermissionsRead;
+			}
+		}) as const,
+	getStaffMemberPermissions: (userId: string) =>
+		({
+			url: `/operator/staff/${userId}/permissions`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: StaffPermissionsRead;
+			}
 		}) as const
 } as const;

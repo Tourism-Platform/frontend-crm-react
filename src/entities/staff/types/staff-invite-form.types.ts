@@ -6,7 +6,7 @@ export const ENUM_FORM_INVITE_STAFF = {
 	EMAIL: "email",
 	FIRST_NAME: "firstName",
 	LAST_NAME: "lastName",
-	ROLE: "role"
+	PERMISSIONS: "permissions"
 } as const;
 
 export type ENUM_FORM_INVITE_STAFF_TYPE =

@@ -16,7 +16,7 @@ export const TOUR_CATALOG_PATHS = {
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: { q: string; lang?: LanguageCode; limit?: number };
+			query: { q: string; read_lang?: LanguageCode; limit?: number };
 			response: LocationSuggestionSchema[];
 		}
 	} as const,
@@ -25,7 +25,7 @@ export const TOUR_CATALOG_PATHS = {
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: { lang?: LanguageCode };
+			query: { read_lang?: LanguageCode };
 			response: CatalogFiltersSchema;
 		}
 	} as const,

@@ -183,7 +183,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 							summaryResult.data as TGetTourSummaryBackendResponce;
 						return mapDraftOptionCardToFrontend(
 							option,
-							summary.total
+							summary.estimated_revenue
 						);
 					})
 				);

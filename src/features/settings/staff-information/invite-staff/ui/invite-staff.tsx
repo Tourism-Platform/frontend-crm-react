@@ -21,6 +21,7 @@ import {
 } from "@/shared/ui";
 
 import {
+	ENUM_FORM_INVITE_STAFF,
 	INVITE_STAFF_SCHEMA,
 	type TInviteStaffSchema,
 	useCreateStaffMutation
@@ -35,6 +36,9 @@ export const InviteStaff: FC = () => {
 
 	const form = useForm<TInviteStaffSchema>({
 		resolver: zodResolver(INVITE_STAFF_SCHEMA),
+		defaultValues: {
+			[ENUM_FORM_INVITE_STAFF.PERMISSIONS]: []
+		},
 		mode: "onSubmit"
 	});
 
@@ -71,15 +75,17 @@ export const InviteStaff: FC = () => {
 						className="space-y-6"
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_INVITE_STAFF_LIST.map(({ key, ...item }) => (
-								<CustomField
-									key={key}
-									control={form?.control}
-									name={key}
-									t={t}
-									{...item}
-								/>
-							))}
+							{FORM_INVITE_STAFF_LIST().map(
+								({ key, ...item }) => (
+									<CustomField
+										key={key}
+										control={form?.control}
+										name={key}
+										t={t}
+										{...item}
+									/>
+								)
+							)}
 						</div>
 						<DialogFooter>
 							<DialogClose asChild onClick={() => setOpen(false)}>

@@ -6,27 +6,27 @@ import { CustomField } from "@/shared/ui";
 
 import type { TEditStaffSchema } from "@/entities/staff";
 
-import { PERSONAL_DETAILS_LIST } from "../model";
+import { ACCESS_LIST } from "../model";
 
-interface IPersonalDetailsProps {
+interface IAccessProps {
 	form: UseFormReturn<TEditStaffSchema>;
 }
 
-export const PersonalDetails: FC<IPersonalDetailsProps> = ({ form }) => {
+export const Access: FC<IAccessProps> = ({ form }) => {
 	const { t } = useTranslation("staff_information_page");
 
 	return (
 		<div className="space-y-5">
 			<div>
 				<h3 className="text-base font-semibold">
-					{t("menu.edit.form.details.title")}
+					{t("menu.edit.form.access.title")}
 				</h3>
 				<p className="text-sm text-muted-foreground">
-					{t("menu.edit.form.details.description")}
+					{t("menu.edit.form.access.description")}
 				</p>
 			</div>
 			<div className="grid grid-cols-2 gap-x-6">
-				{PERSONAL_DETAILS_LIST().map(({ key, ...item }) => (
+				{ACCESS_LIST().map(({ key, ...item }) => (
 					<CustomField
 						key={key}
 						control={form?.control}

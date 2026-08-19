@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
-import React, { type FC, type ReactNode } from "react";
+import React, { type FC, type ReactNode, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -24,9 +24,12 @@ import {
 	ENUM_FORM_EDIT_STAFF,
 	type IStaffUser,
 	type TEditStaffSchema,
+	useGetStaffMemberPermissionsQuery,
+	useReplaceStaffMemberAccessMutation,
 	useUpdateStaffMutation
 } from "@/entities/staff";
 
+import { Access } from "./access";
 import { Commission } from "./commission";
 import { PersonalDetails } from "./personal-details";
 
@@ -43,34 +46,64 @@ export const EditStaff: FC<IEditStaffProps> = ({
 }) => {
 	const [open, setOpen] = React.useState(false);
 	const { t } = useTranslation("staff_information_page");
-	const [updateStaff, { isLoading }] = useUpdateStaffMutation();
+	const [updateStaff, { isLoading: isUpdating }] = useUpdateStaffMutation();
+	const [replaceAccess, { isLoading: isReplacingAccess }] =
+		useReplaceStaffMemberAccessMutation();
+	const { data: access } = useGetStaffMemberPermissionsQuery(user?.id ?? "", {
+		skip: !open || !user?.id
+	});
 	const form = useForm<TEditStaffSchema>({
 		resolver: zodResolver(EDIT_STAFF_SCHEMA),
 		defaultValues: {
 			[ENUM_FORM_EDIT_STAFF.FIRST_NAME]: user?.firstName || "",
 			[ENUM_FORM_EDIT_STAFF.LAST_NAME]: user?.lastName || "",
 			[ENUM_FORM_EDIT_STAFF.EMAIL]: user?.email || "",
-			[ENUM_FORM_EDIT_STAFF.ROLE]: user?.role,
 			[ENUM_FORM_EDIT_STAFF.STATUS]: user?.status,
 			[ENUM_FORM_EDIT_STAFF.TYPE]: user?.type,
-			[ENUM_FORM_EDIT_STAFF.SPLIT]: user?.split || 0
+			[ENUM_FORM_EDIT_STAFF.SPLIT]: user?.split || 0,
+			[ENUM_FORM_EDIT_STAFF.PERMISSIONS]: []
 		},
 		mode: "onSubmit"
 	});
 
+	useEffect(() => {
+		if (!user) return;
+
+		form.reset({
+			[ENUM_FORM_EDIT_STAFF.FIRST_NAME]: user.firstName || "",
+			[ENUM_FORM_EDIT_STAFF.LAST_NAME]: user.lastName || "",
+			[ENUM_FORM_EDIT_STAFF.EMAIL]: user.email || "",
+			[ENUM_FORM_EDIT_STAFF.STATUS]: user.status,
+			[ENUM_FORM_EDIT_STAFF.TYPE]: user.type,
+			[ENUM_FORM_EDIT_STAFF.SPLIT]: user.split || 0,
+			[ENUM_FORM_EDIT_STAFF.PERMISSIONS]: access?.direct ?? []
+		});
+	}, [user, access, form]);
+
+	const isLoading = isUpdating || isReplacingAccess;
+
 	async function onSubmit(data: TEditStaffSchema) {
-		if (user) {
-			try {
-				await updateStaff({
-					id: user.id!,
-					data: data
-				}).unwrap();
-				toast.success(t("menu.edit.form.toasts.success"));
-				setOpen(false);
-			} catch (error) {
-				toast.error(t("menu.edit.form.toasts.error"));
-				console.error("Failed to update staff:", error);
-			}
+		if (!user?.id) return;
+
+		try {
+			await Promise.all([
+				updateStaff({
+					id: user.id,
+					data
+				}).unwrap(),
+				replaceAccess({
+					id: user.id,
+					data: {
+						permissions: data.permissions,
+						groupIds: access?.groupIds ?? []
+					}
+				}).unwrap()
+			]);
+			toast.success(t("menu.edit.form.toasts.success"));
+			setOpen(false);
+		} catch (error) {
+			toast.error(t("menu.edit.form.toasts.error"));
+			console.error("Failed to update staff:", error);
 		}
 	}
 	return (
@@ -90,6 +123,7 @@ export const EditStaff: FC<IEditStaffProps> = ({
 					<form onSubmit={form.handleSubmit(onSubmit)}>
 						<div>
 							<PersonalDetails form={form} />
+							<Access form={form} />
 							<Commission form={form} />
 						</div>
 						<DialogFooter>

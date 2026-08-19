@@ -1,5 +1,5 @@
 import type { Currency } from "@/shared/api";
-import { ENUM_API_TAGS, PRICING_REVIEW_PATHS } from "@/shared/api";
+import { ENUM_API_TAGS, TOUR_OPTION_PATHS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -16,7 +16,7 @@ export const tourPricingReviewApi = authApi.injectEndpoints({
 			{ tourId: string; optionId: string; currency?: Currency }
 		>({
 			query: ({ tourId, optionId, currency }) => ({
-				...PRICING_REVIEW_PATHS.getTourSummary(tourId, optionId),
+				...TOUR_OPTION_PATHS.getTourSummary(tourId, optionId),
 				params: currency ? { currency } : undefined
 			}),
 			transformResponse: (response: TGetTourSummaryBackendResponce) =>

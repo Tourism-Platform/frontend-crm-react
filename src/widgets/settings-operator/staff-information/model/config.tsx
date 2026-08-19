@@ -4,12 +4,12 @@ import type { TFunction } from "i18next";
 import { Badge, Skeleton } from "@/shared/ui";
 
 import {
-	type ENUM_STAFF_ROLE_OPTIONS_TYPE,
 	type ENUM_STAFF_STATUS_OPTIONS_TYPE,
+	type ENUM_STAFF_USER_ROLE_TYPE,
 	type IStaffUser,
-	STAFF_ROLE_LABELS,
 	STAFF_STATUS_LABELS,
-	STAFF_STATUS_VARIANTS
+	STAFF_STATUS_VARIANTS,
+	STAFF_USER_ROLE_LABELS
 } from "@/entities/staff";
 
 import { StaffActions } from "../ui";
@@ -65,15 +65,15 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
 			accessorKey: "role",
-			cell: ({ row }) => (
-				<div className="font-medium">
-					{
-						STAFF_ROLE_LABELS[
-							row.getValue("role") as ENUM_STAFF_ROLE_OPTIONS_TYPE
-						]
-					}
-				</div>
-			),
+			cell: ({ row }) => {
+				const role = row.getValue("role") as ENUM_STAFF_USER_ROLE_TYPE;
+
+				return (
+					<div className="font-medium">
+						{t(STAFF_USER_ROLE_LABELS[role], { ns: "options" })}
+					</div>
+				);
+			},
 			size: 180
 		},
 		{

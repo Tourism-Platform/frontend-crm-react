@@ -17,9 +17,13 @@
 					"label": "Email",
 					"placeholder": "Enter staff email address"
 				},
-				"role": {
-					"label": "Role",
-					"placeholder": "Select staff role"
+				"groupIds": {
+					"label": "Permission groups",
+					"placeholder": "Select permission groups"
+				},
+				"permissions": {
+					"label": "Direct permissions",
+					"placeholder": "Select extra permissions"
 				}
 			},
 			"errors": {
@@ -36,9 +40,6 @@
 					"min": "Email is required",
 					"max": "Email is too long",
 					"invalid": "Invalid email format"
-				},
-				"role": {
-					"required": "Role is required"
 				}
 			},
 			"buttons": {
@@ -73,10 +74,6 @@
 							"label": "Email",
 							"placeholder": "Enter staff email address"
 						},
-						"role": {
-							"label": "Role",
-							"placeholder": "Select staff role"
-						},
 						"status": {
 							"label": "Status",
 							"placeholder": "Select staff status"
@@ -99,11 +96,22 @@
 							"max": "Email is too long",
 							"invalid": "Invalid email format"
 						},
-						"role": {
-							"required": "Role is required"
-						},
 						"status": {
 							"required": "Status is required"
+						}
+					}
+				},
+				"access": {
+					"title": "Access",
+					"description": "Permission groups and extra permissions for this staff member",
+					"fields": {
+						"groupIds": {
+							"label": "Permission groups",
+							"placeholder": "Select permission groups"
+						},
+						"permissions": {
+							"label": "Direct permissions",
+							"placeholder": "Select extra permissions"
 						}
 					}
 				},

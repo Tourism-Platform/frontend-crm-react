@@ -170,6 +170,6 @@ export const mapDraftPreviewOptionToFrontend = (
 ): IOptionDetail => ({
 	id: backend.id,
 	title,
-	price: mapDraftOptionPriceToFrontend(backend.total),
+	price: mapDraftOptionPriceToFrontend(backend.estimated_revenue),
 	days: groupOperatorEventsIntoDays(backend.events)
 });

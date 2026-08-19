@@ -1,68 +1,70 @@
-import { StaffInviteRoleEnum } from "../../../shared/api/generated/Api";
-import { OPERATOR_STAFF_PATHS } from "../../../shared/api/generated/paths";
+import { ENUM_PERMISSION, type TInviteStaffSchema } from "../types";
 
-export type TStaffSeedItem =
-	typeof OPERATOR_STAFF_PATHS.inviteStaff._types.body;
-
-export const STAFF_SEED: readonly TStaffSeedItem[] = [
+export const STAFF_SEED: readonly TInviteStaffSchema[] = [
 	{
 		email: "ivan.ivanov@example.com",
-		first_name: "Ivan",
-		last_name: "Ivanov",
-		role: StaffInviteRoleEnum.OperatorAccountant
+		firstName: "Ivan",
+		lastName: "Ivanov",
+		permissions: [ENUM_PERMISSION.LEDGER_READ, ENUM_PERMISSION.INVOICE_READ]
 	},
 	{
 		email: "petr.petrov@example.com",
-		first_name: "Petr",
-		last_name: "Petrov",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Petr",
+		lastName: "Petrov",
+		permissions: [
+			ENUM_PERMISSION.BOOKING_READ,
+			ENUM_PERMISSION.BOOKING_WRITE
+		]
 	},
 	{
 		email: "anna.sidorova@example.com",
-		first_name: "Anna",
-		last_name: "Sidorova",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Anna",
+		lastName: "Sidorova",
+		permissions: [
+			ENUM_PERMISSION.BOOKING_READ,
+			ENUM_PERMISSION.CATALOG_READ
+		]
 	},
 	{
 		email: "aleksey.smirnov@example.com",
-		first_name: "Aleksey",
-		last_name: "Smirnov",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Aleksey",
+		lastName: "Smirnov",
+		permissions: [ENUM_PERMISSION.TOUR_READ, ENUM_PERMISSION.TOUR_UPDATE]
 	},
 	{
 		email: "maria.kuznetsova@example.com",
-		first_name: "Maria",
-		last_name: "Kuznetsova",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Maria",
+		lastName: "Kuznetsova",
+		permissions: [ENUM_PERMISSION.TOUR_READ]
 	},
 	{
 		email: "dmitriy.popov@example.com",
-		first_name: "Dmitriy",
-		last_name: "Popov",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Dmitriy",
+		lastName: "Popov",
+		permissions: [ENUM_PERMISSION.BOOKING_READ]
 	},
 	{
 		email: "elena.vasilyeva@example.com",
-		first_name: "Elena",
-		last_name: "Vasilyeva",
-		role: StaffInviteRoleEnum.OperatorAccountant
+		firstName: "Elena",
+		lastName: "Vasilyeva",
+		permissions: [ENUM_PERMISSION.LEDGER_READ]
 	},
 	{
 		email: "sergey.sokolov@example.com",
-		first_name: "Sergey",
-		last_name: "Sokolov",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Sergey",
+		lastName: "Sokolov",
+		permissions: [ENUM_PERMISSION.SUPPLIER_READ]
 	},
 	{
 		email: "olga.mikhaylova@example.com",
-		first_name: "Olga",
-		last_name: "Mikhaylova",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Olga",
+		lastName: "Mikhaylova",
+		permissions: [ENUM_PERMISSION.BOOKING_READ]
 	},
 	{
 		email: "andrey.novikov@example.com",
-		first_name: "Andrey",
-		last_name: "Novikov",
-		role: StaffInviteRoleEnum.OperatorSalesManager
+		firstName: "Andrey",
+		lastName: "Novikov",
+		permissions: [ENUM_PERMISSION.TOUR_READ]
 	}
-] as const;
+];

@@ -1,6 +1,7 @@
 import type {
 	BodyUploadOptionCoverTourTourIdOptionOptionIdCoverPost,
 	Currency,
+	LanguageCode,
 	TourOptionCreateSchema,
 	TourOptionModel,
 	TourOptionUpdateSchema,
@@ -17,7 +18,7 @@ export const TOUR_OPTION_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { currency?: Currency };
+				query: { currency?: Currency; read_lang?: LanguageCode };
 				response: TourSummaryResponse;
 			}
 		}) as const,

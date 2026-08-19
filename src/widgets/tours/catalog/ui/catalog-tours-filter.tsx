@@ -5,13 +5,11 @@ import { type FC, useCallback, useMemo } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { LanguageCode } from "@/shared/api";
 import {
 	ENUM_LANGUAGES,
 	type TOptionsKeys,
 	i18nLanguageMapper
 } from "@/shared/config";
-import { languageCodeMapper } from "@/shared/converters";
 import { CustomAccordion, withErrorBoundary } from "@/shared/ui";
 
 import {
@@ -47,16 +45,10 @@ const CatalogToursFilterBase: FC<ICatalogToursFilterProps> = ({ form }) => {
 
 	const selectedFilters = watch("filters") || {};
 
-	const readLang = useMemo(
-		() =>
-			languageCodeMapper.to(
-				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
-			) ?? LanguageCode.En,
-		[i18n.language]
-	);
+	const readLang = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 
 	const { data: catalogFilters, isLoading: isCatalogFiltersLoading } =
-		useGetCatalogFiltersQuery({ lang: readLang });
+		useGetCatalogFiltersQuery(readLang);
 
 	const countryItems = useMemo(
 		() =>

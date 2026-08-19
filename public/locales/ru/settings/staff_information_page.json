@@ -17,9 +17,13 @@
 					"label": "Email",
 					"placeholder": "Введите email сотрудника"
 				},
-				"role": {
-					"label": "Роль",
-					"placeholder": "Выберите роль сотрудника"
+				"groupIds": {
+					"label": "Группы доступа",
+					"placeholder": "Выберите группы доступа"
+				},
+				"permissions": {
+					"label": "Прямые права",
+					"placeholder": "Выберите дополнительные права"
 				}
 			},
 			"errors": {
@@ -36,9 +40,6 @@
 					"min": "Email обязателен",
 					"max": "Email слишком длинный",
 					"invalid": "Неверный формат email"
-				},
-				"role": {
-					"required": "Роль обязательна"
 				}
 			},
 			"buttons": {
@@ -73,10 +74,6 @@
 							"label": "Email",
 							"placeholder": "Введите email сотрудника"
 						},
-						"role": {
-							"label": "Роль",
-							"placeholder": "Выберите роль сотрудника"
-						},
 						"status": {
 							"label": "Статус",
 							"placeholder": "Выберите статус сотрудника"
@@ -99,11 +96,22 @@
 							"max": "Email слишком длинный",
 							"invalid": "Неверный формат email"
 						},
-						"role": {
-							"required": "Роль обязательна"
-						},
 						"status": {
 							"required": "Статус обязателен"
+						}
+					}
+				},
+				"access": {
+					"title": "Доступ",
+					"description": "Группы прав и дополнительные права этого сотрудника",
+					"fields": {
+						"groupIds": {
+							"label": "Группы доступа",
+							"placeholder": "Выберите группы доступа"
+						},
+						"permissions": {
+							"label": "Прямые права",
+							"placeholder": "Выберите дополнительные права"
 						}
 					}
 				},

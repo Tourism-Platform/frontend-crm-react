@@ -6,7 +6,7 @@ import { ENUM_COMMISSION_OPTIONS } from "@/entities/commission";
 
 import {
 	ENUM_FORM_EDIT_STAFF,
-	ENUM_STAFF_ROLE_OPTIONS,
+	ENUM_PERMISSION,
 	ENUM_STAFF_STATUS_OPTIONS
 } from "../types";
 
@@ -30,9 +30,6 @@ export const EDIT_STAFF_SCHEMA = z.object({
 	[ENUM_FORM_EDIT_STAFF.EMAIL]: z
 		.email(msg("menu.edit.form.details.errors.email.invalid"))
 		.min(1, msg("menu.edit.form.details.errors.email.min")),
-	[ENUM_FORM_EDIT_STAFF.ROLE]: z.enum(ENUM_STAFF_ROLE_OPTIONS, {
-		message: msg("menu.edit.form.details.errors.role.required")
-	}),
 	[ENUM_FORM_EDIT_STAFF.STATUS]: z.enum(ENUM_STAFF_STATUS_OPTIONS, {
 		message: msg("menu.edit.form.details.errors.status.required")
 	}),
@@ -44,5 +41,6 @@ export const EDIT_STAFF_SCHEMA = z.object({
 			message: msg("menu.edit.form.commission.errors.split.required")
 		})
 		.min(0, msg("menu.edit.form.commission.errors.split.min"))
-		.max(100, msg("menu.edit.form.commission.errors.split.max"))
+		.max(100, msg("menu.edit.form.commission.errors.split.max")),
+	[ENUM_FORM_EDIT_STAFF.PERMISSIONS]: z.array(z.enum(ENUM_PERMISSION))
 });

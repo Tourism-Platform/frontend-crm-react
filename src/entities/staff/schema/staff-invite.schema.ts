@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { type TStaffInformationPageKeys, i18nKey } from "@/shared/config";
 
-import { ENUM_STAFF_ROLE_OPTIONS } from "../types";
+import { ENUM_PERMISSION } from "../types";
 import { ENUM_FORM_INVITE_STAFF } from "../types/staff-invite-form.types";
 
 const msg = i18nKey<TStaffInformationPageKeys>();
@@ -25,7 +25,5 @@ export const INVITE_STAFF_SCHEMA = z.object({
 	[ENUM_FORM_INVITE_STAFF.EMAIL]: z
 		.email(msg("invite.form.errors.email.invalid"))
 		.min(1, msg("invite.form.errors.email.min")),
-	[ENUM_FORM_INVITE_STAFF.ROLE]: z.enum(ENUM_STAFF_ROLE_OPTIONS, {
-		message: msg("invite.form.errors.role.required")
-	})
+	[ENUM_FORM_INVITE_STAFF.PERMISSIONS]: z.array(z.enum(ENUM_PERMISSION))
 });

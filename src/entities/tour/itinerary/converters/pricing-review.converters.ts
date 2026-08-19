@@ -11,6 +11,7 @@ import {
 	type ENUM_EVENT_BACKEND_TYPE,
 	type ITourPricingReview,
 	type TGetTourSummaryBackendResponce,
+	type TMultiEventDetailBackend,
 	type TOperatorEventBackend,
 	type TPackageBillableBackend,
 	type TTourMinMaxCostBackend,
@@ -28,14 +29,6 @@ const mapMinMaxCostToRange = (
 ): ITourSummaryRange => ({
 	from: cost.min.val,
 	to: cost.max.val
-});
-
-const deriveProfitRange = (
-	total: TTourMinMaxCostBackend,
-	cost: TTourMinMaxCostBackend
-): ITourSummaryRange => ({
-	from: total.min.val - cost.max.val,
-	to: total.max.val - cost.min.val
 });
 
 const mapMinMaxCostToDisplay = (cost: TTourMinMaxCostBackend): string => {
@@ -69,19 +62,21 @@ const mapEventPayloadToReviewItem = (
 			day: event.day,
 			position: event.position,
 			optionIndex: 0,
-			subRows: (event.details ?? []).map((detail, index) => ({
-				id: detail.id ?? `${eventId}:${index}`,
-				item: detail.name ?? "-",
-				supplier: detail.supplier_id ?? "-",
-				plannedCost: "-",
-				estimatedRevenue: "-",
-				type: mapBackendTypToEventType(
-					detail.typ as ENUM_EVENT_BACKEND_TYPE | undefined
-				),
-				day: event.day,
-				position: event.position,
-				optionIndex: index
-			}))
+			subRows: (event.details ?? []).map(
+				(detail: TMultiEventDetailBackend, index: number) => ({
+					id: detail.id ?? `${eventId}:${index}`,
+					item: detail.name ?? "-",
+					supplier: detail.supplier_id ?? "-",
+					plannedCost: "-",
+					estimatedRevenue: "-",
+					type: mapBackendTypToEventType(
+						detail.typ as ENUM_EVENT_BACKEND_TYPE | undefined
+					),
+					day: event.day,
+					position: event.position,
+					optionIndex: index
+				})
+			)
 		};
 	}
 
@@ -125,9 +120,9 @@ export const mapTourSummaryToFrontend = (
 	backend: TGetTourSummaryBackendResponce
 ): ITourPricingReview => ({
 	summary: {
-		revenue: mapMinMaxCostToRange(backend.total),
-		cost: mapMinMaxCostToRange(backend.cost),
-		profit: deriveProfitRange(backend.total, backend.cost)
+		revenue: mapMinMaxCostToRange(backend.estimated_revenue),
+		cost: mapMinMaxCostToRange(backend.estimated_cost),
+		profit: mapMinMaxCostToRange(backend.estimated_profit)
 	},
 	items: backend.events.map((item) =>
 		isPackageBillable(item)

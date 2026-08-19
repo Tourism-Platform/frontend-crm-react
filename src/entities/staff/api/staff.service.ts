@@ -1,20 +1,35 @@
-import { ENUM_API_TAGS, OPERATOR_STAFF_PATHS } from "@/shared/api";
+import {
+	ENUM_API_TAGS,
+	OPERATOR_STAFF_PATHS,
+	PERMISSION_GROUPS_PATHS
+} from "@/shared/api";
 import { type IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapPermissionGroupToFrontend,
+	mapStaffAccessToBackend,
+	mapStaffAccessToFrontend,
 	mapStaffFiltersToBackend,
 	mapStaffInviteToBackend,
 	mapStaffPaginatedToFrontend,
+	mapStaffToFrontend,
 	mapStaffUpdateToBackend
 } from "../converters";
 import type {
+	IPermissionGroup,
+	IStaffAccess,
+	IStaffAccessForm,
 	IStaffFilters,
 	IStaffUser,
 	TEditStaffSchema,
+	TInviteStaffBackendResponse,
 	TInviteStaffSchema,
-	TListStaffBackendResponse
+	TListStaffBackendResponse,
+	TPermissionGroupListBackend,
+	TStaffAccessReadBackend,
+	TStaffReadBackend
 } from "../types";
 
 export const staffApi = authApi.injectEndpoints({
@@ -35,6 +50,8 @@ export const staffApi = authApi.injectEndpoints({
 				...OPERATOR_STAFF_PATHS.inviteStaff,
 				body: mapStaffInviteToBackend(staff)
 			}),
+			transformResponse: (response: TInviteStaffBackendResponse) =>
+				mapStaffToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION]
 		}),
 		updateStaff: builder.mutation<
@@ -45,6 +62,8 @@ export const staffApi = authApi.injectEndpoints({
 				...OPERATOR_STAFF_PATHS.updateStaffMember(id),
 				body: mapStaffUpdateToBackend(data)
 			}),
+			transformResponse: (response: TStaffReadBackend) =>
+				mapStaffToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION]
 		}),
 		deleteStaff: builder.mutation<void, string>({
@@ -52,6 +71,40 @@ export const staffApi = authApi.injectEndpoints({
 				...OPERATOR_STAFF_PATHS.deleteStaffMember(id)
 			}),
 			invalidatesTags: [ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION]
+		}),
+		getStaffMemberPermissions: builder.query<IStaffAccess, string>({
+			query: (userId) => ({
+				...OPERATOR_STAFF_PATHS.getStaffMemberPermissions(userId)
+			}),
+			transformResponse: (response: TStaffAccessReadBackend) =>
+				mapStaffAccessToFrontend(response),
+			providesTags: (_result, _error, userId) => [
+				{
+					type: ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION,
+					id: userId
+				}
+			]
+		}),
+		replaceStaffMemberAccess: builder.mutation<
+			IStaffAccess,
+			{ id: string; data: IStaffAccessForm }
+		>({
+			query: ({ id, data }) => ({
+				...OPERATOR_STAFF_PATHS.replaceStaffMemberAccess(id),
+				body: mapStaffAccessToBackend(data)
+			}),
+			transformResponse: (response: TStaffAccessReadBackend) =>
+				mapStaffAccessToFrontend(response),
+			invalidatesTags: (_result, _error, { id }) => [
+				ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION,
+				{ type: ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION, id }
+			]
+		}),
+		getPermissionGroups: builder.query<IPermissionGroup[], void>({
+			query: () => ({ ...PERMISSION_GROUPS_PATHS.listPermissionGroups }),
+			transformResponse: (response: TPermissionGroupListBackend) =>
+				response.data.map(mapPermissionGroupToFrontend),
+			providesTags: [ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION]
 		})
 	})
 });
@@ -60,5 +113,8 @@ export const {
 	useGetStaffQuery,
 	useCreateStaffMutation,
 	useUpdateStaffMutation,
-	useDeleteStaffMutation
+	useDeleteStaffMutation,
+	useGetStaffMemberPermissionsQuery,
+	useReplaceStaffMemberAccessMutation,
+	useGetPermissionGroupsQuery
 } = staffApi;

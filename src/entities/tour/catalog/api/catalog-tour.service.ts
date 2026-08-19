@@ -1,9 +1,11 @@
 import { ENUM_API_TAGS, TOUR_CATALOG_PATHS } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapCatalogFiltersQueryToBackend,
 	mapCatalogListFiltersToFrontend,
 	mapCatalogTourFiltersToPublicCatalogQuery,
 	mapCatalogTourPaginatedToFrontend,
@@ -18,7 +20,6 @@ import type {
 	IRecentSearch,
 	IRecentSearchBackend,
 	TCatalogFiltersBackend,
-	TCatalogFiltersQuery,
 	TListCatalogToursBackendResponse,
 	TLocationSuggestOption,
 	TLocationSuggestParams,
@@ -41,11 +42,11 @@ export const catalogTourApi = authApi.injectEndpoints({
 		}),
 		getCatalogFilters: builder.query<
 			ICatalogListFilters,
-			TCatalogFiltersQuery
+			ENUM_LANGUAGES_TYPE
 		>({
-			query: (params) => ({
+			query: (language) => ({
 				...TOUR_CATALOG_PATHS.listFilters,
-				params
+				params: mapCatalogFiltersQueryToBackend(language)
 			}),
 			transformResponse: (response: TCatalogFiltersBackend) =>
 				mapCatalogListFiltersToFrontend(response),

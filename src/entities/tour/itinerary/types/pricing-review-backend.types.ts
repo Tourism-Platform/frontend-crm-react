@@ -1,10 +1,11 @@
-import type { PRICING_REVIEW_PATHS } from "@/shared/api";
+import type { TOUR_OPTION_PATHS } from "@/shared/api";
 
 export type TGetTourSummaryBackendResponce = ReturnType<
-	typeof PRICING_REVIEW_PATHS.getTourSummary
+	typeof TOUR_OPTION_PATHS.getTourSummary
 >["_types"]["response"];
 
-export type TTourMinMaxCostBackend = TGetTourSummaryBackendResponce["cost"];
+export type TTourMinMaxCostBackend =
+	TGetTourSummaryBackendResponce["estimated_cost"];
 
 export type TTourSummaryEventBackend =
 	TGetTourSummaryBackendResponce["events"][number];

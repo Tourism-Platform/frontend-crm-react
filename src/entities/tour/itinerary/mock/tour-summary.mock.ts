@@ -126,10 +126,9 @@ const MOCK_MARKUP_TOTAL = costRange(260, 370);
 export const TOUR_SUMMARY_MOCK: TGetTourSummaryBackendResponce = {
 	id: MOCK_TOUR_OPTION_ID,
 	events: MOCK_EVENTS,
-	cost: MOCK_COST_TOTAL,
-	markup: MOCK_MARKUP_TOTAL,
-	fees: costRange(0, 0),
-	total: costRange(2710, 3570)
+	estimated_cost: MOCK_COST_TOTAL,
+	estimated_profit: MOCK_MARKUP_TOTAL,
+	estimated_revenue: costRange(2710, 3570)
 };
 
 export const isTourSummaryMockPair = (

@@ -25,11 +25,9 @@ export enum VehicleBodyType {
 export enum UserRoles {
 	Admin = "admin",
 	OperatorAdmin = "operator_admin",
-	OperatorSalesManager = "operator_sales_manager",
-	OperatorAccountant = "operator_accountant",
+	OperatorStaff = "operator_staff",
 	AgencyAdmin = "agency_admin",
-	AgencySalesManager = "agency_sales_manager",
-	AgencyAccountant = "agency_accountant",
+	AgencyStaff = "agency_staff",
 	AuthenticatedUser = "authenticated_user"
 }
 
@@ -138,6 +136,65 @@ export enum RebuildState {
 export enum PickupType {
 	AirportPickup = "airport_pickup",
 	HotelPickup = "hotel_pickup"
+}
+
+/** Permissions */
+export enum Permissions {
+	TourRead = "tour_read",
+	TourCreate = "tour_create",
+	TourUpdate = "tour_update",
+	TourDelete = "tour_delete",
+	TourPublish = "tour_publish",
+	TourArchive = "tour_archive",
+	TourOptionWrite = "tour_option_write",
+	TourEventWrite = "tour_event_write",
+	TourEventLibraryRead = "tour_event_library_read",
+	TourEventLibraryWrite = "tour_event_library_write",
+	TourGalleryWrite = "tour_gallery_write",
+	TourLandingWrite = "tour_landing_write",
+	TourScheduleWrite = "tour_schedule_write",
+	TourFinanceRead = "tour_finance_read",
+	TourFinanceWrite = "tour_finance_write",
+	CatalogRead = "catalog_read",
+	BookingRead = "booking_read",
+	BookingWrite = "booking_write",
+	BookingCancel = "booking_cancel",
+	BookingTransition = "booking_transition",
+	BookingFinanceRead = "booking_finance_read",
+	BookingPaxWrite = "booking_pax_write",
+	BookingRevisionWrite = "booking_revision_write",
+	BookingPaymentRead = "booking_payment_read",
+	BookingPaymentWrite = "booking_payment_write",
+	BookingPaymentConfirm = "booking_payment_confirm",
+	BookingAvailabilityWrite = "booking_availability_write",
+	BookingVoucherWrite = "booking_voucher_write",
+	BookingReconciliationRead = "booking_reconciliation_read",
+	InvoiceRead = "invoice_read",
+	InvoiceWrite = "invoice_write",
+	InvoicePaymentWrite = "invoice_payment_write",
+	LedgerRead = "ledger_read",
+	SupplierRead = "supplier_read",
+	SupplierWrite = "supplier_write",
+	OperatorInfoRead = "operator_info_read",
+	OperatorInfoWrite = "operator_info_write",
+	OperatorDelete = "operator_delete",
+	OperatorFinancialsRead = "operator_financials_read",
+	OperatorFinancialsWrite = "operator_financials_write",
+	OperatorFilesRead = "operator_files_read",
+	OperatorFilesWrite = "operator_files_write",
+	OperatorAgenciesRead = "operator_agencies_read",
+	OperatorAgenciesWrite = "operator_agencies_write",
+	FxRateRead = "fx_rate_read",
+	FxRateWrite = "fx_rate_write",
+	SupplierPaymentRead = "supplier_payment_read",
+	SupplierPaymentWrite = "supplier_payment_write",
+	PaymentRouteRead = "payment_route_read",
+	PaymentRouteWrite = "payment_route_write",
+	AgencyInfoRead = "agency_info_read",
+	AgencyInfoWrite = "agency_info_write",
+	StaffRead = "staff_read",
+	StaffManage = "staff_manage",
+	AuditRead = "audit_read"
 }
 
 /** PaymentMethod */
@@ -945,6 +1002,49 @@ export interface AgencyModel {
 	id: string;
 	/** Name */
 	name: string;
+}
+
+/** AuditLogListResponse */
+export interface AuditLogListResponse {
+	/** Total Count */
+	total_count: number;
+	/** Data */
+	data: AuditLogRead[];
+}
+
+/** AuditLogRead */
+export interface AuditLogRead {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * User Id
+	 * @format uuid
+	 */
+	user_id: string;
+	/** Email */
+	email: string | null;
+	/** Display Name */
+	display_name: string | null;
+	role: UserRoles;
+	/** Operator Id */
+	operator_id: string | null;
+	/** Agency Id */
+	agency_id: string | null;
+	/** Method */
+	method: string;
+	/** Path */
+	path: string;
+	permission: Permissions | null;
+	/** Status Code */
+	status_code: number;
+	/**
+	 * Created At
+	 * @format date-time
+	 */
+	created_at: string;
 }
 
 /** AuthUserIn */
@@ -3848,6 +3948,14 @@ export interface GroupSizeTierOutput {
 export interface GroupSizeTierPubSchema {
 	/** Up To Pax */
 	up_to_pax?: number | null;
+}
+
+/** GroupTemplate */
+export interface GroupTemplate {
+	/** Name */
+	name: string;
+	/** Permissions */
+	permissions: Permissions[];
 }
 
 /** GuideByLanguageCategory */
@@ -7139,6 +7247,53 @@ export interface PercentageMarkup {
 	percentage: number;
 }
 
+/** PermissionCatalog */
+export interface PermissionCatalog {
+	/** Permissions */
+	permissions: Permissions[];
+	/** Default Groups */
+	default_groups: GroupTemplate[];
+}
+
+/** PermissionGroupCreate */
+export interface PermissionGroupCreate {
+	/**
+	 * Name
+	 * @minLength 1
+	 * @maxLength 64
+	 */
+	name: string;
+	/** Permissions */
+	permissions?: Permissions[];
+}
+
+/** PermissionGroupListResponse */
+export interface PermissionGroupListResponse {
+	/** Data */
+	data: PermissionGroupRead[];
+}
+
+/** PermissionGroupRead */
+export interface PermissionGroupRead {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/** Permissions */
+	permissions: Permissions[];
+}
+
+/** PermissionGroupUpdate */
+export interface PermissionGroupUpdate {
+	/** Name */
+	name?: string | null;
+	/** Permissions */
+	permissions: Permissions[];
+}
+
 /** PriceRangeSchema */
 export interface PriceRangeSchema {
 	/** Min */
@@ -7648,6 +7803,14 @@ export interface SignInIn {
 	password: string;
 }
 
+/** StaffAccessReplace */
+export interface StaffAccessReplace {
+	/** Permissions */
+	permissions: Permissions[];
+	/** Group Ids */
+	group_ids: string[];
+}
+
 /** StaffInvite */
 export interface StaffInvite {
 	/**
@@ -7666,8 +7829,12 @@ export interface StaffInvite {
 	 * @maxLength 255
 	 */
 	last_name: string;
-	/** Role */
-	role: StaffInviteRoleEnum;
+	/** Password */
+	password?: string | null;
+	/** Permissions */
+	permissions?: Permissions[];
+	/** Group Ids */
+	group_ids?: string[];
 }
 
 /** StaffInviteResult */
@@ -7683,13 +7850,12 @@ export interface StaffInviteResult {
 	last_name: string | null;
 	/** Email */
 	email: string;
-	/** Role */
-	role: StaffInviteResultRoleEnum;
+	role: UserRoles;
 	status: StaffStatus;
 	/** Commission Percent */
 	commission_percent: number | null;
 	/** Generated Password */
-	generated_password: string;
+	generated_password: string | null;
 }
 
 /** StaffListResponse */
@@ -7698,6 +7864,16 @@ export interface StaffListResponse {
 	total_count: number;
 	/** Data */
 	data: StaffRead[];
+}
+
+/** StaffPermissionsRead */
+export interface StaffPermissionsRead {
+	/** Direct */
+	direct: Permissions[];
+	/** Group Ids */
+	group_ids: string[];
+	/** Effective */
+	effective: Permissions[];
 }
 
 /** StaffRead */
@@ -7713,8 +7889,7 @@ export interface StaffRead {
 	last_name: string | null;
 	/** Email */
 	email: string;
-	/** Role */
-	role: StaffReadRoleEnum;
+	role: UserRoles;
 	status: StaffStatus;
 	/** Commission Percent */
 	commission_percent: number | null;
@@ -7726,8 +7901,6 @@ export interface StaffUpdate {
 	first_name?: string | null;
 	/** Last Name */
 	last_name?: string | null;
-	/** Role */
-	role?: StaffUpdateRoleEnum | null;
 	/** Status */
 	status?: StaffUpdateStatusEnum | null;
 	/** Commission Percent */
@@ -9269,7 +9442,17 @@ export interface TourStatisticsResponse {
 	currency?: Currency;
 }
 
-/** TourSummaryResponse */
+/**
+ * TourSummaryResponse
+ * Option quote: ``estimated_cost`` is what the operator pays out
+ * (cost + fees), ``estimated_profit`` is the markup kept, and
+ * ``estimated_revenue`` is the full agency price — the two always
+ * sum to it.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/summary`` for the quote itself
+ */
 export interface TourSummaryResponse {
 	/**
 	 * Id
@@ -9285,10 +9468,9 @@ export interface TourSummaryResponse {
 				typ: "package_bill";
 		  } & PackageBillableOutput)
 	)[];
-	cost: TourMinMaxCostSchemaOutput;
-	markup: TourMinMaxCostSchemaOutput;
-	fees: TourMinMaxCostSchemaOutput;
-	total: TourMinMaxCostSchemaOutput;
+	estimated_cost: TourMinMaxCostSchemaOutput;
+	estimated_profit: TourMinMaxCostSchemaOutput;
+	estimated_revenue: TourMinMaxCostSchemaOutput;
 }
 
 /** TrainDetailPubSchema */
@@ -10220,29 +10402,6 @@ export interface VoucherResponse {
 	file_name: string | null;
 }
 
-/** Role */
-export enum StaffInviteRoleEnum {
-	OperatorSalesManager = "operator_sales_manager",
-	OperatorAccountant = "operator_accountant"
-}
-
-/** Role */
-export enum StaffInviteResultRoleEnum {
-	OperatorSalesManager = "operator_sales_manager",
-	OperatorAccountant = "operator_accountant"
-}
-
-/** Role */
-export enum StaffReadRoleEnum {
-	OperatorSalesManager = "operator_sales_manager",
-	OperatorAccountant = "operator_accountant"
-}
-
-export enum StaffUpdateRoleEnum {
-	OperatorSalesManager = "operator_sales_manager",
-	OperatorAccountant = "operator_accountant"
-}
-
 export enum StaffUpdateStatusEnum {
 	Active = "active",
 	Inactive = "inactive"
@@ -10301,7 +10460,7 @@ export interface SuggestLocationsTourCatalogSuggestGetParams {
 	 */
 	q: string;
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Limit
 	 * @min 1
@@ -10313,7 +10472,7 @@ export interface SuggestLocationsTourCatalogSuggestGetParams {
 
 export interface ListFiltersTourCatalogFiltersGetParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 }
 
 export interface ListPublicCatalogTourCatalogPublicGetParams {
@@ -10387,6 +10546,8 @@ export interface ListAgencyCatalogTourCatalogAgencyGetParams {
 export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
 	/** @default "USD" */
 	currency?: Currency;
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -10702,7 +10863,7 @@ export type CreateEventTourTourIdOptionIdEventCreatePostPayload =
 
 export interface CreateEventTourTourIdOptionIdEventCreatePostParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -10715,11 +10876,11 @@ export interface CreateEventTourTourIdOptionIdEventCreatePostParams {
 	optionId: string;
 }
 
-export interface ListTourEventsTourTourIdOptionIdEventGetParams {
+export interface ListTourEventsTourTourIdOptionIdEventItineraryGetParams {
 	/** Day */
 	day?: number | null;
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Skip
 	 * @min 0
@@ -10742,7 +10903,7 @@ export interface ListTourEventsTourTourIdOptionIdEventGetParams {
 
 export interface GetTourEventTourTourIdOptionIdEventEventIdGetParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Option Id
 	 * @format uuid
@@ -10798,7 +10959,7 @@ export interface ValidateEventTourTourIdOptionIdEventEventIdValidateGetParams {
 
 export interface ReorderEventTourTourIdOptionIdEventEventIdReorderPostParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Option Id
 	 * @format uuid
@@ -10818,7 +10979,7 @@ export interface ReorderEventTourTourIdOptionIdEventEventIdReorderPostParams {
 
 export interface SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -10869,7 +11030,7 @@ export type UpdateSingleEventTourTourIdOptionIdEventSingleEventIdUpdatePatchPayl
 
 export interface UpdateSingleEventTourTourIdOptionIdEventSingleEventIdUpdatePatchParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -10893,7 +11054,7 @@ export type MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMultiTarge
 
 export interface MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMultiTargetEventIdPostParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -10918,7 +11079,7 @@ export interface MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMulti
 
 export interface ReorderEventOptionsTourTourIdOptionIdEventMultiEventIdReorderOptionsPostParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Option Id
 	 * @format uuid
@@ -10969,7 +11130,7 @@ export type AddEventOptionTourTourIdOptionIdEventMultiEventIdAddOptionPostPayloa
 
 export interface AddEventOptionTourTourIdOptionIdEventMultiEventIdAddOptionPostParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11020,7 +11181,7 @@ export type UpdateEventOptionTourTourIdOptionIdEventMultiEventIdUpdateOptionEven
 
 export interface UpdateEventOptionTourTourIdOptionIdEventMultiEventIdUpdateOptionEventOptionIdPatchParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11045,7 +11206,7 @@ export interface UpdateEventOptionTourTourIdOptionIdEventMultiEventIdUpdateOptio
 
 export interface DeleteEventOptionTourTourIdOptionIdEventMultiEventIdRemoveOptionEventOptionIdDeleteParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11074,7 +11235,7 @@ export type MoveEventOptionToSingleTourTourIdOptionIdEventMultiEventIdMoveToSing
 
 export interface MoveEventOptionToSingleTourTourIdOptionIdEventMultiEventIdMoveToSingleEventOptionIdPostParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11352,7 +11513,7 @@ export interface RemoveRecurrenceRuleTourTourIdScheduleRuleRuleIdDeleteParams {
 
 export interface GetLandingPageTourTourIdLandingGetParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11456,11 +11617,11 @@ export interface ListPublicTourOptionsTourTourIdPublicOptionAllGetParams {
 	tourId: string;
 }
 
-export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdGetParams {
+export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdItineraryGetParams {
 	/** @default "USD" */
 	currency?: Currency;
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11475,7 +11636,7 @@ export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdGetParams {
 
 export interface GetPublicLandingPageTourTourIdPublicLandingGetParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -11855,6 +12016,22 @@ export interface UpdateStaffMemberOperatorStaffUserIdPatchParams {
 }
 
 export interface DeleteStaffMemberOperatorStaffUserIdDeleteParams {
+	/**
+	 * User Id
+	 * @format uuid
+	 */
+	userId: string;
+}
+
+export interface ReplaceStaffMemberAccessOperatorStaffUserIdAccessPostParams {
+	/**
+	 * User Id
+	 * @format uuid
+	 */
+	userId: string;
+}
+
+export interface GetStaffMemberPermissionsOperatorStaffUserIdPermissionsGetParams {
 	/**
 	 * User Id
 	 * @format uuid
@@ -12805,4 +12982,60 @@ export interface ReverseGeoReverseGetParams {
 	 * @default 1
 	 */
 	limit?: number;
+}
+
+export interface ListOrgAuditAuditAllGetParams {
+	/** User Id */
+	user_id?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListAllAuditAuditAdminAllGetParams {
+	/** User Id */
+	user_id?: string | null;
+	/** Operator Id */
+	operator_id?: string | null;
+	/** Agency Id */
+	agency_id?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface UpdatePermissionGroupAuthPermissionGroupGroupIdPatchParams {
+	/**
+	 * Group Id
+	 * @format uuid
+	 */
+	groupId: string;
+}
+
+export interface DeletePermissionGroupAuthPermissionGroupGroupIdDeleteParams {
+	/**
+	 * Group Id
+	 * @format uuid
+	 */
+	groupId: string;
 }

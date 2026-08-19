@@ -6,10 +6,10 @@ export const ENUM_FORM_EDIT_STAFF = {
 	FIRST_NAME: "firstName",
 	LAST_NAME: "lastName",
 	EMAIL: "email",
-	ROLE: "role",
 	STATUS: "status",
 	TYPE: "type",
-	SPLIT: "split"
+	SPLIT: "split",
+	PERMISSIONS: "permissions"
 } as const;
 
 export type ENUM_FORM_EDIT_STAFF_TYPE =

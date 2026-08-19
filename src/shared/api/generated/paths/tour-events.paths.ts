@@ -49,19 +49,19 @@ export const TOUR_EVENTS_PATHS = {
 					| GuideSingleEventInput
 					| SupplementarySingleEventInput
 					| MultiEvent;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
 	listTourEvents: (tourId: string, optionId: string) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event`,
+			url: `/tour/${tourId}/${optionId}/event/itinerary`,
 			method: "GET",
 			_types: {} as {
 				body: void;
 				query: {
 					day?: number | null;
-					lang?: LanguageCode;
+					read_lang?: LanguageCode;
 					skip?: number;
 					limit?: number | null;
 				};
@@ -74,7 +74,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -100,7 +100,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: EventReorderSchema;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -110,7 +110,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body: EventOptionalSchema;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -129,7 +129,7 @@ export const TOUR_EVENTS_PATHS = {
 					| FlightEventInput
 					| GuideEventInput
 					| SupplementaryEventInput;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -144,7 +144,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: MoveToMultiSchema | null;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: MoveToMultiResult;
 			}
 		}) as const,
@@ -154,7 +154,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: OptionReorderSchema;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -173,7 +173,7 @@ export const TOUR_EVENTS_PATHS = {
 					| FlightEventInput
 					| GuideEventInput
 					| SupplementaryEventInput;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -197,7 +197,7 @@ export const TOUR_EVENTS_PATHS = {
 					| FlightEventInput
 					| GuideEventInput
 					| SupplementaryEventInput;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -212,7 +212,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "DELETE",
 			_types: {} as {
 				body: void;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
@@ -227,7 +227,7 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: EventReorderSchema | null;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: MoveToSingleResult;
 			}
 		}) as const

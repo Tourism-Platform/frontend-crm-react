@@ -16,7 +16,7 @@ export const TOUR_LANDING_PAGE_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { lang?: LanguageCode };
+				query: { read_lang?: LanguageCode };
 				response: LandingPageResponse;
 			}
 		}) as const,

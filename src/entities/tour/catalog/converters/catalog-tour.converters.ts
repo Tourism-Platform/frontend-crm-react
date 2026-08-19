@@ -1,4 +1,5 @@
-import type { LanguageCode } from "@/shared/api";
+import { LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
 import type { IPaginationResponse } from "@/shared/types";
 
@@ -15,6 +16,7 @@ import {
 	type ICatalogTourInfo,
 	type ICatalogTourInfoBackend,
 	type TCatalogFiltersBackend,
+	type TCatalogFiltersQuery,
 	type TCatalogTourBackend,
 	type TCatalogTourQueryBackend,
 	type TListCatalogToursBackendResponse
@@ -95,6 +97,12 @@ export const mapCatalogListFiltersToFrontend = (
 ): ICatalogListFilters => ({
 	countries: data.countries,
 	cities: data.cities
+});
+
+export const mapCatalogFiltersQueryToBackend = (
+	language: ENUM_LANGUAGES_TYPE
+): TCatalogFiltersQuery => ({
+	read_lang: languageCodeMapper.to(language) ?? LanguageCode.En
 });
 
 export const mapPopularToursPaginatedToFrontend = (

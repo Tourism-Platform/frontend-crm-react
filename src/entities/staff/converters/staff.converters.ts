@@ -3,6 +3,9 @@ import { type IPaginationResponse } from "@/shared/types";
 import type { ENUM_COMMISSION_OPTIONS_TYPE } from "@/entities/commission";
 
 import type {
+	IPermissionGroup,
+	IStaffAccess,
+	IStaffAccessForm,
 	IStaffFilters,
 	IStaffUser,
 	TEditStaffSchema,
@@ -10,26 +13,26 @@ import type {
 	TInviteStaffSchema,
 	TListStaffBackendResponse,
 	TListStaffQuery,
+	TPermissionGroupListBackend,
+	TStaffAccessReadBackend,
+	TStaffAccessReplaceBackendBody,
 	TStaffReadBackend,
 	TUpdateStaffBackendBody
 } from "../types";
 
-import {
-	staffRoleInviteConverter,
-	staffRoleReadConverter,
-	staffRoleUpdateConverter
-} from "./staff-role.converters";
+import { permissionConverter } from "./permission.converters";
 import {
 	staffStatusReadConverter,
 	staffStatusUpdateConverter
 } from "./staff-status.converters";
+import { staffUserRoleConverter } from "./staff-user-role.converters";
 
 export const mapStaffToFrontend = (data: TStaffReadBackend): IStaffUser => ({
 	id: data.user_id,
 	firstName: data.first_name || "",
 	lastName: data.last_name || "",
 	email: data.email,
-	role: staffRoleReadConverter.from(data.role)!,
+	role: staffUserRoleConverter.from(data.role)!,
 	status: staffStatusReadConverter.from(data.status)!,
 	type: "percentage" as ENUM_COMMISSION_OPTIONS_TYPE,
 	split: Number(((data.commission_percent ?? 0) * 100).toFixed(2))
@@ -41,7 +44,8 @@ export const mapStaffInviteToBackend = (
 	email: data.email,
 	first_name: data.firstName,
 	last_name: data.lastName,
-	role: staffRoleInviteConverter.to(data.role)!
+	permissions: permissionConverter.toMany(data.permissions ?? []),
+	group_ids: []
 });
 
 export const mapStaffUpdateToBackend = (
@@ -49,9 +53,31 @@ export const mapStaffUpdateToBackend = (
 ): TUpdateStaffBackendBody => ({
 	first_name: data.firstName,
 	last_name: data.lastName,
-	role: staffRoleUpdateConverter.to(data.role!)!,
 	status: staffStatusUpdateConverter.to(data.status!),
 	commission_percent: Number(((data.split ?? 0) / 100).toFixed(2))
+});
+
+export const mapStaffAccessToFrontend = (
+	data: TStaffAccessReadBackend
+): IStaffAccess => ({
+	direct: permissionConverter.fromMany(data.direct),
+	groupIds: data.group_ids,
+	effective: permissionConverter.fromMany(data.effective)
+});
+
+export const mapStaffAccessToBackend = (
+	data: IStaffAccessForm
+): TStaffAccessReplaceBackendBody => ({
+	permissions: permissionConverter.toMany(data.permissions),
+	group_ids: data.groupIds
+});
+
+export const mapPermissionGroupToFrontend = (
+	group: TPermissionGroupListBackend["data"][number]
+): IPermissionGroup => ({
+	id: group.id,
+	name: group.name,
+	permissions: permissionConverter.fromMany(group.permissions)
 });
 
 export const mapStaffListToFrontend = (
