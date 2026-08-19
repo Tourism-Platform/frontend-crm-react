@@ -20,7 +20,8 @@ export const ENUM_API_TAGS = {
 		FINANCIAL_INFORMATION: "Operator Financial Information",
 		CURRENCY_RATES: "Operator Currency Rates",
 		STAFF_INFORMATION: "Operator Staff Information",
-		PAYMENT_ROUTES: "Operator Payment Routes"
+		PAYMENT_ROUTES: "Operator Payment Routes",
+		AGENCIES: "Operator Agencies"
 	},
 	TOURS_OPTIONS: "Tours Options",
 	TOURS_PRICING_SUMMARY: "Tours Pricing Summary",

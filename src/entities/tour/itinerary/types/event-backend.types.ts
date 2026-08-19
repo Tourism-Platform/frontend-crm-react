@@ -1,6 +1,20 @@
-import type { TOUR_EVENTS_PATHS, TourEventResponse } from "@/shared/api";
+import type {
+	EmptyDetails,
+	MultiEventReadOutput,
+	TOUR_EVENTS_PATHS,
+	TimeSchema,
+	TourEventResponse
+} from "@/shared/api";
 
 export type TTourEventBackendResponce = TourEventResponse;
+
+export type TTimeSchemaBackend = TimeSchema;
+export type TEmptyDetailsBackend = EmptyDetails;
+export type TMultiEventReadBackend = MultiEventReadOutput;
+export type TMultiEventDetailBackend = NonNullable<
+	TMultiEventReadBackend["details"]
+>[number];
+
 export type TTourEventUpdateBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.updateSingleEvent
 >["_types"]["body"];

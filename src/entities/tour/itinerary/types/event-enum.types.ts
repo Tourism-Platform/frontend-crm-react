@@ -11,7 +11,8 @@ export const ENUM_EVENT = {
 	ACTIVITY: "activity",
 	GUIDE: "guide",
 	EVENT_LIBRARY: "event-library",
-	ITINERARY_LIBRARY: "itinerary-library"
+	ITINERARY_LIBRARY: "itinerary-library",
+	PACKAGE: "package"
 } as const;
 
 export type ENUM_EVENT_TYPE = (typeof ENUM_EVENT)[keyof typeof ENUM_EVENT];

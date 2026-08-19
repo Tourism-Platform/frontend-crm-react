@@ -768,6 +768,21 @@ export interface AdminUserView {
 	agency_id?: string | null;
 }
 
+/** AgencyDiscountUpdate */
+export interface AgencyDiscountUpdate {
+	/**
+	 * Discount
+	 * The markup calculation strategy.
+	 */
+	discount:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseInput)
+		| ({
+				typ: "percentage";
+		  } & PercentageMarkup);
+}
+
 /** AgencyFilesModel */
 export interface AgencyFilesModel {
 	/**
@@ -858,6 +873,30 @@ export interface AgencyInfoUpdate {
 	country?: string | null;
 }
 
+/**
+ * AgencyInvite
+ * One-time creation of an agency owner on the agency's behalf. Only the
+ * email is required — the account activates on first Google SSO or, when a
+ * password is set, email + password sign-in.
+ *
+ * Check:
+ * - GET /operator/agencies/partnered — where the invitee shows up
+ * - PATCH /operator/agencies/{agency_id}/discount — per-partner pricing
+ */
+export interface AgencyInvite {
+	/**
+	 * Email
+	 * @format email
+	 * @maxLength 255
+	 */
+	email: string;
+	/** Password */
+	password?: string | null;
+	/** Name */
+	name?: string | null;
+	info?: AgencyInfoUpdate | null;
+}
+
 /** AgencyListItem */
 export interface AgencyListItem {
 	/**
@@ -906,98 +945,6 @@ export interface AgencyModel {
 	id: string;
 	/** Name */
 	name: string;
-}
-
-/** AnyEventWithCost */
-export interface AnyEventWithCostInput {
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
-	/** Option Id */
-	option_id?: string | null;
-	/** Event */
-	event:
-		| (
-				| ({
-						typ: "activity";
-				  } & ActivitySingleEventInput)
-				| ({
-						typ: "bus";
-				  } & BusSingleEventInput)
-				| ({
-						typ: "flight";
-				  } & FlightSingleEventInput)
-				| ({
-						typ: "guide";
-				  } & GuideSingleEventInput)
-				| ({
-						typ: "housing";
-				  } & HousingSingleEventInput)
-				| ({
-						typ: "ref";
-				  } & InformationSingleEventInput)
-				| ({
-						typ: "supplementary";
-				  } & SupplementarySingleEventInput)
-				| ({
-						typ: "train";
-				  } & TrainSingleEventInput)
-				| ({
-						typ: "transfer";
-				  } & TransferSingleEventInput)
-		  )
-		| MultiEventReadInput;
-	cost: TourMinMaxCostSchemaInput;
-	markup: TourMinMaxCostSchemaInput;
-	guide_typ?: GuideType | null;
-}
-
-/** AnyEventWithCost */
-export interface AnyEventWithCostOutput {
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
-	/** Option Id */
-	option_id?: string | null;
-	/** Event */
-	event:
-		| (
-				| ({
-						typ: "activity";
-				  } & ActivitySingleEventOutput)
-				| ({
-						typ: "bus";
-				  } & BusSingleEventOutput)
-				| ({
-						typ: "flight";
-				  } & FlightSingleEventOutput)
-				| ({
-						typ: "guide";
-				  } & GuideSingleEventOutput)
-				| ({
-						typ: "housing";
-				  } & HousingSingleEventOutput)
-				| ({
-						typ: "ref";
-				  } & InformationSingleEventOutput)
-				| ({
-						typ: "supplementary";
-				  } & SupplementarySingleEventOutput)
-				| ({
-						typ: "train";
-				  } & TrainSingleEventOutput)
-				| ({
-						typ: "transfer";
-				  } & TransferSingleEventOutput)
-		  )
-		| MultiEventReadOutput;
-	cost: TourMinMaxCostSchemaOutput;
-	markup: TourMinMaxCostSchemaOutput;
-	guide_typ?: GuideType | null;
 }
 
 /** AuthUserIn */
@@ -1409,7 +1356,8 @@ export interface BookingItineraryResponse {
  * BookingOrderClientDetail
  * Agency/tourist-facing order detail: instead of echoing the caller's own
  * identity it carries the ``operator`` contact block — who to reach about
- * this booking.
+ * this booking. ``discount`` is the partner discount frozen into the booking
+ * snapshot at creation.
  */
 export interface BookingOrderClientDetail {
 	order: BookingOrderResponse;
@@ -1422,6 +1370,20 @@ export interface BookingOrderClientDetail {
 	 * in yet.
 	 */
 	operator: OrderOperatorInfo;
+	/**
+	 * Discount
+	 * The markup calculation strategy.
+	 */
+	discount?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /**
@@ -2631,6 +2593,102 @@ export interface EventLibraryResponse {
 	image_paths?: string[];
 	/** Primary Image Path */
 	primary_image_path?: string | null;
+}
+
+/**
+ * EventLine
+ * One event slot on a summary line: the slot id and its full payload.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/summary`` for the quote these appear in
+ */
+export interface EventLineInput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivitySingleEventInput)
+				| ({
+						typ: "bus";
+				  } & BusSingleEventInput)
+				| ({
+						typ: "flight";
+				  } & FlightSingleEventInput)
+				| ({
+						typ: "guide";
+				  } & GuideSingleEventInput)
+				| ({
+						typ: "housing";
+				  } & HousingSingleEventInput)
+				| ({
+						typ: "ref";
+				  } & InformationSingleEventInput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementarySingleEventInput)
+				| ({
+						typ: "train";
+				  } & TrainSingleEventInput)
+				| ({
+						typ: "transfer";
+				  } & TransferSingleEventInput)
+		  )
+		| MultiEventReadInput;
+}
+
+/**
+ * EventLine
+ * One event slot on a summary line: the slot id and its full payload.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/summary`` for the quote these appear in
+ */
+export interface EventLineOutput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivitySingleEventOutput)
+				| ({
+						typ: "bus";
+				  } & BusSingleEventOutput)
+				| ({
+						typ: "flight";
+				  } & FlightSingleEventOutput)
+				| ({
+						typ: "guide";
+				  } & GuideSingleEventOutput)
+				| ({
+						typ: "housing";
+				  } & HousingSingleEventOutput)
+				| ({
+						typ: "ref";
+				  } & InformationSingleEventOutput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementarySingleEventOutput)
+				| ({
+						typ: "train";
+				  } & TrainSingleEventOutput)
+				| ({
+						typ: "transfer";
+				  } & TransferSingleEventOutput)
+		  )
+		| MultiEventReadOutput;
 }
 
 /** EventOptionalSchema */
@@ -6374,7 +6432,80 @@ export interface OrderUserInfo {
 	phone_number?: string | null;
 }
 
-/** PackageCreate */
+/**
+ * PackageBillable
+ * Every event of one package, priced once for the bundle. ``min`` is zero
+ * when only optional events reach the package, so the option's minimum leaves
+ * it out exactly as the totals do. ``events`` is empty when the package is
+ * reached only through choice alternatives — the money still sits on this line
+ * so the itemization reconciles with the totals.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/summary`` for the quote this belongs to
+ * - ``/tour/{tour_id}/{option_id}/package/{package_id}`` for the package itself
+ */
+export interface PackageBillableInput {
+	/**
+	 * Typ
+	 * @default "package_bill"
+	 */
+	typ?: "package_bill";
+	/**
+	 * Identity of the package a summary line bills through.
+	 *
+	 * Check
+	 *
+	 * - ``/tour/{tour_id}/{option_id}/package/{package_id}`` for the package itself
+	 */
+	package: PackageRef;
+	/** Events */
+	events: EventLineInput[];
+	cost: TourMinMaxCostSchemaInput;
+	markup: TourMinMaxCostSchemaInput;
+	fees: TourMinMaxCostSchemaInput;
+}
+
+/**
+ * PackageBillable
+ * Every event of one package, priced once for the bundle. ``min`` is zero
+ * when only optional events reach the package, so the option's minimum leaves
+ * it out exactly as the totals do. ``events`` is empty when the package is
+ * reached only through choice alternatives — the money still sits on this line
+ * so the itemization reconciles with the totals.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/summary`` for the quote this belongs to
+ * - ``/tour/{tour_id}/{option_id}/package/{package_id}`` for the package itself
+ */
+export interface PackageBillableOutput {
+	/**
+	 * Typ
+	 * @default "package_bill"
+	 */
+	typ?: "package_bill";
+	/**
+	 * Identity of the package a summary line bills through.
+	 *
+	 * Check
+	 *
+	 * - ``/tour/{tour_id}/{option_id}/package/{package_id}`` for the package itself
+	 */
+	package: PackageRef;
+	/** Events */
+	events: EventLineOutput[];
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+}
+
+/**
+ * PackageCreate
+ * A package starts as a name and nothing else — the operator groups the
+ * events first and prices the bundle once the supplier quotes it. An unpriced
+ * package bills zero, which the publish gate refuses.
+ */
 export interface PackageCreate {
 	/** Name */
 	name: string;
@@ -6382,13 +6513,16 @@ export interface PackageCreate {
 	 * Expenses
 	 * The expense calculation strategy.
 	 */
-	expenses:
-		| ({
-				typ: "fixed";
-		  } & FixedExpenseInput)
-		| ({
-				typ: "per_person";
-		  } & PerPersonExpenseInput);
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseInput)
+		  )
+		| null;
 	fees?: FixedExpenseInput | null;
 	/**
 	 * Markup
@@ -6408,7 +6542,29 @@ export interface PackageCreate {
 	supplier_id?: string | null;
 }
 
-/** PackageUpdate */
+/**
+ * PackageRef
+ * Identity of the package a summary line bills through.
+ *
+ * Check
+ *
+ * - ``/tour/{tour_id}/{option_id}/package/{package_id}`` for the package itself
+ */
+export interface PackageRef {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+}
+
+/**
+ * PackageUpdate
+ * Partial update: an omitted field is left alone, an explicit ``null``
+ * clears it. ``name`` is the one column that cannot be cleared.
+ */
 export interface PackageUpdate {
 	/** Name */
 	name?: string | null;
@@ -6443,6 +6599,64 @@ export interface PackageUpdate {
 		| null;
 	/** Supplier Id */
 	supplier_id?: string | null;
+}
+
+/** PartneredAgencyItem */
+export interface PartneredAgencyItem {
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agency_id: string;
+	/** Name */
+	name: string;
+	/** Invited Email */
+	invited_email: string;
+	/** Invited User Id */
+	invited_user_id?: string | null;
+	/**
+	 * Partnered At
+	 * @format date-time
+	 */
+	partnered_at: string;
+	/**
+	 * Discount
+	 * The markup calculation strategy.
+	 */
+	discount?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Business Name */
+	business_name?: string | null;
+	/** Contact Person */
+	contact_person?: string | null;
+	/** Contact Email */
+	contact_email?: string | null;
+	/** Contact Phone */
+	contact_phone?: string | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
+	/** Website Url */
+	website_url?: string | null;
+	/** Logo Url */
+	logo_url?: string | null;
+}
+
+/** PartneredAgencyListResponse */
+export interface PartneredAgencyListResponse {
+	/** Total Count */
+	total_count: number;
+	/** Data */
+	data: PartneredAgencyItem[];
 }
 
 /** PasswordChangeIn */
@@ -6999,13 +7213,16 @@ export interface PricingPackageInput {
 	 * Expenses
 	 * The expense calculation strategy.
 	 */
-	expenses:
-		| ({
-				typ: "fixed";
-		  } & FixedExpenseInput)
-		| ({
-				typ: "per_person";
-		  } & PerPersonExpenseInput);
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseInput)
+		  )
+		| null;
 	fees?: FixedExpenseInput | null;
 	/**
 	 * Markup
@@ -7046,13 +7263,16 @@ export interface PricingPackageOutput {
 	 * Expenses
 	 * The expense calculation strategy.
 	 */
-	expenses:
-		| ({
-				typ: "fixed";
-		  } & FixedExpenseOutput)
-		| ({
-				typ: "per_person";
-		  } & PerPersonExpenseOutput);
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseOutput)
+		  )
+		| null;
 	fees?: FixedExpenseOutput | null;
 	/**
 	 * Markup
@@ -7118,6 +7338,22 @@ export interface PublicTourCatalogSchemaInput {
 	price_per_person: PriceRangeSchema | null;
 	/** Option Count */
 	option_count?: number | null;
+	public_price_range?: PriceRangeSchema | null;
+	public_price_per_person?: PriceRangeSchema | null;
+	/**
+	 * Discount
+	 * The markup calculation strategy.
+	 */
+	discount?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** PublicTourCatalogSchema */
@@ -7160,6 +7396,22 @@ export interface PublicTourCatalogSchemaOutput {
 	price_per_person: PriceRangeSchema | null;
 	/** Option Count */
 	option_count?: number | null;
+	public_price_range?: PriceRangeSchema | null;
+	public_price_per_person?: PriceRangeSchema | null;
+	/**
+	 * Discount
+	 * The markup calculation strategy.
+	 */
+	discount?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /**
@@ -7480,6 +7732,122 @@ export interface StaffUpdate {
 	status?: StaffUpdateStatusEnum | null;
 	/** Commission Percent */
 	commission_percent?: number | null;
+}
+
+/**
+ * StandaloneBillable
+ * One event that prices itself: its own cost and markup across the option's
+ * cheapest and dearest resolutions over the tour's allowed group-size range.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/summary`` for the quote this belongs to
+ * - ``/tour/{tour_id}/{option_id}/package`` for the packages events can join
+ */
+export interface StandaloneBillableInput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivitySingleEventInput)
+				| ({
+						typ: "bus";
+				  } & BusSingleEventInput)
+				| ({
+						typ: "flight";
+				  } & FlightSingleEventInput)
+				| ({
+						typ: "guide";
+				  } & GuideSingleEventInput)
+				| ({
+						typ: "housing";
+				  } & HousingSingleEventInput)
+				| ({
+						typ: "ref";
+				  } & InformationSingleEventInput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementarySingleEventInput)
+				| ({
+						typ: "train";
+				  } & TrainSingleEventInput)
+				| ({
+						typ: "transfer";
+				  } & TransferSingleEventInput)
+		  )
+		| MultiEventReadInput;
+	/**
+	 * Typ
+	 * @default "individual_bill"
+	 */
+	typ?: "individual_bill";
+	cost: TourMinMaxCostSchemaInput;
+	markup: TourMinMaxCostSchemaInput;
+	fees: TourMinMaxCostSchemaInput;
+}
+
+/**
+ * StandaloneBillable
+ * One event that prices itself: its own cost and markup across the option's
+ * cheapest and dearest resolutions over the tour's allowed group-size range.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/summary`` for the quote this belongs to
+ * - ``/tour/{tour_id}/{option_id}/package`` for the packages events can join
+ */
+export interface StandaloneBillableOutput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Event */
+	event:
+		| (
+				| ({
+						typ: "activity";
+				  } & ActivitySingleEventOutput)
+				| ({
+						typ: "bus";
+				  } & BusSingleEventOutput)
+				| ({
+						typ: "flight";
+				  } & FlightSingleEventOutput)
+				| ({
+						typ: "guide";
+				  } & GuideSingleEventOutput)
+				| ({
+						typ: "housing";
+				  } & HousingSingleEventOutput)
+				| ({
+						typ: "ref";
+				  } & InformationSingleEventOutput)
+				| ({
+						typ: "supplementary";
+				  } & SupplementarySingleEventOutput)
+				| ({
+						typ: "train";
+				  } & TrainSingleEventOutput)
+				| ({
+						typ: "transfer";
+				  } & TransferSingleEventOutput)
+		  )
+		| MultiEventReadOutput;
+	/**
+	 * Typ
+	 * @default "individual_bill"
+	 */
+	typ?: "individual_bill";
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
 }
 
 /** SupplementaryDetails */
@@ -8608,12 +8976,15 @@ export interface TourPackageModel {
 	 * The expense calculation strategy.
 	 */
 	expenses:
-		| ({
-				typ: "fixed";
-		  } & FixedExpenseOutput)
-		| ({
-				typ: "per_person";
-		  } & PerPersonExpenseOutput);
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonExpenseOutput)
+		  )
+		| null;
 	fees: FixedExpenseOutput | null;
 	/**
 	 * Markup
@@ -8703,6 +9074,20 @@ export interface TourSnapshotSchemaInput {
 	operator_financials?: PricingFinancialsInput | null;
 	/** Fx Rates */
 	fx_rates?: FrozenFxRateInput[];
+	/**
+	 * Agency Discount
+	 * The markup calculation strategy.
+	 */
+	agency_discount?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /**
@@ -8724,6 +9109,20 @@ export interface TourSnapshotSchemaOutput {
 	operator_financials?: PricingFinancialsOutput | null;
 	/** Fx Rates */
 	fx_rates?: FrozenFxRateOutput[];
+	/**
+	 * Agency Discount
+	 * The markup calculation strategy.
+	 */
+	agency_discount?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /**
@@ -8731,20 +9130,21 @@ export interface TourSnapshotSchemaOutput {
  * Tour-level order, revenue & profit statistics, all in the operator's base
  * currency. Every field defaults to 0 so the endpoint never returns null/empty.
  *
- * Planned figures are catalog projections — independent of orders — so they
- * show as soon as a tour has priced options. They are ``min``/``max`` ranges:
- * the spread comes from category alternatives (cheapest vs dearest room/car/
- * option) and the tour's pax range (``group_size_min`` → ``group_size``), rolled
- * up across the tour's options (min of option mins, max of option maxes).
+ * Planned figures are summed over the confirmed booking set, each order priced
+ * from its own frozen snapshot — the pax, the categories the client actually
+ * chose and the FX table pinned at booking time — through the same
+ * ``planned_of`` the reconciliation board and the order detail use. A tour
+ * with no orders therefore reports 0, not a catalog projection; live option
+ * pricing is what ``/tour/{id}/option/{id}/summary`` and the catalog are for.
+ * An order whose snapshot cannot be priced (operator financials wiped, an
+ * unregistered FX pair) contributes 0 rather than failing the response.
  *
- * - ``planned_revenue_min``/``planned_revenue_max`` — planned gross agency price
- *   (cost+markup+fees+taxes) from current event pricing.
- * - ``planned_cost_min``/``planned_cost_max`` — planned supplier cost.
- * - ``planned_profit_min`` = revenue_min − cost_max (worst margin);
- *   ``planned_profit_max`` = revenue_max − cost_min (best margin).
+ * - ``planned_revenue`` — planned gross agency price (cost+markup+fees+taxes).
+ * - ``planned_cost`` — planned supplier cost.
+ * - ``planned_profit`` = planned_revenue − planned_cost.
  *
- * Realized figures are over the confirmed booking set ({CONFIRMED, IN_PROGRESS,
- * COMPLETED}):
+ * Realized figures are over the same confirmed booking set ({CONFIRMED,
+ * IN_PROGRESS, COMPLETED}):
  *
  * - ``confirmed_revenue`` — actually billed: sum of issued invoice totals.
  * - ``real_cost`` — actually recorded supplier-payment ledger, FX-converted to
@@ -8788,41 +9188,23 @@ export interface TourStatisticsResponse {
 	 */
 	tourists?: number;
 	/**
-	 * Planned Revenue Min
+	 * Planned Revenue
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	planned_revenue_min?: string;
+	planned_revenue?: string;
 	/**
-	 * Planned Revenue Max
+	 * Planned Cost
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	planned_revenue_max?: string;
+	planned_cost?: string;
 	/**
-	 * Planned Cost Min
+	 * Planned Profit
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	planned_cost_min?: string;
-	/**
-	 * Planned Cost Max
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	planned_cost_max?: string;
-	/**
-	 * Planned Profit Min
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	planned_profit_min?: string;
-	/**
-	 * Planned Profit Max
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	planned_profit_max?: string;
+	planned_profit?: string;
 	/**
 	 * Confirmed Revenue
 	 * @default "0"
@@ -8895,7 +9277,14 @@ export interface TourSummaryResponse {
 	 */
 	id: string;
 	/** Events */
-	events: AnyEventWithCostOutput[];
+	events: (
+		| ({
+				typ: "individual_bill";
+		  } & StandaloneBillableOutput)
+		| ({
+				typ: "package_bill";
+		  } & PackageBillableOutput)
+	)[];
 	cost: TourMinMaxCostSchemaOutput;
 	markup: TourMinMaxCostSchemaOutput;
 	fees: TourMinMaxCostSchemaOutput;
@@ -11116,18 +11505,23 @@ export interface GetPublicTourScheduleTourTourIdPublicScheduleGetParams {
 
 export interface CreatePackageTourTourIdOptionIdPackagePostParams {
 	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
 	 * Tour Id
 	 * @format uuid
 	 */
 	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 }
 
 export interface ListPackagesTourTourIdOptionIdPackageGetParams {
+	/**
+	 * Q
+	 * Filter by package name
+	 */
+	q?: string | null;
 	/**
 	 * Option Id
 	 * @format uuid
@@ -11160,6 +11554,11 @@ export interface GetPackageTourTourIdOptionIdPackagePackageIdGetParams {
 
 export interface UpdatePackageTourTourIdOptionIdPackagePackageIdPatchParams {
 	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
 	 * Option Id
 	 * @format uuid
 	 */
@@ -11169,15 +11568,15 @@ export interface UpdatePackageTourTourIdOptionIdPackagePackageIdPatchParams {
 	 * @format uuid
 	 */
 	packageId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
 }
 
 export interface DeletePackageTourTourIdOptionIdPackagePackageIdDeleteParams {
 	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
 	 * Option Id
 	 * @format uuid
 	 */
@@ -11187,11 +11586,6 @@ export interface DeletePackageTourTourIdOptionIdPackagePackageIdDeleteParams {
 	 * @format uuid
 	 */
 	packageId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
 }
 
 export interface ListToursTourGetParams {
@@ -11370,6 +11764,66 @@ export interface RemoveFileOperatorMeFilesFileIdDeleteParams {
 	 * @format uuid
 	 */
 	fileId: string;
+}
+
+export interface ListPartneredAgenciesOperatorAgenciesPartneredGetParams {
+	/** Q */
+	q?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListAgenciesOperatorAgenciesAllGetParams {
+	/** Q */
+	q?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface GetAgencyInfoByIdOperatorAgenciesAgencyIdInfoGetParams {
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agencyId: string;
+}
+
+export interface SetAgencyDiscountOperatorAgenciesAgencyIdDiscountPatchParams {
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agencyId: string;
+}
+
+export interface DeleteAgencyDiscountOperatorAgenciesAgencyIdDiscountDeleteParams {
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agencyId: string;
 }
 
 export interface ListStaffOperatorStaffAllGetParams {
@@ -11642,32 +12096,6 @@ export interface DeleteLogoSupplierSupplierIdLogoDeleteParams {
 	 * @format uuid
 	 */
 	supplierId: string;
-}
-
-export interface ListAgenciesAgencyGetParams {
-	/** Q */
-	q?: string | null;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface GetAgencyInfoByIdAgencyAgencyIdInfoGetParams {
-	/**
-	 * Agency Id
-	 * @format uuid
-	 */
-	agencyId: string;
 }
 
 export interface ListAgencyDocumentsAgencyMeDocumentsGetParams {

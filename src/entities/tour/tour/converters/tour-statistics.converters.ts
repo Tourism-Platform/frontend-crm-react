@@ -7,8 +7,8 @@ export const mapTourStatisticsToFrontend = (
 	data: TourStatisticsResponse
 ): ITourStatistics => {
 	const confirmed = data.confirmed_revenue ?? "0";
-	const plannedMin = data.planned_revenue_min ?? "0";
-	const plannedMax = data.planned_revenue_max ?? "0";
+	const plannedMin = data.planned_revenue ?? "0";
+	const plannedMax = data.confirmed_revenue ?? "0";
 
 	return {
 		totalOrders: data.total_orders ?? 0,

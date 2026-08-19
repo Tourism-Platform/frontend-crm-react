@@ -1,8 +1,7 @@
-import type { AgencyListItem } from "@/shared/api";
+import type { TOperatorAgencyListItemBackend } from "../types";
 
-export const AGENCY_LIST_MOCK: AgencyListItem[] = Array.from(
-	{ length: 40 },
-	(_, index) => {
+export const OPERATOR_AGENCY_LIST_MOCK: TOperatorAgencyListItemBackend[] =
+	Array.from({ length: 40 }, (_, index) => {
 		const n = index + 1;
 		return {
 			id: `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`,
@@ -18,5 +17,4 @@ export const AGENCY_LIST_MOCK: AgencyListItem[] = Array.from(
 			website_url: `https://agency${n}.example.com`,
 			logo_url: null
 		};
-	}
-);
+	});

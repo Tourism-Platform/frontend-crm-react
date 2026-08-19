@@ -87,8 +87,8 @@ export const mapPackageToForm = (
 	const expenses = backend.expenses;
 	const feesVal = backend.fees?.cost?.val;
 	const markup = mapMarkupFromBackend(backend.markup);
-	const isPerPerson = expenses.typ === "per_person";
-	const cost = isPerPerson ? expenses.cost_per_person : expenses.cost;
+	const isPerPerson = expenses?.typ === "per_person";
+	const cost = isPerPerson ? expenses?.cost_per_person : expenses?.cost;
 
 	return {
 		[ENUM_PACKAGE_FIELD.NAME]: backend.name ?? "",

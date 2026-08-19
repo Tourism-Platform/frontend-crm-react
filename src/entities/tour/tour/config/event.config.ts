@@ -76,6 +76,12 @@ export const EVENT_METADATA: Record<
 		icon: Calendar,
 		color_text: "text-blue-500",
 		color_bg: "bg-blue-500"
+	},
+	[ENUM_EVENT.PACKAGE]: {
+		title: "Package",
+		icon: BoxOutlineIcon,
+		color_text: "text-indigo-600",
+		color_bg: "bg-indigo-600"
 	}
 };
 

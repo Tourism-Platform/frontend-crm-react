@@ -1,16 +1,13 @@
 import { format } from "date-fns";
 
-import type {
-	AnyEventWithCostOutput,
-	EmptyDetails,
-	HousingDetailsSchemaOutput,
-	MultiEventReadOutput,
-	TimeSchema,
-	TransferDetailsSchemaOutput
-} from "@/shared/api";
-
 import {
+	type TEmptyDetailsBackend,
 	type TEventImageBackend,
+	type THousingDetailsBackend,
+	type TMultiEventDetailBackend,
+	type TOperatorEventBackend,
+	type TTimeSchemaBackend,
+	type TTransferDetailsBackend,
 	accommodationAmenityConverter,
 	mapEventImageToFrontend
 } from "@/entities/tour/itinerary";
@@ -29,9 +26,7 @@ import {
 	mapSheetRoomsFromExpenses
 } from "./preview-option-sheet.converters";
 
-type TOperatorEvent = AnyEventWithCostOutput["event"];
-type TOperatorDetail = NonNullable<MultiEventReadOutput["details"]>[number];
-type TOperatorSheetSource = TOperatorEvent | TOperatorDetail;
+type TOperatorSheetSource = TOperatorEventBackend | TMultiEventDetailBackend;
 
 const mapHopToSegment = (
 	hop: {
@@ -43,19 +38,19 @@ const mapHopToSegment = (
 		arrival_location?: unknown;
 		departure_date?: string;
 		arrival_date?: string;
-		departure_time?: TimeSchema;
-		arrival_time?: TimeSchema;
+		departure_time?: TTimeSchemaBackend;
+		arrival_time?: TTimeSchemaBackend;
 		departure_terminal?: string;
 		departure_gate?: string;
 		departure?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TimeSchema;
+			time?: TTimeSchemaBackend;
 		};
 		arrival?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TimeSchema;
+			time?: TTimeSchemaBackend;
 		};
 	},
 	routeLabel: string
@@ -110,7 +105,7 @@ const mapSheetExtraFromOperator = (
 	switch (typ) {
 		case "transfer": {
 			const transferDetails = details as
-				| TransferDetailsSchemaOutput
+				| TTransferDetailsBackend
 				| null
 				| undefined;
 			return {
@@ -126,7 +121,7 @@ const mapSheetExtraFromOperator = (
 		}
 		case "housing": {
 			const housingDetails = details as
-				| HousingDetailsSchemaOutput
+				| THousingDetailsBackend
 				| null
 				| undefined;
 			return {
@@ -144,8 +139,8 @@ const mapSheetExtraFromOperator = (
 			const activityDetails = details as
 				| {
 						location?: unknown;
-						start_time?: TimeSchema | null;
-						end_time?: TimeSchema | null;
+						start_time?: TTimeSchemaBackend | null;
+						end_time?: TTimeSchemaBackend | null;
 				  }
 				| null
 				| undefined;
@@ -179,7 +174,7 @@ const mapSheetExtraFromOperator = (
 			};
 		}
 		case "ref": {
-			const infoDetails = details as EmptyDetails | undefined;
+			const infoDetails = details as TEmptyDetailsBackend | undefined;
 			return {
 				kind: "info",
 				startTime: formatPubTime(infoDetails?.start_time ?? undefined),

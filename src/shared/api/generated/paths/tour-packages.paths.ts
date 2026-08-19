@@ -10,7 +10,7 @@ export const TOUR_PACKAGES_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: void;
+				query: { q?: string | null };
 				response: TourPackageModel[];
 			}
 		}) as const,

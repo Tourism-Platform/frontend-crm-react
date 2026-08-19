@@ -2,8 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useDebounce } from "@/shared/hooks";
 
-import { useListAgenciesQuery } from "../api";
-import type { TAgencyListItem, TAgencySelectOption } from "../types";
+import {
+	type IOperatorAgencyListItem,
+	useListOperatorAgenciesQuery
+} from "@/entities/user/operator";
+
+import type { TAgencySelectOption } from "../types";
 
 const DEFAULT_LIMIT = 20;
 const DEFAULT_DEBOUNCE_MS = 300;
@@ -12,7 +16,6 @@ type TUseAgencySearchOptionsParams = {
 	limit?: number;
 	debounceMs?: number;
 	enabled?: boolean;
-	status?: string;
 };
 
 type TUseAgencySearchOptionsResult = {
@@ -25,7 +28,7 @@ type TUseAgencySearchOptionsResult = {
 	loadMore: () => void;
 };
 
-const toOption = (item: TAgencyListItem): TAgencySelectOption => ({
+const toOption = (item: IOperatorAgencyListItem): TAgencySelectOption => ({
 	value: item.id,
 	label: item.businessName || item.name,
 	name: item.name,
@@ -41,13 +44,14 @@ export const useAgencySearchOptions = (
 	const {
 		limit = DEFAULT_LIMIT,
 		debounceMs = DEFAULT_DEBOUNCE_MS,
-		enabled = true,
-		status
+		enabled = true
 	} = params;
 
 	const [query, setQuery] = useState("");
 	const [page, setPage] = useState(1);
-	const [accumulated, setAccumulated] = useState<TAgencyListItem[]>([]);
+	const [accumulated, setAccumulated] = useState<IOperatorAgencyListItem[]>(
+		[]
+	);
 	const [totalCount, setTotalCount] = useState(0);
 	const requestIdRef = useRef(0);
 	const debouncedQuery = useDebounce(query, debounceMs);
@@ -58,17 +62,17 @@ export const useAgencySearchOptions = (
 		setPage(1);
 		setAccumulated([]);
 		setTotalCount(0);
-	}, [trimmedQuery, status]);
+	}, [trimmedQuery]);
 
-	const { data, isLoading, isFetching, isSuccess } = useListAgenciesQuery(
-		{
-			search: trimmedQuery || undefined,
-			status,
-			page,
-			limit
-		},
-		{ skip: !enabled }
-	);
+	const { data, isLoading, isFetching, isSuccess } =
+		useListOperatorAgenciesQuery(
+			{
+				search: trimmedQuery || undefined,
+				page,
+				limit
+			},
+			{ skip: !enabled }
+		);
 
 	useEffect(() => {
 		if (!data || !isSuccess) {

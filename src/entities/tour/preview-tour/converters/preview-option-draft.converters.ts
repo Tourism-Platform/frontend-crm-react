@@ -1,12 +1,12 @@
-import type {
-	AnyEventWithCostOutput,
-	MultiEventReadOutput,
-	TourSummaryResponse
-} from "@/shared/api";
-
 import {
 	ENUM_EVENT_BACKEND,
-	type ENUM_EVENT_BACKEND_TYPE
+	type ENUM_EVENT_BACKEND_TYPE,
+	type TGetTourSummaryBackendResponce,
+	type TMultiEventDetailBackend,
+	type TMultiEventReadBackend,
+	type TOperatorEventBackend,
+	type TStandaloneBillableBackend,
+	type TTourSummaryEventBackend
 } from "@/entities/tour/itinerary";
 
 import type {
@@ -25,11 +25,12 @@ import { buildSheetFromOperatorEvent } from "./preview-option-draft-sheet.conver
 import { mapPreviewBackendTypToEventType } from "./preview-option-event-type.converters";
 import { formatLocation, isLocationOut } from "./preview-option-location.utils";
 
-type TOperatorEvent = AnyEventWithCostOutput["event"];
-type TOperatorDetail = NonNullable<MultiEventReadOutput["details"]>[number];
+const isStandaloneBillable = (
+	item: TTourSummaryEventBackend
+): item is TStandaloneBillableBackend => "event_id" in item && "event" in item;
 
 const extractCityFromOperatorEvent = (
-	event: TOperatorEvent
+	event: TOperatorEventBackend
 ): string | undefined => {
 	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
 		const first = event.details?.[0];
@@ -81,7 +82,7 @@ const extractCityFromOperatorEvent = (
 const mapDetailToSubOption = (
 	parentKey: string,
 	index: number,
-	detail: TOperatorDetail
+	detail: TMultiEventDetailBackend
 ): ISubOption => ({
 	id: `${parentKey}-sub-${index}`,
 	title: detail.name || "",
@@ -89,7 +90,9 @@ const mapDetailToSubOption = (
 	sheet: buildSheetFromOperatorEvent(detail)
 });
 
-const mapMultiplyOptionEvent = (event: MultiEventReadOutput): IOptionEvent => {
+const mapMultiplyOptionEvent = (
+	event: TMultiEventReadBackend
+): IOptionEvent => {
 	const eventKey = `d${event.day}-p${event.position}`;
 
 	return {
@@ -104,7 +107,7 @@ const mapMultiplyOptionEvent = (event: MultiEventReadOutput): IOptionEvent => {
 	};
 };
 
-const mapSingleOperatorEvent = (event: TOperatorEvent): IOptionEvent => {
+const mapSingleOperatorEvent = (event: TOperatorEventBackend): IOptionEvent => {
 	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
 		return mapMultiplyOptionEvent(event);
 	}
@@ -127,11 +130,13 @@ const mapSingleOperatorEvent = (event: TOperatorEvent): IOptionEvent => {
 };
 
 const groupOperatorEventsIntoDays = (
-	events: AnyEventWithCostOutput[]
+	events: TTourSummaryEventBackend[]
 ): IOptionDay[] => {
-	const byDay = new Map<number, TOperatorEvent[]>();
+	const byDay = new Map<number, TOperatorEventBackend[]>();
 
 	for (const item of events) {
+		if (!isStandaloneBillable(item)) continue;
+
 		const event = item.event;
 		const day = "day" in event ? event.day : 0;
 		const list = byDay.get(day) ?? [];
@@ -160,7 +165,7 @@ const groupOperatorEventsIntoDays = (
 };
 
 export const mapDraftPreviewOptionToFrontend = (
-	backend: TourSummaryResponse,
+	backend: TGetTourSummaryBackendResponce,
 	title = ""
 ): IOptionDetail => ({
 	id: backend.id,

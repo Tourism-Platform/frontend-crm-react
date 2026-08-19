@@ -1,26 +1,25 @@
 import {
-	type AnyEventWithCostOutput,
-	Currency,
-	type TourMinMaxCostSchemaOutput,
-	type TourSummaryResponse
-} from "@/shared/api";
-
-import {
 	MOCK_EVENT_IDS,
 	MOCK_TOUR_ID,
 	MOCK_TOUR_OPTION_ID
 } from "@/entities/booking/order/mock/booking-order.mock.constants";
-import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary";
 
-const costRange = (min: number, max: number): TourMinMaxCostSchemaOutput => ({
-	min: { val: min, currency: Currency.USD },
-	max: { val: max, currency: Currency.USD }
+import {
+	ENUM_EVENT_BACKEND,
+	type TGetTourSummaryBackendResponce,
+	type TTourMinMaxCostBackend,
+	type TTourSummaryEventBackend
+} from "../types";
+
+const costRange = (min: number, max: number): TTourMinMaxCostBackend => ({
+	min: { val: min },
+	max: { val: max }
 });
 
-const MOCK_EVENTS: AnyEventWithCostOutput[] = [
+const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 	{
 		event_id: "event_1",
-		option_id: MOCK_TOUR_OPTION_ID,
+		typ: "individual_bill",
 		event: {
 			typ: ENUM_EVENT_BACKEND.FLIGHT,
 			name: "International Flight: London - Tashkent",
@@ -30,11 +29,12 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 			details: null
 		},
 		cost: costRange(1000, 1200),
-		markup: costRange(100, 150)
+		markup: costRange(100, 150),
+		fees: costRange(0, 0)
 	},
 	{
 		event_id: "event_2",
-		option_id: MOCK_TOUR_OPTION_ID,
+		typ: "individual_bill",
 		event: {
 			typ: ENUM_EVENT_BACKEND.OPTIONS,
 			day: 2,
@@ -55,11 +55,12 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 			]
 		},
 		cost: costRange(800, 1200),
-		markup: costRange(80, 120)
+		markup: costRange(80, 120),
+		fees: costRange(0, 0)
 	},
 	{
 		event_id: "event_3",
-		option_id: MOCK_TOUR_OPTION_ID,
+		typ: "individual_bill",
 		event: {
 			typ: ENUM_EVENT_BACKEND.ACTIVITY,
 			name: "City Sightseeing Tour",
@@ -69,20 +70,66 @@ const MOCK_EVENTS: AnyEventWithCostOutput[] = [
 			details: null
 		},
 		cost: costRange(250, 300),
-		markup: costRange(40, 50)
+		markup: costRange(40, 50),
+		fees: costRange(0, 0)
+	},
+	{
+		typ: "package_bill",
+		package: {
+			id: "package_1",
+			name: "City Transfer Package"
+		},
+		events: [
+			{
+				event_id: "event_4",
+				event: {
+					typ: ENUM_EVENT_BACKEND.TRANSFER,
+					name: "Airport Transfer",
+					supplier_id: "Transfer Co",
+					day: 1,
+					position: 2,
+					details: null
+				}
+			},
+			{
+				event_id: "event_5",
+				event: {
+					typ: ENUM_EVENT_BACKEND.OPTIONS,
+					day: 4,
+					position: 1,
+					details: [
+						{
+							typ: ENUM_EVENT_BACKEND.ACTIVITY,
+							name: "Museum Tour",
+							supplier_id: "Museums LLC",
+							details: null
+						},
+						{
+							typ: ENUM_EVENT_BACKEND.ACTIVITY,
+							name: "Walking Tour",
+							supplier_id: "Walks LLC",
+							details: null
+						}
+					]
+				}
+			}
+		],
+		cost: costRange(400, 500),
+		markup: costRange(40, 50),
+		fees: costRange(0, 0)
 	}
 ];
 
-const MOCK_COST_TOTAL = costRange(2050, 2700);
-const MOCK_MARKUP_TOTAL = costRange(220, 320);
+const MOCK_COST_TOTAL = costRange(2450, 3200);
+const MOCK_MARKUP_TOTAL = costRange(260, 370);
 
-export const TOUR_SUMMARY_MOCK: TourSummaryResponse = {
+export const TOUR_SUMMARY_MOCK: TGetTourSummaryBackendResponce = {
 	id: MOCK_TOUR_OPTION_ID,
 	events: MOCK_EVENTS,
 	cost: MOCK_COST_TOTAL,
 	markup: MOCK_MARKUP_TOTAL,
 	fees: costRange(0, 0),
-	total: costRange(2270, 3020)
+	total: costRange(2710, 3570)
 };
 
 export const isTourSummaryMockPair = (

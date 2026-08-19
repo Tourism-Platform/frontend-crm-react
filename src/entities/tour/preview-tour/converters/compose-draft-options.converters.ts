@@ -1,12 +1,16 @@
-import type { TourMinMaxCostSchemaOutput, TourOptionModel } from "@/shared/api";
 import { formatToDollars } from "@/shared/utils";
+
+import type {
+	TTourMinMaxCostBackend,
+	TTourOptionBackend
+} from "@/entities/tour/itinerary";
 
 import type { IPreviewOptionCard } from "../types";
 
 import { toPublicImageUrl } from "./preview-option-media.utils";
 
 export const mapDraftOptionPriceToFrontend = (
-	total?: TourMinMaxCostSchemaOutput
+	total?: TTourMinMaxCostBackend
 ): string => {
 	if (!total) return "";
 
@@ -21,8 +25,8 @@ export const mapDraftOptionPriceToFrontend = (
 };
 
 export const mapDraftOptionCardToFrontend = (
-	option: TourOptionModel,
-	total?: TourMinMaxCostSchemaOutput
+	option: TTourOptionBackend,
+	total?: TTourMinMaxCostBackend
 ): IPreviewOptionCard => ({
 	id: option.id,
 	title: option.name ?? "",

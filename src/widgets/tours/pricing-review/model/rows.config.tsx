@@ -3,7 +3,7 @@ import type { TFunction } from "i18next";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { buildRoute } from "@/shared/config";
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import { Button } from "@/shared/ui";
 
@@ -83,7 +83,11 @@ export const PRICING_REVIEW_COLUMNS = (
 				const hasSubRows = !!subRows?.length;
 				const metadata = type ? EVENT_METADATA[type] : null;
 				const Icon = metadata?.icon;
-				const title = getValue() as string;
+				const rawTitle = getValue() as string;
+				const title =
+					type === ENUM_EVENT.PACKAGE && !rawTitle.trim()
+						? t("table.untitled")
+						: rawTitle;
 				const parent = getParentRow?.();
 				const isNestedOption =
 					depth > 0 &&
@@ -95,28 +99,38 @@ export const PRICING_REVIEW_COLUMNS = (
 					: undefined;
 				const pricingTab = type ? EVENT_PRICING_TAB[type] : undefined;
 				const href =
-					eventPath && id
-						? isNestedOption && parent
-							? buildRoute(
-									eventPath,
-									{
-										tourId,
-										optionId,
-										eventId: parent.original.id,
-										eventOptionId: id
-									},
-									pricingTab ? { tab: pricingTab } : undefined
-								)
-							: buildRoute(
-									eventPath,
-									{
-										tourId,
-										optionId,
-										eventId: id
-									},
-									pricingTab ? { tab: pricingTab } : undefined
-								)
-						: undefined;
+					type === ENUM_EVENT.PACKAGE && id
+						? buildRoute(ENUM_PATH.TOURS.PACKAGE, {
+								tourId,
+								optionId,
+								packageId: id
+							})
+						: eventPath && id
+							? isNestedOption && parent
+								? buildRoute(
+										eventPath,
+										{
+											tourId,
+											optionId,
+											eventId: parent.original.id,
+											eventOptionId: id
+										},
+										pricingTab
+											? { tab: pricingTab }
+											: undefined
+									)
+								: buildRoute(
+										eventPath,
+										{
+											tourId,
+											optionId,
+											eventId: id
+										},
+										pricingTab
+											? { tab: pricingTab }
+											: undefined
+									)
+							: undefined;
 
 				return (
 					<div

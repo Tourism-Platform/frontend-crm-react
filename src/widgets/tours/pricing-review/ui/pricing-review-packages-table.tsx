@@ -69,7 +69,7 @@ const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 	const pagination = useMemo<PaginationState>(
 		() => ({
 			pageIndex: 0,
-			pageSize: Math.max(filteredPackages.length, 1)
+			pageSize: Math.max(filteredPackages.length, 10)
 		}),
 		[filteredPackages.length]
 	);

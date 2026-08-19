@@ -4,9 +4,7 @@ import type {
 	LandingPageImageModel,
 	LandingPageResponse,
 	OperatorInfoModel,
-	TourMetaResponse,
-	TourOptionModel,
-	TourSummaryResponse
+	TourMetaResponse
 } from "@/shared/api";
 import {
 	OPERATOR_PATHS,
@@ -17,6 +15,10 @@ import {
 } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
+import type {
+	TGetTourSummaryBackendResponce,
+	TTourOptionBackend
+} from "@/entities/tour/itinerary";
 
 import {
 	composeDraftLandingToPreview,
@@ -160,7 +162,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 					return { error: listResult.error };
 				}
 
-				const options = (listResult.data as TourOptionModel[]) ?? [];
+				const options = (listResult.data as TTourOptionBackend[]) ?? [];
 
 				const cards = await Promise.all(
 					options.map(async (option) => {
@@ -178,7 +180,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 						}
 
 						const summary =
-							summaryResult.data as TourSummaryResponse;
+							summaryResult.data as TGetTourSummaryBackendResponce;
 						return mapDraftOptionCardToFrontend(
 							option,
 							summary.total
@@ -212,7 +214,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 
 				return {
 					data: mapDraftPreviewOptionToFrontend(
-						summaryResult.data as TourSummaryResponse
+						summaryResult.data as TGetTourSummaryBackendResponce
 					)
 				};
 			}
