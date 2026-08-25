@@ -40,7 +40,7 @@ export const PerGuideCard: FC<IPerGuideCardProps> = ({
 	index,
 	addMarginSeparately
 }) => {
-	const { t } = useTranslation("guide_edit_page");
+	const { t } = useTranslation(["guide_edit_page", "options"]);
 	const rowFields = PER_GUIDE_ROW_FIELDS_LIST();
 	const guideType = form.watch(
 		`${ENUM_FORM_SECTION.GUIDES}.${ENUM_FORM_GUIDES.GUIDES_LIST}.${index}.${ENUM_FORM_GUIDES.GUIDE_TYPE}`
@@ -62,8 +62,9 @@ export const PerGuideCard: FC<IPerGuideCardProps> = ({
 			<CardContent className="grid gap-4">
 				<div
 					className={cn(
-						"grid grid-cols-3 gap-5",
-						addMarginSeparately && "grid-cols-[1fr_1fr_1.5fr_0.5fr]"
+						"grid max-w-3xl grid-cols-3 gap-4",
+						addMarginSeparately &&
+							"max-w-4xl grid-cols-[minmax(0,10rem)_minmax(0,10rem)_minmax(0,14rem)_minmax(0,8rem)]"
 					)}
 				>
 					{rowFields.map(({ key, ...item }, fieldIndex) => (

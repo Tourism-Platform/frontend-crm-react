@@ -10,7 +10,8 @@ import {
 	CardContent,
 	CardHeader,
 	CustomField,
-	CustomInputSelect
+	CustomInputSelect,
+	Separator
 } from "@/shared/ui";
 
 import {
@@ -66,58 +67,64 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 						`${roomsPath}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}` as const;
 
 					return (
-						<div key={field.id} className="grid gap-3">
-							<div
-								className={cn(
-									"grid grid-cols-[1fr_1fr_0.5fr_auto] gap-3 items-center",
-									addMarginSeparately &&
-										"grid-cols-[1fr_1fr_1.5fr_0.5fr_auto]"
-								)}
-							>
-								{categoryRowFields.map(
-									({ key, ...item }, fieldIndex) => (
-										<Fragment key={key}>
-											{addMarginSeparately &&
-											fieldIndex ===
-												categoryRowFields.length - 1 ? (
-												<CustomInputSelect
-													control={form.control}
-													name={`${categoryPath}.${PER_ROOM_MARKUP_FIELD.key}`}
-													label={
-														PER_ROOM_MARKUP_FIELD.label
-													}
-													placeholder={
-														PER_ROOM_MARKUP_FIELD.placeholder
-													}
-													selectOptions={[
-														...PER_ROOM_MARKUP_FIELD.selectOptions
-													]}
-													t={t}
-												/>
-											) : null}
-											<CustomField
-												control={form.control}
-												name={`${categoryPath}.${key}`}
-												t={t}
-												{...item}
-											/>
-										</Fragment>
-									)
-								)}
-								<Button
-									type="button"
-									variant="destructive"
-									size="icon"
-									onClick={() => remove(categoryIndex)}
+						<Fragment key={field.id}>
+							<div className="grid gap-3">
+								<div
+									className={cn(
+										"grid grid-cols-[1fr_1fr_0.5fr_auto] gap-3 items-center",
+										addMarginSeparately &&
+											"grid-cols-[1fr_1fr_1.5fr_0.5fr_auto]"
+									)}
 								>
-									<Trash2 className="h-4 w-4" />
-								</Button>
+									{categoryRowFields.map(
+										({ key, ...item }, fieldIndex) => (
+											<Fragment key={key}>
+												{addMarginSeparately &&
+												fieldIndex ===
+													categoryRowFields.length -
+														1 ? (
+													<CustomInputSelect
+														control={form.control}
+														name={`${categoryPath}.${PER_ROOM_MARKUP_FIELD.key}`}
+														label={
+															PER_ROOM_MARKUP_FIELD.label
+														}
+														placeholder={
+															PER_ROOM_MARKUP_FIELD.placeholder
+														}
+														selectOptions={[
+															...PER_ROOM_MARKUP_FIELD.selectOptions
+														]}
+														t={t}
+													/>
+												) : null}
+												<CustomField
+													control={form.control}
+													name={`${categoryPath}.${key}`}
+													t={t}
+													{...item}
+												/>
+											</Fragment>
+										)
+									)}
+									<Button
+										type="button"
+										variant="destructive"
+										size="icon"
+										onClick={() => remove(categoryIndex)}
+									>
+										<Trash2 className="h-4 w-4" />
+									</Button>
+								</div>
+								<FeeLinesField
+									control={form.control}
+									name={`${categoryPath}.${ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES}`}
+								/>
 							</div>
-							<FeeLinesField
-								control={form.control}
-								name={`${categoryPath}.${ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES}`}
-							/>
-						</div>
+							{categoryIndex < fields.length - 1 ? (
+								<Separator />
+							) : null}
+						</Fragment>
 					);
 				})}
 				<Button

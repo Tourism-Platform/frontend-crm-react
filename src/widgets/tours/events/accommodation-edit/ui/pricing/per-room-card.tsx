@@ -54,8 +54,9 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 			<CardContent className="grid gap-4">
 				<div
 					className={cn(
-						"grid grid-cols-2 gap-5",
-						addMarginSeparately && "grid-cols-[1fr_1.5fr_0.5fr]"
+						"grid max-w-xl grid-cols-2 gap-4",
+						addMarginSeparately &&
+							"max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)]"
 					)}
 				>
 					{PER_ROOM_ROW_FIELDS_LIST.map(

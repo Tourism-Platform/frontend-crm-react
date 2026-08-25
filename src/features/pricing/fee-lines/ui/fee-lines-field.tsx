@@ -7,10 +7,13 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, CustomInputSelect } from "@/shared/ui";
+import { Button, CustomField } from "@/shared/ui";
 
 import { CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_FEE_FIELD, createEmptyFeeRow } from "@/entities/tour";
+
+const FEE_ROW_GRID =
+	"grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.4fr)_7rem_7rem_2.25rem] gap-x-3 gap-y-2 items-center";
 
 interface IFeeLinesFieldProps<T extends FieldValues> {
 	control: Control<T>;
@@ -32,11 +35,25 @@ export const FeeLinesField = <T extends FieldValues>({
 	return (
 		<div className="flex flex-col gap-3">
 			<div className="text-sm font-medium">{t("fees.title")}</div>
+			{fields.length > 0 ? (
+				<div className={`${FEE_ROW_GRID} px-0.5`}>
+					<span className="text-xs font-medium text-muted-foreground">
+						{t("fees.fields.name.label")}
+					</span>
+					<span className="text-xs font-medium text-muted-foreground">
+						{t("fees.fields.description.label")}
+					</span>
+					<span className="text-xs font-medium text-muted-foreground">
+						{t("fees.fields.cost.label")}
+					</span>
+					<span className="text-xs font-medium text-muted-foreground">
+						{t("fees.fields.currency.label")}
+					</span>
+					<span aria-hidden />
+				</div>
+			) : null}
 			{fields.map((field, index) => (
-				<div
-					key={field.id}
-					className="grid grid-cols-[1fr_1fr_0.7fr_1fr_auto] gap-2 items-end"
-				>
+				<div key={field.id} className={FEE_ROW_GRID}>
 					<CustomField
 						control={control}
 						name={
@@ -47,6 +64,21 @@ export const FeeLinesField = <T extends FieldValues>({
 						placeholder="fees.fields.name.placeholder"
 						t={t}
 						disabled={disabled}
+						hideLabel
+						className="min-w-0"
+					/>
+					<CustomField
+						control={control}
+						name={
+							`${name}.${index}.${ENUM_FEE_FIELD.DESCRIPTION}` as Path<T>
+						}
+						fieldType="input"
+						label="fees.fields.description.label"
+						placeholder="fees.fields.description.placeholder"
+						t={t}
+						disabled={disabled}
+						hideLabel
+						className="min-w-0"
 					/>
 					<CustomField
 						control={control}
@@ -59,33 +91,28 @@ export const FeeLinesField = <T extends FieldValues>({
 						placeholder="fees.fields.cost.placeholder"
 						t={t}
 						disabled={disabled}
-					/>
-					<CustomInputSelect
-						control={control}
-						name={
-							`${name}.${index}.${ENUM_FEE_FIELD.CURRENCY}` as Path<T>
-						}
-						label="fees.fields.currency.label"
-						placeholder="fees.fields.currency.placeholder"
-						selectOptions={[...CURRENCY_OPTIONS]}
-						t={t}
-						disabled={disabled}
+						hideLabel
+						className="min-w-0"
 					/>
 					<CustomField
 						control={control}
 						name={
-							`${name}.${index}.${ENUM_FEE_FIELD.DESCRIPTION}` as Path<T>
+							`${name}.${index}.${ENUM_FEE_FIELD.CURRENCY}` as Path<T>
 						}
-						fieldType="input"
-						label="fees.fields.description.label"
-						placeholder="fees.fields.description.placeholder"
+						fieldType="select"
+						label="fees.fields.currency.label"
+						placeholder="fees.fields.currency.placeholder"
+						options={[...CURRENCY_OPTIONS]}
 						t={t}
 						disabled={disabled}
+						hideLabel
+						className="min-w-0"
 					/>
 					<Button
 						type="button"
 						variant="destructive"
 						size="icon"
+						className="shrink-0"
 						onClick={() => remove(index)}
 						disabled={disabled}
 					>

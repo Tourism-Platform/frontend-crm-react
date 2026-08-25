@@ -118,8 +118,8 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 									<div
 										className={
 											addMarginSeparately
-												? "grid grid-cols-[1fr_1.5fr_0.5fr] gap-5"
-												: "grid grid-cols-2 gap-5"
+												? "grid max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)] gap-4"
+												: "grid max-w-xl grid-cols-2 gap-4"
 										}
 									>
 										{tab.priceDetailsList.map(
