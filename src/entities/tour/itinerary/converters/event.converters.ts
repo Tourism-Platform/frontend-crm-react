@@ -7,6 +7,7 @@ import {
 	type ENUM_EVENT_BACKEND_TYPE,
 	type ENUM_EVENT_TYPE,
 	type IEventOptionReorder,
+	type IGetTourEventResult,
 	type IMoveToMultiResult,
 	type IMoveToSingleResult,
 	type ITourEvent,
@@ -155,6 +156,34 @@ export const mapEventOptionToFrontend = (
 
 	return mapEventToFrontend(asResponse);
 };
+
+export const mapTourEventDetailsFromBackend = (
+	backend: TTourEventBackendResponce,
+	eventOptionId?: string
+): Record<string, unknown> => {
+	if (eventOptionId && backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS) {
+		const multiEvent = backend.event as MultiEventReadOutput;
+		const option = (multiEvent.details ?? []).find(
+			(detail) => detail.id === eventOptionId
+		);
+		return (
+			((option as { details?: Record<string, unknown> } | undefined)
+				?.details as Record<string, unknown>) ?? {}
+		);
+	}
+
+	return (backend.event?.details as Record<string, unknown>) ?? {};
+};
+
+export const mapGetTourEventToFrontend = (
+	backend: TTourEventBackendResponce,
+	eventOptionId?: string
+): IGetTourEventResult => ({
+	form: eventOptionId
+		? mapEventOptionToFrontend(backend, eventOptionId)
+		: mapEventToFrontend(backend),
+	details: mapTourEventDetailsFromBackend(backend, eventOptionId)
+});
 
 export const mapEventUpdateToBackend = (
 	type: ENUM_EVENT_TYPE,

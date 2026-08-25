@@ -8,7 +8,7 @@
 	"overview": {
 		"title": "Overview",
 		"revenue": "Planned revenue",
-		"cost": "Planned cost",
+		"cost": "Planned cost (incl. fees)",
 		"profit": "Planned profit"
 	},
 	"table": {

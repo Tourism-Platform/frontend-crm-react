@@ -4,8 +4,9 @@ import {
 	ReceiptIcon,
 	ReceiptIcon2
 } from "@/shared/assets";
-import { ENUM_PATH } from "@/shared/config";
 import type { ISidebarMenu } from "@/shared/ui";
+
+import { ENUM_PATH } from "../routes.config";
 
 export const FINANCE_SIDEBAR_LIST: ISidebarMenu[] = [
 	{

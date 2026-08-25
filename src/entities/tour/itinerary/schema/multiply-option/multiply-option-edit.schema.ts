@@ -13,6 +13,6 @@ export const MULTIPLY_OPTION_EDIT_SCHEMA = z.object({
 	name: z.string(),
 	description: z.string(),
 	options: z.array(MULTIPLY_OPTION_ITEM_SCHEMA),
-	day: z.number().optional(),
+	day: z.number().min(1).optional(),
 	position: z.number().optional()
 });

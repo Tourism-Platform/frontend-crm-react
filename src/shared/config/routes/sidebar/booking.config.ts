@@ -1,6 +1,7 @@
 import { CalendarDaysIcon, TaskSquareIcon } from "@/shared/assets";
-import { ENUM_PATH } from "@/shared/config";
 import type { ISidebarMenu } from "@/shared/ui";
+
+import { ENUM_PATH } from "../routes.config";
 
 export const OPERATOR_BOOKING_SIDEBAR_LIST: ISidebarMenu[] = [
 	{

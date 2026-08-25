@@ -4,6 +4,7 @@ import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
 
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
+	ENUM_GUIDE_CHARGE,
 	ENUM_GUIDE_EXPENSE_TYP,
 	ENUM_GUIDE_MARKUP_TYP,
 	ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD,
@@ -12,6 +13,7 @@ import {
 	ENUM_GUIDE_PRICING_INVOICING,
 	ENUM_GUIDE_PRICING_TYPE
 } from "../../types";
+import { feesArraySchema } from "../common/fee.schema";
 
 const nullableNumber = z
 	.number()
@@ -31,9 +33,12 @@ const markupSchema = z
 	})
 	.nullable();
 
+const chargeTypSchema = z.enum(ENUM_GUIDE_CHARGE);
+
 const perGuidePriceRowSchema = z.object({
+	[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]: chargeTypSchema,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: nonNegativeNullableNumber,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: nonNegativeNullableNumber,
+	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -41,8 +46,9 @@ const perGuidePriceRowSchema = z.object({
 const categoryRowSchema = z.object({
 	// Empty lang is allowed — sync creates blank rows when a guide is added
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: z.string(),
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]: chargeTypSchema,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: nonNegativeNullableNumber,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: nonNegativeNullableNumber,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: markupSchema
 });

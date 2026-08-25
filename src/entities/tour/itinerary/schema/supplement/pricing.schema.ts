@@ -18,6 +18,7 @@ import {
 	ENUM_SUPPLEMENT_PRICING_INVOICING,
 	ENUM_SUPPLEMENT_PRICING_TYPE
 } from "../../types";
+import { feesArraySchema } from "../common/fee.schema";
 
 const msg = i18nKey<TTourEventSupplementEditPageKeys>();
 
@@ -41,7 +42,7 @@ const markupSchema = z
 
 const perItemPriceRowSchema = z.object({
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: nonNegativeNullableNumber,
-	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: nonNegativeNullableNumber,
+	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -111,8 +112,7 @@ export const SUPPLEMENT_PRICING_SCHEMA = z
 		[ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES]:
 			perItemExpensesSchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: nullableNumber.optional(),
-		[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]:
-			nonNegativeNullableNumber.optional(),
+		[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]: feesArraySchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_SUPPLEMENT_PRICING_FIELD.PACKAGE_ID]: z.string()

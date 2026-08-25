@@ -6,4 +6,7 @@ export * from "./accommodation-edit-page";
 export * from "./activity-edit-page";
 export * from "./info-edit-page";
 export * from "./itineraries-stub-page";
-export * from "./suppliers-stub-page";
+export * from "./suppliers-page";
+export * from "./supplier-id-page";
+export * from "./hotel-product-edit-page";
+export * from "./train-product-edit-page";

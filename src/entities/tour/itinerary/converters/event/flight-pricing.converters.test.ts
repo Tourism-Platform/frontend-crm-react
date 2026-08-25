@@ -3,11 +3,13 @@ import { describe, expect, it, vi } from "vitest";
 import { Currency } from "@/shared/api";
 
 import {
+	ENUM_FEE_FIELD,
 	ENUM_FLIGHT_MARKUP_TYP,
 	ENUM_FLIGHT_PRICING_FIELD,
 	ENUM_FLIGHT_PRICING_INVOICING,
 	ENUM_FLIGHT_PRICING_TYPE,
-	type TFlightPricingSchema
+	type TFlightPricingSchema,
+	createEmptyFeeRow
 } from "../../types";
 
 import {
@@ -19,6 +21,12 @@ vi.mock("@/shared/config", () => ({
 	ENV: { VITE_API_URL: "http://localhost" },
 	i18nKey: () => (key: string) => key
 }));
+
+const feeRow = (cost: number, currency: string) => ({
+	...createEmptyFeeRow(),
+	[ENUM_FEE_FIELD.COST]: cost,
+	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
+});
 
 const basePricing = (
 	overrides: Partial<TFlightPricingSchema> = {}
@@ -61,7 +69,7 @@ describe("mapFlightPricingToBackend", () => {
 			mapFlightPricingToBackend(
 				basePricing({
 					[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE]: 200,
-					[ENUM_FLIGHT_PRICING_FIELD.TAXES]: 10,
+					[ENUM_FLIGHT_PRICING_FIELD.FEES]: [feeRow(10, "USD")],
 					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: Currency.USD,
 					[ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: {
@@ -72,6 +80,13 @@ describe("mapFlightPricingToBackend", () => {
 			).details?.expenses
 		).toMatchObject({
 			typ: "fixed",
+			fees: [
+				{
+					name: null,
+					description: null,
+					cost: { val: 10, currency: Currency.USD }
+				}
+			],
 			markup: {
 				typ: "fixed",
 				cost: { val: 25, currency: Currency.USD }
@@ -86,7 +101,7 @@ describe("mapFlightPricingToBackend", () => {
 					[ENUM_FLIGHT_PRICING_FIELD.PRICING_TYPE]:
 						ENUM_FLIGHT_PRICING_TYPE.PER_PERSON,
 					[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE]: 90,
-					[ENUM_FLIGHT_PRICING_FIELD.TAXES]: 3,
+					[ENUM_FLIGHT_PRICING_FIELD.FEES]: [feeRow(3, "EUR")],
 					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: Currency.EUR,
 					[ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: {

@@ -17,6 +17,8 @@ import {
 	type ISlotProps
 } from "../../model";
 
+import { ActivityMenu } from "./activity-menu";
+
 const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t, i18n } = useTranslation("activity_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
@@ -39,6 +41,7 @@ const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 							{...item}
 						/>
 					))}
+					<ActivityMenu form={form} />
 				</div>
 			</div>
 			<div className="flex justify-end mt-6">

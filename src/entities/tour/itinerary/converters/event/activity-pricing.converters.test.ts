@@ -7,7 +7,9 @@ import {
 	ENUM_ACTIVITY_PRICING_FIELD,
 	ENUM_ACTIVITY_PRICING_INVOICING,
 	ENUM_ACTIVITY_PRICING_TYPE,
-	type TActivityPricingSchema
+	ENUM_FEE_FIELD,
+	type TActivityPricingSchema,
+	createEmptyFeeRow
 } from "../../types";
 
 import {
@@ -19,6 +21,12 @@ vi.mock("@/shared/config", () => ({
 	ENV: { VITE_API_URL: "http://localhost" },
 	i18nKey: () => (key: string) => key
 }));
+
+const feeRow = (cost: number, currency: string) => ({
+	...createEmptyFeeRow(),
+	[ENUM_FEE_FIELD.COST]: cost,
+	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
+});
 
 const basePricing = (
 	overrides: Partial<TActivityPricingSchema> = {}
@@ -72,10 +80,7 @@ describe("mapActivityPricingFromBackend", () => {
 				expenses: {
 					typ: "per_person",
 					cost_per_person: { val: 50, currency: Currency.EUR },
-					fees: {
-						typ: "fixed",
-						cost: { val: 5, currency: Currency.EUR }
-					},
+					fees: [{ cost: { val: 5, currency: Currency.EUR } }],
 					markup: { typ: "percentage", percentage: 0.15 }
 				}
 			})
@@ -83,7 +88,7 @@ describe("mapActivityPricingFromBackend", () => {
 			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.PER_PERSON,
 			add_margin_separately: true,
 			total_price: 50,
-			taxes: 5,
+			fees: [feeRow(5, "EUR")],
 			currency: Currency.EUR,
 			markup: { typ: ENUM_ACTIVITY_MARKUP_TYP.PERCENTAGE, value: "15" }
 		});
@@ -96,7 +101,7 @@ describe("mapActivityPricingToBackend", () => {
 			mapActivityPricingToBackend(
 				basePricing({
 					[ENUM_ACTIVITY_PRICING_FIELD.TOTAL_PRICE]: 100,
-					[ENUM_ACTIVITY_PRICING_FIELD.TAXES]: 5,
+					[ENUM_ACTIVITY_PRICING_FIELD.FEES]: [feeRow(5, "USD")],
 					[ENUM_ACTIVITY_PRICING_FIELD.CURRENCY]: Currency.USD,
 					[ENUM_ACTIVITY_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: {
@@ -108,10 +113,13 @@ describe("mapActivityPricingToBackend", () => {
 		).toEqual({
 			typ: "fixed",
 			cost: { val: 100, currency: Currency.USD },
-			fees: {
-				typ: "fixed",
-				cost: { val: 5, currency: Currency.USD }
-			},
+			fees: [
+				{
+					name: null,
+					description: null,
+					cost: { val: 5, currency: Currency.USD }
+				}
+			],
 			markup: {
 				typ: "fixed",
 				cost: { val: 10, currency: Currency.USD }
@@ -124,7 +132,7 @@ describe("mapActivityPricingToBackend", () => {
 			mapActivityPricingToBackend(
 				basePricing({
 					[ENUM_ACTIVITY_PRICING_FIELD.TOTAL_PRICE]: 100,
-					[ENUM_ACTIVITY_PRICING_FIELD.TAXES]: 5,
+					[ENUM_ACTIVITY_PRICING_FIELD.FEES]: [feeRow(5, "USD")],
 					[ENUM_ACTIVITY_PRICING_FIELD.CURRENCY]: Currency.USD,
 					[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_ACTIVITY_MARKUP_TYP.FIXED,
@@ -145,7 +153,7 @@ describe("mapActivityPricingToBackend", () => {
 					[ENUM_ACTIVITY_PRICING_FIELD.PRICING_TYPE]:
 						ENUM_ACTIVITY_PRICING_TYPE.PER_PERSON,
 					[ENUM_ACTIVITY_PRICING_FIELD.TOTAL_PRICE]: 80,
-					[ENUM_ACTIVITY_PRICING_FIELD.TAXES]: 4,
+					[ENUM_ACTIVITY_PRICING_FIELD.FEES]: [feeRow(4, "EUR")],
 					[ENUM_ACTIVITY_PRICING_FIELD.CURRENCY]: Currency.EUR,
 					[ENUM_ACTIVITY_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: {
@@ -157,10 +165,13 @@ describe("mapActivityPricingToBackend", () => {
 		).toEqual({
 			typ: "per_person",
 			cost_per_person: { val: 80, currency: Currency.EUR },
-			fees: {
-				typ: "fixed",
-				cost: { val: 4, currency: Currency.EUR }
-			},
+			fees: [
+				{
+					name: null,
+					description: null,
+					cost: { val: 4, currency: Currency.EUR }
+				}
+			],
 			markup: { typ: "percentage", percentage: 0.2 }
 		});
 	});

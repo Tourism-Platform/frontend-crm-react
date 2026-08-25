@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, Fragment } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -18,6 +18,8 @@ import {
 	ENUM_ACTIVITY_PRICING_FIELD,
 	ENUM_ACTIVITY_PRICING_TYPE
 } from "@/entities/tour";
+
+import { FeeLinesField } from "@/features/pricing";
 
 import {
 	ENUM_FORM_SECTION,
@@ -111,20 +113,19 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 								<div
 									className={
 										addMarginSeparately
-											? "grid grid-cols-[1fr_1fr_1.5fr_0.5fr] gap-5"
-											: "grid grid-cols-3 gap-5"
+											? "grid grid-cols-[1fr_1.5fr_0.5fr] gap-5"
+											: "grid grid-cols-2 gap-5"
 									}
 								>
 									{tab.priceDetailsList.map(
 										({ key, ...item }, fieldIndex) => (
-											<>
+											<Fragment key={key}>
 												{addMarginSeparately &&
 												fieldIndex ===
 													tab.priceDetailsList
 														.length -
 														1 ? (
 													<CustomInputSelect
-														key={`${key}-markup`}
 														control={form.control}
 														name={`${ENUM_FORM_SECTION.PRICING}.${PRICING_MARKUP_FIELD.key}`}
 														label={
@@ -140,16 +141,19 @@ const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
 													/>
 												) : null}
 												<CustomField
-													key={key}
 													name={`${ENUM_FORM_SECTION.PRICING}.${key}`}
 													control={form.control}
 													t={t}
 													{...item}
 												/>
-											</>
+											</Fragment>
 										)
 									)}
 								</div>
+								<FeeLinesField
+									control={form.control}
+									name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACTIVITY_PRICING_FIELD.FEES}`}
+								/>
 							</div>
 						</CustomOptionTabsContent>
 					))}

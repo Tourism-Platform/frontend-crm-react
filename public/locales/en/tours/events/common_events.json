@@ -12,5 +12,176 @@
 			"tour_details": "Tour details edit",
 			"info": "Info edit"
 		}
+	},
+	"attach_product": {
+		"buttons": {
+			"attach": "Choose supplier product",
+			"attaching": "Attaching...",
+			"change": "Change product",
+			"detach": "Detach product",
+			"detaching": "Detaching..."
+		},
+		"dialog": {
+			"title": "Select supplier product",
+			"description": "Link this event to a catalog product. Tour-specific fields stay editable.",
+			"fields": {
+				"search": {
+					"label": "Search",
+					"placeholder": "Search by product name"
+				},
+				"variant": {
+					"label": "Category",
+					"placeholder": "Select category",
+					"all": "All categories"
+				}
+			},
+			"loading": "Loading products…",
+			"empty": "No products found",
+			"load_error": "Could not load products",
+			"retry": "Retry",
+			"cancel": "Cancel",
+			"confirm": "Attach",
+			"confirming": "Attaching..."
+		},
+		"override_warn": {
+			"title": "Contract price will be cleared",
+			"description": "Changing the product removes the negotiated rate that was set for the previous product.",
+			"cancel": "Keep current product",
+			"confirm": "Continue"
+		},
+		"toasts": {
+			"attach": {
+				"success": "Product linked",
+				"error": "Could not link product"
+			},
+			"detach": {
+				"success": "Product detached",
+				"error": "Could not detach product"
+			}
+		}
+	},
+	"override_product": {
+		"buttons": {
+			"set": "Contract price",
+			"setting": "Saving...",
+			"edit": "Edit override",
+			"clear": "Clear override",
+			"clearing": "Clearing..."
+		},
+		"dialog": {
+			"title": "Contract price",
+			"description": "Replaces product rate and policy for this tour only. Saving sends a full replace of both fields.",
+			"fields": {
+				"pricing_type": {
+					"label": "Pricing type",
+					"placeholder": "Select pricing type",
+					"options": {
+						"flat_rate": "Flat rate",
+						"per_person": "Per person"
+					}
+				},
+				"charge_typ": {
+					"label": "Charge mode",
+					"placeholder": "Select charge mode",
+					"options": {
+						"fixed": "Whole stay",
+						"per_duration": "Per night"
+					}
+				},
+				"total_price": {
+					"label": "Price",
+					"placeholder": "Enter price"
+				},
+				"taxes": {
+					"label": "Taxes / fees",
+					"placeholder": "Enter taxes"
+				},
+				"currency": {
+					"label": "Currency",
+					"placeholder": "Select currency"
+				},
+				"check_in_from": {
+					"label": "Check-in from",
+					"placeholder": "HH:MM"
+				},
+				"check_out_until": {
+					"label": "Check-out until",
+					"placeholder": "HH:MM"
+				}
+			},
+			"cancel": "Cancel",
+			"confirm": "Save",
+			"confirming": "Saving..."
+		},
+		"clear_warn": {
+			"title": "Clear contract price?",
+			"description": "The event will go back to the supplier product rate and policy.",
+			"cancel": "Keep override",
+			"confirm": "Clear"
+		},
+		"toasts": {
+			"set": {
+				"success": "Contract price saved",
+				"error": "Could not save contract price"
+			},
+			"clear": {
+				"success": "Override cleared",
+				"error": "Could not clear override"
+			}
+		}
+	},
+	"policy_check": {
+		"warn_only": "Cutoff crossed; price is unchanged",
+		"surcharge": {
+			"fixed": "{{val}} {{currency}}",
+			"percentage": "{{percentage}}%"
+		},
+		"codes": {
+			"early_check_in": { "title": "Early check-in" },
+			"late_check_out": { "title": "Late check-out" },
+			"supplier_type_mismatch": { "title": "Supplier type mismatch" }
+		},
+		"option_badge": "{{count}} policy warnings",
+		"toasts": { "error": "Could not load policy warnings" }
+	},
+	"product_seasons": {
+		"title": "Seasonal product rates",
+		"empty": "No seasonal rates on this product",
+		"range": "{{from}} – {{to}}",
+		"charge": {
+			"label": "Charge type",
+			"fixed": "Whole stay",
+			"per_duration": "Per night"
+		},
+		"fees": {
+			"title": "Fees",
+			"empty": "No fees",
+			"line": "{{name}}: {{amount}}"
+		}
+	},
+	"revision": {
+		"frozen_price": "Price is frozen at attach"
+	},
+	"fees": {
+		"title": "Internal fees (operator)",
+		"add": "Add fee",
+		"fields": {
+			"name": {
+				"label": "Name",
+				"placeholder": "e.g. VAT, city tax"
+			},
+			"cost": {
+				"label": "Amount",
+				"placeholder": "0"
+			},
+			"currency": {
+				"label": "Currency",
+				"placeholder": "Select currency"
+			},
+			"description": {
+				"label": "Description",
+				"placeholder": "Optional note"
+			}
+		}
 	}
 }

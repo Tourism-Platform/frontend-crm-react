@@ -1,0 +1,163 @@
+{
+	"page_name": "Hotel product",
+	"back": "Back to supplier",
+	"tabs": {
+		"general": "General",
+		"details": "Details",
+		"variants": "Variants",
+		"images": "Images"
+	},
+	"form": {
+		"general": {
+			"fields": {
+				"name": {
+					"label": "Name",
+					"placeholder": "Hotel name"
+				}
+			},
+			"errors": {
+				"name": {
+					"required": "Name is required"
+				}
+			},
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			}
+		},
+		"details": {
+			"fields": {
+				"stars": {
+					"label": "Stars",
+					"placeholder": "1–5"
+				},
+				"lat": {
+					"label": "Latitude",
+					"placeholder": "Lat"
+				},
+				"long": {
+					"label": "Longitude",
+					"placeholder": "Long"
+				},
+				"amenities": {
+					"label": "Amenities",
+					"placeholder": "Select amenities"
+				},
+				"checkInFrom": {
+					"label": "Check-in from",
+					"placeholder": "14:00"
+				},
+				"checkOutUntil": {
+					"label": "Check-out until",
+					"placeholder": "12:00"
+				}
+			},
+			"buttons": {
+				"save": "Save details",
+				"saving": "Saving ..."
+			}
+		},
+		"variants": {
+			"title": "Variants",
+			"add": "Add variant",
+			"fields": {
+				"name": {
+					"label": "Variant name",
+					"placeholder": "Deluxe"
+				},
+				"roomTyp": {
+					"label": "Room type",
+					"placeholder": "Select type"
+				},
+				"chargeTyp": {
+					"label": "Charge type",
+					"placeholder": "Select"
+				},
+				"cost": {
+					"label": "Cost",
+					"placeholder": "0"
+				},
+				"currency": {
+					"label": "Currency",
+					"placeholder": "USD"
+				},
+				"fromDate": {
+					"label": "Season from",
+					"placeholder": "YYYY-MM-DD"
+				},
+				"toDate": {
+					"label": "Season to",
+					"placeholder": "YYYY-MM-DD"
+				},
+				"seasonChargeTyp": {
+					"label": "Season charge type",
+					"placeholder": "Select"
+				},
+				"seasonCost": {
+					"label": "Season cost",
+					"placeholder": "0"
+				},
+				"seasonCurrency": {
+					"label": "Season currency",
+					"placeholder": "USD"
+				}
+			},
+			"charge": {
+				"fixed": "Whole stay",
+				"per_duration": "Per night"
+			},
+			"add_room": "Add room",
+			"add_rate": "Add season",
+			"buttons": {
+				"save": "Save variant",
+				"saving": "Saving ...",
+				"delete": "Delete",
+				"deleting": "Deleting ..."
+			}
+		},
+		"images": {
+			"product_title": "Product gallery",
+			"node_title": "Room photos",
+			"select_room": "Select room",
+			"buttons": {
+				"save": "Save photos",
+				"saving": "Saving ..."
+			}
+		},
+		"toasts": {
+			"save": {
+				"success": "Saved",
+				"error": "Failed to save"
+			},
+			"load": {
+				"error": "Failed to load product"
+			},
+			"create": {
+				"success": "Product created",
+				"error": "Failed to create product"
+			},
+			"delete": {
+				"success": "Deleted",
+				"error": "Failed to delete"
+			}
+		}
+	},
+	"menu": {
+		"delete": {
+			"button": "Delete product",
+			"form": {
+				"title": "Delete product",
+				"warning": "Are you sure you want to delete this hotel product?",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting ..."
+				},
+				"toasts": {
+					"success": "Product deleted",
+					"error": "Failed to delete product"
+				}
+			}
+		}
+	}
+}

@@ -1,4 +1,6 @@
 export * from "./general-info.types";
+export * from "./menu.types";
+export * from "./menu-backend.types";
 export * from "./pricing.types";
 export * from "./pricing-backend.types";
 export * from "./tab.types";

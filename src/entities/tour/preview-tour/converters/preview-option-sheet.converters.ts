@@ -152,16 +152,31 @@ const mapTransferSheet = (
 
 const mapHousingSheet = (
 	event: { typ: "housing" } & HousingEventPubReadOutput
-): TOptionEventSheetExtra => ({
-	kind: "accommodation",
-	amenities: accommodationAmenityConverter.fromMany(
-		event?.details?.amenities ?? []
-	),
-	nights: `${event?.details?.duration} night${event?.details?.duration === 1 ? "" : "s"}`,
-	checkIn: formatPubTime(event?.details?.check_in ?? undefined),
-	checkOut: formatPubTime(event?.details?.check_out ?? undefined),
-	rooms: mapSheetRoomsFromExpenses(event?.details?.expenses)
-});
+): TOptionEventSheetExtra => {
+	const details = event.details;
+
+	if (details?.source === "inherited") {
+		return {
+			kind: "accommodation",
+			amenities: [],
+			nights: `${details.duration ?? 0} night${details.duration === 1 ? "" : "s"}`,
+			checkIn: formatPubTime(details.check_in ?? undefined),
+			checkOut: formatPubTime(details.check_out ?? undefined),
+			rooms: []
+		};
+	}
+
+	return {
+		kind: "accommodation",
+		amenities: accommodationAmenityConverter.fromMany(
+			details?.amenities ?? []
+		),
+		nights: `${details?.duration} night${details?.duration === 1 ? "" : "s"}`,
+		checkIn: formatPubTime(details?.check_in ?? undefined),
+		checkOut: formatPubTime(details?.check_out ?? undefined),
+		rooms: mapSheetRoomsFromExpenses(details?.expenses)
+	};
+};
 
 const mapActivitySheet = (
 	event: { typ: "activity" } & ActivityEventPubReadOutput
@@ -267,13 +282,16 @@ const mapTrainBusSheet = (
 		| ({ typ: "train" } & TrainEventPubReadOutput)
 		| ({ typ: "bus" } & BusEventPubReadOutput),
 	routeLabel: string
-): TOptionEventSheetExtra => ({
-	kind: "flight",
-	segments:
-		event?.details?.hop?.map((hop) =>
-			mapHopToSegment(hop as any, routeLabel)
-		) ?? []
-});
+): TOptionEventSheetExtra => {
+	const hops =
+		event.details && "hop" in event.details ? event.details.hop : undefined;
+
+	return {
+		kind: "flight",
+		segments:
+			hops?.map((hop) => mapHopToSegment(hop as any, routeLabel)) ?? []
+	};
+};
 
 const mapSheetExtraFromPub = (
 	event: TPubEvent | TPubDetail

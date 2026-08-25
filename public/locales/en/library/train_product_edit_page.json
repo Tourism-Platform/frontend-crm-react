@@ -1,0 +1,136 @@
+{
+	"page_name": "Train product",
+	"back": "Back to supplier",
+	"tabs": {
+		"general": "General",
+		"hops": "Hops",
+		"variants": "Variants",
+		"images": "Images"
+	},
+	"form": {
+		"general": {
+			"fields": {
+				"name": {
+					"label": "Name",
+					"placeholder": "Train name"
+				}
+			},
+			"errors": {
+				"name": {
+					"required": "Name is required"
+				}
+			},
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving ..."
+			}
+		},
+		"hops": {
+			"add": "Add hop",
+			"fields": {
+				"departureTime": {
+					"label": "Departure time",
+					"placeholder": "08:00"
+				},
+				"arrivalTime": {
+					"label": "Arrival time",
+					"placeholder": "12:00"
+				},
+				"departureLat": {
+					"label": "Departure lat",
+					"placeholder": "Lat"
+				},
+				"departureLong": {
+					"label": "Departure long",
+					"placeholder": "Long"
+				},
+				"arrivalLat": {
+					"label": "Arrival lat",
+					"placeholder": "Lat"
+				},
+				"arrivalLong": {
+					"label": "Arrival long",
+					"placeholder": "Long"
+				}
+			},
+			"buttons": {
+				"save": "Save hops",
+				"saving": "Saving ..."
+			}
+		},
+		"variants": {
+			"title": "Variants",
+			"add": "Add variant",
+			"fields": {
+				"name": {
+					"label": "Variant name",
+					"placeholder": "Standard"
+				},
+				"chargeTyp": {
+					"label": "Charge type",
+					"placeholder": "Select"
+				},
+				"cost": {
+					"label": "Cost",
+					"placeholder": "0"
+				},
+				"currency": {
+					"label": "Currency",
+					"placeholder": "USD"
+				}
+			},
+			"charge": {
+				"fixed": "Fixed",
+				"per_person": "Per person"
+			},
+			"buttons": {
+				"save": "Save variant",
+				"saving": "Saving ...",
+				"delete": "Delete",
+				"deleting": "Deleting ..."
+			}
+		},
+		"images": {
+			"product_title": "Product gallery",
+			"buttons": {
+				"save": "Save photos",
+				"saving": "Saving ..."
+			}
+		},
+		"toasts": {
+			"save": {
+				"success": "Saved",
+				"error": "Failed to save"
+			},
+			"load": {
+				"error": "Failed to load product"
+			},
+			"create": {
+				"success": "Product created",
+				"error": "Failed to create product"
+			},
+			"delete": {
+				"success": "Deleted",
+				"error": "Failed to delete"
+			}
+		}
+	},
+	"menu": {
+		"delete": {
+			"button": "Delete product",
+			"form": {
+				"title": "Delete product",
+				"warning": "Are you sure you want to delete this train product?",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting ..."
+				},
+				"toasts": {
+					"success": "Product deleted",
+					"error": "Failed to delete product"
+				}
+			}
+		}
+	}
+}

@@ -3,9 +3,19 @@ import { z } from "zod";
 import { type TTourActivityEditPageKeys, i18nKey } from "@/shared/config";
 import { GEO_FORM_VALUE_SCHEMA } from "@/shared/schema/geo-form.schema";
 
-import { ENUM_ACTIVITY_TYPE, ENUM_FORM_ACTIVITY } from "../../types";
+import {
+	ENUM_ACTIVITY_TYPE,
+	ENUM_FORM_ACTIVITY,
+	ENUM_FORM_ACTIVITY_MENU
+} from "../../types";
 
 const msg = i18nKey<TTourActivityEditPageKeys>();
+
+const menuItemSchema = z.object({
+	[ENUM_FORM_ACTIVITY_MENU.ID]: z.string().uuid().optional(),
+	[ENUM_FORM_ACTIVITY_MENU.NAME]: z.string(),
+	[ENUM_FORM_ACTIVITY_MENU.DESCRIPTION]: z.string().nullable().optional()
+});
 
 export const GENERAL_INFO_SCHEMA = z.object({
 	[ENUM_FORM_ACTIVITY.DESCRIPTION]: z
@@ -92,5 +102,7 @@ export const GENERAL_INFO_SCHEMA = z.object({
 		// 		"form.general.details.form.fields.end_timezone.errors.max"
 		// 	)
 		// })
-		.optional()
+		.optional(),
+
+	[ENUM_FORM_ACTIVITY.MENU]: z.array(menuItemSchema)
 });

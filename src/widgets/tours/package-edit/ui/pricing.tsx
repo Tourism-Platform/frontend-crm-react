@@ -1,5 +1,5 @@
 import { Loader } from "lucide-react";
-import { type FC } from "react";
+import { type FC, Fragment } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -22,6 +22,8 @@ import {
 	ENUM_PACKAGE_PRICING_TYPE,
 	type TPackageEditSchema
 } from "@/entities/tour";
+
+import { FeeLinesField } from "@/features/pricing";
 
 import {
 	PACKAGE_MARKUP_FIELD,
@@ -131,8 +133,8 @@ const PackagePricingBase: FC<IPackagePricingProps> = ({
 										<div
 											className={
 												addMarginSeparately
-													? "grid grid-cols-[1fr_1fr_1.5fr_0.5fr] gap-5"
-													: "grid grid-cols-3 gap-5"
+													? "grid grid-cols-[1fr_1.5fr_0.5fr] gap-5"
+													: "grid grid-cols-2 gap-5"
 											}
 										>
 											{priceDetailsList.map(
@@ -140,13 +142,12 @@ const PackagePricingBase: FC<IPackagePricingProps> = ({
 													{ key, ...item },
 													fieldIndex
 												) => (
-													<>
+													<Fragment key={key}>
 														{addMarginSeparately &&
 														fieldIndex ===
 															priceDetailsList.length -
 																1 ? (
 															<CustomInputSelect
-																key={`${key}-markup`}
 																control={
 																	form.control
 																}
@@ -166,7 +167,6 @@ const PackagePricingBase: FC<IPackagePricingProps> = ({
 															/>
 														) : null}
 														<CustomField
-															key={key}
 															name={key}
 															control={
 																form.control
@@ -174,10 +174,14 @@ const PackagePricingBase: FC<IPackagePricingProps> = ({
 															t={t}
 															{...item}
 														/>
-													</>
+													</Fragment>
 												)
 											)}
 										</div>
+										<FeeLinesField
+											control={form.control}
+											name={ENUM_PACKAGE_FIELD.FEES}
+										/>
 									</div>
 								</CustomOptionTabsContent>
 							)

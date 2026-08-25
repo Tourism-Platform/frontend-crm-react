@@ -27,7 +27,7 @@ export const ENUM_ACTIVITY_PRICING_FIELD = {
 	PRICING_TYPE: "pricing_type",
 	ADD_MARGIN_SEPARATELY: "add_margin_separately",
 	TOTAL_PRICE: "total_price",
-	TAXES: "taxes",
+	FEES: "fees",
 	CURRENCY: "currency",
 	MARKUP: "markup",
 	PACKAGE_ID: "package_id"

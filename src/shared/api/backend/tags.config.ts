@@ -9,10 +9,12 @@ export const ENUM_API_TAGS = {
 	FINANCE_CLIENT_PAYMENTS: "Finance Client Payments",
 	FINANCE_SUPPLIER_PAYMENTS: "Finance Supplier Payments",
 	BOOKING_ORDERS: "Booking Orders",
+	BOOKING_REVISION: "Booking Revision",
 	TOUR_ORDER_HISTORY: "Tour Order History",
 	TOUR_ACTIVITY_LOG: "Tour Activity Log",
 	TOURS_CATALOG: "Tours Catalog",
 	TOURS_EVENTS: "Tours Events",
+	TOUR_POLICY_CHECK: "Tour Policy Check",
 	EVENT_LIBRARY: "Event Library",
 	LANDING_IMAGES: "Landing Images",
 	EVENT_IMAGES: "Event Images",
@@ -25,5 +27,7 @@ export const ENUM_API_TAGS = {
 	},
 	TOURS_OPTIONS: "Tours Options",
 	TOURS_PRICING_SUMMARY: "Tours Pricing Summary",
-	TOURS_PACKAGES: "Tours Packages"
+	TOURS_PACKAGES: "Tours Packages",
+	SUPPLIERS: "Suppliers",
+	SUPPLIER_PRODUCTS: "Supplier Products"
 } as const;

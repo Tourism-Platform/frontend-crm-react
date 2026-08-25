@@ -19,6 +19,7 @@ export * from "./supplier-payment.interface";
 export * from "./order-tour-review.types";
 export * from "./booking-availability.types";
 export * from "./booking-availability-backend.types";
+export * from "./revision-event-product.types";
 export * from "./order-pax-backend.types";
 export * from "./create-booking.types";
 export * from "./create-booking-backend.types";

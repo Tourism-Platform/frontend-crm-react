@@ -1,6 +1,7 @@
 import { BoxOutlineIcon, CalendarDaysIcon, HouseIcon } from "@/shared/assets";
-import { ENUM_PATH } from "@/shared/config";
 import type { ISidebarMenu } from "@/shared/ui";
+
+import { ENUM_PATH } from "../routes.config";
 
 export const LIBRARY_SIDEBAR_LIST: ISidebarMenu[] = [
 	{

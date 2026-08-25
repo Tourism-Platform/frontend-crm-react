@@ -6,7 +6,9 @@ import {
 } from "@/entities/commission";
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
+	ENUM_GUIDE_CHARGE,
 	ENUM_GUIDE_PRICE_ROW_FIELD,
+	GUIDE_CHARGE_LABELS,
 	LANGUAGES_LABELS
 } from "@/entities/tour";
 
@@ -23,18 +25,19 @@ export const PER_GUIDE_CATEGORY_ROW_FIELDS_LIST =
 			options: useValueToTranslateLabel(LANGUAGES_LABELS)
 		},
 		{
+			key: ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP,
+			label: "form.pricing.form.per_guide.fields.charge_typ.label",
+			placeholder:
+				"form.pricing.form.per_guide.fields.charge_typ.placeholder",
+			fieldType: "select",
+			options: useValueToTranslateLabel(GUIDE_CHARGE_LABELS),
+			defaultValue: ENUM_GUIDE_CHARGE.PER_DURATION
+		},
+		{
 			key: ENUM_GUIDE_CATEGORY_ROW_FIELD.COST,
 			label: "form.pricing.form.per_guide.table.cost",
 			placeholder:
 				"form.pricing.form.per_guide.fields.total_cost.placeholder",
-			fieldType: "input",
-			type: "number"
-		},
-		{
-			key: ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES,
-			label: "form.pricing.form.per_guide.table.fees",
-			placeholder:
-				"form.pricing.form.per_guide.fields.taxes_fees.placeholder",
 			fieldType: "input",
 			type: "number"
 		},
@@ -51,26 +54,28 @@ export const PER_GUIDE_CATEGORY_ROW_FIELDS_LIST =
 
 export const createEmptyPerGuideCategoryRow = () => ({
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: "",
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: null,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: [],
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
 });
 
-export const PER_GUIDE_ROW_FIELDS_LIST: TGuidePricingFormField[] = [
+export const PER_GUIDE_ROW_FIELDS_LIST = (): TGuidePricingFormField[] => [
+	{
+		key: ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP,
+		label: "form.pricing.form.per_guide.fields.charge_typ.label",
+		placeholder:
+			"form.pricing.form.per_guide.fields.charge_typ.placeholder",
+		fieldType: "select",
+		options: useValueToTranslateLabel(GUIDE_CHARGE_LABELS),
+		defaultValue: ENUM_GUIDE_CHARGE.PER_DURATION
+	},
 	{
 		key: ENUM_GUIDE_PRICE_ROW_FIELD.COST,
 		label: "form.pricing.form.per_guide.fields.total_cost.label",
 		placeholder:
 			"form.pricing.form.per_guide.fields.total_cost.placeholder",
-		fieldType: "input",
-		type: "number"
-	},
-	{
-		key: ENUM_GUIDE_PRICE_ROW_FIELD.FEES,
-		label: "form.pricing.form.per_guide.fields.taxes_fees.label",
-		placeholder:
-			"form.pricing.form.per_guide.fields.taxes_fees.placeholder",
 		fieldType: "input",
 		type: "number"
 	},

@@ -1,0 +1,136 @@
+{
+	"page_name": "Поезд",
+	"back": "К поставщику",
+	"tabs": {
+		"general": "Основное",
+		"hops": "Плечи",
+		"variants": "Варианты",
+		"images": "Фото"
+	},
+	"form": {
+		"general": {
+			"fields": {
+				"name": {
+					"label": "Название",
+					"placeholder": "Название поезда"
+				}
+			},
+			"errors": {
+				"name": {
+					"required": "Укажите название"
+				}
+			},
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение ..."
+			}
+		},
+		"hops": {
+			"add": "Добавить плечо",
+			"fields": {
+				"departureTime": {
+					"label": "Время отправления",
+					"placeholder": "08:00"
+				},
+				"arrivalTime": {
+					"label": "Время прибытия",
+					"placeholder": "12:00"
+				},
+				"departureLat": {
+					"label": "Широта отправления",
+					"placeholder": "Lat"
+				},
+				"departureLong": {
+					"label": "Долгота отправления",
+					"placeholder": "Long"
+				},
+				"arrivalLat": {
+					"label": "Широта прибытия",
+					"placeholder": "Lat"
+				},
+				"arrivalLong": {
+					"label": "Долгота прибытия",
+					"placeholder": "Long"
+				}
+			},
+			"buttons": {
+				"save": "Сохранить плечи",
+				"saving": "Сохранение ..."
+			}
+		},
+		"variants": {
+			"title": "Варианты",
+			"add": "Добавить вариант",
+			"fields": {
+				"name": {
+					"label": "Название варианта",
+					"placeholder": "Standard"
+				},
+				"chargeTyp": {
+					"label": "Тип тарифа",
+					"placeholder": "Выберите"
+				},
+				"cost": {
+					"label": "Стоимость",
+					"placeholder": "0"
+				},
+				"currency": {
+					"label": "Валюта",
+					"placeholder": "USD"
+				}
+			},
+			"charge": {
+				"fixed": "Фикс",
+				"per_person": "За человека"
+			},
+			"buttons": {
+				"save": "Сохранить вариант",
+				"saving": "Сохранение ...",
+				"delete": "Удалить",
+				"deleting": "Удаление ..."
+			}
+		},
+		"images": {
+			"product_title": "Галерея продукта",
+			"buttons": {
+				"save": "Сохранить фото",
+				"saving": "Сохранение ..."
+			}
+		},
+		"toasts": {
+			"save": {
+				"success": "Сохранено",
+				"error": "Не удалось сохранить"
+			},
+			"load": {
+				"error": "Не удалось загрузить продукт"
+			},
+			"create": {
+				"success": "Продукт создан",
+				"error": "Не удалось создать продукт"
+			},
+			"delete": {
+				"success": "Удалено",
+				"error": "Не удалось удалить"
+			}
+		}
+	},
+	"menu": {
+		"delete": {
+			"button": "Удалить продукт",
+			"form": {
+				"title": "Удалить продукт",
+				"warning": "Вы уверены, что хотите удалить этот продукт поезда?",
+				"buttons": {
+					"decline": "Отмена",
+					"confirm": "Удалить",
+					"confirming": "Удаление ..."
+				},
+				"toasts": {
+					"success": "Продукт удалён",
+					"error": "Не удалось удалить продукт"
+				}
+			}
+		}
+	}
+}

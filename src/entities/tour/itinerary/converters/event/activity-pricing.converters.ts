@@ -15,6 +15,8 @@ import {
 	type TCommissionMarkupInputBackend
 } from "../../types";
 
+import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
+
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
 ): IActivityPriceRowMarkup | null => {
@@ -70,7 +72,7 @@ export const mapActivityPricingFromBackend = (
 		return defaults;
 	}
 
-	const feesVal = expenses.fees?.cost?.val;
+	const fees = mapFeesFromBackend(expenses.fees);
 
 	if (expenses.typ === "fixed") {
 		const markup = mapMarkupFromBackend(expenses.markup);
@@ -82,7 +84,7 @@ export const mapActivityPricingFromBackend = (
 			...(expenses.cost?.val != null && {
 				total_price: expenses.cost.val
 			}),
-			...(feesVal != null && { taxes: feesVal }),
+			[ENUM_ACTIVITY_PRICING_FIELD.FEES]: fees,
 			...(expenses.cost?.currency && {
 				currency: currencyConverter.from(expenses.cost.currency)
 			})
@@ -98,7 +100,7 @@ export const mapActivityPricingFromBackend = (
 		...(expenses.cost_per_person?.val != null && {
 			total_price: expenses.cost_per_person.val
 		}),
-		...(feesVal != null && { taxes: feesVal }),
+		[ENUM_ACTIVITY_PRICING_FIELD.FEES]: fees,
 		...(expenses.cost_per_person?.currency && {
 			currency: currencyConverter.from(expenses.cost_per_person.currency)
 		})
@@ -117,7 +119,7 @@ export const mapActivityPricingToBackend = (
 
 	const totalPrice = pricing[ENUM_ACTIVITY_PRICING_FIELD.TOTAL_PRICE];
 	const currency = pricing[ENUM_ACTIVITY_PRICING_FIELD.CURRENCY];
-	const taxes = pricing[ENUM_ACTIVITY_PRICING_FIELD.TAXES];
+	const fees = mapFeesToBackend(pricing[ENUM_ACTIVITY_PRICING_FIELD.FEES]);
 
 	if (totalPrice == null || !currency) {
 		return {};
@@ -127,16 +129,6 @@ export const mapActivityPricingToBackend = (
 		val: totalPrice,
 		currency: currencyConverter.to(currency)!
 	};
-	const fees =
-		taxes != null
-			? {
-					typ: "fixed" as const,
-					cost: {
-						val: taxes,
-						currency: currencyConverter.to(currency)!
-					}
-				}
-			: null;
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_ACTIVITY_PRICING_FIELD.MARKUP] ?? null,
 		currency,

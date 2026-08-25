@@ -1,5 +1,7 @@
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { IFeeFormRow } from "../fee.types";
+
 export const ENUM_ACCOMMODATION_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -33,6 +35,14 @@ export const ENUM_ACCOMMODATION_MARKUP_TYP = {
 export type ENUM_ACCOMMODATION_MARKUP_TYP_TYPE =
 	(typeof ENUM_ACCOMMODATION_MARKUP_TYP)[keyof typeof ENUM_ACCOMMODATION_MARKUP_TYP];
 
+export const ENUM_ACCOMMODATION_CHARGE = {
+	FIXED: "fixed",
+	PER_DURATION: "per_duration"
+} as const;
+
+export type ENUM_ACCOMMODATION_CHARGE_TYPE =
+	(typeof ENUM_ACCOMMODATION_CHARGE)[keyof typeof ENUM_ACCOMMODATION_CHARGE];
+
 export const ENUM_ACCOMMODATION_PRICING_FIELD = {
 	INVOICING: "invoicing",
 	PRICING_TYPE: "pricing_type",
@@ -40,9 +50,10 @@ export const ENUM_ACCOMMODATION_PRICING_FIELD = {
 	ADD_MARGIN_SEPARATELY: "add_margin_separately",
 	EXPENSES: "expenses",
 	TOTAL_PRICE: "total_price",
-	TAXES: "taxes",
+	FEES: "fees",
 	CURRENCY: "currency",
 	MARKUP: "markup",
+	CHARGE_TYP: "charge_typ",
 	PACKAGE_ID: "package_id"
 } as const;
 
@@ -85,7 +96,7 @@ export interface IAccommodationPriceRowMarkup {
 
 export interface IAccommodationPerRoomPriceRow {
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: number | null;
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: number | null;
+	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: IFeeFormRow[];
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]?: ENUM_CURRENCY_OPTIONS_TYPE;
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: IAccommodationPriceRowMarkup | null;
 }

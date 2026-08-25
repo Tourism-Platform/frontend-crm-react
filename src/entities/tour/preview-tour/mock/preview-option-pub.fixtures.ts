@@ -55,6 +55,7 @@ export const locationAirportTashkent = (): LocationOutSchema => ({
 });
 
 const housingDetails = (city: LocationOutSchema) => ({
+	source: "custom" as const,
 	location: city,
 	amenities: [AmenitiesTypes.Wifi, AmenitiesTypes.Breakfast],
 	duration: 1,
@@ -190,6 +191,7 @@ export const trainEvent = (
 	day,
 	position,
 	details: {
+		source: "custom",
 		hop: [
 			{
 				departure: {

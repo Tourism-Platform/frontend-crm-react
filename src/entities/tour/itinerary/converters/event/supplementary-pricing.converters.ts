@@ -17,6 +17,7 @@ import {
 	type ISupplementPriceRowMarkup,
 	type TCommissionMarkupBackend,
 	type TCommissionMarkupInputBackend,
+	type TFeeBackend,
 	type TSupplementEditSchema,
 	type TSupplementItemsSchema,
 	type TSupplementPricingSchema,
@@ -24,15 +25,32 @@ import {
 	type TSupplementaryItemInputBackend
 } from "../../types";
 
+import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
+
 type TItemsList =
 	TSupplementItemsSchema[typeof ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST];
 
 const createEmptyPerItemRow = (): ISupplementPerItemPriceRow => ({
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: null,
-	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: null,
+	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: [],
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: null
 });
+
+const sameFees = (
+	a?: TFeeBackend[] | null,
+	b?: TFeeBackend[] | null
+): boolean => {
+	const left = a ?? [];
+	const right = b ?? [];
+	if (left.length !== right.length) return false;
+	return left.every(
+		(fee, index) =>
+			fee.cost?.val === right[index]?.cost?.val &&
+			fee.cost?.currency === right[index]?.cost?.currency &&
+			fee.name === right[index]?.name
+	);
+};
 
 const alignPerItemPriceRows = (
 	itemsListLength: number,
@@ -180,14 +198,14 @@ export const mapPricingFromBackend = (
 			return (
 				a.cost?.val === b.cost?.val &&
 				a.cost?.currency === b.cost?.currency &&
-				a.fees?.cost?.val === b.fees?.cost?.val
+				sameFees(a.fees, b.fees)
 			);
 		}
 		if (a.typ === "per_person" && b.typ === "per_person") {
 			return (
 				a.cost_per_person?.val === b.cost_per_person?.val &&
 				a.cost_per_person?.currency === b.cost_per_person?.currency &&
-				a.fees?.cost?.val === b.fees?.cost?.val
+				sameFees(a.fees, b.fees)
 			);
 		}
 		return false;
@@ -202,8 +220,9 @@ export const mapPricingFromBackend = (
 					ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON,
 				[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]:
 					first.expenses.cost_per_person?.val ?? null,
-				[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]:
-					first.expenses.fees?.cost?.val ?? null,
+				[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]: mapFeesFromBackend(
+					first.expenses.fees
+				),
 				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
 					currencyConverter.from(
 						first.expenses.cost_per_person?.currency
@@ -222,8 +241,9 @@ export const mapPricingFromBackend = (
 				ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE,
 			[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]:
 				first.expenses.cost?.val ?? null,
-			[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]:
-				first.expenses.fees?.cost?.val ?? null,
+			[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]: mapFeesFromBackend(
+				first.expenses.fees
+			),
 			[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: currencyConverter.from(
 				first.expenses.cost?.currency
 			),
@@ -247,8 +267,9 @@ export const mapPricingFromBackend = (
 
 		return {
 			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: cost,
-			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]:
-				expenses?.fees?.cost?.val ?? null,
+			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: mapFeesFromBackend(
+				expenses?.fees
+			),
 			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]: currency,
 			[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
 				expenses?.markup
@@ -296,17 +317,9 @@ export const mapItemsAndPricingToBackend = (
 		pricing[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY] ??
 		DEFAULT_EVENT_CURRENCY;
 	const total = pricing[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE];
-	const taxes = pricing[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES];
-	const rootFees =
-		taxes != null
-			? {
-					typ: "fixed" as const,
-					cost: {
-						val: taxes,
-						currency: currencyConverter.to(currency)!
-					}
-				}
-			: null;
+	const rootFees = mapFeesToBackend(
+		pricing[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]
+	);
 	const rootMarkup = pricing[
 		ENUM_SUPPLEMENT_PRICING_FIELD.ADD_MARGIN_SEPARATELY
 	]
@@ -322,7 +335,7 @@ export const mapItemsAndPricingToBackend = (
 			expenses:
 				total != null
 					? {
-							typ: "fixed" as const,
+							typ: "fixed",
 							cost: {
 								val: total,
 								currency: currencyConverter.to(currency)!
@@ -340,7 +353,7 @@ export const mapItemsAndPricingToBackend = (
 			expenses:
 				total != null
 					? {
-							typ: "per_person" as const,
+							typ: "per_person",
 							cost_per_person: {
 								val: total,
 								currency: currencyConverter.to(currency)!
@@ -366,7 +379,9 @@ export const mapItemsAndPricingToBackend = (
 			row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY] ??
 			DEFAULT_EVENT_CURRENCY;
 		const cost = row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST];
-		const fees = row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES];
+		const fees = mapFeesToBackend(
+			row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]
+		);
 		const markup = mapMarkupToBackend(
 			row[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP],
 			rowCurrency
@@ -377,24 +392,12 @@ export const mapItemsAndPricingToBackend = (
 			expenses:
 				cost != null
 					? {
-							typ: "fixed" as const,
+							typ: "fixed",
 							cost: {
 								val: cost,
 								currency: currencyConverter.to(rowCurrency)!
 							},
-							fees:
-								fees != null
-									? {
-											typ: "fixed" as const,
-											cost: {
-												val: fees,
-												currency:
-													currencyConverter.to(
-														rowCurrency
-													)!
-											}
-										}
-									: null,
+							fees,
 							markup
 						}
 					: null

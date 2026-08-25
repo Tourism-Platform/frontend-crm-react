@@ -24,14 +24,6 @@ export const PER_CAR_CATEGORY_ROW_FIELDS_LIST: TTransportationPricingFormField[]
 			type: "number"
 		},
 		{
-			key: ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES,
-			label: "form.pricing.form.per_car.table.fees",
-			placeholder:
-				"form.pricing.form.per_car.fields.taxes_fees.placeholder",
-			fieldType: "input",
-			type: "number"
-		},
-		{
 			key: ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY,
 			label: "form.pricing.form.per_car.table.currency",
 			placeholder:
@@ -45,7 +37,7 @@ export const PER_CAR_CATEGORY_ROW_FIELDS_LIST: TTransportationPricingFormField[]
 export const createEmptyPerCarCategoryRow = () => ({
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: "",
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: null,
-	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: null,
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: [],
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]: null
 });

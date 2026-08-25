@@ -58,7 +58,14 @@ describe("mapItemsAndPricingToBackend", () => {
 					[ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE]:
 						ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 250,
-					[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]: 20,
+					[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]: [
+						{
+							name: null,
+							cost: 20,
+							currency: "USD",
+							description: null
+						}
+					],
 					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD
 				})
 			)
@@ -68,10 +75,13 @@ describe("mapItemsAndPricingToBackend", () => {
 				expenses: {
 					typ: "fixed",
 					cost: { val: 250, currency: Currency.USD },
-					fees: {
-						typ: "fixed",
-						cost: { val: 20, currency: Currency.USD }
-					},
+					fees: [
+						{
+							name: null,
+							description: null,
+							cost: { val: 20, currency: Currency.USD }
+						}
+					],
 					markup: null
 				}
 			}
@@ -129,7 +139,14 @@ describe("mapItemsAndPricingToBackend", () => {
 					[ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE]:
 						ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 80,
-					[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]: 5,
+					[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]: [
+						{
+							name: null,
+							cost: 5,
+							currency: "EUR",
+							description: null
+						}
+					],
 					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.EUR
 				})
 			)
@@ -139,10 +156,13 @@ describe("mapItemsAndPricingToBackend", () => {
 				expenses: {
 					typ: "per_person",
 					cost_per_person: { val: 80, currency: Currency.EUR },
-					fees: {
-						typ: "fixed",
-						cost: { val: 5, currency: Currency.EUR }
-					},
+					fees: [
+						{
+							name: null,
+							description: null,
+							cost: { val: 5, currency: Currency.EUR }
+						}
+					],
 					markup: null
 				}
 			}
@@ -190,7 +210,14 @@ describe("mapItemsAndPricingToBackend", () => {
 						[ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS]: [
 							{
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: 150,
-								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: 10,
+								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: [
+									{
+										name: null,
+										cost: 10,
+										currency: "USD",
+										description: null
+									}
+								],
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]:
 									Currency.USD,
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: null
@@ -205,10 +232,13 @@ describe("mapItemsAndPricingToBackend", () => {
 				expenses: {
 					typ: "fixed",
 					cost: { val: 150, currency: Currency.USD },
-					fees: {
-						typ: "fixed",
-						cost: { val: 10, currency: Currency.USD }
-					},
+					fees: [
+						{
+							name: null,
+							description: null,
+							cost: { val: 10, currency: Currency.USD }
+						}
+					],
 					markup: null
 				}
 			}
@@ -227,7 +257,14 @@ describe("mapItemsAndPricingToBackend", () => {
 						[ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS]: [
 							{
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: null,
-								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: 10,
+								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: [
+									{
+										name: null,
+										cost: 10,
+										currency: "USD",
+										description: null
+									}
+								],
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]:
 									Currency.USD,
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: null
@@ -246,14 +283,16 @@ describe("mapItemsAndPricingToBackend", () => {
 				[ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE]:
 					ENUM_SUPPLEMENT_PRICING_TYPE.PER_ITEM,
 				[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 999,
-				[ENUM_SUPPLEMENT_PRICING_FIELD.TAXES]: 50,
+				[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]: [
+					{ name: null, cost: 50, currency: "USD", description: null }
+				],
 				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD,
 				[ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES]: {
 					typ: ENUM_SUPPLEMENT_PRICING_TYPE.PER_ITEM,
 					[ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS]: [
 						{
 							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: 40,
-							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: null,
+							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: [],
 							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]:
 								Currency.USD,
 							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: null
@@ -282,10 +321,13 @@ describe("mapPricingFromBackend", () => {
 					expenses: {
 						typ: "fixed",
 						cost: { val: 30, currency: Currency.USD },
-						fees: {
-							typ: "fixed",
-							cost: { val: 5, currency: Currency.USD }
-						},
+						fees: [
+							{
+								name: null,
+								description: null,
+								cost: { val: 5, currency: Currency.USD }
+							}
+						],
 						markup: {
 							typ: "fixed",
 							cost: { val: 5, currency: Currency.USD }
@@ -296,7 +338,7 @@ describe("mapPricingFromBackend", () => {
 		).toMatchObject({
 			pricing_type: ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE,
 			total_price: 30,
-			taxes: 5,
+			fees: [{ name: null, cost: 5, currency: "USD", description: null }],
 			currency: Currency.USD,
 			add_margin_separately: true,
 			markup: { typ: ENUM_SUPPLEMENT_MARKUP_TYP.FIXED, value: "5" }
@@ -311,10 +353,13 @@ describe("mapPricingFromBackend", () => {
 					expenses: {
 						typ: "per_person",
 						cost_per_person: { val: 15, currency: Currency.EUR },
-						fees: {
-							typ: "fixed",
-							cost: { val: 2, currency: Currency.EUR }
-						},
+						fees: [
+							{
+								name: null,
+								description: null,
+								cost: { val: 2, currency: Currency.EUR }
+							}
+						],
 						markup: null
 					}
 				}
@@ -322,7 +367,7 @@ describe("mapPricingFromBackend", () => {
 		).toMatchObject({
 			pricing_type: ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON,
 			total_price: 15,
-			taxes: 2,
+			fees: [{ name: null, cost: 2, currency: "EUR", description: null }],
 			currency: Currency.EUR,
 			add_margin_separately: false
 		});
@@ -336,10 +381,13 @@ describe("mapPricingFromBackend", () => {
 					expenses: {
 						typ: "fixed",
 						cost: { val: 10, currency: Currency.USD },
-						fees: {
-							typ: "fixed",
-							cost: { val: 1, currency: Currency.USD }
-						},
+						fees: [
+							{
+								name: null,
+								description: null,
+								cost: { val: 1, currency: Currency.USD }
+							}
+						],
 						markup: null
 					}
 				},
@@ -360,13 +408,20 @@ describe("mapPricingFromBackend", () => {
 				items: [
 					{
 						cost: 10,
-						fees: 1,
+						fees: [
+							{
+								name: null,
+								cost: 1,
+								currency: "USD",
+								description: null
+							}
+						],
 						currency: Currency.USD,
 						markup: null
 					},
 					{
 						cost: 20,
-						fees: null,
+						fees: [],
 						currency: Currency.USD,
 						markup: null
 					}

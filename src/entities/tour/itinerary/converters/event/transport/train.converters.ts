@@ -8,15 +8,22 @@ import type {
 	TTourEventUpdateBackend,
 	TTrainRouteSegment
 } from "../../../types";
-import { ENUM_FLIGHT_TRANSPORT_TYPE, ENUM_FORM_TRAIN } from "../../../types";
+import {
+	ENUM_FLIGHT_TRANSPORT_TYPE,
+	ENUM_FORM_EVENT_PRODUCT,
+	ENUM_FORM_TRAIN,
+	ENUM_HOUSING_SOURCE
+} from "../../../types";
 import {
 	mapFlightPricingFromBackend,
 	mapFlightPricingToBackend
 } from "../flight-pricing.converters";
+import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
 } from "../package-id.helpers";
+import { isInheritedTrainDetails } from "../train-details.helpers";
 
 import { mapTrainHopToSegment, mapTrainSegmentToHop } from "./journey.helpers";
 import { mapEventMetaToForm } from "./shared.helpers";
@@ -27,8 +34,6 @@ const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 	[ENUM_FORM_TRAIN.TRAIN_NUMBER]: "",
 	[ENUM_FORM_TRAIN.DEPARTURE_STATION]: null,
 	[ENUM_FORM_TRAIN.ARRIVAL_STATION]: null,
-	// [ENUM_FORM_TRAIN.DEPARTURE_DATE]: null,
-	// [ENUM_FORM_TRAIN.ARRIVAL_DATE]: null,
 	[ENUM_FORM_TRAIN.DEPARTURE_TIME]: null,
 	[ENUM_FORM_TRAIN.ARRIVAL_TIME]: null,
 	[ENUM_FORM_TRAIN.DEPARTURE_TIMEZONE]: "",
@@ -50,7 +55,31 @@ export const mapTrainEventToForm = (
 	data: TTourEventBackendResponce
 ): TFlightEditSchema => {
 	const event = assertTrainEvent(data);
-	const hops = event.details?.hop ?? [];
+	const details = event.details;
+
+	if (isInheritedTrainDetails(details)) {
+		const hops = details.product?.hop ?? [];
+		const route: TTrainRouteSegment[] =
+			hops.length > 0
+				? hops.map(mapTrainHopToSegment)
+				: [createEmptyTrainSegment()];
+
+		return {
+			...mapEventMetaToForm(event),
+			...mapInheritedProductLinkToForm(details),
+			general: {
+				description: event.description ?? "",
+				transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
+				route
+			},
+			pricing: applyEventPackageIdToPricing(
+				mapFlightPricingFromBackend(null),
+				event.package_id
+			)
+		};
+	}
+
+	const hops = details?.hop ?? [];
 	const route: TTrainRouteSegment[] =
 		hops.length > 0
 			? hops.map(mapTrainHopToSegment)
@@ -58,13 +87,15 @@ export const mapTrainEventToForm = (
 
 	return {
 		...mapEventMetaToForm(event),
+		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
+		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
 			description: event.description ?? "",
 			transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
 			route
 		},
 		pricing: applyEventPackageIdToPricing(
-			mapFlightPricingFromBackend(event.details),
+			mapFlightPricingFromBackend(details),
 			event.package_id
 		)
 	};
@@ -74,6 +105,24 @@ export const mapTrainFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>,
 	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
+	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
+
+	if (productId) {
+		return {
+			typ: ENUM_EVENT_BACKEND.TRAIN,
+			package_id: mapEventPackageIdToBackend(frontend?.pricing),
+			...(frontend.name !== undefined &&
+				frontend.name !== "" && { name: frontend.name }),
+			...(frontend.general?.description !== undefined && {
+				description: frontend.general.description
+			}),
+			details: {
+				product_id: productId,
+				variant_id: frontend[ENUM_FORM_EVENT_PRODUCT.VARIANT_ID] ?? null
+			}
+		};
+	}
+
 	const g = frontend.general;
 	const trainRoute = g?.route?.filter(
 		(segment): segment is TTrainRouteSegment =>
@@ -86,10 +135,6 @@ export const mapTrainFormToUpdate = (
 		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
-		...(Number.isFinite(frontend.position) && {
-			position: frontend.position
-		}),
-		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		...(g?.description !== undefined && { description: g.description }),
 		details: {
 			...(trainRoute?.length && {

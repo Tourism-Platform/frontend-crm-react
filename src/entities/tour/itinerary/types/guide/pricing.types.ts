@@ -1,5 +1,7 @@
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { IFeeFormRow } from "../fee.types";
+
 export const ENUM_GUIDE_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -23,6 +25,14 @@ export const ENUM_GUIDE_EXPENSE_TYP = {
 export type ENUM_GUIDE_EXPENSE_TYP_TYPE =
 	(typeof ENUM_GUIDE_EXPENSE_TYP)[keyof typeof ENUM_GUIDE_EXPENSE_TYP];
 
+export const ENUM_GUIDE_CHARGE = {
+	FIXED: "fixed",
+	PER_DURATION: "per_duration"
+} as const;
+
+export type ENUM_GUIDE_CHARGE_TYPE =
+	(typeof ENUM_GUIDE_CHARGE)[keyof typeof ENUM_GUIDE_CHARGE];
+
 export const ENUM_GUIDE_MARKUP_TYP = {
 	FIXED: "fixed",
 	PERCENTAGE: "percentage"
@@ -44,6 +54,7 @@ export type ENUM_GUIDE_PRICING_FIELD_TYPE =
 	(typeof ENUM_GUIDE_PRICING_FIELD)[keyof typeof ENUM_GUIDE_PRICING_FIELD];
 
 export const ENUM_GUIDE_PRICE_ROW_FIELD = {
+	CHARGE_TYP: "charge_typ",
 	COST: "cost",
 	FEES: "fees",
 	CURRENCY: "currency",
@@ -55,6 +66,7 @@ export type ENUM_GUIDE_PRICE_ROW_FIELD_TYPE =
 
 export const ENUM_GUIDE_CATEGORY_ROW_FIELD = {
 	LANG: "lang",
+	CHARGE_TYP: ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP,
 	COST: ENUM_GUIDE_PRICE_ROW_FIELD.COST,
 	FEES: ENUM_GUIDE_PRICE_ROW_FIELD.FEES,
 	CURRENCY: ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY,
@@ -78,8 +90,9 @@ export interface IGuidePriceRowMarkup {
 }
 
 export interface IGuidePerGuidePriceRow {
+	[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE_TYPE;
 	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: number | null;
-	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: number | null;
+	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: IFeeFormRow[];
 	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]?: ENUM_CURRENCY_OPTIONS_TYPE;
 	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: IGuidePriceRowMarkup | null;
 }

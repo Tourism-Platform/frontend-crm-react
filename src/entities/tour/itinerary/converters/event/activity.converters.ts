@@ -1,17 +1,27 @@
-import { type ActivitySingleEventOutput, LanguageCode } from "@/shared/api";
+import {
+	type ActivitySingleEventOutput,
+	ActivityType,
+	LanguageCode
+} from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
-import { ENUM_EVENT_BACKEND } from "../../types";
 import {
+	ENUM_ACTIVITY_TYPE,
+	ENUM_EVENT_BACKEND,
+	ENUM_FORM_ACTIVITY,
 	type TActivityEditSchema,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../types";
 
+import {
+	mapMenuFromBackend,
+	mapMenuToBackend
+} from "./activity-menu.converters";
 import {
 	mapActivityPricingFromBackend,
 	mapActivityPricingToBackend
@@ -22,17 +32,31 @@ import {
 	mapEventPackageIdToBackend
 } from "./package-id.helpers";
 
+const normalizeActivityDetailsTyp = (
+	detailsTyp: string | null | undefined
+): ActivityType | null | undefined => {
+	if (detailsTyp === "food") {
+		return ActivityType.Food;
+	}
+	return detailsTyp as ActivityType | null | undefined;
+};
+
 export const mapActivityEventToForm = (
 	data: TTourEventBackendResponce
 ): TActivityEditSchema => {
 	const event = data?.event as ActivitySingleEventOutput;
+	const details = event?.details;
+	const detailsTyp = details?.typ;
+	const activityTyp = normalizeActivityDetailsTyp(detailsTyp);
+	const isFood = detailsTyp === "food";
+
 	return {
 		name: event?.name || "",
 		day: event.day,
 		position: event.position,
 		general: {
 			description: event.description || "",
-			activity_subtype: activityTypeMapper.from(event?.details?.typ),
+			activity_subtype: activityTypeMapper.from(activityTyp),
 			activity_start_time: event.details?.start_time?.time || "",
 			activity_start_timezone: String(
 				event.details?.start_time?.timezone ?? getDeviceUtcOffset()
@@ -41,7 +65,12 @@ export const mapActivityEventToForm = (
 			activity_end_timezone: String(
 				event.details?.end_time?.timezone ?? getDeviceUtcOffset()
 			),
-			location: mapBackendLocationToGeoForm(event.details?.location)
+			location: mapBackendLocationToGeoForm(event.details?.location),
+			[ENUM_FORM_ACTIVITY.MENU]: isFood
+				? mapMenuFromBackend(
+						details && "menu" in details ? details.menu : null
+					)
+				: []
 		},
 		pricing: applyEventPackageIdToPricing(
 			mapActivityPricingFromBackend(event.details),
@@ -56,6 +85,7 @@ export const mapActivityFormToUpdate = (
 ): TTourEventUpdateBackend => {
 	const g = frontend?.general;
 	const pricingDetails = mapActivityPricingToBackend(frontend?.pricing);
+	const isFood = g?.activity_subtype === ENUM_ACTIVITY_TYPE.FOOD;
 
 	return {
 		...(frontend.name !== undefined &&
@@ -69,9 +99,14 @@ export const mapActivityFormToUpdate = (
 		}),
 		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		details: {
-			...(g?.activity_subtype && {
-				typ: activityTypeMapper.to(g.activity_subtype)
-			}),
+			...(isFood
+				? {
+						typ: "food",
+						menu: mapMenuToBackend(g?.[ENUM_FORM_ACTIVITY.MENU])
+					}
+				: g?.activity_subtype
+					? { typ: activityTypeMapper.to(g.activity_subtype) }
+					: {}),
 			...(g?.activity_start_time && {
 				start_time: {
 					time: g.activity_start_time,

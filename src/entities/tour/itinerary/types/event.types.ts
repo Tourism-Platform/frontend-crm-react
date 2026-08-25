@@ -18,7 +18,7 @@ export interface ITourEventOption {
 	details: Record<string, unknown>;
 	/** Preformatted start–end clock range for board cards */
 	timeSubtitle?: string;
-	// isOptional: boolean;
+	isOptional?: boolean;
 }
 
 export interface ITourEvent {
@@ -67,6 +67,12 @@ export type TTourEvent =
 	| TActivityEditSchema
 	| TGuideEditSchema
 	| TMultiplyOptionEditSchema;
+
+/** Result of getTourEvent: form values + raw backend details for product inheritance. */
+export interface IGetTourEventResult {
+	form: TTourEvent;
+	details: Record<string, unknown>;
+}
 
 export type TTourEventUpdate = Partial<
 	| TFlightEditSchema

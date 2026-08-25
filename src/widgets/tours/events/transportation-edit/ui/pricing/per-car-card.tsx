@@ -14,11 +14,14 @@ import {
 import {
 	ENUM_FORM_CARS,
 	ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD,
+	ENUM_TRANSPORTATION_PRICE_ROW_FIELD,
 	ENUM_TRANSPORTATION_PRICING_FIELD,
 	type ENUM_VEHICLE_BODY_TYPE_TYPE,
 	type TTransportationEditSchema,
 	VEHICLE_BODY_TYPE_LABELS
 } from "@/entities/tour";
+
+import { FeeLinesField } from "@/features/pricing";
 
 import {
 	ENUM_FORM_SECTION,
@@ -41,6 +44,8 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 	const carName = form.watch(
 		`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${ENUM_FORM_CARS.CAR_NAME}`
 	) as ENUM_VEHICLE_BODY_TYPE_TYPE | undefined;
+	const rowPath =
+		`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}.${index}` as const;
 
 	return (
 		<Card>
@@ -56,8 +61,8 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 			<CardContent className="grid gap-4">
 				<div
 					className={cn(
-						"grid grid-cols-[1fr_1fr_1fr] gap-5",
-						addMarginSeparately && "grid-cols-[1fr_1fr_1.5fr_0.5fr]"
+						"grid grid-cols-2 gap-5",
+						addMarginSeparately && "grid-cols-[1fr_1.5fr_0.5fr]"
 					)}
 				>
 					{PER_CAR_ROW_FIELDS_LIST.map(
@@ -68,7 +73,7 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 									PER_CAR_ROW_FIELDS_LIST.length - 1 ? (
 									<CustomInputSelect
 										control={form.control}
-										name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}.${index}.${PER_CAR_MARKUP_FIELD.key}`}
+										name={`${rowPath}.${PER_CAR_MARKUP_FIELD.key}`}
 										label={PER_CAR_MARKUP_FIELD.label}
 										placeholder={
 											PER_CAR_MARKUP_FIELD.placeholder
@@ -81,7 +86,7 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 								) : null}
 								<CustomField
 									control={form.control}
-									name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}.${index}.${key}`}
+									name={`${rowPath}.${key}`}
 									t={t}
 									{...item}
 								/>
@@ -89,6 +94,10 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 						)
 					)}
 				</div>
+				<FeeLinesField
+					control={form.control}
+					name={`${rowPath}.${ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES}`}
+				/>
 			</CardContent>
 		</Card>
 	);

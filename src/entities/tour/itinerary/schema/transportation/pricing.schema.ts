@@ -20,6 +20,7 @@ import {
 	ENUM_TRANSPORTATION_PRICING_INVOICING,
 	ENUM_TRANSPORTATION_PRICING_TYPE
 } from "../../types";
+import { feesArraySchema } from "../common/fee.schema";
 
 const msg = i18nKey<TTourEventTransportationEditPageKeys>();
 
@@ -43,7 +44,7 @@ const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
 const perCarPriceRowSchema = z.object({
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: nonNegativeNullableNumber,
-	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: nonNegativeNullableNumber,
+	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -55,7 +56,7 @@ const categoryRowSchema = z.object({
 		)
 	}),
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: nonNegativeNullableNumber,
-	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: nonNegativeNullableNumber,
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -134,8 +135,7 @@ export const TRANSPORTATION_PRICING_SCHEMA = z
 			.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]:
 			nullableNumber.optional(),
-		[ENUM_TRANSPORTATION_PRICING_FIELD.TAXES]:
-			nonNegativeNullableNumber.optional(),
+		[ENUM_TRANSPORTATION_PRICING_FIELD.FEES]: feesArraySchema.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_TRANSPORTATION_PRICING_FIELD.PACKAGE_ID]: z.string()

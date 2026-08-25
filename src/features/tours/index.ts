@@ -1,5 +1,9 @@
 export * from "./connected-tour-header";
+export * from "./attach-event-product";
+export * from "./override-event-product";
+export * from "./event-policy-check";
 export * from "./create-option";
+
 export * from "./create-tour";
 export * from "./delete-option";
 export * from "./edit-option";

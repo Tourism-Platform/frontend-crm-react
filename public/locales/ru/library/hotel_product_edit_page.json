@@ -1,0 +1,163 @@
+{
+	"page_name": "Отель",
+	"back": "К поставщику",
+	"tabs": {
+		"general": "Основное",
+		"details": "Детали",
+		"variants": "Варианты",
+		"images": "Фото"
+	},
+	"form": {
+		"general": {
+			"fields": {
+				"name": {
+					"label": "Название",
+					"placeholder": "Название отеля"
+				}
+			},
+			"errors": {
+				"name": {
+					"required": "Укажите название"
+				}
+			},
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение ..."
+			}
+		},
+		"details": {
+			"fields": {
+				"stars": {
+					"label": "Звёзды",
+					"placeholder": "1–5"
+				},
+				"lat": {
+					"label": "Широта",
+					"placeholder": "Lat"
+				},
+				"long": {
+					"label": "Долгота",
+					"placeholder": "Long"
+				},
+				"amenities": {
+					"label": "Удобства",
+					"placeholder": "Выберите удобства"
+				},
+				"checkInFrom": {
+					"label": "Заезд с",
+					"placeholder": "14:00"
+				},
+				"checkOutUntil": {
+					"label": "Выезд до",
+					"placeholder": "12:00"
+				}
+			},
+			"buttons": {
+				"save": "Сохранить детали",
+				"saving": "Сохранение ..."
+			}
+		},
+		"variants": {
+			"title": "Варианты",
+			"add": "Добавить вариант",
+			"fields": {
+				"name": {
+					"label": "Название варианта",
+					"placeholder": "Deluxe"
+				},
+				"roomTyp": {
+					"label": "Тип комнаты",
+					"placeholder": "Выберите тип"
+				},
+				"chargeTyp": {
+					"label": "Тип тарифа",
+					"placeholder": "Выберите"
+				},
+				"cost": {
+					"label": "Стоимость",
+					"placeholder": "0"
+				},
+				"currency": {
+					"label": "Валюта",
+					"placeholder": "USD"
+				},
+				"fromDate": {
+					"label": "Сезон с",
+					"placeholder": "YYYY-MM-DD"
+				},
+				"toDate": {
+					"label": "Сезон по",
+					"placeholder": "YYYY-MM-DD"
+				},
+				"seasonChargeTyp": {
+					"label": "Тип тарифа сезона",
+					"placeholder": "Выберите"
+				},
+				"seasonCost": {
+					"label": "Цена сезона",
+					"placeholder": "0"
+				},
+				"seasonCurrency": {
+					"label": "Валюта сезона",
+					"placeholder": "USD"
+				}
+			},
+			"charge": {
+				"fixed": "За весь срок",
+				"per_duration": "За ночь"
+			},
+			"add_room": "Добавить комнату",
+			"add_rate": "Добавить сезон",
+			"buttons": {
+				"save": "Сохранить вариант",
+				"saving": "Сохранение ...",
+				"delete": "Удалить",
+				"deleting": "Удаление ..."
+			}
+		},
+		"images": {
+			"product_title": "Галерея продукта",
+			"node_title": "Фото комнат",
+			"select_room": "Выберите комнату",
+			"buttons": {
+				"save": "Сохранить фото",
+				"saving": "Сохранение ..."
+			}
+		},
+		"toasts": {
+			"save": {
+				"success": "Сохранено",
+				"error": "Не удалось сохранить"
+			},
+			"load": {
+				"error": "Не удалось загрузить продукт"
+			},
+			"create": {
+				"success": "Продукт создан",
+				"error": "Не удалось создать продукт"
+			},
+			"delete": {
+				"success": "Удалено",
+				"error": "Не удалось удалить"
+			}
+		}
+	},
+	"menu": {
+		"delete": {
+			"button": "Удалить продукт",
+			"form": {
+				"title": "Удалить продукт",
+				"warning": "Вы уверены, что хотите удалить этот отельный продукт?",
+				"buttons": {
+					"decline": "Отмена",
+					"confirm": "Удалить",
+					"confirming": "Удаление ..."
+				},
+				"toasts": {
+					"success": "Продукт удалён",
+					"error": "Не удалось удалить продукт"
+				}
+			}
+		}
+	}
+}

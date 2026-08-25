@@ -16,6 +16,8 @@ import {
 	type TTransportDetailsWithPricingBackend
 } from "../../types";
 
+import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
+
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
 ): IFlightPriceRowMarkup | null => {
@@ -71,7 +73,7 @@ export const mapFlightPricingFromBackend = (
 		return defaults;
 	}
 
-	const feesVal = expenses.fees?.cost?.val;
+	const fees = mapFeesFromBackend(expenses.fees);
 
 	if (expenses.typ === "fixed") {
 		const markup = mapMarkupFromBackend(expenses.markup);
@@ -83,7 +85,7 @@ export const mapFlightPricingFromBackend = (
 			...(expenses.cost?.val != null && {
 				total_price: expenses.cost.val
 			}),
-			...(feesVal != null && { taxes: feesVal }),
+			[ENUM_FLIGHT_PRICING_FIELD.FEES]: fees,
 			...(expenses.cost?.currency && {
 				currency: currencyConverter.from(expenses.cost.currency)
 			})
@@ -99,7 +101,7 @@ export const mapFlightPricingFromBackend = (
 		...(expenses.cost_per_person?.val != null && {
 			total_price: expenses.cost_per_person.val
 		}),
-		...(feesVal != null && { taxes: feesVal }),
+		[ENUM_FLIGHT_PRICING_FIELD.FEES]: fees,
 		...(expenses.cost_per_person?.currency && {
 			currency: currencyConverter.from(expenses.cost_per_person.currency)
 		})
@@ -120,7 +122,7 @@ export const mapFlightPricingToBackend = (
 
 	const totalPrice = pricing[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE];
 	const currency = pricing[ENUM_FLIGHT_PRICING_FIELD.CURRENCY];
-	const taxes = pricing[ENUM_FLIGHT_PRICING_FIELD.TAXES];
+	const fees = mapFeesToBackend(pricing[ENUM_FLIGHT_PRICING_FIELD.FEES]);
 
 	if (totalPrice == null || !currency) {
 		return {};
@@ -130,16 +132,6 @@ export const mapFlightPricingToBackend = (
 		val: totalPrice,
 		currency: currencyConverter.to(currency)!
 	};
-	const fees =
-		taxes != null
-			? {
-					typ: "fixed" as const,
-					cost: {
-						val: taxes,
-						currency: currencyConverter.to(currency)!
-					}
-				}
-			: null;
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_FLIGHT_PRICING_FIELD.MARKUP] ?? null,
 		currency,

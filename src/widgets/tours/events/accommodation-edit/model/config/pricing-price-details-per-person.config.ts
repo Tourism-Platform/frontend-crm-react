@@ -13,16 +13,8 @@ export const PRICING_PER_PERSON_PRICE_DETAILS_LIST: TAccommodationPricingFormFie
 			placeholder:
 				"form.pricing.form.pricing_details.fields.total_price_per_person.placeholder",
 			key: ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE,
-			fieldType: "input",
-			type: "number"
-		},
-		{
-			label: "form.pricing.form.pricing_details.fields.taxes_and_fees_per_person.label",
-			placeholder:
-				"form.pricing.form.pricing_details.fields.taxes_and_fees_per_person.placeholder",
-			key: ENUM_ACCOMMODATION_PRICING_FIELD.TAXES,
-			fieldType: "input",
-			type: "number"
+			type: "number",
+			fieldType: "input"
 		},
 		{
 			label: "form.pricing.form.pricing_details.fields.currency.label",

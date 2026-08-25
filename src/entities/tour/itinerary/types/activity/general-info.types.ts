@@ -9,7 +9,8 @@ export const ENUM_FORM_ACTIVITY = {
 	ACTIVITY_START_TIMEZONE: "activity_start_timezone",
 	ACTIVITY_END_TIME: "activity_end_time",
 	ACTIVITY_END_TIMEZONE: "activity_end_timezone",
-	DESCRIPTION: "description"
+	DESCRIPTION: "description",
+	MENU: "menu"
 } as const;
 
 export type ENUM_FORM_ACTIVITY_TYPE =

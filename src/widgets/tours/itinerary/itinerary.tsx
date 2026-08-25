@@ -7,6 +7,7 @@ import { Separator, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ConnectedTourHeader,
+	OptionPolicyWarningBadges,
 	PreviewTourButton,
 	PublishTourButton
 } from "@/features/tours";
@@ -74,11 +75,17 @@ const ItineraryBase: FC = () => {
 	const actionsJsx = useMemo(
 		() => (
 			<>
+				{activeOption ? (
+					<OptionPolicyWarningBadges
+						tourId={tourId}
+						optionId={activeOption}
+					/>
+				) : null}
 				<PreviewTourButton />
 				<PublishTourButton />
 			</>
 		),
-		[]
+		[activeOption, tourId]
 	);
 
 	if (isLoading) {

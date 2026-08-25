@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
 	ENUM_FORM_GUIDES,
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
+	ENUM_GUIDE_CHARGE,
 	ENUM_GUIDE_EXPENSE_TYP,
 	ENUM_GUIDE_FORM_SECTION,
 	ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD,
@@ -28,16 +29,18 @@ vi.mock("@/shared/config", async () => {
 /** Mirrors empty row from alignGuidePerGuideExpenses / createEmptyCategoryRow */
 const emptyCategoryRow = () => ({
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: "",
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: null,
+	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: [],
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
 });
 
 /** Mirrors empty row from alignGuidePerGuideExpenses / createEmptyPerGuidePriceRow */
 const emptyPerGuideRow = () => ({
+	[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
+	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
 	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 });

@@ -1,0 +1,11 @@
+import type { SupplierProductListResponse } from "@/shared/api/generated/Api";
+import type { SUPPLIER_PRODUCT_PATHS } from "@/shared/api/generated/paths/supplier-product.paths";
+
+export type TListSupplierProductsQueryBackend =
+	(typeof SUPPLIER_PRODUCT_PATHS.listAllProducts)["_types"]["query"];
+
+export type TSupplierProductListBackend = SupplierProductListResponse;
+
+export type TCreateProductBodyBackend = ReturnType<
+	typeof SUPPLIER_PRODUCT_PATHS.createProduct
+>["_types"]["body"];

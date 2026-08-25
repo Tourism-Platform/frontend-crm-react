@@ -17,7 +17,11 @@ import {
 
 import type { TFlightEditSchema } from "@/entities/tour";
 
-import { EventTitleInput } from "../ui";
+import {
+	useHasProductOverride,
+	useIsInheritedProduct
+} from "../model/use-is-inherited-product";
+import { EventTitleInput, InheritedLockBanner } from "../ui";
 
 import {
 	type ENUM_FORM_SECTION_TYPE,
@@ -41,15 +45,28 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 	const { t } = useTranslation("flight_edit_page");
 	const allowedTabs = tabs.map((item) => item.type);
 	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
+	const isInherited = useIsInheritedProduct(form);
+	const hasOverride = useHasProductOverride(form);
 
 	return (
 		<Form {...form}>
 			<section className="flex flex-col gap-6">
-				<EventTitleInput
-					control={form.control}
-					icon={PlaneIcon}
-					placeholder={t("input.title.placeholder")}
-				/>
+				<div className="flex flex-col gap-2">
+					<EventTitleInput
+						control={form.control}
+						icon={PlaneIcon}
+						placeholder={t("input.title.placeholder")}
+					/>
+					{isInherited && hasOverride ? (
+						<InheritedLockBanner
+							variant="override"
+							title={t("form.inherited.override_title")}
+							description={t(
+								"form.inherited.override_description"
+							)}
+						/>
+					) : null}
+				</div>
 				<Card>
 					<CardContent>
 						<CustomOptionTabs

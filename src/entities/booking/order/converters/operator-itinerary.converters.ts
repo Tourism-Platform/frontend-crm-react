@@ -13,7 +13,8 @@ import type {
 	TTourMinMaxCostBackend
 } from "../types";
 
-const formatCost = (cost: TTourMinMaxCostBackend): string => {
+/** Operator itinerary `cost` is supplier cost only (fees separate). Do not reuse tour-summary mappers — there `estimated_cost` already includes fees. */
+const formatCostWithoutFees = (cost: TTourMinMaxCostBackend): string => {
 	const { min, max } = cost;
 	if (min.val === max.val) return formatToDollars(min.val);
 	return `${formatToDollars(min.val)} - ${formatToDollars(max.val)}`;
@@ -24,7 +25,7 @@ const formatRevenue = (
 	markup: TTourMinMaxCostBackend,
 	fees: TTourMinMaxCostBackend
 ): string =>
-	formatCost({
+	formatCostWithoutFees({
 		min: {
 			val: cost.min.val + markup.min.val + fees.min.val,
 			currency: cost.min.currency
@@ -40,7 +41,7 @@ const mapEventToItem = (
 ): IOrderTourReviewItem => {
 	const { event_id, event, cost, markup, fees, selected_option_index } =
 		backend;
-	const plannedCost = formatCost(cost);
+	const plannedCost = formatCostWithoutFees(cost);
 	const estimatedRevenue = formatRevenue(cost, markup, fees);
 
 	if (event.typ === "options") {
@@ -94,7 +95,7 @@ const mapPackageToItem = (
 	id: pkg.package_id,
 	item: pkg.name,
 	supplier: "-",
-	plannedCost: formatCost(pkg.cost),
+	plannedCost: formatCostWithoutFees(pkg.cost),
 	estimatedRevenue: formatRevenue(pkg.cost, pkg.markup, pkg.fees),
 	day: 0,
 	position: 0,

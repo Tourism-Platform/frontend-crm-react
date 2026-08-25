@@ -157,6 +157,14 @@
 							"label": "Cost",
 							"placeholder": "Enter..."
 						},
+						"charge_typ": {
+							"label": "Charge mode",
+							"placeholder": "Select charge mode",
+							"options": {
+								"fixed": "Per engagement",
+								"per_duration": "Per day"
+							}
+						},
 						"taxes_fees": {
 							"label": "Fees",
 							"placeholder": "Enter..."

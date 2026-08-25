@@ -1,5 +1,7 @@
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { IFeeFormRow } from "../fee.types";
+
 export const ENUM_SUPPLEMENT_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -32,7 +34,7 @@ export const ENUM_SUPPLEMENT_PRICING_FIELD = {
 	ADD_MARGIN_SEPARATELY: "add_margin_separately",
 	EXPENSES: "expenses",
 	TOTAL_PRICE: "total_price",
-	TAXES: "taxes",
+	FEES: "fees",
 	CURRENCY: "currency",
 	MARKUP: "markup",
 	PACKAGE_ID: "package_id"
@@ -65,7 +67,7 @@ export interface ISupplementPriceRowMarkup {
 
 export interface ISupplementPerItemPriceRow {
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: number | null;
-	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: number | null;
+	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: IFeeFormRow[];
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]?: ENUM_CURRENCY_OPTIONS_TYPE;
 	[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: ISupplementPriceRowMarkup | null;
 }

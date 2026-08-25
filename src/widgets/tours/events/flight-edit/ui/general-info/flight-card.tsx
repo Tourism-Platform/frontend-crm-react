@@ -31,6 +31,7 @@ interface IFlightCardProps {
 	form: UseFormReturn<TFlightEditSchema>;
 	onRemove: (index: number) => void;
 	index: number;
+	readOnly?: boolean;
 }
 
 type TTrainBusGeoEnrichmentProps = {
@@ -67,7 +68,7 @@ const TrainBusGeoEnrichment: FC<TTrainBusGeoEnrichmentProps> = ({
 };
 
 export const FlightCard: FC<IFlightCardProps> = React.memo(
-	({ form, onRemove, index }) => {
+	({ form, onRemove, index, readOnly = false }) => {
 		const { t, i18n } = useTranslation("flight_edit_page");
 		const language =
 			i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
@@ -98,9 +99,11 @@ export const FlightCard: FC<IFlightCardProps> = React.memo(
 		return (
 			<Card className="relative">
 				<CardContent>
-					<div className="absolute top-0 right-0">
-						<FlightMenu onRemove={() => onRemove(index)} />
-					</div>
+					{!readOnly ? (
+						<div className="absolute top-0 right-0">
+							<FlightMenu onRemove={() => onRemove(index)} />
+						</div>
+					) : null}
 					{isGeoTransport && transportType && (
 						<TrainBusGeoEnrichment
 							form={form}
@@ -116,6 +119,7 @@ export const FlightCard: FC<IFlightCardProps> = React.memo(
 								control={form?.control}
 								name={`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}.${index}.${key}`}
 								t={t}
+								disabled={readOnly}
 								{...item}
 							/>
 						))}

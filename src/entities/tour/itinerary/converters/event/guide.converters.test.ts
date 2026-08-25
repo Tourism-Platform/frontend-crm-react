@@ -13,6 +13,7 @@ import { DEFAULT_GUIDE_UP_TO_PAX } from "../../config";
 import {
 	ENUM_FORM_GUIDES,
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
+	ENUM_GUIDE_CHARGE,
 	ENUM_GUIDE_EXPENSE_TYP,
 	ENUM_GUIDE_FORM_SECTION,
 	ENUM_GUIDE_MARKUP_TYP,
@@ -61,8 +62,10 @@ const baseForm = (
 			typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 				{
+					[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
+						ENUM_GUIDE_CHARGE.PER_DURATION,
 					[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
-					[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
+					[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
 					[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 					[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 				}
@@ -164,8 +167,10 @@ describe("mapGuideFormToUpdate", () => {
 									[
 										{
 											lang: "",
+											charge_typ:
+												ENUM_GUIDE_CHARGE.PER_DURATION,
 											cost: null,
-											fees: null,
+											fees: [],
 											currency: undefined,
 											markup: null
 										}
@@ -208,8 +213,10 @@ describe("mapGuideFormToUpdate", () => {
 						typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 						[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 							{
+								[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
+									ENUM_GUIDE_CHARGE.PER_DURATION,
 								[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: 120,
-								[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
+								[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
 								[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "USD",
 								[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 							}
@@ -228,13 +235,17 @@ describe("mapGuideFormToUpdate", () => {
 			categories: [
 				{
 					expenses: {
-						typ: "per_group",
-						tiers: [
-							{
-								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-								cost: { val: 120, currency: Currency.USD }
-							}
-						]
+						typ: "per_duration",
+						rate: {
+							typ: "per_group",
+							tiers: [
+								{
+									up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+									cost: { val: 120, currency: Currency.USD }
+								}
+							]
+						},
+						fees: null
 					}
 				}
 			]
@@ -260,8 +271,18 @@ describe("mapGuideFormToUpdate", () => {
 										{
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]:
 												ENUM_LANGUAGES.ENGLISH,
+											[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]:
+												ENUM_GUIDE_CHARGE.PER_DURATION,
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: 120,
-											[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: 10,
+											[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]:
+												[
+													{
+														name: null,
+														cost: 10,
+														currency: "USD",
+														description: null
+													}
+												],
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]:
 												"USD",
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]:
@@ -273,9 +294,11 @@ describe("mapGuideFormToUpdate", () => {
 										{
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]:
 												ENUM_LANGUAGES.RUSSIAN,
+											[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]:
+												ENUM_GUIDE_CHARGE.PER_DURATION,
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: 150,
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]:
-												null,
+												[],
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]:
 												"EUR",
 											[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]:
@@ -297,30 +320,40 @@ describe("mapGuideFormToUpdate", () => {
 			{
 				lang: LanguageCode.En,
 				expenses: {
-					typ: "per_group",
-					tiers: [
+					typ: "per_duration",
+					rate: {
+						typ: "per_group",
+						tiers: [
+							{
+								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+								cost: { val: 120, currency: Currency.USD }
+							}
+						]
+					},
+					fees: [
 						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							cost: { val: 120, currency: Currency.USD }
+							name: null,
+							description: null,
+							cost: { val: 10, currency: Currency.USD }
 						}
 					],
-					fees: {
-						typ: "fixed",
-						cost: { val: 10, currency: Currency.USD }
-					},
 					markup: { typ: "percentage", percentage: 0.1 }
 				}
 			},
 			{
 				lang: LanguageCode.Ru,
 				expenses: {
-					typ: "per_group",
-					tiers: [
-						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							cost: { val: 150, currency: Currency.EUR }
-						}
-					]
+					typ: "per_duration",
+					rate: {
+						typ: "per_group",
+						tiers: [
+							{
+								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+								cost: { val: 150, currency: Currency.EUR }
+							}
+						]
+					},
+					fees: null
 				}
 			}
 		]);
@@ -335,30 +368,42 @@ describe("mapGuidePricingFromBackend", () => {
 					{
 						lang: LanguageCode.En,
 						expenses: {
-							typ: "per_group",
-							tiers: [
-								{
-									up_to_pax: 15,
-									cost: { val: 120, currency: Currency.USD }
-								}
-							],
-							fees: {
-								typ: "fixed",
-								cost: { val: 5, currency: Currency.USD }
+							typ: "per_duration",
+							rate: {
+								typ: "per_group",
+								tiers: [
+									{
+										up_to_pax: 15,
+										cost: {
+											val: 120,
+											currency: Currency.USD
+										}
+									}
+								]
 							},
+							fees: [
+								{ cost: { val: 5, currency: Currency.USD } }
+							],
 							markup: { typ: "percentage", percentage: 0.1 }
 						}
 					},
 					{
 						lang: LanguageCode.Ru,
 						expenses: {
-							typ: "per_group",
-							tiers: [
-								{
-									up_to_pax: 15,
-									cost: { val: 150, currency: Currency.EUR }
-								}
-							]
+							typ: "per_duration",
+							rate: {
+								typ: "per_group",
+								tiers: [
+									{
+										up_to_pax: 15,
+										cost: {
+											val: 150,
+											currency: Currency.EUR
+										}
+									}
+								]
+							},
+							fees: null
 						}
 					}
 				]
@@ -380,8 +425,16 @@ describe("mapGuidePricingFromBackend", () => {
 					categories: [
 						{
 							lang: ENUM_LANGUAGES.ENGLISH,
+							charge_typ: ENUM_GUIDE_CHARGE.PER_DURATION,
 							cost: 120,
-							fees: 5,
+							fees: [
+								{
+									name: null,
+									cost: 5,
+									currency: "USD",
+									description: null
+								}
+							],
 							currency: "USD",
 							markup: {
 								typ: ENUM_GUIDE_MARKUP_TYP.PERCENTAGE,
@@ -390,8 +443,9 @@ describe("mapGuidePricingFromBackend", () => {
 						},
 						{
 							lang: ENUM_LANGUAGES.RUSSIAN,
+							charge_typ: ENUM_GUIDE_CHARGE.PER_DURATION,
 							cost: 150,
-							fees: null,
+							fees: [],
 							currency: "EUR",
 							markup: null
 						}
@@ -408,17 +462,27 @@ describe("mapGuidePricingFromBackend", () => {
 				categories: [
 					{
 						expenses: {
-							typ: "per_group",
-							tiers: [
-								{
-									up_to_pax: 10,
-									cost: { val: 100, currency: Currency.USD }
-								},
-								{
-									up_to_pax: 20,
-									cost: { val: 200, currency: Currency.USD }
-								}
-							]
+							typ: "per_duration",
+							rate: {
+								typ: "per_group",
+								tiers: [
+									{
+										up_to_pax: 10,
+										cost: {
+											val: 100,
+											currency: Currency.USD
+										}
+									},
+									{
+										up_to_pax: 20,
+										cost: {
+											val: 200,
+											currency: Currency.USD
+										}
+									}
+								]
+							},
+							fees: null
 						}
 					}
 				]
@@ -436,8 +500,9 @@ describe("mapGuidePricingFromBackend", () => {
 			typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 			guides: [
 				{
+					charge_typ: ENUM_GUIDE_CHARGE.PER_DURATION,
 					cost: 100,
-					fees: null,
+					fees: [],
 					currency: "USD",
 					markup: null
 				}
@@ -472,8 +537,17 @@ describe("guide converters round-trip", () => {
 								{
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]:
 										ENUM_LANGUAGES.ENGLISH,
+									[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]:
+										ENUM_GUIDE_CHARGE.PER_DURATION,
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: 120,
-									[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: 10,
+									[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: [
+										{
+											name: null,
+											cost: 10,
+											currency: "USD",
+											description: null
+										}
+									],
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]:
 										"USD",
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: {

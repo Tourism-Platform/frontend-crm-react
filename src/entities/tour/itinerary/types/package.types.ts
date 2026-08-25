@@ -1,5 +1,7 @@
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { IFeeFormRow } from "./fee.types";
+
 export const TOUR_PACKAGE_CREATE_ID = "new";
 
 export const ENUM_PACKAGE_PRICING_TYPE = {
@@ -23,7 +25,7 @@ export const ENUM_PACKAGE_FIELD = {
 	PRICING_TYPE: "pricing_type",
 	ADD_MARGIN_SEPARATELY: "add_margin_separately",
 	TOTAL_PRICE: "total_price",
-	TAXES: "taxes",
+	FEES: "fees",
 	CURRENCY: "currency",
 	MARKUP: "markup",
 	SUPPLIER_ID: "supplier_id"
@@ -57,7 +59,7 @@ export interface IPackageFormPayload {
 	pricing_type: ENUM_PACKAGE_PRICING_TYPE_TYPE;
 	add_margin_separately: boolean;
 	total_price?: number | null;
-	taxes?: number | null;
+	fees?: IFeeFormRow[];
 	currency?: ENUM_CURRENCY_OPTIONS_TYPE;
 	markup?: IPackageFormMarkup | null;
 	supplier_id?: string | null;

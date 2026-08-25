@@ -17,14 +17,6 @@ export const PRICING_FLAT_RATE_PRICE_DETAILS_LIST: TAccommodationPricingFormFiel
 			fieldType: "input"
 		},
 		{
-			label: "form.pricing.form.pricing_details.fields.taxes_and_fees.label",
-			placeholder:
-				"form.pricing.form.pricing_details.fields.taxes_and_fees.placeholder",
-			key: ENUM_ACCOMMODATION_PRICING_FIELD.TAXES,
-			type: "number",
-			fieldType: "input"
-		},
-		{
 			label: "form.pricing.form.pricing_details.fields.currency.label",
 			placeholder:
 				"form.pricing.form.pricing_details.fields.currency.placeholder",

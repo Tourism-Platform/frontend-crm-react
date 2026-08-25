@@ -51,3 +51,11 @@ export type TMoveToMultiResultBackend = ReturnType<
 export type TMoveToSingleResultBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.moveEventOptionToSingle
 >["_types"]["response"];
+
+export type TEventProductLinkBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.attachSingleEventProduct
+>["_types"]["body"];
+
+export type TEventProductReadLangQueryBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.attachSingleEventProduct
+>["_types"]["query"];

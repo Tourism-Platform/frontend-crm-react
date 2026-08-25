@@ -12,6 +12,8 @@ const MAP_PERMISSION: Record<ENUM_PERMISSION_TYPE, Permissions> = {
 	[ENUM_PERMISSION.TOUR_ARCHIVE]: Permissions.TourArchive,
 	[ENUM_PERMISSION.TOUR_OPTION_WRITE]: Permissions.TourOptionWrite,
 	[ENUM_PERMISSION.TOUR_EVENT_WRITE]: Permissions.TourEventWrite,
+	[ENUM_PERMISSION.TOUR_EVENT_OVERRIDE_WRITE]:
+		Permissions.TourEventOverrideWrite,
 	[ENUM_PERMISSION.TOUR_EVENT_LIBRARY_READ]: Permissions.TourEventLibraryRead,
 	[ENUM_PERMISSION.TOUR_EVENT_LIBRARY_WRITE]:
 		Permissions.TourEventLibraryWrite,
@@ -28,6 +30,8 @@ const MAP_PERMISSION: Record<ENUM_PERMISSION_TYPE, Permissions> = {
 	[ENUM_PERMISSION.BOOKING_FINANCE_READ]: Permissions.BookingFinanceRead,
 	[ENUM_PERMISSION.BOOKING_PAX_WRITE]: Permissions.BookingPaxWrite,
 	[ENUM_PERMISSION.BOOKING_REVISION_WRITE]: Permissions.BookingRevisionWrite,
+	[ENUM_PERMISSION.BOOKING_EVENT_OVERRIDE_WRITE]:
+		Permissions.BookingEventOverrideWrite,
 	[ENUM_PERMISSION.BOOKING_PAYMENT_READ]: Permissions.BookingPaymentRead,
 	[ENUM_PERMISSION.BOOKING_PAYMENT_WRITE]: Permissions.BookingPaymentWrite,
 	[ENUM_PERMISSION.BOOKING_PAYMENT_CONFIRM]:

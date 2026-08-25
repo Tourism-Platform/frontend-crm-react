@@ -138,7 +138,14 @@ describe("mapAccommodationPricingToBackend", () => {
 					[ENUM_ACCOMMODATION_PRICING_FIELD.PRICING_TYPE]:
 						ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
 					[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 250,
-					[ENUM_ACCOMMODATION_PRICING_FIELD.TAXES]: 20,
+					[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: [
+						{
+							name: null,
+							cost: 20,
+							currency: "USD",
+							description: null
+						}
+					],
 					[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
 				}),
 				roomsList
@@ -148,10 +155,13 @@ describe("mapAccommodationPricingToBackend", () => {
 				expenses: {
 					typ: "fixed",
 					cost: { val: 250, currency: Currency.USD },
-					fees: {
-						typ: "fixed",
-						cost: { val: 20, currency: Currency.USD }
-					},
+					fees: [
+						{
+							name: null,
+							description: null,
+							cost: { val: 20, currency: Currency.USD }
+						}
+					],
 					markup: null
 				}
 			}
@@ -246,7 +256,14 @@ describe("mapAccommodationPricingToBackend", () => {
 						[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: [
 							{
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: 150,
-								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: 10,
+								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: [
+									{
+										name: null,
+										cost: 10,
+										currency: "USD",
+										description: null
+									}
+								],
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
 									Currency.USD,
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]:
@@ -268,10 +285,16 @@ describe("mapAccommodationPricingToBackend", () => {
 							expenses: {
 								typ: "fixed",
 								cost: { val: 150, currency: Currency.USD },
-								fees: {
-									typ: "fixed",
-									cost: { val: 10, currency: Currency.USD }
-								},
+								fees: [
+									{
+										name: null,
+										description: null,
+										cost: {
+											val: 10,
+											currency: Currency.USD
+										}
+									}
+								],
 								markup: null
 							}
 						}
@@ -292,7 +315,7 @@ describe("mapAccommodationPricingToBackend", () => {
 						[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: [
 							{
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: 150,
-								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: null,
+								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: [],
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
 									undefined,
 								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]:
@@ -337,7 +360,7 @@ describe("mapAccommodationPricingToBackend", () => {
 												HousingRoomTypes.Double,
 											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 200,
 											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]:
-												null,
+												[],
 											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]:
 												Currency.USD,
 											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]:
@@ -395,7 +418,7 @@ describe("mapAccommodationPricingToBackend", () => {
 											ENUM_HOUSING_ROOM_TYPE.DOUBLE,
 										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 100,
 										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]:
-											null,
+											[],
 										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]:
 											Currency.USD,
 										[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]:
@@ -434,7 +457,7 @@ describe("mapAccommodationPricingToBackend", () => {
 					[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: [
 						{
 							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: 40,
-							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: null,
+							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: [],
 							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
 								Currency.USD,
 							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: null

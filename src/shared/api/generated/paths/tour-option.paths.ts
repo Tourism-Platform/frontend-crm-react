@@ -18,7 +18,11 @@ export const TOUR_OPTION_PATHS = {
 			method: "GET",
 			_types: {} as {
 				body: void;
-				query: { currency?: Currency; read_lang?: LanguageCode };
+				query: {
+					currency?: Currency;
+					read_lang?: LanguageCode;
+					as_of?: string | null;
+				};
 				response: TourSummaryResponse;
 			}
 		}) as const,

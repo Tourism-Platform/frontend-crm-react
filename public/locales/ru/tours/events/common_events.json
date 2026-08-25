@@ -12,5 +12,178 @@
 			"tour_details": "Редактирование деталей тура",
 			"info": "Редактирование информации"
 		}
+	},
+	"attach_product": {
+		"buttons": {
+			"attach": "Выбрать продукт поставщика",
+			"attaching": "Привязка...",
+			"change": "Сменить продукт",
+			"detach": "Отвязать продукт",
+			"detaching": "Отвязка..."
+		},
+		"dialog": {
+			"title": "Выбор продукта поставщика",
+			"description": "Привяжите ивент к продукту каталога. Турные поля останутся редактируемыми.",
+			"fields": {
+				"search": {
+					"label": "Поиск",
+					"placeholder": "Поиск по названию"
+				},
+				"variant": {
+					"label": "Категория",
+					"placeholder": "Выберите категорию",
+					"all": "Все категории"
+				}
+			},
+			"loading": "Загрузка продуктов…",
+			"empty": "Продукты не найдены",
+			"load_error": "Не удалось загрузить продукты",
+			"retry": "Повторить",
+			"cancel": "Отмена",
+			"confirm": "Привязать",
+			"confirming": "Привязка..."
+		},
+		"override_warn": {
+			"title": "Договорная цена будет сброшена",
+			"description": "Смена продукта удалит договорную ставку, согласованную под предыдущий продукт.",
+			"cancel": "Оставить текущий",
+			"confirm": "Продолжить"
+		},
+		"toasts": {
+			"attach": {
+				"success": "Продукт привязан",
+				"error": "Не удалось привязать продукт"
+			},
+			"detach": {
+				"success": "Продукт отвязан",
+				"error": "Не удалось отвязать продукт"
+			}
+		}
+	},
+	"override_product": {
+		"buttons": {
+			"set": "Договорная цена",
+			"setting": "Сохранение...",
+			"edit": "Изменить override",
+			"clear": "Сбросить override",
+			"clearing": "Сброс..."
+		},
+		"dialog": {
+			"title": "Договорная цена",
+			"description": "Заменяет цену и политику продукта только для этого тура. Сохранение полностью перезаписывает оба поля.",
+			"fields": {
+				"pricing_type": {
+					"label": "Тип цены",
+					"placeholder": "Выберите тип",
+					"options": {
+						"flat_rate": "Фикс",
+						"per_person": "За человека"
+					}
+				},
+				"charge_typ": {
+					"label": "Режим оплаты",
+					"placeholder": "Выберите режим",
+					"options": {
+						"fixed": "За весь стей",
+						"per_duration": "За ночь"
+					}
+				},
+				"total_price": {
+					"label": "Цена",
+					"placeholder": "Введите цену"
+				},
+				"taxes": {
+					"label": "Налоги / сборы",
+					"placeholder": "Введите сумму"
+				},
+				"currency": {
+					"label": "Валюта",
+					"placeholder": "Выберите валюту"
+				},
+				"check_in_from": {
+					"label": "Заезд с",
+					"placeholder": "ЧЧ:ММ"
+				},
+				"check_out_until": {
+					"label": "Выезд до",
+					"placeholder": "ЧЧ:ММ"
+				}
+			},
+			"cancel": "Отмена",
+			"confirm": "Сохранить",
+			"confirming": "Сохранение..."
+		},
+		"clear_warn": {
+			"title": "Сбросить договорную цену?",
+			"description": "Ивент вернётся к цене и политике продукта поставщика.",
+			"cancel": "Оставить",
+			"confirm": "Сбросить"
+		},
+		"toasts": {
+			"set": {
+				"success": "Договорная цена сохранена",
+				"error": "Не удалось сохранить договорную цену"
+			},
+			"clear": {
+				"success": "Override сброшен",
+				"error": "Не удалось сбросить override"
+			}
+		}
+	},
+	"policy_check": {
+		"warn_only": "Cutoff перейден; цена не изменена",
+		"surcharge": {
+			"fixed": "{{val}} {{currency}}",
+			"percentage": "{{percentage}}%"
+		},
+		"codes": {
+			"early_check_in": { "title": "Ранний заезд" },
+			"late_check_out": { "title": "Поздний выезд" },
+			"supplier_type_mismatch": {
+				"title": "Несовпадение типа поставщика"
+			}
+		},
+		"option_badge": "{{count}} предупреждений по policy",
+		"toasts": { "error": "Не удалось загрузить предупреждения policy" }
+	},
+	"product_seasons": {
+		"title": "Сезонные тарифы продукта",
+		"empty": "У продукта нет сезонных тарифов",
+		"range": "{{from}} – {{to}}",
+		"charge": {
+			"label": "Тип начисления",
+			"fixed": "За весь срок",
+			"per_duration": "За ночь"
+		},
+		"fees": {
+			"title": "Сборы",
+			"empty": "Без сборов",
+			"line": "{{name}}: {{amount}}"
+		}
+	},
+	"revision": {
+		"frozen_price": "Цена зафиксирована при привязке"
+	},
+	"fees": {
+		"title": "Сборы (оператор)",
+		"add": "Добавить сбор",
+		"fields": {
+			"name": {
+				"label": "Название",
+				"placeholder": "например НДС, городской сбор"
+			},
+			"cost": {
+				"label": "Сумма",
+				"placeholder": "0"
+			},
+			"currency": {
+				"label": "Валюта",
+				"placeholder": "Выберите валюту"
+			},
+			"description": {
+				"label": "Описание",
+				"placeholder": "Необязательно"
+			}
+		}
 	}
 }

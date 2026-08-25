@@ -1,0 +1,159 @@
+import { ChevronLeft, Trash2 } from "lucide-react";
+import { type FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+
+import { ENUM_PATH, buildRoute } from "@/shared/config";
+import { useQueryTab } from "@/shared/hooks";
+import {
+	Button,
+	Card,
+	CardContent,
+	CustomOptionTabs,
+	CustomOptionTabsContent,
+	CustomOptionTabsList,
+	CustomOptionTabsTrigger,
+	Separator,
+	withErrorBoundary
+} from "@/shared/ui";
+
+import { DeleteSupplierProduct } from "@/features/library";
+
+import {
+	ENUM_HOTEL_PRODUCT_EDIT_TAB,
+	HOTEL_PRODUCT_EDIT_TABS,
+	type IHotelProductEditProps
+} from "../model";
+
+import { HotelProductDetailsTab } from "./details";
+import { HotelProductGeneral } from "./general";
+import { HotelProductImages } from "./images";
+import { HotelProductVariants } from "./variants";
+
+const HotelProductEditBase: FC<IHotelProductEditProps> = ({
+	supplierId,
+	productId,
+	isCreate,
+	product
+}) => {
+	const { t } = useTranslation("hotel_product_edit_page");
+	const navigate = useNavigate();
+	const tabs = isCreate
+		? HOTEL_PRODUCT_EDIT_TABS.filter(
+				(tab) => tab.type === ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL
+			)
+		: HOTEL_PRODUCT_EDIT_TABS;
+	const allowedTabs = tabs.map((item) => item.type);
+	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
+
+	const resolvedName = product?.name ?? "";
+	const resolvedDetails = product?.details ?? null;
+	const resolvedVariants = product?.variants ?? [];
+
+	const supplierPath = buildRoute(ENUM_PATH.LIBRARY.SUPPLIER, {
+		supplierId
+	});
+
+	return (
+		<section className="flex flex-col gap-6">
+			<div className="flex flex-wrap items-center justify-between gap-3">
+				<div className="flex flex-col gap-2">
+					<Button variant="ghost" className="w-fit px-0" asChild>
+						<Link to={supplierPath}>
+							<ChevronLeft className="mr-1 h-4 w-4" />
+							{t("back")}
+						</Link>
+					</Button>
+					<h1 className="text-2xl font-semibold">
+						{resolvedName || t("page_name")}
+					</h1>
+				</div>
+				{!isCreate ? (
+					<DeleteSupplierProduct
+						supplierId={supplierId}
+						productId={productId}
+						ns="hotel_product_edit_page"
+						onSuccess={() => navigate(supplierPath)}
+						trigger={
+							<Button variant="destructive">
+								<Trash2 className="mr-2 h-4 w-4" />
+								{t("menu.delete.button")}
+							</Button>
+						}
+					/>
+				) : null}
+			</div>
+
+			<Card>
+				<CardContent>
+					<CustomOptionTabs
+						defaultValue={initialTab}
+						onValueChange={setTab}
+					>
+						<CustomOptionTabsList
+							style={{
+								gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
+							}}
+						>
+							{tabs.map((item) => (
+								<CustomOptionTabsTrigger
+									key={item.type}
+									value={item.type}
+									variant="tongue"
+								>
+									{t(item.label)}
+								</CustomOptionTabsTrigger>
+							))}
+						</CustomOptionTabsList>
+						<Separator className="mb-6" />
+
+						<CustomOptionTabsContent
+							value={ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL}
+						>
+							<HotelProductGeneral
+								supplierId={supplierId}
+								productId={productId}
+								isCreate={isCreate}
+								name={resolvedName}
+							/>
+						</CustomOptionTabsContent>
+
+						{!isCreate ? (
+							<>
+								<CustomOptionTabsContent
+									value={ENUM_HOTEL_PRODUCT_EDIT_TAB.DETAILS}
+								>
+									<HotelProductDetailsTab
+										supplierId={supplierId}
+										productId={productId}
+										details={resolvedDetails}
+									/>
+								</CustomOptionTabsContent>
+								<CustomOptionTabsContent
+									value={ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS}
+								>
+									<HotelProductVariants
+										supplierId={supplierId}
+										productId={productId}
+										variants={resolvedVariants}
+									/>
+								</CustomOptionTabsContent>
+								<CustomOptionTabsContent
+									value={ENUM_HOTEL_PRODUCT_EDIT_TAB.IMAGES}
+								>
+									<HotelProductImages
+										supplierId={supplierId}
+										productId={productId}
+										variants={resolvedVariants}
+									/>
+								</CustomOptionTabsContent>
+							</>
+						) : null}
+					</CustomOptionTabs>
+				</CardContent>
+			</Card>
+		</section>
+	);
+};
+
+export const HotelProductEdit = withErrorBoundary(HotelProductEditBase);

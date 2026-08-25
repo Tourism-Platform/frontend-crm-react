@@ -9,6 +9,7 @@ const msg = i18nKey<TTourAccommodationEditPageKeys>();
 export const ROOMS_SCHEMA = z.object({
 	[ENUM_FORM_ROOMS.ROOMS_LIST]: z.array(
 		z.object({
+			[ENUM_FORM_ROOMS.ID]: z.string().optional(),
 			[ENUM_FORM_ROOMS.ROOM_NAME]: z
 				.string({
 					message: msg(

@@ -30,14 +30,6 @@ export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST =
 			type: "number"
 		},
 		{
-			key: ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES,
-			label: "form.pricing.form.per_room.table.fees",
-			placeholder:
-				"form.pricing.form.per_room.fields.taxes_fees.placeholder",
-			fieldType: "input",
-			type: "number"
-		},
-		{
 			key: ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY,
 			label: "form.pricing.form.per_room.table.currency",
 			placeholder:
@@ -51,7 +43,7 @@ export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST =
 export const createEmptyPerRoomCategoryRow = () => ({
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: "",
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: null,
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: null,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: [],
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: null
 });

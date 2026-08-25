@@ -9,6 +9,7 @@ import {
 	type TTimeSchemaBackend,
 	type TTransferDetailsBackend,
 	accommodationAmenityConverter,
+	isInheritedHousingDetails,
 	mapEventImageToFrontend
 } from "@/entities/tour/itinerary";
 
@@ -124,6 +125,22 @@ const mapSheetExtraFromOperator = (
 				| THousingDetailsBackend
 				| null
 				| undefined;
+
+			if (isInheritedHousingDetails(housingDetails)) {
+				return {
+					kind: "accommodation",
+					amenities: [],
+					nights: `${housingDetails.duration ?? 0} night${housingDetails.duration === 1 ? "" : "s"}`,
+					checkIn: formatPubTime(
+						housingDetails.check_in ?? undefined
+					),
+					checkOut: formatPubTime(
+						housingDetails.check_out ?? undefined
+					),
+					rooms: []
+				};
+			}
+
 			return {
 				kind: "accommodation",
 				amenities: accommodationAmenityConverter.fromMany(

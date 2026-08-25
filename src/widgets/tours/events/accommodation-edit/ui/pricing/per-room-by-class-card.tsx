@@ -14,11 +14,14 @@ import {
 } from "@/shared/ui";
 
 import {
+	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
 	ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD,
 	ENUM_ACCOMMODATION_PRICING_FIELD,
 	ENUM_FORM_ROOMS,
 	type TAccommodationEditSchema
 } from "@/entities/tour";
+
+import { FeeLinesField } from "@/features/pricing";
 
 import {
 	ENUM_FORM_SECTION,
@@ -40,10 +43,12 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 	const categoryRowFields = PER_ROOM_CATEGORY_ROW_FIELDS_LIST();
+	const roomsPath =
+		`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}` as const;
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
-		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}`
+		name: `${roomsPath}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}`
 	});
 
 	return (
@@ -55,55 +60,66 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 					) ?? ""}
 				</h4>
 			</CardHeader>
-			<CardContent className="grid">
-				{fields.map((field, categoryIndex) => (
-					<div
-						key={field.id}
-						className={cn(
-							"grid grid-cols-[1fr_1fr_1fr_0.5fr_auto] gap-3 items-center",
-							addMarginSeparately &&
-								"grid-cols-[1fr_1fr_1fr_1.5fr_0.5fr_auto]"
-						)}
-					>
-						{categoryRowFields.map(
-							({ key, ...item }, fieldIndex) => (
-								<Fragment key={key}>
-									{addMarginSeparately &&
-									fieldIndex ===
-										categoryRowFields.length - 1 ? (
-										<CustomInputSelect
-											control={form.control}
-											name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}.${PER_ROOM_MARKUP_FIELD.key}`}
-											label={PER_ROOM_MARKUP_FIELD.label}
-											placeholder={
-												PER_ROOM_MARKUP_FIELD.placeholder
-											}
-											selectOptions={[
-												...PER_ROOM_MARKUP_FIELD.selectOptions
-											]}
-											t={t}
-										/>
-									) : null}
-									<CustomField
-										control={form.control}
-										name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}.${key}`}
-										t={t}
-										{...item}
-									/>
-								</Fragment>
-							)
-						)}
-						<Button
-							type="button"
-							variant="destructive"
-							size="icon"
-							onClick={() => remove(categoryIndex)}
-							// disabled={fields.length <= 1}
-						>
-							<Trash2 className="h-4 w-4" />
-						</Button>
-					</div>
-				))}
+			<CardContent className="grid gap-4">
+				{fields.map((field, categoryIndex) => {
+					const categoryPath =
+						`${roomsPath}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}` as const;
+
+					return (
+						<div key={field.id} className="grid gap-3">
+							<div
+								className={cn(
+									"grid grid-cols-[1fr_1fr_0.5fr_auto] gap-3 items-center",
+									addMarginSeparately &&
+										"grid-cols-[1fr_1fr_1.5fr_0.5fr_auto]"
+								)}
+							>
+								{categoryRowFields.map(
+									({ key, ...item }, fieldIndex) => (
+										<Fragment key={key}>
+											{addMarginSeparately &&
+											fieldIndex ===
+												categoryRowFields.length - 1 ? (
+												<CustomInputSelect
+													control={form.control}
+													name={`${categoryPath}.${PER_ROOM_MARKUP_FIELD.key}`}
+													label={
+														PER_ROOM_MARKUP_FIELD.label
+													}
+													placeholder={
+														PER_ROOM_MARKUP_FIELD.placeholder
+													}
+													selectOptions={[
+														...PER_ROOM_MARKUP_FIELD.selectOptions
+													]}
+													t={t}
+												/>
+											) : null}
+											<CustomField
+												control={form.control}
+												name={`${categoryPath}.${key}`}
+												t={t}
+												{...item}
+											/>
+										</Fragment>
+									)
+								)}
+								<Button
+									type="button"
+									variant="destructive"
+									size="icon"
+									onClick={() => remove(categoryIndex)}
+								>
+									<Trash2 className="h-4 w-4" />
+								</Button>
+							</div>
+							<FeeLinesField
+								control={form.control}
+								name={`${categoryPath}.${ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES}`}
+							/>
+						</div>
+					);
+				})}
 				<Button
 					type="button"
 					variant="outline"

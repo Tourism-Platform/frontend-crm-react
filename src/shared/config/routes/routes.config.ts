@@ -110,6 +110,15 @@ export const ENUM_PATH = {
 		EVENT_ACTIVITY: "/library/events/:libraryId/activity",
 		EVENT_INFO: "/library/events/:libraryId/info",
 		ITINERARIES: "/library/itineraries",
-		SUPPLIERS: "/library/suppliers"
+		SUPPLIERS: "/library/suppliers",
+		SUPPLIER: "/library/suppliers/:supplierId",
+		SUPPLIER_HOTEL_PRODUCT_NEW:
+			"/library/suppliers/:supplierId/products/hotel/new",
+		SUPPLIER_HOTEL_PRODUCT:
+			"/library/suppliers/:supplierId/products/hotel/:productId",
+		SUPPLIER_TRAIN_PRODUCT_NEW:
+			"/library/suppliers/:supplierId/products/train/new",
+		SUPPLIER_TRAIN_PRODUCT:
+			"/library/suppliers/:supplierId/products/train/:productId"
 	}
 } as const;

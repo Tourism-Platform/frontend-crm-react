@@ -1,0 +1,82 @@
+{
+	"page_name": "Поставщики",
+	"suppliers_title": "Поставщики",
+	"new_supplier": {
+		"button": "Новый поставщик"
+	},
+	"table": {
+		"brand_name": "Бренд",
+		"legal_name": "Юр. название",
+		"types": "Типы",
+		"phone": "Телефон",
+		"empty": "—"
+	},
+	"menu": {
+		"edit": {
+			"button": "Открыть"
+		},
+		"delete": {
+			"button": "Удалить",
+			"form": {
+				"title": "Удалить поставщика",
+				"warning": "Вы уверены, что хотите удалить этого поставщика? Это действие нельзя отменить.",
+				"buttons": {
+					"decline": "Отмена",
+					"confirm": "Удалить",
+					"confirming": "Удаление ..."
+				},
+				"toasts": {
+					"success": "Поставщик удалён",
+					"error": "Не удалось удалить поставщика"
+				}
+			}
+		}
+	},
+	"create": {
+		"title": "Новый поставщик",
+		"errors": {
+			"brandName": {
+				"required": "Укажите бренд"
+			},
+			"supplierTypes": {
+				"required": "Выберите хотя бы один тип"
+			}
+		},
+		"fields": {
+			"brandName": {
+				"label": "Бренд",
+				"placeholder": "Введите бренд"
+			},
+			"legalName": {
+				"label": "Юр. название",
+				"placeholder": "Введите юр. название"
+			},
+			"phone": {
+				"label": "Телефон",
+				"placeholder": "Введите телефон"
+			},
+			"website": {
+				"label": "Сайт",
+				"placeholder": "https://"
+			},
+			"supplierTypes": {
+				"label": "Типы поставщика",
+				"placeholder": "Выберите типы"
+			}
+		},
+		"buttons": {
+			"decline": "Отмена",
+			"save": "Создать",
+			"saving": "Создание ..."
+		},
+		"toasts": {
+			"success": "Поставщик создан",
+			"error": "Не удалось создать поставщика"
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Не удалось загрузить поставщиков"
+		}
+	}
+}

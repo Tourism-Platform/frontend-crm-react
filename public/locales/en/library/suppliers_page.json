@@ -1,0 +1,82 @@
+{
+	"page_name": "Suppliers",
+	"suppliers_title": "Suppliers",
+	"new_supplier": {
+		"button": "New supplier"
+	},
+	"table": {
+		"brand_name": "Brand name",
+		"legal_name": "Legal name",
+		"types": "Types",
+		"phone": "Phone",
+		"empty": "—"
+	},
+	"menu": {
+		"edit": {
+			"button": "Open"
+		},
+		"delete": {
+			"button": "Delete",
+			"form": {
+				"title": "Delete supplier",
+				"warning": "Are you sure you want to delete this supplier? This action cannot be undone.",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting ..."
+				},
+				"toasts": {
+					"success": "Supplier deleted",
+					"error": "Failed to delete supplier"
+				}
+			}
+		}
+	},
+	"create": {
+		"title": "New supplier",
+		"errors": {
+			"brandName": {
+				"required": "Brand name is required"
+			},
+			"supplierTypes": {
+				"required": "Select at least one type"
+			}
+		},
+		"fields": {
+			"brandName": {
+				"label": "Brand name",
+				"placeholder": "Enter brand name"
+			},
+			"legalName": {
+				"label": "Legal name",
+				"placeholder": "Enter legal name"
+			},
+			"phone": {
+				"label": "Phone",
+				"placeholder": "Enter phone"
+			},
+			"website": {
+				"label": "Website",
+				"placeholder": "https://"
+			},
+			"supplierTypes": {
+				"label": "Supplier types",
+				"placeholder": "Select types"
+			}
+		},
+		"buttons": {
+			"decline": "Cancel",
+			"save": "Create",
+			"saving": "Creating ..."
+		},
+		"toasts": {
+			"success": "Supplier created",
+			"error": "Failed to create supplier"
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load suppliers"
+		}
+	}
+}

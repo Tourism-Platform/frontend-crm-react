@@ -4,8 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import type { TAccommodationEditSchema } from "@/entities/tour";
+import {
+	ENUM_FORM_ACCOMMODATION,
+	type TAccommodationEditSchema
+} from "@/entities/tour";
 
+import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { ACCOMMODATION_DETAILS_LIST, ENUM_FORM_SECTION } from "../../model";
 
 interface IAccommodationDetailsProps {
@@ -14,6 +18,8 @@ interface IAccommodationDetailsProps {
 
 const AccommodationDetailsBase: FC<IAccommodationDetailsProps> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
+	const isInherited = useIsInheritedProduct(form);
+
 	return (
 		<div className="grid gap-5">
 			<h2 className="text-xl">{t("form.general.details.title")}</h2>
@@ -24,6 +30,10 @@ const AccommodationDetailsBase: FC<IAccommodationDetailsProps> = ({ form }) => {
 						control={form?.control}
 						name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
 						t={t}
+						disabled={
+							isInherited &&
+							key === ENUM_FORM_ACCOMMODATION.AMENITIES
+						}
 						{...item}
 					/>
 				))}

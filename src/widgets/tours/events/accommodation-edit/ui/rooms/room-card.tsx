@@ -17,9 +17,15 @@ interface IRoomCardProps {
 	form: UseFormReturn<TAccommodationEditSchema>;
 	onRemove: () => void;
 	index: number;
+	readOnly?: boolean;
 }
 
-export const RoomCard: FC<IRoomCardProps> = ({ form, onRemove, index }) => {
+export const RoomCard: FC<IRoomCardProps> = ({
+	form,
+	onRemove,
+	index,
+	readOnly = false
+}) => {
 	const { t } = useTranslation("accommodation_edit_page");
 	return (
 		<Card className="relative">
@@ -27,9 +33,11 @@ export const RoomCard: FC<IRoomCardProps> = ({ form, onRemove, index }) => {
 				{t("form.rooms.details.room_item", { index: index + 1 })}
 			</CardHeader>
 			<CardContent className="grid gap-1">
-				<div className="absolute top-0 right-0">
-					<RoomMenu onRemove={onRemove} />
-				</div>
+				{!readOnly ? (
+					<div className="absolute top-0 right-0">
+						<RoomMenu onRemove={onRemove} />
+					</div>
+				) : null}
 				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 					{ROOM_DATA_LIST.map(({ key, ...item }) => (
 						<CustomField
@@ -37,6 +45,7 @@ export const RoomCard: FC<IRoomCardProps> = ({ form, onRemove, index }) => {
 							control={form?.control}
 							name={`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${key}`}
 							t={t}
+							disabled={readOnly}
 							{...item}
 						/>
 					))}

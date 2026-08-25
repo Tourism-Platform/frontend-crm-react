@@ -23,6 +23,8 @@ export { OPERATOR_FX_RATE_PATHS } from "./operator-fx-rate.paths";
 export { OPERATOR_SUPPLIER_PAYMENT_PATHS } from "./operator-supplier-payment.paths";
 export { OPERATOR_PAYMENT_ROUTES_PATHS } from "./operator-payment-routes.paths";
 export { OPERATOR_PATHS } from "./operator.paths";
+export { SUPPLIER_PRODUCT_PATHS } from "./supplier-product.paths";
+export { SUPPLIER_PRODUCT_IMAGES_PATHS } from "./supplier-product-images.paths";
 export { SUPPLIER_PATHS } from "./supplier.paths";
 export { AGENCY_PATHS } from "./agency.paths";
 export { BOOKING_AVAILABILITY_PATHS } from "./booking-availability.paths";

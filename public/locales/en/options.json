@@ -29,6 +29,7 @@
 			"tour_archive": "Archive tours",
 			"tour_option_write": "Write tour options",
 			"tour_event_write": "Write tour events",
+			"tour_event_override_write": "Override tour event prices",
 			"tour_event_library_read": "Read event library",
 			"tour_event_library_write": "Write event library",
 			"tour_gallery_write": "Write tour gallery",
@@ -44,6 +45,7 @@
 			"booking_finance_read": "Read booking finance",
 			"booking_pax_write": "Write passengers",
 			"booking_revision_write": "Write booking revisions",
+			"booking_event_override_write": "Override booking event prices",
 			"booking_payment_read": "Read booking payments",
 			"booking_payment_write": "Write booking payments",
 			"booking_payment_confirm": "Confirm booking payments",
@@ -325,10 +327,62 @@
 			"guide": "Guide"
 		}
 	},
+	"supplier_type": {
+		"flight": "Flight",
+		"hotel": "Hotel",
+		"museum": "Museum",
+		"transfer": "Transfer",
+		"activity": "Activity",
+		"train": "Train",
+		"bus": "Bus"
+	},
+	"hotel_amenity": {
+		"wifi": "Wi‑Fi",
+		"pool": "Pool",
+		"breakfast": "Breakfast",
+		"parking": "Parking",
+		"gym": "Gym",
+		"spa": "Spa",
+		"restaurant": "Restaurant",
+		"bar": "Bar",
+		"airport_shuttle": "Airport shuttle",
+		"air_conditioning": "Air conditioning",
+		"room_service": "Room service",
+		"laundry": "Laundry",
+		"concierge": "Concierge",
+		"business_center": "Business center",
+		"kids_club": "Kids club",
+		"beach_access": "Beach access",
+		"sauna": "Sauna",
+		"jacuzzi": "Jacuzzi",
+		"pet_friendly": "Pet friendly",
+		"wheelchair_accessible": "Wheelchair accessible"
+	},
+	"hotel_room_type": {
+		"single": "Single",
+		"double": "Double",
+		"twin": "Twin",
+		"triple": "Triple",
+		"quadruple": "Quadruple",
+		"suite": "Suite",
+		"family": "Family"
+	},
 	"guide": {
 		"types": {
 			"local": "Local guide",
 			"accompanying": "Tour guide"
+		},
+		"charge": {
+			"fixed": "Whole engagement",
+			"per_duration": "Per day"
 		}
+	},
+	"hotel_room_charge": {
+		"fixed": "Whole stay",
+		"per_duration": "Per night"
+	},
+	"train_variant_charge": {
+		"fixed": "Fixed",
+		"per_person": "Per person"
 	}
 }

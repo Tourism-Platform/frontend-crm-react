@@ -7,6 +7,8 @@ import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
 	ENUM_EVENT_BACKEND,
+	ENUM_FORM_EVENT_PRODUCT,
+	ENUM_HOUSING_SOURCE,
 	type TAccommodationEditSchema,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
@@ -14,6 +16,7 @@ import {
 
 import { accommodationAmenityConverter } from "./accommodation-amenity.converters";
 import {
+	getDefaultAccommodationPricing,
 	mapAccommodationPricingFromBackend,
 	mapAccommodationPricingToBackend
 } from "./accommodation-pricing.converters";
@@ -21,6 +24,11 @@ import {
 	mapRoomsFromBackend,
 	mapRoomsToBackend
 } from "./accommodation-rooms.converters";
+import { isInheritedHousingDetails } from "./housing-details.helpers";
+import {
+	mapInheritedHousingProductSnapshotToForm,
+	mapInheritedProductLinkToForm
+} from "./inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
@@ -31,6 +39,38 @@ export const mapAccommodationEventToForm = (
 ): TAccommodationEditSchema => {
 	const event = data?.event as HousingSingleEventOutput;
 	const details = event?.details;
+
+	if (isInheritedHousingDetails(details)) {
+		const link = mapInheritedProductLinkToForm(details);
+		const snapshot = mapInheritedHousingProductSnapshotToForm(details);
+
+		return {
+			name: event?.name || "",
+			day: event.day,
+			position: event.position,
+			...link,
+			general: {
+				property: snapshot.property,
+				amenities: snapshot.amenities,
+				description: event.description || "",
+				length_of_stay: details.duration ?? null,
+				check_in_time: details.check_in?.time || "",
+				check_in_timezone: String(
+					details.check_in?.timezone ?? getDeviceUtcOffset()
+				),
+				check_out_time: details.check_out?.time || "",
+				check_out_timezone: String(
+					details.check_out?.timezone ?? getDeviceUtcOffset()
+				)
+			},
+			rooms: snapshot.rooms,
+			pricing: applyEventPackageIdToPricing(
+				getDefaultAccommodationPricing(),
+				event.package_id
+			)
+		};
+	}
+
 	const expenses = details?.expenses;
 	const perRoomRooms =
 		expenses?.typ === "per_room" ? expenses.rooms : undefined;
@@ -42,20 +82,22 @@ export const mapAccommodationEventToForm = (
 		name: event?.name || "",
 		day: event.day,
 		position: event.position,
+		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
+		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
 			property: mapBackendLocationToGeoForm(details?.location),
 			amenities: accommodationAmenityConverter.fromMany(
 				details?.amenities ?? []
 			),
 			description: event.description || "",
-			length_of_stay: event.details?.duration ?? null,
-			check_in_time: event.details?.check_in?.time || "",
+			length_of_stay: details?.duration ?? null,
+			check_in_time: details?.check_in?.time || "",
 			check_in_timezone: String(
-				event.details?.check_in?.timezone ?? getDeviceUtcOffset()
+				details?.check_in?.timezone ?? getDeviceUtcOffset()
 			),
-			check_out_time: event.details?.check_out?.time || "",
+			check_out_time: details?.check_out?.time || "",
 			check_out_timezone: String(
-				event.details?.check_out?.timezone ?? getDeviceUtcOffset()
+				details?.check_out?.timezone ?? getDeviceUtcOffset()
 			)
 		},
 		rooms,
@@ -70,6 +112,40 @@ export const mapAccommodationFormToUpdate = (
 	frontend: Partial<TAccommodationEditSchema>,
 	lang: LanguageCode = LanguageCode.En
 ): TTourEventUpdateBackend => {
+	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
+
+	if (productId) {
+		const g = frontend.general;
+		const duration = Number(g?.length_of_stay);
+
+		return {
+			typ: ENUM_EVENT_BACKEND.HOUSING,
+			...(frontend.name !== undefined &&
+				frontend.name !== "" && { name: frontend.name }),
+			...(g?.description !== undefined &&
+				g.description !== "" && { description: g.description }),
+			package_id: mapEventPackageIdToBackend(frontend?.pricing),
+			details: {
+				product_id: productId,
+				variant_id:
+					frontend[ENUM_FORM_EVENT_PRODUCT.VARIANT_ID] ?? null,
+				...(Number.isFinite(duration) && duration > 0 && { duration }),
+				...(g?.check_in_time && {
+					check_in: {
+						time: g.check_in_time,
+						timezone: g.check_in_timezone
+					}
+				}),
+				...(g?.check_out_time && {
+					check_out: {
+						time: g.check_out_time,
+						timezone: g.check_out_timezone
+					}
+				})
+			}
+		} as TTourEventUpdateBackend;
+	}
+
 	const g = frontend?.general;
 	const roomsList = frontend?.rooms?.rooms ?? [];
 	const pricingDetails = mapAccommodationPricingToBackend(
@@ -93,10 +169,6 @@ export const mapAccommodationFormToUpdate = (
 			g.description !== "" && { description: g.description }),
 		typ: ENUM_EVENT_BACKEND.HOUSING,
 		package_id: mapEventPackageIdToBackend(frontend?.pricing),
-		...(Number.isFinite(frontend.position) && {
-			position: frontend.position
-		}),
-		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		details: {
 			...(Number.isFinite(duration) && duration > 0 && { duration }),
 			...(amenities && { amenities }),

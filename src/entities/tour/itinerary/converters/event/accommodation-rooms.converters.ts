@@ -1,6 +1,5 @@
 import type {
 	HousingRoomCategoryExpensesSchemaOutput,
-	HousingRoomDoubleSchemaInput,
 	HousingRoomDoubleSchemaOutput
 } from "@/shared/api";
 
@@ -8,9 +7,8 @@ import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../types";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
-const mapRoomToBackendInput = (
-	room: TRoomsList[number]
-): Pick<HousingRoomDoubleSchemaInput, "name" | "description"> => ({
+const mapRoomToBackendInput = (room: TRoomsList[number]) => ({
+	...(room[ENUM_FORM_ROOMS.ID] ? { id: room[ENUM_FORM_ROOMS.ID] } : {}),
 	name: room.room_name || null,
 	description: room.description || null
 });
@@ -22,8 +20,9 @@ export const mapRoomsFromBackend = (
 	if (perRoomRooms?.length) {
 		return {
 			rooms: perRoomRooms.map((room) => ({
-				room_name: room.name ?? "",
-				description: room.description ?? ""
+				[ENUM_FORM_ROOMS.ID]: room.id,
+				[ENUM_FORM_ROOMS.ROOM_NAME]: room.name ?? "",
+				[ENUM_FORM_ROOMS.DESCRIPTION]: room.description ?? ""
 			}))
 		};
 	}
@@ -34,8 +33,8 @@ export const mapRoomsFromBackend = (
 
 	return {
 		rooms: perRoomCategoryRooms.map((category) => ({
-			room_name: category.name ?? "",
-			description: ""
+			[ENUM_FORM_ROOMS.ROOM_NAME]: category.name ?? "",
+			[ENUM_FORM_ROOMS.DESCRIPTION]: ""
 		}))
 	};
 };

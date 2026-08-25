@@ -61,7 +61,14 @@ describe("transportation flat/per_person markup", () => {
 			mapTransportationPricingToBackend(
 				basePricing({
 					[ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]: 150,
-					[ENUM_TRANSPORTATION_PRICING_FIELD.TAXES]: 8,
+					[ENUM_TRANSPORTATION_PRICING_FIELD.FEES]: [
+						{
+							name: null,
+							cost: 8,
+							currency: "USD",
+							description: null
+						}
+					],
 					[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]: Currency.USD,
 					[ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: {

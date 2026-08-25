@@ -120,6 +120,7 @@ export const mapTourSummaryToFrontend = (
 	backend: TGetTourSummaryBackendResponce
 ): ITourPricingReview => ({
 	summary: {
+		// estimated_cost already includes fees (cost + fees); no top-level fees field
 		revenue: mapMinMaxCostToRange(backend.estimated_revenue),
 		cost: mapMinMaxCostToRange(backend.estimated_cost),
 		profit: mapMinMaxCostToRange(backend.estimated_profit)

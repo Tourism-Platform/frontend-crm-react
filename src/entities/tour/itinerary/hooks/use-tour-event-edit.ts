@@ -64,7 +64,8 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 	};
 
 	return {
-		data: data as T | undefined,
+		data: data?.form as T | undefined,
+		details: data?.details,
 		isError,
 		isLoading: isUpdateLoading || isUpdateOptionLoading,
 		update

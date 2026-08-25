@@ -97,13 +97,34 @@ export enum TourCatalogSort {
 	DurationDesc = "duration_desc"
 }
 
-/** SupplierType */
+/**
+ * SupplierType
+ * What a supplier can be contracted for. A supplier carries a set of these,
+ * not one: a hotel that also runs the restaurant, or a DMC selling transfers
+ * and guides, is one counterparty with one set of bank details.
+ */
 export enum SupplierType {
 	Flight = "flight",
-	Transfer = "transfer",
 	Hotel = "hotel",
 	Museum = "museum",
-	Activity = "activity"
+	Transfer = "transfer",
+	Activity = "activity",
+	Train = "train",
+	Bus = "bus"
+}
+
+/**
+ * SupplierPolicyWarning
+ * What a supplier policy caught on an event. Advisory, never a publish
+ * block: the operator is the authority on their own contract, so a warning
+ * reports the conflict and the charge to expect and leaves the call to them.
+ *
+ * Check: GET /tour/{tour_id}/{option_id}/event/policy-check
+ */
+export enum SupplierPolicyWarning {
+	EarlyCheckIn = "early_check_in",
+	LateCheckOut = "late_check_out",
+	SupplierTypeMismatch = "supplier_type_mismatch"
 }
 
 /** SupplierPaymentStatus */
@@ -148,6 +169,7 @@ export enum Permissions {
 	TourArchive = "tour_archive",
 	TourOptionWrite = "tour_option_write",
 	TourEventWrite = "tour_event_write",
+	TourEventOverrideWrite = "tour_event_override_write",
 	TourEventLibraryRead = "tour_event_library_read",
 	TourEventLibraryWrite = "tour_event_library_write",
 	TourGalleryWrite = "tour_gallery_write",
@@ -163,6 +185,7 @@ export enum Permissions {
 	BookingFinanceRead = "booking_finance_read",
 	BookingPaxWrite = "booking_pax_write",
 	BookingRevisionWrite = "booking_revision_write",
+	BookingEventOverrideWrite = "booking_event_override_write",
 	BookingPaymentRead = "booking_payment_read",
 	BookingPaymentWrite = "booking_payment_write",
 	BookingPaymentConfirm = "booking_payment_confirm",
@@ -330,6 +353,7 @@ export enum ExpenseType {
 	Fixed = "fixed",
 	PerPerson = "per_person",
 	PerGroup = "per_group",
+	PerDuration = "per_duration",
 	PerCar = "per_car",
 	PerCarCategory = "per_car_category",
 	PerRoom = "per_room",
@@ -354,7 +378,8 @@ export enum EventTypes {
 export enum EditOp {
 	Create = "create",
 	Update = "update",
-	Delete = "delete"
+	Delete = "delete",
+	Override = "override"
 }
 
 /** Currency */
@@ -486,6 +511,8 @@ export interface ActivityDetailsPubSchemaInput {
 	start_time?: TimeSchema | null;
 	end_time?: TimeSchema | null;
 	expenses?: ChargePubSchema | null;
+	/** Menu */
+	menu?: MenuItemPubSchema[] | null;
 }
 
 /** ActivityDetailsPubSchema */
@@ -496,12 +523,12 @@ export interface ActivityDetailsPubSchemaOutput {
 	start_time?: TimeSchema | null;
 	end_time?: TimeSchema | null;
 	expenses?: ChargePubSchema | null;
+	/** Menu */
+	menu?: MenuItemPubSchema[] | null;
 }
 
 /** ActivityDetailsSchema */
 export interface ActivityDetailsSchemaInput {
-	/** Sub-type of an activity */
-	typ?: ActivityType | null;
 	/**
 	 * Location
 	 * Event location
@@ -525,12 +552,12 @@ export interface ActivityDetailsSchemaInput {
 				  } & PerPersonChargeInput)
 		  )
 		| null;
+	/** Sub-type of an activity */
+	typ?: ActivityType | null;
 }
 
 /** ActivityDetailsSchema */
 export interface ActivityDetailsSchemaOutput {
-	/** Sub-type of an activity */
-	typ?: ActivityType | null;
 	/**
 	 * Location
 	 * Event location
@@ -554,6 +581,8 @@ export interface ActivityDetailsSchemaOutput {
 				  } & PerPersonChargeOutput)
 		  )
 		| null;
+	/** Sub-type of an activity */
+	typ?: ActivityType | null;
 }
 
 /** ActivityEvent */
@@ -577,7 +606,11 @@ export interface ActivityEventInput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsSchemaInput | null;
+	/** Details */
+	details?:
+		| ActivityFoodDetailsSchemaInput
+		| ActivityDetailsSchemaInput
+		| null;
 }
 
 /** ActivityEvent */
@@ -601,7 +634,11 @@ export interface ActivityEventOutput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsSchemaOutput | null;
+	/** Details */
+	details?:
+		| ActivityFoodDetailsSchemaOutput
+		| ActivityDetailsSchemaOutput
+		| null;
 }
 
 /** ActivityEventPubRead */
@@ -679,7 +716,11 @@ export interface ActivityEventTypeReadInput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsSchemaInput | null;
+	/** Details */
+	details?:
+		| ActivityFoodDetailsSchemaInput
+		| ActivityDetailsSchemaInput
+		| null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -708,7 +749,11 @@ export interface ActivityEventTypeReadOutput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsSchemaOutput | null;
+	/** Details */
+	details?:
+		| ActivityFoodDetailsSchemaOutput
+		| ActivityDetailsSchemaOutput
+		| null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -716,11 +761,80 @@ export interface ActivityEventTypeReadOutput {
 	id?: string | null;
 }
 
+/** ActivityFoodDetailsSchema */
+export interface ActivityFoodDetailsSchemaInput {
+	/**
+	 * Location
+	 * Event location
+	 */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event start time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+	/** Typ */
+	typ: "food";
+	/**
+	 * Menu
+	 * Menu of a restaurant (food) activity
+	 */
+	menu?: MenuItemSchema[] | null;
+}
+
+/** ActivityFoodDetailsSchema */
+export interface ActivityFoodDetailsSchemaOutput {
+	/**
+	 * Location
+	 * Event location
+	 */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event start time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+	/** Typ */
+	typ: "food";
+	/**
+	 * Menu
+	 * Menu of a restaurant (food) activity
+	 */
+	menu?: MenuItemSchema[] | null;
+}
+
 /** ActivitySingleEvent */
 export interface ActivitySingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -758,7 +872,11 @@ export interface ActivitySingleEventInput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsSchemaInput | null;
+	/** Details */
+	details?:
+		| ActivityFoodDetailsSchemaInput
+		| ActivityDetailsSchemaInput
+		| null;
 }
 
 /** ActivitySingleEvent */
@@ -766,6 +884,7 @@ export interface ActivitySingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -803,7 +922,11 @@ export interface ActivitySingleEventOutput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsSchemaOutput | null;
+	/** Details */
+	details?:
+		| ActivityFoodDetailsSchemaOutput
+		| ActivityDetailsSchemaOutput
+		| null;
 }
 
 /** AdminUserView */
@@ -1191,6 +1314,12 @@ export interface BodyUploadEventImagesTourTourIdEventEventIdImagesPost {
 	images: File[];
 }
 
+/** Body_upload_event_node_images_tour__tour_id__event__event_id__node__node_id__images_post */
+export interface BodyUploadEventNodeImagesTourTourIdEventEventIdNodeNodeIdImagesPost {
+	/** Images */
+	images: File[];
+}
+
 /** Body_upload_invoice_pdf_invoice__invoice_id__pdf_post */
 export interface BodyUploadInvoicePdfInvoiceInvoiceIdPdfPost {
 	/**
@@ -1212,6 +1341,12 @@ export interface BodyUploadLibraryImagesTourEventLibraryLibraryIdImagesPost {
 	images: File[];
 }
 
+/** Body_upload_node_images_supplier__supplier_id__product__product_id__variant__variant_id__node__node_id__images_post */
+export interface BodyUploadNodeImagesSupplierSupplierIdProductProductIdVariantVariantIdNodeNodeIdImagesPost {
+	/** Images */
+	images: File[];
+}
+
 /** Body_upload_option_cover_tour__tour_id__option__option_id__cover_post */
 export interface BodyUploadOptionCoverTourTourIdOptionOptionIdCoverPost {
 	/**
@@ -1228,6 +1363,12 @@ export interface BodyUploadPassengerPassportBookingOrderBookingIdPaxPaxIdPasspor
 	 * @format binary
 	 */
 	file: File;
+}
+
+/** Body_upload_product_images_supplier__supplier_id__product__product_id__images_post */
+export interface BodyUploadProductImagesSupplierSupplierIdProductProductIdImagesPost {
+	/** Images */
+	images: File[];
 }
 
 /** Body_upload_receipt_operator_supplier_payment__payment_id__receipt_post */
@@ -2203,6 +2344,7 @@ export interface BusSingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -2248,6 +2390,7 @@ export interface BusSingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -2541,6 +2684,302 @@ export interface CustomDetails {
 	items: KeyValItem[];
 }
 
+/**
+ * CustomHousingDetails
+ * A stay the operator described and priced itself.
+ */
+export interface CustomHousingDetailsInput {
+	/**
+	 * Duration
+	 * Length of stay
+	 */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
+	/**
+	 * Location
+	 * Housing location
+	 */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	/**
+	 * Expenses
+	 * Expenses strategy for this event
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+				| ({
+						typ: "per_room";
+				  } & PerRoomExpensesInput)
+				| ({
+						typ: "per_room_category";
+				  } & PerRoomCategoryExpensesInput)
+		  )
+		| null;
+	/** Stars */
+	stars?: number | null;
+}
+
+/**
+ * CustomHousingDetails
+ * A stay the operator described and priced itself.
+ */
+export interface CustomHousingDetailsOutput {
+	/**
+	 * Duration
+	 * Length of stay
+	 */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
+	/**
+	 * Location
+	 * Housing location
+	 */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	/**
+	 * Expenses
+	 * Expenses strategy for this event
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+				| ({
+						typ: "per_room";
+				  } & PerRoomExpensesOutput)
+				| ({
+						typ: "per_room_category";
+				  } & PerRoomCategoryExpensesOutput)
+		  )
+		| null;
+	/** Stars */
+	stars?: number | null;
+}
+
+/** CustomHousingDetailsPubSchema */
+export interface CustomHousingDetailsPubSchemaInput {
+	/** Duration */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	/** Stars */
+	stars?: number | null;
+	expenses?: HousingExpensesPubSchemaInput | null;
+}
+
+/** CustomHousingDetailsPubSchema */
+export interface CustomHousingDetailsPubSchemaOutput {
+	/** Duration */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	/** Stars */
+	stars?: number | null;
+	expenses?: HousingExpensesPubSchemaOutput | null;
+}
+
+/** CustomTrainDetailPubSchema */
+export interface CustomTrainDetailPubSchemaInput {
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
+	/** Hop */
+	hop?: TrainHopPubSchemaInput[] | null;
+	expenses?: ChargePubSchema | null;
+}
+
+/** CustomTrainDetailPubSchema */
+export interface CustomTrainDetailPubSchemaOutput {
+	/** Hop */
+	hop?: TrainHopPubSchemaOutput[] | null;
+	expenses?: ChargePubSchema | null;
+}
+
+/**
+ * CustomTrainDetails
+ * A leg the operator priced itself.
+ */
+export interface CustomTrainDetailsInput {
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
+	/** Hop */
+	hop?: TrainHopSchemaInput[] | null;
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/**
+ * CustomTrainDetails
+ * A leg the operator priced itself.
+ */
+export interface CustomTrainDetailsOutput {
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
+	/** Hop */
+	hop?: TrainHopSchemaOutput[] | null;
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+}
+
+/**
+ * DurationCharge
+ * A per-duration cost together with its own one-off fee and markup.
+ */
+export interface DurationChargeInput {
+	/**
+	 * Typ
+	 * @default "per_duration"
+	 */
+	typ?: "per_duration";
+	/**
+	 * Rate
+	 * How one unit of the duration is priced.
+	 */
+	rate:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseInput)
+		| ({
+				typ: "per_group";
+		  } & PerGroupExpenseInput)
+		| ({
+				typ: "per_person";
+		  } & PerPersonExpenseInput);
+	/** Fees */
+	fees?: FeeInput[] | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * DurationCharge
+ * A per-duration cost together with its own one-off fee and markup.
+ */
+export interface DurationChargeOutput {
+	/**
+	 * Typ
+	 * @default "per_duration"
+	 */
+	typ?: "per_duration";
+	/**
+	 * Rate
+	 * How one unit of the duration is priced.
+	 */
+	rate:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseOutput)
+		| ({
+				typ: "per_group";
+		  } & PerGroupExpenseOutput)
+		| ({
+				typ: "per_person";
+		  } & PerPersonExpenseOutput);
+	/** Fees */
+	fees?: FeeOutput[] | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
 /** EmptyDetails */
 export interface EmptyDetails {
 	/** Event start time */
@@ -2560,6 +2999,13 @@ export interface EmptyDetailsPub {
  * Append-only revision log. CREATE and UPDATE carry the full snapshot event
  * UPDATE and DELETE name the existing snapshot event by ``target_id``. ``seq`` is the order and
  * ``at`` the server-set time — together they answer "how many / how long".
+ * OVERRIDE carries the negotiated deviation for ``target_id`` — ``None``
+ * clears it — and names an OPTIONS alternative by ``option_index``, the same
+ * positional key the rest of the snapshot layer uses.
+ * ``actor_id``/``actor_name`` freeze who committed the edit — the display name
+ * is pinned at write time like everything else in the snapshot, so later staff
+ * renames never rewrite history. Edits recorded before actors existed carry
+ * ``None``.
  */
 export interface EventEditOpInput {
 	op: EditOp;
@@ -2573,6 +3019,23 @@ export interface EventEditOpInput {
 	/** Target Id */
 	target_id?: string | null;
 	event?: OrderTourEventSchemaInput | null;
+	/** Override */
+	override?:
+		| (
+				| ({
+						typ: "housing";
+				  } & HousingOverrideSchemaInput)
+				| ({
+						typ: "train";
+				  } & TrainOverrideSchemaInput)
+		  )
+		| null;
+	/** Option Index */
+	option_index?: number | null;
+	/** Actor Id */
+	actor_id?: string | null;
+	/** Actor Name */
+	actor_name?: string | null;
 }
 
 /**
@@ -2580,6 +3043,13 @@ export interface EventEditOpInput {
  * Append-only revision log. CREATE and UPDATE carry the full snapshot event
  * UPDATE and DELETE name the existing snapshot event by ``target_id``. ``seq`` is the order and
  * ``at`` the server-set time — together they answer "how many / how long".
+ * OVERRIDE carries the negotiated deviation for ``target_id`` — ``None``
+ * clears it — and names an OPTIONS alternative by ``option_index``, the same
+ * positional key the rest of the snapshot layer uses.
+ * ``actor_id``/``actor_name`` freeze who committed the edit — the display name
+ * is pinned at write time like everything else in the snapshot, so later staff
+ * renames never rewrite history. Edits recorded before actors existed carry
+ * ``None``.
  */
 export interface EventEditOpOutput {
 	op: EditOp;
@@ -2593,10 +3063,31 @@ export interface EventEditOpOutput {
 	/** Target Id */
 	target_id?: string | null;
 	event?: OrderTourEventSchemaOutput | null;
+	/** Override */
+	override?:
+		| (
+				| ({
+						typ: "housing";
+				  } & HousingOverrideSchemaOutput)
+				| ({
+						typ: "train";
+				  } & TrainOverrideSchemaOutput)
+		  )
+		| null;
+	/** Option Index */
+	option_index?: number | null;
+	/** Actor Id */
+	actor_id?: string | null;
+	/** Actor Name */
+	actor_name?: string | null;
 }
 
 /** EventImageModel */
 export interface EventImageModel {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
 	/**
 	 * Id
 	 * @format uuid
@@ -2607,10 +3098,6 @@ export interface EventImageModel {
 	 * @format uuid
 	 */
 	event_id: string;
-	/** Image Path */
-	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
 }
 
 /**
@@ -2630,8 +3117,8 @@ export interface EventImagePubSchema {
  * One image attached to an event slot, in the shape ``GET
  * /{tour_id}/event/{event_id}/images/all`` returns.
  *
- * Check: `src.tour.gallery.router.list_event_images`,
- * `src.tour.gallery.router.upload_event_images`.
+ * Check: `src.tour.event.images.router.list_event_images`,
+ * `src.tour.event.images.router.upload_event_images`.
  */
 export interface EventImageSchema {
 	/**
@@ -2795,6 +3282,25 @@ export interface EventLineOutput {
 export interface EventOptionalSchema {
 	/** Is Optional */
 	is_optional: boolean;
+}
+
+/**
+ * EventProductLinkSchema
+ * Which supplier product an event reads from. Only the link — everything the
+ * product states about itself stays on the product, and the tour's own half of
+ * the payload is left where it is.
+ */
+export interface EventProductLinkSchema {
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/**
+	 * Variant Id
+	 * Narrow to one room category or fare class; unset prices across all.
+	 */
+	variant_id?: string | null;
 }
 
 /** EventReorderSchema */
@@ -3015,6 +3521,32 @@ export interface ExcludedDatesBulkDelete {
 }
 
 /**
+ * Fee
+ * One internal fee line riding along with a cost — operator-side
+ * bookkeeping, never agency-facing. A fee carries no fee of its own.
+ */
+export interface FeeInput {
+	/** Name */
+	name?: string | null;
+	cost?: MonetaryValueSchema | null;
+	/** Description */
+	description?: string | null;
+}
+
+/**
+ * Fee
+ * One internal fee line riding along with a cost — operator-side
+ * bookkeeping, never agency-facing. A fee carries no fee of its own.
+ */
+export interface FeeOutput {
+	/** Name */
+	name?: string | null;
+	cost?: MonetaryValueSchema | null;
+	/** Description */
+	description?: string | null;
+}
+
+/**
  * FixedCharge
  * A fixed cost together with its own fee and markup.
  */
@@ -3038,7 +3570,8 @@ export interface FixedChargeInput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
-	fees?: FixedExpenseInput | null;
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -3079,7 +3612,8 @@ export interface FixedChargeOutput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
-	fees?: FixedExpenseOutput | null;
+	/** Fees */
+	fees?: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -3591,6 +4125,7 @@ export interface FlightSingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -3636,6 +4171,7 @@ export interface FlightSingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -3798,8 +4334,13 @@ export interface FrozenTourMeta {
 	categories?: TourCategory[];
 }
 
-/** FrozenTourOption */
-export interface FrozenTourOption {
+/**
+ * FrozenTourOption
+ * ``markup`` is the option-level override frozen at booking time; snapshot
+ * pricing resolves it before the tour-level markup, so later option edits
+ * never change this booking.
+ */
+export interface FrozenTourOptionInput {
 	/**
 	 * Id
 	 * @format uuid
@@ -3811,6 +4352,54 @@ export interface FrozenTourOption {
 	description?: string | null;
 	/** Cover Image Path */
 	cover_image_path?: string | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * FrozenTourOption
+ * ``markup`` is the option-level override frozen at booking time; snapshot
+ * pricing resolves it before the tour-level markup, so later option edits
+ * never change this booking.
+ */
+export interface FrozenTourOptionOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Cover Image Path */
+	cover_image_path?: string | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /** FullScheduleSchema */
@@ -3958,16 +4547,50 @@ export interface GroupTemplate {
 	permissions: Permissions[];
 }
 
-/** GuideByLanguageCategory */
+/**
+ * GuideByLanguageCategory
+ * One language's guide price: flat for the engagement, or per day through
+ * ``DurationCharge`` — its ``rate`` is where the group-size tiers live.
+ */
 export interface GuideByLanguageCategoryInput {
 	lang?: LanguageCode | null;
-	expenses?: PerGroupChargeInput | null;
+	/**
+	 * Expenses
+	 * As a whole, or per unit of the event's own length.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeInput)
+		  )
+		| null;
 }
 
-/** GuideByLanguageCategory */
+/**
+ * GuideByLanguageCategory
+ * One language's guide price: flat for the engagement, or per day through
+ * ``DurationCharge`` — its ``rate`` is where the group-size tiers live.
+ */
 export interface GuideByLanguageCategoryOutput {
 	lang?: LanguageCode | null;
-	expenses?: PerGroupChargeOutput | null;
+	/**
+	 * Expenses
+	 * As a whole, or per unit of the event's own length.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeOutput)
+		  )
+		| null;
 }
 
 /** GuideDetails */
@@ -4123,6 +4746,7 @@ export interface GuideSingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -4168,6 +4792,7 @@ export interface GuideSingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -4229,55 +4854,296 @@ export interface HTTPValidationError {
 	detail?: ValidationError[];
 }
 
-/** HousingDetailsPubSchema */
-export interface HousingDetailsPubSchemaInput {
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
-	/** Duration */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
-	/** Stars */
-	stars?: number | null;
-	expenses?: HousingExpensesPubSchemaInput | null;
+/**
+ * HotelPolicySchema
+ * Standard check-in/check-out hours plus the bands billed on either side of
+ * them. An unset cutoff switches that half of the check off.
+ */
+export interface HotelPolicySchemaInput {
+	/** Check In From */
+	check_in_from?: string | null;
+	/** Check Out Until */
+	check_out_until?: string | null;
+	/** Early Check In */
+	early_check_in?: SupplierPolicyBandInput[];
+	/** Late Check Out */
+	late_check_out?: SupplierPolicyBandInput[];
 }
 
-/** HousingDetailsPubSchema */
-export interface HousingDetailsPubSchemaOutput {
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
-	/** Duration */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
-	/** Stars */
-	stars?: number | null;
-	expenses?: HousingExpensesPubSchemaOutput | null;
+/**
+ * HotelPolicySchema
+ * Standard check-in/check-out hours plus the bands billed on either side of
+ * them. An unset cutoff switches that half of the check off.
+ */
+export interface HotelPolicySchemaOutput {
+	/** Check In From */
+	check_in_from?: string | null;
+	/** Check Out Until */
+	check_out_until?: string | null;
+	/** Early Check In */
+	early_check_in?: SupplierPolicyBandOutput[];
+	/** Late Check Out */
+	late_check_out?: SupplierPolicyBandOutput[];
 }
 
-/** HousingDetailsSchema */
-export interface HousingDetailsSchemaInput {
+/** HotelProductCreate */
+export interface HotelProductCreate {
 	/**
-	 * Location
-	 * Housing location
+	 * Typ
+	 * @default "hotel"
 	 */
+	typ?: "hotel";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** One hotel as the supplier describes it; prices live on its variants. */
+	details?: HotelProductDetails;
+}
+
+/**
+ * HotelProductDetails
+ * One hotel as the supplier describes it; prices live on its variants.
+ */
+export interface HotelProductDetails {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
 	/** Amenities */
 	amenities?: AmenitiesTypes[] | null;
+	policy?: HotelPolicySchemaInput | null;
+}
+
+/**
+ * HotelProductPubSchema
+ * The hotel's own facts. ``policy`` is dropped — an out-of-hours surcharge is
+ * the operator's contract, already priced into what the traveller is quoted.
+ */
+export interface HotelProductPubSchemaInput {
+	/** Name */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	/** Variants */
+	variants?: HotelVariantPubSchemaInput[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/**
+ * HotelProductPubSchema
+ * The hotel's own facts. ``policy`` is dropped — an out-of-hours surcharge is
+ * the operator's contract, already priced into what the traveller is quoted.
+ */
+export interface HotelProductPubSchemaOutput {
+	/** Name */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	/** Variants */
+	variants?: HotelVariantPubSchemaOutput[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/**
+ * HotelProductRead
+ * A hotel as an event inherits it — the object served as ``product`` on a
+ * housing event. The stored payload is flattened onto the row's own identity,
+ * so nothing reads through a nested ``details``.
+ */
+export interface HotelProductReadInput {
 	/**
-	 * Duration
-	 * Length of stay
+	 * Typ
+	 * @default "hotel"
 	 */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
+	typ?: "hotel";
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	policy?: HotelPolicySchemaInput | null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Variants */
+	variants?: HotelVariantReadInput[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/**
+ * HotelProductRead
+ * A hotel as an event inherits it — the object served as ``product`` on a
+ * housing event. The stored payload is flattened onto the row's own identity,
+ * so nothing reads through a nested ``details``.
+ */
+export interface HotelProductReadOutput {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[] | null;
+	policy?: HotelPolicySchemaOutput | null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Variants */
+	variants?: HotelVariantReadOutput[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/**
+ * HotelProductUpdate
+ * Partial update; ``details`` replaces the whole object rather than merging.
+ */
+export interface HotelProductUpdate {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Name */
+	name?: string | null;
+	details?: HotelProductDetails | null;
+}
+
+/**
+ * HotelRoomRateSchema
+ * What a hotel room costs for a stay checking in inside one season. Dates
+ * are inclusive and absolute — a hotel's rate sheet is re-entered per year.
+ */
+export interface HotelRoomRateSchemaInput {
+	/**
+	 * From Date
+	 * @format date
+	 */
+	from_date: string;
+	/**
+	 * To Date
+	 * @format date
+	 */
+	to_date: string;
 	/**
 	 * Expenses
-	 * Expenses strategy for this event
+	 * As a whole, or per unit of the event's own length.
+	 */
+	expenses:
+		| ({
+				typ: "fixed";
+		  } & FixedChargeInput)
+		| ({
+				typ: "per_duration";
+		  } & DurationChargeInput);
+}
+
+/**
+ * HotelRoomRateSchema
+ * What a hotel room costs for a stay checking in inside one season. Dates
+ * are inclusive and absolute — a hotel's rate sheet is re-entered per year.
+ */
+export interface HotelRoomRateSchemaOutput {
+	/**
+	 * From Date
+	 * @format date
+	 */
+	from_date: string;
+	/**
+	 * To Date
+	 * @format date
+	 */
+	to_date: string;
+	/**
+	 * Expenses
+	 * As a whole, or per unit of the event's own length.
+	 */
+	expenses:
+		| ({
+				typ: "fixed";
+		  } & FixedChargeOutput)
+		| ({
+				typ: "per_duration";
+		  } & DurationChargeOutput);
+}
+
+/**
+ * HotelRoomSchema
+ * A room of a hotel product: the base charge plus the seasons that replace
+ * it. A dated stay pays the season containing its check-in, else the base; an
+ * undated one may still land on the base or on any season not yet ended.
+ */
+export interface HotelRoomSchemaInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
+	 */
+	images?: NodeImageSchema[];
+	typ?: HousingRoomTypes | null;
+	/** Pax */
+	pax?: number | null;
+	/**
+	 * Expenses
+	 * Charge for this room of this category, per stay or per night.
 	 */
 	expenses?:
 		| (
@@ -4285,39 +5151,41 @@ export interface HousingDetailsSchemaInput {
 						typ: "fixed";
 				  } & FixedChargeInput)
 				| ({
-						typ: "per_person";
-				  } & PerPersonChargeInput)
-				| ({
-						typ: "per_room";
-				  } & PerRoomExpensesInput)
-				| ({
-						typ: "per_room_category";
-				  } & PerRoomCategoryExpensesInput)
+						typ: "per_duration";
+				  } & DurationChargeInput)
 		  )
 		| null;
-	/** Stars */
-	stars?: number | null;
+	/**
+	 * Rates
+	 * Seasonal charges replacing the base for stays that check in inside them.
+	 */
+	rates?: HotelRoomRateSchemaInput[] | null;
 }
 
-/** HousingDetailsSchema */
-export interface HousingDetailsSchemaOutput {
+/**
+ * HotelRoomSchema
+ * A room of a hotel product: the base charge plus the seasons that replace
+ * it. A dated stay pays the season containing its check-in, else the base; an
+ * undated one may still land on the base or on any season not yet ended.
+ */
+export interface HotelRoomSchemaOutput {
 	/**
-	 * Location
-	 * Housing location
+	 * Id
+	 * @format uuid
 	 */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
+	id?: string;
 	/**
-	 * Duration
-	 * Length of stay
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
 	 */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
+	images?: NodeImageSchema[];
+	typ?: HousingRoomTypes | null;
+	/** Pax */
+	pax?: number | null;
 	/**
 	 * Expenses
-	 * Expenses strategy for this event
+	 * Charge for this room of this category, per stay or per night.
 	 */
 	expenses?:
 		| (
@@ -4325,18 +5193,115 @@ export interface HousingDetailsSchemaOutput {
 						typ: "fixed";
 				  } & FixedChargeOutput)
 				| ({
-						typ: "per_person";
-				  } & PerPersonChargeOutput)
-				| ({
-						typ: "per_room";
-				  } & PerRoomExpensesOutput)
-				| ({
-						typ: "per_room_category";
-				  } & PerRoomCategoryExpensesOutput)
+						typ: "per_duration";
+				  } & DurationChargeOutput)
 		  )
 		| null;
-	/** Stars */
-	stars?: number | null;
+	/**
+	 * Rates
+	 * Seasonal charges replacing the base for stays that check in inside them.
+	 */
+	rates?: HotelRoomRateSchemaOutput[] | null;
+}
+
+/**
+ * HotelVariantDetails
+ * One room category; a group bin-packs into the cheapest combination of its
+ * rooms.
+ */
+export interface HotelVariantDetails {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Rooms */
+	rooms?: HotelRoomSchemaInput[] | null;
+}
+
+/**
+ * HotelVariantPubSchema
+ * One room category of the hotel, rooms kept, prices dropped.
+ */
+export interface HotelVariantPubSchemaInput {
+	/** Name */
+	name?: string | null;
+	/** Rooms */
+	rooms?: HousingRoomPubSchema[] | null;
+}
+
+/**
+ * HotelVariantPubSchema
+ * One room category of the hotel, rooms kept, prices dropped.
+ */
+export interface HotelVariantPubSchemaOutput {
+	/** Name */
+	name?: string | null;
+	/** Rooms */
+	rooms?: HousingRoomPubSchema[] | null;
+}
+
+/**
+ * HotelVariantRead
+ * One room category as it reads — the stored payload flattened onto its own
+ * identity, so a caller reaches rooms at ``variant.rooms``.
+ */
+export interface HotelVariantReadInput {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Rooms */
+	rooms?: HotelRoomSchemaInput[] | null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+}
+
+/**
+ * HotelVariantRead
+ * One room category as it reads — the stored payload flattened onto its own
+ * identity, so a caller reaches rooms at ``variant.rooms``.
+ */
+export interface HotelVariantReadOutput {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Rooms */
+	rooms?: HotelRoomSchemaOutput[] | null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+}
+
+/** HotelVariantWrite */
+export interface HotelVariantWrite {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
+	 * One room category; a group bin-packs into the cheapest combination of its
+	 * rooms.
+	 */
+	details?: HotelVariantDetails;
 }
 
 /** HousingEvent */
@@ -4360,7 +5325,8 @@ export interface HousingEventInput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsSchemaInput | null;
+	/** Details */
+	details?: CustomHousingDetailsInput | InheritedHousingDetailsInput | null;
 }
 
 /** HousingEvent */
@@ -4384,7 +5350,8 @@ export interface HousingEventOutput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsSchemaOutput | null;
+	/** Details */
+	details?: CustomHousingDetailsOutput | InheritedHousingDetailsOutput | null;
 }
 
 /** HousingEventPubRead */
@@ -4411,7 +5378,17 @@ export interface HousingEventPubReadInput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsPubSchemaInput | null;
+	/** Details */
+	details?:
+		| (
+				| ({
+						source: "custom";
+				  } & CustomHousingDetailsPubSchemaInput)
+				| ({
+						source: "inherited";
+				  } & InheritedHousingDetailsPubSchemaInput)
+		  )
+		| null;
 }
 
 /** HousingEventPubRead */
@@ -4438,7 +5415,17 @@ export interface HousingEventPubReadOutput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsPubSchemaOutput | null;
+	/** Details */
+	details?:
+		| (
+				| ({
+						source: "custom";
+				  } & CustomHousingDetailsPubSchemaOutput)
+				| ({
+						source: "inherited";
+				  } & InheritedHousingDetailsPubSchemaOutput)
+		  )
+		| null;
 }
 
 /** HousingEventTypeRead */
@@ -4462,7 +5449,8 @@ export interface HousingEventTypeReadInput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsSchemaInput | null;
+	/** Details */
+	details?: CustomHousingDetailsInput | InheritedHousingDetailsInput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -4491,7 +5479,8 @@ export interface HousingEventTypeReadOutput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsSchemaOutput | null;
+	/** Details */
+	details?: CustomHousingDetailsOutput | InheritedHousingDetailsOutput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -4519,6 +5508,82 @@ export interface HousingExpensesPubSchemaOutput {
 	rooms?: HousingRoomPubSchema[] | null;
 	/** Categories */
 	categories?: HousingRoomCategoryPubSchemaOutput[] | null;
+}
+
+/**
+ * HousingOverrideSchema
+ * What one tour negotiated away from a hotel product's own terms.
+ *
+ * ``expenses`` is the same shape a custom stay uses, so one price editor
+ * serves both; ``policy`` replaces the hotel's check-in rules wholesale. Only
+ * the negotiable half is representable — a hotel's location or stars are facts
+ * about the hotel, and a wrong one means the product is wrong, not the tour.
+ */
+export interface HousingOverrideSchemaInput {
+	/**
+	 * Typ
+	 * @default "housing"
+	 */
+	typ?: "housing";
+	policy?: HotelPolicySchemaInput | null;
+	/** Expenses */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+				| ({
+						typ: "per_room";
+				  } & PerRoomExpensesInput)
+				| ({
+						typ: "per_room_category";
+				  } & PerRoomCategoryExpensesInput)
+		  )
+		| null;
+}
+
+/**
+ * HousingOverrideSchema
+ * What one tour negotiated away from a hotel product's own terms.
+ *
+ * ``expenses`` is the same shape a custom stay uses, so one price editor
+ * serves both; ``policy`` replaces the hotel's check-in rules wholesale. Only
+ * the negotiable half is representable — a hotel's location or stars are facts
+ * about the hotel, and a wrong one means the product is wrong, not the tour.
+ */
+export interface HousingOverrideSchemaOutput {
+	/**
+	 * Typ
+	 * @default "housing"
+	 */
+	typ?: "housing";
+	policy?: HotelPolicySchemaOutput | null;
+	/** Expenses */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+				| ({
+						typ: "per_room";
+				  } & PerRoomExpensesOutput)
+				| ({
+						typ: "per_room_category";
+				  } & PerRoomCategoryExpensesOutput)
+		  )
+		| null;
 }
 
 /** HousingRoomCategoryExpensesSchema */
@@ -4555,9 +5620,21 @@ export interface HousingRoomCategoryPubSchemaOutput {
 
 /**
  * HousingRoomDoubleSchema
- * per room always counts as double
+ * per room always counts as double. An ``ImageBearingNode``: echo its
+ * ``id`` on update to keep the room's images.
  */
 export interface HousingRoomDoubleSchemaInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
+	 */
+	images?: NodeImageSchema[];
 	/**
 	 * Name
 	 * Room name Standard, Suite .e.t.c.
@@ -4568,14 +5645,39 @@ export interface HousingRoomDoubleSchemaInput {
 	 * Room description
 	 */
 	description?: string | null;
-	expenses?: FixedChargeInput | null;
+	/**
+	 * Expenses
+	 * As a whole, or per unit of the event's own length.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeInput)
+		  )
+		| null;
 }
 
 /**
  * HousingRoomDoubleSchema
- * per room always counts as double
+ * per room always counts as double. An ``ImageBearingNode``: echo its
+ * ``id`` on update to keep the room's images.
  */
 export interface HousingRoomDoubleSchemaOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
+	 */
+	images?: NodeImageSchema[];
 	/**
 	 * Name
 	 * Room name Standard, Suite .e.t.c.
@@ -4586,7 +5688,20 @@ export interface HousingRoomDoubleSchemaOutput {
 	 * Room description
 	 */
 	description?: string | null;
-	expenses?: FixedChargeOutput | null;
+	/**
+	 * Expenses
+	 * As a whole, or per unit of the event's own length.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeOutput)
+		  )
+		| null;
 }
 
 /**
@@ -4603,24 +5718,82 @@ export interface HousingRoomPubSchema {
 	name?: string | null;
 	/** Description */
 	description?: string | null;
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
-/** HousingRoomSchema */
+/**
+ * HousingRoomSchema
+ * One room of a category and its charge. ``pax`` is the room type's capacity
+ * and is what the bin-packer fills a group with. An ``ImageBearingNode``: echo
+ * its ``id`` on update to keep the room's images.
+ */
 export interface HousingRoomSchemaInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
+	 */
+	images?: NodeImageSchema[];
 	typ?: HousingRoomTypes | null;
 	/** Pax */
 	pax?: number | null;
-	/** Charge for this room of this category. */
-	expenses?: FixedChargeInput | null;
+	/**
+	 * Expenses
+	 * Charge for this room of this category, per stay or per night.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeInput)
+		  )
+		| null;
 }
 
-/** HousingRoomSchema */
+/**
+ * HousingRoomSchema
+ * One room of a category and its charge. ``pax`` is the room type's capacity
+ * and is what the bin-packer fills a group with. An ``ImageBearingNode``: echo
+ * its ``id`` on update to keep the room's images.
+ */
 export interface HousingRoomSchemaOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
+	 */
+	images?: NodeImageSchema[];
 	typ?: HousingRoomTypes | null;
 	/** Pax */
 	pax?: number | null;
-	/** Charge for this room of this category. */
-	expenses?: FixedChargeOutput | null;
+	/**
+	 * Expenses
+	 * Charge for this room of this category, per stay or per night.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_duration";
+				  } & DurationChargeOutput)
+		  )
+		| null;
 }
 
 /** HousingSingleEvent */
@@ -4628,6 +5801,7 @@ export interface HousingSingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -4665,7 +5839,8 @@ export interface HousingSingleEventInput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsSchemaInput | null;
+	/** Details */
+	details?: CustomHousingDetailsInput | InheritedHousingDetailsInput | null;
 }
 
 /** HousingSingleEvent */
@@ -4673,6 +5848,7 @@ export interface HousingSingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -4710,7 +5886,8 @@ export interface HousingSingleEventOutput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	details?: HousingDetailsSchemaOutput | null;
+	/** Details */
+	details?: CustomHousingDetailsOutput | InheritedHousingDetailsOutput | null;
 }
 
 /** InformationEvent */
@@ -4878,6 +6055,7 @@ export interface InformationSingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -4923,6 +6101,7 @@ export interface InformationSingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -4961,6 +6140,146 @@ export interface InformationSingleEventOutput {
 	 */
 	typ?: "ref";
 	details?: EmptyDetails | null;
+}
+
+/**
+ * InheritedHousingDetails
+ * A stay in a supplier's hotel: the tour states its dates and hours, the
+ * hotel states everything else — unless this tour negotiated otherwise.
+ */
+export interface InheritedHousingDetailsInput {
+	/**
+	 * Duration
+	 * Length of stay
+	 */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: HousingOverrideSchemaInput | null;
+	product?: HotelProductReadInput | null;
+}
+
+/**
+ * InheritedHousingDetails
+ * A stay in a supplier's hotel: the tour states its dates and hours, the
+ * hotel states everything else — unless this tour negotiated otherwise.
+ */
+export interface InheritedHousingDetailsOutput {
+	/**
+	 * Duration
+	 * Length of stay
+	 */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: HousingOverrideSchemaOutput | null;
+	product?: HotelProductReadOutput | null;
+}
+
+/** InheritedHousingDetailsPubSchema */
+export interface InheritedHousingDetailsPubSchemaInput {
+	/** Duration */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	product?: HotelProductPubSchemaInput | null;
+}
+
+/** InheritedHousingDetailsPubSchema */
+export interface InheritedHousingDetailsPubSchemaOutput {
+	/** Duration */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	product?: HotelProductPubSchemaOutput | null;
+}
+
+/** InheritedTrainDetailPubSchema */
+export interface InheritedTrainDetailPubSchemaInput {
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	product?: TrainProductPubSchemaInput | null;
+}
+
+/** InheritedTrainDetailPubSchema */
+export interface InheritedTrainDetailPubSchemaOutput {
+	product?: TrainProductPubSchemaOutput | null;
+}
+
+/**
+ * InheritedTrainDetails
+ * A leg read off a supplier's route: schedule and fare come from there, and
+ * a tour adds nothing of its own.
+ */
+export interface InheritedTrainDetailsInput {
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: TrainOverrideSchemaInput | null;
+	product?: TrainProductReadInput | null;
+}
+
+/**
+ * InheritedTrainDetails
+ * A leg read off a supplier's route: schedule and fare come from there, and
+ * a tour adds nothing of its own.
+ */
+export interface InheritedTrainDetailsOutput {
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: TrainOverrideSchemaOutput | null;
+	product?: TrainProductReadOutput | null;
 }
 
 /** InvoiceDetailResponse */
@@ -5088,6 +6407,10 @@ export interface KeyValItem {
 
 /** LandingPageImageModel */
 export interface LandingPageImageModel {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
 	/**
 	 * Id
 	 * @format uuid
@@ -5098,10 +6421,6 @@ export interface LandingPageImageModel {
 	 * @format uuid
 	 */
 	landing_page_id: string;
-	/** Image Path */
-	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
 }
 
 /** LandingPageImagePubSchema */
@@ -5454,6 +6773,44 @@ export interface MeSchema {
 }
 
 /**
+ * MenuItemPubSchema
+ * One dish on a food activity's menu, photos kept.
+ */
+export interface MenuItemPubSchema {
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Images */
+	images?: EventImagePubSchema[];
+}
+
+/** MenuItemSchema */
+export interface MenuItemSchema {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
+	 */
+	images?: NodeImageSchema[];
+	/**
+	 * Name
+	 * Dish name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Short description of the dish
+	 */
+	description?: string | null;
+}
+
+/**
  * MonetaryValueSchema
  * Monetary value pair.
  *
@@ -5509,6 +6866,7 @@ export interface MultiEvent {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -5670,6 +7028,7 @@ export interface MultiEventReadInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -5733,6 +7092,7 @@ export interface MultiEventReadOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -5804,6 +7164,25 @@ export interface MyAccountRead {
 	/** Profile Picture Path */
 	profile_picture_path: string | null;
 	default_currency: Currency;
+}
+
+/**
+ * NodeImageSchema
+ * One image of a sub-document: the storage key and whether it leads.
+ */
+export interface NodeImageSchema {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/** Image Path */
+	image_path: string;
+	/**
+	 * Is Primary
+	 * @default false
+	 */
+	is_primary?: boolean;
 }
 
 /** OperatorCreateSchema */
@@ -6631,7 +8010,8 @@ export interface PackageCreate {
 				  } & PerPersonExpenseInput)
 		  )
 		| null;
-	fees?: FixedExpenseInput | null;
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -6690,7 +8070,8 @@ export interface PackageUpdate {
 				  } & PerPersonExpenseInput)
 		  )
 		| null;
-	fees?: FixedExpenseInput | null;
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -6978,10 +8359,17 @@ export interface PerCarExpenseOutput {
 }
 
 /**
- * PerGroupCharge
- * A group-size-tiered cost together with its own fee and markup.
+ * PerGroupExpense
+ * A flat cost stepped by group size.
+ *
+ * Tiers are stored sorted by ``up_to_pax``; ranges are implicit (previous
+ * bound + 1 .. own bound) so gaps and overlaps are unrepresentable. The last
+ * tier is open-ended: any headcount above it prices at that tier. Costs must
+ * share one currency and never decrease with group size — tour pricing
+ * evaluates only at the pax-range endpoints, which is sound only for a
+ * monotone step function.
  */
-export interface PerGroupChargeInput {
+export interface PerGroupExpenseInput {
 	/**
 	 * Typ
 	 * @default "per_group"
@@ -6992,28 +8380,20 @@ export interface PerGroupChargeInput {
 	 * @minItems 1
 	 */
 	tiers: GroupSizeTierInput[];
-	fees?: FixedExpenseInput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
 }
 
 /**
- * PerGroupCharge
- * A group-size-tiered cost together with its own fee and markup.
+ * PerGroupExpense
+ * A flat cost stepped by group size.
+ *
+ * Tiers are stored sorted by ``up_to_pax``; ranges are implicit (previous
+ * bound + 1 .. own bound) so gaps and overlaps are unrepresentable. The last
+ * tier is open-ended: any headcount above it prices at that tier. Costs must
+ * share one currency and never decrease with group size — tour pricing
+ * evaluates only at the pax-range endpoints, which is sound only for a
+ * monotone step function.
  */
-export interface PerGroupChargeOutput {
+export interface PerGroupExpenseOutput {
 	/**
 	 * Typ
 	 * @default "per_group"
@@ -7024,21 +8404,6 @@ export interface PerGroupChargeOutput {
 	 * @minItems 1
 	 */
 	tiers: GroupSizeTierOutput[];
-	fees?: FixedExpenseOutput | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseOutput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
 }
 
 /**
@@ -7065,7 +8430,8 @@ export interface PerPersonChargeInput {
 	 * slips through.
 	 */
 	cost_per_person: MonetaryValueSchema;
-	fees?: FixedExpenseInput | null;
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -7106,7 +8472,8 @@ export interface PerPersonChargeOutput {
 	 * slips through.
 	 */
 	cost_per_person: MonetaryValueSchema;
-	fees?: FixedExpenseOutput | null;
+	/** Fees */
+	fees?: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -7378,7 +8745,8 @@ export interface PricingPackageInput {
 				  } & PerPersonExpenseInput)
 		  )
 		| null;
-	fees?: FixedExpenseInput | null;
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -7428,7 +8796,8 @@ export interface PricingPackageOutput {
 				  } & PerPersonExpenseOutput)
 		  )
 		| null;
-	fees?: FixedExpenseOutput | null;
+	/** Fees */
+	fees?: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -8192,6 +9561,7 @@ export interface SupplementarySingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -8237,6 +9607,7 @@ export interface SupplementarySingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -8277,7 +9648,12 @@ export interface SupplementarySingleEventOutput {
 	details?: SupplementaryDetailsOutput | null;
 }
 
-/** SupplierCreateSchema */
+/**
+ * SupplierCreateSchema
+ * A supplier the operator contracts with. ``supplier_types`` is a set — the
+ * same counterparty may be a hotel and a restaurant — and what it actually
+ * sells is created separately, one product per hotel or route.
+ */
 export interface SupplierCreateSchema {
 	/**
 	 * Brand Name
@@ -8290,7 +9666,11 @@ export interface SupplierCreateSchema {
 	phone?: string | null;
 	/** Website */
 	website?: string | null;
-	supplier_type: SupplierType;
+	/**
+	 * Supplier Types
+	 * @minItems 1
+	 */
+	supplier_types: SupplierType[];
 }
 
 /**
@@ -8342,7 +9722,8 @@ export interface SupplierModel {
 	website: string | null;
 	/** Logo Path */
 	logo_path: string | null;
-	supplier_type: SupplierType;
+	/** Supplier Types */
+	supplier_types: SupplierType[];
 	/** Deleted At */
 	deleted_at: string | null;
 }
@@ -8558,7 +9939,220 @@ export interface SupplierPaymentUpdate {
 	status?: SupplierPaymentStatus | null;
 }
 
-/** SupplierUpdateSchema */
+/**
+ * SupplierPolicyBand
+ * Half-open window (``from_time`` inclusive, ``to_time`` exclusive, unset =
+ * open) and the surcharge for landing in it. Bands match first-hit; the
+ * surcharge inflates base cost before operator markup.
+ */
+export interface SupplierPolicyBandInput {
+	/** From Time */
+	from_time?: string | null;
+	/** To Time */
+	to_time?: string | null;
+	/**
+	 * Surcharge
+	 * The markup calculation strategy.
+	 */
+	surcharge?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Note */
+	note?: string | null;
+}
+
+/**
+ * SupplierPolicyBand
+ * Half-open window (``from_time`` inclusive, ``to_time`` exclusive, unset =
+ * open) and the surcharge for landing in it. Bands match first-hit; the
+ * surcharge inflates base cost before operator markup.
+ */
+export interface SupplierPolicyBandOutput {
+	/** From Time */
+	from_time?: string | null;
+	/** To Time */
+	to_time?: string | null;
+	/**
+	 * Surcharge
+	 * The markup calculation strategy.
+	 */
+	surcharge?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Note */
+	note?: string | null;
+}
+
+/**
+ * SupplierPolicyWarningSchema
+ * One conflict between an event and its inherited product's policy, addressed
+ * to the exact input that has to change.
+ *
+ * Advisory, never a publish block — the surcharge is already priced in, this
+ * only names why. ``option_id`` is set when the offender is an alternative of a
+ * choice event; ``path`` walks the payload to the offending input.
+ * ``expected_surcharge`` is null when the policy records a cutoff but no price
+ * for crossing it.
+ */
+export interface SupplierPolicyWarningSchemaInput {
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Option Id */
+	option_id?: string | null;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string;
+	/**
+	 * What a supplier policy caught on an event. Advisory, never a publish
+	 * block: the operator is the authority on their own contract, so a warning
+	 * reports the conflict and the charge to expect and leaves the call to them.
+	 *
+	 * Check: GET /tour/{tour_id}/{option_id}/event/policy-check
+	 */
+	code: SupplierPolicyWarning;
+	/** Path */
+	path: (string | number)[];
+	/** Detail */
+	detail: string;
+	/**
+	 * Expected Surcharge
+	 * The markup calculation strategy.
+	 */
+	expected_surcharge?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/**
+ * SupplierPolicyWarningSchema
+ * One conflict between an event and its inherited product's policy, addressed
+ * to the exact input that has to change.
+ *
+ * Advisory, never a publish block — the surcharge is already priced in, this
+ * only names why. ``option_id`` is set when the offender is an alternative of a
+ * choice event; ``path`` walks the payload to the offending input.
+ * ``expected_surcharge`` is null when the policy records a cutoff but no price
+ * for crossing it.
+ */
+export interface SupplierPolicyWarningSchemaOutput {
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Option Id */
+	option_id?: string | null;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string;
+	/**
+	 * What a supplier policy caught on an event. Advisory, never a publish
+	 * block: the operator is the authority on their own contract, so a warning
+	 * reports the conflict and the charge to expect and leaves the call to them.
+	 *
+	 * Check: GET /tour/{tour_id}/{option_id}/event/policy-check
+	 */
+	code: SupplierPolicyWarning;
+	/** Path */
+	path: (string | number)[];
+	/** Detail */
+	detail: string;
+	/**
+	 * Expected Surcharge
+	 * The markup calculation strategy.
+	 */
+	expected_surcharge?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+}
+
+/** SupplierProductImageModel */
+export interface SupplierProductImageModel {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+}
+
+/** SupplierProductListResponse */
+export interface SupplierProductListResponse {
+	/** Total Count */
+	total_count: number;
+	/** Data */
+	data: (
+		| ({
+				typ: "hotel";
+		  } & HotelProductReadOutput)
+		| ({
+				typ: "train";
+		  } & TrainProductReadOutput)
+	)[];
+}
+
+/**
+ * SupplierUpdateSchema
+ * Partial update: an omitted field is left alone, an explicit ``null``
+ * clears. ``brand_name`` and ``supplier_types`` cannot be cleared.
+ */
 export interface SupplierUpdateSchema {
 	/** Brand Name */
 	brand_name?: string | null;
@@ -8568,6 +10162,8 @@ export interface SupplierUpdateSchema {
 	phone?: string | null;
 	/** Website */
 	website?: string | null;
+	/** Supplier Types */
+	supplier_types?: SupplierType[] | null;
 }
 
 /** TimeSchema */
@@ -8587,6 +10183,10 @@ export interface TimeSchema {
 
 /** TourEventLibraryImageModel */
 export interface TourEventLibraryImageModel {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
 	/**
 	 * Id
 	 * @format uuid
@@ -8597,10 +10197,6 @@ export interface TourEventLibraryImageModel {
 	 * @format uuid
 	 */
 	library_id: string;
-	/** Image Path */
-	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
 }
 
 /** TourEventResponse */
@@ -8912,6 +10508,22 @@ export interface TourOptionModel {
 	cover_image_path: string | null;
 	/** Deleted At */
 	deleted_at: string | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseOutput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Languages */
+	languages: LanguageCode[] | null;
 }
 
 /** TourOptionPreviewSchema */
@@ -9120,12 +10732,34 @@ export interface TourOptionPublicResponse {
 	total_price_max: MonetaryValueSchema;
 }
 
-/** TourOptionUpdateSchema */
+/**
+ * TourOptionUpdateSchema
+ * Partial update: an omitted field is left alone, an explicit ``null``
+ * clears it. Cleared ``markup``/``languages`` fall back to the tour level.
+ *
+ * Check: PATCH /tour/{tour_id}/option/{option_id}
+ */
 export interface TourOptionUpdateSchema {
 	/** Name */
 	name?: string | null;
 	/** Description */
 	description?: string | null;
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
+	/** Languages */
+	languages?: LanguageCode[] | null;
 }
 
 /** TourPackageModel */
@@ -9158,7 +10792,8 @@ export interface TourPackageModel {
 				  } & PerPersonExpenseOutput)
 		  )
 		| null;
-	fees: FixedExpenseOutput | null;
+	/** Fees */
+	fees: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -9234,7 +10869,12 @@ export interface TourScheduleUpdate {
  */
 export interface TourSnapshotSchemaInput {
 	tour_meta: FrozenTourMeta;
-	tour_option: FrozenTourOption;
+	/**
+	 * ``markup`` is the option-level override frozen at booking time; snapshot
+	 * pricing resolves it before the tour-level markup, so later option edits
+	 * never change this booking.
+	 */
+	tour_option: FrozenTourOptionInput;
 	tour_financial_settings?: FrozenTourFinInput | null;
 	/** Events */
 	events: OrderTourEventSchemaInput[];
@@ -9269,7 +10909,12 @@ export interface TourSnapshotSchemaInput {
  */
 export interface TourSnapshotSchemaOutput {
 	tour_meta: FrozenTourMeta;
-	tour_option: FrozenTourOption;
+	/**
+	 * ``markup`` is the option-level override frozen at booking time; snapshot
+	 * pricing resolves it before the tour-level markup, so later option edits
+	 * never change this booking.
+	 */
+	tour_option: FrozenTourOptionOutput;
 	tour_financial_settings?: FrozenTourFinOutput | null;
 	/** Events */
 	events: OrderTourEventSchemaOutput[];
@@ -9473,60 +11118,6 @@ export interface TourSummaryResponse {
 	estimated_revenue: TourMinMaxCostSchemaOutput;
 }
 
-/** TrainDetailPubSchema */
-export interface TrainDetailPubSchemaInput {
-	/** Hop */
-	hop?: TrainHopPubSchemaInput[] | null;
-	expenses?: ChargePubSchema | null;
-}
-
-/** TrainDetailPubSchema */
-export interface TrainDetailPubSchemaOutput {
-	/** Hop */
-	hop?: TrainHopPubSchemaOutput[] | null;
-	expenses?: ChargePubSchema | null;
-}
-
-/** TrainDetailSchema */
-export interface TrainDetailSchemaInput {
-	/** Hop */
-	hop?: TrainHopSchemaInput[] | null;
-	/**
-	 * Expenses
-	 * The charge calculation strategy.
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedChargeInput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonChargeInput)
-		  )
-		| null;
-}
-
-/** TrainDetailSchema */
-export interface TrainDetailSchemaOutput {
-	/** Hop */
-	hop?: TrainHopSchemaOutput[] | null;
-	/**
-	 * Expenses
-	 * The charge calculation strategy.
-	 */
-	expenses?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedChargeOutput)
-				| ({
-						typ: "per_person";
-				  } & PerPersonChargeOutput)
-		  )
-		| null;
-}
-
 /** TrainEvent */
 export interface TrainEventInput {
 	/**
@@ -9548,7 +11139,8 @@ export interface TrainEventInput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailSchemaInput | null;
+	/** Details */
+	details?: CustomTrainDetailsInput | InheritedTrainDetailsInput | null;
 }
 
 /** TrainEvent */
@@ -9572,7 +11164,8 @@ export interface TrainEventOutput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailSchemaOutput | null;
+	/** Details */
+	details?: CustomTrainDetailsOutput | InheritedTrainDetailsOutput | null;
 }
 
 /** TrainEventPubRead */
@@ -9599,7 +11192,17 @@ export interface TrainEventPubReadInput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailPubSchemaInput | null;
+	/** Details */
+	details?:
+		| (
+				| ({
+						source: "custom";
+				  } & CustomTrainDetailPubSchemaInput)
+				| ({
+						source: "inherited";
+				  } & InheritedTrainDetailPubSchemaInput)
+		  )
+		| null;
 }
 
 /** TrainEventPubRead */
@@ -9626,7 +11229,17 @@ export interface TrainEventPubReadOutput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailPubSchemaOutput | null;
+	/** Details */
+	details?:
+		| (
+				| ({
+						source: "custom";
+				  } & CustomTrainDetailPubSchemaOutput)
+				| ({
+						source: "inherited";
+				  } & InheritedTrainDetailPubSchemaOutput)
+		  )
+		| null;
 }
 
 /** TrainEventTypeRead */
@@ -9650,7 +11263,8 @@ export interface TrainEventTypeReadInput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailSchemaInput | null;
+	/** Details */
+	details?: CustomTrainDetailsInput | InheritedTrainDetailsInput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -9679,7 +11293,8 @@ export interface TrainEventTypeReadOutput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailSchemaOutput | null;
+	/** Details */
+	details?: CustomTrainDetailsOutput | InheritedTrainDetailsOutput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -9761,11 +11376,202 @@ export interface TrainJourneyPointSchemaOutput {
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
+/**
+ * TrainOverrideSchema
+ * A fare this tour negotiated, replacing the route's own.
+ */
+export interface TrainOverrideSchemaInput {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/**
+ * TrainOverrideSchema
+ * A fare this tour negotiated, replacing the route's own.
+ */
+export interface TrainOverrideSchemaOutput {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+}
+
+/** TrainProductCreate */
+export interface TrainProductCreate {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** One train route: which stations, at what time. Price lives on variants. */
+	details?: TrainProductDetails;
+}
+
+/**
+ * TrainProductDetails
+ * One train route: which stations, at what time. Price lives on variants.
+ */
+export interface TrainProductDetails {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Hop */
+	hop?: TrainHopSchemaInput[] | null;
+}
+
+/** TrainProductPubSchema */
+export interface TrainProductPubSchemaInput {
+	/** Name */
+	name?: string | null;
+	/** Hop */
+	hop?: TrainHopPubSchemaInput[] | null;
+	/** Variants */
+	variants?: TrainVariantPubSchema[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/** TrainProductPubSchema */
+export interface TrainProductPubSchemaOutput {
+	/** Name */
+	name?: string | null;
+	/** Hop */
+	hop?: TrainHopPubSchemaOutput[] | null;
+	/** Variants */
+	variants?: TrainVariantPubSchema[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/**
+ * TrainProductRead
+ * A train route as an event inherits it; fare classes for room categories.
+ */
+export interface TrainProductReadInput {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Hop */
+	hop?: TrainHopSchemaInput[] | null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Variants */
+	variants?: TrainVariantReadInput[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/**
+ * TrainProductRead
+ * A train route as an event inherits it; fare classes for room categories.
+ */
+export interface TrainProductReadOutput {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Hop */
+	hop?: TrainHopSchemaOutput[] | null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Variants */
+	variants?: TrainVariantReadOutput[];
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+}
+
+/** TrainProductUpdate */
+export interface TrainProductUpdate {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Name */
+	name?: string | null;
+	details?: TrainProductDetails | null;
+}
+
 /** TrainSingleEvent */
 export interface TrainSingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -9803,7 +11609,8 @@ export interface TrainSingleEventInput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailSchemaInput | null;
+	/** Details */
+	details?: CustomTrainDetailsInput | InheritedTrainDetailsInput | null;
 }
 
 /** TrainSingleEvent */
@@ -9811,6 +11618,7 @@ export interface TrainSingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -9848,7 +11656,119 @@ export interface TrainSingleEventOutput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	details?: TrainDetailSchemaOutput | null;
+	/** Details */
+	details?: CustomTrainDetailsOutput | InheritedTrainDetailsOutput | null;
+}
+
+/**
+ * TrainVariantDetails
+ * One fare class and its seat price.
+ */
+export interface TrainVariantDetails {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/**
+ * TrainVariantPubSchema
+ * One fare class, name only — the seat price stays operator-side.
+ */
+export interface TrainVariantPubSchema {
+	/** Name */
+	name?: string | null;
+}
+
+/** TrainVariantRead */
+export interface TrainVariantReadInput {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+}
+
+/** TrainVariantRead */
+export interface TrainVariantReadOutput {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+}
+
+/** TrainVariantWrite */
+export interface TrainVariantWrite {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** One fare class and its seat price. */
+	details?: TrainVariantDetails;
 }
 
 /** TransferCarCategoriesVariant */
@@ -10252,6 +12172,7 @@ export interface TransferSingleEventInput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -10297,6 +12218,7 @@ export interface TransferSingleEventOutput {
 	/**
 	 * Day
 	 * Event's day number in a tour
+	 * @min 1
 	 */
 	day: number;
 	/**
@@ -10548,6 +12470,11 @@ export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
 	currency?: Currency;
 	/** @default "en" */
 	read_lang?: LanguageCode;
+	/**
+	 * As Of
+	 * Preview the template spread as of this date.
+	 */
+	as_of?: string | null;
 	/**
 	 * Tour Id
 	 * @format uuid
@@ -10828,6 +12755,37 @@ export interface SetPrimaryLibraryImageTourEventLibraryLibraryIdImagesImageIdSet
 	imageId: string;
 }
 
+export interface PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
 /** Event */
 export type CreateEventTourTourIdOptionIdEventCreatePostPayload =
 	| (
@@ -11048,6 +13006,96 @@ export interface UpdateSingleEventTourTourIdOptionIdEventSingleEventIdUpdatePatc
 	eventId: string;
 }
 
+/** Override */
+export type SetSingleEventOverrideTourTourIdOptionIdEventSingleEventIdOverridePatchPayload =
+
+		| ({
+				typ: "housing";
+		  } & HousingOverrideSchemaInput)
+		| ({
+				typ: "train";
+		  } & TrainOverrideSchemaInput);
+
+export interface SetSingleEventOverrideTourTourIdOptionIdEventSingleEventIdOverridePatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface ClearSingleEventOverrideTourTourIdOptionIdEventSingleEventIdOverrideDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface AttachSingleEventProductTourTourIdOptionIdEventSingleEventIdProductPatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface DetachSingleEventProductTourTourIdOptionIdEventSingleEventIdProductDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
 /** Move */
 export type MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMultiTargetEventIdPostPayload =
 	MoveToMultiSchema | null;
@@ -11075,6 +13123,116 @@ export interface MoveEventToMultiTourTourIdOptionIdEventSingleEventIdMoveToMulti
 	 * @format uuid
 	 */
 	targetEventId: string;
+}
+
+/** Override */
+export type SetEventOptionOverrideTourTourIdOptionIdEventMultiEventIdOverrideOptionEventOptionIdPatchPayload =
+
+		| ({
+				typ: "housing";
+		  } & HousingOverrideSchemaInput)
+		| ({
+				typ: "train";
+		  } & TrainOverrideSchemaInput);
+
+export interface SetEventOptionOverrideTourTourIdOptionIdEventMultiEventIdOverrideOptionEventOptionIdPatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export interface ClearEventOptionOverrideTourTourIdOptionIdEventMultiEventIdOverrideOptionEventOptionIdDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export interface AttachEventOptionProductTourTourIdOptionIdEventMultiEventIdProductOptionEventOptionIdPatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export interface DetachEventOptionProductTourTourIdOptionIdEventMultiEventIdProductOptionEventOptionIdDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
 }
 
 export interface ReorderEventOptionsTourTourIdOptionIdEventMultiEventIdReorderOptionsPostParams {
@@ -11317,6 +13475,11 @@ export interface DeleteEventImageTourTourIdEventEventIdImagesImageIdDeleteParams
 
 export interface UpdateEventImageTourTourIdEventEventIdImagesImageIdSetPrimaryPatchParams {
 	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
 	 * Event Id
 	 * @format uuid
 	 */
@@ -11326,11 +13489,70 @@ export interface UpdateEventImageTourTourIdEventEventIdImagesImageIdSetPrimaryPa
 	 * @format uuid
 	 */
 	imageId: string;
+}
+
+export interface UploadEventNodeImagesTourTourIdEventEventIdNodeNodeIdImagesPostParams {
 	/**
 	 * Tour Id
 	 * @format uuid
 	 */
 	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+}
+
+export interface DeleteEventNodeImageTourTourIdEventEventIdNodeNodeIdImagesImageIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface SetPrimaryEventNodeImageTourTourIdEventEventIdNodeNodeIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
 }
 
 export interface GetTourCommissionsTourTourIdSeasonalityGetParams {
@@ -12210,6 +14432,340 @@ export interface DeleteOperatorOperatorIdDeleteParams {
 	id: string;
 }
 
+export interface ListAllProductsSupplierProductGetParams {
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Typ */
+	typ?: SupplierType | null;
+	/** Q */
+	q?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+/** Payload */
+export type CreateProductSupplierSupplierIdProductPostPayload =
+	| ({
+			typ: "hotel";
+	  } & HotelProductCreate)
+	| ({
+			typ: "train";
+	  } & TrainProductCreate);
+
+export interface CreateProductSupplierSupplierIdProductPostParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface ListSupplierProductsSupplierSupplierIdProductGetParams {
+	/** Typ */
+	typ?: SupplierType | null;
+	/** Q */
+	q?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface GetProductSupplierSupplierIdProductProductIdGetParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+/** Payload */
+export type UpdateProductSupplierSupplierIdProductProductIdPatchPayload =
+	| ({
+			typ: "hotel";
+	  } & HotelProductUpdate)
+	| ({
+			typ: "train";
+	  } & TrainProductUpdate);
+
+export interface UpdateProductSupplierSupplierIdProductProductIdPatchParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+export interface DeleteProductSupplierSupplierIdProductProductIdDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+/** Payload */
+export type CreateVariantSupplierSupplierIdProductProductIdVariantPostPayload =
+	| ({
+			typ: "hotel";
+	  } & HotelVariantWrite)
+	| ({
+			typ: "train";
+	  } & TrainVariantWrite);
+
+export interface CreateVariantSupplierSupplierIdProductProductIdVariantPostParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+/** Payload */
+export type UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchPayload =
+
+		| ({
+				typ: "hotel";
+		  } & HotelVariantWrite)
+		| ({
+				typ: "train";
+		  } & TrainVariantWrite);
+
+export interface UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variantId: string;
+}
+
+export interface DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variantId: string;
+}
+
+export interface UploadProductImagesSupplierSupplierIdProductProductIdImagesPostParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+export interface ListProductImagesSupplierSupplierIdProductProductIdImagesAllGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+export interface DeleteProductImageSupplierSupplierIdProductProductIdImagesImageIdDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface SetPrimaryProductImageSupplierSupplierIdProductProductIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface UploadNodeImagesSupplierSupplierIdProductProductIdVariantVariantIdNodeNodeIdImagesPostParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variantId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+}
+
+export interface DeleteNodeImageSupplierSupplierIdProductProductIdVariantVariantIdNodeNodeIdImagesImageIdDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variantId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface SetPrimaryNodeImageRouteSupplierSupplierIdProductProductIdVariantVariantIdNodeNodeIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variantId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
 export interface ListSuppliersSupplierGetParams {
 	/**
 	 * Skip
@@ -12567,6 +15123,36 @@ export interface RemoveEventBookingRevisionBookingIdEventEventIdDeleteParams {
 	eventId: string;
 }
 
+export interface SetEventProductBookingRevisionBookingIdEventEventIdProductPatchParams {
+	/** Option Index */
+	option_index?: number | null;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface ClearEventProductBookingRevisionBookingIdEventEventIdProductDeleteParams {
+	/** Option Index */
+	option_index?: number | null;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
 export interface ListEditsBookingRevisionBookingIdEditsGetParams {
 	/**
 	 * Booking Id
@@ -12581,6 +15167,46 @@ export interface PreviewBookingRevisionBookingIdPreviewGetParams {
 	 * @format uuid
 	 */
 	bookingId: string;
+}
+
+/** Override */
+export type SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePatchPayload =
+
+		| ({
+				typ: "housing";
+		  } & HousingOverrideSchemaInput)
+		| ({
+				typ: "train";
+		  } & TrainOverrideSchemaInput);
+
+export interface SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePatchParams {
+	/** Option Index */
+	option_index?: number | null;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface ClearEventOverrideBookingRevisionBookingIdEventEventIdOverrideDeleteParams {
+	/** Option Index */
+	option_index?: number | null;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
 }
 
 export interface AddPassengerInfoBookingOrderBookingIdPaxPostParams {

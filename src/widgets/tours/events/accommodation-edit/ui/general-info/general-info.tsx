@@ -1,5 +1,6 @@
 import { Loader } from "lucide-react";
 import { type FC } from "react";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
@@ -9,8 +10,21 @@ import {
 	useGeoFormFieldEnrichment,
 	useGeoSearchFieldProps
 } from "@/entities/geo";
-import { ENUM_FORM_ACCOMMODATION } from "@/entities/tour";
+import { ENUM_SUPPLIER_TYPE } from "@/entities/supplier";
+import {
+	ENUM_FORM_ACCOMMODATION,
+	ENUM_FORM_EVENT_PRODUCT
+} from "@/entities/tour";
 
+import {
+	EventOverrideControls,
+	EventPolicyWarnings,
+	EventProductLinkControls,
+	InheritedProductSeasonRates
+} from "@/features/tours";
+
+import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
+import { InheritedLockBanner } from "../../../ui/inherited-lock-banner";
 import {
 	ENUM_FORM_SECTION,
 	type ISlotProps,
@@ -27,9 +41,49 @@ const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 		`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_ACCOMMODATION.PROPERTY}` as const;
 	const geoProps = useGeoSearchFieldProps(language);
 	useGeoFormFieldEnrichment({ form, name: propertyFieldName, language });
+	const isInherited = useIsInheritedProduct(form);
+	const productId = useWatch({
+		control: form.control,
+		name: ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID
+	});
+	const variantId = useWatch({
+		control: form.control,
+		name: ENUM_FORM_EVENT_PRODUCT.VARIANT_ID
+	});
+	const hasOverride = useWatch({
+		control: form.control,
+		name: ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE
+	});
 
 	return (
 		<div className="grid gap-12">
+			<div className="grid gap-3">
+				{isInherited ? (
+					<InheritedLockBanner
+						title={t("form.inherited.lock_title")}
+						description={t("form.inherited.lock_description")}
+					/>
+				) : null}
+				<EventPolicyWarnings />
+				<EventProductLinkControls
+					typ={ENUM_SUPPLIER_TYPE.HOTEL}
+					productId={productId}
+					variantId={variantId}
+					hasOverride={Boolean(hasOverride)}
+				/>
+				<EventOverrideControls
+					kind="housing"
+					isInherited={isInherited}
+					hasOverride={Boolean(hasOverride)}
+					onAfterChange={(next) =>
+						form.setValue(
+							ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE,
+							next
+						)
+					}
+				/>
+				{isInherited ? <InheritedProductSeasonRates /> : null}
+			</div>
 			<div className="grid grid-cols-2">
 				{PROPERTIES_LIST(geoProps).map(({ key, ...item }) => (
 					<CustomField
@@ -37,6 +91,7 @@ const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
 						control={form?.control}
 						name={`${ENUM_FORM_SECTION.GENERAL}.${key}`}
 						t={t}
+						disabled={isInherited}
 						{...item}
 					/>
 				))}

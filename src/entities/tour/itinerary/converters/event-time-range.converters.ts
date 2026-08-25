@@ -3,13 +3,13 @@ import type {
 	BusHopSchemaOutput,
 	EmptyDetails,
 	FlightHopDetailsSchemaOutput,
-	HousingDetailsSchemaOutput,
 	TimeSchema,
 	TrainHopSchemaOutput,
 	TransferDetailsSchemaOutput
 } from "@/shared/api";
 
 import { ENUM_EVENT_BACKEND, type ENUM_EVENT_BACKEND_TYPE } from "../types";
+import type { THousingDetailsBackend } from "../types";
 
 const clock = (value?: TimeSchema | null): string =>
 	value?.time ? value.time.slice(0, 5) : "";
@@ -37,7 +37,7 @@ export const mapBackendEventToTimeSubtitle = (
 			return range(clock(d.start_time), clock(d.end_time));
 		}
 		case ENUM_EVENT_BACKEND.HOUSING: {
-			const d = details as HousingDetailsSchemaOutput;
+			const d = details as THousingDetailsBackend;
 			return range(clock(d.check_in), clock(d.check_out));
 		}
 		case ENUM_EVENT_BACKEND.TRANSFER: {

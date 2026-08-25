@@ -13,6 +13,7 @@ import {
 	ENUM_FLIGHT_PRICING_INVOICING,
 	ENUM_FLIGHT_PRICING_TYPE
 } from "../../types";
+import { feesArraySchema } from "../common/fee.schema";
 
 const msg = i18nKey<TTourEventFlightEditPageKeys>();
 
@@ -20,10 +21,6 @@ const nullableNumber = z
 	.number()
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
-
-const nonNegativeNullableNumber = nullableNumber.refine(
-	(value) => value === null || value >= 0
-);
 
 const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
@@ -81,7 +78,7 @@ export const FLIGHT_PRICING_SCHEMA = z
 		),
 		[ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: z.boolean(),
 		[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE]: nullableNumber.optional(),
-		[ENUM_FLIGHT_PRICING_FIELD.TAXES]: nonNegativeNullableNumber.optional(),
+		[ENUM_FLIGHT_PRICING_FIELD.FEES]: feesArraySchema.optional(),
 		[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_FLIGHT_PRICING_FIELD.PACKAGE_ID]: z.string()

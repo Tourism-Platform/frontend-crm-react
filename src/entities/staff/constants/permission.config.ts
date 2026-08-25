@@ -11,6 +11,8 @@ export const PERMISSION_LABELS: Record<ENUM_PERMISSION_TYPE, TOptionsKeys> = {
 	[ENUM_PERMISSION.TOUR_ARCHIVE]: "staff.permissions.tour_archive",
 	[ENUM_PERMISSION.TOUR_OPTION_WRITE]: "staff.permissions.tour_option_write",
 	[ENUM_PERMISSION.TOUR_EVENT_WRITE]: "staff.permissions.tour_event_write",
+	[ENUM_PERMISSION.TOUR_EVENT_OVERRIDE_WRITE]:
+		"staff.permissions.tour_event_override_write",
 	[ENUM_PERMISSION.TOUR_EVENT_LIBRARY_READ]:
 		"staff.permissions.tour_event_library_read",
 	[ENUM_PERMISSION.TOUR_EVENT_LIBRARY_WRITE]:
@@ -35,6 +37,8 @@ export const PERMISSION_LABELS: Record<ENUM_PERMISSION_TYPE, TOptionsKeys> = {
 	[ENUM_PERMISSION.BOOKING_PAX_WRITE]: "staff.permissions.booking_pax_write",
 	[ENUM_PERMISSION.BOOKING_REVISION_WRITE]:
 		"staff.permissions.booking_revision_write",
+	[ENUM_PERMISSION.BOOKING_EVENT_OVERRIDE_WRITE]:
+		"staff.permissions.booking_event_override_write",
 	[ENUM_PERMISSION.BOOKING_PAYMENT_READ]:
 		"staff.permissions.booking_payment_read",
 	[ENUM_PERMISSION.BOOKING_PAYMENT_WRITE]:

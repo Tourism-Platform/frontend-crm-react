@@ -12,6 +12,10 @@ import supplier_payments_page from "../../../../public/locales/en/finance/suppli
 import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
 import event_templates_page from "../../../../public/locales/en/library/event_templates_page.json";
+import hotel_product_edit_page from "../../../../public/locales/en/library/hotel_product_edit_page.json";
+import supplier_id_page from "../../../../public/locales/en/library/supplier_id_page.json";
+import suppliers_page from "../../../../public/locales/en/library/suppliers_page.json";
+import train_product_edit_page from "../../../../public/locales/en/library/train_product_edit_page.json";
 import login_page from "../../../../public/locales/en/login_page.json";
 import main from "../../../../public/locales/en/main.json";
 import not_found_page from "../../../../public/locales/en/not_found_page.json";
@@ -96,6 +100,10 @@ export type TPreviewTourPage = typeof preview_tour_page;
 export type TPreviewOptionPage = typeof preview_option_page;
 export type TPreviewBookingPage = typeof preview_booking_page;
 export type TEventTemplatesPage = typeof event_templates_page;
+export type TSuppliersPage = typeof suppliers_page;
+export type TSupplierIdPage = typeof supplier_id_page;
+export type THotelProductEditPage = typeof hotel_product_edit_page;
+export type TTrainProductEditPage = typeof train_product_edit_page;
 
 export type TOrderIdPage = typeof order_id_page;
 export type TLandingPage = typeof landing_page;
@@ -149,6 +157,10 @@ export type TResources = {
 	preview_option_page: TPreviewOptionPage;
 	preview_booking_page: TPreviewBookingPage;
 	event_templates_page: TEventTemplatesPage;
+	suppliers_page: TSuppliersPage;
+	supplier_id_page: TSupplierIdPage;
+	hotel_product_edit_page: THotelProductEditPage;
+	train_product_edit_page: TTrainProductEditPage;
 	not_found_page: TNotFoundPage;
 
 	options: TOptions;
@@ -202,6 +214,10 @@ export const NS = [
 	"preview_option_page",
 	"preview_booking_page",
 	"event_templates_page",
+	"suppliers_page",
+	"supplier_id_page",
+	"hotel_product_edit_page",
+	"train_product_edit_page",
 	"not_found_page",
 
 	"options"
@@ -273,4 +289,8 @@ export type TPreviewTourPageKeys = TNestedKeyOf<TPreviewTourPage>;
 export type TPreviewOptionPageKeys = TNestedKeyOf<TPreviewOptionPage>;
 export type TPreviewBookingPageKeys = TNestedKeyOf<TPreviewBookingPage>;
 export type TEventTemplatesPageKeys = TNestedKeyOf<TEventTemplatesPage>;
+export type TSuppliersPageKeys = TNestedKeyOf<TSuppliersPage>;
+export type TSupplierIdPageKeys = TNestedKeyOf<TSupplierIdPage>;
+export type THotelProductEditPageKeys = TNestedKeyOf<THotelProductEditPage>;
+export type TTrainProductEditPageKeys = TNestedKeyOf<TTrainProductEditPage>;
 export type TTourItineraryPageKeys = TNestedKeyOf<TTourItineraryPage>;

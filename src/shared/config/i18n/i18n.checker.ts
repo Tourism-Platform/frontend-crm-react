@@ -10,6 +10,10 @@ import supplier_payments_page_ru from "../../../../public/locales/ru/finance/sup
 import header_ru from "../../../../public/locales/ru/header.json";
 import home_ru from "../../../../public/locales/ru/home.json";
 import event_templates_page_ru from "../../../../public/locales/ru/library/event_templates_page.json";
+import hotel_product_edit_page_ru from "../../../../public/locales/ru/library/hotel_product_edit_page.json";
+import supplier_id_page_ru from "../../../../public/locales/ru/library/supplier_id_page.json";
+import suppliers_page_ru from "../../../../public/locales/ru/library/suppliers_page.json";
+import train_product_edit_page_ru from "../../../../public/locales/ru/library/train_product_edit_page.json";
 import login_page_ru from "../../../../public/locales/ru/login_page.json";
 import main_ru from "../../../../public/locales/ru/main.json";
 import not_found_page_ru from "../../../../public/locales/ru/not_found_page.json";
@@ -96,6 +100,10 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	preview_option_page: preview_option_page_ru,
 	preview_booking_page: preview_booking_page_ru,
 	event_templates_page: event_templates_page_ru,
+	suppliers_page: suppliers_page_ru,
+	supplier_id_page: supplier_id_page_ru,
+	hotel_product_edit_page: hotel_product_edit_page_ru,
+	train_product_edit_page: train_product_edit_page_ru,
 	tours_page: tours_page_ru,
 
 	order_id_page: order_id_page_ru,

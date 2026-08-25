@@ -157,6 +157,14 @@
 							"label": "Стоимость",
 							"placeholder": "Введите..."
 						},
+						"charge_typ": {
+							"label": "Режим оплаты",
+							"placeholder": "Выберите режим",
+							"options": {
+								"fixed": "За ангажемент",
+								"per_duration": "За день"
+							}
+						},
 						"taxes_fees": {
 							"label": "Сборы",
 							"placeholder": "Введите..."

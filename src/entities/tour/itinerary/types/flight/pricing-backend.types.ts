@@ -1,14 +1,19 @@
 import type {
 	BusDetailSchemaOutput,
+	CustomTrainDetailsOutput,
 	FlightDetailsSchemaOutput,
-	TrainDetailSchemaOutput
+	InheritedTrainDetailsOutput
 } from "@/shared/api";
 
 export type TFlightDetailsBackend = FlightDetailsSchemaOutput;
-export type TTrainDetailsBackend = TrainDetailSchemaOutput;
+export type TCustomTrainDetailsBackend = CustomTrainDetailsOutput;
+export type TInheritedTrainDetailsBackend = InheritedTrainDetailsOutput;
+export type TTrainDetailsBackend =
+	| TCustomTrainDetailsBackend
+	| TInheritedTrainDetailsBackend;
 export type TBusDetailsBackend = BusDetailSchemaOutput;
 
 export type TTransportDetailsWithPricingBackend =
 	| TFlightDetailsBackend
-	| TTrainDetailsBackend
+	| TCustomTrainDetailsBackend
 	| TBusDetailsBackend;

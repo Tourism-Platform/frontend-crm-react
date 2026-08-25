@@ -1,0 +1,1 @@
+export const LIBRARY_SUPPLIER_PRODUCT_CREATE_ID = "new";

@@ -23,6 +23,16 @@ describe("mapBackendEventToTimeSubtitle", () => {
 		).toBe("14:00 – 11:00");
 	});
 
+	it("formats housing check-in/out for inherited details", () => {
+		expect(
+			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.HOUSING, {
+				product_id: "b0c1c0de-0000-0000-0000-000000000001",
+				check_in: { time: "11:00:00" },
+				check_out: { time: "12:00:00" }
+			})
+		).toBe("11:00 – 12:00");
+	});
+
 	it("formats transfer departure/arrival", () => {
 		expect(
 			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.TRANSFER, {

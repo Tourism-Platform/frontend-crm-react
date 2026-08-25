@@ -2,13 +2,16 @@ import type {
 	ActivitySingleEventInput,
 	BusSingleEventInput,
 	EventEditOpOutput,
+	EventProductLinkSchema,
 	FlightSingleEventInput,
 	GuideSingleEventInput,
+	HousingOverrideSchemaInput,
 	HousingSingleEventInput,
 	InformationSingleEventInput,
 	MultiEvent,
 	RevisionPreview,
 	SupplementarySingleEventInput,
+	TrainOverrideSchemaInput,
 	TrainSingleEventInput,
 	TransferSingleEventInput
 } from "../Api";
@@ -63,6 +66,26 @@ export const BOOKING_REVISION_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: RevisionPreview }
 		}) as const,
+	setEventProduct: (bookingId: string, eventId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/product`,
+			method: "PATCH",
+			_types: {} as {
+				body: EventProductLinkSchema;
+				query: { option_index?: number | null };
+				response: RevisionPreview;
+			}
+		}) as const,
+	clearEventProduct: (bookingId: string, eventId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/product`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: { option_index?: number | null };
+				response: RevisionPreview;
+			}
+		}) as const,
 	listEdits: (bookingId: string) =>
 		({
 			url: `/booking/revision/${bookingId}/edits`,
@@ -78,5 +101,25 @@ export const BOOKING_REVISION_PATHS = {
 			url: `/booking/revision/${bookingId}/preview`,
 			method: "GET",
 			_types: {} as { body: void; query: void; response: RevisionPreview }
+		}) as const,
+	setEventOverride: (bookingId: string, eventId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/override`,
+			method: "PATCH",
+			_types: {} as {
+				body: HousingOverrideSchemaInput | TrainOverrideSchemaInput;
+				query: { option_index?: number | null };
+				response: RevisionPreview;
+			}
+		}) as const,
+	clearEventOverride: (bookingId: string, eventId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/override`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: { option_index?: number | null };
+				response: RevisionPreview;
+			}
 		}) as const
 } as const;

@@ -10,6 +10,7 @@ import {
 	type TAccommodationEditSchema
 } from "@/entities/tour";
 
+import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { ENUM_FORM_SECTION } from "../../model";
 
 import { RoomCard } from "./room-card";
@@ -20,6 +21,7 @@ interface IRoomsProps {
 
 const RoomsDetailsBase: FC<IRoomsProps> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
+	const isInherited = useIsInheritedProduct(form);
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
 		name: `${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}`
@@ -43,20 +45,23 @@ const RoomsDetailsBase: FC<IRoomsProps> = ({ form }) => {
 						form={form}
 						index={index}
 						onRemove={() => remove(index)}
+						readOnly={isInherited}
 					/>
 				))}
 
-				<div>
-					<Button
-						variant="outline"
-						type="button"
-						onClick={handleAddRoom}
-						className="gap-2"
-					>
-						<p>{t("form.rooms.details.form.buttons.add")}</p>
-						<PlusIcon className="h-4 w-4" />
-					</Button>
-				</div>
+				{!isInherited ? (
+					<div>
+						<Button
+							variant="outline"
+							type="button"
+							onClick={handleAddRoom}
+							className="gap-2"
+						>
+							<p>{t("form.rooms.details.form.buttons.add")}</p>
+							<PlusIcon className="h-4 w-4" />
+						</Button>
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

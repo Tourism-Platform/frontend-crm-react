@@ -6,22 +6,37 @@ import {
 	mapAllEventsToFrontend,
 	mapEventCreateToBackend,
 	mapEventOptionCreateToBackend,
-	mapEventOptionToFrontend,
+	mapEventOverrideToBackend,
+	mapEventProductLinkToBackend,
+	mapEventReadLangQueryToBackend,
 	mapEventReorderToBackend,
-	mapEventToFrontend,
 	mapEventUpdateToBackend,
+	mapGetTourEventToFrontend,
 	mapMoveToMultiResultToFrontend,
 	mapMoveToSingleResultToFrontend,
-	mapOptionReorderToBackend
+	mapOptionReorderToBackend,
+	mapSupplierPolicyWarningListToFrontend
 } from "../converters";
 import type {
 	IAddEventOption,
+	IAttachEventOptionProduct,
+	IAttachSingleEventProduct,
+	IClearEventOptionOverride,
+	IClearSingleEventOverride,
 	IDeleteEventOption,
+	IDetachEventOptionProduct,
+	IDetachSingleEventProduct,
+	IGetTourEventResult,
 	IMoveEventOptionToSingle,
 	IMoveEventToMulti,
 	IMoveToMultiResult,
 	IMoveToSingleResult,
+	IPolicyCheckEventArgs,
+	IPolicyCheckOptionArgs,
 	IReorderEventOptions,
+	ISetEventOptionOverride,
+	ISetSingleEventOverride,
+	ISupplierPolicyWarning,
 	ITourEvent,
 	ITourEventCreate,
 	ITourEventReorder,
@@ -30,7 +45,6 @@ import type {
 	IUpdateEventOptionContent,
 	TMoveToMultiResultBackend,
 	TMoveToSingleResultBackend,
-	TTourEvent,
 	TTourEventBackendResponce
 } from "../types";
 
@@ -54,8 +68,52 @@ const pricingTag = (tourId: string, optionId: string) => ({
 	id: `${tourId}:${optionId}`
 });
 
+const policyEventTag = (tourId: string, optionId: string, eventId: string) => ({
+	type: ENUM_API_TAGS.TOUR_POLICY_CHECK,
+	id: `${tourId}-${optionId}-${eventId}`
+});
+
+const policyOptionTag = (tourId: string, optionId: string) => ({
+	type: ENUM_API_TAGS.TOUR_POLICY_CHECK,
+	id: `${tourId}-${optionId}`
+});
+
+const policyInvalidation = (
+	tourId: string,
+	optionId: string,
+	eventId: string
+) => [
+	policyEventTag(tourId, optionId, eventId),
+	policyOptionTag(tourId, optionId)
+];
+
 export const tourEventApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
+		policyCheckEvent: builder.query<
+			ISupplierPolicyWarning[],
+			IPolicyCheckEventArgs
+		>({
+			query: ({ tourId, optionId, eventId }) => ({
+				...TOUR_EVENTS_PATHS.policyCheckEvent(tourId, optionId, eventId)
+			}),
+			transformResponse: mapSupplierPolicyWarningListToFrontend,
+			providesTags: (_r, _e, { tourId, optionId, eventId }) => [
+				policyEventTag(tourId, optionId, eventId),
+				policyOptionTag(tourId, optionId)
+			]
+		}),
+		policyCheckOption: builder.query<
+			ISupplierPolicyWarning[],
+			IPolicyCheckOptionArgs
+		>({
+			query: ({ tourId, optionId }) => ({
+				...TOUR_EVENTS_PATHS.policyCheckOption(tourId, optionId)
+			}),
+			transformResponse: mapSupplierPolicyWarningListToFrontend,
+			providesTags: (_r, _e, { tourId, optionId }) => [
+				policyOptionTag(tourId, optionId)
+			]
+		}),
 		listTourEvents: builder.query<
 			ITourEvent[],
 			{ tourId: string; optionId: string; day?: number | null }
@@ -71,7 +129,7 @@ export const tourEventApi = authApi.injectEndpoints({
 			]
 		}),
 		getTourEvent: builder.query<
-			TTourEvent,
+			IGetTourEventResult,
 			{
 				tourId: string;
 				optionId: string;
@@ -86,10 +144,7 @@ export const tourEventApi = authApi.injectEndpoints({
 				response: TTourEventBackendResponce,
 				_meta,
 				arg
-			) =>
-				arg.eventOptionId
-					? mapEventOptionToFrontend(response, arg.eventOptionId)
-					: mapEventToFrontend(response),
+			) => mapGetTourEventToFrontend(response, arg.eventOptionId),
 			providesTags: (
 				_result,
 				_error,
@@ -129,7 +184,8 @@ export const tourEventApi = authApi.injectEndpoints({
 			) => [
 				eventsTag(tourId, optionId),
 				eventDetailTag(tourId, optionId, eventId),
-				pricingTag(tourId, optionId)
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
 			]
 		}),
 		deleteTourEvent: builder.mutation<
@@ -214,7 +270,8 @@ export const tourEventApi = authApi.injectEndpoints({
 				eventsTag(tourId, optionId),
 				eventDetailTag(tourId, optionId, eventId),
 				eventDetailTag(tourId, optionId, eventId, eventOptionId),
-				pricingTag(tourId, optionId)
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
 			]
 		}),
 		updateEventOptionContent: builder.mutation<
@@ -318,11 +375,251 @@ export const tourEventApi = authApi.injectEndpoints({
 				eventsTag(tourId, optionId),
 				pricingTag(tourId, optionId)
 			]
+		}),
+		attachSingleEventProduct: builder.mutation<
+			ITourEvent,
+			IAttachSingleEventProduct
+		>({
+			query: ({ tourId, optionId, eventId, data, language }) => ({
+				...TOUR_EVENTS_PATHS.attachSingleEventProduct(
+					tourId,
+					optionId,
+					eventId
+				),
+				params: mapEventReadLangQueryToBackend(language),
+				body: mapEventProductLinkToBackend(data)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		detachSingleEventProduct: builder.mutation<
+			ITourEvent,
+			IDetachSingleEventProduct
+		>({
+			query: ({ tourId, optionId, eventId, language }) => ({
+				...TOUR_EVENTS_PATHS.detachSingleEventProduct(
+					tourId,
+					optionId,
+					eventId
+				),
+				params: mapEventReadLangQueryToBackend(language)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		attachEventOptionProduct: builder.mutation<
+			ITourEvent,
+			IAttachEventOptionProduct
+		>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				data,
+				language
+			}) => ({
+				...TOUR_EVENTS_PATHS.attachEventOptionProduct(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId
+				),
+				params: mapEventReadLangQueryToBackend(language),
+				body: mapEventProductLinkToBackend(data)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		detachEventOptionProduct: builder.mutation<
+			ITourEvent,
+			IDetachEventOptionProduct
+		>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				language
+			}) => ({
+				...TOUR_EVENTS_PATHS.detachEventOptionProduct(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId
+				),
+				params: mapEventReadLangQueryToBackend(language)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		setSingleEventOverride: builder.mutation<
+			ITourEvent,
+			ISetSingleEventOverride
+		>({
+			query: ({ tourId, optionId, eventId, data, language }) => ({
+				...TOUR_EVENTS_PATHS.setSingleEventOverride(
+					tourId,
+					optionId,
+					eventId
+				),
+				params: mapEventReadLangQueryToBackend(language),
+				body: mapEventOverrideToBackend(data)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		clearSingleEventOverride: builder.mutation<
+			ITourEvent,
+			IClearSingleEventOverride
+		>({
+			query: ({ tourId, optionId, eventId, language }) => ({
+				...TOUR_EVENTS_PATHS.clearSingleEventOverride(
+					tourId,
+					optionId,
+					eventId
+				),
+				params: mapEventReadLangQueryToBackend(language)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		setEventOptionOverride: builder.mutation<
+			ITourEvent,
+			ISetEventOptionOverride
+		>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				data,
+				language
+			}) => ({
+				...TOUR_EVENTS_PATHS.setEventOptionOverride(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId
+				),
+				params: mapEventReadLangQueryToBackend(language),
+				body: mapEventOverrideToBackend(data)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		clearEventOptionOverride: builder.mutation<
+			ITourEvent,
+			IClearEventOptionOverride
+		>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				language
+			}) => ({
+				...TOUR_EVENTS_PATHS.clearEventOptionOverride(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId
+				),
+				params: mapEventReadLangQueryToBackend(language)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
 		})
 	})
 });
 
 export const {
+	usePolicyCheckEventQuery,
+	usePolicyCheckOptionQuery,
 	useListTourEventsQuery,
 	useGetTourEventQuery,
 	useCreateEventMutation,
@@ -335,5 +632,13 @@ export const {
 	useDeleteEventOptionMutation,
 	useReorderEventOptionsMutation,
 	useMoveEventToMultiMutation,
-	useMoveEventOptionToSingleMutation
+	useMoveEventOptionToSingleMutation,
+	useAttachSingleEventProductMutation,
+	useDetachSingleEventProductMutation,
+	useAttachEventOptionProductMutation,
+	useDetachEventOptionProductMutation,
+	useSetSingleEventOverrideMutation,
+	useClearSingleEventOverrideMutation,
+	useSetEventOptionOverrideMutation,
+	useClearEventOptionOverrideMutation
 } = tourEventApi;

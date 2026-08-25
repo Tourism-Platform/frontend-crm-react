@@ -325,10 +325,25 @@ const LibraryItinerariesStubPage = React.lazy(() =>
 		"@/pages/library/itineraries-stub-page/ui/library-itineraries-stub-page"
 	).then((m) => ({ default: m.LibraryItinerariesStubPage }))
 );
-const LibrarySuppliersStubPage = React.lazy(() =>
+const LibrarySuppliersPage = React.lazy(() =>
+	import("@/pages/library/suppliers-page/ui/suppliers-page").then((m) => ({
+		default: m.LibrarySuppliersPage
+	}))
+);
+const LibrarySupplierIdPage = React.lazy(() =>
+	import("@/pages/library/supplier-id-page/ui/supplier-id-page").then(
+		(m) => ({ default: m.LibrarySupplierIdPage })
+	)
+);
+const LibraryHotelProductEditPage = React.lazy(() =>
 	import(
-		"@/pages/library/suppliers-stub-page/ui/library-suppliers-stub-page"
-	).then((m) => ({ default: m.LibrarySuppliersStubPage }))
+		"@/pages/library/hotel-product-edit-page/ui/library-hotel-product-edit-page"
+	).then((m) => ({ default: m.LibraryHotelProductEditPage }))
+);
+const LibraryTrainProductEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/train-product-edit-page/ui/library-train-product-edit-page"
+	).then((m) => ({ default: m.LibraryTrainProductEditPage }))
 );
 
 // Preview tours pages
@@ -879,7 +894,28 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	},
 	{
 		path: ENUM_PATH.LIBRARY.SUPPLIERS,
-		component: LibrarySuppliersStubPage,
+		component: LibrarySuppliersPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "library"
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIER,
+		component: LibrarySupplierIdPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "library"
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIER_HOTEL_PRODUCT,
+		component: LibraryHotelProductEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "library"
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIER_TRAIN_PRODUCT,
+		component: LibraryTrainProductEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		section: "library"

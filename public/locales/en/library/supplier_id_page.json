@@ -1,0 +1,96 @@
+{
+	"page_name": "Supplier",
+	"back": "Back to suppliers",
+	"products_title": "Products",
+	"fields": {
+		"brandName": {
+			"label": "Brand name",
+			"placeholder": "Enter brand name"
+		},
+		"legalName": {
+			"label": "Legal name",
+			"placeholder": "Enter legal name"
+		},
+		"phone": {
+			"label": "Phone",
+			"placeholder": "Enter phone"
+		},
+		"website": {
+			"label": "Website",
+			"placeholder": "https://"
+		},
+		"supplierTypes": {
+			"label": "Supplier types",
+			"placeholder": "Select types"
+		}
+	},
+	"errors": {
+		"brandName": {
+			"required": "Brand name is required"
+		},
+		"supplierTypes": {
+			"required": "Select at least one type"
+		}
+	},
+	"form": {
+		"buttons": {
+			"save": "Save",
+			"saving": "Saving ..."
+		},
+		"toasts": {
+			"save": {
+				"success": "Supplier saved",
+				"error": "Failed to save supplier"
+			},
+			"load": {
+				"error": "Failed to load supplier"
+			},
+			"logo": {
+				"success": "Logo updated",
+				"error": "Failed to update logo"
+			}
+		}
+	},
+	"logo": {
+		"label": "Logo",
+		"upload": "Upload logo",
+		"uploading": "Uploading ...",
+		"delete": "Remove logo",
+		"deleting": "Removing ..."
+	},
+	"products": {
+		"table": {
+			"name": "Name",
+			"type": "Type",
+			"empty": "—"
+		},
+		"new_hotel": "New hotel product",
+		"new_train": "New train product",
+		"menu": {
+			"edit": {
+				"button": "Edit"
+			},
+			"delete": {
+				"button": "Delete",
+				"form": {
+					"title": "Delete product",
+					"warning": "Are you sure you want to delete this product? This action cannot be undone.",
+					"buttons": {
+						"decline": "Cancel",
+						"confirm": "Delete",
+						"confirming": "Deleting ..."
+					},
+					"toasts": {
+						"success": "Product deleted",
+						"error": "Failed to delete product"
+					}
+				}
+			}
+		}
+	},
+	"toasts": {
+		"load_products": {
+			"error": "Failed to load products"
+		}
+	}
+}

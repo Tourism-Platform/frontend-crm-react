@@ -5,6 +5,7 @@ import {
 
 import {
 	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
+	ENUM_ACCOMMODATION_CHARGE,
 	ENUM_ACCOMMODATION_EXPENSE_TYP,
 	ENUM_ACCOMMODATION_MARKUP_TYP,
 	ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD,
@@ -20,28 +21,35 @@ import {
 	type IAccommodationPerRoomExpenses,
 	type IAccommodationPerRoomPriceRow,
 	type IAccommodationPriceRowMarkup,
+	type IFeeFormRow,
 	type TAccommodationPricingSchema,
 	type TCommissionMarkupBackend,
 	type TCommissionMarkupInputBackend,
+	type TCustomHousingDetailsInputBackend,
+	type TDurationChargeBackend,
 	type TFixedChargeBackend,
-	type TFixedChargeInputBackend,
 	type TFixedExpenseInputBackend,
 	type THousingDetailsBackend,
 	type THousingRoomCategoryBackend,
 	type THousingRoomCategoryExpensesBackend,
+	type THousingRoomChargeInputBackend,
 	type THousingRoomExpensesBackend,
 	type TPerRoomCategoryExpensesBackend,
 	type TPerRoomExpensesBackend,
 	type TRoomsSchema
 } from "../../types";
 
+import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
+import { isInheritedHousingDetails } from "./housing-details.helpers";
 import { housingRoomTypeConverter } from "./housing-room-type.converters";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
+type THousingRoomChargeBackend = TFixedChargeBackend | TDurationChargeBackend;
+
 const createEmptyPerRoomPriceRow = (): IAccommodationPerRoomPriceRow => ({
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: null,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: null,
+	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: [],
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: null
 });
@@ -49,7 +57,7 @@ const createEmptyPerRoomPriceRow = (): IAccommodationPerRoomPriceRow => ({
 const createEmptyCategoryRow = (): IAccommodationCategoryPriceRow => ({
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: "",
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: null,
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: null,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: [],
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: undefined,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: null
 });
@@ -61,20 +69,68 @@ const createEmptyPerRoomByClassPriceRow =
 		]
 	});
 
-const mapPriceRowFromFixedCharge = (
-	charge?: TFixedChargeBackend | null
+const mapCostFromDurationRate = (
+	charge: TDurationChargeBackend
+): {
+	cost: number | null;
+	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined;
+} => {
+	const rate = charge.rate;
+	if (rate && "tiers" in rate) {
+		const tier = rate.tiers?.[0];
+		return {
+			cost: tier?.cost?.val ?? null,
+			currency: currencyConverter.from(tier?.cost?.currency)
+		};
+	}
+	if (rate && "cost" in rate) {
+		return {
+			cost: rate.cost?.val ?? null,
+			currency: currencyConverter.from(rate.cost?.currency)
+		};
+	}
+	return { cost: null, currency: undefined };
+};
+
+const mapPriceRowFromCharge = (
+	charge?: THousingRoomChargeBackend | null
 ): Pick<
 	IAccommodationPerRoomPriceRow,
 	| typeof ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST
 	| typeof ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES
 	| typeof ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY
-> => ({
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: charge?.cost?.val ?? null,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: charge?.fees?.cost?.val ?? null,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: currencyConverter.from(
-		charge?.cost?.currency ?? charge?.fees?.cost?.currency
-	)
-});
+> => {
+	if (!charge) {
+		return {
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: null,
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: [],
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: undefined
+		};
+	}
+
+	if (charge.typ === "per_duration" || "rate" in charge) {
+		const duration = charge as TDurationChargeBackend;
+		const { cost, currency } = mapCostFromDurationRate(duration);
+		return {
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: cost,
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: mapFeesFromBackend(
+				duration.fees
+			),
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: currency
+		};
+	}
+
+	const fixed = charge as TFixedChargeBackend;
+	return {
+		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: fixed.cost?.val ?? null,
+		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: mapFeesFromBackend(
+			fixed.fees
+		),
+		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: currencyConverter.from(
+			fixed.cost?.currency
+		)
+	};
+};
 
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
@@ -95,7 +151,7 @@ const mapMarkupFromBackend = (
 const mapPerRoomPriceFromBackend = (
 	room: THousingRoomExpensesBackend
 ): IAccommodationPerRoomPriceRow => ({
-	...mapPriceRowFromFixedCharge(room.expenses),
+	...mapPriceRowFromCharge(room.expenses),
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
 		room.expenses?.markup
 	)
@@ -106,7 +162,7 @@ const mapCategoryRowFromBackend = (
 ): IAccommodationCategoryPriceRow => ({
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
 		housingRoomTypeConverter.from(room?.typ) ?? "",
-	...mapPriceRowFromFixedCharge(room?.expenses),
+	...mapPriceRowFromCharge(room?.expenses),
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
 		room?.expenses?.markup
 	)
@@ -192,19 +248,20 @@ const mapMarkupToBackend = (
 
 const mapToFixedCharge = (
 	cost: number | null,
-	fees: number | null,
+	fees: IFeeFormRow[],
 	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined,
 	markup: TCommissionMarkupInputBackend | null
-): TFixedChargeInputBackend | undefined => {
+): Extract<THousingRoomChargeInputBackend, { typ: "fixed" }> | undefined => {
 	const costExpense = mapAmountToFixedExpense(cost, currency);
 	if (!costExpense) return undefined;
 
-	return {
+	const result: Extract<THousingRoomChargeInputBackend, { typ: "fixed" }> = {
 		typ: "fixed",
 		cost: costExpense.cost,
-		fees: mapAmountToFixedExpense(fees, currency) ?? null,
+		fees: mapFeesToBackend(fees),
 		markup
 	};
+	return result;
 };
 
 const applyMarkupToPerRoomExpenses = (
@@ -310,6 +367,8 @@ export const getDefaultAccommodationPricing = (
 		roomsListLength: roomsList.length
 	}),
 	[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: null,
+	[ENUM_ACCOMMODATION_PRICING_FIELD.CHARGE_TYP]:
+		ENUM_ACCOMMODATION_CHARGE.FIXED,
 	package_id: ""
 });
 
@@ -317,11 +376,11 @@ export const mapAccommodationPricingFromBackend = (
 	details?: THousingDetailsBackend | null,
 	roomsList: TRoomsList = []
 ): TAccommodationPricingSchema => {
-	const expenses = details?.expenses;
-	const feesVal =
-		expenses && (expenses.typ === "fixed" || expenses.typ === "per_person")
-			? (expenses.fees?.cost?.val ?? null)
-			: null;
+	if (!details || isInheritedHousingDetails(details)) {
+		return getDefaultAccommodationPricing(roomsList);
+	}
+
+	const expenses = details.expenses;
 	const defaults = getDefaultAccommodationPricing(roomsList);
 
 	if (!expenses) {
@@ -375,15 +434,38 @@ export const mapAccommodationPricingFromBackend = (
 		return {
 			...defaults,
 			pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
+			[ENUM_ACCOMMODATION_PRICING_FIELD.CHARGE_TYP]:
+				ENUM_ACCOMMODATION_CHARGE.FIXED,
 			add_margin_separately: Boolean(markup?.value),
 			[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markup,
 			...(expenses.cost?.val != null && {
 				total_price: expenses.cost.val
 			}),
-			...(feesVal != null && { taxes: feesVal }),
+			[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: mapFeesFromBackend(
+				expenses.fees
+			),
 			...(expenses.cost?.currency && {
 				currency: expenses.cost.currency
 			})
+		};
+	}
+
+	if (expenses.typ === "per_duration") {
+		const duration = expenses as TDurationChargeBackend;
+		const { cost, currency } = mapCostFromDurationRate(duration);
+		const markup = mapMarkupFromBackend(duration.markup);
+		return {
+			...defaults,
+			pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
+			[ENUM_ACCOMMODATION_PRICING_FIELD.CHARGE_TYP]:
+				ENUM_ACCOMMODATION_CHARGE.PER_DURATION,
+			add_margin_separately: Boolean(markup?.value),
+			[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markup,
+			...(cost != null && { total_price: cost }),
+			[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: mapFeesFromBackend(
+				duration.fees
+			),
+			...(currency && { currency })
 		};
 	}
 
@@ -396,7 +478,9 @@ export const mapAccommodationPricingFromBackend = (
 		...(expenses.cost_per_person?.val != null && {
 			total_price: expenses.cost_per_person.val
 		}),
-		...(feesVal != null && { taxes: feesVal }),
+		[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: mapFeesFromBackend(
+			expenses.fees
+		),
 		...(expenses.cost_per_person?.currency && {
 			currency: expenses.cost_per_person.currency
 		})
@@ -406,7 +490,7 @@ export const mapAccommodationPricingFromBackend = (
 export const mapAccommodationPricingToBackend = (
 	pricing?: TAccommodationPricingSchema,
 	roomsList: TRoomsList = []
-): { details?: Pick<THousingDetailsBackend, "expenses"> } => {
+): { details?: Pick<TCustomHousingDetailsInputBackend, "expenses"> } => {
 	if (
 		!pricing ||
 		pricing.invoicing !== ENUM_ACCOMMODATION_PRICING_INVOICING.INDIVIDUAL
@@ -497,6 +581,9 @@ export const mapAccommodationPricingToBackend = (
 								ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY
 							];
 						return {
+							...(room[ENUM_FORM_ROOMS.ID]
+								? { id: room[ENUM_FORM_ROOMS.ID] }
+								: {}),
 							name: room.room_name || null,
 							description: room.description || null,
 							expenses: mapToFixedCharge(
@@ -525,7 +612,9 @@ export const mapAccommodationPricingToBackend = (
 
 	const totalPrice = pricing[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE];
 	const currency = pricing[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY];
-	const taxes = pricing[ENUM_ACCOMMODATION_PRICING_FIELD.TAXES];
+	const fees = mapFeesToBackend(
+		pricing[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]
+	);
 
 	if (totalPrice == null || !currency) {
 		return {};
@@ -535,16 +624,6 @@ export const mapAccommodationPricingToBackend = (
 		val: totalPrice,
 		currency: currencyConverter.to(currency)!
 	};
-	const fees =
-		taxes != null
-			? {
-					typ: "fixed" as const,
-					cost: {
-						val: taxes,
-						currency: currencyConverter.to(currency)!
-					}
-				}
-			: null;
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP] ?? null,
 		currency,
@@ -552,6 +631,22 @@ export const mapAccommodationPricingToBackend = (
 	);
 
 	if (pricing.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE) {
+		if (
+			pricing[ENUM_ACCOMMODATION_PRICING_FIELD.CHARGE_TYP] ===
+			ENUM_ACCOMMODATION_CHARGE.PER_DURATION
+		) {
+			return {
+				details: {
+					expenses: {
+						typ: "per_duration",
+						rate: { typ: "fixed", cost },
+						fees,
+						markup
+					}
+				}
+			};
+		}
+
 		return {
 			details: {
 				expenses: { typ: "fixed", cost, fees, markup }

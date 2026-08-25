@@ -9,6 +9,7 @@ import {
 
 import {
 	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
+	ENUM_ACCOMMODATION_CHARGE,
 	ENUM_ACCOMMODATION_EXPENSE_TYP,
 	ENUM_ACCOMMODATION_MARKUP_TYP,
 	ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD,
@@ -17,6 +18,7 @@ import {
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
 	ENUM_ACCOMMODATION_PRICING_TYPE
 } from "../../types";
+import { feesArraySchema } from "../common/fee.schema";
 
 const msg = i18nKey<TTourAccommodationEditPageKeys>();
 
@@ -40,7 +42,7 @@ const markupSchema = z
 
 const perRoomPriceRowSchema = z.object({
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: nonNegativeNullableNumber,
-	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: nonNegativeNullableNumber,
+	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -52,7 +54,7 @@ const categoryRowSchema = z.object({
 		)
 	}),
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: nonNegativeNullableNumber,
-	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: nonNegativeNullableNumber,
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: markupSchema
 });
@@ -164,10 +166,13 @@ export const ACCOMMODATION_PRICING_SCHEMA = z
 			.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]:
 			nullableNumber.optional(),
-		[ENUM_ACCOMMODATION_PRICING_FIELD.TAXES]:
-			nonNegativeNullableNumber.optional(),
+		[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: feesArraySchema.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markupSchema.optional(),
+		[ENUM_ACCOMMODATION_PRICING_FIELD.CHARGE_TYP]: z
+			.enum(ENUM_ACCOMMODATION_CHARGE)
+			.default(ENUM_ACCOMMODATION_CHARGE.FIXED)
+			.optional(),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: z.string()
 	})
 	.superRefine((data, ctx) => {

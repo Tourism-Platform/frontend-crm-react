@@ -30,8 +30,10 @@ export const mapMultiplyOptionDetailToOption = (
 		eventType:
 			mapBackendTypToEventType(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
 		details,
-		timeSubtitle: mapBackendEventToTimeSubtitle(backendTyp, details)
-		// isOptional: Boolean(detail.is_optional)
+		timeSubtitle: mapBackendEventToTimeSubtitle(backendTyp, details),
+		isOptional: Boolean(
+			(detail as { is_optional?: boolean | null }).is_optional
+		)
 	};
 };
 

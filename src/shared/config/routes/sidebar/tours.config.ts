@@ -9,8 +9,9 @@ import {
 	PercentCircleIcon,
 	SettingsIcon
 } from "@/shared/assets";
-import { ENUM_PATH } from "@/shared/config";
 import type { ISidebarMenu } from "@/shared/ui";
+
+import { ENUM_PATH } from "../routes.config";
 
 export const TOURS_SIDEBAR_LIST: ISidebarMenu[] = [
 	{

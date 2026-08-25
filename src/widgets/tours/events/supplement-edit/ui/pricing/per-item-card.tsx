@@ -14,9 +14,12 @@ import {
 import {
 	ENUM_FORM_SUPPLEMENT_ITEMS,
 	ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD,
+	ENUM_SUPPLEMENT_PRICE_ROW_FIELD,
 	ENUM_SUPPLEMENT_PRICING_FIELD,
 	type TSupplementEditSchema
 } from "@/entities/tour";
+
+import { FeeLinesField } from "@/features/pricing";
 
 import {
 	ENUM_FORM_SECTION,
@@ -39,6 +42,8 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 	const itemName = form.watch(
 		`${ENUM_FORM_SECTION.ITEMS}.${ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST}.${index}.${ENUM_FORM_SUPPLEMENT_ITEMS.NAME}`
 	);
+	const rowPath =
+		`${ENUM_FORM_SECTION.PRICING}.${ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES}.${ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS}.${index}` as const;
 
 	return (
 		<Card>
@@ -48,8 +53,8 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 			<CardContent className="grid gap-4">
 				<div
 					className={cn(
-						"grid grid-cols-[1fr_1fr_1fr] gap-5",
-						addMarginSeparately && "grid-cols-[1fr_1fr_1.5fr_0.5fr]"
+						"grid grid-cols-2 gap-5",
+						addMarginSeparately && "grid-cols-[1fr_1.5fr_0.5fr]"
 					)}
 				>
 					{PER_ITEM_ROW_FIELDS_LIST.map(
@@ -60,7 +65,7 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 									PER_ITEM_ROW_FIELDS_LIST.length - 1 ? (
 									<CustomInputSelect
 										control={form.control}
-										name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES}.${ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS}.${index}.${PER_ITEM_MARKUP_FIELD.key}`}
+										name={`${rowPath}.${PER_ITEM_MARKUP_FIELD.key}`}
 										label={PER_ITEM_MARKUP_FIELD.label}
 										placeholder={
 											PER_ITEM_MARKUP_FIELD.placeholder
@@ -73,7 +78,7 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 								) : null}
 								<CustomField
 									control={form.control}
-									name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES}.${ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS}.${index}.${key}`}
+									name={`${rowPath}.${key}`}
 									t={t}
 									{...item}
 								/>
@@ -81,6 +86,10 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 						)
 					)}
 				</div>
+				<FeeLinesField
+					control={form.control}
+					name={`${rowPath}.${ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES}`}
+				/>
 			</CardContent>
 		</Card>
 	);

@@ -1,0 +1,96 @@
+{
+	"page_name": "Поставщик",
+	"back": "К списку поставщиков",
+	"products_title": "Продукты",
+	"fields": {
+		"brandName": {
+			"label": "Бренд",
+			"placeholder": "Введите бренд"
+		},
+		"legalName": {
+			"label": "Юр. название",
+			"placeholder": "Введите юр. название"
+		},
+		"phone": {
+			"label": "Телефон",
+			"placeholder": "Введите телефон"
+		},
+		"website": {
+			"label": "Сайт",
+			"placeholder": "https://"
+		},
+		"supplierTypes": {
+			"label": "Типы поставщика",
+			"placeholder": "Выберите типы"
+		}
+	},
+	"errors": {
+		"brandName": {
+			"required": "Укажите бренд"
+		},
+		"supplierTypes": {
+			"required": "Выберите хотя бы один тип"
+		}
+	},
+	"form": {
+		"buttons": {
+			"save": "Сохранить",
+			"saving": "Сохранение ..."
+		},
+		"toasts": {
+			"save": {
+				"success": "Поставщик сохранён",
+				"error": "Не удалось сохранить поставщика"
+			},
+			"load": {
+				"error": "Не удалось загрузить поставщика"
+			},
+			"logo": {
+				"success": "Логотип обновлён",
+				"error": "Не удалось обновить логотип"
+			}
+		}
+	},
+	"logo": {
+		"label": "Логотип",
+		"upload": "Загрузить логотип",
+		"uploading": "Загрузка ...",
+		"delete": "Удалить логотип",
+		"deleting": "Удаление ..."
+	},
+	"products": {
+		"table": {
+			"name": "Название",
+			"type": "Тип",
+			"empty": "—"
+		},
+		"new_hotel": "Новый отель",
+		"new_train": "Новый поезд",
+		"menu": {
+			"edit": {
+				"button": "Редактировать"
+			},
+			"delete": {
+				"button": "Удалить",
+				"form": {
+					"title": "Удалить продукт",
+					"warning": "Вы уверены, что хотите удалить этот продукт? Это действие нельзя отменить.",
+					"buttons": {
+						"decline": "Отмена",
+						"confirm": "Удалить",
+						"confirming": "Удаление ..."
+					},
+					"toasts": {
+						"success": "Продукт удалён",
+						"error": "Не удалось удалить продукт"
+					}
+				}
+			}
+		}
+	},
+	"toasts": {
+		"load_products": {
+			"error": "Не удалось загрузить продукты"
+		}
+	}
+}

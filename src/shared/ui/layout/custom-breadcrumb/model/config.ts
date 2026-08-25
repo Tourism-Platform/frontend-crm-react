@@ -96,5 +96,14 @@ export const BREADCRUMB_LIST: TBreadcrumbList = {
 	[ENUM_PATH.LIBRARY.EVENT_INFO]: "operator.library.general.menu.events",
 	[ENUM_PATH.LIBRARY.ITINERARIES]:
 		"operator.library.general.menu.itineraries",
-	[ENUM_PATH.LIBRARY.SUPPLIERS]: "operator.library.general.menu.suppliers"
+	[ENUM_PATH.LIBRARY.SUPPLIERS]: "operator.library.general.menu.suppliers",
+	[ENUM_PATH.LIBRARY.SUPPLIER]: "operator.library.general.menu.suppliers",
+	[ENUM_PATH.LIBRARY.SUPPLIER_HOTEL_PRODUCT_NEW]:
+		"operator.library.general.menu.suppliers",
+	[ENUM_PATH.LIBRARY.SUPPLIER_HOTEL_PRODUCT]:
+		"operator.library.general.menu.suppliers",
+	[ENUM_PATH.LIBRARY.SUPPLIER_TRAIN_PRODUCT_NEW]:
+		"operator.library.general.menu.suppliers",
+	[ENUM_PATH.LIBRARY.SUPPLIER_TRAIN_PRODUCT]:
+		"operator.library.general.menu.suppliers"
 };

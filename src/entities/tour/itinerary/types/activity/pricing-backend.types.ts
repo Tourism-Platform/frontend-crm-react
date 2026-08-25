@@ -1,3 +1,14 @@
-import type { ActivityDetailsSchemaOutput } from "@/shared/api";
+import type {
+	ActivityDetailsSchemaInput,
+	ActivityDetailsSchemaOutput,
+	ActivityFoodDetailsSchemaInput,
+	ActivityFoodDetailsSchemaOutput
+} from "@/shared/api";
 
-export type TActivityDetailsBackend = ActivityDetailsSchemaOutput;
+export type TActivityDetailsBackend =
+	| ActivityDetailsSchemaOutput
+	| ActivityFoodDetailsSchemaOutput;
+
+export type TActivityDetailsInputBackend =
+	| ActivityDetailsSchemaInput
+	| ActivityFoodDetailsSchemaInput;

@@ -10,16 +10,14 @@ import {
 	ENUM_PACKAGE_PRICING_TYPE
 } from "../types/package.types";
 
+import { feesArraySchema } from "./common/fee.schema";
+
 const msg = i18nKey<TTourPackageEditPageKeys>();
 
 const nullableNumber = z
 	.number()
 	.nullable()
 	.refine((value) => value === null || Number.isFinite(value));
-
-const nonNegativeNullableNumber = nullableNumber.refine(
-	(value) => value === null || value >= 0
-);
 
 const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
 
@@ -43,7 +41,7 @@ export const PACKAGE_EDIT_SCHEMA = z
 		[ENUM_PACKAGE_FIELD.PRICING_TYPE]: z.enum(ENUM_PACKAGE_PRICING_TYPE),
 		[ENUM_PACKAGE_FIELD.ADD_MARGIN_SEPARATELY]: z.boolean(),
 		[ENUM_PACKAGE_FIELD.TOTAL_PRICE]: nullableNumber.optional(),
-		[ENUM_PACKAGE_FIELD.TAXES]: nonNegativeNullableNumber.optional(),
+		[ENUM_PACKAGE_FIELD.FEES]: feesArraySchema.optional(),
 		[ENUM_PACKAGE_FIELD.CURRENCY]: optionalCurrencySchema,
 		[ENUM_PACKAGE_FIELD.MARKUP]: markupSchema.optional(),
 		[ENUM_PACKAGE_FIELD.SUPPLIER_ID]: z.string().nullable().optional()

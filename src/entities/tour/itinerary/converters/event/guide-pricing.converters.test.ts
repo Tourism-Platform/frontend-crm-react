@@ -6,7 +6,9 @@ import { ENUM_LANGUAGES } from "@/entities/tour/landing/types/languages.types";
 
 import { DEFAULT_GUIDE_UP_TO_PAX } from "../../config";
 import {
+	ENUM_FEE_FIELD,
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
+	ENUM_GUIDE_CHARGE,
 	ENUM_GUIDE_EXPENSE_TYP,
 	ENUM_GUIDE_MARKUP_TYP,
 	ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD,
@@ -14,7 +16,8 @@ import {
 	ENUM_GUIDE_PRICING_FIELD,
 	ENUM_GUIDE_PRICING_INVOICING,
 	ENUM_GUIDE_PRICING_TYPE,
-	type TGuidePricingSchema
+	type TGuidePricingSchema,
+	createEmptyFeeRow
 } from "../../types";
 
 import { mapGuideCategoriesToBackend } from "./guide-pricing.converters";
@@ -24,6 +27,12 @@ vi.mock("@/shared/config", () => ({
 	i18nKey: () => (key: string) => key,
 	ENUM_LOCAL_STORAGE: { IS_AUTH: "is_auth" }
 }));
+
+const feeRow = (cost: number, currency: string) => ({
+	...createEmptyFeeRow(),
+	[ENUM_FEE_FIELD.COST]: cost,
+	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
+});
 
 const basePricing = (
 	overrides: Partial<TGuidePricingSchema> = {}
@@ -46,8 +55,10 @@ describe("mapGuideCategoriesToBackend", () => {
 					typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 						{
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
+								ENUM_GUIDE_CHARGE.PER_DURATION,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
+							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
 							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 						}
@@ -67,8 +78,10 @@ describe("mapGuideCategoriesToBackend", () => {
 					typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 						{
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
+								ENUM_GUIDE_CHARGE.PER_DURATION,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: 100,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
+							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
 							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 						}
@@ -81,13 +94,17 @@ describe("mapGuideCategoriesToBackend", () => {
 		expect(result).toEqual([
 			{
 				expenses: {
-					typ: "per_group",
-					tiers: [
-						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							cost: { val: 100 }
-						}
-					]
+					typ: "per_duration",
+					rate: {
+						typ: "per_group",
+						tiers: [
+							{
+								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+								cost: { val: 100 }
+							}
+						]
+					},
+					fees: null
 				}
 			}
 		]);
@@ -100,9 +117,11 @@ describe("mapGuideCategoriesToBackend", () => {
 					typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 						{
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
+								ENUM_GUIDE_CHARGE.PER_DURATION,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]:
 								"80" as unknown as number,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: null,
+							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
 							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "USD",
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
 						}
@@ -115,13 +134,17 @@ describe("mapGuideCategoriesToBackend", () => {
 		expect(result).toEqual([
 			{
 				expenses: {
-					typ: "per_group",
-					tiers: [
-						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							cost: { val: 80, currency: Currency.USD }
-						}
-					]
+					typ: "per_duration",
+					rate: {
+						typ: "per_group",
+						tiers: [
+							{
+								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+								cost: { val: 80, currency: Currency.USD }
+							}
+						]
+					},
+					fees: null
 				}
 			}
 		]);
@@ -139,8 +162,10 @@ describe("mapGuideCategoriesToBackend", () => {
 								{
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]:
 										ENUM_LANGUAGES.ENGLISH,
+									[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]:
+										ENUM_GUIDE_CHARGE.PER_DURATION,
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
-									[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: null,
+									[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: [],
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]:
 										undefined,
 									[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
@@ -164,8 +189,12 @@ describe("mapGuideCategoriesToBackend", () => {
 					typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
 					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
 						{
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
+								ENUM_GUIDE_CHARGE.PER_DURATION,
 							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: 50,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: 10,
+							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [
+								feeRow(10, "EUR")
+							],
 							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "EUR",
 							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: {
 								typ: ENUM_GUIDE_MARKUP_TYP.PERCENTAGE,
@@ -181,18 +210,55 @@ describe("mapGuideCategoriesToBackend", () => {
 		expect(result).toEqual([
 			{
 				expenses: {
-					typ: "per_group",
-					tiers: [
+					typ: "per_duration",
+					rate: {
+						typ: "per_group",
+						tiers: [
+							{
+								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+								cost: { val: 50, currency: Currency.EUR }
+							}
+						]
+					},
+					fees: [
 						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							cost: { val: 50, currency: Currency.EUR }
+							name: null,
+							description: null,
+							cost: { val: 10, currency: Currency.EUR }
 						}
 					],
-					fees: {
-						typ: "fixed",
-						cost: { val: 10, currency: Currency.EUR }
-					},
 					markup: { typ: "percentage", percentage: 0.15 }
+				}
+			}
+		]);
+	});
+
+	it("maps fixed chargeTyp to fixed expenses", () => {
+		const result = mapGuideCategoriesToBackend(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: {
+					typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
+					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
+						{
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
+								ENUM_GUIDE_CHARGE.FIXED,
+							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: 300,
+							[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
+							[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: "USD",
+							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
+						}
+					]
+				}
+			}),
+			1
+		);
+
+		expect(result).toEqual([
+			{
+				expenses: {
+					typ: "fixed",
+					cost: { val: 300, currency: Currency.USD },
+					fees: null
 				}
 			}
 		]);

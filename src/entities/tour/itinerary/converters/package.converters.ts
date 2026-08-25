@@ -17,6 +17,8 @@ import {
 	type TTourPackageBackend
 } from "../types";
 
+import { mapFeesFromBackend, mapFeesToBackend } from "./event/fees.converters";
+
 const mapMarkupFromBackend = (
 	markup?: TTourPackageBackend["markup"]
 ): IPackageFormMarkup | null => {
@@ -59,7 +61,7 @@ export const getEmptyPackageForm = (): TPackageEditSchema => ({
 	[ENUM_PACKAGE_FIELD.PRICING_TYPE]: ENUM_PACKAGE_PRICING_TYPE.FLAT_RATE,
 	[ENUM_PACKAGE_FIELD.ADD_MARGIN_SEPARATELY]: false,
 	[ENUM_PACKAGE_FIELD.TOTAL_PRICE]: null,
-	[ENUM_PACKAGE_FIELD.TAXES]: null,
+	[ENUM_PACKAGE_FIELD.FEES]: [],
 	[ENUM_PACKAGE_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_PACKAGE_FIELD.MARKUP]: null,
 	[ENUM_PACKAGE_FIELD.SUPPLIER_ID]: ""
@@ -85,7 +87,6 @@ export const mapPackageToForm = (
 	backend: TTourPackageBackend
 ): TPackageEditSchema => {
 	const expenses = backend.expenses;
-	const feesVal = backend.fees?.cost?.val;
 	const markup = mapMarkupFromBackend(backend.markup);
 	const isPerPerson = expenses?.typ === "per_person";
 	const cost = isPerPerson ? expenses?.cost_per_person : expenses?.cost;
@@ -98,7 +99,7 @@ export const mapPackageToForm = (
 		[ENUM_PACKAGE_FIELD.ADD_MARGIN_SEPARATELY]: Boolean(markup?.value),
 		[ENUM_PACKAGE_FIELD.MARKUP]: markup,
 		[ENUM_PACKAGE_FIELD.TOTAL_PRICE]: cost?.val ?? null,
-		[ENUM_PACKAGE_FIELD.TAXES]: feesVal ?? null,
+		[ENUM_PACKAGE_FIELD.FEES]: mapFeesFromBackend(backend.fees),
 		[ENUM_PACKAGE_FIELD.CURRENCY]: cost?.currency
 			? currencyConverter.from(cost.currency)
 			: DEFAULT_EVENT_CURRENCY,
@@ -111,7 +112,7 @@ const mapPackageFormToPayload = (
 ): TPackageUpdateBackend => {
 	const totalPrice = form[ENUM_PACKAGE_FIELD.TOTAL_PRICE];
 	const currency = form[ENUM_PACKAGE_FIELD.CURRENCY];
-	const taxes = form[ENUM_PACKAGE_FIELD.TAXES];
+	const fees = mapFeesToBackend(form[ENUM_PACKAGE_FIELD.FEES]);
 	const supplierId = form[ENUM_PACKAGE_FIELD.SUPPLIER_ID]?.trim();
 
 	if (totalPrice == null || !currency) {
@@ -128,30 +129,20 @@ const mapPackageFormToPayload = (
 		val: totalPrice,
 		currency: currencyConverter.to(currency)!
 	};
-	const fees =
-		taxes != null
-			? {
-					typ: "fixed" as const,
-					cost: {
-						val: taxes,
-						currency: currencyConverter.to(currency)!
-					}
-				}
-			: null;
 	const markup = mapMarkupToBackend(
 		form[ENUM_PACKAGE_FIELD.MARKUP] ?? null,
 		currency,
 		form.add_margin_separately
 	);
 
-	const expenses =
+	const expenses: TPackageUpdateBackend["expenses"] =
 		form.pricing_type === ENUM_PACKAGE_PRICING_TYPE.PER_PERSON
 			? {
-					typ: "per_person" as const,
+					typ: "per_person",
 					cost_per_person: cost
 				}
 			: {
-					typ: "fixed" as const,
+					typ: "fixed",
 					cost
 				};
 

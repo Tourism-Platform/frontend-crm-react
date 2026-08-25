@@ -4,6 +4,8 @@ import { type TTourAccommodationEditPageKeys, i18nKey } from "@/shared/config";
 
 import { ENUM_FORM_PRICE_DETAILS } from "../../types";
 
+import { feesArraySchema } from "./fee.schema";
+
 const msg = i18nKey<TTourAccommodationEditPageKeys>();
 
 export const PRICING_SCHEMA = z.object({
@@ -19,18 +21,7 @@ export const PRICING_SCHEMA = z.object({
 				"form.pricing.form.pricing_details.fields.total_price.errors.max"
 			)
 		}),
-	[ENUM_FORM_PRICE_DETAILS.TAXES]: z
-		.number()
-		.min(0, {
-			message: msg(
-				"form.pricing.form.pricing_details.fields.taxes_and_fees.errors.min"
-			)
-		})
-		.max(100, {
-			message: msg(
-				"form.pricing.form.pricing_details.fields.taxes_and_fees.errors.max"
-			)
-		}),
+	[ENUM_FORM_PRICE_DETAILS.FEES]: feesArraySchema,
 	[ENUM_FORM_PRICE_DETAILS.CURRENCY]: z
 		.string()
 		.min(1, {

@@ -1,5 +1,8 @@
-import { LanguageCode } from "@/shared/api";
-import { ENUM_LANGUAGES, type ENUM_LANGUAGES_TYPE } from "@/shared/config";
+import { LanguageCode } from "@/shared/api/generated/Api";
+import {
+	ENUM_LANGUAGES,
+	type ENUM_LANGUAGES_TYPE
+} from "@/shared/config/languages";
 import { createEnumMapper } from "@/shared/utils";
 
 const MAP_LANGUAGE_CODE: Partial<Record<ENUM_LANGUAGES_TYPE, LanguageCode>> = {

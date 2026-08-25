@@ -74,7 +74,13 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 
 	library: {
 		folder: "library",
-		namespaces: ["event_templates_page"]
+		namespaces: [
+			"event_templates_page",
+			"suppliers_page",
+			"supplier_id_page",
+			"hotel_product_edit_page",
+			"train_product_edit_page"
+		]
 	},
 
 	shared: {

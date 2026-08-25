@@ -10,6 +10,6 @@ export const SUPPLEMENT_EDIT_SCHEMA = z.object({
 	[ENUM_FORM_SECTION.PRICING]: SUPPLEMENT_PRICING_SCHEMA,
 	[ENUM_FORM_SECTION.NAME]: z.string().optional(),
 	[ENUM_FORM_SECTION.DESCRIPTION]: z.string().optional(),
-	[ENUM_FORM_SECTION.DAY]: z.number().optional(),
+	[ENUM_FORM_SECTION.DAY]: z.number().min(1).optional(),
 	[ENUM_FORM_SECTION.POSITION]: z.number().optional()
 });

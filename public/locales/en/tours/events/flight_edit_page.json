@@ -15,6 +15,14 @@
 		"pricing": "Pricing & booking"
 	},
 	"form": {
+		"inherited": {
+			"lock_title": "Linked to supplier product",
+			"lock_description": "Route details come from the supplier product and cannot be edited here",
+			"pricing_title": "Pricing from product",
+			"pricing_description": "Fares are managed on the supplier product",
+			"override_title": "Contract price applied",
+			"override_description": "This event uses a negotiated price instead of the product rate"
+		},
 		"toasts": {
 			"load": {
 				"error": "Error while loading data"

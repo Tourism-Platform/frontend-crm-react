@@ -13,10 +13,13 @@ import {
 
 import {
 	ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD,
+	ENUM_ACCOMMODATION_PRICE_ROW_FIELD,
 	ENUM_ACCOMMODATION_PRICING_FIELD,
 	ENUM_FORM_ROOMS,
 	type TAccommodationEditSchema
 } from "@/entities/tour";
+
+import { FeeLinesField } from "@/features/pricing";
 
 import {
 	ENUM_FORM_SECTION,
@@ -36,6 +39,8 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 	addMarginSeparately
 }) => {
 	const { t } = useTranslation("accommodation_edit_page");
+	const rowPath =
+		`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}` as const;
 
 	return (
 		<Card>
@@ -49,8 +54,8 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 			<CardContent className="grid gap-4">
 				<div
 					className={cn(
-						"grid grid-cols-[1fr_1fr_1fr] gap-5",
-						addMarginSeparately && "grid-cols-[1fr_1fr_1.5fr_0.5fr]"
+						"grid grid-cols-2 gap-5",
+						addMarginSeparately && "grid-cols-[1fr_1.5fr_0.5fr]"
 					)}
 				>
 					{PER_ROOM_ROW_FIELDS_LIST.map(
@@ -61,7 +66,7 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 									PER_ROOM_ROW_FIELDS_LIST.length - 1 ? (
 									<CustomInputSelect
 										control={form.control}
-										name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${PER_ROOM_MARKUP_FIELD.key}`}
+										name={`${rowPath}.${PER_ROOM_MARKUP_FIELD.key}`}
 										label={PER_ROOM_MARKUP_FIELD.label}
 										placeholder={
 											PER_ROOM_MARKUP_FIELD.placeholder
@@ -74,7 +79,7 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 								) : null}
 								<CustomField
 									control={form.control}
-									name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}.${key}`}
+									name={`${rowPath}.${key}`}
 									t={t}
 									{...item}
 								/>
@@ -82,6 +87,10 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 						)
 					)}
 				</div>
+				<FeeLinesField
+					control={form.control}
+					name={`${rowPath}.${ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES}`}
+				/>
 			</CardContent>
 		</Card>
 	);

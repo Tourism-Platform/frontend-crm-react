@@ -19,6 +19,7 @@ import {
 	type TTourEventBackendResponce,
 	type TTourEventUpdate,
 	type TTransportationEditSchema,
+	isInheritedTrainDetails,
 	mapBackendTypToEventType,
 	mapEventTypeToBackendTyps
 } from "@/entities/tour/itinerary";
@@ -86,7 +87,18 @@ const mapEventLibrarySummary = (
 			const parts = [flightCode || null, route, time].filter(Boolean);
 			return parts.length ? parts.join(" · ") : null;
 		}
-		case ENUM_EVENT_BACKEND.TRAIN:
+		case ENUM_EVENT_BACKEND.TRAIN: {
+			const details = event.details;
+			if (!details) return null;
+			const hop = isInheritedTrainDetails(details)
+				? details.product?.hop?.[0]
+				: details.hop?.[0];
+			if (!hop) return null;
+			return joinRange(
+				formatTimeHhMm(hop.departure?.time?.time),
+				formatTimeHhMm(hop.arrival?.time?.time)
+			);
+		}
 		case ENUM_EVENT_BACKEND.BUS: {
 			const hop = event.details?.hop?.[0];
 			if (!hop) return null;

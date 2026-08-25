@@ -29,6 +29,7 @@
 			"tour_archive": "Архивация туров",
 			"tour_option_write": "Редактирование опций тура",
 			"tour_event_write": "Редактирование событий тура",
+			"tour_event_override_write": "Переопределение цен событий тура",
 			"tour_event_library_read": "Просмотр библиотеки событий",
 			"tour_event_library_write": "Редактирование библиотеки событий",
 			"tour_gallery_write": "Редактирование галереи",
@@ -44,6 +45,7 @@
 			"booking_finance_read": "Просмотр финансов бронирования",
 			"booking_pax_write": "Редактирование пассажиров",
 			"booking_revision_write": "Редактирование ревизий",
+			"booking_event_override_write": "Переопределение цен событий брони",
 			"booking_payment_read": "Просмотр платежей бронирования",
 			"booking_payment_write": "Редактирование платежей бронирования",
 			"booking_payment_confirm": "Подтверждение платежей",
@@ -325,10 +327,62 @@
 			"guide": "Гид"
 		}
 	},
+	"supplier_type": {
+		"flight": "Авиа",
+		"hotel": "Отель",
+		"museum": "Музей",
+		"transfer": "Трансфер",
+		"activity": "Активность",
+		"train": "Поезд",
+		"bus": "Автобус"
+	},
+	"hotel_amenity": {
+		"wifi": "Wi‑Fi",
+		"pool": "Бассейн",
+		"breakfast": "Завтрак",
+		"parking": "Парковка",
+		"gym": "Спортзал",
+		"spa": "Спа",
+		"restaurant": "Ресторан",
+		"bar": "Бар",
+		"airport_shuttle": "Трансфер из аэропорта",
+		"air_conditioning": "Кондиционер",
+		"room_service": "Обслуживание номеров",
+		"laundry": "Прачечная",
+		"concierge": "Консьерж",
+		"business_center": "Бизнес-центр",
+		"kids_club": "Детский клуб",
+		"beach_access": "Выход к пляжу",
+		"sauna": "Сауна",
+		"jacuzzi": "Джакузи",
+		"pet_friendly": "Можно с животными",
+		"wheelchair_accessible": "Доступно для инвалидов"
+	},
+	"hotel_room_type": {
+		"single": "Одноместный",
+		"double": "Двухместный",
+		"twin": "Twin",
+		"triple": "Трёхместный",
+		"quadruple": "Четырёхместный",
+		"suite": "Люкс",
+		"family": "Семейный"
+	},
 	"guide": {
 		"types": {
 			"local": "Местный гид",
 			"accompanying": "Сопровождающий гид"
+		},
+		"charge": {
+			"fixed": "За весь ангажемент",
+			"per_duration": "За день"
 		}
+	},
+	"hotel_room_charge": {
+		"fixed": "За весь стей",
+		"per_duration": "За ночь"
+	},
+	"train_variant_charge": {
+		"fixed": "Фиксированная",
+		"per_person": "С человека"
 	}
 }
