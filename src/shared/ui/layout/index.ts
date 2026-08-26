@@ -4,4 +4,5 @@ export * from "./custom-sidebar";
 export * from "./language-toggle";
 export * from "./nav-menu-mobile";
 export * from "./nav-menu";
+export * from "./nav-rich-item";
 export * from "./theme-toggle";

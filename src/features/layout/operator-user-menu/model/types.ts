@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import type { TSidebarKeys } from "@/shared/config";
 
 export interface IUserMenu {
@@ -5,7 +7,8 @@ export interface IUserMenu {
 }
 
 export interface IUserMenuItem {
-	icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+	icon?: ReactNode;
 	label: TSidebarKeys;
+	description?: TSidebarKeys;
 	path: string;
 }

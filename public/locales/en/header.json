@@ -115,7 +115,9 @@
 			"title": "Booking",
 			"menu": {
 				"orders": "Orders",
-				"appeals": "Appeals"
+				"orders_description": "Manage booking orders",
+				"appeals": "Appeals",
+				"appeals_description": "Review appeals and requests"
 			}
 		}
 	},
@@ -136,22 +138,33 @@
 			"title": "Booking",
 			"menu": {
 				"orders": "Orders",
-				"appeals": "Appeals"
+				"orders_description": "Manage booking orders",
+				"appeals": "Appeals",
+				"appeals_description": "Review appeals and requests"
 			}
 		},
 		"finance": {
 			"title": "Finance",
 			"menu": {
 				"invoices": "Invoices",
+				"invoices_description": "View and issue invoices",
 				"client_payments": "Client payments",
+				"client_payments_description": "Track client payments",
 				"supplier_payments": "Supplier payments",
-				"reconciliation": "Reconciliation"
+				"supplier_payments_description": "Pay suppliers",
+				"reconciliation": "Reconciliation",
+				"reconciliation_description": "Reconcile balances"
 			}
 		},
 		"library": {
 			"title": "Library",
 			"menu": {
 				"events": "Events",
+				"events_description": "Event templates library",
+				"itineraries": "Itineraries",
+				"itineraries_description": "Saved itinerary routes",
+				"suppliers": "Suppliers",
+				"suppliers_description": "Supplier catalog",
 				"overview": "Overview",
 				"analytics": "Analytics",
 				"reports": "Reports"

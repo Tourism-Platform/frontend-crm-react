@@ -115,7 +115,9 @@
 			"title": "Бронирование",
 			"menu": {
 				"orders": "Заказы",
-				"appeals": "Обращения"
+				"orders_description": "Управление заказами",
+				"appeals": "Обращения",
+				"appeals_description": "Обработка обращений и запросов"
 			}
 		}
 	},
@@ -136,22 +138,33 @@
 			"title": "Бронирование",
 			"menu": {
 				"orders": "Заказы",
-				"appeals": "Обращения"
+				"orders_description": "Управление заказами",
+				"appeals": "Обращения",
+				"appeals_description": "Обработка обращений и запросов"
 			}
 		},
 		"finance": {
 			"title": "Финансы",
 			"menu": {
 				"invoices": "Счета",
+				"invoices_description": "Просмотр и выставление счетов",
 				"client_payments": "Платежи клиентов",
+				"client_payments_description": "Отслеживание платежей клиентов",
 				"supplier_payments": "Платежи поставщикам",
-				"reconciliation": "Сверка"
+				"supplier_payments_description": "Оплата поставщикам",
+				"reconciliation": "Сверка",
+				"reconciliation_description": "Сверка балансов"
 			}
 		},
 		"library": {
 			"title": "Библиотека",
 			"menu": {
 				"events": "События",
+				"events_description": "Шаблоны событий",
+				"itineraries": "Маршруты",
+				"itineraries_description": "Сохранённые маршруты",
+				"suppliers": "Поставщики",
+				"suppliers_description": "Каталог поставщиков",
 				"overview": "Обзор",
 				"analytics": "Аналитика",
 				"reports": "Отчёты"

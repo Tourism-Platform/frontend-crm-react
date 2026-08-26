@@ -30,13 +30,13 @@ export const PUBLIC_NAV_ITEMS: TPublicNavGroup[] = [
 						labelKey: "public.nav.solutions.items.operators.label",
 						descriptionKey:
 							"public.nav.solutions.items.operators.description",
-						icon: Building2
+						icon: <Building2 />
 					},
 					{
 						labelKey: "public.nav.solutions.items.agencies.label",
 						descriptionKey:
 							"public.nav.solutions.items.agencies.description",
-						icon: Handshake
+						icon: <Handshake />
 					}
 				]
 			},
@@ -47,7 +47,7 @@ export const PUBLIC_NAV_ITEMS: TPublicNavGroup[] = [
 						labelKey: "public.nav.solutions.items.suppliers.label",
 						descriptionKey:
 							"public.nav.solutions.items.suppliers.description",
-						icon: Hotel
+						icon: <Hotel />
 					}
 				]
 			}
@@ -63,19 +63,19 @@ export const PUBLIC_NAV_ITEMS: TPublicNavGroup[] = [
 						labelKey: "public.nav.product.items.tour_builder.label",
 						descriptionKey:
 							"public.nav.product.items.tour_builder.description",
-						icon: Map
+						icon: <Map />
 					},
 					{
 						labelKey: "public.nav.product.items.booking.label",
 						descriptionKey:
 							"public.nav.product.items.booking.description",
-						icon: ClipboardList
+						icon: <ClipboardList />
 					},
 					{
 						labelKey: "public.nav.product.items.finance.label",
 						descriptionKey:
 							"public.nav.product.items.finance.description",
-						icon: DollarSign
+						icon: <DollarSign />
 					}
 				]
 			},
@@ -86,19 +86,19 @@ export const PUBLIC_NAV_ITEMS: TPublicNavGroup[] = [
 						labelKey: "public.nav.product.items.documents.label",
 						descriptionKey:
 							"public.nav.product.items.documents.description",
-						icon: FileText
+						icon: <FileText />
 					},
 					{
 						labelKey: "public.nav.product.items.crm.label",
 						descriptionKey:
 							"public.nav.product.items.crm.description",
-						icon: Users
+						icon: <Users />
 					},
 					{
 						labelKey: "public.nav.product.items.analytics.label",
 						descriptionKey:
 							"public.nav.product.items.analytics.description",
-						icon: BarChart3
+						icon: <BarChart3 />
 					}
 				]
 			}
@@ -114,13 +114,13 @@ export const PUBLIC_NAV_ITEMS: TPublicNavGroup[] = [
 						labelKey: "public.nav.resources.items.blog.label",
 						descriptionKey:
 							"public.nav.resources.items.blog.description",
-						icon: PenLine
+						icon: <PenLine />
 					},
 					{
 						labelKey: "public.nav.resources.items.news.label",
 						descriptionKey:
 							"public.nav.resources.items.news.description",
-						icon: Newspaper
+						icon: <Newspaper />
 					}
 				]
 			},
@@ -131,14 +131,14 @@ export const PUBLIC_NAV_ITEMS: TPublicNavGroup[] = [
 						labelKey: "public.nav.resources.items.support.label",
 						descriptionKey:
 							"public.nav.resources.items.support.description",
-						icon: LifeBuoy
+						icon: <LifeBuoy />
 					},
 					{
 						labelKey:
 							"public.nav.resources.items.knowledge_base.label",
 						descriptionKey:
 							"public.nav.resources.items.knowledge_base.description",
-						icon: BookOpen
+						icon: <BookOpen />
 					}
 				]
 			}
@@ -153,25 +153,25 @@ export const PUBLIC_NAV_ITEMS: TPublicNavGroup[] = [
 						labelKey: "public.nav.company.items.about.label",
 						descriptionKey:
 							"public.nav.company.items.about.description",
-						icon: Mountain
+						icon: <Mountain />
 					},
 					{
 						labelKey: "public.nav.company.items.partners.label",
 						descriptionKey:
 							"public.nav.company.items.partners.description",
-						icon: Handshake
+						icon: <Handshake />
 					},
 					{
 						labelKey: "public.nav.company.items.careers.label",
 						descriptionKey:
 							"public.nav.company.items.careers.description",
-						icon: Briefcase
+						icon: <Briefcase />
 					},
 					{
 						labelKey: "public.nav.company.items.contact.label",
 						descriptionKey:
 							"public.nav.company.items.contact.description",
-						icon: Mail
+						icon: <Mail />
 					}
 				]
 			}

@@ -1,4 +1,9 @@
-import { BoxOutlineIcon, CalendarDaysIcon, HouseIcon } from "@/shared/assets";
+import {
+	BoxIcon,
+	MapPointWaveIcon,
+	Routing2Icon
+} from "@solar-icons/react/outline";
+
 import type { ISidebarMenu } from "@/shared/ui";
 
 import { ENUM_PATH } from "../routes.config";
@@ -9,18 +14,23 @@ export const LIBRARY_SIDEBAR_LIST: ISidebarMenu[] = [
 		menu: [
 			{
 				label: "operator.library.general.menu.events",
+				description: "operator.library.general.menu.events_description",
 				path: ENUM_PATH.LIBRARY.EVENTS,
-				icon: BoxOutlineIcon
+				icon: <MapPointWaveIcon />
 			},
 			{
 				label: "operator.library.general.menu.itineraries",
+				description:
+					"operator.library.general.menu.itineraries_description",
 				path: ENUM_PATH.LIBRARY.ITINERARIES,
-				icon: CalendarDaysIcon
+				icon: <Routing2Icon />
 			},
 			{
 				label: "operator.library.general.menu.suppliers",
+				description:
+					"operator.library.general.menu.suppliers_description",
 				path: ENUM_PATH.LIBRARY.SUPPLIERS,
-				icon: HouseIcon
+				icon: <BoxIcon />
 			}
 		]
 	}

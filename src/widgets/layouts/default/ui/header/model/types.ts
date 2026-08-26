@@ -1,11 +1,11 @@
-import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 import type { THeaderKeys } from "@/shared/config";
 
 export type TPublicNavItem = {
 	labelKey: THeaderKeys;
 	descriptionKey: THeaderKeys;
-	icon: LucideIcon;
+	icon: ReactNode;
 };
 
 export type TPublicNavSection = {

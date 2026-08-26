@@ -1,10 +1,11 @@
 import {
-	DollarSquareIcon,
-	HouseIcon,
-	LockHoleIcon,
-	NotificationBigIcon,
+	BellRingIcon,
+	Buildings2Icon,
+	DollarMinimalisticIcon,
+	KeySquare2Icon,
 	SettingsIcon
-} from "@/shared/assets";
+} from "@solar-icons/react/outline";
+
 import { ENUM_PATH } from "@/shared/config";
 
 import type { IUserMenu } from "./types";
@@ -14,18 +15,24 @@ export const AGENCY_USER_MENU_LIST: IUserMenu[] = [
 		menu: [
 			{
 				label: "agency.settings.personal.menu.account",
+				description:
+					"agency.settings.personal.menu.account_description",
 				path: ENUM_PATH.AGENCY.SETTINGS.ACCOUNT_SETTINGS,
-				icon: SettingsIcon
+				icon: <SettingsIcon />
 			},
 			{
 				label: "agency.settings.personal.menu.security",
+				description:
+					"agency.settings.personal.menu.security_description",
 				path: ENUM_PATH.AGENCY.SETTINGS.SECURITY,
-				icon: LockHoleIcon
+				icon: <KeySquare2Icon />
 			},
 			{
 				label: "agency.settings.personal.menu.notifications",
+				description:
+					"agency.settings.personal.menu.notifications_description",
 				path: ENUM_PATH.AGENCY.SETTINGS.NOTIFICATIONS,
-				icon: NotificationBigIcon
+				icon: <BellRingIcon />
 			}
 		]
 	},
@@ -33,13 +40,17 @@ export const AGENCY_USER_MENU_LIST: IUserMenu[] = [
 		menu: [
 			{
 				label: "agency.settings.business.menu.business",
+				description:
+					"agency.settings.business.menu.business_description",
 				path: ENUM_PATH.AGENCY.SETTINGS.BUSINESS_SETTINGS,
-				icon: HouseIcon
+				icon: <Buildings2Icon />
 			},
 			{
 				label: "agency.settings.business.menu.financial",
+				description:
+					"agency.settings.business.menu.financial_description",
 				path: ENUM_PATH.AGENCY.SETTINGS.FINANCIAL_SETTINGS,
-				icon: DollarSquareIcon
+				icon: <DollarMinimalisticIcon />
 			}
 		]
 	}

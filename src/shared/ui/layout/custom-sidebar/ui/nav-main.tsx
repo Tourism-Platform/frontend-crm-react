@@ -5,10 +5,12 @@ import { Link, matchPath, useLocation, useParams } from "react-router-dom";
 import { type TToursPath, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import {
+	NavRichItem,
 	SidebarGroup,
 	SidebarGroupLabel,
 	SidebarMenu,
-	SidebarMenuButton
+	SidebarMenuButton,
+	useSidebar
 } from "@/shared/ui";
 
 import type { ISidebarMenu } from "../model";
@@ -21,6 +23,9 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 	const { t } = useTranslation("sidebar");
 	const { tourId } = useParams<{ tourId: string }>();
 	const location = useLocation();
+	const { state, isMobile } = useSidebar();
+	const iconOnly = state === "collapsed" && !isMobile;
+
 	return (
 		<>
 			{items.map((item) => (
@@ -42,21 +47,23 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 								<SidebarMenuButton
 									tooltip={t(subItem?.label)}
 									key={subItem?.label}
-									size={"sm"}
+									size="lg"
+									isActive={!!match}
 									asChild
+									className={cn(
+										"h-auto min-h-12 items-start py-2 cursor-pointer"
+									)}
 								>
-									<Link
-										to={toPath}
-										className={cn(
-											"text-muted-foreground",
-											!!match &&
-												"bg-sidebar-primary text-primary-foreground hover:bg-sidebar-primary hover:text-muted-foreground"
-										)}
-									>
-										{subItem?.icon && <subItem.icon />}
-										<span className="text-sm">
-											{t(subItem?.label)}
-										</span>
+									<Link to={toPath}>
+										<NavRichItem
+											icon={subItem.icon}
+											title={t(subItem.label)}
+											description={
+												subItem.description &&
+												t(subItem.description)
+											}
+											iconOnly={iconOnly}
+										/>
 									</Link>
 								</SidebarMenuButton>
 							);

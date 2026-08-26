@@ -6,7 +6,9 @@ import {
 	ENUM_AUTH,
 	ENUM_LAYOUT,
 	ENUM_PATH,
-	type IRouting
+	type IRouting,
+	isAgencyUserRole,
+	isOperatorUserRole
 } from "@/shared/config";
 import {
 	Alert,
@@ -18,7 +20,6 @@ import {
 } from "@/shared/ui";
 
 import { useGetAuthAccountQuery } from "@/entities/auth";
-import { ENUM_ROLE } from "@/entities/user";
 
 const SessionCheckError = ({ onRetry }: { onRetry: () => void }) => {
 	const { t } = useTranslation("login_page");
@@ -94,7 +95,7 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 		}
 
 		if (authAccount) {
-			const isAgencyRole = authAccount.role === ENUM_ROLE.AGENCY;
+			const isAgencyRole = isAgencyUserRole(authAccount.role);
 
 			if (isAgencyRole) {
 				return <Navigate to={ENUM_PATH.TOURS.CATALOG.ROOT} replace />;
@@ -105,8 +106,8 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 	}
 
 	if (authAccount) {
-		const isAgencyRole = authAccount.role === ENUM_ROLE.AGENCY;
-		const isOperatorRole = authAccount.role === ENUM_ROLE.TOUR_OPERATOR;
+		const isAgencyRole = isAgencyUserRole(authAccount.role);
+		const isOperatorRole = isOperatorUserRole(authAccount.role);
 
 		if (route.layout === ENUM_LAYOUT.ROOT_OPERATOR && isAgencyRole) {
 			return <Navigate to={ENUM_PATH.TOURS.CATALOG.ROOT} replace />;

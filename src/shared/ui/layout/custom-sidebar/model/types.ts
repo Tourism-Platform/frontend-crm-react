@@ -6,7 +6,8 @@ export interface ISidebarMenu {
 }
 
 export interface ISidebarMenuItem {
-	icon?: React.FC<React.SVGProps<SVGSVGElement>>;
+	icon?: React.ReactNode;
 	label: TSidebarKeys;
+	description?: TSidebarKeys;
 	path: string | TToursPath;
 }

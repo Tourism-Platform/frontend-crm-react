@@ -4,7 +4,7 @@ import { login } from "@/entities/user";
 
 import { mapAuthAccountToFrontend, mapAuthUserToBackend } from "../converters";
 import { resetAllApiState } from "../lib/reset-api-state";
-import type { IAuthUser, TAuthAccountBackend } from "../types";
+import type { IAuthAccount, IAuthUser, TAuthAccountBackend } from "../types";
 
 export const AuthService = baseApi.injectEndpoints({
 	endpoints: (build) => ({
@@ -33,7 +33,7 @@ export const AuthService = baseApi.injectEndpoints({
 				resetAllApiState(dispatch);
 			}
 		}),
-		getAuthAccount: build.query<TAuthAccountBackend, void>({
+		getAuthAccount: build.query<IAuthAccount, void>({
 			query: () => ({
 				...AUTH_PATHS.getMyAccount
 			}),

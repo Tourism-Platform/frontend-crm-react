@@ -6,18 +6,26 @@
 				"title": "Личные",
 				"menu": {
 					"account": "Настройки аккаунта",
+					"account_description": "Профиль и предпочтения",
 					"security": "Безопасность",
-					"notifications": "Уведомления"
+					"security_description": "Пароль и доступ",
+					"notifications": "Уведомления",
+					"notifications_description": "Оповещения и письма"
 				}
 			},
 			"business": {
 				"title": "Бизнес",
 				"menu": {
 					"business": "Информация о бизнесе",
-					"staff": "Информация о сотрудниках",
+					"business_description": "Данные компании",
+					"staff": "Сотрудники",
+					"staff_description": "Команда и роли",
 					"financial": "Финансовая информация",
-					"tour": "Настройки тура",
-					"tags": "Теги"
+					"financial_description": "Биллинг и комиссии",
+					"tour": "Настройки туров",
+					"tour_description": "Значения по умолчанию",
+					"tags": "Теги",
+					"tags_description": "Метки и категории"
 				}
 			}
 		},
@@ -26,20 +34,29 @@
 				"title": "Основное",
 				"menu": {
 					"overview": "Обзор",
+					"overview_description": "Сводка по туру",
 					"itinerary": "Маршрут",
+					"itinerary_description": "Сборка маршрута",
 					"schedule": "Расписание",
-					"pricing_review": "Цены и отзывы",
+					"schedule_description": "Даты и заезды",
+					"pricing_review": "Цены и проверка",
+					"pricing_review_description": "Стоимость и маржа",
 					"package_edit": "Редактирование пакета",
-					"landing": "Лэндинг"
+					"landing": "Лендинг",
+					"landing_description": "Публичная страница тура"
 				}
 			},
 			"more": {
-				"title": "Дополнительно",
+				"title": "Ещё",
 				"menu": {
 					"order_history": "История заказов",
+					"order_history_description": "Прошлые бронирования",
 					"messages": "Сообщения",
+					"messages_description": "Переписка по туру",
 					"activity_log": "Журнал активности",
-					"settings": "Настройки"
+					"activity_log_description": "Недавние изменения",
+					"settings": "Настройки",
+					"settings_description": "Конфигурация тура"
 				}
 			}
 		},
@@ -49,19 +66,25 @@
 				"title": "Основное",
 				"menu": {
 					"orders": "Заказы",
-					"appeals": "Обращения"
+					"orders_description": "Управление заказами",
+					"appeals": "Обращения",
+					"appeals_description": "Обработка обращений и запросов"
 				}
 			}
 		},
 		"finance": {
 			"title": "Финансы",
 			"general": {
-				"title": "Общее",
+				"title": "Основное",
 				"menu": {
 					"invoices": "Счета",
+					"invoices_description": "Просмотр и выставление счетов",
 					"client_payments": "Платежи клиентов",
+					"client_payments_description": "Отслеживание платежей клиентов",
 					"supplier_payments": "Платежи поставщикам",
-					"reconciliation": "Сверка"
+					"supplier_payments_description": "Оплата поставщикам",
+					"reconciliation": "Сверка",
+					"reconciliation_description": "Сверка балансов"
 				}
 			}
 		},
@@ -71,8 +94,11 @@
 				"title": "Компоненты тура",
 				"menu": {
 					"events": "События",
+					"events_description": "Шаблоны событий",
 					"itineraries": "Маршруты",
-					"suppliers": "Поставщики"
+					"itineraries_description": "Сохранённые маршруты",
+					"suppliers": "Поставщики",
+					"suppliers_description": "Каталог поставщиков"
 				}
 			}
 		}
@@ -84,15 +110,20 @@
 				"title": "Личные",
 				"menu": {
 					"account": "Настройки аккаунта",
+					"account_description": "Профиль и предпочтения",
 					"security": "Безопасность",
-					"notifications": "Уведомления"
+					"security_description": "Пароль и доступ",
+					"notifications": "Уведомления",
+					"notifications_description": "Оповещения и письма"
 				}
 			},
 			"business": {
 				"title": "Бизнес",
 				"menu": {
 					"business": "Информация о бизнесе",
-					"financial": "Финансовая информация"
+					"business_description": "Данные компании",
+					"financial": "Финансовая информация",
+					"financial_description": "Биллинг и комиссии"
 				}
 			}
 		},
@@ -103,13 +134,13 @@
 					"overview": "Обзор",
 					"itinerary": "Маршрут",
 					"schedule": "Расписание",
-					"pricing_review": "Цены и отзывы",
+					"pricing_review": "Цены и проверка",
 					"package_edit": "Редактирование пакета",
-					"landing": "Лэндинг"
+					"landing": "Лендинг"
 				}
 			},
 			"more": {
-				"title": "Дополнительно",
+				"title": "Ещё",
 				"menu": {
 					"order_history": "История заказов",
 					"messages": "Сообщения",
@@ -124,14 +155,16 @@
 				"title": "Основное",
 				"menu": {
 					"orders": "Заказы",
-					"appeals": "Обращения"
+					"orders_description": "Управление заказами",
+					"appeals": "Обращения",
+					"appeals_description": "Обработка обращений и запросов"
 				}
 			}
 		},
 		"finance": {
 			"title": "Финансы",
 			"general": {
-				"title": "Общее",
+				"title": "Основное",
 				"menu": {
 					"invoices": "Счета",
 					"client_payments": "Платежи клиентов",

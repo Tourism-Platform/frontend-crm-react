@@ -6,18 +6,26 @@
 				"title": "Personal",
 				"menu": {
 					"account": "Account Settings",
+					"account_description": "Profile and preferences",
 					"security": "Security",
-					"notifications": "Notifications"
+					"security_description": "Password and access",
+					"notifications": "Notifications",
+					"notifications_description": "Alerts and emails"
 				}
 			},
 			"business": {
 				"title": "Business",
 				"menu": {
 					"business": "Business information",
+					"business_description": "Company details",
 					"staff": "Staff information",
+					"staff_description": "Team members and roles",
 					"financial": "Financial information",
+					"financial_description": "Billing and commissions",
 					"tour": "Tour settings",
-					"tags": "Tags"
+					"tour_description": "Defaults for tours",
+					"tags": "Tags",
+					"tags_description": "Labels and categories"
 				}
 			}
 		},
@@ -26,20 +34,29 @@
 				"title": "General",
 				"menu": {
 					"overview": "Overview",
+					"overview_description": "Tour summary",
 					"itinerary": "Itinerary",
+					"itinerary_description": "Build the route",
 					"schedule": "Schedule",
+					"schedule_description": "Dates and departures",
 					"pricing_review": "Pricing & review",
+					"pricing_review_description": "Costs and margins",
 					"package_edit": "Package edit",
-					"landing": "Landing"
+					"landing": "Landing",
+					"landing_description": "Public tour page"
 				}
 			},
 			"more": {
 				"title": "More",
 				"menu": {
 					"order_history": "Order history",
+					"order_history_description": "Past bookings",
 					"messages": "Messages",
+					"messages_description": "Tour conversations",
 					"activity_log": "Activity log",
-					"settings": "Settings"
+					"activity_log_description": "Recent changes",
+					"settings": "Settings",
+					"settings_description": "Tour configuration"
 				}
 			}
 		},
@@ -49,7 +66,9 @@
 				"title": "General",
 				"menu": {
 					"orders": "Orders",
-					"appeals": "Appeals"
+					"orders_description": "Manage booking orders",
+					"appeals": "Appeals",
+					"appeals_description": "Review appeals and requests"
 				}
 			}
 		},
@@ -59,9 +78,13 @@
 				"title": "General",
 				"menu": {
 					"invoices": "Invoices",
+					"invoices_description": "View and issue invoices",
 					"client_payments": "Client payments",
+					"client_payments_description": "Track client payments",
 					"supplier_payments": "Supplier payments",
-					"reconciliation": "Reconciliation"
+					"supplier_payments_description": "Pay suppliers",
+					"reconciliation": "Reconciliation",
+					"reconciliation_description": "Reconcile balances"
 				}
 			}
 		},
@@ -71,8 +94,11 @@
 				"title": "Tour component",
 				"menu": {
 					"events": "Events",
+					"events_description": "Event templates library",
 					"itineraries": "Itineraries",
-					"suppliers": "Suppliers"
+					"itineraries_description": "Saved itinerary routes",
+					"suppliers": "Suppliers",
+					"suppliers_description": "Supplier catalog"
 				}
 			}
 		}
@@ -84,15 +110,20 @@
 				"title": "Personal",
 				"menu": {
 					"account": "Account Settings",
+					"account_description": "Profile and preferences",
 					"security": "Security",
-					"notifications": "Notifications"
+					"security_description": "Password and access",
+					"notifications": "Notifications",
+					"notifications_description": "Alerts and emails"
 				}
 			},
 			"business": {
 				"title": "Business",
 				"menu": {
 					"business": "Business information",
-					"financial": "Financial information"
+					"business_description": "Company details",
+					"financial": "Financial information",
+					"financial_description": "Billing and commissions"
 				}
 			}
 		},
@@ -124,7 +155,9 @@
 				"title": "General",
 				"menu": {
 					"orders": "Orders",
-					"appeals": "Appeals"
+					"orders_description": "Manage booking orders",
+					"appeals": "Appeals",
+					"appeals_description": "Review appeals and requests"
 				}
 			}
 		},
