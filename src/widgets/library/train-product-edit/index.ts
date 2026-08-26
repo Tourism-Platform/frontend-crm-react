@@ -1,2 +1,1 @@
-export * from "./ui";
-export * from "./model";
+export { TrainProductEdit } from "./ui/train-product-edit";

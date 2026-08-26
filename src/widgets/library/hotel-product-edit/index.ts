@@ -1,2 +1,1 @@
-export * from "./ui";
-export * from "./model";
+export { HotelProductEdit } from "./ui/hotel-product-edit";

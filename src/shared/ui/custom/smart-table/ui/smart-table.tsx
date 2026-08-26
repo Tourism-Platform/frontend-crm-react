@@ -18,7 +18,6 @@ import { memo, useCallback, useEffect, useId, useMemo, useState } from "react";
 
 import { cn } from "@/shared/lib";
 import {
-	Button,
 	CustomOptionTabs,
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
@@ -296,7 +295,7 @@ function SmartTableInner<TData extends object>({
 								)}
 							</div>
 							<div
-								className={`flex items-center gap-3 ${!!actions || useViewMode ? "flex" : "hidden"}`}
+								className={`flex gap-3 h-full ${!!actions || useViewMode ? "flex" : "hidden"}`}
 							>
 								{actions}
 								{useViewMode && (
@@ -305,14 +304,8 @@ function SmartTableInner<TData extends object>({
 											<CustomOptionTabsTrigger
 												key={item.type}
 												value={item.type}
-												asChild
 											>
-												<Button
-													variant="outline"
-													size="icon"
-												>
-													{item.icon}
-												</Button>
+												{item.icon}
 											</CustomOptionTabsTrigger>
 										))}
 									</CustomOptionTabsList>
