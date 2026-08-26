@@ -125,7 +125,7 @@ export const OperatorUserMenu: FC = () => {
 								<DropdownMenuItem
 									key={menuItem.label}
 									asChild
-									className="p-0 focus:bg-transparent"
+									className="p-0 focus:bg-muted"
 								>
 									<Link
 										to={menuItem.path}

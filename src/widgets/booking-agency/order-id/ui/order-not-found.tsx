@@ -1,4 +1,4 @@
-import { ChevronLeft, FileSearch } from "lucide-react";
+import { FileSearch } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -23,9 +23,8 @@ export const OrderNotFound: FC = () => {
 				</p>
 			</div>
 
-			<Button variant="ghost" size="sm" asChild className="text-primary">
+			<Button variant="outline" size="sm" asChild>
 				<Link to={ENUM_PATH.AGENCY.BOOKING.ORDERS}>
-					<ChevronLeft className="mr-2 h-4 w-4" />
 					{t("buttons.back")}
 				</Link>
 			</Button>

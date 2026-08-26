@@ -7,11 +7,7 @@ import {
 	type IRouting
 } from "@/shared/config";
 
-import {
-	SettingsAgencyLayout,
-	SettingsOperatorLayout,
-	ToursOperatorLayout
-} from "@/widgets/layouts";
+import { ToursOperatorLayout } from "@/widgets/layouts";
 
 // Lazy loading страниц для корректной работы Suspense
 const LoginPage = React.lazy(() =>
@@ -390,24 +386,21 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: OperatorAccountSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "settings-operator",
-		layout_cascade: [SettingsOperatorLayout]
+		section: "settings-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.BUSINESS_SETTINGS,
 		component: OperatorBusinessSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "settings-operator",
-		layout_cascade: [SettingsOperatorLayout]
+		section: "settings-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.FINANCIAL_SETTINGS,
 		component: OperatorFinancialSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "settings-operator",
-		layout_cascade: [SettingsOperatorLayout]
+		section: "settings-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.NOTIFICATIONS,
@@ -421,16 +414,14 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: OperatorSecurityPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "settings-operator",
-		layout_cascade: [SettingsOperatorLayout]
+		section: "settings-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.STAFF_INFORMATION,
 		component: OperatorStaffInformationPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "settings-operator",
-		layout_cascade: [SettingsOperatorLayout]
+		section: "settings-operator"
 	},
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.TAGS,
@@ -453,24 +444,21 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: AgencyAccountSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		section: "settings-agency",
-		layout_cascade: [SettingsAgencyLayout]
+		section: "settings-agency"
 	},
 	{
 		path: ENUM_PATH.AGENCY.SETTINGS.BUSINESS_SETTINGS,
 		component: AgencyBusinessSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		section: "settings-agency",
-		layout_cascade: [SettingsAgencyLayout]
+		section: "settings-agency"
 	},
 	{
 		path: ENUM_PATH.AGENCY.SETTINGS.FINANCIAL_SETTINGS,
 		component: AgencyFinancialSettingsPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		section: "settings-agency",
-		layout_cascade: [SettingsAgencyLayout]
+		section: "settings-agency"
 	},
 	{
 		path: ENUM_PATH.AGENCY.SETTINGS.NOTIFICATIONS,
@@ -484,8 +472,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: AgencySecurityPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		section: "settings-agency",
-		layout_cascade: [SettingsAgencyLayout]
+		section: "settings-agency"
 	},
 
 	// tours

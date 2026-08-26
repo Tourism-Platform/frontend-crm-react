@@ -1,11 +1,8 @@
-import { ChevronLeft } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 
-import { ENUM_PATH } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Badge, Button } from "@/shared/ui";
+import { Badge, useSetBreadcrumbLabels } from "@/shared/ui";
 
 import {
 	type ENUM_INVOICE_STATUS_TYPE,
@@ -31,22 +28,10 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 	dueDate
 }) => {
 	const { t } = useTranslation(["invoice_id_page", "options"]);
+	useSetBreadcrumbLabels([paymentId]);
 
 	return (
 		<div className="grid gap-5">
-			<div>
-				<Button
-					variant="ghost"
-					size="sm"
-					asChild
-					className="text-primary"
-				>
-					<Link to={ENUM_PATH.FINANCE.INVOICES}>
-						<ChevronLeft className="mr-2 h-4 w-4" />
-						{t("buttons.back", { ns: "invoice_id_page" })}
-					</Link>
-				</Button>
-			</div>
 			<div className="grid gap-2">
 				<div className="flex items-center justify-between">
 					<div className="flex gap-3">

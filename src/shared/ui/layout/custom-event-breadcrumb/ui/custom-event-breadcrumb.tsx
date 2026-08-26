@@ -1,17 +1,9 @@
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, matchPath, useLocation, useParams } from "react-router-dom";
+import { matchPath, useLocation, useParams } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-	Card,
-	CardContent
-} from "@/shared/ui";
+import { BreadcrumbPills } from "@/shared/ui";
 
 import { BREADCRUMB_LIST } from "../model";
 
@@ -21,32 +13,29 @@ export const CustomEventBreadcrumb: FC = () => {
 	const location = useLocation();
 	const currentPath = Object.values(ENUM_PATH.TOURS.EVENTS).find((item) =>
 		matchPath(item, location.pathname)
-	)!;
+	);
+
+	if (!currentPath) return null;
+
+	const itineraryHref = buildRoute(ENUM_PATH.TOURS.ITINERARY, { tourId });
+
 	return (
-		<Card className="py-2">
-			<CardContent>
-				<Breadcrumb>
-					<BreadcrumbList>
-						<Link
-							to={buildRoute(ENUM_PATH.TOURS.ITINERARY, {
-								tourId
-							})}
-						>
-							<BreadcrumbItem className="hidden md:block">
-								{t(
-									BREADCRUMB_LIST[ENUM_PATH.TOURS.EVENTS.ROOT]
-								)}
-							</BreadcrumbItem>
-						</Link>
-						<BreadcrumbSeparator className="hidden md:block" />
-						<BreadcrumbItem>
-							<BreadcrumbPage>
-								{t(BREADCRUMB_LIST[currentPath])}
-							</BreadcrumbPage>
-						</BreadcrumbItem>
-					</BreadcrumbList>
-				</Breadcrumb>
-			</CardContent>
-		</Card>
+		<div className="px-0">
+			<BreadcrumbPills
+				items={[
+					{
+						key: "itinerary",
+						label: t(BREADCRUMB_LIST[ENUM_PATH.TOURS.EVENTS.ROOT]),
+						to: itineraryHref,
+						isCurrent: false
+					},
+					{
+						key: "event",
+						label: t(BREADCRUMB_LIST[currentPath]),
+						isCurrent: true
+					}
+				]}
+			/>
+		</div>
 	);
 };

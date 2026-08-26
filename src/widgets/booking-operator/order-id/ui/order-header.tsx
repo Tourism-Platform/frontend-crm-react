@@ -1,12 +1,10 @@
-import { ChevronLeft, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
-import { ENUM_PATH } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Badge, Button } from "@/shared/ui";
+import { Badge, Button, useSetBreadcrumbLabels } from "@/shared/ui";
 
 import {
 	BOOKING_ORDER_STATUS_LABELS,
@@ -48,6 +46,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 	availability = []
 }) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
+	useSetBreadcrumbLabels([orderNumber]);
 	const [updateBookingStatus, { isLoading: isUpdatingStatus }] =
 		useUpdateBookingStatusMutation();
 
@@ -106,19 +105,6 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 
 	return (
 		<div className="grid gap-5">
-			<div>
-				<Button
-					variant="ghost"
-					size="sm"
-					asChild
-					className="text-primary"
-				>
-					<Link to={ENUM_PATH.OPERATOR.BOOKING.ORDERS}>
-						<ChevronLeft className="mr-2 h-4 w-4" />
-						{t("buttons.back")}
-					</Link>
-				</Button>
-			</div>
 			<div className="grid gap-2">
 				<div className="flex items-center justify-between">
 					<div className="flex flex-col gap-3">
