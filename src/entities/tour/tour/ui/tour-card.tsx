@@ -27,6 +27,7 @@ import type { ENUM_TOUR_STATUS_TYPE, ITourCard } from "../types";
 import { ENUM_TOUR_STATUS } from "../types";
 
 const VISIBLE_CATEGORIES = 2;
+const VISIBLE_LANGUAGES = 5;
 
 const STATUS_OVERLAY_CLASS: Record<ENUM_TOUR_STATUS_TYPE, string> = {
 	[ENUM_TOUR_STATUS.PUBLISHED]: "bg-emerald-600 text-white",
@@ -52,6 +53,12 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 	const visibleCategories = card.categories.slice(0, VISIBLE_CATEGORIES);
 	const hiddenCategoriesCount = Math.max(
 		card.categories.length - VISIBLE_CATEGORIES,
+		0
+	);
+
+	const visibleLanguages = card.languages.slice(0, VISIBLE_LANGUAGES);
+	const hiddenLanguagesCount = Math.max(
+		card.languages.length - VISIBLE_LANGUAGES,
 		0
 	);
 
@@ -131,7 +138,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 				</div>
 				{!!card.languages.length && (
 					<div className="absolute bottom-3 left-3 z-10 flex flex-wrap gap-1">
-						{card.languages.map((lang) => (
+						{visibleLanguages.map((lang) => (
 							<Badge
 								key={lang}
 								variant="secondary"
@@ -140,6 +147,14 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 								{lang}
 							</Badge>
 						))}
+						{hiddenLanguagesCount > 0 && (
+							<Badge
+								variant="secondary"
+								className="bg-background/95 text-foreground shadow-sm backdrop-blur-sm"
+							>
+								+{hiddenLanguagesCount}
+							</Badge>
+						)}
 					</div>
 				)}
 			</div>
