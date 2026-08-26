@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { Button, withErrorBoundary } from "@/shared/ui";
 
-import { type ISlotProps } from "../../model";
+import { type TSlotProps } from "../../model";
 
 import { GuidesDetails } from "./guides-details";
 
-const GuidesInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const GuidesInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("guide_edit_page");
 
 	return (

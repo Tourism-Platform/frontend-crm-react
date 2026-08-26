@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { Button, withErrorBoundary } from "@/shared/ui";
 
-import { type ISlotProps } from "../../model";
+import { type TSlotProps } from "../../model";
 
 import { RoomsDetails } from "./rooms-details";
 
-const RoomsInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const RoomsInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 
 	return (

@@ -13,9 +13,9 @@ import {
 
 import { buildPackageCreateRoute } from "@/features/tours";
 
-import { ENUM_FORM_SECTION, type ISlotProps } from "../../model";
+import { ENUM_FORM_SECTION, type TSlotProps } from "../../model";
 
-const InvoicingPartBase: FC<ISlotProps> = ({ form }) => {
+const InvoicingPartBase: FC<TSlotProps> = ({ form }) => {
 	const { t } = useTranslation("guide_edit_page");
 	const { tourId, optionId, eventId, eventOptionId } = useEventEditIds();
 	const { data: packages = [] } = useListPackagesQuery(

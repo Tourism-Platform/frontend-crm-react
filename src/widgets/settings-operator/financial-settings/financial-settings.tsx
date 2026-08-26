@@ -4,11 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
 	Card,
 	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Separator,
+	CustomQueryTabs,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -22,30 +18,10 @@ const FinancialSettingsBase: FC = () => {
 			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex gap-5 flex-col max-w-5xl">
-					<CustomOptionTabs
-						defaultValue={FINANCIAL_SETTINGS_OPERATOR_TABS[0]?.type}
-					>
-						<CustomOptionTabsList className="grid-cols-4">
-							{FINANCIAL_SETTINGS_OPERATOR_TABS.map((item) => (
-								<CustomOptionTabsTrigger
-									key={item.type}
-									value={item.type}
-									variant={"tongue"}
-								>
-									{t(item.label)}
-								</CustomOptionTabsTrigger>
-							))}
-						</CustomOptionTabsList>
-						<Separator className="mb-6" />
-						{FINANCIAL_SETTINGS_OPERATOR_TABS.map((item) => (
-							<CustomOptionTabsContent
-								key={item.type}
-								value={item.type}
-							>
-								<item.slot />
-							</CustomOptionTabsContent>
-						))}
-					</CustomOptionTabs>
+					<CustomQueryTabs
+						ns="financial_settings_page_operator"
+						tabs={FINANCIAL_SETTINGS_OPERATOR_TABS}
+					/>
 				</CardContent>
 			</Card>
 		</section>

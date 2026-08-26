@@ -3,9 +3,9 @@ import {
 	ENUM_FLIGHT_PRICING_INVOICING,
 	type IFlightPricingTab
 } from "../types";
-import type { ISlotProps } from "../types";
+import type { TSlotProps } from "../types";
 
-export const PRICING_TABS_LIST: IFlightPricingTab<ISlotProps>[] = [
+export const PRICING_TABS_LIST: IFlightPricingTab<TSlotProps>[] = [
 	{
 		label: "form.pricing.invoicing.tabs.individual",
 		type: ENUM_FLIGHT_PRICING_INVOICING.INDIVIDUAL,

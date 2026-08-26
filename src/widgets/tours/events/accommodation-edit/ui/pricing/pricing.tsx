@@ -23,14 +23,14 @@ import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { InheritedLockBanner } from "../../../ui/inherited-lock-banner";
 import {
 	ENUM_FORM_SECTION,
-	type ISlotProps,
-	PRICING_TABS_LIST
+	PRICING_TABS_LIST,
+	type TSlotProps
 } from "../../model";
 
 import { InvoicingIndividual } from "./invoicing-individual";
 import { InvoicingPart } from "./invoicing-part";
 
-const PricingBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("accommodation_edit_page");
 	const { mode } = useEventEditIds();
 	const isMultiplyChild = mode === ENUM_EVENT_MODE.MULTI;

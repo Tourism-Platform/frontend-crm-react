@@ -3,17 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { HouseIcon } from "@/shared/assets";
-import { useQueryTab } from "@/shared/hooks";
-import {
-	Card,
-	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Form,
-	Separator
-} from "@/shared/ui";
+import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TAccommodationEditSchema } from "@/entities/tour";
 
@@ -25,15 +15,14 @@ import { EventTitleInput, InheritedLockBanner } from "../ui";
 
 import {
 	ACCOMMODATION_EDIT_TABS_LIST,
-	type ENUM_FORM_SECTION_TYPE,
-	type IAccommodationEditTabs
+	type ENUM_FORM_SECTION_TYPE
 } from "./model";
 
 export interface IAccommodationEditProps {
 	form: UseFormReturn<TAccommodationEditSchema>;
 	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
-	tabs?: IAccommodationEditTabs[];
+	tabs?: typeof ACCOMMODATION_EDIT_TABS_LIST;
 }
 
 export const AccommodationEdit: FC<IAccommodationEditProps> = ({
@@ -43,8 +32,6 @@ export const AccommodationEdit: FC<IAccommodationEditProps> = ({
 	tabs = ACCOMMODATION_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("accommodation_edit_page");
-	const allowedTabs = tabs.map((item) => item.type);
-	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 	const isInherited = useIsInheritedProduct(form);
 	const hasOverride = useHasProductOverride(form);
 
@@ -70,45 +57,13 @@ export const AccommodationEdit: FC<IAccommodationEditProps> = ({
 				</div>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs
-							defaultValue={initialTab}
-							onValueChange={setTab}
-						>
-							<CustomOptionTabsList
-								style={{
-									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
-								}}
-							>
-								{tabs.map((item) => (
-									<CustomOptionTabsTrigger
-										key={item.type}
-										value={item.type}
-										variant={"tongue"}
-									>
-										{t(item?.label)}
-									</CustomOptionTabsTrigger>
-								))}
-							</CustomOptionTabsList>
-							<Separator className="mb-6" />
-							{tabs.map((item) => (
-								<CustomOptionTabsContent
-									key={item.type}
-									value={item.type}
-								>
-									<item.slot
-										form={form}
-										{...(item?.section && {
-											onSubmit: () =>
-												createSectionSubmit(
-													item.section
-												)
-										})}
-										{...(item?.ns && { ns: item.ns })}
-										isLoading={isLoading}
-									/>
-								</CustomOptionTabsContent>
-							))}
-						</CustomOptionTabs>
+						<CustomQueryTabs
+							ns="accommodation_edit_page"
+							tabs={tabs}
+							form={form}
+							createSectionSubmit={createSectionSubmit}
+							isLoading={isLoading}
+						/>
 					</CardContent>
 				</Card>
 			</section>

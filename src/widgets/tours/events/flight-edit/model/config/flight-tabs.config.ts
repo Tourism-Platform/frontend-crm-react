@@ -1,13 +1,22 @@
+import { type IQueryTab } from "@/shared/ui";
+
 import {
 	ENUM_FLIGHT_EDIT_TAB,
-	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION
+	type ENUM_FLIGHT_EDIT_TAB_TYPE,
+	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
+	type TFlightEditSchema
 } from "@/entities/tour";
 
 import { Media } from "../../../ui";
 import { GeneralInfo, Pricing } from "../../ui";
-import { type IFlightEditTabs } from "../types";
+import { type ENUM_FORM_SECTION_TYPE } from "../types";
 
-export const FLIGHT_EDIT_TABS_LIST: IFlightEditTabs[] = [
+export const FLIGHT_EDIT_TABS_LIST: IQueryTab<
+	ENUM_FLIGHT_EDIT_TAB_TYPE,
+	"flight_edit_page",
+	ENUM_FORM_SECTION_TYPE,
+	TFlightEditSchema
+>[] = [
 	{
 		label: "tabs.general",
 		type: ENUM_FLIGHT_EDIT_TAB.GENERAL,

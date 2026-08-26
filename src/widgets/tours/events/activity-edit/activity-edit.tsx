@@ -3,16 +3,11 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { TicketStarIcon } from "@/shared/assets";
-import { useQueryTab } from "@/shared/hooks";
 import {
 	Card,
 	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
+	CustomQueryTabs,
 	Form,
-	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -20,17 +15,13 @@ import type { TActivityEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import {
-	type ENUM_FORM_SECTION_TYPE,
-	EVENT_EDIT_TABS_LIST,
-	type IActivityEditTabs
-} from "./model";
+import { type ENUM_FORM_SECTION_TYPE, EVENT_EDIT_TABS_LIST } from "./model";
 
 export interface IActivityEditProps {
 	form: UseFormReturn<TActivityEditSchema>;
 	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
-	tabs?: IActivityEditTabs[];
+	tabs?: typeof EVENT_EDIT_TABS_LIST;
 }
 
 const ActivityEditBase: FC<IActivityEditProps> = ({
@@ -40,8 +31,6 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 	tabs = EVENT_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("activity_edit_page");
-	const allowedTabs = tabs.map((item) => item.type);
-	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	return (
 		<Form {...form}>
@@ -54,45 +43,13 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs
-							defaultValue={initialTab}
-							onValueChange={setTab}
-						>
-							<CustomOptionTabsList
-								style={{
-									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
-								}}
-							>
-								{tabs.map((item) => (
-									<CustomOptionTabsTrigger
-										key={item.type}
-										value={item.type}
-										variant={"tongue"}
-									>
-										{t(item?.label)}
-									</CustomOptionTabsTrigger>
-								))}
-							</CustomOptionTabsList>
-							<Separator className="mb-6" />
-							{tabs.map((item) => (
-								<CustomOptionTabsContent
-									key={item.type}
-									value={item.type}
-								>
-									<item.slot
-										form={form}
-										{...(item?.section && {
-											onSubmit: () =>
-												createSectionSubmit(
-													item.section
-												)
-										})}
-										{...(item?.ns && { ns: item.ns })}
-										isLoading={isLoading}
-									/>
-								</CustomOptionTabsContent>
-							))}
-						</CustomOptionTabs>
+						<CustomQueryTabs
+							ns="activity_edit_page"
+							tabs={tabs}
+							form={form}
+							createSectionSubmit={createSectionSubmit}
+							isLoading={isLoading}
+						/>
 					</CardContent>
 				</Card>
 			</section>

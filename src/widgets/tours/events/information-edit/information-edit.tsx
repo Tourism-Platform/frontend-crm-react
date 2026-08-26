@@ -3,29 +3,19 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { InfoCircleIcon } from "@/shared/assets";
-import { useQueryTab } from "@/shared/hooks";
-import {
-	Card,
-	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Form,
-	Separator
-} from "@/shared/ui";
+import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TInfoEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../ui";
 
-import { type IInformationEditTabs, INFORMATION_EDIT_TABS_LIST } from "./model";
+import { INFORMATION_EDIT_TABS_LIST } from "./model";
 
 export interface IInformationEditProps {
 	form: UseFormReturn<TInfoEditSchema>;
 	createSectionSubmit: () => Promise<void>;
 	isLoading: boolean;
-	tabs?: IInformationEditTabs[];
+	tabs?: typeof INFORMATION_EDIT_TABS_LIST;
 }
 
 export const InformationEdit: FC<IInformationEditProps> = ({
@@ -35,8 +25,6 @@ export const InformationEdit: FC<IInformationEditProps> = ({
 	tabs = INFORMATION_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("information_edit_page");
-	const allowedTabs = tabs.map((item) => item.type);
-	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	return (
 		<Form {...form}>
@@ -49,42 +37,13 @@ export const InformationEdit: FC<IInformationEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs
-							defaultValue={initialTab}
-							onValueChange={setTab}
-						>
-							<CustomOptionTabsList
-								style={{
-									gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
-								}}
-							>
-								{tabs.map((item) => (
-									<CustomOptionTabsTrigger
-										key={item.type}
-										value={item.type}
-										variant={"tongue"}
-									>
-										{t(item?.label)}
-									</CustomOptionTabsTrigger>
-								))}
-							</CustomOptionTabsList>
-							<Separator className="mb-6" />
-							{tabs.map((item) => (
-								<CustomOptionTabsContent
-									key={item.type}
-									value={item.type}
-								>
-									<item.slot
-										form={form}
-										{...(item?.section && {
-											onSubmit: createSectionSubmit
-										})}
-										{...(item?.ns && { ns: item.ns })}
-										isLoading={isLoading}
-									/>
-								</CustomOptionTabsContent>
-							))}
-						</CustomOptionTabs>
+						<CustomQueryTabs
+							ns="information_edit_page"
+							tabs={tabs}
+							form={form}
+							createSectionSubmit={createSectionSubmit}
+							isLoading={isLoading}
+						/>
 					</CardContent>
 				</Card>
 			</section>

@@ -1,8 +1,13 @@
+import { type IQueryTab } from "@/shared/ui";
+
 import { FinanceInfo } from "../../ui/finance-info";
 import { GeneralInfo } from "../../ui/general-info";
-import { ENUM_SETTINGS_TAB, type ISettingsTabs } from "../types";
+import { ENUM_SETTINGS_TAB, type ENUM_SETTINGS_TAB_TYPE } from "../types";
 
-export const SETTINGS_TABS_LIST: ISettingsTabs[] = [
+export const SETTINGS_TABS_LIST: IQueryTab<
+	ENUM_SETTINGS_TAB_TYPE,
+	"tour_settings_page"
+>[] = [
 	{
 		label: "tabs.general",
 		type: ENUM_SETTINGS_TAB.GENERAL,

@@ -4,16 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { cn } from "@/shared/lib";
-import {
-	Button,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Separator,
-	withErrorBoundary
-} from "@/shared/ui";
+import { Button, CustomQueryTabs, withErrorBoundary } from "@/shared/ui";
 
 import { usePreviewOptionPageData } from "@/entities/tour/preview-tour";
 
@@ -35,7 +26,6 @@ export const PreviewOptionBase: FC = () => {
 
 	const {
 		tour: tourData,
-		optionDetail,
 		isLoading: isPageLoading,
 		isError
 	} = usePreviewOptionPageData({
@@ -60,8 +50,6 @@ export const PreviewOptionBase: FC = () => {
 		);
 	}
 
-	const defaultTab = PREVIEW_OPTION_TABS_LIST[0]?.type ?? "";
-
 	return (
 		<section className="flex flex-col gap-8 container pb-12 mt-6 max-w-6xl mx-auto relative">
 			<Link
@@ -80,30 +68,10 @@ export const PreviewOptionBase: FC = () => {
 			</div>
 
 			<div className="flex flex-col mt-4">
-				<CustomOptionTabs defaultValue={defaultTab}>
-					<CustomOptionTabsList
-						className={cn("grid w-fit mb-4 grid-cols-2")}
-					>
-						{PREVIEW_OPTION_TABS_LIST.map((item) => (
-							<CustomOptionTabsTrigger
-								key={item.type}
-								value={item.type}
-								variant="tongue"
-							>
-								{t(item.label)}
-							</CustomOptionTabsTrigger>
-						))}
-					</CustomOptionTabsList>
-					<Separator className="mb-6" />
-					{PREVIEW_OPTION_TABS_LIST.map((item) => (
-						<CustomOptionTabsContent
-							key={item.type}
-							value={item.type}
-						>
-							<item.slot optionData={optionDetail} />
-						</CustomOptionTabsContent>
-					))}
-				</CustomOptionTabs>
+				<CustomQueryTabs
+					ns="preview_option_page"
+					tabs={PREVIEW_OPTION_TABS_LIST}
+				/>
 			</div>
 		</section>
 	);

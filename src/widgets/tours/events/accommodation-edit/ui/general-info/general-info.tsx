@@ -27,14 +27,14 @@ import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { InheritedLockBanner } from "../../../ui/inherited-lock-banner";
 import {
 	ENUM_FORM_SECTION,
-	type ISlotProps,
-	PROPERTIES_LIST
+	PROPERTIES_LIST,
+	type TSlotProps
 } from "../../model";
 
 import { AccommodationDetails } from "./accommodation-details";
 import { Schedule } from "./schedule";
 
-const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t, i18n } = useTranslation("accommodation_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 	const propertyFieldName =

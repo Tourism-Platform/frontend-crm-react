@@ -14,12 +14,12 @@ import { ENUM_FORM_ACTIVITY } from "@/entities/tour";
 import {
 	ENUM_FORM_SECTION,
 	EVENT_DATA_LIST,
-	type ISlotProps
+	type TSlotProps
 } from "../../model";
 
 import { ActivityMenu } from "./activity-menu";
 
-const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t, i18n } = useTranslation("activity_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 	const locationFieldName =

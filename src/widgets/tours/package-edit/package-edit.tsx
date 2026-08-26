@@ -3,22 +3,13 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { BoxOutlineIcon } from "@/shared/assets";
-import {
-	Card,
-	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Form,
-	Separator
-} from "@/shared/ui";
+import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TPackageEditSchema } from "@/entities/tour";
 
 import { EventTitleInput } from "../events/ui";
 
-import { PackagePricing } from "./ui";
+import { PACKAGE_EDIT_TABS_LIST } from "./model";
 
 export interface IPackageEditProps {
 	form: UseFormReturn<TPackageEditSchema>;
@@ -26,8 +17,6 @@ export interface IPackageEditProps {
 	isLoading: boolean;
 	backToEventHref?: string;
 }
-
-const PACKAGE_TAB = "pricing";
 
 export const PackageEdit: FC<IPackageEditProps> = ({
 	form,
@@ -47,30 +36,14 @@ export const PackageEdit: FC<IPackageEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomOptionTabs defaultValue={PACKAGE_TAB}>
-							<CustomOptionTabsList
-								style={{
-									gridTemplateColumns:
-										"repeat(1, minmax(0, 1fr))"
-								}}
-							>
-								<CustomOptionTabsTrigger
-									value={PACKAGE_TAB}
-									variant={"tongue"}
-								>
-									{t("tabs.pricing")}
-								</CustomOptionTabsTrigger>
-							</CustomOptionTabsList>
-							<Separator className="mb-6" />
-							<CustomOptionTabsContent value={PACKAGE_TAB}>
-								<PackagePricing
-									form={form}
-									onSubmit={onSubmit}
-									isLoading={isLoading}
-									backToEventHref={backToEventHref}
-								/>
-							</CustomOptionTabsContent>
-						</CustomOptionTabs>
+						<CustomQueryTabs
+							ns="tour_package_edit_page"
+							tabs={PACKAGE_EDIT_TABS_LIST}
+							form={form}
+							createSectionSubmit={onSubmit}
+							isLoading={isLoading}
+							slotContext={{ backToEventHref }}
+						/>
 					</CardContent>
 				</Card>
 			</section>

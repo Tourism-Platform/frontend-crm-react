@@ -1,5 +1,5 @@
 import { type FC } from "react";
-import { type UseFormReturn, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { Button, withErrorBoundary } from "@/shared/ui";
@@ -10,19 +10,11 @@ import {
 	type TMultiplyOptionEditSchema
 } from "@/entities/tour";
 
+import { type TSlotProps } from "../../model";
+
 import { OptionsDetails } from "./options-details";
 
-interface IGeneralInfoProps {
-	form: UseFormReturn<TMultiplyOptionEditSchema>;
-	onSubmit: () => Promise<void>;
-	isLoading?: boolean;
-}
-
-const GeneralInfoBase: FC<IGeneralInfoProps> = ({
-	form,
-	onSubmit,
-	isLoading = false
-}) => {
+const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("multiply_option_edit_page");
 	const options =
 		(useWatch({

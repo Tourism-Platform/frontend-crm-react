@@ -1,10 +1,21 @@
-import { ENUM_INFORMATION_EDIT_TAB } from "@/entities/tour";
+import { type IQueryTab } from "@/shared/ui";
+
+import {
+	ENUM_INFORMATION_EDIT_TAB,
+	type ENUM_INFORMATION_EDIT_TAB_TYPE,
+	type TInfoEditSchema
+} from "@/entities/tour";
 
 import { Media } from "../../../ui";
 import { GeneralInfo } from "../../ui";
-import { ENUM_FORM_SECTION, type IInformationEditTabs } from "../types";
+import { ENUM_FORM_SECTION, type ENUM_FORM_SECTION_TYPE } from "../types";
 
-export const INFORMATION_EDIT_TABS_LIST: IInformationEditTabs[] = [
+export const INFORMATION_EDIT_TABS_LIST: IQueryTab<
+	ENUM_INFORMATION_EDIT_TAB_TYPE,
+	"information_edit_page",
+	ENUM_FORM_SECTION_TYPE,
+	TInfoEditSchema
+>[] = [
 	{
 		label: "tabs.general",
 		type: ENUM_INFORMATION_EDIT_TAB.GENERAL,

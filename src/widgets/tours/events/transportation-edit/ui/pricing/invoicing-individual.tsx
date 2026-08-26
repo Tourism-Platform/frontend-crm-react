@@ -23,15 +23,15 @@ import { FeeLinesField } from "@/features/pricing";
 
 import {
 	ENUM_FORM_SECTION,
-	type ISlotProps,
 	PRICING_INDIVIDUAL_TABS_LIST,
 	PRICING_MARKUP_FIELD,
+	type TSlotProps,
 	createEmptyPricingMarkup
 } from "../../model";
 
 import { PerCarDetails } from "./per-car-details";
 
-const InvoicingIndividualBase: FC<ISlotProps> = ({ form }) => {
+const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 	const { t } = useTranslation("transportation_edit_page");
 	const pricingType = useWatch({
 		control: form.control,

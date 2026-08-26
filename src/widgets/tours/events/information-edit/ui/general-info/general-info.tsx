@@ -7,10 +7,10 @@ import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
 import {
 	ENUM_FORM_SECTION,
 	INFORMATION_DATA_LIST,
-	type ISlotProps
+	type TSlotProps
 } from "../../model";
 
-const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("information_edit_page");
 	return (
 		<div className="grid gap-12">

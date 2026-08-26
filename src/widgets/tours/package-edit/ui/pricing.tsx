@@ -1,6 +1,6 @@
 import { Loader } from "lucide-react";
 import { type FC, Fragment } from "react";
-import { type UseFormReturn, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
@@ -13,6 +13,7 @@ import {
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
+	type IQueryTabSlotProps,
 	Label,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -31,14 +32,16 @@ import {
 	createEmptyPackageMarkup
 } from "../model";
 
-interface IPackagePricingProps {
-	form: UseFormReturn<TPackageEditSchema>;
-	onSubmit: () => void | Promise<void>;
-	isLoading: boolean;
+type TPackagePricingProps = Required<
+	Pick<
+		IQueryTabSlotProps<TPackageEditSchema>,
+		"form" | "onSubmit" | "isLoading"
+	>
+> & {
 	backToEventHref?: string;
-}
+};
 
-const PackagePricingBase: FC<IPackagePricingProps> = ({
+const PackagePricingBase: FC<TPackagePricingProps> = ({
 	form,
 	onSubmit,
 	isLoading,

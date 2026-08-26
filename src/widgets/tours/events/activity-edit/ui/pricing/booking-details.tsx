@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
 
-import type { ISlotProps } from "../../model/types";
+import type { TSlotProps } from "../../model/types";
 
-interface IBookingDetailsProps extends Pick<ISlotProps, "form"> {
+interface IBookingDetailsProps extends Pick<TSlotProps, "form"> {
 	className?: string;
 }
 

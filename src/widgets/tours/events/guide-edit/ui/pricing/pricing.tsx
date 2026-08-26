@@ -21,13 +21,13 @@ import {
 
 import {
 	ENUM_FORM_SECTION,
-	type ISlotProps,
-	PRICING_TABS_LIST
+	PRICING_TABS_LIST,
+	type TSlotProps
 } from "../../model";
 
 import { InvoicingIndividual } from "./invoicing-individual";
 
-const PricingBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("guide_edit_page");
 	const { mode } = useEventEditIds();
 	const isMultiplyChild = mode === ENUM_EVENT_MODE.MULTI;

@@ -1,32 +1,16 @@
-import { type FC } from "react";
-import type { UseFormReturn } from "react-hook-form";
-
-import {
-	type TResources,
-	type TTourEventMultiplyOptionEditPageKeys
-} from "@/shared/config";
+import { type TTourEventMultiplyOptionEditPageKeys } from "@/shared/config";
 import { type TFormField } from "@/shared/types";
 
-import {
-	type ENUM_FORM_MULTIPLY_OPTION_TYPE,
-	type ENUM_MULTIPLY_OPTION_EDIT_TAB_TYPE,
-	type TMultiplyOptionEditSchema
-} from "@/entities/tour";
+import { type ENUM_FORM_MULTIPLY_OPTION_TYPE } from "@/entities/tour";
+
+export const ENUM_FORM_SECTION = {
+	GENERAL: "general"
+} as const;
+
+export type ENUM_FORM_SECTION_TYPE =
+	(typeof ENUM_FORM_SECTION)[keyof typeof ENUM_FORM_SECTION];
 
 export type TForm = TFormField<
 	TTourEventMultiplyOptionEditPageKeys,
 	ENUM_FORM_MULTIPLY_OPTION_TYPE
 >;
-
-export interface IMultiplyOptionSlotProps {
-	form?: UseFormReturn<TMultiplyOptionEditSchema>;
-	onSubmit?: () => Promise<void>;
-	isLoading?: boolean;
-}
-
-export interface IMultiplyOptionEditTabs {
-	label: TTourEventMultiplyOptionEditPageKeys;
-	type: ENUM_MULTIPLY_OPTION_EDIT_TAB_TYPE;
-	slot: FC<IMultiplyOptionSlotProps | any>;
-	ns?: keyof TResources;
-}

@@ -4,12 +4,12 @@ import { useTranslation } from "react-i18next";
 
 import { Button, Separator, withErrorBoundary } from "@/shared/ui";
 
-import { type ISlotProps } from "../../model";
+import { type TSlotProps } from "../../model";
 
 import { DescriptionInfo } from "./description-info";
 import { TransportationInfo } from "./transportation-info";
 
-const GeneralInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("transportation_edit_page");
 
 	return (

@@ -1,9 +1,6 @@
 import type { FC } from "react";
 
-import type {
-	TPreviewOptionPageKeys,
-	TPreviewTourPageKeys
-} from "@/shared/config";
+import type { TPreviewTourPageKeys } from "@/shared/config";
 
 import type {
 	IOptionDetail,
@@ -31,12 +28,6 @@ export interface IPreviewOptionTabSlotProps {
 
 export interface IPreviewTourInformationSlotProps {
 	data?: IPreviewTourData;
-}
-
-export interface IPreviewOptionTab {
-	type: TPreviewOptionTabType;
-	label: TPreviewOptionPageKeys;
-	slot: FC<IPreviewOptionTabSlotProps>;
 }
 
 export type TPreviewTourSingleOptionTab =

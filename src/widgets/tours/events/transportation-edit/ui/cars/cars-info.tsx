@@ -4,11 +4,11 @@ import { useTranslation } from "react-i18next";
 
 import { Button, withErrorBoundary } from "@/shared/ui";
 
-import { type ISlotProps } from "../../model";
+import { type TSlotProps } from "../../model";
 
 import { CarsDetails } from "./cars-details";
 
-const CarsInfoBase: FC<ISlotProps> = ({ form, onSubmit, isLoading }) => {
+const CarsInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("transportation_edit_page");
 
 	return (

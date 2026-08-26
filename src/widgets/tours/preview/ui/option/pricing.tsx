@@ -1,15 +1,18 @@
 import { Bed, Bus, Map } from "lucide-react";
 import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router";
 
 import { PreviewerSimple, Separator, withErrorBoundary } from "@/shared/ui";
 import { Badge } from "@/shared/ui/shadcn-ui/badge";
 
-import type {
-	IOptionDetail,
-	TOptionSheetSource
+import {
+	type IOptionDetail,
+	type TOptionSheetSource,
+	usePreviewOptionPageData
 } from "@/entities/tour/preview-tour";
 
+import { useIsDraftPreview } from "../../model/hooks";
 import {
 	type TPricingAccommodationRow,
 	groupPricingEvents
@@ -108,8 +111,19 @@ const PricingGroup: FC<IPricingGroupProps> = ({
 	</section>
 );
 
-const PricingBase: FC<IPricingProps> = ({ optionData }) => {
+const PricingBase: FC<IPricingProps> = ({ optionData: optionDataProp }) => {
 	const { t } = useTranslation("preview_option_page");
+	const { tourId = "", optionId = "" } = useParams<{
+		tourId: string;
+		optionId: string;
+	}>();
+	const isDraftPreview = useIsDraftPreview();
+	const { optionDetail } = usePreviewOptionPageData({
+		tourId,
+		optionId,
+		isDraft: isDraftPreview
+	});
+	const optionData = optionDataProp ?? optionDetail;
 	const groups = groupPricingEvents(optionData?.days);
 
 	const accommodationCount = groups.accommodation.reduce((sum, row) => {

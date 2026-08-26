@@ -3,9 +3,9 @@ import {
 	ENUM_ACTIVITY_PRICING_INVOICING,
 	type IActivityPricingTab
 } from "../types";
-import type { ISlotProps } from "../types/activity-tabs.types";
+import type { TSlotProps } from "../types/activity-tabs.types";
 
-export const PRICING_TABS_LIST: IActivityPricingTab<ISlotProps>[] = [
+export const PRICING_TABS_LIST: IActivityPricingTab<TSlotProps>[] = [
 	{
 		label: "form.pricing.invoicing.tabs.individual",
 		type: ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL,

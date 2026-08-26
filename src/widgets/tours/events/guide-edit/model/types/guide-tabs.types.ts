@@ -1,12 +1,9 @@
-import type { FC } from "react";
-import type { UseFormReturn } from "react-hook-form";
-
-import type { TResources, TTourEventGuideEditPageKeys } from "@/shared/config";
+import type { TTourEventGuideEditPageKeys } from "@/shared/config";
 import type { TFormField } from "@/shared/types";
+import type { IQueryTabSlotProps } from "@/shared/ui";
 
 import {
 	type ENUM_GUIDE_CATEGORY_ROW_FIELD_TYPE,
-	type ENUM_GUIDE_EDIT_TAB_TYPE,
 	type ENUM_GUIDE_PRICE_ROW_FIELD_TYPE,
 	type ENUM_GUIDE_PRICING_FIELD_TYPE,
 	ENUM_GUIDE_PRICING_TYPE,
@@ -14,21 +11,12 @@ import {
 	type TGuideEditSchema
 } from "@/entities/tour";
 
-import type { ENUM_FORM_SECTION_TYPE } from "./form-section.types";
-
-export interface ISlotProps {
-	form: UseFormReturn<TGuideEditSchema>;
-	onSubmit: (data: any) => void;
-	isLoading: boolean;
-}
-
-export interface IGuideEditTabs {
-	label: TTourEventGuideEditPageKeys;
-	type: ENUM_GUIDE_EDIT_TAB_TYPE;
-	slot: FC<ISlotProps | any>;
-	section?: ENUM_FORM_SECTION_TYPE;
-	ns?: keyof TResources;
-}
+export type TSlotProps = Required<
+	Pick<
+		IQueryTabSlotProps<TGuideEditSchema>,
+		"form" | "onSubmit" | "isLoading"
+	>
+>;
 
 export type TGuidePricingFormField = TFormField<
 	TTourEventGuideEditPageKeys,

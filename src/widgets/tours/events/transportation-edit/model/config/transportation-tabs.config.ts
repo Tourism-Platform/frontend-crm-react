@@ -1,10 +1,21 @@
-import { ENUM_TRANSPORTATION_EDIT_TAB } from "@/entities/tour";
+import { type IQueryTab } from "@/shared/ui";
+
+import {
+	ENUM_TRANSPORTATION_EDIT_TAB,
+	type ENUM_TRANSPORTATION_EDIT_TAB_TYPE,
+	type TTransportationEditSchema
+} from "@/entities/tour";
 
 import { Media } from "../../../ui";
 import { CarsInfo, GeneralInfo, Pricing } from "../../ui";
-import { ENUM_FORM_SECTION, type ITransportationEditTabs } from "../types";
+import { ENUM_FORM_SECTION, type ENUM_FORM_SECTION_TYPE } from "../types";
 
-export const TRANSPORTATION_EDIT_TABS_LIST: ITransportationEditTabs[] = [
+export const TRANSPORTATION_EDIT_TABS_LIST: IQueryTab<
+	ENUM_TRANSPORTATION_EDIT_TAB_TYPE,
+	"transportation_edit_page",
+	ENUM_FORM_SECTION_TYPE,
+	TTransportationEditSchema
+>[] = [
 	{
 		label: "tabs.general",
 		type: ENUM_TRANSPORTATION_EDIT_TAB.GENERAL,

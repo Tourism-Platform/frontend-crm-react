@@ -3,9 +3,9 @@ import {
 	ENUM_TRANSPORTATION_PRICING_INVOICING,
 	type ITransportationPricingTab
 } from "../types";
-import type { ISlotProps } from "../types/transportation-tabs.types";
+import type { TSlotProps } from "../types/transportation-tabs.types";
 
-export const PRICING_TABS_LIST: ITransportationPricingTab<ISlotProps>[] = [
+export const PRICING_TABS_LIST: ITransportationPricingTab<TSlotProps>[] = [
 	{
 		label: "form.pricing.invoicing.tabs.individual",
 		type: ENUM_TRANSPORTATION_PRICING_INVOICING.INDIVIDUAL,

@@ -1,12 +1,9 @@
-import { type FC, useMemo, useState } from "react";
+import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import {
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
+	CustomQueryTabs,
 	EmptyState,
 	ErrorState,
 	PageLoader,
@@ -19,24 +16,14 @@ import {
 	PublishTourButton
 } from "@/features/tours";
 
-import { usePricingReview } from "../model";
+import { PRICING_REVIEW_TABLE_TABS, usePricingReview } from "../model";
 
-import {
-	PricingReviewPackagesTable,
-	PricingReviewSummary,
-	PricingReviewTable,
-	PricingReviewTabs
-} from "./index";
-
-const TABLE_TAB = {
-	EVENTS: "events",
-	PACKAGES: "packages"
-} as const;
+import { PricingReviewSummary } from "./pricing-review-summary";
+import { PricingReviewTabs } from "./pricing-review-tabs";
 
 const PricingReviewBase: FC = () => {
 	const { t } = useTranslation("tour_pricing_review_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
-	const [tableTab, setTableTab] = useState<string>(TABLE_TAB.EVENTS);
 
 	const {
 		options,
@@ -119,39 +106,15 @@ const PricingReviewBase: FC = () => {
 			/>
 
 			<PricingReviewSummary summary={pricingReview.summary} />
-			<CustomOptionTabs
-				value={tableTab}
-				onValueChange={setTableTab}
-				className="flex flex-col gap-6"
-			>
-				<CustomOptionTabsList className="grid grid-cols-2 w-70">
-					<CustomOptionTabsTrigger
-						value={TABLE_TAB.EVENTS}
-						variant="tongue"
-					>
-						{t("tabs.events")}
-					</CustomOptionTabsTrigger>
-					<CustomOptionTabsTrigger
-						value={TABLE_TAB.PACKAGES}
-						variant="tongue"
-					>
-						{t("tabs.packages")}
-					</CustomOptionTabsTrigger>
-				</CustomOptionTabsList>
-				<CustomOptionTabsContent value={TABLE_TAB.EVENTS}>
-					<PricingReviewTable
-						items={pricingReview.items}
-						tourId={tourId}
-						optionId={activeOptionId}
-					/>
-				</CustomOptionTabsContent>
-				<CustomOptionTabsContent value={TABLE_TAB.PACKAGES}>
-					<PricingReviewPackagesTable
-						tourId={tourId}
-						optionId={activeOptionId}
-					/>
-				</CustomOptionTabsContent>
-			</CustomOptionTabs>
+			<CustomQueryTabs
+				ns="tour_pricing_review_page"
+				tabs={PRICING_REVIEW_TABLE_TABS}
+				slotContext={{
+					tourId,
+					optionId: activeOptionId,
+					items: pricingReview.items
+				}}
+			/>
 		</section>
 	);
 };

@@ -1,10 +1,21 @@
-import { ENUM_ACTIVITY_EDIT_TAB } from "@/entities/tour";
+import { type IQueryTab } from "@/shared/ui";
+
+import {
+	ENUM_ACTIVITY_EDIT_TAB,
+	type ENUM_ACTIVITY_EDIT_TAB_TYPE,
+	type TActivityEditSchema
+} from "@/entities/tour";
 
 import { Media } from "../../../ui";
 import { GeneralInfo, Pricing } from "../../ui";
-import { ENUM_FORM_SECTION, type IActivityEditTabs } from "../types";
+import { ENUM_FORM_SECTION, type ENUM_FORM_SECTION_TYPE } from "../types";
 
-export const EVENT_EDIT_TABS_LIST: IActivityEditTabs[] = [
+export const EVENT_EDIT_TABS_LIST: IQueryTab<
+	ENUM_ACTIVITY_EDIT_TAB_TYPE,
+	"activity_edit_page",
+	ENUM_FORM_SECTION_TYPE,
+	TActivityEditSchema
+>[] = [
 	{
 		label: "tabs.general",
 		type: ENUM_ACTIVITY_EDIT_TAB.GENERAL,
