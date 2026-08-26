@@ -4,30 +4,20 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { useQueryTab } from "@/shared/hooks";
 import {
 	Button,
 	Card,
 	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Separator,
+	CustomQueryTabs,
 	withErrorBoundary
 } from "@/shared/ui";
 
 import { DeleteSupplierProduct } from "@/features/library";
 
 import {
-	ENUM_TRAIN_PRODUCT_EDIT_TAB,
 	type ITrainProductEditProps,
-	TRAIN_PRODUCT_EDIT_TABS
+	TRAIN_PRODUCT_EDIT_TABS_LIST
 } from "../model";
-
-import { TrainProductGeneral } from "./general";
-import { TrainProductImages } from "./images";
-import { TrainProductVariants } from "./variants";
 
 const TrainProductEditBase: FC<ITrainProductEditProps> = ({
 	supplierId,
@@ -37,9 +27,7 @@ const TrainProductEditBase: FC<ITrainProductEditProps> = ({
 }) => {
 	const { t } = useTranslation("train_product_edit_page");
 	const navigate = useNavigate();
-	const tabs = TRAIN_PRODUCT_EDIT_TABS;
-	const allowedTabs = tabs.map((item) => item.type);
-	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
+	const variants = product?.variants ?? [];
 
 	const supplierPath = buildRoute(ENUM_PATH.LIBRARY.SUPPLIER, {
 		supplierId
@@ -77,58 +65,17 @@ const TrainProductEditBase: FC<ITrainProductEditProps> = ({
 
 			<Card>
 				<CardContent>
-					<CustomOptionTabs
-						defaultValue={initialTab}
-						onValueChange={setTab}
-					>
-						<CustomOptionTabsList
-							style={{
-								gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
-							}}
-						>
-							{tabs.map((item) => (
-								<CustomOptionTabsTrigger
-									key={item.type}
-									value={item.type}
-									variant="tongue"
-								>
-									{t(item.label)}
-								</CustomOptionTabsTrigger>
-							))}
-						</CustomOptionTabsList>
-						<Separator className="mb-6" />
-
-						<CustomOptionTabsContent
-							value={ENUM_TRAIN_PRODUCT_EDIT_TAB.GENERAL}
-						>
-							<TrainProductGeneral
-								supplierId={supplierId}
-								productId={productId}
-								isCreate={isCreate}
-								product={product}
-							/>
-						</CustomOptionTabsContent>
-
-						<CustomOptionTabsContent
-							value={ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS}
-						>
-							<TrainProductVariants
-								supplierId={supplierId}
-								productId={productId}
-								variants={product?.variants}
-							/>
-						</CustomOptionTabsContent>
-
-						<CustomOptionTabsContent
-							value={ENUM_TRAIN_PRODUCT_EDIT_TAB.IMAGES}
-						>
-							<TrainProductImages
-								supplierId={supplierId}
-								productId={productId}
-								disabled={isCreate}
-							/>
-						</CustomOptionTabsContent>
-					</CustomOptionTabs>
+					<CustomQueryTabs
+						ns="train_product_edit_page"
+						tabs={TRAIN_PRODUCT_EDIT_TABS_LIST}
+						slotContext={{
+							supplierId,
+							productId,
+							isCreate,
+							product,
+							variants
+						}}
+					/>
 				</CardContent>
 			</Card>
 		</section>

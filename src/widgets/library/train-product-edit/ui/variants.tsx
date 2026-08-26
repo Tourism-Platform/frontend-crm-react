@@ -66,6 +66,16 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 		form.reset(mapTrainVariantToForm(selectedVariant));
 	}, [selectedVariant, form, selectedId]);
 
+	useEffect(() => {
+		if (variants.length === 0) return;
+
+		setSelectedId((current) =>
+			current === "new" && !form.formState.isDirty
+				? variants[0].id
+				: current
+		);
+	}, [variants.length, form.formState.isDirty]);
+
 	const isSaving = isCreating || isUpdating;
 
 	async function onSubmit(data: TTrainVariantFormSchema) {
@@ -117,6 +127,11 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 		}
 	};
 
+	const handleAddVariant = () => {
+		setSelectedId("new");
+		form.reset(emptyTrainVariantForm());
+	};
+
 	return (
 		<div className="grid gap-6">
 			<div className="flex flex-wrap gap-2">
@@ -137,7 +152,7 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 					type="button"
 					variant={selectedId === "new" ? "default" : "outline"}
 					size="sm"
-					onClick={() => setSelectedId("new")}
+					onClick={handleAddVariant}
 				>
 					<PlusIcon className="mr-1 h-4 w-4" />
 					{t("form.variants.add")}

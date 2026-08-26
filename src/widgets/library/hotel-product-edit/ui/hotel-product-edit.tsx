@@ -4,30 +4,20 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { useQueryTab } from "@/shared/hooks";
 import {
 	Button,
 	Card,
 	CardContent,
-	CustomOptionTabs,
-	CustomOptionTabsContent,
-	CustomOptionTabsList,
-	CustomOptionTabsTrigger,
-	Separator,
+	CustomQueryTabs,
 	withErrorBoundary
 } from "@/shared/ui";
 
 import { DeleteSupplierProduct } from "@/features/library";
 
 import {
-	ENUM_HOTEL_PRODUCT_EDIT_TAB,
-	HOTEL_PRODUCT_EDIT_TABS,
+	HOTEL_PRODUCT_EDIT_TABS_LIST,
 	type IHotelProductEditProps
 } from "../model";
-
-import { HotelProductGeneral } from "./general";
-import { HotelProductImages } from "./images";
-import { HotelProductVariants } from "./variants";
 
 const HotelProductEditBase: FC<IHotelProductEditProps> = ({
 	supplierId,
@@ -37,12 +27,9 @@ const HotelProductEditBase: FC<IHotelProductEditProps> = ({
 }) => {
 	const { t } = useTranslation("hotel_product_edit_page");
 	const navigate = useNavigate();
-	const tabs = HOTEL_PRODUCT_EDIT_TABS;
-	const allowedTabs = tabs.map((item) => item.type);
-	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
+	const variants = product?.variants ?? [];
 
 	const resolvedName = product?.name ?? "";
-	const resolvedVariants = product?.variants ?? [];
 
 	const supplierPath = buildRoute(ENUM_PATH.LIBRARY.SUPPLIER, {
 		supplierId
@@ -80,59 +67,17 @@ const HotelProductEditBase: FC<IHotelProductEditProps> = ({
 
 			<Card>
 				<CardContent>
-					<CustomOptionTabs
-						defaultValue={initialTab}
-						onValueChange={setTab}
-					>
-						<CustomOptionTabsList
-							style={{
-								gridTemplateColumns: `repeat(${tabs.length}, minmax(0, 1fr))`
-							}}
-						>
-							{tabs.map((item) => (
-								<CustomOptionTabsTrigger
-									key={item.type}
-									value={item.type}
-									variant="tongue"
-								>
-									{t(item.label)}
-								</CustomOptionTabsTrigger>
-							))}
-						</CustomOptionTabsList>
-						<Separator className="mb-6" />
-
-						<CustomOptionTabsContent
-							value={ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL}
-						>
-							<HotelProductGeneral
-								supplierId={supplierId}
-								productId={productId}
-								isCreate={isCreate}
-								product={product}
-							/>
-						</CustomOptionTabsContent>
-
-						<CustomOptionTabsContent
-							value={ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS}
-						>
-							<HotelProductVariants
-								supplierId={supplierId}
-								productId={productId}
-								variants={resolvedVariants}
-							/>
-						</CustomOptionTabsContent>
-
-						<CustomOptionTabsContent
-							value={ENUM_HOTEL_PRODUCT_EDIT_TAB.IMAGES}
-						>
-							<HotelProductImages
-								supplierId={supplierId}
-								productId={productId}
-								variants={resolvedVariants}
-								disabled={isCreate}
-							/>
-						</CustomOptionTabsContent>
-					</CustomOptionTabs>
+					<CustomQueryTabs
+						ns="hotel_product_edit_page"
+						tabs={HOTEL_PRODUCT_EDIT_TABS_LIST}
+						slotContext={{
+							supplierId,
+							productId,
+							isCreate,
+							product,
+							variants
+						}}
+					/>
 				</CardContent>
 			</Card>
 		</section>
