@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,7 +6,12 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
+import {
+	CustomField,
+	Form,
+	LoaderButton,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ENUM_SETTINGS_FINANCE_FORM,
@@ -107,18 +111,17 @@ const FinanceInfoBase: FC = () => {
 				</div>
 				<FocTiersDetails form={form} />
 				<div className="col-span-2 flex justify-end">
-					<Button type="submit" disabled={isSaving || isTourLoading}>
-						{isSaving || isTourLoading ? (
-							<>
-								<Loader className="mr-2 h-4 w-4 animate-spin" />
-								{isTourLoading
-									? t("finance.form.buttons.loading")
-									: t("finance.form.buttons.saving")}
-							</>
-						) : (
-							t("finance.form.buttons.save")
-						)}
-					</Button>
+					<LoaderButton
+						type="submit"
+						disabled={isSaving || isTourLoading}
+						isLoading={isSaving || isTourLoading}
+						label={t("finance.form.buttons.save")}
+						loadingLabel={
+							isTourLoading
+								? t("finance.form.buttons.loading")
+								: t("finance.form.buttons.saving")
+						}
+					/>
 				</div>
 			</form>
 		</Form>

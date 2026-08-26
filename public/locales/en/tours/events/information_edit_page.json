@@ -48,7 +48,7 @@
 		"general": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"info": {
 				"form": {
@@ -100,7 +100,7 @@
 		"media": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		}
 	}

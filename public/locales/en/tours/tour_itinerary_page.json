@@ -58,7 +58,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Save",
-					"saving": "Saving..."
+					"saving": "Saving"
 				},
 				"toasts": {
 					"save": {
@@ -75,7 +75,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Option deleted",
@@ -88,34 +88,34 @@
 	"toasts": {
 		"option": {
 			"create": {
-				"loading": "Creating option...",
+				"loading": "Creating option",
 				"success": "Option created",
 				"error": "Failed to create option"
 			},
 			"delete": {
-				"loading": "Deleting option...",
+				"loading": "Deleting option",
 				"success": "Option deleted",
 				"error": "Failed to delete option"
 			}
 		},
 		"event": {
 			"create": {
-				"loading": "Creating event...",
+				"loading": "Creating event",
 				"success": "Event created",
 				"error": "Failed to create event"
 			},
 			"move": {
-				"loading": "Moving event...",
+				"loading": "Moving event",
 				"success": "Event moved",
 				"error": "Failed to move event"
 			},
 			"reorder": {
-				"loading": "Reordering...",
+				"loading": "Reordering",
 				"success": "Event reordered",
 				"error": "Failed to reorder event"
 			},
 			"delete": {
-				"loading": "Deleting event...",
+				"loading": "Deleting event",
 				"success": "Event deleted",
 				"error": "Failed to delete event"
 			}

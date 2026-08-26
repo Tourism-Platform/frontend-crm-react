@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -128,18 +128,13 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 							{t("override_product.dialog.cancel")}
 						</Button>
 					</DialogClose>
-					<Button
+					<LoaderButton
 						type="button"
 						onClick={handleConfirm}
-						disabled={isSubmitting}
-					>
-						{isSubmitting ? (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-						) : null}
-						{isSubmitting
-							? t("override_product.dialog.confirming")
-							: t("override_product.dialog.confirm")}
-					</Button>
+						isLoading={isSubmitting}
+						label={t("override_product.dialog.confirm")}
+						loadingLabel={t("override_product.dialog.confirming")}
+					/>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

@@ -44,7 +44,7 @@
 		"general": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"details": {
 				"title": "Transfer details",
@@ -139,7 +139,7 @@
 		"cars": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"details": {
 				"title": "Car details",
@@ -184,13 +184,13 @@
 		"media": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		},
 		"pricing": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"title": "Pricing",
 			"invoicing": {

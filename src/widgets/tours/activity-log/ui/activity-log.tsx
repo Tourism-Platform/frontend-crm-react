@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -11,6 +10,7 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -95,18 +95,15 @@ const ActivityLogBase: FC = () => {
 
 					{hasMore && (
 						<div className="flex justify-center pb-4">
-							<Button
+							<LoaderButton
 								variant="outline"
+								type="button"
 								onClick={handleLoadMore}
 								disabled={isFetching || isActivityLogError}
-							>
-								{isFetching && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
-								)}
-								{isFetching
-									? t("buttons.loading")
-									: t("buttons.load")}
-							</Button>
+								isLoading={isFetching}
+								label={t("buttons.load")}
+								loadingLabel={t("buttons.loading")}
+							/>
 						</div>
 					)}
 				</CardContent>

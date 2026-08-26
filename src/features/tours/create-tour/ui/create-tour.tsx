@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { type FC, Fragment, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -18,6 +18,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -204,14 +205,11 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 									{t("create.form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
-								)}
-								{isLoading
-									? t("create.form.buttons.saving")
-									: t("create.form.buttons.save")}
-							</Button>
+							<LoaderButton
+								isLoading={isLoading}
+								label={t("create.form.buttons.save")}
+								loadingLabel={t("create.form.buttons.saving")}
+							/>
 						</DialogFooter>
 					</form>
 				</Form>

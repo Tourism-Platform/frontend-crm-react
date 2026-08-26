@@ -24,6 +24,7 @@
     "@magicui": "https://magicui.design/r/{name}",
     "@aceternity": "https://ui.aceternity.com/registry/{name}.json",
     "@shadcn-space": "https://shadcnspace.com/r/{name}.json",
-    "@kibo-ui": "https://www.kibo-ui.com/r/{name}.json"
+    "@kibo-ui": "https://www.kibo-ui.com/r/{name}.json",
+    "@loading-ui": "https://loading-ui.com/r/{name}.json"
   }
 }

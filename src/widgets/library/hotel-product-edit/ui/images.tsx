@@ -1,10 +1,9 @@
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-	Button,
 	CustomUploadImages,
+	LoaderButton,
 	SelectPicker,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -62,21 +61,14 @@ const HotelProductImagesBase: FC<IHotelProductImagesProps> = ({
 					maxFiles={10}
 				/>
 				<div className="flex justify-end">
-					<Button
+					<LoaderButton
 						size="lg"
 						type="button"
 						onClick={productUpload.handlePhotosSubmit}
-						disabled={productUpload.isLoading}
-					>
-						{productUpload.isLoading ? (
-							<>
-								<Loader className="mr-2 h-4 w-4 animate-spin" />
-								{t("form.images.buttons.saving")}
-							</>
-						) : (
-							t("form.images.buttons.save")
-						)}
-					</Button>
+						isLoading={productUpload.isLoading}
+						label={t("form.images.buttons.save")}
+						loadingLabel={t("form.images.buttons.saving")}
+					/>
 				</div>
 			</div>
 
@@ -102,21 +94,14 @@ const HotelProductImagesBase: FC<IHotelProductImagesProps> = ({
 						maxFiles={5}
 					/>
 					<div className="flex justify-end">
-						<Button
+						<LoaderButton
 							size="lg"
 							type="button"
 							onClick={nodeUpload.handlePhotosSubmit}
-							disabled={nodeUpload.isLoading}
-						>
-							{nodeUpload.isLoading ? (
-								<>
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
-									{t("form.images.buttons.saving")}
-								</>
-							) : (
-								t("form.images.buttons.save")
-							)}
-						</Button>
+							isLoading={nodeUpload.isLoading}
+							label={t("form.images.buttons.save")}
+							loadingLabel={t("form.images.buttons.saving")}
+						/>
 					</div>
 				</div>
 			) : null}

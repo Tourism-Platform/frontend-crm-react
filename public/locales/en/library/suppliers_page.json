@@ -23,7 +23,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting ..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Supplier deleted",
@@ -67,7 +67,7 @@
 		"buttons": {
 			"decline": "Cancel",
 			"save": "Create",
-			"saving": "Creating ..."
+			"saving": "Creating"
 		},
 		"toasts": {
 			"success": "Supplier created",

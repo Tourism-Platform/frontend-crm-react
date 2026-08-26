@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC, Fragment } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -15,6 +14,7 @@ import {
 	CustomOptionTabsTrigger,
 	type IQueryTabSlotProps,
 	Label,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -217,18 +217,13 @@ const PackagePricingBase: FC<TPackagePricingProps> = ({
 							</Link>
 						</Button>
 					) : null}
-					<Button
+					<LoaderButton
 						type="button"
 						onClick={onSubmit}
-						disabled={isLoading}
-					>
-						{isLoading && (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-						)}
-						{isLoading
-							? t("form.buttons.saving")
-							: t("form.buttons.save")}
-					</Button>
+						isLoading={isLoading}
+						label={t("form.buttons.save")}
+						loadingLabel={t("form.buttons.saving")}
+					/>
 				</div>
 			</div>
 		</div>

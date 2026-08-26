@@ -13,6 +13,7 @@
 		"title": "Send invoice",
 		"description": "Select a payment route for the invoice",
 		"confirm": "Confirm",
+		"confirming": "Confirming",
 		"cancel": "Cancel",
 		"empty": "No payment routes configured",
 		"load_error": "Failed to load payment routes",

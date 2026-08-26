@@ -1,13 +1,12 @@
 import { type SerializedError } from "@reduxjs/toolkit";
 import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
-	Button,
 	CustomField,
+	LoaderButton,
 	// FieldSeparator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -58,15 +57,13 @@ const SignInFormBase: FC<ISignInFormProps> = ({ form, isLoading, error }) => {
 					/>
 				))}
 			</div>
-			<Button
-				type="submit"
-				className="flex gap-2 items-center justify-center"
-			>
-				{isLoading && (
-					<Loader className="size-4 animate-spin text-muted-foreground" />
-				)}
-				<p>{t("form.buttons.sign_in")}</p>
-			</Button>
+			<LoaderButton
+				className="flex  items-center justify-center"
+				isLoading={isLoading}
+				disabled={isLoading}
+				label={t("form.buttons.sign_in")}
+				loadingLabel={t("form.buttons.sign_in")}
+			/>
 			{/* <FieldSeparator>{t("form.sign_in.continue")}</FieldSeparator>
 			<GoogleLoginButton /> */}
 			<div className="text-center">

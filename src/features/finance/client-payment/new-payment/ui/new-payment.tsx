@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,6 +16,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -125,14 +125,13 @@ export const NewPayment: FC = () => {
 									{t("new_payment.form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
+							<LoaderButton
+								isLoading={isLoading}
+								label={t("new_payment.form.buttons.save")}
+								loadingLabel={t(
+									"new_payment.form.buttons.saving"
 								)}
-								{isLoading
-									? t("new_payment.form.buttons.saving")
-									: t("new_payment.form.buttons.save")}
-							</Button>
+							/>
 						</DialogFooter>
 					</form>
 				</Form>

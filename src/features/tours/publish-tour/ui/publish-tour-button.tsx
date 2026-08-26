@@ -1,9 +1,8 @@
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 import { usePublishTourMutation } from "@/entities/tour";
 
@@ -33,19 +32,14 @@ export const PublishTourButton: FC<IPublishTourButtonProps> = ({ tourId }) => {
 	};
 
 	return (
-		<Button
+		<LoaderButton
+			type="button"
 			variant="default"
 			onClick={handlePublish}
-			disabled={isLoading || !tourId}
-		>
-			{isLoading ? (
-				<>
-					<Loader className="mr-2 h-4 w-4 animate-spin" />
-					{t("actions.publishing")}
-				</>
-			) : (
-				t("actions.publish")
-			)}
-		</Button>
+			isLoading={isLoading}
+			disabled={!tourId}
+			label={t("actions.publish")}
+			loadingLabel={t("actions.publishing")}
+		/>
 	);
 };

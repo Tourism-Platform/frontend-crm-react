@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, type ReactNode, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -18,6 +17,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator,
 	type TUploadImageItem
 } from "@/shared/ui";
@@ -211,14 +211,13 @@ export const EditOption: FC<IEditOptionProps> = ({
 									{t("option.form.modal.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
+							<LoaderButton
+								isLoading={isLoading}
+								label={t("option.form.modal.buttons.save")}
+								loadingLabel={t(
+									"option.form.modal.buttons.saving"
 								)}
-								{isLoading
-									? t("option.form.modal.buttons.saving")
-									: t("option.form.modal.buttons.save")}
-							</Button>
+							/>
 						</DialogFooter>
 					</form>
 				</Form>

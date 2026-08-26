@@ -22,11 +22,11 @@
 	"actions": {
 		"preview": "Preview",
 		"publish": "Publish",
-		"publishing": "Publishing...",
+		"publishing": "Publishing",
 		"archive": "Archive",
-		"archiving": "Archiving...",
+		"archiving": "Archiving",
 		"unarchive": "Unarchive",
-		"unarchiving": "Unarchiving..."
+		"unarchiving": "Unarchiving"
 	},
 	"search": {
 		"form": {

@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader, type LucideIcon } from "lucide-react";
+import { type LucideIcon } from "lucide-react";
 import { type FC, memo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,9 +10,9 @@ import {
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-	Button,
 	Checkbox,
 	Label,
+	LoaderButton,
 	ScrollArea
 } from "@/shared/ui";
 
@@ -116,21 +116,22 @@ export const CustomAccordion: FC<ICustomAccordionProps> = memo(
 
 								{hasMore &&
 									!(isLoading && items.length === 0) && (
-										<Button
+										<LoaderButton
 											variant="ghost"
 											size="sm"
+											type="button"
 											className="h-auto p-0 text-xs text-muted-foreground mt-1 hover:bg-transparent"
 											disabled={isLoading}
+											isLoading={isLoading}
+											label={t("actions.show_more")}
+											loadingLabel={t(
+												"actions.show_more"
+											)}
 											onClick={(e) => {
 												e.stopPropagation();
 												onLoadMore?.();
 											}}
-										>
-											{isLoading && (
-												<Loader className="h-3 w-3 animate-spin mr-1" />
-											)}
-											{t("actions.show_more")}
-										</Button>
+										/>
 									)}
 							</div>
 						</ScrollArea>

@@ -63,7 +63,7 @@
 			"buttons": {
 				"decline": "Cancel",
 				"save": "Create",
-				"saving": "Creating ..."
+				"saving": "Creating"
 			},
 			"toasts": {
 				"success": "Tour created successfully",

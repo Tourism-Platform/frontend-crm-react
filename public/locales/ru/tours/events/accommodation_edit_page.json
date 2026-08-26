@@ -58,7 +58,7 @@
 		"general": {
 			"buttons": {
 				"save": "Сохранить",
-				"saving": "Сохранение..."
+				"saving": "Сохранение"
 			},
 			"properties": {
 				"title": "Название отеля",
@@ -149,7 +149,7 @@
 		"rooms": {
 			"buttons": {
 				"save": "Сохранить",
-				"saving": "Сохранение ..."
+				"saving": "Сохранение"
 			},
 			"details": {
 				"title": "Номера",
@@ -183,13 +183,13 @@
 		"media": {
 			"buttons": {
 				"save": "Сохранить",
-				"saving": "Сохранение ..."
+				"saving": "Сохранение"
 			}
 		},
 		"pricing": {
 			"buttons": {
 				"save": "Сохранить",
-				"saving": "Сохранение..."
+				"saving": "Сохранение"
 			},
 			"title": "Цены",
 			"invoicing": {

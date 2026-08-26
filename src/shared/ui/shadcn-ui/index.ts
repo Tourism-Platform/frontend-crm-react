@@ -51,3 +51,8 @@ export * from "./safari";
 export * from "./comet-card";
 export * from "./comet-card-tilt";
 export * from "./floating-card";
+
+export * from "./rating";
+export * from "./swirling";
+export * from "./text-dots";
+export * from "./dots-ring";

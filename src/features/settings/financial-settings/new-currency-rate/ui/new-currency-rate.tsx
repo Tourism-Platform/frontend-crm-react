@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,6 +16,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -98,18 +98,15 @@ export const NewCurrencyRate: FC = () => {
 									)}
 								</Button>
 							</DialogClose>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
+							<LoaderButton
+								isLoading={isLoading}
+								label={t(
+									"currency.currency_rate.form.buttons.save"
 								)}
-								{isLoading
-									? t(
-											"currency.currency_rate.form.buttons.saving"
-										)
-									: t(
-											"currency.currency_rate.form.buttons.save"
-										)}
-							</Button>
+								loadingLabel={t(
+									"currency.currency_rate.form.buttons.saving"
+								)}
+							/>
 						</DialogFooter>
 					</form>
 				</Form>

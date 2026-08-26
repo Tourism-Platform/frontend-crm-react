@@ -16,10 +16,10 @@
 	"attach_product": {
 		"buttons": {
 			"attach": "Choose supplier product",
-			"attaching": "Attaching...",
+			"attaching": "Attaching",
 			"change": "Change product",
 			"detach": "Detach product",
-			"detaching": "Detaching..."
+			"detaching": "Detaching"
 		},
 		"dialog": {
 			"title": "Select supplier product",
@@ -41,7 +41,7 @@
 			"retry": "Retry",
 			"cancel": "Cancel",
 			"confirm": "Attach",
-			"confirming": "Attaching..."
+			"confirming": "Attaching"
 		},
 		"override_warn": {
 			"title": "Contract price will be cleared",
@@ -63,10 +63,10 @@
 	"override_product": {
 		"buttons": {
 			"set": "Contract price",
-			"setting": "Saving...",
+			"setting": "Saving",
 			"edit": "Edit override",
 			"clear": "Clear override",
-			"clearing": "Clearing..."
+			"clearing": "Clearing"
 		},
 		"dialog": {
 			"title": "Contract price",
@@ -111,7 +111,7 @@
 			},
 			"cancel": "Cancel",
 			"confirm": "Save",
-			"confirming": "Saving..."
+			"confirming": "Saving"
 		},
 		"clear_warn": {
 			"title": "Clear contract price?",
@@ -137,12 +137,20 @@
 			"percentage": "{{percentage}}%"
 		},
 		"codes": {
-			"early_check_in": { "title": "Early check-in" },
-			"late_check_out": { "title": "Late check-out" },
-			"supplier_type_mismatch": { "title": "Supplier type mismatch" }
+			"early_check_in": {
+				"title": "Early check-in"
+			},
+			"late_check_out": {
+				"title": "Late check-out"
+			},
+			"supplier_type_mismatch": {
+				"title": "Supplier type mismatch"
+			}
 		},
 		"option_badge": "{{count}} policy warnings",
-		"toasts": { "error": "Could not load policy warnings" }
+		"toasts": {
+			"error": "Could not load policy warnings"
+		}
 	},
 	"product_seasons": {
 		"title": "Seasonal product rates",

@@ -1,49 +1,43 @@
 {
 	"page_name": "Tour Schedule",
-
 	"tabs": {
 		"fixed_dates": "Fixed Dates",
 		"recurring_dates": "Recurring pattern"
 	},
-
 	"selected_dates": {
 		"title": "Selected Dates"
 	},
-
 	"fixed_dates": {
 		"toasts": {
 			"add": {
-				"loading": "Adding date...",
+				"loading": "Adding date",
 				"success": "Date added",
 				"error": "Failed to add date"
 			},
 			"remove": {
-				"loading": "Removing date...",
+				"loading": "Removing date",
 				"success": "Date removed",
 				"error": "Failed to remove date"
 			}
 		}
 	},
-
 	"removed_days": {
 		"title": "Removed days"
 	},
-
 	"excluded_dates": {
 		"toasts": {
 			"add": {
-				"loading": "Excluding date...",
+				"loading": "Excluding date",
 				"success": "Date excluded",
 				"error": "Failed to exclude date"
 			},
 			"remove": {
-				"loading": "Restoring date...",
+				"loading": "Restoring date",
 				"success": "Date restored",
 				"error": "Failed to restore date"
 			}
 		}
 	},
-
 	"recurring": {
 		"repeat_on": {
 			"label": "Repeat on",
@@ -71,9 +65,7 @@
 			"validation_error": "Select weekdays and a period"
 		}
 	},
-
 	"switcher": "Seasonality",
-
 	"seasonality": {
 		"period": {
 			"label": "Period of Seasonality"
@@ -82,13 +74,11 @@
 			"label": "Seasonal commission, %",
 			"placeholder": "Enter seasonal commission, %"
 		},
-
 		"buttons": {
 			"add": "Add new rule",
 			"save_rule": "Save rule",
 			"saved_rule": "Saved"
 		},
-
 		"toasts": {
 			"enabled": "Seasonality enabled",
 			"disabled": "Seasonality disabled",

@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC, type ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -13,6 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -76,19 +76,16 @@ export const DeleteOption: FC<IDeleteOptionProps> = ({
 							{t("option.delete.form.buttons.decline")}
 						</Button>
 					</DialogClose>
-					<Button
+					<LoaderButton
 						type="button"
 						variant="destructive"
 						onClick={handleDelete}
-						disabled={isLoading}
-					>
-						{isLoading && (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
+						isLoading={isLoading}
+						label={t("option.delete.form.buttons.confirm")}
+						loadingLabel={t(
+							"option.delete.form.buttons.confirming"
 						)}
-						{isLoading
-							? t("option.delete.form.buttons.confirming")
-							: t("option.delete.form.buttons.confirm")}
-					</Button>
+					/>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

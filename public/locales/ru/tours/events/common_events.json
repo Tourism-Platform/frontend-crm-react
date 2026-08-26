@@ -16,10 +16,10 @@
 	"attach_product": {
 		"buttons": {
 			"attach": "Выбрать продукт поставщика",
-			"attaching": "Привязка...",
+			"attaching": "Привязка",
 			"change": "Сменить продукт",
 			"detach": "Отвязать продукт",
-			"detaching": "Отвязка..."
+			"detaching": "Отвязка"
 		},
 		"dialog": {
 			"title": "Выбор продукта поставщика",
@@ -41,7 +41,7 @@
 			"retry": "Повторить",
 			"cancel": "Отмена",
 			"confirm": "Привязать",
-			"confirming": "Привязка..."
+			"confirming": "Привязка"
 		},
 		"override_warn": {
 			"title": "Договорная цена будет сброшена",
@@ -63,10 +63,10 @@
 	"override_product": {
 		"buttons": {
 			"set": "Договорная цена",
-			"setting": "Сохранение...",
+			"setting": "Сохранение",
 			"edit": "Изменить override",
 			"clear": "Сбросить override",
-			"clearing": "Сброс..."
+			"clearing": "Сброс"
 		},
 		"dialog": {
 			"title": "Договорная цена",
@@ -111,7 +111,7 @@
 			},
 			"cancel": "Отмена",
 			"confirm": "Сохранить",
-			"confirming": "Сохранение..."
+			"confirming": "Сохранение"
 		},
 		"clear_warn": {
 			"title": "Сбросить договорную цену?",
@@ -137,14 +137,20 @@
 			"percentage": "{{percentage}}%"
 		},
 		"codes": {
-			"early_check_in": { "title": "Ранний заезд" },
-			"late_check_out": { "title": "Поздний выезд" },
+			"early_check_in": {
+				"title": "Ранний заезд"
+			},
+			"late_check_out": {
+				"title": "Поздний выезд"
+			},
 			"supplier_type_mismatch": {
 				"title": "Несовпадение типа поставщика"
 			}
 		},
 		"option_badge": "{{count}} предупреждений по policy",
-		"toasts": { "error": "Не удалось загрузить предупреждения policy" }
+		"toasts": {
+			"error": "Не удалось загрузить предупреждения policy"
+		}
 	},
 	"product_seasons": {
 		"title": "Сезонные тарифы продукта",

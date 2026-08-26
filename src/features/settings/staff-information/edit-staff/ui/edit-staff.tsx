@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import React, { type FC, type ReactNode, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -16,6 +15,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -136,14 +136,13 @@ export const EditStaff: FC<IEditStaffProps> = ({
 									{t("menu.edit.form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
+							<LoaderButton
+								isLoading={isLoading}
+								label={t("menu.edit.form.buttons.save")}
+								loadingLabel={t(
+									"menu.edit.form.buttons.saving"
 								)}
-								{isLoading
-									? t("menu.edit.form.buttons.saving")
-									: t("menu.edit.form.buttons.save")}
-							</Button>
+							/>
 						</DialogFooter>
 					</form>
 				</Form>

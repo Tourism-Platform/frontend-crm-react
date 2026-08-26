@@ -58,7 +58,7 @@
 		"general": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"properties": {
 				"title": "Property",
@@ -149,7 +149,7 @@
 		"rooms": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"details": {
 				"title": "Rooms",
@@ -183,13 +183,13 @@
 		"media": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		},
 		"pricing": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"title": "Pricing",
 			"invoicing": {

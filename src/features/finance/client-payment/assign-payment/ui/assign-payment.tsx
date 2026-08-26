@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -18,6 +17,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -148,14 +148,13 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 								</Button>
 							</DialogClose>
 							{!isAssigned && (
-								<Button type="submit" disabled={isLoading}>
-									{isLoading && (
-										<Loader className="mr-2 h-4 w-4 animate-spin" />
+								<LoaderButton
+									isLoading={isLoading}
+									label={t("menu.assign.form.buttons.save")}
+									loadingLabel={t(
+										"menu.assign.form.buttons.saving"
 									)}
-									{isLoading
-										? t("menu.assign.form.buttons.saving")
-										: t("menu.assign.form.buttons.save")}
-								</Button>
+								/>
 							)}
 						</DialogFooter>
 					</form>

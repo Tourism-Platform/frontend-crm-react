@@ -16,14 +16,14 @@
 		"media": {
 			"buttons": {
 				"save": "Сохранить",
-				"saving": "Сохранение ..."
+				"saving": "Сохранение"
 			}
 		}
 	},
 	"general": {
 		"buttons": {
 			"save": "Сохранить",
-			"saving": "Сохранение..."
+			"saving": "Сохранение"
 		},
 		"description": {
 			"description": {

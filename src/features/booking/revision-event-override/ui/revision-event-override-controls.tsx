@@ -3,7 +3,7 @@ import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button } from "@/shared/ui";
+import { Button, LoaderButton } from "@/shared/ui";
 
 import {
 	type TEventOverride,
@@ -104,19 +104,15 @@ export const RevisionEventOverrideControls: FC<
 					{setButtonLabel()}
 				</Button>
 				{hasOverride ? (
-					<Button
+					<LoaderButton
 						type="button"
 						variant="outline"
 						onClick={() => setClearOpen(true)}
+						isLoading={isClearing}
 						disabled={isLoading}
-					>
-						{isClearing ? (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-						) : null}
-						{isClearing
-							? t("override_product.buttons.clearing")
-							: t("override_product.buttons.clear")}
-					</Button>
+						label={t("override_product.buttons.clear")}
+						loadingLabel={t("override_product.buttons.clearing")}
+					/>
 				) : null}
 			</div>
 

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -12,7 +11,12 @@ import {
 	buildRoute,
 	i18nLanguageMapper
 } from "@/shared/config";
-import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
+import {
+	CustomField,
+	Form,
+	LoaderButton,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	useGeoFormFieldEnrichment,
@@ -139,16 +143,17 @@ const HotelProductGeneralBase: FC<IHotelProductGeneralProps> = ({
 				{renderField(locationField)}
 				{FORM_HOTEL_PRODUCT_GENERAL_LIST().map(renderField)}
 				<div className="md:col-span-2 flex justify-end">
-					<Button type="submit" size="lg" disabled={isLoading}>
-						{isLoading && (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-						)}
-						{isLoading
-							? t("form.general.buttons.saving")
-							: isCreate
+					<LoaderButton
+						type="submit"
+						disabled={isLoading}
+						isLoading={isLoading}
+						label={
+							isCreate
 								? t("form.general.buttons.create")
-								: t("form.general.buttons.save")}
-					</Button>
+								: t("form.general.buttons.save")
+						}
+						loadingLabel={t("form.general.buttons.saving")}
+					/>
 				</div>
 			</form>
 		</Form>

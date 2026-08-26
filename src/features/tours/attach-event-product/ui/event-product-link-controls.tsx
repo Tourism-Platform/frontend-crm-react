@@ -1,9 +1,8 @@
-import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button } from "@/shared/ui";
+import { Button, LoaderButton } from "@/shared/ui";
 
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
 import type { IEventProductLink } from "@/entities/tour";
@@ -64,19 +63,14 @@ export const EventProductLinkControls: FC<IEventProductLinkControlsProps> = ({
 		<>
 			<div className="flex flex-wrap gap-2">
 				{!isLinked ? (
-					<Button
+					<LoaderButton
 						type="button"
 						variant="outline"
 						onClick={() => setOpen(true)}
-						disabled={isLoading}
-					>
-						{isLoading ? (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-						) : null}
-						{isLoading
-							? t("attach_product.buttons.attaching")
-							: t("attach_product.buttons.attach")}
-					</Button>
+						isLoading={isLoading}
+						label={t("attach_product.buttons.attach")}
+						loadingLabel={t("attach_product.buttons.attaching")}
+					/>
 				) : (
 					<>
 						<Button
@@ -87,19 +81,14 @@ export const EventProductLinkControls: FC<IEventProductLinkControlsProps> = ({
 						>
 							{t("attach_product.buttons.change")}
 						</Button>
-						<Button
+						<LoaderButton
 							type="button"
 							variant="outline"
 							onClick={handleDetach}
-							disabled={isLoading}
-						>
-							{isLoading ? (
-								<Loader className="mr-2 h-4 w-4 animate-spin" />
-							) : null}
-							{isLoading
-								? t("attach_product.buttons.detaching")
-								: t("attach_product.buttons.detach")}
-						</Button>
+							isLoading={isLoading}
+							label={t("attach_product.buttons.detach")}
+							loadingLabel={t("attach_product.buttons.detaching")}
+						/>
 					</>
 				)}
 			</div>

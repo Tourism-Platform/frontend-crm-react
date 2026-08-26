@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
@@ -7,8 +6,8 @@ import { toast } from "sonner";
 import type { TResources } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
-	Button,
 	CustomUploadImages,
+	LoaderButton,
 	useCustomUploadImages,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -109,21 +108,14 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 				maxFiles={5}
 			/>
 			<div className="flex justify-end mt-6">
-				<Button
+				<LoaderButton
 					size="lg"
 					type="button"
 					onClick={handlePhotosSubmit}
-					disabled={isLoading}
-				>
-					{isLoading ? (
-						<>
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-							{t("form.media.buttons.saving")}
-						</>
-					) : (
-						t("form.media.buttons.save")
-					)}
-				</Button>
+					isLoading={isLoading}
+					label={t("form.media.buttons.save")}
+					loadingLabel={t("form.media.buttons.saving")}
+				/>
 			</div>
 		</div>
 	);

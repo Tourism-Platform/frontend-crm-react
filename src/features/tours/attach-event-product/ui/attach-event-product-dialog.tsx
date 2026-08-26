@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -13,6 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -125,18 +125,14 @@ export const AttachEventProductDialog: FC<IAttachEventProductDialogProps> = ({
 							{t("attach_product.dialog.cancel")}
 						</Button>
 					</DialogClose>
-					<Button
+					<LoaderButton
 						type="button"
 						onClick={handleConfirm}
-						disabled={!selectedProductId || isSubmitting}
-					>
-						{isSubmitting ? (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-						) : null}
-						{isSubmitting
-							? t("attach_product.dialog.confirming")
-							: t("attach_product.dialog.confirm")}
-					</Button>
+						isLoading={Boolean(isSubmitting)}
+						disabled={!selectedProductId}
+						label={t("attach_product.dialog.confirm")}
+						loadingLabel={t("attach_product.dialog.confirming")}
+					/>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

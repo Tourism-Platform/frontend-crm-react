@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,6 +16,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -195,18 +195,15 @@ export const EditPaymentRoute: FC<IEditPaymentRouteProps> = ({
 									)}
 								</Button>
 							</DialogClose>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
+							<LoaderButton
+								isLoading={isLoading}
+								label={t(
+									"payment_settings.form.modal.buttons.save"
 								)}
-								{isLoading
-									? t(
-											"payment_settings.form.modal.buttons.saving"
-										)
-									: t(
-											"payment_settings.form.modal.buttons.save"
-										)}
-							</Button>
+								loadingLabel={t(
+									"payment_settings.form.modal.buttons.saving"
+								)}
+							/>
 						</DialogFooter>
 					</form>
 				</Form>

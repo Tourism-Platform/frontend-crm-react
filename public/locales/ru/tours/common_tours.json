@@ -22,11 +22,11 @@
 	"actions": {
 		"preview": "Предпросмотр",
 		"publish": "Опубликовать",
-		"publishing": "Публикация...",
+		"publishing": "Публикация",
 		"archive": "Архивировать",
-		"archiving": "Архивация...",
+		"archiving": "Архивация",
 		"unarchive": "Разархивировать",
-		"unarchiving": "Разархивация..."
+		"unarchiving": "Разархивация"
 	},
 	"search": {
 		"form": {

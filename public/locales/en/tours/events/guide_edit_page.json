@@ -49,7 +49,7 @@
 		"guides": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"details": {
 				"title": "Guide details",
@@ -85,14 +85,14 @@
 		"media": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		},
 		"pricing": {
 			"title": "Pricing",
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"invoicing": {
 				"title": "How will this activity be invoiced?",

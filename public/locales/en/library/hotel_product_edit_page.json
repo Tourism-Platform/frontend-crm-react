@@ -45,7 +45,7 @@
 			},
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ...",
+				"saving": "Saving",
 				"create": "Create hotel"
 			}
 		},
@@ -110,9 +110,9 @@
 			"add_rate": "Add season",
 			"buttons": {
 				"save": "Save variant",
-				"saving": "Saving ...",
+				"saving": "Saving",
 				"delete": "Delete",
-				"deleting": "Deleting ..."
+				"deleting": "Deleting"
 			}
 		},
 		"images": {
@@ -121,7 +121,7 @@
 			"select_room": "Select room",
 			"buttons": {
 				"save": "Save photos",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		},
 		"toasts": {
@@ -151,7 +151,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting ..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Product deleted",

@@ -9,6 +9,7 @@ import {
 	AvatarFallback,
 	AvatarImage,
 	Button,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -93,19 +94,23 @@ const SupplierLogoInfoBase: FC<ISupplierLogoInfoProps> = ({
 				</Avatar>
 				<div className="flex gap-2">
 					<div className="relative inline-block">
-						<Button
+						<LoaderButton
 							type="button"
 							onClick={openFileDialog}
 							aria-haspopup="dialog"
 							disabled={isUploading || isDeleting}
-						>
-							{isUploading && (
-								<Loader className="mr-2 h-4 w-4 animate-spin" />
-							)}
-							{hasLogo
-								? t("logo.buttons.change")
-								: t("logo.buttons.add")}
-						</Button>
+							isLoading={isUploading}
+							label={
+								hasLogo
+									? t("logo.buttons.change")
+									: t("logo.buttons.add")
+							}
+							loadingLabel={
+								hasLogo
+									? t("logo.buttons.change")
+									: t("logo.buttons.add")
+							}
+						/>
 						<input
 							{...getInputProps()}
 							className="sr-only"

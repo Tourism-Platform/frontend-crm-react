@@ -41,7 +41,7 @@
 		},
 		"buttons": {
 			"save": "Save",
-			"saving": "Saving ...",
+			"saving": "Saving",
 			"close": "Close"
 		},
 		"toasts": {

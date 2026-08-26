@@ -14,6 +14,7 @@ import {
 	FormField,
 	FormItem,
 	FormMessage,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -112,19 +113,25 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 								</FormControl>
 								<div className="flex gap-2">
 									<div className="relative inline-block">
-										<Button
+										<LoaderButton
 											type="button"
 											onClick={openFileDialog}
 											aria-haspopup="dialog"
 											disabled={isUploading || isDeleting}
-										>
-											{isUploading && (
-												<Loader className="mr-2 h-4 w-4 animate-spin" />
-											)}
-											{field.value || files[0]?.file.name
-												? t("avatar.buttons.change")
-												: t("avatar.buttons.add")}
-										</Button>
+											isLoading={isUploading}
+											label={
+												field.value ||
+												files[0]?.file.name
+													? t("avatar.buttons.change")
+													: t("avatar.buttons.add")
+											}
+											loadingLabel={
+												field.value ||
+												files[0]?.file.name
+													? t("avatar.buttons.change")
+													: t("avatar.buttons.add")
+											}
+										/>
 										<input
 											{...getInputProps()}
 											className="sr-only"

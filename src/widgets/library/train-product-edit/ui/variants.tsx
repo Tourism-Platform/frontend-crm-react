@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader, PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { type FC, Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import {
 	Button,
 	CustomField,
 	Form,
+	LoaderButton,
 	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -186,28 +187,23 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 					))}
 					<div className="md:col-span-3 flex justify-end gap-2">
 						{selectedId !== "new" || form.formState.isDirty ? (
-							<Button
+							<LoaderButton
 								type="button"
 								variant="destructive"
 								onClick={handleDelete}
-								disabled={isDeleting}
-							>
-								{isDeleting && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								isLoading={isDeleting}
+								label={t("form.variants.buttons.delete")}
+								loadingLabel={t(
+									"form.variants.buttons.deleting"
 								)}
-								{isDeleting
-									? t("form.variants.buttons.deleting")
-									: t("form.variants.buttons.delete")}
-							</Button>
+							/>
 						) : null}
-						<Button type="submit" size="lg" disabled={isSaving}>
-							{isSaving && (
-								<Loader className="mr-2 h-4 w-4 animate-spin" />
-							)}
-							{isSaving
-								? t("form.variants.buttons.saving")
-								: t("form.variants.buttons.save")}
-						</Button>
+						<LoaderButton
+							size="lg"
+							isLoading={isSaving}
+							label={t("form.variants.buttons.save")}
+							loadingLabel={t("form.variants.buttons.saving")}
+						/>
 					</div>
 				</form>
 			</Form>

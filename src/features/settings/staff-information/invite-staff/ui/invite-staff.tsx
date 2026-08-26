@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,6 +16,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -97,14 +97,11 @@ export const InviteStaff: FC = () => {
 									{t("invite.form.buttons.decline")}
 								</Button>
 							</DialogClose>
-							<Button type="submit" disabled={isLoading}>
-								{isLoading && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
-								)}
-								{isLoading
-									? t("invite.form.buttons.saving")
-									: t("invite.form.buttons.save")}
-							</Button>
+							<LoaderButton
+								isLoading={isLoading}
+								label={t("invite.form.buttons.save")}
+								loadingLabel={t("invite.form.buttons.saving")}
+							/>
 						</DialogFooter>
 					</form>
 				</Form>

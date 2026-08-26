@@ -1,9 +1,8 @@
-import { Loader } from "lucide-react";
 import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button } from "@/shared/ui";
+import { Button, LoaderButton } from "@/shared/ui";
 
 import {
 	ENUM_EVENT_MODE,
@@ -79,19 +78,23 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 	return (
 		<>
 			<div className="flex flex-wrap gap-2">
-				<Button
+				<LoaderButton
 					type="button"
 					variant="outline"
 					onClick={() => setDialogOpen(true)}
 					disabled={isLoading}
-				>
-					{isLoading ? (
-						<Loader className="mr-2 h-4 w-4 animate-spin" />
-					) : null}
-					{hasOverride
-						? t("override_product.buttons.edit")
-						: t("override_product.buttons.set")}
-				</Button>
+					isLoading={isLoading}
+					label={
+						hasOverride
+							? t("override_product.buttons.edit")
+							: t("override_product.buttons.set")
+					}
+					loadingLabel={
+						hasOverride
+							? t("override_product.buttons.edit")
+							: t("override_product.buttons.set")
+					}
+				/>
 				{hasOverride ? (
 					<Button
 						type="button"

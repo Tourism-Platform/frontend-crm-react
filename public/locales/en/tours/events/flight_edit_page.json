@@ -57,7 +57,7 @@
 		"general": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"flights": {
 				"title": "Transportation subtype",
@@ -400,7 +400,7 @@
 		"pricing": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"title": "Pricing",
 			"invoicing": {
@@ -521,7 +521,7 @@
 		"media": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		}
 	}

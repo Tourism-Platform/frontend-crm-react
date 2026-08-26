@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,9 +6,9 @@ import { toast } from "sonner";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
-	Button,
 	CustomField,
 	Form,
+	LoaderButton,
 	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -133,18 +132,17 @@ const TaxSettingsBase: FC = () => {
 				</div>
 
 				<div>
-					<Button type="submit" disabled={isLoading}>
-						{isLoading ? (
-							<>
-								<Loader className="mr-2 h-4 w-4 animate-spin" />
-								{isTaxSettingsLoading
-									? t("tax_settings.form.buttons.loading")
-									: t("tax_settings.form.buttons.saving")}
-							</>
-						) : (
-							t("tax_settings.form.buttons.save")
-						)}
-					</Button>
+					<LoaderButton
+						type="submit"
+						disabled={isLoading}
+						isLoading={isLoading}
+						label={t("tax_settings.form.buttons.save")}
+						loadingLabel={
+							isTaxSettingsLoading
+								? t("tax_settings.form.buttons.loading")
+								: t("tax_settings.form.buttons.saving")
+						}
+					/>
 				</div>
 			</form>
 		</Form>

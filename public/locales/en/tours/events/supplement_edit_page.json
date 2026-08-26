@@ -49,7 +49,7 @@
 		"items": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"details": {
 				"title": "Supplement items",
@@ -79,7 +79,7 @@
 			"title": "Pricing",
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"invoicing": {
 				"title": "How will this activity be invoiced?",
@@ -175,7 +175,7 @@
 		"media": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		}
 	}

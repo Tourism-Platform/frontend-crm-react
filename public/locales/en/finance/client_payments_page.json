@@ -58,7 +58,7 @@
 			"buttons": {
 				"decline": "Cancel",
 				"save": "Create",
-				"saving": "Creating ..."
+				"saving": "Creating"
 			},
 			"toasts": {
 				"success": "Payment created successfully",
@@ -101,7 +101,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Assign",
-					"saving": "Assigning ..."
+					"saving": "Assigning"
 				},
 				"toasts": {
 					"success": "Payment assigned successfully",
@@ -139,7 +139,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Save",
-					"saving": "Saving ..."
+					"saving": "Saving"
 				},
 				"toasts": {
 					"success": "Payment updated successfully",
@@ -155,7 +155,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Payment deleted successfully",

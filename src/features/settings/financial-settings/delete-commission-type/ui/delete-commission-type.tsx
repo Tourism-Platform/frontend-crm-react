@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC, type ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -13,6 +12,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -80,23 +80,18 @@ export const DeleteCommissionType: FC<IDeleteCommissionTypeProps> = ({
 							)}
 						</Button>
 					</DialogClose>
-					<Button
+					<LoaderButton
 						type="button"
 						variant="destructive"
 						onClick={handleDelete}
-						disabled={isLoading}
-					>
-						{isLoading && (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
+						isLoading={isLoading}
+						label={t(
+							"currency.commission_type.menu.delete.form.buttons.confirm"
 						)}
-						{isLoading
-							? t(
-									"currency.commission_type.menu.delete.form.buttons.confirming"
-								)
-							: t(
-									"currency.commission_type.menu.delete.form.buttons.confirm"
-								)}
-					</Button>
+						loadingLabel={t(
+							"currency.commission_type.menu.delete.form.buttons.confirming"
+						)}
+					/>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

@@ -43,7 +43,7 @@
 		"buttons": {
 			"decline": "Decline",
 			"save": "Save",
-			"saving": "Saving..."
+			"saving": "Saving"
 		},
 		"toasts": {
 			"success": "Password changed successfully",

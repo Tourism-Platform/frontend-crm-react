@@ -23,7 +23,7 @@
 				"buttons": {
 					"decline": "Отмена",
 					"confirm": "Удалить",
-					"confirming": "Удаление ..."
+					"confirming": "Удаление"
 				},
 				"toasts": {
 					"success": "Поставщик удалён",
@@ -67,7 +67,7 @@
 		"buttons": {
 			"decline": "Отмена",
 			"save": "Создать",
-			"saving": "Создание ..."
+			"saving": "Создание"
 		},
 		"toasts": {
 			"success": "Поставщик создан",

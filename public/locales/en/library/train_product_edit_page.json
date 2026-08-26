@@ -49,7 +49,7 @@
 			"buttons": {
 				"create": "Create",
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		},
 		"variants": {
@@ -84,16 +84,16 @@
 			},
 			"buttons": {
 				"save": "Save variant",
-				"saving": "Saving ...",
+				"saving": "Saving",
 				"delete": "Delete",
-				"deleting": "Deleting ..."
+				"deleting": "Deleting"
 			}
 		},
 		"images": {
 			"product_title": "Product gallery",
 			"buttons": {
 				"save": "Save photos",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		},
 		"toasts": {
@@ -123,7 +123,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting ..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Product deleted",

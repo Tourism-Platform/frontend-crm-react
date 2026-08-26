@@ -1,13 +1,12 @@
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
-	Button,
 	CustomOptionTabs,
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -88,18 +87,13 @@ const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 				)}
 
 				<div className="flex justify-end mt-6">
-					<Button
+					<LoaderButton
 						type="button"
 						onClick={onSubmit}
-						disabled={isLoading}
-					>
-						{isLoading && (
-							<Loader className="mr-2 h-4 w-4 animate-spin" />
-						)}
-						{isLoading
-							? t("form.pricing.buttons.saving")
-							: t("form.pricing.buttons.save")}
-					</Button>
+						isLoading={isLoading}
+						label={t("form.pricing.buttons.save")}
+						loadingLabel={t("form.pricing.buttons.saving")}
+					/>
 				</div>
 			</div>
 		</div>

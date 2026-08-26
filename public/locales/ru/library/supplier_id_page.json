@@ -35,7 +35,7 @@
 	"form": {
 		"buttons": {
 			"save": "Сохранить",
-			"saving": "Сохранение ..."
+			"saving": "Сохранение"
 		},
 		"toasts": {
 			"save": {
@@ -84,7 +84,7 @@
 					"buttons": {
 						"decline": "Отмена",
 						"confirm": "Удалить",
-						"confirming": "Удаление ..."
+						"confirming": "Удаление"
 					},
 					"toasts": {
 						"success": "Продукт удалён",

@@ -45,7 +45,7 @@
 			"buttons": {
 				"decline": "Cancel",
 				"save": "Send invite",
-				"saving": "Inviting ..."
+				"saving": "Inviting"
 			},
 			"toasts": {
 				"success": "Invite sent successfully",
@@ -142,7 +142,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Save",
-					"saving": "Saving ..."
+					"saving": "Saving"
 				},
 				"toasts": {
 					"success": "Staff member updated successfully",
@@ -158,7 +158,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Staff member deleted successfully",

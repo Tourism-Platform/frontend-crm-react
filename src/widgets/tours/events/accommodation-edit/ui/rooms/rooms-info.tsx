@@ -1,8 +1,7 @@
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button, withErrorBoundary } from "@/shared/ui";
+import { LoaderButton, withErrorBoundary } from "@/shared/ui";
 
 import { type TSlotProps } from "../../model";
 
@@ -16,14 +15,13 @@ const RoomsInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 			<RoomsDetails form={form} />
 
 			<div className="flex justify-end mt-6">
-				<Button type="button" onClick={onSubmit} disabled={isLoading}>
-					{isLoading && (
-						<Loader className="mr-2 h-4 w-4 animate-spin" />
-					)}
-					{isLoading
-						? t("form.rooms.buttons.saving")
-						: t("form.rooms.buttons.save")}
-				</Button>
+				<LoaderButton
+					type="button"
+					onClick={onSubmit}
+					isLoading={isLoading}
+					label={t("form.rooms.buttons.save")}
+					loadingLabel={t("form.rooms.buttons.saving")}
+				/>
 			</div>
 		</div>
 	);

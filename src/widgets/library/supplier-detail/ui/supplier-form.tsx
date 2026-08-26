@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,11 +6,11 @@ import { toast } from "sonner";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
-	Button,
 	Card,
 	CardContent,
 	CustomField,
 	Form,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -112,14 +111,12 @@ const SupplierFormBase: FC<ISupplierFormProps> = ({ supplierId }) => {
 							)}
 						</div>
 						<div className="flex justify-end">
-							<Button type="submit" size="lg" disabled={isSaving}>
-								{isSaving && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
-								)}
-								{isSaving
-									? t("form.buttons.saving")
-									: t("form.buttons.save")}
-							</Button>
+							<LoaderButton
+								size="lg"
+								isLoading={isSaving}
+								label={t("form.buttons.save")}
+								loadingLabel={t("form.buttons.saving")}
+							/>
 						</div>
 					</form>
 				</Form>

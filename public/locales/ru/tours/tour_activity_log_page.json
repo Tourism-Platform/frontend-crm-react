@@ -8,7 +8,7 @@
 	},
 	"buttons": {
 		"load": "Показать еще",
-		"loading": "Загрузка ..."
+		"loading": "Загрузка"
 	},
 	"toasts": {
 		"load": {

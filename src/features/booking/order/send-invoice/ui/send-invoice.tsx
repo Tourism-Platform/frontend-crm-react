@@ -1,4 +1,3 @@
-import { Loader } from "lucide-react";
 import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -14,6 +13,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
+	LoaderButton,
 	ScrollArea,
 	Separator,
 	Skeleton
@@ -185,16 +185,16 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 									{t("send_invoice_modal.cancel")}
 								</Button>
 							</DialogClose>
-							<Button
+							<LoaderButton
 								type="button"
 								onClick={handleConfirm}
 								disabled={isConfirmDisabled}
-							>
-								{isConfirming && (
-									<Loader className="mr-2 h-4 w-4 animate-spin" />
+								isLoading={isConfirming}
+								label={t("send_invoice_modal.confirm")}
+								loadingLabel={t(
+									"send_invoice_modal.confirming"
 								)}
-								{t("send_invoice_modal.confirm")}
-							</Button>
+							/>
 						</DialogFooter>
 					</div>
 				</DialogContent>

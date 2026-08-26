@@ -49,7 +49,7 @@
 		"general": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"details": {
 				"title": "Activity details",
@@ -136,13 +136,13 @@
 		"media": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			}
 		},
 		"pricing": {
 			"buttons": {
 				"save": "Save",
-				"saving": "Saving ..."
+				"saving": "Saving"
 			},
 			"title": "Pricing",
 			"invoicing": {

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -8,10 +7,10 @@ import { toast } from "sonner";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
-	Button,
 	CustomField,
 	CustomRangeField,
 	Form,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -125,21 +124,17 @@ const GeneralInfoBase: FC = () => {
 					/>
 				</div>
 				<div className="flex justify-end mt-6">
-					<Button
+					<LoaderButton
 						type="submit"
 						disabled={isUpdating || isTourLoading}
-					>
-						{isUpdating || isTourLoading ? (
-							<>
-								<Loader className="mr-2 h-4 w-4 animate-spin" />
-								{isTourLoading
-									? t("general.form.buttons.loading")
-									: t("general.form.buttons.saving")}
-							</>
-						) : (
-							t("general.form.buttons.save")
-						)}
-					</Button>
+						isLoading={isUpdating || isTourLoading}
+						label={t("general.form.buttons.save")}
+						loadingLabel={
+							isTourLoading
+								? t("general.form.buttons.loading")
+								: t("general.form.buttons.saving")
+						}
+					/>
 				</div>
 			</form>
 		</Form>

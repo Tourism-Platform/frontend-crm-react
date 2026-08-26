@@ -33,8 +33,8 @@
 			},
 			"buttons": {
 				"save": "Save",
-				"loading": "Loading...",
-				"saving": "Saving ..."
+				"loading": "Loading",
+				"saving": "Saving"
 			},
 			"toasts": {
 				"save": {
@@ -131,7 +131,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Save",
-					"saving": "Saving ..."
+					"saving": "Saving"
 				},
 				"toasts": {
 					"save": {
@@ -146,7 +146,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Payment route deleted successfully",
@@ -193,8 +193,8 @@
 			},
 			"buttons": {
 				"save": "Save",
-				"loading": "Loading...",
-				"saving": "Saving ..."
+				"loading": "Loading",
+				"saving": "Saving"
 			},
 			"toasts": {
 				"save": {
@@ -232,7 +232,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Add",
-					"saving": "Adding ..."
+					"saving": "Adding"
 				},
 				"toasts": {
 					"success": "Commission type added successfully",
@@ -257,7 +257,7 @@
 						"buttons": {
 							"decline": "Cancel",
 							"save": "Save",
-							"saving": "Saving ..."
+							"saving": "Saving"
 						},
 						"toasts": {
 							"success": "Commission type updated successfully",
@@ -273,7 +273,7 @@
 						"buttons": {
 							"decline": "Cancel",
 							"confirm": "Delete",
-							"confirming": "Deleting..."
+							"confirming": "Deleting"
 						},
 						"toasts": {
 							"success": "Commission type deleted successfully",
@@ -328,7 +328,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"save": "Add",
-					"saving": "Adding ..."
+					"saving": "Adding"
 				},
 				"toasts": {
 					"success": "Currency rate added successfully",

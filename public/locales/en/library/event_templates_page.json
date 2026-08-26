@@ -24,7 +24,7 @@
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",
-					"confirming": "Deleting ..."
+					"confirming": "Deleting"
 				},
 				"toasts": {
 					"success": "Template deleted",

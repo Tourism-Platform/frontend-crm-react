@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,10 +6,10 @@ import { toast } from "sonner";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
-	Button,
 	Card,
 	CardContent,
 	Form,
+	LoaderButton,
 	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -92,21 +91,17 @@ const AccountSettingsBase: FC = () => {
 							<Separator />
 							<GeneralInfo form={form} />
 							<div>
-								<Button
+								<LoaderButton
 									type="submit"
 									disabled={isUpdating || isAccountLoading}
-								>
-									{isAccountLoading || isUpdating ? (
-										<>
-											<Loader className="mr-2 h-4 w-4 animate-spin" />
-											{isAccountLoading
-												? t("form.buttons.loading")
-												: t("form.buttons.saving")}
-										</>
-									) : (
-										t("form.buttons.save")
-									)}
-								</Button>
+									isLoading={isUpdating || isAccountLoading}
+									label={t("form.buttons.save")}
+									loadingLabel={
+										isAccountLoading
+											? t("form.buttons.loading")
+											: t("form.buttons.saving")
+									}
+								/>
 							</div>
 						</form>
 					</Form>

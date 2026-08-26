@@ -18,3 +18,4 @@ export * from "./custom-selectable-card";
 export * from "./custom-tag-input";
 export * from "./empty-state";
 export * from "./error-state";
+export * from "./loader-button";

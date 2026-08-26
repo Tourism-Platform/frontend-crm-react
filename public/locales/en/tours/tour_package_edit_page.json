@@ -40,7 +40,7 @@
 		},
 		"buttons": {
 			"save": "Save",
-			"saving": "Saving ...",
+			"saving": "Saving",
 			"create": "Create",
 			"back_to_event": "Back to event"
 		},

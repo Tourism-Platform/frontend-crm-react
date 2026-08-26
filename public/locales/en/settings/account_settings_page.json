@@ -88,8 +88,8 @@
 		},
 		"buttons": {
 			"save": "Save",
-			"loading": "Loading ...",
-			"saving": "Saving ..."
+			"loading": "Loading",
+			"saving": "Saving"
 		},
 		"toasts": {
 			"save": {

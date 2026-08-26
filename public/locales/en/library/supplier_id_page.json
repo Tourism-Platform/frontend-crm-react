@@ -35,7 +35,7 @@
 	"form": {
 		"buttons": {
 			"save": "Save",
-			"saving": "Saving ..."
+			"saving": "Saving"
 		},
 		"toasts": {
 			"save": {
@@ -84,7 +84,7 @@
 					"buttons": {
 						"decline": "Cancel",
 						"confirm": "Delete",
-						"confirming": "Deleting ..."
+						"confirming": "Deleting"
 					},
 					"toasts": {
 						"success": "Product deleted",
