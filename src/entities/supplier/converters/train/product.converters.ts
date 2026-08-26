@@ -17,8 +17,7 @@ import {
 	type TTrainVariantCharge,
 	type TTrainVariantChargeInputBackend,
 	type TTrainVariantReadBackend,
-	type TTrainVariantWriteBackend,
-	type TUpdateTrainProductBackend
+	type TTrainVariantWriteBackend
 } from "../../types";
 import {
 	mapSupplierFeesFromBackend,
@@ -216,22 +215,5 @@ export const mapTrainProductToCreate = (
 	details: {
 		typ: "train",
 		hop: data.hops.map(mapTrainHopToBackend)
-	}
-});
-
-export const mapTrainProductNameToUpdate = (
-	name: string
-): TUpdateTrainProductBackend => ({
-	typ: "train",
-	name
-});
-
-export const mapTrainProductHopsToUpdate = (
-	hops: ITrainHop[]
-): TUpdateTrainProductBackend => ({
-	typ: "train",
-	details: {
-		typ: "train",
-		hop: hops.map(mapTrainHopToBackend)
 	}
 });

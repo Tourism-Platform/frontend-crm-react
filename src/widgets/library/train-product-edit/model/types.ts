@@ -1,6 +1,7 @@
+import type { ITrainProduct } from "@/entities/supplier";
+
 export const ENUM_TRAIN_PRODUCT_EDIT_TAB = {
 	GENERAL: "general",
-	HOPS: "hops",
 	VARIANTS: "variants",
 	IMAGES: "images"
 } as const;
@@ -12,5 +13,5 @@ export interface ITrainProductEditProps {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	product?: import("@/entities/supplier").ITrainProduct | null;
+	product?: ITrainProduct | null;
 }

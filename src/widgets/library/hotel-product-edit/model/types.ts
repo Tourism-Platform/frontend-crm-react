@@ -1,6 +1,7 @@
+import type { IHotelProduct } from "@/entities/supplier";
+
 export const ENUM_HOTEL_PRODUCT_EDIT_TAB = {
 	GENERAL: "general",
-	DETAILS: "details",
 	VARIANTS: "variants",
 	IMAGES: "images"
 } as const;
@@ -12,5 +13,5 @@ export interface IHotelProductEditProps {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	product?: import("@/entities/supplier").IHotelProduct | null;
+	product?: IHotelProduct | null;
 }

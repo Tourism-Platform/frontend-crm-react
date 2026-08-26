@@ -5,7 +5,7 @@ import {
 	SUPPLIER_TYPE_LABELS
 } from "@/entities/supplier";
 
-import type { TForm } from "./types";
+import type { TForm } from "./form.types";
 
 export const FORM_SUPPLIER_DETAIL_LIST = (): TForm[] => [
 	{

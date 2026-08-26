@@ -5,10 +5,9 @@ import type { IPaginationResponse } from "@/shared/types";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
-	mapHotelProductDetailsToUpdate,
 	mapHotelProductFromBackend,
-	mapHotelProductNameToUpdate,
-	mapHotelProductToCreate,
+	mapHotelProductGeneralToCreate,
+	mapHotelProductGeneralToUpdate,
 	mapHotelVariantFromBackend,
 	mapHotelVariantToWrite,
 	mapSupplierNodeImageToFrontend,
@@ -17,9 +16,8 @@ import {
 	mapSupplierProductImageToFrontend,
 	mapSupplierProductListToFrontend,
 	mapTrainProductFromBackend,
-	mapTrainProductHopsToUpdate,
-	mapTrainProductNameToUpdate,
-	mapTrainProductToCreate,
+	mapTrainProductGeneralToCreate,
+	mapTrainProductGeneralToUpdate,
 	mapTrainVariantFromBackend,
 	mapTrainVariantToWrite
 } from "../converters";
@@ -44,11 +42,9 @@ import type {
 	ISupplierProductImage,
 	ITrainProduct,
 	ITrainVariant,
-	IUpdateHotelProductDetails,
-	IUpdateHotelProductName,
+	IUpdateHotelProduct,
 	IUpdateHotelVariant,
-	IUpdateTrainProductHops,
-	IUpdateTrainProductName,
+	IUpdateTrainProduct,
 	IUpdateTrainVariant,
 	IUploadNodeImages,
 	IUploadProductImages,
@@ -110,9 +106,9 @@ export const supplierProductApi = authApi.injectEndpoints({
 			IHotelProduct,
 			ICreateHotelProduct
 		>({
-			query: ({ supplierId, data }) => ({
+			query: ({ supplierId, values, language }) => ({
 				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapHotelProductToCreate(data)
+				body: mapHotelProductGeneralToCreate(values, language)
 			}),
 			transformResponse: (response: THotelProductReadBackend) =>
 				mapHotelProductFromBackend(response),
@@ -120,26 +116,23 @@ export const supplierProductApi = authApi.injectEndpoints({
 				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
 			]
 		}),
-		updateHotelProductName: builder.mutation<
+		updateHotelProduct: builder.mutation<
 			IHotelProduct,
-			IUpdateHotelProductName
+			IUpdateHotelProduct
 		>({
-			query: ({ supplierId, productId, name }) => ({
+			query: ({
+				supplierId,
+				productId,
+				values,
+				language,
+				existingPolicy
+			}) => ({
 				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapHotelProductNameToUpdate(name)
-			}),
-			transformResponse: (response: THotelProductReadBackend) =>
-				mapHotelProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		updateHotelProductDetails: builder.mutation<
-			IHotelProduct,
-			IUpdateHotelProductDetails
-		>({
-			query: ({ supplierId, productId, data }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapHotelProductDetailsToUpdate(data)
+				body: mapHotelProductGeneralToUpdate(
+					values,
+					existingPolicy,
+					language
+				)
 			}),
 			transformResponse: (response: THotelProductReadBackend) =>
 				mapHotelProductFromBackend(response),
@@ -150,9 +143,9 @@ export const supplierProductApi = authApi.injectEndpoints({
 			ITrainProduct,
 			ICreateTrainProduct
 		>({
-			query: ({ supplierId, data }) => ({
+			query: ({ supplierId, values, language }) => ({
 				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapTrainProductToCreate(data)
+				body: mapTrainProductGeneralToCreate(values, language)
 			}),
 			transformResponse: (response: TTrainProductReadBackend) =>
 				mapTrainProductFromBackend(response),
@@ -160,26 +153,13 @@ export const supplierProductApi = authApi.injectEndpoints({
 				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
 			]
 		}),
-		updateTrainProductName: builder.mutation<
+		updateTrainProduct: builder.mutation<
 			ITrainProduct,
-			IUpdateTrainProductName
+			IUpdateTrainProduct
 		>({
-			query: ({ supplierId, productId, name }) => ({
+			query: ({ supplierId, productId, values, language }) => ({
 				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapTrainProductNameToUpdate(name)
-			}),
-			transformResponse: (response: TTrainProductReadBackend) =>
-				mapTrainProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		updateTrainProductHops: builder.mutation<
-			ITrainProduct,
-			IUpdateTrainProductHops
-		>({
-			query: ({ supplierId, productId, hops }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapTrainProductHopsToUpdate(hops)
+				body: mapTrainProductGeneralToUpdate(values, language)
 			}),
 			transformResponse: (response: TTrainProductReadBackend) =>
 				mapTrainProductFromBackend(response),
@@ -398,11 +378,9 @@ export const {
 	useGetSupplierProductQuery,
 	useLazyGetSupplierProductQuery,
 	useCreateHotelProductMutation,
-	useUpdateHotelProductNameMutation,
-	useUpdateHotelProductDetailsMutation,
+	useUpdateHotelProductMutation,
 	useCreateTrainProductMutation,
-	useUpdateTrainProductNameMutation,
-	useUpdateTrainProductHopsMutation,
+	useUpdateTrainProductMutation,
 	useDeleteSupplierProductMutation,
 	useCreateHotelVariantMutation,
 	useUpdateHotelVariantMutation,

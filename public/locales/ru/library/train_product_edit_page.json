@@ -3,64 +3,63 @@
 	"back": "К поставщику",
 	"tabs": {
 		"general": "Основное",
-		"hops": "Плечи",
 		"variants": "Варианты",
 		"images": "Фото"
 	},
 	"form": {
+		"create_hint": {
+			"save_general_first": "Сначала создайте поезд на вкладке «Основное»"
+		},
 		"general": {
 			"fields": {
 				"name": {
 					"label": "Название",
 					"placeholder": "Название поезда"
+				},
+				"hops": {
+					"add": "Добавить плечо",
+					"departureTime": {
+						"label": "Время отправления",
+						"placeholder": "08:00"
+					},
+					"arrivalTime": {
+						"label": "Время прибытия",
+						"placeholder": "12:00"
+					},
+					"departureLocation": {
+						"label": "Станция отправления",
+						"placeholder": "Начните вводить станцию или город",
+						"empty": "Ничего не найдено"
+					},
+					"arrivalLocation": {
+						"label": "Станция прибытия",
+						"placeholder": "Начните вводить станцию или город",
+						"empty": "Ничего не найдено"
+					}
 				}
 			},
 			"errors": {
 				"name": {
 					"required": "Укажите название"
+				},
+				"hops": {
+					"required": "Добавьте хотя бы одно плечо"
 				}
 			},
 			"buttons": {
+				"create": "Создать",
 				"save": "Сохранить",
-				"saving": "Сохранение ..."
-			}
-		},
-		"hops": {
-			"add": "Добавить плечо",
-			"fields": {
-				"departureTime": {
-					"label": "Время отправления",
-					"placeholder": "08:00"
-				},
-				"arrivalTime": {
-					"label": "Время прибытия",
-					"placeholder": "12:00"
-				},
-				"departureLat": {
-					"label": "Широта отправления",
-					"placeholder": "Lat"
-				},
-				"departureLong": {
-					"label": "Долгота отправления",
-					"placeholder": "Long"
-				},
-				"arrivalLat": {
-					"label": "Широта прибытия",
-					"placeholder": "Lat"
-				},
-				"arrivalLong": {
-					"label": "Долгота прибытия",
-					"placeholder": "Long"
-				}
-			},
-			"buttons": {
-				"save": "Сохранить плечи",
 				"saving": "Сохранение ..."
 			}
 		},
 		"variants": {
 			"title": "Варианты",
 			"add": "Добавить вариант",
+			"errors": {
+				"name": {
+					"required": "Укажите название варианта"
+				}
+			},
 			"fields": {
 				"name": {
 					"label": "Название варианта",

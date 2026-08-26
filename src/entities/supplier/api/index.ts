@@ -16,11 +16,9 @@ export {
 	useListProductImagesQuery,
 	useSetPrimaryNodeImageMutation,
 	useSetPrimaryProductImageMutation,
-	useUpdateHotelProductDetailsMutation,
-	useUpdateHotelProductNameMutation,
+	useUpdateHotelProductMutation,
 	useUpdateHotelVariantMutation,
-	useUpdateTrainProductHopsMutation,
-	useUpdateTrainProductNameMutation,
+	useUpdateTrainProductMutation,
 	useUpdateTrainVariantMutation,
 	useUploadNodeImagesMutation,
 	useUploadProductImagesMutation

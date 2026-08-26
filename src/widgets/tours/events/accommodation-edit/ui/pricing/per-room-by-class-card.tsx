@@ -71,9 +71,9 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 							<div className="grid gap-3">
 								<div
 									className={cn(
-										"grid grid-cols-[1fr_1fr_0.5fr_auto] gap-3 items-center",
+										"grid max-w-3xl grid-cols-[minmax(0,10rem)_minmax(0,8rem)_minmax(0,8rem)_auto] gap-3 items-center",
 										addMarginSeparately &&
-											"grid-cols-[1fr_1fr_1.5fr_0.5fr_auto]"
+											"max-w-4xl grid-cols-[minmax(0,10rem)_minmax(0,8rem)_minmax(0,12rem)_minmax(0,8rem)_auto]"
 									)}
 								>
 									{categoryRowFields.map(
@@ -102,6 +102,7 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 													control={form.control}
 													name={`${categoryPath}.${key}`}
 													t={t}
+													className="min-w-0"
 													{...item}
 												/>
 											</Fragment>

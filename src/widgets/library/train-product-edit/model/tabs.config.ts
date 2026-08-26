@@ -16,10 +16,6 @@ export const TRAIN_PRODUCT_EDIT_TABS: ITrainProductEditTab[] = [
 		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.GENERAL
 	},
 	{
-		label: "tabs.hops",
-		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.HOPS
-	},
-	{
 		label: "tabs.variants",
 		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS
 	},

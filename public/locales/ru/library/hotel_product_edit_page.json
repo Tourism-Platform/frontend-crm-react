@@ -3,41 +3,27 @@
 	"back": "К поставщику",
 	"tabs": {
 		"general": "Основное",
-		"details": "Детали",
 		"variants": "Варианты",
 		"images": "Фото"
 	},
 	"form": {
+		"create_hint": {
+			"save_general_first": "Сначала создайте отель на вкладке «Основное»"
+		},
 		"general": {
 			"fields": {
 				"name": {
 					"label": "Название",
 					"placeholder": "Название отеля"
-				}
-			},
-			"errors": {
-				"name": {
-					"required": "Укажите название"
-				}
-			},
-			"buttons": {
-				"save": "Сохранить",
-				"saving": "Сохранение ..."
-			}
-		},
-		"details": {
-			"fields": {
+				},
+				"location": {
+					"label": "Адрес",
+					"placeholder": "Начните вводить адрес",
+					"empty": "Ничего не найдено"
+				},
 				"stars": {
 					"label": "Звёзды",
 					"placeholder": "1–5"
-				},
-				"lat": {
-					"label": "Широта",
-					"placeholder": "Lat"
-				},
-				"long": {
-					"label": "Долгота",
-					"placeholder": "Long"
 				},
 				"amenities": {
 					"label": "Удобства",
@@ -52,14 +38,28 @@
 					"placeholder": "12:00"
 				}
 			},
+			"errors": {
+				"name": {
+					"required": "Укажите название"
+				}
+			},
 			"buttons": {
-				"save": "Сохранить детали",
-				"saving": "Сохранение ..."
+				"save": "Сохранить",
+				"saving": "Сохранение ...",
+				"create": "Создать отель"
 			}
 		},
 		"variants": {
 			"title": "Варианты",
 			"add": "Добавить вариант",
+			"errors": {
+				"name": {
+					"required": "Укажите название варианта"
+				},
+				"roomTyp": {
+					"required": "Выберите тип комнаты"
+				}
+			},
 			"fields": {
 				"name": {
 					"label": "Название варианта",

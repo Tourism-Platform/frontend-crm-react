@@ -26,7 +26,6 @@ import {
 } from "../model";
 
 import { TrainProductGeneral } from "./general";
-import { TrainProductHops } from "./hops";
 import { TrainProductImages } from "./images";
 import { TrainProductVariants } from "./variants";
 
@@ -38,11 +37,7 @@ const TrainProductEditBase: FC<ITrainProductEditProps> = ({
 }) => {
 	const { t } = useTranslation("train_product_edit_page");
 	const navigate = useNavigate();
-	const tabs = isCreate
-		? TRAIN_PRODUCT_EDIT_TABS.filter(
-				(tab) => tab.type === ENUM_TRAIN_PRODUCT_EDIT_TAB.GENERAL
-			)
-		: TRAIN_PRODUCT_EDIT_TABS;
+	const tabs = TRAIN_PRODUCT_EDIT_TABS;
 	const allowedTabs = tabs.map((item) => item.type);
 	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
@@ -110,41 +105,29 @@ const TrainProductEditBase: FC<ITrainProductEditProps> = ({
 								supplierId={supplierId}
 								productId={productId}
 								isCreate={isCreate}
-								name={product?.name}
-								hops={product?.hops}
+								product={product}
 							/>
 						</CustomOptionTabsContent>
 
-						{!isCreate ? (
-							<>
-								<CustomOptionTabsContent
-									value={ENUM_TRAIN_PRODUCT_EDIT_TAB.HOPS}
-								>
-									<TrainProductHops
-										supplierId={supplierId}
-										productId={productId}
-										hops={product?.hops}
-									/>
-								</CustomOptionTabsContent>
-								<CustomOptionTabsContent
-									value={ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS}
-								>
-									<TrainProductVariants
-										supplierId={supplierId}
-										productId={productId}
-										variants={product?.variants}
-									/>
-								</CustomOptionTabsContent>
-								<CustomOptionTabsContent
-									value={ENUM_TRAIN_PRODUCT_EDIT_TAB.IMAGES}
-								>
-									<TrainProductImages
-										supplierId={supplierId}
-										productId={productId}
-									/>
-								</CustomOptionTabsContent>
-							</>
-						) : null}
+						<CustomOptionTabsContent
+							value={ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS}
+						>
+							<TrainProductVariants
+								supplierId={supplierId}
+								productId={productId}
+								variants={product?.variants}
+							/>
+						</CustomOptionTabsContent>
+
+						<CustomOptionTabsContent
+							value={ENUM_TRAIN_PRODUCT_EDIT_TAB.IMAGES}
+						>
+							<TrainProductImages
+								supplierId={supplierId}
+								productId={productId}
+								disabled={isCreate}
+							/>
+						</CustomOptionTabsContent>
 					</CustomOptionTabs>
 				</CardContent>
 			</Card>

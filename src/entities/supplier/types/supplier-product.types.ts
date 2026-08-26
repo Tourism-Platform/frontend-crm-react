@@ -1,18 +1,13 @@
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import type { IPaginationRequest } from "@/shared/types";
 
-import type {
-	IHotelProduct,
-	IHotelProductCreate,
-	IHotelProductDetails
-} from "./hotel";
+import type { THotelProductGeneralSchema } from "../schema/hotel-product.schema";
+import type { TTrainProductGeneralSchema } from "../schema/train-product.schema";
+
+import type { IHotelPolicy, IHotelProduct } from "./hotel";
 import type { IHotelVariantWrite } from "./hotel/rooms.types";
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "./supplier-type.types";
-import type {
-	ITrainHop,
-	ITrainProduct,
-	ITrainProductCreate,
-	ITrainVariantWrite
-} from "./train";
+import type { ITrainProduct, ITrainVariantWrite } from "./train";
 
 export type TSupplierProduct = IHotelProduct | ITrainProduct;
 
@@ -29,36 +24,29 @@ export interface IGetSupplierProduct {
 
 export interface ICreateHotelProduct {
 	supplierId: string;
-	data: IHotelProductCreate;
+	values: THotelProductGeneralSchema;
+	language?: ENUM_LANGUAGES_TYPE;
 }
 
-export interface IUpdateHotelProductName {
+export interface IUpdateHotelProduct {
 	supplierId: string;
 	productId: string;
-	name: string;
-}
-
-export interface IUpdateHotelProductDetails {
-	supplierId: string;
-	productId: string;
-	data: IHotelProductDetails;
+	values: THotelProductGeneralSchema;
+	language?: ENUM_LANGUAGES_TYPE;
+	existingPolicy?: IHotelPolicy | null;
 }
 
 export interface ICreateTrainProduct {
 	supplierId: string;
-	data: ITrainProductCreate;
+	values: TTrainProductGeneralSchema;
+	language?: ENUM_LANGUAGES_TYPE;
 }
 
-export interface IUpdateTrainProductName {
+export interface IUpdateTrainProduct {
 	supplierId: string;
 	productId: string;
-	name: string;
-}
-
-export interface IUpdateTrainProductHops {
-	supplierId: string;
-	productId: string;
-	hops: ITrainHop[];
+	values: TTrainProductGeneralSchema;
+	language?: ENUM_LANGUAGES_TYPE;
 }
 
 export interface IDeleteSupplierProduct {

@@ -13,8 +13,10 @@ import {
 } from "../supplier-money.converters";
 
 const mapSurchargeToBackend = (
-	surcharge: TSupplierSurcharge
-): NonNullable<TSupplierPolicyBandInputBackend["surcharge"]> => {
+	surcharge: TSupplierSurcharge | null | undefined
+): TSupplierPolicyBandInputBackend["surcharge"] | null => {
+	if (!surcharge) return null;
+
 	switch (surcharge.typ) {
 		case ENUM_SUPPLIER_SURCHARGE.PERCENTAGE:
 			return {
@@ -63,7 +65,7 @@ export const mapSupplierPolicyBandToBackend = (
 ): TSupplierPolicyBandInputBackend => ({
 	from_time: band.fromTime,
 	to_time: band.toTime,
-	surcharge: band.surcharge ? mapSurchargeToBackend(band.surcharge) : null,
+	surcharge: mapSurchargeToBackend(band.surcharge),
 	note: band.note
 });
 
@@ -80,13 +82,17 @@ export const mapSupplierPolicyBandFromBackend = (band: {
 });
 
 export const mapHotelPolicyToBackend = (
-	policy: IHotelPolicy
-): THotelPolicyInputBackend => ({
-	check_in_from: policy.checkInFrom,
-	check_out_until: policy.checkOutUntil,
-	early_check_in: policy.earlyCheckIn.map(mapSupplierPolicyBandToBackend),
-	late_check_out: policy.lateCheckOut.map(mapSupplierPolicyBandToBackend)
-});
+	policy: IHotelPolicy | null | undefined
+): THotelPolicyInputBackend | null => {
+	if (!policy) return null;
+
+	return {
+		check_in_from: policy.checkInFrom,
+		check_out_until: policy.checkOutUntil,
+		early_check_in: policy.earlyCheckIn.map(mapSupplierPolicyBandToBackend),
+		late_check_out: policy.lateCheckOut.map(mapSupplierPolicyBandToBackend)
+	};
+};
 
 export const mapHotelPolicyFromBackend = (
 	policy: THotelPolicyReadBackend

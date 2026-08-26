@@ -25,7 +25,6 @@ import {
 	type IHotelProductEditProps
 } from "../model";
 
-import { HotelProductDetailsTab } from "./details";
 import { HotelProductGeneral } from "./general";
 import { HotelProductImages } from "./images";
 import { HotelProductVariants } from "./variants";
@@ -38,16 +37,11 @@ const HotelProductEditBase: FC<IHotelProductEditProps> = ({
 }) => {
 	const { t } = useTranslation("hotel_product_edit_page");
 	const navigate = useNavigate();
-	const tabs = isCreate
-		? HOTEL_PRODUCT_EDIT_TABS.filter(
-				(tab) => tab.type === ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL
-			)
-		: HOTEL_PRODUCT_EDIT_TABS;
+	const tabs = HOTEL_PRODUCT_EDIT_TABS;
 	const allowedTabs = tabs.map((item) => item.type);
 	const [initialTab, setTab] = useQueryTab(allowedTabs[0], allowedTabs);
 
 	const resolvedName = product?.name ?? "";
-	const resolvedDetails = product?.details ?? null;
 	const resolvedVariants = product?.variants ?? [];
 
 	const supplierPath = buildRoute(ENUM_PATH.LIBRARY.SUPPLIER, {
@@ -114,41 +108,30 @@ const HotelProductEditBase: FC<IHotelProductEditProps> = ({
 								supplierId={supplierId}
 								productId={productId}
 								isCreate={isCreate}
-								name={resolvedName}
+								product={product}
 							/>
 						</CustomOptionTabsContent>
 
-						{!isCreate ? (
-							<>
-								<CustomOptionTabsContent
-									value={ENUM_HOTEL_PRODUCT_EDIT_TAB.DETAILS}
-								>
-									<HotelProductDetailsTab
-										supplierId={supplierId}
-										productId={productId}
-										details={resolvedDetails}
-									/>
-								</CustomOptionTabsContent>
-								<CustomOptionTabsContent
-									value={ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS}
-								>
-									<HotelProductVariants
-										supplierId={supplierId}
-										productId={productId}
-										variants={resolvedVariants}
-									/>
-								</CustomOptionTabsContent>
-								<CustomOptionTabsContent
-									value={ENUM_HOTEL_PRODUCT_EDIT_TAB.IMAGES}
-								>
-									<HotelProductImages
-										supplierId={supplierId}
-										productId={productId}
-										variants={resolvedVariants}
-									/>
-								</CustomOptionTabsContent>
-							</>
-						) : null}
+						<CustomOptionTabsContent
+							value={ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS}
+						>
+							<HotelProductVariants
+								supplierId={supplierId}
+								productId={productId}
+								variants={resolvedVariants}
+							/>
+						</CustomOptionTabsContent>
+
+						<CustomOptionTabsContent
+							value={ENUM_HOTEL_PRODUCT_EDIT_TAB.IMAGES}
+						>
+							<HotelProductImages
+								supplierId={supplierId}
+								productId={productId}
+								variants={resolvedVariants}
+								disabled={isCreate}
+							/>
+						</CustomOptionTabsContent>
 					</CustomOptionTabs>
 				</CardContent>
 			</Card>

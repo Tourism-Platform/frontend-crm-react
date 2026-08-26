@@ -3,3 +3,5 @@ export * from "./room-type.converters";
 export * from "./policy.converters";
 export * from "./rooms.converters";
 export * from "./product.converters";
+export * from "./product-form.converters";
+export * from "./variant-form.converters";

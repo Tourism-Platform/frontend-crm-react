@@ -16,22 +16,11 @@ import {
 } from "../../types";
 
 import {
-	mapHotelProductDetailsToUpdate,
 	mapHotelProductFromBackend,
-	mapHotelProductNameToUpdate,
 	mapHotelProductToCreate,
 	mapHotelVariantToWrite,
 	mapSupplierPolicyBandToBackend
 } from "./index";
-
-describe("mapHotelProductNameToUpdate", () => {
-	it("omits details on rename", () => {
-		expect(mapHotelProductNameToUpdate("Новое имя")).toEqual({
-			typ: "hotel",
-			name: "Новое имя"
-		});
-	});
-});
 
 describe("mapHotelProductToCreate", () => {
 	it("maps Hyatt create payload from audit", () => {
@@ -127,26 +116,6 @@ describe("mapHotelProductToCreate", () => {
 				}
 			}
 		});
-	});
-});
-
-describe("mapHotelProductDetailsToUpdate", () => {
-	it("sends details as a full replace", () => {
-		const body = mapHotelProductDetailsToUpdate({
-			location: { lat: 41.311, long: 69.279 },
-			stars: 5,
-			amenities: [ENUM_HOTEL_AMENITY.WIFI],
-			policy: {
-				checkInFrom: "14:00",
-				checkOutUntil: "12:00",
-				earlyCheckIn: [],
-				lateCheckOut: []
-			}
-		});
-
-		expect(body.typ).toBe("hotel");
-		expect(body).toHaveProperty("details");
-		expect(body).not.toHaveProperty("name");
 	});
 });
 

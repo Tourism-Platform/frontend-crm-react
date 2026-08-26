@@ -4,7 +4,6 @@ import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { PageLoader } from "@/shared/ui";
 
 import {
 	ENUM_SUPPLIER_TYPE,
@@ -27,11 +26,7 @@ export const LibraryTrainProductEditPage: FC = () => {
 	}>();
 	const isCreate = productId === LIBRARY_SUPPLIER_PRODUCT_CREATE_ID;
 
-	const {
-		data: product,
-		isLoading,
-		isRealError
-	} = useOptionalResourceQuery(
+	const { data: product, isRealError } = useOptionalResourceQuery(
 		useGetSupplierProductQuery(
 			{ supplierId, productId },
 			{ skip: !supplierId || !productId || isCreate }
@@ -43,10 +38,6 @@ export const LibraryTrainProductEditPage: FC = () => {
 			toast.error(t("form.toasts.load.error"));
 		}
 	}, [isRealError, t]);
-
-	if (!isCreate && isLoading) {
-		return <PageLoader />;
-	}
 
 	const trainProduct = isTrainProduct(product) ? product : null;
 

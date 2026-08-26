@@ -44,19 +44,25 @@
 			},
 			"load": {
 				"error": "Failed to load supplier"
-			},
-			"logo": {
-				"success": "Logo updated",
-				"error": "Failed to update logo"
 			}
 		}
 	},
 	"logo": {
-		"label": "Logo",
-		"upload": "Upload logo",
-		"uploading": "Uploading ...",
-		"delete": "Remove logo",
-		"deleting": "Removing ..."
+		"title": "Logo",
+		"buttons": {
+			"add": "Add photo",
+			"change": "Change photo"
+		},
+		"toasts": {
+			"upload": {
+				"success": "Logo updated",
+				"error": "Failed to upload logo"
+			},
+			"delete": {
+				"success": "Logo removed",
+				"error": "Failed to remove logo"
+			}
+		}
 	},
 	"products": {
 		"table": {

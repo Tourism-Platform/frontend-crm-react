@@ -1,67 +1,79 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { Loader, PlusIcon } from "lucide-react";
 import { type FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { ENUM_PATH, buildRoute } from "@/shared/config";
+import {
+	ENUM_LANGUAGES,
+	ENUM_PATH,
+	buildRoute,
+	i18nLanguageMapper
+} from "@/shared/config";
 import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_FORM_TRAIN_PRODUCT as ENUM_FORM,
-	type ITrainHop,
-	TRAIN_PRODUCT_NAME_SCHEMA,
-	type TTrainProductNameSchema,
+	type ITrainProduct,
+	TRAIN_PRODUCT_GENERAL_SCHEMA,
+	type TTrainProductGeneralSchema,
+	emptyHopFormRow,
+	mapTrainProductToGeneralForm,
 	useCreateTrainProductMutation,
-	useUpdateTrainProductNameMutation
+	useUpdateTrainProductMutation
 } from "@/entities/supplier";
+
+import { TRAIN_PRODUCT_NAME_FIELD } from "../model";
+
+import { TrainHopRow } from "./train-hop-row";
 
 interface ITrainProductGeneralProps {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	name?: string;
-	hops?: ITrainHop[];
+	product?: ITrainProduct | null;
 }
 
 const TrainProductGeneralBase: FC<ITrainProductGeneralProps> = ({
 	supplierId,
 	productId,
 	isCreate,
-	name = "",
-	hops = []
+	product
 }) => {
-	const { t } = useTranslation("train_product_edit_page");
+	const { t, i18n } = useTranslation("train_product_edit_page");
 	const navigate = useNavigate();
-	const [createTrainProduct, { isLoading: isCreating }] =
-		useCreateTrainProductMutation();
-	const [updateTrainProductName, { isLoading: isUpdating }] =
-		useUpdateTrainProductNameMutation();
-	const isLoading = isCreating || isUpdating;
+	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 
-	const form = useForm<TTrainProductNameSchema>({
-		resolver: zodResolver(TRAIN_PRODUCT_NAME_SCHEMA),
+	const form = useForm<TTrainProductGeneralSchema>({
+		resolver: zodResolver(TRAIN_PRODUCT_GENERAL_SCHEMA),
 		mode: "onSubmit",
-		defaultValues: {
-			[ENUM_FORM.NAME]: name
-		}
+		defaultValues: mapTrainProductToGeneralForm(product)
+	});
+
+	const { fields, append, remove } = useFieldArray({
+		control: form.control,
+		name: ENUM_FORM.HOPS
 	});
 
 	useEffect(() => {
-		form.reset({ [ENUM_FORM.NAME]: name });
-	}, [name, form]);
+		form.reset(mapTrainProductToGeneralForm(product));
+	}, [product, form]);
 
-	const onSubmit = form.handleSubmit(async (values) => {
+	const [createTrainProduct, { isLoading: isCreating }] =
+		useCreateTrainProductMutation();
+	const [updateTrainProduct, { isLoading: isUpdating }] =
+		useUpdateTrainProductMutation();
+	const isLoading = isCreating || isUpdating;
+
+	async function onSubmit(data: TTrainProductGeneralSchema) {
 		try {
 			if (isCreate) {
 				const created = await createTrainProduct({
 					supplierId,
-					data: {
-						name: values[ENUM_FORM.NAME],
-						hops
-					}
+					values: data,
+					language
 				}).unwrap();
 				toast.success(t("form.toasts.create.success"));
 				navigate(
@@ -74,10 +86,11 @@ const TrainProductGeneralBase: FC<ITrainProductGeneralProps> = ({
 				return;
 			}
 
-			await updateTrainProductName({
+			await updateTrainProduct({
 				supplierId,
 				productId,
-				name: values[ENUM_FORM.NAME]
+				values: data,
+				language
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
@@ -88,27 +101,49 @@ const TrainProductGeneralBase: FC<ITrainProductGeneralProps> = ({
 			);
 			console.error(error);
 		}
-	});
+	}
+
+	const { key: nameKey, ...nameField } = TRAIN_PRODUCT_NAME_FIELD;
 
 	return (
 		<Form {...form}>
-			<form onSubmit={onSubmit} className="grid gap-6">
+			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
 				<CustomField
 					control={form.control}
-					name={ENUM_FORM.NAME}
+					name={nameKey}
 					t={t}
-					label="form.general.fields.name.label"
-					placeholder="form.general.fields.name.placeholder"
-					fieldType="input"
+					{...nameField}
 				/>
-				<div className="flex justify-end">
+
+				{fields.map((field, index) => (
+					<TrainHopRow
+						key={field.id}
+						form={form}
+						index={index}
+						language={language}
+						canRemove={fields.length > 1}
+						onRemove={() => remove(index)}
+					/>
+				))}
+
+				<div className="flex flex-wrap justify-between gap-3">
+					<Button
+						type="button"
+						variant="outline"
+						onClick={() => append(emptyHopFormRow())}
+					>
+						<PlusIcon className="mr-1 h-4 w-4" />
+						{t("form.general.fields.hops.add")}
+					</Button>
 					<Button type="submit" size="lg" disabled={isLoading}>
 						{isLoading && (
 							<Loader className="mr-2 h-4 w-4 animate-spin" />
 						)}
 						{isLoading
 							? t("form.general.buttons.saving")
-							: t("form.general.buttons.save")}
+							: isCreate
+								? t("form.general.buttons.create")
+								: t("form.general.buttons.save")}
 					</Button>
 				</div>
 			</form>

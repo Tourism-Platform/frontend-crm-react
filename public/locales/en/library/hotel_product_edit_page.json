@@ -3,41 +3,27 @@
 	"back": "Back to supplier",
 	"tabs": {
 		"general": "General",
-		"details": "Details",
 		"variants": "Variants",
 		"images": "Images"
 	},
 	"form": {
+		"create_hint": {
+			"save_general_first": "Create the hotel on the General tab first"
+		},
 		"general": {
 			"fields": {
 				"name": {
 					"label": "Name",
 					"placeholder": "Hotel name"
-				}
-			},
-			"errors": {
-				"name": {
-					"required": "Name is required"
-				}
-			},
-			"buttons": {
-				"save": "Save",
-				"saving": "Saving ..."
-			}
-		},
-		"details": {
-			"fields": {
+				},
+				"location": {
+					"label": "Address",
+					"placeholder": "Start typing an address",
+					"empty": "No results found"
+				},
 				"stars": {
 					"label": "Stars",
 					"placeholder": "1–5"
-				},
-				"lat": {
-					"label": "Latitude",
-					"placeholder": "Lat"
-				},
-				"long": {
-					"label": "Longitude",
-					"placeholder": "Long"
 				},
 				"amenities": {
 					"label": "Amenities",
@@ -52,14 +38,28 @@
 					"placeholder": "12:00"
 				}
 			},
+			"errors": {
+				"name": {
+					"required": "Name is required"
+				}
+			},
 			"buttons": {
-				"save": "Save details",
-				"saving": "Saving ..."
+				"save": "Save",
+				"saving": "Saving ...",
+				"create": "Create hotel"
 			}
 		},
 		"variants": {
 			"title": "Variants",
 			"add": "Add variant",
+			"errors": {
+				"name": {
+					"required": "Variant name is required"
+				},
+				"roomTyp": {
+					"required": "Select a room type"
+				}
+			},
 			"fields": {
 				"name": {
 					"label": "Variant name",

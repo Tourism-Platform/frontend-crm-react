@@ -3,64 +3,63 @@
 	"back": "Back to supplier",
 	"tabs": {
 		"general": "General",
-		"hops": "Hops",
 		"variants": "Variants",
 		"images": "Images"
 	},
 	"form": {
+		"create_hint": {
+			"save_general_first": "Create the train on the General tab first"
+		},
 		"general": {
 			"fields": {
 				"name": {
 					"label": "Name",
 					"placeholder": "Train name"
+				},
+				"hops": {
+					"add": "Add hop",
+					"departureTime": {
+						"label": "Departure time",
+						"placeholder": "08:00"
+					},
+					"arrivalTime": {
+						"label": "Arrival time",
+						"placeholder": "12:00"
+					},
+					"departureLocation": {
+						"label": "Departure station",
+						"placeholder": "Start typing a station or city",
+						"empty": "No results found"
+					},
+					"arrivalLocation": {
+						"label": "Arrival station",
+						"placeholder": "Start typing a station or city",
+						"empty": "No results found"
+					}
 				}
 			},
 			"errors": {
 				"name": {
 					"required": "Name is required"
+				},
+				"hops": {
+					"required": "Add at least one hop"
 				}
 			},
 			"buttons": {
+				"create": "Create",
 				"save": "Save",
-				"saving": "Saving ..."
-			}
-		},
-		"hops": {
-			"add": "Add hop",
-			"fields": {
-				"departureTime": {
-					"label": "Departure time",
-					"placeholder": "08:00"
-				},
-				"arrivalTime": {
-					"label": "Arrival time",
-					"placeholder": "12:00"
-				},
-				"departureLat": {
-					"label": "Departure lat",
-					"placeholder": "Lat"
-				},
-				"departureLong": {
-					"label": "Departure long",
-					"placeholder": "Long"
-				},
-				"arrivalLat": {
-					"label": "Arrival lat",
-					"placeholder": "Lat"
-				},
-				"arrivalLong": {
-					"label": "Arrival long",
-					"placeholder": "Long"
-				}
-			},
-			"buttons": {
-				"save": "Save hops",
 				"saving": "Saving ..."
 			}
 		},
 		"variants": {
 			"title": "Variants",
 			"add": "Add variant",
+			"errors": {
+				"name": {
+					"required": "Variant name is required"
+				}
+			},
 			"fields": {
 				"name": {
 					"label": "Variant name",

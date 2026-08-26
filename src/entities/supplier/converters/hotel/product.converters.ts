@@ -4,8 +4,7 @@ import {
 	type IHotelProductCreate,
 	type IHotelProductDetails,
 	type TCreateHotelProductBackend,
-	type THotelProductReadBackend,
-	type TUpdateHotelProductBackend
+	type THotelProductReadBackend
 } from "../../types";
 import {
 	mapSupplierLocationFromBackend,
@@ -24,7 +23,7 @@ const mapHotelProductDetailsToBackend = (data: IHotelProductDetails) => ({
 	location: mapSupplierLocationToBackend(data.location),
 	stars: data.stars,
 	amenities: hotelAmenityConverter.toMany(data.amenities),
-	policy: data.policy ? mapHotelPolicyToBackend(data.policy) : null
+	policy: mapHotelPolicyToBackend(data.policy)
 });
 
 export const mapHotelProductFromBackend = (
@@ -56,18 +55,4 @@ export const mapHotelProductToCreate = (
 		amenities: data.amenities,
 		policy: data.policy ?? null
 	})
-});
-
-export const mapHotelProductNameToUpdate = (
-	name: string
-): TUpdateHotelProductBackend => ({
-	typ: "hotel",
-	name
-});
-
-export const mapHotelProductDetailsToUpdate = (
-	data: IHotelProductDetails
-): TUpdateHotelProductBackend => ({
-	typ: "hotel",
-	details: mapHotelProductDetailsToBackend(data)
 });

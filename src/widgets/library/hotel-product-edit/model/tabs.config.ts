@@ -14,10 +14,6 @@ export const HOTEL_PRODUCT_EDIT_TABS: IHotelProductEditTab[] = [
 		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL
 	},
 	{
-		label: "tabs.details",
-		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.DETAILS
-	},
-	{
 		label: "tabs.variants",
 		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS
 	},
