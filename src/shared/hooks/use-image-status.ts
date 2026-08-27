@@ -1,15 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { ENUM_IMAGE_STATUS, type ENUM_IMAGE_STATUS_TYPE } from "@/shared/types";
 
 export const useImageStatus = (src?: string | null) => {
+	const [prevSrc, setPrevSrc] = useState(src);
 	const [status, setStatus] = useState<ENUM_IMAGE_STATUS_TYPE>(
 		src ? ENUM_IMAGE_STATUS.LOADING : ENUM_IMAGE_STATUS.ERROR
 	);
 
-	useEffect(() => {
+	if (src !== prevSrc) {
+		setPrevSrc(src);
 		setStatus(src ? ENUM_IMAGE_STATUS.LOADING : ENUM_IMAGE_STATUS.ERROR);
-	}, [src]);
+	}
 
 	const onLoad = useCallback(() => {
 		setStatus(ENUM_IMAGE_STATUS.LOADED);

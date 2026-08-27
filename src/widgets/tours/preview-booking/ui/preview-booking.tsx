@@ -86,6 +86,7 @@ const PreviewBookingBase: FC = () => {
 		currentStep === 1
 			? {
 					label: t("step_1.continue"),
+					loadingLabel: t("step_1.continuing"),
 					onClick: handleNextStep,
 					isLoading: isStepActionLoading,
 					type: "button" as const
@@ -93,6 +94,7 @@ const PreviewBookingBase: FC = () => {
 			: currentStep === 2
 				? {
 						label: t("step_2.submit"),
+						loadingLabel: t("step_2.submitting"),
 						type: "submit" as const,
 						form: BOOKING_FORM_ID,
 						isLoading: isStepActionLoading

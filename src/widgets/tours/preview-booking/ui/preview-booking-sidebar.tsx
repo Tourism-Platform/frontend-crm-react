@@ -1,10 +1,9 @@
 import { format } from "date-fns";
-import { Loader2 } from "lucide-react";
 import { type FC } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Card, CardContent } from "@/shared/ui";
+import { Card, CardContent, LoaderButton } from "@/shared/ui";
 
 import type { TSubmittedBooking } from "@/entities/booking";
 import {
@@ -16,6 +15,7 @@ import type { IPreviewTourGeneral } from "@/entities/tour/preview-tour";
 
 type TSidebarAction = {
 	label: string;
+	loadingLabel: string;
 	isLoading?: boolean;
 	disabled?: boolean;
 	type?: "button" | "submit";
@@ -174,18 +174,16 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 				</div>
 
 				{action ? (
-					<Button
+					<LoaderButton
 						type={action.type ?? "button"}
 						form={action.form}
 						className="w-full"
-						disabled={action.disabled || action.isLoading}
+						disabled={action.disabled}
+						isLoading={action.isLoading}
 						onClick={action.onClick}
-					>
-						{action.isLoading ? (
-							<Loader2 className="mr-2 size-4 animate-spin" />
-						) : null}
-						{action.label}
-					</Button>
+						label={action.label}
+						loadingLabel={action.loadingLabel}
+					/>
 				) : null}
 			</CardContent>
 		</Card>

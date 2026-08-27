@@ -1,9 +1,12 @@
+import { UserIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { ENUM_PATH } from "@/shared/config";
+import { useImageStatus } from "@/shared/hooks";
+import { cn } from "@/shared/lib";
 import {
 	Button,
 	Card,
@@ -28,6 +31,9 @@ const PreviewTourProviderCardBase: FC = () => {
 	} = usePreviewOperatorData({ tourId, isDraft: isDraftPreview });
 
 	const providerData = PROVIDER_CONTACTS(data);
+	const { isLoaded, isLoading, isError, onLoad, onError } = useImageStatus(
+		data?.logo
+	);
 
 	const handleBooking = () => {
 		if (isDraftPreview) return;
@@ -49,12 +55,33 @@ const PreviewTourProviderCardBase: FC = () => {
 		<Card className="w-[400px] shrink-0 relative overflow-hidden">
 			<div className="absolute top-0 left-0 w-full h-30 bg-blue-100" />
 			<CardContent className="flex flex-col gap-4 pt-10">
-				<div>
-					<img
-						src={data?.logo}
-						alt={data?.business_name}
-						className="h-26 w-26 rounded-full z-10 border-4 border-background relative z-10"
-					/>
+				<div className="relative z-10 h-26 w-26 overflow-hidden rounded-full border-4 border-background bg-muted">
+					{!isLoaded && (
+						<div className="absolute inset-0 z-0 flex items-center justify-center">
+							{isLoading && (
+								<Skeleton className="absolute inset-0 size-full" />
+							)}
+							<UserIcon
+								className={cn(
+									"size-10 text-muted-foreground/40",
+									isLoading &&
+										"animate-pulse text-muted-foreground/20"
+								)}
+							/>
+						</div>
+					)}
+					{data?.logo && !isError && (
+						<img
+							src={data.logo}
+							alt={data.business_name}
+							onLoad={onLoad}
+							onError={onError}
+							className={cn(
+								"absolute inset-0 size-full object-cover transition-opacity duration-500",
+								isLoaded ? "opacity-100" : "opacity-0"
+							)}
+						/>
+					)}
 				</div>
 				<p className="text-xs text-muted-foreground">
 					{t("provider.title")}

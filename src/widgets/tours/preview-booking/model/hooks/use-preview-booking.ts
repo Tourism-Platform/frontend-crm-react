@@ -169,6 +169,21 @@ export const usePreviewBooking = () => {
 	}, [availableLanguages, bookingIdParam, form]);
 
 	useEffect(() => {
+		if (bookingIdParam || !options.length) return;
+
+		const currentOptionId = form.getValues(
+			ENUM_FORM_PREVIEW_BOOKING.OPTION_ID
+		);
+		if (options.some((option) => option.id === currentOptionId)) {
+			return;
+		}
+
+		form.setValue(ENUM_FORM_PREVIEW_BOOKING.OPTION_ID, options[0].id, {
+			shouldValidate: true
+		});
+	}, [bookingIdParam, form, options]);
+
+	useEffect(() => {
 		hasSyncedPax.current = false;
 	}, [bookingIdParam, currentStep]);
 
@@ -301,6 +316,14 @@ export const usePreviewBooking = () => {
 
 	const onSubmit = async (formData: TPreviewBookingSchema) => {
 		if (!bookingIdParam) return;
+
+		if (
+			!formData.travellers.every((traveller) =>
+				isTravellerComplete(traveller as ITravellerPaxInput)
+			)
+		) {
+			return;
+		}
 
 		try {
 			for (const rawTraveller of formData.travellers) {

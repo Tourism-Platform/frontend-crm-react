@@ -1,15 +1,16 @@
+import { GalleryIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
-	CardDescription,
-	CardTitle,
+	Previewer,
+	Skeleton,
 	withErrorBoundary
 } from "@/shared/ui";
-import { Badge } from "@/shared/ui/shadcn-ui/badge";
 
 import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 
@@ -24,67 +25,92 @@ export const PreviewBookingOptionCardBase: FC<
 	IPreviewBookingOptionCardProps
 > = ({ option, isSelected, onSelect, disabled = false }) => {
 	const { t } = useTranslation("preview_tour_page");
+	const { isLoaded, isLoading, isError, onLoad, onError } = useImageStatus(
+		option.image
+	);
 
 	return (
 		<Card
 			className={cn(
-				"transition-colors",
+				"overflow-hidden py-0 transition-colors",
 				disabled && "cursor-default opacity-60",
 				!disabled && "cursor-pointer",
 				isSelected
-					? "border-primary/30 bg-primary/5 ring-1 ring-primary/20"
+					? "border-primary bg-primary/5 ring-1 ring-primary/20"
 					: !disabled && "hover:bg-muted/50"
 			)}
 			onClick={() => !disabled && onSelect(option.id)}
 		>
-			<CardContent>
-				<div className="flex flex-col gap-6 lg:flex-row">
-					<div className="flex flex-1 flex-col gap-4">
-						<div className="grid gap-3">
-							<div className="flex items-start justify-between gap-3">
-								<Badge>
-									<CardTitle>{option.title}</CardTitle>
-								</Badge>
-								<div
-									className={cn(
-										"mt-1 flex size-4 shrink-0 items-center justify-center rounded-full border",
-										isSelected
-											? "border-primary bg-primary"
-											: "border-input"
-									)}
-								>
-									{isSelected && (
-										<span className="size-2 rounded-full bg-primary-foreground" />
-									)}
-								</div>
-							</div>
-							<CardDescription>
-								{option.description}
-							</CardDescription>
+			<CardContent className="flex min-w-0 flex-col gap-0 p-0 md:flex-row md:items-stretch">
+				<div className="relative min-h-36 w-full shrink-0 overflow-hidden bg-muted md:w-1/3">
+					{!isLoaded && (
+						<div className="absolute inset-0 z-0 flex items-center justify-center">
+							{isLoading && (
+								<Skeleton className="absolute inset-0 size-full" />
+							)}
+							<GalleryIcon
+								className={cn(
+									"size-20 text-muted-foreground/40",
+									isLoading &&
+										"animate-pulse text-muted-foreground/20"
+								)}
+							/>
 						</div>
-
-						<div className="mt-auto">
-							<p className="mb-1 text-xs tracking-wider text-muted-foreground uppercase">
-								{t("sections.itinerary.card.from")}
-							</p>
-							<p className="text-xl font-bold">
-								{option.price}{" "}
-								<span className="text-base font-normal">
-									{t("sections.itinerary.card.per_person")}
-								</span>
-							</p>
-							<p className="mt-1 text-xs text-muted-foreground">
-								{t("sections.itinerary.card.price_depends")}
-							</p>
-						</div>
-					</div>
-
-					<div className="w-full shrink-0 lg:w-[320px]">
+					)}
+					{option.image && !isError && (
 						<img
 							src={option.image}
 							alt={option.title}
-							className="h-[240px] w-full rounded-xl object-cover"
+							onLoad={onLoad}
+							onError={onError}
+							className={cn(
+								"absolute inset-0 size-full object-cover transition-opacity duration-500",
+								isLoaded ? "opacity-100" : "opacity-0"
+							)}
 						/>
+					)}
+				</div>
+
+				<div className="flex min-w-0 flex-1 flex-col gap-3 px-4 py-4">
+					<div className="flex items-start justify-between gap-3">
+						<div className="flex min-w-0 flex-1 flex-col gap-1.5">
+							<span className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base">
+								{option.title}
+							</span>
+							{!!option.description && (
+								<Previewer
+									text={option.description}
+									className="text-sm leading-relaxed text-muted-foreground"
+								/>
+							)}
+						</div>
+						<div
+							className={cn(
+								"mt-1 flex size-4 shrink-0 items-center justify-center rounded-full border",
+								isSelected
+									? "border-primary bg-primary"
+									: "border-input"
+							)}
+						>
+							{isSelected && (
+								<span className="size-2 rounded-full bg-primary-foreground" />
+							)}
+						</div>
+					</div>
+
+					<div className="mt-auto border-t pt-3">
+						<p className="mb-1 text-xs tracking-wider text-muted-foreground uppercase">
+							{t("sections.itinerary.card.from")}
+						</p>
+						<p className="text-xl font-bold">
+							{option.price}{" "}
+							<span className="text-base font-normal">
+								{t("sections.itinerary.card.per_person")}
+							</span>
+						</p>
+						<p className="mt-1 text-xs text-muted-foreground">
+							{t("sections.itinerary.card.price_depends")}
+						</p>
 					</div>
 				</div>
 			</CardContent>
