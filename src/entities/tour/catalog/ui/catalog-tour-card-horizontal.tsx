@@ -1,15 +1,17 @@
 import {
 	CalendarMarkIcon,
-	HealthIcon,
+	GalleryIcon,
+	HeartPulseIcon,
+	LayersIcon,
+	Routing2Icon,
 	UsersGroupRoundedIcon
 } from "@solar-icons/react/outline";
-import { Image, Layers } from "lucide-react";
-import { type FC, type ReactNode, useState } from "react";
+import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { MapPinIcon, tourPlaceholder } from "@/shared/assets";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
+import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import { Badge, Card, PreviewerSimple, Skeleton } from "@/shared/ui";
 import { formatMoney } from "@/shared/utils";
@@ -36,7 +38,9 @@ export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
 	data: tour,
 	className
 }) => {
-	const [isImageLoaded, setIsImageLoaded] = useState(false);
+	const { isLoaded, isLoading, isError, onLoad, onError } = useImageStatus(
+		tour.imageUrl
+	);
 	const { t } = useTranslation(["tours_catalog_page", "options"]);
 
 	const tourHref = buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
@@ -83,12 +87,12 @@ export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
 		},
 		{
 			key: "age",
-			icon: <HealthIcon className="size-3.5 shrink-0" />,
+			icon: <HeartPulseIcon className="size-3.5 shrink-0" />,
 			label: ageLabel
 		},
 		{
 			key: "options",
-			icon: <Layers className="size-3.5 shrink-0" />,
+			icon: <LayersIcon className="size-3.5 shrink-0" />,
 			label: t("card.options", { count: tour.optionCount ?? 0 })
 		}
 	];
@@ -101,24 +105,32 @@ export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
 		<Link to={tourHref} className={cn("block min-w-0", className)}>
 			<Card className="relative flex min-w-0 flex-row items-stretch gap-0 overflow-hidden py-0 transition-shadow hover:shadow-md">
 				<div className="relative min-h-40 w-1/2 shrink-0 self-stretch overflow-hidden bg-muted md:w-1/3">
-					{!isImageLoaded && (
+					{!isLoaded && (
 						<div className="absolute inset-0 z-0 flex items-center justify-center">
-							<Skeleton className="absolute inset-0 size-full" />
-							<Image className="size-8 animate-pulse text-muted-foreground/20" />
+							{isLoading && (
+								<Skeleton className="absolute inset-0 size-full" />
+							)}
+							<GalleryIcon
+								className={cn(
+									"size-20 text-muted-foreground/40",
+									isLoading &&
+										"animate-pulse text-muted-foreground/20"
+								)}
+							/>
 						</div>
 					)}
-					<img
-						src={tour.imageUrl || tourPlaceholder}
-						alt={tour.title}
-						onError={(e) => {
-							e.currentTarget.src = tourPlaceholder;
-						}}
-						onLoad={() => setIsImageLoaded(true)}
-						className={cn(
-							"absolute inset-0 size-full object-cover transition-opacity duration-500",
-							isImageLoaded ? "opacity-100" : "opacity-0"
-						)}
-					/>
+					{tour.imageUrl && !isError && (
+						<img
+							src={tour.imageUrl}
+							alt={tour.title}
+							onLoad={onLoad}
+							onError={onError}
+							className={cn(
+								"absolute inset-0 size-full object-cover transition-opacity duration-500",
+								isLoaded ? "opacity-100" : "opacity-0"
+							)}
+						/>
+					)}
 					<div className="absolute inset-x-0 bottom-0 z-10 h-14 bg-gradient-to-t from-black/55 to-transparent" />
 					<div className="absolute left-2 top-2 z-10">
 						<Badge className="border-0 bg-background/95 text-xs text-foreground shadow-sm backdrop-blur-sm">
@@ -157,7 +169,7 @@ export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
 						</span>
 						{!!tour.route.length && (
 							<div className="flex min-w-0 items-center gap-1 text-[11px] text-muted-foreground sm:text-xs">
-								<MapPinIcon className="size-3 shrink-0" />
+								<Routing2Icon className="size-3 shrink-0" />
 								<span className="truncate">
 									{tour.route.join(" → ")}
 								</span>

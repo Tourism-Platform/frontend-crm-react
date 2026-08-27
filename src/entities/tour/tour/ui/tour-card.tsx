@@ -1,16 +1,16 @@
 import {
 	CalendarMarkIcon,
-	HealthIcon,
+	GalleryIcon,
+	HeartPulseIcon,
 	TagIcon,
 	UsersGroupRoundedIcon
 } from "@solar-icons/react/outline";
-import { Image } from "lucide-react";
-import { type FC, type ReactNode, useState } from "react";
+import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { tourPlaceholder } from "@/shared/assets";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
+import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import {
 	Badge,
@@ -47,7 +47,9 @@ type TMetaItem = {
 };
 
 export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
-	const [isImageLoaded, setIsImageLoaded] = useState(false);
+	const { isLoaded, isLoading, isError, onLoad, onError } = useImageStatus(
+		card.imageUrl
+	);
 	const { t } = useTranslation(["options", "tours_page"]);
 
 	const visibleCategories = card.categories.slice(0, VISIBLE_CATEGORIES);
@@ -93,7 +95,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 		},
 		{
 			key: "age",
-			icon: <HealthIcon className="size-3.5 shrink-0" />,
+			icon: <HeartPulseIcon className="size-3.5 shrink-0" />,
 			label: ageLabel
 		},
 		{
@@ -106,24 +108,32 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 	return (
 		<Card className="relative h-full gap-0 overflow-hidden pt-0 pb-4">
 			<div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted">
-				{!isImageLoaded && (
+				{!isLoaded && (
 					<div className="absolute inset-0 z-0 flex items-center justify-center">
-						<Skeleton className="absolute inset-0 size-full" />
-						<Image className="size-10 animate-pulse text-muted-foreground/20" />
+						{isLoading && (
+							<Skeleton className="absolute inset-0 size-full" />
+						)}
+						<GalleryIcon
+							className={cn(
+								"size-20 text-muted-foreground/40",
+								isLoading &&
+									"animate-pulse text-muted-foreground/20"
+							)}
+						/>
 					</div>
 				)}
-				<img
-					src={card.imageUrl || tourPlaceholder}
-					alt={card.title}
-					onError={(e) => {
-						e.currentTarget.src = tourPlaceholder;
-					}}
-					onLoad={() => setIsImageLoaded(true)}
-					className={cn(
-						"absolute inset-0 size-full object-cover transition-opacity duration-500",
-						isImageLoaded ? "opacity-100" : "opacity-0"
-					)}
-				/>
+				{card.imageUrl && !isError && (
+					<img
+						src={card.imageUrl}
+						alt={card.title}
+						onLoad={onLoad}
+						onError={onError}
+						className={cn(
+							"absolute inset-0 size-full object-cover transition-opacity duration-500",
+							isLoaded ? "opacity-100" : "opacity-0"
+						)}
+					/>
+				)}
 				<div className="absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-black/55 to-transparent" />
 				<div className="absolute left-3 top-3 z-10">
 					<Badge
