@@ -3,6 +3,7 @@
 export { ADMIN_PATHS } from "./admin.paths";
 export { AUTH_PATHS } from "./auth.paths";
 export { ACCOUNT_PATHS } from "./account.paths";
+export { TOUR_SLUG_PATHS } from "./tour-slug.paths";
 export { TOUR_CATALOG_PATHS } from "./tour-catalog.paths";
 export { TOUR_OPTION_PATHS } from "./tour-option.paths";
 export { TOUR_FINANCIAL_PATHS } from "./tour-financial.paths";
