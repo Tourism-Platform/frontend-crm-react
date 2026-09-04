@@ -1,10 +1,8 @@
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router";
 import { toast } from "sonner";
 
 import type { TResources } from "@/shared/config";
-import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	CustomUploadImages,
 	LoaderButton,
@@ -12,52 +10,23 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import {
-	useDeleteEventImageMutation,
-	useListEventImagesQuery,
-	useUpdateEventImageMutation,
-	useUploadEventImagesMutation
-} from "@/entities/tour";
+import { useEventMedia } from "./use-event-media";
 
 export interface IMediaProps {
 	ns?: keyof TResources;
 }
 
-const EMPTY_IMAGES: { id: string; imagePath: string; isPrimary: boolean }[] =
-	[];
-
 const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 	const { t } = useTranslation(ns);
 	const {
-		tourId = "",
-		eventId = "",
-		eventOptionId
-	} = useParams<{
-		tourId: string;
-		eventId: string;
-		eventOptionId?: string;
-	}>();
-	const mediaEventId = eventOptionId || eventId;
-
-	const {
-		data: serverImages = EMPTY_IMAGES,
-		isLoading: isListLoading,
-		isRealError: isError
-	} = useOptionalResourceQuery(
-		useListEventImagesQuery(
-			{ tourId, eventId: mediaEventId },
-			{ skip: !tourId || !mediaEventId }
-		)
-	);
-
-	const [uploadImagesMutation, { isLoading: isUploading }] =
-		useUploadEventImagesMutation();
-	const [deleteImageMutation, { isLoading: isDeleting }] =
-		useDeleteEventImageMutation();
-	const [setPrimaryImageMutation, { isLoading: isSettingPrimary }] =
-		useUpdateEventImageMutation();
-
-	const isMutating = isUploading || isDeleting || isSettingPrimary;
+		serverImages,
+		isListLoading,
+		isError,
+		isMutating,
+		addImages,
+		removeImage,
+		setPrimaryImage
+	} = useEventMedia();
 
 	const {
 		items,
@@ -69,24 +38,9 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 	} = useCustomUploadImages({
 		images: serverImages,
 		isServerLoading: isListLoading || isMutating,
-		addImages: (files) =>
-			uploadImagesMutation({
-				tourId,
-				eventId: mediaEventId,
-				files
-			}).unwrap(),
-		removeImage: (imageId) =>
-			deleteImageMutation({
-				tourId,
-				eventId: mediaEventId,
-				imageId
-			}).unwrap(),
-		setPrimaryImage: (imageId) =>
-			setPrimaryImageMutation({
-				tourId,
-				eventId: mediaEventId,
-				imageId
-			}).unwrap(),
+		addImages,
+		removeImage,
+		setPrimaryImage,
 		onSuccess: () => toast.success(t("form.toasts.save.success")),
 		onError: () => toast.error(t("form.toasts.save.error"))
 	});
@@ -99,7 +53,6 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 
 	return (
 		<div className="grid gap-6">
-			{/* <h2 className="text-xl">{t("media.title")}</h2> */}
 			<CustomUploadImages
 				items={items}
 				onAdd={handleAdd}

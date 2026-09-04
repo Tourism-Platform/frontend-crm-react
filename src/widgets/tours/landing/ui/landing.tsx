@@ -14,6 +14,7 @@ import {
 	Form,
 	LoaderButton,
 	Separator,
+	fetchImageAsFile,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -133,11 +134,17 @@ const LandingBase: FC = () => {
 			return;
 		}
 
-		// ── Case 2: new files added (with or without deletions/reorder) ───
-		// Strategy: delete all → re-upload everything in final order
+		// ── Case 2: POST appends. Fetch kept images, delete them, upload the full set.
 
 		if (hasPending) {
-			// Delete all existing server images
+			const filesToUpload = await Promise.all(
+				orderedItems.map((item) =>
+					item.kind === "pending"
+						? Promise.resolve(item.file)
+						: fetchImageAsFile(item.src)
+				)
+			);
+
 			const allServerImages = orderedItems
 				.filter(
 					(i): i is Extract<typeof i, { kind: "uploaded" }> =>
@@ -153,17 +160,6 @@ const LandingBase: FC = () => {
 				idsToDeleteAll.map((imageId) =>
 					deleteImage({ tourId, imageId }).unwrap()
 				)
-			);
-
-			// Build files in final order: uploaded → fetch as blob, pending → File
-			const filesToUpload = await Promise.all(
-				orderedItems.map(async (item) => {
-					if (item.kind === "pending") return item.file;
-					const res = await fetch(item.src);
-					const blob = await res.blob();
-					const name = item.src.split("/").pop() ?? "image";
-					return new File([blob], name, { type: blob.type });
-				})
 			);
 
 			const newImages = await uploadImages({

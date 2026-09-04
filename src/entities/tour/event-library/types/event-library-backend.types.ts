@@ -1,7 +1,8 @@
 import type {
 	EventLibraryListResponse,
 	EventLibraryResponse,
-	EventTypes
+	EventTypes,
+	TourEventLibraryImageModel
 } from "@/shared/api";
 import { TOUR_EVENT_LIBRARY_PATHS } from "@/shared/api";
 
@@ -21,3 +22,5 @@ export type TCreateEventLibraryBackend =
 export type TUpdateEventLibraryBackend = ReturnType<
 	typeof TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent
 >["_types"]["body"];
+
+export type TEventLibraryImageBackend = TourEventLibraryImageModel;

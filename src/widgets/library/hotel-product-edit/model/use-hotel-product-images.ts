@@ -18,11 +18,7 @@ import {
 	useUploadProductImagesMutation
 } from "@/entities/supplier";
 
-const EMPTY_PRODUCT_IMAGES: {
-	id: string;
-	imagePath: string;
-	isPrimary: boolean;
-}[] = [];
+const EMPTY_PRODUCT_IMAGES: ISupplierNodeImage[] = [];
 
 export interface IUseHotelProductImagesParams {
 	supplierId: string;
@@ -130,7 +126,7 @@ export const useHotelProductImages = ({
 		onError: () => toast.error(t("form.toasts.save.error"))
 	});
 
-	const nodeImages: ISupplierNodeImage[] = selectedRoom?.images ?? [];
+	const nodeImages = selectedRoom?.images ?? EMPTY_PRODUCT_IMAGES;
 
 	const nodeUpload = useCustomUploadImages({
 		images: nodeImages,

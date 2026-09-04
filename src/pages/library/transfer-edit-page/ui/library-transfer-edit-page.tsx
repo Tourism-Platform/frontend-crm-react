@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +16,6 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
-	ENUM_TRANSPORTATION_EDIT_TAB,
 	LIBRARY_EVENT_CREATE_ID,
 	TRANSPORTATION_EDIT_SCHEMA,
 	type TTransportationEditSchema,
@@ -26,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { TransportationEdit } from "@/widgets/tours";
-import {
-	type ENUM_FORM_SECTION_TYPE,
-	TRANSPORTATION_EDIT_TABS_LIST
-} from "@/widgets/tours/events/transportation-edit/model";
+import { type ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/transportation-edit/model";
 
 export const LibraryTransferEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
@@ -53,14 +49,6 @@ export const LibraryTransferEditPage: FC = () => {
 		resolver: zodResolver(TRANSPORTATION_EDIT_SCHEMA),
 		mode: "onSubmit"
 	});
-
-	const tabs = useMemo(
-		() =>
-			TRANSPORTATION_EDIT_TABS_LIST.filter(
-				(tab) => tab.type !== ENUM_TRANSPORTATION_EDIT_TAB.MEDIA
-			),
-		[]
-	);
 
 	useEffect(() => {
 		if (isLoadError) {
@@ -125,7 +113,6 @@ export const LibraryTransferEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isCreateLoading || isUpdateLoading}
-			tabs={tabs}
 		/>
 	);
 };

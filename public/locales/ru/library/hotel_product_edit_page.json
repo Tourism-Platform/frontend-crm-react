@@ -3,8 +3,8 @@
 	"back": "К поставщику",
 	"tabs": {
 		"general": "Основное",
-		"variants": "Варианты",
-		"images": "Фото"
+		"media": "Медиа",
+		"variants": "Варианты"
 	},
 	"form": {
 		"create_hint": {

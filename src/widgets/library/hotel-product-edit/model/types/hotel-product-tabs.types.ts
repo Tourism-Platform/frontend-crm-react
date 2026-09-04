@@ -2,8 +2,8 @@ import type { IHotelProduct, IHotelVariant } from "@/entities/supplier";
 
 export const ENUM_HOTEL_PRODUCT_EDIT_TAB = {
 	GENERAL: "general",
-	VARIANTS: "variants",
-	IMAGES: "images"
+	MEDIA: "media",
+	VARIANTS: "variants"
 } as const;
 
 export type ENUM_HOTEL_PRODUCT_EDIT_TAB_TYPE =

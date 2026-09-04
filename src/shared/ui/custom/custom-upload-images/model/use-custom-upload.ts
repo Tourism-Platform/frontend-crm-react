@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { type TUploadImageItem, getUploadItemId } from "@/shared/ui";
 
+import { fetchImageAsFile } from "./fetch-image-as-file";
+
 export interface IUploadResult {
 	id: string;
 }
@@ -31,6 +33,7 @@ export const useCustomUploadImages = ({
 	const toDeleteRef = useRef<string[]>([]);
 
 	useEffect(() => {
+		if (isSubmitting || isServerLoading) return;
 		if (!images?.length) {
 			setItems([]);
 			return;
@@ -48,7 +51,7 @@ export const useCustomUploadImages = ({
 			}))
 		);
 		toDeleteRef.current = [];
-	}, [images]);
+	}, [images, isSubmitting, isServerLoading]);
 
 	const handleAdd = (files: File[]) => {
 		const pending: TUploadImageItem[] = files.map((file) => ({
@@ -112,23 +115,20 @@ export const useCustomUploadImages = ({
 				return;
 			}
 
-			// Case 2: new files added
+			// Case 2: POST appends. Fetch kept images, delete them, upload the full set.
 			if (hasPending) {
+				const filesToUpload = await Promise.all(
+					items.map((item) =>
+						item.kind === "pending"
+							? Promise.resolve(item.file)
+							: fetchImageAsFile(item.src)
+					)
+				);
+
 				const idsToDeleteAll = [
 					...new Set([...toDelete, ...uploadedItems.map((i) => i.id)])
 				];
-
 				await Promise.all(idsToDeleteAll.map((id) => removeImage(id)));
-
-				const filesToUpload = await Promise.all(
-					items.map(async (item) => {
-						if (item.kind === "pending") return item.file;
-						const res = await fetch(item.src);
-						const blob = await res.blob();
-						const name = item.src.split("/").pop() ?? "image";
-						return new File([blob], name, { type: blob.type });
-					})
-				);
 
 				const newImages = await addImages(filesToUpload);
 				const firstId = newImages[0]?.id;

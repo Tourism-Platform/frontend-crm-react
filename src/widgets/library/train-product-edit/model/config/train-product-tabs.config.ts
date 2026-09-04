@@ -20,7 +20,7 @@ type TTrainVariantsTabExtra = Pick<
 	"supplierId" | "productId" | "variants"
 >;
 
-type TTrainImagesTabExtra = Pick<
+type TTrainMediaTabExtra = Pick<
 	ITrainProductEditSlotContext,
 	"supplierId" | "productId"
 > & { disabled: boolean };
@@ -34,6 +34,15 @@ type TTrainGeneralTab = IQueryTab<
 	TTrainGeneralTabExtra
 >;
 
+type TTrainMediaTab = IQueryTab<
+	typeof ENUM_TRAIN_PRODUCT_EDIT_TAB.MEDIA,
+	"train_product_edit_page",
+	string,
+	never,
+	ITrainProductEditSlotContext,
+	TTrainMediaTabExtra
+>;
+
 type TTrainVariantsTab = IQueryTab<
 	typeof ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS,
 	"train_product_edit_page",
@@ -43,19 +52,10 @@ type TTrainVariantsTab = IQueryTab<
 	TTrainVariantsTabExtra
 >;
 
-type TTrainImagesTab = IQueryTab<
-	typeof ENUM_TRAIN_PRODUCT_EDIT_TAB.IMAGES,
-	"train_product_edit_page",
-	string,
-	never,
-	ITrainProductEditSlotContext,
-	TTrainImagesTabExtra
->;
-
 export const TRAIN_PRODUCT_EDIT_TABS_LIST: (
 	| TTrainGeneralTab
+	| TTrainMediaTab
 	| TTrainVariantsTab
-	| TTrainImagesTab
 )[] = [
 	{
 		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.GENERAL,
@@ -69,6 +69,16 @@ export const TRAIN_PRODUCT_EDIT_TABS_LIST: (
 		})
 	},
 	{
+		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.MEDIA,
+		label: "tabs.media",
+		slot: TrainProductImages,
+		getSlotProps: ({ supplierId, productId, isCreate }) => ({
+			supplierId,
+			productId,
+			disabled: isCreate
+		})
+	},
+	{
 		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: TrainProductVariants,
@@ -76,16 +86,6 @@ export const TRAIN_PRODUCT_EDIT_TABS_LIST: (
 			supplierId,
 			productId,
 			variants
-		})
-	},
-	{
-		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.IMAGES,
-		label: "tabs.images",
-		slot: TrainProductImages,
-		getSlotProps: ({ supplierId, productId, isCreate }) => ({
-			supplierId,
-			productId,
-			disabled: isCreate
 		})
 	}
 ];

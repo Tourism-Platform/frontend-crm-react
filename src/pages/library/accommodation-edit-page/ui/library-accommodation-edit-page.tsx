@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +16,6 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ACCOMMODATION_EDIT_SCHEMA,
-	ENUM_ACCOMMODATION_EDIT_TAB,
 	ENUM_EVENT,
 	LIBRARY_EVENT_CREATE_ID,
 	type TAccommodationEditSchema,
@@ -26,10 +25,7 @@ import {
 } from "@/entities/tour";
 
 import { AccommodationEdit } from "@/widgets/tours";
-import {
-	ACCOMMODATION_EDIT_TABS_LIST,
-	type ENUM_FORM_SECTION_TYPE
-} from "@/widgets/tours/events/accommodation-edit/model";
+import { type ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/accommodation-edit/model";
 
 export const LibraryAccommodationEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
@@ -53,14 +49,6 @@ export const LibraryAccommodationEditPage: FC = () => {
 		resolver: zodResolver(ACCOMMODATION_EDIT_SCHEMA),
 		mode: "onSubmit"
 	});
-
-	const tabs = useMemo(
-		() =>
-			ACCOMMODATION_EDIT_TABS_LIST.filter(
-				(tab) => tab.type !== ENUM_ACCOMMODATION_EDIT_TAB.MEDIA
-			),
-		[]
-	);
 
 	useEffect(() => {
 		if (isLoadError) {
@@ -125,7 +113,6 @@ export const LibraryAccommodationEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isCreateLoading || isUpdateLoading}
-			tabs={tabs}
 		/>
 	);
 };

@@ -19,7 +19,11 @@ const isTrainProduct = (product?: TSupplierProduct): product is ITrainProduct =>
 	product?.typ === ENUM_SUPPLIER_TYPE.TRAIN;
 
 export const LibraryTrainProductEditPage: FC = () => {
-	const { t } = useTranslation("train_product_edit_page");
+	const { t } = useTranslation([
+		"train_product_edit_page",
+		"common_events",
+		"options"
+	]);
 	const { supplierId = "", productId = "" } = useParams<{
 		supplierId: string;
 		productId: string;

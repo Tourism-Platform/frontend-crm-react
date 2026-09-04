@@ -2,8 +2,8 @@ import type { ITrainProduct, ITrainVariant } from "@/entities/supplier";
 
 export const ENUM_TRAIN_PRODUCT_EDIT_TAB = {
 	GENERAL: "general",
-	VARIANTS: "variants",
-	IMAGES: "images"
+	MEDIA: "media",
+	VARIANTS: "variants"
 } as const;
 
 export type ENUM_TRAIN_PRODUCT_EDIT_TAB_TYPE =

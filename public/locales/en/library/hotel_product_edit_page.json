@@ -3,8 +3,8 @@
 	"back": "Back to supplier",
 	"tabs": {
 		"general": "General",
-		"variants": "Variants",
-		"images": "Images"
+		"media": "Media",
+		"variants": "Variants"
 	},
 	"form": {
 		"create_hint": {

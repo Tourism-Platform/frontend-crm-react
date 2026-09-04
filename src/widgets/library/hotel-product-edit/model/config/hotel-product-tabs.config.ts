@@ -20,7 +20,7 @@ type THotelVariantsTabExtra = Pick<
 	"supplierId" | "productId" | "variants"
 >;
 
-type THotelImagesTabExtra = Pick<
+type THotelMediaTabExtra = Pick<
 	IHotelProductEditSlotContext,
 	"supplierId" | "productId" | "variants"
 > & { disabled: boolean };
@@ -34,6 +34,15 @@ type THotelGeneralTab = IQueryTab<
 	THotelGeneralTabExtra
 >;
 
+type THotelMediaTab = IQueryTab<
+	typeof ENUM_HOTEL_PRODUCT_EDIT_TAB.MEDIA,
+	"hotel_product_edit_page",
+	string,
+	never,
+	IHotelProductEditSlotContext,
+	THotelMediaTabExtra
+>;
+
 type THotelVariantsTab = IQueryTab<
 	typeof ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS,
 	"hotel_product_edit_page",
@@ -43,19 +52,10 @@ type THotelVariantsTab = IQueryTab<
 	THotelVariantsTabExtra
 >;
 
-type THotelImagesTab = IQueryTab<
-	typeof ENUM_HOTEL_PRODUCT_EDIT_TAB.IMAGES,
-	"hotel_product_edit_page",
-	string,
-	never,
-	IHotelProductEditSlotContext,
-	THotelImagesTabExtra
->;
-
 export const HOTEL_PRODUCT_EDIT_TABS_LIST: (
 	| THotelGeneralTab
+	| THotelMediaTab
 	| THotelVariantsTab
-	| THotelImagesTab
 )[] = [
 	{
 		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL,
@@ -69,6 +69,17 @@ export const HOTEL_PRODUCT_EDIT_TABS_LIST: (
 		})
 	},
 	{
+		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.MEDIA,
+		label: "tabs.media",
+		slot: HotelProductImages,
+		getSlotProps: ({ supplierId, productId, variants, isCreate }) => ({
+			supplierId,
+			productId,
+			variants,
+			disabled: isCreate
+		})
+	},
+	{
 		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: HotelProductVariants,
@@ -76,17 +87,6 @@ export const HOTEL_PRODUCT_EDIT_TABS_LIST: (
 			supplierId,
 			productId,
 			variants
-		})
-	},
-	{
-		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.IMAGES,
-		label: "tabs.images",
-		slot: HotelProductImages,
-		getSlotProps: ({ supplierId, productId, variants, isCreate }) => ({
-			supplierId,
-			productId,
-			variants,
-			disabled: isCreate
 		})
 	}
 ];

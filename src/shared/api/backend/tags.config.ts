@@ -18,6 +18,7 @@ export const ENUM_API_TAGS = {
 	EVENT_LIBRARY: "Event Library",
 	LANDING_IMAGES: "Landing Images",
 	EVENT_IMAGES: "Event Images",
+	EVENT_LIBRARY_IMAGES: "Event Library Images",
 	OPERATOR: {
 		FINANCIAL_INFORMATION: "Operator Financial Information",
 		CURRENCY_RATES: "Operator Currency Rates",

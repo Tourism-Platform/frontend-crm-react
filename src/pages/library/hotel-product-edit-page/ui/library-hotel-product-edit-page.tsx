@@ -19,7 +19,11 @@ const isHotelProduct = (product?: TSupplierProduct): product is IHotelProduct =>
 	product?.typ === ENUM_SUPPLIER_TYPE.HOTEL;
 
 export const LibraryHotelProductEditPage: FC = () => {
-	const { t } = useTranslation("hotel_product_edit_page");
+	const { t } = useTranslation([
+		"hotel_product_edit_page",
+		"common_events",
+		"options"
+	]);
 	const { supplierId = "", productId = "" } = useParams<{
 		supplierId: string;
 		productId: string;

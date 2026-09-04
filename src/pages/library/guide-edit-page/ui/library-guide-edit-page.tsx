@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,7 +16,6 @@ import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
 	ENUM_EVENT,
-	ENUM_GUIDE_EDIT_TAB,
 	GUIDE_EDIT_SCHEMA,
 	LIBRARY_EVENT_CREATE_ID,
 	type TGuideEditSchema,
@@ -26,7 +25,6 @@ import {
 } from "@/entities/tour";
 
 import { GuideEdit } from "@/widgets/tours";
-import { GUIDE_EDIT_TABS_LIST } from "@/widgets/tours/events/guide-edit/model";
 
 export const LibraryGuideEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
@@ -50,14 +48,6 @@ export const LibraryGuideEditPage: FC = () => {
 		resolver: zodResolver(GUIDE_EDIT_SCHEMA),
 		mode: "onSubmit"
 	});
-
-	const tabs = useMemo(
-		() =>
-			GUIDE_EDIT_TABS_LIST.filter(
-				(tab) => tab.type !== ENUM_GUIDE_EDIT_TAB.MEDIA
-			),
-		[]
-	);
 
 	useEffect(() => {
 		if (isLoadError) {
@@ -119,7 +109,6 @@ export const LibraryGuideEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isCreateLoading || isUpdateLoading}
-			tabs={tabs}
 		/>
 	);
 };
