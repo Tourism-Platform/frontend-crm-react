@@ -4,6 +4,7 @@ import type { ACCOMMODATION_EDIT_SCHEMA } from "../../schema";
 
 export const ENUM_FORM_ACCOMMODATION = {
 	PROPERTY: "property",
+	STARS: "stars",
 	AMENITIES: "amenities",
 	DESCRIPTION: "description",
 	LENGTH_OF_STAY: "length_of_stay",

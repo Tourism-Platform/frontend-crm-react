@@ -88,7 +88,7 @@ const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 				/>
 				{isInherited ? <InheritedProductSeasonRates /> : null}
 			</div>
-			<div className="grid grid-cols-2">
+			<div className="grid grid-cols-2 gap-4">
 				{PROPERTIES_LIST(geoProps).map(({ key, ...item }) => (
 					<CustomField
 						key={key}

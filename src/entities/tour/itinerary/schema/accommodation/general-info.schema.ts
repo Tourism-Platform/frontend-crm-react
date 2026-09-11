@@ -14,6 +14,14 @@ export const GENERAL_INFO_SCHEMA = z.object({
 	[ENUM_FORM_ACCOMMODATION.PROPERTY]:
 		GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 
+	[ENUM_FORM_ACCOMMODATION.STARS]: z
+		.number()
+		.int()
+		.min(1, msg("form.general.details.form.fields.stars.errors.min"))
+		.max(5, msg("form.general.details.form.fields.stars.errors.max"))
+		.nullable()
+		.optional(),
+
 	[ENUM_FORM_ACCOMMODATION.AMENITIES]: z
 		.array(z.enum(ENUM_ACCOMMODATION_AMENITY))
 		.optional(),

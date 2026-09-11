@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -33,12 +33,7 @@ import {
 	useUpdateHotelProductMutation
 } from "@/entities/supplier";
 
-import {
-	FORM_HOTEL_PRODUCT_GENERAL_LIST,
-	HOTEL_PRODUCT_GENERAL_NAME_FIELD,
-	LOCATION_FIELD,
-	type TForm
-} from "../model";
+import { FORM_HOTEL_PRODUCT_GENERAL_LIST } from "../model";
 
 interface IHotelProductGeneralProps {
 	supplierId: string;
@@ -58,7 +53,6 @@ const HotelProductGeneralBase: FC<IHotelProductGeneralProps> = ({
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 
 	const geoProps = useGeoSearchFieldProps(language);
-	const locationField = useMemo(() => LOCATION_FIELD(geoProps), [geoProps]);
 
 	const form = useForm<
 		THotelProductGeneralFormInput,
@@ -123,25 +117,23 @@ const HotelProductGeneralBase: FC<IHotelProductGeneralProps> = ({
 		}
 	}
 
-	const renderField = ({ key, ...item }: TForm) => (
-		<CustomField
-			key={key}
-			control={form.control}
-			name={key}
-			t={t}
-			{...item}
-		/>
-	);
-
 	return (
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="grid gap-6 md:grid-cols-2"
 			>
-				{renderField(HOTEL_PRODUCT_GENERAL_NAME_FIELD)}
-				{renderField(locationField)}
-				{FORM_HOTEL_PRODUCT_GENERAL_LIST().map(renderField)}
+				{FORM_HOTEL_PRODUCT_GENERAL_LIST(geoProps).map(
+					({ key, ...item }) => (
+						<CustomField
+							key={key}
+							control={form.control}
+							name={key}
+							t={t}
+							{...item}
+						/>
+					)
+				)}
 				<div className="md:col-span-2 flex justify-end">
 					<LoaderButton
 						type="submit"

@@ -37,6 +37,7 @@ export const mapInheritedHousingProductSnapshotToForm = (
 	details: TInheritedHousingDetailsBackend
 ): {
 	property: ReturnType<typeof mapBackendLocationToGeoForm>;
+	stars: number | null;
 	amenities: ReturnType<typeof accommodationAmenityConverter.fromMany>;
 	rooms: TRoomsSchema;
 } => {
@@ -56,6 +57,7 @@ export const mapInheritedHousingProductSnapshotToForm = (
 
 	return {
 		property: mapBackendLocationToGeoForm(product?.location ?? null),
+		stars: product?.stars ?? null,
 		amenities: accommodationAmenityConverter.fromMany(
 			product?.amenities ?? []
 		),

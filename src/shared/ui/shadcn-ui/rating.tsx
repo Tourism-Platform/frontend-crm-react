@@ -1,6 +1,7 @@
 "use client";
 
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
+import { type VariantProps, cva } from "class-variance-authority";
 import { type LucideProps, StarIcon } from "lucide-react";
 import type { KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
 import {
@@ -21,6 +22,7 @@ type RatingContextValue = {
 	readOnly: boolean;
 	hoverValue: number | null;
 	focusedStar: number | null;
+	previewOnHover: boolean;
 	handleValueChange: (
 		event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
 		value: number
@@ -40,14 +42,45 @@ const useRating = () => {
 	return context;
 };
 
-export type RatingButtonProps = LucideProps & {
-	index?: number;
-	icon?: ReactElement<LucideProps>;
-};
+export const ratingButtonVariants = cva(
+	"rounded-full p-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:shrink-0",
+	{
+		variants: {
+			variant: {
+				default: "",
+				primary: "text-primary"
+			},
+			size: {
+				sm: "[&_svg]:size-3.5",
+				default: "[&_svg]:size-5",
+				lg: "[&_svg]:size-6",
+				xl: "[&_svg]:size-[24px]"
+			}
+		},
+		defaultVariants: {
+			variant: "default",
+			size: "default"
+		}
+	}
+);
+
+export type RatingButtonVariant = VariantProps<
+	typeof ratingButtonVariants
+>["variant"];
+export type RatingButtonSize = VariantProps<
+	typeof ratingButtonVariants
+>["size"];
+
+export type RatingButtonProps = Omit<LucideProps, "size"> &
+	VariantProps<typeof ratingButtonVariants> & {
+		index?: number;
+		icon?: ReactElement<LucideProps>;
+	};
 
 export const RatingButton = ({
 	index: providedIndex,
-	size = 20,
+	variant,
+	size,
 	className,
 	icon = <StarIcon />
 }: RatingButtonProps) => {
@@ -56,6 +89,7 @@ export const RatingButton = ({
 		readOnly,
 		hoverValue,
 		focusedStar,
+		previewOnHover,
 		handleValueChange,
 		handleKeyDown,
 		setHoverValue,
@@ -63,7 +97,10 @@ export const RatingButton = ({
 	} = useRating();
 
 	const index = providedIndex ?? 0;
-	const isActive = index < (hoverValue ?? focusedStar ?? value ?? 0);
+	const previewValue = previewOnHover
+		? (hoverValue ?? focusedStar ?? value ?? 0)
+		: (value ?? 0);
+	const isActive = index < previewValue;
 	let tabIndex = -1;
 
 	if (!readOnly) {
@@ -78,10 +115,10 @@ export const RatingButton = ({
 	);
 
 	const handleMouseEnter = useCallback(() => {
-		if (!readOnly) {
+		if (!readOnly && previewOnHover) {
 			setHoverValue(index + 1);
 		}
-	}, [readOnly, setHoverValue, index]);
+	}, [readOnly, previewOnHover, setHoverValue, index]);
 
 	const handleFocus = useCallback(() => {
 		setFocusedStar(index + 1);
@@ -94,8 +131,7 @@ export const RatingButton = ({
 	return (
 		<button
 			className={cn(
-				"rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-				"p-0.5",
+				ratingButtonVariants({ variant, size }),
 				readOnly && "cursor-default",
 				className
 			)}
@@ -109,7 +145,6 @@ export const RatingButton = ({
 			type="button"
 		>
 			{cloneElement(icon, {
-				size,
 				className: cn(
 					"transition-colors duration-200",
 					isActive && "fill-current",
@@ -130,6 +165,7 @@ export type RatingProps = {
 	) => void;
 	onValueChange?: (value: number) => void;
 	readOnly?: boolean;
+	previewOnHover?: boolean;
 	className?: string;
 	children?: ReactNode;
 };
@@ -140,6 +176,7 @@ export const Rating = ({
 	defaultValue = 0,
 	onChange,
 	readOnly = false,
+	previewOnHover = true,
 	className,
 	children,
 	...props
@@ -215,6 +252,7 @@ export const Rating = ({
 		readOnly,
 		hoverValue,
 		focusedStar,
+		previewOnHover,
 		handleValueChange,
 		handleKeyDown,
 		setHoverValue,

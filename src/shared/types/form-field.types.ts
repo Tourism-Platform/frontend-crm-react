@@ -11,6 +11,8 @@ import type {
 	CustomGeoSelectProps,
 	MultipleSelectorDisplayMode,
 	Option as MultipleSelectorOption,
+	RatingButtonSize,
+	RatingButtonVariant,
 	SelectPickerOption,
 	TAsyncSelectOption,
 	TCustomAsyncSelectProps
@@ -107,6 +109,15 @@ type TFormSwitch<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	description?: L;
 };
 
+type TFormRating<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
+	fieldType: "rating";
+	max?: number;
+	size?: RatingButtonSize;
+	variant?: RatingButtonVariant;
+	readOnly?: boolean;
+	previewOnHover?: boolean;
+};
+
 type TFormAutocomplete<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: "autocomplete";
 	options: CustomAutocompleteOption[];
@@ -164,6 +175,7 @@ export type TFormField<L = TGenericLabel, K = TGenericKey> =
 	| TFormTags<L, K>
 	| TFormUploadFiles<L, K>
 	| TFormSwitch<L, K>
+	| TFormRating<L, K>
 	| TFormAutocomplete<L, K>
 	| TFormCountry<L, K>
 	| TFormGeo<L, K>

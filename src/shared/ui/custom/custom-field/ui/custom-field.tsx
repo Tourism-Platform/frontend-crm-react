@@ -12,6 +12,8 @@ import type {
 	CustomCountrySelectProps,
 	CustomGeoSelectProps,
 	ICustomUploadFilesProps,
+	RatingButtonSize,
+	RatingButtonVariant,
 	TCustomAsyncSelectProps
 } from "@/shared/ui";
 import {
@@ -34,6 +36,8 @@ import {
 	type MultipleSelectorDisplayMode,
 	type Option as MultipleSelectorOption,
 	PasswordInput,
+	Rating,
+	RatingButton,
 	SelectPicker,
 	type SelectPickerProps,
 	Switch,
@@ -63,7 +67,8 @@ export type CustomFieldVariant =
 	| "asyncSelect"
 	| "dateRange"
 	| "datePicker"
-	| "switch";
+	| "switch"
+	| "rating";
 type BaseFieldProps = {
 	control: Control<any>;
 	name: string;
@@ -162,6 +167,15 @@ type SwitchFieldVariant = BaseFieldProps & {
 	description?: string;
 };
 
+type RatingFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "rating">;
+	max?: number;
+	size?: RatingButtonSize;
+	variant?: RatingButtonVariant;
+	readOnly?: boolean;
+	previewOnHover?: boolean;
+};
+
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
@@ -180,7 +194,8 @@ type CustomFieldProps =
 	| AsyncSelectFieldVariant
 	| DateRangeFieldVariant
 	| DatePickerFieldVariant
-	| SwitchFieldVariant;
+	| SwitchFieldVariant
+	| RatingFieldVariant;
 
 // helpers
 const toDateValue = (v: unknown): DateValue | null => {
@@ -429,6 +444,28 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						disabled={props.disabled}
 					/>
 				);
+			case "rating": {
+				const max = props.max ?? 5;
+
+				return (
+					<Rating
+						value={
+							typeof field.value === "number" ? field.value : 0
+						}
+						onValueChange={field.onChange}
+						readOnly={props.readOnly || props.disabled}
+						previewOnHover={props.previewOnHover}
+					>
+						{Array.from({ length: max }, (_, index) => (
+							<RatingButton
+								key={index}
+								size={props.size}
+								variant={props.variant}
+							/>
+						))}
+					</Rating>
+				);
+			}
 
 			default:
 				return (

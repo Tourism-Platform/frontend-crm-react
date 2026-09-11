@@ -54,6 +54,7 @@ export const mapAccommodationEventToForm = (
 			...link,
 			general: {
 				property: snapshot.property,
+				stars: snapshot.stars,
 				amenities: snapshot.amenities,
 				description: event.description || "",
 				length_of_stay: details.duration ?? null,
@@ -89,6 +90,7 @@ export const mapAccommodationEventToForm = (
 		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
 			property: mapBackendLocationToGeoForm(details?.location),
+			stars: details?.stars ?? null,
 			amenities: accommodationAmenityConverter.fromMany(
 				details?.amenities ?? []
 			),
@@ -175,6 +177,7 @@ export const mapAccommodationFormToUpdate = (
 		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		details: {
 			...(Number.isFinite(duration) && duration > 0 && { duration }),
+			stars: g?.stars ?? null,
 			...(amenities && { amenities }),
 			...(g !== undefined && {
 				location: mapGeoFormToBackendLocation(g.property, lang)

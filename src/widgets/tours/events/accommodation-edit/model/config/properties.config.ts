@@ -13,7 +13,15 @@ export const PROPERTIES_LIST = (geo: TGeoFieldProps): TForm[] => [
 		key: ENUM_FORM_ACCOMMODATION.PROPERTY,
 		fieldType: "geo",
 		icon: MapPin,
-		className: "col-span-2",
 		...geo
+	},
+	{
+		key: ENUM_FORM_ACCOMMODATION.STARS,
+		fieldType: "rating",
+		max: 5,
+		previewOnHover: false,
+		variant: "primary",
+		size: "xl",
+		label: "form.general.details.form.fields.stars.label"
 	}
 ];

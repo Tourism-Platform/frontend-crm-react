@@ -81,6 +81,13 @@
 				"title": "Accommodation details",
 				"form": {
 					"fields": {
+						"stars": {
+							"label": "Stars",
+							"errors": {
+								"min": "Minimum 1 star",
+								"max": "Maximum 5 stars"
+							}
+						},
 						"amenities": {
 							"label": "Accommodation amenities",
 							"placeholder": "Choose",

@@ -10,34 +10,33 @@ import {
 
 import type { TForm } from "./form.types";
 
-export const HOTEL_PRODUCT_GENERAL_NAME_FIELD: TForm = {
-	key: ENUM_FORM.NAME,
-	fieldType: "input",
-	label: "form.general.fields.name.label",
-	placeholder: "form.general.fields.name.placeholder",
-	className: "md:col-span-2"
-};
-
-export const LOCATION_FIELD = (geo: TGeoFieldProps): TForm => ({
-	key: ENUM_FORM.LOCATION,
-	fieldType: "geo",
-	icon: MapPin,
-	label: "form.general.fields.location.label",
-	placeholder: "form.general.fields.location.placeholder",
-	emptyText: "form.general.fields.location.empty",
-	className: "md:col-span-2",
-	...geo
-});
-
-export const FORM_HOTEL_PRODUCT_GENERAL_LIST = (): TForm[] => [
+export const FORM_HOTEL_PRODUCT_GENERAL_LIST = (
+	geo: TGeoFieldProps
+): TForm[] => [
+	{
+		key: ENUM_FORM.NAME,
+		fieldType: "input",
+		label: "form.general.fields.name.label",
+		placeholder: "form.general.fields.name.placeholder",
+		className: "col-span-2"
+	},
+	{
+		key: ENUM_FORM.LOCATION,
+		fieldType: "geo",
+		icon: MapPin,
+		label: "form.general.fields.location.label",
+		placeholder: "form.general.fields.location.placeholder",
+		emptyText: "form.general.fields.location.empty",
+		...geo
+	},
 	{
 		key: ENUM_FORM.STARS,
-		fieldType: "input",
-		type: "number",
-		min: 1,
+		fieldType: "rating",
 		max: 5,
-		label: "form.general.fields.stars.label",
-		placeholder: "form.general.fields.stars.placeholder"
+		previewOnHover: false,
+		variant: "primary",
+		size: "xl",
+		label: "form.general.fields.stars.label"
 	},
 	{
 		key: ENUM_FORM.AMENITIES,

@@ -319,6 +319,7 @@ describe("mapAccommodationEventToForm — inherited", () => {
 						supplier_id: "5upp0000-0000-0000-0000-000000000001",
 						name: "Hyatt",
 						location: { lat: 41.311, long: 69.279 },
+						stars: 5,
 						amenities: [AmenitiesTypes.Wifi],
 						variants: [
 							{
@@ -350,6 +351,7 @@ describe("mapAccommodationEventToForm — inherited", () => {
 		expect(form.general.amenities).toEqual([
 			ENUM_ACCOMMODATION_AMENITY.WIFI
 		]);
+		expect(form.general.stars).toBe(5);
 		expect(form.rooms.rooms[0]).toMatchObject({
 			id: "68375727-0000-0000-0000-000000000001",
 			room_name: HousingRoomTypes.Double
@@ -405,6 +407,7 @@ describe("mapAccommodationFormToUpdate — inherited", () => {
 		expect(body.details).not.toHaveProperty("expenses");
 		expect(body.details).not.toHaveProperty("location");
 		expect(body.details).not.toHaveProperty("amenities");
+		expect(body.details).not.toHaveProperty("stars");
 		expect(body).not.toHaveProperty("day");
 		expect(body).not.toHaveProperty("position");
 		expect(body.description).toBe("у окна");
@@ -418,6 +421,7 @@ describe("mapAccommodationFormToUpdate — custom regression", () => {
 			source: ENUM_HOUSING_SOURCE.CUSTOM,
 			general: {
 				property: null,
+				stars: 4,
 				amenities: [],
 				description: "",
 				length_of_stay: 1,
@@ -443,5 +447,6 @@ describe("mapAccommodationFormToUpdate — custom regression", () => {
 
 		expect(body.details).not.toHaveProperty("product_id");
 		expect(body.details).toHaveProperty("location");
+		expect(body.details).toMatchObject({ stars: 4 });
 	});
 });
