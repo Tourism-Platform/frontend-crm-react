@@ -11,6 +11,7 @@ export const ACCESS_LIST = (): TForm[] => [
 		key: ENUM_FORM_EDIT_STAFF.PERMISSIONS,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(PERMISSION_LABELS),
+		badgeVariant: "secondary",
 		className: "col-span-2"
 	}
 ];

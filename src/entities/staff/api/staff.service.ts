@@ -13,6 +13,7 @@ import {
 	mapStaffAccessToFrontend,
 	mapStaffFiltersToBackend,
 	mapStaffInviteToBackend,
+	mapStaffInviteToFrontend,
 	mapStaffPaginatedToFrontend,
 	mapStaffToFrontend,
 	mapStaffUpdateToBackend
@@ -22,6 +23,7 @@ import type {
 	IStaffAccess,
 	IStaffAccessForm,
 	IStaffFilters,
+	IStaffInviteResult,
 	IStaffUser,
 	TEditStaffSchema,
 	TInviteStaffBackendResponse,
@@ -45,13 +47,13 @@ export const staffApi = authApi.injectEndpoints({
 				providesTags: [ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION]
 			}
 		),
-		createStaff: builder.mutation<IStaffUser, TInviteStaffSchema>({
+		createStaff: builder.mutation<IStaffInviteResult, TInviteStaffSchema>({
 			query: (staff) => ({
 				...OPERATOR_STAFF_PATHS.inviteStaff,
 				body: mapStaffInviteToBackend(staff)
 			}),
 			transformResponse: (response: TInviteStaffBackendResponse) =>
-				mapStaffToFrontend(response),
+				mapStaffInviteToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.OPERATOR.STAFF_INFORMATION]
 		}),
 		updateStaff: builder.mutation<

@@ -6,6 +6,7 @@ export const ENUM_FORM_INVITE_STAFF = {
 	EMAIL: "email",
 	FIRST_NAME: "firstName",
 	LAST_NAME: "lastName",
+	PASSWORD: "password",
 	PERMISSIONS: "permissions"
 } as const;
 

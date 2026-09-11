@@ -59,7 +59,7 @@ export function PasswordInput({
 						variant="ghost"
 						size="icon"
 						type="button"
-						className="absolute inset-y-1/2 right-1 size-7 -translate-y-1/2"
+						className="absolute top-1 right-1 size-7"
 						onClick={() => setShowPassword((p) => !p)}
 					>
 						<Icon className="size-5" />

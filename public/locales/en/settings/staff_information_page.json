@@ -17,6 +17,10 @@
 					"label": "Email",
 					"placeholder": "Enter staff email address"
 				},
+				"password": {
+					"label": "Password",
+					"placeholder": "Leave empty to auto-generate"
+				},
 				"groupIds": {
 					"label": "Permission groups",
 					"placeholder": "Select permission groups"
@@ -40,6 +44,11 @@
 					"min": "Email is required",
 					"max": "Email is too long",
 					"invalid": "Invalid email format"
+				},
+				"password": {
+					"min": "Password must be at least 8 characters",
+					"max": "Password is too long",
+					"complexity": "Password must contain at least one digit and one special symbol (!@#$%^&*)"
 				}
 			},
 			"buttons": {
@@ -49,7 +58,16 @@
 			},
 			"toasts": {
 				"success": "Invite sent successfully",
-				"error": "Failed to send invite"
+				"error": "Failed to send invite",
+				"copied": "Password copied",
+				"copy_failed": "Failed to copy password"
+			},
+			"generated": {
+				"title": "Staff invited",
+				"description": "A password was generated automatically. Copy it now — it will not be shown again.",
+				"warning": "This password will not be shown again. Share it with the employee securely.",
+				"copy": "Copy password",
+				"close": "Done"
 			}
 		}
 	},

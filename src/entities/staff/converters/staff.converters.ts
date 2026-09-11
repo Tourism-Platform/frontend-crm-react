@@ -7,9 +7,11 @@ import type {
 	IStaffAccess,
 	IStaffAccessForm,
 	IStaffFilters,
+	IStaffInviteResult,
 	IStaffUser,
 	TEditStaffSchema,
 	TInviteStaffBackendBody,
+	TInviteStaffBackendResponse,
 	TInviteStaffSchema,
 	TListStaffBackendResponse,
 	TListStaffQuery,
@@ -40,12 +42,22 @@ export const mapStaffToFrontend = (data: TStaffReadBackend): IStaffUser => ({
 
 export const mapStaffInviteToBackend = (
 	data: TInviteStaffSchema
-): TInviteStaffBackendBody => ({
-	email: data.email,
-	first_name: data.firstName,
-	last_name: data.lastName,
-	permissions: permissionConverter.toMany(data.permissions ?? []),
-	group_ids: []
+): TInviteStaffBackendBody => {
+	return {
+		email: data.email,
+		first_name: data.firstName,
+		last_name: data.lastName,
+		password: data.password?.trim() ?? null,
+		permissions: permissionConverter.toMany(data.permissions ?? []),
+		group_ids: []
+	};
+};
+
+export const mapStaffInviteToFrontend = (
+	data: TInviteStaffBackendResponse
+): IStaffInviteResult => ({
+	...mapStaffToFrontend(data),
+	generatedPassword: data.generated_password
 });
 
 export const mapStaffUpdateToBackend = (

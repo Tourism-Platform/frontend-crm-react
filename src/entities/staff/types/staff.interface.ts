@@ -13,3 +13,7 @@ export interface IStaffUser {
 	type: ENUM_COMMISSION_OPTIONS_TYPE;
 	split: number | null;
 }
+
+export interface IStaffInviteResult extends IStaffUser {
+	generatedPassword: string | null;
+}

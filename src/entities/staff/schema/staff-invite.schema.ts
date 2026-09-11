@@ -25,5 +25,20 @@ export const INVITE_STAFF_SCHEMA = z.object({
 	[ENUM_FORM_INVITE_STAFF.EMAIL]: z
 		.email(msg("invite.form.errors.email.invalid"))
 		.min(1, msg("invite.form.errors.email.min")),
+	[ENUM_FORM_INVITE_STAFF.PASSWORD]: z
+		.string()
+		.trim()
+		.max(128, msg("invite.form.errors.password.max"))
+		.refine(
+			(value) => value.length === 0 || value.length >= 8,
+			msg("invite.form.errors.password.min")
+		)
+		.refine(
+			(value) =>
+				value.length === 0 ||
+				(/\d/.test(value) && /[!@#$%^&*]/.test(value)),
+			msg("invite.form.errors.password.complexity")
+		)
+		.optional(),
 	[ENUM_FORM_INVITE_STAFF.PERMISSIONS]: z.array(z.enum(ENUM_PERMISSION))
 });
