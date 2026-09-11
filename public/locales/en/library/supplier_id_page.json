@@ -70,12 +70,37 @@
 			"type": "Type",
 			"empty": "—"
 		},
-		"new_hotel": "New hotel",
-		"new_train": "New train",
-		"new_flight": "New flight",
-		"new_bus": "New bus",
-		"new_transfer": "New transfer",
-		"new_activity": "New activity",
+		"new_product": {
+			"button": "New product"
+		},
+		"create": {
+			"title": "New product",
+			"subtitle": "Choose product type",
+			"hotel": {
+				"title": "Hotel",
+				"description": "Hotel accommodation product"
+			},
+			"train": {
+				"title": "Train",
+				"description": "Train transport product"
+			},
+			"flight": {
+				"title": "Flight",
+				"description": "Flight transport product"
+			},
+			"bus": {
+				"title": "Bus",
+				"description": "Bus transport product"
+			},
+			"transfer": {
+				"title": "Transfer",
+				"description": "Airport or hotel transfer product"
+			},
+			"activity": {
+				"title": "Activity",
+				"description": "Excursion and activity product"
+			}
+		},
 		"menu": {
 			"edit": {
 				"button": "Edit"

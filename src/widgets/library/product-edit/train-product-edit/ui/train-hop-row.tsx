@@ -1,10 +1,9 @@
-import { Trash2 } from "lucide-react";
 import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
-import { Button, CustomField } from "@/shared/ui";
+import { Card, CardContent, CustomField } from "@/shared/ui";
 
 import {
 	useGeoFormFieldEnrichment,
@@ -16,13 +15,13 @@ import {
 	type TTrainProductGeneralSchema
 } from "@/entities/supplier";
 
+import { RowRemoveMenu } from "../../ui";
 import { TRAIN_HOP_FIELDS_LIST } from "../model";
 
 interface ITrainHopRowProps {
 	form: UseFormReturn<TTrainProductGeneralSchema>;
 	index: number;
 	language: ENUM_LANGUAGES_TYPE;
-	canRemove: boolean;
 	onRemove: () => void;
 }
 
@@ -30,7 +29,6 @@ export const TrainHopRow: FC<ITrainHopRowProps> = ({
 	form,
 	index,
 	language,
-	canRemove,
 	onRemove
 }) => {
 	const { t } = useTranslation("train_product_edit_page");
@@ -49,31 +47,26 @@ export const TrainHopRow: FC<ITrainHopRowProps> = ({
 	});
 
 	return (
-		<div className="grid gap-3 rounded-md border p-4 md:grid-cols-2">
-			{TRAIN_HOP_FIELDS_LIST({
-				departure: departureGeo,
-				arrival: arrivalGeo
-			}).map(({ key, ...item }) => (
-				<CustomField
-					key={key}
-					control={form.control}
-					name={`${ENUM_FORM.HOPS}.${index}.${key}`}
-					t={t}
-					{...item}
-				/>
-			))}
-			{canRemove ? (
-				<div className="md:col-span-2 flex justify-end">
-					<Button
-						type="button"
-						variant="ghost"
-						size="sm"
-						onClick={onRemove}
-					>
-						<Trash2 className="mr-1 h-4 w-4" />
-					</Button>
+		<Card className="relative">
+			<CardContent>
+				<div className="absolute top-0 right-0">
+					<RowRemoveMenu onRemove={onRemove} />
 				</div>
-			) : null}
-		</div>
+				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+					{TRAIN_HOP_FIELDS_LIST({
+						departure: departureGeo,
+						arrival: arrivalGeo
+					}).map(({ key, ...item }) => (
+						<CustomField
+							key={key}
+							control={form.control}
+							name={`${ENUM_FORM.HOPS}.${index}.${key}`}
+							t={t}
+							{...item}
+						/>
+					))}
+				</div>
+			</CardContent>
+		</Card>
 	);
 };

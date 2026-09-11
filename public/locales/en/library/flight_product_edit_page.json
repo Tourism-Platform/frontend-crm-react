@@ -14,7 +14,7 @@
 			"fields": {
 				"name": {
 					"label": "Name",
-					"placeholder": "Enter flight title or it will automatically generated",
+					"placeholder": "Enter flight name",
 					"errors": {
 						"required": "Title is required"
 					}

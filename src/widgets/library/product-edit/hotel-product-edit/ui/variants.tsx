@@ -182,15 +182,16 @@ const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 						placeholder="form.variants.fields.name.placeholder"
 					/>
 
-					{fields.map((field, index) => (
-						<HotelVariantRoomRow
-							key={field.id}
-							form={form}
-							index={index}
-							canRemove={fields.length > 1}
-							onRemove={() => remove(index)}
-						/>
-					))}
+					<div className="grid gap-4">
+						{fields.map((field, index) => (
+							<HotelVariantRoomRow
+								key={field.id}
+								form={form}
+								index={index}
+								onRemove={() => remove(index)}
+							/>
+						))}
+					</div>
 
 					<div className="flex flex-wrap justify-between gap-3">
 						<Button

@@ -14,7 +14,7 @@
 			"fields": {
 				"name": {
 					"label": "Name",
-					"placeholder": "Enter accommodation title or it will automatically generated",
+					"placeholder": "Enter hotel name",
 					"errors": {
 						"required": "Name is required"
 					}
@@ -147,6 +147,7 @@
 				"fixed": "Whole stay",
 				"per_duration": "Per night"
 			},
+			"room_item": "Room {{index}}",
 			"add_room": "Add room",
 			"add_rate": "Add season",
 			"buttons": {

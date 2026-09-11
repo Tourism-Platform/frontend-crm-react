@@ -121,16 +121,17 @@ const FlightProductGeneralBase: FC<IFlightProductGeneralProps> = ({
 					{...nameField}
 				/>
 
-				{fields.map((field, index) => (
-					<FlightHopRow
-						key={field.id}
-						form={form}
-						index={index}
-						language={language}
-						canRemove={fields.length > 1}
-						onRemove={() => remove(index)}
-					/>
-				))}
+				<div className="grid gap-4">
+					{fields.map((field, index) => (
+						<FlightHopRow
+							key={field.id}
+							form={form}
+							index={index}
+							language={language}
+							onRemove={() => remove(index)}
+						/>
+					))}
+				</div>
 
 				<div className="flex flex-wrap justify-between gap-3">
 					<Button

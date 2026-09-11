@@ -14,7 +14,7 @@
 			"fields": {
 				"name": {
 					"label": "Name",
-					"placeholder": "Enter transfer title or it will be automatically generated",
+					"placeholder": "Enter transfer name",
 					"errors": {
 						"required": "Name is required"
 					}

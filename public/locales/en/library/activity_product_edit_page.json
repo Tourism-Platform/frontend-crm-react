@@ -14,7 +14,7 @@
 			"fields": {
 				"name": {
 					"label": "Name",
-					"placeholder": "Enter event title or it will automatically generated",
+					"placeholder": "Enter activity name",
 					"errors": {
 						"required": "Name is required"
 					}

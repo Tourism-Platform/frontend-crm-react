@@ -1,21 +1,19 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { PlusIcon } from "lucide-react";
 import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
-import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import {
 	type ISupplierProductFilters,
-	LIBRARY_SUPPLIER_PRODUCT_CREATE_ID,
 	useListAllProductsQuery
 } from "@/entities/supplier";
+
+import { CreateSupplierProduct } from "@/features/library";
 
 import { COLUMNS } from "../model";
 
@@ -86,92 +84,8 @@ const SupplierProductsBase: FC<ISupplierProductsProps> = ({ supplierId }) => {
 	);
 
 	const actionsJsx = useMemo(
-		() => (
-			<div className="flex flex-wrap gap-2">
-				<Button asChild>
-					<Link
-						to={buildRoute(
-							ENUM_PATH.LIBRARY.SUPPLIER_HOTEL_PRODUCT,
-							{
-								supplierId,
-								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
-							}
-						)}
-					>
-						<p>{t("products.new_hotel")}</p>
-						<PlusIcon />
-					</Link>
-				</Button>
-				<Button asChild variant="outline">
-					<Link
-						to={buildRoute(
-							ENUM_PATH.LIBRARY.SUPPLIER_TRAIN_PRODUCT,
-							{
-								supplierId,
-								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
-							}
-						)}
-					>
-						<p>{t("products.new_train")}</p>
-						<PlusIcon />
-					</Link>
-				</Button>
-				<Button asChild variant="outline">
-					<Link
-						to={buildRoute(
-							ENUM_PATH.LIBRARY.SUPPLIER_FLIGHT_PRODUCT,
-							{
-								supplierId,
-								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
-							}
-						)}
-					>
-						<p>{t("products.new_flight")}</p>
-						<PlusIcon />
-					</Link>
-				</Button>
-				<Button asChild variant="outline">
-					<Link
-						to={buildRoute(ENUM_PATH.LIBRARY.SUPPLIER_BUS_PRODUCT, {
-							supplierId,
-							productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
-						})}
-					>
-						<p>{t("products.new_bus")}</p>
-						<PlusIcon />
-					</Link>
-				</Button>
-				<Button asChild variant="outline">
-					<Link
-						to={buildRoute(
-							ENUM_PATH.LIBRARY.SUPPLIER_TRANSFER_PRODUCT,
-							{
-								supplierId,
-								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
-							}
-						)}
-					>
-						<p>{t("products.new_transfer")}</p>
-						<PlusIcon />
-					</Link>
-				</Button>
-				<Button asChild variant="outline">
-					<Link
-						to={buildRoute(
-							ENUM_PATH.LIBRARY.SUPPLIER_ACTIVITY_PRODUCT,
-							{
-								supplierId,
-								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
-							}
-						)}
-					>
-						<p>{t("products.new_activity")}</p>
-						<PlusIcon />
-					</Link>
-				</Button>
-			</div>
-		),
-		[supplierId, t]
+		() => <CreateSupplierProduct supplierId={supplierId} />,
+		[supplierId]
 	);
 
 	return (
