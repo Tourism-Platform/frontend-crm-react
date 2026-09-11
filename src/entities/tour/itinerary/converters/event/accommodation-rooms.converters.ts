@@ -1,9 +1,9 @@
-import type {
-	HousingRoomCategoryExpensesSchemaOutput,
-	HousingRoomDoubleSchemaOutput
-} from "@/shared/api";
-
-import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../types";
+import {
+	ENUM_FORM_ROOMS,
+	type THousingRoomCategoryExpensesBackend,
+	type THousingRoomExpensesBackend,
+	type TRoomsSchema
+} from "../../types";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
@@ -14,8 +14,8 @@ const mapRoomToBackendInput = (room: TRoomsList[number]) => ({
 });
 
 export const mapRoomsFromBackend = (
-	perRoomRooms?: HousingRoomDoubleSchemaOutput[] | null,
-	perRoomCategoryRooms?: HousingRoomCategoryExpensesSchemaOutput[] | null
+	perRoomRooms?: THousingRoomExpensesBackend[] | null,
+	perRoomCategoryRooms?: THousingRoomCategoryExpensesBackend[] | null
 ) => {
 	if (perRoomRooms?.length) {
 		return {

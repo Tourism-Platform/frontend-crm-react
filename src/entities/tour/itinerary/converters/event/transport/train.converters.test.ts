@@ -1,5 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { LanguageCode } from "@/shared/api";
+
 import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FLIGHT_TRANSPORT_TYPE,
@@ -22,7 +24,10 @@ vi.mock("@/shared/converters", () => ({
 		location && location.lat != null
 			? { lat: location.lat, long: location.long }
 			: null,
-	mapGeoFormToBackendLocation: () => ({ lat: 0, long: 0 })
+	mapGeoFormToBackendLocation: () => ({ lat: 0, long: 0 }),
+	languageCodeMapper: {
+		to: () => LanguageCode.En
+	}
 }));
 
 vi.mock("@/shared/hooks", () => ({

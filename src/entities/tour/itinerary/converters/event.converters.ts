@@ -1,6 +1,4 @@
-import { LanguageCode, type MultiEventReadOutput } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
-import { languageCodeMapper } from "@/shared/converters";
 
 import {
 	ENUM_EVENT,
@@ -22,6 +20,7 @@ import {
 	type TGuideEditSchema,
 	type TMoveToMultiResultBackend,
 	type TMoveToSingleResultBackend,
+	type TMultiEventReadBackend,
 	type TSupplementEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
@@ -87,7 +86,7 @@ export const mapAllEventsToFrontend = (
 	}
 
 	if (backend.event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		const multiEvent = backend.event as MultiEventReadOutput;
+		const multiEvent = backend.event as TMultiEventReadBackend;
 		event.options = (multiEvent.details ?? [])
 			.map(mapMultiplyOptionDetailToOption)
 			.filter((opt): opt is ITourEventOption => opt !== null);
@@ -136,7 +135,7 @@ export const mapEventOptionToFrontend = (
 		throw new Error("Event is not a multiply option");
 	}
 
-	const multiEvent = backend.event as MultiEventReadOutput;
+	const multiEvent = backend.event as TMultiEventReadBackend;
 	const option = (multiEvent.details ?? []).find(
 		(detail) => detail.id === eventOptionId
 	);
@@ -162,7 +161,7 @@ export const mapTourEventDetailsFromBackend = (
 	eventOptionId?: string
 ): Record<string, unknown> => {
 	if (eventOptionId && backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		const multiEvent = backend.event as MultiEventReadOutput;
+		const multiEvent = backend.event as TMultiEventReadBackend;
 		const option = (multiEvent.details ?? []).find(
 			(detail) => detail.id === eventOptionId
 		);
@@ -190,14 +189,15 @@ export const mapEventUpdateToBackend = (
 	frontend: TTourEventUpdate,
 	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
-	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
-
 	if (type === ENUM_EVENT.FLIGHT)
-		return mapTransportFormToUpdate(frontend as TFlightEditSchema, lang);
+		return mapTransportFormToUpdate(
+			frontend as TFlightEditSchema,
+			language
+		);
 	else if (type === ENUM_EVENT.TRANSPORTATION)
 		return mapTransferFormToUpdate(
 			frontend as TTransportationEditSchema,
-			lang
+			language
 		);
 	else if (type === ENUM_EVENT.SUPPLEMENT)
 		return mapSupplementaryFormToUpdate(frontend as TSupplementEditSchema);
@@ -205,10 +205,13 @@ export const mapEventUpdateToBackend = (
 	else if (type === ENUM_EVENT.ACCOMMODATION)
 		return mapAccommodationFormToUpdate(
 			frontend as TAccommodationEditSchema,
-			lang
+			language
 		);
 	else if (type === ENUM_EVENT.ACTIVITY)
-		return mapActivityFormToUpdate(frontend as TActivityEditSchema, lang);
+		return mapActivityFormToUpdate(
+			frontend as TActivityEditSchema,
+			language
+		);
 	else if (type === ENUM_EVENT.GUIDE)
 		return mapGuideFormToUpdate(frontend as TGuideEditSchema);
 

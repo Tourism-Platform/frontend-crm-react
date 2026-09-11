@@ -119,6 +119,22 @@ export const ENUM_PATH = {
 		SUPPLIER_TRAIN_PRODUCT_NEW:
 			"/library/suppliers/:supplierId/products/train/new",
 		SUPPLIER_TRAIN_PRODUCT:
-			"/library/suppliers/:supplierId/products/train/:productId"
+			"/library/suppliers/:supplierId/products/train/:productId",
+		SUPPLIER_FLIGHT_PRODUCT_NEW:
+			"/library/suppliers/:supplierId/products/flight/new",
+		SUPPLIER_FLIGHT_PRODUCT:
+			"/library/suppliers/:supplierId/products/flight/:productId",
+		SUPPLIER_BUS_PRODUCT_NEW:
+			"/library/suppliers/:supplierId/products/bus/new",
+		SUPPLIER_BUS_PRODUCT:
+			"/library/suppliers/:supplierId/products/bus/:productId",
+		SUPPLIER_TRANSFER_PRODUCT_NEW:
+			"/library/suppliers/:supplierId/products/transfer/new",
+		SUPPLIER_TRANSFER_PRODUCT:
+			"/library/suppliers/:supplierId/products/transfer/:productId",
+		SUPPLIER_ACTIVITY_PRODUCT_NEW:
+			"/library/suppliers/:supplierId/products/activity/new",
+		SUPPLIER_ACTIVITY_PRODUCT:
+			"/library/suppliers/:supplierId/products/activity/:productId"
 	}
 } as const;

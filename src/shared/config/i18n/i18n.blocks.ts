@@ -79,7 +79,11 @@ export const TRANSLATION_BLOCKS: Record<string, ITranslationBlock> = {
 			"suppliers_page",
 			"supplier_id_page",
 			"hotel_product_edit_page",
-			"train_product_edit_page"
+			"train_product_edit_page",
+			"flight_product_edit_page",
+			"bus_product_edit_page",
+			"transfer_product_edit_page",
+			"activity_product_edit_page"
 		]
 	},
 

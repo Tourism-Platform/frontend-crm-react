@@ -14,36 +14,48 @@
 			"fields": {
 				"name": {
 					"label": "Название",
-					"placeholder": "Название поезда"
-				},
-				"hops": {
-					"add": "Добавить плечо",
-					"departureTime": {
-						"label": "Время отправления",
-						"placeholder": "08:00"
-					},
-					"arrivalTime": {
-						"label": "Время прибытия",
-						"placeholder": "12:00"
-					},
-					"departureLocation": {
-						"label": "Станция отправления",
-						"placeholder": "Начните вводить станцию или город",
-						"empty": "Ничего не найдено"
-					},
-					"arrivalLocation": {
-						"label": "Станция прибытия",
-						"placeholder": "Начните вводить станцию или город",
-						"empty": "Ничего не найдено"
+					"placeholder": "Введите номер поезда",
+					"errors": {
+						"required": "Укажите название"
 					}
-				}
-			},
-			"errors": {
-				"name": {
-					"required": "Укажите название"
 				},
 				"hops": {
-					"required": "Добавьте хотя бы одно плечо"
+					"add": "Добавить поезд",
+					"errors": {
+						"min_segments": "Должен быть хотя бы один маршрут"
+					},
+					"departure_time": {
+						"label": "Время отправления",
+						"placeholder": "Выберите время",
+						"errors": {
+							"required": "Время отправления обязательно",
+							"invalid": "Недопустимый формат времени"
+						}
+					},
+					"arrival_time": {
+						"label": "Время прибытия",
+						"placeholder": "Выберите время",
+						"errors": {
+							"required": "Время прибытия обязательно",
+							"invalid": "Недопустимый формат времени"
+						}
+					},
+					"departure_station": {
+						"label": "Станция отправления",
+						"placeholder": "Введите станцию отправления",
+						"empty": "Локации не найдены",
+						"errors": {
+							"required": "Станция отправления обязательна"
+						}
+					},
+					"arrival_station": {
+						"label": "Станция прибытия",
+						"placeholder": "Введите станцию прибытия",
+						"empty": "Локации не найдены",
+						"errors": {
+							"required": "Станция прибытия обязательна"
+						}
+					}
 				}
 			},
 			"buttons": {
@@ -55,27 +67,34 @@
 		"variants": {
 			"title": "Варианты",
 			"add": "Добавить вариант",
-			"errors": {
-				"name": {
-					"required": "Укажите название варианта"
-				}
-			},
 			"fields": {
 				"name": {
 					"label": "Название варианта",
-					"placeholder": "Standard"
+					"placeholder": "Standard",
+					"errors": {
+						"required": "Укажите название варианта"
+					}
 				},
-				"chargeTyp": {
-					"label": "Тип тарифа",
-					"placeholder": "Выберите"
+				"charge_typ": {
+					"label": "Режим оплаты",
+					"placeholder": "Выберите режим",
+					"errors": {
+						"required": "Выберите тип тарифа"
+					}
 				},
 				"cost": {
-					"label": "Стоимость",
-					"placeholder": "0"
+					"label": "Цена",
+					"placeholder": "Введите цену",
+					"errors": {
+						"required": "Укажите стоимость"
+					}
 				},
 				"currency": {
 					"label": "Валюта",
-					"placeholder": "USD"
+					"placeholder": "Выберите валюту",
+					"errors": {
+						"required": "Выберите валюту"
+					}
 				}
 			},
 			"charge": {
@@ -119,7 +138,7 @@
 			"button": "Удалить продукт",
 			"form": {
 				"title": "Удалить продукт",
-				"warning": "Вы уверены, что хотите удалить этот продукт поезда?",
+				"warning": "Вы уверены, что хотите удалить этот поезд?",
 				"buttons": {
 					"decline": "Отмена",
 					"confirm": "Удалить",

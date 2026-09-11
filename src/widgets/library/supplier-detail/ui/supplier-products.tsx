@@ -116,6 +116,59 @@ const SupplierProductsBase: FC<ISupplierProductsProps> = ({ supplierId }) => {
 						<PlusIcon />
 					</Link>
 				</Button>
+				<Button asChild variant="outline">
+					<Link
+						to={buildRoute(
+							ENUM_PATH.LIBRARY.SUPPLIER_FLIGHT_PRODUCT,
+							{
+								supplierId,
+								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
+							}
+						)}
+					>
+						<p>{t("products.new_flight")}</p>
+						<PlusIcon />
+					</Link>
+				</Button>
+				<Button asChild variant="outline">
+					<Link
+						to={buildRoute(ENUM_PATH.LIBRARY.SUPPLIER_BUS_PRODUCT, {
+							supplierId,
+							productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
+						})}
+					>
+						<p>{t("products.new_bus")}</p>
+						<PlusIcon />
+					</Link>
+				</Button>
+				<Button asChild variant="outline">
+					<Link
+						to={buildRoute(
+							ENUM_PATH.LIBRARY.SUPPLIER_TRANSFER_PRODUCT,
+							{
+								supplierId,
+								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
+							}
+						)}
+					>
+						<p>{t("products.new_transfer")}</p>
+						<PlusIcon />
+					</Link>
+				</Button>
+				<Button asChild variant="outline">
+					<Link
+						to={buildRoute(
+							ENUM_PATH.LIBRARY.SUPPLIER_ACTIVITY_PRODUCT,
+							{
+								supplierId,
+								productId: LIBRARY_SUPPLIER_PRODUCT_CREATE_ID
+							}
+						)}
+					>
+						<p>{t("products.new_activity")}</p>
+						<PlusIcon />
+					</Link>
+				</Button>
 			</div>
 		),
 		[supplierId, t]

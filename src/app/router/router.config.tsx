@@ -341,6 +341,26 @@ const LibraryTrainProductEditPage = React.lazy(() =>
 		"@/pages/library/train-product-edit-page/ui/library-train-product-edit-page"
 	).then((m) => ({ default: m.LibraryTrainProductEditPage }))
 );
+const LibraryFlightProductEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/flight-product-edit-page/ui/library-flight-product-edit-page"
+	).then((m) => ({ default: m.LibraryFlightProductEditPage }))
+);
+const LibraryBusProductEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/bus-product-edit-page/ui/library-bus-product-edit-page"
+	).then((m) => ({ default: m.LibraryBusProductEditPage }))
+);
+const LibraryTransferProductEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/transfer-product-edit-page/ui/library-transfer-product-edit-page"
+	).then((m) => ({ default: m.LibraryTransferProductEditPage }))
+);
+const LibraryActivityProductEditPage = React.lazy(() =>
+	import(
+		"@/pages/library/activity-product-edit-page/ui/library-activity-product-edit-page"
+	).then((m) => ({ default: m.LibraryActivityProductEditPage }))
+);
 
 // Preview tours pages
 const PreviewTourPage = React.lazy(() =>
@@ -903,6 +923,34 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.LIBRARY.SUPPLIER_TRAIN_PRODUCT,
 		component: LibraryTrainProductEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "library"
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIER_FLIGHT_PRODUCT,
+		component: LibraryFlightProductEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "library"
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIER_BUS_PRODUCT,
+		component: LibraryBusProductEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "library"
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIER_TRANSFER_PRODUCT,
+		component: LibraryTransferProductEditPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "library"
+	},
+	{
+		path: ENUM_PATH.LIBRARY.SUPPLIER_ACTIVITY_PRODUCT,
+		component: LibraryActivityProductEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		section: "library"

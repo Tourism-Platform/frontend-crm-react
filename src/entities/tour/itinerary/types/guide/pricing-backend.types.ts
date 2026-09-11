@@ -1,7 +1,8 @@
 import type {
 	GuideByLanguageCategoryInput,
 	GuideByLanguageCategoryOutput,
-	GuideDetailsOutput
+	GuideDetailsOutput,
+	GuideTypeTier
 } from "@/shared/api";
 
 export type TGuideDetailsBackend = GuideDetailsOutput;
@@ -10,3 +11,4 @@ export type TGuideByLanguageCategoryInputBackend = GuideByLanguageCategoryInput;
 export type TGuideCategoryChargeInputBackend = NonNullable<
 	GuideByLanguageCategoryInput["expenses"]
 >;
+export type TGuideTypeTierBackend = GuideTypeTier;

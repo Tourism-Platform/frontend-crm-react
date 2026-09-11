@@ -14,36 +14,48 @@
 			"fields": {
 				"name": {
 					"label": "Name",
-					"placeholder": "Train name"
-				},
-				"hops": {
-					"add": "Add hop",
-					"departureTime": {
-						"label": "Departure time",
-						"placeholder": "08:00"
-					},
-					"arrivalTime": {
-						"label": "Arrival time",
-						"placeholder": "12:00"
-					},
-					"departureLocation": {
-						"label": "Departure station",
-						"placeholder": "Start typing a station or city",
-						"empty": "No results found"
-					},
-					"arrivalLocation": {
-						"label": "Arrival station",
-						"placeholder": "Start typing a station or city",
-						"empty": "No results found"
+					"placeholder": "Enter train number",
+					"errors": {
+						"required": "Name is required"
 					}
-				}
-			},
-			"errors": {
-				"name": {
-					"required": "Name is required"
 				},
 				"hops": {
-					"required": "Add at least one hop"
+					"add": "Add train",
+					"errors": {
+						"min_segments": "At least one route segment is required"
+					},
+					"departure_time": {
+						"label": "Departure time",
+						"placeholder": "Select time",
+						"errors": {
+							"required": "Departure time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"arrival_time": {
+						"label": "Arrival time",
+						"placeholder": "Select time",
+						"errors": {
+							"required": "Arrival time is required",
+							"invalid": "Invalid time format"
+						}
+					},
+					"departure_station": {
+						"label": "Departure station",
+						"placeholder": "Enter departure station",
+						"empty": "No locations found",
+						"errors": {
+							"required": "Departure station is required"
+						}
+					},
+					"arrival_station": {
+						"label": "Arrival station",
+						"placeholder": "Enter arrival station",
+						"empty": "No locations found",
+						"errors": {
+							"required": "Arrival station is required"
+						}
+					}
 				}
 			},
 			"buttons": {
@@ -55,27 +67,34 @@
 		"variants": {
 			"title": "Variants",
 			"add": "Add variant",
-			"errors": {
-				"name": {
-					"required": "Variant name is required"
-				}
-			},
 			"fields": {
 				"name": {
 					"label": "Variant name",
-					"placeholder": "Standard"
+					"placeholder": "Standard",
+					"errors": {
+						"required": "Variant name is required"
+					}
 				},
-				"chargeTyp": {
-					"label": "Charge type",
-					"placeholder": "Select"
+				"charge_typ": {
+					"label": "Charge mode",
+					"placeholder": "Select charge mode",
+					"errors": {
+						"required": "Select a charge type"
+					}
 				},
 				"cost": {
-					"label": "Cost",
-					"placeholder": "0"
+					"label": "Price",
+					"placeholder": "Enter price",
+					"errors": {
+						"required": "Cost is required"
+					}
 				},
 				"currency": {
 					"label": "Currency",
-					"placeholder": "USD"
+					"placeholder": "Select currency",
+					"errors": {
+						"required": "Select a currency"
+					}
 				}
 			},
 			"charge": {
@@ -119,7 +138,7 @@
 			"button": "Delete product",
 			"form": {
 				"title": "Delete product",
-				"warning": "Are you sure you want to delete this train product?",
+				"warning": "Are you sure you want to delete this train?",
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",

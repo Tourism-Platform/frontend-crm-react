@@ -1,0 +1,127 @@
+{
+	"page_name": "Activity product",
+	"back": "Back to supplier",
+	"tabs": {
+		"general": "General",
+		"media": "Media",
+		"variants": "Variants"
+	},
+	"form": {
+		"create_hint": {
+			"save_general_first": "Create the activity on the General tab first"
+		},
+		"general": {
+			"fields": {
+				"name": {
+					"label": "Name",
+					"placeholder": "Enter event title or it will automatically generated",
+					"errors": {
+						"required": "Name is required"
+					}
+				},
+				"location": {
+					"label": "Location",
+					"placeholder": "Enter location",
+					"empty": "No locations found",
+					"errors": {
+						"required": "Location is required"
+					}
+				},
+				"activity_subtype": {
+					"label": "Activity type",
+					"placeholder": "Select activity type",
+					"errors": {
+						"required": "Activity type is required"
+					}
+				}
+			},
+			"buttons": {
+				"create": "Create",
+				"save": "Save",
+				"saving": "Saving"
+			}
+		},
+		"variants": {
+			"title": "Variants",
+			"add": "Add variant",
+			"fields": {
+				"name": {
+					"label": "Variant name",
+					"placeholder": "Standard",
+					"errors": {
+						"required": "Variant name is required"
+					}
+				},
+				"charge_typ": {
+					"label": "Charge mode",
+					"placeholder": "Select charge mode",
+					"errors": {
+						"required": "Select a charge type"
+					}
+				},
+				"cost": {
+					"label": "Price",
+					"placeholder": "Enter price",
+					"errors": {
+						"required": "Cost is required"
+					}
+				},
+				"currency": {
+					"label": "Currency",
+					"placeholder": "Select currency",
+					"errors": {
+						"required": "Select a currency"
+					}
+				}
+			},
+			"buttons": {
+				"save": "Save variant",
+				"saving": "Saving",
+				"delete": "Delete",
+				"deleting": "Deleting"
+			}
+		},
+		"images": {
+			"product_title": "Product gallery",
+			"buttons": {
+				"save": "Save photos",
+				"saving": "Saving"
+			}
+		},
+		"toasts": {
+			"save": {
+				"success": "Saved",
+				"error": "Failed to save"
+			},
+			"load": {
+				"error": "Failed to load product"
+			},
+			"create": {
+				"success": "Product created",
+				"error": "Failed to create product"
+			},
+			"delete": {
+				"success": "Deleted",
+				"error": "Failed to delete"
+			}
+		}
+	},
+	"menu": {
+		"delete": {
+			"button": "Delete product",
+			"form": {
+				"title": "Delete product",
+				"warning": "Are you sure you want to delete this activity?",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting"
+				},
+				"toasts": {
+					"success": "Product deleted",
+					"error": "Failed to delete product"
+				}
+			}
+		}
+	}
+}

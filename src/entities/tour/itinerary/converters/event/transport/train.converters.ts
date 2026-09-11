@@ -1,12 +1,14 @@
-import type { TrainSingleEventOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
+import { languageCodeMapper } from "@/shared/converters";
 
 import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
 	TFlightEditSchema,
 	TTourEventBackendResponce,
 	TTourEventUpdateBackend,
-	TTrainRouteSegment
+	TTrainRouteSegment,
+	TTrainSingleEventBackend
 } from "../../../types";
 import {
 	ENUM_FLIGHT_TRANSPORT_TYPE,
@@ -42,7 +44,7 @@ const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 
 const assertTrainEvent = (
 	data: TTourEventBackendResponce
-): TrainSingleEventOutput => {
+): TTrainSingleEventBackend => {
 	if (!("typ" in data.event) || data.event.typ !== ENUM_EVENT_BACKEND.TRAIN) {
 		throw new Error(
 			'mapTrainEventToForm: expected train event with typ "train"'
@@ -55,7 +57,7 @@ export const mapTrainEventToForm = (
 	data: TTourEventBackendResponce
 ): TFlightEditSchema => {
 	const event = assertTrainEvent(data);
-	const details = event.details;
+	const details = event.details ?? null;
 
 	if (isInheritedTrainDetails(details)) {
 		const hops = details.product?.hop ?? [];
@@ -73,7 +75,7 @@ export const mapTrainEventToForm = (
 				route
 			},
 			pricing: applyEventPackageIdToPricing(
-				mapFlightPricingFromBackend(null),
+				mapFlightPricingFromBackend(),
 				event.package_id
 			)
 		};
@@ -103,8 +105,9 @@ export const mapTrainEventToForm = (
 
 export const mapTrainFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>,
-	lang: LanguageCode = LanguageCode.En
+	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
+	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
 
 	if (productId) {

@@ -1,8 +1,11 @@
 import type {
+	ActivityOverrideSchemaInput,
 	ActivitySingleEventInput,
+	BusOverrideSchemaInput,
 	BusSingleEventInput,
 	EventEditOpOutput,
 	EventProductLinkSchema,
+	FlightOverrideSchemaInput,
 	FlightSingleEventInput,
 	GuideSingleEventInput,
 	HousingOverrideSchemaInput,
@@ -13,6 +16,7 @@ import type {
 	SupplementarySingleEventInput,
 	TrainOverrideSchemaInput,
 	TrainSingleEventInput,
+	TransferOverrideSchemaInput,
 	TransferSingleEventInput
 } from "../Api";
 
@@ -107,7 +111,13 @@ export const BOOKING_REVISION_PATHS = {
 			url: `/booking/revision/${bookingId}/event/${eventId}/override`,
 			method: "PATCH",
 			_types: {} as {
-				body: HousingOverrideSchemaInput | TrainOverrideSchemaInput;
+				body:
+					| HousingOverrideSchemaInput
+					| TrainOverrideSchemaInput
+					| FlightOverrideSchemaInput
+					| BusOverrideSchemaInput
+					| TransferOverrideSchemaInput
+					| ActivityOverrideSchemaInput;
 				query: { option_index?: number | null };
 				response: RevisionPreview;
 			}

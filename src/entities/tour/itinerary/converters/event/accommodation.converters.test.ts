@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { AmenitiesTypes, Currency, HousingRoomTypes } from "@/shared/api";
+import {
+	AmenitiesTypes,
+	Currency,
+	HousingRoomTypes,
+	LanguageCode
+} from "@/shared/api";
 
 import {
 	ENUM_ACCOMMODATION_AMENITY,
@@ -30,7 +35,10 @@ vi.mock("@/shared/config", () => ({
 
 vi.mock("@/shared/converters", () => ({
 	mapBackendLocationToGeoForm: () => null,
-	mapGeoFormToBackendLocation: () => null
+	mapGeoFormToBackendLocation: () => null,
+	languageCodeMapper: {
+		to: () => LanguageCode.En
+	}
 }));
 
 vi.mock("@/shared/hooks", () => ({

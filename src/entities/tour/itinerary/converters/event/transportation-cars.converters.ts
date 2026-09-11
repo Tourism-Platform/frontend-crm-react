@@ -1,10 +1,11 @@
-import type {
-	TransferCarCategoriesVariantOutput,
-	TransferCarVariantInput,
-	TransferCarVariantOutput
-} from "@/shared/api";
+import type { TransferCarVariantInput } from "@/shared/api";
 
-import { ENUM_FORM_CARS, type TCarsSchema } from "../../types";
+import {
+	ENUM_FORM_CARS,
+	type TCarsSchema,
+	type TTransferCarCategoriesVariantBackend,
+	type TTransferCarVariantBackend
+} from "../../types";
 
 import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
@@ -19,8 +20,8 @@ const mapCarToBackendInput = (
 });
 
 export const mapCarsFromBackend = (
-	perCarCars?: TransferCarVariantOutput[] | null,
-	perCarCategoryCars?: TransferCarCategoriesVariantOutput[] | null
+	perCarCars?: TTransferCarVariantBackend[] | null,
+	perCarCategoryCars?: TTransferCarCategoriesVariantBackend[] | null
 ): TCarsSchema => {
 	const source = perCarCars?.length
 		? perCarCars

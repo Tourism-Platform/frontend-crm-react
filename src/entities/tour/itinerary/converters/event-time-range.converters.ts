@@ -1,17 +1,16 @@
-import type {
-	ActivityDetailsSchemaOutput,
-	BusHopSchemaOutput,
-	EmptyDetails,
-	FlightHopDetailsSchemaOutput,
-	TimeSchema,
-	TrainHopSchemaOutput,
-	TransferDetailsSchemaOutput
-} from "@/shared/api";
-
 import { ENUM_EVENT_BACKEND, type ENUM_EVENT_BACKEND_TYPE } from "../types";
-import type { THousingDetailsBackend } from "../types";
+import type {
+	TActivityDetailsBackend,
+	TBusHopOutputBackend,
+	TEmptyDetailsBackend,
+	TFlightHopOutputBackend,
+	THousingDetailsBackend,
+	TTimeSchemaBackend,
+	TTrainHopOutputBackend,
+	TTransferDetailsBackend
+} from "../types";
 
-const clock = (value?: TimeSchema | null): string =>
+const clock = (value?: TTimeSchemaBackend | null): string =>
 	value?.time ? value.time.slice(0, 5) : "";
 
 const range = (start: string, end: string): string | undefined => {
@@ -29,11 +28,11 @@ export const mapBackendEventToTimeSubtitle = (
 
 	switch (typ) {
 		case ENUM_EVENT_BACKEND.ACTIVITY: {
-			const d = details as ActivityDetailsSchemaOutput;
+			const d = details as TActivityDetailsBackend;
 			return range(clock(d.start_time), clock(d.end_time));
 		}
 		case ENUM_EVENT_BACKEND.REF: {
-			const d = details as EmptyDetails;
+			const d = details as TEmptyDetailsBackend;
 			return range(clock(d.start_time), clock(d.end_time));
 		}
 		case ENUM_EVENT_BACKEND.HOUSING: {
@@ -41,13 +40,13 @@ export const mapBackendEventToTimeSubtitle = (
 			return range(clock(d.check_in), clock(d.check_out));
 		}
 		case ENUM_EVENT_BACKEND.TRANSFER: {
-			const d = details as TransferDetailsSchemaOutput;
+			const d = details as TTransferDetailsBackend;
 			return range(clock(d.departure?.time), clock(d.arrival?.time));
 		}
 		case ENUM_EVENT_BACKEND.FLIGHT: {
 			const hops =
-				(details as { hop?: FlightHopDetailsSchemaOutput[] | null })
-					.hop ?? [];
+				(details as { hop?: TFlightHopOutputBackend[] | null }).hop ??
+				[];
 			if (hops.length === 0) return undefined;
 			return range(
 				clock(hops[0].departure_time),
@@ -60,7 +59,7 @@ export const mapBackendEventToTimeSubtitle = (
 				(
 					details as {
 						hop?: Array<
-							TrainHopSchemaOutput | BusHopSchemaOutput
+							TTrainHopOutputBackend | TBusHopOutputBackend
 						> | null;
 					}
 				).hop ?? [];

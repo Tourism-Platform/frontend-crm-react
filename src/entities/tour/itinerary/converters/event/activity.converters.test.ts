@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { LanguageCode } from "@/shared/api";
+import { ENUM_LANGUAGES } from "@/shared/config";
 
 import {
 	ENUM_ACTIVITY_FORM_SECTION,
@@ -57,7 +57,7 @@ describe("mapActivityFormToUpdate food branch", () => {
 					currency: "USD"
 				}
 			},
-			LanguageCode.En
+			ENUM_LANGUAGES.EN
 		);
 
 		expect(result.details).toMatchObject({
@@ -89,7 +89,7 @@ describe("mapActivityFormToUpdate food branch", () => {
 					]
 				}
 			},
-			LanguageCode.En
+			ENUM_LANGUAGES.EN
 		);
 
 		expect(result.details).toMatchObject({

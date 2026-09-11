@@ -1,9 +1,10 @@
 import type {
-	TourOptionCreateSchema,
-	TourOptionUpdateSchema
-} from "@/shared/api";
-
-import type { IOption, IOptionFormPayload, TTourOptionBackend } from "../types";
+	IOption,
+	IOptionFormPayload,
+	TTourOptionBackend,
+	TTourOptionCreateBackend,
+	TTourOptionUpdateBackend
+} from "../types";
 
 export const mapOptionToFrontend = (backend: TTourOptionBackend): IOption => ({
 	id: backend.id,
@@ -15,14 +16,14 @@ export const mapOptionToFrontend = (backend: TTourOptionBackend): IOption => ({
 
 export const mapOptionCreateToBackend = (
 	data: IOptionFormPayload
-): TourOptionCreateSchema => ({
+): TTourOptionCreateBackend => ({
 	name: data.name,
 	description: data.description || null
 });
 
 export const mapOptionUpdateToBackend = (
 	data: IOptionFormPayload
-): TourOptionUpdateSchema => ({
+): TTourOptionUpdateBackend => ({
 	name: data.name,
 	description: data.description || null
 });

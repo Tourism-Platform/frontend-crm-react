@@ -19,6 +19,7 @@ export * from "./event/event-policy-check.converters";
 export * from "./event/hotel-policy.converters";
 export * from "./event/flight-pricing.converters";
 export * from "./event/train-details.helpers";
+export * from "./event/flight-details.helpers";
 export * from "./event/vehicle-body-type.converters";
 export * from "./event/supplementary.converters";
 export * from "./event/supplementary-pricing.converters";

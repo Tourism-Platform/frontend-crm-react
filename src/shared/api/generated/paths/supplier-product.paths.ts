@@ -1,6 +1,21 @@
 import type {
+	ActivityProductCreate,
+	ActivityProductReadOutput,
+	ActivityProductUpdate,
+	ActivityVariantReadOutput,
+	ActivityVariantWrite,
 	BodyUploadNodeImagesSupplierSupplierIdProductProductIdVariantVariantIdNodeNodeIdImagesPost,
 	BodyUploadProductImagesSupplierSupplierIdProductProductIdImagesPost,
+	BusProductCreate,
+	BusProductReadOutput,
+	BusProductUpdate,
+	BusVariantReadOutput,
+	BusVariantWrite,
+	FlightProductCreate,
+	FlightProductReadOutput,
+	FlightProductUpdate,
+	FlightVariantReadOutput,
+	FlightVariantWrite,
 	HotelProductCreate,
 	HotelProductReadOutput,
 	HotelProductUpdate,
@@ -14,7 +29,12 @@ import type {
 	TrainProductReadOutput,
 	TrainProductUpdate,
 	TrainVariantReadOutput,
-	TrainVariantWrite
+	TrainVariantWrite,
+	TransferProductCreate,
+	TransferProductReadOutput,
+	TransferProductUpdate,
+	TransferVariantReadOutput,
+	TransferVariantWrite
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -56,9 +76,21 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			url: `/supplier/${supplierId}/product`,
 			method: "POST",
 			_types: {} as {
-				body: HotelProductCreate | TrainProductCreate;
+				body:
+					| HotelProductCreate
+					| TrainProductCreate
+					| FlightProductCreate
+					| BusProductCreate
+					| TransferProductCreate
+					| ActivityProductCreate;
 				query: void;
-				response: HotelProductReadOutput | TrainProductReadOutput;
+				response:
+					| HotelProductReadOutput
+					| TrainProductReadOutput
+					| FlightProductReadOutput
+					| BusProductReadOutput
+					| TransferProductReadOutput
+					| ActivityProductReadOutput;
 			}
 		}) as const,
 	getProduct: (supplierId: string, productId: string) =>
@@ -68,7 +100,13 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			_types: {} as {
 				body: void;
 				query: void;
-				response: HotelProductReadOutput | TrainProductReadOutput;
+				response:
+					| HotelProductReadOutput
+					| TrainProductReadOutput
+					| FlightProductReadOutput
+					| BusProductReadOutput
+					| TransferProductReadOutput
+					| ActivityProductReadOutput;
 			}
 		}) as const,
 	updateProduct: (supplierId: string, productId: string) =>
@@ -76,9 +114,21 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			url: `/supplier/${supplierId}/product/${productId}`,
 			method: "PATCH",
 			_types: {} as {
-				body: HotelProductUpdate | TrainProductUpdate;
+				body:
+					| HotelProductUpdate
+					| TrainProductUpdate
+					| FlightProductUpdate
+					| BusProductUpdate
+					| TransferProductUpdate
+					| ActivityProductUpdate;
 				query: void;
-				response: HotelProductReadOutput | TrainProductReadOutput;
+				response:
+					| HotelProductReadOutput
+					| TrainProductReadOutput
+					| FlightProductReadOutput
+					| BusProductReadOutput
+					| TransferProductReadOutput
+					| ActivityProductReadOutput;
 			}
 		}) as const,
 	deleteProduct: (supplierId: string, productId: string) =>
@@ -92,9 +142,21 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			url: `/supplier/${supplierId}/product/${productId}/variant`,
 			method: "POST",
 			_types: {} as {
-				body: HotelVariantWrite | TrainVariantWrite;
+				body:
+					| HotelVariantWrite
+					| TrainVariantWrite
+					| FlightVariantWrite
+					| BusVariantWrite
+					| TransferVariantWrite
+					| ActivityVariantWrite;
 				query: void;
-				response: HotelVariantReadOutput | TrainVariantReadOutput;
+				response:
+					| HotelVariantReadOutput
+					| TrainVariantReadOutput
+					| FlightVariantReadOutput
+					| BusVariantReadOutput
+					| TransferVariantReadOutput
+					| ActivityVariantReadOutput;
 			}
 		}) as const,
 	updateVariant: (supplierId: string, productId: string, variantId: string) =>
@@ -102,9 +164,21 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			url: `/supplier/${supplierId}/product/${productId}/variant/${variantId}`,
 			method: "PATCH",
 			_types: {} as {
-				body: HotelVariantWrite | TrainVariantWrite;
+				body:
+					| HotelVariantWrite
+					| TrainVariantWrite
+					| FlightVariantWrite
+					| BusVariantWrite
+					| TransferVariantWrite
+					| ActivityVariantWrite;
 				query: void;
-				response: HotelVariantReadOutput | TrainVariantReadOutput;
+				response:
+					| HotelVariantReadOutput
+					| TrainVariantReadOutput
+					| FlightVariantReadOutput
+					| BusVariantReadOutput
+					| TransferVariantReadOutput
+					| ActivityVariantReadOutput;
 			}
 		}) as const,
 	deleteVariant: (supplierId: string, productId: string, variantId: string) =>

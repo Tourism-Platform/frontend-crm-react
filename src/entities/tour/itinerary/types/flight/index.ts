@@ -1,5 +1,7 @@
 export * from "./flight-enum.types";
 export * from "./flight.types";
+export * from "./flight-hop-backend.types";
+export * from "./flight-event-backend.types";
 export * from "./pricing.types";
 export * from "./pricing-backend.types";
 export * from "./tab.types";

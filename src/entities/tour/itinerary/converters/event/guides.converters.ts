@@ -1,13 +1,10 @@
-import type {
-	GuideByLanguageCategoryOutput,
-	GuideDetailsOutput,
-	GuideTypeTier
-} from "@/shared/api";
-
 import { DEFAULT_GUIDE_UP_TO_PAX } from "../../config";
 import {
 	ENUM_FORM_GUIDES,
 	ENUM_GUIDE_TYPE,
+	type TGuideByLanguageCategoryBackend,
+	type TGuideDetailsBackend,
+	type TGuideTypeTierBackend,
 	type TGuidesSchema
 } from "../../types";
 
@@ -23,7 +20,7 @@ export const getDefaultGuidesList = (): TGuidesList => [
 ];
 
 export const mapGuidesFromBackend = (
-	details?: GuideDetailsOutput | null
+	details?: TGuideDetailsBackend | null
 ): TGuidesSchema => ({
 	[ENUM_FORM_GUIDES.GUIDES_LIST]: [
 		{
@@ -44,7 +41,7 @@ export const mapGuidesDurationToBackend = (
 
 export const mapGuidesTypTiersToBackend = (
 	guidesList: TGuidesList = []
-): GuideTypeTier[] | undefined => {
+): TGuideTypeTierBackend[] | undefined => {
 	const guideType = guidesList[0]?.[ENUM_FORM_GUIDES.GUIDE_TYPE];
 	const typ = guideTypeMapper.to(guideType);
 	if (!typ) return undefined;
@@ -57,4 +54,4 @@ export const mapGuidesTypTiersToBackend = (
 	];
 };
 
-export type { GuideByLanguageCategoryOutput };
+export type { TGuideByLanguageCategoryBackend };

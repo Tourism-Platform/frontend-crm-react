@@ -1,11 +1,4 @@
-import {
-	type BusHopSchemaInput,
-	type BusHopSchemaOutput,
-	type BusJourneyPointSchemaInput,
-	LanguageCode,
-	type TrainHopSchemaInput,
-	type TrainHopSchemaOutput
-} from "@/shared/api";
+import { LanguageCode } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
@@ -13,7 +6,15 @@ import {
 import { getDeviceUtcOffset } from "@/shared/hooks";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 
-import type { TBusRouteSegment, TTrainRouteSegment } from "../../../types";
+import type {
+	TBusHopInputBackend,
+	TBusHopOutputBackend,
+	TBusJourneyPointInputBackend,
+	TBusRouteSegment,
+	TTrainHopInputBackend,
+	TTrainHopOutputBackend,
+	TTrainRouteSegment
+} from "../../../types";
 import {
 	ENUM_FLIGHT_TRANSPORT_TYPE,
 	ENUM_FORM_BUS,
@@ -21,21 +22,19 @@ import {
 } from "../../../types";
 
 const buildJourneyPointInput = (
-	// date: string | null,
 	time: string | null,
 	timezone: string,
 	location: TGeoFormValue | null | undefined,
 	lang: LanguageCode
-): BusJourneyPointSchemaInput => ({
-	// ...(date ? { date } : {}),
+): TBusJourneyPointInputBackend => ({
 	...(time && timezone ? { time: { time, timezone: Number(timezone) } } : {}),
 	...(location !== undefined && {
-		location: location ? mapGeoFormToBackendLocation(location, lang) : null
+		location: mapGeoFormToBackendLocation(location, lang)
 	})
 });
 
 export const mapTrainHopToSegment = (
-	hop: TrainHopSchemaOutput
+	hop: TTrainHopOutputBackend
 ): TTrainRouteSegment => {
 	const departure = hop.departure;
 	const arrival = hop.arrival;
@@ -50,8 +49,6 @@ export const mapTrainHopToSegment = (
 		[ENUM_FORM_TRAIN.ARRIVAL_STATION]: mapBackendLocationToGeoForm(
 			arrival?.location
 		),
-		// [ENUM_FORM_TRAIN.DEPARTURE_DATE]: departure?.date ?? null,
-		// [ENUM_FORM_TRAIN.ARRIVAL_DATE]: arrival?.date ?? null,
 		[ENUM_FORM_TRAIN.DEPARTURE_TIME]: departure?.time?.time ?? null,
 		[ENUM_FORM_TRAIN.ARRIVAL_TIME]: arrival?.time?.time ?? null,
 		[ENUM_FORM_TRAIN.DEPARTURE_TIMEZONE]: String(
@@ -64,7 +61,7 @@ export const mapTrainHopToSegment = (
 };
 
 export const mapBusHopToSegment = (
-	hop: BusHopSchemaOutput
+	hop: TBusHopOutputBackend
 ): TBusRouteSegment => {
 	const departure = hop.departure;
 	const arrival = hop.arrival;
@@ -79,8 +76,6 @@ export const mapBusHopToSegment = (
 		[ENUM_FORM_BUS.ARRIVAL_POINT]: mapBackendLocationToGeoForm(
 			arrival?.location
 		),
-		// [ENUM_FORM_BUS.DEPARTURE_DATE]: departure?.date ?? null,
-		// [ENUM_FORM_BUS.ARRIVAL_DATE]: arrival?.date ?? null,
 		[ENUM_FORM_BUS.DEPARTURE_TIME]: departure?.time?.time ?? null,
 		[ENUM_FORM_BUS.ARRIVAL_TIME]: arrival?.time?.time ?? null,
 		[ENUM_FORM_BUS.DEPARTURE_TIMEZONE]: String(
@@ -95,16 +90,14 @@ export const mapBusHopToSegment = (
 export const mapTrainSegmentToHop = (
 	segment: TTrainRouteSegment,
 	lang: LanguageCode = LanguageCode.En
-): TrainHopSchemaInput => ({
+): TTrainHopInputBackend => ({
 	departure: buildJourneyPointInput(
-		// segment.departure_date ?? null,
 		segment.departure_time ?? null,
 		segment.departure_timezone ?? "",
 		segment.departure_station,
 		lang
 	),
 	arrival: buildJourneyPointInput(
-		// segment.arrival_date ?? null,
 		segment.arrival_time ?? null,
 		segment.arrival_timezone ?? "",
 		segment.arrival_station,
@@ -115,16 +108,14 @@ export const mapTrainSegmentToHop = (
 export const mapBusSegmentToHop = (
 	segment: TBusRouteSegment,
 	lang: LanguageCode = LanguageCode.En
-): BusHopSchemaInput => ({
+): TBusHopInputBackend => ({
 	departure: buildJourneyPointInput(
-		// segment.departure_date ?? null,
 		segment.departure_time ?? null,
 		segment.departure_timezone ?? "",
 		segment.departure_point,
 		lang
 	),
 	arrival: buildJourneyPointInput(
-		// segment.arrival_date ?? null,
 		segment.arrival_time ?? null,
 		segment.arrival_timezone ?? "",
 		segment.arrival_point,

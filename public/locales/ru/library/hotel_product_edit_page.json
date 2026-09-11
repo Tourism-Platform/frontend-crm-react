@@ -14,33 +14,50 @@
 			"fields": {
 				"name": {
 					"label": "Название",
-					"placeholder": "Название отеля"
+					"placeholder": "Введите название размещения или оно будет сгенерировано автоматически",
+					"errors": {
+						"required": "Укажите название"
+					}
 				},
 				"location": {
-					"label": "Адрес",
-					"placeholder": "Начните вводить адрес",
-					"empty": "Ничего не найдено"
+					"label": "Объект",
+					"placeholder": "Введите местоположение",
+					"empty": "Локации не найдены",
+					"errors": {
+						"required": "Объект обязателен"
+					}
 				},
 				"stars": {
 					"label": "Звёзды",
-					"placeholder": "1–5"
+					"placeholder": "1–5",
+					"errors": {
+						"required": "Укажите количество звёзд",
+						"min": "Минимум 1 звезда",
+						"max": "Максимум 5 звёзд"
+					}
 				},
 				"amenities": {
-					"label": "Удобства",
-					"placeholder": "Выберите удобства"
+					"label": "Удобства размещения",
+					"placeholder": "Выберите",
+					"errors": {
+						"required": "Выберите удобства"
+					}
 				},
-				"checkInFrom": {
+				"check_in_from": {
 					"label": "Заезд с",
-					"placeholder": "14:00"
+					"placeholder": "ЧЧ:ММ",
+					"errors": {
+						"required": "Укажите время заезда",
+						"invalid": "Недопустимый формат времени"
+					}
 				},
-				"checkOutUntil": {
+				"check_out_until": {
 					"label": "Выезд до",
-					"placeholder": "12:00"
-				}
-			},
-			"errors": {
-				"name": {
-					"required": "Укажите название"
+					"placeholder": "ЧЧ:ММ",
+					"errors": {
+						"required": "Укажите время выезда",
+						"invalid": "Недопустимый формат времени"
+					}
 				}
 			},
 			"buttons": {
@@ -52,54 +69,78 @@
 		"variants": {
 			"title": "Варианты",
 			"add": "Добавить вариант",
-			"errors": {
-				"name": {
-					"required": "Укажите название варианта"
-				},
-				"roomTyp": {
-					"required": "Выберите тип комнаты"
-				}
-			},
 			"fields": {
 				"name": {
 					"label": "Название варианта",
-					"placeholder": "Deluxe"
+					"placeholder": "Deluxe",
+					"errors": {
+						"required": "Укажите название варианта"
+					}
 				},
-				"roomTyp": {
-					"label": "Тип комнаты",
-					"placeholder": "Выберите тип"
+				"room_name": {
+					"label": "Тип номера",
+					"placeholder": "Выберите тип",
+					"errors": {
+						"required": "Тип номера обязателен"
+					}
 				},
-				"chargeTyp": {
-					"label": "Тип тарифа",
-					"placeholder": "Выберите"
+				"charge_typ": {
+					"label": "Режим оплаты",
+					"placeholder": "Выберите режим",
+					"errors": {
+						"required": "Выберите тип тарифа"
+					}
 				},
 				"cost": {
-					"label": "Стоимость",
-					"placeholder": "0"
+					"label": "Цена",
+					"placeholder": "Введите цену",
+					"errors": {
+						"required": "Укажите стоимость"
+					}
 				},
 				"currency": {
 					"label": "Валюта",
-					"placeholder": "USD"
+					"placeholder": "Выберите валюту",
+					"errors": {
+						"required": "Выберите валюту"
+					}
 				},
-				"fromDate": {
+				"from_date": {
 					"label": "Сезон с",
-					"placeholder": "YYYY-MM-DD"
+					"placeholder": "YYYY-MM-DD",
+					"errors": {
+						"required": "Укажите начало сезона",
+						"invalid": "Недопустимый формат даты"
+					}
 				},
-				"toDate": {
+				"to_date": {
 					"label": "Сезон по",
-					"placeholder": "YYYY-MM-DD"
+					"placeholder": "YYYY-MM-DD",
+					"errors": {
+						"required": "Укажите конец сезона",
+						"invalid": "Недопустимый формат даты"
+					}
 				},
-				"seasonChargeTyp": {
+				"season_charge_typ": {
 					"label": "Тип тарифа сезона",
-					"placeholder": "Выберите"
+					"placeholder": "Выберите режим",
+					"errors": {
+						"required": "Выберите тип тарифа сезона"
+					}
 				},
-				"seasonCost": {
-					"label": "Цена сезона",
-					"placeholder": "0"
+				"season_cost": {
+					"label": "Цена",
+					"placeholder": "Введите цену",
+					"errors": {
+						"required": "Укажите цену сезона"
+					}
 				},
-				"seasonCurrency": {
+				"season_currency": {
 					"label": "Валюта сезона",
-					"placeholder": "USD"
+					"placeholder": "Выберите валюту",
+					"errors": {
+						"required": "Выберите валюту сезона"
+					}
 				}
 			},
 			"charge": {
@@ -147,7 +188,7 @@
 			"button": "Удалить продукт",
 			"form": {
 				"title": "Удалить продукт",
-				"warning": "Вы уверены, что хотите удалить этот отельный продукт?",
+				"warning": "Вы уверены, что хотите удалить этот отель?",
 				"buttons": {
 					"decline": "Отмена",
 					"confirm": "Удалить",

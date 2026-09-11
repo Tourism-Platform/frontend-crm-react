@@ -10,15 +10,13 @@ import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 import {
 	ENUM_FORM_TRAIN_PRODUCT as ENUM_FORM,
 	ENUM_FORM_TRAIN_HOP as ENUM_HOP,
+	type ITrainHop,
+	type ITrainProduct,
+	type TCreateTrainProductBackend,
 	type TTrainHopFormSchema,
-	type TTrainProductGeneralSchema
-} from "../../schema/train-product.schema";
-import type {
-	ITrainHop,
-	ITrainProduct,
-	TCreateTrainProductBackend,
-	TTrainHopInputBackend,
-	TUpdateTrainProductBackend
+	type TTrainHopInputBackend,
+	type TTrainProductGeneralSchema,
+	type TUpdateTrainProductBackend
 } from "../../types";
 
 const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
@@ -65,12 +63,12 @@ const mapHopFormToBackend = (
 	lang: LanguageCode
 ): TTrainHopInputBackend => ({
 	departure: mapHopPointToBackend(
-		hop[ENUM_HOP.DEPARTURE_TIME],
+		hop[ENUM_HOP.DEPARTURE_TIME] ?? "",
 		hop[ENUM_HOP.DEPARTURE_LOCATION],
 		lang
 	),
 	arrival: mapHopPointToBackend(
-		hop[ENUM_HOP.ARRIVAL_TIME],
+		hop[ENUM_HOP.ARRIVAL_TIME] ?? "",
 		hop[ENUM_HOP.ARRIVAL_LOCATION],
 		lang
 	)

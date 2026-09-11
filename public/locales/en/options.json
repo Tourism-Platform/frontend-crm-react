@@ -384,5 +384,36 @@
 	"train_variant_charge": {
 		"fixed": "Fixed",
 		"per_person": "Per person"
+	},
+	"flight_variant_charge": {
+		"fixed": "Flat rate",
+		"per_person": "Per person"
+	},
+	"activity_variant_charge": {
+		"fixed": "Flat rate",
+		"per_person": "Per person"
+	},
+	"activity_type": {
+		"food": "Food",
+		"master_class": "Master class",
+		"sightseeing": "Sightseeing",
+		"outdoor": "Outdoor",
+		"riding": "Riding",
+		"extreme": "Extreme",
+		"wellness": "Wellness",
+		"entertainment": "Entertainment",
+		"water_activities": "Water activities",
+		"photography": "Photography",
+		"spiritual": "Spiritual",
+		"other": "Other"
+	},
+	"vehicle_body_type": {
+		"sedan": "Sedan",
+		"minivan": "Minivan",
+		"minibus": "Minibus",
+		"minibus_plus": "Minibus plus",
+		"bus": "Bus",
+		"suv": "SUV",
+		"coach": "Coach"
 	}
 }

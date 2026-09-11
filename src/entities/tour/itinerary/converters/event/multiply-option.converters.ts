@@ -1,10 +1,9 @@
-import type { MultiEventReadOutput } from "@/shared/api";
-
 import {
 	ENUM_EVENT,
 	type ENUM_EVENT_BACKEND_TYPE,
 	type IEventOptionReorder,
 	type ITourEventOption,
+	type TMultiEventReadBackend,
 	type TMultiplyOptionEditSchema,
 	type TTourEventBackendResponce
 } from "../../types";
@@ -12,7 +11,7 @@ import { mapBackendEventToTimeSubtitle } from "../event-time-range.converters";
 import { mapBackendTypToEventType } from "../event-type.converters";
 
 type TMultiEventOptionDetail = NonNullable<
-	MultiEventReadOutput["details"]
+	TMultiEventReadBackend["details"]
 >[number];
 
 export const mapMultiplyOptionDetailToOption = (
@@ -40,7 +39,7 @@ export const mapMultiplyOptionDetailToOption = (
 export const mapMultiplyOptionEventToForm = (
 	data: TTourEventBackendResponce
 ): TMultiplyOptionEditSchema => {
-	const event = data?.event as MultiEventReadOutput;
+	const event = data?.event as TMultiEventReadBackend;
 
 	const options = (event?.details ?? [])
 		.map(mapMultiplyOptionDetailToOption)

@@ -1,0 +1,190 @@
+{
+	"page_name": "Flight product",
+	"back": "Back to supplier",
+	"tabs": {
+		"general": "General",
+		"media": "Media",
+		"variants": "Variants"
+	},
+	"form": {
+		"create_hint": {
+			"save_general_first": "Create the flight on the General tab first"
+		},
+		"general": {
+			"fields": {
+				"name": {
+					"label": "Name",
+					"placeholder": "Enter flight title or it will automatically generated",
+					"errors": {
+						"required": "Title is required"
+					}
+				},
+				"hops": {
+					"add": "Add flight",
+					"errors": {
+						"min_segments": "At least one route segment is required"
+					},
+					"airline_code": {
+						"label": "Airline code",
+						"placeholder": "Enter airline code",
+						"errors": {
+							"required": "Airline code is required",
+							"min": "Airline code is too short",
+							"max": "Airline code is too long",
+							"pattern": "Must be 2–3 uppercase letters or numbers"
+						}
+					},
+					"flight_number": {
+						"label": "Flight number",
+						"placeholder": "Enter flight number",
+						"errors": {
+							"required": "Flight number is required",
+							"min": "Flight number is too short",
+							"max": "Flight number is too long",
+							"invalid": "Invalid flight number format"
+						}
+					},
+					"departure_airport_code": {
+						"label": "Departure airport code",
+						"placeholder": "Enter departure airport code",
+						"errors": {
+							"required": "Departure airport code is required",
+							"length": "Departure airport code must be 3 characters",
+							"invalid": "Invalid IATA airport code",
+							"pattern": "Must be 3 uppercase letters"
+						}
+					},
+					"arrival_airport_code": {
+						"label": "Arrival airport code",
+						"placeholder": "Enter arrival airport code",
+						"errors": {
+							"required": "Arrival airport code is required",
+							"length": "Arrival airport code must be 3 characters",
+							"invalid": "Invalid IATA airport code",
+							"pattern": "Must be 3 uppercase letters"
+						}
+					},
+					"departure_location": {
+						"label": "Departure city",
+						"placeholder": "Enter location",
+						"empty": "No locations found",
+						"errors": {
+							"required": "Departure city is required"
+						}
+					},
+					"arrival_location": {
+						"label": "Arrival city",
+						"placeholder": "Enter location",
+						"empty": "No locations found",
+						"errors": {
+							"required": "Arrival city is required"
+						}
+					},
+					"departure_terminal": {
+						"label": "Departure terminal",
+						"placeholder": "Enter departure terminal",
+						"errors": {
+							"required": "Departure terminal is required",
+							"max": "Terminal name is too long"
+						}
+					},
+					"departure_gate": {
+						"label": "Departure gate",
+						"placeholder": "Enter departure gate",
+						"errors": {
+							"required": "Departure gate is required",
+							"max": "Gate name is too long"
+						}
+					}
+				}
+			},
+			"buttons": {
+				"create": "Create",
+				"save": "Save",
+				"saving": "Saving"
+			}
+		},
+		"variants": {
+			"title": "Variants",
+			"add": "Add variant",
+			"fields": {
+				"name": {
+					"label": "Variant name",
+					"placeholder": "Economy",
+					"errors": {
+						"required": "Variant name is required"
+					}
+				},
+				"charge_typ": {
+					"label": "Charge mode",
+					"placeholder": "Select charge mode",
+					"errors": {
+						"required": "Select a charge type"
+					}
+				},
+				"cost": {
+					"label": "Price",
+					"placeholder": "Enter price",
+					"errors": {
+						"required": "Cost is required"
+					}
+				},
+				"currency": {
+					"label": "Currency",
+					"placeholder": "Select currency",
+					"errors": {
+						"required": "Select a currency"
+					}
+				}
+			},
+			"buttons": {
+				"save": "Save variant",
+				"saving": "Saving",
+				"delete": "Delete",
+				"deleting": "Deleting"
+			}
+		},
+		"images": {
+			"product_title": "Product gallery",
+			"buttons": {
+				"save": "Save photos",
+				"saving": "Saving"
+			}
+		},
+		"toasts": {
+			"save": {
+				"success": "Saved",
+				"error": "Failed to save"
+			},
+			"load": {
+				"error": "Failed to load product"
+			},
+			"create": {
+				"success": "Product created",
+				"error": "Failed to create product"
+			},
+			"delete": {
+				"success": "Deleted",
+				"error": "Failed to delete"
+			}
+		}
+	},
+	"menu": {
+		"delete": {
+			"button": "Delete product",
+			"form": {
+				"title": "Delete product",
+				"warning": "Are you sure you want to delete this flight?",
+				"buttons": {
+					"decline": "Cancel",
+					"confirm": "Delete",
+					"confirming": "Deleting"
+				},
+				"toasts": {
+					"success": "Product deleted",
+					"error": "Failed to delete product"
+				}
+			}
+		}
+	}
+}

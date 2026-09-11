@@ -4,13 +4,9 @@ import {
 } from "@/entities/commission";
 
 import {
+	ENUM_FORM_HOTEL_ROOMS,
 	ENUM_FORM_HOTEL_VARIANT,
 	ENUM_FORM_HOTEL_VARIANT_ROOM,
-	type THotelVariantFormSchema,
-	type THotelVariantRoomFormSchema
-} from "../../schema/hotel-variant.schema";
-import {
-	ENUM_FORM_HOTEL_ROOMS,
 	ENUM_HOTEL_ROOM_CHARGE,
 	type ENUM_HOTEL_ROOM_CHARGE_TYPE,
 	type ENUM_HOTEL_ROOM_TYPE_TYPE,
@@ -18,7 +14,9 @@ import {
 	type IHotelVariant,
 	type IHotelVariantWrite,
 	type ISupplierFeeFormRow,
-	type THotelRoomCharge
+	type THotelRoomCharge,
+	type THotelVariantFormSchema,
+	type THotelVariantRoomFormSchema
 } from "../../types";
 
 const chargeToFormFields = (

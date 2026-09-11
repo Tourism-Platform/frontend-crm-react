@@ -8,14 +8,12 @@ import {
 
 import {
 	ENUM_FORM_HOTEL_PRODUCT,
-	type THotelProductGeneralSchema
-} from "../../schema/hotel-product.schema";
-import type {
-	IHotelPolicy,
-	IHotelProduct,
-	TCreateHotelProductBackend,
-	THotelProductDetailsBackend,
-	TUpdateHotelProductBackend
+	type IHotelPolicy,
+	type IHotelProduct,
+	type TCreateHotelProductBackend,
+	type THotelProductDetailsBackend,
+	type THotelProductGeneralSchema,
+	type TUpdateHotelProductBackend
 } from "../../types";
 
 import { hotelAmenityConverter } from "./amenity.converters";

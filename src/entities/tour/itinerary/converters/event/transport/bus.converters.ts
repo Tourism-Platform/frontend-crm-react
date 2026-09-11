@@ -1,18 +1,22 @@
-import type { BusSingleEventOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
+import { languageCodeMapper } from "@/shared/converters";
 
 import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
 	TBusRouteSegment,
+	TBusSingleEventBackend,
 	TFlightEditSchema,
 	TTourEventBackendResponce,
 	TTourEventUpdateBackend
 } from "../../../types";
 import { ENUM_FLIGHT_TRANSPORT_TYPE, ENUM_FORM_BUS } from "../../../types";
+import { isInheritedBusDetails } from "../bus-details.helpers";
 import {
 	mapFlightPricingFromBackend,
 	mapFlightPricingToBackend
 } from "../flight-pricing.converters";
+import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
@@ -37,7 +41,7 @@ const createEmptyBusSegment = (): TBusRouteSegment => ({
 
 const assertBusEvent = (
 	data: TTourEventBackendResponce
-): BusSingleEventOutput => {
+): TBusSingleEventBackend => {
 	if (!("typ" in data.event) || data.event.typ !== ENUM_EVENT_BACKEND.BUS) {
 		throw new Error('mapBusEventToForm: expected bus event with typ "bus"');
 	}
@@ -48,7 +52,31 @@ export const mapBusEventToForm = (
 	data: TTourEventBackendResponce
 ): TFlightEditSchema => {
 	const event = assertBusEvent(data);
-	const hops = event.details?.hop ?? [];
+	const details = event.details ?? null;
+
+	if (isInheritedBusDetails(details)) {
+		const hops = details.hop ?? [];
+		const route: TBusRouteSegment[] =
+			hops.length > 0
+				? hops.map(mapBusHopToSegment)
+				: [createEmptyBusSegment()];
+
+		return {
+			...mapEventMetaToForm(event),
+			...mapInheritedProductLinkToForm(details),
+			general: {
+				description: event.description ?? "",
+				transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
+				route
+			},
+			pricing: applyEventPackageIdToPricing(
+				mapFlightPricingFromBackend(),
+				event.package_id
+			)
+		};
+	}
+
+	const hops = details?.hop ?? [];
 	const route: TBusRouteSegment[] =
 		hops.length > 0
 			? hops.map(mapBusHopToSegment)
@@ -62,7 +90,7 @@ export const mapBusEventToForm = (
 			route
 		},
 		pricing: applyEventPackageIdToPricing(
-			mapFlightPricingFromBackend(event.details),
+			mapFlightPricingFromBackend(details),
 			event.package_id
 		)
 	};
@@ -70,8 +98,9 @@ export const mapBusEventToForm = (
 
 export const mapBusFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>,
-	lang: LanguageCode = LanguageCode.En
+	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
+	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const g = frontend.general;
 	const busRoute = g?.route?.filter(
 		(segment): segment is TBusRouteSegment =>

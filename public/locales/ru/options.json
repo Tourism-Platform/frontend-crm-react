@@ -384,5 +384,36 @@
 	"train_variant_charge": {
 		"fixed": "Фиксированная",
 		"per_person": "С человека"
+	},
+	"flight_variant_charge": {
+		"fixed": "Фикс цена",
+		"per_person": "За человека"
+	},
+	"activity_variant_charge": {
+		"fixed": "Фикс цена",
+		"per_person": "За человека"
+	},
+	"activity_type": {
+		"food": "Еда",
+		"master_class": "Мастер-класс",
+		"sightseeing": "Экскурсия",
+		"outdoor": "На природе",
+		"riding": "Верховая езда",
+		"extreme": "Экстрим",
+		"wellness": "Велнес",
+		"entertainment": "Развлечения",
+		"water_activities": "Водные активности",
+		"photography": "Фотография",
+		"spiritual": "Духовные практики",
+		"other": "Другое"
+	},
+	"vehicle_body_type": {
+		"sedan": "Седан",
+		"minivan": "Минивэн",
+		"minibus": "Микроавтобус",
+		"minibus_plus": "Микроавтобус+",
+		"bus": "Автобус",
+		"suv": "Внедорожник",
+		"coach": "Туристический автобус"
 	}
 }

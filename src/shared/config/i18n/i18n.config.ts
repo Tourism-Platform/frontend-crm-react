@@ -11,11 +11,15 @@ import reconciliation_page from "../../../../public/locales/en/finance/reconcili
 import supplier_payments_page from "../../../../public/locales/en/finance/supplier_payments_page.json";
 import header from "../../../../public/locales/en/header.json";
 import home from "../../../../public/locales/en/home.json";
+import activity_product_edit_page from "../../../../public/locales/en/library/activity_product_edit_page.json";
+import bus_product_edit_page from "../../../../public/locales/en/library/bus_product_edit_page.json";
 import event_templates_page from "../../../../public/locales/en/library/event_templates_page.json";
+import flight_product_edit_page from "../../../../public/locales/en/library/flight_product_edit_page.json";
 import hotel_product_edit_page from "../../../../public/locales/en/library/hotel_product_edit_page.json";
 import supplier_id_page from "../../../../public/locales/en/library/supplier_id_page.json";
 import suppliers_page from "../../../../public/locales/en/library/suppliers_page.json";
 import train_product_edit_page from "../../../../public/locales/en/library/train_product_edit_page.json";
+import transfer_product_edit_page from "../../../../public/locales/en/library/transfer_product_edit_page.json";
 import login_page from "../../../../public/locales/en/login_page.json";
 import main from "../../../../public/locales/en/main.json";
 import not_found_page from "../../../../public/locales/en/not_found_page.json";
@@ -104,6 +108,10 @@ export type TSuppliersPage = typeof suppliers_page;
 export type TSupplierIdPage = typeof supplier_id_page;
 export type THotelProductEditPage = typeof hotel_product_edit_page;
 export type TTrainProductEditPage = typeof train_product_edit_page;
+export type TFlightProductEditPage = typeof flight_product_edit_page;
+export type TBusProductEditPage = typeof bus_product_edit_page;
+export type TTransferProductEditPage = typeof transfer_product_edit_page;
+export type TActivityProductEditPage = typeof activity_product_edit_page;
 
 export type TOrderIdPage = typeof order_id_page;
 export type TLandingPage = typeof landing_page;
@@ -161,6 +169,10 @@ export type TResources = {
 	supplier_id_page: TSupplierIdPage;
 	hotel_product_edit_page: THotelProductEditPage;
 	train_product_edit_page: TTrainProductEditPage;
+	flight_product_edit_page: TFlightProductEditPage;
+	bus_product_edit_page: TBusProductEditPage;
+	transfer_product_edit_page: TTransferProductEditPage;
+	activity_product_edit_page: TActivityProductEditPage;
 	not_found_page: TNotFoundPage;
 
 	options: TOptions;
@@ -218,6 +230,10 @@ export const NS = [
 	"supplier_id_page",
 	"hotel_product_edit_page",
 	"train_product_edit_page",
+	"flight_product_edit_page",
+	"bus_product_edit_page",
+	"transfer_product_edit_page",
+	"activity_product_edit_page",
 	"not_found_page",
 
 	"options"
@@ -293,4 +309,10 @@ export type TSuppliersPageKeys = TNestedKeyOf<TSuppliersPage>;
 export type TSupplierIdPageKeys = TNestedKeyOf<TSupplierIdPage>;
 export type THotelProductEditPageKeys = TNestedKeyOf<THotelProductEditPage>;
 export type TTrainProductEditPageKeys = TNestedKeyOf<TTrainProductEditPage>;
+export type TFlightProductEditPageKeys = TNestedKeyOf<TFlightProductEditPage>;
+export type TBusProductEditPageKeys = TNestedKeyOf<TBusProductEditPage>;
+export type TTransferProductEditPageKeys =
+	TNestedKeyOf<TTransferProductEditPage>;
+export type TActivityProductEditPageKeys =
+	TNestedKeyOf<TActivityProductEditPage>;
 export type TTourItineraryPageKeys = TNestedKeyOf<TTourItineraryPage>;

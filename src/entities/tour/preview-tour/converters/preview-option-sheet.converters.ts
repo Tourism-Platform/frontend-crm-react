@@ -147,7 +147,7 @@ const mapTransferSheet = (
 	kind: "transfer",
 	pickup: formatJourneyPoint(event?.details?.departure ?? undefined),
 	dropoff: formatJourneyPoint(event?.details?.arrival ?? undefined),
-	cars: mapSheetCarsFromExpenses(event?.details?.expenses)
+	cars: mapSheetCarsFromExpenses({ cars: event?.details?.cars })
 });
 
 const mapHousingSheet = (
@@ -155,26 +155,17 @@ const mapHousingSheet = (
 ): TOptionEventSheetExtra => {
 	const details = event.details;
 
-	if (details?.source === "inherited") {
-		return {
-			kind: "accommodation",
-			amenities: [],
-			nights: `${details.duration ?? 0} night${details.duration === 1 ? "" : "s"}`,
-			checkIn: formatPubTime(details.check_in ?? undefined),
-			checkOut: formatPubTime(details.check_out ?? undefined),
-			rooms: []
-		};
-	}
-
 	return {
 		kind: "accommodation",
 		amenities: accommodationAmenityConverter.fromMany(
 			details?.amenities ?? []
 		),
-		nights: `${details?.duration} night${details?.duration === 1 ? "" : "s"}`,
+		nights: `${details?.duration ?? 0} night${details?.duration === 1 ? "" : "s"}`,
 		checkIn: formatPubTime(details?.check_in ?? undefined),
 		checkOut: formatPubTime(details?.check_out ?? undefined),
-		rooms: mapSheetRoomsFromExpenses(details?.expenses)
+		rooms: mapSheetRoomsFromExpenses({
+			categories: details?.categories
+		})
 	};
 };
 

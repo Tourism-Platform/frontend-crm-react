@@ -9,34 +9,12 @@ import {
 	ENUM_HOTEL_ROOM_TYPE,
 	ENUM_SUPPLIER_FEE_FIELD
 } from "../types";
+import {
+	ENUM_FORM_HOTEL_VARIANT,
+	ENUM_FORM_HOTEL_VARIANT_ROOM
+} from "../types/hotel/variant-form.types";
 
 const msg = i18nKey<THotelProductEditPageKeys>();
-
-export const ENUM_FORM_HOTEL_VARIANT = {
-	NAME: "name",
-	ROOMS: "rooms"
-} as const;
-
-export type ENUM_FORM_HOTEL_VARIANT_TYPE =
-	(typeof ENUM_FORM_HOTEL_VARIANT)[keyof typeof ENUM_FORM_HOTEL_VARIANT];
-
-export const ENUM_FORM_HOTEL_VARIANT_ROOM = {
-	ID: "id",
-	TYP: "typ",
-	CHARGE_TYP: "chargeTyp",
-	COST: "cost",
-	CURRENCY: "currency",
-	FEES: "fees",
-	FROM_DATE: "fromDate",
-	TO_DATE: "toDate",
-	SEASON_CHARGE_TYP: "seasonChargeTyp",
-	SEASON_COST: "seasonCost",
-	SEASON_CURRENCY: "seasonCurrency",
-	SEASON_FEES: "seasonFees"
-} as const;
-
-export type ENUM_FORM_HOTEL_VARIANT_ROOM_TYPE =
-	(typeof ENUM_FORM_HOTEL_VARIANT_ROOM)[keyof typeof ENUM_FORM_HOTEL_VARIANT_ROOM];
 
 const HOTEL_VARIANT_FEE_SCHEMA = z.object({
 	[ENUM_SUPPLIER_FEE_FIELD.NAME]: z.string().nullable(),
@@ -76,7 +54,7 @@ export const HOTEL_VARIANT_FORM_SCHEMA = z
 		[ENUM_FORM_HOTEL_VARIANT.NAME]: z
 			.string()
 			.trim()
-			.min(1, msg("form.variants.errors.name.required")),
+			.min(1, msg("form.variants.fields.name.errors.required")),
 		[ENUM_FORM_HOTEL_VARIANT.ROOMS]: z
 			.array(HOTEL_VARIANT_ROOM_SCHEMA)
 			.min(1)
@@ -90,12 +68,7 @@ export const HOTEL_VARIANT_FORM_SCHEMA = z
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
 				path: [ENUM_FORM_HOTEL_VARIANT.ROOMS],
-				message: msg("form.variants.errors.roomTyp.required")
+				message: msg("form.variants.fields.room_name.errors.required")
 			});
 		}
 	});
-
-export type THotelVariantRoomFormSchema = z.infer<
-	typeof HOTEL_VARIANT_ROOM_SCHEMA
->;
-export type THotelVariantFormSchema = z.infer<typeof HOTEL_VARIANT_FORM_SCHEMA>;

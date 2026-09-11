@@ -14,33 +14,50 @@
 			"fields": {
 				"name": {
 					"label": "Name",
-					"placeholder": "Hotel name"
+					"placeholder": "Enter accommodation title or it will automatically generated",
+					"errors": {
+						"required": "Name is required"
+					}
 				},
 				"location": {
-					"label": "Address",
-					"placeholder": "Start typing an address",
-					"empty": "No results found"
+					"label": "Property",
+					"placeholder": "Enter location",
+					"empty": "No locations found",
+					"errors": {
+						"required": "Property is required"
+					}
 				},
 				"stars": {
 					"label": "Stars",
-					"placeholder": "1–5"
+					"placeholder": "1–5",
+					"errors": {
+						"required": "Stars are required",
+						"min": "Minimum 1 star",
+						"max": "Maximum 5 stars"
+					}
 				},
 				"amenities": {
-					"label": "Amenities",
-					"placeholder": "Select amenities"
+					"label": "Accommodation amenities",
+					"placeholder": "Choose",
+					"errors": {
+						"required": "Select amenities"
+					}
 				},
-				"checkInFrom": {
+				"check_in_from": {
 					"label": "Check-in from",
-					"placeholder": "14:00"
+					"placeholder": "HH:MM",
+					"errors": {
+						"required": "Check-in time is required",
+						"invalid": "Invalid time format"
+					}
 				},
-				"checkOutUntil": {
+				"check_out_until": {
 					"label": "Check-out until",
-					"placeholder": "12:00"
-				}
-			},
-			"errors": {
-				"name": {
-					"required": "Name is required"
+					"placeholder": "HH:MM",
+					"errors": {
+						"required": "Check-out time is required",
+						"invalid": "Invalid time format"
+					}
 				}
 			},
 			"buttons": {
@@ -52,54 +69,78 @@
 		"variants": {
 			"title": "Variants",
 			"add": "Add variant",
-			"errors": {
-				"name": {
-					"required": "Variant name is required"
-				},
-				"roomTyp": {
-					"required": "Select a room type"
-				}
-			},
 			"fields": {
 				"name": {
 					"label": "Variant name",
-					"placeholder": "Deluxe"
+					"placeholder": "Deluxe",
+					"errors": {
+						"required": "Variant name is required"
+					}
 				},
-				"roomTyp": {
+				"room_name": {
 					"label": "Room type",
-					"placeholder": "Select type"
+					"placeholder": "Select type",
+					"errors": {
+						"required": "Room type is required"
+					}
 				},
-				"chargeTyp": {
-					"label": "Charge type",
-					"placeholder": "Select"
+				"charge_typ": {
+					"label": "Charge mode",
+					"placeholder": "Select charge mode",
+					"errors": {
+						"required": "Select a charge type"
+					}
 				},
 				"cost": {
-					"label": "Cost",
-					"placeholder": "0"
+					"label": "Price",
+					"placeholder": "Enter price",
+					"errors": {
+						"required": "Cost is required"
+					}
 				},
 				"currency": {
 					"label": "Currency",
-					"placeholder": "USD"
+					"placeholder": "Select currency",
+					"errors": {
+						"required": "Select a currency"
+					}
 				},
-				"fromDate": {
+				"from_date": {
 					"label": "Season from",
-					"placeholder": "YYYY-MM-DD"
+					"placeholder": "YYYY-MM-DD",
+					"errors": {
+						"required": "Season start is required",
+						"invalid": "Invalid date format"
+					}
 				},
-				"toDate": {
+				"to_date": {
 					"label": "Season to",
-					"placeholder": "YYYY-MM-DD"
+					"placeholder": "YYYY-MM-DD",
+					"errors": {
+						"required": "Season end is required",
+						"invalid": "Invalid date format"
+					}
 				},
-				"seasonChargeTyp": {
+				"season_charge_typ": {
 					"label": "Season charge type",
-					"placeholder": "Select"
+					"placeholder": "Select charge mode",
+					"errors": {
+						"required": "Select a season charge type"
+					}
 				},
-				"seasonCost": {
-					"label": "Season cost",
-					"placeholder": "0"
+				"season_cost": {
+					"label": "Price",
+					"placeholder": "Enter price",
+					"errors": {
+						"required": "Season cost is required"
+					}
 				},
-				"seasonCurrency": {
+				"season_currency": {
 					"label": "Season currency",
-					"placeholder": "USD"
+					"placeholder": "Select currency",
+					"errors": {
+						"required": "Select a season currency"
+					}
 				}
 			},
 			"charge": {
@@ -147,7 +188,7 @@
 			"button": "Delete product",
 			"form": {
 				"title": "Delete product",
-				"warning": "Are you sure you want to delete this hotel product?",
+				"warning": "Are you sure you want to delete this hotel?",
 				"buttons": {
 					"decline": "Cancel",
 					"confirm": "Delete",

@@ -5,6 +5,21 @@ import type { IPaginationResponse } from "@/shared/types";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapActivityProductFromBackend,
+	mapActivityProductGeneralToCreate,
+	mapActivityProductGeneralToUpdate,
+	mapActivityVariantFromBackend,
+	mapActivityVariantToWrite,
+	mapBusProductFromBackend,
+	mapBusProductGeneralToCreate,
+	mapBusProductGeneralToUpdate,
+	mapBusVariantFromBackend,
+	mapBusVariantToWrite,
+	mapFlightProductFromBackend,
+	mapFlightProductGeneralToCreate,
+	mapFlightProductGeneralToUpdate,
+	mapFlightVariantFromBackend,
+	mapFlightVariantToWrite,
 	mapHotelProductFromBackend,
 	mapHotelProductGeneralToCreate,
 	mapHotelProductGeneralToUpdate,
@@ -19,18 +34,41 @@ import {
 	mapTrainProductGeneralToCreate,
 	mapTrainProductGeneralToUpdate,
 	mapTrainVariantFromBackend,
-	mapTrainVariantToWrite
+	mapTrainVariantToWrite,
+	mapTransferProductFromBackend,
+	mapTransferProductGeneralToCreate,
+	mapTransferProductGeneralToUpdate,
+	mapTransferVariantFromBackend,
+	mapTransferVariantToWrite
 } from "../converters";
 import type {
+	IActivityProduct,
+	IActivityVariant,
+	IBusProduct,
+	IBusVariant,
+	ICreateActivityProduct,
+	ICreateActivityVariant,
+	ICreateBusProduct,
+	ICreateBusVariant,
+	ICreateFlightProduct,
+	ICreateFlightVariant,
 	ICreateHotelProduct,
 	ICreateHotelVariant,
 	ICreateTrainProduct,
 	ICreateTrainVariant,
+	ICreateTransferProduct,
+	ICreateTransferVariant,
+	IDeleteActivityVariant,
+	IDeleteBusVariant,
+	IDeleteFlightVariant,
 	IDeleteHotelVariant,
 	IDeleteNodeImage,
 	IDeleteProductImage,
 	IDeleteSupplierProduct,
 	IDeleteTrainVariant,
+	IDeleteTransferVariant,
+	IFlightProduct,
+	IFlightVariant,
 	IGetSupplierProduct,
 	IHotelProduct,
 	IHotelVariant,
@@ -42,12 +80,28 @@ import type {
 	ISupplierProductImage,
 	ITrainProduct,
 	ITrainVariant,
+	ITransferProduct,
+	ITransferVariant,
+	IUpdateActivityProduct,
+	IUpdateActivityVariant,
+	IUpdateBusProduct,
+	IUpdateBusVariant,
+	IUpdateFlightProduct,
+	IUpdateFlightVariant,
 	IUpdateHotelProduct,
 	IUpdateHotelVariant,
 	IUpdateTrainProduct,
 	IUpdateTrainVariant,
+	IUpdateTransferProduct,
+	IUpdateTransferVariant,
 	IUploadNodeImages,
 	IUploadProductImages,
+	TActivityProductReadBackend,
+	TActivityVariantReadBackend,
+	TBusProductReadBackend,
+	TBusVariantReadBackend,
+	TFlightProductReadBackend,
+	TFlightVariantReadBackend,
 	THotelProductReadBackend,
 	THotelVariantReadBackend,
 	TSupplierNodeImageBackend,
@@ -55,7 +109,9 @@ import type {
 	TSupplierProductImageBackend,
 	TSupplierProductListBackend,
 	TTrainProductReadBackend,
-	TTrainVariantReadBackend
+	TTrainVariantReadBackend,
+	TTransferProductReadBackend,
+	TTransferVariantReadBackend
 } from "../types";
 
 const productListTags = (result?: IPaginationResponse<TSupplierProduct>) =>
@@ -96,7 +152,9 @@ export const supplierProductApi = authApi.injectEndpoints({
 				...SUPPLIER_PRODUCT_PATHS.getProduct(supplierId, productId)
 			}),
 			transformResponse: (
-				response: THotelProductReadBackend | TTrainProductReadBackend
+				response: ReturnType<
+					typeof SUPPLIER_PRODUCT_PATHS.getProduct
+				>["_types"]["response"]
 			) => mapSupplierProductFromBackend(response),
 			providesTags: (_result, _error, { productId }) => [
 				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: productId }
@@ -255,6 +313,266 @@ export const supplierProductApi = authApi.injectEndpoints({
 			invalidatesTags: (_result, _error, { productId }) =>
 				productInvalidateTags(productId)
 		}),
+		createFlightProduct: builder.mutation<
+			IFlightProduct,
+			ICreateFlightProduct
+		>({
+			query: ({ supplierId, values, language }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
+				body: mapFlightProductGeneralToCreate(values, language)
+			}),
+			transformResponse: (response: TFlightProductReadBackend) =>
+				mapFlightProductFromBackend(response),
+			invalidatesTags: [
+				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
+			]
+		}),
+		updateFlightProduct: builder.mutation<
+			IFlightProduct,
+			IUpdateFlightProduct
+		>({
+			query: ({ supplierId, productId, values, language }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
+				body: mapFlightProductGeneralToUpdate(values, language)
+			}),
+			transformResponse: (response: TFlightProductReadBackend) =>
+				mapFlightProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		createFlightVariant: builder.mutation<
+			IFlightVariant,
+			ICreateFlightVariant
+		>({
+			query: ({ supplierId, productId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createVariant(supplierId, productId),
+				body: mapFlightVariantToWrite(data)
+			}),
+			transformResponse: (response: TFlightVariantReadBackend) =>
+				mapFlightVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		updateFlightVariant: builder.mutation<
+			IFlightVariant,
+			IUpdateFlightVariant
+		>({
+			query: ({ supplierId, productId, variantId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateVariant(
+					supplierId,
+					productId,
+					variantId
+				),
+				body: mapFlightVariantToWrite(data)
+			}),
+			transformResponse: (response: TFlightVariantReadBackend) =>
+				mapFlightVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		deleteFlightVariant: builder.mutation<void, IDeleteFlightVariant>({
+			query: ({ supplierId, productId, variantId }) => ({
+				...SUPPLIER_PRODUCT_PATHS.deleteVariant(
+					supplierId,
+					productId,
+					variantId
+				)
+			}),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		createBusProduct: builder.mutation<IBusProduct, ICreateBusProduct>({
+			query: ({ supplierId, values }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
+				body: mapBusProductGeneralToCreate(values)
+			}),
+			transformResponse: (response: TBusProductReadBackend) =>
+				mapBusProductFromBackend(response),
+			invalidatesTags: [
+				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
+			]
+		}),
+		updateBusProduct: builder.mutation<IBusProduct, IUpdateBusProduct>({
+			query: ({ supplierId, productId, values }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
+				body: mapBusProductGeneralToUpdate(values)
+			}),
+			transformResponse: (response: TBusProductReadBackend) =>
+				mapBusProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		createBusVariant: builder.mutation<IBusVariant, ICreateBusVariant>({
+			query: ({ supplierId, productId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createVariant(supplierId, productId),
+				body: mapBusVariantToWrite(data)
+			}),
+			transformResponse: (response: TBusVariantReadBackend) =>
+				mapBusVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		updateBusVariant: builder.mutation<IBusVariant, IUpdateBusVariant>({
+			query: ({ supplierId, productId, variantId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateVariant(
+					supplierId,
+					productId,
+					variantId
+				),
+				body: mapBusVariantToWrite(data)
+			}),
+			transformResponse: (response: TBusVariantReadBackend) =>
+				mapBusVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		deleteBusVariant: builder.mutation<void, IDeleteBusVariant>({
+			query: ({ supplierId, productId, variantId }) => ({
+				...SUPPLIER_PRODUCT_PATHS.deleteVariant(
+					supplierId,
+					productId,
+					variantId
+				)
+			}),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		createTransferProduct: builder.mutation<
+			ITransferProduct,
+			ICreateTransferProduct
+		>({
+			query: ({ supplierId, values }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
+				body: mapTransferProductGeneralToCreate(values)
+			}),
+			transformResponse: (response: TTransferProductReadBackend) =>
+				mapTransferProductFromBackend(response),
+			invalidatesTags: [
+				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
+			]
+		}),
+		updateTransferProduct: builder.mutation<
+			ITransferProduct,
+			IUpdateTransferProduct
+		>({
+			query: ({ supplierId, productId, values }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
+				body: mapTransferProductGeneralToUpdate(values)
+			}),
+			transformResponse: (response: TTransferProductReadBackend) =>
+				mapTransferProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		createTransferVariant: builder.mutation<
+			ITransferVariant,
+			ICreateTransferVariant
+		>({
+			query: ({ supplierId, productId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createVariant(supplierId, productId),
+				body: mapTransferVariantToWrite(data)
+			}),
+			transformResponse: (response: TTransferVariantReadBackend) =>
+				mapTransferVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		updateTransferVariant: builder.mutation<
+			ITransferVariant,
+			IUpdateTransferVariant
+		>({
+			query: ({ supplierId, productId, variantId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateVariant(
+					supplierId,
+					productId,
+					variantId
+				),
+				body: mapTransferVariantToWrite(data)
+			}),
+			transformResponse: (response: TTransferVariantReadBackend) =>
+				mapTransferVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		deleteTransferVariant: builder.mutation<void, IDeleteTransferVariant>({
+			query: ({ supplierId, productId, variantId }) => ({
+				...SUPPLIER_PRODUCT_PATHS.deleteVariant(
+					supplierId,
+					productId,
+					variantId
+				)
+			}),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		createActivityProduct: builder.mutation<
+			IActivityProduct,
+			ICreateActivityProduct
+		>({
+			query: ({ supplierId, values, language }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
+				body: mapActivityProductGeneralToCreate(values, language)
+			}),
+			transformResponse: (response: TActivityProductReadBackend) =>
+				mapActivityProductFromBackend(response),
+			invalidatesTags: [
+				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
+			]
+		}),
+		updateActivityProduct: builder.mutation<
+			IActivityProduct,
+			IUpdateActivityProduct
+		>({
+			query: ({ supplierId, productId, values, language }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
+				body: mapActivityProductGeneralToUpdate(values, language)
+			}),
+			transformResponse: (response: TActivityProductReadBackend) =>
+				mapActivityProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		createActivityVariant: builder.mutation<
+			IActivityVariant,
+			ICreateActivityVariant
+		>({
+			query: ({ supplierId, productId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.createVariant(supplierId, productId),
+				body: mapActivityVariantToWrite(data)
+			}),
+			transformResponse: (response: TActivityVariantReadBackend) =>
+				mapActivityVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		updateActivityVariant: builder.mutation<
+			IActivityVariant,
+			IUpdateActivityVariant
+		>({
+			query: ({ supplierId, productId, variantId, data }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateVariant(
+					supplierId,
+					productId,
+					variantId
+				),
+				body: mapActivityVariantToWrite(data)
+			}),
+			transformResponse: (response: TActivityVariantReadBackend) =>
+				mapActivityVariantFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		deleteActivityVariant: builder.mutation<void, IDeleteActivityVariant>({
+			query: ({ supplierId, productId, variantId }) => ({
+				...SUPPLIER_PRODUCT_PATHS.deleteVariant(
+					supplierId,
+					productId,
+					variantId
+				)
+			}),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
 		listProductImages: builder.query<
 			ISupplierProductImage[],
 			IListProductImages
@@ -388,6 +706,26 @@ export const {
 	useCreateTrainVariantMutation,
 	useUpdateTrainVariantMutation,
 	useDeleteTrainVariantMutation,
+	useCreateFlightProductMutation,
+	useUpdateFlightProductMutation,
+	useCreateFlightVariantMutation,
+	useUpdateFlightVariantMutation,
+	useDeleteFlightVariantMutation,
+	useCreateBusProductMutation,
+	useUpdateBusProductMutation,
+	useCreateBusVariantMutation,
+	useUpdateBusVariantMutation,
+	useDeleteBusVariantMutation,
+	useCreateTransferProductMutation,
+	useUpdateTransferProductMutation,
+	useCreateTransferVariantMutation,
+	useUpdateTransferVariantMutation,
+	useDeleteTransferVariantMutation,
+	useCreateActivityProductMutation,
+	useUpdateActivityProductMutation,
+	useCreateActivityVariantMutation,
+	useUpdateActivityVariantMutation,
+	useDeleteActivityVariantMutation,
 	useListProductImagesQuery,
 	useUploadProductImagesMutation,
 	useSetPrimaryProductImageMutation,

@@ -1,7 +1,5 @@
-import { LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE, TLibraryPath } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config";
-import { languageCodeMapper } from "@/shared/converters";
 import { type IPaginationResponse } from "@/shared/types";
 
 import {
@@ -19,6 +17,7 @@ import {
 	type TTourEventBackendResponce,
 	type TTourEventUpdate,
 	type TTransportationEditSchema,
+	isInheritedFlightDetails,
 	isInheritedTrainDetails,
 	mapBackendTypToEventType,
 	mapEventTypeToBackendTyps
@@ -65,7 +64,34 @@ const mapEventLibrarySummary = (
 ): string | null => {
 	switch (event.typ) {
 		case ENUM_EVENT_BACKEND.FLIGHT: {
-			const hop = event.details?.hop?.[0];
+			const details = event.details;
+			if (!details) return null;
+
+			if (isInheritedFlightDetails(details)) {
+				const leg = details.product?.hop?.[0];
+				const flightCode = leg
+					? [
+							leg.airline_code,
+							leg.flight_number != null
+								? String(leg.flight_number)
+								: null
+						]
+							.filter(Boolean)
+							.join("")
+					: null;
+				const from = leg?.departure_airport_code ?? null;
+				const to = leg?.arrival_airport_code ?? null;
+				const route =
+					from && to ? `${from} → ${to}` : (from ?? to ?? null);
+				const time = joinRange(
+					formatTimeHhMm(details.departure_time?.time),
+					formatTimeHhMm(details.arrival_time?.time)
+				);
+				const parts = [flightCode || null, route, time].filter(Boolean);
+				return parts.length ? parts.join(" · ") : null;
+			}
+
+			const hop = details.hop?.[0];
 			if (!hop) return null;
 
 			const flightCode = [
@@ -90,9 +116,15 @@ const mapEventLibrarySummary = (
 		case ENUM_EVENT_BACKEND.TRAIN: {
 			const details = event.details;
 			if (!details) return null;
-			const hop = isInheritedTrainDetails(details)
-				? details.product?.hop?.[0]
-				: details.hop?.[0];
+
+			if (isInheritedTrainDetails(details)) {
+				return joinRange(
+					formatTimeHhMm(details.departure_time?.time),
+					formatTimeHhMm(details.arrival_time?.time)
+				);
+			}
+
+			const hop = details.hop?.[0];
 			if (!hop) return null;
 			return joinRange(
 				formatTimeHhMm(hop.departure?.time?.time),
@@ -282,8 +314,6 @@ export const mapEventLibraryUpdateToBackend = (
 	frontend: TTourEventUpdate,
 	language?: ENUM_LANGUAGES_TYPE
 ): TUpdateEventLibraryBackend => {
-	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
-
 	if (type === ENUM_EVENT.FLIGHT) {
 		const {
 			// day: _day,
@@ -291,7 +321,7 @@ export const mapEventLibraryUpdateToBackend = (
 			...body
 		} = mapTransportFormToUpdate(
 			frontend as TFlightEditSchema,
-			lang
+			language
 		) as Record<string, unknown>;
 		return body as TUpdateEventLibraryBackend;
 	}
@@ -303,7 +333,7 @@ export const mapEventLibraryUpdateToBackend = (
 			...body
 		} = mapTransferFormToUpdate(
 			frontend as TTransportationEditSchema,
-			lang
+			language
 		) as Record<string, unknown>;
 		return body as TUpdateEventLibraryBackend;
 	}
@@ -350,7 +380,7 @@ export const mapEventLibraryUpdateToBackend = (
 			...body
 		} = mapAccommodationFormToUpdate(
 			frontend as TAccommodationEditSchema,
-			lang
+			language
 		) as Record<string, unknown>;
 		return body as TUpdateEventLibraryBackend;
 	}
@@ -362,7 +392,7 @@ export const mapEventLibraryUpdateToBackend = (
 			...body
 		} = mapActivityFormToUpdate(
 			frontend as TActivityEditSchema,
-			lang
+			language
 		) as Record<string, unknown>;
 		return body as TUpdateEventLibraryBackend;
 	}

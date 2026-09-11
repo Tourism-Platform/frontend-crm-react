@@ -22,10 +22,26 @@ describe("mapSupplierProductFromBackend", () => {
 			name: "Afrosiyob",
 			hop: []
 		});
+		const flight = mapSupplierProductFromBackend({
+			typ: "flight",
+			id: "flight-1",
+			supplier_id: "s1",
+			name: "HY 601",
+			hop: []
+		});
+		const bus = mapSupplierProductFromBackend({
+			typ: "bus",
+			id: "bus-1",
+			supplier_id: "s1",
+			name: "Coach"
+		});
 
 		expect(hotel.typ).toBe(ENUM_SUPPLIER_TYPE.HOTEL);
 		expect(train.typ).toBe(ENUM_SUPPLIER_TYPE.TRAIN);
+		expect(flight.typ).toBe(ENUM_SUPPLIER_TYPE.FLIGHT);
+		expect(bus.typ).toBe(ENUM_SUPPLIER_TYPE.BUS);
 		expect("hops" in train).toBe(true);
+		expect("hops" in flight).toBe(true);
 	});
 });
 

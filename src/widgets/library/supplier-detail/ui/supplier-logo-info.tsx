@@ -74,7 +74,7 @@ const SupplierLogoInfoBase: FC<ISupplierLogoInfoProps> = ({
 			.map((n) => n[0])
 			.join("")
 			.toUpperCase()
-			.slice(0, 2) || "S";
+			.slice(0, 2) || "U";
 
 	const src = logoPath || files[0]?.preview;
 	const hasLogo = Boolean(logoPath || files[0]?.file?.name);

@@ -345,21 +345,6 @@ export enum Gender {
 	F = "F"
 }
 
-/**
- * ExpenseType
- * Enumeration for different types of commissions.
- */
-export enum ExpenseType {
-	Fixed = "fixed",
-	PerPerson = "per_person",
-	PerGroup = "per_group",
-	PerDuration = "per_duration",
-	PerCar = "per_car",
-	PerCarCategory = "per_car_category",
-	PerRoom = "per_room",
-	PerRoomCategory = "per_room_category"
-}
-
 /** EventTypes */
 export enum EventTypes {
 	Flight = "flight",
@@ -489,7 +474,8 @@ export enum ActivityType {
 	Entertainment = "entertainment",
 	WaterActivities = "water_activities",
 	Photography = "photography",
-	Spiritual = "spiritual"
+	Spiritual = "spiritual",
+	Other = "other"
 }
 
 /** AccountType */
@@ -503,41 +489,22 @@ export interface AccountTypeRead {
 	account_type: AccountType;
 }
 
-/** ActivityDetailsPubSchema */
-export interface ActivityDetailsPubSchemaInput {
-	typ?: ActivityType | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	start_time?: TimeSchema | null;
-	end_time?: TimeSchema | null;
-	expenses?: ChargePubSchema | null;
-	/** Menu */
-	menu?: MenuItemPubSchema[] | null;
-}
-
-/** ActivityDetailsPubSchema */
-export interface ActivityDetailsPubSchemaOutput {
-	typ?: ActivityType | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	start_time?: TimeSchema | null;
-	end_time?: TimeSchema | null;
-	expenses?: ChargePubSchema | null;
-	/** Menu */
-	menu?: MenuItemPubSchema[] | null;
-}
-
 /** ActivityDetailsSchema */
 export interface ActivityDetailsSchemaInput {
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event end time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/**
 	 * Location
 	 * Event location
 	 */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Event start time */
-	start_time?: TimeSchema | null;
-	/** Event start time */
-	end_time?: TimeSchema | null;
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -558,15 +525,20 @@ export interface ActivityDetailsSchemaInput {
 
 /** ActivityDetailsSchema */
 export interface ActivityDetailsSchemaOutput {
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event end time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/**
 	 * Location
 	 * Event location
 	 */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Event start time */
-	start_time?: TimeSchema | null;
-	/** Event start time */
-	end_time?: TimeSchema | null;
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -610,6 +582,7 @@ export interface ActivityEventInput {
 	details?:
 		| ActivityFoodDetailsSchemaInput
 		| ActivityDetailsSchemaInput
+		| InheritedActivityDetailsInput
 		| null;
 }
 
@@ -638,6 +611,7 @@ export interface ActivityEventOutput {
 	details?:
 		| ActivityFoodDetailsSchemaOutput
 		| ActivityDetailsSchemaOutput
+		| InheritedActivityDetailsOutput
 		| null;
 }
 
@@ -665,7 +639,47 @@ export interface ActivityEventPubReadInput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsPubSchemaInput | null;
+	/** Details */
+	details?:
+		| (
+				| ({
+						typ: "entertainment";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "extreme";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "food";
+				  } & FoodActivityPubSchemaInput)
+				| ({
+						typ: "master_class";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "other";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "outdoor";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "photography";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "riding";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "sightseeing";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "spiritual";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "water_activities";
+				  } & GeneralActivityPubSchemaInput)
+				| ({
+						typ: "wellness";
+				  } & GeneralActivityPubSchemaInput)
+		  )
+		| null;
 }
 
 /** ActivityEventPubRead */
@@ -692,7 +706,47 @@ export interface ActivityEventPubReadOutput {
 	 * @default "activity"
 	 */
 	typ?: "activity";
-	details?: ActivityDetailsPubSchemaOutput | null;
+	/** Details */
+	details?:
+		| (
+				| ({
+						typ: "entertainment";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "extreme";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "food";
+				  } & FoodActivityPubSchemaOutput)
+				| ({
+						typ: "master_class";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "other";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "outdoor";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "photography";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "riding";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "sightseeing";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "spiritual";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "water_activities";
+				  } & GeneralActivityPubSchemaOutput)
+				| ({
+						typ: "wellness";
+				  } & GeneralActivityPubSchemaOutput)
+		  )
+		| null;
 }
 
 /** ActivityEventTypeRead */
@@ -720,6 +774,7 @@ export interface ActivityEventTypeReadInput {
 	details?:
 		| ActivityFoodDetailsSchemaInput
 		| ActivityDetailsSchemaInput
+		| InheritedActivityDetailsInput
 		| null;
 	/**
 	 * Id
@@ -753,6 +808,7 @@ export interface ActivityEventTypeReadOutput {
 	details?:
 		| ActivityFoodDetailsSchemaOutput
 		| ActivityDetailsSchemaOutput
+		| InheritedActivityDetailsOutput
 		| null;
 	/**
 	 * Id
@@ -763,15 +819,20 @@ export interface ActivityEventTypeReadOutput {
 
 /** ActivityFoodDetailsSchema */
 export interface ActivityFoodDetailsSchemaInput {
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event end time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/**
 	 * Location
 	 * Event location
 	 */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Event start time */
-	start_time?: TimeSchema | null;
-	/** Event start time */
-	end_time?: TimeSchema | null;
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -797,15 +858,20 @@ export interface ActivityFoodDetailsSchemaInput {
 
 /** ActivityFoodDetailsSchema */
 export interface ActivityFoodDetailsSchemaOutput {
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event end time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/**
 	 * Location
 	 * Event location
 	 */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Event start time */
-	start_time?: TimeSchema | null;
-	/** Event start time */
-	end_time?: TimeSchema | null;
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -827,6 +893,171 @@ export interface ActivityFoodDetailsSchemaOutput {
 	 * Menu of a restaurant (food) activity
 	 */
 	menu?: MenuItemSchema[] | null;
+}
+
+/**
+ * ActivityOverrideSchema
+ * A price this tour negotiated with the venue, replacing the offering's
+ * own.
+ */
+export interface ActivityOverrideSchemaInput {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/**
+ * ActivityOverrideSchema
+ * A price this tour negotiated with the venue, replacing the offering's
+ * own.
+ */
+export interface ActivityOverrideSchemaOutput {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+}
+
+/** ActivityProductCreate */
+export interface ActivityProductCreate {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
+	 * One venue — a restaurant, a museum, a workshop — as the supplier describes
+	 * it. Prices live on its variants.
+	 */
+	details?: ActivityProductDetails;
+}
+
+/**
+ * ActivityProductDetails
+ * One venue — a restaurant, a museum, a workshop — as the supplier describes
+ * it. Prices live on its variants.
+ */
+export interface ActivityProductDetails {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	sub_typ?: ActivityType | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+}
+
+/** ActivityProductRead */
+export interface ActivityProductReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	sub_typ?: ActivityType | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Variants */
+	variants?: ActivityVariantReadInput[];
+}
+
+/** ActivityProductRead */
+export interface ActivityProductReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	sub_typ?: ActivityType | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Variants */
+	variants?: ActivityVariantReadOutput[];
+}
+
+/** ActivityProductUpdate */
+export interface ActivityProductUpdate {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/** Name */
+	name?: string | null;
+	details?: ActivityProductDetails | null;
 }
 
 /** ActivitySingleEvent */
@@ -876,6 +1107,7 @@ export interface ActivitySingleEventInput {
 	details?:
 		| ActivityFoodDetailsSchemaInput
 		| ActivityDetailsSchemaInput
+		| InheritedActivityDetailsInput
 		| null;
 }
 
@@ -926,7 +1158,120 @@ export interface ActivitySingleEventOutput {
 	details?:
 		| ActivityFoodDetailsSchemaOutput
 		| ActivityDetailsSchemaOutput
+		| InheritedActivityDetailsOutput
 		| null;
+}
+
+/**
+ * ActivityVariantPayload
+ * One offering of a venue as the API exchanges it: a set menu, a ticket
+ * tier, a class.
+ */
+export interface ActivityVariantPayload {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+	/** Menu */
+	menu?: ProductMenuItemSchema[] | null;
+}
+
+/** ActivityVariantRead */
+export interface ActivityVariantReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+	/** Menu */
+	menu?: ProductMenuItemSchema[] | null;
+}
+
+/** ActivityVariantRead */
+export interface ActivityVariantReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+	/** Menu */
+	menu?: ProductMenuItemSchema[] | null;
+}
+
+/** ActivityVariantWrite */
+export interface ActivityVariantWrite {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
+	 * One offering of a venue as the API exchanges it: a set menu, a ticket
+	 * tier, a class.
+	 */
+	details?: ActivityVariantPayload;
 }
 
 /** AdminUserView */
@@ -2051,24 +2396,56 @@ export interface BookingUpdate {
 	comment?: string | null;
 }
 
-/** BusDetailPubSchema */
+/**
+ * BusDetailPubSchema
+ * A coach leg as a traveller sees it: the route it drives and the coaches
+ * it runs, whoever supplies them.
+ */
 export interface BusDetailPubSchemaInput {
+	/**
+	 * Name
+	 * The fleet's own name
+	 */
+	name?: string | null;
 	/** Hop */
-	hop?: BusHopPubSchemaInput[] | null;
-	expenses?: ChargePubSchema | null;
+	hop?: TransportHopPubSchemaInput[];
+	/** Vehicles */
+	vehicles?: VehiclePubSchema[];
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
-/** BusDetailPubSchema */
+/**
+ * BusDetailPubSchema
+ * A coach leg as a traveller sees it: the route it drives and the coaches
+ * it runs, whoever supplies them.
+ */
 export interface BusDetailPubSchemaOutput {
+	/**
+	 * Name
+	 * The fleet's own name
+	 */
+	name?: string | null;
 	/** Hop */
-	hop?: BusHopPubSchemaOutput[] | null;
-	expenses?: ChargePubSchema | null;
+	hop?: TransportHopPubSchemaOutput[];
+	/** Vehicles */
+	vehicles?: VehiclePubSchema[];
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
-/** BusDetailSchema */
+/**
+ * BusDetailSchema
+ * A bus leg the operator priced itself.
+ */
 export interface BusDetailSchemaInput {
 	/** Hop */
 	hop?: BusHopSchemaInput[] | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -2085,10 +2462,18 @@ export interface BusDetailSchemaInput {
 		| null;
 }
 
-/** BusDetailSchema */
+/**
+ * BusDetailSchema
+ * A bus leg the operator priced itself.
+ */
 export interface BusDetailSchemaOutput {
 	/** Hop */
 	hop?: BusHopSchemaOutput[] | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -2126,7 +2511,8 @@ export interface BusEventInput {
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details?: BusDetailSchemaInput | null;
+	/** Details */
+	details?: BusDetailSchemaInput | InheritedBusDetailsInput | null;
 }
 
 /** BusEvent */
@@ -2150,7 +2536,8 @@ export interface BusEventOutput {
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details?: BusDetailSchemaOutput | null;
+	/** Details */
+	details?: BusDetailSchemaOutput | InheritedBusDetailsOutput | null;
 }
 
 /** BusEventPubRead */
@@ -2228,7 +2615,8 @@ export interface BusEventTypeReadInput {
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details?: BusDetailSchemaInput | null;
+	/** Details */
+	details?: BusDetailSchemaInput | InheritedBusDetailsInput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -2257,24 +2645,13 @@ export interface BusEventTypeReadOutput {
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details?: BusDetailSchemaOutput | null;
+	/** Details */
+	details?: BusDetailSchemaOutput | InheritedBusDetailsOutput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
 	 */
 	id?: string | null;
-}
-
-/** BusHopPubSchema */
-export interface BusHopPubSchemaInput {
-	departure?: BusJourneyPointPubSchemaInput | null;
-	arrival?: BusJourneyPointPubSchemaInput | null;
-}
-
-/** BusHopPubSchema */
-export interface BusHopPubSchemaOutput {
-	departure?: BusJourneyPointPubSchemaOutput | null;
-	arrival?: BusJourneyPointPubSchemaOutput | null;
 }
 
 /**
@@ -2299,24 +2676,6 @@ export interface BusHopSchemaOutput {
 	arrival?: BusJourneyPointSchemaOutput | null;
 }
 
-/** BusJourneyPointPubSchema */
-export interface BusJourneyPointPubSchemaInput {
-	/** Date */
-	date?: string | null;
-	time?: TimeSchema | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-}
-
-/** BusJourneyPointPubSchema */
-export interface BusJourneyPointPubSchemaOutput {
-	/** Date */
-	date?: string | null;
-	time?: TimeSchema | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-}
-
 /**
  * BusJourneyPointSchema
  * Represents either a departure or arrival point for the bus journey.
@@ -2337,6 +2696,160 @@ export interface BusJourneyPointSchemaOutput {
 	time?: TimeSchema | null;
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+}
+
+/**
+ * BusOverrideSchema
+ * A price this tour negotiated for the leg, replacing the fleet's own.
+ */
+export interface BusOverrideSchemaInput {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/**
+ * BusOverrideSchema
+ * A price this tour negotiated for the leg, replacing the fleet's own.
+ */
+export interface BusOverrideSchemaOutput {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+}
+
+/** BusProductCreate */
+export interface BusProductCreate {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
+	 * One coach fleet. Nothing of its own: the route is the tour's, the
+	 * vehicles and their prices are its variants.
+	 */
+	details?: BusProductDetails;
+}
+
+/**
+ * BusProductDetails
+ * One coach fleet. Nothing of its own: the route is the tour's, the
+ * vehicles and their prices are its variants.
+ */
+export interface BusProductDetails {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+}
+
+/** BusProductRead */
+export interface BusProductReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/** Variants */
+	variants?: BusVariantReadInput[];
+}
+
+/** BusProductRead */
+export interface BusProductReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/** Variants */
+	variants?: BusVariantReadOutput[];
+}
+
+/** BusProductUpdate */
+export interface BusProductUpdate {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/** Name */
+	name?: string | null;
+	details?: BusProductDetails | null;
 }
 
 /** BusSingleEvent */
@@ -2382,7 +2895,8 @@ export interface BusSingleEventInput {
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details?: BusDetailSchemaInput | null;
+	/** Details */
+	details?: BusDetailSchemaInput | InheritedBusDetailsInput | null;
 }
 
 /** BusSingleEvent */
@@ -2428,7 +2942,98 @@ export interface BusSingleEventOutput {
 	 * @default "bus"
 	 */
 	typ?: "bus";
-	details?: BusDetailSchemaOutput | null;
+	/** Details */
+	details?: BusDetailSchemaOutput | InheritedBusDetailsOutput | null;
+}
+
+/**
+ * BusVariantPayload
+ * One vehicle category of a coach fleet as the API exchanges it.
+ */
+export interface BusVariantPayload {
+	body_type?: VehicleBodyType | null;
+	/**
+	 * Pax
+	 * Seats; what the bin-packer fills a group with.
+	 */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+	/** Charge for one vehicle of this category. */
+	expenses?: FixedChargeInput | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+}
+
+/** BusVariantRead */
+export interface BusVariantReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	body_type?: VehicleBodyType | null;
+	/**
+	 * Pax
+	 * Seats; what the bin-packer fills a group with.
+	 */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+	/** Charge for one vehicle of this category. */
+	expenses?: FixedChargeInput | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+}
+
+/** BusVariantRead */
+export interface BusVariantReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	body_type?: VehicleBodyType | null;
+	/**
+	 * Pax
+	 * Seats; what the bin-packer fills a group with.
+	 */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+	/** Charge for one vehicle of this category. */
+	expenses?: FixedChargeOutput | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+}
+
+/** BusVariantWrite */
+export interface BusVariantWrite {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** One vehicle category of a coach fleet as the API exchanges it. */
+	details?: BusVariantPayload;
 }
 
 /** CatalogFiltersSchema */
@@ -2437,17 +3042,6 @@ export interface CatalogFiltersSchema {
 	cities: string[];
 	/** Countries */
 	countries: string[];
-}
-
-/**
- * ChargePubSchema
- * Any charge with every monetary leaf removed: only the strategy and the
- * structure it carries survive.
- */
-export interface ChargePubSchema {
-	typ?: ExpenseType | null;
-	/** Tiers */
-	tiers?: GroupSizeTierPubSchema[] | null;
 }
 
 /** ClassicSwiftDetails */
@@ -2786,60 +3380,6 @@ export interface CustomHousingDetailsOutput {
 	stars?: number | null;
 }
 
-/** CustomHousingDetailsPubSchema */
-export interface CustomHousingDetailsPubSchemaInput {
-	/** Duration */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
-	/**
-	 * Source
-	 * @default "custom"
-	 */
-	source?: "custom";
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
-	/** Stars */
-	stars?: number | null;
-	expenses?: HousingExpensesPubSchemaInput | null;
-}
-
-/** CustomHousingDetailsPubSchema */
-export interface CustomHousingDetailsPubSchemaOutput {
-	/** Duration */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
-	/** Stars */
-	stars?: number | null;
-	expenses?: HousingExpensesPubSchemaOutput | null;
-}
-
-/** CustomTrainDetailPubSchema */
-export interface CustomTrainDetailPubSchemaInput {
-	/**
-	 * Source
-	 * @default "custom"
-	 */
-	source?: "custom";
-	/** Hop */
-	hop?: TrainHopPubSchemaInput[] | null;
-	expenses?: ChargePubSchema | null;
-}
-
-/** CustomTrainDetailPubSchema */
-export interface CustomTrainDetailPubSchemaOutput {
-	/** Hop */
-	hop?: TrainHopPubSchemaOutput[] | null;
-	expenses?: ChargePubSchema | null;
-}
-
 /**
  * CustomTrainDetails
  * A leg the operator priced itself.
@@ -3023,11 +3563,23 @@ export interface EventEditOpInput {
 	override?:
 		| (
 				| ({
+						typ: "activity";
+				  } & ActivityOverrideSchemaInput)
+				| ({
+						typ: "bus";
+				  } & BusOverrideSchemaInput)
+				| ({
+						typ: "flight";
+				  } & FlightOverrideSchemaInput)
+				| ({
 						typ: "housing";
 				  } & HousingOverrideSchemaInput)
 				| ({
 						typ: "train";
 				  } & TrainOverrideSchemaInput)
+				| ({
+						typ: "transfer";
+				  } & TransferOverrideSchemaInput)
 		  )
 		| null;
 	/** Option Index */
@@ -3067,11 +3619,23 @@ export interface EventEditOpOutput {
 	override?:
 		| (
 				| ({
+						typ: "activity";
+				  } & ActivityOverrideSchemaOutput)
+				| ({
+						typ: "bus";
+				  } & BusOverrideSchemaOutput)
+				| ({
+						typ: "flight";
+				  } & FlightOverrideSchemaOutput)
+				| ({
 						typ: "housing";
 				  } & HousingOverrideSchemaOutput)
 				| ({
 						typ: "train";
 				  } & TrainOverrideSchemaOutput)
+				| ({
+						typ: "transfer";
+				  } & TransferOverrideSchemaOutput)
 		  )
 		| null;
 	/** Option Index */
@@ -3102,14 +3666,18 @@ export interface EventImageModel {
 
 /**
  * EventImagePubSchema
- * Public mirror of ``EventImageSchema`` with the row id dropped — internal
+ * One picture, wherever it hangs: an event slot, a room, a dish, or the
+ * supplier product the event reads from. The row id is dropped — internal
  * identifiers never cross the boundary.
  */
 export interface EventImagePubSchema {
 	/** Image Path */
 	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
+	/**
+	 * Is Primary
+	 * @default false
+	 */
+	is_primary?: boolean;
 }
 
 /**
@@ -3728,24 +4296,52 @@ export interface FixedExpenseOutput {
 	cost: MonetaryValueSchema;
 }
 
-/** FlightDetailsPubSchema */
+/**
+ * FlightDetailsPubSchema
+ * A flight as a traveller sees it: the legs it flies and the fare classes
+ * it sells, whoever sells the seat.
+ */
 export interface FlightDetailsPubSchemaInput {
+	/**
+	 * Name
+	 * The route's own name
+	 */
+	name?: string | null;
 	/** Hop */
-	hop?: FlightHopPubSchemaInput[] | null;
-	expenses?: ChargePubSchema | null;
+	hop?: FlightHopPubSchemaInput[];
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
-/** FlightDetailsPubSchema */
+/**
+ * FlightDetailsPubSchema
+ * A flight as a traveller sees it: the legs it flies and the fare classes
+ * it sells, whoever sells the seat.
+ */
 export interface FlightDetailsPubSchemaOutput {
+	/**
+	 * Name
+	 * The route's own name
+	 */
+	name?: string | null;
 	/** Hop */
-	hop?: FlightHopPubSchemaOutput[] | null;
-	expenses?: ChargePubSchema | null;
+	hop?: FlightHopPubSchemaOutput[];
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
-/** FlightDetailsSchema */
+/**
+ * FlightDetailsSchema
+ * A flight the operator scheduled and priced itself.
+ */
 export interface FlightDetailsSchemaInput {
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/** Hop */
-	hop?: FlightHopDetailsSchemaInput[] | null;
+	hop?: FlightHopSchemaInput[] | null;
 	/**
 	 * Expenses
 	 * Expenses strategy for this event
@@ -3762,10 +4358,18 @@ export interface FlightDetailsSchemaInput {
 		| null;
 }
 
-/** FlightDetailsSchema */
+/**
+ * FlightDetailsSchema
+ * A flight the operator scheduled and priced itself.
+ */
 export interface FlightDetailsSchemaOutput {
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/** Hop */
-	hop?: FlightHopDetailsSchemaOutput[] | null;
+	hop?: FlightHopSchemaOutput[] | null;
 	/**
 	 * Expenses
 	 * Expenses strategy for this event
@@ -3803,7 +4407,8 @@ export interface FlightEventInput {
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details?: FlightDetailsSchemaInput | null;
+	/** Details */
+	details?: FlightDetailsSchemaInput | InheritedFlightDetailsInput | null;
 }
 
 /** FlightEvent */
@@ -3827,7 +4432,8 @@ export interface FlightEventOutput {
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details?: FlightDetailsSchemaOutput | null;
+	/** Details */
+	details?: FlightDetailsSchemaOutput | InheritedFlightDetailsOutput | null;
 }
 
 /** FlightEventPubRead */
@@ -3905,7 +4511,8 @@ export interface FlightEventTypeReadInput {
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details?: FlightDetailsSchemaInput | null;
+	/** Details */
+	details?: FlightDetailsSchemaInput | InheritedFlightDetailsInput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -3934,7 +4541,8 @@ export interface FlightEventTypeReadOutput {
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details?: FlightDetailsSchemaOutput | null;
+	/** Details */
+	details?: FlightDetailsSchemaOutput | InheritedFlightDetailsOutput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -3942,113 +4550,14 @@ export interface FlightEventTypeReadOutput {
 	id?: string | null;
 }
 
-/** FlightHopDetailsSchema */
-export interface FlightHopDetailsSchemaInput {
-	/**
-	 * Airline Code
-	 * IATA or ICAO airline code (2–3 letters/numbers, uppercase)
-	 */
-	airline_code?: string | null;
-	/**
-	 * Flight Number
-	 * Flight number (1–4 digits)
-	 */
-	flight_number?: number | null;
-	/**
-	 * Departure Airport Code
-	 * Departure airport IATA code (3 uppercase letters)
-	 */
-	departure_airport_code?: string | null;
-	/**
-	 * Arrival Airport Code
-	 * Arrival airport IATA code (3 uppercase letters)
-	 */
-	arrival_airport_code?: string | null;
-	/** Departure Location */
-	departure_location?:
-		| LocationOutSchema
-		| LocationRefSchema
-		| LocationInSchema
-		| null;
-	/** Arrival Location */
-	arrival_location?:
-		| LocationOutSchema
-		| LocationRefSchema
-		| LocationInSchema
-		| null;
-	departure_time?: TimeSchema | null;
-	arrival_time?: TimeSchema | null;
-	/**
-	 * Departure Terminal
-	 * Departure terminal (e.g., '1', 'T2', 'A')
-	 */
-	departure_terminal?: string | null;
-	/**
-	 * Departure Gate
-	 * Departure gate (e.g., 'A12', 'B3')
-	 */
-	departure_gate?: string | null;
-	/**
-	 * Amenities
-	 * List of amenities available on this flight.
-	 */
-	amenities?: AmenitiesTypes[] | null;
-}
-
-/** FlightHopDetailsSchema */
-export interface FlightHopDetailsSchemaOutput {
-	/**
-	 * Airline Code
-	 * IATA or ICAO airline code (2–3 letters/numbers, uppercase)
-	 */
-	airline_code?: string | null;
-	/**
-	 * Flight Number
-	 * Flight number (1–4 digits)
-	 */
-	flight_number?: number | null;
-	/**
-	 * Departure Airport Code
-	 * Departure airport IATA code (3 uppercase letters)
-	 */
-	departure_airport_code?: string | null;
-	/**
-	 * Arrival Airport Code
-	 * Arrival airport IATA code (3 uppercase letters)
-	 */
-	arrival_airport_code?: string | null;
-	/** Departure Location */
-	departure_location?:
-		| LocationOutSchema
-		| LocationRefSchema
-		| LocationInSchema
-		| null;
-	/** Arrival Location */
-	arrival_location?:
-		| LocationOutSchema
-		| LocationRefSchema
-		| LocationInSchema
-		| null;
-	departure_time?: TimeSchema | null;
-	arrival_time?: TimeSchema | null;
-	/**
-	 * Departure Terminal
-	 * Departure terminal (e.g., '1', 'T2', 'A')
-	 */
-	departure_terminal?: string | null;
-	/**
-	 * Departure Gate
-	 * Departure gate (e.g., 'A12', 'B3')
-	 */
-	departure_gate?: string | null;
-	/**
-	 * Amenities
-	 * List of amenities available on this flight.
-	 */
-	amenities?: AmenitiesTypes[] | null;
-}
-
-/** FlightHopPubSchema */
+/**
+ * FlightHopPubSchema
+ * One leg of a flight: which flight, between which airports, at what hours
+ * and on what dates.
+ *
+ * An airline's route carries airports but no timetable, so the hours the tour
+ * states land on the first departure and the last arrival.
+ */
 export interface FlightHopPubSchemaInput {
 	/** Airline Code */
 	airline_code?: string | null;
@@ -4070,21 +4579,28 @@ export interface FlightHopPubSchemaInput {
 		| LocationRefSchema
 		| LocationInSchema
 		| null;
-	/** Departure Date */
-	departure_date?: string | null;
-	/** Arrival Date */
-	arrival_date?: string | null;
-	departure_time?: TimeSchema | null;
-	arrival_time?: TimeSchema | null;
 	/** Departure Terminal */
 	departure_terminal?: string | null;
 	/** Departure Gate */
 	departure_gate?: string | null;
 	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
+	amenities?: AmenitiesTypes[];
+	departure_time?: TimeSchema | null;
+	arrival_time?: TimeSchema | null;
+	/** Departure Date */
+	departure_date?: string | null;
+	/** Arrival Date */
+	arrival_date?: string | null;
 }
 
-/** FlightHopPubSchema */
+/**
+ * FlightHopPubSchema
+ * One leg of a flight: which flight, between which airports, at what hours
+ * and on what dates.
+ *
+ * An airline's route carries airports but no timetable, so the hours the tour
+ * states land on the first departure and the last arrival.
+ */
 export interface FlightHopPubSchemaOutput {
 	/** Airline Code */
 	airline_code?: string | null;
@@ -4106,18 +4622,408 @@ export interface FlightHopPubSchemaOutput {
 		| LocationRefSchema
 		| LocationInSchema
 		| null;
-	/** Departure Date */
-	departure_date?: string | null;
-	/** Arrival Date */
-	arrival_date?: string | null;
-	departure_time?: TimeSchema | null;
-	arrival_time?: TimeSchema | null;
 	/** Departure Terminal */
 	departure_terminal?: string | null;
 	/** Departure Gate */
 	departure_gate?: string | null;
 	/** Amenities */
+	amenities?: AmenitiesTypes[];
+	departure_time?: TimeSchema | null;
+	arrival_time?: TimeSchema | null;
+	/** Departure Date */
+	departure_date?: string | null;
+	/** Arrival Date */
+	arrival_date?: string | null;
+}
+
+/**
+ * FlightHopSchema
+ * One leg of a flight the operator schedules itself: the airline's route
+ * plus the hours this tour flies it.
+ */
+export interface FlightHopSchemaInput {
+	/**
+	 * Airline Code
+	 * IATA or ICAO airline code (2–3 letters/numbers, uppercase)
+	 */
+	airline_code?: string | null;
+	/**
+	 * Flight Number
+	 * Flight number (1–4 digits)
+	 */
+	flight_number?: number | null;
+	/**
+	 * Departure Airport Code
+	 * Departure airport IATA code (3 uppercase letters)
+	 */
+	departure_airport_code?: string | null;
+	/**
+	 * Arrival Airport Code
+	 * Arrival airport IATA code (3 uppercase letters)
+	 */
+	arrival_airport_code?: string | null;
+	/** Departure Location */
+	departure_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/** Arrival Location */
+	arrival_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/**
+	 * Departure Terminal
+	 * Departure terminal (e.g., '1', 'T2', 'A')
+	 */
+	departure_terminal?: string | null;
+	/**
+	 * Departure Gate
+	 * Departure gate (e.g., 'A12', 'B3')
+	 */
+	departure_gate?: string | null;
+	/**
+	 * Amenities
+	 * List of amenities available on this flight.
+	 */
 	amenities?: AmenitiesTypes[] | null;
+	departure_time?: TimeSchema | null;
+	arrival_time?: TimeSchema | null;
+}
+
+/**
+ * FlightHopSchema
+ * One leg of a flight the operator schedules itself: the airline's route
+ * plus the hours this tour flies it.
+ */
+export interface FlightHopSchemaOutput {
+	/**
+	 * Airline Code
+	 * IATA or ICAO airline code (2–3 letters/numbers, uppercase)
+	 */
+	airline_code?: string | null;
+	/**
+	 * Flight Number
+	 * Flight number (1–4 digits)
+	 */
+	flight_number?: number | null;
+	/**
+	 * Departure Airport Code
+	 * Departure airport IATA code (3 uppercase letters)
+	 */
+	departure_airport_code?: string | null;
+	/**
+	 * Arrival Airport Code
+	 * Arrival airport IATA code (3 uppercase letters)
+	 */
+	arrival_airport_code?: string | null;
+	/** Departure Location */
+	departure_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/** Arrival Location */
+	arrival_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/**
+	 * Departure Terminal
+	 * Departure terminal (e.g., '1', 'T2', 'A')
+	 */
+	departure_terminal?: string | null;
+	/**
+	 * Departure Gate
+	 * Departure gate (e.g., 'A12', 'B3')
+	 */
+	departure_gate?: string | null;
+	/**
+	 * Amenities
+	 * List of amenities available on this flight.
+	 */
+	amenities?: AmenitiesTypes[] | null;
+	departure_time?: TimeSchema | null;
+	arrival_time?: TimeSchema | null;
+}
+
+/**
+ * FlightLegSchema
+ * One leg of an airline's route: which flight, between which airports.
+ *
+ * No hours live here. A route is an identity — an airline code, a number and
+ * two airports — while a timetable belongs to a date, so the tour states the
+ * hours it flies. The timed shape a tour states itself is ``FlightHopSchema``.
+ */
+export interface FlightLegSchemaInput {
+	/**
+	 * Airline Code
+	 * IATA or ICAO airline code (2–3 letters/numbers, uppercase)
+	 */
+	airline_code?: string | null;
+	/**
+	 * Flight Number
+	 * Flight number (1–4 digits)
+	 */
+	flight_number?: number | null;
+	/**
+	 * Departure Airport Code
+	 * Departure airport IATA code (3 uppercase letters)
+	 */
+	departure_airport_code?: string | null;
+	/**
+	 * Arrival Airport Code
+	 * Arrival airport IATA code (3 uppercase letters)
+	 */
+	arrival_airport_code?: string | null;
+	/** Departure Location */
+	departure_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/** Arrival Location */
+	arrival_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/**
+	 * Departure Terminal
+	 * Departure terminal (e.g., '1', 'T2', 'A')
+	 */
+	departure_terminal?: string | null;
+	/**
+	 * Departure Gate
+	 * Departure gate (e.g., 'A12', 'B3')
+	 */
+	departure_gate?: string | null;
+	/**
+	 * Amenities
+	 * List of amenities available on this flight.
+	 */
+	amenities?: AmenitiesTypes[] | null;
+}
+
+/**
+ * FlightLegSchema
+ * One leg of an airline's route: which flight, between which airports.
+ *
+ * No hours live here. A route is an identity — an airline code, a number and
+ * two airports — while a timetable belongs to a date, so the tour states the
+ * hours it flies. The timed shape a tour states itself is ``FlightHopSchema``.
+ */
+export interface FlightLegSchemaOutput {
+	/**
+	 * Airline Code
+	 * IATA or ICAO airline code (2–3 letters/numbers, uppercase)
+	 */
+	airline_code?: string | null;
+	/**
+	 * Flight Number
+	 * Flight number (1–4 digits)
+	 */
+	flight_number?: number | null;
+	/**
+	 * Departure Airport Code
+	 * Departure airport IATA code (3 uppercase letters)
+	 */
+	departure_airport_code?: string | null;
+	/**
+	 * Arrival Airport Code
+	 * Arrival airport IATA code (3 uppercase letters)
+	 */
+	arrival_airport_code?: string | null;
+	/** Departure Location */
+	departure_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/** Arrival Location */
+	arrival_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/**
+	 * Departure Terminal
+	 * Departure terminal (e.g., '1', 'T2', 'A')
+	 */
+	departure_terminal?: string | null;
+	/**
+	 * Departure Gate
+	 * Departure gate (e.g., 'A12', 'B3')
+	 */
+	departure_gate?: string | null;
+	/**
+	 * Amenities
+	 * List of amenities available on this flight.
+	 */
+	amenities?: AmenitiesTypes[] | null;
+}
+
+/**
+ * FlightOverrideSchema
+ * A fare this tour negotiated, replacing the route's own.
+ */
+export interface FlightOverrideSchemaInput {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/**
+ * FlightOverrideSchema
+ * A fare this tour negotiated, replacing the route's own.
+ */
+export interface FlightOverrideSchemaOutput {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+}
+
+/** FlightProductCreate */
+export interface FlightProductCreate {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
+	 * One flight route: which airports the flight connects. The hours are the
+	 * tour's and the fares are on the variants.
+	 */
+	details?: FlightProductDetails;
+}
+
+/**
+ * FlightProductDetails
+ * One flight route: which airports the flight connects. The hours are the
+ * tour's and the fares are on the variants.
+ */
+export interface FlightProductDetails {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Hop */
+	hop?: FlightLegSchemaInput[] | null;
+}
+
+/** FlightProductRead */
+export interface FlightProductReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Hop */
+	hop?: FlightLegSchemaInput[] | null;
+	/** Variants */
+	variants?: FlightVariantReadInput[];
+}
+
+/** FlightProductRead */
+export interface FlightProductReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Hop */
+	hop?: FlightLegSchemaOutput[] | null;
+	/** Variants */
+	variants?: FlightVariantReadOutput[];
+}
+
+/** FlightProductUpdate */
+export interface FlightProductUpdate {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Name */
+	name?: string | null;
+	details?: FlightProductDetails | null;
 }
 
 /** FlightSingleEvent */
@@ -4163,7 +5069,8 @@ export interface FlightSingleEventInput {
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details?: FlightDetailsSchemaInput | null;
+	/** Details */
+	details?: FlightDetailsSchemaInput | InheritedFlightDetailsInput | null;
 }
 
 /** FlightSingleEvent */
@@ -4209,7 +5116,110 @@ export interface FlightSingleEventOutput {
 	 * @default "flight"
 	 */
 	typ?: "flight";
-	details?: FlightDetailsSchemaOutput | null;
+	/** Details */
+	details?: FlightDetailsSchemaOutput | InheritedFlightDetailsOutput | null;
+}
+
+/**
+ * FlightVariantDetails
+ * One fare class and its seat price.
+ */
+export interface FlightVariantDetails {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/** FlightVariantRead */
+export interface FlightVariantReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/** FlightVariantRead */
+export interface FlightVariantReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+}
+
+/** FlightVariantWrite */
+export interface FlightVariantWrite {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** One fare class and its seat price. */
+	details?: FlightVariantDetails;
 }
 
 /**
@@ -4244,6 +5254,84 @@ export interface FocTier {
 	 * @min 1
 	 */
 	free: number;
+}
+
+/**
+ * FoodActivityPubSchema
+ * A meal, and the only kind with a payload of its own today: what the venue
+ * serves.
+ */
+export interface FoodActivityPubSchemaInput {
+	/**
+	 * Name
+	 * The venue's own name
+	 */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	start_time?: TimeSchema | null;
+	end_time?: TimeSchema | null;
+	/** Images */
+	images?: EventImagePubSchema[];
+	/**
+	 * Typ
+	 * @default "food"
+	 */
+	typ?: "food";
+	/** Offerings */
+	offerings?: FoodOfferingPubSchemaInput[];
+}
+
+/**
+ * FoodActivityPubSchema
+ * A meal, and the only kind with a payload of its own today: what the venue
+ * serves.
+ */
+export interface FoodActivityPubSchemaOutput {
+	/**
+	 * Name
+	 * The venue's own name
+	 */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	start_time?: TimeSchema | null;
+	end_time?: TimeSchema | null;
+	/** Images */
+	images?: EventImagePubSchema[];
+	/**
+	 * Typ
+	 * @default "food"
+	 */
+	typ?: "food";
+	/** Offerings */
+	offerings?: FoodOfferingPubSchemaOutput[];
+}
+
+/**
+ * FoodOfferingPubSchema
+ * One thing a food venue serves — a set menu, a tasting — price stripped.
+ * A tour that describes the meal itself has a single unnamed offering; a venue
+ * read off a supplier names each of its own.
+ */
+export interface FoodOfferingPubSchemaInput {
+	/** Name */
+	name?: string | null;
+	/** Menu */
+	menu?: MenuItemPubSchema[];
+}
+
+/**
+ * FoodOfferingPubSchema
+ * One thing a food venue serves — a set menu, a tasting — price stripped.
+ * A tour that describes the meal itself has a single unnamed offering; a venue
+ * read off a supplier names each of its own.
+ */
+export interface FoodOfferingPubSchemaOutput {
+	/** Name */
+	name?: string | null;
+	/** Menu */
+	menu?: MenuItemPubSchema[];
 }
 
 /** FrozenFxRate */
@@ -4449,6 +5537,56 @@ export interface FxRateUpdateSchema {
 }
 
 /**
+ * GeneralActivityPubSchema
+ * Every kind that has nothing to say beyond the base. The tag is spelled out
+ * member by member because the union discriminates on it — a new
+ * ``ActivityType`` is added here, or given its own arm once it has a payload.
+ */
+export interface GeneralActivityPubSchemaInput {
+	/**
+	 * Name
+	 * The venue's own name
+	 */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	start_time?: TimeSchema | null;
+	end_time?: TimeSchema | null;
+	/** Images */
+	images?: EventImagePubSchema[];
+	/**
+	 * Typ
+	 * @default "other"
+	 */
+	typ?: GeneralActivityPubSchemaInputTypEnum;
+}
+
+/**
+ * GeneralActivityPubSchema
+ * Every kind that has nothing to say beyond the base. The tag is spelled out
+ * member by member because the union discriminates on it — a new
+ * ``ActivityType`` is added here, or given its own arm once it has a payload.
+ */
+export interface GeneralActivityPubSchemaOutput {
+	/**
+	 * Name
+	 * The venue's own name
+	 */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	start_time?: TimeSchema | null;
+	end_time?: TimeSchema | null;
+	/** Images */
+	images?: EventImagePubSchema[];
+	/**
+	 * Typ
+	 * @default "other"
+	 */
+	typ?: GeneralActivityPubSchemaOutputTypEnum;
+}
+
+/**
  * GeoFeature
  * Provider-neutral geocoded place.
  */
@@ -4529,16 +5667,6 @@ export interface GroupSizeTierOutput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
-}
-
-/**
- * GroupSizeTierPubSchema
- * A group-size band with its cost stripped — the bands themselves say how
- * the offer is structured.
- */
-export interface GroupSizeTierPubSchema {
-	/** Up To Pax */
-	up_to_pax?: number | null;
 }
 
 /** GroupTemplate */
@@ -4923,57 +6051,26 @@ export interface HotelProductDetails {
 	policy?: HotelPolicySchemaInput | null;
 }
 
-/**
- * HotelProductPubSchema
- * The hotel's own facts. ``policy`` is dropped — an out-of-hours surcharge is
- * the operator's contract, already priced into what the traveller is quoted.
- */
-export interface HotelProductPubSchemaInput {
-	/** Name */
-	name?: string | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Stars */
-	stars?: number | null;
-	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
-	/** Variants */
-	variants?: HotelVariantPubSchemaInput[];
-	/** Image Paths */
-	image_paths?: string[];
-	/** Primary Image Path */
-	primary_image_path?: string | null;
-}
-
-/**
- * HotelProductPubSchema
- * The hotel's own facts. ``policy`` is dropped — an out-of-hours surcharge is
- * the operator's contract, already priced into what the traveller is quoted.
- */
-export interface HotelProductPubSchemaOutput {
-	/** Name */
-	name?: string | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Stars */
-	stars?: number | null;
-	/** Amenities */
-	amenities?: AmenitiesTypes[] | null;
-	/** Variants */
-	variants?: HotelVariantPubSchemaOutput[];
-	/** Image Paths */
-	image_paths?: string[];
-	/** Primary Image Path */
-	primary_image_path?: string | null;
-}
-
-/**
- * HotelProductRead
- * A hotel as an event inherits it — the object served as ``product`` on a
- * housing event. The stored payload is flattened onto the row's own identity,
- * so nothing reads through a nested ``details``.
- */
+/** HotelProductRead */
 export interface HotelProductReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
 	/**
 	 * Typ
 	 * @default "hotel"
@@ -4986,6 +6083,12 @@ export interface HotelProductReadInput {
 	/** Amenities */
 	amenities?: AmenitiesTypes[] | null;
 	policy?: HotelPolicySchemaInput | null;
+	/** Variants */
+	variants?: HotelVariantReadInput[];
+}
+
+/** HotelProductRead */
+export interface HotelProductReadOutput {
 	/**
 	 * Id
 	 * @format uuid
@@ -5000,21 +6103,10 @@ export interface HotelProductReadInput {
 	supplier_name?: string | null;
 	/** Name */
 	name: string;
-	/** Variants */
-	variants?: HotelVariantReadInput[];
 	/** Image Paths */
 	image_paths?: string[];
 	/** Primary Image Path */
 	primary_image_path?: string | null;
-}
-
-/**
- * HotelProductRead
- * A hotel as an event inherits it — the object served as ``product`` on a
- * housing event. The stored payload is flattened onto the row's own identity,
- * so nothing reads through a nested ``details``.
- */
-export interface HotelProductReadOutput {
 	/**
 	 * Typ
 	 * @default "hotel"
@@ -5027,26 +6119,8 @@ export interface HotelProductReadOutput {
 	/** Amenities */
 	amenities?: AmenitiesTypes[] | null;
 	policy?: HotelPolicySchemaOutput | null;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name?: string | null;
-	/** Name */
-	name: string;
 	/** Variants */
 	variants?: HotelVariantReadOutput[];
-	/** Image Paths */
-	image_paths?: string[];
-	/** Primary Image Path */
-	primary_image_path?: string | null;
 }
 
 /**
@@ -5207,11 +6281,11 @@ export interface HotelRoomSchemaOutput {
 }
 
 /**
- * HotelVariantDetails
- * One room category; a group bin-packs into the cheapest combination of its
- * rooms.
+ * HotelVariantPayload
+ * One room category as the API exchanges it; a group bin-packs into the
+ * cheapest combination of its rooms.
  */
-export interface HotelVariantDetails {
+export interface HotelVariantPayload {
 	/**
 	 * Typ
 	 * @default "hotel"
@@ -5219,43 +6293,14 @@ export interface HotelVariantDetails {
 	typ?: "hotel";
 	/** Rooms */
 	rooms?: HotelRoomSchemaInput[] | null;
-}
-
-/**
- * HotelVariantPubSchema
- * One room category of the hotel, rooms kept, prices dropped.
- */
-export interface HotelVariantPubSchemaInput {
-	/** Name */
-	name?: string | null;
-	/** Rooms */
-	rooms?: HousingRoomPubSchema[] | null;
-}
-
-/**
- * HotelVariantPubSchema
- * One room category of the hotel, rooms kept, prices dropped.
- */
-export interface HotelVariantPubSchemaOutput {
-	/** Name */
-	name?: string | null;
-	/** Rooms */
-	rooms?: HousingRoomPubSchema[] | null;
 }
 
 /**
  * HotelVariantRead
- * One room category as it reads — the stored payload flattened onto its own
- * identity, so a caller reaches rooms at ``variant.rooms``.
+ * One room category as it reads — the row and its rooms flattened onto its
+ * own identity, so a caller reaches rooms at ``variant.rooms``.
  */
 export interface HotelVariantReadInput {
-	/**
-	 * Typ
-	 * @default "hotel"
-	 */
-	typ?: "hotel";
-	/** Rooms */
-	rooms?: HotelRoomSchemaInput[] | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -5263,14 +6308,28 @@ export interface HotelVariantReadInput {
 	id: string;
 	/** Name */
 	name: string;
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Rooms */
+	rooms?: HotelRoomSchemaInput[] | null;
 }
 
 /**
  * HotelVariantRead
- * One room category as it reads — the stored payload flattened onto its own
- * identity, so a caller reaches rooms at ``variant.rooms``.
+ * One room category as it reads — the row and its rooms flattened onto its
+ * own identity, so a caller reaches rooms at ``variant.rooms``.
  */
 export interface HotelVariantReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
 	/**
 	 * Typ
 	 * @default "hotel"
@@ -5278,13 +6337,6 @@ export interface HotelVariantReadOutput {
 	typ?: "hotel";
 	/** Rooms */
 	rooms?: HotelRoomSchemaOutput[] | null;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Name */
-	name: string;
 }
 
 /** HotelVariantWrite */
@@ -5300,10 +6352,64 @@ export interface HotelVariantWrite {
 	 */
 	name: string;
 	/**
-	 * One room category; a group bin-packs into the cheapest combination of its
-	 * rooms.
+	 * One room category as the API exchanges it; a group bin-packs into the
+	 * cheapest combination of its rooms.
 	 */
-	details?: HotelVariantDetails;
+	details?: HotelVariantPayload;
+}
+
+/**
+ * HousingDetailsPubSchema
+ * A stay as a traveller sees it: where they sleep, how it is rated, how
+ * long they stay and which rooms are on offer.
+ */
+export interface HousingDetailsPubSchemaInput {
+	/**
+	 * Name
+	 * The accommodation's own name
+	 */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
+	/** Duration */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/** Categories */
+	categories?: HousingRoomCategoryPubSchemaInput[];
+	/** Images */
+	images?: EventImagePubSchema[];
+}
+
+/**
+ * HousingDetailsPubSchema
+ * A stay as a traveller sees it: where they sleep, how it is rated, how
+ * long they stay and which rooms are on offer.
+ */
+export interface HousingDetailsPubSchemaOutput {
+	/**
+	 * Name
+	 * The accommodation's own name
+	 */
+	name?: string | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
+	/** Duration */
+	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
+	/** Categories */
+	categories?: HousingRoomCategoryPubSchemaOutput[];
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
 /** HousingEvent */
@@ -5380,17 +6486,7 @@ export interface HousingEventPubReadInput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	/** Details */
-	details?:
-		| (
-				| ({
-						source: "custom";
-				  } & CustomHousingDetailsPubSchemaInput)
-				| ({
-						source: "inherited";
-				  } & InheritedHousingDetailsPubSchemaInput)
-		  )
-		| null;
+	details?: HousingDetailsPubSchemaInput | null;
 }
 
 /** HousingEventPubRead */
@@ -5417,17 +6513,7 @@ export interface HousingEventPubReadOutput {
 	 * @default "housing"
 	 */
 	typ?: "housing";
-	/** Details */
-	details?:
-		| (
-				| ({
-						source: "custom";
-				  } & CustomHousingDetailsPubSchemaOutput)
-				| ({
-						source: "inherited";
-				  } & InheritedHousingDetailsPubSchemaOutput)
-		  )
-		| null;
+	details?: HousingDetailsPubSchemaOutput | null;
 }
 
 /** HousingEventTypeRead */
@@ -5488,28 +6574,6 @@ export interface HousingEventTypeReadOutput {
 	 * Option (alternative) id; populated on read, ignored on write.
 	 */
 	id?: string | null;
-}
-
-/** HousingExpensesPubSchema */
-export interface HousingExpensesPubSchemaInput {
-	typ?: ExpenseType | null;
-	/** Tiers */
-	tiers?: GroupSizeTierPubSchema[] | null;
-	/** Rooms */
-	rooms?: HousingRoomPubSchema[] | null;
-	/** Categories */
-	categories?: HousingRoomCategoryPubSchemaInput[] | null;
-}
-
-/** HousingExpensesPubSchema */
-export interface HousingExpensesPubSchemaOutput {
-	typ?: ExpenseType | null;
-	/** Tiers */
-	tiers?: GroupSizeTierPubSchema[] | null;
-	/** Rooms */
-	rooms?: HousingRoomPubSchema[] | null;
-	/** Categories */
-	categories?: HousingRoomCategoryPubSchemaOutput[] | null;
 }
 
 /**
@@ -5604,20 +6668,28 @@ export interface HousingRoomCategoryExpensesSchemaOutput {
 	rooms?: HousingRoomSchemaOutput[] | null;
 }
 
-/** HousingRoomCategoryPubSchema */
+/**
+ * HousingRoomCategoryPubSchema
+ * One band of rooms. A stay priced per room with no bands of its own
+ * arrives as a single unnamed category.
+ */
 export interface HousingRoomCategoryPubSchemaInput {
 	/** Name */
 	name?: string | null;
 	/** Rooms */
-	rooms?: HousingRoomPubSchema[] | null;
+	rooms?: HousingRoomPubSchema[];
 }
 
-/** HousingRoomCategoryPubSchema */
+/**
+ * HousingRoomCategoryPubSchema
+ * One band of rooms. A stay priced per room with no bands of its own
+ * arrives as a single unnamed category.
+ */
 export interface HousingRoomCategoryPubSchemaOutput {
 	/** Name */
 	name?: string | null;
 	/** Rooms */
-	rooms?: HousingRoomPubSchema[] | null;
+	rooms?: HousingRoomPubSchema[];
 }
 
 /**
@@ -5708,9 +6780,8 @@ export interface HousingRoomDoubleSchemaOutput {
 
 /**
  * HousingRoomPubSchema
- * One room, charge stripped. Flat across both room shapes the operator
- * stores: categorised rooms carry ``typ``/``pax``, per-room ones carry
- * ``name``/``description``.
+ * One room, charge stripped. Flat across both room shapes: a categorised
+ * room states ``typ``/``pax``, a per-room one states ``name``/``description``.
  */
 export interface HousingRoomPubSchema {
 	typ?: HousingRoomTypes | null;
@@ -6145,6 +7216,162 @@ export interface InformationSingleEventOutput {
 }
 
 /**
+ * InheritedActivityDetails
+ * A visit to a supplier's venue: the tour states the hours, the venue states
+ * where it is, what it offers and at what price — unless this tour negotiated
+ * otherwise.
+ */
+export interface InheritedActivityDetailsInput {
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event end time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: ActivityOverrideSchemaInput | null;
+	product?: ActivityProductReadInput | null;
+}
+
+/**
+ * InheritedActivityDetails
+ * A visit to a supplier's venue: the tour states the hours, the venue states
+ * where it is, what it offers and at what price — unless this tour negotiated
+ * otherwise.
+ */
+export interface InheritedActivityDetailsOutput {
+	/** Event start time */
+	start_time?: TimeSchema | null;
+	/** Event end time */
+	end_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: ActivityOverrideSchemaOutput | null;
+	product?: ActivityProductReadOutput | null;
+}
+
+/**
+ * InheritedBusDetails
+ * A leg driven by a supplier's fleet: the tour states the route, the fleet
+ * states its vehicles and their prices — unless this tour negotiated
+ * otherwise.
+ */
+export interface InheritedBusDetailsInput {
+	/** Hop */
+	hop?: BusHopSchemaInput[] | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: BusOverrideSchemaInput | null;
+	product?: BusProductReadInput | null;
+}
+
+/**
+ * InheritedBusDetails
+ * A leg driven by a supplier's fleet: the tour states the route, the fleet
+ * states its vehicles and their prices — unless this tour negotiated
+ * otherwise.
+ */
+export interface InheritedBusDetailsOutput {
+	/** Hop */
+	hop?: BusHopSchemaOutput[] | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: BusOverrideSchemaOutput | null;
+	product?: BusProductReadOutput | null;
+}
+
+/**
+ * InheritedFlightDetails
+ * A flight read off an airline's route: the airports and the fares come
+ * from there, the hours this tour flies are its own.
+ */
+export interface InheritedFlightDetailsInput {
+	/** When this tour leaves, whatever the route says */
+	departure_time?: TimeSchema | null;
+	/** When this tour arrives, whatever the route says */
+	arrival_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: FlightOverrideSchemaInput | null;
+	product?: FlightProductReadInput | null;
+}
+
+/**
+ * InheritedFlightDetails
+ * A flight read off an airline's route: the airports and the fares come
+ * from there, the hours this tour flies are its own.
+ */
+export interface InheritedFlightDetailsOutput {
+	/** When this tour leaves, whatever the route says */
+	departure_time?: TimeSchema | null;
+	/** When this tour arrives, whatever the route says */
+	arrival_time?: TimeSchema | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: FlightOverrideSchemaOutput | null;
+	product?: FlightProductReadOutput | null;
+}
+
+/**
  * InheritedHousingDetails
  * A stay in a supplier's hotel: the tour states its dates and hours, the
  * hotel states everything else — unless this tour negotiated otherwise.
@@ -6202,50 +7429,16 @@ export interface InheritedHousingDetailsOutput {
 	product?: HotelProductReadOutput | null;
 }
 
-/** InheritedHousingDetailsPubSchema */
-export interface InheritedHousingDetailsPubSchemaInput {
-	/** Duration */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
-	/**
-	 * Source
-	 * @default "inherited"
-	 */
-	source?: "inherited";
-	product?: HotelProductPubSchemaInput | null;
-}
-
-/** InheritedHousingDetailsPubSchema */
-export interface InheritedHousingDetailsPubSchemaOutput {
-	/** Duration */
-	duration?: number | null;
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
-	product?: HotelProductPubSchemaOutput | null;
-}
-
-/** InheritedTrainDetailPubSchema */
-export interface InheritedTrainDetailPubSchemaInput {
-	/**
-	 * Source
-	 * @default "inherited"
-	 */
-	source?: "inherited";
-	product?: TrainProductPubSchemaInput | null;
-}
-
-/** InheritedTrainDetailPubSchema */
-export interface InheritedTrainDetailPubSchemaOutput {
-	product?: TrainProductPubSchemaOutput | null;
-}
-
 /**
  * InheritedTrainDetails
- * A leg read off a supplier's route: schedule and fare come from there, and
- * a tour adds nothing of its own.
+ * A leg read off a supplier's route: the stations and the fare come from
+ * there, the hours this tour runs to are its own.
  */
 export interface InheritedTrainDetailsInput {
+	/** When this tour leaves, whatever the route says */
+	departure_time?: TimeSchema | null;
+	/** When this tour arrives, whatever the route says */
+	arrival_time?: TimeSchema | null;
 	/**
 	 * Source
 	 * @default "inherited"
@@ -6264,10 +7457,14 @@ export interface InheritedTrainDetailsInput {
 
 /**
  * InheritedTrainDetails
- * A leg read off a supplier's route: schedule and fare come from there, and
- * a tour adds nothing of its own.
+ * A leg read off a supplier's route: the stations and the fare come from
+ * there, the hours this tour runs to are its own.
  */
 export interface InheritedTrainDetailsOutput {
+	/** When this tour leaves, whatever the route says */
+	departure_time?: TimeSchema | null;
+	/** When this tour arrives, whatever the route says */
+	arrival_time?: TimeSchema | null;
 	/**
 	 * Source
 	 * @default "inherited"
@@ -6282,6 +7479,60 @@ export interface InheritedTrainDetailsOutput {
 	variant_id?: string | null;
 	override?: TrainOverrideSchemaOutput | null;
 	product?: TrainProductReadOutput | null;
+}
+
+/**
+ * InheritedTransferDetails
+ * A ride by a supplier's fleet: the tour states the leg, the fleet states
+ * its vehicles and their prices — unless this tour negotiated otherwise.
+ */
+export interface InheritedTransferDetailsInput {
+	typ?: TransferTypes | null;
+	/** Details of the departure. */
+	departure?: TransferJourneyPointSchemaInput | null;
+	/** Details of the arrival. */
+	arrival?: TransferJourneyPointSchemaInput | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: TransferOverrideSchemaInput | null;
+	product?: TransferProductReadInput | null;
+}
+
+/**
+ * InheritedTransferDetails
+ * A ride by a supplier's fleet: the tour states the leg, the fleet states
+ * its vehicles and their prices — unless this tour negotiated otherwise.
+ */
+export interface InheritedTransferDetailsOutput {
+	typ?: TransferTypes | null;
+	/** Details of the departure. */
+	departure?: TransferJourneyPointSchemaOutput | null;
+	/** Details of the arrival. */
+	arrival?: TransferJourneyPointSchemaOutput | null;
+	/**
+	 * Source
+	 * @default "inherited"
+	 */
+	source?: "inherited";
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	product_id: string;
+	/** Variant Id */
+	variant_id?: string | null;
+	override?: TransferOverrideSchemaOutput | null;
+	product?: TransferProductReadOutput | null;
 }
 
 /** InvoiceDetailResponse */
@@ -6397,6 +7648,42 @@ export interface InvoicePaymentCreate {
 export interface InvoicePdfResponse {
 	/** Url */
 	url: string;
+}
+
+/**
+ * JourneyPointPubSchema
+ * One end of a transport leg: where, at what hour, on what date.
+ *
+ * ``date`` is read-only and filled by the backend only. A tour template stays
+ * reusable across every departure, so it states ``day`` + ``time``; the
+ * concrete date is resolved from a booking's anchor date and is never accepted
+ * from a client. Stays null on surfaces with no anchor date — the public tour
+ * view and the catalog listing.
+ */
+export interface JourneyPointPubSchemaInput {
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Date */
+	date?: string | null;
+}
+
+/**
+ * JourneyPointPubSchema
+ * One end of a transport leg: where, at what hour, on what date.
+ *
+ * ``date`` is read-only and filled by the backend only. A tour template stays
+ * reusable across every departure, so it states ``day`` + ``time``; the
+ * concrete date is resolved from a booking's anchor date and is never accepted
+ * from a client. Stays null on surfaces with no anchor date — the public tour
+ * view and the catalog listing.
+ */
+export interface JourneyPointPubSchemaOutput {
+	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Date */
+	date?: string | null;
 }
 
 /** KeyValItem */
@@ -6776,7 +8063,7 @@ export interface MeSchema {
 
 /**
  * MenuItemPubSchema
- * One dish on a food activity's menu, photos kept.
+ * One dish on a food offering's menu, photos kept.
  */
 export interface MenuItemPubSchema {
 	/** Name */
@@ -6942,34 +8229,35 @@ export interface MultiEventPubInput {
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date?: string | null;
-	/** Typ */
-	typ: "options";
+	/**
+	 * Typ
+	 * @default "options"
+	 */
+	typ?: "options";
 	/** Details */
-	details?:
-		| (
-				| ({
-						typ: "activity";
-				  } & ActivityEventPubReadInput)
-				| ({
-						typ: "bus";
-				  } & BusEventPubReadInput)
-				| ({
-						typ: "flight";
-				  } & FlightEventPubReadInput)
-				| ({
-						typ: "housing";
-				  } & HousingEventPubReadInput)
-				| ({
-						typ: "ref";
-				  } & InformationEventPubReadInput)
-				| ({
-						typ: "train";
-				  } & TrainEventPubReadInput)
-				| ({
-						typ: "transfer";
-				  } & TransferEventPubReadInput)
-		  )[]
-		| null;
+	details?: (
+		| ({
+				typ: "activity";
+		  } & ActivityEventPubReadInput)
+		| ({
+				typ: "bus";
+		  } & BusEventPubReadInput)
+		| ({
+				typ: "flight";
+		  } & FlightEventPubReadInput)
+		| ({
+				typ: "housing";
+		  } & HousingEventPubReadInput)
+		| ({
+				typ: "ref";
+		  } & InformationEventPubReadInput)
+		| ({
+				typ: "train";
+		  } & TrainEventPubReadInput)
+		| ({
+				typ: "transfer";
+		  } & TransferEventPubReadInput)
+	)[];
 }
 
 /** MultiEventPub */
@@ -6991,34 +8279,35 @@ export interface MultiEventPubOutput {
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date?: string | null;
-	/** Typ */
-	typ: "options";
+	/**
+	 * Typ
+	 * @default "options"
+	 */
+	typ?: "options";
 	/** Details */
-	details?:
-		| (
-				| ({
-						typ: "activity";
-				  } & ActivityEventPubReadOutput)
-				| ({
-						typ: "bus";
-				  } & BusEventPubReadOutput)
-				| ({
-						typ: "flight";
-				  } & FlightEventPubReadOutput)
-				| ({
-						typ: "housing";
-				  } & HousingEventPubReadOutput)
-				| ({
-						typ: "ref";
-				  } & InformationEventPubReadOutput)
-				| ({
-						typ: "train";
-				  } & TrainEventPubReadOutput)
-				| ({
-						typ: "transfer";
-				  } & TransferEventPubReadOutput)
-		  )[]
-		| null;
+	details?: (
+		| ({
+				typ: "activity";
+		  } & ActivityEventPubReadOutput)
+		| ({
+				typ: "bus";
+		  } & BusEventPubReadOutput)
+		| ({
+				typ: "flight";
+		  } & FlightEventPubReadOutput)
+		| ({
+				typ: "housing";
+		  } & HousingEventPubReadOutput)
+		| ({
+				typ: "ref";
+		  } & InformationEventPubReadOutput)
+		| ({
+				typ: "train";
+		  } & TrainEventPubReadOutput)
+		| ({
+				typ: "transfer";
+		  } & TransferEventPubReadOutput)
+	)[];
 }
 
 /**
@@ -8816,6 +10105,29 @@ export interface PricingPackageOutput {
 		| null;
 }
 
+/**
+ * ProductMenuItemSchema
+ * One dish or item of an activity offering. A row of ``supplier_menu_item``
+ * with its pictures as rows under it; echo its ``id`` on update to keep them.
+ */
+export interface ProductMenuItemSchema {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Images
+	 * Images of this node, primary first; server-owned — ignored on write, changed only through the node image routes.
+	 * @maxItems 5
+	 */
+	images?: NodeImageSchema[];
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+}
+
 /** PublicTourCatalogListResponse */
 export interface PublicTourCatalogListResponse {
 	/** Total Count */
@@ -10162,11 +11474,23 @@ export interface SupplierProductListResponse {
 	/** Data */
 	data: (
 		| ({
+				typ: "activity";
+		  } & ActivityProductReadOutput)
+		| ({
+				typ: "bus";
+		  } & BusProductReadOutput)
+		| ({
+				typ: "flight";
+		  } & FlightProductReadOutput)
+		| ({
 				typ: "hotel";
 		  } & HotelProductReadOutput)
 		| ({
 				typ: "train";
 		  } & TrainProductReadOutput)
+		| ({
+				typ: "transfer";
+		  } & TransferProductReadOutput)
 	)[];
 }
 
@@ -11171,6 +12495,50 @@ export interface TourSummaryResponse {
 	estimated_revenue: TourMinMaxCostSchemaOutput;
 }
 
+/**
+ * TrainDetailPubSchema
+ * A rail leg as a traveller sees it: the stations it calls at, the hours it
+ * runs to, and the fare classes it sells.
+ *
+ * A supplier's route carries stations but no timetable, so the hours the tour
+ * states land on the first departure and the last arrival — the only two the
+ * leg has. A route with no stations at all still keeps its hours, in one hop
+ * with no place attached.
+ */
+export interface TrainDetailPubSchemaInput {
+	/**
+	 * Name
+	 * The route's own name
+	 */
+	name?: string | null;
+	/** Hop */
+	hop?: TransportHopPubSchemaInput[];
+	/** Images */
+	images?: EventImagePubSchema[];
+}
+
+/**
+ * TrainDetailPubSchema
+ * A rail leg as a traveller sees it: the stations it calls at, the hours it
+ * runs to, and the fare classes it sells.
+ *
+ * A supplier's route carries stations but no timetable, so the hours the tour
+ * states land on the first departure and the last arrival — the only two the
+ * leg has. A route with no stations at all still keeps its hours, in one hop
+ * with no place attached.
+ */
+export interface TrainDetailPubSchemaOutput {
+	/**
+	 * Name
+	 * The route's own name
+	 */
+	name?: string | null;
+	/** Hop */
+	hop?: TransportHopPubSchemaOutput[];
+	/** Images */
+	images?: EventImagePubSchema[];
+}
+
 /** TrainEvent */
 export interface TrainEventInput {
 	/**
@@ -11245,17 +12613,7 @@ export interface TrainEventPubReadInput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	/** Details */
-	details?:
-		| (
-				| ({
-						source: "custom";
-				  } & CustomTrainDetailPubSchemaInput)
-				| ({
-						source: "inherited";
-				  } & InheritedTrainDetailPubSchemaInput)
-		  )
-		| null;
+	details?: TrainDetailPubSchemaInput | null;
 }
 
 /** TrainEventPubRead */
@@ -11282,17 +12640,7 @@ export interface TrainEventPubReadOutput {
 	 * @default "train"
 	 */
 	typ?: "train";
-	/** Details */
-	details?:
-		| (
-				| ({
-						source: "custom";
-				  } & CustomTrainDetailPubSchemaOutput)
-				| ({
-						source: "inherited";
-				  } & InheritedTrainDetailPubSchemaOutput)
-		  )
-		| null;
+	details?: TrainDetailPubSchemaOutput | null;
 }
 
 /** TrainEventTypeRead */
@@ -11355,21 +12703,9 @@ export interface TrainEventTypeReadOutput {
 	id?: string | null;
 }
 
-/** TrainHopPubSchema */
-export interface TrainHopPubSchemaInput {
-	departure?: TrainJourneyPointPubSchemaInput | null;
-	arrival?: TrainJourneyPointPubSchemaInput | null;
-}
-
-/** TrainHopPubSchema */
-export interface TrainHopPubSchemaOutput {
-	departure?: TrainJourneyPointPubSchemaOutput | null;
-	arrival?: TrainJourneyPointPubSchemaOutput | null;
-}
-
 /**
  * TrainHopSchema
- * Represents a single leg of a train journey.
+ * One leg of a rail journey the operator schedules itself.
  */
 export interface TrainHopSchemaInput {
 	/** Details of the departure. */
@@ -11380,7 +12716,7 @@ export interface TrainHopSchemaInput {
 
 /**
  * TrainHopSchema
- * Represents a single leg of a train journey.
+ * One leg of a rail journey the operator schedules itself.
  */
 export interface TrainHopSchemaOutput {
 	/** Details of the departure. */
@@ -11389,44 +12725,52 @@ export interface TrainHopSchemaOutput {
 	arrival?: TrainJourneyPointSchemaOutput | null;
 }
 
-/** TrainJourneyPointPubSchema */
-export interface TrainJourneyPointPubSchemaInput {
-	/** Date */
-	date?: string | null;
-	time?: TimeSchema | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-}
-
-/** TrainJourneyPointPubSchema */
-export interface TrainJourneyPointPubSchemaOutput {
-	/** Date */
-	date?: string | null;
-	time?: TimeSchema | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-}
-
 /**
  * TrainJourneyPointSchema
- * Represents either a departure or arrival point for the train journey.
+ * A station a tour calls at, with the hour it does. A supplier's route
+ * states the station alone; the clock is the tour's own statement.
  */
 export interface TrainJourneyPointSchemaInput {
-	/** The time of an event */
-	time?: TimeSchema | null;
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** The time of an event */
+	time?: TimeSchema | null;
 }
 
 /**
  * TrainJourneyPointSchema
- * Represents either a departure or arrival point for the train journey.
+ * A station a tour calls at, with the hour it does. A supplier's route
+ * states the station alone; the clock is the tour's own statement.
  */
 export interface TrainJourneyPointSchemaOutput {
-	/** The time of an event */
-	time?: TimeSchema | null;
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** The time of an event */
+	time?: TimeSchema | null;
+}
+
+/**
+ * TrainLegSchema
+ * One leg of a supplier's rail route — its two stations and nothing else.
+ * The timed shape a tour states itself is ``TrainHopSchema``.
+ */
+export interface TrainLegSchemaInput {
+	/** Where the leg leaves from. */
+	departure?: TrainStopSchemaInput | null;
+	/** Where the leg arrives. */
+	arrival?: TrainStopSchemaInput | null;
+}
+
+/**
+ * TrainLegSchema
+ * One leg of a supplier's rail route — its two stations and nothing else.
+ * The timed shape a tour states itself is ``TrainHopSchema``.
+ */
+export interface TrainLegSchemaOutput {
+	/** Where the leg leaves from. */
+	departure?: TrainStopSchemaOutput | null;
+	/** Where the leg arrives. */
+	arrival?: TrainStopSchemaOutput | null;
 }
 
 /**
@@ -11493,13 +12837,17 @@ export interface TrainProductCreate {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** One train route: which stations, at what time. Price lives on variants. */
+	/**
+	 * One train route: which stations it connects. The hours are the tour's and
+	 * the price is on the variants.
+	 */
 	details?: TrainProductDetails;
 }
 
 /**
  * TrainProductDetails
- * One train route: which stations, at what time. Price lives on variants.
+ * One train route: which stations it connects. The hours are the tour's and
+ * the price is on the variants.
  */
 export interface TrainProductDetails {
 	/**
@@ -11508,50 +12856,12 @@ export interface TrainProductDetails {
 	 */
 	typ?: "train";
 	/** Hop */
-	hop?: TrainHopSchemaInput[] | null;
+	hop?: TrainLegSchemaInput[] | null;
 }
 
-/** TrainProductPubSchema */
-export interface TrainProductPubSchemaInput {
-	/** Name */
-	name?: string | null;
-	/** Hop */
-	hop?: TrainHopPubSchemaInput[] | null;
-	/** Variants */
-	variants?: TrainVariantPubSchema[];
-	/** Image Paths */
-	image_paths?: string[];
-	/** Primary Image Path */
-	primary_image_path?: string | null;
-}
-
-/** TrainProductPubSchema */
-export interface TrainProductPubSchemaOutput {
-	/** Name */
-	name?: string | null;
-	/** Hop */
-	hop?: TrainHopPubSchemaOutput[] | null;
-	/** Variants */
-	variants?: TrainVariantPubSchema[];
-	/** Image Paths */
-	image_paths?: string[];
-	/** Primary Image Path */
-	primary_image_path?: string | null;
-}
-
-/**
- * TrainProductRead
- * A train route as an event inherits it; fare classes for room categories.
- */
+/** TrainProductRead */
 export interface TrainProductReadInput {
 	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ?: "train";
-	/** Hop */
-	hop?: TrainHopSchemaInput[] | null;
-	/**
 	 * Id
 	 * @format uuid
 	 */
@@ -11565,26 +12875,23 @@ export interface TrainProductReadInput {
 	supplier_name?: string | null;
 	/** Name */
 	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Hop */
+	hop?: TrainLegSchemaInput[] | null;
 	/** Variants */
 	variants?: TrainVariantReadInput[];
-	/** Image Paths */
-	image_paths?: string[];
-	/** Primary Image Path */
-	primary_image_path?: string | null;
 }
 
-/**
- * TrainProductRead
- * A train route as an event inherits it; fare classes for room categories.
- */
+/** TrainProductRead */
 export interface TrainProductReadOutput {
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ?: "train";
-	/** Hop */
-	hop?: TrainHopSchemaOutput[] | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -11599,12 +12906,19 @@ export interface TrainProductReadOutput {
 	supplier_name?: string | null;
 	/** Name */
 	name: string;
-	/** Variants */
-	variants?: TrainVariantReadOutput[];
 	/** Image Paths */
 	image_paths?: string[];
 	/** Primary Image Path */
 	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Hop */
+	hop?: TrainLegSchemaOutput[] | null;
+	/** Variants */
+	variants?: TrainVariantReadOutput[];
 }
 
 /** TrainProductUpdate */
@@ -11714,6 +13028,26 @@ export interface TrainSingleEventOutput {
 }
 
 /**
+ * TrainStopSchema
+ * Where a supplier's rail route calls, with no hour attached: the supplier
+ * states which stations it runs between, the tour states when it runs them.
+ */
+export interface TrainStopSchemaInput {
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+}
+
+/**
+ * TrainStopSchema
+ * Where a supplier's rail route calls, with no hour attached: the supplier
+ * states which stations it runs between, the tour states when it runs them.
+ */
+export interface TrainStopSchemaOutput {
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+}
+
+/**
  * TrainVariantDetails
  * One fare class and its seat price.
  */
@@ -11739,17 +13073,15 @@ export interface TrainVariantDetails {
 		| null;
 }
 
-/**
- * TrainVariantPubSchema
- * One fare class, name only — the seat price stays operator-side.
- */
-export interface TrainVariantPubSchema {
-	/** Name */
-	name?: string | null;
-}
-
 /** TrainVariantRead */
 export interface TrainVariantReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
 	/**
 	 * Typ
 	 * @default "train"
@@ -11769,6 +13101,10 @@ export interface TrainVariantReadInput {
 				  } & PerPersonChargeInput)
 		  )
 		| null;
+}
+
+/** TrainVariantRead */
+export interface TrainVariantReadOutput {
 	/**
 	 * Id
 	 * @format uuid
@@ -11776,10 +13112,6 @@ export interface TrainVariantReadInput {
 	id: string;
 	/** Name */
 	name: string;
-}
-
-/** TrainVariantRead */
-export interface TrainVariantReadOutput {
 	/**
 	 * Typ
 	 * @default "train"
@@ -11799,13 +13131,6 @@ export interface TrainVariantReadOutput {
 				  } & PerPersonChargeOutput)
 		  )
 		| null;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Name */
-	name: string;
 }
 
 /** TrainVariantWrite */
@@ -11888,18 +13213,19 @@ export interface TransferCarPackageCategorySchemaOutput {
 
 /**
  * TransferCarPubSchema
- * One car variant — body type, capacity and description survive; only its
- * charge is stripped. Covers both ``PerCarExpense`` and
- * ``PerCarCategoryExpense`` cars, hence ``categories``.
+ * One car of the ride. ``categories`` is the trim a tour prices its own
+ * cars by; a supplier's fleet names its cars instead and leaves it empty.
  */
 export interface TransferCarPubSchema {
+	/** Name */
+	name?: string | null;
 	typ?: VehicleBodyType | null;
 	/** Pax */
 	pax?: number | null;
 	/** Description */
 	description?: string | null;
 	/** Categories */
-	categories?: TransferCarCategoryPubSchema[] | null;
+	categories?: TransferCarCategoryPubSchema[];
 }
 
 /** TransferCarVariant */
@@ -11928,25 +13254,85 @@ export interface TransferCarVariantOutput {
 	expenses?: FixedChargeOutput | null;
 }
 
-/** TransferDetailsPubSchema */
+/**
+ * TransferDetailsPubSchema
+ * A transfer as a traveller sees it: what kind of run it is, where it
+ * leaves from and arrives at, and the cars that drive it.
+ */
 export interface TransferDetailsPubSchemaInput {
+	/**
+	 * Name
+	 * The fleet's own name
+	 */
+	name?: string | null;
 	typ?: TransferTypes | null;
-	departure?: TransferJourneyPointPubSchemaInput | null;
-	arrival?: TransferJourneyPointPubSchemaInput | null;
-	expenses?: TransferExpensesPubSchemaInput | null;
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	departure?: JourneyPointPubSchemaInput;
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	arrival?: JourneyPointPubSchemaInput;
+	/** Cars */
+	cars?: TransferCarPubSchema[];
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
-/** TransferDetailsPubSchema */
+/**
+ * TransferDetailsPubSchema
+ * A transfer as a traveller sees it: what kind of run it is, where it
+ * leaves from and arrives at, and the cars that drive it.
+ */
 export interface TransferDetailsPubSchemaOutput {
+	/**
+	 * Name
+	 * The fleet's own name
+	 */
+	name?: string | null;
 	typ?: TransferTypes | null;
-	departure?: TransferJourneyPointPubSchemaOutput | null;
-	arrival?: TransferJourneyPointPubSchemaOutput | null;
-	expenses?: TransferExpensesPubSchemaOutput | null;
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	departure?: JourneyPointPubSchemaOutput;
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	arrival?: JourneyPointPubSchemaOutput;
+	/** Cars */
+	cars?: TransferCarPubSchema[];
+	/** Images */
+	images?: EventImagePubSchema[];
 }
 
 /**
  * TransferDetailsSchema
- * Represents a transfer journey with departure and arrival details.
+ * A transfer the operator priced itself, as a whole or per car.
  */
 export interface TransferDetailsSchemaInput {
 	typ?: TransferTypes | null;
@@ -11954,6 +13340,11 @@ export interface TransferDetailsSchemaInput {
 	departure?: TransferJourneyPointSchemaInput | null;
 	/** Details of the arrival. */
 	arrival?: TransferJourneyPointSchemaInput | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/** Expenses */
 	expenses?:
 		| (
@@ -11975,7 +13366,7 @@ export interface TransferDetailsSchemaInput {
 
 /**
  * TransferDetailsSchema
- * Represents a transfer journey with departure and arrival details.
+ * A transfer the operator priced itself, as a whole or per car.
  */
 export interface TransferDetailsSchemaOutput {
 	typ?: TransferTypes | null;
@@ -11983,6 +13374,11 @@ export interface TransferDetailsSchemaOutput {
 	departure?: TransferJourneyPointSchemaOutput | null;
 	/** Details of the arrival. */
 	arrival?: TransferJourneyPointSchemaOutput | null;
+	/**
+	 * Source
+	 * @default "custom"
+	 */
+	source?: "custom";
 	/** Expenses */
 	expenses?:
 		| (
@@ -12023,7 +13419,8 @@ export interface TransferEventInput {
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details?: TransferDetailsSchemaInput | null;
+	/** Details */
+	details?: TransferDetailsSchemaInput | InheritedTransferDetailsInput | null;
 }
 
 /** TransferEvent */
@@ -12047,7 +13444,11 @@ export interface TransferEventOutput {
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details?: TransferDetailsSchemaOutput | null;
+	/** Details */
+	details?:
+		| TransferDetailsSchemaOutput
+		| InheritedTransferDetailsOutput
+		| null;
 }
 
 /** TransferEventPubRead */
@@ -12125,7 +13526,8 @@ export interface TransferEventTypeReadInput {
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details?: TransferDetailsSchemaInput | null;
+	/** Details */
+	details?: TransferDetailsSchemaInput | InheritedTransferDetailsInput | null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
@@ -12154,48 +13556,16 @@ export interface TransferEventTypeReadOutput {
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details?: TransferDetailsSchemaOutput | null;
+	/** Details */
+	details?:
+		| TransferDetailsSchemaOutput
+		| InheritedTransferDetailsOutput
+		| null;
 	/**
 	 * Id
 	 * Option (alternative) id; populated on read, ignored on write.
 	 */
 	id?: string | null;
-}
-
-/** TransferExpensesPubSchema */
-export interface TransferExpensesPubSchemaInput {
-	typ?: ExpenseType | null;
-	/** Tiers */
-	tiers?: GroupSizeTierPubSchema[] | null;
-	/** Cars */
-	cars?: TransferCarPubSchema[] | null;
-}
-
-/** TransferExpensesPubSchema */
-export interface TransferExpensesPubSchemaOutput {
-	typ?: ExpenseType | null;
-	/** Tiers */
-	tiers?: GroupSizeTierPubSchema[] | null;
-	/** Cars */
-	cars?: TransferCarPubSchema[] | null;
-}
-
-/** TransferJourneyPointPubSchema */
-export interface TransferJourneyPointPubSchemaInput {
-	/** Date */
-	date?: string | null;
-	time?: TimeSchema | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-}
-
-/** TransferJourneyPointPubSchema */
-export interface TransferJourneyPointPubSchemaOutput {
-	/** Date */
-	date?: string | null;
-	time?: TimeSchema | null;
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -12218,6 +13588,156 @@ export interface TransferJourneyPointSchemaOutput {
 	time?: TimeSchema | null;
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+}
+
+/**
+ * TransferOverrideSchema
+ * A price this tour negotiated for the ride, replacing the fleet's own.
+ */
+export interface TransferOverrideSchemaInput {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeInput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeInput)
+		  )
+		| null;
+}
+
+/**
+ * TransferOverrideSchema
+ * A price this tour negotiated for the ride, replacing the fleet's own.
+ */
+export interface TransferOverrideSchemaOutput {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/**
+	 * Expenses
+	 * The charge calculation strategy.
+	 */
+	expenses?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedChargeOutput)
+				| ({
+						typ: "per_person";
+				  } & PerPersonChargeOutput)
+		  )
+		| null;
+}
+
+/** TransferProductCreate */
+export interface TransferProductCreate {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** One transfer fleet; the same shape as a coach fleet. */
+	details?: TransferProductDetails;
+}
+
+/**
+ * TransferProductDetails
+ * One transfer fleet; the same shape as a coach fleet.
+ */
+export interface TransferProductDetails {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+}
+
+/** TransferProductRead */
+export interface TransferProductReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/** Variants */
+	variants?: TransferVariantReadInput[];
+}
+
+/** TransferProductRead */
+export interface TransferProductReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name?: string | null;
+	/** Name */
+	name: string;
+	/** Image Paths */
+	image_paths?: string[];
+	/** Primary Image Path */
+	primary_image_path?: string | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/** Variants */
+	variants?: TransferVariantReadOutput[];
+}
+
+/** TransferProductUpdate */
+export interface TransferProductUpdate {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/** Name */
+	name?: string | null;
+	details?: TransferProductDetails | null;
 }
 
 /** TransferSingleEvent */
@@ -12263,7 +13783,8 @@ export interface TransferSingleEventInput {
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details?: TransferDetailsSchemaInput | null;
+	/** Details */
+	details?: TransferDetailsSchemaInput | InheritedTransferDetailsInput | null;
 }
 
 /** TransferSingleEvent */
@@ -12309,7 +13830,155 @@ export interface TransferSingleEventOutput {
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-	details?: TransferDetailsSchemaOutput | null;
+	/** Details */
+	details?:
+		| TransferDetailsSchemaOutput
+		| InheritedTransferDetailsOutput
+		| null;
+}
+
+/**
+ * TransferVariantPayload
+ * One vehicle category of a transfer fleet as the API exchanges it.
+ */
+export interface TransferVariantPayload {
+	body_type?: VehicleBodyType | null;
+	/**
+	 * Pax
+	 * Seats; what the bin-packer fills a group with.
+	 */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+	/** Charge for one vehicle of this category. */
+	expenses?: FixedChargeInput | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+}
+
+/** TransferVariantRead */
+export interface TransferVariantReadInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	body_type?: VehicleBodyType | null;
+	/**
+	 * Pax
+	 * Seats; what the bin-packer fills a group with.
+	 */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+	/** Charge for one vehicle of this category. */
+	expenses?: FixedChargeInput | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+}
+
+/** TransferVariantRead */
+export interface TransferVariantReadOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	body_type?: VehicleBodyType | null;
+	/**
+	 * Pax
+	 * Seats; what the bin-packer fills a group with.
+	 */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+	/** Charge for one vehicle of this category. */
+	expenses?: FixedChargeOutput | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+}
+
+/** TransferVariantWrite */
+export interface TransferVariantWrite {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** One vehicle category of a transfer fleet as the API exchanges it. */
+	details?: TransferVariantPayload;
+}
+
+/**
+ * TransportHopPubSchema
+ * One leg of a road or rail journey — its two ends.
+ */
+export interface TransportHopPubSchemaInput {
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	departure?: JourneyPointPubSchemaInput;
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	arrival?: JourneyPointPubSchemaInput;
+}
+
+/**
+ * TransportHopPubSchema
+ * One leg of a road or rail journey — its two ends.
+ */
+export interface TransportHopPubSchemaOutput {
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	departure?: JourneyPointPubSchemaOutput;
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	arrival?: JourneyPointPubSchemaOutput;
 }
 
 /** UpdateFinancialSchema */
@@ -12362,6 +14031,21 @@ export interface ValidationError {
 	type: string;
 }
 
+/**
+ * VehiclePubSchema
+ * One coach or car category: body, seats and description survive, its price
+ * does not.
+ */
+export interface VehiclePubSchema {
+	/** Name */
+	name?: string | null;
+	typ?: VehicleBodyType | null;
+	/** Pax */
+	pax?: number | null;
+	/** Description */
+	description?: string | null;
+}
+
 /** VoucherResponse */
 export interface VoucherResponse {
 	/**
@@ -12375,6 +14059,42 @@ export interface VoucherResponse {
 	url: string;
 	/** File Name */
 	file_name: string | null;
+}
+
+/**
+ * Typ
+ * @default "other"
+ */
+export enum GeneralActivityPubSchemaInputTypEnum {
+	MasterClass = "master_class",
+	Sightseeing = "sightseeing",
+	Outdoor = "outdoor",
+	Riding = "riding",
+	Extreme = "extreme",
+	Wellness = "wellness",
+	Entertainment = "entertainment",
+	WaterActivities = "water_activities",
+	Photography = "photography",
+	Spiritual = "spiritual",
+	Other = "other"
+}
+
+/**
+ * Typ
+ * @default "other"
+ */
+export enum GeneralActivityPubSchemaOutputTypEnum {
+	MasterClass = "master_class",
+	Sightseeing = "sightseeing",
+	Outdoor = "outdoor",
+	Riding = "riding",
+	Extreme = "extreme",
+	Wellness = "wellness",
+	Entertainment = "entertainment",
+	WaterActivities = "water_activities",
+	Photography = "photography",
+	Spiritual = "spiritual",
+	Other = "other"
 }
 
 export enum StaffUpdateStatusEnum {
@@ -13097,7 +14817,19 @@ export type SetSingleEventOverrideTourTourIdOptionIdEventSingleEventIdOverridePa
 		  } & HousingOverrideSchemaInput)
 		| ({
 				typ: "train";
-		  } & TrainOverrideSchemaInput);
+		  } & TrainOverrideSchemaInput)
+		| ({
+				typ: "flight";
+		  } & FlightOverrideSchemaInput)
+		| ({
+				typ: "bus";
+		  } & BusOverrideSchemaInput)
+		| ({
+				typ: "transfer";
+		  } & TransferOverrideSchemaInput)
+		| ({
+				typ: "activity";
+		  } & ActivityOverrideSchemaInput);
 
 export interface SetSingleEventOverrideTourTourIdOptionIdEventSingleEventIdOverridePatchParams {
 	/** @default "en" */
@@ -13216,7 +14948,19 @@ export type SetEventOptionOverrideTourTourIdOptionIdEventMultiEventIdOverrideOpt
 		  } & HousingOverrideSchemaInput)
 		| ({
 				typ: "train";
-		  } & TrainOverrideSchemaInput);
+		  } & TrainOverrideSchemaInput)
+		| ({
+				typ: "flight";
+		  } & FlightOverrideSchemaInput)
+		| ({
+				typ: "bus";
+		  } & BusOverrideSchemaInput)
+		| ({
+				typ: "transfer";
+		  } & TransferOverrideSchemaInput)
+		| ({
+				typ: "activity";
+		  } & ActivityOverrideSchemaInput);
 
 export interface SetEventOptionOverrideTourTourIdOptionIdEventMultiEventIdOverrideOptionEventOptionIdPatchParams {
 	/** @default "en" */
@@ -14544,7 +16288,19 @@ export type CreateProductSupplierSupplierIdProductPostPayload =
 	  } & HotelProductCreate)
 	| ({
 			typ: "train";
-	  } & TrainProductCreate);
+	  } & TrainProductCreate)
+	| ({
+			typ: "flight";
+	  } & FlightProductCreate)
+	| ({
+			typ: "bus";
+	  } & BusProductCreate)
+	| ({
+			typ: "transfer";
+	  } & TransferProductCreate)
+	| ({
+			typ: "activity";
+	  } & ActivityProductCreate);
 
 export interface CreateProductSupplierSupplierIdProductPostParams {
 	/**
@@ -14599,7 +16355,19 @@ export type UpdateProductSupplierSupplierIdProductProductIdPatchPayload =
 	  } & HotelProductUpdate)
 	| ({
 			typ: "train";
-	  } & TrainProductUpdate);
+	  } & TrainProductUpdate)
+	| ({
+			typ: "flight";
+	  } & FlightProductUpdate)
+	| ({
+			typ: "bus";
+	  } & BusProductUpdate)
+	| ({
+			typ: "transfer";
+	  } & TransferProductUpdate)
+	| ({
+			typ: "activity";
+	  } & ActivityProductUpdate);
 
 export interface UpdateProductSupplierSupplierIdProductProductIdPatchParams {
 	/**
@@ -14634,7 +16402,19 @@ export type CreateVariantSupplierSupplierIdProductProductIdVariantPostPayload =
 	  } & HotelVariantWrite)
 	| ({
 			typ: "train";
-	  } & TrainVariantWrite);
+	  } & TrainVariantWrite)
+	| ({
+			typ: "flight";
+	  } & FlightVariantWrite)
+	| ({
+			typ: "bus";
+	  } & BusVariantWrite)
+	| ({
+			typ: "transfer";
+	  } & TransferVariantWrite)
+	| ({
+			typ: "activity";
+	  } & ActivityVariantWrite);
 
 export interface CreateVariantSupplierSupplierIdProductProductIdVariantPostParams {
 	/**
@@ -14657,7 +16437,19 @@ export type UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatch
 		  } & HotelVariantWrite)
 		| ({
 				typ: "train";
-		  } & TrainVariantWrite);
+		  } & TrainVariantWrite)
+		| ({
+				typ: "flight";
+		  } & FlightVariantWrite)
+		| ({
+				typ: "bus";
+		  } & BusVariantWrite)
+		| ({
+				typ: "transfer";
+		  } & TransferVariantWrite)
+		| ({
+				typ: "activity";
+		  } & ActivityVariantWrite);
 
 export interface UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchParams {
 	/**
@@ -15260,7 +17052,19 @@ export type SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePatchPay
 		  } & HousingOverrideSchemaInput)
 		| ({
 				typ: "train";
-		  } & TrainOverrideSchemaInput);
+		  } & TrainOverrideSchemaInput)
+		| ({
+				typ: "flight";
+		  } & FlightOverrideSchemaInput)
+		| ({
+				typ: "bus";
+		  } & BusOverrideSchemaInput)
+		| ({
+				typ: "transfer";
+		  } & TransferOverrideSchemaInput)
+		| ({
+				typ: "activity";
+		  } & ActivityOverrideSchemaInput);
 
 export interface SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePatchParams {
 	/** Option Index */

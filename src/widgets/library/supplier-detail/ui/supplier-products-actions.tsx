@@ -3,7 +3,6 @@ import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import { ENUM_PATH, buildRoute } from "@/shared/config";
 import {
 	Button,
 	DropdownMenu,
@@ -12,9 +11,11 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import { ENUM_SUPPLIER_TYPE, type TSupplierProduct } from "@/entities/supplier";
+import { type TSupplierProduct } from "@/entities/supplier";
 
 import { DeleteSupplierProduct } from "@/features/library";
+
+import { buildSupplierProductEditRoute } from "../model/lib";
 
 interface ISupplierProductsActionsProps {
 	supplierId: string;
@@ -30,18 +31,14 @@ export const SupplierProductsActions: FC<ISupplierProductsActionsProps> = ({
 
 	if (!item) return null;
 
-	const handleEdit = () => {
-		const path =
-			item.typ === ENUM_SUPPLIER_TYPE.TRAIN
-				? ENUM_PATH.LIBRARY.SUPPLIER_TRAIN_PRODUCT
-				: ENUM_PATH.LIBRARY.SUPPLIER_HOTEL_PRODUCT;
+	const editHref = buildSupplierProductEditRoute(item.typ, {
+		supplierId,
+		productId: item.id
+	});
 
-		navigate(
-			buildRoute(path, {
-				supplierId,
-				productId: item.id
-			})
-		);
+	const handleEdit = () => {
+		if (!editHref) return;
+		navigate(editHref);
 	};
 
 	return (
@@ -59,9 +56,11 @@ export const SupplierProductsActions: FC<ISupplierProductsActionsProps> = ({
 				</div>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				<DropdownMenuItem onClick={handleEdit}>
-					{t("products.menu.edit.button")}
-				</DropdownMenuItem>
+				{editHref ? (
+					<DropdownMenuItem onClick={handleEdit}>
+						{t("products.menu.edit.button")}
+					</DropdownMenuItem>
+				) : null}
 				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
 					<DeleteSupplierProduct
 						supplierId={supplierId}

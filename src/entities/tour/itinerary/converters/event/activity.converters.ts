@@ -1,9 +1,7 @@
+import { ActivityType, LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
-	type ActivitySingleEventOutput,
-	ActivityType,
-	LanguageCode
-} from "@/shared/api";
-import {
+	languageCodeMapper,
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
@@ -13,11 +11,15 @@ import {
 	ENUM_ACTIVITY_TYPE,
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_ACTIVITY,
+	ENUM_FORM_EVENT_PRODUCT,
+	ENUM_HOUSING_SOURCE,
 	type TActivityEditSchema,
+	type TActivitySingleEventBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../types";
 
+import { isInheritedActivityDetails } from "./activity-details.helpers";
 import {
 	mapMenuFromBackend,
 	mapMenuToBackend
@@ -27,6 +29,7 @@ import {
 	mapActivityPricingToBackend
 } from "./activity-pricing.converters";
 import { activityTypeMapper } from "./activity-type.converters";
+import { mapInheritedProductLinkToForm } from "./inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
@@ -44,8 +47,40 @@ const normalizeActivityDetailsTyp = (
 export const mapActivityEventToForm = (
 	data: TTourEventBackendResponce
 ): TActivityEditSchema => {
-	const event = data?.event as ActivitySingleEventOutput;
-	const details = event?.details;
+	const event = data?.event as TActivitySingleEventBackend;
+	const details = event?.details ?? null;
+
+	if (isInheritedActivityDetails(details)) {
+		const product = details.product;
+		const productTyp = product?.sub_typ ?? null;
+		const activityTyp = normalizeActivityDetailsTyp(productTyp);
+
+		return {
+			name: event?.name || "",
+			day: event.day,
+			position: event.position,
+			...mapInheritedProductLinkToForm(details),
+			general: {
+				description: event.description || "",
+				activity_subtype: activityTypeMapper.from(activityTyp),
+				activity_start_time: details.start_time?.time || "",
+				activity_start_timezone: String(
+					details.start_time?.timezone ?? getDeviceUtcOffset()
+				),
+				activity_end_time: details.end_time?.time || "",
+				activity_end_timezone: String(
+					details.end_time?.timezone ?? getDeviceUtcOffset()
+				),
+				location: mapBackendLocationToGeoForm(product?.location),
+				[ENUM_FORM_ACTIVITY.MENU]: []
+			},
+			pricing: applyEventPackageIdToPricing(
+				mapActivityPricingFromBackend(),
+				event.package_id
+			)
+		};
+	}
+
 	const detailsTyp = details?.typ;
 	const activityTyp = normalizeActivityDetailsTyp(detailsTyp);
 	const isFood = detailsTyp === "food";
@@ -54,18 +89,20 @@ export const mapActivityEventToForm = (
 		name: event?.name || "",
 		day: event.day,
 		position: event.position,
+		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
+		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
 			description: event.description || "",
 			activity_subtype: activityTypeMapper.from(activityTyp),
-			activity_start_time: event.details?.start_time?.time || "",
+			activity_start_time: details?.start_time?.time || "",
 			activity_start_timezone: String(
-				event.details?.start_time?.timezone ?? getDeviceUtcOffset()
+				details?.start_time?.timezone ?? getDeviceUtcOffset()
 			),
-			activity_end_time: event.details?.end_time?.time || "",
+			activity_end_time: details?.end_time?.time || "",
 			activity_end_timezone: String(
-				event.details?.end_time?.timezone ?? getDeviceUtcOffset()
+				details?.end_time?.timezone ?? getDeviceUtcOffset()
 			),
-			location: mapBackendLocationToGeoForm(event.details?.location),
+			location: mapBackendLocationToGeoForm(details?.location),
 			[ENUM_FORM_ACTIVITY.MENU]: isFood
 				? mapMenuFromBackend(
 						details && "menu" in details ? details.menu : null
@@ -73,7 +110,7 @@ export const mapActivityEventToForm = (
 				: []
 		},
 		pricing: applyEventPackageIdToPricing(
-			mapActivityPricingFromBackend(event.details),
+			mapActivityPricingFromBackend(details),
 			event.package_id
 		)
 	};
@@ -81,8 +118,27 @@ export const mapActivityEventToForm = (
 
 export const mapActivityFormToUpdate = (
 	frontend: Partial<TActivityEditSchema>,
-	lang: LanguageCode = LanguageCode.En
+	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
+	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
+
+	if (productId) {
+		return {
+			typ: ENUM_EVENT_BACKEND.ACTIVITY,
+			package_id: mapEventPackageIdToBackend(frontend?.pricing),
+			...(frontend.name !== undefined &&
+				frontend.name !== "" && { name: frontend.name }),
+			...(frontend.general?.description !== undefined && {
+				description: frontend.general.description
+			}),
+			details: {
+				product_id: productId,
+				variant_id: frontend[ENUM_FORM_EVENT_PRODUCT.VARIANT_ID] ?? null
+			}
+		};
+	}
+
 	const g = frontend?.general;
 	const pricingDetails = mapActivityPricingToBackend(frontend?.pricing);
 	const isFood = g?.activity_subtype === ENUM_ACTIVITY_TYPE.FOOD;
@@ -120,9 +176,7 @@ export const mapActivityFormToUpdate = (
 				}
 			}),
 			...(g !== undefined && {
-				location: g.location
-					? mapGeoFormToBackendLocation(g.location, lang)
-					: null
+				location: mapGeoFormToBackendLocation(g.location, lang)
 			}),
 			...pricingDetails.details
 		}

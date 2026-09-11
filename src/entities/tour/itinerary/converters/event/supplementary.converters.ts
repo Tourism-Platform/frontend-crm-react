@@ -1,11 +1,7 @@
-import type {
-	SupplementarySingleEventOutput,
-	TourEventResponse
-} from "@/shared/api";
-
 import { ENUM_EVENT_BACKEND } from "../../types";
 import type {
 	TSupplementEditSchema,
+	TSupplementarySingleEventBackend,
 	TTourEventBackendResponce,
 	TTourEventUpdateBackend
 } from "../../types";
@@ -21,7 +17,7 @@ import {
 	mapPricingFromBackend
 } from "./supplementary-pricing.converters";
 
-type TSupplementaryEvent = SupplementarySingleEventOutput;
+type TSupplementaryEvent = TSupplementarySingleEventBackend;
 
 export const mapSupplementaryEventToForm = (
 	data: TTourEventBackendResponce
@@ -69,5 +65,4 @@ export const mapSupplementaryFormToUpdate = (
 	};
 };
 
-// keep TourEventResponse reference for type clarity in call sites
-export type TSupplementaryTourEventResponse = TourEventResponse;
+export type TSupplementaryTourEventResponse = TTourEventBackendResponce;

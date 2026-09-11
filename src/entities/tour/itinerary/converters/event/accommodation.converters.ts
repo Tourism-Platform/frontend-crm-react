@@ -1,5 +1,7 @@
-import { type HousingSingleEventOutput, LanguageCode } from "@/shared/api";
+import { LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
+	languageCodeMapper,
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
@@ -10,6 +12,7 @@ import {
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_HOUSING_SOURCE,
 	type TAccommodationEditSchema,
+	type THousingSingleEventBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../types";
@@ -37,7 +40,7 @@ import {
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce
 ): TAccommodationEditSchema => {
-	const event = data?.event as HousingSingleEventOutput;
+	const event = data?.event as THousingSingleEventBackend;
 	const details = event?.details;
 
 	if (isInheritedHousingDetails(details)) {
@@ -110,8 +113,9 @@ export const mapAccommodationEventToForm = (
 
 export const mapAccommodationFormToUpdate = (
 	frontend: Partial<TAccommodationEditSchema>,
-	lang: LanguageCode = LanguageCode.En
+	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
+	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
 
 	if (productId) {
@@ -173,9 +177,7 @@ export const mapAccommodationFormToUpdate = (
 			...(Number.isFinite(duration) && duration > 0 && { duration }),
 			...(amenities && { amenities }),
 			...(g !== undefined && {
-				location: g.property
-					? mapGeoFormToBackendLocation(g.property, lang)
-					: null
+				location: mapGeoFormToBackendLocation(g.property, lang)
 			}),
 			...(g?.check_in_time && {
 				check_in: {

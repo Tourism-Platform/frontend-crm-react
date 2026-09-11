@@ -1,9 +1,8 @@
-import type { GuideSingleEventOutput } from "@/shared/api/generated/Api";
-
 import { ENUM_EVENT_BACKEND } from "../../types";
 import {
 	ENUM_GUIDE_FORM_SECTION,
 	type TGuideEditSchema,
+	type TGuideSingleEventBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../types";
@@ -22,7 +21,7 @@ import {
 	mapEventPackageIdToBackend
 } from "./package-id.helpers";
 
-type TGuideEvent = GuideSingleEventOutput;
+type TGuideEvent = TGuideSingleEventBackend;
 
 export const mapGuideEventToForm = (
 	data: TTourEventBackendResponce

@@ -3,3 +3,7 @@ export * from "./hotel-amenity-labels";
 export * from "./hotel-room-type-labels";
 export * from "./hotel-room-charge-labels";
 export * from "./train-variant-charge-labels";
+export * from "./flight-variant-charge-labels";
+export * from "./activity-variant-charge-labels";
+export * from "./activity-sub-type-labels";
+export * from "./vehicle-body-type-labels";

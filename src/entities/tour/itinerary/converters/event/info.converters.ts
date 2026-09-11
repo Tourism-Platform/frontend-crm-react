@@ -1,9 +1,9 @@
-import type { InformationSingleEventOutput } from "@/shared/api";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import { ENUM_EVENT_BACKEND } from "../../types";
 import {
 	type TInfoEditSchema,
+	type TInformationSingleEventBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../types";
@@ -11,7 +11,7 @@ import {
 export const mapInfoEventToForm = (
 	data: TTourEventBackendResponce
 ): TInfoEditSchema => {
-	const event = data?.event as InformationSingleEventOutput;
+	const event = data?.event as TInformationSingleEventBackend;
 	return {
 		name: event?.name || "",
 		day: event.day,

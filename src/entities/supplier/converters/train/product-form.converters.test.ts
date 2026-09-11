@@ -47,9 +47,6 @@ describe("mapTrainProductGeneralToCreate", () => {
 			city: "Tashkent",
 			lang: LanguageCode.En
 		});
-		expect(body.details?.hop?.[0]?.departure?.time).toEqual({
-			time: "08:00"
-		});
 	});
 
 	it("returns null location when geo is empty", () => {

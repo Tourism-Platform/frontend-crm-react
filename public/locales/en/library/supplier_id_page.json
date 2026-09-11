@@ -70,8 +70,12 @@
 			"type": "Type",
 			"empty": "—"
 		},
-		"new_hotel": "New hotel product",
-		"new_train": "New train product",
+		"new_hotel": "New hotel",
+		"new_train": "New train",
+		"new_flight": "New flight",
+		"new_bus": "New bus",
+		"new_transfer": "New transfer",
+		"new_activity": "New activity",
 		"menu": {
 			"edit": {
 				"button": "Edit"

@@ -1,22 +1,27 @@
-import type { TransferSingleEventOutput } from "@/shared/api";
 import { LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
+	languageCodeMapper,
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
-import { ENUM_EVENT_BACKEND } from "../../types";
 import {
+	ENUM_EVENT_BACKEND,
+	ENUM_FORM_EVENT_PRODUCT,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend,
+	type TTransferSingleEventBackend,
 	type TTransportationEditSchema
 } from "../../types";
 
+import { mapInheritedProductLinkToForm } from "./inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
 } from "./package-id.helpers";
+import { isInheritedTransferDetails } from "./transfer-details.helpers";
 import { transferTypeMapper } from "./transfer-type.converters";
 import {
 	mapCarsFromBackend,
@@ -30,9 +35,43 @@ import {
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce
 ): TTransportationEditSchema => {
-	const event = data?.event as TransferSingleEventOutput;
-	const details = event?.details;
-	const expenses = details?.expenses;
+	const event = data?.event as TTransferSingleEventBackend;
+	const details = event?.details ?? null;
+
+	if (isInheritedTransferDetails(details)) {
+		return {
+			name: event?.name || "",
+			day: event.day,
+			position: event.position,
+			...mapInheritedProductLinkToForm(details),
+			general: {
+				description: event.description || "",
+				transfer_type: transferTypeMapper.from(details.typ),
+				meet_point: mapBackendLocationToGeoForm(
+					details.departure?.location
+				),
+				end_point: mapBackendLocationToGeoForm(
+					details.arrival?.location
+				),
+				departure_time: details.departure?.time?.time || null,
+				arrival_time: details.arrival?.time?.time || null,
+				departure_timezone: String(
+					details.departure?.time?.timezone ?? getDeviceUtcOffset()
+				),
+				arrival_timezone: String(
+					details.arrival?.time?.timezone ?? getDeviceUtcOffset()
+				)
+			},
+			cars: mapCarsFromBackend(),
+			pricing: applyEventPackageIdToPricing(
+				mapTransportationPricingFromBackend(),
+				event.package_id
+			)
+		};
+	}
+
+	const expenses =
+		details && "expenses" in details ? details.expenses : undefined;
 	const perCarCars = expenses?.typ === "per_car" ? expenses.cars : undefined;
 	const perCarCategoryCars =
 		expenses?.typ === "per_car_category" ? expenses.cars : undefined;
@@ -44,23 +83,18 @@ export const mapTransferEventToForm = (
 		position: event.position,
 		general: {
 			description: event.description || "",
-			transfer_type: transferTypeMapper.from(event?.details?.typ),
+			transfer_type: transferTypeMapper.from(details?.typ),
 			meet_point: mapBackendLocationToGeoForm(
-				event?.details?.departure?.location
+				details?.departure?.location
 			),
-			end_point: mapBackendLocationToGeoForm(
-				event?.details?.arrival?.location
-			),
-			// departure_date: event?.details?.departure?.date || "",
-			// arrival_date: event?.details?.departure?.date || "",
-			departure_time: event?.details?.departure?.time?.time || null,
-			arrival_time: event?.details?.arrival?.time?.time || null,
+			end_point: mapBackendLocationToGeoForm(details?.arrival?.location),
+			departure_time: details?.departure?.time?.time || null,
+			arrival_time: details?.arrival?.time?.time || null,
 			departure_timezone: String(
-				event?.details?.departure?.time?.timezone ??
-					getDeviceUtcOffset()
+				details?.departure?.time?.timezone ?? getDeviceUtcOffset()
 			),
 			arrival_timezone: String(
-				event?.details?.arrival?.time?.timezone ?? getDeviceUtcOffset()
+				details?.arrival?.time?.timezone ?? getDeviceUtcOffset()
 			)
 		},
 		cars,
@@ -73,9 +107,28 @@ export const mapTransferEventToForm = (
 
 export const mapTransferFormToUpdate = (
 	frontend: Partial<TTransportationEditSchema>,
-	lang: LanguageCode = LanguageCode.En
+	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
-	const g = frontend?.general;
+	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
+
+	if (productId) {
+		return {
+			typ: ENUM_EVENT_BACKEND.TRANSFER,
+			package_id: mapEventPackageIdToBackend(frontend?.pricing),
+			...(frontend.name !== undefined &&
+				frontend.name !== "" && { name: frontend.name }),
+			...(frontend.general?.description !== undefined && {
+				description: frontend.general.description
+			}),
+			details: {
+				product_id: productId,
+				variant_id: frontend[ENUM_FORM_EVENT_PRODUCT.VARIANT_ID] ?? null
+			}
+		};
+	}
+
+	const g = frontend.general;
 	const carsList = frontend?.cars?.cars ?? [];
 	const pricingDetails = mapTransportationPricingToBackend(
 		frontend?.pricing,
@@ -114,9 +167,10 @@ export const mapTransferFormToUpdate = (
 							}
 						}),
 					...(g?.meet_point !== undefined && {
-						location: g.meet_point
-							? mapGeoFormToBackendLocation(g.meet_point, lang)
-							: null
+						location: mapGeoFormToBackendLocation(
+							g.meet_point,
+							lang
+						)
 					})
 				}
 			}),
@@ -133,9 +187,7 @@ export const mapTransferFormToUpdate = (
 							}
 						}),
 					...(g?.end_point !== undefined && {
-						location: g.end_point
-							? mapGeoFormToBackendLocation(g.end_point, lang)
-							: null
+						location: mapGeoFormToBackendLocation(g.end_point, lang)
 					})
 				}
 			}),

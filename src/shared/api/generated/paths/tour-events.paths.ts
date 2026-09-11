@@ -1,12 +1,15 @@
 import type {
 	ActivityEventInput,
+	ActivityOverrideSchemaInput,
 	ActivitySingleEventInput,
 	BusEventInput,
+	BusOverrideSchemaInput,
 	BusSingleEventInput,
 	EventOptionalSchema,
 	EventProductLinkSchema,
 	EventReorderSchema,
 	FlightEventInput,
+	FlightOverrideSchemaInput,
 	FlightSingleEventInput,
 	GuideEventInput,
 	GuideSingleEventInput,
@@ -30,6 +33,7 @@ import type {
 	TrainOverrideSchemaInput,
 	TrainSingleEventInput,
 	TransferEventInput,
+	TransferOverrideSchemaInput,
 	TransferSingleEventInput
 } from "../Api";
 
@@ -166,7 +170,13 @@ export const TOUR_EVENTS_PATHS = {
 			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/override`,
 			method: "PATCH",
 			_types: {} as {
-				body: HousingOverrideSchemaInput | TrainOverrideSchemaInput;
+				body:
+					| HousingOverrideSchemaInput
+					| TrainOverrideSchemaInput
+					| FlightOverrideSchemaInput
+					| BusOverrideSchemaInput
+					| TransferOverrideSchemaInput
+					| ActivityOverrideSchemaInput;
 				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
@@ -238,7 +248,13 @@ export const TOUR_EVENTS_PATHS = {
 			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/override-option/${eventOptionId}`,
 			method: "PATCH",
 			_types: {} as {
-				body: HousingOverrideSchemaInput | TrainOverrideSchemaInput;
+				body:
+					| HousingOverrideSchemaInput
+					| TrainOverrideSchemaInput
+					| FlightOverrideSchemaInput
+					| BusOverrideSchemaInput
+					| TransferOverrideSchemaInput
+					| ActivityOverrideSchemaInput;
 				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}

@@ -1,4 +1,5 @@
 import type {
+	InheritedTransferDetailsOutput,
 	PerCarCategoryExpenseOutput,
 	PerCarExpenseOutput,
 	TransferCarCategoriesVariantOutput,
@@ -8,6 +9,10 @@ import type {
 } from "@/shared/api";
 
 export type TTransferDetailsBackend = TransferDetailsSchemaOutput;
+export type TInheritedTransferDetailsBackend = InheritedTransferDetailsOutput;
+export type TTransferEventDetailsBackend =
+	| TTransferDetailsBackend
+	| TInheritedTransferDetailsBackend;
 export type TTransferCarVariantBackend = TransferCarVariantOutput;
 export type TTransferCarPackageCategoryBackend =
 	TransferCarPackageCategorySchemaOutput;

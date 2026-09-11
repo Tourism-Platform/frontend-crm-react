@@ -2,12 +2,10 @@ import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
 import {
 	ENUM_FORM_TRAIN_VARIANT,
-	type TTrainVariantFormSchema
-} from "../../schema/train-variant.schema";
-import {
 	ENUM_TRAIN_VARIANT_CHARGE,
 	type ITrainVariant,
-	type ITrainVariantWrite
+	type ITrainVariantWrite,
+	type TTrainVariantFormSchema
 } from "../../types";
 
 export const emptyTrainVariantForm = (): TTrainVariantFormSchema => ({
