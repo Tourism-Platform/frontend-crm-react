@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import type { FLIGHT_PRODUCT_PRICING_SCHEMA } from "../../schema/flight-product-pricing.schema";
 import type {
 	FLIGHT_HOP_SCHEMA,
 	FLIGHT_PRODUCT_GENERAL_SCHEMA
@@ -27,7 +28,21 @@ export const ENUM_FORM_FLIGHT_HOP = {
 export type ENUM_FORM_FLIGHT_HOP_TYPE =
 	(typeof ENUM_FORM_FLIGHT_HOP)[keyof typeof ENUM_FORM_FLIGHT_HOP];
 
+export const ENUM_FORM_FLIGHT_PRICING = {
+	PRICING: "pricing",
+	CHARGE_TYP: "chargeTyp",
+	COST: "cost",
+	CURRENCY: "currency",
+	FEES: "fees"
+} as const;
+
+export type ENUM_FORM_FLIGHT_PRICING_TYPE =
+	(typeof ENUM_FORM_FLIGHT_PRICING)[keyof typeof ENUM_FORM_FLIGHT_PRICING];
+
 export type TFlightHopFormSchema = z.infer<typeof FLIGHT_HOP_SCHEMA>;
 export type TFlightProductGeneralSchema = z.infer<
 	typeof FLIGHT_PRODUCT_GENERAL_SCHEMA
+>;
+export type TFlightProductPricingSchema = z.infer<
+	typeof FLIGHT_PRODUCT_PRICING_SCHEMA
 >;

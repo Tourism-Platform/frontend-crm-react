@@ -12,7 +12,7 @@ import { ENUM_FORM_FLIGHT_VARIANT } from "../types/flight/variant-form.types";
 
 const msg = i18nKey<TFlightProductEditPageKeys>();
 
-const FLIGHT_VARIANT_FEE_SCHEMA = z.object({
+export const FLIGHT_VARIANT_FEE_SCHEMA = z.object({
 	[ENUM_SUPPLIER_FEE_FIELD.NAME]: z.string().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.COST]: z.number().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.CURRENCY]: z

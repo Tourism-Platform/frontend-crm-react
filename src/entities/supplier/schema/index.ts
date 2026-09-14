@@ -5,6 +5,7 @@ export * from "./hotel-variant.schema";
 export * from "./train-product.schema";
 export * from "./train-variant.schema";
 export * from "./flight-product.schema";
+export * from "./flight-product-pricing.schema";
 export * from "./flight-variant.schema";
 export * from "./bus-product.schema";
 export * from "./bus-variant.schema";

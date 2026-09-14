@@ -10,16 +10,24 @@ import {
 	ENUM_FLIGHT_PRICING,
 	ENUM_FORM_FLIGHT_PRODUCT as ENUM_FORM,
 	ENUM_FORM_FLIGHT_HOP as ENUM_HOP,
+	ENUM_FORM_FLIGHT_PRICING as ENUM_PRICING,
 	type IFlightHop,
 	type IFlightProduct,
+	type IUpdateFlightProduct,
 	type TCreateFlightProductBackend,
 	type TFlightHopFormSchema,
 	type TFlightLegInputBackend,
 	type TFlightProductDetailsBackend,
 	type TFlightProductGeneralSchema,
+	type TFlightProductPricingSchema,
 	type TUpdateFlightProductBackend
 } from "../../types";
 import { mapSupplierVariantChargeToBackend } from "../supplier-variant-charge.converters";
+
+import {
+	mapFlightChargeFormToExpenses,
+	mapFlightExpensesToChargeForm
+} from "./variant-form.converters";
 
 const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
 	languageCodeMapper.to(language) ?? LanguageCode.En;
@@ -70,6 +78,13 @@ export const mapFlightProductToGeneralForm = (
 	[ENUM_FORM.HOPS]: product?.hops?.length
 		? product.hops.map(mapHopDomainToForm)
 		: [emptyFlightHopFormRow()]
+});
+
+export const mapFlightProductToPricingForm = (
+	product?: IFlightProduct | null
+): TFlightProductPricingSchema => ({
+	[ENUM_PRICING.PRICING]: product?.pricing ?? ENUM_FLIGHT_PRICING.PER_FARE,
+	...mapFlightExpensesToChargeForm(product?.charge)
 });
 
 const mapHopFormToBackend = (
@@ -143,3 +158,34 @@ export const mapFlightProductGeneralToUpdate = (
 	typ: "flight",
 	details: mapGeneralFormToDetails(values, existing, language)
 });
+
+export const mapFlightProductPricingToUpdate = (
+	product: IFlightProduct,
+	values: TFlightProductPricingSchema,
+	language?: ENUM_LANGUAGES_TYPE
+): TUpdateFlightProductBackend => {
+	const pricing = values[ENUM_PRICING.PRICING];
+	const charge =
+		pricing === ENUM_FLIGHT_PRICING.WHOLE
+			? mapFlightChargeFormToExpenses(values)
+			: null;
+
+	return mapFlightProductGeneralToUpdate(
+		mapFlightProductToGeneralForm(product),
+		{ ...product, pricing, charge },
+		language
+	);
+};
+
+export const mapFlightProductToUpdate = ({
+	values,
+	existing,
+	pricing,
+	language
+}: IUpdateFlightProduct): TUpdateFlightProductBackend => {
+	if (pricing && existing) {
+		return mapFlightProductPricingToUpdate(existing, pricing, language);
+	}
+
+	return mapFlightProductGeneralToUpdate(values, existing, language);
+};

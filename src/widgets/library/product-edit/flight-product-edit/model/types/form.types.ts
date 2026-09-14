@@ -3,6 +3,7 @@ import type { TFormField } from "@/shared/types";
 
 import type {
 	ENUM_FORM_FLIGHT_HOP_TYPE,
+	ENUM_FORM_FLIGHT_PRICING_TYPE,
 	ENUM_FORM_FLIGHT_PRODUCT_TYPE,
 	ENUM_FORM_FLIGHT_VARIANT_TYPE
 } from "@/entities/supplier";
@@ -20,4 +21,9 @@ export type THopForm = TFormField<
 export type TVariantForm = TFormField<
 	TFlightProductEditPageKeys,
 	ENUM_FORM_FLIGHT_VARIANT_TYPE
+>;
+
+export type TPricingForm = TFormField<
+	TFlightProductEditPageKeys,
+	ENUM_FORM_FLIGHT_PRICING_TYPE
 >;

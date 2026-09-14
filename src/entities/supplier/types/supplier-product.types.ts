@@ -14,7 +14,10 @@ import type {
 	IFlightProduct,
 	IFlightVariantWrite
 } from "./flight";
-import type { TFlightProductGeneralSchema } from "./flight/product-form.types";
+import type {
+	TFlightProductGeneralSchema,
+	TFlightProductPricingSchema
+} from "./flight/product-form.types";
 import type {
 	ENUM_HOTEL_PRICING_TYPE,
 	IHotelProduct,
@@ -159,6 +162,7 @@ export interface IUpdateFlightProduct {
 	values: TFlightProductGeneralSchema;
 	language?: ENUM_LANGUAGES_TYPE;
 	existing?: IFlightProduct | null;
+	pricing?: TFlightProductPricingSchema;
 }
 
 export interface ICreateBusProduct {

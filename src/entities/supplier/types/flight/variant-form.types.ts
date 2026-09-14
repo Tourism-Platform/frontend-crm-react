@@ -22,3 +22,10 @@ export type TFlightVariantFormSchema = z.infer<
 export type TFlightVariantCreateSchema = z.infer<
 	typeof FLIGHT_VARIANT_CREATE_SCHEMA
 >;
+export type TFlightChargeFormFields = Pick<
+	TFlightVariantFormSchema,
+	| typeof ENUM_FORM_FLIGHT_VARIANT.CHARGE_TYP
+	| typeof ENUM_FORM_FLIGHT_VARIANT.COST
+	| typeof ENUM_FORM_FLIGHT_VARIANT.CURRENCY
+	| typeof ENUM_FORM_FLIGHT_VARIANT.FEES
+>;

@@ -115,6 +115,15 @@
 						"required": "Variant name is required"
 					}
 				},
+				"pricing": {
+					"label": "Pricing",
+					"placeholder": "Select pricing",
+					"per_fare": "Per fare",
+					"whole": "Whole route",
+					"errors": {
+						"required": "Select pricing"
+					}
+				},
 				"charge_typ": {
 					"label": "Charge mode",
 					"placeholder": "Select charge mode",
@@ -140,6 +149,8 @@
 			"buttons": {
 				"save": "Save variant",
 				"saving": "Saving",
+				"save_pricing": "Save",
+				"saving_pricing": "Saving",
 				"delete": "Delete variant",
 				"deleting": "Deleting"
 			},

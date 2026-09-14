@@ -14,7 +14,7 @@ import {
 	mapBusProductGeneralToUpdate,
 	mapFlightProductFromBackend,
 	mapFlightProductGeneralToCreate,
-	mapFlightProductGeneralToUpdate,
+	mapFlightProductToUpdate,
 	mapHotelProductFromBackend,
 	mapHotelProductGeneralToCreate,
 	mapHotelProductGeneralToUpdate,
@@ -202,13 +202,12 @@ export const supplierProductApi = authApi.injectEndpoints({
 			IFlightProduct,
 			IUpdateFlightProduct
 		>({
-			query: ({ supplierId, productId, values, language, existing }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapFlightProductGeneralToUpdate(
-					values,
-					existing,
-					language
-				)
+			query: (data) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(
+					data.supplierId,
+					data.productId
+				),
+				body: mapFlightProductToUpdate(data)
 			}),
 			transformResponse: (response: TFlightProductReadBackend) =>
 				mapFlightProductFromBackend(response),
