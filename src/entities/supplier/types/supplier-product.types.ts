@@ -8,7 +8,10 @@ import type {
 	IBusProduct,
 	IBusVariantWrite
 } from "./bus";
-import type { TBusProductGeneralSchema } from "./bus/product-form.types";
+import type {
+	TBusProductGeneralSchema,
+	TBusProductPricingSchema
+} from "./bus/product-form.types";
 import type {
 	ENUM_FLIGHT_PRICING_TYPE,
 	IFlightProduct,
@@ -175,6 +178,7 @@ export interface IUpdateBusProduct {
 	productId: string;
 	values: TBusProductGeneralSchema;
 	existing?: IBusProduct | null;
+	pricing?: TBusProductPricingSchema;
 }
 
 export interface ICreateTransferProduct {

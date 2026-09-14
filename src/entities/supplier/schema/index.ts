@@ -8,6 +8,7 @@ export * from "./flight-product.schema";
 export * from "./flight-product-pricing.schema";
 export * from "./flight-variant.schema";
 export * from "./bus-product.schema";
+export * from "./bus-product-pricing.schema";
 export * from "./bus-variant.schema";
 export * from "./transfer-product.schema";
 export * from "./transfer-variant.schema";

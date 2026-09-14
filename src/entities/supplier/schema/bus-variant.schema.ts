@@ -9,7 +9,7 @@ import { ENUM_FORM_BUS_VARIANT } from "../types/bus/variant-form.types";
 
 const msg = i18nKey<TBusProductEditPageKeys>();
 
-const BUS_VARIANT_FEE_SCHEMA = z.object({
+export const BUS_VARIANT_FEE_SCHEMA = z.object({
 	[ENUM_SUPPLIER_FEE_FIELD.NAME]: z.string().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.COST]: z.number().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.CURRENCY]: z

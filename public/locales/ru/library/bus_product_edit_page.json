@@ -59,6 +59,22 @@
 						"max": "Описание слишком длинное"
 					}
 				},
+				"pricing": {
+					"label": "Тарификация",
+					"placeholder": "Выберите тарификацию",
+					"per_vehicle": "За машину",
+					"whole": "За всё",
+					"errors": {
+						"required": "Выберите тарификацию"
+					}
+				},
+				"charge_typ": {
+					"label": "Режим оплаты",
+					"placeholder": "Выберите режим",
+					"errors": {
+						"required": "Выберите тип тарифа"
+					}
+				},
 				"cost": {
 					"label": "Цена",
 					"placeholder": "Введите цену",
@@ -77,6 +93,8 @@
 			"buttons": {
 				"save": "Сохранить вариант",
 				"saving": "Сохранение",
+				"save_pricing": "Сохранить",
+				"saving_pricing": "Сохранение",
 				"delete": "Удалить вариант",
 				"deleting": "Удаление"
 			},

@@ -59,6 +59,22 @@
 						"max": "Description is too long"
 					}
 				},
+				"pricing": {
+					"label": "Pricing",
+					"placeholder": "Select pricing",
+					"per_vehicle": "Per vehicle",
+					"whole": "Whole fleet",
+					"errors": {
+						"required": "Select pricing"
+					}
+				},
+				"charge_typ": {
+					"label": "Charge mode",
+					"placeholder": "Select charge mode",
+					"errors": {
+						"required": "Select a charge type"
+					}
+				},
 				"cost": {
 					"label": "Price",
 					"placeholder": "Enter price",
@@ -77,6 +93,8 @@
 			"buttons": {
 				"save": "Save variant",
 				"saving": "Saving",
+				"save_pricing": "Save",
+				"saving_pricing": "Saving",
 				"delete": "Delete variant",
 				"deleting": "Deleting"
 			},

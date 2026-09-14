@@ -11,7 +11,7 @@ import {
 	mapActivityProductGeneralToUpdate,
 	mapBusProductFromBackend,
 	mapBusProductGeneralToCreate,
-	mapBusProductGeneralToUpdate,
+	mapBusProductToUpdate,
 	mapFlightProductFromBackend,
 	mapFlightProductGeneralToCreate,
 	mapFlightProductToUpdate,
@@ -226,9 +226,12 @@ export const supplierProductApi = authApi.injectEndpoints({
 			]
 		}),
 		updateBusProduct: builder.mutation<IBusProduct, IUpdateBusProduct>({
-			query: ({ supplierId, productId, values, existing }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapBusProductGeneralToUpdate(values, existing)
+			query: (data) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(
+					data.supplierId,
+					data.productId
+				),
+				body: mapBusProductToUpdate(data)
 			}),
 			transformResponse: (response: TBusProductReadBackend) =>
 				mapBusProductFromBackend(response),
