@@ -2,39 +2,50 @@ import type {
 	ActivityProductCreate,
 	ActivityProductReadOutput,
 	ActivityProductUpdate,
-	ActivityVariantReadOutput,
 	ActivityVariantWrite,
 	BodyUploadNodeImagesSupplierSupplierIdProductProductIdVariantVariantIdNodeNodeIdImagesPost,
 	BodyUploadProductImagesSupplierSupplierIdProductProductIdImagesPost,
 	BusProductCreate,
 	BusProductReadOutput,
 	BusProductUpdate,
-	BusVariantReadOutput,
-	BusVariantWrite,
 	FlightProductCreate,
 	FlightProductReadOutput,
 	FlightProductUpdate,
-	FlightVariantReadOutput,
-	FlightVariantWrite,
 	HotelProductCreate,
 	HotelProductReadOutput,
 	HotelProductUpdate,
-	HotelVariantReadOutput,
-	HotelVariantWrite,
 	NodeImageSchema,
+	PerCarCategoryTransferVariantWrite,
+	PerCarTransferVariantWrite,
+	PerFareFlightVariantWrite,
+	PerFareTrainVariantWrite,
+	PerRoomHotelVariantWrite,
+	PerVehicleBusVariantWrite,
+	ProductLinkRead,
 	SupplierProductImageModel,
 	SupplierProductListResponse,
 	SupplierType,
+	ToPerCar,
+	ToPerCarCategory,
+	ToPerFare,
+	ToPerRoom,
+	ToPerVehicle,
+	ToWholeFleet,
+	ToWholeHotel,
+	ToWholeRoute,
+	ToWholeTransfer,
 	TrainProductCreate,
 	TrainProductReadOutput,
 	TrainProductUpdate,
-	TrainVariantReadOutput,
-	TrainVariantWrite,
 	TransferProductCreate,
 	TransferProductReadOutput,
 	TransferProductUpdate,
-	TransferVariantReadOutput,
-	TransferVariantWrite
+	VariantCreated,
+	WholeBusVariantWrite,
+	WholeFlightVariantWrite,
+	WholeHotelVariantWrite,
+	WholeTrainVariantWrite,
+	WholeTransferVariantWrite
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -137,26 +148,61 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
+	listProductLinks: (supplierId: string, productId: string) =>
+		({
+			url: `/supplier/${supplierId}/product/${productId}/links`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: ProductLinkRead[];
+			}
+		}) as const,
+	switchProductPricing: (supplierId: string, productId: string) =>
+		({
+			url: `/supplier/${supplierId}/product/${productId}/pricing`,
+			method: "POST",
+			_types: {} as {
+				body:
+					| ToPerRoom
+					| ToWholeHotel
+					| ToPerFare
+					| ToWholeRoute
+					| ToPerVehicle
+					| ToWholeFleet
+					| ToPerCar
+					| ToPerCarCategory
+					| ToWholeTransfer;
+				query: void;
+				response:
+					| HotelProductReadOutput
+					| TrainProductReadOutput
+					| FlightProductReadOutput
+					| BusProductReadOutput
+					| TransferProductReadOutput
+					| ActivityProductReadOutput;
+			}
+		}) as const,
 	createVariant: (supplierId: string, productId: string) =>
 		({
 			url: `/supplier/${supplierId}/product/${productId}/variant`,
 			method: "POST",
 			_types: {} as {
 				body:
-					| HotelVariantWrite
-					| TrainVariantWrite
-					| FlightVariantWrite
-					| BusVariantWrite
-					| TransferVariantWrite
+					| PerRoomHotelVariantWrite
+					| WholeHotelVariantWrite
+					| PerFareTrainVariantWrite
+					| WholeTrainVariantWrite
+					| PerFareFlightVariantWrite
+					| WholeFlightVariantWrite
+					| PerVehicleBusVariantWrite
+					| WholeBusVariantWrite
+					| PerCarTransferVariantWrite
+					| WholeTransferVariantWrite
+					| PerCarCategoryTransferVariantWrite
 					| ActivityVariantWrite;
 				query: void;
-				response:
-					| HotelVariantReadOutput
-					| TrainVariantReadOutput
-					| FlightVariantReadOutput
-					| BusVariantReadOutput
-					| TransferVariantReadOutput
-					| ActivityVariantReadOutput;
+				response: VariantCreated;
 			}
 		}) as const,
 	updateVariant: (supplierId: string, productId: string, variantId: string) =>
@@ -165,20 +211,26 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| HotelVariantWrite
-					| TrainVariantWrite
-					| FlightVariantWrite
-					| BusVariantWrite
-					| TransferVariantWrite
+					| PerRoomHotelVariantWrite
+					| WholeHotelVariantWrite
+					| PerFareTrainVariantWrite
+					| WholeTrainVariantWrite
+					| PerFareFlightVariantWrite
+					| WholeFlightVariantWrite
+					| PerVehicleBusVariantWrite
+					| WholeBusVariantWrite
+					| PerCarTransferVariantWrite
+					| WholeTransferVariantWrite
+					| PerCarCategoryTransferVariantWrite
 					| ActivityVariantWrite;
 				query: void;
 				response:
-					| HotelVariantReadOutput
-					| TrainVariantReadOutput
-					| FlightVariantReadOutput
-					| BusVariantReadOutput
-					| TransferVariantReadOutput
-					| ActivityVariantReadOutput;
+					| HotelProductReadOutput
+					| TrainProductReadOutput
+					| FlightProductReadOutput
+					| BusProductReadOutput
+					| TransferProductReadOutput
+					| ActivityProductReadOutput;
 			}
 		}) as const,
 	deleteVariant: (supplierId: string, productId: string, variantId: string) =>

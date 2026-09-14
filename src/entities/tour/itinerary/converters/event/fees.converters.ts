@@ -3,7 +3,9 @@ import { currencyConverter } from "@/entities/commission";
 import type { IFeeFormRow, TFeeBackend, TFeeInputBackend } from "../../types";
 import { ENUM_FEE_FIELD } from "../../types";
 
-export const mapFeeFromBackend = (fee: TFeeBackend): IFeeFormRow => ({
+export const mapFeeFromBackend = (
+	fee: TFeeBackend | TFeeInputBackend
+): IFeeFormRow => ({
 	[ENUM_FEE_FIELD.NAME]: fee.name ?? null,
 	[ENUM_FEE_FIELD.COST]: fee.cost?.val ?? null,
 	[ENUM_FEE_FIELD.CURRENCY]:
@@ -29,7 +31,7 @@ export const mapFeeToBackend = (fee: IFeeFormRow): TFeeInputBackend => {
 };
 
 export const mapFeesFromBackend = (
-	fees?: TFeeBackend[] | null
+	fees?: (TFeeBackend | TFeeInputBackend)[] | null
 ): IFeeFormRow[] => (fees ?? []).map(mapFeeFromBackend);
 
 export const mapFeesToBackend = (

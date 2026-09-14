@@ -1,7 +1,7 @@
 import type {
 	ActivityEventPubReadOutput,
 	BusEventPubReadOutput,
-	EmptyDetails,
+	EmptyDetailsPub,
 	FlightEventPubReadOutput,
 	HousingEventPubReadOutput,
 	HousingRoomTypes,
@@ -24,6 +24,6 @@ export type TInformationEventPubBackend = InformationEventPubReadOutput;
 export type TMultiEventPubBackend = MultiEventPubOutput;
 export type TPubLocationBackend = LocationOutSchema;
 export type TPubTimeBackend = TimeSchema;
-export type TPubEmptyDetailsBackend = EmptyDetails;
+export type TPubEmptyDetailsBackend = EmptyDetailsPub;
 export type TPubHousingRoomTypeBackend = HousingRoomTypes;
 export type TPubVehicleBodyTypeBackend = VehicleBodyType;

@@ -1,10 +1,13 @@
 import type {
-	FlightLegSchemaInput,
+	Fare,
+	FlightLegInput,
+	FlightLegOutput,
 	FlightProductCreate,
 	FlightProductReadOutput,
 	FlightProductUpdate,
-	FlightVariantReadOutput,
-	FlightVariantWrite
+	PerFareFlightVariantWrite,
+	PricedFareOutput,
+	WholeFlightVariantWrite
 } from "@/shared/api/generated/Api";
 
 import type { TCreateProductBodyBackend } from "../supplier-product-backend.types";
@@ -16,9 +19,12 @@ export type TCreateFlightProductBackend = Extract<
 
 export type TFlightProductReadBackend = FlightProductReadOutput;
 export type TUpdateFlightProductBackend = FlightProductUpdate;
-export type TFlightVariantWriteBackend = FlightVariantWrite;
-export type TFlightVariantReadBackend = FlightVariantReadOutput;
-export type TFlightHopInputBackend = FlightLegSchemaInput;
-export type TFlightVariantChargeInputBackend = NonNullable<
-	FlightVariantWrite["details"]
->["expenses"];
+export type TFlightProductDetailsBackend = NonNullable<
+	TUpdateFlightProductBackend["details"]
+>;
+export type TFlightVariantWriteBackend =
+	| PerFareFlightVariantWrite
+	| WholeFlightVariantWrite;
+export type TFlightVariantReadBackend = PricedFareOutput | Fare;
+export type TFlightLegInputBackend = FlightLegInput;
+export type TFlightLegReadBackend = FlightLegOutput;

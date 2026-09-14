@@ -14,8 +14,6 @@ export type ENUM_FORM_TRAIN_PRODUCT_TYPE =
 	(typeof ENUM_FORM_TRAIN_PRODUCT)[keyof typeof ENUM_FORM_TRAIN_PRODUCT];
 
 export const ENUM_FORM_TRAIN_HOP = {
-	DEPARTURE_TIME: "departureTime",
-	ARRIVAL_TIME: "arrivalTime",
 	DEPARTURE_LOCATION: "departureLocation",
 	ARRIVAL_LOCATION: "arrivalLocation"
 } as const;

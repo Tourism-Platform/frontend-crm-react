@@ -11,8 +11,6 @@ import {
 const msg = i18nKey<TTrainProductEditPageKeys>();
 
 export const TRAIN_HOP_SCHEMA = z.object({
-	[ENUM_FORM_TRAIN_HOP.DEPARTURE_TIME]: z.string().optional().nullable(),
-	[ENUM_FORM_TRAIN_HOP.ARRIVAL_TIME]: z.string().optional().nullable(),
 	[ENUM_FORM_TRAIN_HOP.DEPARTURE_LOCATION]:
 		GEO_FORM_VALUE_SCHEMA.nullable().optional(),
 	[ENUM_FORM_TRAIN_HOP.ARRIVAL_LOCATION]:

@@ -4,6 +4,9 @@ import {
 	type BusEventPubReadOutput,
 	Currency,
 	type FlightEventPubReadOutput,
+	type GeneralActivityPubSchemaOutput,
+	GeneralActivityPubSchemaOutputTypEnum,
+	HotelKind,
 	type HousingEventPubReadOutput,
 	HousingRoomTypes,
 	type InformationEventPubReadOutput,
@@ -53,7 +56,9 @@ export const locationAirportTashkent = (): LocationOutSchema => ({
 });
 
 const housingDetails = (city: LocationOutSchema) => ({
+	name: null,
 	location: city,
+	stars: null,
 	amenities: [AmenitiesTypes.Wifi, AmenitiesTypes.Breakfast],
 	duration: 1,
 	check_in: time("14:00:00"),
@@ -67,18 +72,22 @@ const housingDetails = (city: LocationOutSchema) => ({
 					typ: HousingRoomTypes.Double,
 					pax: 2,
 					description:
-						"Comfortable double room with air conditioning, a private bathroom, and city views."
+						"Comfortable double room with air conditioning, a private bathroom, and city views.",
+					images: []
 				},
 				{
 					name: "Family Suite",
 					typ: HousingRoomTypes.Family,
 					pax: 4,
 					description:
-						"Spacious suite with two sleeping areas, suitable for families travelling together."
+						"Spacious suite with two sleeping areas, suitable for families travelling together.",
+					images: []
 				}
 			]
 		}
-	]
+	],
+	images: [],
+	typs: [HotelKind.Hotel]
 });
 
 export const infoEvent = (
@@ -92,10 +101,13 @@ export const infoEvent = (
 	description,
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: {
 		start_time: time("13:00:00"),
 		end_time: time("13:15:00")
-	} as InformationEventPubReadOutput["details"]
+	}
 });
 
 export const flightEvent = (
@@ -109,7 +121,11 @@ export const flightEvent = (
 	description,
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: {
+		name: null,
 		hop: [
 			{
 				airline_code: "HY",
@@ -123,9 +139,11 @@ export const flightEvent = (
 				departure_time: time("08:30:00"),
 				arrival_time: time("14:45:00"),
 				departure_terminal: "1",
-				departure_gate: "A1"
+				departure_gate: "A1",
+				amenities: []
 			}
-		]
+		],
+		images: []
 	}
 });
 
@@ -140,7 +158,11 @@ export const transferEvent = (
 	description,
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: {
+		name: null,
 		typ: TransferTypes.AirportTransfer,
 		departure: {
 			date: "2026-06-01",
@@ -154,24 +176,31 @@ export const transferEvent = (
 		},
 		cars: [
 			{
+				name: null,
 				typ: VehicleBodyType.Sedan,
 				pax: 2,
 				description:
-					"Air-conditioned sedan for a private transfer with space for light luggage."
+					"Air-conditioned sedan for a private transfer with space for light luggage.",
+				categories: []
 			},
 			{
+				name: null,
 				typ: VehicleBodyType.Minivan,
 				pax: 7,
 				description:
-					"Spacious minivan for a small group, with air conditioning and room for bags."
+					"Spacious minivan for a small group, with air conditioning and room for bags.",
+				categories: []
 			},
 			{
+				name: null,
 				typ: VehicleBodyType.Minibus,
 				pax: 21,
 				description:
-					"Comfortable minibus for group transfers between the airport, hotel, and route stops."
+					"Comfortable minibus for group transfers between the airport, hotel, and route stops.",
+				categories: []
 			}
-		]
+		],
+		images: []
 	}
 });
 
@@ -186,7 +215,11 @@ export const trainEvent = (
 	description,
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: {
+		name: null,
 		hop: [
 			{
 				departure: {
@@ -200,7 +233,8 @@ export const trainEvent = (
 					location: locationSamarkand()
 				}
 			}
-		]
+		],
+		images: []
 	}
 });
 
@@ -215,7 +249,11 @@ export const busEvent = (
 	description,
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: {
+		name: null,
 		hop: [
 			{
 				departure: {
@@ -229,7 +267,9 @@ export const busEvent = (
 					location: locationSamarkand()
 				}
 			}
-		]
+		],
+		vehicles: [],
+		images: []
 	}
 });
 
@@ -245,6 +285,9 @@ export const housingEvent = (
 	description,
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: housingDetails(city)
 });
 
@@ -260,12 +303,20 @@ export const activityEvent = (
 	description,
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
+	// The generated details union intersects the literal discriminant with the
+	// native enum (`{ typ: "sightseeing" } & GeneralActivityPubSchemaOutput`),
+	// which TS reduces to never — a targeted cast is the only way to state it.
 	details: {
-		typ: "sightseeing",
+		typ: GeneralActivityPubSchemaOutputTypEnum.Sightseeing,
+		name: null,
 		location: city,
 		start_time: time("09:00:00"),
-		end_time: time("17:00:00")
-	} as unknown as NonNullable<ActivityEventPubReadOutput["details"]>
+		end_time: time("17:00:00"),
+		images: []
+	} as { typ: "sightseeing" } & GeneralActivityPubSchemaOutput
 });
 
 export const multiplyHotels = (
@@ -278,6 +329,9 @@ export const multiplyHotels = (
 		"Stay in one of our partner hotels of the same category. Exact property is confirmed before departure.",
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: [
 		withEventMedia(
 			housingEvent(
@@ -332,6 +386,9 @@ export const multiplyEvening = (
 		"Select one included evening activity. Tell your guide by 12:00 on day 1.",
 	day,
 	position,
+	is_optional: false,
+	images: [],
+	date: null,
 	details: [
 		withEventMedia(
 			activityEvent(

@@ -97,10 +97,13 @@ export const useAttachEventProductDialog = ({
 		}
 
 		const values = form.getValues();
+		const variantId = values[ENUM_FORM_ATTACH_PRODUCT.VARIANT_ID];
 
+		// Contract 3.1: the picked variant becomes `scope.only.ids[0]`;
+		// no variant picked = whole product (scope omitted).
 		await onConfirm({
 			productId: selectedProductId,
-			variantId: values[ENUM_FORM_ATTACH_PRODUCT.VARIANT_ID]
+			scope: variantId ? { typ: "only", ids: [variantId] } : undefined
 		});
 	};
 

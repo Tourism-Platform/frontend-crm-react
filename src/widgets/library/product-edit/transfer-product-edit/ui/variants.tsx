@@ -16,15 +16,18 @@ import {
 
 import {
 	ENUM_FORM_TRANSFER_VARIANT as ENUM_FORM,
+	ENUM_SUPPLIER_TYPE,
+	ENUM_TRANSFER_PRICING,
+	type ITransferProduct,
 	type ITransferVariant,
 	TRANSFER_VARIANT_FORM_SCHEMA,
 	type TTransferVariantFormSchema,
 	emptyTransferVariantForm,
 	mapTransferVariantFormToWrite,
 	mapTransferVariantToForm,
-	useCreateTransferVariantMutation,
-	useDeleteTransferVariantMutation,
-	useUpdateTransferVariantMutation
+	useCreateVariantMutation,
+	useDeleteVariantMutation,
+	useUpdateVariantMutation
 } from "@/entities/supplier";
 
 import { FeeLinesField } from "@/features/pricing";
@@ -34,23 +37,25 @@ import { TRANSFER_VARIANT_FIELDS_LIST } from "../model";
 interface ITransferProductVariantsProps {
 	supplierId: string;
 	productId: string;
+	product?: ITransferProduct | null;
 	variants?: ITransferVariant[];
 }
 
 const TransferProductVariantsBase: FC<ITransferProductVariantsProps> = ({
 	supplierId,
 	productId,
+	product,
 	variants = []
 }) => {
 	const { t } = useTranslation("transfer_product_edit_page");
 	const [selectedId, setSelectedId] = useState<string | "new">("new");
 
-	const [createTransferVariant, { isLoading: isCreating }] =
-		useCreateTransferVariantMutation();
-	const [updateTransferVariant, { isLoading: isUpdating }] =
-		useUpdateTransferVariantMutation();
-	const [deleteTransferVariant, { isLoading: isDeleting }] =
-		useDeleteTransferVariantMutation();
+	const [createVariant, { isLoading: isCreating }] =
+		useCreateVariantMutation();
+	const [updateVariant, { isLoading: isUpdating }] =
+		useUpdateVariantMutation();
+	const [deleteVariant, { isLoading: isDeleting }] =
+		useDeleteVariantMutation();
 
 	const selectedVariant =
 		selectedId === "new"
@@ -81,23 +86,30 @@ const TransferProductVariantsBase: FC<ITransferProductVariantsProps> = ({
 
 	async function onSubmit(data: TTransferVariantFormSchema) {
 		const payload = mapTransferVariantFormToWrite(data);
+		const pricing = product?.pricing ?? ENUM_TRANSFER_PRICING.PER_CAR;
 
 		try {
 			if (selectedId === "new") {
-				const created = await createTransferVariant({
+				// The new variant arrives with the invalidated product query;
+				// reset the form so the same values cannot be submitted twice.
+				await createVariant({
 					supplierId,
 					productId,
+					typ: ENUM_SUPPLIER_TYPE.TRANSFER,
+					pricing,
 					data: payload
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
-				setSelectedId(created.id);
+				form.reset(emptyTransferVariantForm());
 				return;
 			}
 
-			await updateTransferVariant({
+			await updateVariant({
 				supplierId,
 				productId,
 				variantId: selectedId,
+				typ: ENUM_SUPPLIER_TYPE.TRANSFER,
+				pricing,
 				data: payload
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
@@ -114,7 +126,7 @@ const TransferProductVariantsBase: FC<ITransferProductVariantsProps> = ({
 		}
 
 		try {
-			await deleteTransferVariant({
+			await deleteVariant({
 				supplierId,
 				productId,
 				variantId: selectedId

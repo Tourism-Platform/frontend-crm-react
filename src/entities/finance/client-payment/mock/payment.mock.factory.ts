@@ -25,6 +25,8 @@ export const createClientPaymentMocks = (): ClientPaymentResponse[] =>
 			operator_id: MOCK_PAYMENT_DEFAULTS.operator_id,
 			amount: row.amount,
 			currency: MOCK_PAYMENT_DEFAULTS.currency,
+			rate: "1",
+			base_amount: row.amount.toFixed(2),
 			status: row.status,
 			note: row.note ?? null,
 			attachment_count: row.attachment_count,

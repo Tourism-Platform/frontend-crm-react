@@ -18,6 +18,7 @@ export * from "./transfer";
 export * from "./activity";
 export * from "./vehicle-body.types";
 export * from "./supplier-variant-charge.types";
+export * from "./supplier-variant-charge-backend.types";
 export * from "./supplier-product-backend.types";
 export * from "./supplier-product.types";
 export * from "./supplier-product-image-backend.types";

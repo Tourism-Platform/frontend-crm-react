@@ -25,9 +25,9 @@ export const mapGuidesFromBackend = (
 	[ENUM_FORM_GUIDES.GUIDES_LIST]: [
 		{
 			[ENUM_FORM_GUIDES.GUIDE_TYPE]:
-				guideTypeMapper.from(details?.typ_tiers?.[0]?.typ) ??
+				guideTypeMapper.from(details?.spec?.typ_tiers?.[0]?.typ) ??
 				ENUM_GUIDE_TYPE.LOCAL,
-			[ENUM_FORM_GUIDES.DURATION_DAYS]: details?.duration ?? 1
+			[ENUM_FORM_GUIDES.DURATION_DAYS]: details?.plan?.duration ?? 1
 		}
 	]
 });

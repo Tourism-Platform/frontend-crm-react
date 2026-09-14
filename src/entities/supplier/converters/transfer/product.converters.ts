@@ -1,5 +1,7 @@
 import {
 	ENUM_SUPPLIER_TYPE,
+	ENUM_TRANSFER_PRICING,
+	type ENUM_TRANSFER_PRICING_TYPE,
 	type ITransferProduct,
 	type ITransferProductCreate,
 	type ITransferVariant,
@@ -11,7 +13,8 @@ import {
 } from "../../types";
 import {
 	mapSupplierFixedChargeFromBackend,
-	mapSupplierFixedChargeToBackend
+	mapSupplierFixedChargeToBackend,
+	mapSupplierVariantChargeFromBackend
 } from "../supplier-variant-charge.converters";
 import { vehicleBodyTypeConverter } from "../vehicle-body.converters";
 
@@ -23,46 +26,80 @@ const emptyToNull = (value: string | null | undefined): string | null => {
 export const mapTransferVariantFromBackend = (
 	variant: TTransferVariantReadBackend
 ): ITransferVariant => ({
-	id: variant.id,
-	name: variant.name,
+	id: variant.id ?? "",
+	name: variant.name ?? "",
 	bodyType: vehicleBodyTypeConverter.from(variant.body_type) ?? null,
 	pax: variant.pax ?? null,
 	description: variant.description ?? null,
-	expenses: mapSupplierFixedChargeFromBackend(variant.expenses)
+	expenses:
+		"charge" in variant
+			? mapSupplierFixedChargeFromBackend(variant.charge)
+			: null
 });
 
 export const mapTransferVariantToWrite = (
-	data: ITransferVariantWrite
-): TTransferVariantWriteBackend => ({
-	typ: "transfer",
-	name: data.name,
-	details: {
-		typ: "transfer",
-		body_type: vehicleBodyTypeConverter.to(data.bodyType) ?? null,
+	data: ITransferVariantWrite,
+	pricing: ENUM_TRANSFER_PRICING_TYPE
+): TTransferVariantWriteBackend => {
+	const base = {
+		name: data.name,
+		body_type: vehicleBodyTypeConverter.to(data.bodyType)!,
 		pax: data.pax,
-		description: emptyToNull(data.description),
-		expenses: data.expenses
-			? mapSupplierFixedChargeToBackend(data.expenses)
-			: null
+		description: emptyToNull(data.description)
+	};
+
+	switch (pricing) {
+		case ENUM_TRANSFER_PRICING.WHOLE:
+			return {
+				...base,
+				typ: "transfer",
+				pricing: ENUM_TRANSFER_PRICING.WHOLE
+			};
+		case ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY:
+			// The form does not edit category price lines; omitting the optional
+			// `categories` key leaves them untouched on the backend.
+			return {
+				...base,
+				typ: "transfer",
+				pricing: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY
+			};
+		default:
+			return {
+				...base,
+				typ: "transfer",
+				pricing: ENUM_TRANSFER_PRICING.PER_CAR,
+				charge: mapSupplierFixedChargeToBackend(data.expenses)
+			};
 	}
-});
+};
 
 export const mapTransferProductFromBackend = (
 	row: TTransferProductReadBackend
-): ITransferProduct => ({
-	id: row.id,
-	supplierId: row.supplier_id,
-	typ: ENUM_SUPPLIER_TYPE.TRANSFER,
-	name: row.name,
-	imagePaths: row.image_paths ?? [],
-	primaryImagePath: row.primary_image_path ?? null,
-	variants: (row.variants ?? []).map(mapTransferVariantFromBackend)
-});
+): ITransferProduct => {
+	const spec = row.spec;
+
+	return {
+		id: row.id,
+		supplierId: row.supplier_id,
+		typ: ENUM_SUPPLIER_TYPE.TRANSFER,
+		name: spec.name ?? row.name,
+		pricing: spec.pricing,
+		charge:
+			spec.pricing === ENUM_TRANSFER_PRICING.WHOLE
+				? mapSupplierVariantChargeFromBackend(spec.charge)
+				: null,
+		imagePaths: row.image_paths ?? [],
+		primaryImagePath: row.primary_image_path ?? null,
+		variants: spec.cars.map(mapTransferVariantFromBackend)
+	};
+};
 
 export const mapTransferProductToCreate = (
 	data: ITransferProductCreate
 ): TCreateTransferProductBackend => ({
 	typ: "transfer",
-	name: data.name,
-	details: { typ: "transfer" }
+	details: {
+		pricing: ENUM_TRANSFER_PRICING.PER_CAR,
+		name: data.name
+	}
 });

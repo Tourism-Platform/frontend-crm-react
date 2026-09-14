@@ -7,16 +7,19 @@ import {
 } from "@/shared/converters";
 
 import {
+	ENUM_FLIGHT_PRICING,
 	ENUM_FORM_FLIGHT_PRODUCT as ENUM_FORM,
 	ENUM_FORM_FLIGHT_HOP as ENUM_HOP,
 	type IFlightHop,
 	type IFlightProduct,
 	type TCreateFlightProductBackend,
 	type TFlightHopFormSchema,
-	type TFlightHopInputBackend,
+	type TFlightLegInputBackend,
+	type TFlightProductDetailsBackend,
 	type TFlightProductGeneralSchema,
 	type TUpdateFlightProductBackend
 } from "../../types";
+import { mapSupplierVariantChargeToBackend } from "../supplier-variant-charge.converters";
 
 const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
 	languageCodeMapper.to(language) ?? LanguageCode.En;
@@ -72,7 +75,7 @@ export const mapFlightProductToGeneralForm = (
 const mapHopFormToBackend = (
 	hop: TFlightHopFormSchema,
 	lang: LanguageCode
-): TFlightHopInputBackend => ({
+): TFlightLegInputBackend => ({
 	airline_code:
 		emptyToNull(hop[ENUM_HOP.AIRLINE_CODE] ?? "")?.toUpperCase() ?? null,
 	flight_number: parseFlightNumber(hop[ENUM_HOP.FLIGHT_NUMBER] ?? ""),
@@ -92,34 +95,51 @@ const mapHopFormToBackend = (
 		lang
 	),
 	departure_terminal: emptyToNull(hop[ENUM_HOP.DEPARTURE_TERMINAL] ?? ""),
-	departure_gate: emptyToNull(hop[ENUM_HOP.DEPARTURE_GATE] ?? ""),
-	amenities: null
+	departure_gate: emptyToNull(hop[ENUM_HOP.DEPARTURE_GATE] ?? "")
 });
 
 const mapGeneralFormToDetails = (
 	values: TFlightProductGeneralSchema,
+	existing: IFlightProduct | null | undefined,
 	language?: ENUM_LANGUAGES_TYPE
-): TCreateFlightProductBackend => {
+): TFlightProductDetailsBackend => {
 	const lang = resolveLang(language);
-
-	return {
-		typ: "flight",
+	const base = {
 		name: values[ENUM_FORM.NAME],
-		details: {
-			typ: "flight",
-			hop: values[ENUM_FORM.HOPS].map((hop) =>
-				mapHopFormToBackend(hop, lang)
-			)
-		}
+		legs: values[ENUM_FORM.HOPS].map((hop) =>
+			mapHopFormToBackend(hop, lang)
+		)
 	};
+
+	if (existing?.pricing === ENUM_FLIGHT_PRICING.WHOLE) {
+		if (!existing.charge) {
+			throw new Error(
+				"Cannot update a whole-priced flight route without its charge"
+			);
+		}
+		return {
+			...base,
+			pricing: ENUM_FLIGHT_PRICING.WHOLE,
+			charge: mapSupplierVariantChargeToBackend(existing.charge)
+		};
+	}
+
+	return { ...base, pricing: ENUM_FLIGHT_PRICING.PER_FARE };
 };
 
 export const mapFlightProductGeneralToCreate = (
 	values: TFlightProductGeneralSchema,
 	language?: ENUM_LANGUAGES_TYPE
-): TCreateFlightProductBackend => mapGeneralFormToDetails(values, language);
+): TCreateFlightProductBackend => ({
+	typ: "flight",
+	details: mapGeneralFormToDetails(values, null, language)
+});
 
 export const mapFlightProductGeneralToUpdate = (
 	values: TFlightProductGeneralSchema,
+	existing: IFlightProduct | null | undefined,
 	language?: ENUM_LANGUAGES_TYPE
-): TUpdateFlightProductBackend => mapGeneralFormToDetails(values, language);
+): TUpdateFlightProductBackend => ({
+	typ: "flight",
+	details: mapGeneralFormToDetails(values, existing, language)
+});

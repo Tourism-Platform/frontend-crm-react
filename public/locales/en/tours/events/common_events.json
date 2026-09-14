@@ -49,6 +49,16 @@
 			"cancel": "Keep current product",
 			"confirm": "Continue"
 		},
+		"detach_dialog": {
+			"title": "Detach product?",
+			"description": "Choose what this event keeps of the product it leaves.",
+			"keep_spec": "Keep a copy of the product content (spec) on the event",
+			"keep_nothing": "Keep nothing — the event is left empty",
+			"drop_override": "Also drop the contract price override",
+			"cancel": "Cancel",
+			"confirm": "Detach",
+			"confirming": "Detaching"
+		},
 		"toasts": {
 			"attach": {
 				"success": "Product linked",

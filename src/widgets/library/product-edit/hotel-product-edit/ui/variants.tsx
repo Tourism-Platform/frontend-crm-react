@@ -16,16 +16,19 @@ import {
 
 import {
 	ENUM_FORM_HOTEL_VARIANT as ENUM_FORM,
+	ENUM_HOTEL_PRICING,
+	ENUM_SUPPLIER_TYPE,
 	HOTEL_VARIANT_FORM_SCHEMA,
+	type IHotelProduct,
 	type IHotelVariant,
 	type THotelVariantFormSchema,
 	emptyHotelVariantForm,
 	emptyHotelVariantRoom,
 	mapHotelVariantFormToWrite,
 	mapHotelVariantToForm,
-	useCreateHotelVariantMutation,
-	useDeleteHotelVariantMutation,
-	useUpdateHotelVariantMutation
+	useCreateVariantMutation,
+	useDeleteVariantMutation,
+	useUpdateVariantMutation
 } from "@/entities/supplier";
 
 import { HOTEL_VARIANT_NAME_FIELD } from "../model";
@@ -35,23 +38,25 @@ import { HotelVariantRoomRow } from "./hotel-variant-room-row";
 interface IHotelProductVariantsProps {
 	supplierId: string;
 	productId: string;
+	product?: IHotelProduct | null;
 	variants?: IHotelVariant[];
 }
 
 const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 	supplierId,
 	productId,
+	product,
 	variants = []
 }) => {
 	const { t } = useTranslation("hotel_product_edit_page");
 	const [selectedId, setSelectedId] = useState<string | "new">("new");
 
-	const [createHotelVariant, { isLoading: isCreating }] =
-		useCreateHotelVariantMutation();
-	const [updateHotelVariant, { isLoading: isUpdating }] =
-		useUpdateHotelVariantMutation();
-	const [deleteHotelVariant, { isLoading: isDeleting }] =
-		useDeleteHotelVariantMutation();
+	const [createVariant, { isLoading: isCreating }] =
+		useCreateVariantMutation();
+	const [updateVariant, { isLoading: isUpdating }] =
+		useUpdateVariantMutation();
+	const [deleteVariant, { isLoading: isDeleting }] =
+		useDeleteVariantMutation();
 
 	const selectedVariant =
 		selectedId === "new"
@@ -87,23 +92,30 @@ const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 
 	async function onSubmit(data: THotelVariantFormSchema) {
 		const payload = mapHotelVariantFormToWrite(data);
+		const pricing = product?.pricing ?? ENUM_HOTEL_PRICING.PER_ROOM;
 
 		try {
 			if (selectedId === "new") {
-				const created = await createHotelVariant({
+				// The new variant arrives with the invalidated product query;
+				// reset the form so the same values cannot be submitted twice.
+				await createVariant({
 					supplierId,
 					productId,
+					typ: ENUM_SUPPLIER_TYPE.HOTEL,
+					pricing,
 					data: payload
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
-				setSelectedId(created.id);
+				form.reset(emptyHotelVariantForm());
 				return;
 			}
 
-			await updateHotelVariant({
+			await updateVariant({
 				supplierId,
 				productId,
 				variantId: selectedId,
+				typ: ENUM_SUPPLIER_TYPE.HOTEL,
+				pricing,
 				data: payload
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
@@ -125,7 +137,7 @@ const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 		}
 
 		try {
-			await deleteHotelVariant({
+			await deleteVariant({
 				supplierId,
 				productId,
 				variantId: selectedId

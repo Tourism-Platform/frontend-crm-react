@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import type {
 	ActivityEventPubReadOutput,
 	BusEventPubReadOutput,
-	EmptyDetails,
 	FlightEventPubReadOutput,
 	HousingEventPubReadOutput,
 	HousingRoomTypes,
@@ -60,6 +59,7 @@ export const formatJourneyPoint = (point?: {
 
 type TSheetCarSource = {
 	typ?: VehicleBodyType | null;
+	body_type?: VehicleBodyType | null;
 	pax?: number | null;
 	description?: string | null;
 };
@@ -98,9 +98,10 @@ export const mapSheetCarsFromExpenses = (
 	if (!hasCars(expenses) || !expenses.cars?.length) return [];
 
 	return expenses.cars
-		.filter((car) => car.typ || car.description || car.pax)
+		.filter((car) => car.typ || car.body_type || car.description || car.pax)
 		.map((car) => ({
-			typ: vehicleBodyTypeConverter.from(car.typ) ?? null,
+			typ:
+				vehicleBodyTypeConverter.from(car.typ ?? car.body_type) ?? null,
 			pax: car.pax ?? null,
 			description: car.description ?? ""
 		}));
@@ -181,8 +182,7 @@ const mapActivitySheet = (
 const mapInfoSheet = (
 	event: { typ: "ref" } & InformationEventPubReadOutput
 ): TOptionEventSheetExtra => {
-	// Pub OpenAPI still types details as EmptyDetailsPub; runtime has start/end.
-	const details = event.details as EmptyDetails | undefined;
+	const details = event.details;
 	return {
 		kind: "info",
 		startTime: formatPubTime(details?.start_time ?? undefined),
@@ -192,28 +192,28 @@ const mapInfoSheet = (
 
 const mapHopToSegment = (
 	hop: {
-		airline_code?: string;
-		flight_number?: number;
-		departure_airport_code?: string;
-		arrival_airport_code?: string;
+		airline_code?: string | null;
+		flight_number?: number | null;
+		departure_airport_code?: string | null;
+		arrival_airport_code?: string | null;
 		departure_location?: unknown;
 		arrival_location?: unknown;
-		departure_date?: string;
-		arrival_date?: string;
-		departure_time?: TimeSchema;
-		arrival_time?: TimeSchema;
-		departure_terminal?: string;
-		departure_gate?: string;
+		departure_date?: string | null;
+		arrival_date?: string | null;
+		departure_time?: TimeSchema | null;
+		arrival_time?: TimeSchema | null;
+		departure_terminal?: string | null;
+		departure_gate?: string | null;
 		departure?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TimeSchema;
-		};
+			time?: TimeSchema | null;
+		} | null;
 		arrival?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TimeSchema;
-		};
+			time?: TimeSchema | null;
+		} | null;
 	},
 	routeLabel: string
 ): IOptionFlightSegment => {
@@ -263,9 +263,8 @@ const mapFlightSheet = (
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
 	segments:
-		event?.details?.hop?.map((hop) =>
-			mapHopToSegment(hop as any, routeLabel)
-		) ?? []
+		event?.details?.hop?.map((hop) => mapHopToSegment(hop, routeLabel)) ??
+		[]
 });
 
 const mapTrainBusSheet = (
@@ -274,13 +273,11 @@ const mapTrainBusSheet = (
 		| ({ typ: "bus" } & BusEventPubReadOutput),
 	routeLabel: string
 ): TOptionEventSheetExtra => {
-	const hops =
-		event.details && "hop" in event.details ? event.details.hop : undefined;
+	const hops = event.details?.hop;
 
 	return {
 		kind: "flight",
-		segments:
-			hops?.map((hop) => mapHopToSegment(hop as any, routeLabel)) ?? []
+		segments: hops?.map((hop) => mapHopToSegment(hop, routeLabel)) ?? []
 	};
 };
 

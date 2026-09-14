@@ -63,7 +63,7 @@ describe("findItemLocation", () => {
 	it("should find an item in tripDetails", () => {
 		const result = findItemLocation(mockOptionsData, "block-1");
 		expect(result).toEqual({
-			optionId: 1,
+			optionId: "1",
 			location: "tripDetails",
 			index: 0
 		});
@@ -72,7 +72,7 @@ describe("findItemLocation", () => {
 	it("should find a nested item in tripDetails", () => {
 		const result = findItemLocation(mockOptionsData, "block-2-1");
 		expect(result).toEqual({
-			optionId: 1,
+			optionId: "1",
 			location: "tripDetails",
 			index: 1,
 			nestedIndex: 0
@@ -82,7 +82,7 @@ describe("findItemLocation", () => {
 	it("should find an item in days", () => {
 		const result = findItemLocation(mockOptionsData, "block-3");
 		expect(result).toEqual({
-			optionId: 1,
+			optionId: "1",
 			location: "day",
 			day: 1,
 			index: 0
@@ -92,7 +92,7 @@ describe("findItemLocation", () => {
 	it("should find a nested item in days", () => {
 		const result = findItemLocation(mockOptionsData, "block-4-1");
 		expect(result).toEqual({
-			optionId: 1,
+			optionId: "1",
 			location: "day",
 			day: 2,
 			index: 0,

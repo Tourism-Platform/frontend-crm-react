@@ -1,9 +1,13 @@
 import type {
+	Car,
+	CategorisedCarOutput,
+	PerCarCategoryTransferVariantWrite,
+	PerCarTransferVariantWrite,
+	PricedCarOutput,
 	TransferProductCreate,
 	TransferProductReadOutput,
 	TransferProductUpdate,
-	TransferVariantReadOutput,
-	TransferVariantWrite
+	WholeTransferVariantWrite
 } from "@/shared/api/generated/Api";
 
 import type { TCreateProductBodyBackend } from "../supplier-product-backend.types";
@@ -15,5 +19,14 @@ export type TCreateTransferProductBackend = Extract<
 
 export type TTransferProductReadBackend = TransferProductReadOutput;
 export type TUpdateTransferProductBackend = TransferProductUpdate;
-export type TTransferVariantWriteBackend = TransferVariantWrite;
-export type TTransferVariantReadBackend = TransferVariantReadOutput;
+export type TTransferProductDetailsBackend = NonNullable<
+	TUpdateTransferProductBackend["details"]
+>;
+export type TTransferVariantWriteBackend =
+	| PerCarTransferVariantWrite
+	| PerCarCategoryTransferVariantWrite
+	| WholeTransferVariantWrite;
+export type TTransferVariantReadBackend =
+	| PricedCarOutput
+	| CategorisedCarOutput
+	| Car;

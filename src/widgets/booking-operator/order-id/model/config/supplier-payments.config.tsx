@@ -16,7 +16,7 @@ import { EVENT_METADATA } from "@/entities/tour";
 import {
 	type ENUM_EVENT_BACKEND_TYPE,
 	EVENT_BACKEND_TYPE_LABELS,
-	mapBackendTypToEventType
+	backendEventTypeMapper
 } from "@/entities/tour/itinerary";
 
 import { ConfirmPayment } from "@/features/finance";
@@ -43,7 +43,7 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 				getValue
 			}) => {
 				const hasSubRows = getCanExpand();
-				const eventType = mapBackendTypToEventType(
+				const eventType = backendEventTypeMapper.to(
 					type as ENUM_EVENT_BACKEND_TYPE
 				);
 				const metadata = eventType ? EVENT_METADATA[eventType] : null;

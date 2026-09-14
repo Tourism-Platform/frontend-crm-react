@@ -15,16 +15,19 @@ import {
 } from "@/shared/ui";
 
 import {
+	ENUM_FLIGHT_PRICING,
 	ENUM_FORM_FLIGHT_VARIANT as ENUM_FORM,
+	ENUM_SUPPLIER_TYPE,
 	FLIGHT_VARIANT_FORM_SCHEMA,
+	type IFlightProduct,
 	type IFlightVariant,
 	type TFlightVariantFormSchema,
 	emptyFlightVariantForm,
 	mapFlightVariantFormToWrite,
 	mapFlightVariantToForm,
-	useCreateFlightVariantMutation,
-	useDeleteFlightVariantMutation,
-	useUpdateFlightVariantMutation
+	useCreateVariantMutation,
+	useDeleteVariantMutation,
+	useUpdateVariantMutation
 } from "@/entities/supplier";
 
 import { FeeLinesField } from "@/features/pricing";
@@ -34,23 +37,25 @@ import { FLIGHT_VARIANT_FIELDS_LIST } from "../model";
 interface IFlightProductVariantsProps {
 	supplierId: string;
 	productId: string;
+	product?: IFlightProduct | null;
 	variants?: IFlightVariant[];
 }
 
 const FlightProductVariantsBase: FC<IFlightProductVariantsProps> = ({
 	supplierId,
 	productId,
+	product,
 	variants = []
 }) => {
 	const { t } = useTranslation("flight_product_edit_page");
 	const [selectedId, setSelectedId] = useState<string | "new">("new");
 
-	const [createFlightVariant, { isLoading: isCreating }] =
-		useCreateFlightVariantMutation();
-	const [updateFlightVariant, { isLoading: isUpdating }] =
-		useUpdateFlightVariantMutation();
-	const [deleteFlightVariant, { isLoading: isDeleting }] =
-		useDeleteFlightVariantMutation();
+	const [createVariant, { isLoading: isCreating }] =
+		useCreateVariantMutation();
+	const [updateVariant, { isLoading: isUpdating }] =
+		useUpdateVariantMutation();
+	const [deleteVariant, { isLoading: isDeleting }] =
+		useDeleteVariantMutation();
 
 	const selectedVariant =
 		selectedId === "new"
@@ -81,23 +86,30 @@ const FlightProductVariantsBase: FC<IFlightProductVariantsProps> = ({
 
 	async function onSubmit(data: TFlightVariantFormSchema) {
 		const payload = mapFlightVariantFormToWrite(data);
+		const pricing = product?.pricing ?? ENUM_FLIGHT_PRICING.PER_FARE;
 
 		try {
 			if (selectedId === "new") {
-				const created = await createFlightVariant({
+				// The new variant arrives with the invalidated product query;
+				// reset the form so the same values cannot be submitted twice.
+				await createVariant({
 					supplierId,
 					productId,
+					typ: ENUM_SUPPLIER_TYPE.FLIGHT,
+					pricing,
 					data: payload
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
-				setSelectedId(created.id);
+				form.reset(emptyFlightVariantForm());
 				return;
 			}
 
-			await updateFlightVariant({
+			await updateVariant({
 				supplierId,
 				productId,
 				variantId: selectedId,
+				typ: ENUM_SUPPLIER_TYPE.FLIGHT,
+				pricing,
 				data: payload
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
@@ -114,7 +126,7 @@ const FlightProductVariantsBase: FC<IFlightProductVariantsProps> = ({
 		}
 
 		try {
-			await deleteFlightVariant({
+			await deleteVariant({
 				supplierId,
 				productId,
 				variantId: selectedId

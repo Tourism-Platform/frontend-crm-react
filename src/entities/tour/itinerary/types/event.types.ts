@@ -2,6 +2,11 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
 import type { TAccommodationEditSchema } from "./accommodation";
 import type { TActivityEditSchema } from "./activity";
+import type { ENUM_EVENT_BACKEND_TYPE } from "./event-backend-enum.types";
+import type {
+	TEventDetailsBackend,
+	TEventDetailsWriteBackend
+} from "./event-backend.types";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
 import type { TFlightEditSchema } from "./flight";
 import type { TGuideEditSchema } from "./guide";
@@ -11,28 +16,41 @@ import type { TSupplementEditSchema } from "./supplement";
 import type { TTransportationEditSchema } from "./transportation";
 
 export interface ITourEventOption {
+	/** Event option row id — `details[i].id` on the multi read. */
 	id: string;
 	name: string;
 	description: string;
 	eventType: ENUM_EVENT_TYPE;
-	details: Record<string, unknown>;
+	/** Exact backend discriminator (flight/train/bus are all FLIGHT in eventType). */
+	backendTyp: ENUM_EVENT_BACKEND_TYPE;
+	/** READ details (`{ plan, supply, spec }`) — never send back as a WRITE body. */
+	details: TEventDetailsBackend;
 	/** Preformatted start–end clock range for board cards */
 	timeSubtitle?: string;
 	isOptional?: boolean;
 }
 
 export interface ITourEvent {
+	/** Event SLOT id — `TourEventResponse.id`. Used as `eventId` in routes/API. */
 	id: string;
 	tourOptionId: string | null;
+	/**
+	 * Event OPTION row id for single events — `event.id` on the read.
+	 * Undefined for multi slots (each alternative carries its own id).
+	 */
+	eventOptionId?: string;
 	name: string;
 	description: string;
 	day: number;
 	position: number;
 	eventType: ENUM_EVENT_TYPE;
-	details: Record<string, unknown>;
+	/** Exact backend discriminator (flight/train/bus are all FLIGHT in eventType). */
+	backendTyp: ENUM_EVENT_BACKEND_TYPE;
+	/** READ details (`{ plan, supply, spec }`); null for multi slots. */
+	details: TEventDetailsBackend | null;
 	/** Preformatted start–end clock range for board cards */
 	timeSubtitle?: string;
-	/** Nested alternatives for multiply-option (typ 10) */
+	/** Nested alternatives for multiply-option slots */
 	options?: ITourEventOption[];
 }
 
@@ -42,8 +60,10 @@ export interface ITourEventCreate {
 	day: number;
 	position: number;
 	eventType: ENUM_EVENT_TYPE;
-	details?: Record<string, unknown>;
-	supplierId?: string | null;
+	/** Exact backend discriminator when eventType is ambiguous (FLIGHT group). */
+	backendTyp?: ENUM_EVENT_BACKEND_TYPE;
+	/** WRITE details (`{ plan?, supply? }`) — output of a WRITE converter only. */
+	details?: TEventDetailsWriteBackend;
 	packageId?: string | null;
 	isOptional?: boolean;
 }
@@ -52,6 +72,8 @@ export interface ITourEventUpdate {
 	tourId: string;
 	optionId: string;
 	eventId: string;
+	/** Option row id — for single events it is `event.id` from the read. */
+	eventOptionId: string;
 	type: ENUM_EVENT_TYPE;
 	data: TTourEventUpdate;
 	/** Язык UI — конвертируется в LanguageCode при save */
@@ -68,10 +90,13 @@ export type TTourEvent =
 	| TGuideEditSchema
 	| TMultiplyOptionEditSchema;
 
-/** Result of getTourEvent: form values + raw backend details for product inheritance. */
+/** Result of getTourEvent: form values + raw backend READ details for supply/override reads. */
 export interface IGetTourEventResult {
 	form: TTourEvent;
-	details: Record<string, unknown>;
+	/** READ details of the addressed option row (`{ plan, supply, spec }`). */
+	details: TEventDetailsBackend | undefined;
+	/** Resolved option row id — URL param for multi, `event.id` for single. */
+	eventOptionId?: string;
 }
 
 export type TTourEventUpdate = Partial<
@@ -90,8 +115,9 @@ export interface ITourEventReorder {
 	position: number;
 }
 
+/** Option reorder is ID-based: every alternative's option row id in the new order. */
 export interface IEventOptionReorder {
-	order: number[];
+	order: string[];
 }
 
 export interface IAddEventOption {
@@ -113,13 +139,17 @@ export interface IUpdateEventOption {
 	language?: ENUM_LANGUAGES_TYPE;
 }
 
-/** Same endpoint as updateEventOption, body via mapEventOptionCreateToBackend. */
+/** Content update from a read option row (multiply-option page). */
 export interface IUpdateEventOptionContent {
 	tourId: string;
 	optionId: string;
 	eventId: string;
 	eventOptionId: string;
-	data: ITourEventCreate;
+	/** READ option row — converted to WRITE inside the service. */
+	option: Pick<
+		ITourEventOption,
+		"name" | "description" | "backendTyp" | "details"
+	>;
 }
 
 export interface IDeleteEventOption {
@@ -141,6 +171,8 @@ export interface IMoveEventToMulti {
 	optionId: string;
 	eventId: string;
 	targetEventId: string;
+	/** Insert index among the target's alternatives (backend clamps to last). */
+	optionPosition: number;
 }
 
 export interface IMoveEventOptionToSingle {
@@ -148,6 +180,8 @@ export interface IMoveEventOptionToSingle {
 	optionId: string;
 	eventId: string;
 	eventOptionId: string;
+	/** Final slot placement — sent in the same request, no follow-up reorder. */
+	target?: ITourEventReorder | null;
 }
 
 export interface IMoveToMultiResult {

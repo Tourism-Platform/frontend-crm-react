@@ -1,39 +1,45 @@
-import type { IHotelRoomRate } from "@/entities/supplier";
-import { mapHotelVariantFromBackend } from "@/entities/supplier";
+import type { RoomSeasonOutput } from "@/shared/api";
+
 import {
-	type THousingDetailsBackend,
-	isInheritedHousingDetails
-} from "@/entities/tour";
+	type IHotelRoomRate,
+	mapHotelRoomChargeFromBackend
+} from "@/entities/supplier";
+import type { TEventDetailsBackend } from "@/entities/tour";
 
 export interface IProductSeasonRateRow {
 	roomLabel: string;
 	rates: IHotelRoomRate[];
 }
 
+const mapSeasonToRate = (season: RoomSeasonOutput): IHotelRoomRate => ({
+	fromDate: season.from_date,
+	toDate: season.to_date,
+	expenses: mapHotelRoomChargeFromBackend(season.charge)
+});
+
+/**
+ * Season rates of the linked product for the policy-check view.
+ *
+ * Contract 3.1: `details.spec` is already scoped by the backend — read the
+ * scoped per-room spec directly, never re-filter units by scope here.
+ */
 export const mapSeasonRatesFromHousingDetails = (
-	details: THousingDetailsBackend | undefined
+	details: TEventDetailsBackend | undefined
 ): IProductSeasonRateRow[] => {
-	if (!isInheritedHousingDetails(details)) {
+	if (details?.supply.source !== "product") {
 		return [];
 	}
 
-	const product = details.product;
-	if (!product) {
+	const spec = details.spec;
+	if (!spec || !("pricing" in spec) || spec.pricing !== "per_room") {
 		return [];
 	}
 
-	const variants = product.variants ?? [];
-	const selected = details.variant_id
-		? variants.filter((variant) => variant.id === details.variant_id)
-		: variants;
-
-	return selected.flatMap((variant) => {
-		const mapped = mapHotelVariantFromBackend(variant);
-		return mapped.rooms
-			.filter((room) => Boolean(room.rates?.length))
-			.map((room) => ({
-				roomLabel: room.typ ?? mapped.name,
-				rates: room.rates ?? []
-			}));
-	});
+	return spec.categories
+		.flatMap((category) => category.rooms ?? [])
+		.map((room) => ({
+			roomLabel: room.name ?? room.typ ?? "Room",
+			rates: (room.rate?.seasons ?? []).map(mapSeasonToRate)
+		}))
+		.filter((row) => row.rates.length > 0);
 };

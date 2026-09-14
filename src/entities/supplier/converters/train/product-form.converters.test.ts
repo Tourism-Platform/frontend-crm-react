@@ -13,8 +13,6 @@ const formValues = {
 	name: "Afrosiyob TAS–SKD",
 	hops: [
 		{
-			departureTime: "08:00",
-			arrivalTime: "10:10",
 			departureLocation: {
 				lat: 41.29,
 				long: 69.28,
@@ -40,8 +38,9 @@ describe("mapTrainProductGeneralToCreate", () => {
 			ENUM_LANGUAGES.EN
 		);
 
-		expect(body.name).toBe("Afrosiyob TAS–SKD");
-		expect(body.details?.hop?.[0]?.departure?.location).toMatchObject({
+		expect(body.details.pricing).toBe("per_fare");
+		expect(body.details.name).toBe("Afrosiyob TAS–SKD");
+		expect(body.details.legs?.[0]?.departure?.location).toMatchObject({
 			lat: 41.29,
 			long: 69.28,
 			city: "Tashkent",
@@ -55,8 +54,6 @@ describe("mapTrainProductGeneralToCreate", () => {
 				...formValues,
 				hops: [
 					{
-						departureTime: "08:00",
-						arrivalTime: "10:10",
 						departureLocation: null,
 						arrivalLocation: null
 					}
@@ -65,8 +62,8 @@ describe("mapTrainProductGeneralToCreate", () => {
 			ENUM_LANGUAGES.EN
 		);
 
-		expect(body.details?.hop?.[0]?.departure?.location).toBeNull();
-		expect(body.details?.hop?.[0]?.arrival?.location).toBeNull();
+		expect(body.details.legs?.[0]?.departure?.location).toBeNull();
+		expect(body.details.legs?.[0]?.arrival?.location).toBeNull();
 	});
 });
 

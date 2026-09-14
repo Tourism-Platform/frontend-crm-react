@@ -1,3 +1,4 @@
+import { TranslationState } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE, TLibraryPath } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config";
 import { type IPaginationResponse } from "@/shared/types";
@@ -7,36 +8,21 @@ import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
 	type ENUM_EVENT_TYPE,
-	type TAccommodationEditSchema,
-	type TActivityEditSchema,
-	type TFlightEditSchema,
-	type TGuideEditSchema,
-	type TInfoEditSchema,
-	type TSupplementEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
 	type TTourEventUpdate,
-	type TTransportationEditSchema,
-	isInheritedFlightDetails,
-	isInheritedTrainDetails,
-	mapBackendTypToEventType,
-	mapEventTypeToBackendTyps
+	backendEventTypeMapper,
+	mapEventTypeToBackendTyps,
+	mapEventUpdateToBackend
 } from "@/entities/tour/itinerary";
 import {
 	mapAccommodationEventToForm,
-	mapAccommodationFormToUpdate,
 	mapActivityEventToForm,
-	mapActivityFormToUpdate,
 	mapFlyEventToForm,
 	mapGuideEventToForm,
-	mapGuideFormToUpdate,
 	mapInfoEventToForm,
-	mapInfoFormToUpdate,
 	mapSupplementaryEventToForm,
-	mapSupplementaryFormToUpdate,
-	mapTransferEventToForm,
-	mapTransferFormToUpdate,
-	mapTransportFormToUpdate
+	mapTransferEventToForm
 } from "@/entities/tour/itinerary/converters/event";
 
 import type {
@@ -59,102 +45,68 @@ const joinRange = (from: string | null, to: string | null): string | null => {
 	return from ?? to;
 };
 
+/**
+ * Short summary for the library table (contract 3.1 shapes):
+ * times live in `details.plan`, route data in the scoped `details.spec`.
+ */
 const mapEventLibrarySummary = (
 	event: TEventLibraryItemBackend["event"]
 ): string | null => {
 	switch (event.typ) {
 		case ENUM_EVENT_BACKEND.FLIGHT: {
-			const details = event.details;
-			if (!details) return null;
+			const leg = event.details.spec?.legs?.[0];
 
-			if (isInheritedFlightDetails(details)) {
-				const leg = details.product?.hop?.[0];
-				const flightCode = leg
-					? [
-							leg.airline_code,
-							leg.flight_number != null
-								? String(leg.flight_number)
-								: null
-						]
-							.filter(Boolean)
-							.join("")
-					: null;
-				const from = leg?.departure_airport_code ?? null;
-				const to = leg?.arrival_airport_code ?? null;
-				const route =
-					from && to ? `${from} → ${to}` : (from ?? to ?? null);
-				const time = joinRange(
-					formatTimeHhMm(details.departure_time?.time),
-					formatTimeHhMm(details.arrival_time?.time)
-				);
-				const parts = [flightCode || null, route, time].filter(Boolean);
-				return parts.length ? parts.join(" · ") : null;
-			}
-
-			const hop = details.hop?.[0];
-			if (!hop) return null;
-
-			const flightCode = [
-				hop.airline_code,
-				hop.flight_number != null ? String(hop.flight_number) : null
-			]
-				.filter(Boolean)
-				.join("");
-
-			const from = hop.departure_airport_code ?? null;
-			const to = hop.arrival_airport_code ?? null;
+			const flightCode = leg
+				? [
+						leg.airline_code,
+						leg.flight_number != null
+							? String(leg.flight_number)
+							: null
+					]
+						.filter(Boolean)
+						.join("")
+				: null;
+			const from = leg?.departure_airport_code ?? null;
+			const to = leg?.arrival_airport_code ?? null;
 			const route = from && to ? `${from} → ${to}` : (from ?? to ?? null);
-
 			const time = joinRange(
-				formatTimeHhMm(hop.departure_time?.time),
-				formatTimeHhMm(hop.arrival_time?.time)
+				formatTimeHhMm(event.details.plan?.departure_time?.time),
+				formatTimeHhMm(event.details.plan?.arrival_time?.time)
 			);
 
 			const parts = [flightCode || null, route, time].filter(Boolean);
 			return parts.length ? parts.join(" · ") : null;
 		}
 		case ENUM_EVENT_BACKEND.TRAIN: {
-			const details = event.details;
-			if (!details) return null;
-
-			if (isInheritedTrainDetails(details)) {
-				return joinRange(
-					formatTimeHhMm(details.departure_time?.time),
-					formatTimeHhMm(details.arrival_time?.time)
-				);
-			}
-
-			const hop = details.hop?.[0];
-			if (!hop) return null;
 			return joinRange(
-				formatTimeHhMm(hop.departure?.time?.time),
-				formatTimeHhMm(hop.arrival?.time?.time)
+				formatTimeHhMm(event.details.plan?.departure_time?.time),
+				formatTimeHhMm(event.details.plan?.arrival_time?.time)
 			);
 		}
 		case ENUM_EVENT_BACKEND.BUS: {
-			const hop = event.details?.hop?.[0];
-			if (!hop) return null;
+			const leg = event.details.plan?.legs?.[0];
+			if (!leg) return null;
 			return joinRange(
-				formatTimeHhMm(hop.departure?.time?.time),
-				formatTimeHhMm(hop.arrival?.time?.time)
+				formatTimeHhMm(leg.departure?.time?.time),
+				formatTimeHhMm(leg.arrival?.time?.time)
 			);
 		}
 		case ENUM_EVENT_BACKEND.TRANSFER: {
 			return joinRange(
-				formatTimeHhMm(event.details?.departure?.time?.time),
-				formatTimeHhMm(event.details?.arrival?.time?.time)
+				formatTimeHhMm(event.details.plan?.departure?.time?.time),
+				formatTimeHhMm(event.details.plan?.arrival?.time?.time)
 			);
 		}
 		case ENUM_EVENT_BACKEND.ACTIVITY: {
 			return joinRange(
-				formatTimeHhMm(event.details?.start_time?.time),
-				formatTimeHhMm(event.details?.end_time?.time)
+				formatTimeHhMm(event.details.plan?.start_time?.time),
+				formatTimeHhMm(event.details.plan?.end_time?.time)
 			);
 		}
 		case ENUM_EVENT_BACKEND.HOUSING: {
 			return joinRange(
-				formatTimeHhMm(event.details?.check_in?.time),
-				formatTimeHhMm(event.details?.check_out?.time)
+				formatTimeHhMm(event.details.plan?.check_in?.time),
+				formatTimeHhMm(event.details.plan?.check_out?.time)
 			);
 		}
 		default:
@@ -162,19 +114,30 @@ const mapEventLibrarySummary = (
 	}
 };
 
+/** Supplier id for the list row — from `details.supply` (contract 3.1). */
+const resolveEventSupplierId = (
+	event: TEventLibraryItemBackend["event"]
+): string | null => {
+	const supply = event.details?.supply;
+	if (!supply) return null;
+	return supply.source === "product"
+		? supply.supplier.id
+		: (supply.supplier_id ?? null);
+};
+
 export const mapEventLibraryItemToFrontend = (
 	data: TEventLibraryItemBackend
 ): IEventLibraryItem => {
-	const typ = data.event?.typ as ENUM_EVENT_BACKEND_TYPE | undefined;
 	const eventType =
-		mapBackendTypToEventType(typ) ?? ENUM_EVENT.TRANSPORTATION;
+		backendEventTypeMapper.to(data.event?.typ as ENUM_EVENT_BACKEND_TYPE) ??
+		ENUM_EVENT.TRANSPORTATION;
 
 	return {
 		id: data.id,
 		name: data.event?.name ?? "",
 		eventType,
-		supplierId: data.event?.supplier_id ?? null,
-		summary: mapEventLibrarySummary(data.event),
+		supplierId: data.event ? resolveEventSupplierId(data.event) : null,
+		summary: data.event ? mapEventLibrarySummary(data.event) : null,
 		primaryImagePath: data.primary_image_path ?? null
 	};
 };
@@ -214,29 +177,6 @@ export const mapEventLibraryFiltersToBackend = (
 	};
 };
 
-export const mapEventTypeToLibraryPathSegment = (
-	eventType: ENUM_EVENT_TYPE
-): string | null => {
-	switch (eventType) {
-		case ENUM_EVENT.TRANSPORTATION:
-			return "transfer";
-		case ENUM_EVENT.SUPPLEMENT:
-			return "supplement";
-		case ENUM_EVENT.GUIDE:
-			return "guide";
-		case ENUM_EVENT.FLIGHT:
-			return "flight";
-		case ENUM_EVENT.ACCOMMODATION:
-			return "accommodation";
-		case ENUM_EVENT.ACTIVITY:
-			return "activity";
-		case ENUM_EVENT.INFO:
-			return "info";
-		default:
-			return null;
-	}
-};
-
 export const mapEventTypeToLibraryEditPath = (
 	eventType: ENUM_EVENT_TYPE
 ): TLibraryPath | null => {
@@ -260,29 +200,27 @@ export const mapEventTypeToLibraryEditPath = (
 	}
 };
 
+/**
+ * A library READ event is an option-row payload; the tour-event form
+ * converters expect a single-event slot payload — add the slot-owned fields
+ * (day/position/is_optional/images) as neutral defaults.
+ */
 const adaptLibraryEventToTourResponse = (
 	backend: TEventLibraryItemBackend
-): TTourEventBackendResponce =>
-	({
-		id: backend.id,
-		tour_option_id: null,
-		origin_event_id: null,
-		event: {
-			typ: backend.event.typ,
-			day: 1,
-			position: 0,
-			name: backend.event.name,
-			description: backend.event.description,
-			supplier_id: backend.event.supplier_id,
-			package_id: backend.event.package_id,
-			// is_optional: backend.event.is_optional,
-			details: backend.event.details
-		},
-		image_paths: backend.image_paths ?? [],
-		primary_image_path: backend.primary_image_path ?? null
-	}) as TTourEventBackendResponce;
+): TTourEventBackendResponce => ({
+	id: backend.id,
+	tour_option_id: null,
+	translation: TranslationState.Source,
+	event: {
+		...backend.event,
+		day: 1,
+		position: 0,
+		is_optional: false,
+		images: []
+	}
+});
 
-/** Library response → form (как mapEventToFrontend в itinerary). */
+/** Library response → form (same as mapEventToFrontend in itinerary). */
 export const mapEventLibraryToForm = (
 	backend: TEventLibraryItemBackend
 ): TTourEvent => {
@@ -304,111 +242,25 @@ export const mapEventLibraryToForm = (
 		case ENUM_EVENT_BACKEND.GUIDE:
 			return mapGuideEventToForm(adapted);
 		default:
-			return backend as unknown as TTransportationEditSchema;
+			throw new Error("Unsupported library event typ");
 	}
 };
 
-/** Form → library create/update body (как mapEventUpdateToBackend в itinerary). */
+/**
+ * Form → library create/update body. The library write union IS the
+ * option-row WRITE union of contract 3.1, so this delegates to the same
+ * form converters the itinerary update flow uses.
+ */
 export const mapEventLibraryUpdateToBackend = (
 	type: ENUM_EVENT_TYPE,
 	frontend: TTourEventUpdate,
 	language?: ENUM_LANGUAGES_TYPE
-): TUpdateEventLibraryBackend => {
-	if (type === ENUM_EVENT.FLIGHT) {
-		const {
-			// day: _day,
-			// position: _position,
-			...body
-		} = mapTransportFormToUpdate(
-			frontend as TFlightEditSchema,
-			language
-		) as Record<string, unknown>;
-		return body as TUpdateEventLibraryBackend;
-	}
-
-	if (type === ENUM_EVENT.TRANSPORTATION) {
-		const {
-			// day: _day,
-			// position: _position,
-			...body
-		} = mapTransferFormToUpdate(
-			frontend as TTransportationEditSchema,
-			language
-		) as Record<string, unknown>;
-		return body as TUpdateEventLibraryBackend;
-	}
-
-	if (type === ENUM_EVENT.SUPPLEMENT) {
-		const {
-			// day: _day,
-			// position: _position,
-			...body
-		} = mapSupplementaryFormToUpdate(
-			frontend as TSupplementEditSchema
-		) as Record<string, unknown>;
-		return body as TUpdateEventLibraryBackend;
-	}
-
-	if (type === ENUM_EVENT.GUIDE) {
-		const {
-			// day: _day,
-			// position: _position,
-			...body
-		} = mapGuideFormToUpdate(frontend as TGuideEditSchema) as Record<
-			string,
-			unknown
-		>;
-		return body as TUpdateEventLibraryBackend;
-	}
-
-	if (type === ENUM_EVENT.INFO) {
-		const {
-			// day: _day,
-			// position: _position,
-			...body
-		} = mapInfoFormToUpdate(frontend as TInfoEditSchema) as Record<
-			string,
-			unknown
-		>;
-		return body as TUpdateEventLibraryBackend;
-	}
-
-	if (type === ENUM_EVENT.ACCOMMODATION) {
-		const {
-			// day: _day,
-			// position: _position,
-			...body
-		} = mapAccommodationFormToUpdate(
-			frontend as TAccommodationEditSchema,
-			language
-		) as Record<string, unknown>;
-		return body as TUpdateEventLibraryBackend;
-	}
-
-	if (type === ENUM_EVENT.ACTIVITY) {
-		const {
-			// day: _day,
-			// position: _position,
-			...body
-		} = mapActivityFormToUpdate(
-			frontend as TActivityEditSchema,
-			language
-		) as Record<string, unknown>;
-		return body as TUpdateEventLibraryBackend;
-	}
-
-	return {
-		name: frontend.name
-	} as TUpdateEventLibraryBackend;
-};
+): TUpdateEventLibraryBackend =>
+	mapEventUpdateToBackend(type, frontend, language);
 
 export const mapEventLibraryCreateToBackend = (
 	type: ENUM_EVENT_TYPE,
 	frontend: TTourEventUpdate,
 	language?: ENUM_LANGUAGES_TYPE
 ): TCreateEventLibraryBackend =>
-	mapEventLibraryUpdateToBackend(
-		type,
-		frontend,
-		language
-	) as TCreateEventLibraryBackend;
+	mapEventUpdateToBackend(type, frontend, language);

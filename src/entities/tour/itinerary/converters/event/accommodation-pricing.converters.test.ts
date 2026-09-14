@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { Currency, HousingRoomTypes } from "@/shared/api";
+import type { HousingDetailsOutput } from "@/shared/api";
 
 import {
 	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
@@ -49,6 +50,72 @@ const roomsList = [
 	}
 ];
 
+const roomsOnlySpec = {
+	spec: {
+		pricing: "per_room" as const,
+		categories: [
+			{
+				name: null,
+				rooms: [
+					{
+						typ: HousingRoomTypes.Double,
+						pax: 2,
+						name: "Deluxe",
+						description: "Deluxe class",
+						rate: {
+							base: {
+								typ: "fixed" as const,
+								cost: { val: 0, currency: Currency.USD }
+							}
+						}
+					}
+				]
+			}
+		]
+	}
+};
+
+const namedCategoryDetails = (): HousingDetailsOutput => ({
+	plan: {},
+	supply: { source: "inline", supplier_id: null },
+	spec: {
+		pricing: "per_room",
+		images: [],
+		name: null,
+		location: null,
+		stars: null,
+		typs: [],
+		amenities: [],
+		policy: null,
+		categories: [
+			{
+				id: "cat-1",
+				name: "Deluxe",
+				rooms: [
+					{
+						id: "room-1",
+						images: [],
+						typ: HousingRoomTypes.Double,
+						pax: 2,
+						name: null,
+						description: null,
+						rate: {
+							base: {
+								typ: "fixed",
+								cost: { val: 200, currency: Currency.USD },
+								fees: null,
+								extra_costs: [],
+								markup: null
+							},
+							seasons: []
+						}
+					}
+				]
+			}
+		]
+	}
+});
+
 const basePricing = (
 	overrides: Partial<TAccommodationPricingSchema> = {}
 ): TAccommodationPricingSchema => ({
@@ -64,31 +131,9 @@ const basePricing = (
 });
 
 describe("mapAccommodationPricingFromBackend", () => {
-	it("maps categories[].rooms[].typ into pricing category name only", () => {
+	it("maps a named category into class-priced per-room rows", () => {
 		const result = mapAccommodationPricingFromBackend(
-			{
-				expenses: {
-					typ: "per_room_category",
-					categories: [
-						{
-							name: "Deluxe",
-							rooms: [
-								{
-									typ: HousingRoomTypes.Double,
-									pax: 2,
-									expenses: {
-										typ: "fixed",
-										cost: {
-											val: 200,
-											currency: Currency.USD
-										}
-									}
-								}
-							]
-						}
-					]
-				}
-			},
+			namedCategoryDetails(),
 			roomsList
 		);
 
@@ -111,13 +156,13 @@ describe("mapAccommodationPricingFromBackend", () => {
 });
 
 describe("mapAccommodationPricingToBackend", () => {
-	it("returns empty payload without pricing", () => {
+	it("returns a rooms-only spec without pricing", () => {
 		expect(mapAccommodationPricingToBackend(undefined, roomsList)).toEqual(
-			{}
+			roomsOnlySpec
 		);
 	});
 
-	it("returns empty payload for part_of_package invoicing", () => {
+	it("returns a rooms-only spec for part_of_package invoicing", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -128,10 +173,10 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual({});
+		).toEqual(roomsOnlySpec);
 	});
 
-	it("maps flat_rate with total_price, taxes and currency", () => {
+	it("maps flat_rate to a whole spec with price.base", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -150,19 +195,22 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual({
-			details: {
-				expenses: {
-					typ: "fixed",
-					cost: { val: 250, currency: Currency.USD },
-					fees: [
-						{
-							name: null,
-							description: null,
-							cost: { val: 20, currency: Currency.USD }
-						}
-					],
-					markup: null
+		).toMatchObject({
+			spec: {
+				pricing: "whole",
+				price: {
+					base: {
+						typ: "fixed",
+						cost: { val: 250, currency: Currency.USD },
+						fees: [
+							{
+								name: null,
+								description: null,
+								cost: { val: 20, currency: Currency.USD }
+							}
+						],
+						markup: null
+					}
 				}
 			}
 		});
@@ -184,22 +232,25 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual({
-			details: {
-				expenses: {
-					typ: "fixed",
-					cost: { val: 250, currency: Currency.USD },
-					fees: null,
-					markup: {
+		).toMatchObject({
+			spec: {
+				pricing: "whole",
+				price: {
+					base: {
 						typ: "fixed",
-						cost: { val: 30, currency: Currency.USD }
+						cost: { val: 250, currency: Currency.USD },
+						fees: null,
+						markup: {
+							typ: "fixed",
+							cost: { val: 30, currency: Currency.USD }
+						}
 					}
 				}
 			}
 		});
 	});
 
-	it("returns empty payload for flat_rate without currency", () => {
+	it("returns a rooms-only spec for flat_rate without currency", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -208,10 +259,10 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual({});
+		).toEqual(roomsOnlySpec);
 	});
 
-	it("returns empty payload for flat_rate without total_price", () => {
+	it("returns a rooms-only spec for flat_rate without total_price", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -219,10 +270,10 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual({});
+		).toEqual(roomsOnlySpec);
 	});
 
-	it("maps per_person with total_price and currency", () => {
+	it("maps per_person to a whole spec", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -233,13 +284,16 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual({
-			details: {
-				expenses: {
-					typ: "per_person",
-					cost_per_person: { val: 80, currency: Currency.EUR },
-					fees: null,
-					markup: null
+		).toMatchObject({
+			spec: {
+				pricing: "whole",
+				price: {
+					base: {
+						typ: "per_person",
+						cost_per_person: { val: 80, currency: Currency.EUR },
+						fees: null,
+						markup: null
+					}
 				}
 			}
 		});
@@ -274,129 +328,29 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual({
-			details: {
-				expenses: {
-					typ: "per_room",
-					rooms: [
-						{
-							name: "Deluxe",
-							description: "Deluxe class",
-							expenses: {
-								typ: "fixed",
-								cost: { val: 150, currency: Currency.USD },
-								fees: [
-									{
-										name: null,
-										description: null,
-										cost: {
-											val: 10,
-											currency: Currency.USD
-										}
-									}
-								],
-								markup: null
-							}
-						}
-					]
-				}
-			}
-		});
-	});
-
-	it("omits per_room expenses when cost is set without currency", () => {
-		expect(
-			mapAccommodationPricingToBackend(
-				basePricing({
-					[ENUM_ACCOMMODATION_PRICING_FIELD.PRICING_TYPE]:
-						ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM,
-					[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: {
-						typ: ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM,
-						[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: [
+		).toMatchObject({
+			spec: {
+				pricing: "per_room",
+				categories: [
+					{
+						name: null,
+						rooms: [
 							{
-								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: 150,
-								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: [],
-								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
-									undefined,
-								[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]:
-									null
-							}
-						]
-					}
-				}),
-				roomsList
-			)
-		).toEqual({
-			details: {
-				expenses: {
-					typ: "per_room",
-					rooms: [
-						{
-							name: "Deluxe",
-							description: "Deluxe class",
-							expenses: undefined
-						}
-					]
-				}
-			}
-		});
-	});
-
-	it("maps class room_name and HousingRoomType category into per_room_category", () => {
-		expect(
-			mapAccommodationPricingToBackend(
-				basePricing({
-					[ENUM_ACCOMMODATION_PRICING_FIELD.PRICING_TYPE]:
-						ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM,
-					[ENUM_ACCOMMODATION_PRICING_FIELD.PRICE_BASED_ON_CLASS]: true,
-					[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: {
-						typ: ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM_CATEGORY,
-						[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: [
-							{
-								[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]:
-									[
-										{
-											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
-												HousingRoomTypes.Double,
-											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST]: 200,
-											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.FEES]:
-												[],
-											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.CURRENCY]:
-												Currency.USD,
-											[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]:
-												null
-										}
-									]
-							}
-						]
-					}
-				}),
-				roomsList
-			)
-		).toEqual({
-			details: {
-				expenses: {
-					typ: "per_room_category",
-					categories: [
-						{
-							name: "Deluxe",
-							rooms: [
-								{
-									typ: HousingRoomTypes.Double,
-									expenses: {
+								name: "Deluxe",
+								description: "Deluxe class",
+								rate: {
+									base: {
 										typ: "fixed",
 										cost: {
-											val: 200,
+											val: 150,
 											currency: Currency.USD
-										},
-										fees: null,
-										markup: null
+										}
 									}
 								}
-							]
-						}
-					]
-				}
+							}
+						]
+					}
+				]
 			}
 		});
 	});
@@ -432,20 +386,19 @@ describe("mapAccommodationPricingToBackend", () => {
 			roomsList
 		);
 
-		const expenses = result.details?.expenses;
-		expect(expenses).toMatchObject({ typ: "per_room_category" });
-		if (expenses && "categories" in expenses) {
-			expect(expenses.categories?.[0]?.name).toBe("Deluxe");
-			expect(expenses.categories?.[0]?.name).not.toBe(
+		expect(result.spec).toMatchObject({ pricing: "per_room" });
+		if (result.spec?.pricing === "per_room") {
+			expect(result.spec.categories?.[0]?.name).toBe("Deluxe");
+			expect(result.spec.categories?.[0]?.name).not.toBe(
 				HousingRoomTypes.Double
 			);
-			expect(expenses.categories?.[0]?.rooms?.[0]?.typ).toBe(
+			expect(result.spec.categories?.[0]?.rooms?.[0]?.typ).toBe(
 				HousingRoomTypes.Double
 			);
 		}
 	});
 
-	it("does not send flat_rate fields when active tab is per_room", () => {
+	it("does not send a whole-arm charge when the active tab is per_room", () => {
 		const result = mapAccommodationPricingToBackend(
 			basePricing({
 				[ENUM_ACCOMMODATION_PRICING_FIELD.PRICING_TYPE]:
@@ -468,7 +421,7 @@ describe("mapAccommodationPricingToBackend", () => {
 			roomsList
 		);
 
-		expect(result.details?.expenses).toMatchObject({ typ: "per_room" });
-		expect(result.details?.expenses).not.toMatchObject({ typ: "fixed" });
+		expect(result.spec?.pricing).toBe("per_room");
+		expect(result.spec).not.toMatchObject({ pricing: "whole" });
 	});
 });

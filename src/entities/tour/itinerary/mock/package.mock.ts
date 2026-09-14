@@ -12,6 +12,12 @@ export const createPackageMock = (
 		typ: "fixed",
 		cost: { val: 100, currency: Currency.USD }
 	},
-	fees: overrides.fees ?? [{ cost: { val: 10, currency: Currency.USD } }],
+	fees: overrides.fees ?? [
+		{
+			name: null,
+			cost: { val: 10, currency: Currency.USD },
+			description: null
+		}
+	],
 	markup: overrides.markup ?? null
 });

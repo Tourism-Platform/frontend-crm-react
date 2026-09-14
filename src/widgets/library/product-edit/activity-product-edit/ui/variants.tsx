@@ -17,14 +17,15 @@ import {
 import {
 	ACTIVITY_VARIANT_FORM_SCHEMA,
 	ENUM_FORM_ACTIVITY_VARIANT as ENUM_FORM,
+	ENUM_SUPPLIER_TYPE,
 	type IActivityVariant,
 	type TActivityVariantFormSchema,
 	emptyActivityVariantForm,
 	mapActivityVariantFormToWrite,
 	mapActivityVariantToForm,
-	useCreateActivityVariantMutation,
-	useDeleteActivityVariantMutation,
-	useUpdateActivityVariantMutation
+	useCreateVariantMutation,
+	useDeleteVariantMutation,
+	useUpdateVariantMutation
 } from "@/entities/supplier";
 
 import { FeeLinesField } from "@/features/pricing";
@@ -45,12 +46,12 @@ const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 	const { t } = useTranslation("activity_product_edit_page");
 	const [selectedId, setSelectedId] = useState<string | "new">("new");
 
-	const [createActivityVariant, { isLoading: isCreating }] =
-		useCreateActivityVariantMutation();
-	const [updateActivityVariant, { isLoading: isUpdating }] =
-		useUpdateActivityVariantMutation();
-	const [deleteActivityVariant, { isLoading: isDeleting }] =
-		useDeleteActivityVariantMutation();
+	const [createVariant, { isLoading: isCreating }] =
+		useCreateVariantMutation();
+	const [updateVariant, { isLoading: isUpdating }] =
+		useUpdateVariantMutation();
+	const [deleteVariant, { isLoading: isDeleting }] =
+		useDeleteVariantMutation();
 
 	const selectedVariant =
 		selectedId === "new"
@@ -84,20 +85,24 @@ const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 
 		try {
 			if (selectedId === "new") {
-				const created = await createActivityVariant({
+				// The new variant arrives with the invalidated product query;
+				// reset the form so the same values cannot be submitted twice.
+				await createVariant({
 					supplierId,
 					productId,
+					typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
 					data: payload
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
-				setSelectedId(created.id);
+				form.reset(emptyActivityVariantForm());
 				return;
 			}
 
-			await updateActivityVariant({
+			await updateVariant({
 				supplierId,
 				productId,
 				variantId: selectedId,
+				typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
 				data: payload
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
@@ -114,7 +119,7 @@ const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 		}
 
 		try {
-			await deleteActivityVariant({
+			await deleteVariant({
 				supplierId,
 				productId,
 				variantId: selectedId

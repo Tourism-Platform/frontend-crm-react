@@ -6,17 +6,16 @@ import { toast } from "sonner";
 
 import {
 	ENUM_EVENT,
-	type ITourEventOption,
 	MULTIPLY_OPTION_EDIT_SCHEMA,
 	type TMultiplyOptionEditSchema,
 	getRemovedMultiplyOptions,
 	hasMultiplyOptionsOrderChanged,
 	mapMultiplyOptionReorderToBackend,
-	useDeleteEventOptionMutation,
+	useDeleteTourEventOptionMutation,
 	useEventEditIds,
 	useReorderEventOptionsMutation,
 	useTourEventEdit,
-	useUpdateEventOptionContentMutation
+	useUpdateOptionContentMutation
 } from "@/entities/tour";
 
 import { MultiplyOptionEdit } from "@/widgets/tours";
@@ -29,10 +28,10 @@ export const MultiplyOptionEditPage: FC = () => {
 	);
 	const [reorderEventOptions, { isLoading: isReorderLoading }] =
 		useReorderEventOptionsMutation();
-	const [deleteEventOption, { isLoading: isDeleteLoading }] =
-		useDeleteEventOptionMutation();
-	const [updateEventOptionContent, { isLoading: isUpdateLoading }] =
-		useUpdateEventOptionContentMutation();
+	const [deleteOption, { isLoading: isDeleteLoading }] =
+		useDeleteTourEventOptionMutation();
+	const [updateOptionContent, { isLoading: isUpdateLoading }] =
+		useUpdateOptionContentMutation();
 
 	const form = useForm<TMultiplyOptionEditSchema>({
 		resolver: zodResolver(MULTIPLY_OPTION_EDIT_SCHEMA),
@@ -58,9 +57,8 @@ export const MultiplyOptionEditPage: FC = () => {
 	}, [data, reset]);
 
 	const createSectionSubmit = async () => {
-		const currentOptions = (form.getValues("options") ??
-			[]) as ITourEventOption[];
-		const originalOptions = (data?.options ?? []) as ITourEventOption[];
+		const currentOptions = form.getValues("options") ?? [];
+		const originalOptions = data?.options ?? [];
 
 		if (currentOptions.length < 2) {
 			toast.error(t("form.toasts.save.error"));
@@ -81,7 +79,7 @@ export const MultiplyOptionEditPage: FC = () => {
 
 		try {
 			for (const option of removedOptions) {
-				await deleteEventOption({
+				await deleteOption({
 					tourId,
 					optionId,
 					eventId,
@@ -90,33 +88,19 @@ export const MultiplyOptionEditPage: FC = () => {
 			}
 
 			for (const option of currentOptions) {
-				await updateEventOptionContent({
+				await updateOptionContent({
 					tourId,
 					optionId,
 					eventId,
 					eventOptionId: option.id,
-					data: {
-						name: option.name,
-						description: option.description,
-						day: data?.day ?? 0,
-						position: data?.position ?? 0,
-						eventType: option.eventType,
-						details: option.details
-						// isOptional: option.isOptional
-					}
+					option
 				}).unwrap();
 			}
 
 			if (orderChanged) {
-				const orderPayload = mapMultiplyOptionReorderToBackend(
-					originalRemaining,
-					currentOptions
-				);
-
-				if (orderPayload.order.some((index) => index < 0)) {
-					toast.error(t("form.toasts.save.error"));
-					return;
-				}
+				// Contract 3.1: reorder payload is option row IDs, not indices.
+				const orderPayload =
+					mapMultiplyOptionReorderToBackend(currentOptions);
 
 				await reorderEventOptions({
 					tourId,

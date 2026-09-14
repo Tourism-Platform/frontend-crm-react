@@ -439,7 +439,8 @@ export const mapGuidePricingFromBackend = (
 	details?: TGuideDetailsBackend | null,
 	guidesList: TGuidesList = []
 ): TGuidePricingSchema => {
-	const categories = details?.categories ?? [];
+	// Contract 3.1: language categories live on `details.spec`.
+	const categories = details?.spec?.categories ?? [];
 	const defaults = getDefaultGuidePricing(guidesList);
 
 	if (!categories.length) {

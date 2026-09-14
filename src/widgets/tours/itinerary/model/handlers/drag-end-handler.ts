@@ -1,7 +1,11 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 
 import { ENUM_EVENT } from "@/entities/tour";
-import type { ENUM_EVENT_TYPE, IEventLibraryItem } from "@/entities/tour";
+import type {
+	ENUM_EVENT_TYPE,
+	IEventLibraryItem,
+	TEventDetailsWriteBackend
+} from "@/entities/tour";
 
 import {
 	addItemToData,
@@ -31,7 +35,7 @@ export type TDragAction =
 			eventType: ENUM_EVENT_TYPE;
 			title: string;
 			tempBlockId: string;
-			details: Record<string, unknown>;
+			details: TEventDetailsWriteBackend;
 	  }
 	| {
 			type: "createFromLibrary";
@@ -50,7 +54,7 @@ export type TDragAction =
 			eventType: ENUM_EVENT_TYPE;
 			title: string;
 			tempBlockId: string;
-			details: Record<string, unknown>;
+			details: TEventDetailsWriteBackend;
 	  }
 	| {
 			type: "addOptionFromLibrary";
@@ -77,12 +81,15 @@ export type TDragAction =
 	| {
 			type: "reorderOptions";
 			parentBackendId: string;
-			order: number[];
+			/** Event option row IDs (details[i].id) in the new order. */
+			order: string[];
 	  }
 	| {
 			type: "moveToMulti";
 			eventId: string;
 			targetEventId: string;
+			/** Insert index among the target's alternatives. */
+			optionPosition: number;
 	  }
 	| {
 			type: "moveToSingle";
@@ -148,15 +155,19 @@ const getTargetParent = (
 	);
 };
 
-const buildOptionReorderPermutation = (
+/**
+ * Option reorder payload (contract 3.1): the option row IDs (`details[i].id`)
+ * in the new order — never array indices.
+ */
+const buildOptionReorderIds = (
+	items: IDayItem[],
 	fromNestedIndex: number,
-	toIndex: number,
-	length: number
-): number[] => {
-	const order = Array.from({ length }, (_, i) => i);
-	const [removed] = order.splice(fromNestedIndex, 1);
-	order.splice(toIndex, 0, removed);
-	return order;
+	toIndex: number
+): string[] => {
+	const ids = items.map((item) => item.backendId ?? item.id);
+	const [removed] = ids.splice(fromNestedIndex, 1);
+	ids.splice(toIndex, 0, removed);
+	return ids;
 };
 
 const resolveCreateAction = (
@@ -267,7 +278,8 @@ const resolveItemMoveAction = (
 		return {
 			type: "moveToMulti",
 			eventId: movedItem.backendId,
-			targetEventId: targetParent.backendId
+			targetEventId: targetParent.backendId,
+			optionPosition: toIndex
 		};
 	}
 
@@ -307,10 +319,13 @@ const resolveItemMoveAction = (
 		if (!parent?.backendId || !parent.items) return undefined;
 
 		if (sameParent) {
-			const order = buildOptionReorderPermutation(
+			// Every alternative must have its backend option row id — a freshly
+			// added option still syncing (temp id) makes the payload invalid.
+			if (parent.items.some((item) => !item.backendId)) return undefined;
+			const order = buildOptionReorderIds(
+				parent.items,
 				from.nestedIndex!,
-				toIndex,
-				parent.items.length
+				toIndex
 			);
 			return {
 				type: "reorderOptions",

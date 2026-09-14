@@ -1,52 +1,41 @@
+import type { StayRateOutput } from "@/shared/api";
+
 import type {
 	IHousingEventOverride,
-	TAccommodationPricingSchema,
-	TCustomHousingDetailsBackend,
 	THousingOverrideInputBackend,
 	THousingOverrideOutputBackend
 } from "../../types";
 
 import {
-	getDefaultAccommodationPricing,
-	mapAccommodationPricingFromBackend,
-	mapAccommodationPricingToBackend
-} from "./accommodation-pricing.converters";
-import {
 	mapHotelPolicyFromBackend,
 	mapHotelPolicyToBackend
 } from "./hotel-policy.converters";
 
-/** Thin wrapper: unwrap details.expenses; null/empty → null */
-export const mapHousingOverrideExpensesToBackend = (
-	pricing?: TAccommodationPricingSchema | null
-): THousingOverrideInputBackend["expenses"] => {
-	if (!pricing) {
-		return null;
-	}
+/** StayRate Output → Input: identical structure, Input fields are optional. */
+const mapStayRateOutputToInput = (
+	rate: StayRateOutput
+): NonNullable<IHousingEventOverride["rate"]> => ({
+	base: rate.base,
+	seasons: rate.seasons
+});
 
-	return mapAccommodationPricingToBackend(pricing).details?.expenses ?? null;
-};
-
-export const mapHousingOverrideExpensesFromBackend = (
-	expenses?: THousingOverrideOutputBackend["expenses"] | null
-): TAccommodationPricingSchema | null => {
-	if (!expenses) {
-		return null;
-	}
-
-	return mapAccommodationPricingFromBackend({
-		expenses
-	} as TCustomHousingDetailsBackend);
-};
-
+/**
+ * Housing override (contract 3.1):
+ * WRITE `{ typ: "housing", policy?, rates? }` where the dialog's single charge
+ * is the WHOLE arm: `rates = { pricing: "whole", price: { base, seasons? } }`.
+ */
 export const mapHousingEventOverrideToBackend = (
 	data: IHousingEventOverride
 ): THousingOverrideInputBackend => ({
 	typ: "housing",
-	expenses: mapHousingOverrideExpensesToBackend(data.expenses),
-	policy: mapHotelPolicyToBackend(data.policy)
+	policy: mapHotelPolicyToBackend(data.policy),
+	rates: data.rate ? { pricing: "whole", price: data.rate } : null
 });
 
+/**
+ * READ: only the whole arm maps back into the dialog model — per-room rate
+ * rows are a backend capability this UI does not edit (rate → null).
+ */
 export const mapHousingOverrideFromBackend = (
 	override?: THousingOverrideOutputBackend | null
 ): IHousingEventOverride | null => {
@@ -54,9 +43,15 @@ export const mapHousingOverrideFromBackend = (
 		return null;
 	}
 
+	const rates = override.rates;
+	const rate =
+		rates?.pricing === "whole"
+			? mapStayRateOutputToInput(rates.price)
+			: null;
+
 	return {
 		typ: "housing",
-		expenses: mapHousingOverrideExpensesFromBackend(override.expenses),
+		rate,
 		policy: mapHotelPolicyFromBackend(override.policy)
 	};
 };
@@ -72,6 +67,6 @@ export const getEmptyHotelPolicy = (): NonNullable<
 
 export const getDefaultHousingOverrideForm = (): IHousingEventOverride => ({
 	typ: "housing",
-	expenses: getDefaultAccommodationPricing(),
+	rate: null,
 	policy: getEmptyHotelPolicy()
 });

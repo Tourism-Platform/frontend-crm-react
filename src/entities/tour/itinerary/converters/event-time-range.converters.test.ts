@@ -1,110 +1,268 @@
 import { describe, expect, it } from "vitest";
 
-import { ENUM_EVENT_BACKEND } from "../types";
+import { Currency } from "@/shared/api";
+import type {
+	ActivityDetailsOutput,
+	BusDetailsOutput,
+	FlightDetailsOutput,
+	GuideDetailsOutput,
+	HousingDetailsOutput,
+	InformationDetailsOutput,
+	SupplementaryDetailsOutput,
+	TransferDetailsOutput
+} from "@/shared/api";
+
+import type { TSingleEventReadBackend } from "../types";
 
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
 
+const INLINE = { source: "inline" as const, supplier_id: null };
+
+const META = {
+	id: "00000000-0000-0000-0000-000000000001",
+	day: 1,
+	position: 0,
+	is_optional: false,
+	images: [] as [],
+	name: null,
+	description: null,
+	package_id: null
+};
+
+const ZERO_FIXED = {
+	typ: "fixed" as const,
+	cost: { val: 0, currency: Currency.USD },
+	fees: null,
+	extra_costs: [] as [],
+	markup: null
+};
+
+const activityEvent = (
+	plan: ActivityDetailsOutput["plan"]
+): TSingleEventReadBackend => ({
+	...META,
+	typ: "activity",
+	details: {
+		plan,
+		supply: INLINE,
+		spec: {
+			sub_typ: "food",
+			images: [],
+			name: null,
+			location: null,
+			offerings: []
+		}
+	}
+});
+
+const housingEvent = (
+	plan: HousingDetailsOutput["plan"]
+): TSingleEventReadBackend => ({
+	...META,
+	typ: "housing",
+	details: {
+		plan,
+		supply: INLINE,
+		spec: {
+			pricing: "whole",
+			images: [],
+			name: null,
+			location: null,
+			stars: null,
+			typs: [],
+			amenities: [],
+			policy: null,
+			price: { base: ZERO_FIXED, seasons: [] },
+			categories: []
+		}
+	}
+});
+
+const transferEvent = (
+	plan: TransferDetailsOutput["plan"]
+): TSingleEventReadBackend => ({
+	...META,
+	typ: "transfer",
+	details: {
+		plan,
+		supply: INLINE,
+		spec: {
+			pricing: "whole",
+			images: [],
+			name: null,
+			cars: [],
+			charge: ZERO_FIXED
+		}
+	}
+});
+
+const flightEvent = (
+	plan: FlightDetailsOutput["plan"]
+): TSingleEventReadBackend => ({
+	...META,
+	typ: "flight",
+	details: {
+		plan,
+		supply: INLINE,
+		spec: {
+			pricing: "whole",
+			images: [],
+			name: null,
+			legs: [],
+			fares: [],
+			charge: ZERO_FIXED
+		}
+	}
+});
+
+const busEvent = (plan: BusDetailsOutput["plan"]): TSingleEventReadBackend => ({
+	...META,
+	typ: "bus",
+	details: {
+		plan,
+		supply: INLINE,
+		spec: {
+			pricing: "whole",
+			images: [],
+			name: null,
+			vehicles: [],
+			charge: ZERO_FIXED
+		}
+	}
+});
+
+const refEvent = (
+	plan: InformationDetailsOutput["plan"]
+): TSingleEventReadBackend => ({
+	...META,
+	typ: "ref",
+	details: {
+		plan,
+		supply: INLINE,
+		spec: {}
+	}
+});
+
+const guideEvent = (): TSingleEventReadBackend => ({
+	...META,
+	typ: "guide",
+	details: {
+		plan: {},
+		supply: INLINE,
+		spec: { name: null, typ_tiers: [], categories: [] }
+	} satisfies GuideDetailsOutput
+});
+
+const supplementaryEvent = (): TSingleEventReadBackend => ({
+	...META,
+	typ: "supplementary",
+	details: {
+		plan: {},
+		supply: INLINE,
+		spec: { item: [] }
+	} satisfies SupplementaryDetailsOutput
+});
+
 describe("mapBackendEventToTimeSubtitle", () => {
-	it("formats activity start/end", () => {
+	it("formats activity start/end from plan", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.ACTIVITY, {
-				start_time: { time: "09:00:00", timezone: 5 },
-				end_time: { time: "17:30:00", timezone: 5 }
-			})
+			mapBackendEventToTimeSubtitle(
+				activityEvent({
+					start_time: { time: "09:00:00", timezone: 5 },
+					end_time: { time: "17:30:00", timezone: 5 }
+				})
+			)
 		).toBe("09:00 – 17:30");
 	});
 
-	it("formats housing check-in/out", () => {
+	it("formats housing check-in/out from plan", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.HOUSING, {
-				check_in: { time: "14:00:00" },
-				check_out: { time: "11:00:00" }
-			})
+			mapBackendEventToTimeSubtitle(
+				housingEvent({
+					check_in: { time: "14:00:00" },
+					check_out: { time: "11:00:00" }
+				})
+			)
 		).toBe("14:00 – 11:00");
 	});
 
-	it("formats housing check-in/out for inherited details", () => {
+	it("formats housing check-in/out for a product-linked stay (plan only)", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.HOUSING, {
-				product_id: "b0c1c0de-0000-0000-0000-000000000001",
-				check_in: { time: "11:00:00" },
-				check_out: { time: "12:00:00" }
-			})
+			mapBackendEventToTimeSubtitle(
+				housingEvent({
+					check_in: { time: "11:00:00" },
+					check_out: { time: "12:00:00" }
+				})
+			)
 		).toBe("11:00 – 12:00");
 	});
 
-	it("formats transfer departure/arrival", () => {
+	it("formats transfer departure/arrival from plan", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.TRANSFER, {
-				departure: { time: { time: "08:15:00" } },
-				arrival: { time: { time: "09:45:00" } }
-			})
+			mapBackendEventToTimeSubtitle(
+				transferEvent({
+					typ: null,
+					departure: { time: { time: "08:15:00" }, location: null },
+					arrival: { time: { time: "09:45:00" }, location: null }
+				})
+			)
 		).toBe("08:15 – 09:45");
 	});
 
-	it("formats flight hops from first departure and last arrival", () => {
+	it("formats flight departure/arrival from plan", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.FLIGHT, {
-				hop: [
-					{
-						departure_time: { time: "10:00:00" },
-						arrival_time: { time: "12:00:00" }
-					},
-					{
-						departure_time: { time: "13:00:00" },
-						arrival_time: { time: "15:20:00" }
-					}
-				]
-			})
+			mapBackendEventToTimeSubtitle(
+				flightEvent({
+					departure_time: { time: "10:00:00" },
+					arrival_time: { time: "15:20:00" }
+				})
+			)
 		).toBe("10:00 – 15:20");
 	});
 
-	it("does not fall back to first hop arrival for flight end", () => {
+	it("does not invent a flight arrival when plan only has departure", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.FLIGHT, {
-				hop: [
-					{
-						departure_time: { time: "10:00:00" },
-						arrival_time: { time: "12:00:00" }
-					},
-					{
-						departure_time: { time: "13:00:00" }
-					}
-				]
-			})
+			mapBackendEventToTimeSubtitle(
+				flightEvent({
+					departure_time: { time: "10:00:00" }
+				})
+			)
 		).toBe("10:00");
 	});
 
-	it("formats train/bus journey hops", () => {
+	it("formats bus journey from first departure and last arrival on plan.legs", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.TRAIN, {
-				hop: [
-					{
-						departure: { time: { time: "06:30:00" } },
-						arrival: { time: { time: "08:00:00" } }
-					}
-				]
-			})
+			mapBackendEventToTimeSubtitle(
+				busEvent({
+					legs: [
+						{
+							departure: {
+								time: { time: "06:30:00" },
+								location: null
+							},
+							arrival: {
+								time: { time: "08:00:00" },
+								location: null
+							}
+						}
+					]
+				})
+			)
 		).toBe("06:30 – 08:00");
 	});
 
-	it("returns undefined for guide/supplement/options", () => {
+	it("returns undefined for guide/supplement (no clock plan)", () => {
+		expect(mapBackendEventToTimeSubtitle(guideEvent())).toBeUndefined();
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.GUIDE, {})
-		).toBeUndefined();
-		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.SUPPLEMENTARY, {})
-		).toBeUndefined();
-		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.OPTIONS, {})
+			mapBackendEventToTimeSubtitle(supplementaryEvent())
 		).toBeUndefined();
 	});
 
 	it("returns single edge when only one time is present", () => {
 		expect(
-			mapBackendEventToTimeSubtitle(ENUM_EVENT_BACKEND.REF, {
-				start_time: { time: "12:00:00" }
-			})
+			mapBackendEventToTimeSubtitle(
+				refEvent({ start_time: { time: "12:00:00" } })
+			)
 		).toBe("12:00");
 	});
 });

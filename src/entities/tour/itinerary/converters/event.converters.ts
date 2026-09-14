@@ -2,25 +2,28 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
 import {
 	ENUM_EVENT,
+	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
 	type ENUM_EVENT_TYPE,
 	type IEventOptionReorder,
 	type IGetTourEventResult,
+	type IMoveEventToMulti,
 	type IMoveToMultiResult,
 	type IMoveToSingleResult,
 	type ITourEvent,
 	type ITourEventCreate,
-	type ITourEventOption,
 	type ITourEventReorder,
 	type TAccommodationEditSchema,
 	type TActivityEditSchema,
+	type TEventDetailsBackend,
 	type TEventOptionBodyBackend,
 	type TEventOptionReorderBackend,
 	type TFlightEditSchema,
 	type TGuideEditSchema,
+	type TMoveToMultiBodyBackend,
 	type TMoveToMultiResultBackend,
 	type TMoveToSingleResultBackend,
-	type TMultiEventReadBackend,
+	type TMultiEventDetailBackend,
 	type TSupplementEditSchema,
 	type TTourEvent,
 	type TTourEventBackendResponce,
@@ -30,8 +33,8 @@ import {
 	type TTourEventUpdateBackend,
 	type TTransportationEditSchema
 } from "../types";
-import { ENUM_EVENT_BACKEND } from "../types";
 
+import { backendEventTypeMapper } from "./backend-event-type.converters";
 import {
 	mapAccommodationEventToForm,
 	mapAccommodationFormToUpdate,
@@ -53,48 +56,54 @@ import {
 	mapTransportFormToUpdate
 } from "./event";
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
-import {
-	eventTypeMapper,
-	mapBackendTypToEventType
-} from "./event-type.converters";
+import { eventTypeMapper } from "./event-type.converters";
 
+/**
+ * Slot read → board/list domain model.
+ *
+ * ID semantics (contract 3.1):
+ * - `id`            — event SLOT id (`TourEventResponse.id`), used in routes/API;
+ * - `eventOptionId` — option ROW id (`event.id` on the read); single events only,
+ *                     multi alternatives carry their own ids inside `options`.
+ */
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
 ): ITourEvent => {
-	const backendTyp = backend.event.typ as ENUM_EVENT_BACKEND_TYPE | undefined;
-	const details = (backend.event.details as Record<string, unknown>) || {};
+	const slot = backend.event;
 
-	const event: ITourEvent = {
+	if (slot.typ === ENUM_EVENT_BACKEND.OPTIONS) {
+		return {
+			id: backend.id,
+			tourOptionId: backend.tour_option_id,
+			name: "",
+			description: "",
+			day: slot.day,
+			position: slot.position,
+			eventType: ENUM_EVENT.MULTIPLY_OPTION,
+			backendTyp: ENUM_EVENT_BACKEND.OPTIONS,
+			details: null,
+			options: (slot.details ?? [])
+				.map(mapMultiplyOptionDetailToOption)
+				.filter((opt): opt is NonNullable<typeof opt> => opt !== null)
+		};
+	}
+
+	const backendTyp = slot.typ as ENUM_EVENT_BACKEND_TYPE;
+
+	return {
 		id: backend.id,
 		tourOptionId: backend.tour_option_id,
-		name: "",
-		description: "",
-		day: backend.event.day,
-		position: backend.event.position,
+		eventOptionId: slot.id,
+		name: slot.name || "",
+		description: slot.description || "",
+		day: slot.day,
+		position: slot.position,
 		eventType:
-			mapBackendTypToEventType(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
-		details,
-		timeSubtitle: mapBackendEventToTimeSubtitle(backendTyp, details)
+			backendEventTypeMapper.to(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
+		backendTyp,
+		details: slot.details,
+		timeSubtitle: mapBackendEventToTimeSubtitle(slot)
 	};
-
-	if ("name" in backend.event) {
-		event.name = backend.event.name || "";
-	}
-
-	if ("description" in backend.event) {
-		event.description = backend.event.description || "";
-	}
-
-	if (backend.event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		const multiEvent = backend.event as TMultiEventReadBackend;
-		event.options = (multiEvent.details ?? [])
-			.map(mapMultiplyOptionDetailToOption)
-			.filter((opt): opt is ITourEventOption => opt !== null);
-		event.details = {};
-		event.timeSubtitle = undefined;
-	}
-
-	return event;
 };
 
 export const mapEventToFrontend = (
@@ -121,9 +130,9 @@ export const mapEventToFrontend = (
 			return mapSupplementaryEventToForm(backend);
 		case ENUM_EVENT_BACKEND.OPTIONS:
 			return mapMultiplyOptionEventToForm(backend);
-
 		default:
-			return backend as unknown as TTransportationEditSchema;
+			// All contract 3.1 typs are handled above.
+			throw new Error("Unsupported event typ");
 	}
 };
 
@@ -135,43 +144,49 @@ export const mapEventOptionToFrontend = (
 		throw new Error("Event is not a multiply option");
 	}
 
-	const multiEvent = backend.event as TMultiEventReadBackend;
+	const multiEvent = backend.event;
 	const option = (multiEvent.details ?? []).find(
-		(detail) => detail.id === eventOptionId
+		(detail: TMultiEventDetailBackend) => detail.id === eventOptionId
 	);
 	if (!option) {
 		throw new Error(`Event option ${eventOptionId} not found`);
 	}
 
-	const asResponse = {
-		id: eventOptionId,
+	// Re-embed the alternative as a single-event slot read so the type-specific
+	// form converters can be reused unchanged. The slot-owned fields
+	// (day/position/is_optional/images) come from the multi slot.
+	const asResponse: TTourEventBackendResponce = {
+		id: backend.id,
 		tour_option_id: backend.tour_option_id,
+		translation: backend.translation,
 		event: {
 			...option,
 			day: multiEvent.day,
-			position: multiEvent.position
+			position: multiEvent.position,
+			is_optional: multiEvent.is_optional,
+			images: multiEvent.images
 		}
-	} as TTourEventBackendResponce;
+	};
 
 	return mapEventToFrontend(asResponse);
 };
 
+/**
+ * Typed READ details of the addressed option row —
+ * `{ plan, supply, spec }`; never send back as a WRITE body.
+ */
 export const mapTourEventDetailsFromBackend = (
 	backend: TTourEventBackendResponce,
 	eventOptionId?: string
-): Record<string, unknown> => {
-	if (eventOptionId && backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		const multiEvent = backend.event as TMultiEventReadBackend;
-		const option = (multiEvent.details ?? []).find(
-			(detail) => detail.id === eventOptionId
-		);
-		return (
-			((option as { details?: Record<string, unknown> } | undefined)
-				?.details as Record<string, unknown>) ?? {}
-		);
+): TEventDetailsBackend | undefined => {
+	if (backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS) {
+		if (!eventOptionId) return undefined;
+		return (backend.event.details ?? []).find(
+			(detail: TMultiEventDetailBackend) => detail.id === eventOptionId
+		)?.details;
 	}
 
-	return (backend.event?.details as Record<string, unknown>) ?? {};
+	return backend.event?.details;
 };
 
 export const mapGetTourEventToFrontend = (
@@ -181,7 +196,11 @@ export const mapGetTourEventToFrontend = (
 	form: eventOptionId
 		? mapEventOptionToFrontend(backend, eventOptionId)
 		: mapEventToFrontend(backend),
-	details: mapTourEventDetailsFromBackend(backend, eventOptionId)
+	details: mapTourEventDetailsFromBackend(backend, eventOptionId),
+	eventOptionId:
+		backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS
+			? eventOptionId
+			: backend.event?.id
 });
 
 export const mapEventUpdateToBackend = (
@@ -215,9 +234,7 @@ export const mapEventUpdateToBackend = (
 	else if (type === ENUM_EVENT.GUIDE)
 		return mapGuideFormToUpdate(frontend as TGuideEditSchema);
 
-	return {
-		name: frontend.name
-	} as TTourEventUpdateBackend;
+	throw new Error(`Unsupported event type for update: ${type}`);
 };
 
 export const mapEventReorderToBackend = (
@@ -227,32 +244,41 @@ export const mapEventReorderToBackend = (
 	position: frontend.position
 });
 
+/** Option reorder payload — event option row IDs in the new order. */
 export const mapOptionReorderToBackend = (
 	frontend: IEventOptionReorder
 ): TEventOptionReorderBackend => ({
 	order: frontend.order
 });
 
-/** Body for addEventOption / updateEventOption kind:"option" (no day/position). */
+/**
+ * Body for `addOption` — a WRITE event union member (no day/position:
+ * an alternative inherits the slot's placement).
+ */
 export const mapEventOptionCreateToBackend = (
 	frontend: ITourEventCreate
 ): TEventOptionBodyBackend => {
-	const typ = eventTypeMapper.to(frontend.eventType);
+	const typ = frontend.backendTyp ?? eventTypeMapper.to(frontend.eventType);
+	if (!typ || typ === ENUM_EVENT_BACKEND.OPTIONS) {
+		throw new Error(`Invalid option typ: ${String(typ)}`);
+	}
 
 	return {
 		name: frontend.name,
 		description: frontend.description,
 		typ,
-		details: frontend.details || {},
-		...(frontend.supplierId !== undefined && {
-			supplier_id: frontend.supplierId
-		}),
+		details: frontend.details ?? {},
 		...(frontend.packageId !== undefined && {
 			package_id: frontend.packageId
-		}),
-		is_optional: Boolean(frontend.isOptional)
+		})
 	} as TEventOptionBodyBackend;
 };
+
+export const mapMoveToMultiToBackend = (
+	frontend: Pick<IMoveEventToMulti, "optionPosition">
+): NonNullable<TMoveToMultiBodyBackend> => ({
+	option_position: frontend.optionPosition
+});
 
 export const mapMoveToMultiResultToFrontend = (
 	backend: TMoveToMultiResultBackend
@@ -268,11 +294,29 @@ export const mapMoveToSingleResultToFrontend = (
 	sourceEvent: mapAllEventsToFrontend(backend.source_event)
 });
 
+/**
+ * Body for `createEvent` — a SingleEvent WRITE union member (with day/position),
+ * or a MultiEvent for an empty choice slot.
+ */
 export const mapEventCreateToBackend = (
 	frontend: ITourEventCreate
 ): TTourEventCreateBackend => {
-	const typ = eventTypeMapper.to(frontend.eventType);
-	const isMultipleOption = typ === ENUM_EVENT_BACKEND.OPTIONS;
+	const typ = frontend.backendTyp ?? eventTypeMapper.to(frontend.eventType);
+	if (!typ) {
+		throw new Error(`Cannot resolve backend typ for ${frontend.eventType}`);
+	}
+
+	if (typ === ENUM_EVENT_BACKEND.OPTIONS) {
+		return {
+			day: frontend.day,
+			position: frontend.position,
+			typ: ENUM_EVENT_BACKEND.OPTIONS,
+			details: [],
+			...(frontend.isOptional !== undefined && {
+				is_optional: frontend.isOptional
+			})
+		};
+	}
 
 	return {
 		name: frontend.name,
@@ -280,16 +324,12 @@ export const mapEventCreateToBackend = (
 		day: frontend.day,
 		position: frontend.position,
 		typ,
-		...(isMultipleOption &&
-			frontend.details && { details: frontend.details }),
-		...(!isMultipleOption
-			? { details: frontend.details }
-			: { details: [] }),
-		...(frontend.supplierId !== undefined && {
-			supplier_id: frontend.supplierId
-		}),
+		details: frontend.details ?? {},
 		...(frontend.packageId !== undefined && {
 			package_id: frontend.packageId
+		}),
+		...(frontend.isOptional !== undefined && {
+			is_optional: frontend.isOptional
 		})
 	} as TTourEventCreateBackend;
 };

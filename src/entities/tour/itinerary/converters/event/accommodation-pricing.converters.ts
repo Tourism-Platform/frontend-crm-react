@@ -1,3 +1,12 @@
+import { Currency, HousingRoomTypes } from "@/shared/api";
+import type {
+	DurationChargeOutput,
+	FixedChargeInput,
+	HousingDetailsOutput,
+	PricedCategoryOutput,
+	PricedRoomOutput
+} from "@/shared/api";
+
 import {
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
@@ -14,6 +23,7 @@ import {
 	ENUM_ACCOMMODATION_PRICING_INVOICING,
 	ENUM_ACCOMMODATION_PRICING_TYPE,
 	ENUM_FORM_ROOMS,
+	ENUM_HOUSING_ROOM_TYPE,
 	type ENUM_HOUSING_ROOM_TYPE_TYPE,
 	type IAccommodationCategoryPriceRow,
 	type IAccommodationPerRoomByClassPriceRow,
@@ -25,27 +35,31 @@ import {
 	type TAccommodationPricingSchema,
 	type TCommissionMarkupBackend,
 	type TCommissionMarkupInputBackend,
-	type TCustomHousingDetailsInputBackend,
-	type TDurationChargeBackend,
-	type TFixedChargeBackend,
-	type TFixedExpenseInputBackend,
-	type THousingDetailsBackend,
-	type THousingRoomCategoryBackend,
-	type THousingRoomCategoryExpensesBackend,
-	type THousingRoomChargeInputBackend,
-	type THousingRoomExpensesBackend,
-	type TPerRoomCategoryExpensesBackend,
-	type TPerRoomExpensesBackend,
+	type THousingRoomBaseChargeBackend,
+	type THousingSpecInputBackend,
 	type TRoomsSchema
 } from "../../types";
 
+import { isClassPricedHousingSpec } from "./accommodation-rooms.converters";
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
 import { isInheritedHousingDetails } from "./housing-details.helpers";
 import { housingRoomTypeConverter } from "./housing-room-type.converters";
+import { zeroFixedCharge } from "./zero-fixed-charge.helpers";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
-type THousingRoomChargeBackend = TFixedChargeBackend | TDurationChargeBackend;
+/**
+ * The form captures neither a room's `typ` nor its `pax`, but
+ * `PricedRoomInput` / `Room` require both — contract gap bridged with a
+ * documented default (double room for two).
+ */
+const DEFAULT_ROOM_TYP = HousingRoomTypes.Double;
+const DEFAULT_ROOM_PAX = 2;
+
+const isHousingRoomType = (
+	value: string
+): value is ENUM_HOUSING_ROOM_TYPE_TYPE =>
+	Object.values(ENUM_HOUSING_ROOM_TYPE).some((v) => v === value);
 
 const createEmptyPerRoomPriceRow = (): IAccommodationPerRoomPriceRow => ({
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: null,
@@ -70,30 +84,33 @@ const createEmptyPerRoomByClassPriceRow =
 	});
 
 const mapCostFromDurationRate = (
-	charge: TDurationChargeBackend
+	charge: DurationChargeOutput
 ): {
 	cost: number | null;
 	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined;
 } => {
 	const rate = charge.rate;
-	if (rate && "tiers" in rate) {
+	if (rate.typ === "per_group") {
 		const tier = rate.tiers?.[0];
 		return {
 			cost: tier?.cost?.val ?? null,
 			currency: currencyConverter.from(tier?.cost?.currency)
 		};
 	}
-	if (rate && "cost" in rate) {
+	if (rate.typ === "per_person") {
 		return {
-			cost: rate.cost?.val ?? null,
-			currency: currencyConverter.from(rate.cost?.currency)
+			cost: rate.cost_per_person?.val ?? null,
+			currency: currencyConverter.from(rate.cost_per_person?.currency)
 		};
 	}
-	return { cost: null, currency: undefined };
+	return {
+		cost: rate.cost?.val ?? null,
+		currency: currencyConverter.from(rate.cost?.currency)
+	};
 };
 
 const mapPriceRowFromCharge = (
-	charge?: THousingRoomChargeBackend | null
+	charge?: THousingRoomBaseChargeBackend | null
 ): Pick<
 	IAccommodationPerRoomPriceRow,
 	| typeof ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST
@@ -108,26 +125,25 @@ const mapPriceRowFromCharge = (
 		};
 	}
 
-	if (charge.typ === "per_duration" || "rate" in charge) {
-		const duration = charge as TDurationChargeBackend;
-		const { cost, currency } = mapCostFromDurationRate(duration);
+	if (charge.typ === "per_duration") {
 		return {
-			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: cost,
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]:
+				charge.rate.cost?.val ?? null,
 			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: mapFeesFromBackend(
-				duration.fees
+				charge.fees
 			),
-			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: currency
+			[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
+				currencyConverter.from(charge.rate.cost?.currency)
 		};
 	}
 
-	const fixed = charge as TFixedChargeBackend;
 	return {
-		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: fixed.cost?.val ?? null,
+		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: charge.cost?.val ?? null,
 		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: mapFeesFromBackend(
-			fixed.fees
+			charge.fees
 		),
 		[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]: currencyConverter.from(
-			fixed.cost?.currency
+			charge.cost?.currency
 		)
 	};
 };
@@ -149,27 +165,27 @@ const mapMarkupFromBackend = (
 };
 
 const mapPerRoomPriceFromBackend = (
-	room: THousingRoomExpensesBackend
+	room: PricedRoomOutput
 ): IAccommodationPerRoomPriceRow => ({
-	...mapPriceRowFromCharge(room.expenses),
+	...mapPriceRowFromCharge(room.rate?.base),
 	[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
-		room.expenses?.markup
+		room.rate?.base?.markup
 	)
 });
 
 const mapCategoryRowFromBackend = (
-	room?: THousingRoomCategoryBackend | null
+	room?: PricedRoomOutput | null
 ): IAccommodationCategoryPriceRow => ({
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]:
-		housingRoomTypeConverter.from(room?.typ) ?? "",
-	...mapPriceRowFromCharge(room?.expenses),
+		room?.name ?? housingRoomTypeConverter.from(room?.typ) ?? "",
+	...mapPriceRowFromCharge(room?.rate?.base),
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
-		room?.expenses?.markup
+		room?.rate?.base?.markup
 	)
 });
 
 const mapPerRoomByClassPriceFromBackend = (
-	category?: THousingRoomCategoryExpensesBackend | null
+	category?: PricedCategoryOutput | null
 ): IAccommodationPerRoomByClassPriceRow => ({
 	[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]: category?.rooms
 		?.length
@@ -180,7 +196,7 @@ const mapPerRoomByClassPriceFromBackend = (
 const alignPerRoomPriceRows = (
 	roomsListLength: number,
 	existing: IAccommodationPerRoomPriceRow[] = [],
-	apiRows?: THousingRoomExpensesBackend[] | null
+	apiRows?: PricedRoomOutput[] | null
 ): IAccommodationPerRoomPriceRow[] =>
 	Array.from({ length: roomsListLength }, (_, index) => {
 		if (existing[index]) {
@@ -195,7 +211,7 @@ const alignPerRoomPriceRows = (
 const alignPerRoomByClassPriceRows = (
 	roomsListLength: number,
 	existing: IAccommodationPerRoomByClassPriceRow[] = [],
-	apiRows?: THousingRoomCategoryExpensesBackend[] | null
+	apiRows?: PricedCategoryOutput[] | null
 ): IAccommodationPerRoomByClassPriceRow[] =>
 	Array.from({ length: roomsListLength }, (_, index) => {
 		const row = existing[index];
@@ -211,16 +227,13 @@ const alignPerRoomByClassPriceRows = (
 const mapAmountToFixedExpense = (
 	amount: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined
-): TFixedExpenseInputBackend | undefined => {
+): { val: number; currency: Currency } | undefined => {
 	if (amount == null || !Number.isFinite(amount) || !amount || !currency) {
 		return undefined;
 	}
 	return {
-		typ: "fixed",
-		cost: {
-			val: amount,
-			currency: currencyConverter.to(currency)!
-		}
+		val: amount,
+		currency: currencyConverter.to(currency) ?? Currency.USD
 	};
 };
 
@@ -241,7 +254,7 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency)!
+			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
 		}
 	};
 };
@@ -251,17 +264,16 @@ const mapToFixedCharge = (
 	fees: IFeeFormRow[],
 	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined,
 	markup: TCommissionMarkupInputBackend | null
-): Extract<THousingRoomChargeInputBackend, { typ: "fixed" }> | undefined => {
+): FixedChargeInput | undefined => {
 	const costExpense = mapAmountToFixedExpense(cost, currency);
 	if (!costExpense) return undefined;
 
-	const result: Extract<THousingRoomChargeInputBackend, { typ: "fixed" }> = {
+	return {
 		typ: "fixed",
-		cost: costExpense.cost,
+		cost: costExpense,
 		fees: mapFeesToBackend(fees),
 		markup
 	};
-	return result;
 };
 
 const applyMarkupToPerRoomExpenses = (
@@ -372,27 +384,54 @@ export const getDefaultAccommodationPricing = (
 	package_id: ""
 });
 
+/**
+ * Pricing section of the form, read from `details.spec` (contract 3.1):
+ * - `{ pricing: "per_room" }` — per-room rows (flat or by class);
+ * - `{ pricing: "whole" }` — `price.base` maps to flat-rate (fixed /
+ *   per-duration) or per-person form rows.
+ */
 export const mapAccommodationPricingFromBackend = (
-	details?: THousingDetailsBackend | null,
+	details?: HousingDetailsOutput | null,
 	roomsList: TRoomsList = []
 ): TAccommodationPricingSchema => {
 	if (!details || isInheritedHousingDetails(details)) {
 		return getDefaultAccommodationPricing(roomsList);
 	}
 
-	const expenses = details.expenses;
+	const spec = details.spec;
 	const defaults = getDefaultAccommodationPricing(roomsList);
 
-	if (!expenses) {
+	if (!spec) {
 		return defaults;
 	}
 
-	if (expenses.typ === "per_room") {
-		const perRoom = expenses as TPerRoomExpensesBackend;
+	if (spec.pricing === "per_room") {
+		if (isClassPricedHousingSpec(spec)) {
+			const rooms = alignPerRoomByClassPriceRows(
+				roomsList.length,
+				[],
+				spec.categories
+			);
+			const categories = rooms.flatMap(
+				(room) =>
+					room[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]
+			);
+			return {
+				...defaults,
+				pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM,
+				price_based_on_class: true,
+				add_margin_separately: hasAnyMarkup(categories),
+				expenses: {
+					typ: ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM_CATEGORY,
+					[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: rooms
+				}
+			};
+		}
+
 		const rooms = alignPerRoomPriceRows(
 			roomsList.length,
 			[],
-			perRoom.rooms
+			spec.categories[0]?.rooms
 		);
 		return {
 			...defaults,
@@ -406,31 +445,13 @@ export const mapAccommodationPricingFromBackend = (
 		};
 	}
 
-	if (expenses.typ === "per_room_category") {
-		const perRoomCategory = expenses as TPerRoomCategoryExpensesBackend;
-		const rooms = alignPerRoomByClassPriceRows(
-			roomsList.length,
-			[],
-			perRoomCategory.categories
-		);
-		const categories = rooms.flatMap(
-			(room) =>
-				room[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES]
-		);
-		return {
-			...defaults,
-			pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM,
-			price_based_on_class: true,
-			add_margin_separately: hasAnyMarkup(categories),
-			expenses: {
-				typ: ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM_CATEGORY,
-				[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: rooms
-			}
-		};
+	const base = spec.price?.base;
+	if (!base) {
+		return defaults;
 	}
 
-	if (expenses.typ === "fixed") {
-		const markup = mapMarkupFromBackend(expenses.markup);
+	if (base.typ === "fixed") {
+		const markup = mapMarkupFromBackend(base.markup);
 		return {
 			...defaults,
 			pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
@@ -438,22 +459,21 @@ export const mapAccommodationPricingFromBackend = (
 				ENUM_ACCOMMODATION_CHARGE.FIXED,
 			add_margin_separately: Boolean(markup?.value),
 			[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markup,
-			...(expenses.cost?.val != null && {
-				total_price: expenses.cost.val
+			...(base.cost?.val != null && {
+				total_price: base.cost.val
 			}),
 			[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: mapFeesFromBackend(
-				expenses.fees
+				base.fees
 			),
-			...(expenses.cost?.currency && {
-				currency: expenses.cost.currency
+			...(base.cost?.currency && {
+				currency: base.cost.currency
 			})
 		};
 	}
 
-	if (expenses.typ === "per_duration") {
-		const duration = expenses as TDurationChargeBackend;
-		const { cost, currency } = mapCostFromDurationRate(duration);
-		const markup = mapMarkupFromBackend(duration.markup);
+	if (base.typ === "per_duration") {
+		const { cost, currency } = mapCostFromDurationRate(base);
+		const markup = mapMarkupFromBackend(base.markup);
 		return {
 			...defaults,
 			pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
@@ -463,39 +483,75 @@ export const mapAccommodationPricingFromBackend = (
 			[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: markup,
 			...(cost != null && { total_price: cost }),
 			[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: mapFeesFromBackend(
-				duration.fees
+				base.fees
 			),
 			...(currency && { currency })
 		};
 	}
 
-	const perPersonMarkup = mapMarkupFromBackend(expenses.markup);
+	const perPersonMarkup = mapMarkupFromBackend(base.markup);
 	return {
 		...defaults,
 		pricing_type: ENUM_ACCOMMODATION_PRICING_TYPE.PER_PERSON,
 		add_margin_separately: Boolean(perPersonMarkup?.value),
 		[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP]: perPersonMarkup,
-		...(expenses.cost_per_person?.val != null && {
-			total_price: expenses.cost_per_person.val
+		...(base.cost_per_person?.val != null && {
+			total_price: base.cost_per_person.val
 		}),
-		[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: mapFeesFromBackend(
-			expenses.fees
-		),
-		...(expenses.cost_per_person?.currency && {
-			currency: expenses.cost_per_person.currency
+		[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]: mapFeesFromBackend(base.fees),
+		...(base.cost_per_person?.currency && {
+			currency: base.cost_per_person.currency
 		})
 	};
 };
 
+/**
+ * Rooms without a price of their own (part-of-package stays, or pricing
+ * left untouched): a per-room spec whose rooms carry a zero-valued fixed
+ * rate — the 3.1 contract requires a rate per room, so the old "rooms with
+ * no expenses" intent is bridged with an explicit zero.
+ */
+const mapRoomsOnlySpec = (
+	roomsList: TRoomsList
+): THousingSpecInputBackend | undefined =>
+	roomsList.length
+		? {
+				pricing: "per_room",
+				categories: [
+					{
+						name: null,
+						rooms: roomsList.map((room) => ({
+							...(room[ENUM_FORM_ROOMS.ID]
+								? { id: room[ENUM_FORM_ROOMS.ID] }
+								: {}),
+							typ: DEFAULT_ROOM_TYP,
+							pax: DEFAULT_ROOM_PAX,
+							name: room.room_name || null,
+							description: room.description || null,
+							rate: { base: zeroFixedCharge(undefined) }
+						}))
+					}
+				]
+			}
+		: undefined;
+
+/**
+ * Write-side housing spec for `supply.inline.spec` (contract 3.1). The
+ * descriptive fields (location / stars / amenities) are merged in by the
+ * event converter. When no price is constructible the rooms are still
+ * stated (zero-rated) rather than dropped; with no rooms either, no spec
+ * is returned and the caller omits `supply` so the backend keeps the
+ * current one.
+ */
 export const mapAccommodationPricingToBackend = (
 	pricing?: TAccommodationPricingSchema,
 	roomsList: TRoomsList = []
-): { details?: Pick<TCustomHousingDetailsInputBackend, "expenses"> } => {
+): { spec?: THousingSpecInputBackend } => {
 	if (
 		!pricing ||
 		pricing.invoicing !== ENUM_ACCOMMODATION_PRICING_INVOICING.INDIVIDUAL
 	) {
-		return {};
+		return { spec: mapRoomsOnlySpec(roomsList) };
 	}
 
 	if (pricing.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.PER_ROOM) {
@@ -507,105 +563,135 @@ export const mapAccommodationPricingToBackend = (
 		});
 
 		if (pricing.price_based_on_class) {
-			const rooms =
+			const rows =
 				aligned.typ === ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM_CATEGORY
 					? aligned[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]
 					: [];
 
 			return {
-				details: {
-					expenses: {
-						typ: "per_room_category",
-						categories: roomsList.map((room, index) => ({
-							name: room.room_name || null,
-							rooms: (
-								rooms[index]?.[
-									ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD
-										.CATEGORIES
-								] ?? []
-							).map((category) => {
-								const rowCurrency =
-									category[
-										ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
-											.CURRENCY
-									];
-								return {
-									typ:
-										housingRoomTypeConverter.to(
+				spec: {
+					pricing: "per_room",
+					categories: roomsList.map((room, index) => ({
+						...(room[ENUM_FORM_ROOMS.ID]
+							? { id: room[ENUM_FORM_ROOMS.ID] }
+							: {}),
+						name: room.room_name || null,
+						rooms: (
+							rows[index]?.[
+								ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD
+									.CATEGORIES
+							] ?? []
+						).map((category) => {
+							const rowCurrency =
+								category[
+									ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
+										.CURRENCY
+								];
+							const categoryName =
+								category[
+									ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME
+								];
+							return {
+								typ:
+									(isHousingRoomType(categoryName)
+										? housingRoomTypeConverter.to(
+												categoryName
+											)
+										: undefined) ?? DEFAULT_ROOM_TYP,
+								pax: DEFAULT_ROOM_PAX,
+								rate: {
+									base:
+										mapToFixedCharge(
 											category[
 												ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
-													.NAME
-											] as ENUM_HOUSING_ROOM_TYPE_TYPE
-										) ?? null,
-									expenses: mapToFixedCharge(
-										category[
-											ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
-												.COST
-										],
-										category[
-											ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
-												.FEES
-										],
-										rowCurrency,
-										mapMarkupToBackend(
+													.COST
+											],
 											category[
 												ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
-													.MARKUP
+													.FEES
 											],
 											rowCurrency,
-											addMargin
-										)
-									)
-								};
-							})
-						}))
-					}
+											mapMarkupToBackend(
+												category[
+													ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD
+														.MARKUP
+												],
+												rowCurrency,
+												addMargin
+											)
+										) ?? zeroFixedCharge(rowCurrency)
+								}
+							};
+						})
+					}))
 				}
 			};
 		}
 
-		const rooms =
+		const rows =
 			aligned.typ === ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM
 				? aligned[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]
 				: [];
 
 		return {
-			details: {
-				expenses: {
-					typ: "per_room",
-					rooms: roomsList.map((room, index) => {
-						const priceRow =
-							rooms[index] ?? createEmptyPerRoomPriceRow();
-						const rowCurrency =
-							priceRow[
-								ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY
-							];
-						return {
-							...(room[ENUM_FORM_ROOMS.ID]
-								? { id: room[ENUM_FORM_ROOMS.ID] }
-								: {}),
-							name: room.room_name || null,
-							description: room.description || null,
-							expenses: mapToFixedCharge(
-								priceRow[
-									ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST
-								],
-								priceRow[
-									ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES
-								],
-								rowCurrency,
-								mapMarkupToBackend(
-									priceRow[
-										ENUM_ACCOMMODATION_PRICE_ROW_FIELD
-											.MARKUP
-									],
-									rowCurrency,
-									addMargin
-								)
-							)
-						};
-					})
-				}
+			spec: {
+				pricing: "per_room",
+				...(roomsList.length
+					? {
+							categories: [
+								{
+									name: null,
+									rooms: roomsList.map((room, index) => {
+										const priceRow =
+											rows[index] ??
+											createEmptyPerRoomPriceRow();
+										const rowCurrency =
+											priceRow[
+												ENUM_ACCOMMODATION_PRICE_ROW_FIELD
+													.CURRENCY
+											];
+										return {
+											...(room[ENUM_FORM_ROOMS.ID]
+												? {
+														id: room[
+															ENUM_FORM_ROOMS.ID
+														]
+													}
+												: {}),
+											typ: DEFAULT_ROOM_TYP,
+											pax: DEFAULT_ROOM_PAX,
+											name: room.room_name || null,
+											description:
+												room.description || null,
+											rate: {
+												base:
+													mapToFixedCharge(
+														priceRow[
+															ENUM_ACCOMMODATION_PRICE_ROW_FIELD
+																.COST
+														],
+														priceRow[
+															ENUM_ACCOMMODATION_PRICE_ROW_FIELD
+																.FEES
+														],
+														rowCurrency,
+														mapMarkupToBackend(
+															priceRow[
+																ENUM_ACCOMMODATION_PRICE_ROW_FIELD
+																	.MARKUP
+															],
+															rowCurrency,
+															addMargin
+														)
+													) ??
+													zeroFixedCharge(rowCurrency)
+											}
+										};
+									})
+								}
+							]
+						}
+					: {})
 			}
 		};
 	}
@@ -617,18 +703,34 @@ export const mapAccommodationPricingToBackend = (
 	);
 
 	if (totalPrice == null || !currency) {
-		return {};
+		return { spec: mapRoomsOnlySpec(roomsList) };
 	}
 
 	const cost = {
 		val: totalPrice,
-		currency: currencyConverter.to(currency)!
+		currency: currencyConverter.to(currency) ?? Currency.USD
 	};
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_ACCOMMODATION_PRICING_FIELD.MARKUP] ?? null,
 		currency,
 		pricing.add_margin_separately
 	);
+	const categories = roomsList.length
+		? [
+				{
+					name: null,
+					rooms: roomsList.map((room) => ({
+						...(room[ENUM_FORM_ROOMS.ID]
+							? { id: room[ENUM_FORM_ROOMS.ID] }
+							: {}),
+						typ: DEFAULT_ROOM_TYP,
+						pax: DEFAULT_ROOM_PAX,
+						name: room.room_name || null,
+						description: room.description || null
+					}))
+				}
+			]
+		: undefined;
 
 	if (pricing.pricing_type === ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE) {
 		if (
@@ -636,27 +738,37 @@ export const mapAccommodationPricingToBackend = (
 			ENUM_ACCOMMODATION_CHARGE.PER_DURATION
 		) {
 			return {
-				details: {
-					expenses: {
-						typ: "per_duration",
-						rate: { typ: "fixed", cost },
-						fees,
-						markup
-					}
+				spec: {
+					pricing: "whole",
+					price: {
+						base: {
+							typ: "per_duration",
+							rate: { typ: "fixed", cost },
+							fees,
+							markup
+						}
+					},
+					...(categories && { categories })
 				}
 			};
 		}
 
 		return {
-			details: {
-				expenses: { typ: "fixed", cost, fees, markup }
+			spec: {
+				pricing: "whole",
+				price: { base: { typ: "fixed", cost, fees, markup } },
+				...(categories && { categories })
 			}
 		};
 	}
 
 	return {
-		details: {
-			expenses: { typ: "per_person", cost_per_person: cost, fees, markup }
+		spec: {
+			pricing: "whole",
+			price: {
+				base: { typ: "per_person", cost_per_person: cost, fees, markup }
+			},
+			...(categories && { categories })
 		}
 	};
 };

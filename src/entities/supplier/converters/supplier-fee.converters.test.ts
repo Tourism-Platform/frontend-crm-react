@@ -36,7 +36,11 @@ describe("supplier-fee.converters", () => {
 		expect(mapSupplierFeesFromBackend([])).toEqual([]);
 		expect(
 			mapSupplierFeesFromBackend([
-				{ name: "VAT", cost: { val: 12, currency: Currency.USD } },
+				{
+					name: "VAT",
+					cost: { val: 12, currency: Currency.USD },
+					description: null
+				},
 				{
 					name: "City tax",
 					cost: { val: 3000, currency: Currency.UZS },

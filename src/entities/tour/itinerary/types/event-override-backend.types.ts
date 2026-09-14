@@ -1,17 +1,17 @@
 import type {
-	HousingOverrideSchemaInput,
-	HousingOverrideSchemaOutput,
-	TOUR_EVENTS_PATHS,
-	TrainOverrideSchemaInput,
-	TrainOverrideSchemaOutput
+	HotelOverrideInput,
+	HotelOverrideOutput,
+	RouteOverrideInput,
+	RouteOverrideOutput,
+	TOUR_EVENTS_PATHS
 } from "@/shared/api";
 
 export type TEventOverrideInputBackend = ReturnType<
-	typeof TOUR_EVENTS_PATHS.setSingleEventOverride
+	typeof TOUR_EVENTS_PATHS.setOptionOverride
 >["_types"]["body"];
 
-export type THousingOverrideInputBackend = HousingOverrideSchemaInput;
-export type TTrainOverrideInputBackend = TrainOverrideSchemaInput;
+export type THousingOverrideInputBackend = HotelOverrideInput;
+export type TTrainOverrideInputBackend = RouteOverrideInput;
 
-export type THousingOverrideOutputBackend = HousingOverrideSchemaOutput;
-export type TTrainOverrideOutputBackend = TrainOverrideSchemaOutput;
+export type THousingOverrideOutputBackend = HotelOverrideOutput;
+export type TTrainOverrideOutputBackend = RouteOverrideOutput;

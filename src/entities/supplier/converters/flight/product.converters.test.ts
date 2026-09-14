@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ENUM_SUPPLIER_VARIANT_CHARGE } from "../../types";
+import { ENUM_FLIGHT_PRICING, ENUM_SUPPLIER_VARIANT_CHARGE } from "../../types";
 
 import {
 	mapFlightProductToCreate,
@@ -8,7 +8,7 @@ import {
 } from "./product.converters";
 
 describe("mapFlightProductToCreate", () => {
-	it("maps hops as hop[]", () => {
+	it("maps hops as legs[]", () => {
 		expect(
 			mapFlightProductToCreate({
 				name: "HY TAS–SKD",
@@ -28,10 +28,10 @@ describe("mapFlightProductToCreate", () => {
 			})
 		).toEqual({
 			typ: "flight",
-			name: "HY TAS–SKD",
 			details: {
-				typ: "flight",
-				hop: [
+				pricing: "per_fare",
+				name: "HY TAS–SKD",
+				legs: [
 					{
 						airline_code: "HY",
 						flight_number: 601,
@@ -40,8 +40,7 @@ describe("mapFlightProductToCreate", () => {
 						departure_location: { lat: 41.25, long: 69.28 },
 						arrival_location: { lat: 39.7, long: 66.98 },
 						departure_terminal: "2",
-						departure_gate: "A1",
-						amenities: null
+						departure_gate: "A1"
 					}
 				]
 			}
@@ -50,29 +49,51 @@ describe("mapFlightProductToCreate", () => {
 });
 
 describe("mapFlightVariantToWrite", () => {
-	it("maps per_person expenses", () => {
+	it("maps per_fare variant with per_person charge", () => {
 		expect(
-			mapFlightVariantToWrite({
-				name: "Economy",
-				expenses: {
-					typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
-					costPerPerson: { val: 120, currency: "USD" },
-					fees: null,
-					markup: null
-				}
-			})
+			mapFlightVariantToWrite(
+				{
+					name: "Economy",
+					expenses: {
+						typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
+						costPerPerson: { val: 120, currency: "USD" },
+						fees: null,
+						markup: null
+					}
+				},
+				ENUM_FLIGHT_PRICING.PER_FARE
+			)
 		).toEqual({
 			typ: "flight",
+			pricing: "per_fare",
 			name: "Economy",
-			details: {
-				typ: "flight",
-				expenses: {
-					typ: "per_person",
-					cost_per_person: { val: 120, currency: "USD" },
-					fees: null,
-					markup: null
-				}
+			charge: {
+				typ: "per_person",
+				cost_per_person: { val: 120, currency: "USD" },
+				fees: null,
+				markup: null
 			}
+		});
+	});
+
+	it("maps whole variant without charge", () => {
+		expect(
+			mapFlightVariantToWrite(
+				{
+					name: "Economy",
+					expenses: {
+						typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+						cost: { val: 120, currency: "USD" },
+						fees: null,
+						markup: null
+					}
+				},
+				ENUM_FLIGHT_PRICING.WHOLE
+			)
+		).toEqual({
+			typ: "flight",
+			pricing: "whole",
+			name: "Economy"
 		});
 	});
 });

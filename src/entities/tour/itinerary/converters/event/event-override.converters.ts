@@ -1,4 +1,5 @@
 import type {
+	TEventDetailsBackend,
 	TEventOverride,
 	TEventOverrideInputBackend,
 	THousingOverrideOutputBackend,
@@ -27,20 +28,30 @@ export const mapEventOverrideToBackend = (
 	}
 };
 
+/**
+ * Reads the override from typed READ details.
+ * Contract 3.1: the override lives at `details.supply.override` and exists
+ * only on product supply (`details.override` is gone).
+ */
 export const mapEventOverrideFromDetails = (
-	details: Record<string, unknown> | undefined,
+	details: TEventDetailsBackend | undefined,
 	kind: TEventOverrideKind
 ): TEventOverride | null => {
-	const raw = details?.override;
-	if (!raw || typeof raw !== "object") {
+	const supply = details?.supply;
+	if (!supply || supply.source !== "product") {
+		return null;
+	}
+
+	const override = supply.override;
+	if (!override) {
 		return null;
 	}
 
 	if (kind === "housing") {
 		return mapHousingOverrideFromBackend(
-			raw as THousingOverrideOutputBackend
+			override as THousingOverrideOutputBackend
 		);
 	}
 
-	return mapTrainOverrideFromBackend(raw as TTrainOverrideOutputBackend);
+	return mapTrainOverrideFromBackend(override as TTrainOverrideOutputBackend);
 };

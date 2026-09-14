@@ -1,41 +1,84 @@
 import { describe, expect, it } from "vitest";
 
+import type { InformationDetailsOutput } from "@/shared/api";
+
+import type { TMultiEventDetailBackend } from "../../types";
 import { ENUM_EVENT_BACKEND } from "../../types/event-backend-enum.types";
 import { ENUM_EVENT } from "../../types/event-enum.types";
 
 import {
 	getRemovedMultiplyOptions,
-	mapMultiplyOptionDetailToOption
+	hasMultiplyOptionsOrderChanged,
+	mapMultiplyOptionDetailToOption,
+	mapMultiplyOptionReorderToBackend
 } from "./multiply-option.converters";
 
+const INFO_DETAILS: InformationDetailsOutput = {
+	plan: {},
+	supply: { source: "inline", supplier_id: null },
+	spec: {}
+};
+
+const buildDetail = (
+	overrides: Partial<{
+		id: string;
+		name: string | null;
+		description: string | null;
+	}>
+): TMultiEventDetailBackend => ({
+	id: "opt-1",
+	name: "Info",
+	description: null,
+	package_id: null,
+	...overrides,
+	typ: "ref",
+	details: INFO_DETAILS
+});
+
 describe("mapMultiplyOptionDetailToOption", () => {
-	it("maps is_optional true to isOptional", () => {
-		const option = mapMultiplyOptionDetailToOption({
-			id: "opt-1",
-			name: "Activity",
-			description: "Desc",
-			typ: ENUM_EVENT_BACKEND.ACTIVITY,
-			is_optional: true,
-			details: { foo: "bar" }
-		} as Parameters<typeof mapMultiplyOptionDetailToOption>[0]);
+	it("maps the option row id and fields", () => {
+		const option = mapMultiplyOptionDetailToOption(
+			buildDetail({ id: "opt-1", name: "Activity" })
+		);
 
 		expect(option).toMatchObject({
 			id: "opt-1",
 			name: "Activity",
-			isOptional: true,
-			eventType: ENUM_EVENT.ACTIVITY
+			eventType: ENUM_EVENT.INFO,
+			backendTyp: ENUM_EVENT_BACKEND.REF,
+			details: INFO_DETAILS
 		});
 	});
+});
 
-	// it("defaults missing is_optional to false", () => {
-	// 	const option = mapMultiplyOptionDetailToOption({
-	// 		id: "opt-2",
-	// 		name: "Flight",
-	// 		typ: ENUM_EVENT_BACKEND.FLIGHT
-	// 	} as Parameters<typeof mapMultiplyOptionDetailToOption>[0]);
+describe("mapMultiplyOptionReorderToBackend", () => {
+	it("builds the order from option row IDs (never indices)", () => {
+		expect(
+			mapMultiplyOptionReorderToBackend([
+				{ id: "uuid-b" },
+				{ id: "uuid-a" },
+				{ id: "uuid-c" }
+			])
+		).toEqual({ order: ["uuid-b", "uuid-a", "uuid-c"] });
+	});
+});
 
-	// 	expect(option?.isOptional).toBe(false);
-	// });
+describe("hasMultiplyOptionsOrderChanged", () => {
+	it("detects reordering among surviving options", () => {
+		expect(
+			hasMultiplyOptionsOrderChanged(
+				[{ id: "a" }, { id: "b" }],
+				[{ id: "b" }, { id: "a" }]
+			)
+		).toBe(true);
+
+		expect(
+			hasMultiplyOptionsOrderChanged(
+				[{ id: "a" }, { id: "b" }],
+				[{ id: "a" }, { id: "b" }]
+			)
+		).toBe(false);
+	});
 });
 
 describe("getRemovedMultiplyOptions", () => {

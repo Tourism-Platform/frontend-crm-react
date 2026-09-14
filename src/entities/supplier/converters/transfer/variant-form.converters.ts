@@ -3,6 +3,7 @@ import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 import {
 	ENUM_FORM_TRANSFER_VARIANT,
 	ENUM_SUPPLIER_VARIANT_CHARGE,
+	ENUM_VEHICLE_BODY_TYPE,
 	type ITransferVariant,
 	type ITransferVariantWrite,
 	type TTransferVariantFormSchema
@@ -10,8 +11,8 @@ import {
 
 export const emptyTransferVariantForm = (): TTransferVariantFormSchema => ({
 	[ENUM_FORM_TRANSFER_VARIANT.NAME]: "",
-	[ENUM_FORM_TRANSFER_VARIANT.BODY_TYPE]: null,
-	[ENUM_FORM_TRANSFER_VARIANT.PAX]: null,
+	[ENUM_FORM_TRANSFER_VARIANT.BODY_TYPE]: ENUM_VEHICLE_BODY_TYPE.SEDAN,
+	[ENUM_FORM_TRANSFER_VARIANT.PAX]: 1,
 	[ENUM_FORM_TRANSFER_VARIANT.DESCRIPTION]: "",
 	[ENUM_FORM_TRANSFER_VARIANT.COST]: "",
 	[ENUM_FORM_TRANSFER_VARIANT.CURRENCY]: DEFAULT_EVENT_CURRENCY,
@@ -27,8 +28,9 @@ export const mapTransferVariantToForm = (
 
 	return {
 		[ENUM_FORM_TRANSFER_VARIANT.NAME]: variant.name,
-		[ENUM_FORM_TRANSFER_VARIANT.BODY_TYPE]: variant.bodyType,
-		[ENUM_FORM_TRANSFER_VARIANT.PAX]: variant.pax,
+		[ENUM_FORM_TRANSFER_VARIANT.BODY_TYPE]:
+			variant.bodyType ?? ENUM_VEHICLE_BODY_TYPE.SEDAN,
+		[ENUM_FORM_TRANSFER_VARIANT.PAX]: variant.pax ?? 1,
 		[ENUM_FORM_TRANSFER_VARIANT.DESCRIPTION]: variant.description ?? "",
 		[ENUM_FORM_TRANSFER_VARIANT.COST]:
 			expenses?.cost != null ? String(expenses.cost.val) : "",
@@ -53,8 +55,8 @@ export const mapTransferVariantFormToWrite = (
 
 	return {
 		name: values[ENUM_FORM_TRANSFER_VARIANT.NAME].trim(),
-		bodyType: values[ENUM_FORM_TRANSFER_VARIANT.BODY_TYPE] ?? null,
-		pax: values[ENUM_FORM_TRANSFER_VARIANT.PAX] ?? null,
+		bodyType: values[ENUM_FORM_TRANSFER_VARIANT.BODY_TYPE],
+		pax: values[ENUM_FORM_TRANSFER_VARIANT.PAX],
 		description:
 			values[ENUM_FORM_TRANSFER_VARIANT.DESCRIPTION].trim() || null,
 		expenses: {

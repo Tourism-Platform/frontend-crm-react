@@ -1,7 +1,5 @@
 import {
 	ENUM_EVENT_MODE,
-	type THousingDetailsBackend,
-	isInheritedHousingDetails,
 	useEventEditIds,
 	useGetTourEventQuery
 } from "@/entities/tour";
@@ -26,12 +24,9 @@ export const useInheritedProductSeasonRates = () => {
 		{ skip: !tourId || !optionId || !eventId }
 	);
 
-	const details = event?.details as THousingDetailsBackend | undefined;
-
 	return {
-		rows: mapSeasonRatesFromHousingDetails(
-			isInheritedHousingDetails(details) ? details : undefined
-		),
+		// The mapper itself guards on product supply + per-room spec.
+		rows: mapSeasonRatesFromHousingDetails(event?.details),
 		isLoading,
 		isError
 	};

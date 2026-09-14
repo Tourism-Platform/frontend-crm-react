@@ -1,18 +1,18 @@
-import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { Currency } from "@/shared/api";
+
 import {
-	ENUM_ACCOMMODATION_CHARGE,
-	ENUM_ACCOMMODATION_PRICING_FIELD,
-	ENUM_ACCOMMODATION_PRICING_INVOICING,
-	ENUM_ACCOMMODATION_PRICING_TYPE,
-	ENUM_FLIGHT_PRICING_FIELD,
-	ENUM_FLIGHT_PRICING_INVOICING,
+	DEFAULT_EVENT_CURRENCY,
+	currencyConverter
+} from "@/entities/commission";
+import {
 	ENUM_FLIGHT_PRICING_TYPE,
 	type IHousingEventOverride,
 	type ITrainEventOverride,
 	type TEventOverride,
-	getDefaultAccommodationPricing,
+	type TEventOverrideCharge,
 	getEmptyHotelPolicy,
-	mapFlightPricingFromBackend
+	mapFeesFromBackend,
+	mapFeesToBackend
 } from "@/entities/tour";
 
 import {
@@ -34,6 +34,58 @@ const emptyFormValues = (): TOverrideProductFormValues => ({
 	[ENUM_FORM_OVERRIDE_PRODUCT.CHECK_OUT_UNTIL]: ""
 });
 
+/** Domain charge → form fields (pricing type / total / fees / currency). */
+const chargeToFormValues = (
+	charge: TEventOverrideCharge | null | undefined
+): Partial<TOverrideProductFormValues> => {
+	if (!charge) {
+		return {};
+	}
+
+	if (charge.typ === "per_person") {
+		return {
+			[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE]:
+				ENUM_FLIGHT_PRICING_TYPE.PER_PERSON,
+			[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE]:
+				charge.cost_per_person?.val ?? null,
+			[ENUM_FORM_OVERRIDE_PRODUCT.FEES]: mapFeesFromBackend(charge.fees),
+			[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
+				currencyConverter.from(
+					charge.cost_per_person?.currency ?? Currency.USD
+				) ?? DEFAULT_EVENT_CURRENCY
+		};
+	}
+
+	if (charge.typ === "per_duration") {
+		const rate = charge.rate;
+		return {
+			[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE]:
+				ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
+			[ENUM_FORM_OVERRIDE_PRODUCT.CHARGE_TYP]:
+				ENUM_OVERRIDE_CHARGE.PER_DURATION,
+			[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE]:
+				rate.typ === "fixed" ? (rate.cost?.val ?? null) : null,
+			[ENUM_FORM_OVERRIDE_PRODUCT.FEES]: mapFeesFromBackend(charge.fees),
+			[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
+				currencyConverter.from(
+					(rate.typ === "fixed" ? rate.cost?.currency : undefined) ??
+						Currency.USD
+				) ?? DEFAULT_EVENT_CURRENCY
+		};
+	}
+
+	return {
+		[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE]:
+			ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
+		[ENUM_FORM_OVERRIDE_PRODUCT.CHARGE_TYP]: ENUM_OVERRIDE_CHARGE.FIXED,
+		[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE]: charge.cost?.val ?? null,
+		[ENUM_FORM_OVERRIDE_PRODUCT.FEES]: mapFeesFromBackend(charge.fees),
+		[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
+			currencyConverter.from(charge.cost?.currency ?? Currency.USD) ??
+			DEFAULT_EVENT_CURRENCY
+	};
+};
+
 export const mapOverrideToFormValues = (
 	kind: TOverrideEventKind,
 	override: TEventOverride | null | undefined
@@ -45,23 +97,9 @@ export const mapOverrideToFormValues = (
 	}
 
 	if (kind === "housing" && override.typ === "housing") {
-		const expenses = override.expenses;
 		return {
-			[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE]:
-				expenses?.pricing_type ===
-				ENUM_ACCOMMODATION_PRICING_TYPE.PER_PERSON
-					? ENUM_FLIGHT_PRICING_TYPE.PER_PERSON
-					: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
-			[ENUM_FORM_OVERRIDE_PRODUCT.CHARGE_TYP]:
-				expenses?.[ENUM_ACCOMMODATION_PRICING_FIELD.CHARGE_TYP] ===
-				ENUM_ACCOMMODATION_CHARGE.PER_DURATION
-					? ENUM_OVERRIDE_CHARGE.PER_DURATION
-					: ENUM_OVERRIDE_CHARGE.FIXED,
-			[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE]:
-				expenses?.total_price ?? null,
-			[ENUM_FORM_OVERRIDE_PRODUCT.FEES]: expenses?.fees ?? [],
-			[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
-				expenses?.currency ?? DEFAULT_EVENT_CURRENCY,
+			...defaults,
+			...chargeToFormValues(override.rate?.base),
 			[ENUM_FORM_OVERRIDE_PRODUCT.CHECK_IN_FROM]:
 				override.policy?.checkInFrom ?? "",
 			[ENUM_FORM_OVERRIDE_PRODUCT.CHECK_OUT_UNTIL]:
@@ -70,71 +108,78 @@ export const mapOverrideToFormValues = (
 	}
 
 	if (kind === "train" && override.typ === "train") {
-		const expenses = override.expenses;
 		return {
 			...defaults,
-			[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE]:
-				expenses?.pricing_type === ENUM_FLIGHT_PRICING_TYPE.PER_PERSON
-					? ENUM_FLIGHT_PRICING_TYPE.PER_PERSON
-					: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
-			[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE]:
-				expenses?.[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE] ?? null,
-			[ENUM_FORM_OVERRIDE_PRODUCT.FEES]:
-				expenses?.[ENUM_FLIGHT_PRICING_FIELD.FEES] ?? [],
-			[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
-				expenses?.[ENUM_FLIGHT_PRICING_FIELD.CURRENCY] ??
-				DEFAULT_EVENT_CURRENCY
+			...chargeToFormValues(override.charge)
 		};
 	}
 
 	return defaults;
 };
 
+/** Form fields → domain charge (contract 3.1 charge union). */
+const formValuesToCharge = (
+	kind: TOverrideEventKind,
+	values: TOverrideProductFormValues
+): TEventOverrideCharge => {
+	const total = values[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE];
+	const currency =
+		currencyConverter.to(values[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]) ??
+		Currency.USD;
+	const fees = mapFeesToBackend(values[ENUM_FORM_OVERRIDE_PRODUCT.FEES]);
+
+	if (
+		values[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE] ===
+		ENUM_FLIGHT_PRICING_TYPE.PER_PERSON
+	) {
+		return {
+			typ: "per_person",
+			cost_per_person: { val: total ?? 0, currency },
+			fees,
+			extra_costs: [],
+			markup: null
+		};
+	}
+
+	if (
+		kind === "housing" &&
+		values[ENUM_FORM_OVERRIDE_PRODUCT.CHARGE_TYP] ===
+			ENUM_OVERRIDE_CHARGE.PER_DURATION
+	) {
+		return {
+			typ: "per_duration",
+			rate: {
+				typ: "fixed",
+				cost: { val: total ?? 0, currency }
+			},
+			fees,
+			extra_costs: [],
+			markup: null
+		};
+	}
+
+	return {
+		typ: "fixed",
+		cost: { val: total ?? 0, currency },
+		fees,
+		extra_costs: [],
+		markup: null
+	};
+};
+
 export const mapFormValuesToOverride = (
 	kind: TOverrideEventKind,
 	values: TOverrideProductFormValues
 ): TEventOverride => {
-	const currency = values[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY];
-	const isPerPerson =
-		values[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE] ===
-		ENUM_FLIGHT_PRICING_TYPE.PER_PERSON;
+	const charge = formValuesToCharge(kind, values);
 
 	if (kind === "train") {
-		const base = mapFlightPricingFromBackend(null);
-		const expenses: NonNullable<ITrainEventOverride["expenses"]> = {
-			...base,
-			invoicing: ENUM_FLIGHT_PRICING_INVOICING.INDIVIDUAL,
-			pricing_type: isPerPerson
-				? ENUM_FLIGHT_PRICING_TYPE.PER_PERSON
-				: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
-			[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE]:
-				values[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE],
-			[ENUM_FLIGHT_PRICING_FIELD.FEES]:
-				values[ENUM_FORM_OVERRIDE_PRODUCT.FEES],
-			[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: currency
-		};
-
-		return { typ: "train", expenses };
+		if (charge.typ === "per_duration") {
+			throw new Error("Train override supports fixed/per_person charges");
+		}
+		const override: ITrainEventOverride = { typ: "train", charge };
+		return override;
 	}
-
-	const base = getDefaultAccommodationPricing();
-	const expenses: NonNullable<IHousingEventOverride["expenses"]> = {
-		...base,
-		invoicing: ENUM_ACCOMMODATION_PRICING_INVOICING.INDIVIDUAL,
-		pricing_type: isPerPerson
-			? ENUM_ACCOMMODATION_PRICING_TYPE.PER_PERSON
-			: ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
-		[ENUM_ACCOMMODATION_PRICING_FIELD.CHARGE_TYP]:
-			values[ENUM_FORM_OVERRIDE_PRODUCT.CHARGE_TYP] ===
-			ENUM_OVERRIDE_CHARGE.PER_DURATION
-				? ENUM_ACCOMMODATION_CHARGE.PER_DURATION
-				: ENUM_ACCOMMODATION_CHARGE.FIXED,
-		[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]:
-			values[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE],
-		[ENUM_ACCOMMODATION_PRICING_FIELD.FEES]:
-			values[ENUM_FORM_OVERRIDE_PRODUCT.FEES],
-		[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: currency
-	};
 
 	const policy = getEmptyHotelPolicy();
 	policy.checkInFrom =
@@ -142,5 +187,10 @@ export const mapFormValuesToOverride = (
 	policy.checkOutUntil =
 		values[ENUM_FORM_OVERRIDE_PRODUCT.CHECK_OUT_UNTIL].trim() || null;
 
-	return { typ: "housing", expenses, policy };
+	const override: IHousingEventOverride = {
+		typ: "housing",
+		rate: { base: charge, seasons: [] },
+		policy
+	};
+	return override;
 };

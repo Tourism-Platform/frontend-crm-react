@@ -9,14 +9,14 @@ import {
 	type IEventLibraryItem,
 	type ITemplateItem,
 	mapLibraryTemplateToCreateEvent,
-	useAddEventOptionMutation,
+	useAddOptionMutation,
 	useCreateEventMutation,
-	useDeleteEventOptionMutation,
 	useDeleteTourEventMutation,
+	useDeleteTourEventOptionMutation,
 	useLazyGetEventLibraryTemplateQuery,
 	useListEventLibraryQuery,
-	useMoveEventOptionToSingleMutation,
 	useMoveEventToMultiMutation,
+	useMoveOptionToSingleMutation,
 	useReorderEventMutation,
 	useReorderEventOptionsMutation
 } from "@/entities/tour";
@@ -184,11 +184,11 @@ export const useItineraryDnd = ({
 	const [getEventLibraryTemplate] = useLazyGetEventLibraryTemplateQuery();
 	const [reorderEvent] = useReorderEventMutation();
 	const [deleteEvent] = useDeleteTourEventMutation();
-	const [addEventOption] = useAddEventOptionMutation();
-	const [deleteEventOption] = useDeleteEventOptionMutation();
+	const [addEventOption] = useAddOptionMutation();
+	const [deleteEventOption] = useDeleteTourEventOptionMutation();
 	const [reorderEventOptions] = useReorderEventOptionsMutation();
 	const [moveEventToMulti] = useMoveEventToMultiMutation();
-	const [moveEventOptionToSingle] = useMoveEventOptionToSingleMutation();
+	const [moveOptionToSingle] = useMoveOptionToSingleMutation();
 
 	const applyBackendIdPatch = (tempBlockId: string, backendId: string) => {
 		const current = watch("optionsData");
@@ -410,7 +410,8 @@ export const useItineraryDnd = ({
 				tourId,
 				optionId: activeOption,
 				eventId: action.eventId,
-				targetEventId: action.targetEventId
+				targetEventId: action.targetEventId,
+				optionPosition: action.optionPosition
 			}).unwrap();
 
 			toast.promise(movePromise, {
@@ -422,19 +423,15 @@ export const useItineraryDnd = ({
 				}
 			});
 		} else if (action.type === "moveToSingle") {
+			// Contract 3.1: the final slot placement travels in the SAME request —
+			// no follow-up reorderEvent, no intermediate inconsistent state.
 			const movePromise = (async () => {
-				const result = await moveEventOptionToSingle({
+				const result = await moveOptionToSingle({
 					tourId,
 					optionId: activeOption,
 					eventId: action.parentEventId,
-					eventOptionId: action.eventOptionId
-				}).unwrap();
-
-				await reorderEvent({
-					tourId,
-					optionId: activeOption,
-					eventId: result.newEvent.id,
-					data: { day: action.day, position: action.position }
+					eventOptionId: action.eventOptionId,
+					target: { day: action.day, position: action.position }
 				}).unwrap();
 
 				return result;

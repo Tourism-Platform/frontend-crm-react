@@ -1,13 +1,7 @@
-import { ENUM_EVENT_BACKEND, type ENUM_EVENT_BACKEND_TYPE } from "../types";
 import type {
-	TActivityDetailsBackend,
-	TBusHopOutputBackend,
-	TEmptyDetailsBackend,
-	TFlightHopOutputBackend,
-	THousingDetailsBackend,
-	TTimeSchemaBackend,
-	TTrainHopOutputBackend,
-	TTransferDetailsBackend
+	TMultiEventDetailBackend,
+	TSingleEventReadBackend,
+	TTimeSchemaBackend
 } from "../types";
 
 const clock = (value?: TTimeSchemaBackend | null): string =>
@@ -18,55 +12,41 @@ const range = (start: string, end: string): string | undefined => {
 	return start || end || undefined;
 };
 
+/**
+ * Board-card time subtitle. Reads `details.plan` — the tour's own schedule
+ * statement in contract 3.1 (never the spec/supply).
+ */
 export const mapBackendEventToTimeSubtitle = (
-	typ: ENUM_EVENT_BACKEND_TYPE | null | undefined,
-	details: unknown
+	event: TSingleEventReadBackend | TMultiEventDetailBackend
 ): string | undefined => {
-	if (!typ || details == null || typeof details !== "object") {
-		return undefined;
-	}
-
-	switch (typ) {
-		case ENUM_EVENT_BACKEND.ACTIVITY: {
-			const d = details as TActivityDetailsBackend;
-			return range(clock(d.start_time), clock(d.end_time));
+	switch (event.typ) {
+		case "activity":
+		case "ref": {
+			const plan = event.details.plan;
+			return range(clock(plan.start_time), clock(plan.end_time));
 		}
-		case ENUM_EVENT_BACKEND.REF: {
-			const d = details as TEmptyDetailsBackend;
-			return range(clock(d.start_time), clock(d.end_time));
+		case "housing": {
+			const plan = event.details.plan;
+			return range(clock(plan.check_in), clock(plan.check_out));
 		}
-		case ENUM_EVENT_BACKEND.HOUSING: {
-			const d = details as THousingDetailsBackend;
-			return range(clock(d.check_in), clock(d.check_out));
-		}
-		case ENUM_EVENT_BACKEND.TRANSFER: {
-			const d = details as TTransferDetailsBackend;
-			return range(clock(d.departure?.time), clock(d.arrival?.time));
-		}
-		case ENUM_EVENT_BACKEND.FLIGHT: {
-			const hops =
-				(details as { hop?: TFlightHopOutputBackend[] | null }).hop ??
-				[];
-			if (hops.length === 0) return undefined;
+		case "transfer": {
+			const plan = event.details.plan;
 			return range(
-				clock(hops[0].departure_time),
-				clock(hops[hops.length - 1].arrival_time)
+				clock(plan.departure?.time),
+				clock(plan.arrival?.time)
 			);
 		}
-		case ENUM_EVENT_BACKEND.TRAIN:
-		case ENUM_EVENT_BACKEND.BUS: {
-			const hops =
-				(
-					details as {
-						hop?: Array<
-							TTrainHopOutputBackend | TBusHopOutputBackend
-						> | null;
-					}
-				).hop ?? [];
-			if (hops.length === 0) return undefined;
+		case "flight":
+		case "train": {
+			const plan = event.details.plan;
+			return range(clock(plan.departure_time), clock(plan.arrival_time));
+		}
+		case "bus": {
+			const legs = event.details.plan.legs ?? [];
+			if (legs.length === 0) return undefined;
 			return range(
-				clock(hops[0].departure?.time),
-				clock(hops[hops.length - 1].arrival?.time)
+				clock(legs[0].departure?.time),
+				clock(legs[legs.length - 1].arrival?.time)
 			);
 		}
 		default:

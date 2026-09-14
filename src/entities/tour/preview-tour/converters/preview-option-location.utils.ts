@@ -6,6 +6,15 @@ import type { TOptionDetailBackend } from "../types";
 
 type TPubEvent = TOptionDetailBackend["events"][number];
 
+type TPubMultiDetail = Extract<
+	TPubEvent,
+	{ typ: typeof ENUM_EVENT_BACKEND.OPTIONS }
+>["details"][number];
+
+type TPubDetailsEvent =
+	| Exclude<TPubEvent, { typ: typeof ENUM_EVENT_BACKEND.OPTIONS }>
+	| TPubMultiDetail;
+
 export const isLocationOut = (
 	location: unknown
 ): location is LocationOutSchema =>
@@ -21,49 +30,51 @@ export const formatLocation = (location: unknown): string => {
 	return address ? `${city}, ${address}` : city;
 };
 
+export const cityFromLocation = (location: unknown): string | undefined =>
+	isLocationOut(location) ? (location.city ?? undefined) : undefined;
+
+const extractCityFromPubDetails = (
+	event: TPubDetailsEvent
+): string | undefined => {
+	switch (event.typ) {
+		case ENUM_EVENT_BACKEND.HOUSING:
+		case ENUM_EVENT_BACKEND.ACTIVITY:
+			return cityFromLocation(event.details?.location);
+		case ENUM_EVENT_BACKEND.TRANSFER:
+			return (
+				cityFromLocation(event.details?.departure.location) ??
+				cityFromLocation(event.details?.arrival.location)
+			);
+		case ENUM_EVENT_BACKEND.FLIGHT: {
+			const hop = event.details?.hop[0];
+			return (
+				cityFromLocation(hop?.departure_location) ??
+				cityFromLocation(hop?.arrival_location)
+			);
+		}
+		case ENUM_EVENT_BACKEND.TRAIN:
+		case ENUM_EVENT_BACKEND.BUS: {
+			const hop = event.details?.hop[0];
+			return (
+				cityFromLocation(hop?.departure.location) ??
+				cityFromLocation(hop?.arrival.location)
+			);
+		}
+		default:
+			return undefined;
+	}
+};
+
 export const extractCityFromPubEvent = (
 	event: TPubEvent
 ): string | undefined => {
 	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		const first = event?.details?.[0];
-		if (first && "details" in first && first.details) {
-			const details = first.details as { location?: unknown };
-			if (isLocationOut(details.location)) {
-				return details.location.city ?? undefined;
-			}
+		for (const detail of event.details ?? []) {
+			const city = extractCityFromPubDetails(detail);
+			if (city) return city;
 		}
 		return undefined;
 	}
 
-	if (!("details" in event) || !event.details) {
-		return undefined;
-	}
-
-	const details = event.details as Record<string, unknown>;
-
-	if (isLocationOut(details.location)) {
-		return details.location.city ?? undefined;
-	}
-
-	const hop = details.hop;
-	if (Array.isArray(hop) && hop[0]) {
-		const point = hop[0] as {
-			departure?: { location?: unknown };
-			arrival?: { location?: unknown };
-		};
-		if (isLocationOut(point.departure?.location)) {
-			return point.departure.location.city ?? undefined;
-		}
-		if (isLocationOut(point.arrival?.location)) {
-			return point.arrival.location.city ?? undefined;
-		}
-	}
-
-	const departure = details.departure as { location?: unknown } | undefined;
-
-	if (isLocationOut(departure?.location)) {
-		return (departure!.location as LocationOutSchema).city ?? undefined;
-	}
-
-	return undefined;
+	return extractCityFromPubDetails(event);
 };

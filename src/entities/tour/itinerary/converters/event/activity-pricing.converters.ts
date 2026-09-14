@@ -1,3 +1,6 @@
+import { Currency } from "@/shared/api";
+import type { FixedChargeInput, PerPersonChargeInput } from "@/shared/api";
+
 import {
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
@@ -16,6 +19,11 @@ import {
 } from "../../types";
 
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
+
+/** Write-side venue offering charge (contract 3.1 `spec.offerings[].charge`). */
+export type TActivityOfferingChargeInput =
+	| FixedChargeInput
+	| PerPersonChargeInput;
 
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
@@ -49,7 +57,7 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency)!
+			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
 		}
 	};
 };
@@ -62,54 +70,65 @@ const getDefaultActivityPricing = (): TActivityPricingSchema => ({
 	package_id: ""
 });
 
+/**
+ * Pricing section of the form, read from `details.spec` (contract 3.1).
+ * A venue prices its offerings (`spec.offerings[].charge`); the event form
+ * shows a single price, so the first offering's charge is read.
+ */
 export const mapActivityPricingFromBackend = (
 	details?: TActivityDetailsBackend | null
 ): TActivityPricingSchema => {
-	const expenses = details?.expenses;
 	const defaults = getDefaultActivityPricing();
+	const charge = details?.spec?.offerings?.[0]?.charge;
 
-	if (!expenses) {
+	if (!charge) {
 		return defaults;
 	}
 
-	const fees = mapFeesFromBackend(expenses.fees);
+	const fees = mapFeesFromBackend(charge.fees);
 
-	if (expenses.typ === "fixed") {
-		const markup = mapMarkupFromBackend(expenses.markup);
+	if (charge.typ === "fixed") {
+		const markup = mapMarkupFromBackend(charge.markup);
 		return {
 			...defaults,
 			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
 			add_margin_separately: Boolean(markup?.value),
 			[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: markup,
-			...(expenses.cost?.val != null && {
-				total_price: expenses.cost.val
+			...(charge.cost?.val != null && {
+				total_price: charge.cost.val
 			}),
 			[ENUM_ACTIVITY_PRICING_FIELD.FEES]: fees,
-			...(expenses.cost?.currency && {
-				currency: currencyConverter.from(expenses.cost.currency)
+			...(charge.cost?.currency && {
+				currency: currencyConverter.from(charge.cost.currency)
 			})
 		};
 	}
 
-	const perPersonMarkup = mapMarkupFromBackend(expenses.markup);
+	const perPersonMarkup = mapMarkupFromBackend(charge.markup);
 	return {
 		...defaults,
 		pricing_type: ENUM_ACTIVITY_PRICING_TYPE.PER_PERSON,
 		add_margin_separately: Boolean(perPersonMarkup?.value),
 		[ENUM_ACTIVITY_PRICING_FIELD.MARKUP]: perPersonMarkup,
-		...(expenses.cost_per_person?.val != null && {
-			total_price: expenses.cost_per_person.val
+		...(charge.cost_per_person?.val != null && {
+			total_price: charge.cost_per_person.val
 		}),
 		[ENUM_ACTIVITY_PRICING_FIELD.FEES]: fees,
-		...(expenses.cost_per_person?.currency && {
-			currency: currencyConverter.from(expenses.cost_per_person.currency)
+		...(charge.cost_per_person?.currency && {
+			currency: currencyConverter.from(charge.cost_per_person.currency)
 		})
 	};
 };
 
+/**
+ * The charge for the venue's single form offering (contract 3.1). The
+ * caller assembles `spec.offerings` — a food venue also hangs its menu on
+ * the offering, so it may need a zero-valued charge to keep the menu (see
+ * the event converter).
+ */
 export const mapActivityPricingToBackend = (
 	pricing?: TActivityPricingSchema
-): { details?: Pick<TActivityDetailsBackend, "expenses"> } => {
+): { charge?: TActivityOfferingChargeInput } => {
 	if (
 		!pricing ||
 		pricing.invoicing !== ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL
@@ -127,7 +146,7 @@ export const mapActivityPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currencyConverter.to(currency)!
+		currency: currencyConverter.to(currency) ?? Currency.USD
 	};
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_ACTIVITY_PRICING_FIELD.MARKUP] ?? null,
@@ -137,15 +156,11 @@ export const mapActivityPricingToBackend = (
 
 	if (pricing.pricing_type === ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE) {
 		return {
-			details: {
-				expenses: { typ: "fixed", cost, fees, markup }
-			}
+			charge: { typ: "fixed", cost, fees, markup }
 		};
 	}
 
 	return {
-		details: {
-			expenses: { typ: "per_person", cost_per_person: cost, fees, markup }
-		}
+		charge: { typ: "per_person", cost_per_person: cost, fees, markup }
 	};
 };

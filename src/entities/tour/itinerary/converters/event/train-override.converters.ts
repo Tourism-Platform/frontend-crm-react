@@ -1,43 +1,34 @@
+import { RouteOverrideInputTypEnum } from "@/shared/api";
+
 import type {
 	ITrainEventOverride,
-	TFlightPricingSchema,
 	TTrainOverrideInputBackend,
 	TTrainOverrideOutputBackend
 } from "../../types";
 
-import {
-	mapFlightPricingFromBackend,
-	mapFlightPricingToBackend
-} from "./flight-pricing.converters";
-
-/** Thin wrapper: unwrap details.expenses; null/empty → null */
-export const mapTrainOverrideExpensesToBackend = (
-	expenses?: TFlightPricingSchema | null
-): TTrainOverrideInputBackend["expenses"] => {
-	if (!expenses) {
-		return null;
-	}
-
-	return mapFlightPricingToBackend(expenses).details?.expenses ?? null;
-};
-
-export const mapTrainOverrideExpensesFromBackend = (
-	expenses?: TTrainOverrideOutputBackend["expenses"] | null
-): TFlightPricingSchema | null => {
-	if (!expenses) {
-		return null;
-	}
-
-	return mapFlightPricingFromBackend({ expenses });
-};
-
+/**
+ * Route (train) override (contract 3.1):
+ * WRITE `{ typ: "train", rates }` where the dialog's single charge is the
+ * WHOLE arm: `rates = { pricing: "whole", charge }`.
+ */
 export const mapTrainEventOverrideToBackend = (
 	data: ITrainEventOverride
-): TTrainOverrideInputBackend => ({
-	typ: "train",
-	expenses: mapTrainOverrideExpensesToBackend(data.expenses)
-});
+): TTrainOverrideInputBackend => {
+	if (!data.charge) {
+		// The dialog always builds a charge on submit; never fabricate one.
+		throw new Error("Train override requires a charge");
+	}
 
+	return {
+		typ: RouteOverrideInputTypEnum.Train,
+		rates: { pricing: "whole", charge: data.charge }
+	};
+};
+
+/**
+ * READ: only the whole arm maps back into the dialog model — per-fare charge
+ * rows are a backend capability this UI does not edit (charge → null).
+ */
 export const mapTrainOverrideFromBackend = (
 	override?: TTrainOverrideOutputBackend | null
 ): ITrainEventOverride | null => {
@@ -45,13 +36,15 @@ export const mapTrainOverrideFromBackend = (
 		return null;
 	}
 
+	const rates = override.rates;
+
 	return {
 		typ: "train",
-		expenses: mapTrainOverrideExpensesFromBackend(override.expenses)
+		charge: rates.pricing === "whole" ? rates.charge : null
 	};
 };
 
 export const getDefaultTrainOverrideForm = (): ITrainEventOverride => ({
 	typ: "train",
-	expenses: mapFlightPricingFromBackend(null)
+	charge: null
 });

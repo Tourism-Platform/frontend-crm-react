@@ -15,8 +15,5 @@ export const ACTIVITY_PRODUCT_GENERAL_SCHEMA = z.object({
 		.min(1, msg("form.general.fields.name.errors.required")),
 	[ENUM_FORM_ACTIVITY_PRODUCT.LOCATION]:
 		GEO_FORM_VALUE_SCHEMA.nullable().optional(),
-	[ENUM_FORM_ACTIVITY_PRODUCT.SUB_TYP]: z
-		.enum(ENUM_ACTIVITY_SUB_TYPE)
-		.nullable()
-		.optional()
+	[ENUM_FORM_ACTIVITY_PRODUCT.SUB_TYP]: z.enum(ENUM_ACTIVITY_SUB_TYPE)
 });

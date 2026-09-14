@@ -1,33 +1,22 @@
-import type { TransferCarVariantInput } from "@/shared/api";
+import type { TransferDetailsOutput } from "@/shared/api";
 
-import {
-	ENUM_FORM_CARS,
-	type TCarsSchema,
-	type TTransferCarCategoriesVariantBackend,
-	type TTransferCarVariantBackend
-} from "../../types";
+import type { TCarsSchema } from "../../types";
 
 import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
-type TCarsList = TCarsSchema[typeof ENUM_FORM_CARS.CARS_LIST];
+/** Read-side transfer spec (`details.spec`, contract 3.1). */
+type TTransferSpecOutput = TransferDetailsOutput["spec"];
 
-const mapCarToBackendInput = (
-	car: TCarsList[number]
-): Pick<TransferCarVariantInput, "typ" | "pax" | "description"> => ({
-	typ: vehicleBodyTypeConverter.to(car.car_name) ?? null,
-	pax: car.pax,
-	description: car.description || null
-});
-
+/**
+ * Cars section of the form, read from `details.spec` (3.1). Every spec
+ * arm lists its cars (`per_car` priced, `per_car_category` categorised,
+ * `whole` descriptive); all of them carry `body_type` / `pax` /
+ * `description`.
+ */
 export const mapCarsFromBackend = (
-	perCarCars?: TTransferCarVariantBackend[] | null,
-	perCarCategoryCars?: TTransferCarCategoriesVariantBackend[] | null
+	spec?: TTransferSpecOutput | null
 ): TCarsSchema => {
-	const source = perCarCars?.length
-		? perCarCars
-		: perCarCategoryCars?.length
-			? perCarCategoryCars
-			: [];
+	const source = spec?.cars ?? [];
 
 	if (!source.length) {
 		return { cars: [] };
@@ -35,18 +24,10 @@ export const mapCarsFromBackend = (
 
 	return {
 		cars: source.map((car) => ({
-			car_name: vehicleBodyTypeConverter.from(car.typ)!,
+			// The enum map is total over the generated VehicleBodyType.
+			car_name: vehicleBodyTypeConverter.from(car.body_type)!,
 			pax: car.pax ?? null,
 			description: car.description ?? ""
 		}))
 	};
 };
-
-export const mapCarsToBackend = (carsList: TCarsList = []) => ({
-	details: {
-		expenses: {
-			typ: "per_car" as const,
-			cars: carsList.map(mapCarToBackendInput)
-		}
-	}
-});

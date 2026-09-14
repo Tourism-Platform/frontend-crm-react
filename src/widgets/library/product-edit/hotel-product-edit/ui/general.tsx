@@ -104,7 +104,7 @@ const HotelProductGeneralBase: FC<IHotelProductGeneralProps> = ({
 				productId,
 				values: data,
 				language,
-				existingPolicy: product?.details?.policy
+				existing: product
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {

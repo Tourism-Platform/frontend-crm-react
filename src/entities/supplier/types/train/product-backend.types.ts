@@ -1,10 +1,13 @@
 import type {
-	TrainHopSchemaInput,
+	Fare,
+	PerFareTrainVariantWrite,
+	PricedFareOutput,
+	TrainLegInput,
+	TrainLegOutput,
 	TrainProductCreate,
 	TrainProductReadOutput,
 	TrainProductUpdate,
-	TrainVariantReadOutput,
-	TrainVariantWrite
+	WholeTrainVariantWrite
 } from "@/shared/api/generated/Api";
 
 import type { TCreateProductBodyBackend } from "../supplier-product-backend.types";
@@ -16,9 +19,12 @@ export type TCreateTrainProductBackend = Extract<
 
 export type TTrainProductReadBackend = TrainProductReadOutput;
 export type TUpdateTrainProductBackend = TrainProductUpdate;
-export type TTrainVariantWriteBackend = TrainVariantWrite;
-export type TTrainVariantReadBackend = TrainVariantReadOutput;
-export type TTrainHopInputBackend = TrainHopSchemaInput;
-export type TTrainVariantChargeInputBackend = NonNullable<
-	TrainVariantWrite["details"]
->["expenses"];
+export type TTrainProductDetailsBackend = NonNullable<
+	TUpdateTrainProductBackend["details"]
+>;
+export type TTrainVariantWriteBackend =
+	| PerFareTrainVariantWrite
+	| WholeTrainVariantWrite;
+export type TTrainVariantReadBackend = PricedFareOutput | Fare;
+export type TTrainLegInputBackend = TrainLegInput;
+export type TTrainLegReadBackend = TrainLegOutput;

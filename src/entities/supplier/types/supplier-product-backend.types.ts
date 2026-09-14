@@ -9,3 +9,13 @@ export type TSupplierProductListBackend = SupplierProductListResponse;
 export type TCreateProductBodyBackend = ReturnType<
 	typeof SUPPLIER_PRODUCT_PATHS.createProduct
 >["_types"]["body"];
+
+export type TSupplierVariantWriteBackend = ReturnType<
+	typeof SUPPLIER_PRODUCT_PATHS.createVariant
+>["_types"]["body"];
+
+export type TSupplierProductReadBackend = ReturnType<
+	typeof SUPPLIER_PRODUCT_PATHS.getProduct
+>["_types"]["response"];
+
+export type TSupplierVariantProductReadBackend = TSupplierProductReadBackend;

@@ -1,4 +1,5 @@
 import { LanguageCode } from "@/shared/api";
+import type { BusDetailsWrite, BusInlineSupplyNew } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
 
@@ -54,13 +55,15 @@ export const mapBusEventToForm = (
 	const event = assertBusEvent(data);
 	const details = event.details ?? null;
 
-	if (isInheritedBusDetails(details)) {
-		const hops = details.hop ?? [];
-		const route: TBusRouteSegment[] =
-			hops.length > 0
-				? hops.map(mapBusHopToSegment)
-				: [createEmptyBusSegment()];
+	// Contract 3.1: a coach run is the tour's own statement — the legs sit
+	// on `plan` (with their hours), whoever supplies the fleet.
+	const legs = details?.plan?.legs ?? [];
+	const route: TBusRouteSegment[] =
+		legs.length > 0
+			? legs.map(mapBusHopToSegment)
+			: [createEmptyBusSegment()];
 
+	if (isInheritedBusDetails(details)) {
 		return {
 			...mapEventMetaToForm(event),
 			...mapInheritedProductLinkToForm(details),
@@ -75,12 +78,6 @@ export const mapBusEventToForm = (
 			)
 		};
 	}
-
-	const hops = details?.hop ?? [];
-	const route: TBusRouteSegment[] =
-		hops.length > 0
-			? hops.map(mapBusHopToSegment)
-			: [createEmptyBusSegment()];
 
 	return {
 		...mapEventMetaToForm(event),
@@ -106,25 +103,33 @@ export const mapBusFormToUpdate = (
 		(segment): segment is TBusRouteSegment =>
 			segment.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.BUS
 	);
-	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
+	const { charge } = mapFlightPricingToBackend(frontend?.pricing);
+
+	// The run itself is the plan. A charge is stated on a `whole` fleet
+	// spec; without one `supply` is omitted so the backend keeps the
+	// current one (a full replace would wipe it — and could replace a
+	// product link with an empty inline supply).
+	const spec: BusInlineSupplyNew["spec"] | undefined = charge
+		? { pricing: "whole", charge }
+		: undefined;
+
+	const details: BusDetailsWrite = {
+		...(busRoute?.length && {
+			plan: {
+				legs: busRoute.map((segment) =>
+					mapBusSegmentToHop(segment, lang)
+				)
+			}
+		}),
+		...(spec && { supply: { source: "inline", spec } })
+	};
 
 	return {
 		typ: ENUM_EVENT_BACKEND.BUS,
 		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
-		...(Number.isFinite(frontend.position) && {
-			position: frontend.position
-		}),
-		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		...(g?.description !== undefined && { description: g.description }),
-		details: {
-			...(busRoute?.length && {
-				hop: busRoute.map((segment) =>
-					mapBusSegmentToHop(segment, lang)
-				)
-			}),
-			...pricingDetails.details
-		}
+		details
 	};
 };

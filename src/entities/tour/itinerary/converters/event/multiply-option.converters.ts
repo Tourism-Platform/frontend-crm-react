@@ -1,73 +1,65 @@
 import {
 	ENUM_EVENT,
+	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
 	type IEventOptionReorder,
 	type ITourEventOption,
-	type TMultiEventReadBackend,
+	type TMultiEventDetailBackend,
 	type TMultiplyOptionEditSchema,
 	type TTourEventBackendResponce
 } from "../../types";
+import { backendEventTypeMapper } from "../backend-event-type.converters";
 import { mapBackendEventToTimeSubtitle } from "../event-time-range.converters";
-import { mapBackendTypToEventType } from "../event-type.converters";
-
-type TMultiEventOptionDetail = NonNullable<
-	TMultiEventReadBackend["details"]
->[number];
 
 export const mapMultiplyOptionDetailToOption = (
-	detail: TMultiEventOptionDetail
+	detail: TMultiEventDetailBackend
 ): ITourEventOption | null => {
 	if (!detail.id) return null;
 
-	const backendTyp = detail.typ as ENUM_EVENT_BACKEND_TYPE | undefined;
-	const details = (detail.details as Record<string, unknown>) || {};
+	const backendTyp = detail.typ as ENUM_EVENT_BACKEND_TYPE;
 
 	return {
 		id: detail.id,
 		name: detail.name || "",
 		description: detail.description || "",
 		eventType:
-			mapBackendTypToEventType(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
-		details,
-		timeSubtitle: mapBackendEventToTimeSubtitle(backendTyp, details),
-		isOptional: Boolean(
-			(detail as { is_optional?: boolean | null }).is_optional
-		)
+			backendEventTypeMapper.to(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
+		backendTyp,
+		details: detail.details,
+		timeSubtitle: mapBackendEventToTimeSubtitle(detail)
 	};
 };
 
 export const mapMultiplyOptionEventToForm = (
 	data: TTourEventBackendResponce
 ): TMultiplyOptionEditSchema => {
-	const event = data?.event as TMultiEventReadBackend;
+	const event = data?.event;
 
-	const options = (event?.details ?? [])
+	if (event?.typ !== ENUM_EVENT_BACKEND.OPTIONS) {
+		return { name: "", description: "", options: [] };
+	}
+
+	const options = (event.details ?? [])
 		.map(mapMultiplyOptionDetailToOption)
 		.filter((opt): opt is ITourEventOption => opt !== null);
 
 	return {
-		name:
-			"name" in event
-				? ((event as { name?: string | null }).name ?? "")
-				: "",
-		description:
-			"description" in event
-				? ((event as { description?: string | null }).description ?? "")
-				: "",
-		day: event?.day,
-		position: event?.position,
+		name: "",
+		description: "",
+		day: event.day,
+		position: event.position,
 		options
 	};
 };
 
-/** Builds 0-based position permutation for reorder-options API. */
+/**
+ * Reorder payload — the current option row IDs in the new order.
+ * Contract 3.1: `order` is `string[]` of event option ids, not indices.
+ */
 export const mapMultiplyOptionReorderToBackend = (
-	originalOptions: Pick<ITourEventOption, "id">[],
 	currentOptions: Pick<ITourEventOption, "id">[]
 ): IEventOptionReorder => ({
-	order: currentOptions.map((option) =>
-		originalOptions.findIndex((item) => item.id === option.id)
-	)
+	order: currentOptions.map((option) => option.id)
 });
 
 export const hasMultiplyOptionsOrderChanged = (

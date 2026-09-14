@@ -1,23 +1,23 @@
 import type {
-	ActivityEventInput,
-	ActivityOverrideSchemaInput,
-	ActivitySingleEventInput,
-	BusEventInput,
-	BusOverrideSchemaInput,
-	BusSingleEventInput,
+	ActivityEvent,
+	ActivityOverrideInput,
+	ActivitySingleEvent,
+	AttachBody,
+	BusEvent,
+	BusOverrideInput,
+	BusSingleEvent,
+	DetachBody,
 	EventOptionalSchema,
-	EventProductLinkSchema,
 	EventReorderSchema,
-	FlightEventInput,
-	FlightOverrideSchemaInput,
-	FlightSingleEventInput,
-	GuideEventInput,
-	GuideSingleEventInput,
-	HousingEventInput,
-	HousingOverrideSchemaInput,
-	HousingSingleEventInput,
-	InformationEventInput,
-	InformationSingleEventInput,
+	FlightEvent,
+	FlightSingleEvent,
+	GuideEvent,
+	GuideSingleEvent,
+	HotelOverrideInput,
+	HousingEvent,
+	HousingSingleEvent,
+	InformationEvent,
+	InformationSingleEvent,
 	LanguageCode,
 	MoveToMultiResult,
 	MoveToMultiSchema,
@@ -25,16 +25,18 @@ import type {
 	MultiEvent,
 	OptionReorderSchema,
 	PublishBlockSchema,
-	SupplementaryEventInput,
-	SupplementarySingleEventInput,
+	RelinkBody,
+	RouteOverrideInput,
+	ScopeBody,
+	SupplementaryEvent,
+	SupplementarySingleEvent,
 	SupplierPolicyWarningSchemaOutput,
 	TourEventResponse,
-	TrainEventInput,
-	TrainOverrideSchemaInput,
-	TrainSingleEventInput,
-	TransferEventInput,
-	TransferOverrideSchemaInput,
-	TransferSingleEventInput
+	TrainEvent,
+	TrainSingleEvent,
+	TransferEvent,
+	TransferOverrideInput,
+	TransferSingleEvent
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -67,15 +69,15 @@ export const TOUR_EVENTS_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationSingleEventInput
-					| BusSingleEventInput
-					| TrainSingleEventInput
-					| TransferSingleEventInput
-					| ActivitySingleEventInput
-					| HousingSingleEventInput
-					| FlightSingleEventInput
-					| GuideSingleEventInput
-					| SupplementarySingleEventInput
+					| InformationSingleEvent
+					| BusSingleEvent
+					| TrainSingleEvent
+					| TransferSingleEvent
+					| ActivitySingleEvent
+					| HousingSingleEvent
+					| FlightSingleEvent
+					| GuideSingleEvent
+					| SupplementarySingleEvent
 					| MultiEvent;
 				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
@@ -122,6 +124,101 @@ export const TOUR_EVENTS_PATHS = {
 				response: PublishBlockSchema[];
 			}
 		}) as const,
+	setOptionOverride: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/override`,
+			method: "PATCH",
+			_types: {} as {
+				body:
+					| HotelOverrideInput
+					| RouteOverrideInput
+					| BusOverrideInput
+					| TransferOverrideInput
+					| ActivityOverrideInput;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	clearOptionOverride: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/override`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	attachOptionProduct: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/attach`,
+			method: "POST",
+			_types: {} as {
+				body: AttachBody;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	relinkOptionProduct: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/relink`,
+			method: "POST",
+			_types: {} as {
+				body: RelinkBody;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	scopeOptionProduct: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/scope`,
+			method: "PATCH",
+			_types: {} as {
+				body: ScopeBody;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	detachOptionProduct: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/detach`,
+			method: "POST",
+			_types: {} as {
+				body: DetachBody;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
 	reorderEvent: (tourId: string, optionId: string, eventId: string) =>
 		({
 			url: `/tour/${tourId}/${optionId}/event/${eventId}/reorder`,
@@ -142,52 +239,67 @@ export const TOUR_EVENTS_PATHS = {
 				response: TourEventResponse;
 			}
 		}) as const,
-	updateSingleEvent: (tourId: string, optionId: string, eventId: string) =>
+	reorderEventOptions: (tourId: string, optionId: string, eventId: string) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/update`,
-			method: "PATCH",
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/reorder-options`,
+			method: "POST",
 			_types: {} as {
-				body:
-					| InformationEventInput
-					| BusEventInput
-					| TrainEventInput
-					| TransferEventInput
-					| ActivityEventInput
-					| HousingEventInput
-					| FlightEventInput
-					| GuideEventInput
-					| SupplementaryEventInput;
+				body: OptionReorderSchema;
 				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
-	setSingleEventOverride: (
-		tourId: string,
-		optionId: string,
-		eventId: string
-	) =>
+	addOption: (tourId: string, optionId: string, eventId: string) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/override`,
-			method: "PATCH",
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option`,
+			method: "POST",
 			_types: {} as {
 				body:
-					| HousingOverrideSchemaInput
-					| TrainOverrideSchemaInput
-					| FlightOverrideSchemaInput
-					| BusOverrideSchemaInput
-					| TransferOverrideSchemaInput
-					| ActivityOverrideSchemaInput;
+					| InformationEvent
+					| BusEvent
+					| TrainEvent
+					| TransferEvent
+					| ActivityEvent
+					| HousingEvent
+					| FlightEvent
+					| GuideEvent
+					| SupplementaryEvent;
 				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}
 		}) as const,
-	clearSingleEventOverride: (
+	updateOption: (
 		tourId: string,
 		optionId: string,
-		eventId: string
+		eventId: string,
+		eventOptionId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/override`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}`,
+			method: "PATCH",
+			_types: {} as {
+				body:
+					| InformationEvent
+					| BusEvent
+					| TrainEvent
+					| TransferEvent
+					| ActivityEvent
+					| HousingEvent
+					| FlightEvent
+					| GuideEvent
+					| SupplementaryEvent;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	deleteOption: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}`,
 			method: "DELETE",
 			_types: {} as {
 				body: void;
@@ -195,32 +307,19 @@ export const TOUR_EVENTS_PATHS = {
 				response: TourEventResponse;
 			}
 		}) as const,
-	attachSingleEventProduct: (
+	moveOptionToSingle: (
 		tourId: string,
 		optionId: string,
-		eventId: string
+		eventId: string,
+		eventOptionId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/product`,
-			method: "PATCH",
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/move-to-single`,
+			method: "POST",
 			_types: {} as {
-				body: EventProductLinkSchema;
+				body: EventReorderSchema | null;
 				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	detachSingleEventProduct: (
-		tourId: string,
-		optionId: string,
-		eventId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/product`,
-			method: "DELETE",
-			_types: {} as {
-				body: void;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
+				response: MoveToSingleResult;
 			}
 		}) as const,
 	moveEventToMulti: (
@@ -230,161 +329,12 @@ export const TOUR_EVENTS_PATHS = {
 		targetEventId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/single/${eventId}/move-to-multi/${targetEventId}`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/move-to-multi/${targetEventId}`,
 			method: "POST",
 			_types: {} as {
 				body: MoveToMultiSchema | null;
 				query: { read_lang?: LanguageCode };
 				response: MoveToMultiResult;
-			}
-		}) as const,
-	setEventOptionOverride: (
-		tourId: string,
-		optionId: string,
-		eventId: string,
-		eventOptionId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/override-option/${eventOptionId}`,
-			method: "PATCH",
-			_types: {} as {
-				body:
-					| HousingOverrideSchemaInput
-					| TrainOverrideSchemaInput
-					| FlightOverrideSchemaInput
-					| BusOverrideSchemaInput
-					| TransferOverrideSchemaInput
-					| ActivityOverrideSchemaInput;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	clearEventOptionOverride: (
-		tourId: string,
-		optionId: string,
-		eventId: string,
-		eventOptionId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/override-option/${eventOptionId}`,
-			method: "DELETE",
-			_types: {} as {
-				body: void;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	attachEventOptionProduct: (
-		tourId: string,
-		optionId: string,
-		eventId: string,
-		eventOptionId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/product-option/${eventOptionId}`,
-			method: "PATCH",
-			_types: {} as {
-				body: EventProductLinkSchema;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	detachEventOptionProduct: (
-		tourId: string,
-		optionId: string,
-		eventId: string,
-		eventOptionId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/product-option/${eventOptionId}`,
-			method: "DELETE",
-			_types: {} as {
-				body: void;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	reorderEventOptions: (tourId: string, optionId: string, eventId: string) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/reorder-options`,
-			method: "POST",
-			_types: {} as {
-				body: OptionReorderSchema;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	addEventOption: (tourId: string, optionId: string, eventId: string) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/add-option`,
-			method: "POST",
-			_types: {} as {
-				body:
-					| InformationEventInput
-					| BusEventInput
-					| TrainEventInput
-					| TransferEventInput
-					| ActivityEventInput
-					| HousingEventInput
-					| FlightEventInput
-					| GuideEventInput
-					| SupplementaryEventInput;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	updateEventOption: (
-		tourId: string,
-		optionId: string,
-		eventId: string,
-		eventOptionId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/update-option/${eventOptionId}`,
-			method: "PATCH",
-			_types: {} as {
-				body:
-					| InformationEventInput
-					| BusEventInput
-					| TrainEventInput
-					| TransferEventInput
-					| ActivityEventInput
-					| HousingEventInput
-					| FlightEventInput
-					| GuideEventInput
-					| SupplementaryEventInput;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	deleteEventOption: (
-		tourId: string,
-		optionId: string,
-		eventId: string,
-		eventOptionId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/remove-option/${eventOptionId}`,
-			method: "DELETE",
-			_types: {} as {
-				body: void;
-				query: { read_lang?: LanguageCode };
-				response: TourEventResponse;
-			}
-		}) as const,
-	moveEventOptionToSingle: (
-		tourId: string,
-		optionId: string,
-		eventId: string,
-		eventOptionId: string
-	) =>
-		({
-			url: `/tour/${tourId}/${optionId}/event/multi/${eventId}/move-to-single/${eventOptionId}`,
-			method: "POST",
-			_types: {} as {
-				body: EventReorderSchema | null;
-				query: { read_lang?: LanguageCode };
-				response: MoveToSingleResult;
 			}
 		}) as const
 } as const;

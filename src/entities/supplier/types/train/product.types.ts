@@ -14,6 +14,14 @@ export const ENUM_TRAIN_VARIANT_CHARGE = {
 export type ENUM_TRAIN_VARIANT_CHARGE_TYPE =
 	(typeof ENUM_TRAIN_VARIANT_CHARGE)[keyof typeof ENUM_TRAIN_VARIANT_CHARGE];
 
+export const ENUM_TRAIN_PRICING = {
+	PER_FARE: "per_fare",
+	WHOLE: "whole"
+} as const;
+
+export type ENUM_TRAIN_PRICING_TYPE =
+	(typeof ENUM_TRAIN_PRICING)[keyof typeof ENUM_TRAIN_PRICING];
+
 export interface ITrainFixedCharge {
 	typ: typeof ENUM_TRAIN_VARIANT_CHARGE.FIXED;
 	cost: IMonetaryValue;
@@ -31,7 +39,6 @@ export interface ITrainPerPersonCharge {
 export type TTrainVariantCharge = ITrainFixedCharge | ITrainPerPersonCharge;
 
 export interface ITrainJourneyPoint {
-	time: string | null;
 	location: ISupplierLocation | null;
 }
 
@@ -51,6 +58,9 @@ export interface ITrainProduct {
 	supplierId: string;
 	typ: ENUM_SUPPLIER_TYPE_TYPE;
 	name: string;
+	pricing: ENUM_TRAIN_PRICING_TYPE;
+	/** Route-level charge of a whole-priced route; null for per-fare ones. */
+	charge: TTrainVariantCharge | null;
 	hops: ITrainHop[];
 	imagePaths: string[];
 	primaryImagePath: string | null;
@@ -64,5 +74,5 @@ export interface ITrainProductCreate {
 
 export interface ITrainVariantWrite {
 	name: string;
-	expenses: TTrainVariantCharge | null;
+	expenses: TTrainVariantCharge;
 }

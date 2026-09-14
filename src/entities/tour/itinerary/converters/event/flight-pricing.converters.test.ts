@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { Currency } from "@/shared/api";
+import type { FlightDetailsOutput } from "@/shared/api";
 
 import {
 	ENUM_FEE_FIELD,
@@ -28,6 +29,21 @@ const feeRow = (cost: number, currency: string) => ({
 	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
 });
 
+const wholeFlightDetails = (
+	charge: Extract<FlightDetailsOutput["spec"], { pricing: "whole" }>["charge"]
+): FlightDetailsOutput => ({
+	plan: {},
+	supply: { source: "inline", supplier_id: null },
+	spec: {
+		pricing: "whole",
+		images: [],
+		name: null,
+		legs: [],
+		fares: [],
+		charge
+	}
+});
+
 const basePricing = (
 	overrides: Partial<TFlightPricingSchema> = {}
 ): TFlightPricingSchema => ({
@@ -42,19 +58,20 @@ const basePricing = (
 });
 
 describe("mapFlightPricingFromBackend", () => {
-	it("maps fixed expenses markup from backend", () => {
+	it("maps a whole-route fixed charge from spec.charge", () => {
 		expect(
-			mapFlightPricingFromBackend({
-				expenses: {
+			mapFlightPricingFromBackend(
+				wholeFlightDetails({
 					typ: "fixed",
 					cost: { val: 200, currency: Currency.USD },
 					fees: null,
+					extra_costs: [],
 					markup: {
 						typ: "fixed",
 						cost: { val: 25, currency: Currency.USD }
 					}
-				}
-			})
+				})
+			)
 		).toMatchObject({
 			pricing_type: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
 			add_margin_separately: true,
@@ -64,7 +81,7 @@ describe("mapFlightPricingFromBackend", () => {
 });
 
 describe("mapFlightPricingToBackend", () => {
-	it("writes markup to fixed charge when flag on", () => {
+	it("writes markup to a fixed charge when flag on", () => {
 		expect(
 			mapFlightPricingToBackend(
 				basePricing({
@@ -77,7 +94,7 @@ describe("mapFlightPricingToBackend", () => {
 						value: "25"
 					}
 				})
-			).details?.expenses
+			).charge
 		).toMatchObject({
 			typ: "fixed",
 			fees: [
@@ -94,7 +111,7 @@ describe("mapFlightPricingToBackend", () => {
 		});
 	});
 
-	it("writes markup to per_person charge when flag on", () => {
+	it("writes markup to a per_person charge when flag on", () => {
 		expect(
 			mapFlightPricingToBackend(
 				basePricing({
@@ -109,7 +126,7 @@ describe("mapFlightPricingToBackend", () => {
 						value: "10"
 					}
 				})
-			).details?.expenses
+			).charge
 		).toMatchObject({
 			typ: "per_person",
 			markup: { typ: "percentage", percentage: 0.1 }
@@ -128,7 +145,7 @@ describe("mapFlightPricingToBackend", () => {
 						value: "25"
 					}
 				})
-			).details?.expenses
+			).charge
 		).toEqual({
 			typ: "fixed",
 			cost: { val: 200, currency: Currency.USD },

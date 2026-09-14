@@ -1,4 +1,4 @@
-import { mapBackendTypToEventType } from "@/entities/tour/itinerary/converters/event-type.converters";
+import { backendEventTypeMapper } from "@/entities/tour/itinerary/converters/backend-event-type.converters";
 import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types";
 
 import type { TBookingEventAvailabilityBackend } from "../types";
@@ -16,9 +16,8 @@ export const mapBookingAvailabilityToFrontend = (
 	status: availabilityStatusMapper.from(data.status)!,
 	eventName: data.event_name,
 	eventType:
-		mapBackendTypToEventType(
-			data.event_typ as ENUM_EVENT_BACKEND_TYPE | null
-		) ?? null
+		backendEventTypeMapper.to(data.event_typ as ENUM_EVENT_BACKEND_TYPE) ??
+		null
 });
 
 export const mapBookingAvailabilityListToFrontend = (

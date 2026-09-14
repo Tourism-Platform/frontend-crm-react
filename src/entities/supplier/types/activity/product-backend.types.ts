@@ -1,9 +1,11 @@
 import type {
 	ActivityProductCreate,
+	ActivityProductDetails,
 	ActivityProductReadOutput,
 	ActivityProductUpdate,
-	ActivityVariantReadOutput,
-	ActivityVariantWrite
+	ActivityVariantWrite,
+	FoodOfferingOutput,
+	TicketedOfferingOutput
 } from "@/shared/api/generated/Api";
 
 import type { TCreateProductBodyBackend } from "../supplier-product-backend.types";
@@ -15,8 +17,8 @@ export type TCreateActivityProductBackend = Extract<
 
 export type TActivityProductReadBackend = ActivityProductReadOutput;
 export type TUpdateActivityProductBackend = ActivityProductUpdate;
+export type TActivityProductDetailsBackend = ActivityProductDetails;
 export type TActivityVariantWriteBackend = ActivityVariantWrite;
-export type TActivityVariantReadBackend = ActivityVariantReadOutput;
-export type TActivityVariantChargeInputBackend = NonNullable<
-	ActivityVariantWrite["details"]
->["expenses"];
+export type TActivityVariantReadBackend =
+	| TicketedOfferingOutput
+	| FoodOfferingOutput;

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { Currency } from "@/shared/api";
+import type { ActivityDetailsOutput } from "@/shared/api";
 
 import {
 	ENUM_ACTIVITY_MARKUP_TYP,
@@ -28,6 +29,35 @@ const feeRow = (cost: number, currency: string) => ({
 	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
 });
 
+const activityDetails = (
+	charge: NonNullable<ActivityDetailsOutput["spec"]> extends {
+		offerings: infer O;
+	}
+		? O extends Array<infer I>
+			? I extends { charge: infer C }
+				? C
+				: never
+			: never
+		: never
+): ActivityDetailsOutput => ({
+	plan: {},
+	supply: { source: "inline", supplier_id: null },
+	spec: {
+		sub_typ: "food",
+		images: [],
+		name: null,
+		location: null,
+		offerings: [
+			{
+				id: "off-1",
+				name: null,
+				charge,
+				menu: []
+			}
+		]
+	}
+});
+
 const basePricing = (
 	overrides: Partial<TActivityPricingSchema> = {}
 ): TActivityPricingSchema => ({
@@ -42,7 +72,7 @@ const basePricing = (
 });
 
 describe("mapActivityPricingFromBackend", () => {
-	it("returns defaults without expenses", () => {
+	it("returns defaults without a charge", () => {
 		expect(mapActivityPricingFromBackend(null)).toEqual({
 			invoicing: ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL,
 			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
@@ -52,19 +82,20 @@ describe("mapActivityPricingFromBackend", () => {
 		});
 	});
 
-	it("maps fixed expenses markup from backend", () => {
+	it("maps a fixed offering charge from spec.offerings[0]", () => {
 		expect(
-			mapActivityPricingFromBackend({
-				expenses: {
+			mapActivityPricingFromBackend(
+				activityDetails({
 					typ: "fixed",
 					cost: { val: 100, currency: Currency.USD },
 					fees: null,
+					extra_costs: [],
 					markup: {
 						typ: "fixed",
 						cost: { val: 10, currency: Currency.USD }
 					}
-				}
-			})
+				})
+			)
 		).toMatchObject({
 			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
 			add_margin_separately: true,
@@ -74,16 +105,23 @@ describe("mapActivityPricingFromBackend", () => {
 		});
 	});
 
-	it("maps per_person expenses markup from backend", () => {
+	it("maps a per_person offering charge from spec.offerings[0]", () => {
 		expect(
-			mapActivityPricingFromBackend({
-				expenses: {
+			mapActivityPricingFromBackend(
+				activityDetails({
 					typ: "per_person",
 					cost_per_person: { val: 50, currency: Currency.EUR },
-					fees: [{ cost: { val: 5, currency: Currency.EUR } }],
+					fees: [
+						{
+							name: null,
+							description: null,
+							cost: { val: 5, currency: Currency.EUR }
+						}
+					],
+					extra_costs: [],
 					markup: { typ: "percentage", percentage: 0.15 }
-				}
-			})
+				})
+			)
 		).toMatchObject({
 			pricing_type: ENUM_ACTIVITY_PRICING_TYPE.PER_PERSON,
 			add_margin_separately: true,
@@ -96,7 +134,7 @@ describe("mapActivityPricingFromBackend", () => {
 });
 
 describe("mapActivityPricingToBackend", () => {
-	it("writes markup to fixed charge when flag on", () => {
+	it("writes markup to a fixed charge when flag on", () => {
 		expect(
 			mapActivityPricingToBackend(
 				basePricing({
@@ -109,7 +147,7 @@ describe("mapActivityPricingToBackend", () => {
 						value: "10"
 					}
 				})
-			).details?.expenses
+			).charge
 		).toEqual({
 			typ: "fixed",
 			cost: { val: 100, currency: Currency.USD },
@@ -139,14 +177,14 @@ describe("mapActivityPricingToBackend", () => {
 						value: "10"
 					}
 				})
-			).details?.expenses
+			).charge
 		).toMatchObject({
 			typ: "fixed",
 			markup: null
 		});
 	});
 
-	it("writes markup to per_person charge when flag on", () => {
+	it("writes markup to a per_person charge when flag on", () => {
 		expect(
 			mapActivityPricingToBackend(
 				basePricing({
@@ -161,7 +199,7 @@ describe("mapActivityPricingToBackend", () => {
 						value: "20"
 					}
 				})
-			).details?.expenses
+			).charge
 		).toEqual({
 			typ: "per_person",
 			cost_per_person: { val: 80, currency: Currency.EUR },
@@ -188,7 +226,7 @@ describe("mapActivityPricingToBackend", () => {
 						value: "10"
 					}
 				})
-			).details?.expenses
+			).charge
 		).toEqual({
 			typ: "fixed",
 			cost: { val: 100, currency: Currency.USD },

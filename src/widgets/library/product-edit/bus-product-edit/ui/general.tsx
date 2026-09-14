@@ -77,7 +77,8 @@ const BusProductGeneralBase: FC<IBusProductGeneralProps> = ({
 			await updateBusProduct({
 				supplierId,
 				productId,
-				values: data
+				values: data,
+				existing: product
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {

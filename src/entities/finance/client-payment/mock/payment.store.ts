@@ -186,6 +186,8 @@ export const createPaymentFromFormData = (
 		operator_id: MOCK_OPERATOR_ID,
 		amount: amountUzs / exchangeRate,
 		currency: MOCK_PAYMENT_DEFAULTS.currency,
+		rate: String(exchangeRate),
+		base_amount: amountUzs.toFixed(2),
 		status: ClientPaymentStatus.NotConfirmed,
 		note: typeof note === "string" && note.length > 0 ? note : null,
 		attachment_count: hasFile ? 1 : 0,

@@ -14,10 +14,9 @@ describe("mapActivityProductToCreate", () => {
 			})
 		).toEqual({
 			typ: "activity",
-			name: "Registan walking tour",
 			details: {
-				typ: "activity",
 				sub_typ: "sightseeing",
+				name: "Registan walking tour",
 				location: { lat: 39.65, long: 66.97 }
 			}
 		});

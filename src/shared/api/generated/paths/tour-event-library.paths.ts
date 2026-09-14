@@ -1,18 +1,18 @@
 import type {
-	ActivityEventInput,
+	ActivityEvent,
 	BodyUploadLibraryImagesTourEventLibraryLibraryIdImagesPost,
-	BusEventInput,
+	BusEvent,
 	EventLibraryListResponse,
 	EventLibraryResponse,
 	EventTypes,
-	FlightEventInput,
-	GuideEventInput,
-	HousingEventInput,
-	InformationEventInput,
-	SupplementaryEventInput,
+	FlightEvent,
+	GuideEvent,
+	HousingEvent,
+	InformationEvent,
+	SupplementaryEvent,
 	TourEventLibraryImageModel,
-	TrainEventInput,
-	TransferEventInput
+	TrainEvent,
+	TransferEvent
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -38,15 +38,15 @@ export const TOUR_EVENT_LIBRARY_PATHS = {
 		method: "POST",
 		_types: {} as {
 			body:
-				| InformationEventInput
-				| BusEventInput
-				| TrainEventInput
-				| TransferEventInput
-				| ActivityEventInput
-				| HousingEventInput
-				| FlightEventInput
-				| GuideEventInput
-				| SupplementaryEventInput;
+				| InformationEvent
+				| BusEvent
+				| TrainEvent
+				| TransferEvent
+				| ActivityEvent
+				| HousingEvent
+				| FlightEvent
+				| GuideEvent
+				| SupplementaryEvent;
 			query: void;
 			response: EventLibraryResponse;
 		}
@@ -67,15 +67,15 @@ export const TOUR_EVENT_LIBRARY_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| InformationEventInput
-					| BusEventInput
-					| TrainEventInput
-					| TransferEventInput
-					| ActivityEventInput
-					| HousingEventInput
-					| FlightEventInput
-					| GuideEventInput
-					| SupplementaryEventInput;
+					| InformationEvent
+					| BusEvent
+					| TrainEvent
+					| TransferEvent
+					| ActivityEvent
+					| HousingEvent
+					| FlightEvent
+					| GuideEvent
+					| SupplementaryEvent;
 				query: void;
 				response: EventLibraryResponse;
 			}

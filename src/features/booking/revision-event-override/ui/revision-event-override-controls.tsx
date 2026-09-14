@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Button, LoaderButton } from "@/shared/ui";
 
 import {
+	type TEventDetailsBackend,
 	type TEventOverride,
 	mapEventOverrideFromDetails
 } from "@/entities/tour";
@@ -22,7 +23,7 @@ interface IRevisionEventOverrideControlsProps {
 	kind: TOverrideEventKind;
 	isInherited: boolean;
 	hasOverride?: boolean;
-	details?: Record<string, unknown>;
+	details?: TEventDetailsBackend;
 	bookingId: string;
 	eventId: string;
 	optionIndex?: number | null;

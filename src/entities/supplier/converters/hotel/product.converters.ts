@@ -1,10 +1,13 @@
+import type { StayRateOutput } from "@/shared/api/generated/Api";
+
 import {
+	ENUM_HOTEL_PRICING,
 	ENUM_SUPPLIER_TYPE,
 	type IHotelProduct,
 	type IHotelProductCreate,
-	type IHotelProductDetails,
 	type TCreateHotelProductBackend,
-	type THotelProductReadBackend
+	type THotelProductReadBackend,
+	type THotelStayRateInputBackend
 } from "../../types";
 import {
 	mapSupplierLocationFromBackend,
@@ -18,41 +21,55 @@ import {
 } from "./policy.converters";
 import { mapHotelVariantFromBackend } from "./rooms.converters";
 
-const mapHotelProductDetailsToBackend = (data: IHotelProductDetails) => ({
-	typ: "hotel" as const,
-	location: mapSupplierLocationToBackend(data.location),
-	stars: data.stars,
-	amenities: hotelAmenityConverter.toMany(data.amenities),
-	policy: mapHotelPolicyToBackend(data.policy)
+/**
+ * The whole-stay price is carried through untouched: every output charge leaf
+ * is structurally assignable to its input counterpart, so this is a plain
+ * re-wrap, verified by the compiler.
+ */
+const mapStayRateFromBackend = (
+	price: StayRateOutput
+): THotelStayRateInputBackend => ({
+	base: price.base,
+	seasons: price.seasons
 });
 
 export const mapHotelProductFromBackend = (
 	row: THotelProductReadBackend
-): IHotelProduct => ({
-	id: row.id,
-	supplierId: row.supplier_id,
-	typ: ENUM_SUPPLIER_TYPE.HOTEL,
-	name: row.name,
-	details: {
-		location: mapSupplierLocationFromBackend(row.location ?? null),
-		stars: row.stars ?? null,
-		amenities: hotelAmenityConverter.fromMany(row.amenities ?? []),
-		policy: mapHotelPolicyFromBackend(row.policy)
-	},
-	imagePaths: row.image_paths ?? [],
-	primaryImagePath: row.primary_image_path ?? null,
-	variants: (row.variants ?? []).map(mapHotelVariantFromBackend)
-});
+): IHotelProduct => {
+	const spec = row.spec;
+
+	return {
+		id: row.id,
+		supplierId: row.supplier_id,
+		typ: ENUM_SUPPLIER_TYPE.HOTEL,
+		name: spec.name ?? row.name,
+		pricing: spec.pricing,
+		details: {
+			location: mapSupplierLocationFromBackend(spec.location ?? null),
+			stars: spec.stars ?? null,
+			amenities: hotelAmenityConverter.fromMany(spec.amenities ?? []),
+			policy: mapHotelPolicyFromBackend(spec.policy)
+		},
+		stayRate:
+			spec.pricing === ENUM_HOTEL_PRICING.WHOLE
+				? mapStayRateFromBackend(spec.price)
+				: null,
+		imagePaths: row.image_paths ?? [],
+		primaryImagePath: row.primary_image_path ?? null,
+		variants: spec.categories.map(mapHotelVariantFromBackend)
+	};
+};
 
 export const mapHotelProductToCreate = (
 	data: IHotelProductCreate
 ): TCreateHotelProductBackend => ({
 	typ: "hotel",
-	name: data.name,
-	details: mapHotelProductDetailsToBackend({
-		location: data.location ?? null,
+	details: {
+		pricing: ENUM_HOTEL_PRICING.PER_ROOM,
+		name: data.name,
+		location: mapSupplierLocationToBackend(data.location ?? null),
 		stars: data.stars ?? null,
-		amenities: data.amenities,
-		policy: data.policy ?? null
-	})
+		amenities: hotelAmenityConverter.toMany(data.amenities),
+		policy: mapHotelPolicyToBackend(data.policy)
+	}
 });

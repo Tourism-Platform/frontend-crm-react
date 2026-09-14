@@ -1,31 +1,33 @@
 import type {
-	BusDetailSchemaOutput,
-	CustomTrainDetailsOutput,
-	FlightDetailsSchemaOutput,
-	InheritedBusDetailsOutput,
-	InheritedFlightDetailsOutput,
-	InheritedTrainDetailsOutput
-} from "@/shared/api";
+	BusDetailsOutput,
+	FlightDetailsOutput,
+	PerFareFlightRouteInput,
+	PerFareFlightRouteOutput,
+	TrainDetailsOutput,
+	WholeFlightRouteInput,
+	WholeFlightRouteOutput
+} from "src/shared/api/generated";
 
-export type TFlightDetailsBackend = FlightDetailsSchemaOutput;
-export type TInheritedFlightDetailsBackend = InheritedFlightDetailsOutput;
-export type TFlightEventDetailsBackend =
-	| TFlightDetailsBackend
-	| TInheritedFlightDetailsBackend;
+/**
+ * Backend pricing shapes for flight/train event specs (contract 3.1).
+ *
+ * Read: `details.spec` = `{ pricing: "per_fare" } & PerFare*RouteOutput`
+ *   | `{ pricing: "whole" } & Whole*RouteOutput`
+ * Write (inside `supply.inline.spec`): the matching `*Input` members.
+ */
 
-export type TCustomTrainDetailsBackend = CustomTrainDetailsOutput;
-export type TInheritedTrainDetailsBackend = InheritedTrainDetailsOutput;
-export type TTrainDetailsBackend =
-	| TCustomTrainDetailsBackend
-	| TInheritedTrainDetailsBackend;
+/** Read-side flight route spec union. */
+export type TFlightPricingBackend =
+	| PerFareFlightRouteOutput
+	| WholeFlightRouteOutput;
 
-export type TBusDetailsBackend = BusDetailSchemaOutput;
-export type TInheritedBusDetailsBackend = InheritedBusDetailsOutput;
-export type TBusEventDetailsBackend =
-	| TBusDetailsBackend
-	| TInheritedBusDetailsBackend;
+/** Write-side flight route spec union (goes into `supply.inline.spec`). */
+export type TFlightPricingInputBackend =
+	| PerFareFlightRouteInput
+	| WholeFlightRouteInput;
 
+/** Read-side details of a priced route/fleet event (flight, train or bus). */
 export type TTransportDetailsWithPricingBackend =
-	| TFlightDetailsBackend
-	| TCustomTrainDetailsBackend
-	| TBusDetailsBackend;
+	| FlightDetailsOutput
+	| TrainDetailsOutput
+	| BusDetailsOutput;

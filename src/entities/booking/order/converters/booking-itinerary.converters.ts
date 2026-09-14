@@ -1,5 +1,5 @@
 import { ENUM_EVENT } from "@/entities/tour/itinerary";
-import { mapBackendTypToEventType } from "@/entities/tour/itinerary/converters/event-type.converters";
+import { backendEventTypeMapper } from "@/entities/tour/itinerary/converters/backend-event-type.converters";
 import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types";
 
 import type {
@@ -31,9 +31,7 @@ const mapSingleEventToItem = (
 ): IOrderTourReviewItem => ({
 	id: buildEventId(event.typ, event.day, event.position, index, optionIndex),
 	item: event.name ?? "-",
-	type: mapBackendTypToEventType(
-		event.typ as ENUM_EVENT_BACKEND_TYPE | undefined
-	),
+	type: backendEventTypeMapper.to(event.typ as ENUM_EVENT_BACKEND_TYPE),
 	day: event.day ?? 0,
 	position: event.position ?? 0,
 	optionIndex

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { Currency } from "@/shared/api";
+import type { TransferDetailsOutput } from "@/shared/api";
 
 import {
 	ENUM_TRANSPORTATION_MARKUP_TYP,
@@ -20,6 +21,23 @@ vi.mock("@/shared/config", () => ({
 	i18nKey: () => (key: string) => key
 }));
 
+const wholeTransferDetails = (
+	charge: Extract<
+		TransferDetailsOutput["spec"],
+		{ pricing: "whole" }
+	>["charge"]
+): TransferDetailsOutput => ({
+	plan: { typ: null, departure: null, arrival: null },
+	supply: { source: "inline", supplier_id: null },
+	spec: {
+		pricing: "whole",
+		images: [],
+		name: null,
+		cars: [],
+		charge
+	}
+});
+
 const basePricing = (
 	overrides: Partial<TTransportationPricingSchema> = {}
 ): TTransportationPricingSchema => ({
@@ -36,19 +54,20 @@ const basePricing = (
 });
 
 describe("transportation flat/per_person markup", () => {
-	it("maps fixed expenses markup from backend", () => {
+	it("maps a whole-ride fixed charge from spec.charge", () => {
 		expect(
-			mapTransportationPricingFromBackend({
-				expenses: {
+			mapTransportationPricingFromBackend(
+				wholeTransferDetails({
 					typ: "fixed",
 					cost: { val: 150, currency: Currency.USD },
 					fees: null,
+					extra_costs: [],
 					markup: {
 						typ: "fixed",
 						cost: { val: 12, currency: Currency.USD }
 					}
-				}
-			})
+				})
+			)
 		).toMatchObject({
 			pricing_type: ENUM_TRANSPORTATION_PRICING_TYPE.FLAT_RATE,
 			add_margin_separately: true,
@@ -56,7 +75,7 @@ describe("transportation flat/per_person markup", () => {
 		});
 	});
 
-	it("writes markup to fixed charge when flag on", () => {
+	it("writes markup to a whole-ride fixed charge when flag on", () => {
 		expect(
 			mapTransportationPricingToBackend(
 				basePricing({
@@ -76,17 +95,20 @@ describe("transportation flat/per_person markup", () => {
 						value: "12"
 					}
 				})
-			).details?.expenses
+			).spec
 		).toMatchObject({
-			typ: "fixed",
-			markup: {
+			pricing: "whole",
+			charge: {
 				typ: "fixed",
-				cost: { val: 12, currency: Currency.USD }
+				markup: {
+					typ: "fixed",
+					cost: { val: 12, currency: Currency.USD }
+				}
 			}
 		});
 	});
 
-	it("writes markup to per_person charge when flag on", () => {
+	it("writes markup to a whole-ride per_person charge when flag on", () => {
 		expect(
 			mapTransportationPricingToBackend(
 				basePricing({
@@ -100,10 +122,13 @@ describe("transportation flat/per_person markup", () => {
 						value: "5"
 					}
 				})
-			).details?.expenses
+			).spec
 		).toMatchObject({
-			typ: "per_person",
-			markup: { typ: "percentage", percentage: 0.05 }
+			pricing: "whole",
+			charge: {
+				typ: "per_person",
+				markup: { typ: "percentage", percentage: 0.05 }
+			}
 		});
 	});
 });

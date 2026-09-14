@@ -17,7 +17,7 @@ type TTransferGeneralTabExtra = Pick<
 
 type TTransferVariantsTabExtra = Pick<
 	ITransferProductEditSlotContext,
-	"supplierId" | "productId" | "variants"
+	"supplierId" | "productId" | "product" | "variants"
 >;
 
 type TTransferMediaTabExtra = Pick<
@@ -82,9 +82,10 @@ export const TRANSFER_PRODUCT_EDIT_TABS_LIST: (
 		type: ENUM_TRANSFER_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: TransferProductVariants,
-		getSlotProps: ({ supplierId, productId, variants }) => ({
+		getSlotProps: ({ supplierId, productId, product, variants }) => ({
 			supplierId,
 			productId,
+			product,
 			variants
 		})
 	}

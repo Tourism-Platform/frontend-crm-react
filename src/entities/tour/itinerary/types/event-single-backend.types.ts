@@ -1,15 +1,16 @@
 import type {
-	ActivitySingleEventOutput,
-	GuideSingleEventOutput,
-	HousingSingleEventOutput,
-	InformationSingleEventOutput,
-	SupplementarySingleEventOutput,
-	TransferSingleEventOutput
+	ActivitySingleEventReadOutput,
+	GuideSingleEventReadOutput,
+	HousingSingleEventReadOutput,
+	InformationSingleEventReadOutput,
+	SupplementarySingleEventReadOutput,
+	TransferSingleEventReadOutput
 } from "@/shared/api";
 
-export type TActivitySingleEventBackend = ActivitySingleEventOutput;
-export type THousingSingleEventBackend = HousingSingleEventOutput;
-export type TTransferSingleEventBackend = TransferSingleEventOutput;
-export type TInformationSingleEventBackend = InformationSingleEventOutput;
-export type TSupplementarySingleEventBackend = SupplementarySingleEventOutput;
-export type TGuideSingleEventBackend = GuideSingleEventOutput;
+export type TActivitySingleEventBackend = ActivitySingleEventReadOutput;
+export type THousingSingleEventBackend = HousingSingleEventReadOutput;
+export type TTransferSingleEventBackend = TransferSingleEventReadOutput;
+export type TInformationSingleEventBackend = InformationSingleEventReadOutput;
+export type TSupplementarySingleEventBackend =
+	SupplementarySingleEventReadOutput;
+export type TGuideSingleEventBackend = GuideSingleEventReadOutput;

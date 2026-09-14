@@ -1,15 +1,11 @@
 import { format } from "date-fns";
 
 import {
-	type TEmptyDetailsBackend,
 	type TEventImageBackend,
-	type THousingDetailsBackend,
 	type TMultiEventDetailBackend,
 	type TOperatorEventBackend,
 	type TTimeSchemaBackend,
-	type TTransferDetailsBackend,
 	accommodationAmenityConverter,
-	isInheritedHousingDetails,
 	mapEventImageToFrontend
 } from "@/entities/tour/itinerary";
 
@@ -31,28 +27,28 @@ type TOperatorSheetSource = TOperatorEventBackend | TMultiEventDetailBackend;
 
 const mapHopToSegment = (
 	hop: {
-		airline_code?: string;
-		flight_number?: number;
-		departure_airport_code?: string;
-		arrival_airport_code?: string;
+		airline_code?: string | null;
+		flight_number?: number | null;
+		departure_airport_code?: string | null;
+		arrival_airport_code?: string | null;
 		departure_location?: unknown;
 		arrival_location?: unknown;
-		departure_date?: string;
-		arrival_date?: string;
-		departure_time?: TTimeSchemaBackend;
-		arrival_time?: TTimeSchemaBackend;
-		departure_terminal?: string;
-		departure_gate?: string;
+		departure_date?: string | null;
+		arrival_date?: string | null;
+		departure_time?: TTimeSchemaBackend | null;
+		arrival_time?: TTimeSchemaBackend | null;
+		departure_terminal?: string | null;
+		departure_gate?: string | null;
 		departure?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TTimeSchemaBackend;
-		};
+			time?: TTimeSchemaBackend | null;
+		} | null;
 		arrival?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TTimeSchemaBackend;
-		};
+			time?: TTimeSchemaBackend | null;
+		} | null;
 	},
 	routeLabel: string
 ): IOptionFlightSegment => {
@@ -99,103 +95,103 @@ const mapHopToSegment = (
 const mapSheetExtraFromOperator = (
 	event: TOperatorSheetSource
 ): TOptionEventSheetExtra => {
-	const typ = event.typ;
 	const name = "name" in event ? (event.name ?? "") : "";
-	const details = "details" in event ? event.details : undefined;
 
-	switch (typ) {
+	switch (event.typ) {
 		case "transfer": {
-			const transferDetails = details as
-				| TTransferDetailsBackend
-				| null
-				| undefined;
+			const details = event.details;
 			return {
 				kind: "transfer",
 				pickup: formatJourneyPoint(
-					transferDetails?.departure ?? undefined
+					details?.plan.departure ?? undefined
 				),
-				dropoff: formatJourneyPoint(
-					transferDetails?.arrival ?? undefined
-				),
-				cars: mapSheetCarsFromExpenses(transferDetails?.expenses)
+				dropoff: formatJourneyPoint(details?.plan.arrival ?? undefined),
+				cars: mapSheetCarsFromExpenses({ cars: details?.spec.cars })
 			};
 		}
 		case "housing": {
-			const housingDetails = details as
-				| THousingDetailsBackend
-				| null
-				| undefined;
-
-			if (isInheritedHousingDetails(housingDetails)) {
-				return {
-					kind: "accommodation",
-					amenities: [],
-					nights: `${housingDetails.duration ?? 0} night${housingDetails.duration === 1 ? "" : "s"}`,
-					checkIn: formatPubTime(
-						housingDetails.check_in ?? undefined
-					),
-					checkOut: formatPubTime(
-						housingDetails.check_out ?? undefined
-					),
-					rooms: []
-				};
-			}
-
+			const details = event.details;
 			return {
 				kind: "accommodation",
 				amenities: accommodationAmenityConverter.fromMany(
-					housingDetails?.amenities ?? []
+					details?.spec.amenities ?? []
 				),
-				nights: `${housingDetails?.duration ?? 0} night${housingDetails?.duration === 1 ? "" : "s"}`,
-				checkIn: formatPubTime(housingDetails?.check_in ?? undefined),
-				checkOut: formatPubTime(housingDetails?.check_out ?? undefined),
-				rooms: mapSheetRoomsFromExpenses(housingDetails?.expenses)
+				nights: `${details?.plan.duration ?? 0} night${details?.plan.duration === 1 ? "" : "s"}`,
+				checkIn: formatPubTime(details?.plan.check_in ?? undefined),
+				checkOut: formatPubTime(details?.plan.check_out ?? undefined),
+				rooms: mapSheetRoomsFromExpenses({
+					categories: details?.spec.categories
+				})
 			};
 		}
 		case "activity": {
-			const activityDetails = details as
-				| {
-						location?: unknown;
-						start_time?: TTimeSchemaBackend | null;
-						end_time?: TTimeSchemaBackend | null;
-				  }
-				| null
-				| undefined;
+			const details = event.details;
 			return {
 				kind: "activity",
 				location:
-					formatLocation(activityDetails?.location ?? undefined) ||
-					"—",
-				startTime: formatPubTime(
-					activityDetails?.start_time ?? undefined
-				),
-				endTime: formatPubTime(activityDetails?.end_time ?? undefined)
+					formatLocation(details?.spec.location ?? undefined) || "—",
+				startTime: formatPubTime(details?.plan.start_time ?? undefined),
+				endTime: formatPubTime(details?.plan.end_time ?? undefined)
 			};
 		}
-		case "flight":
-		case "train":
-		case "bus": {
-			const hopDetails = details as
-				| { hop?: unknown[] | null }
-				| null
-				| undefined;
+		case "flight": {
+			const details = event.details;
 			return {
 				kind: "flight",
 				segments:
-					hopDetails?.hop?.map((hop) =>
+					details?.spec.legs.map((leg) =>
 						mapHopToSegment(
-							hop as Parameters<typeof mapHopToSegment>[0],
+							{
+								...leg,
+								departure_time: details.plan.departure_time,
+								arrival_time: details.plan.arrival_time
+							},
+							name
+						)
+					) ?? []
+			};
+		}
+		case "train": {
+			const details = event.details;
+			return {
+				kind: "flight",
+				segments:
+					details?.spec.legs.map((leg) =>
+						mapHopToSegment(
+							{
+								departure: {
+									location: leg.departure?.location,
+									time: details.plan.departure_time
+								},
+								arrival: {
+									location: leg.arrival?.location,
+									time: details.plan.arrival_time
+								}
+							},
+							name
+						)
+					) ?? []
+			};
+		}
+		case "bus": {
+			const details = event.details;
+			return {
+				kind: "flight",
+				segments:
+					details?.plan.legs.map((leg) =>
+						mapHopToSegment(
+							{ departure: leg.departure, arrival: leg.arrival },
 							name
 						)
 					) ?? []
 			};
 		}
 		case "ref": {
-			const infoDetails = details as TEmptyDetailsBackend | undefined;
+			const details = event.details;
 			return {
 				kind: "info",
-				startTime: formatPubTime(infoDetails?.start_time ?? undefined),
-				endTime: formatPubTime(infoDetails?.end_time ?? undefined)
+				startTime: formatPubTime(details?.plan.start_time ?? undefined),
+				endTime: formatPubTime(details?.plan.end_time ?? undefined)
 			};
 		}
 		default:

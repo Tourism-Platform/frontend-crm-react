@@ -24,11 +24,11 @@ export interface IActivityProduct {
 
 export interface IActivityProductCreate {
 	name: string;
-	subTyp: ENUM_ACTIVITY_SUB_TYPE_TYPE | null;
+	subTyp: ENUM_ACTIVITY_SUB_TYPE_TYPE;
 	location?: ISupplierLocation | null;
 }
 
 export interface IActivityVariantWrite {
 	name: string;
-	expenses: TSupplierVariantCharge | null;
+	expenses: TSupplierVariantCharge;
 }

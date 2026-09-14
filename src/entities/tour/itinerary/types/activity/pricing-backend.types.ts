@@ -1,22 +1,40 @@
 import type {
-	ActivityDetailsSchemaInput,
-	ActivityDetailsSchemaOutput,
-	ActivityFoodDetailsSchemaInput,
-	ActivityFoodDetailsSchemaOutput,
-	InheritedActivityDetailsInput,
-	InheritedActivityDetailsOutput
+	ActivityDetailsOutput,
+	ActivityDetailsWrite,
+	ActivityInlineSupplyNew,
+	ActivityProductSupplyOutput,
+	FoodOfferingInput
 } from "@/shared/api";
 
-export type TActivityDetailsBackend =
-	| ActivityDetailsSchemaOutput
-	| ActivityFoodDetailsSchemaOutput;
+/**
+ * Backend shapes for an activity event (contract 3.1).
+ *
+ * Read: `details` = `ActivityDetailsOutput` — `{ plan, supply, spec }` where
+ * `supply.source` discriminates inline vs product-linked events and `spec`
+ * is the venue spec (food vs general venue by `sub_typ`).
+ * Write: `ActivityDetailsWrite` = `{ plan?, supply? }` (spec lives inside
+ * `supply.inline.spec`).
+ */
 
-export type TInheritedActivityDetailsBackend = InheritedActivityDetailsOutput;
-export type TActivityEventDetailsBackend =
-	| TActivityDetailsBackend
-	| TInheritedActivityDetailsBackend;
+/** Read-side activity details (`{ plan, supply, spec }`). */
+export type TActivityDetailsBackend = ActivityDetailsOutput;
 
-export type TActivityDetailsInputBackend =
-	| ActivityDetailsSchemaInput
-	| ActivityFoodDetailsSchemaInput
-	| InheritedActivityDetailsInput;
+/** Read-side activity details narrowed to a product-linked supply. */
+export type TInheritedActivityDetailsBackend = ActivityDetailsOutput & {
+	supply: { source: "product" } & ActivityProductSupplyOutput;
+};
+
+/** Read-side activity details (single 3.1 shape; supply discriminates). */
+export type TActivityEventDetailsBackend = ActivityDetailsOutput;
+
+/** Write-side activity details (`{ plan?, supply? }`). */
+export type TActivityDetailsInputBackend = ActivityDetailsWrite;
+
+/** Read-side activity spec (`details.spec`). */
+export type TActivitySpecBackend = ActivityDetailsOutput["spec"];
+
+/** Write-side activity spec — goes into `supply.inline.spec`. */
+export type TActivitySpecInputBackend = ActivityInlineSupplyNew["spec"];
+
+/** Write-side food offering inside `supply.inline.spec.offerings`. */
+export type TActivityFoodOfferingInputBackend = FoodOfferingInput;

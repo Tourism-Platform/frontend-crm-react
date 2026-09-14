@@ -3,17 +3,39 @@ import type { IPaginationRequest } from "@/shared/types";
 
 import type { IActivityProduct, IActivityVariantWrite } from "./activity";
 import type { TActivityProductGeneralSchema } from "./activity/product-form.types";
-import type { IBusProduct, IBusVariantWrite } from "./bus";
+import type {
+	ENUM_BUS_PRICING_TYPE,
+	IBusProduct,
+	IBusVariantWrite
+} from "./bus";
 import type { TBusProductGeneralSchema } from "./bus/product-form.types";
-import type { IFlightProduct, IFlightVariantWrite } from "./flight";
+import type {
+	ENUM_FLIGHT_PRICING_TYPE,
+	IFlightProduct,
+	IFlightVariantWrite
+} from "./flight";
 import type { TFlightProductGeneralSchema } from "./flight/product-form.types";
-import type { IHotelPolicy, IHotelProduct } from "./hotel";
+import type {
+	ENUM_HOTEL_PRICING_TYPE,
+	IHotelProduct,
+	IHotelVariantWrite
+} from "./hotel";
 import type { THotelProductGeneralSchema } from "./hotel/product-form.types";
-import type { IHotelVariantWrite } from "./hotel/rooms.types";
-import type { ENUM_SUPPLIER_TYPE_TYPE } from "./supplier-type.types";
-import type { ITrainProduct, ITrainVariantWrite } from "./train";
+import {
+	ENUM_SUPPLIER_TYPE,
+	type ENUM_SUPPLIER_TYPE_TYPE
+} from "./supplier-type.types";
+import type {
+	ENUM_TRAIN_PRICING_TYPE,
+	ITrainProduct,
+	ITrainVariantWrite
+} from "./train";
 import type { TTrainProductGeneralSchema } from "./train/product-form.types";
-import type { ITransferProduct, ITransferVariantWrite } from "./transfer";
+import type {
+	ENUM_TRANSFER_PRICING_TYPE,
+	ITransferProduct,
+	ITransferVariantWrite
+} from "./transfer";
 import type { TTransferProductGeneralSchema } from "./transfer/product-form.types";
 
 export type TSupplierProduct =
@@ -35,6 +57,63 @@ export interface IGetSupplierProduct {
 	productId: string;
 }
 
+/**
+ * Result of the create-variant route: the new variant id together with the
+ * freshly read product it landed on.
+ */
+export interface ISupplierVariantCreated<
+	TProduct extends TSupplierProduct = TSupplierProduct
+> {
+	variantId: string;
+	product: TProduct;
+}
+
+export type TSupplierVariantWriteInput =
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.HOTEL;
+			pricing: ENUM_HOTEL_PRICING_TYPE;
+			data: IHotelVariantWrite;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRAIN;
+			pricing: ENUM_TRAIN_PRICING_TYPE;
+			data: ITrainVariantWrite;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.FLIGHT;
+			pricing: ENUM_FLIGHT_PRICING_TYPE;
+			data: IFlightVariantWrite;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.BUS;
+			pricing: ENUM_BUS_PRICING_TYPE;
+			data: IBusVariantWrite;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRANSFER;
+			pricing: ENUM_TRANSFER_PRICING_TYPE;
+			data: ITransferVariantWrite;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.ACTIVITY;
+			data: IActivityVariantWrite;
+	  };
+
+export type TCreateSupplierVariant = {
+	supplierId: string;
+	productId: string;
+} & TSupplierVariantWriteInput;
+
+export type TUpdateSupplierVariant = TCreateSupplierVariant & {
+	variantId: string;
+};
+
+export interface IDeleteSupplierVariant {
+	supplierId: string;
+	productId: string;
+	variantId: string;
+}
+
 export interface ICreateHotelProduct {
 	supplierId: string;
 	values: THotelProductGeneralSchema;
@@ -46,7 +125,7 @@ export interface IUpdateHotelProduct {
 	productId: string;
 	values: THotelProductGeneralSchema;
 	language?: ENUM_LANGUAGES_TYPE;
-	existingPolicy?: IHotelPolicy | null;
+	existing?: IHotelProduct | null;
 }
 
 export interface ICreateTrainProduct {
@@ -60,49 +139,12 @@ export interface IUpdateTrainProduct {
 	productId: string;
 	values: TTrainProductGeneralSchema;
 	language?: ENUM_LANGUAGES_TYPE;
+	existing?: ITrainProduct | null;
 }
 
 export interface IDeleteSupplierProduct {
 	supplierId: string;
 	productId: string;
-}
-
-export interface ICreateHotelVariant {
-	supplierId: string;
-	productId: string;
-	data: IHotelVariantWrite;
-}
-
-export interface IUpdateHotelVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
-	data: IHotelVariantWrite;
-}
-
-export interface IDeleteHotelVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
-}
-
-export interface ICreateTrainVariant {
-	supplierId: string;
-	productId: string;
-	data: ITrainVariantWrite;
-}
-
-export interface IUpdateTrainVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
-	data: ITrainVariantWrite;
-}
-
-export interface IDeleteTrainVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
 }
 
 export interface ICreateFlightProduct {
@@ -116,25 +158,7 @@ export interface IUpdateFlightProduct {
 	productId: string;
 	values: TFlightProductGeneralSchema;
 	language?: ENUM_LANGUAGES_TYPE;
-}
-
-export interface ICreateFlightVariant {
-	supplierId: string;
-	productId: string;
-	data: IFlightVariantWrite;
-}
-
-export interface IUpdateFlightVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
-	data: IFlightVariantWrite;
-}
-
-export interface IDeleteFlightVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
+	existing?: IFlightProduct | null;
 }
 
 export interface ICreateBusProduct {
@@ -146,25 +170,7 @@ export interface IUpdateBusProduct {
 	supplierId: string;
 	productId: string;
 	values: TBusProductGeneralSchema;
-}
-
-export interface ICreateBusVariant {
-	supplierId: string;
-	productId: string;
-	data: IBusVariantWrite;
-}
-
-export interface IUpdateBusVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
-	data: IBusVariantWrite;
-}
-
-export interface IDeleteBusVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
+	existing?: IBusProduct | null;
 }
 
 export interface ICreateTransferProduct {
@@ -176,25 +182,7 @@ export interface IUpdateTransferProduct {
 	supplierId: string;
 	productId: string;
 	values: TTransferProductGeneralSchema;
-}
-
-export interface ICreateTransferVariant {
-	supplierId: string;
-	productId: string;
-	data: ITransferVariantWrite;
-}
-
-export interface IUpdateTransferVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
-	data: ITransferVariantWrite;
-}
-
-export interface IDeleteTransferVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
+	existing?: ITransferProduct | null;
 }
 
 export interface ICreateActivityProduct {
@@ -208,23 +196,4 @@ export interface IUpdateActivityProduct {
 	productId: string;
 	values: TActivityProductGeneralSchema;
 	language?: ENUM_LANGUAGES_TYPE;
-}
-
-export interface ICreateActivityVariant {
-	supplierId: string;
-	productId: string;
-	data: IActivityVariantWrite;
-}
-
-export interface IUpdateActivityVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
-	data: IActivityVariantWrite;
-}
-
-export interface IDeleteActivityVariant {
-	supplierId: string;
-	productId: string;
-	variantId: string;
 }

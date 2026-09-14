@@ -1,14 +1,17 @@
+import type {
+	FlightDetailsWrite,
+	FlightInlineSupplyNew,
+	FlightLegInput,
+	FlightLegOutput,
+	Schedule
+} from "@/shared/api";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
 	TFlightEditSchema,
-	TFlightHopInputBackend,
-	TFlightHopOutputBackend,
-	TFlightLegOutputBackend,
 	TFlightSingleEventBackend,
 	TFlyRouteSegment,
-	TInheritedFlightDetailsBackend,
 	TTourEventBackendResponce,
 	TTourEventUpdateBackend
 } from "../../../types";
@@ -28,6 +31,7 @@ import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
 } from "../package-id.helpers";
+import { toTimezoneOffset } from "../timezone.helpers";
 
 import { mapEventMetaToForm } from "./shared.helpers";
 
@@ -50,38 +54,21 @@ const createEmptyFlySegment = (): TFlyRouteSegment => {
 	};
 };
 
-const mapHopToFlySegment = (
-	hop: TFlightHopOutputBackend
-): TFlyRouteSegment => ({
-	[ENUM_FORM_FLIGHT.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
-	[ENUM_FORM_FLIGHT.AIRLINE_CODE]: hop.airline_code ?? "",
-	[ENUM_FORM_FLIGHT.FLIGHT_NUMBER]: String(hop.flight_number ?? ""),
-	[ENUM_FORM_FLIGHT.DEPARTURE_AIRPORT_CODE]: hop.departure_airport_code ?? "",
-	[ENUM_FORM_FLIGHT.ARRIVAL_AIRPORT_CODE]: hop.arrival_airport_code ?? "",
-	[ENUM_FORM_FLIGHT.DEPARTURE_TIME]: hop.departure_time?.time ?? null,
-	[ENUM_FORM_FLIGHT.ARRIVAL_TIME]: hop.arrival_time?.time ?? null,
-	[ENUM_FORM_FLIGHT.DEPARTURE_TIMEZONE]: String(
-		hop.departure_time?.timezone ?? getDeviceUtcOffset()
-	),
-	[ENUM_FORM_FLIGHT.ARRIVAL_TIMEZONE]: String(
-		hop.arrival_time?.timezone ?? getDeviceUtcOffset()
-	),
-	[ENUM_FORM_FLIGHT.DEPARTURE_TERMINAL]: hop.departure_terminal ?? "",
-	[ENUM_FORM_FLIGHT.DEPARTURE_GATE]: hop.departure_gate ?? "",
-	[ENUM_FORM_FLIGHT.ARRIVAL_TERMINAL]: "",
-	[ENUM_FORM_FLIGHT.ARRIVAL_GATE]: ""
-});
-
+/**
+ * Contract 3.1: a flight leg (`spec.legs[]`) carries no hours — the
+ * event-level `plan` (Schedule) states them, landing on the first
+ * departure and the last arrival.
+ */
 const mapFlightLegToFlySegment = (
-	leg: TFlightLegOutputBackend,
-	inherited: TInheritedFlightDetailsBackend,
+	leg: FlightLegOutput,
+	plan: Schedule | null | undefined,
 	index: number,
 	total: number
 ): TFlyRouteSegment => {
 	const isFirst = index === 0;
 	const isLast = index === total - 1;
-	const departureTime = isFirst ? inherited.departure_time : null;
-	const arrivalTime = isLast ? inherited.arrival_time : null;
+	const departureTime = isFirst ? plan?.departure_time : null;
+	const arrivalTime = isLast ? plan?.arrival_time : null;
 
 	return {
 		[ENUM_FORM_FLIGHT.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
@@ -105,39 +92,38 @@ const mapFlightLegToFlySegment = (
 	};
 };
 
-const mapFlySegmentToHop = (
-	segment: TFlyRouteSegment
-): TFlightHopInputBackend => {
-	const hop: TFlightHopOutputBackend = {
-		airline_code: segment.airline_code,
-		flight_number: Number(segment.flight_number) || null,
-		departure_airport_code: segment.departure_airport_code,
-		arrival_airport_code: segment.arrival_airport_code
+const mapFlySegmentToHop = (segment: TFlyRouteSegment): FlightLegInput => ({
+	airline_code: segment.airline_code,
+	flight_number: Number(segment.flight_number) || null,
+	departure_airport_code: segment.departure_airport_code,
+	arrival_airport_code: segment.arrival_airport_code,
+	...(segment.departure_terminal && {
+		departure_terminal: segment.departure_terminal
+	}),
+	...(segment.departure_gate && { departure_gate: segment.departure_gate })
+});
+
+/** Event-level hours (3.1 `plan`): first departure, last arrival. */
+const mapSchedulePlanToBackend = (
+	route: TFlyRouteSegment[] | undefined
+): Schedule => {
+	const first = route?.[0];
+	const last = route?.length ? route[route.length - 1] : undefined;
+
+	return {
+		...(first?.departure_time && {
+			departure_time: {
+				time: first.departure_time,
+				timezone: toTimezoneOffset(first.departure_timezone)
+			}
+		}),
+		...(last?.arrival_time && {
+			arrival_time: {
+				time: last.arrival_time,
+				timezone: toTimezoneOffset(last.arrival_timezone)
+			}
+		})
 	};
-
-	if (segment.departure_time && segment.departure_timezone) {
-		hop.departure_time = {
-			time: segment.departure_time,
-			timezone: Number(segment.departure_timezone)
-		};
-	}
-
-	if (segment.arrival_time && segment.arrival_timezone) {
-		hop.arrival_time = {
-			time: segment.arrival_time,
-			timezone: Number(segment.arrival_timezone)
-		};
-	}
-
-	if (segment.departure_terminal) {
-		hop.departure_terminal = segment.departure_terminal;
-	}
-
-	if (segment.departure_gate) {
-		hop.departure_gate = segment.departure_gate;
-	}
-
-	return hop;
 };
 
 const assertFlyEvent = (
@@ -159,21 +145,16 @@ export const mapFlyEventToForm = (
 ): TFlightEditSchema => {
 	const event = assertFlyEvent(data);
 	const details = event.details ?? null;
+	const plan = details?.plan;
+	const legs = details?.spec?.legs ?? [];
+	const route: TFlyRouteSegment[] =
+		legs.length > 0
+			? legs.map((leg, index) =>
+					mapFlightLegToFlySegment(leg, plan, index, legs.length)
+				)
+			: [createEmptyFlySegment()];
 
 	if (isInheritedFlightDetails(details)) {
-		const legs = details.product?.hop ?? [];
-		const route: TFlyRouteSegment[] =
-			legs.length > 0
-				? legs.map((leg, index) =>
-						mapFlightLegToFlySegment(
-							leg,
-							details,
-							index,
-							legs.length
-						)
-					)
-				: [createEmptyFlySegment()];
-
 		return {
 			...mapEventMetaToForm(event),
 			...mapInheritedProductLinkToForm(details),
@@ -188,12 +169,6 @@ export const mapFlyEventToForm = (
 			)
 		};
 	}
-
-	const hops = details?.hop ?? [];
-	const route: TFlyRouteSegment[] =
-		hops.length > 0
-			? hops.map(mapHopToFlySegment)
-			: [createEmptyFlySegment()];
 
 	return {
 		...mapEventMetaToForm(event),
@@ -215,45 +190,54 @@ export const mapFlyFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>
 ): TTourEventUpdateBackend => {
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
-
-	if (productId) {
-		return {
-			typ: ENUM_EVENT_BACKEND.FLIGHT,
-			package_id: mapEventPackageIdToBackend(frontend?.pricing),
-			...(frontend.name !== undefined &&
-				frontend.name !== "" && { name: frontend.name }),
-			...(frontend.general?.description !== undefined && {
-				description: frontend.general.description
-			}),
-			details: {
-				product_id: productId,
-				variant_id: frontend[ENUM_FORM_EVENT_PRODUCT.VARIANT_ID] ?? null
-			}
-		};
-	}
-
 	const g = frontend.general;
 	const flyRoute = g?.route?.filter(
 		(segment): segment is TFlyRouteSegment =>
 			segment.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.FLY
 	);
-	const pricingDetails = mapFlightPricingToBackend(frontend?.pricing);
+	const plan = mapSchedulePlanToBackend(flyRoute);
+
+	if (productId) {
+		// Product-linked flight: the update keeps the link exactly where
+		// it is — `supply` is omitted, only the tour's own plan is stated.
+		return {
+			typ: ENUM_EVENT_BACKEND.FLIGHT,
+			package_id: mapEventPackageIdToBackend(frontend?.pricing),
+			...(frontend.name !== undefined &&
+				frontend.name !== "" && { name: frontend.name }),
+			...(g?.description !== undefined && {
+				description: g.description
+			}),
+			details: { plan }
+		};
+	}
+
+	const legs = flyRoute?.length
+		? flyRoute.map(mapFlySegmentToHop)
+		: undefined;
+	const { charge } = mapFlightPricingToBackend(frontend?.pricing);
+
+	// A priced route is stated `whole`; an unpriced one keeps its legs on a
+	// `per_fare` spec, which carries no event-level charge. With neither
+	// legs nor charge, `supply` is omitted so the backend keeps the current
+	// one (a full replace would wipe it).
+	const spec: FlightInlineSupplyNew["spec"] | undefined = charge
+		? { pricing: "whole", ...(legs && { legs }), charge }
+		: legs
+			? { pricing: "per_fare", legs }
+			: undefined;
+
+	const details: FlightDetailsWrite = {
+		plan,
+		...(spec && { supply: { source: "inline", spec } })
+	};
 
 	return {
 		typ: ENUM_EVENT_BACKEND.FLIGHT,
 		package_id: mapEventPackageIdToBackend(frontend?.pricing),
 		...(frontend.name !== undefined &&
 			frontend.name !== "" && { name: frontend.name }),
-		...(Number.isFinite(frontend.position) && {
-			position: frontend.position
-		}),
-		...(Number.isFinite(frontend.day) && { day: frontend.day }),
 		...(g?.description !== undefined && { description: g.description }),
-		details: {
-			...(flyRoute?.length && {
-				hop: flyRoute.map(mapFlySegmentToHop)
-			}),
-			...pricingDetails.details
-		}
+		details
 	};
 };

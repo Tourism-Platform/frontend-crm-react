@@ -1,23 +1,22 @@
 import type {
-	ActivityOverrideSchemaInput,
-	ActivitySingleEventInput,
-	BusOverrideSchemaInput,
-	BusSingleEventInput,
+	ActivityOverrideInput,
+	ActivitySingleEvent,
+	BusOverrideInput,
+	BusSingleEvent,
 	EventEditOpOutput,
-	EventProductLinkSchema,
-	FlightOverrideSchemaInput,
-	FlightSingleEventInput,
-	GuideSingleEventInput,
-	HousingOverrideSchemaInput,
-	HousingSingleEventInput,
-	InformationSingleEventInput,
+	FlightSingleEvent,
+	GuideSingleEvent,
+	HotelOverrideInput,
+	HousingSingleEvent,
+	InformationSingleEvent,
 	MultiEvent,
+	ProductSupplyNew,
 	RevisionPreview,
-	SupplementarySingleEventInput,
-	TrainOverrideSchemaInput,
-	TrainSingleEventInput,
-	TransferOverrideSchemaInput,
-	TransferSingleEventInput
+	RouteOverrideInput,
+	SupplementarySingleEvent,
+	TrainSingleEvent,
+	TransferOverrideInput,
+	TransferSingleEvent
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -30,15 +29,15 @@ export const BOOKING_REVISION_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body:
-					| InformationSingleEventInput
-					| BusSingleEventInput
-					| TrainSingleEventInput
-					| TransferSingleEventInput
-					| ActivitySingleEventInput
-					| HousingSingleEventInput
-					| FlightSingleEventInput
-					| GuideSingleEventInput
-					| SupplementarySingleEventInput
+					| InformationSingleEvent
+					| BusSingleEvent
+					| TrainSingleEvent
+					| TransferSingleEvent
+					| ActivitySingleEvent
+					| HousingSingleEvent
+					| FlightSingleEvent
+					| GuideSingleEvent
+					| SupplementarySingleEvent
 					| MultiEvent;
 				query: void;
 				response: RevisionPreview;
@@ -50,15 +49,15 @@ export const BOOKING_REVISION_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| InformationSingleEventInput
-					| BusSingleEventInput
-					| TrainSingleEventInput
-					| TransferSingleEventInput
-					| ActivitySingleEventInput
-					| HousingSingleEventInput
-					| FlightSingleEventInput
-					| GuideSingleEventInput
-					| SupplementarySingleEventInput
+					| InformationSingleEvent
+					| BusSingleEvent
+					| TrainSingleEvent
+					| TransferSingleEvent
+					| ActivitySingleEvent
+					| HousingSingleEvent
+					| FlightSingleEvent
+					| GuideSingleEvent
+					| SupplementarySingleEvent
 					| MultiEvent;
 				query: void;
 				response: RevisionPreview;
@@ -75,8 +74,11 @@ export const BOOKING_REVISION_PATHS = {
 			url: `/booking/revision/${bookingId}/event/${eventId}/product`,
 			method: "PATCH",
 			_types: {} as {
-				body: EventProductLinkSchema;
-				query: { option_index?: number | null };
+				body: ProductSupplyNew;
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
 				response: RevisionPreview;
 			}
 		}) as const,
@@ -86,7 +88,10 @@ export const BOOKING_REVISION_PATHS = {
 			method: "DELETE",
 			_types: {} as {
 				body: void;
-				query: { option_index?: number | null };
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
 				response: RevisionPreview;
 			}
 		}) as const,
@@ -112,13 +117,15 @@ export const BOOKING_REVISION_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body:
-					| HousingOverrideSchemaInput
-					| TrainOverrideSchemaInput
-					| FlightOverrideSchemaInput
-					| BusOverrideSchemaInput
-					| TransferOverrideSchemaInput
-					| ActivityOverrideSchemaInput;
-				query: { option_index?: number | null };
+					| HotelOverrideInput
+					| RouteOverrideInput
+					| BusOverrideInput
+					| TransferOverrideInput
+					| ActivityOverrideInput;
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
 				response: RevisionPreview;
 			}
 		}) as const,
@@ -128,7 +135,10 @@ export const BOOKING_REVISION_PATHS = {
 			method: "DELETE",
 			_types: {} as {
 				body: void;
-				query: { option_index?: number | null };
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
 				response: RevisionPreview;
 			}
 		}) as const

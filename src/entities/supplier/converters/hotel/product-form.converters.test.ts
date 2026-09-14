@@ -33,14 +33,15 @@ describe("mapHotelProductGeneralToCreate", () => {
 			ENUM_LANGUAGES.EN
 		);
 
-		expect(body.details?.location).toMatchObject({
+		expect(body.details.location).toMatchObject({
 			lat: 41.311,
 			long: 69.279,
 			city: "Tashkent",
 			lang: LanguageCode.En
 		});
-		expect(body.name).toBe("Hyatt Regency Tashkent");
-		expect(body.details?.stars).toBe(5);
+		expect(body.details.pricing).toBe("per_room");
+		expect(body.details.name).toBe("Hyatt Regency Tashkent");
+		expect(body.details.stars).toBe(5);
 	});
 });
 

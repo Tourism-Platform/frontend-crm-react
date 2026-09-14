@@ -1,55 +1,63 @@
 import type { IPaginationResponse } from "@/shared/types";
 
 import {
-	ENUM_SUPPLIER_TYPE_BACKEND,
-	type TActivityProductReadBackend,
-	type TBusProductReadBackend,
-	type TFlightProductReadBackend,
-	type THotelProductReadBackend,
+	ENUM_SUPPLIER_TYPE,
 	type TSupplierProduct,
 	type TSupplierProductListBackend,
-	type TTrainProductReadBackend,
-	type TTransferProductReadBackend
+	type TSupplierProductReadBackend,
+	type TSupplierVariantWriteBackend,
+	type TSupplierVariantWriteInput
 } from "../types";
 
-import { mapActivityProductFromBackend } from "./activity";
-import { mapBusProductFromBackend } from "./bus";
-import { mapFlightProductFromBackend } from "./flight";
-import { mapHotelProductFromBackend } from "./hotel";
-import { mapTrainProductFromBackend } from "./train";
-import { mapTransferProductFromBackend } from "./transfer";
-
-type TSupplierProductReadBackend =
-	| THotelProductReadBackend
-	| TTrainProductReadBackend
-	| TFlightProductReadBackend
-	| TBusProductReadBackend
-	| TTransferProductReadBackend
-	| TActivityProductReadBackend;
+import {
+	mapActivityProductFromBackend,
+	mapActivityVariantToWrite
+} from "./activity";
+import { mapBusProductFromBackend, mapBusVariantToWrite } from "./bus";
+import { mapFlightProductFromBackend, mapFlightVariantToWrite } from "./flight";
+import { mapHotelProductFromBackend, mapHotelVariantToWrite } from "./hotel";
+import { mapTrainProductFromBackend, mapTrainVariantToWrite } from "./train";
+import {
+	mapTransferProductFromBackend,
+	mapTransferVariantToWrite
+} from "./transfer";
 
 export const mapSupplierProductFromBackend = (
 	item: TSupplierProductReadBackend
 ): TSupplierProduct => {
 	switch (item.typ) {
-		case ENUM_SUPPLIER_TYPE_BACKEND.TRAIN:
-			return mapTrainProductFromBackend(item as TTrainProductReadBackend);
-		case ENUM_SUPPLIER_TYPE_BACKEND.FLIGHT:
-			return mapFlightProductFromBackend(
-				item as TFlightProductReadBackend
-			);
-		case ENUM_SUPPLIER_TYPE_BACKEND.BUS:
-			return mapBusProductFromBackend(item as TBusProductReadBackend);
-		case ENUM_SUPPLIER_TYPE_BACKEND.TRANSFER:
-			return mapTransferProductFromBackend(
-				item as TTransferProductReadBackend
-			);
-		case ENUM_SUPPLIER_TYPE_BACKEND.ACTIVITY:
-			return mapActivityProductFromBackend(
-				item as TActivityProductReadBackend
-			);
-		case ENUM_SUPPLIER_TYPE_BACKEND.HOTEL:
+		case ENUM_SUPPLIER_TYPE.TRAIN:
+			return mapTrainProductFromBackend(item);
+		case ENUM_SUPPLIER_TYPE.FLIGHT:
+			return mapFlightProductFromBackend(item);
+		case ENUM_SUPPLIER_TYPE.BUS:
+			return mapBusProductFromBackend(item);
+		case ENUM_SUPPLIER_TYPE.TRANSFER:
+			return mapTransferProductFromBackend(item);
+		case ENUM_SUPPLIER_TYPE.ACTIVITY:
+			return mapActivityProductFromBackend(item);
+		case ENUM_SUPPLIER_TYPE.HOTEL:
 		default:
-			return mapHotelProductFromBackend(item as THotelProductReadBackend);
+			return mapHotelProductFromBackend(item);
+	}
+};
+
+export const mapSupplierVariantToWrite = (
+	input: TSupplierVariantWriteInput
+): TSupplierVariantWriteBackend => {
+	switch (input.typ) {
+		case ENUM_SUPPLIER_TYPE.HOTEL:
+			return mapHotelVariantToWrite(input.data, input.pricing);
+		case ENUM_SUPPLIER_TYPE.TRAIN:
+			return mapTrainVariantToWrite(input.data, input.pricing);
+		case ENUM_SUPPLIER_TYPE.FLIGHT:
+			return mapFlightVariantToWrite(input.data, input.pricing);
+		case ENUM_SUPPLIER_TYPE.BUS:
+			return mapBusVariantToWrite(input.data, input.pricing);
+		case ENUM_SUPPLIER_TYPE.TRANSFER:
+			return mapTransferVariantToWrite(input.data, input.pricing);
+		case ENUM_SUPPLIER_TYPE.ACTIVITY:
+			return mapActivityVariantToWrite(input.data);
 	}
 };
 

@@ -96,7 +96,8 @@ const TrainProductGeneralBase: FC<ITrainProductGeneralProps> = ({
 				supplierId,
 				productId,
 				values: data,
-				language
+				language,
+				existing: product
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {

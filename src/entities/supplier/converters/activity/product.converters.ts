@@ -1,3 +1,5 @@
+import { ActivityType } from "@/shared/api/generated/Api";
+
 import {
 	ENUM_SUPPLIER_TYPE,
 	type IActivityProduct,
@@ -24,8 +26,8 @@ export const mapActivityVariantFromBackend = (
 	variant: TActivityVariantReadBackend
 ): IActivityVariant => ({
 	id: variant.id,
-	name: variant.name,
-	expenses: mapSupplierVariantChargeFromBackend(variant.expenses)
+	name: variant.name ?? "",
+	expenses: mapSupplierVariantChargeFromBackend(variant.charge)
 });
 
 export const mapActivityVariantToWrite = (
@@ -33,37 +35,35 @@ export const mapActivityVariantToWrite = (
 ): TActivityVariantWriteBackend => ({
 	typ: "activity",
 	name: data.name,
-	details: {
-		typ: "activity",
-		expenses: data.expenses
-			? mapSupplierVariantChargeToBackend(data.expenses)
-			: null,
-		menu: null
-	}
+	charge: mapSupplierVariantChargeToBackend(data.expenses)
 });
 
 export const mapActivityProductFromBackend = (
 	row: TActivityProductReadBackend
-): IActivityProduct => ({
-	id: row.id,
-	supplierId: row.supplier_id,
-	typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
-	name: row.name,
-	subTyp: activitySubTypeConverter.from(row.sub_typ) ?? null,
-	location: mapSupplierLocationFromBackend(row.location ?? null),
-	imagePaths: row.image_paths ?? [],
-	primaryImagePath: row.primary_image_path ?? null,
-	variants: (row.variants ?? []).map(mapActivityVariantFromBackend)
-});
+): IActivityProduct => {
+	const spec = row.spec;
+
+	return {
+		id: row.id,
+		supplierId: row.supplier_id,
+		typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
+		name: spec.name ?? row.name,
+		subTyp:
+			activitySubTypeConverter.from(spec.sub_typ as ActivityType) ?? null,
+		location: mapSupplierLocationFromBackend(spec.location ?? null),
+		imagePaths: row.image_paths ?? [],
+		primaryImagePath: row.primary_image_path ?? null,
+		variants: spec.offerings.map(mapActivityVariantFromBackend)
+	};
+};
 
 export const mapActivityProductToCreate = (
 	data: IActivityProductCreate
 ): TCreateActivityProductBackend => ({
 	typ: "activity",
-	name: data.name,
 	details: {
-		typ: "activity",
-		sub_typ: activitySubTypeConverter.to(data.subTyp) ?? null,
-		location: mapSupplierLocationToBackend(data.location)
+		sub_typ: activitySubTypeConverter.to(data.subTyp)!,
+		name: data.name,
+		location: mapSupplierLocationToBackend(data.location ?? null)
 	}
 });

@@ -76,10 +76,10 @@ graph TD
 
 ## 5. Multi-option API (фактический контракт)
 
-- Parent: `event.typ === "10"` (`ENUM_EVENT.MULTIPLY_OPTION`), слот = `day` + `position`.
-- Children: `event.details[]` с собственным `id` (= `eventOptionId`).
-- Single update: `PATCH .../event/single/{eventId}/update` (`updateTourEvent` RTK → `updateSingleEvent` path).
-- Nested CRUD: `addEventOption` / `updateEventOption` / `deleteEventOption` / `reorderEventOptions` / `moveEventToMulti` / `moveEventOptionToSingle`.
+- Parent: `event.typ === "options"` (`ENUM_EVENT.MULTIPLY_OPTION`), слот = `day` + `position`.
+- Children: `event.details[]` с собственным `id` (= `eventOptionId`, option row ID).
+- Unified option API (contract 3.1): `addOption` / `updateOption` / `deleteOption` / `reorderEventOptions` (order = option row IDs) / `moveEventToMulti` (с `option_position`) / `moveOptionToSingle` (target `{day, position}` в том же запросе).
+- Product linking: `attachOptionProduct` / `detachOptionProduct` (`{keep, drop_override?}`) / `relinkOptionProduct` / `scopeOptionProduct`; override: `setOptionOverride` / `clearOptionOverride`.
 - Hydration: `useItineraryEvents` → `IDayItem.items` из `ITourEvent.options`.
 - DND: `TDragAction` ветвит root vs nested (`addOption`, `reorderOptions`, `moveToMulti`, `moveToSingle`).
 
@@ -88,7 +88,7 @@ graph TD
 ### Исправлено (multi API)
 
 1. **`patchBackendId`** — ищет temp card в `days`, `tripDetails` и nested `items`; обновляет и `backendId`, и `id`.
-2. **Удаление nested** — `deleteEventOption(parentId, eventOptionId)`, не `deleteTourEvent` родителя.
+2. **Удаление nested** — `deleteOption(parentId, eventOptionId)`, не `deleteTourEvent` родителя.
 3. **`reorderEvent` / multi-мутации** — `invalidatesTags` на `TOURS_EVENTS` (кэш списка обновляется после reorder).
 
 ### Остаётся

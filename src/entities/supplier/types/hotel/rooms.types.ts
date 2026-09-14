@@ -58,7 +58,7 @@ export interface IHotelRoomWrite {
 	[ENUM_FORM_HOTEL_ROOMS.ID]?: string;
 	typ: ENUM_HOTEL_ROOM_TYPE_TYPE;
 	pax?: number | null;
-	expenses: THotelRoomCharge | null;
+	expenses: THotelRoomCharge;
 	rates?: IHotelRoomRate[] | null;
 }
 

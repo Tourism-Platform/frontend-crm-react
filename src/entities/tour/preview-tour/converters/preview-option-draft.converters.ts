@@ -23,60 +23,67 @@ import {
 import { mapDraftOptionPriceToFrontend } from "./compose-draft-options.converters";
 import { buildSheetFromOperatorEvent } from "./preview-option-draft-sheet.converters";
 import { mapPreviewBackendTypToEventType } from "./preview-option-event-type.converters";
-import { formatLocation, isLocationOut } from "./preview-option-location.utils";
+import { cityFromLocation } from "./preview-option-location.utils";
 
 const isStandaloneBillable = (
 	item: TTourSummaryEventBackend
 ): item is TStandaloneBillableBackend => "event_id" in item && "event" in item;
 
+type TOperatorCitySource = Exclude<
+	TOperatorEventBackend | TMultiEventDetailBackend,
+	{ typ: typeof ENUM_EVENT_BACKEND.OPTIONS }
+>;
+
+const extractCityFromOperatorDetails = (
+	event: TOperatorCitySource
+): string | undefined => {
+	switch (event.typ) {
+		case ENUM_EVENT_BACKEND.HOUSING:
+		case ENUM_EVENT_BACKEND.ACTIVITY:
+			return cityFromLocation(event.details.spec.location);
+		case ENUM_EVENT_BACKEND.TRANSFER:
+			return (
+				cityFromLocation(event.details.plan.departure?.location) ??
+				cityFromLocation(event.details.plan.arrival?.location)
+			);
+		case ENUM_EVENT_BACKEND.BUS: {
+			const leg = event.details.plan.legs[0];
+			return (
+				cityFromLocation(leg?.departure?.location) ??
+				cityFromLocation(leg?.arrival?.location)
+			);
+		}
+		case ENUM_EVENT_BACKEND.FLIGHT: {
+			const leg = event.details.spec.legs[0];
+			return (
+				cityFromLocation(leg?.departure_location) ??
+				cityFromLocation(leg?.arrival_location)
+			);
+		}
+		case ENUM_EVENT_BACKEND.TRAIN: {
+			const leg = event.details.spec.legs[0];
+			return (
+				cityFromLocation(leg?.departure?.location) ??
+				cityFromLocation(leg?.arrival?.location)
+			);
+		}
+		default:
+			return undefined;
+	}
+};
+
 const extractCityFromOperatorEvent = (
 	event: TOperatorEventBackend
 ): string | undefined => {
 	if (event.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		const first = event.details?.[0];
-		if (first && "details" in first && first.details) {
-			const details = first.details as { location?: unknown };
-			if (isLocationOut(details.location)) {
-				return details.location.city ?? undefined;
-			}
+		for (const detail of event.details ?? []) {
+			const city = extractCityFromOperatorDetails(detail);
+			if (city) return city;
 		}
 		return undefined;
 	}
 
-	if (!("details" in event) || !event.details) {
-		return undefined;
-	}
-
-	const details = event.details as Record<string, unknown>;
-
-	if (isLocationOut(details.location)) {
-		return details.location.city ?? undefined;
-	}
-
-	const hop = details.hop;
-	if (Array.isArray(hop) && hop[0]) {
-		const point = hop[0] as {
-			departure?: { location?: unknown };
-			arrival?: { location?: unknown };
-			departure_location?: unknown;
-			arrival_location?: unknown;
-		};
-		if (isLocationOut(point.departure?.location)) {
-			return point.departure.location.city ?? undefined;
-		}
-		if (isLocationOut(point.arrival?.location)) {
-			return point.arrival.location.city ?? undefined;
-		}
-		const depLoc = formatLocation(point.departure_location);
-		if (depLoc) return depLoc.split(",")[0]?.trim();
-	}
-
-	const departure = details.departure as { location?: unknown } | undefined;
-	if (isLocationOut(departure?.location)) {
-		return departure!.location.city ?? undefined;
-	}
-
-	return undefined;
+	return extractCityFromOperatorDetails(event);
 };
 
 const mapDetailToSubOption = (

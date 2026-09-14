@@ -3,6 +3,14 @@ import type { ISupplierLocation } from "../supplier-location.types";
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "../supplier-type.types";
 import type { TSupplierVariantCharge } from "../supplier-variant-charge.types";
 
+export const ENUM_FLIGHT_PRICING = {
+	PER_FARE: "per_fare",
+	WHOLE: "whole"
+} as const;
+
+export type ENUM_FLIGHT_PRICING_TYPE =
+	(typeof ENUM_FLIGHT_PRICING)[keyof typeof ENUM_FLIGHT_PRICING];
+
 export interface IFlightHop {
 	airlineCode: string | null;
 	flightNumber: number | null;
@@ -26,6 +34,9 @@ export interface IFlightProduct {
 	supplierId: string;
 	typ: ENUM_SUPPLIER_TYPE_TYPE;
 	name: string;
+	pricing: ENUM_FLIGHT_PRICING_TYPE;
+	/** Route-level charge of a whole-priced route; null for per-fare ones. */
+	charge: TSupplierVariantCharge | null;
 	hops: IFlightHop[];
 	imagePaths: string[];
 	primaryImagePath: string | null;
@@ -39,5 +50,5 @@ export interface IFlightProductCreate {
 
 export interface IFlightVariantWrite {
 	name: string;
-	expenses: TSupplierVariantCharge | null;
+	expenses: TSupplierVariantCharge;
 }

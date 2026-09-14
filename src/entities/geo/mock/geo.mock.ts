@@ -6,6 +6,10 @@ export const GEO_MOCK_FEATURES: GeoFeature[] = [
 		long: 69.2401,
 		name: "Tashkent",
 		city: "Tashkent",
+		street: null,
+		housenumber: null,
+		postcode: null,
+		state: null,
 		country: "Uzbekistan",
 		country_code: "uz"
 	},
@@ -14,6 +18,10 @@ export const GEO_MOCK_FEATURES: GeoFeature[] = [
 		long: 66.9597,
 		name: "Samarkand",
 		city: "Samarkand",
+		street: null,
+		housenumber: null,
+		postcode: null,
+		state: null,
 		country: "Uzbekistan",
 		country_code: "uz"
 	},
@@ -23,6 +31,9 @@ export const GEO_MOCK_FEATURES: GeoFeature[] = [
 		name: "Tashkent International Airport",
 		city: "Tashkent",
 		street: "Tashkent International Airport",
+		housenumber: null,
+		postcode: null,
+		state: null,
 		country: "Uzbekistan",
 		country_code: "uz"
 	},
@@ -31,6 +42,10 @@ export const GEO_MOCK_FEATURES: GeoFeature[] = [
 		long: 72.3442,
 		name: "Andijan",
 		city: "Andijan",
+		street: null,
+		housenumber: null,
+		postcode: null,
+		state: null,
 		country: "Uzbekistan",
 		country_code: "uz"
 	},
@@ -39,6 +54,10 @@ export const GEO_MOCK_FEATURES: GeoFeature[] = [
 		long: 71.7843,
 		name: "Fergana",
 		city: "Fergana",
+		street: null,
+		housenumber: null,
+		postcode: null,
+		state: null,
 		country: "Uzbekistan",
 		country_code: "uz"
 	}

@@ -1,19 +1,28 @@
 import type {
+	CategoryOutput,
 	DurationChargeInput,
-	HotelRoomRateSchemaInput,
-	HotelRoomSchemaInput,
-	HotelVariantReadOutput,
-	HotelVariantWrite
+	PerRoomHotelVariantWrite,
+	PricedCategoryOutput,
+	PricedRoomOutput,
+	PricedRoomWrite,
+	Room,
+	RoomRateInput,
+	RoomRateOutput,
+	RoomSeasonInput,
+	RoomSeasonOutput,
+	RoomWrite,
+	WholeHotelVariantWrite
 } from "@/shared/api/generated/Api";
 
 export type TDurationChargeInputBackend = DurationChargeInput;
-export type THotelRoomSchemaInputBackend = HotelRoomSchemaInput;
-export type THotelRoomRateInputBackend = HotelRoomRateSchemaInput;
-export type THotelRoomChargeInputBackend = NonNullable<
-	HotelRoomSchemaInput["expenses"]
->;
-export type THotelVariantWriteBackend = HotelVariantWrite;
-export type THotelVariantReadBackend = HotelVariantReadOutput;
-export type THotelRoomReadBackend = NonNullable<
-	HotelVariantReadOutput["rooms"]
->[number];
+export type TPricedRoomWriteBackend = PricedRoomWrite;
+export type TRoomWriteBackend = RoomWrite;
+export type THotelRoomRateInputBackend = RoomSeasonInput;
+export type THotelRoomChargeInputBackend = RoomRateInput["base"];
+export type THotelRoomChargeReadBackend = RoomRateOutput["base"];
+export type THotelRoomSeasonReadBackend = RoomSeasonOutput;
+export type THotelVariantWriteBackend =
+	| PerRoomHotelVariantWrite
+	| WholeHotelVariantWrite;
+export type THotelVariantReadBackend = PricedCategoryOutput | CategoryOutput;
+export type THotelRoomReadBackend = PricedRoomOutput | Room;

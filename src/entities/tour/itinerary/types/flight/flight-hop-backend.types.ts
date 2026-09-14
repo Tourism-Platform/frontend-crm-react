@@ -1,25 +1,15 @@
-import type {
-	BusHopSchemaInput,
-	BusHopSchemaOutput,
-	BusJourneyPointSchemaInput,
-	FlightHopSchemaInput,
-	FlightHopSchemaOutput,
-	FlightLegSchemaOutput,
-	TrainHopSchemaInput,
-	TrainHopSchemaOutput,
-	TrainJourneyPointSchemaOutput,
-	TrainLegSchemaOutput
-} from "@/shared/api";
+import type { FlightLegInput, FlightLegOutput } from "src/shared/api/generated";
 
-export type TFlightHopInputBackend = FlightHopSchemaInput;
-export type TFlightHopOutputBackend = FlightHopSchemaOutput;
-export type TFlightLegOutputBackend = FlightLegSchemaOutput;
+/**
+ * Backend flight leg (hop) shapes (contract 3.1).
+ *
+ * Legs live on the route spec (`details.spec.legs`) — read as
+ * `FlightLegOutput`, written as `FlightLegInput`. Legs carry no times;
+ * departure/arrival times are event-level (`details.plan` = `Schedule`).
+ */
 
-export type TTrainHopInputBackend = TrainHopSchemaInput;
-export type TTrainHopOutputBackend = TrainHopSchemaOutput;
-export type TTrainLegOutputBackend = TrainLegSchemaOutput;
-export type TTrainJourneyPointOutputBackend = TrainJourneyPointSchemaOutput;
+/** Read-side flight leg (`details.spec.legs[]`). */
+export type TFlightHopBackend = FlightLegOutput;
 
-export type TBusHopInputBackend = BusHopSchemaInput;
-export type TBusHopOutputBackend = BusHopSchemaOutput;
-export type TBusJourneyPointInputBackend = BusJourneyPointSchemaInput;
+/** Write-side flight leg (`supply.inline.spec.legs[]`). */
+export type TFlightHopInputBackend = FlightLegInput;

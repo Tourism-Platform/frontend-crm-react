@@ -1,3 +1,5 @@
+import type { SupplementaryDetailsWrite } from "@/shared/api";
+
 import { ENUM_EVENT_BACKEND } from "../../types";
 import type {
 	TSupplementEditSchema,
@@ -23,7 +25,8 @@ export const mapSupplementaryEventToForm = (
 	data: TTourEventBackendResponce
 ): TSupplementEditSchema => {
 	const event = data?.event as TSupplementaryEvent;
-	const backendItems = event?.details?.item;
+	// Contract 3.1: supplementary lines live on `details.spec.item`.
+	const backendItems = event?.details?.spec?.item;
 
 	return {
 		[ENUM_FORM_SECTION.NAME]: event?.name || "",
@@ -43,7 +46,22 @@ export const mapSupplementaryFormToUpdate = (
 ): TTourEventUpdateBackend => {
 	const itemsList = frontend.items?.items;
 	const pricing = frontend.pricing;
-	const hasDetails = itemsList !== undefined || pricing !== undefined;
+	const hasSpec = itemsList !== undefined || pricing !== undefined;
+
+	// Contract 3.1: `details` is required on a supplementary update — the
+	// lines sit inside the inline supply's spec. When the form states no
+	// items at all the spec's `item` stays omitted rather than wiping the
+	// backend's list with [].
+	const details: SupplementaryDetailsWrite = {
+		supply: {
+			source: "inline",
+			spec: {
+				...(hasSpec && {
+					item: mapItemsAndPricingToBackend(itemsList, pricing)
+				})
+			}
+		}
+	};
 
 	return {
 		typ: ENUM_EVENT_BACKEND.SUPPLEMENTARY,
@@ -53,15 +71,7 @@ export const mapSupplementaryFormToUpdate = (
 		...(frontend.description !== undefined && {
 			description: frontend.description || null
 		}),
-		...(Number.isFinite(frontend.position) && {
-			position: frontend.position
-		}),
-		...(Number.isFinite(frontend.day) && { day: frontend.day }),
-		...(hasDetails && {
-			details: {
-				item: mapItemsAndPricingToBackend(itemsList, pricing)
-			}
-		})
+		details
 	};
 };
 

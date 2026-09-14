@@ -16,15 +16,18 @@ import {
 
 import {
 	ENUM_FORM_TRAIN_VARIANT as ENUM_FORM,
+	ENUM_SUPPLIER_TYPE,
+	ENUM_TRAIN_PRICING,
+	type ITrainProduct,
 	type ITrainVariant,
 	TRAIN_VARIANT_FORM_SCHEMA,
 	type TTrainVariantFormSchema,
 	emptyTrainVariantForm,
 	mapTrainVariantFormToWrite,
 	mapTrainVariantToForm,
-	useCreateTrainVariantMutation,
-	useDeleteTrainVariantMutation,
-	useUpdateTrainVariantMutation
+	useCreateVariantMutation,
+	useDeleteVariantMutation,
+	useUpdateVariantMutation
 } from "@/entities/supplier";
 
 import { FeeLinesField } from "@/features/pricing";
@@ -34,23 +37,25 @@ import { TRAIN_VARIANT_FIELDS_LIST } from "../model";
 interface ITrainProductVariantsProps {
 	supplierId: string;
 	productId: string;
+	product?: ITrainProduct | null;
 	variants?: ITrainVariant[];
 }
 
 const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 	supplierId,
 	productId,
+	product,
 	variants = []
 }) => {
 	const { t } = useTranslation("train_product_edit_page");
 	const [selectedId, setSelectedId] = useState<string | "new">("new");
 
-	const [createTrainVariant, { isLoading: isCreating }] =
-		useCreateTrainVariantMutation();
-	const [updateTrainVariant, { isLoading: isUpdating }] =
-		useUpdateTrainVariantMutation();
-	const [deleteTrainVariant, { isLoading: isDeleting }] =
-		useDeleteTrainVariantMutation();
+	const [createVariant, { isLoading: isCreating }] =
+		useCreateVariantMutation();
+	const [updateVariant, { isLoading: isUpdating }] =
+		useUpdateVariantMutation();
+	const [deleteVariant, { isLoading: isDeleting }] =
+		useDeleteVariantMutation();
 
 	const selectedVariant =
 		selectedId === "new"
@@ -81,23 +86,30 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 
 	async function onSubmit(data: TTrainVariantFormSchema) {
 		const payload = mapTrainVariantFormToWrite(data);
+		const pricing = product?.pricing ?? ENUM_TRAIN_PRICING.PER_FARE;
 
 		try {
 			if (selectedId === "new") {
-				const created = await createTrainVariant({
+				// The new variant arrives with the invalidated product query;
+				// reset the form so the same values cannot be submitted twice.
+				await createVariant({
 					supplierId,
 					productId,
+					typ: ENUM_SUPPLIER_TYPE.TRAIN,
+					pricing,
 					data: payload
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
-				setSelectedId(created.id);
+				form.reset(emptyTrainVariantForm());
 				return;
 			}
 
-			await updateTrainVariant({
+			await updateVariant({
 				supplierId,
 				productId,
 				variantId: selectedId,
+				typ: ENUM_SUPPLIER_TYPE.TRAIN,
+				pricing,
 				data: payload
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
@@ -114,7 +126,7 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 		}
 
 		try {
-			await deleteTrainVariant({
+			await deleteVariant({
 				supplierId,
 				productId,
 				variantId: selectedId

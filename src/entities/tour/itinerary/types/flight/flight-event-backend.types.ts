@@ -1,9 +1,9 @@
 import type {
-	BusSingleEventOutput,
-	FlightSingleEventOutput,
-	TrainSingleEventOutput
+	BusSingleEventReadOutput,
+	FlightSingleEventReadOutput,
+	TrainSingleEventReadOutput
 } from "@/shared/api";
 
-export type TFlightSingleEventBackend = FlightSingleEventOutput;
-export type TTrainSingleEventBackend = TrainSingleEventOutput;
-export type TBusSingleEventBackend = BusSingleEventOutput;
+export type TFlightSingleEventBackend = FlightSingleEventReadOutput;
+export type TTrainSingleEventBackend = TrainSingleEventReadOutput;
+export type TBusSingleEventBackend = BusSingleEventReadOutput;

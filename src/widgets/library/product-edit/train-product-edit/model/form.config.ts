@@ -41,17 +41,5 @@ export const TRAIN_HOP_FIELDS_LIST = ({
 		placeholder: "form.general.fields.hops.arrival_station.placeholder",
 		emptyText: "form.general.fields.hops.arrival_station.empty",
 		...arrival
-	},
-	{
-		key: ENUM_HOP.DEPARTURE_TIME,
-		fieldType: "time",
-		label: "form.general.fields.hops.departure_time.label",
-		placeholder: "form.general.fields.hops.departure_time.placeholder"
-	},
-	{
-		key: ENUM_HOP.ARRIVAL_TIME,
-		fieldType: "time",
-		label: "form.general.fields.hops.arrival_time.label",
-		placeholder: "form.general.fields.hops.arrival_time.placeholder"
 	}
 ];

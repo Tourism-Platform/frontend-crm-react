@@ -8,6 +8,7 @@ import {
 
 import {
 	ENUM_FORM_HOTEL_PRODUCT,
+	ENUM_HOTEL_PRICING,
 	type IHotelPolicy,
 	type IHotelProduct,
 	type TCreateHotelProductBackend,
@@ -50,20 +51,39 @@ const buildPolicyFromForm = (
 
 export const mapGeneralFormToDetailsBackend = (
 	values: THotelProductGeneralSchema,
-	existingPolicy: IHotelPolicy | null | undefined,
+	existing: IHotelProduct | null | undefined,
 	lang: LanguageCode
-): THotelProductDetailsBackend => ({
-	typ: "hotel",
-	location: mapGeoFormToBackendLocation(
-		values[ENUM_FORM_HOTEL_PRODUCT.LOCATION],
-		lang
-	),
-	stars: values[ENUM_FORM_HOTEL_PRODUCT.STARS] ?? null,
-	amenities: hotelAmenityConverter.toMany(
-		values[ENUM_FORM_HOTEL_PRODUCT.AMENITIES] ?? []
-	),
-	policy: mapHotelPolicyToBackend(buildPolicyFromForm(values, existingPolicy))
-});
+): THotelProductDetailsBackend => {
+	const base = {
+		name: values[ENUM_FORM_HOTEL_PRODUCT.NAME],
+		location: mapGeoFormToBackendLocation(
+			values[ENUM_FORM_HOTEL_PRODUCT.LOCATION],
+			lang
+		),
+		stars: values[ENUM_FORM_HOTEL_PRODUCT.STARS] ?? null,
+		amenities: hotelAmenityConverter.toMany(
+			values[ENUM_FORM_HOTEL_PRODUCT.AMENITIES] ?? []
+		),
+		policy: mapHotelPolicyToBackend(
+			buildPolicyFromForm(values, existing?.details?.policy)
+		)
+	};
+
+	if (existing?.pricing === ENUM_HOTEL_PRICING.WHOLE) {
+		if (!existing.stayRate) {
+			throw new Error(
+				"Cannot update a whole-priced hotel without its stay rate"
+			);
+		}
+		return {
+			...base,
+			pricing: ENUM_HOTEL_PRICING.WHOLE,
+			price: existing.stayRate
+		};
+	}
+
+	return { ...base, pricing: ENUM_HOTEL_PRICING.PER_ROOM };
+};
 
 export const mapHotelProductGeneralToCreate = (
 	values: THotelProductGeneralSchema,
@@ -73,21 +93,19 @@ export const mapHotelProductGeneralToCreate = (
 
 	return {
 		typ: "hotel",
-		name: values[ENUM_FORM_HOTEL_PRODUCT.NAME],
 		details: mapGeneralFormToDetailsBackend(values, null, lang)
 	};
 };
 
 export const mapHotelProductGeneralToUpdate = (
 	values: THotelProductGeneralSchema,
-	existingPolicy: IHotelPolicy | null | undefined,
+	existing: IHotelProduct | null | undefined,
 	language?: ENUM_LANGUAGES_TYPE
 ): TUpdateHotelProductBackend => {
 	const lang = resolveLang(language);
 
 	return {
 		typ: "hotel",
-		name: values[ENUM_FORM_HOTEL_PRODUCT.NAME],
-		details: mapGeneralFormToDetailsBackend(values, existingPolicy, lang)
+		details: mapGeneralFormToDetailsBackend(values, existing, lang)
 	};
 };

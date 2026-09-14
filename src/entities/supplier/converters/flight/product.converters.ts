@@ -1,4 +1,6 @@
 import {
+	ENUM_FLIGHT_PRICING,
+	type ENUM_FLIGHT_PRICING_TYPE,
 	ENUM_SUPPLIER_TYPE,
 	type IFlightHop,
 	type IFlightProduct,
@@ -6,7 +8,8 @@ import {
 	type IFlightVariant,
 	type IFlightVariantWrite,
 	type TCreateFlightProductBackend,
-	type TFlightHopInputBackend,
+	type TFlightLegInputBackend,
+	type TFlightLegReadBackend,
 	type TFlightProductReadBackend,
 	type TFlightVariantReadBackend,
 	type TFlightVariantWriteBackend
@@ -26,7 +29,9 @@ const emptyToNull = (value: string | null | undefined): string | null => {
 	return trimmed ? trimmed : null;
 };
 
-const mapFlightHopToBackend = (hop: IFlightHop): TFlightHopInputBackend => ({
+export const mapFlightHopToBackend = (
+	hop: IFlightHop
+): TFlightLegInputBackend => ({
 	airline_code: emptyToNull(hop.airlineCode),
 	flight_number: hop.flightNumber,
 	departure_airport_code: emptyToNull(hop.departureAirportCode),
@@ -35,68 +40,86 @@ const mapFlightHopToBackend = (hop: IFlightHop): TFlightHopInputBackend => ({
 	arrival_location: mapSupplierLocationToBackend(hop.arrivalLocation),
 	departure_terminal: emptyToNull(hop.departureTerminal),
 	departure_gate: emptyToNull(hop.departureGate),
-	amenities: hop.amenities.length
-		? hotelAmenityConverter.toMany(hop.amenities)
-		: null
+	...(hop.amenities.length
+		? { amenities: hotelAmenityConverter.toMany(hop.amenities) }
+		: {})
 });
 
-const mapFlightHopFromBackend = (hop: TFlightHopInputBackend): IFlightHop => ({
-	airlineCode: hop.airline_code ?? null,
-	flightNumber: hop.flight_number ?? null,
-	departureAirportCode: hop.departure_airport_code ?? null,
-	arrivalAirportCode: hop.arrival_airport_code ?? null,
+export const mapFlightHopFromBackend = (
+	leg: TFlightLegReadBackend
+): IFlightHop => ({
+	airlineCode: leg.airline_code ?? null,
+	flightNumber: leg.flight_number ?? null,
+	departureAirportCode: leg.departure_airport_code ?? null,
+	arrivalAirportCode: leg.arrival_airport_code ?? null,
 	departureLocation: mapSupplierLocationFromBackend(
-		hop.departure_location ?? null
+		leg.departure_location ?? null
 	),
 	arrivalLocation: mapSupplierLocationFromBackend(
-		hop.arrival_location ?? null
+		leg.arrival_location ?? null
 	),
-	departureTerminal: hop.departure_terminal ?? null,
-	departureGate: hop.departure_gate ?? null,
-	amenities: hotelAmenityConverter.fromMany(hop.amenities ?? [])
+	departureTerminal: leg.departure_terminal ?? null,
+	departureGate: leg.departure_gate ?? null,
+	amenities: hotelAmenityConverter.fromMany(leg.amenities ?? [])
 });
 
 export const mapFlightVariantFromBackend = (
 	variant: TFlightVariantReadBackend
 ): IFlightVariant => ({
-	id: variant.id,
-	name: variant.name,
-	expenses: mapSupplierVariantChargeFromBackend(variant.expenses)
+	id: variant.id ?? "",
+	name: variant.name ?? "",
+	expenses:
+		"charge" in variant
+			? mapSupplierVariantChargeFromBackend(variant.charge)
+			: null
 });
 
 export const mapFlightVariantToWrite = (
-	data: IFlightVariantWrite
-): TFlightVariantWriteBackend => ({
-	typ: "flight",
-	name: data.name,
-	details: {
-		typ: "flight",
-		expenses: data.expenses
-			? mapSupplierVariantChargeToBackend(data.expenses)
-			: null
-	}
-});
+	data: IFlightVariantWrite,
+	pricing: ENUM_FLIGHT_PRICING_TYPE
+): TFlightVariantWriteBackend =>
+	pricing === ENUM_FLIGHT_PRICING.WHOLE
+		? {
+				typ: "flight",
+				pricing: ENUM_FLIGHT_PRICING.WHOLE,
+				name: data.name
+			}
+		: {
+				typ: "flight",
+				pricing: ENUM_FLIGHT_PRICING.PER_FARE,
+				name: data.name,
+				charge: mapSupplierVariantChargeToBackend(data.expenses)
+			};
 
 export const mapFlightProductFromBackend = (
 	row: TFlightProductReadBackend
-): IFlightProduct => ({
-	id: row.id,
-	supplierId: row.supplier_id,
-	typ: ENUM_SUPPLIER_TYPE.FLIGHT,
-	name: row.name,
-	hops: (row.hop ?? []).map(mapFlightHopFromBackend),
-	imagePaths: row.image_paths ?? [],
-	primaryImagePath: row.primary_image_path ?? null,
-	variants: (row.variants ?? []).map(mapFlightVariantFromBackend)
-});
+): IFlightProduct => {
+	const spec = row.spec;
+
+	return {
+		id: row.id,
+		supplierId: row.supplier_id,
+		typ: ENUM_SUPPLIER_TYPE.FLIGHT,
+		name: spec.name ?? row.name,
+		pricing: spec.pricing,
+		charge:
+			spec.pricing === ENUM_FLIGHT_PRICING.WHOLE
+				? mapSupplierVariantChargeFromBackend(spec.charge)
+				: null,
+		hops: spec.legs.map(mapFlightHopFromBackend),
+		imagePaths: row.image_paths ?? [],
+		primaryImagePath: row.primary_image_path ?? null,
+		variants: spec.fares.map(mapFlightVariantFromBackend)
+	};
+};
 
 export const mapFlightProductToCreate = (
 	data: IFlightProductCreate
 ): TCreateFlightProductBackend => ({
 	typ: "flight",
-	name: data.name,
 	details: {
-		typ: "flight",
-		hop: data.hops.map(mapFlightHopToBackend)
+		pricing: ENUM_FLIGHT_PRICING.PER_FARE,
+		name: data.name,
+		legs: data.hops.map(mapFlightHopToBackend)
 	}
 });

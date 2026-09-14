@@ -1,3 +1,6 @@
+import { Currency } from "@/shared/api";
+import type { FixedChargeInput, PerPersonChargeInput } from "@/shared/api";
+
 import {
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
@@ -11,12 +14,14 @@ import {
 	type IFlightPriceRowMarkup,
 	type TCommissionMarkupBackend,
 	type TCommissionMarkupInputBackend,
-	type TFlightDetailsBackend,
 	type TFlightPricingSchema,
 	type TTransportDetailsWithPricingBackend
 } from "../../types";
 
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
+
+/** Write-side whole-route/fleet charge (contract 3.1 `spec.charge`). */
+export type TWholeRouteChargeInput = FixedChargeInput | PerPersonChargeInput;
 
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
@@ -50,7 +55,7 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency)!
+			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
 		}
 	};
 };
@@ -63,56 +68,68 @@ const getDefaultFlightPricing = (): TFlightPricingSchema => ({
 	package_id: ""
 });
 
+/**
+ * Pricing section of the form, read from `details.spec` (contract 3.1).
+ * Only a whole route/fleet (`spec.pricing === "whole"`) carries an
+ * event-stated charge the form can show; per-fare / per-vehicle specs
+ * price their own units, which the event form does not edit — those read
+ * as the default (unpriced) pricing.
+ */
 export const mapFlightPricingFromBackend = (
 	details?: TTransportDetailsWithPricingBackend | null
 ): TFlightPricingSchema => {
-	const expenses = details?.expenses;
 	const defaults = getDefaultFlightPricing();
+	const spec = details?.spec;
 
-	if (!expenses) {
+	if (!spec || spec.pricing !== "whole") {
 		return defaults;
 	}
 
-	const fees = mapFeesFromBackend(expenses.fees);
+	const charge = spec.charge;
+	const fees = mapFeesFromBackend(charge.fees);
 
-	if (expenses.typ === "fixed") {
-		const markup = mapMarkupFromBackend(expenses.markup);
+	if (charge.typ === "fixed") {
+		const markup = mapMarkupFromBackend(charge.markup);
 		return {
 			...defaults,
 			pricing_type: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
 			add_margin_separately: Boolean(markup?.value),
 			[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: markup,
-			...(expenses.cost?.val != null && {
-				total_price: expenses.cost.val
+			...(charge.cost?.val != null && {
+				total_price: charge.cost.val
 			}),
 			[ENUM_FLIGHT_PRICING_FIELD.FEES]: fees,
-			...(expenses.cost?.currency && {
-				currency: currencyConverter.from(expenses.cost.currency)
+			...(charge.cost?.currency && {
+				currency: currencyConverter.from(charge.cost.currency)
 			})
 		};
 	}
 
-	const perPersonMarkup = mapMarkupFromBackend(expenses.markup);
+	const perPersonMarkup = mapMarkupFromBackend(charge.markup);
 	return {
 		...defaults,
 		pricing_type: ENUM_FLIGHT_PRICING_TYPE.PER_PERSON,
 		add_margin_separately: Boolean(perPersonMarkup?.value),
 		[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: perPersonMarkup,
-		...(expenses.cost_per_person?.val != null && {
-			total_price: expenses.cost_per_person.val
+		...(charge.cost_per_person?.val != null && {
+			total_price: charge.cost_per_person.val
 		}),
 		[ENUM_FLIGHT_PRICING_FIELD.FEES]: fees,
-		...(expenses.cost_per_person?.currency && {
-			currency: currencyConverter.from(expenses.cost_per_person.currency)
+		...(charge.cost_per_person?.currency && {
+			currency: currencyConverter.from(charge.cost_per_person.currency)
 		})
 	};
 };
 
+/**
+ * The charge for a whole route/fleet spec (contract 3.1). The caller
+ * assembles the spec: with a charge it is `{ pricing: "whole", charge }`;
+ * without one the route is stated as `{ pricing: "per_fare" | "per_vehicle" }`
+ * carrying no prices of its own.
+ */
 export const mapFlightPricingToBackend = (
 	pricing?: TFlightPricingSchema
-): {
-	details?: Pick<TFlightDetailsBackend, "expenses">;
-} => {
+): { charge?: TWholeRouteChargeInput } => {
 	if (
 		!pricing ||
 		pricing.invoicing !== ENUM_FLIGHT_PRICING_INVOICING.INDIVIDUAL
@@ -130,7 +147,7 @@ export const mapFlightPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currencyConverter.to(currency)!
+		currency: currencyConverter.to(currency) ?? Currency.USD
 	};
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_FLIGHT_PRICING_FIELD.MARKUP] ?? null,
@@ -140,15 +157,11 @@ export const mapFlightPricingToBackend = (
 
 	if (pricing.pricing_type === ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE) {
 		return {
-			details: {
-				expenses: { typ: "fixed", cost, fees, markup }
-			}
+			charge: { typ: "fixed", cost, fees, markup }
 		};
 	}
 
 	return {
-		details: {
-			expenses: { typ: "per_person", cost_per_person: cost, fees, markup }
-		}
+		charge: { typ: "per_person", cost_per_person: cost, fees, markup }
 	};
 };

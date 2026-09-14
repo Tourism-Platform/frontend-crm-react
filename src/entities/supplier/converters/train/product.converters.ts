@@ -1,21 +1,25 @@
+import type {
+	FixedChargeInput,
+	PerPersonChargeInput
+} from "@/shared/api/generated/Api";
+
 import {
-	ENUM_SUPPLIER_SURCHARGE,
 	ENUM_SUPPLIER_TYPE,
+	ENUM_TRAIN_PRICING,
+	type ENUM_TRAIN_PRICING_TYPE,
 	ENUM_TRAIN_VARIANT_CHARGE,
 	type ITrainHop,
 	type ITrainJourneyPoint,
-	type ITrainPerPersonCharge,
 	type ITrainProduct,
 	type ITrainProductCreate,
 	type ITrainVariant,
 	type ITrainVariantWrite,
 	type TCreateTrainProductBackend,
-	type TFixedChargeInputBackend,
-	type TSupplierSurcharge,
-	type TTrainHopInputBackend,
+	type TSupplierVariantChargeReadBackend,
+	type TTrainLegInputBackend,
+	type TTrainLegReadBackend,
 	type TTrainProductReadBackend,
 	type TTrainVariantCharge,
-	type TTrainVariantChargeInputBackend,
 	type TTrainVariantReadBackend,
 	type TTrainVariantWriteBackend
 } from "../../types";
@@ -31,133 +35,86 @@ import {
 	mapMonetaryFromBackend,
 	mapMonetaryToBackend
 } from "../supplier-money.converters";
-
-type TTrainChargeMarkupBackend = NonNullable<
-	TFixedChargeInputBackend["markup"]
->;
-type TTrainChargeMarkupOutputBackend = NonNullable<
-	NonNullable<TTrainVariantReadBackend["expenses"]>["markup"]
->;
-
-const mapTrainMarkupFromBackend = (
-	markup?: TTrainChargeMarkupOutputBackend | null
-): TSupplierSurcharge | null => {
-	if (!markup) return null;
-	if (markup.typ === "percentage" && "percentage" in markup) {
-		return {
-			typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-			percentage: markup.percentage ?? 0
-		};
-	}
-	if ("cost" in markup && markup.cost) {
-		return {
-			typ: ENUM_SUPPLIER_SURCHARGE.FIXED,
-			cost: mapMonetaryFromBackend(markup.cost)
-		};
-	}
-	return null;
-};
-
-const mapTrainMarkupToBackend = (
-	markup: TSupplierSurcharge | null
-): TTrainChargeMarkupBackend | null => {
-	if (!markup) return null;
-	if (markup.typ === ENUM_SUPPLIER_SURCHARGE.PERCENTAGE) {
-		return {
-			typ: "percentage",
-			percentage: markup.percentage
-		};
-	}
-	return {
-		typ: "fixed",
-		cost: mapMonetaryToBackend(markup.cost)
-	};
-};
+import {
+	mapSupplierChargeMarkupFromBackend,
+	mapSupplierChargeMarkupToBackend
+} from "../supplier-variant-charge.converters";
 
 const mapTrainJourneyPointToBackend = (
 	point: ITrainJourneyPoint | null
-): TTrainHopInputBackend["departure"] => {
+): TTrainLegInputBackend["departure"] => {
 	if (!point) {
 		return null;
 	}
 
 	return {
-		time: point.time ? { time: point.time } : null,
 		location: mapSupplierLocationToBackend(point.location)
 	};
 };
 
 const mapTrainJourneyPointFromBackend = (
-	point: TTrainHopInputBackend["departure"] | TTrainHopInputBackend["arrival"]
+	point: TTrainLegReadBackend["departure"]
 ): ITrainJourneyPoint | null => {
 	if (!point) {
 		return null;
 	}
 
 	return {
-		time: point.time?.time ?? null,
-		location: mapSupplierLocationFromBackend(point.location ?? null)
+		location: mapSupplierLocationFromBackend(point.location)
 	};
 };
 
-const mapTrainHopToBackend = (hop: ITrainHop): TTrainHopInputBackend => ({
+export const mapTrainHopToBackend = (
+	hop: ITrainHop
+): TTrainLegInputBackend => ({
 	departure: mapTrainJourneyPointToBackend(hop.departure),
 	arrival: mapTrainJourneyPointToBackend(hop.arrival)
 });
 
-const mapTrainHopFromBackend = (hop: {
-	departure?: TTrainHopInputBackend["departure"];
-	arrival?: TTrainHopInputBackend["arrival"];
-}): ITrainHop => ({
-	departure: mapTrainJourneyPointFromBackend(hop.departure),
-	arrival: mapTrainJourneyPointFromBackend(hop.arrival)
+export const mapTrainHopFromBackend = (
+	leg: TTrainLegReadBackend
+): ITrainHop => ({
+	departure: mapTrainJourneyPointFromBackend(leg.departure),
+	arrival: mapTrainJourneyPointFromBackend(leg.arrival)
 });
 
 export const mapTrainVariantChargeToBackend = (
 	data: TTrainVariantCharge
-): NonNullable<TTrainVariantChargeInputBackend> => {
+): FixedChargeInput | PerPersonChargeInput => {
 	const fees = mapSupplierFeesToBackend(data.fees);
-	const markup = mapTrainMarkupToBackend(data.markup);
+	const markup = mapSupplierChargeMarkupToBackend(data.markup);
 
-	switch (data.typ) {
-		case ENUM_TRAIN_VARIANT_CHARGE.PER_PERSON: {
-			const perPerson: ITrainPerPersonCharge = data;
-			return {
-				typ: "per_person",
-				cost_per_person: mapMonetaryToBackend(perPerson.costPerPerson),
-				fees,
-				markup
-			};
-		}
-		case ENUM_TRAIN_VARIANT_CHARGE.FIXED:
-		default:
-			return {
-				typ: "fixed",
-				cost: mapMonetaryToBackend(data.cost),
-				fees,
-				markup
-			};
+	if (data.typ === ENUM_TRAIN_VARIANT_CHARGE.PER_PERSON) {
+		return {
+			typ: "per_person",
+			cost_per_person: mapMonetaryToBackend(data.costPerPerson),
+			fees,
+			markup
+		};
 	}
+
+	return {
+		typ: "fixed",
+		cost: mapMonetaryToBackend(data.cost),
+		fees,
+		markup
+	};
 };
 
 export const mapTrainVariantChargeFromBackend = (
-	expenses: TTrainVariantReadBackend["expenses"]
+	charge: TSupplierVariantChargeReadBackend | null | undefined
 ): TTrainVariantCharge | null => {
-	if (!expenses) {
+	if (!charge) {
 		return null;
 	}
 
-	const fees = mapSupplierFeesFromBackend(expenses.fees);
-	const markup = mapTrainMarkupFromBackend(expenses.markup);
+	const fees = mapSupplierFeesFromBackend(charge.fees);
+	const markup = mapSupplierChargeMarkupFromBackend(charge.markup);
 
-	if (expenses.typ === "per_person") {
+	if (charge.typ === "per_person") {
 		return {
 			typ: ENUM_TRAIN_VARIANT_CHARGE.PER_PERSON,
-			costPerPerson: mapMonetaryFromBackend(
-				"cost_per_person" in expenses
-					? expenses.cost_per_person
-					: undefined
-			),
+			costPerPerson: mapMonetaryFromBackend(charge.cost_per_person),
 			fees,
 			markup
 		};
@@ -165,9 +122,7 @@ export const mapTrainVariantChargeFromBackend = (
 
 	return {
 		typ: ENUM_TRAIN_VARIANT_CHARGE.FIXED,
-		cost: mapMonetaryFromBackend(
-			"cost" in expenses ? expenses.cost : undefined
-		),
+		cost: mapMonetaryFromBackend(charge.cost),
 		fees,
 		markup
 	};
@@ -176,44 +131,60 @@ export const mapTrainVariantChargeFromBackend = (
 export const mapTrainVariantFromBackend = (
 	variant: TTrainVariantReadBackend
 ): ITrainVariant => ({
-	id: variant.id,
-	name: variant.name,
-	expenses: mapTrainVariantChargeFromBackend(variant.expenses)
+	id: variant.id ?? "",
+	name: variant.name ?? "",
+	expenses:
+		"charge" in variant
+			? mapTrainVariantChargeFromBackend(variant.charge)
+			: null
 });
 
 export const mapTrainVariantToWrite = (
-	data: ITrainVariantWrite
-): TTrainVariantWriteBackend => ({
-	typ: "train",
-	name: data.name,
-	details: {
-		typ: "train",
-		expenses: data.expenses
-			? mapTrainVariantChargeToBackend(data.expenses)
-			: null
-	}
-});
+	data: ITrainVariantWrite,
+	pricing: ENUM_TRAIN_PRICING_TYPE
+): TTrainVariantWriteBackend =>
+	pricing === ENUM_TRAIN_PRICING.WHOLE
+		? {
+				typ: "train",
+				pricing: ENUM_TRAIN_PRICING.WHOLE,
+				name: data.name
+			}
+		: {
+				typ: "train",
+				pricing: ENUM_TRAIN_PRICING.PER_FARE,
+				name: data.name,
+				charge: mapTrainVariantChargeToBackend(data.expenses)
+			};
 
 export const mapTrainProductFromBackend = (
 	row: TTrainProductReadBackend
-): ITrainProduct => ({
-	id: row.id,
-	supplierId: row.supplier_id,
-	typ: ENUM_SUPPLIER_TYPE.TRAIN,
-	name: row.name,
-	hops: (row.hop ?? []).map(mapTrainHopFromBackend),
-	imagePaths: row.image_paths ?? [],
-	primaryImagePath: row.primary_image_path ?? null,
-	variants: (row.variants ?? []).map(mapTrainVariantFromBackend)
-});
+): ITrainProduct => {
+	const spec = row.spec;
+
+	return {
+		id: row.id,
+		supplierId: row.supplier_id,
+		typ: ENUM_SUPPLIER_TYPE.TRAIN,
+		name: spec.name ?? row.name,
+		pricing: spec.pricing,
+		charge:
+			spec.pricing === ENUM_TRAIN_PRICING.WHOLE
+				? mapTrainVariantChargeFromBackend(spec.charge)
+				: null,
+		hops: spec.legs.map(mapTrainHopFromBackend),
+		imagePaths: row.image_paths ?? [],
+		primaryImagePath: row.primary_image_path ?? null,
+		variants: spec.fares.map(mapTrainVariantFromBackend)
+	};
+};
 
 export const mapTrainProductToCreate = (
 	data: ITrainProductCreate
 ): TCreateTrainProductBackend => ({
 	typ: "train",
-	name: data.name,
 	details: {
-		typ: "train",
-		hop: data.hops.map(mapTrainHopToBackend)
+		pricing: ENUM_TRAIN_PRICING.PER_FARE,
+		name: data.name,
+		legs: data.hops.map(mapTrainHopToBackend)
 	}
 });

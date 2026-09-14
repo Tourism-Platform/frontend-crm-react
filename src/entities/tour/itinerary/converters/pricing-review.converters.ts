@@ -11,14 +11,28 @@ import {
 	type ENUM_EVENT_BACKEND_TYPE,
 	type ITourPricingReview,
 	type TGetTourSummaryBackendResponce,
-	type TMultiEventDetailBackend,
 	type TOperatorEventBackend,
 	type TPackageBillableBackend,
 	type TTourMinMaxCostBackend,
 	type TTourSummaryEventBackend
 } from "../types";
 
-import { mapBackendTypToEventType } from "./event-type.converters";
+import { backendEventTypeMapper } from "./backend-event-type.converters";
+
+/**
+ * Supplier label for display (contract 3.1): a linked product carries the
+ * resolved `supplier` ref; inline supply only has `supplier_id`.
+ */
+const resolveSupplierLabel = (
+	supply:
+		| { source: "inline"; supplier_id?: string | null }
+		| { source: "product"; supplier: { id: string; name: string } }
+): string => {
+	if (supply.source === "product") {
+		return supply.supplier.name || supply.supplier.id;
+	}
+	return supply.supplier_id ?? "-";
+};
 
 const isPackageBillable = (
 	item: TTourSummaryEventBackend
@@ -62,33 +76,29 @@ const mapEventPayloadToReviewItem = (
 			day: event.day,
 			position: event.position,
 			optionIndex: 0,
-			subRows: (event.details ?? []).map(
-				(detail: TMultiEventDetailBackend, index: number) => ({
-					id: detail.id ?? `${eventId}:${index}`,
-					item: detail.name ?? "-",
-					supplier: detail.supplier_id ?? "-",
-					plannedCost: "-",
-					estimatedRevenue: "-",
-					type: mapBackendTypToEventType(
-						detail.typ as ENUM_EVENT_BACKEND_TYPE | undefined
-					),
-					day: event.day,
-					position: event.position,
-					optionIndex: index
-				})
-			)
+			subRows: (event.details ?? []).map((detail, index) => ({
+				id: detail.id ?? `${eventId}:${index}`,
+				item: detail.name ?? "-",
+				supplier: resolveSupplierLabel(detail.details.supply),
+				plannedCost: "-",
+				estimatedRevenue: "-",
+				type: backendEventTypeMapper.to(
+					detail.typ as ENUM_EVENT_BACKEND_TYPE
+				),
+				day: event.day,
+				position: event.position,
+				optionIndex: index
+			}))
 		};
 	}
 
 	return {
 		id: eventId,
 		item: event.name ?? "",
-		supplier: event.supplier_id ?? "-",
+		supplier: resolveSupplierLabel(event.details.supply),
 		plannedCost,
 		estimatedRevenue,
-		type: mapBackendTypToEventType(
-			event.typ as ENUM_EVENT_BACKEND_TYPE | undefined
-		),
+		type: backendEventTypeMapper.to(event.typ as ENUM_EVENT_BACKEND_TYPE),
 		day: event.day,
 		position: event.position,
 		optionIndex: 0

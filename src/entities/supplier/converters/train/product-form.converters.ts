@@ -10,28 +10,28 @@ import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 import {
 	ENUM_FORM_TRAIN_PRODUCT as ENUM_FORM,
 	ENUM_FORM_TRAIN_HOP as ENUM_HOP,
+	ENUM_TRAIN_PRICING,
 	type ITrainHop,
 	type ITrainProduct,
 	type TCreateTrainProductBackend,
 	type TTrainHopFormSchema,
-	type TTrainHopInputBackend,
+	type TTrainLegInputBackend,
+	type TTrainProductDetailsBackend,
 	type TTrainProductGeneralSchema,
 	type TUpdateTrainProductBackend
 } from "../../types";
+
+import { mapTrainVariantChargeToBackend } from "./product.converters";
 
 const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
 	languageCodeMapper.to(language) ?? LanguageCode.En;
 
 export const emptyHopFormRow = (): TTrainHopFormSchema => ({
-	[ENUM_HOP.DEPARTURE_TIME]: "",
-	[ENUM_HOP.ARRIVAL_TIME]: "",
 	[ENUM_HOP.DEPARTURE_LOCATION]: null,
 	[ENUM_HOP.ARRIVAL_LOCATION]: null
 });
 
 const mapHopDomainToForm = (hop: ITrainHop): TTrainHopFormSchema => ({
-	[ENUM_HOP.DEPARTURE_TIME]: hop.departure?.time ?? "",
-	[ENUM_HOP.ARRIVAL_TIME]: hop.arrival?.time ?? "",
 	[ENUM_HOP.DEPARTURE_LOCATION]: mapBackendLocationToGeoForm(
 		hop.departure?.location ?? null
 	),
@@ -50,54 +50,62 @@ export const mapTrainProductToGeneralForm = (
 });
 
 const mapHopPointToBackend = (
-	time: string,
 	location: TGeoFormValue | null | undefined,
 	lang: LanguageCode
-): TTrainHopInputBackend["departure"] => ({
-	time: time.trim() ? { time: time.trim() } : null,
+): TTrainLegInputBackend["departure"] => ({
 	location: mapGeoFormToBackendLocation(location, lang)
 });
 
 const mapHopFormToBackend = (
 	hop: TTrainHopFormSchema,
 	lang: LanguageCode
-): TTrainHopInputBackend => ({
-	departure: mapHopPointToBackend(
-		hop[ENUM_HOP.DEPARTURE_TIME] ?? "",
-		hop[ENUM_HOP.DEPARTURE_LOCATION],
-		lang
-	),
-	arrival: mapHopPointToBackend(
-		hop[ENUM_HOP.ARRIVAL_TIME] ?? "",
-		hop[ENUM_HOP.ARRIVAL_LOCATION],
-		lang
-	)
+): TTrainLegInputBackend => ({
+	departure: mapHopPointToBackend(hop[ENUM_HOP.DEPARTURE_LOCATION], lang),
+	arrival: mapHopPointToBackend(hop[ENUM_HOP.ARRIVAL_LOCATION], lang)
 });
 
 const mapGeneralFormToDetails = (
 	values: TTrainProductGeneralSchema,
+	existing: ITrainProduct | null | undefined,
 	language?: ENUM_LANGUAGES_TYPE
-): TCreateTrainProductBackend => {
+): TTrainProductDetailsBackend => {
 	const lang = resolveLang(language);
-
-	return {
-		typ: "train",
+	const base = {
 		name: values[ENUM_FORM.NAME],
-		details: {
-			typ: "train",
-			hop: values[ENUM_FORM.HOPS].map((hop) =>
-				mapHopFormToBackend(hop, lang)
-			)
-		}
+		legs: values[ENUM_FORM.HOPS].map((hop) =>
+			mapHopFormToBackend(hop, lang)
+		)
 	};
+
+	if (existing?.pricing === ENUM_TRAIN_PRICING.WHOLE) {
+		if (!existing.charge) {
+			throw new Error(
+				"Cannot update a whole-priced train route without its charge"
+			);
+		}
+		return {
+			...base,
+			pricing: ENUM_TRAIN_PRICING.WHOLE,
+			charge: mapTrainVariantChargeToBackend(existing.charge)
+		};
+	}
+
+	return { ...base, pricing: ENUM_TRAIN_PRICING.PER_FARE };
 };
 
 export const mapTrainProductGeneralToCreate = (
 	values: TTrainProductGeneralSchema,
 	language?: ENUM_LANGUAGES_TYPE
-): TCreateTrainProductBackend => mapGeneralFormToDetails(values, language);
+): TCreateTrainProductBackend => ({
+	typ: "train",
+	details: mapGeneralFormToDetails(values, null, language)
+});
 
 export const mapTrainProductGeneralToUpdate = (
 	values: TTrainProductGeneralSchema,
+	existing: ITrainProduct | null | undefined,
 	language?: ENUM_LANGUAGES_TYPE
-): TUpdateTrainProductBackend => mapGeneralFormToDetails(values, language);
+): TUpdateTrainProductBackend => ({
+	typ: "train",
+	details: mapGeneralFormToDetails(values, existing, language)
+});

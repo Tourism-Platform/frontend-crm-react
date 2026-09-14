@@ -13,3 +13,5 @@ export type ENUM_FORM_CARS_TYPE =
 	(typeof ENUM_FORM_CARS)[keyof typeof ENUM_FORM_CARS];
 
 export type TCarsSchema = z.infer<typeof CARS_SCHEMA>;
+
+export type TCarsList = TCarsSchema[typeof ENUM_FORM_CARS.CARS_LIST];

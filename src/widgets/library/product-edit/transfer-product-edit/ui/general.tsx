@@ -77,7 +77,8 @@ const TransferProductGeneralBase: FC<ITransferProductGeneralProps> = ({
 			await updateTransferProduct({
 				supplierId,
 				productId,
-				values: data
+				values: data,
+				existing: product
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {

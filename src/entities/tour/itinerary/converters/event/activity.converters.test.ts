@@ -30,8 +30,12 @@ vi.mock("@/entities/commission", () => ({
 	ENUM_CURRENCY_OPTIONS: { USD: "USD", EUR: "EUR" }
 }));
 
+const inlineSpec = (
+	details: ReturnType<typeof mapActivityFormToUpdate>["details"]
+) => (details?.supply?.source === "inline" ? details.supply.spec : undefined);
+
 describe("mapActivityFormToUpdate food branch", () => {
-	it("sends literal typ food and echoes menu id", () => {
+	it("sends sub_typ food and echoes menu id on the inline offering", () => {
 		const result = mapActivityFormToUpdate(
 			{
 				[ENUM_ACTIVITY_FORM_SECTION.GENERAL]: {
@@ -60,23 +64,27 @@ describe("mapActivityFormToUpdate food branch", () => {
 			ENUM_LANGUAGES.EN
 		);
 
-		expect(result.details).toMatchObject({
-			typ: "food",
-			menu: [
+		expect(inlineSpec(result.details)).toMatchObject({
+			sub_typ: "food",
+			offerings: [
 				{
-					id: "11111111-1111-1111-1111-111111111111",
-					name: "Plov",
-					description: "lamb"
+					menu: [
+						{
+							id: "11111111-1111-1111-1111-111111111111",
+							name: "Plov",
+							description: "lamb"
+						}
+					],
+					charge: {
+						typ: "fixed",
+						cost: { val: 40, currency: "USD" }
+					}
 				}
-			],
-			expenses: {
-				typ: "fixed",
-				cost: { val: 40, currency: "USD" }
-			}
+			]
 		});
 	});
 
-	it("does not send food menu for non-food subtype", () => {
+	it("does not send a food menu for a non-food subtype", () => {
 		const result = mapActivityFormToUpdate(
 			{
 				[ENUM_ACTIVITY_FORM_SECTION.GENERAL]: {
@@ -92,9 +100,11 @@ describe("mapActivityFormToUpdate food branch", () => {
 			ENUM_LANGUAGES.EN
 		);
 
-		expect(result.details).toMatchObject({
-			typ: "sightseeing"
+		expect(inlineSpec(result.details)).toMatchObject({
+			sub_typ: "sightseeing"
 		});
-		expect(result.details).not.toHaveProperty("menu");
+		expect(JSON.stringify(inlineSpec(result.details))).not.toContain(
+			"Should not send"
+		);
 	});
 });

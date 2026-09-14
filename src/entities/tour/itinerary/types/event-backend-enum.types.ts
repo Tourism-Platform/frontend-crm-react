@@ -1,5 +1,10 @@
-import { EventTypes } from "@/shared/api/generated/Api";
+import { EventTypes } from "@/shared/api";
 
+/**
+ * Backend event discriminator — values are the generated `EventTypes` enum.
+ * SCREAMING keys are local aliases so call sites stay readable; the runtime
+ * value is always an `EventTypes` member.
+ */
 export const ENUM_EVENT_BACKEND = {
 	FLIGHT: EventTypes.Flight,
 	TRAIN: EventTypes.Train,
@@ -13,5 +18,4 @@ export const ENUM_EVENT_BACKEND = {
 	OPTIONS: EventTypes.Options
 } as const;
 
-export type ENUM_EVENT_BACKEND_TYPE =
-	(typeof ENUM_EVENT_BACKEND)[keyof typeof ENUM_EVENT_BACKEND];
+export type ENUM_EVENT_BACKEND_TYPE = EventTypes;

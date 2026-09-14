@@ -16,15 +16,18 @@ import {
 
 import {
 	BUS_VARIANT_FORM_SCHEMA,
+	ENUM_BUS_PRICING,
 	ENUM_FORM_BUS_VARIANT as ENUM_FORM,
+	ENUM_SUPPLIER_TYPE,
+	type IBusProduct,
 	type IBusVariant,
 	type TBusVariantFormSchema,
 	emptyBusVariantForm,
 	mapBusVariantFormToWrite,
 	mapBusVariantToForm,
-	useCreateBusVariantMutation,
-	useDeleteBusVariantMutation,
-	useUpdateBusVariantMutation
+	useCreateVariantMutation,
+	useDeleteVariantMutation,
+	useUpdateVariantMutation
 } from "@/entities/supplier";
 
 import { FeeLinesField } from "@/features/pricing";
@@ -34,23 +37,25 @@ import { BUS_VARIANT_FIELDS_LIST } from "../model";
 interface IBusProductVariantsProps {
 	supplierId: string;
 	productId: string;
+	product?: IBusProduct | null;
 	variants?: IBusVariant[];
 }
 
 const BusProductVariantsBase: FC<IBusProductVariantsProps> = ({
 	supplierId,
 	productId,
+	product,
 	variants = []
 }) => {
 	const { t } = useTranslation("bus_product_edit_page");
 	const [selectedId, setSelectedId] = useState<string | "new">("new");
 
-	const [createBusVariant, { isLoading: isCreating }] =
-		useCreateBusVariantMutation();
-	const [updateBusVariant, { isLoading: isUpdating }] =
-		useUpdateBusVariantMutation();
-	const [deleteBusVariant, { isLoading: isDeleting }] =
-		useDeleteBusVariantMutation();
+	const [createVariant, { isLoading: isCreating }] =
+		useCreateVariantMutation();
+	const [updateVariant, { isLoading: isUpdating }] =
+		useUpdateVariantMutation();
+	const [deleteVariant, { isLoading: isDeleting }] =
+		useDeleteVariantMutation();
 
 	const selectedVariant =
 		selectedId === "new"
@@ -81,23 +86,30 @@ const BusProductVariantsBase: FC<IBusProductVariantsProps> = ({
 
 	async function onSubmit(data: TBusVariantFormSchema) {
 		const payload = mapBusVariantFormToWrite(data);
+		const pricing = product?.pricing ?? ENUM_BUS_PRICING.PER_VEHICLE;
 
 		try {
 			if (selectedId === "new") {
-				const created = await createBusVariant({
+				// The new variant arrives with the invalidated product query;
+				// reset the form so the same values cannot be submitted twice.
+				await createVariant({
 					supplierId,
 					productId,
+					typ: ENUM_SUPPLIER_TYPE.BUS,
+					pricing,
 					data: payload
 				}).unwrap();
 				toast.success(t("form.toasts.save.success"));
-				setSelectedId(created.id);
+				form.reset(emptyBusVariantForm());
 				return;
 			}
 
-			await updateBusVariant({
+			await updateVariant({
 				supplierId,
 				productId,
 				variantId: selectedId,
+				typ: ENUM_SUPPLIER_TYPE.BUS,
+				pricing,
 				data: payload
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
@@ -114,7 +126,7 @@ const BusProductVariantsBase: FC<IBusProductVariantsProps> = ({
 		}
 
 		try {
-			await deleteBusVariant({
+			await deleteVariant({
 				supplierId,
 				productId,
 				variantId: selectedId

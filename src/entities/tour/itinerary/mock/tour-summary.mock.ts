@@ -1,4 +1,13 @@
 import {
+	type ActivityDetailsOutput,
+	type FlightDetailsOutput,
+	type GeneralVenueOutput,
+	GeneralVenueOutputSubTypEnum,
+	type HousingDetailsOutput,
+	type TransferDetailsOutput
+} from "@/shared/api";
+
+import {
 	MOCK_EVENT_IDS,
 	MOCK_TOUR_ID,
 	MOCK_TOUR_OPTION_ID
@@ -16,17 +25,91 @@ const costRange = (min: number, max: number): TTourMinMaxCostBackend => ({
 	max: { val: max }
 });
 
+const inlineSupply = { source: "inline", supplier_id: null } as const;
+
+const flightDetails = (): FlightDetailsOutput => ({
+	plan: {},
+	supply: inlineSupply,
+	spec: {
+		pricing: "whole",
+		images: [],
+		name: null,
+		legs: [],
+		charge: {
+			typ: "fixed",
+			cost: { val: 0 },
+			fees: null,
+			extra_costs: [],
+			markup: null
+		},
+		fares: []
+	}
+});
+
+const housingDetails = (): HousingDetailsOutput => ({
+	plan: {},
+	supply: inlineSupply,
+	spec: {
+		pricing: "per_room",
+		images: [],
+		name: null,
+		location: null,
+		stars: null,
+		typs: [],
+		amenities: [],
+		policy: null,
+		categories: []
+	}
+});
+
+const activityDetails = (): ActivityDetailsOutput => ({
+	plan: {},
+	supply: inlineSupply,
+	// The generated spec union intersects the literal discriminant with the
+	// native enum (`{ sub_typ: "sightseeing" } & GeneralVenueOutput`), which TS
+	// reduces to never — a targeted cast is the only way to state a sub_typ.
+	spec: {
+		sub_typ: GeneralVenueOutputSubTypEnum.Sightseeing,
+		images: [],
+		name: null,
+		location: null,
+		offerings: []
+	} as { sub_typ: "sightseeing" } & GeneralVenueOutput
+});
+
+const transferDetails = (): TransferDetailsOutput => ({
+	plan: { typ: null, departure: null, arrival: null },
+	supply: inlineSupply,
+	spec: {
+		pricing: "whole",
+		images: [],
+		name: null,
+		charge: {
+			typ: "fixed",
+			cost: { val: 0 },
+			fees: null,
+			extra_costs: [],
+			markup: null
+		},
+		cars: []
+	}
+});
+
 const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 	{
 		event_id: "event_1",
 		typ: "individual_bill",
 		event: {
 			typ: ENUM_EVENT_BACKEND.FLIGHT,
+			id: "event_1-option_1",
 			name: "International Flight: London - Tashkent",
-			supplier_id: "Emirates",
+			description: null,
+			package_id: null,
 			day: 1,
 			position: 1,
-			details: null
+			is_optional: false,
+			images: [],
+			details: flightDetails()
 		},
 		cost: costRange(1000, 1200),
 		markup: costRange(100, 150),
@@ -39,18 +122,24 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 			typ: ENUM_EVENT_BACKEND.OPTIONS,
 			day: 2,
 			position: 1,
+			is_optional: false,
+			images: [],
 			details: [
 				{
 					typ: ENUM_EVENT_BACKEND.HOUSING,
+					id: "event_2-option_1",
 					name: "Central Hotel",
-					supplier_id: "Central Group",
-					details: null
+					description: null,
+					package_id: null,
+					details: housingDetails()
 				},
 				{
 					typ: ENUM_EVENT_BACKEND.HOUSING,
+					id: "event_2-option_2",
 					name: "Hyatt Regency",
-					supplier_id: "Hyatt Group",
-					details: null
+					description: null,
+					package_id: null,
+					details: housingDetails()
 				}
 			]
 		},
@@ -63,11 +152,15 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 		typ: "individual_bill",
 		event: {
 			typ: ENUM_EVENT_BACKEND.ACTIVITY,
+			id: "event_3-option_1",
 			name: "City Sightseeing Tour",
-			supplier_id: "Local Tours LLC",
+			description: null,
+			package_id: null,
 			day: 3,
 			position: 1,
-			details: null
+			is_optional: false,
+			images: [],
+			details: activityDetails()
 		},
 		cost: costRange(250, 300),
 		markup: costRange(40, 50),
@@ -84,11 +177,15 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 				event_id: "event_4",
 				event: {
 					typ: ENUM_EVENT_BACKEND.TRANSFER,
+					id: "event_4-option_1",
 					name: "Airport Transfer",
-					supplier_id: "Transfer Co",
+					description: null,
+					package_id: "package_1",
 					day: 1,
 					position: 2,
-					details: null
+					is_optional: false,
+					images: [],
+					details: transferDetails()
 				}
 			},
 			{
@@ -97,18 +194,24 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 					typ: ENUM_EVENT_BACKEND.OPTIONS,
 					day: 4,
 					position: 1,
+					is_optional: false,
+					images: [],
 					details: [
 						{
 							typ: ENUM_EVENT_BACKEND.ACTIVITY,
+							id: "event_5-option_1",
 							name: "Museum Tour",
-							supplier_id: "Museums LLC",
-							details: null
+							description: null,
+							package_id: "package_1",
+							details: activityDetails()
 						},
 						{
 							typ: ENUM_EVENT_BACKEND.ACTIVITY,
+							id: "event_5-option_2",
 							name: "Walking Tour",
-							supplier_id: "Walks LLC",
-							details: null
+							description: null,
+							package_id: "package_1",
+							details: activityDetails()
 						}
 					]
 				}

@@ -328,6 +328,7 @@ describe("mapPricingFromBackend", () => {
 								cost: { val: 5, currency: Currency.USD }
 							}
 						],
+						extra_costs: [],
 						markup: {
 							typ: "fixed",
 							cost: { val: 5, currency: Currency.USD }
@@ -360,6 +361,7 @@ describe("mapPricingFromBackend", () => {
 								cost: { val: 2, currency: Currency.EUR }
 							}
 						],
+						extra_costs: [],
 						markup: null
 					}
 				}
@@ -388,6 +390,7 @@ describe("mapPricingFromBackend", () => {
 								cost: { val: 1, currency: Currency.USD }
 							}
 						],
+						extra_costs: [],
 						markup: null
 					}
 				},
@@ -397,6 +400,7 @@ describe("mapPricingFromBackend", () => {
 						typ: "fixed",
 						cost: { val: 20, currency: Currency.USD },
 						fees: null,
+						extra_costs: [],
 						markup: null
 					}
 				}

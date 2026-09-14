@@ -44,6 +44,7 @@ export const getClientBookingOrderDetail = (
 	return {
 		order: detail.order,
 		tour: detail.tour,
+		discount: null,
 		operator: {
 			id: detail.order.operator_id || MOCK_OPERATOR_ID,
 			name: "Mock Operator",

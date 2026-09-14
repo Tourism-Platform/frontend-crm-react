@@ -23,16 +23,11 @@ export const BUS_VARIANT_FORM_SCHEMA = z.object({
 		.string()
 		.trim()
 		.min(1, msg("form.variants.fields.name.errors.required")),
-	[ENUM_FORM_BUS_VARIANT.BODY_TYPE]: z
-		.enum(ENUM_VEHICLE_BODY_TYPE)
-		.nullable()
-		.optional(),
+	[ENUM_FORM_BUS_VARIANT.BODY_TYPE]: z.enum(ENUM_VEHICLE_BODY_TYPE),
 	[ENUM_FORM_BUS_VARIANT.PAX]: z
 		.number()
 		.int()
-		.min(1, msg("form.variants.fields.pax.errors.min"))
-		.nullable()
-		.optional(),
+		.min(1, msg("form.variants.fields.pax.errors.min")),
 	[ENUM_FORM_BUS_VARIANT.DESCRIPTION]: z.string(),
 	[ENUM_FORM_BUS_VARIANT.COST]: z.string(),
 	[ENUM_FORM_BUS_VARIANT.CURRENCY]: z.enum(ENUM_CURRENCY_OPTIONS),

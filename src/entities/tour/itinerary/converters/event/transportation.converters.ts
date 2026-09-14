@@ -1,4 +1,9 @@
 import { LanguageCode } from "@/shared/api";
+import type {
+	TransferDetailsWrite,
+	TransferLegInput,
+	TransferPointInput
+} from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
@@ -6,6 +11,7 @@ import {
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
+import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 
 import {
 	ENUM_EVENT_BACKEND,
@@ -21,22 +27,25 @@ import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
 } from "./package-id.helpers";
+import { toTimezoneOffset } from "./timezone.helpers";
 import { isInheritedTransferDetails } from "./transfer-details.helpers";
 import { transferTypeMapper } from "./transfer-type.converters";
-import {
-	mapCarsFromBackend,
-	mapCarsToBackend
-} from "./transportation-cars.converters";
+import { mapCarsFromBackend } from "./transportation-cars.converters";
 import {
 	mapTransportationPricingFromBackend,
 	mapTransportationPricingToBackend
 } from "./transportation-pricing.converters";
+
+type TTransferGeneral = TTransportationEditSchema["general"];
 
 export const mapTransferEventToForm = (
 	data: TTourEventBackendResponce
 ): TTransportationEditSchema => {
 	const event = data?.event as TTransferSingleEventBackend;
 	const details = event?.details ?? null;
+	// Contract 3.1: the run (kind, points, hours) is the tour's own `plan`,
+	// whoever supplies the fleet.
+	const plan = details?.plan;
 
 	if (isInheritedTransferDetails(details)) {
 		return {
@@ -46,20 +55,18 @@ export const mapTransferEventToForm = (
 			...mapInheritedProductLinkToForm(details),
 			general: {
 				description: event.description || "",
-				transfer_type: transferTypeMapper.from(details.typ),
+				transfer_type: transferTypeMapper.from(plan?.typ),
 				meet_point: mapBackendLocationToGeoForm(
-					details.departure?.location
+					plan?.departure?.location
 				),
-				end_point: mapBackendLocationToGeoForm(
-					details.arrival?.location
-				),
-				departure_time: details.departure?.time?.time || null,
-				arrival_time: details.arrival?.time?.time || null,
+				end_point: mapBackendLocationToGeoForm(plan?.arrival?.location),
+				departure_time: plan?.departure?.time?.time || null,
+				arrival_time: plan?.arrival?.time?.time || null,
 				departure_timezone: String(
-					details.departure?.time?.timezone ?? getDeviceUtcOffset()
+					plan?.departure?.time?.timezone ?? getDeviceUtcOffset()
 				),
 				arrival_timezone: String(
-					details.arrival?.time?.timezone ?? getDeviceUtcOffset()
+					plan?.arrival?.time?.timezone ?? getDeviceUtcOffset()
 				)
 			},
 			cars: mapCarsFromBackend(),
@@ -70,12 +77,7 @@ export const mapTransferEventToForm = (
 		};
 	}
 
-	const expenses =
-		details && "expenses" in details ? details.expenses : undefined;
-	const perCarCars = expenses?.typ === "per_car" ? expenses.cars : undefined;
-	const perCarCategoryCars =
-		expenses?.typ === "per_car_category" ? expenses.cars : undefined;
-	const cars = mapCarsFromBackend(perCarCars, perCarCategoryCars);
+	const cars = mapCarsFromBackend(details?.spec);
 
 	return {
 		name: event?.name || "",
@@ -83,18 +85,16 @@ export const mapTransferEventToForm = (
 		position: event.position,
 		general: {
 			description: event.description || "",
-			transfer_type: transferTypeMapper.from(details?.typ),
-			meet_point: mapBackendLocationToGeoForm(
-				details?.departure?.location
-			),
-			end_point: mapBackendLocationToGeoForm(details?.arrival?.location),
-			departure_time: details?.departure?.time?.time || null,
-			arrival_time: details?.arrival?.time?.time || null,
+			transfer_type: transferTypeMapper.from(plan?.typ),
+			meet_point: mapBackendLocationToGeoForm(plan?.departure?.location),
+			end_point: mapBackendLocationToGeoForm(plan?.arrival?.location),
+			departure_time: plan?.departure?.time?.time || null,
+			arrival_time: plan?.arrival?.time?.time || null,
 			departure_timezone: String(
-				details?.departure?.time?.timezone ?? getDeviceUtcOffset()
+				plan?.departure?.time?.timezone ?? getDeviceUtcOffset()
 			),
 			arrival_timezone: String(
-				details?.arrival?.time?.timezone ?? getDeviceUtcOffset()
+				plan?.arrival?.time?.timezone ?? getDeviceUtcOffset()
 			)
 		},
 		cars,
@@ -105,39 +105,89 @@ export const mapTransferEventToForm = (
 	};
 };
 
+const mapPointToBackend = (
+	time: string | null | undefined,
+	timezone: string | null | undefined,
+	location: TGeoFormValue | null | undefined,
+	lang: LanguageCode
+): TransferPointInput | undefined => {
+	if (time == null && location === undefined) {
+		return undefined;
+	}
+
+	return {
+		...(time && {
+			time: { time, timezone: toTimezoneOffset(timezone) }
+		}),
+		...(location !== undefined && {
+			location: mapGeoFormToBackendLocation(location, lang)
+		})
+	};
+};
+
+/** The run a transfer makes (3.1 `plan`): kind, departure, arrival. */
+const mapTransferLegToBackend = (
+	g: TTransferGeneral | undefined,
+	lang: LanguageCode
+): TransferLegInput => {
+	const departure = mapPointToBackend(
+		g?.departure_time,
+		g?.departure_timezone,
+		g?.meet_point,
+		lang
+	);
+	const arrival = mapPointToBackend(
+		g?.arrival_time,
+		g?.arrival_timezone,
+		g?.end_point,
+		lang
+	);
+
+	return {
+		...(g?.transfer_type && {
+			typ: transferTypeMapper.to(g.transfer_type)
+		}),
+		...(departure && { departure }),
+		...(arrival && { arrival })
+	};
+};
+
 export const mapTransferFormToUpdate = (
 	frontend: Partial<TTransportationEditSchema>,
 	language?: ENUM_LANGUAGES_TYPE
 ): TTourEventUpdateBackend => {
 	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
+	const g = frontend.general;
+	const plan = mapTransferLegToBackend(g, lang);
 
 	if (productId) {
+		// Product-linked ride: the update keeps the link exactly where it
+		// is — `supply` is omitted, only the tour's own plan is stated.
 		return {
 			typ: ENUM_EVENT_BACKEND.TRANSFER,
 			package_id: mapEventPackageIdToBackend(frontend?.pricing),
 			...(frontend.name !== undefined &&
 				frontend.name !== "" && { name: frontend.name }),
-			...(frontend.general?.description !== undefined && {
-				description: frontend.general.description
+			...(g?.description !== undefined && {
+				description: g.description
 			}),
-			details: {
-				product_id: productId,
-				variant_id: frontend[ENUM_FORM_EVENT_PRODUCT.VARIANT_ID] ?? null
-			}
+			details: { plan }
 		};
 	}
 
-	const g = frontend.general;
 	const carsList = frontend?.cars?.cars ?? [];
-	const pricingDetails = mapTransportationPricingToBackend(
+	const { spec } = mapTransportationPricingToBackend(
 		frontend?.pricing,
 		carsList
 	);
-	const carsDetails =
-		frontend?.cars !== undefined && !pricingDetails.details?.expenses
-			? mapCarsToBackend(carsList).details
-			: undefined;
+
+	// No constructible spec → `supply` is omitted so the backend keeps the
+	// current one (a full replace would wipe it).
+	const details: TransferDetailsWrite = {
+		plan,
+		...(spec && { supply: { source: "inline", spec } })
+	};
 
 	return {
 		...(frontend.name !== undefined &&
@@ -146,53 +196,6 @@ export const mapTransferFormToUpdate = (
 			g.description !== "" && { description: g.description }),
 		typ: ENUM_EVENT_BACKEND.TRANSFER,
 		package_id: mapEventPackageIdToBackend(frontend?.pricing),
-		...(Number.isFinite(frontend.position) && {
-			position: frontend.position
-		}),
-		...(Number.isFinite(frontend.day) && { day: frontend.day }),
-		details: {
-			...(g?.transfer_type && {
-				typ: transferTypeMapper.to(g.transfer_type)
-			}),
-			...((g?.departure_date ||
-				g?.departure_time ||
-				g?.meet_point !== undefined) && {
-				departure: {
-					...(g?.departure_date && { date: g.departure_date }),
-					...(g?.departure_time &&
-						g?.departure_timezone && {
-							time: {
-								time: g.departure_time,
-								timezone: String(g.departure_timezone)
-							}
-						}),
-					...(g?.meet_point !== undefined && {
-						location: mapGeoFormToBackendLocation(
-							g.meet_point,
-							lang
-						)
-					})
-				}
-			}),
-			...((g?.arrival_date ||
-				g?.arrival_time ||
-				g?.end_point !== undefined) && {
-				arrival: {
-					...(g?.arrival_date && { date: g.arrival_date }),
-					...(g?.arrival_time &&
-						g?.arrival_timezone && {
-							time: {
-								time: g.arrival_time,
-								timezone: String(g.arrival_timezone)
-							}
-						}),
-					...(g?.end_point !== undefined && {
-						location: mapGeoFormToBackendLocation(g.end_point, lang)
-					})
-				}
-			}),
-			...carsDetails,
-			...pricingDetails.details
-		}
-	} as unknown as TTourEventUpdateBackend;
+		details
+	};
 };

@@ -1,10 +1,9 @@
 import {
 	ApplyAvailabilityInput,
 	AvailabilityStatus,
-	BookingStatus
+	BookingStatus,
+	EventTypes
 } from "@/shared/api";
-
-import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary";
 
 import type { TBookingEventAvailabilityBackend } from "../types";
 
@@ -22,7 +21,7 @@ const buildAvailabilityRows = (
 		option_index: 0,
 		status: AvailabilityStatus.Selected,
 		event_name: "Flight",
-		event_typ: ENUM_EVENT_BACKEND.FLIGHT
+		event_typ: EventTypes.Flight
 	},
 	{
 		id: `a2${bookingId.slice(1, 9)}-0002-4000-8000-000000000002`,
@@ -31,7 +30,7 @@ const buildAvailabilityRows = (
 		option_index: 0,
 		status: AvailabilityStatus.Available,
 		event_name: "Flight",
-		event_typ: ENUM_EVENT_BACKEND.FLIGHT
+		event_typ: EventTypes.Flight
 	},
 	{
 		id: `a3${bookingId.slice(1, 9)}-0003-4000-8000-000000000003`,
@@ -40,7 +39,7 @@ const buildAvailabilityRows = (
 		option_index: 1,
 		status: AvailabilityStatus.Pending,
 		event_name: "Flight",
-		event_typ: ENUM_EVENT_BACKEND.FLIGHT
+		event_typ: EventTypes.Flight
 	},
 	{
 		id: `a4${bookingId.slice(1, 9)}-0004-4000-8000-000000000004`,
@@ -49,7 +48,7 @@ const buildAvailabilityRows = (
 		option_index: 0,
 		status: AvailabilityStatus.Available,
 		event_name: "Flight",
-		event_typ: ENUM_EVENT_BACKEND.FLIGHT
+		event_typ: EventTypes.Flight
 	}
 ];
 

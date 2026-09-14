@@ -1,6 +1,4 @@
-import { ENUM_PICKUP_TYPE } from "@/entities/tour";
-
-import type { ILandingBackend } from "../types";
+import { ENUM_PICKUP_TYPE, type ILandingBackend } from "../types";
 
 export const TOUR_LANDING_MOCK: ILandingBackend = {
 	photos: "https://www.atorus.ru/sites/default/files/styles/head_carousel/public/2021-09/ca3023.jpg.webp?itok=Wg-lCwZ0",

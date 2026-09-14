@@ -1,17 +1,19 @@
 import type {
 	FixedChargeInput,
+	FixedChargeOutput,
 	PerPersonChargeInput
 } from "@/shared/api/generated/Api";
 
-import {
-	ENUM_SUPPLIER_SURCHARGE,
-	ENUM_SUPPLIER_VARIANT_CHARGE,
-	type ISupplierFixedCharge,
-	type ISupplierPerPersonCharge,
-	type TFixedChargeInputBackend,
-	type TSupplierSurcharge,
-	type TSupplierVariantCharge
-} from "../types";
+import { ENUM_SUPPLIER_SURCHARGE } from "../types/supplier-money.types";
+import type {
+	TChargeMarkupInputBackend,
+	TChargeMarkupReadBackend,
+	TSupplierVariantChargeReadBackend
+} from "../types/supplier-variant-charge-backend.types";
+import type {
+	ISupplierFixedCharge,
+	TSupplierVariantCharge
+} from "../types/supplier-variant-charge.types";
 
 import {
 	mapSupplierFeesFromBackend,
@@ -22,120 +24,102 @@ import {
 	mapMonetaryToBackend
 } from "./supplier-money.converters";
 
-type TChargeMarkupBackend = NonNullable<TFixedChargeInputBackend["markup"]>;
-
-type TChargeExpensesBackend = {
-	typ?: "fixed" | "per_person";
-	cost?: TFixedChargeInputBackend["cost"];
-	cost_per_person?: TFixedChargeInputBackend["cost"];
-	fees?: TFixedChargeInputBackend["fees"];
-	markup?: TChargeMarkupBackend | null;
-} | null;
-
 export const mapSupplierChargeMarkupFromBackend = (
-	markup?: TChargeMarkupBackend | null
-): TSupplierSurcharge | null => {
-	if (!markup) return null;
-	if (markup.typ === "percentage" && "percentage" in markup) {
-		return {
-			typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-			percentage: markup.percentage ?? 0
-		};
+	markup?: TChargeMarkupReadBackend | null
+): TSupplierVariantCharge["markup"] => {
+	if (!markup) {
+		return null;
 	}
-	if ("cost" in markup && markup.cost) {
-		return {
-			typ: ENUM_SUPPLIER_SURCHARGE.FIXED,
-			cost: mapMonetaryFromBackend(markup.cost)
-		};
-	}
-	return null;
-};
-
-export const mapSupplierChargeMarkupToBackend = (
-	markup: TSupplierSurcharge | null
-): TChargeMarkupBackend | null => {
-	if (!markup) return null;
 	if (markup.typ === ENUM_SUPPLIER_SURCHARGE.PERCENTAGE) {
 		return {
-			typ: "percentage",
+			typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
 			percentage: markup.percentage
 		};
 	}
 	return {
-		typ: "fixed",
+		typ: ENUM_SUPPLIER_SURCHARGE.FIXED,
+		cost: mapMonetaryFromBackend(markup.cost)
+	};
+};
+
+export const mapSupplierChargeMarkupToBackend = (
+	markup: TSupplierVariantCharge["markup"]
+): TChargeMarkupInputBackend | null => {
+	if (!markup) {
+		return null;
+	}
+	if (markup.typ === ENUM_SUPPLIER_SURCHARGE.PERCENTAGE) {
+		return {
+			typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
+			percentage: markup.percentage
+		};
+	}
+	return {
+		typ: ENUM_SUPPLIER_SURCHARGE.FIXED,
 		cost: mapMonetaryToBackend(markup.cost)
 	};
 };
 
-export const mapSupplierFixedChargeToBackend = (
-	data: ISupplierFixedCharge
-): TFixedChargeInputBackend => ({
-	typ: "fixed",
-	cost: mapMonetaryToBackend(data.cost),
-	fees: mapSupplierFeesToBackend(data.fees),
-	markup: mapSupplierChargeMarkupToBackend(data.markup)
-});
-
 export const mapSupplierFixedChargeFromBackend = (
-	expenses?: TFixedChargeInputBackend | null
+	expenses?: FixedChargeOutput | null
 ): ISupplierFixedCharge | null => {
-	if (!expenses) return null;
-
+	if (!expenses) {
+		return null;
+	}
 	return {
-		typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+		typ: expenses.typ,
 		cost: mapMonetaryFromBackend(expenses.cost),
 		fees: mapSupplierFeesFromBackend(expenses.fees),
 		markup: mapSupplierChargeMarkupFromBackend(expenses.markup)
 	};
 };
 
-export const mapSupplierVariantChargeToBackend = (
-	data: TSupplierVariantCharge
-):
-	| ({ typ: "fixed" } & FixedChargeInput)
-	| ({ typ: "per_person" } & PerPersonChargeInput) => {
-	const fees = mapSupplierFeesToBackend(data.fees);
-	const markup = mapSupplierChargeMarkupToBackend(data.markup);
-
-	if (data.typ === ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON) {
-		const perPerson: ISupplierPerPersonCharge = data;
+export const mapSupplierVariantChargeFromBackend = (
+	expenses?: TSupplierVariantChargeReadBackend | null
+): TSupplierVariantCharge | null => {
+	if (!expenses) {
+		return null;
+	}
+	if (expenses.typ === "per_person") {
 		return {
-			typ: "per_person",
-			cost_per_person: mapMonetaryToBackend(perPerson.costPerPerson),
-			fees,
-			markup
+			typ: expenses.typ,
+			costPerPerson: mapMonetaryFromBackend(expenses.cost_per_person),
+			fees: mapSupplierFeesFromBackend(expenses.fees),
+			markup: mapSupplierChargeMarkupFromBackend(expenses.markup)
 		};
 	}
-
 	return {
-		typ: "fixed",
-		cost: mapMonetaryToBackend(data.cost),
-		fees,
-		markup
+		typ: expenses.typ,
+		cost: mapMonetaryFromBackend(expenses.cost),
+		fees: mapSupplierFeesFromBackend(expenses.fees),
+		markup: mapSupplierChargeMarkupFromBackend(expenses.markup)
 	};
 };
 
-export const mapSupplierVariantChargeFromBackend = (
-	expenses?: TChargeExpensesBackend
-): TSupplierVariantCharge | null => {
-	if (!expenses) return null;
+export const mapSupplierFixedChargeToBackend = (
+	expenses: ISupplierFixedCharge
+): FixedChargeInput => ({
+	typ: expenses.typ,
+	cost: mapMonetaryToBackend(expenses.cost),
+	fees: mapSupplierFeesToBackend(expenses.fees),
+	markup: mapSupplierChargeMarkupToBackend(expenses.markup)
+});
 
-	const fees = mapSupplierFeesFromBackend(expenses.fees);
-	const markup = mapSupplierChargeMarkupFromBackend(expenses.markup);
-
+export const mapSupplierVariantChargeToBackend = (
+	expenses: TSupplierVariantCharge
+): FixedChargeInput | PerPersonChargeInput => {
 	if (expenses.typ === "per_person") {
 		return {
-			typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
-			costPerPerson: mapMonetaryFromBackend(expenses.cost_per_person),
-			fees,
-			markup
+			typ: expenses.typ,
+			cost_per_person: mapMonetaryToBackend(expenses.costPerPerson),
+			fees: mapSupplierFeesToBackend(expenses.fees),
+			markup: mapSupplierChargeMarkupToBackend(expenses.markup)
 		};
 	}
-
 	return {
-		typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-		cost: mapMonetaryFromBackend(expenses.cost),
-		fees,
-		markup
+		typ: expenses.typ,
+		cost: mapMonetaryToBackend(expenses.cost),
+		fees: mapSupplierFeesToBackend(expenses.fees),
+		markup: mapSupplierChargeMarkupToBackend(expenses.markup)
 	};
 };
