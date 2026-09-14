@@ -31,7 +31,7 @@ describe("mapTrainVariantToForm", () => {
 		expect(form).toMatchObject({
 			name: "Standard",
 			chargeTyp: ENUM_TRAIN_VARIANT_CHARGE.PER_PERSON,
-			cost: "40",
+			cost: 40,
 			currency: DEFAULT_EVENT_CURRENCY,
 			fees: []
 		});
@@ -43,7 +43,7 @@ describe("mapTrainVariantFormToWrite", () => {
 		const write = mapTrainVariantFormToWrite({
 			...emptyTrainVariantForm(),
 			name: "Standard",
-			cost: "25"
+			cost: 25
 		});
 
 		expect(write).toEqual({

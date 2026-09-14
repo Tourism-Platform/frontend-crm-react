@@ -18,7 +18,7 @@ type TBusGeneralTabExtra = Pick<
 type TBusVariantsTabExtra = Pick<
 	IBusProductEditSlotContext,
 	"supplierId" | "productId" | "product" | "variants"
->;
+> & { disabled: boolean };
 
 type TBusMediaTabExtra = Pick<
 	IBusProductEditSlotContext,
@@ -82,11 +82,18 @@ export const BUS_PRODUCT_EDIT_TABS_LIST: (
 		type: ENUM_BUS_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: BusProductVariants,
-		getSlotProps: ({ supplierId, productId, product, variants }) => ({
+		getSlotProps: ({
 			supplierId,
 			productId,
 			product,
-			variants
+			variants,
+			isCreate
+		}) => ({
+			supplierId,
+			productId,
+			product,
+			variants,
+			disabled: isCreate
 		})
 	}
 ];

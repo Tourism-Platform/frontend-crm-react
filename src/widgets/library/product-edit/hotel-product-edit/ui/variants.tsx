@@ -22,14 +22,13 @@ import {
 	type IHotelProduct,
 	type IHotelVariant,
 	type THotelVariantFormSchema,
-	emptyHotelVariantForm,
 	emptyHotelVariantRoom,
 	mapHotelVariantFormToWrite,
 	mapHotelVariantToForm,
-	useCreateVariantMutation,
-	useDeleteVariantMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
+
+import { CreateProductVariant, DeleteProductVariant } from "@/features/library";
 
 import { HOTEL_VARIANT_NAME_FIELD } from "../model";
 
@@ -40,28 +39,28 @@ interface IHotelProductVariantsProps {
 	productId: string;
 	product?: IHotelProduct | null;
 	variants?: IHotelVariant[];
+	disabled?: boolean;
 }
 
 const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 	supplierId,
 	productId,
 	product,
-	variants = []
+	variants = [],
+	disabled = false
 }) => {
 	const { t } = useTranslation("hotel_product_edit_page");
-	const [selectedId, setSelectedId] = useState<string | "new">("new");
+	const [selectedId, setSelectedId] = useState<string | null>(
+		variants[0]?.id ?? null
+	);
 
-	const [createVariant, { isLoading: isCreating }] =
-		useCreateVariantMutation();
 	const [updateVariant, { isLoading: isUpdating }] =
 		useUpdateVariantMutation();
-	const [deleteVariant, { isLoading: isDeleting }] =
-		useDeleteVariantMutation();
 
 	const selectedVariant =
-		selectedId === "new"
-			? null
-			: (variants.find((item) => item.id === selectedId) ?? null);
+		variants.find((item) => item.id === selectedId) ?? variants[0] ?? null;
+	const resolvedId = selectedVariant?.id ?? null;
+	const pricing = product?.pricing ?? ENUM_HOTEL_PRICING.PER_ROOM;
 
 	const form = useForm<THotelVariantFormSchema>({
 		resolver: zodResolver(HOTEL_VARIANT_FORM_SCHEMA),
@@ -75,48 +74,32 @@ const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 	});
 
 	useEffect(() => {
+		if (!selectedVariant) return;
+
 		form.reset(mapHotelVariantToForm(selectedVariant));
-	}, [selectedVariant, form, selectedId]);
+	}, [selectedVariant, form]);
 
-	useEffect(() => {
-		if (variants.length === 0) return;
+	const showPricing = pricing === ENUM_HOTEL_PRICING.PER_ROOM;
 
-		setSelectedId((current) =>
-			current === "new" && !form.formState.isDirty
-				? variants[0].id
-				: current
+	if (disabled) {
+		return (
+			<p className="text-muted-foreground text-sm">
+				{t("form.create_hint.save_general_first")}
+			</p>
 		);
-	}, [variants.length, form.formState.isDirty]);
-
-	const isSaving = isCreating || isUpdating;
+	}
 
 	async function onSubmit(data: THotelVariantFormSchema) {
-		const payload = mapHotelVariantFormToWrite(data);
-		const pricing = product?.pricing ?? ENUM_HOTEL_PRICING.PER_ROOM;
+		if (!resolvedId) return;
 
 		try {
-			if (selectedId === "new") {
-				// The new variant arrives with the invalidated product query;
-				// reset the form so the same values cannot be submitted twice.
-				await createVariant({
-					supplierId,
-					productId,
-					typ: ENUM_SUPPLIER_TYPE.HOTEL,
-					pricing,
-					data: payload
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-				form.reset(emptyHotelVariantForm());
-				return;
-			}
-
 			await updateVariant({
 				supplierId,
 				productId,
-				variantId: selectedId,
+				variantId: resolvedId,
 				typ: ENUM_SUPPLIER_TYPE.HOTEL,
 				pricing,
-				data: payload
+				data: mapHotelVariantFormToWrite(data)
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
@@ -124,32 +107,6 @@ const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 			console.error(error);
 		}
 	}
-
-	const handleAddVariant = () => {
-		setSelectedId("new");
-		form.reset(emptyHotelVariantForm());
-	};
-
-	const handleDelete = async () => {
-		if (selectedId === "new") {
-			form.reset(emptyHotelVariantForm());
-			return;
-		}
-
-		try {
-			await deleteVariant({
-				supplierId,
-				productId,
-				variantId: selectedId
-			}).unwrap();
-			toast.success(t("form.toasts.delete.success"));
-			setSelectedId("new");
-			form.reset(emptyHotelVariantForm());
-		} catch (error) {
-			toast.error(t("form.toasts.delete.error"));
-			console.error(error);
-		}
-	};
 
 	return (
 		<div className="grid gap-6">
@@ -159,7 +116,7 @@ const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 						key={variant.id}
 						type="button"
 						variant={
-							selectedId === variant.id ? "default" : "outline"
+							resolvedId === variant.id ? "default" : "outline"
 						}
 						size="sm"
 						onClick={() => setSelectedId(variant.id)}
@@ -167,76 +124,80 @@ const HotelProductVariantsBase: FC<IHotelProductVariantsProps> = ({
 						{variant.name}
 					</Button>
 				))}
-				<Button
-					type="button"
-					variant={selectedId === "new" ? "default" : "outline"}
-					size="sm"
-					onClick={handleAddVariant}
-				>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					{t("form.variants.add")}
-				</Button>
+				<CreateProductVariant
+					supplierId={supplierId}
+					productId={productId}
+					typ={ENUM_SUPPLIER_TYPE.HOTEL}
+					pricing={pricing}
+					ns="hotel_product_edit_page"
+					onSuccess={setSelectedId}
+				/>
 			</div>
 
-			<Separator />
+			{selectedVariant && resolvedId ? (
+				<>
+					<Separator />
 
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="grid gap-4"
-				>
-					<CustomField
-						control={form.control}
-						name={HOTEL_VARIANT_NAME_FIELD.key}
-						t={t}
-						fieldType="input"
-						label={HOTEL_VARIANT_NAME_FIELD.label}
-						placeholder="form.variants.fields.name.placeholder"
-					/>
-
-					<div className="grid gap-4">
-						{fields.map((field, index) => (
-							<HotelVariantRoomRow
-								key={field.id}
-								form={form}
-								index={index}
-								onRemove={() => remove(index)}
-							/>
-						))}
-					</div>
-
-					<div className="flex flex-wrap justify-between gap-3">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={() => append(emptyHotelVariantRoom())}
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							className="grid gap-4"
 						>
-							<PlusIcon className="mr-1 h-4 w-4" />
-							{t("form.variants.add_room")}
-						</Button>
-						<div className="flex gap-2">
-							{selectedId !== "new" || form.formState.isDirty ? (
-								<LoaderButton
-									type="button"
-									variant="destructive"
-									onClick={handleDelete}
-									isLoading={isDeleting}
-									label={t("form.variants.buttons.delete")}
-									loadingLabel={t(
-										"form.variants.buttons.deleting"
-									)}
-								/>
-							) : null}
-							<LoaderButton
-								size="lg"
-								isLoading={isSaving}
-								label={t("form.variants.buttons.save")}
-								loadingLabel={t("form.variants.buttons.saving")}
+							<CustomField
+								control={form.control}
+								name={HOTEL_VARIANT_NAME_FIELD.key}
+								t={t}
+								fieldType="input"
+								label={HOTEL_VARIANT_NAME_FIELD.label}
+								placeholder="form.variants.fields.name.placeholder"
 							/>
-						</div>
-					</div>
-				</form>
-			</Form>
+
+							<div className="grid gap-4">
+								{fields.map((field, index) => (
+									<HotelVariantRoomRow
+										key={field.id}
+										form={form}
+										index={index}
+										onRemove={() => remove(index)}
+										showPricing={showPricing}
+									/>
+								))}
+							</div>
+
+							<div className="flex flex-wrap justify-between gap-3">
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() =>
+										append(emptyHotelVariantRoom())
+									}
+								>
+									<PlusIcon className="mr-1 h-4 w-4" />
+									{t("form.variants.add_room")}
+								</Button>
+								<div className="grid grid-cols-2 gap-2">
+									<DeleteProductVariant
+										supplierId={supplierId}
+										productId={productId}
+										variantId={resolvedId}
+										variantName={selectedVariant.name}
+										ns="hotel_product_edit_page"
+									/>
+									<LoaderButton
+										size="lg"
+										className="w-full"
+										isLoading={isUpdating}
+										label={t("form.variants.buttons.save")}
+										loadingLabel={t(
+											"form.variants.buttons.saving"
+										)}
+									/>
+								</div>
+							</div>
+						</form>
+					</Form>
+				</>
+			) : null}
 		</div>
 	);
 };

@@ -14,6 +14,7 @@ export * from "./event/housing-room-type.converters";
 export * from "./event/housing-source.converters";
 export * from "./event/housing-details.helpers";
 export * from "./event/details-read-to-write.converters";
+export * from "./event/empty-event-details.converters";
 export * from "./event/event-product-link.converters";
 export * from "./event/housing-override.converters";
 export * from "./event/train-override.converters";

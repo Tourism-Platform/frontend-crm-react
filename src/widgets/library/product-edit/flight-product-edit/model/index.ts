@@ -1,6 +1,3 @@
 export * from "./types";
 export * from "./config";
-export * from "./form.config";
-export * from "./form.types";
-export * from "./variant-fields.config";
-export * from "./use-flight-product-images";
+export * from "./hooks";

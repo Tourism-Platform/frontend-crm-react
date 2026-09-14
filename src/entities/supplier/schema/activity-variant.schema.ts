@@ -21,6 +21,13 @@ const ACTIVITY_VARIANT_FEE_SCHEMA = z.object({
 	[ENUM_SUPPLIER_FEE_FIELD.DESCRIPTION]: z.string().nullable()
 });
 
+export const ACTIVITY_VARIANT_CREATE_SCHEMA = z.object({
+	[ENUM_FORM_ACTIVITY_VARIANT.NAME]: z
+		.string()
+		.trim()
+		.min(1, msg("form.variants.fields.name.errors.required"))
+});
+
 export const ACTIVITY_VARIANT_FORM_SCHEMA = z.object({
 	[ENUM_FORM_ACTIVITY_VARIANT.NAME]: z
 		.string()
@@ -29,7 +36,7 @@ export const ACTIVITY_VARIANT_FORM_SCHEMA = z.object({
 	[ENUM_FORM_ACTIVITY_VARIANT.CHARGE_TYP]: z.enum(
 		ENUM_SUPPLIER_VARIANT_CHARGE
 	),
-	[ENUM_FORM_ACTIVITY_VARIANT.COST]: z.string(),
+	[ENUM_FORM_ACTIVITY_VARIANT.COST]: z.number().nullable(),
 	[ENUM_FORM_ACTIVITY_VARIANT.CURRENCY]: z.enum(ENUM_CURRENCY_OPTIONS),
 	[ENUM_FORM_ACTIVITY_VARIANT.FEES]: z.array(ACTIVITY_VARIANT_FEE_SCHEMA)
 });

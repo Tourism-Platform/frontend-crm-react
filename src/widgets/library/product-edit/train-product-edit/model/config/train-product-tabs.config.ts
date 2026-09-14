@@ -18,7 +18,7 @@ type TTrainGeneralTabExtra = Pick<
 type TTrainVariantsTabExtra = Pick<
 	ITrainProductEditSlotContext,
 	"supplierId" | "productId" | "product" | "variants"
->;
+> & { disabled: boolean };
 
 type TTrainMediaTabExtra = Pick<
 	ITrainProductEditSlotContext,
@@ -82,11 +82,18 @@ export const TRAIN_PRODUCT_EDIT_TABS_LIST: (
 		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: TrainProductVariants,
-		getSlotProps: ({ supplierId, productId, product, variants }) => ({
+		getSlotProps: ({
 			supplierId,
 			productId,
 			product,
-			variants
+			variants,
+			isCreate
+		}) => ({
+			supplierId,
+			productId,
+			product,
+			variants,
+			disabled: isCreate
 		})
 	}
 ];

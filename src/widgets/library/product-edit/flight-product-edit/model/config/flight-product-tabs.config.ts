@@ -18,7 +18,7 @@ type TFlightGeneralTabExtra = Pick<
 type TFlightVariantsTabExtra = Pick<
 	IFlightProductEditSlotContext,
 	"supplierId" | "productId" | "product" | "variants"
->;
+> & { disabled: boolean };
 
 type TFlightMediaTabExtra = Pick<
 	IFlightProductEditSlotContext,
@@ -82,11 +82,18 @@ export const FLIGHT_PRODUCT_EDIT_TABS_LIST: (
 		type: ENUM_FLIGHT_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: FlightProductVariants,
-		getSlotProps: ({ supplierId, productId, product, variants }) => ({
+		getSlotProps: ({
 			supplierId,
 			productId,
 			product,
-			variants
+			variants,
+			isCreate
+		}) => ({
+			supplierId,
+			productId,
+			product,
+			variants,
+			disabled: isCreate
 		})
 	}
 ];

@@ -18,7 +18,7 @@ type TActivityGeneralTabExtra = Pick<
 type TActivityVariantsTabExtra = Pick<
 	IActivityProductEditSlotContext,
 	"supplierId" | "productId" | "variants"
->;
+> & { disabled: boolean };
 
 type TActivityMediaTabExtra = Pick<
 	IActivityProductEditSlotContext,
@@ -82,10 +82,11 @@ export const ACTIVITY_PRODUCT_EDIT_TABS_LIST: (
 		type: ENUM_ACTIVITY_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: ActivityProductVariants,
-		getSlotProps: ({ supplierId, productId, variants }) => ({
+		getSlotProps: ({ supplierId, productId, variants, isCreate }) => ({
 			supplierId,
 			productId,
-			variants
+			variants,
+			disabled: isCreate
 		})
 	}
 ];

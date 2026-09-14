@@ -11,7 +11,7 @@ import {
 export const emptyFlightVariantForm = (): TFlightVariantFormSchema => ({
 	[ENUM_FORM_FLIGHT_VARIANT.NAME]: "",
 	[ENUM_FORM_FLIGHT_VARIANT.CHARGE_TYP]: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-	[ENUM_FORM_FLIGHT_VARIANT.COST]: "",
+	[ENUM_FORM_FLIGHT_VARIANT.COST]: null,
 	[ENUM_FORM_FLIGHT_VARIANT.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_FORM_FLIGHT_VARIANT.FEES]: []
 });
@@ -27,7 +27,7 @@ export const mapFlightVariantToForm = (
 			[ENUM_FORM_FLIGHT_VARIANT.NAME]: variant.name,
 			[ENUM_FORM_FLIGHT_VARIANT.CHARGE_TYP]:
 				ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-			[ENUM_FORM_FLIGHT_VARIANT.COST]: "",
+			[ENUM_FORM_FLIGHT_VARIANT.COST]: null,
 			[ENUM_FORM_FLIGHT_VARIANT.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 			[ENUM_FORM_FLIGHT_VARIANT.FEES]: []
 		};
@@ -41,7 +41,7 @@ export const mapFlightVariantToForm = (
 	return {
 		[ENUM_FORM_FLIGHT_VARIANT.NAME]: variant.name,
 		[ENUM_FORM_FLIGHT_VARIANT.CHARGE_TYP]: expenses.typ,
-		[ENUM_FORM_FLIGHT_VARIANT.COST]: money != null ? String(money.val) : "",
+		[ENUM_FORM_FLIGHT_VARIANT.COST]: money?.val ?? null,
 		[ENUM_FORM_FLIGHT_VARIANT.CURRENCY]:
 			money?.currency ?? DEFAULT_EVENT_CURRENCY,
 		[ENUM_FORM_FLIGHT_VARIANT.FEES]: expenses.fees ?? []
@@ -52,7 +52,7 @@ export const mapFlightVariantFormToWrite = (
 	values: TFlightVariantFormSchema
 ): IFlightVariantWrite => {
 	const money = {
-		val: Number(values[ENUM_FORM_FLIGHT_VARIANT.COST]) || 0,
+		val: values[ENUM_FORM_FLIGHT_VARIANT.COST] ?? 0,
 		currency:
 			values[ENUM_FORM_FLIGHT_VARIANT.CURRENCY] || DEFAULT_EVENT_CURRENCY
 	};

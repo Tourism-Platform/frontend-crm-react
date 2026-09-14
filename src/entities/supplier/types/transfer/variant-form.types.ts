@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-import type { TRANSFER_VARIANT_FORM_SCHEMA } from "../../schema/transfer-variant.schema";
+import type {
+	TRANSFER_VARIANT_CREATE_SCHEMA,
+	TRANSFER_VARIANT_FORM_SCHEMA
+} from "../../schema/transfer-variant.schema";
 
 export const ENUM_FORM_TRANSFER_VARIANT = {
 	NAME: "name",
@@ -17,4 +20,7 @@ export type ENUM_FORM_TRANSFER_VARIANT_TYPE =
 
 export type TTransferVariantFormSchema = z.infer<
 	typeof TRANSFER_VARIANT_FORM_SCHEMA
+>;
+export type TTransferVariantCreateSchema = z.infer<
+	typeof TRANSFER_VARIANT_CREATE_SCHEMA
 >;

@@ -6,7 +6,7 @@ import {
 	ENUM_FORM_FLIGHT_HOP as ENUM_HOP
 } from "@/entities/supplier";
 
-import type { TForm, THopForm } from "./form.types";
+import type { TForm, THopForm } from "../types";
 
 export const FLIGHT_PRODUCT_NAME_FIELD: TForm = {
 	key: ENUM_FORM.NAME,

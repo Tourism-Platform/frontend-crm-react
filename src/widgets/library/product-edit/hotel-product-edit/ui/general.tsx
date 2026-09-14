@@ -119,22 +119,21 @@ const HotelProductGeneralBase: FC<IHotelProductGeneralProps> = ({
 
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="grid gap-6 md:grid-cols-2"
-			>
-				{FORM_HOTEL_PRODUCT_GENERAL_LIST(geoProps).map(
-					({ key, ...item }) => (
-						<CustomField
-							key={key}
-							control={form.control}
-							name={key}
-							t={t}
-							{...item}
-						/>
-					)
-				)}
-				<div className="md:col-span-2 flex justify-end">
+			<form onSubmit={form.handleSubmit(onSubmit)} className="grid">
+				<div className="grid gap-x-4 gap-y-1 grid-cols-2">
+					{FORM_HOTEL_PRODUCT_GENERAL_LIST(geoProps).map(
+						({ key, ...item }) => (
+							<CustomField
+								key={key}
+								control={form.control}
+								name={key}
+								t={t}
+								{...item}
+							/>
+						)
+					)}
+				</div>
+				<div className="flex justify-end">
 					<LoaderButton
 						type="submit"
 						disabled={isLoading}

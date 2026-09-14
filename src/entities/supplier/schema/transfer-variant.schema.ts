@@ -18,6 +18,13 @@ const TRANSFER_VARIANT_FEE_SCHEMA = z.object({
 	[ENUM_SUPPLIER_FEE_FIELD.DESCRIPTION]: z.string().nullable()
 });
 
+export const TRANSFER_VARIANT_CREATE_SCHEMA = z.object({
+	[ENUM_FORM_TRANSFER_VARIANT.NAME]: z
+		.string()
+		.trim()
+		.min(1, msg("form.variants.fields.name.errors.required"))
+});
+
 export const TRANSFER_VARIANT_FORM_SCHEMA = z.object({
 	[ENUM_FORM_TRANSFER_VARIANT.NAME]: z
 		.string()
@@ -29,7 +36,7 @@ export const TRANSFER_VARIANT_FORM_SCHEMA = z.object({
 		.int()
 		.min(1, msg("form.variants.fields.pax.errors.min")),
 	[ENUM_FORM_TRANSFER_VARIANT.DESCRIPTION]: z.string(),
-	[ENUM_FORM_TRANSFER_VARIANT.COST]: z.string(),
+	[ENUM_FORM_TRANSFER_VARIANT.COST]: z.number().nullable(),
 	[ENUM_FORM_TRANSFER_VARIANT.CURRENCY]: z.enum(ENUM_CURRENCY_OPTIONS),
 	[ENUM_FORM_TRANSFER_VARIANT.FEES]: z.array(TRANSFER_VARIANT_FEE_SCHEMA)
 });

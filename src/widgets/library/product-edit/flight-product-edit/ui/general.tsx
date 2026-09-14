@@ -114,24 +114,26 @@ const FlightProductGeneralBase: FC<IFlightProductGeneralProps> = ({
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
-				<CustomField
-					control={form.control}
-					name={nameKey}
-					t={t}
-					{...nameField}
-				/>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+				<div className="grid gap-1">
+					<CustomField
+						control={form.control}
+						name={nameKey}
+						t={t}
+						{...nameField}
+					/>
 
-				<div className="grid gap-4">
-					{fields.map((field, index) => (
-						<FlightHopRow
-							key={field.id}
-							form={form}
-							index={index}
-							language={language}
-							onRemove={() => remove(index)}
-						/>
-					))}
+					<div className="grid gap-4">
+						{fields.map((field, index) => (
+							<FlightHopRow
+								key={field.id}
+								form={form}
+								index={index}
+								language={language}
+								onRemove={() => remove(index)}
+							/>
+						))}
+					</div>
 				</div>
 
 				<div className="flex flex-wrap justify-between gap-3">

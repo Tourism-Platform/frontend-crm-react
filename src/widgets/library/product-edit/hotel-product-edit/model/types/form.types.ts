@@ -3,6 +3,7 @@ import type { TFormField } from "@/shared/types";
 
 import type {
 	ENUM_FORM_HOTEL_PRODUCT_TYPE,
+	ENUM_FORM_HOTEL_VARIANT_ROOM_SEASON_TYPE,
 	ENUM_FORM_HOTEL_VARIANT_ROOM_TYPE,
 	ENUM_FORM_HOTEL_VARIANT_TYPE
 } from "@/entities/supplier";
@@ -20,4 +21,9 @@ export type TVariantForm = TFormField<
 export type TVariantRoomForm = TFormField<
 	THotelProductEditPageKeys,
 	ENUM_FORM_HOTEL_VARIANT_ROOM_TYPE
+>;
+
+export type TVariantRoomSeasonForm = TFormField<
+	THotelProductEditPageKeys,
+	ENUM_FORM_HOTEL_VARIANT_ROOM_SEASON_TYPE
 >;

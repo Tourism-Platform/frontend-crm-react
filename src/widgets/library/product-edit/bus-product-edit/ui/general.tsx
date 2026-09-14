@@ -95,7 +95,7 @@ const BusProductGeneralBase: FC<IBusProductGeneralProps> = ({
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-6">
+			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 				<CustomField
 					control={form.control}
 					name={nameKey}

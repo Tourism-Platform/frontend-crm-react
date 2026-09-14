@@ -18,7 +18,7 @@ type THotelGeneralTabExtra = Pick<
 type THotelVariantsTabExtra = Pick<
 	IHotelProductEditSlotContext,
 	"supplierId" | "productId" | "product" | "variants"
->;
+> & { disabled: boolean };
 
 type THotelMediaTabExtra = Pick<
 	IHotelProductEditSlotContext,
@@ -83,11 +83,18 @@ export const HOTEL_PRODUCT_EDIT_TABS_LIST: (
 		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS,
 		label: "tabs.variants",
 		slot: HotelProductVariants,
-		getSlotProps: ({ supplierId, productId, product, variants }) => ({
+		getSlotProps: ({
 			supplierId,
 			productId,
 			product,
-			variants
+			variants,
+			isCreate
+		}) => ({
+			supplierId,
+			productId,
+			product,
+			variants,
+			disabled: isCreate
 		})
 	}
 ];

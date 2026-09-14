@@ -148,13 +148,33 @@
 				"per_duration": "Per night"
 			},
 			"room_item": "Room {{index}}",
+			"base_price": "Base price",
+			"seasons": "Seasons",
+			"season_item": "Season {{index}}",
 			"add_room": "Add room",
 			"add_rate": "Add season",
 			"buttons": {
 				"save": "Save variant",
 				"saving": "Saving",
-				"delete": "Delete",
+				"delete": "Delete variant",
 				"deleting": "Deleting"
+			},
+			"create_dialog": {
+				"title": "Add variant",
+				"cancel": "Cancel",
+				"confirm": "Create",
+				"confirming": "Creating",
+				"toasts": {
+					"success": "Variant created",
+					"error": "Failed to create variant"
+				}
+			},
+			"delete_dialog": {
+				"title": "Delete variant",
+				"warning": "Delete variant “{{name}}”? This cannot be undone.",
+				"cancel": "Cancel",
+				"confirm": "Delete",
+				"confirming": "Deleting"
 			}
 		},
 		"images": {

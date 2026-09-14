@@ -2,13 +2,13 @@ import { useValueToTranslateLabel } from "@/shared/utils";
 
 import { CURRENCY_OPTIONS } from "@/entities/commission";
 import {
-	ENUM_FORM_TRAIN_VARIANT as ENUM_FORM,
-	TRAIN_VARIANT_CHARGE_LABELS
+	ENUM_FORM_FLIGHT_VARIANT as ENUM_FORM,
+	FLIGHT_VARIANT_CHARGE_LABELS
 } from "@/entities/supplier";
 
-import type { TVariantForm } from "./form.types";
+import type { TVariantForm } from "../types";
 
-export const TRAIN_VARIANT_FIELDS_LIST = (): TVariantForm[] => [
+export const FLIGHT_VARIANT_FIELDS_LIST = (): TVariantForm[] => [
 	{
 		key: ENUM_FORM.NAME,
 		fieldType: "input",
@@ -19,7 +19,7 @@ export const TRAIN_VARIANT_FIELDS_LIST = (): TVariantForm[] => [
 	{
 		key: ENUM_FORM.CHARGE_TYP,
 		fieldType: "select",
-		options: useValueToTranslateLabel(TRAIN_VARIANT_CHARGE_LABELS),
+		options: useValueToTranslateLabel(FLIGHT_VARIANT_CHARGE_LABELS),
 		label: "form.variants.fields.charge_typ.label",
 		placeholder: "form.variants.fields.charge_typ.placeholder"
 	},

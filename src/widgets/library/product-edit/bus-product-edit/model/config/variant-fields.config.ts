@@ -6,7 +6,7 @@ import {
 	VEHICLE_BODY_TYPE_LABELS
 } from "@/entities/supplier";
 
-import type { TVariantForm } from "./form.types";
+import type { TVariantForm } from "../types";
 
 export const BUS_VARIANT_FIELDS_LIST = (): TVariantForm[] => [
 	{
@@ -14,7 +14,7 @@ export const BUS_VARIANT_FIELDS_LIST = (): TVariantForm[] => [
 		fieldType: "input",
 		label: "form.variants.fields.name.label",
 		placeholder: "form.variants.fields.name.placeholder",
-		className: "md:col-span-3"
+		className: "md:col-span-2"
 	},
 	{
 		key: ENUM_FORM.BODY_TYPE,
@@ -37,7 +37,7 @@ export const BUS_VARIANT_FIELDS_LIST = (): TVariantForm[] => [
 		fieldType: "textarea",
 		label: "form.variants.fields.description.label",
 		placeholder: "form.variants.fields.description.placeholder",
-		className: "md:col-span-3"
+		className: "md:col-span-2"
 	},
 	{
 		key: ENUM_FORM.COST,

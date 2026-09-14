@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
-import { type FC, Fragment, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -22,14 +21,12 @@ import {
 	type ITrainVariant,
 	TRAIN_VARIANT_FORM_SCHEMA,
 	type TTrainVariantFormSchema,
-	emptyTrainVariantForm,
 	mapTrainVariantFormToWrite,
 	mapTrainVariantToForm,
-	useCreateVariantMutation,
-	useDeleteVariantMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
 
+import { CreateProductVariant, DeleteProductVariant } from "@/features/library";
 import { FeeLinesField } from "@/features/pricing";
 
 import { TRAIN_VARIANT_FIELDS_LIST } from "../model";
@@ -39,28 +36,28 @@ interface ITrainProductVariantsProps {
 	productId: string;
 	product?: ITrainProduct | null;
 	variants?: ITrainVariant[];
+	disabled?: boolean;
 }
 
 const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 	supplierId,
 	productId,
 	product,
-	variants = []
+	variants = [],
+	disabled = false
 }) => {
 	const { t } = useTranslation("train_product_edit_page");
-	const [selectedId, setSelectedId] = useState<string | "new">("new");
+	const [selectedId, setSelectedId] = useState<string | null>(
+		variants[0]?.id ?? null
+	);
 
-	const [createVariant, { isLoading: isCreating }] =
-		useCreateVariantMutation();
 	const [updateVariant, { isLoading: isUpdating }] =
 		useUpdateVariantMutation();
-	const [deleteVariant, { isLoading: isDeleting }] =
-		useDeleteVariantMutation();
 
 	const selectedVariant =
-		selectedId === "new"
-			? null
-			: (variants.find((item) => item.id === selectedId) ?? null);
+		variants.find((item) => item.id === selectedId) ?? variants[0] ?? null;
+	const resolvedId = selectedVariant?.id ?? null;
+	const pricing = product?.pricing ?? ENUM_TRAIN_PRICING.PER_FARE;
 
 	const form = useForm<TTrainVariantFormSchema>({
 		resolver: zodResolver(TRAIN_VARIANT_FORM_SCHEMA),
@@ -69,48 +66,32 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 	});
 
 	useEffect(() => {
+		if (!selectedVariant) return;
+
 		form.reset(mapTrainVariantToForm(selectedVariant));
-	}, [selectedVariant, form, selectedId]);
+	}, [selectedVariant, form]);
 
-	useEffect(() => {
-		if (variants.length === 0) return;
+	const variantFields = TRAIN_VARIANT_FIELDS_LIST();
 
-		setSelectedId((current) =>
-			current === "new" && !form.formState.isDirty
-				? variants[0].id
-				: current
+	if (disabled) {
+		return (
+			<p className="text-muted-foreground text-sm">
+				{t("form.create_hint.save_general_first")}
+			</p>
 		);
-	}, [variants.length, form.formState.isDirty]);
-
-	const isSaving = isCreating || isUpdating;
+	}
 
 	async function onSubmit(data: TTrainVariantFormSchema) {
-		const payload = mapTrainVariantFormToWrite(data);
-		const pricing = product?.pricing ?? ENUM_TRAIN_PRICING.PER_FARE;
+		if (!resolvedId) return;
 
 		try {
-			if (selectedId === "new") {
-				// The new variant arrives with the invalidated product query;
-				// reset the form so the same values cannot be submitted twice.
-				await createVariant({
-					supplierId,
-					productId,
-					typ: ENUM_SUPPLIER_TYPE.TRAIN,
-					pricing,
-					data: payload
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-				form.reset(emptyTrainVariantForm());
-				return;
-			}
-
 			await updateVariant({
 				supplierId,
 				productId,
-				variantId: selectedId,
+				variantId: resolvedId,
 				typ: ENUM_SUPPLIER_TYPE.TRAIN,
 				pricing,
-				data: payload
+				data: mapTrainVariantFormToWrite(data)
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
@@ -118,32 +99,6 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 			console.error(error);
 		}
 	}
-
-	const handleDelete = async () => {
-		if (selectedId === "new") {
-			form.reset(emptyTrainVariantForm());
-			return;
-		}
-
-		try {
-			await deleteVariant({
-				supplierId,
-				productId,
-				variantId: selectedId
-			}).unwrap();
-			toast.success(t("form.toasts.delete.success"));
-			setSelectedId("new");
-			form.reset(emptyTrainVariantForm());
-		} catch (error) {
-			toast.error(t("form.toasts.delete.error"));
-			console.error(error);
-		}
-	};
-
-	const handleAddVariant = () => {
-		setSelectedId("new");
-		form.reset(emptyTrainVariantForm());
-	};
 
 	return (
 		<div className="grid gap-6">
@@ -153,7 +108,7 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 						key={variant.id}
 						type="button"
 						variant={
-							selectedId === variant.id ? "default" : "outline"
+							resolvedId === variant.id ? "default" : "outline"
 						}
 						size="sm"
 						onClick={() => setSelectedId(variant.id)}
@@ -161,64 +116,64 @@ const TrainProductVariantsBase: FC<ITrainProductVariantsProps> = ({
 						{variant.name}
 					</Button>
 				))}
-				<Button
-					type="button"
-					variant={selectedId === "new" ? "default" : "outline"}
-					size="sm"
-					onClick={handleAddVariant}
-				>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					{t("form.variants.add")}
-				</Button>
+				<CreateProductVariant
+					supplierId={supplierId}
+					productId={productId}
+					typ={ENUM_SUPPLIER_TYPE.TRAIN}
+					pricing={pricing}
+					ns="train_product_edit_page"
+					onSuccess={setSelectedId}
+				/>
 			</div>
 
-			<Separator />
+			{selectedVariant && resolvedId ? (
+				<>
+					<Separator />
 
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="grid gap-4 md:grid-cols-3"
-				>
-					{TRAIN_VARIANT_FIELDS_LIST().map(({ key, ...item }) => (
-						<Fragment key={key}>
-							<CustomField
-								control={form.control}
-								name={key}
-								t={t}
-								{...item}
-							/>
-							{key === ENUM_FORM.CURRENCY ? (
-								<div className="md:col-span-2">
-									<FeeLinesField
-										control={form.control}
-										name={ENUM_FORM.FEES}
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							className="grid gap-x-4 gap-y-1 md:grid-cols-3"
+						>
+							{variantFields.map(({ key, ...item }) => (
+								<CustomField
+									key={key}
+									control={form.control}
+									name={key}
+									t={t}
+									{...item}
+								/>
+							))}
+							<div className="md:col-span-3">
+								<FeeLinesField
+									control={form.control}
+									name={ENUM_FORM.FEES}
+								/>
+							</div>
+							<div className="md:col-span-3 flex justify-end">
+								<div className="grid grid-cols-2 gap-2">
+									<DeleteProductVariant
+										supplierId={supplierId}
+										productId={productId}
+										variantId={resolvedId}
+										variantName={selectedVariant.name}
+										ns="train_product_edit_page"
+									/>
+									<LoaderButton
+										size="lg"
+										className="w-full"
+										isLoading={isUpdating}
+										label={t("form.variants.buttons.save")}
+										loadingLabel={t(
+											"form.variants.buttons.saving"
+										)}
 									/>
 								</div>
-							) : null}
-						</Fragment>
-					))}
-					<div className="md:col-span-3 flex justify-end gap-2">
-						{selectedId !== "new" || form.formState.isDirty ? (
-							<LoaderButton
-								type="button"
-								variant="destructive"
-								onClick={handleDelete}
-								isLoading={isDeleting}
-								label={t("form.variants.buttons.delete")}
-								loadingLabel={t(
-									"form.variants.buttons.deleting"
-								)}
-							/>
-						) : null}
-						<LoaderButton
-							size="lg"
-							isLoading={isSaving}
-							label={t("form.variants.buttons.save")}
-							loadingLabel={t("form.variants.buttons.saving")}
-						/>
-					</div>
-				</form>
-			</Form>
+							</div>
+						</form>
+					</Form>
+				</>
+			) : null}
 		</div>
 	);
 };

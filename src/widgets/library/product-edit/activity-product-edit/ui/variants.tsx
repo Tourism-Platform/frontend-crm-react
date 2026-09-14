@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
-import { type FC, Fragment, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -20,14 +19,12 @@ import {
 	ENUM_SUPPLIER_TYPE,
 	type IActivityVariant,
 	type TActivityVariantFormSchema,
-	emptyActivityVariantForm,
 	mapActivityVariantFormToWrite,
 	mapActivityVariantToForm,
-	useCreateVariantMutation,
-	useDeleteVariantMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
 
+import { CreateProductVariant, DeleteProductVariant } from "@/features/library";
 import { FeeLinesField } from "@/features/pricing";
 
 import { ACTIVITY_VARIANT_FIELDS_LIST } from "../model";
@@ -36,27 +33,26 @@ interface IActivityProductVariantsProps {
 	supplierId: string;
 	productId: string;
 	variants?: IActivityVariant[];
+	disabled?: boolean;
 }
 
 const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 	supplierId,
 	productId,
-	variants = []
+	variants = [],
+	disabled = false
 }) => {
 	const { t } = useTranslation("activity_product_edit_page");
-	const [selectedId, setSelectedId] = useState<string | "new">("new");
+	const [selectedId, setSelectedId] = useState<string | null>(
+		variants[0]?.id ?? null
+	);
 
-	const [createVariant, { isLoading: isCreating }] =
-		useCreateVariantMutation();
 	const [updateVariant, { isLoading: isUpdating }] =
 		useUpdateVariantMutation();
-	const [deleteVariant, { isLoading: isDeleting }] =
-		useDeleteVariantMutation();
 
 	const selectedVariant =
-		selectedId === "new"
-			? null
-			: (variants.find((item) => item.id === selectedId) ?? null);
+		variants.find((item) => item.id === selectedId) ?? variants[0] ?? null;
+	const resolvedId = selectedVariant?.id ?? null;
 
 	const form = useForm<TActivityVariantFormSchema>({
 		resolver: zodResolver(ACTIVITY_VARIANT_FORM_SCHEMA),
@@ -65,45 +61,31 @@ const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 	});
 
 	useEffect(() => {
+		if (!selectedVariant) return;
+
 		form.reset(mapActivityVariantToForm(selectedVariant));
-	}, [selectedVariant, form, selectedId]);
+	}, [selectedVariant, form]);
 
-	useEffect(() => {
-		if (variants.length === 0) return;
+	const variantFields = ACTIVITY_VARIANT_FIELDS_LIST();
 
-		setSelectedId((current) =>
-			current === "new" && !form.formState.isDirty
-				? variants[0].id
-				: current
+	if (disabled) {
+		return (
+			<p className="text-muted-foreground text-sm">
+				{t("form.create_hint.save_general_first")}
+			</p>
 		);
-	}, [variants.length, form.formState.isDirty]);
-
-	const isSaving = isCreating || isUpdating;
+	}
 
 	async function onSubmit(data: TActivityVariantFormSchema) {
-		const payload = mapActivityVariantFormToWrite(data);
+		if (!resolvedId) return;
 
 		try {
-			if (selectedId === "new") {
-				// The new variant arrives with the invalidated product query;
-				// reset the form so the same values cannot be submitted twice.
-				await createVariant({
-					supplierId,
-					productId,
-					typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
-					data: payload
-				}).unwrap();
-				toast.success(t("form.toasts.save.success"));
-				form.reset(emptyActivityVariantForm());
-				return;
-			}
-
 			await updateVariant({
 				supplierId,
 				productId,
-				variantId: selectedId,
+				variantId: resolvedId,
 				typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
-				data: payload
+				data: mapActivityVariantFormToWrite(data)
 			}).unwrap();
 			toast.success(t("form.toasts.save.success"));
 		} catch (error) {
@@ -111,32 +93,6 @@ const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 			console.error(error);
 		}
 	}
-
-	const handleDelete = async () => {
-		if (selectedId === "new") {
-			form.reset(emptyActivityVariantForm());
-			return;
-		}
-
-		try {
-			await deleteVariant({
-				supplierId,
-				productId,
-				variantId: selectedId
-			}).unwrap();
-			toast.success(t("form.toasts.delete.success"));
-			setSelectedId("new");
-			form.reset(emptyActivityVariantForm());
-		} catch (error) {
-			toast.error(t("form.toasts.delete.error"));
-			console.error(error);
-		}
-	};
-
-	const handleAddVariant = () => {
-		setSelectedId("new");
-		form.reset(emptyActivityVariantForm());
-	};
 
 	return (
 		<div className="grid gap-6">
@@ -146,7 +102,7 @@ const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 						key={variant.id}
 						type="button"
 						variant={
-							selectedId === variant.id ? "default" : "outline"
+							resolvedId === variant.id ? "default" : "outline"
 						}
 						size="sm"
 						onClick={() => setSelectedId(variant.id)}
@@ -154,64 +110,63 @@ const ActivityProductVariantsBase: FC<IActivityProductVariantsProps> = ({
 						{variant.name}
 					</Button>
 				))}
-				<Button
-					type="button"
-					variant={selectedId === "new" ? "default" : "outline"}
-					size="sm"
-					onClick={handleAddVariant}
-				>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					{t("form.variants.add")}
-				</Button>
+				<CreateProductVariant
+					supplierId={supplierId}
+					productId={productId}
+					typ={ENUM_SUPPLIER_TYPE.ACTIVITY}
+					ns="activity_product_edit_page"
+					onSuccess={setSelectedId}
+				/>
 			</div>
 
-			<Separator />
+			{selectedVariant && resolvedId ? (
+				<>
+					<Separator />
 
-			<Form {...form}>
-				<form
-					onSubmit={form.handleSubmit(onSubmit)}
-					className="grid gap-4 md:grid-cols-3"
-				>
-					{ACTIVITY_VARIANT_FIELDS_LIST().map(({ key, ...item }) => (
-						<Fragment key={key}>
-							<CustomField
-								control={form.control}
-								name={key}
-								t={t}
-								{...item}
-							/>
-							{key === ENUM_FORM.CURRENCY ? (
-								<div className="md:col-span-2">
-									<FeeLinesField
-										control={form.control}
-										name={ENUM_FORM.FEES}
+					<Form {...form}>
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							className="grid gap-x-4 gap-y-1 md:grid-cols-3"
+						>
+							{variantFields.map(({ key, ...item }) => (
+								<CustomField
+									key={key}
+									control={form.control}
+									name={key}
+									t={t}
+									{...item}
+								/>
+							))}
+							<div className="md:col-span-3">
+								<FeeLinesField
+									control={form.control}
+									name={ENUM_FORM.FEES}
+								/>
+							</div>
+							<div className="md:col-span-3 flex justify-end">
+								<div className="grid grid-cols-2 gap-2">
+									<DeleteProductVariant
+										supplierId={supplierId}
+										productId={productId}
+										variantId={resolvedId}
+										variantName={selectedVariant.name}
+										ns="activity_product_edit_page"
+									/>
+									<LoaderButton
+										size="lg"
+										className="w-full"
+										isLoading={isUpdating}
+										label={t("form.variants.buttons.save")}
+										loadingLabel={t(
+											"form.variants.buttons.saving"
+										)}
 									/>
 								</div>
-							) : null}
-						</Fragment>
-					))}
-					<div className="md:col-span-3 flex justify-end gap-2">
-						{selectedId !== "new" || form.formState.isDirty ? (
-							<LoaderButton
-								type="button"
-								variant="destructive"
-								onClick={handleDelete}
-								isLoading={isDeleting}
-								label={t("form.variants.buttons.delete")}
-								loadingLabel={t(
-									"form.variants.buttons.deleting"
-								)}
-							/>
-						) : null}
-						<LoaderButton
-							size="lg"
-							isLoading={isSaving}
-							label={t("form.variants.buttons.save")}
-							loadingLabel={t("form.variants.buttons.saving")}
-						/>
-					</div>
-				</form>
-			</Form>
+							</div>
+						</form>
+					</Form>
+				</>
+			) : null}
 		</div>
 	);
 };

@@ -8,7 +8,7 @@ import {
 	HOTEL_AMENITY_LABELS
 } from "@/entities/supplier";
 
-import type { TForm } from "./form.types";
+import type { TForm } from "../types";
 
 export const FORM_HOTEL_PRODUCT_GENERAL_LIST = (
 	geo: TGeoFieldProps

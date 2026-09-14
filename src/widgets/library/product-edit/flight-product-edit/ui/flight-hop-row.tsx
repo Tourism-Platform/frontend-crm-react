@@ -15,8 +15,9 @@ import {
 	type TFlightProductGeneralSchema
 } from "@/entities/supplier";
 
-import { RowRemoveMenu } from "../../ui";
 import { FLIGHT_HOP_FIELDS_LIST } from "../model";
+
+import { RowRemoveMenu } from "./row-remove-menu";
 
 interface IFlightHopRowProps {
 	form: UseFormReturn<TFlightProductGeneralSchema>;

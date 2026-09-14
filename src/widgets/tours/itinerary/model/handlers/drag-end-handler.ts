@@ -1,10 +1,12 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 
-import { ENUM_EVENT } from "@/entities/tour";
-import type {
-	ENUM_EVENT_TYPE,
-	IEventLibraryItem,
-	TEventDetailsWriteBackend
+import {
+	ENUM_EVENT,
+	type ENUM_EVENT_TYPE,
+	type IEventLibraryItem,
+	type TEventDetailsWriteBackend,
+	eventTypeMapper,
+	mapEmptyEventDetailsToWrite
 } from "@/entities/tour";
 
 import {
@@ -183,21 +185,23 @@ const resolveCreateAction = (
 	}
 ): TDragAction | undefined => {
 	if (targetContainer.nestedIndex === undefined) {
+		const typ = eventTypeMapper.to(base.eventType);
 		return {
 			type: "create",
 			...base,
-			details: {}
+			details: typ ? mapEmptyEventDetailsToWrite(typ) : {}
 		};
 	}
 
 	const parent = getTargetParent(targetContainer, optionsData, activeOption);
 	if (!parent?.backendId) return undefined;
 
+	const typ = eventTypeMapper.to(base.eventType);
 	return {
 		type: "addOption",
 		parentBackendId: parent.backendId,
 		...base,
-		details: {}
+		details: typ ? mapEmptyEventDetailsToWrite(typ) : {}
 	};
 };
 

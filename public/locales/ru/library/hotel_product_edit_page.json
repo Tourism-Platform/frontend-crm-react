@@ -148,13 +148,33 @@
 				"per_duration": "За ночь"
 			},
 			"room_item": "Комната {{index}}",
+			"base_price": "Базовая цена",
+			"seasons": "Сезоны",
+			"season_item": "Сезон {{index}}",
 			"add_room": "Добавить комнату",
 			"add_rate": "Добавить сезон",
 			"buttons": {
 				"save": "Сохранить вариант",
 				"saving": "Сохранение",
-				"delete": "Удалить",
+				"delete": "Удалить вариант",
 				"deleting": "Удаление"
+			},
+			"create_dialog": {
+				"title": "Добавить вариант",
+				"cancel": "Отмена",
+				"confirm": "Создать",
+				"confirming": "Создание",
+				"toasts": {
+					"success": "Вариант создан",
+					"error": "Не удалось создать вариант"
+				}
+			},
+			"delete_dialog": {
+				"title": "Удалить вариант",
+				"warning": "Удалить вариант «{{name}}»? Это действие нельзя отменить.",
+				"cancel": "Отмена",
+				"confirm": "Удалить",
+				"confirming": "Удаление"
 			}
 		},
 		"images": {

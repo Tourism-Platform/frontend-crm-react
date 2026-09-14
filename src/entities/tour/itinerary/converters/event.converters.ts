@@ -57,6 +57,7 @@ import {
 } from "./event";
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
 import { eventTypeMapper } from "./event-type.converters";
+import { mapEventDetailsWriteOrEmpty } from "./event/empty-event-details.converters";
 
 /**
  * Slot read → board/list domain model.
@@ -267,7 +268,7 @@ export const mapEventOptionCreateToBackend = (
 		name: frontend.name,
 		description: frontend.description,
 		typ,
-		details: frontend.details ?? {},
+		details: mapEventDetailsWriteOrEmpty(typ, frontend.details),
 		...(frontend.packageId !== undefined && {
 			package_id: frontend.packageId
 		})
@@ -324,7 +325,7 @@ export const mapEventCreateToBackend = (
 		day: frontend.day,
 		position: frontend.position,
 		typ,
-		details: frontend.details ?? {},
+		details: mapEventDetailsWriteOrEmpty(typ, frontend.details),
 		...(frontend.packageId !== undefined && {
 			package_id: frontend.packageId
 		}),

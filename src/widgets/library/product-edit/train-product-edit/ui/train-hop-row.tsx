@@ -15,8 +15,9 @@ import {
 	type TTrainProductGeneralSchema
 } from "@/entities/supplier";
 
-import { RowRemoveMenu } from "../../ui";
 import { TRAIN_HOP_FIELDS_LIST } from "../model";
+
+import { RowRemoveMenu } from "./row-remove-menu";
 
 interface ITrainHopRowProps {
 	form: UseFormReturn<TTrainProductGeneralSchema>;
@@ -47,7 +48,7 @@ export const TrainHopRow: FC<ITrainHopRowProps> = ({
 	});
 
 	return (
-		<Card className="relative">
+		<Card className="relative pb-2">
 			<CardContent>
 				<div className="absolute top-0 right-0">
 					<RowRemoveMenu onRemove={onRemove} />

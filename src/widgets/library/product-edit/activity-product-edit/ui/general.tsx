@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect, useMemo } from "react";
+import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -32,12 +32,7 @@ import {
 	useUpdateActivityProductMutation
 } from "@/entities/supplier";
 
-import {
-	ACTIVITY_LOCATION_FIELD,
-	ACTIVITY_PRODUCT_NAME_FIELD,
-	type TForm,
-	getActivitySubTypeField
-} from "../model";
+import { ACTIVITY_PRODUCT_GENERAL_LIST } from "../model";
 
 interface IActivityProductGeneralProps {
 	supplierId: string;
@@ -56,10 +51,6 @@ const ActivityProductGeneralBase: FC<IActivityProductGeneralProps> = ({
 	const navigate = useNavigate();
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 	const geoProps = useGeoSearchFieldProps(language);
-	const locationField = useMemo(
-		() => ACTIVITY_LOCATION_FIELD(geoProps),
-		[geoProps]
-	);
 
 	const form = useForm<TActivityProductGeneralSchema>({
 		resolver: zodResolver(ACTIVITY_PRODUCT_GENERAL_SCHEMA),
@@ -119,26 +110,23 @@ const ActivityProductGeneralBase: FC<IActivityProductGeneralProps> = ({
 		}
 	}
 
-	const renderField = ({ key, ...item }: TForm) => (
-		<CustomField
-			key={key}
-			control={form.control}
-			name={key}
-			t={t}
-			{...item}
-		/>
-	);
-
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="grid gap-6 md:grid-cols-2"
-			>
-				{renderField(ACTIVITY_PRODUCT_NAME_FIELD)}
-				{renderField(locationField)}
-				{renderField(getActivitySubTypeField())}
-				<div className="md:col-span-2 flex justify-end">
+			<form onSubmit={form.handleSubmit(onSubmit)} className="grid">
+				<div className="grid gap-x-4 gap-y-1 grid-cols-2">
+					{ACTIVITY_PRODUCT_GENERAL_LIST(geoProps).map(
+						({ key, ...item }) => (
+							<CustomField
+								key={key}
+								control={form.control}
+								name={key}
+								t={t}
+								{...item}
+							/>
+						)
+					)}
+				</div>
+				<div className="flex justify-end">
 					<LoaderButton
 						type="submit"
 						disabled={isLoading}
