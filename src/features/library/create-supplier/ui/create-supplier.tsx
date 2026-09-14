@@ -70,9 +70,9 @@ export const CreateSupplier: FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>
+				<Button type="button" variant="outline">
+					<PlusIcon className="mr-1 h-4 w-4" />
 					<p>{t("new_supplier.button")}</p>
-					<PlusIcon />
 				</Button>
 			</DialogTrigger>
 			<DialogContent

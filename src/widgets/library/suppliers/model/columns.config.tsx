@@ -3,12 +3,12 @@ import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Skeleton } from "@/shared/ui";
+import { Badge, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_SUPPLIER_TYPE_TYPE,
 	type ISupplier,
-	SUPPLIER_TYPE_LABELS
+	SUPPLIER_TYPE_BADGE
 } from "@/entities/supplier";
 
 import { SuppliersActions } from "../ui/suppliers-actions";
@@ -71,19 +71,23 @@ export const COLUMNS = (
 			cell: ({ row }) => {
 				const types = row.original
 					.supplierTypes as ENUM_SUPPLIER_TYPE_TYPE[];
-				const labels = types
-					.map((typ) => {
-						const key = SUPPLIER_TYPE_LABELS[typ];
-						return key ? t(key, { ns: "options" }) : typ;
-					})
-					.join(", ");
+				if (!types.length) {
+					return <span>{t("table.empty")}</span>;
+				}
 				return (
-					<span className="truncate" title={labels}>
-						{labels || t("table.empty")}
-					</span>
+					<div className="flex flex-wrap gap-1">
+						{types.map((typ) => {
+							const { variant, label } = SUPPLIER_TYPE_BADGE[typ];
+							return (
+								<Badge key={typ} variant={variant} size="sm">
+									{t(label, { ns: "options" })}
+								</Badge>
+							);
+						})}
+					</div>
 				);
 			},
-			size: 200
+			size: 280
 		},
 		{
 			header: t("table.phone"),

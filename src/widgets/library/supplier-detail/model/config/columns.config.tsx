@@ -2,11 +2,11 @@ import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
-import { Skeleton } from "@/shared/ui";
+import { Badge, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_SUPPLIER_TYPE_TYPE,
-	SUPPLIER_TYPE_LABELS,
+	SUPPLIER_TYPE_BADGE,
 	type TSupplierProduct
 } from "@/entities/supplier";
 
@@ -71,11 +71,15 @@ export const COLUMNS = (
 			accessorKey: "typ",
 			cell: ({ row }) => {
 				const typ = row.original.typ as ENUM_SUPPLIER_TYPE_TYPE;
-				const key = SUPPLIER_TYPE_LABELS[typ];
-				const label = key
-					? t(key, { ns: "options" })
-					: typ || t("products.table.empty");
-				return <span className="truncate">{label}</span>;
+				if (!typ) {
+					return <span>{t("products.table.empty")}</span>;
+				}
+				const { variant, label } = SUPPLIER_TYPE_BADGE[typ];
+				return (
+					<Badge variant={variant} size="sm">
+						{t(label, { ns: "options" })}
+					</Badge>
+				);
 			},
 			size: 140
 		},

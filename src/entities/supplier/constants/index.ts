@@ -1,4 +1,5 @@
 export * from "./supplier-type-labels";
+export * from "./supplier-type.config";
 export * from "./hotel-amenity-labels";
 export * from "./hotel-room-type-labels";
 export * from "./hotel-room-charge-labels";

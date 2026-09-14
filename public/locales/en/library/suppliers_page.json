@@ -2,7 +2,7 @@
 	"page_name": "Suppliers",
 	"suppliers_title": "Suppliers",
 	"new_supplier": {
-		"button": "New supplier"
+		"button": "Add supplier"
 	},
 	"table": {
 		"brand_name": "Brand name",

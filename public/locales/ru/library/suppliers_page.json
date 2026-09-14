@@ -2,7 +2,7 @@
 	"page_name": "Поставщики",
 	"suppliers_title": "Поставщики",
 	"new_supplier": {
-		"button": "Новый поставщик"
+		"button": "Добавить поставщика"
 	},
 	"table": {
 		"brand_name": "Бренд",
