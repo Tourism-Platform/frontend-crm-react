@@ -2,16 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import {
-	ENUM_LANGUAGES,
-	ENUM_PATH,
-	buildRoute,
-	i18nLanguageMapper
-} from "@/shared/config";
-import { useOptionalResourceQuery } from "@/shared/hooks";
+import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
+import { useNavigateByType, useOptionalResourceQuery } from "@/shared/hooks";
 import { validateFormWithSectionToast } from "@/shared/lib";
 
 import {
@@ -19,7 +14,9 @@ import {
 	LIBRARY_EVENT_CREATE_ID,
 	TRANSPORTATION_EDIT_SCHEMA,
 	type TTransportationEditSchema,
+	buildEventLibraryEditRoute,
 	useCreateEventLibraryMutation,
+	useGetEventLibraryQuery,
 	useGetEventLibraryRawQuery,
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
@@ -29,16 +26,29 @@ import { type ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/transportati
 
 export const LibraryTransferEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
-	const navigate = useNavigate();
 	const { libraryId = "" } = useParams<{ libraryId: string }>();
 	const isCreate = libraryId === LIBRARY_EVENT_CREATE_ID;
 
-	const { data: libraryEvent, isRealError: isLoadError } =
+	const { data: libraryItem, isRealError: isLoadError } =
 		useOptionalResourceQuery(
-			useGetEventLibraryRawQuery(libraryId, {
+			useGetEventLibraryQuery(libraryId, {
 				skip: !libraryId || isCreate
 			})
 		);
+
+	const { navigateToType, isExpectedType } = useNavigateByType({
+		expectedType: ENUM_EVENT.TRANSPORTATION,
+		actualType: libraryItem?.eventType,
+		params: { libraryId },
+		resolvePath: buildEventLibraryEditRoute,
+		enabled: !isCreate && Boolean(libraryItem)
+	});
+
+	const { data: libraryEvent } = useOptionalResourceQuery(
+		useGetEventLibraryRawQuery(libraryId, {
+			skip: !libraryId || isCreate || !libraryItem || !isExpectedType
+		})
+	);
 
 	const [createEventLibrary, { isLoading: isCreateLoading }] =
 		useCreateEventLibraryMutation();
@@ -84,11 +94,10 @@ export const LibraryTransferEditPage: FC = () => {
 					data
 				}).unwrap();
 				toast.success(t("toasts.create.success"));
-				navigate(
-					buildRoute(ENUM_PATH.LIBRARY.EVENT_TRANSFER, {
-						libraryId: created.id
-					}),
-					{ replace: true }
+				navigateToType(
+					created.eventType,
+					{ replace: true },
+					{ libraryId: created.id }
 				);
 				return;
 			}
@@ -107,6 +116,10 @@ export const LibraryTransferEditPage: FC = () => {
 			console.log(error);
 		}
 	};
+
+	if (!isCreate && libraryItem && !isExpectedType) {
+		return null;
+	}
 
 	return (
 		<TransportationEdit

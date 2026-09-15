@@ -14,6 +14,12 @@ export const ENUM_TRANSFER_PRICING = {
 export type ENUM_TRANSFER_PRICING_TYPE =
 	(typeof ENUM_TRANSFER_PRICING)[keyof typeof ENUM_TRANSFER_PRICING];
 
+export interface ITransferCarCategory {
+	id: string;
+	name: string | null;
+	expenses: ISupplierFixedCharge;
+}
+
 export interface ITransferVariant {
 	id: string;
 	name: string;
@@ -21,6 +27,7 @@ export interface ITransferVariant {
 	pax: number | null;
 	description: string | null;
 	expenses: ISupplierFixedCharge | null;
+	categories: ITransferCarCategory[];
 }
 
 export interface ITransferProduct {
@@ -40,10 +47,17 @@ export interface ITransferProductCreate {
 	name: string;
 }
 
+export interface ITransferCarCategoryWrite {
+	id?: string;
+	name: string | null;
+	expenses: ISupplierFixedCharge;
+}
+
 export interface ITransferVariantWrite {
 	name: string;
 	bodyType: ENUM_VEHICLE_BODY_TYPE_TYPE;
 	pax: number;
 	description: string | null;
 	expenses: ISupplierFixedCharge;
+	categories: ITransferCarCategoryWrite[];
 }

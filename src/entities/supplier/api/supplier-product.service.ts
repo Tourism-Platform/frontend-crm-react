@@ -29,7 +29,7 @@ import {
 	mapTrainProductGeneralToUpdate,
 	mapTransferProductFromBackend,
 	mapTransferProductGeneralToCreate,
-	mapTransferProductGeneralToUpdate
+	mapTransferProductToUpdate
 } from "../converters";
 import type {
 	IActivityProduct,
@@ -54,6 +54,7 @@ import type {
 	ISupplierProductFilters,
 	ISupplierProductImage,
 	ISupplierVariantCreated,
+	ISwitchTransferProductPricing,
 	ITrainProduct,
 	ITransferProduct,
 	IUpdateActivityProduct,
@@ -256,9 +257,28 @@ export const supplierProductApi = authApi.injectEndpoints({
 			ITransferProduct,
 			IUpdateTransferProduct
 		>({
-			query: ({ supplierId, productId, values, existing }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapTransferProductGeneralToUpdate(values, existing)
+			query: (data) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(
+					data.supplierId,
+					data.productId
+				),
+				body: mapTransferProductToUpdate(data)
+			}),
+			transformResponse: (response: TTransferProductReadBackend) =>
+				mapTransferProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		switchTransferProductPricing: builder.mutation<
+			ITransferProduct,
+			ISwitchTransferProductPricing
+		>({
+			query: (data) => ({
+				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
+					data.supplierId,
+					data.productId
+				),
+				body: data.body
 			}),
 			transformResponse: (response: TTransferProductReadBackend) =>
 				mapTransferProductFromBackend(response),
@@ -470,6 +490,7 @@ export const {
 	useUpdateBusProductMutation,
 	useCreateTransferProductMutation,
 	useUpdateTransferProductMutation,
+	useSwitchTransferProductPricingMutation,
 	useCreateActivityProductMutation,
 	useUpdateActivityProductMutation,
 	useCreateVariantMutation,

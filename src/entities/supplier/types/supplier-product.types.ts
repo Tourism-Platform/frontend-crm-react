@@ -40,7 +40,8 @@ import type { TTrainProductGeneralSchema } from "./train/product-form.types";
 import type {
 	ENUM_TRANSFER_PRICING_TYPE,
 	ITransferProduct,
-	ITransferVariantWrite
+	ITransferVariantWrite,
+	TTransferPricingSwitchBackend
 } from "./transfer";
 import type { TTransferProductGeneralSchema } from "./transfer/product-form.types";
 
@@ -191,6 +192,12 @@ export interface IUpdateTransferProduct {
 	productId: string;
 	values: TTransferProductGeneralSchema;
 	existing?: ITransferProduct | null;
+}
+
+export interface ISwitchTransferProductPricing {
+	supplierId: string;
+	productId: string;
+	body: TTransferPricingSwitchBackend;
 }
 
 export interface ICreateActivityProduct {

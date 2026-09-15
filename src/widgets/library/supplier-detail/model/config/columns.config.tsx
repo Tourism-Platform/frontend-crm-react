@@ -7,11 +7,11 @@ import { Badge, Skeleton } from "@/shared/ui";
 import {
 	type ENUM_SUPPLIER_TYPE_TYPE,
 	SUPPLIER_TYPE_BADGE,
-	type TSupplierProduct
+	type TSupplierProduct,
+	buildSupplierProductEditRoute
 } from "@/entities/supplier";
 
 import { SupplierProductsActions } from "../../ui/supplier-products-actions";
-import { buildSupplierProductEditRoute } from "../lib";
 
 export const COLUMNS = (
 	t: TFunction<"supplier_id_page", undefined>,

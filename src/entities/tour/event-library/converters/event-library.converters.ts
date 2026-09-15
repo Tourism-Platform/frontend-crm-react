@@ -1,6 +1,6 @@
 import { TranslationState } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE, TLibraryPath } from "@/shared/config";
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { type IPaginationResponse } from "@/shared/types";
 
 import {
@@ -198,6 +198,15 @@ export const mapEventTypeToLibraryEditPath = (
 		default:
 			return null;
 	}
+};
+
+export const buildEventLibraryEditRoute = (
+	eventType: ENUM_EVENT_TYPE,
+	params: { libraryId: string }
+) => {
+	const path = mapEventTypeToLibraryEditPath(eventType);
+	if (!path) return undefined;
+	return buildRoute(path, params);
 };
 
 /**

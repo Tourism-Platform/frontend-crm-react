@@ -4,6 +4,9 @@ import type {
 	PerCarCategoryTransferVariantWrite,
 	PerCarTransferVariantWrite,
 	PricedCarOutput,
+	ToPerCar,
+	ToPerCarCategory,
+	ToWholeTransfer,
 	TransferProductCreate,
 	TransferProductReadOutput,
 	TransferProductUpdate,
@@ -30,3 +33,7 @@ export type TTransferVariantReadBackend =
 	| PricedCarOutput
 	| CategorisedCarOutput
 	| Car;
+export type TTransferPricingSwitchBackend =
+	| ToPerCar
+	| ToPerCarCategory
+	| ToWholeTransfer;

@@ -1,4 +1,7 @@
-import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+import {
+	DEFAULT_EVENT_CURRENCY,
+	type ENUM_CURRENCY_OPTIONS_TYPE
+} from "@/entities/commission";
 
 export const ENUM_FEE_FIELD = {
 	NAME: "name",
@@ -20,6 +23,6 @@ export interface IFeeFormRow {
 export const createEmptyFeeRow = (): IFeeFormRow => ({
 	[ENUM_FEE_FIELD.NAME]: null,
 	[ENUM_FEE_FIELD.COST]: null,
-	[ENUM_FEE_FIELD.CURRENCY]: null,
+	[ENUM_FEE_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_FEE_FIELD.DESCRIPTION]: null
 });

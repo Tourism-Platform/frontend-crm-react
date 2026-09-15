@@ -6,25 +6,16 @@ import { toast } from "sonner";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
-	ENUM_SUPPLIER_TYPE,
-	type ITransferProduct,
 	LIBRARY_SUPPLIER_PRODUCT_CREATE_ID,
-	type TSupplierProduct,
 	useGetSupplierProductQuery
 } from "@/entities/supplier";
 
 import { TransferProductEdit } from "@/widgets/library";
 
-const isTransferProduct = (
-	product?: TSupplierProduct
-): product is ITransferProduct => product?.typ === ENUM_SUPPLIER_TYPE.TRANSFER;
+import { useLibraryTransferProductEdit } from "../model";
 
 export const LibraryTransferProductEditPage: FC = () => {
-	const { t } = useTranslation([
-		"transfer_product_edit_page",
-		"common_events",
-		"options"
-	]);
+	const { t } = useTranslation("transfer_product_edit_page");
 	const { supplierId = "", productId = "" } = useParams<{
 		supplierId: string;
 		productId: string;
@@ -44,10 +35,28 @@ export const LibraryTransferProductEditPage: FC = () => {
 		}
 	}, [isRealError, t]);
 
-	const transferProduct = isTransferProduct(product) ? product : null;
+	const {
+		form,
+		createSectionSubmit,
+		isLoading,
+		isExpectedType,
+		product: transferProduct
+	} = useLibraryTransferProductEdit({
+		supplierId,
+		productId,
+		isCreate,
+		product
+	});
+
+	if (!isCreate && product && !isExpectedType) {
+		return null;
+	}
 
 	return (
 		<TransferProductEdit
+			form={form}
+			createSectionSubmit={createSectionSubmit}
+			isLoading={isLoading}
 			supplierId={supplierId}
 			productId={productId}
 			isCreate={isCreate}

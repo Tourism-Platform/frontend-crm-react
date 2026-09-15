@@ -16,6 +16,12 @@ import {
 } from "./supplier-fee.converters";
 
 describe("supplier-fee.converters", () => {
+	it("defaults empty fee currency to USD", () => {
+		expect(
+			createEmptySupplierFeeRow()[ENUM_SUPPLIER_FEE_FIELD.CURRENCY]
+		).toBe("USD");
+	});
+
 	it("maps a single fee from backend", () => {
 		expect(
 			mapSupplierFeeFromBackend({

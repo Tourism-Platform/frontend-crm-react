@@ -2,13 +2,14 @@
 	"page_name": "Transfer product",
 	"back": "Back to supplier",
 	"tabs": {
-		"general": "General",
+		"general": "General info",
+		"cars": "Cars",
 		"media": "Media",
-		"variants": "Variants"
+		"pricing": "Pricing & booking"
 	},
 	"form": {
 		"create_hint": {
-			"save_general_first": "Create the transfer on the General tab first"
+			"save_general_first": "Create the transfer on the General info tab first"
 		},
 		"general": {
 			"fields": {
@@ -26,22 +27,144 @@
 				"saving": "Saving"
 			}
 		},
+		"cars": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving"
+			},
+			"details": {
+				"title": "Car details",
+				"car_item": "Car {{index}}",
+				"form": {
+					"fields": {
+						"car_name": {
+							"label": "Car brand",
+							"placeholder": "Select brand",
+							"errors": {
+								"required": "Car brand is required",
+								"max": "Car brand is too long"
+							}
+						},
+						"pax": {
+							"label": "Capacity (pax)",
+							"placeholder": "Number of people",
+							"errors": {
+								"required": "Capacity is required",
+								"max": "Value is too high"
+							}
+						}
+					},
+					"buttons": {
+						"add": "Add car"
+					}
+				}
+			},
+			"description": {
+				"title": "Description",
+				"description": {
+					"label": "Additional information",
+					"placeholder": "Enter details...",
+					"errors": {
+						"min": "Description is too short",
+						"max": "Description is too long",
+						"required": "Description is required"
+					}
+				}
+			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving"
+			},
+			"title": "Pricing",
+			"whole_warning": "Car and class prices will be cleared",
+			"pricing_type": {
+				"title": "How is this activity priced?",
+				"tabs": {
+					"flat_rate": "Flat rate",
+					"per_car": "Per car",
+					"per_person": "Per person"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Pricing details",
+					"fields": {
+						"total_price": {
+							"label": "Total cost",
+							"placeholder": "Enter...",
+							"errors": {
+								"min": "Price must be at least 0",
+								"max": "Price must not exceed 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Total cost per person",
+							"placeholder": "Enter..."
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose",
+							"errors": {
+								"required": "Currency is required",
+								"max": "Currency code is too long"
+							}
+						}
+					}
+				},
+				"per_car": {
+					"empty_cars": "Add cars on the Cars tab to configure per-car pricing.",
+					"checkboxes": {
+						"price_based_on_class": "Price based on class",
+						"add_margin_separately": "Add margin to this component separately"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Total cost per car",
+							"placeholder": "Enter..."
+						},
+						"category_name": {
+							"placeholder": "Enter...",
+							"errors": {
+								"required": "Class name is required"
+							}
+						},
+						"categories": {
+							"errors": {
+								"min": "Add at least one class"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Unique margin",
+								"placeholder": "Enter...",
+								"errors": {
+									"required": "Margin is required"
+								}
+							}
+						}
+					},
+					"table": {
+						"type": "Type",
+						"cost": "Cost",
+						"fees": "Fees",
+						"currency": "Currency"
+					},
+					"buttons": {
+						"add_category": "Add new type"
+					}
+				}
+			}
+		},
 		"variants": {
-			"title": "Variants",
-			"add": "Add variant",
+			"add": "Add car",
 			"fields": {
 				"name": {
 					"label": "Variant name",
 					"placeholder": "Sedan",
 					"errors": {
 						"required": "Variant name is required"
-					}
-				},
-				"body_type": {
-					"label": "Type",
-					"placeholder": "Select type",
-					"errors": {
-						"required": "Select a type"
 					}
 				},
 				"pax": {
@@ -51,32 +174,9 @@
 						"required": "Capacity is required",
 						"min": "Minimum 1"
 					}
-				},
-				"description": {
-					"label": "Description",
-					"placeholder": "Enter description",
-					"errors": {
-						"max": "Description is too long"
-					}
-				},
-				"cost": {
-					"label": "Price",
-					"placeholder": "Enter price",
-					"errors": {
-						"required": "Cost is required"
-					}
-				},
-				"currency": {
-					"label": "Currency",
-					"placeholder": "Select currency",
-					"errors": {
-						"required": "Select a currency"
-					}
 				}
 			},
 			"buttons": {
-				"save": "Save variant",
-				"saving": "Saving",
 				"delete": "Delete variant",
 				"deleting": "Deleting"
 			},

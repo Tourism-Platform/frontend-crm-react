@@ -11,11 +11,12 @@ import {
 	DropdownMenuTrigger
 } from "@/shared/ui";
 
-import { type TSupplierProduct } from "@/entities/supplier";
+import {
+	type TSupplierProduct,
+	buildSupplierProductEditRoute
+} from "@/entities/supplier";
 
 import { DeleteSupplierProduct } from "@/features/library";
-
-import { buildSupplierProductEditRoute } from "../model/lib";
 
 interface ISupplierProductsActionsProps {
 	supplierId: string;

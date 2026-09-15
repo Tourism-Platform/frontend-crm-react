@@ -1,4 +1,5 @@
 export * from "./types";
+export * from "./lib";
 export * from "./constants";
 export * from "./converters";
 export * from "./schema";
