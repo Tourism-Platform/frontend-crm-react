@@ -1,6 +1,6 @@
 import { HttpResponse } from "msw";
 
-import { createMockHandler } from "@/shared/api";
+import { TOUR_OPTION_PATHS, createMockHandler } from "@/shared/api";
 
 import {
 	TOUR_SUMMARY_MOCK,
@@ -9,10 +9,7 @@ import {
 
 export const pricingReviewHandlers = [
 	createMockHandler(
-		{
-			url: "/tour/:tourId/option/:optionId/summary",
-			method: "GET"
-		},
+		TOUR_OPTION_PATHS.getPricingBreakdown(":tourId", ":optionId"),
 		async ({ params }) => {
 			const tourId = String(params.tourId);
 			const optionId = String(params.optionId);

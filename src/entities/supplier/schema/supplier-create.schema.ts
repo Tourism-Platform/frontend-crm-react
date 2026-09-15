@@ -3,7 +3,6 @@ import { z } from "zod";
 import { type TSuppliersPageKeys, i18nKey } from "@/shared/config";
 
 import { ENUM_FORM_SUPPLIER } from "../types/supplier-form.types";
-import { ENUM_SUPPLIER_TYPE } from "../types/supplier-type.types";
 
 const msg = i18nKey<TSuppliersPageKeys>();
 
@@ -14,8 +13,5 @@ export const SUPPLIER_CREATE_SCHEMA = z.object({
 		.min(1, msg("create.errors.brandName.required")),
 	[ENUM_FORM_SUPPLIER.LEGAL_NAME]: z.string().trim().nullable().optional(),
 	[ENUM_FORM_SUPPLIER.PHONE]: z.string().trim().nullable().optional(),
-	[ENUM_FORM_SUPPLIER.WEBSITE]: z.string().trim().nullable().optional(),
-	[ENUM_FORM_SUPPLIER.SUPPLIER_TYPES]: z
-		.array(z.nativeEnum(ENUM_SUPPLIER_TYPE))
-		.min(1, msg("create.errors.supplierTypes.required"))
+	[ENUM_FORM_SUPPLIER.WEBSITE]: z.string().trim().nullable().optional()
 });

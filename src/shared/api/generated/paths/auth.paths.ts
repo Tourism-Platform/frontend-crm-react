@@ -38,7 +38,11 @@ export const AUTH_PATHS = {
 	googleLogin: {
 		url: "/auth/google/login",
 		method: "GET",
-		_types: {} as { body: void; query: void; response: void }
+		_types: {} as {
+			body: void;
+			query: { next?: string | null };
+			response: void;
+		}
 	} as const,
 	googleCallback: {
 		url: "/auth/google/callback",

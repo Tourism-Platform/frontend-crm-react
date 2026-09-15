@@ -1,5 +1,6 @@
 import { formatToDollars } from "@/shared/utils";
 
+import { ENUM_PRICING_REVIEW_ROW } from "@/entities/tour/tour/types/pricing-breakdown.types";
 import type {
 	ITourReviewItem,
 	ITourSummaryRange
@@ -10,7 +11,7 @@ import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
 	type ITourPricingReview,
-	type TGetTourSummaryBackendResponce,
+	type TGetPricingBreakdownBackendResponse,
 	type TOperatorEventBackend,
 	type TPackageBillableBackend,
 	type TTourMinMaxCostBackend,
@@ -18,6 +19,7 @@ import {
 } from "../types";
 
 import { backendEventTypeMapper } from "./backend-event-type.converters";
+import { attachBreakdownToReviewItem } from "./pricing-breakdown.converters";
 
 /**
  * Supplier label for display (contract 3.1): a linked product carries the
@@ -36,7 +38,7 @@ const resolveSupplierLabel = (
 
 const isPackageBillable = (
 	item: TTourSummaryEventBackend
-): item is TPackageBillableBackend => "package" in item;
+): item is TPackageBillableBackend => item.typ === "package_bill";
 
 const mapMinMaxCostToRange = (
 	cost: TTourMinMaxCostBackend
@@ -76,6 +78,7 @@ const mapEventPayloadToReviewItem = (
 			day: event.day,
 			position: event.position,
 			optionIndex: 0,
+			rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
 			subRows: (event.details ?? []).map((detail, index) => ({
 				id: detail.id ?? `${eventId}:${index}`,
 				item: detail.name ?? "-",
@@ -87,7 +90,8 @@ const mapEventPayloadToReviewItem = (
 				),
 				day: event.day,
 				position: event.position,
-				optionIndex: index
+				optionIndex: index,
+				rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
 			}))
 		};
 	}
@@ -101,48 +105,68 @@ const mapEventPayloadToReviewItem = (
 		type: backendEventTypeMapper.to(event.typ as ENUM_EVENT_BACKEND_TYPE),
 		day: event.day,
 		position: event.position,
-		optionIndex: 0
+		optionIndex: 0,
+		rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
 	};
 };
 
 const mapPackageToReviewItem = (
 	backend: TPackageBillableBackend
 ): ITourReviewItem => {
-	const subRows = backend.events.map((line) =>
+	const eventChildren = backend.events.map((line) =>
 		mapEventPayloadToReviewItem(line.event_id, line.event)
 	);
 
-	return {
-		id: backend.package.id,
-		item: backend.package.name,
-		supplier: "-",
-		plannedCost: mapMinMaxCostToDisplay(backend.cost),
-		estimatedRevenue: mapMinMaxCostToDisplay(backend.markup),
-		type: ENUM_EVENT.PACKAGE,
-		day: 0,
-		position: 0,
-		optionIndex: 0,
-		...(subRows.length ? { subRows } : {})
-	};
+	return attachBreakdownToReviewItem(
+		{
+			id: backend.package.id,
+			item: backend.package.name,
+			supplier: "-",
+			plannedCost: mapMinMaxCostToDisplay(backend.cost),
+			estimatedRevenue: mapMinMaxCostToDisplay(backend.markup),
+			type: ENUM_EVENT.PACKAGE,
+			day: 0,
+			position: 0,
+			optionIndex: 0,
+			rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
+			subRows: eventChildren.length ? eventChildren : undefined
+		},
+		backend.breakdown
+	);
 };
 
-export const mapTourSummaryToFrontend = (
-	backend: TGetTourSummaryBackendResponce
+const mapIndividualBillToReviewItem = (
+	backend: Extract<TTourSummaryEventBackend, { typ: "individual_bill" }>
+): ITourReviewItem =>
+	attachBreakdownToReviewItem(
+		mapEventPayloadToReviewItem(
+			backend.event_id,
+			backend.event,
+			backend.cost,
+			backend.markup
+		),
+		backend.breakdown,
+		backend.warnings
+	);
+
+export const mapPricingBreakdownToFrontend = (
+	backend: TGetPricingBreakdownBackendResponse
 ): ITourPricingReview => ({
 	summary: {
-		// estimated_cost already includes fees (cost + fees); no top-level fees field
+		pax: {
+			from: backend.pax.min,
+			to: backend.pax.max
+		},
 		revenue: mapMinMaxCostToRange(backend.estimated_revenue),
+		revenuePerPerson: mapMinMaxCostToRange(
+			backend.estimated_revenue_per_person
+		),
 		cost: mapMinMaxCostToRange(backend.estimated_cost),
 		profit: mapMinMaxCostToRange(backend.estimated_profit)
 	},
 	items: backend.events.map((item) =>
 		isPackageBillable(item)
 			? mapPackageToReviewItem(item)
-			: mapEventPayloadToReviewItem(
-					item.event_id,
-					item.event,
-					item.cost,
-					item.markup
-				)
+			: mapIndividualBillToReviewItem(item)
 	)
 });

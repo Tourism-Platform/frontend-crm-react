@@ -9,7 +9,6 @@ export interface ICatalogTourCard {
 	days: number;
 	nights: number;
 	priceFrom: number;
-	priceTo: number;
 	currency: string;
 	imageUrl: string;
 	route: string[];

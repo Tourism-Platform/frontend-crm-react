@@ -6,6 +6,7 @@ export * from "./operator-itinerary.converters";
 export * from "./booking-itinerary.converters";
 export * from "./booking-availability.converters";
 export * from "./revision-event-product.converters";
+export * from "./revision-preview.converters";
 export * from "./availability-status.convert";
 export * from "./order-status.convert";
 export * from "./booking-pax.converters";

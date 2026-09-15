@@ -82,11 +82,11 @@ const mapSinglePubEvent = (event: TPubEvent): IOptionEvent => {
 	};
 };
 
-const groupEventsIntoDays = (events: TPubEvent[]): IOptionDay[] => {
+const groupEventsIntoDays = (events?: TPubEvent[]): IOptionDay[] => {
 	const byDay = new Map<number, TPubEvent[]>();
 
-	for (const event of events) {
-		const day = event.day ?? 0;
+	for (const event of events ?? []) {
+		const day = event?.day ?? 0;
 		const list = byDay.get(day) ?? [];
 		list.push(event);
 		byDay.set(day, list);
@@ -110,43 +110,39 @@ const groupEventsIntoDays = (events: TPubEvent[]): IOptionDay[] => {
 		});
 };
 
-const mapPreviewOptionPriceToFrontend = (
-	backend: Pick<TOptionDetailBackend, "total_price" | "total_price_max">
-): string => {
-	const min = backend.total_price.val;
-	const max = backend.total_price_max.val;
+const formatMonetaryPrice = (value?: { val?: number } | null): string => {
+	const amount = value?.val;
+	if (amount == null || Number.isNaN(amount)) return "";
 
-	if (min === max) {
-		return formatToDollars(min);
-	}
-
-	return `${formatToDollars(min)} - ${formatToDollars(max)}`;
+	return formatToDollars(amount);
 };
 
 const mapPreviewOptionPreviewToFrontend = (
 	backend: TPreviewOptionListItemBackend
 ): IPreviewOptionCard => ({
-	id: backend.id,
-	title: backend.name ?? "",
-	description: backend.description ?? "",
-	price: mapPreviewOptionPriceToFrontend(backend),
-	image: backend.cover_image_path
+	id: backend?.id ?? "",
+	title: backend?.name ?? "",
+	description: backend?.description ?? "",
+	price: formatMonetaryPrice(backend?.price_per_person),
+	totalPrice: formatMonetaryPrice(backend?.total_price),
+	image: backend?.cover_image_path
 		? toPublicImageUrl(backend.cover_image_path)
 		: ""
 });
 
 export const mapPreviewOptionsListToFrontend = (
-	backend: TPreviewOptionListItemBackend[]
-): IPreviewOptionCard[] => backend.map(mapPreviewOptionPreviewToFrontend);
+	backend?: TPreviewOptionListItemBackend[] | null
+): IPreviewOptionCard[] =>
+	(backend ?? []).map(mapPreviewOptionPreviewToFrontend);
 
 export const mapPreviewOptionToFrontend = (
 	backend: TOptionDetailBackend,
 	title = ""
 ): IOptionDetail => ({
-	id: backend.id,
+	id: backend?.id ?? "",
 	title,
-	price: mapPreviewOptionPriceToFrontend(backend),
-	days: groupEventsIntoDays(backend.events)
+	price: formatMonetaryPrice(backend?.total_price),
+	days: groupEventsIntoDays(backend?.events)
 });
 
 export const enrichOptionDetailTitle = (

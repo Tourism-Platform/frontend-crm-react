@@ -62,6 +62,7 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 		description:
 			"Those seeking the historical culture of the silk road's ancient cities without the hassle of organization will enjoy this comprehensive six-day tour of Samarkand, Bukhara, Khiva & Tashkent. In collaboration with the experience of your local guide, your private group can customize an itinerary catered for your interests - be it cuisine, history, or architecture. Internet usage, accommodation, breakfast, travel (train, flight, and bus), and tickets for activities are all included. Make it easy - local internet access, accommodation, and breakfast are all included The six-day itinerary can be customised to your requests Your city guide allows for easy mobility around the vast cities Hassle-free border pic...",
 		price: "$500.00",
+		totalPrice: "$1,500.00",
 		image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1000",
 		days: [
 			{
@@ -86,6 +87,7 @@ export const PREVIEW_TOUR_OPTIONS_MOCK = [
 		description:
 			"Those seeking the historical culture of the silk road's ancient cities without the hassle of organization will enjoy this comprehensive six-day tour of Samarkand, Bukhara, Khiva & Tashkent. In collaboration with the experience of your local guide, your private group can customize an itinerary catered for your interests - be it cuisine, history, or architecture. Internet usage, accommodation, breakfast, travel (train, flight, and bus), and tickets for activities are all included. Make it easy - local internet access, accommodation, and breakfast are all included The six-day itinerary can be customised to your requests Your city guide allows for easy mobility around the vast cities Hassle-free border pic...",
 		price: "$999.00",
+		totalPrice: "$2,997.00",
 		image: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1000",
 		days: [
 			{

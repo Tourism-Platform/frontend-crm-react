@@ -105,6 +105,30 @@
 			"supplier": "Supplier",
 			"planned_cost": "Planned cost",
 			"estimated_revenue": "Estimated revenue",
+			"warnings_column": "Warnings",
+			"breakdown": {
+				"min": "Book this (cheapest)",
+				"max": "Dearest resolution"
+			},
+			"kind": {
+				"unit": "Unit",
+				"extra_cost": "Extra cost",
+				"surcharge": "Surcharge"
+			},
+			"warnings": {
+				"flat_charge_on_multi_night_stay": "Flat multi-night stay",
+				"flat_charge_on_multi_day_guide": "Flat multi-day guide",
+				"fixed_charge_on_sightseeing": "Fixed sightseeing charge",
+				"empty_supply": "Empty supply",
+				"zero_cost": "Zero cost"
+			},
+			"warnings_hints": {
+				"flat_charge_on_multi_night_stay": "Stay is longer than one night, but the room or hotel is priced as fixed — nights are not multiplied.",
+				"flat_charge_on_multi_day_guide": "Guide lasts more than one day with a fixed price.",
+				"fixed_charge_on_sightseeing": "Sightseeing or spiritual activity uses a fixed offering. Entrance fees are usually per person.",
+				"empty_supply": "Priced event has no offerings, rooms, vehicles, fares, categories or items.",
+				"zero_cost": "There is something to price, but the max leg came out as zero on every line."
+			},
 			"action": "Action",
 			"apply": "Apply",
 			"applied": "Applied",

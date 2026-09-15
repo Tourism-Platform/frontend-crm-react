@@ -2,19 +2,21 @@ import type {
 	BodyUploadOptionCoverTourTourIdOptionOptionIdCoverPost,
 	Currency,
 	LanguageCode,
+	PerPaxPriceMatrixSchemaOutput,
+	PerRangePriceMatrixSchemaOutput,
+	PricingBreakdownResponse,
 	TourOptionCreateSchema,
 	TourOptionModel,
-	TourOptionUpdateSchema,
-	TourSummaryResponse
+	TourOptionUpdateSchema
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const TOUR_OPTION_PATHS = {
-	getTourSummary: (tourId: string, optionId: string) =>
+	getPricingBreakdown: (tourId: string, optionId: string) =>
 		({
-			url: `/tour/${tourId}/option/${optionId}/summary`,
+			url: `/tour/${tourId}/option/${optionId}/pricing-breakdown`,
 			method: "GET",
 			_types: {} as {
 				body: void;
@@ -22,8 +24,29 @@ export const TOUR_OPTION_PATHS = {
 					currency?: Currency;
 					read_lang?: LanguageCode;
 					as_of?: string | null;
+					pax?: number | null;
+					date?: string | null;
 				};
-				response: TourSummaryResponse;
+				response: PricingBreakdownResponse;
+			}
+		}) as const,
+	getPriceMatrix: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/option/${optionId}/price-matrix`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: {
+					currency?: Currency;
+					pax_from?: number | null;
+					pax_to?: number | null;
+					brackets?: string | null;
+					date?: string | null;
+					as_of?: string | null;
+				};
+				response:
+					| PerPaxPriceMatrixSchemaOutput
+					| PerRangePriceMatrixSchemaOutput;
 			}
 		}) as const,
 	listAllTourOptions: (tourId: string) =>

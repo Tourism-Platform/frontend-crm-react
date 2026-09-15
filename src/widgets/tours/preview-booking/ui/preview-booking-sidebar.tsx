@@ -144,14 +144,26 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 					</div>
 				</div>
 
-				<div className="mb-4 flex justify-between border-y py-4">
-					<span className="text-sm text-muted-foreground">
-						{t("sidebar.price_per_person")}
-					</span>
-					<span className="font-semibold">
-						{submittedBooking?.tourCurrency ?? "$"}
-						{pricePerPerson.toFixed(2)}
-					</span>
+				<div className="mb-4 flex flex-col gap-3 border-y py-4">
+					<div className="flex justify-between">
+						<span className="text-sm text-muted-foreground">
+							{t("sidebar.price_per_person")}
+						</span>
+						<span className="font-semibold">
+							{submittedBooking?.tourCurrency ?? "$"}
+							{pricePerPerson.toFixed(2)}
+						</span>
+					</div>
+					{selectedOption?.totalPrice ? (
+						<div className="flex justify-between">
+							<span className="text-sm text-muted-foreground">
+								{t("sidebar.group_total")}
+							</span>
+							<span className="font-semibold">
+								{selectedOption.totalPrice}
+							</span>
+						</div>
+					) : null}
 				</div>
 
 				<div className="mb-6 flex items-end justify-between">

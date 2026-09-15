@@ -1,7 +1,7 @@
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
-	type TGetTourSummaryBackendResponce,
+	type TGetPricingBreakdownBackendResponse,
 	type TMultiEventDetailBackend,
 	type TMultiEventReadBackend,
 	type TOperatorEventBackend,
@@ -137,14 +137,16 @@ const mapSingleOperatorEvent = (event: TOperatorEventBackend): IOptionEvent => {
 };
 
 const groupOperatorEventsIntoDays = (
-	events: TTourSummaryEventBackend[]
+	events?: TTourSummaryEventBackend[] | null
 ): IOptionDay[] => {
 	const byDay = new Map<number, TOperatorEventBackend[]>();
 
-	for (const item of events) {
+	for (const item of events ?? []) {
 		if (!isStandaloneBillable(item)) continue;
 
-		const event = item.event;
+		const event = item?.event;
+		if (!event) continue;
+
 		const day = "day" in event ? event.day : 0;
 		const list = byDay.get(day) ?? [];
 		list.push(event);
@@ -172,11 +174,11 @@ const groupOperatorEventsIntoDays = (
 };
 
 export const mapDraftPreviewOptionToFrontend = (
-	backend: TGetTourSummaryBackendResponce,
+	backend: TGetPricingBreakdownBackendResponse,
 	title = ""
 ): IOptionDetail => ({
-	id: backend.id,
+	id: backend?.id ?? "",
 	title,
-	price: mapDraftOptionPriceToFrontend(backend.estimated_revenue),
-	days: groupOperatorEventsIntoDays(backend.events)
+	price: mapDraftOptionPriceToFrontend(backend?.estimated_revenue_per_person),
+	days: groupOperatorEventsIntoDays(backend?.events)
 });

@@ -48,8 +48,7 @@ const SupplierFormBase: FC<ISupplierFormProps> = ({ supplierId }) => {
 			[ENUM_FORM.BRAND_NAME]: "",
 			[ENUM_FORM.LEGAL_NAME]: "",
 			[ENUM_FORM.PHONE]: "",
-			[ENUM_FORM.WEBSITE]: "",
-			[ENUM_FORM.SUPPLIER_TYPES]: []
+			[ENUM_FORM.WEBSITE]: ""
 		}
 	});
 
@@ -59,8 +58,7 @@ const SupplierFormBase: FC<ISupplierFormProps> = ({ supplierId }) => {
 			[ENUM_FORM.BRAND_NAME]: supplier.brandName ?? "",
 			[ENUM_FORM.LEGAL_NAME]: supplier.legalName ?? "",
 			[ENUM_FORM.PHONE]: supplier.phone ?? "",
-			[ENUM_FORM.WEBSITE]: supplier.website ?? "",
-			[ENUM_FORM.SUPPLIER_TYPES]: supplier.supplierTypes ?? []
+			[ENUM_FORM.WEBSITE]: supplier.website ?? ""
 		});
 	}, [supplier, form]);
 

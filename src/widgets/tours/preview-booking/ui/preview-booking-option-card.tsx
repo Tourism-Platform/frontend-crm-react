@@ -108,6 +108,14 @@ export const PreviewBookingOptionCardBase: FC<
 								{t("sections.itinerary.card.per_person")}
 							</span>
 						</p>
+						{option.totalPrice ? (
+							<p className="mt-1 text-sm text-muted-foreground">
+								{t("sections.itinerary.card.group_total")}:{" "}
+								<span className="font-medium text-foreground">
+									{option.totalPrice}
+								</span>
+							</p>
+						) : null}
 						<p className="mt-1 text-xs text-muted-foreground">
 							{t("sections.itinerary.card.price_depends")}
 						</p>

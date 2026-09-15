@@ -45,8 +45,7 @@ export const CreateSupplier: FC = () => {
 			[ENUM_FORM.BRAND_NAME]: "",
 			[ENUM_FORM.LEGAL_NAME]: "",
 			[ENUM_FORM.PHONE]: "",
-			[ENUM_FORM.WEBSITE]: "",
-			[ENUM_FORM.SUPPLIER_TYPES]: []
+			[ENUM_FORM.WEBSITE]: ""
 		}
 	});
 

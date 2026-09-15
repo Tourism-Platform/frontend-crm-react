@@ -37,8 +37,7 @@ export const mapSupplierToCreate = (
 	brand_name: data.brandName,
 	legal_name: data.legalName?.trim() || null,
 	phone: data.phone?.trim() || null,
-	website: data.website?.trim() || null,
-	supplier_types: supplierTypeConverter.toMany(data.supplierTypes)
+	website: data.website?.trim() || null
 });
 
 export const mapSupplierToUpdate = (
@@ -51,9 +50,6 @@ export const mapSupplierToUpdate = (
 	...(data.phone !== undefined && { phone: data.phone?.trim() || null }),
 	...(data.website !== undefined && {
 		website: data.website?.trim() || null
-	}),
-	...(data.supplierTypes !== undefined && {
-		supplier_types: supplierTypeConverter.toMany(data.supplierTypes)
 	})
 });
 

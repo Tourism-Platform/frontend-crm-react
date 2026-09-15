@@ -1,26 +1,35 @@
 import type { TOUR_OPTION_PATHS } from "@/shared/api";
 
-export type TGetTourSummaryBackendResponce = ReturnType<
-	typeof TOUR_OPTION_PATHS.getTourSummary
+export type TGetPricingBreakdownBackendResponse = ReturnType<
+	typeof TOUR_OPTION_PATHS.getPricingBreakdown
 >["_types"]["response"];
 
 export type TTourMinMaxCostBackend =
-	TGetTourSummaryBackendResponce["estimated_cost"];
+	TGetPricingBreakdownBackendResponse["estimated_cost"];
+
+export type TTourMinMaxPaxBackend = TGetPricingBreakdownBackendResponse["pax"];
 
 export type TTourSummaryEventBackend =
-	TGetTourSummaryBackendResponce["events"][number];
+	TGetPricingBreakdownBackendResponse["events"][number];
 
 export type TStandaloneBillableBackend = Extract<
 	TTourSummaryEventBackend,
-	{ event_id: string }
+	{ typ: "individual_bill" }
 >;
 
 export type TPackageBillableBackend = Extract<
 	TTourSummaryEventBackend,
-	{ package: unknown }
+	{ typ: "package_bill" }
 >;
 
 export type TSummaryEventLineBackend =
 	TPackageBillableBackend["events"][number];
 
 export type TOperatorEventBackend = TStandaloneBillableBackend["event"];
+
+export type TBreakdownSpreadBackend = TStandaloneBillableBackend["breakdown"];
+
+export type TBreakdownLineBackend = TBreakdownSpreadBackend["min"][number];
+
+export type TPricingWarningBackend =
+	TStandaloneBillableBackend["warnings"][number];

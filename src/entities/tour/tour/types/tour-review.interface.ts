@@ -1,4 +1,10 @@
 import { type ENUM_EVENT_TYPE } from "./event.types";
+import type {
+	ENUM_BREAKDOWN_LEG_TYPE,
+	ENUM_PRICING_REVIEW_ROW_TYPE,
+	ENUM_PRICING_WARNING_TYPE,
+	IPricingBreakdownSpread
+} from "./pricing-breakdown.types";
 
 export interface ITourReviewItem {
 	id: string;
@@ -11,6 +17,10 @@ export interface ITourReviewItem {
 	position: number;
 	optionIndex: number;
 	subRows?: ITourReviewItem[];
+	breakdown?: IPricingBreakdownSpread;
+	warnings?: ENUM_PRICING_WARNING_TYPE[];
+	rowKind?: ENUM_PRICING_REVIEW_ROW_TYPE;
+	breakdownLeg?: ENUM_BREAKDOWN_LEG_TYPE;
 }
 
 export interface ITourSummaryRange {
@@ -18,8 +28,15 @@ export interface ITourSummaryRange {
 	to: number;
 }
 
+export interface ITourPaxRange {
+	from: number;
+	to: number;
+}
+
 export interface ITourSummary {
+	pax: ITourPaxRange;
 	revenue: ITourSummaryRange;
+	revenuePerPerson: ITourSummaryRange;
 	cost?: ITourSummaryRange;
 	profit: ITourSummaryRange;
 }

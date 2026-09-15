@@ -433,16 +433,13 @@ export const PREVIEW_TOUR_OPTIONS_LIST_MOCK: TourOptionPreviewSchemaOutput[] = [
 			"Six-day journey through Tashkent and Samarkand with train, guided monuments, and partner hotels.",
 		cover_image_path: PREVIEW_MOCK_IMAGE_URLS.cover,
 		total_price: monetary(983),
-		total_price_max: monetary(1112),
-		price_per_person: monetary(196),
-		price_per_person_max: monetary(222)
+		price_per_person: monetary(196)
 	}
 ];
 
 export const PREVIEW_OPTION_BACKEND_MOCK: TourOptionPublicResponse = {
 	id: PREVIEW_OPTION_MOCK_ID,
 	total_price: monetary(983),
-	total_price_max: monetary(1112),
 	events: [
 		withEventMedia(
 			infoEvent(

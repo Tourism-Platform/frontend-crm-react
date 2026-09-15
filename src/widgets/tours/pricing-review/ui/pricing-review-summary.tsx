@@ -27,7 +27,7 @@ const PricingReviewSummaryBase: FC<IPricingReviewSummaryProps> = ({
 				<CardTitle className="text-lg font-semibold">
 					{t("overview.title")}
 				</CardTitle>
-				<div className="grid grid-flow-col items-center gap-8 justify-start">
+				<div className="flex flex-wrap items-center gap-8">
 					<div className="flex flex-col gap-1">
 						<div className="text-xs text-muted-foreground uppercase">
 							{t("overview.revenue")}
@@ -59,6 +59,29 @@ const PricingReviewSummaryBase: FC<IPricingReviewSummaryProps> = ({
 						<div className="text-xl font-medium">
 							{formatToDollars(summary.profit.from)} -{" "}
 							{formatToDollars(summary.profit.to)}
+						</div>
+					</div>
+
+					<Separator orientation="vertical" className="h-12" />
+
+					<div className="flex flex-col gap-1">
+						<div className="text-xs text-muted-foreground uppercase">
+							{t("overview.pax")}
+						</div>
+						<div className="text-xl font-medium">
+							{summary.pax.from} – {summary.pax.to}
+						</div>
+					</div>
+
+					<Separator orientation="vertical" className="h-12" />
+
+					<div className="flex flex-col gap-1">
+						<div className="text-xs text-muted-foreground uppercase">
+							{t("overview.revenue_per_person")}
+						</div>
+						<div className="text-xl font-medium">
+							{formatToDollars(summary.revenuePerPerson.from)} -{" "}
+							{formatToDollars(summary.revenuePerPerson.to)}
 						</div>
 					</div>
 				</div>

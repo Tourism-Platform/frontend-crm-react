@@ -59,6 +59,7 @@
 			"card": {
 				"from": "From",
 				"per_person": "per person",
+				"group_total": "Group total",
 				"price_depends": "The price depends on the number of people",
 				"view_itinerary": "View itinerary",
 				"day": "Day",

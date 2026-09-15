@@ -6,6 +6,7 @@ export * from "./tour-backend.interface";
 export * from "./tour-filter.interface";
 export * from "./event.types";
 export * from "./tour-review.interface";
+export * from "./pricing-breakdown.types";
 
 export * from "./tour-type.types";
 export * from "./pricing-visibility.types";

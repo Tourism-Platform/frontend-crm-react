@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
-	useGetTourSummaryQuery,
+	useGetPricingBreakdownQuery,
 	useListAllTourOptionsQuery
 } from "@/entities/tour";
 
@@ -37,7 +37,7 @@ export const usePricingReview = (tourId: string) => {
 		setSelectedOptionId(optionId);
 	}, []);
 
-	const summaryQuery = useGetTourSummaryQuery(
+	const summaryQuery = useGetPricingBreakdownQuery(
 		{ tourId, optionId: activeOptionId },
 		{ skip: !tourId || !activeOptionId }
 	);

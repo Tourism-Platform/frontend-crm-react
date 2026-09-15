@@ -9,7 +9,9 @@
 		"title": "Обзор",
 		"revenue": "Планируемая выручка",
 		"cost": "Планируемая стоимость (сборы включены)",
-		"profit": "Планируемая прибыль"
+		"profit": "Планируемая прибыль",
+		"pax": "Pax (min–max)",
+		"revenue_per_person": "Выручка на человека"
 	},
 	"table": {
 		"item": "ID заказа",
@@ -18,6 +20,30 @@
 		"estimated_revenue": "Ожидаемая выручка",
 		"name": "Название",
 		"untitled": "Без названия",
+		"warnings_column": "Предупреждения",
+		"breakdown": {
+			"min": "Самое дешёвое разрешение",
+			"max": "Самое дорогое разрешение"
+		},
+		"kind": {
+			"unit": "Единица",
+			"extra_cost": "Доп. строка",
+			"surcharge": "Наценка"
+		},
+		"warnings": {
+			"flat_charge_on_multi_night_stay": "Фикс. цена на несколько ночей",
+			"flat_charge_on_multi_day_guide": "Фикс. цена гида на несколько дней",
+			"fixed_charge_on_sightseeing": "Фикс. цена экскурсии",
+			"empty_supply": "Нет supply",
+			"zero_cost": "Нулевая стоимость"
+		},
+		"warnings_hints": {
+			"flat_charge_on_multi_night_stay": "Проживание дольше одной ночи, но комната или отель оценены как fixed — ночи не умножаются.",
+			"flat_charge_on_multi_day_guide": "Гид работает больше одного дня с фиксированной ценой.",
+			"fixed_charge_on_sightseeing": "Экскурсия или spiritual-активность с фиксированным offering. Входные билеты обычно per person.",
+			"empty_supply": "У priced-события нет offerings, комнат, машин, fares, категорий или items.",
+			"zero_cost": "Есть что оценивать, но max-leg вышел в 0 по всем строкам."
+		},
 		"buttons": {
 			"add_item": "Добавить позицию",
 			"create_package": "Создать пакет"

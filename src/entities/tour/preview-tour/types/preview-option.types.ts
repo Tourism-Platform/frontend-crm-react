@@ -39,5 +39,6 @@ export interface IPreviewOptionCard {
 	title: string;
 	description: string;
 	price: string;
+	totalPrice: string;
 	image: string;
 }

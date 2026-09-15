@@ -54,18 +54,16 @@ describe("mapSupplierFiltersToBackend", () => {
 });
 
 describe("mapSupplierToCreate", () => {
-	it("maps brand_name and supplier_types", () => {
+	it("maps brand_name and optional contact fields", () => {
 		expect(
 			mapSupplierToCreate({
-				brandName: "Hyatt",
-				supplierTypes: [ENUM_SUPPLIER_TYPE.HOTEL]
+				brandName: "Hyatt"
 			})
 		).toEqual({
 			brand_name: "Hyatt",
 			legal_name: null,
 			phone: null,
-			website: null,
-			supplier_types: ["hotel"]
+			website: null
 		});
 	});
 });

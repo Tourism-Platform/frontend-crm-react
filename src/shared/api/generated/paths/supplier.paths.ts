@@ -3,6 +3,7 @@ import type {
 	SupplierCreateSchema,
 	SupplierListResponse,
 	SupplierModel,
+	SupplierSearchHit,
 	SupplierType,
 	SupplierUpdateSchema
 } from "../Api";
@@ -32,6 +33,15 @@ export const SUPPLIER_PATHS = {
 			body: SupplierCreateSchema;
 			query: void;
 			response: SupplierModel;
+		}
+	} as const,
+	search: {
+		url: "/supplier/search",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { q: string; limit?: number; typ?: SupplierType | null };
+			response: SupplierSearchHit[];
 		}
 	} as const,
 	getSupplier: (supplierId: string) =>

@@ -51,12 +51,10 @@ export const tourCatalogHandlers = [
 				languages: [],
 				price_range: {
 					min: t.price_from,
-					max: t.price_to,
 					currency: "USD"
 				},
 				price_per_person: {
 					min: t.price_from,
-					max: t.price_to,
 					currency: "USD"
 				},
 				option_count: 1

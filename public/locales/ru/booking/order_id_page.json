@@ -105,6 +105,30 @@
 			"supplier": "Поставщик",
 			"planned_cost": "Плановая стоимость",
 			"estimated_revenue": "Ожидаемая выручка",
+			"warnings_column": "Предупреждения",
+			"breakdown": {
+				"min": "Бронировать (самое дешёвое)",
+				"max": "Самое дорогое разрешение"
+			},
+			"kind": {
+				"unit": "Единица",
+				"extra_cost": "Доп. строка",
+				"surcharge": "Наценка"
+			},
+			"warnings": {
+				"flat_charge_on_multi_night_stay": "Фикс. цена на несколько ночей",
+				"flat_charge_on_multi_day_guide": "Фикс. цена гида на несколько дней",
+				"fixed_charge_on_sightseeing": "Фикс. цена экскурсии",
+				"empty_supply": "Нет supply",
+				"zero_cost": "Нулевая стоимость"
+			},
+			"warnings_hints": {
+				"flat_charge_on_multi_night_stay": "Проживание дольше одной ночи, но комната или отель оценены как fixed — ночи не умножаются.",
+				"flat_charge_on_multi_day_guide": "Гид работает больше одного дня с фиксированной ценой.",
+				"fixed_charge_on_sightseeing": "Экскурсия или spiritual-активность с фиксированным offering. Входные билеты обычно per person.",
+				"empty_supply": "У priced-события нет offerings, комнат, машин, fares, категорий или items.",
+				"zero_cost": "Есть что оценивать, но max-leg вышел в 0 по всем строкам."
+			},
 			"action": "Действие",
 			"apply": "Применить",
 			"applied": "Применено",

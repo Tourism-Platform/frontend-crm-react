@@ -147,10 +147,36 @@ export enum StaffStatus {
 	Inactive = "inactive"
 }
 
+/**
+ * SearchKind
+ * What one ``GET /supplier/search`` hit names. Declared in rank order: on
+ * a tied score the supplier lists before its product, the product before its
+ * variant.
+ */
+export enum SearchKind {
+	Supplier = "supplier",
+	Product = "product",
+	Variant = "variant"
+}
+
 /** RebuildState */
 export enum RebuildState {
 	Started = "started",
 	AlreadyRunning = "already_running"
+}
+
+/**
+ * PricingWarning
+ * A structural smell in how an event is priced, flagged so the operator
+ * checks the data before trusting the figure. ``FIXED_CHARGE_ON_SIGHTSEEING``
+ * is a heuristic: entrance fees are per head almost everywhere.
+ */
+export enum PricingWarning {
+	FlatChargeOnMultiNightStay = "flat_charge_on_multi_night_stay",
+	FlatChargeOnMultiDayGuide = "flat_charge_on_multi_day_guide",
+	FixedChargeOnSightseeing = "fixed_charge_on_sightseeing",
+	EmptySupply = "empty_supply",
+	ZeroCost = "zero_cost"
 }
 
 /** PickupType */
@@ -363,6 +389,21 @@ export enum Gender {
 	F = "F"
 }
 
+/**
+ * ExpenseType
+ * Enumeration for different types of commissions.
+ */
+export enum ExpenseType {
+	Fixed = "fixed",
+	PerPerson = "per_person",
+	PerGroup = "per_group",
+	PerDuration = "per_duration",
+	PerCar = "per_car",
+	PerCarCategory = "per_car_category",
+	PerRoom = "per_room",
+	PerRoomCategory = "per_room_category"
+}
+
 /** EventTypes */
 export enum EventTypes {
 	Flight = "flight",
@@ -409,6 +450,17 @@ export enum Currency {
 export enum ClientPaymentStatus {
 	NotConfirmed = "not_confirmed",
 	Confirmed = "confirmed"
+}
+
+/**
+ * BreakdownLineKind
+ * What one line of an event's bill is: the priced unit itself, a named
+ * extra cost riding inside the charge, or a supplier surcharge on top of it.
+ */
+export enum BreakdownLineKind {
+	Unit = "unit",
+	ExtraCost = "extra_cost",
+	Surcharge = "surcharge"
 }
 
 /** BookingTransition */
@@ -1082,7 +1134,7 @@ export interface ActivityVariantWrite {
 	 * Typ
 	 * @default "activity"
 	 */
-	typ: "activity";
+	typ?: "activity";
 	/**
 	 * Name
 	 * @maxLength 255
@@ -2170,6 +2222,114 @@ export interface BookingUpdate {
 	pax?: number | null;
 	/** Comment */
 	comment?: string | null;
+}
+
+/**
+ * BreakdownLineSchema
+ * One priced unit inside an event's bill, the way a supplier invoice would
+ * list it: ``quantity`` units of ``unit_cost`` in the supplier's own currency,
+ * multiplied by ``pax`` heads and ``duration`` nights or days where the
+ * strategy says so, converted at ``fx_rate`` into ``cost``. ``fee`` and
+ * ``markup`` are this line's share, so a bill's lines sum to its event line.
+ * ``unit_id`` names the supplier row when the unit is one, so the operator can
+ * book exactly this room, car or fare.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/pricing-breakdown`` for the planning bill
+ * - ``/booking/operator/{id}/itinerary`` for the bill at the booked headcount
+ */
+export interface BreakdownLineSchemaOutput {
+	/**
+	 * What one line of an event's bill is: the priced unit itself, a named
+	 * extra cost riding inside the charge, or a supplier surcharge on top of it.
+	 */
+	kind: BreakdownLineKind;
+	/** Label */
+	label: string | null;
+	/** Unit Id */
+	unit_id: string | null;
+	pricing: ExpenseType | null;
+	rate: ExpenseType | null;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	unit_cost: MonetaryValueSchema;
+	/**
+	 * Quantity
+	 * @default 1
+	 */
+	quantity: number;
+	/** Pax */
+	pax: number | null;
+	/** Duration */
+	duration: number | null;
+	/** Fx Rate */
+	fx_rate: string | null;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	fee: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	markup: MonetaryValueSchema;
+}
+
+/**
+ * BreakdownSpreadSchema
+ * An event's bill on each leg of a quote: what the cheapest resolution books
+ * and what the dearest one does.
+ */
+export interface BreakdownSpreadSchemaOutput {
+	/** Min */
+	min: BreakdownLineSchemaOutput[];
+	/** Max */
+	max: BreakdownLineSchemaOutput[];
 }
 
 /**
@@ -3462,6 +3622,27 @@ export interface EmptyDetailsPub {
 }
 
 /**
+ * EventBreakdownSchema
+ * One booked event's bill at the booking's own headcount and date, with the
+ * structural warnings its pricing carries.
+ *
+ * Check
+ *
+ * - ``/booking/revision/{id}/preview`` for the effective itinerary it belongs to
+ */
+export interface EventBreakdownSchemaOutput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Lines */
+	lines: BreakdownLineSchemaOutput[];
+	/** Warnings */
+	warnings: PricingWarning[];
+}
+
+/**
  * EventEditOp
  * Append-only revision log. CREATE and UPDATE carry the full snapshot event
  * UPDATE and DELETE name the existing snapshot event by ``target_id``. ``seq`` is the order and
@@ -3627,7 +3808,7 @@ export interface EventLibraryResponse {
  *
  * Check
  *
- * - ``/tour/{id}/option/{id}/summary`` for the quote these appear in
+ * - ``/tour/{id}/option/{id}/pricing-breakdown`` for the quote these appear in
  */
 export interface EventLineOutput {
 	/**
@@ -7487,6 +7668,13 @@ export interface OperatorItineraryEventOutput {
 	cost: TourMinMaxCostSchemaOutput;
 	markup: TourMinMaxCostSchemaOutput;
 	fees: TourMinMaxCostSchemaOutput;
+	/**
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
+	 */
+	breakdown: BreakdownSpreadSchemaOutput;
+	/** Warnings */
+	warnings: PricingWarning[];
 }
 
 /**
@@ -7505,6 +7693,11 @@ export interface OperatorItineraryPackageOutput {
 	cost: TourMinMaxCostSchemaOutput;
 	markup: TourMinMaxCostSchemaOutput;
 	fees: TourMinMaxCostSchemaOutput;
+	/**
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
+	 */
+	breakdown: BreakdownSpreadSchemaOutput;
 }
 
 /**
@@ -7516,7 +7709,7 @@ export interface OperatorItineraryPackageOutput {
  * booking will be billed. ``display_lang`` is what the agency sees, for
  * reference only.
  *
- * Totals are pre-FOC, matching ``TourSummaryResponse`` semantics; FOC discounts
+ * Totals are pre-FOC, matching ``PricingBreakdownResponse`` semantics; FOC discounts
  * agency revenue only and never supplier cost, so ``cost`` is unaffected.
  */
 export interface OperatorItineraryResponse {
@@ -7792,7 +7985,7 @@ export interface OrderUserInfo {
  *
  * Check
  *
- * - ``/tour/{id}/option/{id}/summary`` for the quote this belongs to
+ * - ``/tour/{id}/option/{id}/pricing-breakdown`` for the quote this belongs to
  * - ``/tour/{tour_id}/{option_id}/package/{package_id}`` for the package itself
  */
 export interface PackageBillableOutput {
@@ -7814,6 +8007,11 @@ export interface PackageBillableOutput {
 	cost: TourMinMaxCostSchemaOutput;
 	markup: TourMinMaxCostSchemaOutput;
 	fees: TourMinMaxCostSchemaOutput;
+	/**
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
+	 */
+	breakdown: BreakdownSpreadSchemaOutput;
 }
 
 /**
@@ -8661,6 +8859,21 @@ export interface PerGroupExpenseOutput {
 }
 
 /**
+ * PerPaxPriceMatrixSchema
+ * The price curve of one option: a row per headcount asked for.
+ */
+export interface PerPaxPriceMatrixSchemaOutput {
+	/**
+	 * Typ
+	 * @default "per_pax"
+	 */
+	typ: "per_pax";
+	currency: Currency;
+	/** Rows */
+	rows: PriceMatrixRowSchemaOutput[];
+}
+
+/**
  * PerPersonCharge
  * A per-person cost together with its own fee and markup.
  */
@@ -8804,6 +9017,21 @@ export interface PerPersonExpenseOutput {
 	 * slips through.
 	 */
 	cost_per_person: MonetaryValueSchema;
+}
+
+/**
+ * PerRangePriceMatrixSchema
+ * The price sheet of one option: a line per group-size bracket asked for.
+ */
+export interface PerRangePriceMatrixSchemaOutput {
+	/**
+	 * Typ
+	 * @default "per_range"
+	 */
+	typ: "per_range";
+	currency: Currency;
+	/** Brackets */
+	brackets: PriceMatrixBracketSchemaOutput[];
 }
 
 /**
@@ -9164,12 +9392,55 @@ export interface PlainFareCreate {
 	name: string;
 }
 
+/**
+ * PriceMatrixBracketSchema
+ * One group-size bracket quoted as a single price: ``per_person.max`` is the
+ * dearest head inside the bracket and ``binding_pax`` the headcount that sets
+ * it, so quoting that figure never loses money at any size in the range.
+ * ``min`` figures are the cheapest the bracket can turn out.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/price-matrix?brackets=`` for the brackets
+ */
+export interface PriceMatrixBracketSchemaOutput {
+	/** Pax From */
+	pax_from: number;
+	/** Pax To */
+	pax_to: number;
+	/** Binding Pax */
+	binding_pax: number;
+	cost: TourMinMaxCostSchemaOutput;
+	profit: TourMinMaxCostSchemaOutput;
+	revenue: TourMinMaxCostSchemaOutput;
+	per_person: TourMinMaxCostSchemaOutput;
+}
+
+/**
+ * PriceMatrixRowSchema
+ * One headcount priced end to end, the same legs the breakdown shows:
+ * ``cost`` is what the operator pays out (cost + fees), ``profit`` the markup,
+ * ``revenue`` the agency price and ``per_person`` that revenue over ``pax``.
+ * ``min``/``max`` span the cheapest and dearest room, car and fare categories.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/price-matrix`` for the rows
+ * - ``/tour/{id}/option/{id}/pricing-breakdown?pax=`` for what one row books
+ */
+export interface PriceMatrixRowSchemaOutput {
+	/** Pax */
+	pax: number;
+	cost: TourMinMaxCostSchemaOutput;
+	profit: TourMinMaxCostSchemaOutput;
+	revenue: TourMinMaxCostSchemaOutput;
+	per_person: TourMinMaxCostSchemaOutput;
+}
+
 /** PriceRangeSchema */
 export interface PriceRangeSchema {
 	/** Min */
 	min: number | null;
-	/** Max */
-	max: number | null;
 	currency: Currency | null;
 }
 
@@ -9567,6 +9838,47 @@ export interface PricedVehicleWrite {
 }
 
 /**
+ * PricingBreakdownResponse
+ * Option quote: ``estimated_cost`` is what the operator pays out
+ * (cost + fees), ``estimated_profit`` is the markup kept, and
+ * ``estimated_revenue`` is the full agency price — the two always
+ * sum to it. Every ``min`` is the whole group priced at ``pax.min``, every
+ * ``max`` at ``pax.max``. ``estimated_revenue_per_person`` splits each leg's
+ * revenue across its own headcount and reports the realizable spread, the
+ * same figure the public option page and the catalog show.
+ *
+ * Check
+ *
+ * - ``/tour/{id}/option/{id}/pricing-breakdown`` for the quote itself
+ * - ``/tour/{id}/public/option/all`` for the agency-facing per-person spread
+ */
+export interface PricingBreakdownResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * The headcounts a quote's two legs are priced at: ``min`` is the tour's
+	 * ``group_size_min`` (1 when unset), ``max`` its ``group_size``.
+	 */
+	pax: TourMinMaxPaxSchema;
+	/** Events */
+	events: (
+		| ({
+				typ: "individual_bill";
+		  } & StandaloneBillableOutput)
+		| ({
+				typ: "package_bill";
+		  } & PackageBillableOutput)
+	)[];
+	estimated_cost: TourMinMaxCostSchemaOutput;
+	estimated_profit: TourMinMaxCostSchemaOutput;
+	estimated_revenue: TourMinMaxCostSchemaOutput;
+	estimated_revenue_per_person: TourMinMaxCostSchemaOutput;
+}
+
+/**
  * PricingFinancials
  * Pure markup inputs — built from live operator settings or frozen.
  */
@@ -9940,7 +10252,16 @@ export interface RelinkBody {
 
 /**
  * RevisionPreview
- * Effective itinerary for a booking (original snapshot folded with its edit log
+ * Effective itinerary for a booking (original snapshot folded with its edit
+ * log), priced at the booking's own headcount and date. ``breakdown`` is one
+ * bill per effective event in itinerary order: the units the cheapest
+ * resolution books and the warnings its data carries; empty when the price
+ * could not be resolved.
+ *
+ * Check
+ *
+ * - ``/booking/revision/{id}/preview`` for the itinerary itself
+ * - ``/booking/operator/{id}/itinerary`` for the same bills beside cost columns
  */
 export interface RevisionPreview {
 	/** Pure-Pydantic snapshot of everything a booking's price depends on, frozen at creation. */
@@ -9949,6 +10270,8 @@ export interface RevisionPreview {
 	cost: string | null;
 	/** Revenue */
 	revenue: string | null;
+	/** Breakdown */
+	breakdown: EventBreakdownSchemaOutput[];
 }
 
 /**
@@ -10596,7 +10919,7 @@ export interface StaffUpdate {
  *
  * Check
  *
- * - ``/tour/{id}/option/{id}/summary`` for the quote this belongs to
+ * - ``/tour/{id}/option/{id}/pricing-breakdown`` for the quote this belongs to
  * - ``/tour/{tour_id}/{option_id}/package`` for the packages events can join
  */
 export interface StandaloneBillableOutput {
@@ -10645,6 +10968,13 @@ export interface StandaloneBillableOutput {
 	cost: TourMinMaxCostSchemaOutput;
 	markup: TourMinMaxCostSchemaOutput;
 	fees: TourMinMaxCostSchemaOutput;
+	/**
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
+	 */
+	breakdown: BreakdownSpreadSchemaOutput;
+	/** Warnings */
+	warnings: PricingWarning[];
 }
 
 /**
@@ -11039,9 +11369,11 @@ export interface SupplementarySpecOutput {
 
 /**
  * SupplierCreateSchema
- * A supplier the operator contracts with. ``supplier_types`` is a set — the
- * same counterparty may be a hotel and a restaurant — and what it actually
- * sells is created separately, one product per hotel or route.
+ * A supplier the operator contracts with: the counterparty alone. What it
+ * sells is its products, created one per hotel or route afterwards, and
+ * ``supplier_types`` on the read follows them.
+ *
+ * Check: ``POST /supplier/{supplier_id}/product``.
  */
 export interface SupplierCreateSchema {
 	/**
@@ -11055,11 +11387,6 @@ export interface SupplierCreateSchema {
 	phone?: string | null;
 	/** Website */
 	website?: string | null;
-	/**
-	 * Supplier Types
-	 * @minItems 1
-	 */
-	supplier_types: SupplierType[];
 }
 
 /**
@@ -11455,9 +11782,44 @@ export interface SupplierRef {
 }
 
 /**
+ * SupplierSearchHit
+ * One name the search reached: a supplier, a product, or a variant, each
+ * with the ids above it so a click can land on the row. ``product_id`` and
+ * ``typ`` are set on product and variant hits only.
+ */
+export interface SupplierSearchHit {
+	/**
+	 * What one ``GET /supplier/search`` hit names. Declared in rank order: on
+	 * a tied score the supplier lists before its product, the product before its
+	 * variant.
+	 */
+	kind: SearchKind;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string;
+	/** Product Id */
+	product_id: string | null;
+	/** Product Name */
+	product_name: string | null;
+	typ: SupplierType | null;
+}
+
+/**
  * SupplierUpdateSchema
  * Partial update: an omitted field is left alone, an explicit ``null``
- * clears. ``brand_name`` and ``supplier_types`` cannot be cleared.
+ * clears. ``brand_name`` cannot be cleared; ``supplier_types`` is not a
+ * field here — it follows the products.
  */
 export interface SupplierUpdateSchema {
 	/** Brand Name */
@@ -11468,8 +11830,6 @@ export interface SupplierUpdateSchema {
 	phone?: string | null;
 	/** Website */
 	website?: string | null;
-	/** Supplier Types */
-	supplier_types?: SupplierType[] | null;
 }
 
 /**
@@ -11984,6 +12344,18 @@ export interface TourMinMaxCostSchemaOutput {
 	max: MonetaryValueSchema;
 }
 
+/**
+ * TourMinMaxPaxSchema
+ * The headcounts a quote's two legs are priced at: ``min`` is the tour's
+ * ``group_size_min`` (1 when unset), ``max`` its ``group_size``.
+ */
+export interface TourMinMaxPaxSchema {
+	/** Min */
+	min: number;
+	/** Max */
+	max: number;
+}
+
 /** TourOptionCreateSchema */
 export interface TourOptionCreateSchema {
 	/** Name */
@@ -12067,35 +12439,7 @@ export interface TourOptionPreviewSchemaOutput {
 	 * so same-currency is always satisfied and the guards catch anything that
 	 * slips through.
 	 */
-	total_price_max: MonetaryValueSchema;
-	/**
-	 * Monetary value pair.
-	 *
-	 * Conversion happens inside the schema but takes an explicit ``FxContext``
-	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
-	 * ``return self``; cross-currency requires a matching entry in
-	 * ``fx.rates`` and applies ``val * rate``.
-	 *
-	 * Arithmetic operators stay same-currency-only on purpose: event calc
-	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
-	 * so same-currency is always satisfied and the guards catch anything that
-	 * slips through.
-	 */
 	price_per_person: MonetaryValueSchema;
-	/**
-	 * Monetary value pair.
-	 *
-	 * Conversion happens inside the schema but takes an explicit ``FxContext``
-	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
-	 * ``return self``; cross-currency requires a matching entry in
-	 * ``fx.rates`` and applies ``val * rate``.
-	 *
-	 * Arithmetic operators stay same-currency-only on purpose: event calc
-	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
-	 * so same-currency is always satisfied and the guards catch anything that
-	 * slips through.
-	 */
-	price_per_person_max: MonetaryValueSchema;
 }
 
 /** TourOptionPublicResponse */
@@ -12146,20 +12490,6 @@ export interface TourOptionPublicResponse {
 	 * slips through.
 	 */
 	total_price: MonetaryValueSchema;
-	/**
-	 * Monetary value pair.
-	 *
-	 * Conversion happens inside the schema but takes an explicit ``FxContext``
-	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
-	 * ``return self``; cross-currency requires a matching entry in
-	 * ``fx.rates`` and applies ``val * rate``.
-	 *
-	 * Arithmetic operators stay same-currency-only on purpose: event calc
-	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
-	 * so same-currency is always satisfied and the guards catch anything that
-	 * slips through.
-	 */
-	total_price_max: MonetaryValueSchema;
 }
 
 /**
@@ -12504,37 +12834,6 @@ export interface TourStatisticsResponse {
 	settled_profit: string;
 	/** @default "USD" */
 	currency: Currency;
-}
-
-/**
- * TourSummaryResponse
- * Option quote: ``estimated_cost`` is what the operator pays out
- * (cost + fees), ``estimated_profit`` is the markup kept, and
- * ``estimated_revenue`` is the full agency price — the two always
- * sum to it.
- *
- * Check
- *
- * - ``/tour/{id}/option/{id}/summary`` for the quote itself
- */
-export interface TourSummaryResponse {
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Events */
-	events: (
-		| ({
-				typ: "individual_bill";
-		  } & StandaloneBillableOutput)
-		| ({
-				typ: "package_bill";
-		  } & PackageBillableOutput)
-	)[];
-	estimated_cost: TourMinMaxCostSchemaOutput;
-	estimated_profit: TourMinMaxCostSchemaOutput;
-	estimated_revenue: TourMinMaxCostSchemaOutput;
 }
 
 /**
@@ -14863,6 +15162,11 @@ export interface CreateUserAdminUserPostParams {
 	role?: UserRoles;
 }
 
+export interface GoogleLoginAuthGoogleLoginGetParams {
+	/** Next */
+	next?: string | null;
+}
+
 export interface ListSitemapTourSlugSitemapGetParams {
 	/**
 	 * Skip
@@ -14984,11 +15288,61 @@ export interface ListAgencyCatalogTourCatalogAgencyGetParams {
 	limit?: number;
 }
 
-export interface GetTourSummaryTourTourIdOptionOptionIdSummaryGetParams {
+export interface GetPricingBreakdownTourTourIdOptionOptionIdPricingBreakdownGetParams {
 	/** @default "USD" */
 	currency?: Currency;
 	/** @default "en" */
 	read_lang?: LanguageCode;
+	/**
+	 * As Of
+	 * Preview the template spread as of this date.
+	 */
+	as_of?: string | null;
+	/**
+	 * Pax
+	 * Price both legs at this one headcount instead of the tour's group-size range — what a price-matrix row books.
+	 */
+	pax?: number | null;
+	/**
+	 * Date
+	 * Tour day 1; pins date-ranged supplier rates.
+	 */
+	date?: string | null;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
+export interface GetPriceMatrixTourTourIdOptionOptionIdPriceMatrixGetParams {
+	/** @default "USD" */
+	currency?: Currency;
+	/**
+	 * Pax From
+	 * First headcount; the tour's group_size_min or 1.
+	 */
+	pax_from?: number | null;
+	/**
+	 * Pax To
+	 * Last headcount; the tour's group_size.
+	 */
+	pax_to?: number | null;
+	/**
+	 * Brackets
+	 * Comma-separated from-to pairs, e.g. 1-1,2-3,4-6. Given, the matrix is cut per bracket and pax_from/pax_to are ignored.
+	 */
+	brackets?: string | null;
+	/**
+	 * Date
+	 * Tour day 1; pins date-ranged supplier rates.
+	 */
+	date?: string | null;
 	/**
 	 * As Of
 	 * Preview the template spread as of this date.
@@ -17365,19 +17719,15 @@ export interface ListAllProductsSupplierProductGetParams {
 }
 
 export enum CreateProductSupplierSupplierIdProductPostDetailEnum {
-	ProductTypeMustBeOneOfTheSuppliersSupplierTypes = "product type must be one of the supplier's supplier_types"
-}
-
-export enum CreateProductSupplierSupplierIdProductPostDetailEnum1 {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum CreateProductSupplierSupplierIdProductPostDetailEnum2 {
+export enum CreateProductSupplierSupplierIdProductPostDetailEnum1 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export enum CreateProductSupplierSupplierIdProductPostDetailEnum3 {
+export enum CreateProductSupplierSupplierIdProductPostDetailEnum2 {
 	NotFound = "Not found"
 }
 
@@ -17611,49 +17961,31 @@ export enum SwitchProductPricingSupplierSupplierIdProductProductIdPricingPostDet
 /** Payload */
 export type SwitchProductPricingSupplierSupplierIdProductProductIdPricingPostPayload =
 
-		| ({
-				typ: "hotel";
-		  } & (
+		| (
 				| ({
 						to: "per_room";
 				  } & ToPerRoom)
 				| ({
 						to: "whole";
 				  } & ToWholeHotel)
-		  ))
-		| ({
-				typ: "train";
-		  } & (
+		  )
+		| (
 				| ({
 						to: "per_fare";
 				  } & ToPerFare)
 				| ({
 						to: "whole";
 				  } & ToWholeRoute)
-		  ))
-		| ({
-				typ: "flight";
-		  } & (
-				| ({
-						to: "per_fare";
-				  } & ToPerFare)
-				| ({
-						to: "whole";
-				  } & ToWholeRoute)
-		  ))
-		| ({
-				typ: "bus";
-		  } & (
+		  )
+		| (
 				| ({
 						to: "per_vehicle";
 				  } & ToPerVehicle)
 				| ({
 						to: "whole";
 				  } & ToWholeFleet)
-		  ))
-		| ({
-				typ: "transfer";
-		  } & (
+		  )
+		| (
 				| ({
 						to: "per_car";
 				  } & ToPerCar)
@@ -17663,7 +17995,7 @@ export type SwitchProductPricingSupplierSupplierIdProductProductIdPricingPostPay
 				| ({
 						to: "whole";
 				  } & ToWholeTransfer)
-		  ));
+		  );
 
 export interface SwitchProductPricingSupplierSupplierIdProductProductIdPricingPostParams {
 	/**
@@ -17701,49 +18033,39 @@ export enum CreateVariantSupplierSupplierIdProductProductIdVariantPostDetailEnum
 
 /** Payload */
 export type CreateVariantSupplierSupplierIdProductProductIdVariantPostPayload =
-	| ({
-			typ: "hotel";
-	  } & (
+	| (
 			| ({
 					pricing: "per_room";
 			  } & PerRoomHotelVariantWrite)
 			| ({
 					pricing: "whole";
 			  } & WholeHotelVariantWrite)
-	  ))
-	| ({
-			typ: "train";
-	  } & (
+	  )
+	| (
 			| ({
 					pricing: "per_fare";
 			  } & PerFareTrainVariantWrite)
 			| ({
 					pricing: "whole";
 			  } & WholeTrainVariantWrite)
-	  ))
-	| ({
-			typ: "flight";
-	  } & (
+	  )
+	| (
 			| ({
 					pricing: "per_fare";
 			  } & PerFareFlightVariantWrite)
 			| ({
 					pricing: "whole";
 			  } & WholeFlightVariantWrite)
-	  ))
-	| ({
-			typ: "bus";
-	  } & (
+	  )
+	| (
 			| ({
 					pricing: "per_vehicle";
 			  } & PerVehicleBusVariantWrite)
 			| ({
 					pricing: "whole";
 			  } & WholeBusVariantWrite)
-	  ))
-	| ({
-			typ: "transfer";
-	  } & (
+	  )
+	| (
 			| ({
 					pricing: "per_car";
 			  } & PerCarTransferVariantWrite)
@@ -17753,10 +18075,8 @@ export type CreateVariantSupplierSupplierIdProductProductIdVariantPostPayload =
 			| ({
 					pricing: "per_car_category";
 			  } & PerCarCategoryTransferVariantWrite)
-	  ))
-	| ({
-			typ: "activity";
-	  } & ActivityVariantWrite);
+	  )
+	| ActivityVariantWrite;
 
 export interface CreateVariantSupplierSupplierIdProductProductIdVariantPostParams {
 	/**
@@ -17797,49 +18117,39 @@ export enum UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatch
 /** Payload */
 export type UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchPayload =
 
-		| ({
-				typ: "hotel";
-		  } & (
+		| (
 				| ({
 						pricing: "per_room";
 				  } & PerRoomHotelVariantWrite)
 				| ({
 						pricing: "whole";
 				  } & WholeHotelVariantWrite)
-		  ))
-		| ({
-				typ: "train";
-		  } & (
+		  )
+		| (
 				| ({
 						pricing: "per_fare";
 				  } & PerFareTrainVariantWrite)
 				| ({
 						pricing: "whole";
 				  } & WholeTrainVariantWrite)
-		  ))
-		| ({
-				typ: "flight";
-		  } & (
+		  )
+		| (
 				| ({
 						pricing: "per_fare";
 				  } & PerFareFlightVariantWrite)
 				| ({
 						pricing: "whole";
 				  } & WholeFlightVariantWrite)
-		  ))
-		| ({
-				typ: "bus";
-		  } & (
+		  )
+		| (
 				| ({
 						pricing: "per_vehicle";
 				  } & PerVehicleBusVariantWrite)
 				| ({
 						pricing: "whole";
 				  } & WholeBusVariantWrite)
-		  ))
-		| ({
-				typ: "transfer";
-		  } & (
+		  )
+		| (
 				| ({
 						pricing: "per_car";
 				  } & PerCarTransferVariantWrite)
@@ -17849,10 +18159,8 @@ export type UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatch
 				| ({
 						pricing: "per_car_category";
 				  } & PerCarCategoryTransferVariantWrite)
-		  ))
-		| ({
-				typ: "activity";
-		  } & ActivityVariantWrite);
+		  )
+		| ActivityVariantWrite;
 
 export interface UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchParams {
 	/**
@@ -18140,6 +18448,24 @@ export interface ListSuppliersSupplierGetParams {
 	supplier_type?: SupplierType | null;
 	/** Q */
 	q?: string | null;
+}
+
+export interface SearchSupplierSearchGetParams {
+	/**
+	 * Q
+	 * @minLength 1
+	 * @maxLength 128
+	 */
+	q: string;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 50
+	 * @default 10
+	 */
+	limit?: number;
+	/** Typ */
+	typ?: SupplierType | null;
 }
 
 export interface GetSupplierSupplierSupplierIdGetParams {

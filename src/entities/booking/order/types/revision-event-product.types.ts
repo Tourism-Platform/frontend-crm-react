@@ -1,10 +1,18 @@
 import type { BOOKING_REVISION_PATHS } from "@/shared/api/generated/paths/booking-revision.paths";
 
-import type { IEventProductLink, TEventOverride } from "@/entities/tour";
+import type {
+	ENUM_PRICING_WARNING_TYPE,
+	IEventProductLink,
+	IPricingBreakdownLine,
+	TEventOverride
+} from "@/entities/tour";
 
 export type TRevisionPreviewBackend = ReturnType<
 	typeof BOOKING_REVISION_PATHS.setEventProduct
 >["_types"]["response"];
+
+export type TRevisionEventBreakdownBackend =
+	TRevisionPreviewBackend["breakdown"][number];
 
 export type TRevisionEventProductLinkBackend = ReturnType<
 	typeof BOOKING_REVISION_PATHS.setEventProduct
@@ -13,6 +21,12 @@ export type TRevisionEventProductLinkBackend = ReturnType<
 export type TRevisionEventProductQueryBackend = ReturnType<
 	typeof BOOKING_REVISION_PATHS.setEventProduct
 >["_types"]["query"];
+
+export interface IRevisionEventBreakdown {
+	eventId: string;
+	lines: IPricingBreakdownLine[];
+	warnings: ENUM_PRICING_WARNING_TYPE[];
+}
 
 export interface ISetRevisionEventProduct {
 	bookingId: string;

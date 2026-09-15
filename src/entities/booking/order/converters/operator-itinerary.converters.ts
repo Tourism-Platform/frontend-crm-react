@@ -1,8 +1,13 @@
 import { formatToDollars } from "@/shared/utils";
 
-import { ENUM_EVENT } from "@/entities/tour";
-import { backendEventTypeMapper } from "@/entities/tour/itinerary/converters/backend-event-type.converters";
-import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types";
+import {
+	ENUM_EVENT,
+	ENUM_PRICING_REVIEW_ROW,
+	attachBreakdownToReviewItem,
+	backendEventTypeMapper,
+	isPricingReviewBreakdownRow
+} from "@/entities/tour";
+import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour";
 
 import type {
 	IBookingEventAvailability,
@@ -51,6 +56,15 @@ const resolveSupplierLabel = (
 	return supply.supplier_id ?? "-";
 };
 
+const toOrderReviewItem = (
+	item: ReturnType<typeof attachBreakdownToReviewItem>,
+	eventId?: string
+): IOrderTourReviewItem => ({
+	...item,
+	eventId: isPricingReviewBreakdownRow(item) ? undefined : eventId,
+	subRows: item.subRows?.map((sub) => toOrderReviewItem(sub, eventId))
+});
+
 const mapEventToItem = (
 	backend: TOperatorItineraryEventBackend
 ): IOrderTourReviewItem => {
@@ -59,61 +73,77 @@ const mapEventToItem = (
 	const plannedCost = formatCostWithoutFees(cost);
 	const estimatedRevenue = formatRevenue(cost, markup, fees);
 
-	if (event.typ === "options") {
-		return {
-			id: event_id,
-			eventId: event_id,
-			item: "",
-			supplier: "-",
-			plannedCost,
-			estimatedRevenue,
-			type: ENUM_EVENT.MULTIPLY_OPTION,
-			day: event.day,
-			position: event.position,
-			optionIndex: 0,
-			subRows: (event.details ?? []).map((detail, index) => ({
-				id: `${event_id}:${index}`,
-				eventId: event_id,
-				item: detail.name ?? "-",
-				supplier: resolveSupplierLabel(detail.details.supply),
-				plannedCost: "-",
-				estimatedRevenue: "-",
-				type: backendEventTypeMapper.to(
-					detail.typ as ENUM_EVENT_BACKEND_TYPE
-				),
-				day: event.day,
-				position: event.position,
-				optionIndex: index
-			}))
-		};
-	}
+	const base =
+		event.typ === "options"
+			? {
+					id: event_id,
+					eventId: event_id,
+					item: "",
+					supplier: "-",
+					plannedCost,
+					estimatedRevenue,
+					type: ENUM_EVENT.MULTIPLY_OPTION,
+					day: event.day,
+					position: event.position,
+					optionIndex: 0,
+					rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
+					subRows: (event.details ?? []).map((detail, index) => ({
+						id: `${event_id}:${index}`,
+						eventId: event_id,
+						item: detail.name ?? "-",
+						supplier: resolveSupplierLabel(detail.details.supply),
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: backendEventTypeMapper.to(
+							detail.typ as ENUM_EVENT_BACKEND_TYPE
+						),
+						day: event.day,
+						position: event.position,
+						optionIndex: index,
+						rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
+					}))
+				}
+			: {
+					id: event_id,
+					eventId: event_id,
+					item: event.name ?? "-",
+					supplier: resolveSupplierLabel(event.details.supply),
+					plannedCost,
+					estimatedRevenue,
+					type: backendEventTypeMapper.to(
+						event.typ as ENUM_EVENT_BACKEND_TYPE
+					),
+					day: event.day,
+					position: event.position,
+					optionIndex: selected_option_index ?? 0,
+					rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
+				};
 
-	return {
-		id: event_id,
-		eventId: event_id,
-		item: event.name ?? "-",
-		supplier: resolveSupplierLabel(event.details.supply),
-		plannedCost,
-		estimatedRevenue,
-		type: backendEventTypeMapper.to(event.typ as ENUM_EVENT_BACKEND_TYPE),
-		day: event.day,
-		position: event.position,
-		optionIndex: selected_option_index ?? 0
-	};
+	return toOrderReviewItem(
+		attachBreakdownToReviewItem(base, backend.breakdown, backend.warnings),
+		event_id
+	);
 };
 
 const mapPackageToItem = (
 	pkg: TOperatorItineraryPackageBackend
-): IOrderTourReviewItem => ({
-	id: pkg.package_id,
-	item: pkg.name,
-	supplier: "-",
-	plannedCost: formatCostWithoutFees(pkg.cost),
-	estimatedRevenue: formatRevenue(pkg.cost, pkg.markup, pkg.fees),
-	day: 0,
-	position: 0,
-	optionIndex: 0
-});
+): IOrderTourReviewItem =>
+	toOrderReviewItem(
+		attachBreakdownToReviewItem(
+			{
+				id: pkg.package_id,
+				item: pkg.name,
+				supplier: "-",
+				plannedCost: formatCostWithoutFees(pkg.cost),
+				estimatedRevenue: formatRevenue(pkg.cost, pkg.markup, pkg.fees),
+				day: 0,
+				position: 0,
+				optionIndex: 0,
+				rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
+			},
+			pkg.breakdown
+		)
+	);
 
 export const mapOperatorItineraryToTourReviewItems = (
 	data?: TOperatorBookingItineraryBackend
@@ -138,31 +168,33 @@ const findAvailability = (
 	);
 };
 
+const attachAvailabilityToItem = (
+	item: IOrderTourReviewItem,
+	availability: IBookingEventAvailability[]
+): IOrderTourReviewItem => {
+	const next: IOrderTourReviewItem = {
+		...item,
+		subRows: item.subRows?.map((sub) =>
+			attachAvailabilityToItem(sub, availability)
+		)
+	};
+
+	if (isPricingReviewBreakdownRow(item)) {
+		return next;
+	}
+
+	return {
+		...next,
+		availability: findAvailability(
+			availability,
+			item.eventId,
+			item.optionIndex
+		)
+	};
+};
+
 export const attachAvailabilityToItineraryItems = (
 	items: IOrderTourReviewItem[],
 	availability: IBookingEventAvailability[]
 ): IOrderTourReviewItem[] =>
-	items.map((item) => {
-		if (item.subRows?.length) {
-			return {
-				...item,
-				subRows: item.subRows.map((sub) => ({
-					...sub,
-					availability: findAvailability(
-						availability,
-						sub.eventId,
-						sub.optionIndex
-					)
-				}))
-			};
-		}
-
-		return {
-			...item,
-			availability: findAvailability(
-				availability,
-				item.eventId,
-				item.optionIndex
-			)
-		};
-	});
+	items.map((item) => attachAvailabilityToItem(item, availability));

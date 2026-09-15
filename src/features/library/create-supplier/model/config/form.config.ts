@@ -1,9 +1,4 @@
-import { useValueToTranslateLabel } from "@/shared/utils";
-
-import {
-	ENUM_FORM_SUPPLIER as ENUM_FORM,
-	SUPPLIER_TYPE_LABELS
-} from "@/entities/supplier";
+import { ENUM_FORM_SUPPLIER as ENUM_FORM } from "@/entities/supplier";
 
 import type { TForm } from "./form.types";
 
@@ -32,14 +27,5 @@ export const FORM_CREATE_SUPPLIER_LIST = (): TForm[] => [
 		placeholder: "create.fields.website.placeholder",
 		key: ENUM_FORM.WEBSITE,
 		fieldType: "input"
-	},
-	{
-		label: "create.fields.supplierTypes.label",
-		placeholder: "create.fields.supplierTypes.placeholder",
-		key: ENUM_FORM.SUPPLIER_TYPES,
-		fieldType: "multiselect",
-		options: useValueToTranslateLabel(SUPPLIER_TYPE_LABELS),
-		className: "col-span-2",
-		badgeVariant: "secondary"
 	}
 ];

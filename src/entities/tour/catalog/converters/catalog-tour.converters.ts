@@ -65,7 +65,6 @@ export const mapCatalogTourToFrontend = (
 		days: data.days,
 		nights: data.nights,
 		priceFrom: priceSource?.min ?? 0,
-		priceTo: priceSource?.max ?? 0,
 		currency: priceSource?.currency ?? "USD",
 		imageUrl: data.cover_image_url ?? "",
 		route: data.cities ?? [],

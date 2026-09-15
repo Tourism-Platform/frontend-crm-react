@@ -16,7 +16,7 @@ import {
 
 import { authApi } from "@/entities/auth/api/auth.api";
 import type {
-	TGetTourSummaryBackendResponce,
+	TGetPricingBreakdownBackendResponse,
 	TTourOptionBackend
 } from "@/entities/tour/itinerary";
 
@@ -168,7 +168,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 					options.map(async (option) => {
 						const summaryResult = await query(
 							toQueryArgs(
-								TOUR_OPTION_PATHS.getTourSummary(
+								TOUR_OPTION_PATHS.getPricingBreakdown(
 									tourId,
 									option.id
 								)
@@ -180,10 +180,11 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 						}
 
 						const summary =
-							summaryResult.data as TGetTourSummaryBackendResponce;
+							summaryResult.data as TGetPricingBreakdownBackendResponse;
 						return mapDraftOptionCardToFrontend(
 							option,
-							summary.estimated_revenue
+							summary?.estimated_revenue_per_person,
+							summary?.estimated_revenue
 						);
 					})
 				);
@@ -205,7 +206,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 
 				const summaryResult = await query(
 					toQueryArgs(
-						TOUR_OPTION_PATHS.getTourSummary(tourId, optionId)
+						TOUR_OPTION_PATHS.getPricingBreakdown(tourId, optionId)
 					)
 				);
 				if (summaryResult.error) {
@@ -214,7 +215,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 
 				return {
 					data: mapDraftPreviewOptionToFrontend(
-						summaryResult.data as TGetTourSummaryBackendResponce
+						summaryResult.data as TGetPricingBreakdownBackendResponse
 					)
 				};
 			}

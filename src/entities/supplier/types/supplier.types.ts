@@ -17,7 +17,6 @@ export interface ISupplierCreate {
 	legalName?: string | null;
 	phone?: string | null;
 	website?: string | null;
-	supplierTypes: ENUM_SUPPLIER_TYPE_TYPE[];
 }
 
 export interface ISupplierUpdate {
@@ -25,7 +24,6 @@ export interface ISupplierUpdate {
 	legalName?: string | null;
 	phone?: string | null;
 	website?: string | null;
-	supplierTypes?: ENUM_SUPPLIER_TYPE_TYPE[];
 }
 
 export interface ISupplierFilters extends Omit<IPaginationRequest, "status"> {
