@@ -5,3 +5,6 @@ export * from "./rooms.converters";
 export * from "./product.converters";
 export * from "./product-form.converters";
 export * from "./variant-form.converters";
+export * from "./hotel-product-rooms.converters";
+export * from "./hotel-product-pricing.converters";
+export * from "./hotel-product-edit-form.converters";

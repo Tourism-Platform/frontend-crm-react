@@ -38,13 +38,13 @@ import {
 	type THousingRoomBaseChargeBackend,
 	type THousingSpecInputBackend,
 	type TRoomsSchema
-} from "../../types";
+} from "../../../types";
+import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
+import { isInheritedHousingDetails } from "../housing-details.helpers";
+import { housingRoomTypeConverter } from "../housing-room-type.converters";
+import { zeroFixedCharge } from "../zero-fixed-charge.helpers";
 
 import { isClassPricedHousingSpec } from "./accommodation-rooms.converters";
-import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
-import { isInheritedHousingDetails } from "./housing-details.helpers";
-import { housingRoomTypeConverter } from "./housing-room-type.converters";
-import { zeroFixedCharge } from "./zero-fixed-charge.helpers";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 

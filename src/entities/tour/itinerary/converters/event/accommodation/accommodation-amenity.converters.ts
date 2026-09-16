@@ -4,7 +4,7 @@ import { createEnumMapper } from "@/shared/utils";
 import {
 	ENUM_ACCOMMODATION_AMENITY,
 	type ENUM_ACCOMMODATION_AMENITY_TYPE
-} from "../../types";
+} from "../../../types";
 
 const MAP_ACCOMMODATION_AMENITY: Record<
 	ENUM_ACCOMMODATION_AMENITY_TYPE,

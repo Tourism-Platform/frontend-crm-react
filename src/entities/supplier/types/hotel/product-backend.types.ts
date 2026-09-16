@@ -4,6 +4,8 @@ import type {
 	HotelProductUpdate,
 	PerRoomHotelDetails,
 	StayRateInput,
+	ToPerRoom,
+	ToWholeHotel,
 	WholeHotelDetails
 } from "@/shared/api/generated/Api";
 
@@ -23,3 +25,4 @@ export type TCreateHotelProductBackend = Extract<
 >;
 export type THotelProductReadBackend = HotelProductReadOutput;
 export type TUpdateHotelProductBackend = HotelProductUpdate;
+export type THotelPricingSwitchBackend = ToPerRoom | ToWholeHotel;

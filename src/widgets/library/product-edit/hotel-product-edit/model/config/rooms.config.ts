@@ -1,0 +1,19 @@
+import { ENUM_FORM_HOTEL_PRODUCT_ROOMS } from "@/entities/supplier";
+
+import type { TForm } from "../types";
+
+export const ROOM_DATA_LIST: TForm[] = [
+	{
+		label: "form.rooms.details.form.fields.room_name.label",
+		placeholder: "form.rooms.details.form.fields.room_name.placeholder",
+		key: ENUM_FORM_HOTEL_PRODUCT_ROOMS.ROOM_NAME,
+		fieldType: "input"
+	},
+	{
+		label: "form.rooms.details.form.fields.description.label",
+		placeholder: "form.rooms.details.form.fields.description.placeholder",
+		key: ENUM_FORM_HOTEL_PRODUCT_ROOMS.DESCRIPTION,
+		fieldType: "editor",
+		className: "col-span-2"
+	}
+];

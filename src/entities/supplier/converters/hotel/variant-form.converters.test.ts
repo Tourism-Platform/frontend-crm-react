@@ -31,6 +31,8 @@ describe("mapHotelVariantToForm", () => {
 					id: "r1",
 					typ: ENUM_HOTEL_ROOM_TYPE.DOUBLE,
 					pax: null,
+					name: null,
+					description: null,
 					expenses: {
 						typ: ENUM_HOTEL_ROOM_CHARGE.FIXED,
 						cost: { val: 100, currency: DEFAULT_EVENT_CURRENCY },

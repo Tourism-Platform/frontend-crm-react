@@ -22,9 +22,7 @@ export const HOTEL_PRODUCT_GENERAL_SCHEMA = z.object({
 		.max(5, msg("form.general.fields.stars.errors.max"))
 		.nullable()
 		.optional(),
-	[ENUM_FORM_HOTEL_PRODUCT.AMENITIES]: z
-		.array(z.enum(ENUM_HOTEL_AMENITY))
-		.default([]),
-	[ENUM_FORM_HOTEL_PRODUCT.CHECK_IN_FROM]: z.string().default(""),
-	[ENUM_FORM_HOTEL_PRODUCT.CHECK_OUT_UNTIL]: z.string().default("")
+	[ENUM_FORM_HOTEL_PRODUCT.AMENITIES]: z.array(z.enum(ENUM_HOTEL_AMENITY)),
+	[ENUM_FORM_HOTEL_PRODUCT.CHECK_IN_FROM]: z.string(),
+	[ENUM_FORM_HOTEL_PRODUCT.CHECK_OUT_UNTIL]: z.string()
 });

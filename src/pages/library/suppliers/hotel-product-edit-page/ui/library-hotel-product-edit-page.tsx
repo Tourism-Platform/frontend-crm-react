@@ -6,24 +6,16 @@ import { toast } from "sonner";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
-	ENUM_SUPPLIER_TYPE,
-	type IHotelProduct,
 	LIBRARY_SUPPLIER_PRODUCT_CREATE_ID,
-	type TSupplierProduct,
 	useGetSupplierProductQuery
 } from "@/entities/supplier";
 
 import { HotelProductEdit } from "@/widgets/library";
 
-const isHotelProduct = (product?: TSupplierProduct): product is IHotelProduct =>
-	product?.typ === ENUM_SUPPLIER_TYPE.HOTEL;
+import { useLibraryHotelProductEdit } from "../model";
 
 export const LibraryHotelProductEditPage: FC = () => {
-	const { t } = useTranslation([
-		"hotel_product_edit_page",
-		"common_events",
-		"options"
-	]);
+	const { t } = useTranslation("hotel_product_edit_page");
 	const { supplierId = "", productId = "" } = useParams<{
 		supplierId: string;
 		productId: string;
@@ -43,10 +35,28 @@ export const LibraryHotelProductEditPage: FC = () => {
 		}
 	}, [isRealError, t]);
 
-	const hotelProduct = isHotelProduct(product) ? product : null;
+	const {
+		form,
+		createSectionSubmit,
+		isLoading,
+		isExpectedType,
+		product: hotelProduct
+	} = useLibraryHotelProductEdit({
+		supplierId,
+		productId,
+		isCreate,
+		product
+	});
+
+	if (!isCreate && product && !isExpectedType) {
+		return null;
+	}
 
 	return (
 		<HotelProductEdit
+			form={form}
+			createSectionSubmit={createSectionSubmit}
+			isLoading={isLoading}
 			supplierId={supplierId}
 			productId={productId}
 			isCreate={isCreate}

@@ -15,7 +15,7 @@ import {
 	ENUM_FORM_ROOMS,
 	ENUM_HOUSING_ROOM_TYPE,
 	type TAccommodationPricingSchema
-} from "../../types";
+} from "../../../types";
 
 import {
 	mapAccommodationPricingFromBackend,

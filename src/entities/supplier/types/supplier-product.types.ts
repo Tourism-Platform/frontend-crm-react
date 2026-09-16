@@ -26,6 +26,7 @@ import type {
 	IHotelProduct,
 	IHotelVariantWrite
 } from "./hotel";
+import type { THotelPricingSwitchBackend } from "./hotel/product-backend.types";
 import type { THotelProductGeneralSchema } from "./hotel/product-form.types";
 import {
 	ENUM_SUPPLIER_TYPE,
@@ -133,6 +134,12 @@ export interface IUpdateHotelProduct {
 	values: THotelProductGeneralSchema;
 	language?: ENUM_LANGUAGES_TYPE;
 	existing?: IHotelProduct | null;
+}
+
+export interface ISwitchHotelProductPricing {
+	supplierId: string;
+	productId: string;
+	body: THotelPricingSwitchBackend;
 }
 
 export interface ICreateTrainProduct {

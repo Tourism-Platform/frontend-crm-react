@@ -1,99 +1,83 @@
 import { type IQueryTab } from "@/shared/ui";
 
 import {
-	HotelProductGeneral,
-	HotelProductImages,
-	HotelProductVariants
-} from "../../ui";
-import {
 	ENUM_HOTEL_PRODUCT_EDIT_TAB,
-	type IHotelProductEditSlotContext
+	type ENUM_HOTEL_PRODUCT_EDIT_TAB_TYPE,
+	type THotelProductEditSchema
+} from "@/entities/supplier";
+
+import { GeneralInfo } from "../../ui/general-info";
+import { HotelProductImages } from "../../ui/images";
+import { Pricing } from "../../ui/pricing";
+import { RoomsInfo } from "../../ui/rooms";
+import {
+	ENUM_FORM_SECTION,
+	type ENUM_FORM_SECTION_TYPE,
+	type IHotelProductEditSlotContext,
+	type TSlotProps
 } from "../types";
 
-type THotelGeneralTabExtra = Pick<
-	IHotelProductEditSlotContext,
-	"supplierId" | "productId" | "isCreate" | "product"
+type THotelProductTabExtra = Omit<
+	TSlotProps,
+	"form" | "onSubmit" | "isLoading"
 >;
 
-type THotelVariantsTabExtra = Pick<
-	IHotelProductEditSlotContext,
-	"supplierId" | "productId" | "product" | "variants"
-> & { disabled: boolean };
-
-type THotelMediaTabExtra = Pick<
-	IHotelProductEditSlotContext,
-	"supplierId" | "productId" | "variants"
-> & { disabled: boolean };
-
-type THotelGeneralTab = IQueryTab<
-	typeof ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL,
+export const HOTEL_PRODUCT_EDIT_TABS_LIST: IQueryTab<
+	ENUM_HOTEL_PRODUCT_EDIT_TAB_TYPE,
 	"hotel_product_edit_page",
-	string,
-	never,
+	ENUM_FORM_SECTION_TYPE,
+	THotelProductEditSchema,
 	IHotelProductEditSlotContext,
-	THotelGeneralTabExtra
->;
-
-type THotelMediaTab = IQueryTab<
-	typeof ENUM_HOTEL_PRODUCT_EDIT_TAB.MEDIA,
-	"hotel_product_edit_page",
-	string,
-	never,
-	IHotelProductEditSlotContext,
-	THotelMediaTabExtra
->;
-
-type THotelVariantsTab = IQueryTab<
-	typeof ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS,
-	"hotel_product_edit_page",
-	string,
-	never,
-	IHotelProductEditSlotContext,
-	THotelVariantsTabExtra
->;
-
-export const HOTEL_PRODUCT_EDIT_TABS_LIST: (
-	| THotelGeneralTab
-	| THotelMediaTab
-	| THotelVariantsTab
-)[] = [
+	THotelProductTabExtra
+>[] = [
 	{
-		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL,
 		label: "tabs.general",
-		slot: HotelProductGeneral,
+		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.GENERAL,
+		slot: GeneralInfo,
+		section: ENUM_FORM_SECTION.GENERAL,
 		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
 			isCreate,
-			product
+			product,
+			disabled: false
 		})
 	},
 	{
-		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.MEDIA,
-		label: "tabs.media",
-		slot: HotelProductImages,
-		getSlotProps: ({ supplierId, productId, variants, isCreate }) => ({
+		label: "tabs.rooms",
+		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.ROOMS,
+		slot: RoomsInfo,
+		section: ENUM_FORM_SECTION.ROOMS,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
-			variants,
+			isCreate,
+			product,
 			disabled: isCreate
 		})
 	},
 	{
-		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.VARIANTS,
-		label: "tabs.variants",
-		slot: HotelProductVariants,
-		getSlotProps: ({
+		label: "tabs.media",
+		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.MEDIA,
+		slot: HotelProductImages,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
 			product,
-			variants,
-			isCreate
-		}) => ({
+			disabled: isCreate
+		})
+	},
+	{
+		label: "tabs.pricing",
+		type: ENUM_HOTEL_PRODUCT_EDIT_TAB.PRICING,
+		slot: Pricing,
+		section: ENUM_FORM_SECTION.PRICING,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
 			product,
-			variants,
 			disabled: isCreate
 		})
 	}

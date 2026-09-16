@@ -1,6 +1,6 @@
 import type { HousingDetailsOutput } from "@/shared/api";
 
-import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../types";
+import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../../types";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 

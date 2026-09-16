@@ -1,18 +1,23 @@
-import type { IHotelProduct, IHotelVariant } from "@/entities/supplier";
+import type { IQueryTabSlotProps } from "@/shared/ui";
 
-export const ENUM_HOTEL_PRODUCT_EDIT_TAB = {
-	GENERAL: "general",
-	MEDIA: "media",
-	VARIANTS: "variants"
-} as const;
-
-export type ENUM_HOTEL_PRODUCT_EDIT_TAB_TYPE =
-	(typeof ENUM_HOTEL_PRODUCT_EDIT_TAB)[keyof typeof ENUM_HOTEL_PRODUCT_EDIT_TAB];
+import type {
+	IHotelProduct,
+	THotelProductEditSchema
+} from "@/entities/supplier";
 
 export interface IHotelProductEditSlotContext {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
 	product?: IHotelProduct | null;
-	variants: IHotelVariant[];
 }
+
+export type TSlotProps = Required<
+	Pick<
+		IQueryTabSlotProps<THotelProductEditSchema>,
+		"form" | "onSubmit" | "isLoading"
+	>
+> &
+	IHotelProductEditSlotContext & {
+		disabled: boolean;
+	};

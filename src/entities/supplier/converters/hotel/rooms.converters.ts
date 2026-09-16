@@ -127,6 +127,8 @@ const mapHotelRoomFromBackend = (room: THotelRoomReadBackend): IHotelRoom => ({
 	...(room.id ? { id: room.id } : {}),
 	typ: hotelRoomTypeConverter.from(room.typ) ?? null,
 	pax: room.pax,
+	name: room.name ?? null,
+	description: room.description ?? null,
 	expenses:
 		"rate" in room ? mapHotelRoomChargeFromBackend(room.rate.base) : null,
 	rates:
@@ -142,6 +144,8 @@ const mapHotelRoomToPricedWrite = (
 	id: room[ENUM_FORM_HOTEL_ROOMS.ID] ?? null,
 	typ: hotelRoomTypeConverter.to(room.typ)!,
 	pax: resolveHotelRoomPax(room),
+	name: room.name ?? null,
+	description: room.description ?? null,
 	rate: {
 		base: mapHotelRoomChargeToBackend(room.expenses),
 		seasons: room.rates?.map(mapHotelRoomRateToBackend) ?? []
@@ -153,7 +157,9 @@ const mapHotelRoomToWholeWrite = (
 ): TRoomWriteBackend => ({
 	id: room[ENUM_FORM_HOTEL_ROOMS.ID] ?? null,
 	typ: hotelRoomTypeConverter.to(room.typ)!,
-	pax: resolveHotelRoomPax(room)
+	pax: resolveHotelRoomPax(room),
+	name: room.name ?? null,
+	description: room.description ?? null
 });
 
 export const mapHotelVariantFromBackend = (

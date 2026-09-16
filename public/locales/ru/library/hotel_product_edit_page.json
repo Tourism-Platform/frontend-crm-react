@@ -3,8 +3,9 @@
 	"back": "К поставщику",
 	"tabs": {
 		"general": "Основное",
+		"rooms": "Номера",
 		"media": "Медиа",
-		"variants": "Варианты"
+		"pricing": "Цены и бронирование"
 	},
 	"form": {
 		"create_hint": {
@@ -66,8 +67,123 @@
 				"create": "Создать отель"
 			}
 		},
+		"rooms": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение"
+			},
+			"details": {
+				"title": "Номера",
+				"room_item": "Номер {{index}}",
+				"form": {
+					"fields": {
+						"room_name": {
+							"label": "Тип номера",
+							"placeholder": "Выберите тип",
+							"errors": {
+								"required": "Тип номера обязателен",
+								"max": "Тип номера слишком длинный"
+							}
+						},
+						"description": {
+							"label": "Дополнительная информация",
+							"placeholder": "Введите детали...",
+							"errors": {
+								"min": "Описание слишком короткое",
+								"max": "Описание слишком длинное",
+								"required": "Описание обязательно"
+							}
+						}
+					}
+				}
+			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение"
+			},
+			"title": "Цены",
+			"whole_warning": "Цены номеров будут сброшены",
+			"pricing_type": {
+				"title": "Как считается цена?",
+				"tabs": {
+					"flat_rate": "Фикс",
+					"per_room": "За номер",
+					"per_person": "За человека"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Детали цены",
+					"fields": {
+						"total_price": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Цена должна быть не меньше 0",
+								"max": "Цена не должна превышать 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Валюта обязательна",
+								"max": "Код валюты слишком длинный"
+							}
+						}
+					}
+				},
+				"per_room": {
+					"empty_rooms": "Добавьте номера на вкладке «Номера», чтобы задать цену за номер.",
+					"checkboxes": {
+						"price_based_on_class": "Цена по классу",
+						"add_margin_separately": "Добавить наценку отдельно"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Стоимость за номер",
+							"placeholder": "Введите..."
+						},
+						"category_name": {
+							"placeholder": "Введите...",
+							"errors": {
+								"required": "Укажите название класса"
+							}
+						},
+						"categories": {
+							"errors": {
+								"min": "Добавьте хотя бы один класс"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Отдельная наценка",
+								"placeholder": "Введите...",
+								"errors": {
+									"required": "Укажите наценку"
+								}
+							}
+						}
+					},
+					"table": {
+						"type": "Тип",
+						"cost": "Стоимость",
+						"fees": "Сборы",
+						"currency": "Валюта"
+					},
+					"buttons": {
+						"add_category": "Добавить тип"
+					}
+				}
+			}
+		},
 		"variants": {
-			"title": "Варианты",
 			"add": "Добавить вариант",
 			"fields": {
 				"name": {
@@ -78,84 +194,12 @@
 					}
 				},
 				"room_name": {
-					"label": "Тип номера",
-					"placeholder": "Выберите тип",
 					"errors": {
 						"required": "Тип номера обязателен"
 					}
-				},
-				"charge_typ": {
-					"label": "Режим оплаты",
-					"placeholder": "Выберите режим",
-					"errors": {
-						"required": "Выберите тип тарифа"
-					}
-				},
-				"cost": {
-					"label": "Цена",
-					"placeholder": "Введите цену",
-					"errors": {
-						"required": "Укажите стоимость"
-					}
-				},
-				"currency": {
-					"label": "Валюта",
-					"placeholder": "Выберите валюту",
-					"errors": {
-						"required": "Выберите валюту"
-					}
-				},
-				"from_date": {
-					"label": "Сезон с",
-					"placeholder": "YYYY-MM-DD",
-					"errors": {
-						"required": "Укажите начало сезона",
-						"invalid": "Недопустимый формат даты"
-					}
-				},
-				"to_date": {
-					"label": "Сезон по",
-					"placeholder": "YYYY-MM-DD",
-					"errors": {
-						"required": "Укажите конец сезона",
-						"invalid": "Недопустимый формат даты"
-					}
-				},
-				"season_charge_typ": {
-					"label": "Тип тарифа сезона",
-					"placeholder": "Выберите режим",
-					"errors": {
-						"required": "Выберите тип тарифа сезона"
-					}
-				},
-				"season_cost": {
-					"label": "Цена",
-					"placeholder": "Введите цену",
-					"errors": {
-						"required": "Укажите цену сезона"
-					}
-				},
-				"season_currency": {
-					"label": "Валюта сезона",
-					"placeholder": "Выберите валюту",
-					"errors": {
-						"required": "Выберите валюту сезона"
-					}
 				}
 			},
-			"charge": {
-				"fixed": "За весь срок",
-				"per_duration": "За ночь"
-			},
-			"room_item": "Комната {{index}}",
-			"base_price": "Базовая цена",
-			"seasons": "Сезоны",
-			"season_item": "Сезон {{index}}",
-			"add_room": "Добавить комнату",
-			"add_rate": "Добавить сезон",
 			"buttons": {
-				"save": "Сохранить вариант",
-				"saving": "Сохранение",
 				"delete": "Удалить вариант",
 				"deleting": "Удаление"
 			},

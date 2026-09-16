@@ -17,7 +17,17 @@ import {
 	type THousingSpecInputBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
-} from "../../types";
+} from "../../../types";
+import { isInheritedHousingDetails } from "../housing-details.helpers";
+import {
+	mapInheritedHousingProductSnapshotToForm,
+	mapInheritedProductLinkToForm
+} from "../inherited-housing-form.helpers";
+import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "../package-id.helpers";
+import { toTimezoneOffset } from "../timezone.helpers";
 
 import { accommodationAmenityConverter } from "./accommodation-amenity.converters";
 import {
@@ -26,16 +36,6 @@ import {
 	mapAccommodationPricingToBackend
 } from "./accommodation-pricing.converters";
 import { mapRoomsFromBackend } from "./accommodation-rooms.converters";
-import { isInheritedHousingDetails } from "./housing-details.helpers";
-import {
-	mapInheritedHousingProductSnapshotToForm,
-	mapInheritedProductLinkToForm
-} from "./inherited-housing-form.helpers";
-import {
-	applyEventPackageIdToPricing,
-	mapEventPackageIdToBackend
-} from "./package-id.helpers";
-import { toTimezoneOffset } from "./timezone.helpers";
 
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce

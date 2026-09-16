@@ -293,7 +293,9 @@ describe("mapHotelVariantToWrite", () => {
 		expect(body.rooms?.[0]).toEqual({
 			id: null,
 			typ: "double",
-			pax: 2
+			pax: 2,
+			name: null,
+			description: null
 		});
 	});
 });

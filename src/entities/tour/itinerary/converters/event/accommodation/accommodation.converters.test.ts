@@ -19,7 +19,7 @@ import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_ROOMS,
 	ENUM_HOUSING_SOURCE
-} from "../../types";
+} from "../../../types";
 
 import { mapRoomsFromBackend } from "./accommodation-rooms.converters";
 import {

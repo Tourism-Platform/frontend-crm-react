@@ -8,22 +8,13 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import type { IHotelVariant } from "@/entities/supplier";
+import { type TSlotProps, useHotelProductImages } from "../model";
 
-import { useHotelProductImages } from "../model";
-
-interface IHotelProductImagesProps {
-	supplierId: string;
-	productId: string;
-	variants?: IHotelVariant[];
-	disabled?: boolean;
-}
-
-const HotelProductImagesBase: FC<IHotelProductImagesProps> = ({
+const HotelProductImagesBase: FC<TSlotProps> = ({
 	supplierId,
 	productId,
-	variants = [],
-	disabled = false
+	product,
+	disabled
 }) => {
 	const { t } = useTranslation("hotel_product_edit_page");
 	const {
@@ -35,7 +26,7 @@ const HotelProductImagesBase: FC<IHotelProductImagesProps> = ({
 	} = useHotelProductImages({
 		supplierId,
 		productId,
-		variants,
+		variants: product?.variants ?? [],
 		disabled
 	});
 

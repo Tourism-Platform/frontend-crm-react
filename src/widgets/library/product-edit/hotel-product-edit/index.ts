@@ -1,1 +1,4 @@
-export { HotelProductEdit } from "./ui/hotel-product-edit";
+export {
+	HotelProductEdit,
+	type IHotelProductEditProps
+} from "./ui/hotel-product-edit";

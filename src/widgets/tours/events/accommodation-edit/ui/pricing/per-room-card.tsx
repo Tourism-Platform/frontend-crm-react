@@ -39,17 +39,16 @@ export const PerRoomCard: FC<IPerRoomCardProps> = ({
 	addMarginSeparately
 }) => {
 	const { t } = useTranslation("accommodation_edit_page");
+	const roomName = form.watch(
+		`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_ROOMS.ROOM_NAME}`
+	);
 	const rowPath =
 		`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}.${index}` as const;
 
 	return (
 		<Card>
 			<CardHeader>
-				<h4 className="font-semibold">
-					{form.watch(
-						`${ENUM_FORM_SECTION.ROOMS}.${ENUM_FORM_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_ROOMS.ROOM_NAME}`
-					) ?? ""}
-				</h4>
+				<h4 className="font-semibold">{roomName ?? ""}</h4>
 			</CardHeader>
 			<CardContent className="grid gap-4">
 				<div

@@ -54,6 +54,7 @@ import type {
 	ISupplierProductFilters,
 	ISupplierProductImage,
 	ISupplierVariantCreated,
+	ISwitchHotelProductPricing,
 	ISwitchTransferProductPricing,
 	ITrainProduct,
 	ITransferProduct,
@@ -285,6 +286,22 @@ export const supplierProductApi = authApi.injectEndpoints({
 			invalidatesTags: (_result, _error, { productId }) =>
 				productInvalidateTags(productId)
 		}),
+		switchHotelProductPricing: builder.mutation<
+			IHotelProduct,
+			ISwitchHotelProductPricing
+		>({
+			query: (data) => ({
+				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
+					data.supplierId,
+					data.productId
+				),
+				body: data.body
+			}),
+			transformResponse: (response: THotelProductReadBackend) =>
+				mapHotelProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
 		createActivityProduct: builder.mutation<
 			IActivityProduct,
 			ICreateActivityProduct
@@ -491,6 +508,7 @@ export const {
 	useCreateTransferProductMutation,
 	useUpdateTransferProductMutation,
 	useSwitchTransferProductPricingMutation,
+	useSwitchHotelProductPricingMutation,
 	useCreateActivityProductMutation,
 	useUpdateActivityProductMutation,
 	useCreateVariantMutation,

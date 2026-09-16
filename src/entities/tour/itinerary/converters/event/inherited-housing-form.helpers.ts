@@ -8,7 +8,7 @@ import {
 	type TRoomsSchema
 } from "../../types";
 
-import { accommodationAmenityConverter } from "./accommodation-amenity.converters";
+import { accommodationAmenityConverter } from "./accommodation";
 
 export type TEventProductLinkFormFields = {
 	[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID]: string;

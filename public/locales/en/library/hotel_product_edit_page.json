@@ -3,8 +3,9 @@
 	"back": "Back to supplier",
 	"tabs": {
 		"general": "General",
+		"rooms": "Rooms",
 		"media": "Media",
-		"variants": "Variants"
+		"pricing": "Pricing & booking"
 	},
 	"form": {
 		"create_hint": {
@@ -66,8 +67,123 @@
 				"create": "Create hotel"
 			}
 		},
+		"rooms": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving"
+			},
+			"details": {
+				"title": "Rooms",
+				"room_item": "Room {{index}}",
+				"form": {
+					"fields": {
+						"room_name": {
+							"label": "Room type",
+							"placeholder": "Select type",
+							"errors": {
+								"required": "Room type is required",
+								"max": "Room type is too long"
+							}
+						},
+						"description": {
+							"label": "Additional information",
+							"placeholder": "Enter details...",
+							"errors": {
+								"min": "Description is too short",
+								"max": "Description is too long",
+								"required": "Description is required"
+							}
+						}
+					}
+				}
+			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving"
+			},
+			"title": "Pricing",
+			"whole_warning": "Room prices will be cleared",
+			"pricing_type": {
+				"title": "How is this activity priced?",
+				"tabs": {
+					"flat_rate": "Flat rate",
+					"per_room": "Per room",
+					"per_person": "Per person"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Pricing details",
+					"fields": {
+						"total_price": {
+							"label": "Total cost",
+							"placeholder": "Enter...",
+							"errors": {
+								"min": "Price must be at least 0",
+								"max": "Price must not exceed 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Total cost per person",
+							"placeholder": "Enter..."
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose",
+							"errors": {
+								"required": "Currency is required",
+								"max": "Currency code is too long"
+							}
+						}
+					}
+				},
+				"per_room": {
+					"empty_rooms": "Add rooms on the Rooms tab to configure per-room pricing.",
+					"checkboxes": {
+						"price_based_on_class": "Price based on class",
+						"add_margin_separately": "Add margin to this component separately"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Total cost per room",
+							"placeholder": "Enter..."
+						},
+						"category_name": {
+							"placeholder": "Enter...",
+							"errors": {
+								"required": "Class name is required"
+							}
+						},
+						"categories": {
+							"errors": {
+								"min": "Add at least one class"
+							}
+						},
+						"markup": {
+							"value": {
+								"label": "Unique margin",
+								"placeholder": "Enter...",
+								"errors": {
+									"required": "Margin is required"
+								}
+							}
+						}
+					},
+					"table": {
+						"type": "Type",
+						"cost": "Cost",
+						"fees": "Fees",
+						"currency": "Currency"
+					},
+					"buttons": {
+						"add_category": "Add new type"
+					}
+				}
+			}
+		},
 		"variants": {
-			"title": "Variants",
 			"add": "Add variant",
 			"fields": {
 				"name": {
@@ -78,84 +194,12 @@
 					}
 				},
 				"room_name": {
-					"label": "Room type",
-					"placeholder": "Select type",
 					"errors": {
 						"required": "Room type is required"
 					}
-				},
-				"charge_typ": {
-					"label": "Charge mode",
-					"placeholder": "Select charge mode",
-					"errors": {
-						"required": "Select a charge type"
-					}
-				},
-				"cost": {
-					"label": "Price",
-					"placeholder": "Enter price",
-					"errors": {
-						"required": "Cost is required"
-					}
-				},
-				"currency": {
-					"label": "Currency",
-					"placeholder": "Select currency",
-					"errors": {
-						"required": "Select a currency"
-					}
-				},
-				"from_date": {
-					"label": "Season from",
-					"placeholder": "YYYY-MM-DD",
-					"errors": {
-						"required": "Season start is required",
-						"invalid": "Invalid date format"
-					}
-				},
-				"to_date": {
-					"label": "Season to",
-					"placeholder": "YYYY-MM-DD",
-					"errors": {
-						"required": "Season end is required",
-						"invalid": "Invalid date format"
-					}
-				},
-				"season_charge_typ": {
-					"label": "Season charge type",
-					"placeholder": "Select charge mode",
-					"errors": {
-						"required": "Select a season charge type"
-					}
-				},
-				"season_cost": {
-					"label": "Price",
-					"placeholder": "Enter price",
-					"errors": {
-						"required": "Season cost is required"
-					}
-				},
-				"season_currency": {
-					"label": "Season currency",
-					"placeholder": "Select currency",
-					"errors": {
-						"required": "Select a season currency"
-					}
 				}
 			},
-			"charge": {
-				"fixed": "Whole stay",
-				"per_duration": "Per night"
-			},
-			"room_item": "Room {{index}}",
-			"base_price": "Base price",
-			"seasons": "Seasons",
-			"season_item": "Season {{index}}",
-			"add_room": "Add room",
-			"add_rate": "Add season",
 			"buttons": {
-				"save": "Save variant",
-				"saving": "Saving",
 				"delete": "Delete variant",
 				"deleting": "Deleting"
 			},

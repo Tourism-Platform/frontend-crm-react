@@ -17,7 +17,7 @@ import {
 
 const msg = i18nKey<THotelProductEditPageKeys>();
 
-const HOTEL_VARIANT_FEE_SCHEMA = z.object({
+export const HOTEL_VARIANT_FEE_SCHEMA = z.object({
 	[ENUM_SUPPLIER_FEE_FIELD.NAME]: z.string().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.COST]: z.number().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.CURRENCY]: z
