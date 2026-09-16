@@ -7,11 +7,13 @@ import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TGuideEditSchema } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import { EventTitleInput } from "../ui";
 
 import { GUIDE_EDIT_TABS_LIST } from "./model";
 
-export interface IGuideEditProps {
+export interface IGuideEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TGuideEditSchema>;
 	createSectionSubmit: () => Promise<void>;
 	isLoading: boolean;
@@ -22,6 +24,8 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 	form,
 	createSectionSubmit,
 	isLoading,
+	poolVariant,
+	onPoolSelect,
 	tabs = GUIDE_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("guide_edit_page");
@@ -43,6 +47,7 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 							form={form}
 							createSectionSubmit={createSectionSubmit}
 							isLoading={isLoading}
+							slotContext={{ poolVariant, onPoolSelect }}
 						/>
 					</CardContent>
 				</Card>

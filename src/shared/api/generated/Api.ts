@@ -577,126 +577,27 @@ export interface AccountTypeRead {
 export interface ActivityDetailsOutput {
 	/** When the group is somewhere: an activity's hours, an information entry's. */
 	plan: Times;
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & ActivityProductSupplyOutput);
 	/**
-	 * Spec
-	 * What the venue sells.
+	 * Pool
+	 * @minItems 1
 	 */
-	spec:
-		| ({
-				sub_typ: "entertainment";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "extreme";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "food";
-		  } & FoodVenueOutput)
-		| ({
-				sub_typ: "master_class";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "other";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "outdoor";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "photography";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "riding";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "sightseeing";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "spiritual";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "water_activities";
-		  } & GeneralVenueOutput)
-		| ({
-				sub_typ: "wellness";
-		  } & GeneralVenueOutput);
+	pool: ActivityMemberOutput[];
 }
 
 /**
- * ActivityDetailsWrite
- * A visit as the API takes it.
+ * ActivityDetailsPubSchema
+ * A visit as a traveller sees it: when the group is there, and where.
+ *
+ * A venue is the one supplier a traveller is promised by name — visiting this
+ * museum is the point of the entry, not an accident of who had capacity — so
+ * unlike every other type the venue keeps its name, its place and its
+ * pictures. A pool of venues publishes the one the card is built on.
  */
-export interface ActivityDetailsWrite {
-	/** When the group is somewhere: an activity's hours, an information entry's. */
-	plan?: Times;
-	/** Supply */
-	supply?:
-		| (
-				| ({
-						source: "inline";
-				  } & ActivityInlineSupplyNew)
-				| ({
-						source: "product";
-				  } & ProductSupplyNew)
-		  )
-		| null;
-}
-
-/** ActivityEvent */
-export interface ActivityEvent {
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ: "activity";
-	/** A visit as the API takes it. */
-	details: ActivityDetailsWrite;
-}
-
-/** ActivityEventPubRead */
-export interface ActivityEventPubReadOutput {
-	/** Name */
-	name: string | null;
-	/** Description */
-	description: string | null;
-	/** Day */
-	day: number | null;
-	/** Position */
-	position: number | null;
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/**
-	 * Date
-	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
-	 */
-	date: string | null;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ: "activity";
-	/** Details */
-	details:
+export interface ActivityDetailsPubSchemaOutput {
+	start_time: TimeSchema | null;
+	end_time: TimeSchema | null;
+	/** Spec */
+	spec:
 		| (
 				| ({
 						typ: "entertainment";
@@ -736,6 +637,71 @@ export interface ActivityEventPubReadOutput {
 				  } & GeneralActivityPubSchemaOutput)
 		  )
 		| null;
+}
+
+/**
+ * ActivityDetailsWrite
+ * A visit as the API takes it. A create states the pool; an update may
+ * leave it out to keep every member exactly where it is.
+ */
+export interface ActivityDetailsWrite {
+	/** When the group is somewhere: an activity's hours, an information entry's. */
+	plan?: Times;
+	/** Pool */
+	pool?: ActivityMemberWrite[] | null;
+}
+
+/** ActivityEvent */
+export interface ActivityEvent {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ: "activity";
+	/**
+	 * A visit as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
+	details: ActivityDetailsWrite;
+}
+
+/** ActivityEventPubRead */
+export interface ActivityEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
+	/**
+	 * Date
+	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
+	 */
+	date: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ: "activity";
+	details: ActivityDetailsPubSchemaOutput | null;
 }
 
 /** ActivityEventTypeRead */
@@ -820,6 +786,110 @@ export interface ActivityInlineSupplyNew {
 		| ({
 				sub_typ: "wellness";
 		  } & GeneralVenueInput);
+}
+
+/**
+ * ActivityMember
+ * One venue of a visit's pool as it reads.
+ */
+export interface ActivityMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & ActivityProductSupplyOutput);
+	/**
+	 * Spec
+	 * What the venue sells.
+	 */
+	spec:
+		| ({
+				sub_typ: "entertainment";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "extreme";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "food";
+		  } & FoodVenueOutput)
+		| ({
+				sub_typ: "master_class";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "other";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "outdoor";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "photography";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "riding";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "sightseeing";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "spiritual";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "water_activities";
+		  } & GeneralVenueOutput)
+		| ({
+				sub_typ: "wellness";
+		  } & GeneralVenueOutput);
+}
+
+/**
+ * ActivityMemberNew
+ * A venue joining a visit's pool.
+ */
+export interface ActivityMemberNew {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & ActivityInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
+	/** Typ */
+	typ: "activity";
+}
+
+/**
+ * ActivityMemberWrite
+ * One venue of a visit's pool as the API takes it. Echo ``id`` to keep the
+ * member; one sent without an id is a new member.
+ */
+export interface ActivityMemberWrite {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & ActivityInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
 }
 
 /**
@@ -1067,7 +1137,10 @@ export interface ActivitySingleEvent {
 	 * @default "activity"
 	 */
 	typ: "activity";
-	/** A visit as the API takes it. */
+	/**
+	 * A visit as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: ActivityDetailsWrite;
 }
 
@@ -2232,7 +2305,8 @@ export interface BookingUpdate {
  * strategy says so, converted at ``fx_rate`` into ``cost``. ``fee`` and
  * ``markup`` are this line's share, so a bill's lines sum to its event line.
  * ``unit_id`` names the supplier row when the unit is one, so the operator can
- * book exactly this room, car or fare.
+ * book exactly this room, car or fare, and ``supply_id`` the pool member it is
+ * bought from.
  *
  * Check
  *
@@ -2249,6 +2323,8 @@ export interface BreakdownLineSchemaOutput {
 	label: string | null;
 	/** Unit Id */
 	unit_id: string | null;
+	/** Supply Id */
+	supply_id: string | null;
 	pricing: ExpenseType | null;
 	rate: ExpenseType | null;
 	/**
@@ -2335,20 +2411,12 @@ export interface BreakdownSpreadSchemaOutput {
 /**
  * BusDetailPubSchema
  * A coach leg as a traveller sees it: the route it drives and the coaches
- * it runs, whoever supplies them.
+ * it is driven in.
  */
 export interface BusDetailPubSchemaOutput {
-	/**
-	 * Name
-	 * The fleet's own name
-	 */
-	name: string | null;
 	/** Hop */
 	hop: TransportHopPubSchemaOutput[];
-	/** Vehicles */
-	vehicles: VehiclePubSchema[];
-	/** Images */
-	images: EventImagePubSchema[];
+	spec: BusSpecPubSchemaOutput | null;
 }
 
 /**
@@ -2361,30 +2429,17 @@ export interface BusDetailsOutput {
 	 * fleet.
 	 */
 	plan: BusRouteOutput;
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & BusProductSupplyOutput);
 	/**
-	 * Spec
-	 * How the fleet prices a run.
+	 * Pool
+	 * @minItems 1
 	 */
-	spec:
-		| ({
-				pricing: "per_vehicle";
-		  } & PerVehicleFleetOutput)
-		| ({
-				pricing: "whole";
-		  } & WholeFleetOutput);
+	pool: BusMemberOutput[];
 }
 
 /**
  * BusDetailsWrite
- * A coach run as the API takes it.
+ * A coach run as the API takes it. A create states the pool; an update may
+ * leave it out to keep every member exactly where it is.
  */
 export interface BusDetailsWrite {
 	/**
@@ -2392,17 +2447,8 @@ export interface BusDetailsWrite {
 	 * fleet.
 	 */
 	plan?: BusRouteInput;
-	/** Supply */
-	supply?:
-		| (
-				| ({
-						source: "inline";
-				  } & BusInlineSupplyNew)
-				| ({
-						source: "product";
-				  } & ProductSupplyNew)
-		  )
-		| null;
+	/** Pool */
+	pool?: BusMemberWrite[] | null;
 }
 
 /** BusEvent */
@@ -2424,7 +2470,10 @@ export interface BusEvent {
 	 * @default "bus"
 	 */
 	typ: "bus";
-	/** A coach run as the API takes it. */
+	/**
+	 * A coach run as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: BusDetailsWrite;
 }
 
@@ -2531,6 +2580,80 @@ export interface BusLegOutput {
 	departure: BusPointOutput | null;
 	/** Details of the arrival. */
 	arrival: BusPointOutput | null;
+}
+
+/**
+ * BusMember
+ * One coach supplier of a run's pool as it reads.
+ */
+export interface BusMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & BusProductSupplyOutput);
+	/**
+	 * Spec
+	 * How the fleet prices a run.
+	 */
+	spec:
+		| ({
+				pricing: "per_vehicle";
+		  } & PerVehicleFleetOutput)
+		| ({
+				pricing: "whole";
+		  } & WholeFleetOutput);
+}
+
+/**
+ * BusMemberNew
+ * A coach supplier joining a run's pool.
+ */
+export interface BusMemberNew {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & BusInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
+	/** Typ */
+	typ: "bus";
+}
+
+/**
+ * BusMemberWrite
+ * One coach supplier of a run's pool as the API takes it. Echo ``id`` to
+ * keep the member; one sent without an id is a new member.
+ */
+export interface BusMemberWrite {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & BusInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
 }
 
 /**
@@ -2774,7 +2897,10 @@ export interface BusSingleEvent {
 	 * @default "bus"
 	 */
 	typ: "bus";
-	/** A coach run as the API takes it. */
+	/**
+	 * A coach run as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: BusDetailsWrite;
 }
 
@@ -2827,6 +2953,18 @@ export interface BusSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/**
+ * BusSpecPubSchema
+ * The coaches a run promises, over every fleet of its pool: one entry per
+ * distinct body type and capacity, in the order they were met. Which company
+ * actually drives is procurement, so a fleet's own name and pictures never
+ * reach a traveller, and a coach's own name and description go with them.
+ */
+export interface BusSpecPubSchemaOutput {
+	/** Vehicles */
+	vehicles: VehiclePubSchema[];
 }
 
 /**
@@ -3648,8 +3786,9 @@ export interface EventBreakdownSchemaOutput {
  * UPDATE and DELETE name the existing snapshot event by ``target_id``. ``seq`` is the order and
  * ``at`` the server-set time — together they answer "how many / how long".
  * OVERRIDE carries the negotiated deviation for ``target_id`` — ``None``
- * clears it — and names an OPTIONS alternative by ``option_index``, the same
- * positional key the rest of the snapshot layer uses.
+ * clears it — names an OPTIONS alternative by ``option_index``, the same
+ * positional key the rest of the snapshot layer uses, and the pool member it
+ * deviates for by ``supply_id``.
  * ``actor_id``/``actor_name`` freeze who committed the edit — the display name
  * is pinned at write time like everything else in the snapshot, so later staff
  * renames never rewrite history. Edits recorded before actors existed carry
@@ -3692,6 +3831,8 @@ export interface EventEditOpOutput {
 		| null;
 	/** Option Index */
 	option_index: number | null;
+	/** Supply Id */
+	supply_id: string | null;
 	/** Actor Id */
 	actor_id: string | null;
 	/** Actor Name */
@@ -4457,47 +4598,25 @@ export interface FlightDetailsOutput {
 	 * carry no ids to align a per-leg list against.
 	 */
 	plan: Schedule;
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & RouteProductSupplyOutput);
 	/**
-	 * Spec
-	 * How the route prices a leg.
+	 * Pool
+	 * @minItems 1
 	 */
-	spec:
-		| ({
-				pricing: "per_fare";
-		  } & PerFareFlightRouteOutput)
-		| ({
-				pricing: "whole";
-		  } & WholeFlightRouteOutput);
+	pool: FlightMemberOutput[];
 }
 
 /**
  * FlightDetailsPubSchema
- * A flight as a traveller sees it: the legs it flies and the fare classes
- * it sells, whoever sells the seat.
+ * A flight as a traveller sees it: where the group is flown, and when.
  */
 export interface FlightDetailsPubSchemaOutput {
-	/**
-	 * Name
-	 * The route's own name
-	 */
-	name: string | null;
-	/** Hop */
-	hop: FlightHopPubSchemaOutput[];
-	/** Images */
-	images: EventImagePubSchema[];
+	spec: FlightSpecPubSchemaOutput | null;
 }
 
 /**
  * FlightDetailsWrite
- * An air leg as the API takes it.
+ * An air leg as the API takes it. A create states the pool; an update may
+ * leave it out to keep every member exactly where it is.
  */
 export interface FlightDetailsWrite {
 	/**
@@ -4509,17 +4628,8 @@ export interface FlightDetailsWrite {
 	 * carry no ids to align a per-leg list against.
 	 */
 	plan?: Schedule;
-	/** Supply */
-	supply?:
-		| (
-				| ({
-						source: "inline";
-				  } & FlightInlineSupplyNew)
-				| ({
-						source: "product";
-				  } & ProductSupplyNew)
-		  )
-		| null;
+	/** Pool */
+	pool?: FlightMemberWrite[] | null;
 }
 
 /** FlightEvent */
@@ -4541,7 +4651,10 @@ export interface FlightEvent {
 	 * @default "flight"
 	 */
 	typ: "flight";
-	/** An air leg as the API takes it. */
+	/**
+	 * An air leg as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: FlightDetailsWrite;
 }
 
@@ -4785,6 +4898,80 @@ export interface FlightLegOutput {
 	amenities: AmenitiesTypes[];
 }
 
+/**
+ * FlightMember
+ * One air supplier of a leg's pool as it reads.
+ */
+export interface FlightMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & RouteProductSupplyOutput);
+	/**
+	 * Spec
+	 * How the route prices a leg.
+	 */
+	spec:
+		| ({
+				pricing: "per_fare";
+		  } & PerFareFlightRouteOutput)
+		| ({
+				pricing: "whole";
+		  } & WholeFlightRouteOutput);
+}
+
+/**
+ * FlightMemberNew
+ * An air supplier joining a leg's pool.
+ */
+export interface FlightMemberNew {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & FlightInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
+	/** Typ */
+	typ: "flight";
+}
+
+/**
+ * FlightMemberWrite
+ * One air supplier of a leg's pool as the API takes it. Echo ``id`` to keep
+ * the member; one sent without an id is a new member.
+ */
+export interface FlightMemberWrite {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & FlightInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
+}
+
 /** FlightProductCreate */
 export interface FlightProductCreate {
 	/**
@@ -4907,7 +5094,10 @@ export interface FlightSingleEvent {
 	 * @default "flight"
 	 */
 	typ: "flight";
-	/** An air leg as the API takes it. */
+	/**
+	 * An air leg as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: FlightDetailsWrite;
 }
 
@@ -4963,6 +5153,18 @@ export interface FlightSingleEventReadOutput {
 }
 
 /**
+ * FlightSpecPubSchema
+ * The journey a flight promises: the legs it flies and the hours it runs
+ * to. Two sellers of one pool put the group on the same flights, so the legs
+ * come from the member the card is built on rather than from a combination
+ * that would have no meaning.
+ */
+export interface FlightSpecPubSchemaOutput {
+	/** Hop */
+	hop: FlightHopPubSchemaOutput[];
+}
+
+/**
  * FocPolicy
  * Tiered free-of-charge allowance — each tier frees the pax above its base,
  * capped at that tier's ``free``, and the tiers' max applies (never dips, keeps at
@@ -5009,8 +5211,6 @@ export interface FoodActivityPubSchemaOutput {
 	name: string | null;
 	/** Location */
 	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	start_time: TimeSchema | null;
-	end_time: TimeSchema | null;
 	/** Images */
 	images: EventImagePubSchema[];
 	/**
@@ -5293,8 +5493,6 @@ export interface GeneralActivityPubSchemaOutput {
 	name: string | null;
 	/** Location */
 	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	start_time: TimeSchema | null;
-	end_time: TimeSchema | null;
 	/** Images */
 	images: EventImagePubSchema[];
 	/**
@@ -5491,29 +5689,22 @@ export interface GuideDetailsOutput {
 	/** How long a guide is engaged for. */
 	plan: GuidePlan;
 	/**
-	 * An event that states its own spec: nothing is linked, so the only thing
-	 * left to name is the supplier it is bought from.
+	 * Pool
+	 * @minItems 1
 	 */
-	supply: InlineSupply;
-	/**
-	 * A guide as the event states it. No supplier product backs a guide, so the
-	 * spec is always the tour's own.
-	 */
-	spec: GuideSpecOutput;
+	pool: GuideMemberOutput[];
 }
 
 /**
  * GuideDetailsWrite
- * A guide as the API takes it.
+ * A guide as the API takes it. A create states the pool; an update may
+ * leave it out to keep every member exactly where it is.
  */
 export interface GuideDetailsWrite {
 	/** How long a guide is engaged for. */
 	plan?: GuidePlan;
-	/**
-	 * A guide is always the tour's own: no product supplies one, so the supply
-	 * carries the spec and whoever it is bought from.
-	 */
-	supply: GuideInlineSupplyNew;
+	/** Pool */
+	pool?: GuideMemberWrite[] | null;
 }
 
 /** GuideEvent */
@@ -5535,7 +5726,10 @@ export interface GuideEvent {
 	 * @default "guide"
 	 */
 	typ: "guide";
-	/** A guide as the API takes it. */
+	/**
+	 * A guide as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: GuideDetailsWrite;
 }
 
@@ -5586,6 +5780,65 @@ export interface GuideInlineSupplyNew {
 	 * spec is always the tour's own.
 	 */
 	spec: GuideSpecInput;
+}
+
+/**
+ * GuideMember
+ * One guide supplier of an engagement's pool as it reads.
+ */
+export interface GuideMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/**
+	 * An event that states its own spec: nothing is linked, so the only thing
+	 * left to name is the supplier it is bought from.
+	 */
+	supply: InlineSupply;
+	/**
+	 * A guide as the event states it. No supplier product backs a guide, so the
+	 * spec is always the tour's own.
+	 */
+	spec: GuideSpecOutput;
+}
+
+/**
+ * GuideMemberNew
+ * A guide supplier joining an engagement's pool.
+ */
+export interface GuideMemberNew {
+	/** Id */
+	id?: string | null;
+	/**
+	 * A guide is always the tour's own: no product supplies one, so the supply
+	 * carries the spec and whoever it is bought from.
+	 */
+	supply: GuideInlineSupplyNew;
+	/** Typ */
+	typ: "guide";
+}
+
+/**
+ * GuideMemberWrite
+ * One guide supplier of an engagement's pool as the API takes it. Echo
+ * ``id`` to keep the member; one sent without an id is a new member.
+ */
+export interface GuideMemberWrite {
+	/** Id */
+	id?: string | null;
+	/**
+	 * A guide is always the tour's own: no product supplies one, so the supply
+	 * carries the spec and whoever it is bought from.
+	 */
+	supply: GuideInlineSupplyNew;
 }
 
 /**
@@ -5641,7 +5894,10 @@ export interface GuideSingleEvent {
 	 * @default "guide"
 	 */
 	typ: "guide";
-	/** A guide as the API takes it. */
+	/**
+	 * A guide as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: GuideDetailsWrite;
 }
 
@@ -5961,8 +6217,7 @@ export interface HotelProductUpdate {
 
 /**
  * HousingDetails
- * A stay as it reads: the tour's plan, where the hotel comes from and the
- * hotel itself — stated inline or assembled from the linked product.
+ * A stay as it reads: the tour's plan and the hotels that together fill it.
  */
 export interface HousingDetailsOutput {
 	/**
@@ -5970,61 +6225,31 @@ export interface HousingDetailsOutput {
 	 * whoever supplies the hotel.
 	 */
 	plan: Stay;
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & HotelProductSupplyOutput);
 	/**
-	 * Spec
-	 * Where the hotel's price sits.
+	 * Pool
+	 * @minItems 1
 	 */
-	spec:
-		| ({
-				pricing: "per_room";
-		  } & PerRoomHotelOutput)
-		| ({
-				pricing: "whole";
-		  } & WholeHotelOutput);
+	pool: HousingMemberOutput[];
 }
 
 /**
  * HousingDetailsPubSchema
- * A stay as a traveller sees it: where they sleep, how it is rated, how
- * long they stay and which rooms are on offer.
+ * A stay as a traveller sees it: how long they stay and at what hours, and
+ * what they are promised to stay in.
  */
 export interface HousingDetailsPubSchemaOutput {
-	/**
-	 * Name
-	 * The accommodation's own name
-	 */
-	name: string | null;
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/** Stars */
-	stars: number | null;
-	/** Amenities */
-	amenities: AmenitiesTypes[];
 	/** Duration */
 	duration: number | null;
 	check_in: TimeSchema | null;
 	check_out: TimeSchema | null;
-	/** Categories */
-	categories: HousingRoomCategoryPubSchemaOutput[];
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Typs */
-	typs: HotelKind[];
+	spec: HousingSpecPubSchemaOutput | null;
 }
 
 /**
  * HousingDetailsWrite
- * A stay as the API takes it: the tour's plan and where the hotel comes
- * from. A create states the supply; an update of a linked row may leave it
- * out to keep the link exactly where it is.
+ * A stay as the API takes it: the tour's plan and the hotels that together
+ * fill it. A create states the pool; an update may leave it out to keep every
+ * member exactly where it is.
  */
 export interface HousingDetailsWrite {
 	/**
@@ -6032,17 +6257,8 @@ export interface HousingDetailsWrite {
 	 * whoever supplies the hotel.
 	 */
 	plan?: Stay;
-	/** Supply */
-	supply?:
-		| (
-				| ({
-						source: "inline";
-				  } & HousingInlineSupplyNew)
-				| ({
-						source: "product";
-				  } & ProductSupplyNew)
-		  )
-		| null;
+	/** Pool */
+	pool?: HousingMemberWrite[] | null;
 }
 
 /** HousingEvent */
@@ -6065,9 +6281,9 @@ export interface HousingEvent {
 	 */
 	typ: "housing";
 	/**
-	 * A stay as the API takes it: the tour's plan and where the hotel comes
-	 * from. A create states the supply; an update of a linked row may leave it
-	 * out to keep the link exactly where it is.
+	 * A stay as the API takes it: the tour's plan and the hotels that together
+	 * fill it. A create states the pool; an update may leave it out to keep every
+	 * member exactly where it is.
 	 */
 	details: HousingDetailsWrite;
 }
@@ -6118,10 +6334,7 @@ export interface HousingEventTypeReadOutput {
 	 * @default "housing"
 	 */
 	typ: "housing";
-	/**
-	 * A stay as it reads: the tour's plan, where the hotel comes from and the
-	 * hotel itself — stated inline or assembled from the linked product.
-	 */
+	/** A stay as it reads: the tour's plan and the hotels that together fill it. */
 	details: HousingDetailsOutput;
 	/**
 	 * Id
@@ -6157,15 +6370,78 @@ export interface HousingInlineSupplyNew {
 }
 
 /**
- * HousingRoomCategoryPubSchema
- * One band of rooms. A stay priced per room with no bands of its own
- * arrives as a single unnamed category.
+ * HousingMember
+ * One hotel of a stay's pool as it reads: where it comes from and the hotel
+ * itself — stated inline or assembled from the linked product.
  */
-export interface HousingRoomCategoryPubSchemaOutput {
-	/** Name */
-	name: string | null;
-	/** Rooms */
-	rooms: HousingRoomPubSchema[];
+export interface HousingMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & HotelProductSupplyOutput);
+	/**
+	 * Spec
+	 * Where the hotel's price sits.
+	 */
+	spec:
+		| ({
+				pricing: "per_room";
+		  } & PerRoomHotelOutput)
+		| ({
+				pricing: "whole";
+		  } & WholeHotelOutput);
+}
+
+/**
+ * HousingMemberNew
+ * A hotel joining a stay's pool.
+ */
+export interface HousingMemberNew {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & HousingInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
+	/** Typ */
+	typ: "housing";
+}
+
+/**
+ * HousingMemberWrite
+ * One hotel of a stay's pool as the API takes it. Echo ``id`` to keep the
+ * member; one sent without an id is a new member.
+ */
+export interface HousingMemberWrite {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & HousingInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
 }
 
 /**
@@ -6227,9 +6503,9 @@ export interface HousingSingleEvent {
 	 */
 	typ: "housing";
 	/**
-	 * A stay as the API takes it: the tour's plan and where the hotel comes
-	 * from. A create states the supply; an update of a linked row may leave it
-	 * out to keep the link exactly where it is.
+	 * A stay as the API takes it: the tour's plan and the hotels that together
+	 * fill it. A create states the pool; an update may leave it out to keep every
+	 * member exactly where it is.
 	 */
 	details: HousingDetailsWrite;
 }
@@ -6275,10 +6551,7 @@ export interface HousingSingleEventReadOutput {
 	 * @default "housing"
 	 */
 	typ: "housing";
-	/**
-	 * A stay as it reads: the tour's plan, where the hotel comes from and the
-	 * hotel itself — stated inline or assembled from the linked product.
-	 */
+	/** A stay as it reads: the tour's plan and the hotels that together fill it. */
 	details: HousingDetailsOutput;
 	/**
 	 * Id
@@ -6289,6 +6562,29 @@ export interface HousingSingleEventReadOutput {
 }
 
 /**
+ * HousingSpecPubSchema
+ * The stay a traveller is promised, over every hotel of the pool. Which
+ * property the group is actually put in is procurement, so no hotel's name,
+ * address or pictures reach a traveller; what is promised is the class, and
+ * every figure here is a floor that holds whichever member they land in.
+ *
+ * ``stars`` is the lowest of the pool. ``typs`` and ``amenities`` are what
+ * every member has, so one member without a pool drops the pool from the
+ * card. ``rooms`` is every distinct type and capacity the pool's scoped rooms
+ * offer, without the names each hotel gives them.
+ */
+export interface HousingSpecPubSchemaOutput {
+	/** Stars */
+	stars: number | null;
+	/** Typs */
+	typs: HotelKind[];
+	/** Amenities */
+	amenities: AmenitiesTypes[];
+	/** Rooms */
+	rooms: HousingRoomPubSchema[];
+}
+
+/**
  * InformationDetails
  * An information entry as it reads.
  */
@@ -6296,29 +6592,23 @@ export interface InformationDetailsOutput {
 	/** When the group is somewhere: an activity's hours, an information entry's. */
 	plan: Times;
 	/**
-	 * An event that states its own spec: nothing is linked, so the only thing
-	 * left to name is the supplier it is bought from.
+	 * Pool
+	 * @minItems 1
 	 */
-	supply: InlineSupply;
-	/**
-	 * The half a type states nothing in: a supplementary entry's plan, an
-	 * information entry's spec.
-	 */
-	spec: Empty;
+	pool: InformationMember[];
 }
 
 /**
  * InformationDetailsWrite
- * An information entry as the API takes it.
+ * An information entry as the API takes it. No product supplies one, so a
+ * create that leaves the pool out gets a single member naming no supplier; an
+ * update that leaves it out keeps every member exactly where it is.
  */
 export interface InformationDetailsWrite {
 	/** When the group is somewhere: an activity's hours, an information entry's. */
 	plan?: Times;
-	/**
-	 * An information entry states nothing but its hours, and no product backs
-	 * it, so its supply carries only who it is bought from — if anyone.
-	 */
-	supply?: InformationInlineSupplyNew;
+	/** Pool */
+	pool?: InformationMemberWrite[] | null;
 }
 
 /** InformationEvent */
@@ -6340,7 +6630,11 @@ export interface InformationEvent {
 	 * @default "ref"
 	 */
 	typ: "ref";
-	/** An information entry as the API takes it. */
+	/**
+	 * An information entry as the API takes it. No product supplies one, so a
+	 * create that leaves the pool out gets a single member naming no supplier; an
+	 * update that leaves it out keeps every member exactly where it is.
+	 */
 	details?: InformationDetailsWrite;
 }
 
@@ -6420,6 +6714,65 @@ export interface InformationInlineSupplyNew {
 	spec?: Empty;
 }
 
+/**
+ * InformationMember
+ * One member of an information entry's pool as it reads.
+ */
+export interface InformationMember {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/**
+	 * An event that states its own spec: nothing is linked, so the only thing
+	 * left to name is the supplier it is bought from.
+	 */
+	supply: InlineSupply;
+	/**
+	 * The half a type states nothing in: a supplementary entry's plan, an
+	 * information entry's spec.
+	 */
+	spec: Empty;
+}
+
+/**
+ * InformationMemberNew
+ * A member joining an information entry's pool.
+ */
+export interface InformationMemberNew {
+	/** Id */
+	id?: string | null;
+	/**
+	 * An information entry states nothing but its hours, and no product backs
+	 * it, so its supply carries only who it is bought from — if anyone.
+	 */
+	supply?: InformationInlineSupplyNew;
+	/** Typ */
+	typ: "ref";
+}
+
+/**
+ * InformationMemberWrite
+ * One member of an information entry's pool as the API takes it. Echo
+ * ``id`` to keep the member; one sent without an id is a new member.
+ */
+export interface InformationMemberWrite {
+	/** Id */
+	id?: string | null;
+	/**
+	 * An information entry states nothing but its hours, and no product backs
+	 * it, so its supply carries only who it is bought from — if anyone.
+	 */
+	supply?: InformationInlineSupplyNew;
+}
+
 /** InformationSingleEvent */
 export interface InformationSingleEvent {
 	/**
@@ -6461,7 +6814,11 @@ export interface InformationSingleEvent {
 	 * @default "ref"
 	 */
 	typ: "ref";
-	/** An information entry as the API takes it. */
+	/**
+	 * An information entry as the API takes it. No product supplies one, so a
+	 * create that leaves the pool out gets a single member naming no supplier; an
+	 * update that leaves it out keeps every member exactly where it is.
+	 */
 	details?: InformationDetailsWrite;
 }
 
@@ -9952,8 +10309,9 @@ export interface PricingPackageOutput {
 
 /**
  * ProductLinkRead
- * One tour reading this product: where the event sits, how much of the
- * product it takes and whether it deviates from what the product asks.
+ * One tour pool member reading this product: where the event sits, which
+ * member of which alternative reads it, how much of the product it takes and
+ * whether it deviates from what the product asks.
  */
 export interface ProductLinkRead {
 	/** Tour Id */
@@ -9973,6 +10331,11 @@ export interface ProductLinkRead {
 	 * @format uuid
 	 */
 	event_option_id: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supply_id: string;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -11123,17 +11486,16 @@ export interface SupplementaryDetailsOutput {
 	 */
 	plan: Empty;
 	/**
-	 * An event that states its own spec: nothing is linked, so the only thing
-	 * left to name is the supplier it is bought from.
+	 * Pool
+	 * @minItems 1
 	 */
-	supply: InlineSupply;
-	/** Whatever else the tour bills for, each line carrying its own charge. */
-	spec: SupplementarySpecOutput;
+	pool: SupplementaryMemberOutput[];
 }
 
 /**
  * SupplementaryDetailsWrite
- * Supplementary lines as the API takes them.
+ * Supplementary lines as the API takes them. A create states the pool; an
+ * update may leave it out to keep every member exactly where it is.
  */
 export interface SupplementaryDetailsWrite {
 	/**
@@ -11141,8 +11503,8 @@ export interface SupplementaryDetailsWrite {
 	 * information entry's spec.
 	 */
 	plan?: Empty;
-	/** Supplementary lines are always the tour's own: no product supplies them. */
-	supply: SupplementaryInlineSupplyNew;
+	/** Pool */
+	pool?: SupplementaryMemberWrite[] | null;
 }
 
 /** SupplementaryEvent */
@@ -11164,7 +11526,10 @@ export interface SupplementaryEvent {
 	 * @default "supplementary"
 	 */
 	typ: "supplementary";
-	/** Supplementary lines as the API takes them. */
+	/**
+	 * Supplementary lines as the API takes them. A create states the pool; an
+	 * update may leave it out to keep every member exactly where it is.
+	 */
 	details: SupplementaryDetailsWrite;
 }
 
@@ -11253,6 +11618,56 @@ export interface SupplementaryItemOutput {
 		| null;
 }
 
+/**
+ * SupplementaryMember
+ * One supplier of the supplementary lines' pool as it reads.
+ */
+export interface SupplementaryMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/**
+	 * An event that states its own spec: nothing is linked, so the only thing
+	 * left to name is the supplier it is bought from.
+	 */
+	supply: InlineSupply;
+	/** Whatever else the tour bills for, each line carrying its own charge. */
+	spec: SupplementarySpecOutput;
+}
+
+/**
+ * SupplementaryMemberNew
+ * A supplier joining the supplementary lines' pool.
+ */
+export interface SupplementaryMemberNew {
+	/** Id */
+	id?: string | null;
+	/** Supplementary lines are always the tour's own: no product supplies them. */
+	supply: SupplementaryInlineSupplyNew;
+	/** Typ */
+	typ: "supplementary";
+}
+
+/**
+ * SupplementaryMemberWrite
+ * One supplier of the supplementary lines' pool as the API takes it. Echo
+ * ``id`` to keep the member; one sent without an id is a new member.
+ */
+export interface SupplementaryMemberWrite {
+	/** Id */
+	id?: string | null;
+	/** Supplementary lines are always the tour's own: no product supplies them. */
+	supply: SupplementaryInlineSupplyNew;
+}
+
 /** SupplementarySingleEvent */
 export interface SupplementarySingleEvent {
 	/**
@@ -11294,7 +11709,10 @@ export interface SupplementarySingleEvent {
 	 * @default "supplementary"
 	 */
 	typ: "supplementary";
-	/** Supplementary lines as the API takes them. */
+	/**
+	 * Supplementary lines as the API takes them. A create states the pool; an
+	 * update may leave it out to keep every member exactly where it is.
+	 */
 	details: SupplementaryDetailsWrite;
 }
 
@@ -12838,24 +13256,10 @@ export interface TourStatisticsResponse {
 
 /**
  * TrainDetailPubSchema
- * A rail leg as a traveller sees it: the stations it calls at, the hours it
- * runs to, and the fare classes it sells.
- *
- * A supplier's route carries stations but no timetable, so the hours the tour
- * states land on the first departure and the last arrival — the only two the
- * leg has. A route with no stations at all still keeps its hours, in one hop
- * with no place attached.
+ * A rail leg as a traveller sees it: where the group is carried, and when.
  */
 export interface TrainDetailPubSchemaOutput {
-	/**
-	 * Name
-	 * The route's own name
-	 */
-	name: string | null;
-	/** Hop */
-	hop: TransportHopPubSchemaOutput[];
-	/** Images */
-	images: EventImagePubSchema[];
+	spec: TrainSpecPubSchemaOutput | null;
 }
 
 /**
@@ -12872,30 +13276,17 @@ export interface TrainDetailsOutput {
 	 * carry no ids to align a per-leg list against.
 	 */
 	plan: Schedule;
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & RouteProductSupplyOutput);
 	/**
-	 * Spec
-	 * How the route prices a leg.
+	 * Pool
+	 * @minItems 1
 	 */
-	spec:
-		| ({
-				pricing: "per_fare";
-		  } & PerFareTrainRouteOutput)
-		| ({
-				pricing: "whole";
-		  } & WholeTrainRouteOutput);
+	pool: TrainMemberOutput[];
 }
 
 /**
  * TrainDetailsWrite
- * A rail leg as the API takes it.
+ * A rail leg as the API takes it. A create states the pool; an update may
+ * leave it out to keep every member exactly where it is.
  */
 export interface TrainDetailsWrite {
 	/**
@@ -12907,17 +13298,8 @@ export interface TrainDetailsWrite {
 	 * carry no ids to align a per-leg list against.
 	 */
 	plan?: Schedule;
-	/** Supply */
-	supply?:
-		| (
-				| ({
-						source: "inline";
-				  } & TrainInlineSupplyNew)
-				| ({
-						source: "product";
-				  } & ProductSupplyNew)
-		  )
-		| null;
+	/** Pool */
+	pool?: TrainMemberWrite[] | null;
 }
 
 /** TrainEvent */
@@ -12939,7 +13321,10 @@ export interface TrainEvent {
 	 * @default "train"
 	 */
 	typ: "train";
-	/** A rail leg as the API takes it. */
+	/**
+	 * A rail leg as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: TrainDetailsWrite;
 }
 
@@ -13044,6 +13429,80 @@ export interface TrainLegOutput {
 	departure: TrainStopOutput | null;
 	/** Where the leg arrives. */
 	arrival: TrainStopOutput | null;
+}
+
+/**
+ * TrainMember
+ * One rail supplier of a leg's pool as it reads.
+ */
+export interface TrainMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & RouteProductSupplyOutput);
+	/**
+	 * Spec
+	 * How the route prices a leg.
+	 */
+	spec:
+		| ({
+				pricing: "per_fare";
+		  } & PerFareTrainRouteOutput)
+		| ({
+				pricing: "whole";
+		  } & WholeTrainRouteOutput);
+}
+
+/**
+ * TrainMemberNew
+ * A rail supplier joining a leg's pool.
+ */
+export interface TrainMemberNew {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & TrainInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
+	/** Typ */
+	typ: "train";
+}
+
+/**
+ * TrainMemberWrite
+ * One rail supplier of a leg's pool as the API takes it. Echo ``id`` to
+ * keep the member; one sent without an id is a new member.
+ */
+export interface TrainMemberWrite {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & TrainInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
 }
 
 /** TrainProductCreate */
@@ -13168,7 +13627,10 @@ export interface TrainSingleEvent {
 	 * @default "train"
 	 */
 	typ: "train";
-	/** A rail leg as the API takes it. */
+	/**
+	 * A rail leg as the API takes it. A create states the pool; an update may
+	 * leave it out to keep every member exactly where it is.
+	 */
 	details: TrainDetailsWrite;
 }
 
@@ -13224,6 +13686,23 @@ export interface TrainSingleEventReadOutput {
 }
 
 /**
+ * TrainSpecPubSchema
+ * The journey a rail leg promises: the stations it calls at and the hours
+ * it runs to. Two rail suppliers of one pool carry the same group over the
+ * same line, so the stations come from the member the card is built on rather
+ * than from a combination that would have no meaning.
+ *
+ * A supplier's route carries stations but no timetable, so the hours the tour
+ * states land on the first departure and the last arrival — the only two the
+ * leg has. A route with no stations at all still keeps its hours, in one hop
+ * with no place attached.
+ */
+export interface TrainSpecPubSchemaOutput {
+	/** Hop */
+	hop: TransportHopPubSchemaOutput[];
+}
+
+/**
  * TrainStop
  * Where a rail route calls, with no hour attached: the supplier states
  * which stations it runs between, the tour states when it runs them.
@@ -13276,41 +13755,19 @@ export interface TransferDetailsOutput {
 	 * whoever drives it.
 	 */
 	plan: TransferLegOutput;
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & TransferProductSupplyOutput);
 	/**
-	 * Spec
-	 * How the fleet prices a leg.
+	 * Pool
+	 * @minItems 1
 	 */
-	spec:
-		| ({
-				pricing: "per_car";
-		  } & PerCarTransferOutput)
-		| ({
-				pricing: "per_car_category";
-		  } & PerCarCategoryTransferOutput)
-		| ({
-				pricing: "whole";
-		  } & WholeTransferOutput);
+	pool: TransferMemberOutput[];
 }
 
 /**
  * TransferDetailsPubSchema
  * A transfer as a traveller sees it: what kind of run it is, where it
- * leaves from and arrives at, and the cars that drive it.
+ * leaves from and arrives at, and what it is driven in.
  */
 export interface TransferDetailsPubSchemaOutput {
-	/**
-	 * Name
-	 * The fleet's own name
-	 */
-	name: string | null;
 	typ: TransferTypes | null;
 	/**
 	 * One end of a transport leg: where, at what hour, on what date.
@@ -13332,15 +13789,13 @@ export interface TransferDetailsPubSchemaOutput {
 	 * view and the catalog listing.
 	 */
 	arrival: JourneyPointPubSchemaOutput;
-	/** Cars */
-	cars: TransferCarPubSchema[];
-	/** Images */
-	images: EventImagePubSchema[];
+	spec: TransferSpecPubSchemaOutput | null;
 }
 
 /**
  * TransferDetailsWrite
- * A ride as the API takes it.
+ * A ride as the API takes it. A create states the pool; an update may leave
+ * it out to keep every member exactly where it is.
  */
 export interface TransferDetailsWrite {
 	/**
@@ -13348,17 +13803,8 @@ export interface TransferDetailsWrite {
 	 * whoever drives it.
 	 */
 	plan?: TransferLegInput;
-	/** Supply */
-	supply?:
-		| (
-				| ({
-						source: "inline";
-				  } & TransferInlineSupplyNew)
-				| ({
-						source: "product";
-				  } & ProductSupplyNew)
-		  )
-		| null;
+	/** Pool */
+	pool?: TransferMemberWrite[] | null;
 }
 
 /** TransferEvent */
@@ -13380,7 +13826,10 @@ export interface TransferEvent {
 	 * @default "transfer"
 	 */
 	typ: "transfer";
-	/** A ride as the API takes it. */
+	/**
+	 * A ride as the API takes it. A create states the pool; an update may leave
+	 * it out to keep every member exactly where it is.
+	 */
 	details: TransferDetailsWrite;
 }
 
@@ -13492,6 +13941,83 @@ export interface TransferLegOutput {
 	departure: TransferPointOutput | null;
 	/** Details of the arrival. */
 	arrival: TransferPointOutput | null;
+}
+
+/**
+ * TransferMember
+ * One car supplier of a ride's pool as it reads.
+ */
+export interface TransferMemberOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Is Main
+	 * Whether the public card falls back to this member for its title and pictures. Exactly one member of a pool carries it.
+	 * @default false
+	 */
+	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & TransferProductSupplyOutput);
+	/**
+	 * Spec
+	 * How the fleet prices a leg.
+	 */
+	spec:
+		| ({
+				pricing: "per_car";
+		  } & PerCarTransferOutput)
+		| ({
+				pricing: "per_car_category";
+		  } & PerCarCategoryTransferOutput)
+		| ({
+				pricing: "whole";
+		  } & WholeTransferOutput);
+}
+
+/**
+ * TransferMemberNew
+ * A car supplier joining a ride's pool.
+ */
+export interface TransferMemberNew {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & TransferInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
+	/** Typ */
+	typ: "transfer";
+}
+
+/**
+ * TransferMemberWrite
+ * One car supplier of a ride's pool as the API takes it. Echo ``id`` to
+ * keep the member; one sent without an id is a new member.
+ */
+export interface TransferMemberWrite {
+	/** Id */
+	id?: string | null;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & TransferInlineSupplyNew)
+		| ({
+				source: "product";
+		  } & ProductSupplyNew);
 }
 
 /**
@@ -13730,7 +14256,10 @@ export interface TransferSingleEvent {
 	 * @default "transfer"
 	 */
 	typ: "transfer";
-	/** A ride as the API takes it. */
+	/**
+	 * A ride as the API takes it. A create states the pool; an update may leave
+	 * it out to keep every member exactly where it is.
+	 */
 	details: TransferDetailsWrite;
 }
 
@@ -13783,6 +14312,19 @@ export interface TransferSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/**
+ * TransferSpecPubSchema
+ * The cars a ride promises, over every fleet of its pool: one entry per
+ * distinct body type and capacity. Which company actually drives is
+ * procurement, so a fleet's own name and pictures never reach a traveller, and
+ * a car's own name, description and trim go with them — a trim is priced per
+ * fleet and means nothing once the fleets are put together.
+ */
+export interface TransferSpecPubSchemaOutput {
+	/** Cars */
+	cars: TransferCarPubSchema[];
 }
 
 /**
@@ -15924,32 +16466,217 @@ export interface ValidateEventTourTourIdOptionIdEventEventIdValidateGetParams {
 	eventId: string;
 }
 
-export enum SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverridePatchDetailEnum {
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum {
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum1 {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverridePatchDetailEnum1 {
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum2 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export enum SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverridePatchDetailEnum2 {
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum3 {
 	EventOptionNotFound = "Event option not found",
+	SupplierNotFound = "Supplier not found",
 	SupplierProductNotFound = "Supplier product not found"
 }
 
-export enum SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverridePatchDetailEnum3 {
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
+}
+
+/** Member */
+export type AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostPayload =
+
+		| ({
+				typ: "housing";
+		  } & HousingMemberNew)
+		| ({
+				typ: "train";
+		  } & TrainMemberNew)
+		| ({
+				typ: "flight";
+		  } & FlightMemberNew)
+		| ({
+				typ: "bus";
+		  } & BusMemberNew)
+		| ({
+				typ: "transfer";
+		  } & TransferMemberNew)
+		| ({
+				typ: "activity";
+		  } & ActivityMemberNew)
+		| ({
+				typ: "ref";
+		  } & InformationMemberNew)
+		| ({
+				typ: "guide";
+		  } & GuideMemberNew)
+		| ({
+				typ: "supplementary";
+		  } & SupplementaryMemberNew);
+
+export interface AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum {
+	CannotRemoveTheLastSupplierOfAnOptionsPool = "Cannot remove the last supplier of an option's pool"
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found"
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum2 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found"
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum2 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum3 {
 	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
 	OverrideTypeMustMatchTheEventsType = "Override type must match the event's type",
 	OverridePricesByAnArmTheSupplierProductDoesNotPriceBy = "Override prices by an arm the supplier product does not price by"
 }
 
-export enum SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverridePatchDetailEnum4 {
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum4 {
 	OverridePricesAUnitTheEventsScopeDoesNotTake = "Override prices a unit the event's scope does not take"
 }
 
 /** Override */
-export type SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverridePatchPayload =
+export type SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchPayload =
 
 		| ({
 				typ: "housing";
@@ -15970,7 +16697,7 @@ export type SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOv
 				typ: "activity";
 		  } & ActivityOverrideInput);
 
-export interface SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverridePatchParams {
+export interface SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -15993,27 +16720,33 @@ export interface SetOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptio
 	 * @format uuid
 	 */
 	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
-export enum ClearOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverrideDeleteDetailEnum {
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum ClearOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverrideDeleteDetailEnum1 {
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum1 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export enum ClearOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverrideDeleteDetailEnum2 {
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum2 {
 	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
 	SupplierProductNotFound = "Supplier product not found"
 }
 
-export enum ClearOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverrideDeleteDetailEnum3 {
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum3 {
 	EventReadsFromNoSupplierProduct = "Event reads from no supplier product"
 }
 
-export interface ClearOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdOverrideDeleteParams {
+export interface ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -16036,35 +16769,41 @@ export interface ClearOptionOverrideTourTourIdOptionIdEventEventIdOptionEventOpt
 	 * @format uuid
 	 */
 	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
-export enum AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdAttachPostDetailEnum {
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum {
 	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
 }
 
-export enum AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdAttachPostDetailEnum1 {
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum1 {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdAttachPostDetailEnum2 {
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum2 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export enum AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdAttachPostDetailEnum3 {
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum3 {
 	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
 	SupplierProductNotFound = "Supplier product not found"
 }
 
-export enum AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdAttachPostDetailEnum4 {
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum4 {
 	EventAlreadyReadsFromASupplierProductRelinkItInstead = "Event already reads from a supplier product; relink it instead"
 }
 
-export enum AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdAttachPostDetailEnum5 {
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum5 {
 	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
 }
 
-export interface AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdAttachPostParams {
+export interface AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -16087,36 +16826,42 @@ export interface AttachOptionProductTourTourIdOptionIdEventEventIdOptionEventOpt
 	 * @format uuid
 	 */
 	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
-export enum RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdRelinkPostDetailEnum {
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum {
 	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
 }
 
-export enum RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdRelinkPostDetailEnum1 {
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum1 {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdRelinkPostDetailEnum2 {
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum2 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export enum RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdRelinkPostDetailEnum3 {
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum3 {
 	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
 	SupplierProductNotFound = "Supplier product not found"
 }
 
-export enum RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdRelinkPostDetailEnum4 {
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum4 {
 	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
 	EventCarriesANegotiatedOverrideSayToDropItToMoveTheLink = "Event carries a negotiated override; say to drop it to move the link"
 }
 
-export enum RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdRelinkPostDetailEnum5 {
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum5 {
 	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
 }
 
-export interface RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdRelinkPostParams {
+export interface RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -16139,32 +16884,38 @@ export interface RelinkOptionProductTourTourIdOptionIdEventEventIdOptionEventOpt
 	 * @format uuid
 	 */
 	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
-export enum ScopeOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdScopePatchDetailEnum {
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum ScopeOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdScopePatchDetailEnum1 {
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum1 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export enum ScopeOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdScopePatchDetailEnum2 {
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum2 {
 	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
 	SupplierProductNotFound = "Supplier product not found"
 }
 
-export enum ScopeOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdScopePatchDetailEnum3 {
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum3 {
 	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
 	ScopeWouldStrandANegotiatedOverrideOnUnitsItLeavesOut = "Scope would strand a negotiated override on units it leaves out"
 }
 
-export enum ScopeOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdScopePatchDetailEnum4 {
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum4 {
 	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
 }
 
-export interface ScopeOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdScopePatchParams {
+export interface ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -16187,28 +16938,34 @@ export interface ScopeOptionProductTourTourIdOptionIdEventEventIdOptionEventOpti
 	 * @format uuid
 	 */
 	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
-export enum DetachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdDetachPostDetailEnum {
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum DetachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdDetachPostDetailEnum1 {
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum1 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export enum DetachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdDetachPostDetailEnum2 {
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum2 {
 	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
 	SupplierProductNotFound = "Supplier product not found"
 }
 
-export enum DetachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdDetachPostDetailEnum3 {
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum3 {
 	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
 	EventCarriesANegotiatedOverrideSayToDropItToMoveTheLink = "Event carries a negotiated override; say to drop it to move the link"
 }
 
-export interface DetachOptionProductTourTourIdOptionIdEventEventIdOptionEventOptionIdDetachPostParams {
+export interface DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -16231,6 +16988,11 @@ export interface DetachOptionProductTourTourIdOptionIdEventEventIdOptionEventOpt
 	 * @format uuid
 	 */
 	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
 export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum {
@@ -16459,7 +17221,8 @@ export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDe
 }
 
 export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum4 {
-	SupplyMovesThroughAttachRelinkScopeOrDetach = "Supply moves through attach, relink, scope or detach"
+	SupplyMovesThroughAttachRelinkScopeOrDetach = "Supply moves through attach, relink, scope or detach",
+	PoolMembersAreAddedAndRemovedThroughThePoolRoutes = "Pool members are added and removed through the pool routes"
 }
 
 export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum5 {
@@ -18808,7 +19571,37 @@ export interface RemoveEventBookingRevisionBookingIdEventEventIdDeleteParams {
 	eventId: string;
 }
 
-export interface SetEventProductBookingRevisionBookingIdEventEventIdProductPatchParams {
+/** Member */
+export type AddPoolMemberBookingRevisionBookingIdEventEventIdPoolPostPayload =
+	| ({
+			typ: "housing";
+	  } & HousingMemberNew)
+	| ({
+			typ: "train";
+	  } & TrainMemberNew)
+	| ({
+			typ: "flight";
+	  } & FlightMemberNew)
+	| ({
+			typ: "bus";
+	  } & BusMemberNew)
+	| ({
+			typ: "transfer";
+	  } & TransferMemberNew)
+	| ({
+			typ: "activity";
+	  } & ActivityMemberNew)
+	| ({
+			typ: "ref";
+	  } & InformationMemberNew)
+	| ({
+			typ: "guide";
+	  } & GuideMemberNew)
+	| ({
+			typ: "supplementary";
+	  } & SupplementaryMemberNew);
+
+export interface AddPoolMemberBookingRevisionBookingIdEventEventIdPoolPostParams {
 	/** Event Option Id */
 	event_option_id?: string | null;
 	/** Option Index */
@@ -18825,7 +19618,7 @@ export interface SetEventProductBookingRevisionBookingIdEventEventIdProductPatch
 	eventId: string;
 }
 
-export interface ClearEventProductBookingRevisionBookingIdEventEventIdProductDeleteParams {
+export interface RemovePoolMemberBookingRevisionBookingIdEventEventIdPoolSupplyIdDeleteParams {
 	/** Event Option Id */
 	event_option_id?: string | null;
 	/** Option Index */
@@ -18840,6 +19633,55 @@ export interface ClearEventProductBookingRevisionBookingIdEventEventIdProductDel
 	 * @format uuid
 	 */
 	eventId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export interface SetPoolMemberProductBookingRevisionBookingIdEventEventIdPoolSupplyIdProductPatchParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export interface ClearPoolMemberProductBookingRevisionBookingIdEventEventIdPoolSupplyIdProductDeleteParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
 export interface ListEditsBookingRevisionBookingIdEditsGetParams {
@@ -18859,7 +19701,7 @@ export interface PreviewBookingRevisionBookingIdPreviewGetParams {
 }
 
 /** Override */
-export type SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePatchPayload =
+export type SetPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverridePatchPayload =
 
 		| ({
 				typ: "housing";
@@ -18880,7 +19722,7 @@ export type SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePatchPay
 				typ: "activity";
 		  } & ActivityOverrideInput);
 
-export interface SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePatchParams {
+export interface SetPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverridePatchParams {
 	/** Event Option Id */
 	event_option_id?: string | null;
 	/** Option Index */
@@ -18895,9 +19737,14 @@ export interface SetEventOverrideBookingRevisionBookingIdEventEventIdOverridePat
 	 * @format uuid
 	 */
 	eventId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
-export interface ClearEventOverrideBookingRevisionBookingIdEventEventIdOverrideDeleteParams {
+export interface ClearPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverrideDeleteParams {
 	/** Event Option Id */
 	event_option_id?: string | null;
 	/** Option Index */
@@ -18912,6 +19759,11 @@ export interface ClearEventOverrideBookingRevisionBookingIdEventEventIdOverrideD
 	 * @format uuid
 	 */
 	eventId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
 }
 
 export interface AddPassengerInfoBookingOrderBookingIdPaxPostParams {

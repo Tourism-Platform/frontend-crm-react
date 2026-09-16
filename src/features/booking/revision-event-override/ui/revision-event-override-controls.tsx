@@ -27,6 +27,7 @@ interface IRevisionEventOverrideControlsProps {
 	bookingId: string;
 	eventId: string;
 	optionIndex?: number | null;
+	supplyId?: string;
 	onAfterChange?: (hasOverride: boolean) => void;
 }
 
@@ -40,6 +41,7 @@ export const RevisionEventOverrideControls: FC<
 	bookingId,
 	eventId,
 	optionIndex,
+	supplyId,
 	onAfterChange
 }) => {
 	const { t } = useTranslation("common_events");
@@ -47,12 +49,17 @@ export const RevisionEventOverrideControls: FC<
 		useRevisionEventOverrideMutations({
 			bookingId,
 			eventId,
-			optionIndex
+			optionIndex,
+			supplyId
 		});
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [clearOpen, setClearOpen] = useState(false);
 
-	const initialOverride = mapEventOverrideFromDetails(details, kind);
+	const initialOverride = mapEventOverrideFromDetails(
+		details,
+		kind,
+		supplyId
+	);
 
 	if (!isInherited) {
 		return null;

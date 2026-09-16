@@ -1,3 +1,5 @@
+import { format } from "date-fns";
+
 export const formatDate = (date: string | Date | undefined): string => {
 	if (!date) return "";
 	const d = new Date(date);
@@ -20,6 +22,16 @@ export const formatDateToISO = (date: string | Date | undefined): string => {
 	const year = d.getFullYear();
 
 	return `${year}-${month}-${day}`;
+};
+
+export const formatSheetDate = (
+	value?: string | Date | null,
+	dateFormat = "d MMM, yyyy"
+): string => {
+	if (!value) return "";
+	const d = value instanceof Date ? value : new Date(value);
+	if (Number.isNaN(d.getTime())) return "";
+	return format(d, dateFormat);
 };
 
 export const fromatISOtoDate = (

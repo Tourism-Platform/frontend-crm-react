@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { formatSheetDate } from "@/shared/utils";
 
 import {
 	type TEventImageBackend,
@@ -6,6 +6,7 @@ import {
 	type TOperatorEventBackend,
 	type TTimeSchemaBackend,
 	accommodationAmenityConverter,
+	getMainPoolMember,
 	mapEventImageToFrontend
 } from "@/entities/tour/itinerary";
 
@@ -53,17 +54,16 @@ const mapHopToSegment = (
 	routeLabel: string
 ): IOptionFlightSegment => {
 	if ("departure_airport_code" in hop && hop.departure_airport_code) {
-		const depDate = hop.departure_date
-			? format(new Date(hop.departure_date), "d MMM, yyyy")
-			: "";
-		const arrDate = hop.arrival_date
-			? format(new Date(hop.arrival_date), "d MMM, yyyy")
-			: "";
 		return {
 			airlineCode: hop.airline_code ?? "",
 			flightNumber: String(hop.flight_number ?? ""),
 			route: routeLabel,
-			dateRange: [depDate, arrDate].filter(Boolean).join(" - "),
+			dateRange: [
+				formatSheetDate(hop.departure_date),
+				formatSheetDate(hop.arrival_date)
+			]
+				.filter(Boolean)
+				.join(" - "),
 			departureCode: hop.departure_airport_code,
 			departureTime: formatPubTime(hop.departure_time ?? undefined),
 			departurePlace: `${formatLocation(hop.departure_location ?? undefined)}${hop.departure_terminal ? `, Terminal ${hop.departure_terminal}` : ""}${hop.departure_gate ? ` • Gate ${hop.departure_gate}` : ""}`,
@@ -81,7 +81,7 @@ const mapHopToSegment = (
 		route: routeLabel,
 		dateRange: [dep?.date, arr?.date]
 			.filter((d): d is string => Boolean(d))
-			.map((d) => format(new Date(d), "d MMM, yyyy"))
+			.map((d) => formatSheetDate(d))
 			.join(" - "),
 		departureCode: "—",
 		departureTime: formatPubTime(dep?.time ?? undefined),
@@ -100,77 +100,101 @@ const mapSheetExtraFromOperator = (
 	switch (event.typ) {
 		case "transfer": {
 			const details = event.details;
+			const spec = getMainPoolMember(details)?.spec;
 			return {
 				kind: "transfer",
 				pickup: formatJourneyPoint(
 					details?.plan.departure ?? undefined
 				),
 				dropoff: formatJourneyPoint(details?.plan.arrival ?? undefined),
-				cars: mapSheetCarsFromExpenses({ cars: details?.spec.cars })
+				cars: mapSheetCarsFromExpenses({ cars: spec?.cars })
 			};
 		}
 		case "housing": {
 			const details = event.details;
+			const spec = getMainPoolMember(details)?.spec;
 			return {
 				kind: "accommodation",
 				amenities: accommodationAmenityConverter.fromMany(
-					details?.spec.amenities ?? []
+					spec?.amenities ?? []
 				),
 				nights: `${details?.plan.duration ?? 0} night${details?.plan.duration === 1 ? "" : "s"}`,
 				checkIn: formatPubTime(details?.plan.check_in ?? undefined),
 				checkOut: formatPubTime(details?.plan.check_out ?? undefined),
 				rooms: mapSheetRoomsFromExpenses({
-					categories: details?.spec.categories
+					categories: spec?.categories
 				})
 			};
 		}
 		case "activity": {
 			const details = event.details;
+			const spec = getMainPoolMember(details)?.spec;
 			return {
 				kind: "activity",
-				location:
-					formatLocation(details?.spec.location ?? undefined) || "—",
+				location: formatLocation(spec?.location ?? undefined) || "—",
 				startTime: formatPubTime(details?.plan.start_time ?? undefined),
 				endTime: formatPubTime(details?.plan.end_time ?? undefined)
 			};
 		}
 		case "flight": {
 			const details = event.details;
+			const spec = getMainPoolMember(details)?.spec;
+			const legs = spec && "legs" in spec ? spec.legs : undefined;
 			return {
 				kind: "flight",
 				segments:
-					details?.spec.legs.map((leg) =>
-						mapHopToSegment(
-							{
-								...leg,
-								departure_time: details.plan.departure_time,
-								arrival_time: details.plan.arrival_time
-							},
-							name
+					legs
+						?.filter(
+							(
+								leg
+							): leg is Extract<
+								(typeof legs)[number],
+								{ departure_location?: unknown }
+							> => "departure_location" in leg
 						)
-					) ?? []
+						.map((leg) =>
+							mapHopToSegment(
+								{
+									...leg,
+									departure_time: details.plan.departure_time,
+									arrival_time: details.plan.arrival_time
+								},
+								name
+							)
+						) ?? []
 			};
 		}
 		case "train": {
 			const details = event.details;
+			const spec = getMainPoolMember(details)?.spec;
+			const legs = spec && "legs" in spec ? spec.legs : undefined;
 			return {
 				kind: "flight",
 				segments:
-					details?.spec.legs.map((leg) =>
-						mapHopToSegment(
-							{
-								departure: {
-									location: leg.departure?.location,
-									time: details.plan.departure_time
-								},
-								arrival: {
-									location: leg.arrival?.location,
-									time: details.plan.arrival_time
-								}
-							},
-							name
+					legs
+						?.filter(
+							(
+								leg
+							): leg is Extract<
+								(typeof legs)[number],
+								{ departure?: unknown }
+							> => "departure" in leg
 						)
-					) ?? []
+						.map((leg) =>
+							mapHopToSegment(
+								{
+									departure: {
+										location: leg.departure?.location,
+										time: details.plan.departure_time
+									},
+									arrival: {
+										location: leg.arrival?.location,
+										time: details.plan.arrival_time
+									}
+								},
+								name
+							)
+						) ?? []
 			};
 		}
 		case "bus": {

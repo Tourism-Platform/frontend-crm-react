@@ -6,6 +6,7 @@ export * from "./accommodation";
 export * from "./housing-room-type.converters";
 export * from "./housing-source.converters";
 export * from "./housing-details.helpers";
+export * from "./event-pool.helpers";
 export * from "./inherited-housing-form.helpers";
 export * from "./details-read-to-write.converters";
 export * from "./empty-event-details.converters";

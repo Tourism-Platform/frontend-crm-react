@@ -65,7 +65,7 @@ const ZERO_FIXED = {
 const inlineSpec = (
 	details: ReturnType<typeof mapAccommodationFormToUpdate>["details"]
 ) => {
-	const supply = details?.supply;
+	const supply = details?.pool?.[0]?.supply;
 	return supply?.source === "inline" ? supply.spec : undefined;
 };
 
@@ -346,49 +346,58 @@ describe("mapAccommodationEventToForm — inherited", () => {
 						check_in: { time: "11:00:00" },
 						check_out: { time: "12:00:00" }
 					},
-					supply: {
-						source: "product",
-						product_id: "b0c1c0de-0000-0000-0000-000000000001",
-						supplier: {
-							id: "5upp0000-0000-0000-0000-000000000001",
-							name: "Hyatt"
-						},
-						scope: {
-							typ: "only",
-							ids: ["a2f30000-0000-0000-0000-000000000001"]
-						},
-						override: null
-					},
-					spec: {
-						pricing: "per_room",
-						images: [],
-						name: "Hyatt",
-						location: { lat: 41.311, long: 69.279 },
-						stars: 5,
-						typs: [],
-						amenities: [AmenitiesTypes.Wifi],
-						policy: null,
-						categories: [
-							{
-								id: "cat-1",
-								name: null,
-								rooms: [
+					pool: [
+						{
+							id: "11111111-1111-1111-1111-111111111111",
+							is_main: true,
+							supply: {
+								source: "product",
+								product_id:
+									"b0c1c0de-0000-0000-0000-000000000001",
+								supplier: {
+									id: "5upp0000-0000-0000-0000-000000000001",
+									name: "Hyatt"
+								},
+								scope: {
+									typ: "only",
+									ids: [
+										"a2f30000-0000-0000-0000-000000000001"
+									]
+								},
+								override: null
+							},
+							spec: {
+								pricing: "per_room",
+								images: [],
+								name: "Hyatt",
+								location: { lat: 41.311, long: 69.279 },
+								stars: 5,
+								typs: [],
+								amenities: [AmenitiesTypes.Wifi],
+								policy: null,
+								categories: [
 									{
-										id: ROOM_ID,
-										images: [],
-										typ: HousingRoomTypes.Double,
-										pax: 2,
+										id: "cat-1",
 										name: null,
-										description: null,
-										rate: {
-											base: ZERO_FIXED,
-											seasons: []
-										}
+										rooms: [
+											{
+												id: ROOM_ID,
+												images: [],
+												typ: HousingRoomTypes.Double,
+												pax: 2,
+												name: null,
+												description: null,
+												rate: {
+													base: ZERO_FIXED,
+													seasons: []
+												}
+											}
+										]
 									}
 								]
 							}
-						]
-					}
+						}
+					]
 				}
 			}
 		});
@@ -500,6 +509,6 @@ describe("mapAccommodationFormToUpdate — custom", () => {
 			stars: 4,
 			location: null
 		});
-		expect(body.details?.supply?.source).toBe("inline");
+		expect(body.details?.pool?.[0]?.supply?.source).toBe("inline");
 	});
 });

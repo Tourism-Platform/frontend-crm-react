@@ -17,7 +17,7 @@ import {
  * Unified product-link mutations (contract 3.1) — attach / relink / detach
  * all address the option row (`eventId` slot + resolved `eventOptionId`).
  */
-export const useEventProductLinkMutations = () => {
+export const useEventProductLinkMutations = (supplyId?: string) => {
 	const { i18n } = useTranslation();
 	const { tourId, optionId, eventId } = useEventEditIds();
 	const eventOptionId = useResolvedEventOptionId();
@@ -34,6 +34,7 @@ export const useEventProductLinkMutations = () => {
 			optionId,
 			eventId,
 			eventOptionId,
+			supplyId: supplyId ?? "",
 			data,
 			language
 		}).unwrap();
@@ -44,6 +45,7 @@ export const useEventProductLinkMutations = () => {
 			optionId,
 			eventId,
 			eventOptionId,
+			supplyId: supplyId ?? "",
 			data,
 			language
 		}).unwrap();
@@ -54,6 +56,7 @@ export const useEventProductLinkMutations = () => {
 			optionId,
 			eventId,
 			eventOptionId,
+			supplyId: supplyId ?? "",
 			data,
 			language
 		}).unwrap();

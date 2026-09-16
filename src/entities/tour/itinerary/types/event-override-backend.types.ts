@@ -7,7 +7,7 @@ import type {
 } from "@/shared/api";
 
 export type TEventOverrideInputBackend = ReturnType<
-	typeof TOUR_EVENTS_PATHS.setOptionOverride
+	typeof TOUR_EVENTS_PATHS.setPoolMemberOverride
 >["_types"]["body"];
 
 export type THousingOverrideInputBackend = HotelOverrideInput;

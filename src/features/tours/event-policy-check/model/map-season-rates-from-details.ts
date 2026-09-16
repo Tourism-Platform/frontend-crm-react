@@ -4,7 +4,11 @@ import {
 	type IHotelRoomRate,
 	mapHotelRoomChargeFromBackend
 } from "@/entities/supplier";
-import type { TEventDetailsBackend } from "@/entities/tour";
+import {
+	type TEventDetailsBackend,
+	getPoolMember,
+	isProductPoolMember
+} from "@/entities/tour";
 
 export interface IProductSeasonRateRow {
 	roomLabel: string;
@@ -20,17 +24,18 @@ const mapSeasonToRate = (season: RoomSeasonOutput): IHotelRoomRate => ({
 /**
  * Season rates of the linked product for the policy-check view.
  *
- * Contract 3.1: `details.spec` is already scoped by the backend — read the
+ * Contract 6: the pool member `spec` is already scoped by the backend — read the
  * scoped per-room spec directly, never re-filter units by scope here.
  */
 export const mapSeasonRatesFromHousingDetails = (
 	details: TEventDetailsBackend | undefined
 ): IProductSeasonRateRow[] => {
-	if (details?.supply.source !== "product") {
+	const member = getPoolMember(details);
+	if (!isProductPoolMember(member)) {
 		return [];
 	}
 
-	const spec = details.spec;
+	const spec = member.spec;
 	if (!spec || !("pricing" in spec) || spec.pricing !== "per_room") {
 		return [];
 	}

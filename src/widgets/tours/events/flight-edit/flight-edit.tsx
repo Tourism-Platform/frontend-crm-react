@@ -7,6 +7,8 @@ import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TFlightEditSchema } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import {
 	useHasProductOverride,
 	useIsInheritedProduct
@@ -15,7 +17,7 @@ import { EventTitleInput, InheritedLockBanner } from "../ui";
 
 import { type ENUM_FORM_SECTION_TYPE, FLIGHT_EDIT_TABS_LIST } from "./model";
 
-export interface IFlightEditProps {
+export interface IFlightEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TFlightEditSchema>;
 	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
@@ -26,6 +28,8 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 	form,
 	createSectionSubmit,
 	isLoading,
+	poolVariant,
+	onPoolSelect,
 	tabs = FLIGHT_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("flight_edit_page");
@@ -59,6 +63,7 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 							form={form}
 							createSectionSubmit={createSectionSubmit}
 							isLoading={isLoading}
+							slotContext={{ poolVariant, onPoolSelect }}
 						/>
 					</CardContent>
 				</Card>

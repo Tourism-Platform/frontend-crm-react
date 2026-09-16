@@ -8,21 +8,34 @@ interface IUseRevisionEventProductMutationsArgs {
 	bookingId: string;
 	eventId: string;
 	optionIndex?: number | null;
+	supplyId?: string;
 }
 
 export const useRevisionEventProductMutations = ({
 	bookingId,
 	eventId,
-	optionIndex
+	optionIndex,
+	supplyId
 }: IUseRevisionEventProductMutationsArgs) => {
 	const [setProduct, setState] = useSetRevisionEventProductMutation();
 	const [clearProduct, clearState] = useClearRevisionEventProductMutation();
 
 	const attach = (data: IEventProductLink) =>
-		setProduct({ bookingId, eventId, optionIndex, data }).unwrap();
+		setProduct({
+			bookingId,
+			eventId,
+			supplyId: supplyId ?? "",
+			optionIndex,
+			data
+		}).unwrap();
 
 	const detach = () =>
-		clearProduct({ bookingId, eventId, optionIndex }).unwrap();
+		clearProduct({
+			bookingId,
+			eventId,
+			supplyId: supplyId ?? "",
+			optionIndex
+		}).unwrap();
 
 	return {
 		attach,

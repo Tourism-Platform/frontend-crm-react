@@ -3,6 +3,7 @@ import { ENUM_API_TAGS, TOUR_EVENTS_PATHS } from "@/shared/api";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapAddPoolMemberToBackend,
 	mapAllEventsToFrontend,
 	mapEventCreateToBackend,
 	mapEventOptionCreateToBackend,
@@ -24,6 +25,7 @@ import {
 } from "../converters";
 import type {
 	IAddEventOption,
+	IAddEventPoolMember,
 	IAttachOptionProduct,
 	IClearOptionOverride,
 	IDeleteEventOption,
@@ -36,8 +38,10 @@ import type {
 	IPolicyCheckEventArgs,
 	IPolicyCheckOptionArgs,
 	IRelinkOptionProduct,
+	IRemoveEventPoolMember,
 	IReorderEventOptions,
 	IScopeOptionProduct,
+	ISetEventPoolMemberMain,
 	ISetOptionOverride,
 	ISupplierPolicyWarning,
 	ITourEvent,
@@ -144,6 +148,7 @@ export const tourEventApi = authApi.injectEndpoints({
 				optionId: string;
 				eventId: string;
 				eventOptionId?: string;
+				supplyId?: string;
 			}
 		>({
 			query: ({ tourId, optionId, eventId }) => ({
@@ -153,7 +158,12 @@ export const tourEventApi = authApi.injectEndpoints({
 				response: TTourEventBackendResponce,
 				_meta,
 				arg
-			) => mapGetTourEventToFrontend(response, arg.eventOptionId),
+			) =>
+				mapGetTourEventToFrontend(
+					response,
+					arg.eventOptionId,
+					arg.supplyId
+				),
 			providesTags: (
 				_result,
 				_error,
@@ -241,7 +251,8 @@ export const tourEventApi = authApi.injectEndpoints({
 				eventOptionId,
 				type,
 				data,
-				language
+				language,
+				currentDetails
 			}) => ({
 				...TOUR_EVENTS_PATHS.updateOption(
 					tourId,
@@ -249,7 +260,12 @@ export const tourEventApi = authApi.injectEndpoints({
 					eventId,
 					eventOptionId
 				),
-				body: mapEventUpdateToBackend(type, data, language)
+				body: mapEventUpdateToBackend(
+					type,
+					data,
+					language,
+					currentDetails
+				)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
@@ -391,14 +407,16 @@ export const tourEventApi = authApi.injectEndpoints({
 					optionId,
 					eventId,
 					eventOptionId,
+					supplyId,
 					data,
 					language
 				}) => ({
-					...TOUR_EVENTS_PATHS.attachOptionProduct(
+					...TOUR_EVENTS_PATHS.attachPoolMemberProduct(
 						tourId,
 						optionId,
 						eventId,
-						eventOptionId
+						eventOptionId,
+						supplyId
 					),
 					params: mapEventReadLangQueryToBackend(language),
 					body: mapEventProductLinkToBackend(data)
@@ -425,14 +443,16 @@ export const tourEventApi = authApi.injectEndpoints({
 					optionId,
 					eventId,
 					eventOptionId,
+					supplyId,
 					data,
 					language
 				}) => ({
-					...TOUR_EVENTS_PATHS.detachOptionProduct(
+					...TOUR_EVENTS_PATHS.detachPoolMemberProduct(
 						tourId,
 						optionId,
 						eventId,
-						eventOptionId
+						eventOptionId,
+						supplyId
 					),
 					params: mapEventReadLangQueryToBackend(language),
 					body: mapEventProductDetachToBackend(data)
@@ -459,14 +479,16 @@ export const tourEventApi = authApi.injectEndpoints({
 					optionId,
 					eventId,
 					eventOptionId,
+					supplyId,
 					data,
 					language
 				}) => ({
-					...TOUR_EVENTS_PATHS.relinkOptionProduct(
+					...TOUR_EVENTS_PATHS.relinkPoolMemberProduct(
 						tourId,
 						optionId,
 						eventId,
-						eventOptionId
+						eventOptionId,
+						supplyId
 					),
 					params: mapEventReadLangQueryToBackend(language),
 					body: mapEventProductRelinkToBackend(data)
@@ -492,17 +514,119 @@ export const tourEventApi = authApi.injectEndpoints({
 				optionId,
 				eventId,
 				eventOptionId,
+				supplyId,
 				data,
 				language
 			}) => ({
-				...TOUR_EVENTS_PATHS.scopeOptionProduct(
+				...TOUR_EVENTS_PATHS.scopePoolMemberProduct(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId,
+					supplyId
+				),
+				params: mapEventReadLangQueryToBackend(language),
+				body: mapEventProductScopeUpdateToBackend(data)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+
+		addPoolMember: builder.mutation<ITourEvent, IAddEventPoolMember>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				intent,
+				language
+			}) => ({
+				...TOUR_EVENTS_PATHS.addPoolMember(
 					tourId,
 					optionId,
 					eventId,
 					eventOptionId
 				),
 				params: mapEventReadLangQueryToBackend(language),
-				body: mapEventProductScopeUpdateToBackend(data)
+				body: mapAddPoolMemberToBackend(intent)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		removePoolMember: builder.mutation<ITourEvent, IRemoveEventPoolMember>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				supplyId,
+				language
+			}) => ({
+				...TOUR_EVENTS_PATHS.removePoolMember(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId,
+					supplyId
+				),
+				params: mapEventReadLangQueryToBackend(language)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		setPoolMemberMain: builder.mutation<
+			ITourEvent,
+			ISetEventPoolMemberMain
+		>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				supplyId,
+				language
+			}) => ({
+				...TOUR_EVENTS_PATHS.setPoolMemberMain(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId,
+					supplyId
+				),
+				params: mapEventReadLangQueryToBackend(language)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
@@ -527,14 +651,16 @@ export const tourEventApi = authApi.injectEndpoints({
 				optionId,
 				eventId,
 				eventOptionId,
+				supplyId,
 				data,
 				language
 			}) => ({
-				...TOUR_EVENTS_PATHS.setOptionOverride(
+				...TOUR_EVENTS_PATHS.setPoolMemberOverride(
 					tourId,
 					optionId,
 					eventId,
-					eventOptionId
+					eventOptionId,
+					supplyId
 				),
 				params: mapEventReadLangQueryToBackend(language),
 				body: mapEventOverrideToBackend(data)
@@ -560,13 +686,15 @@ export const tourEventApi = authApi.injectEndpoints({
 					optionId,
 					eventId,
 					eventOptionId,
+					supplyId,
 					language
 				}) => ({
-					...TOUR_EVENTS_PATHS.clearOptionOverride(
+					...TOUR_EVENTS_PATHS.clearPoolMemberOverride(
 						tourId,
 						optionId,
 						eventId,
-						eventOptionId
+						eventOptionId,
+						supplyId
 					),
 					params: mapEventReadLangQueryToBackend(language)
 				}),
@@ -608,6 +736,9 @@ export const {
 	useDetachOptionProductMutation,
 	useRelinkOptionProductMutation,
 	useScopeOptionProductMutation,
+	useAddPoolMemberMutation,
+	useRemovePoolMemberMutation,
+	useSetPoolMemberMainMutation,
 	useSetOptionOverrideMutation,
 	useClearOptionOverrideMutation
 } = tourEventApi;

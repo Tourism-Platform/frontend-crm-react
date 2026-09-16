@@ -14,6 +14,7 @@ export * from "./event/accommodation/accommodation-pricing.converters";
 export * from "./event/housing-room-type.converters";
 export * from "./event/housing-source.converters";
 export * from "./event/housing-details.helpers";
+export * from "./event/event-pool.helpers";
 export * from "./event/details-read-to-write.converters";
 export * from "./event/empty-event-details.converters";
 export * from "./event/event-product-link.converters";
@@ -33,3 +34,9 @@ export * from "./event/guide-pricing.converters";
 export * from "./event/multiply-option.converters";
 export * from "./package.converters";
 export * from "./event/package-id.helpers";
+export {
+	createEmptyBusSegment,
+	createEmptyFlySegment,
+	createEmptyTrainSegment,
+	createEmptyTransportSegment
+} from "./event/transport";

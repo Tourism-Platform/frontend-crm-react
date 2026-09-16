@@ -2,39 +2,35 @@ import type {
 	ActivityDetailsOutput,
 	ActivityDetailsWrite,
 	ActivityInlineSupplyNew,
-	ActivityProductSupplyOutput,
 	FoodOfferingInput
 } from "@/shared/api";
 
 /**
- * Backend shapes for an activity event (contract 3.1).
+ * Backend shapes for an activity event (contract 6).
  *
- * Read: `details` = `ActivityDetailsOutput` — `{ plan, supply, spec }` where
- * `supply.source` discriminates inline vs product-linked events and `spec`
- * is the venue spec (food vs general venue by `sub_typ`).
- * Write: `ActivityDetailsWrite` = `{ plan?, supply? }` (spec lives inside
- * `supply.inline.spec`).
+ * Read: `details` = `ActivityDetailsOutput` — `{ plan, pool: [{ id, is_main, supply, spec }] }`.
+ * Write: `ActivityDetailsWrite` = `{ plan?, pool? }` (spec lives inside
+ * inline pool member `supply.spec`).
  */
 
-/** Read-side activity details (`{ plan, supply, spec }`). */
+/** Read-side activity details. */
 export type TActivityDetailsBackend = ActivityDetailsOutput;
 
-/** Read-side activity details narrowed to a product-linked supply. */
-export type TInheritedActivityDetailsBackend = ActivityDetailsOutput & {
-	supply: { source: "product" } & ActivityProductSupplyOutput;
-};
+/** @deprecated Product-linked supply is on `pool[].supply`, not `details.supply`. */
+export type TInheritedActivityDetailsBackend = never;
 
-/** Read-side activity details (single 3.1 shape; supply discriminates). */
+/** Read-side activity details (operator read). */
 export type TActivityEventDetailsBackend = ActivityDetailsOutput;
 
-/** Write-side activity details (`{ plan?, supply? }`). */
+/** Write-side activity details (`{ plan?, pool? }`). */
 export type TActivityDetailsInputBackend = ActivityDetailsWrite;
 
-/** Read-side activity spec (`details.spec`). */
-export type TActivitySpecBackend = ActivityDetailsOutput["spec"];
+/** Read-side activity spec (`pool[].spec`). */
+export type TActivitySpecBackend =
+	ActivityDetailsOutput["pool"][number]["spec"];
 
-/** Write-side activity spec — goes into `supply.inline.spec`. */
+/** Write-side activity spec — goes into `pool[].supply.spec`. */
 export type TActivitySpecInputBackend = ActivityInlineSupplyNew["spec"];
 
-/** Write-side food offering inside `supply.inline.spec.offerings`. */
+/** Write-side food offering inside `pool[].supply.spec.offerings`. */
 export type TActivityFoodOfferingInputBackend = FoodOfferingInput;

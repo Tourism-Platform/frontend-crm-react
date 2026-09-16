@@ -36,6 +36,7 @@ import {
 	type TGuidesSchema
 } from "../../types";
 
+import { getPoolMember } from "./event-pool.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
 import {
 	mapGuideGroupTiersFromBackend,
@@ -437,10 +438,11 @@ export const getDefaultGuidePricing = (
 
 export const mapGuidePricingFromBackend = (
 	details?: TGuideDetailsBackend | null,
-	guidesList: TGuidesList = []
+	guidesList: TGuidesList = [],
+	supplyId?: string | null
 ): TGuidePricingSchema => {
-	// Contract 3.1: language categories live on `details.spec`.
-	const categories = details?.spec?.categories ?? [];
+	// Contract 6: language categories live on the pool member `spec`.
+	const categories = getPoolMember(details, supplyId)?.spec?.categories ?? [];
 	const defaults = getDefaultGuidePricing(guidesList);
 
 	if (!categories.length) {

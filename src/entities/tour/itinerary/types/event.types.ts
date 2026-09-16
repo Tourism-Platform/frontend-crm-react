@@ -5,7 +5,8 @@ import type { TActivityEditSchema } from "./activity";
 import type { ENUM_EVENT_BACKEND_TYPE } from "./event-backend-enum.types";
 import type {
 	TEventDetailsBackend,
-	TEventDetailsWriteBackend
+	TEventDetailsWriteBackend,
+	TTourEventBackendResponce
 } from "./event-backend.types";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
 import type { TFlightEditSchema } from "./flight";
@@ -23,7 +24,7 @@ export interface ITourEventOption {
 	eventType: ENUM_EVENT_TYPE;
 	/** Exact backend discriminator (flight/train/bus are all FLIGHT in eventType). */
 	backendTyp: ENUM_EVENT_BACKEND_TYPE;
-	/** READ details (`{ plan, supply, spec }`) — never send back as a WRITE body. */
+	/** READ details (`{ plan, pool }`) — never send back as a WRITE body. */
 	details: TEventDetailsBackend;
 	/** Preformatted start–end clock range for board cards */
 	timeSubtitle?: string;
@@ -46,7 +47,7 @@ export interface ITourEvent {
 	eventType: ENUM_EVENT_TYPE;
 	/** Exact backend discriminator (flight/train/bus are all FLIGHT in eventType). */
 	backendTyp: ENUM_EVENT_BACKEND_TYPE;
-	/** READ details (`{ plan, supply, spec }`); null for multi slots. */
+	/** READ details (`{ plan, pool }`); null for multi slots. */
 	details: TEventDetailsBackend | null;
 	/** Preformatted start–end clock range for board cards */
 	timeSubtitle?: string;
@@ -62,7 +63,7 @@ export interface ITourEventCreate {
 	eventType: ENUM_EVENT_TYPE;
 	/** Exact backend discriminator when eventType is ambiguous (FLIGHT group). */
 	backendTyp?: ENUM_EVENT_BACKEND_TYPE;
-	/** WRITE details (`{ plan?, supply? }`) — output of a WRITE converter only. */
+	/** WRITE details (`{ plan?, pool? }`) — output of a WRITE converter only. */
 	details?: TEventDetailsWriteBackend;
 	packageId?: string | null;
 	isOptional?: boolean;
@@ -78,6 +79,8 @@ export interface ITourEventUpdate {
 	data: TTourEventUpdate;
 	/** Язык UI — конвертируется в LanguageCode при save */
 	language?: ENUM_LANGUAGES_TYPE;
+	/** Current READ details — used to echo pool ids on inline spec save. */
+	currentDetails?: TEventDetailsBackend;
 }
 
 export type TTourEvent =
@@ -93,10 +96,12 @@ export type TTourEvent =
 /** Result of getTourEvent: form values + raw backend READ details for supply/override reads. */
 export interface IGetTourEventResult {
 	form: TTourEvent;
-	/** READ details of the addressed option row (`{ plan, supply, spec }`). */
+	/** READ details of the addressed option row (`{ plan, pool }`). */
 	details: TEventDetailsBackend | undefined;
 	/** Resolved option row id — URL param for multi, `event.id` for single. */
 	eventOptionId?: string;
+	/** Original slot read — used to remap the form onto another pool member. */
+	response: TTourEventBackendResponce;
 }
 
 export type TTourEventUpdate = Partial<

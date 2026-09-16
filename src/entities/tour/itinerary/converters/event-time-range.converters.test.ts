@@ -16,7 +16,17 @@ import type { TSingleEventReadBackend } from "../types";
 
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
 
+const INLINE_MEMBER_ID = "11111111-1111-1111-1111-111111111111";
 const INLINE = { source: "inline" as const, supplier_id: null };
+
+const inlinePool = <T>(spec: T) => [
+	{
+		id: INLINE_MEMBER_ID,
+		is_main: true,
+		supply: INLINE,
+		spec
+	}
+];
 
 const META = {
 	id: "00000000-0000-0000-0000-000000000001",
@@ -44,14 +54,13 @@ const activityEvent = (
 	typ: "activity",
 	details: {
 		plan,
-		supply: INLINE,
-		spec: {
+		pool: inlinePool({
 			sub_typ: "food",
 			images: [],
 			name: null,
 			location: null,
 			offerings: []
-		}
+		})
 	}
 });
 
@@ -62,9 +71,8 @@ const housingEvent = (
 	typ: "housing",
 	details: {
 		plan,
-		supply: INLINE,
-		spec: {
-			pricing: "whole",
+		pool: inlinePool({
+			pricing: "whole" as const,
 			images: [],
 			name: null,
 			location: null,
@@ -74,7 +82,7 @@ const housingEvent = (
 			policy: null,
 			price: { base: ZERO_FIXED, seasons: [] },
 			categories: []
-		}
+		})
 	}
 });
 
@@ -85,14 +93,13 @@ const transferEvent = (
 	typ: "transfer",
 	details: {
 		plan,
-		supply: INLINE,
-		spec: {
-			pricing: "whole",
+		pool: inlinePool({
+			pricing: "whole" as const,
 			images: [],
 			name: null,
 			cars: [],
 			charge: ZERO_FIXED
-		}
+		})
 	}
 });
 
@@ -103,15 +110,14 @@ const flightEvent = (
 	typ: "flight",
 	details: {
 		plan,
-		supply: INLINE,
-		spec: {
-			pricing: "whole",
+		pool: inlinePool({
+			pricing: "whole" as const,
 			images: [],
 			name: null,
 			legs: [],
 			fares: [],
 			charge: ZERO_FIXED
-		}
+		})
 	}
 });
 
@@ -120,14 +126,13 @@ const busEvent = (plan: BusDetailsOutput["plan"]): TSingleEventReadBackend => ({
 	typ: "bus",
 	details: {
 		plan,
-		supply: INLINE,
-		spec: {
-			pricing: "whole",
+		pool: inlinePool({
+			pricing: "whole" as const,
 			images: [],
 			name: null,
 			vehicles: [],
 			charge: ZERO_FIXED
-		}
+		})
 	}
 });
 
@@ -138,8 +143,7 @@ const refEvent = (
 	typ: "ref",
 	details: {
 		plan,
-		supply: INLINE,
-		spec: {}
+		pool: inlinePool({})
 	}
 });
 
@@ -148,8 +152,7 @@ const guideEvent = (): TSingleEventReadBackend => ({
 	typ: "guide",
 	details: {
 		plan: {},
-		supply: INLINE,
-		spec: { name: null, typ_tiers: [], categories: [] }
+		pool: inlinePool({ name: null, typ_tiers: [], categories: [] })
 	} satisfies GuideDetailsOutput
 });
 
@@ -158,8 +161,7 @@ const supplementaryEvent = (): TSingleEventReadBackend => ({
 	typ: "supplementary",
 	details: {
 		plan: {},
-		supply: INLINE,
-		spec: { item: [] }
+		pool: inlinePool({ item: [] })
 	} satisfies SupplementaryDetailsOutput
 });
 

@@ -77,43 +77,52 @@ const roomsOnlySpec = {
 
 const namedCategoryDetails = (): HousingDetailsOutput => ({
 	plan: {},
-	supply: { source: "inline", supplier_id: null },
-	spec: {
-		pricing: "per_room",
-		images: [],
-		name: null,
-		location: null,
-		stars: null,
-		typs: [],
-		amenities: [],
-		policy: null,
-		categories: [
-			{
-				id: "cat-1",
-				name: "Deluxe",
-				rooms: [
+	pool: [
+		{
+			id: "11111111-1111-1111-1111-111111111111",
+			is_main: true,
+			supply: { source: "inline", supplier_id: null },
+			spec: {
+				pricing: "per_room",
+				images: [],
+				name: null,
+				location: null,
+				stars: null,
+				typs: [],
+				amenities: [],
+				policy: null,
+				categories: [
 					{
-						id: "room-1",
-						images: [],
-						typ: HousingRoomTypes.Double,
-						pax: 2,
-						name: null,
-						description: null,
-						rate: {
-							base: {
-								typ: "fixed",
-								cost: { val: 200, currency: Currency.USD },
-								fees: null,
-								extra_costs: [],
-								markup: null
-							},
-							seasons: []
-						}
+						id: "cat-1",
+						name: "Deluxe",
+						rooms: [
+							{
+								id: "room-1",
+								images: [],
+								typ: HousingRoomTypes.Double,
+								pax: 2,
+								name: null,
+								description: null,
+								rate: {
+									base: {
+										typ: "fixed",
+										cost: {
+											val: 200,
+											currency: Currency.USD
+										},
+										fees: null,
+										extra_costs: [],
+										markup: null
+									},
+									seasons: []
+								}
+							}
+						]
 					}
 				]
 			}
-		]
-	}
+		}
+	]
 });
 
 const basePricing = (

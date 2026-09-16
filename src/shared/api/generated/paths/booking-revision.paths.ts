@@ -1,20 +1,29 @@
 import type {
+	ActivityMemberNew,
 	ActivityOverrideInput,
 	ActivitySingleEvent,
+	BusMemberNew,
 	BusOverrideInput,
 	BusSingleEvent,
 	EventEditOpOutput,
+	FlightMemberNew,
 	FlightSingleEvent,
+	GuideMemberNew,
 	GuideSingleEvent,
 	HotelOverrideInput,
+	HousingMemberNew,
 	HousingSingleEvent,
+	InformationMemberNew,
 	InformationSingleEvent,
 	MultiEvent,
 	ProductSupplyNew,
 	RevisionPreview,
 	RouteOverrideInput,
+	SupplementaryMemberNew,
 	SupplementarySingleEvent,
+	TrainMemberNew,
 	TrainSingleEvent,
+	TransferMemberNew,
 	TransferOverrideInput,
 	TransferSingleEvent
 } from "../Api";
@@ -69,9 +78,48 @@ export const BOOKING_REVISION_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: RevisionPreview }
 		}) as const,
-	setEventProduct: (bookingId: string, eventId: string) =>
+	addPoolMember: (bookingId: string, eventId: string) =>
 		({
-			url: `/booking/revision/${bookingId}/event/${eventId}/product`,
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool`,
+			method: "POST",
+			_types: {} as {
+				body:
+					| HousingMemberNew
+					| TrainMemberNew
+					| FlightMemberNew
+					| BusMemberNew
+					| TransferMemberNew
+					| ActivityMemberNew
+					| InformationMemberNew
+					| GuideMemberNew
+					| SupplementaryMemberNew;
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
+				response: RevisionPreview;
+			}
+		}) as const,
+	removePoolMember: (bookingId: string, eventId: string, supplyId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
+				response: RevisionPreview;
+			}
+		}) as const,
+	setPoolMemberProduct: (
+		bookingId: string,
+		eventId: string,
+		supplyId: string
+	) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/product`,
 			method: "PATCH",
 			_types: {} as {
 				body: ProductSupplyNew;
@@ -82,9 +130,13 @@ export const BOOKING_REVISION_PATHS = {
 				response: RevisionPreview;
 			}
 		}) as const,
-	clearEventProduct: (bookingId: string, eventId: string) =>
+	clearPoolMemberProduct: (
+		bookingId: string,
+		eventId: string,
+		supplyId: string
+	) =>
 		({
-			url: `/booking/revision/${bookingId}/event/${eventId}/product`,
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/product`,
 			method: "DELETE",
 			_types: {} as {
 				body: void;
@@ -111,9 +163,13 @@ export const BOOKING_REVISION_PATHS = {
 			method: "GET",
 			_types: {} as { body: void; query: void; response: RevisionPreview }
 		}) as const,
-	setEventOverride: (bookingId: string, eventId: string) =>
+	setPoolMemberOverride: (
+		bookingId: string,
+		eventId: string,
+		supplyId: string
+	) =>
 		({
-			url: `/booking/revision/${bookingId}/event/${eventId}/override`,
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/override`,
 			method: "PATCH",
 			_types: {} as {
 				body:
@@ -129,9 +185,13 @@ export const BOOKING_REVISION_PATHS = {
 				response: RevisionPreview;
 			}
 		}) as const,
-	clearEventOverride: (bookingId: string, eventId: string) =>
+	clearPoolMemberOverride: (
+		bookingId: string,
+		eventId: string,
+		supplyId: string
+	) =>
 		({
-			url: `/booking/revision/${bookingId}/event/${eventId}/override`,
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/override`,
 			method: "DELETE",
 			_types: {} as {
 				body: void;

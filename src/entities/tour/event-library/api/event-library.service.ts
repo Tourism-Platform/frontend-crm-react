@@ -3,6 +3,10 @@ import { type IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 import type { TTourEvent } from "@/entities/tour/itinerary";
+import {
+	type TAddPoolMemberIntent,
+	mapAddPoolMemberToBackend
+} from "@/entities/tour/itinerary";
 
 import {
 	mapEventLibraryCreateToBackend,
@@ -10,7 +14,9 @@ import {
 	mapEventLibraryItemToFrontend,
 	mapEventLibraryListToFrontend,
 	mapEventLibraryToForm,
-	mapEventLibraryUpdateToBackend
+	mapEventLibraryUpdateToBackend,
+	mapLibraryPoolAddToBackend,
+	mapLibraryPoolRemoveToBackend
 } from "../converters";
 import type {
 	IEventLibraryCreate,
@@ -48,13 +54,19 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
 			]
 		}),
-		getEventLibraryRaw: builder.query<TTourEvent, string>({
-			query: (libraryId) => ({
+		getEventLibraryRaw: builder.query<
+			TTourEvent,
+			{ libraryId: string; supplyId?: string }
+		>({
+			query: ({ libraryId }) => ({
 				...TOUR_EVENT_LIBRARY_PATHS.getLibraryEvent(libraryId)
 			}),
-			transformResponse: (response: TEventLibraryItemBackend) =>
-				mapEventLibraryToForm(response),
-			providesTags: (_result, _error, libraryId) => [
+			transformResponse: (
+				response: TEventLibraryItemBackend,
+				_meta,
+				arg
+			) => mapEventLibraryToForm(response, arg.supplyId),
+			providesTags: (_result, _error, { libraryId }) => [
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
 			]
 		}),
@@ -87,9 +99,49 @@ export const eventLibraryApi = authApi.injectEndpoints({
 			IEventLibraryItem,
 			IEventLibraryUpdate
 		>({
-			query: ({ libraryId, type, data, language }) => ({
+			query: ({ libraryId, type, data, language, currentDetails }) => ({
 				...TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent(libraryId),
-				body: mapEventLibraryUpdateToBackend(type, data, language)
+				body: mapEventLibraryUpdateToBackend(
+					type,
+					data,
+					language,
+					currentDetails
+				)
+			}),
+			transformResponse: (response: TEventLibraryItemBackend) =>
+				mapEventLibraryItemToFrontend(response),
+			invalidatesTags: (_result, _error, { libraryId }) => [
+				ENUM_API_TAGS.EVENT_LIBRARY,
+				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
+			]
+		}),
+		patchEventLibraryPool: builder.mutation<
+			IEventLibraryItem,
+			| {
+					libraryId: string;
+					action: "add";
+					template: TEventLibraryItemBackend;
+					intent: TAddPoolMemberIntent;
+			  }
+			| {
+					libraryId: string;
+					action: "remove";
+					template: TEventLibraryItemBackend;
+					supplyId: string;
+			  }
+		>({
+			query: (arg) => ({
+				...TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent(arg.libraryId),
+				body:
+					arg.action === "add"
+						? mapLibraryPoolAddToBackend(
+								arg.template,
+								mapAddPoolMemberToBackend(arg.intent)
+							)
+						: mapLibraryPoolRemoveToBackend(
+								arg.template,
+								arg.supplyId
+							)
 			}),
 			transformResponse: (response: TEventLibraryItemBackend) =>
 				mapEventLibraryItemToFrontend(response),
@@ -111,8 +163,10 @@ export const {
 	useListEventLibraryQuery,
 	useGetEventLibraryQuery,
 	useGetEventLibraryRawQuery,
+	useGetEventLibraryTemplateQuery,
 	useLazyGetEventLibraryTemplateQuery,
 	useCreateEventLibraryMutation,
 	useUpdateEventLibraryMutation,
+	usePatchEventLibraryPoolMutation,
 	useDeleteEventLibraryMutation
 } = eventLibraryApi;

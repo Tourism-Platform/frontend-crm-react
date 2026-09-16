@@ -15,8 +15,14 @@ import {
 
 const INFO_DETAILS: InformationDetailsOutput = {
 	plan: {},
-	supply: { source: "inline", supplier_id: null },
-	spec: {}
+	pool: [
+		{
+			id: "11111111-1111-1111-1111-111111111111",
+			is_main: true,
+			supply: { source: "inline", supplier_id: null },
+			spec: {}
+		}
+	]
 };
 
 const buildDetail = (

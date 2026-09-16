@@ -3,7 +3,6 @@ import React, { type FC } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { getDeviceUtcOffset } from "@/shared/hooks";
 import {
 	Button,
 	CustomOptionTabs,
@@ -12,19 +11,27 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { ENUM_SUPPLIER_TYPE } from "@/entities/supplier";
 import {
+	ENUM_SUPPLIER_TYPE,
+	type ENUM_SUPPLIER_TYPE_TYPE
+} from "@/entities/supplier";
+import {
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE,
 	ENUM_FLIGHT_TRANSPORT_TYPE,
 	type ENUM_FLIGHT_TRANSPORT_TYPE_TYPE,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_FLIGHT,
 	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
-	type TFlightEditSchema
+	type TFlightEditSchema,
+	createEmptyTransportSegment
 } from "@/entities/tour";
 
 import {
 	EventOverrideControls,
-	EventProductLinkControls
+	EventPoolControls,
+	EventProductLinkControls,
+	type TEventPoolUiProps
 } from "@/features/tours";
 
 import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
@@ -33,11 +40,15 @@ import { FLIGHT_TRANSPORT_TYPE_TABS_LIST } from "../../model";
 
 import { FlightCard } from "./flight-card";
 
-interface IFlightInfoProps {
+interface IFlightInfoProps extends TEventPoolUiProps {
 	form: UseFormReturn<TFlightEditSchema>;
 }
 
-const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
+const FlightInfoBase: FC<IFlightInfoProps> = ({
+	form,
+	poolVariant,
+	onPoolSelect
+}) => {
 	const { t } = useTranslation("flight_edit_page");
 	const isInherited = useIsInheritedProduct(form);
 	const productId = useWatch({
@@ -52,6 +63,10 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 		control: form.control,
 		name: ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE
 	});
+	const supplyId = useWatch({
+		control: form.control,
+		name: ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID
+	});
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
@@ -60,61 +75,8 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 
 	const formState = form.watch();
 
-	const createEmptySegment = React.useCallback(
-		(
-			transportType: ENUM_FLIGHT_TRANSPORT_TYPE_TYPE | undefined
-		): TFlightEditSchema["general"]["route"][number] => {
-			const timezone = getDeviceUtcOffset();
-
-			if (transportType === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN) {
-				return {
-					transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,
-					carrier: "",
-					train_number: "",
-					departure_station: null,
-					arrival_station: null,
-					departure_time: null,
-					arrival_time: null,
-					departure_timezone: timezone,
-					arrival_timezone: timezone
-				};
-			}
-
-			if (transportType === ENUM_FLIGHT_TRANSPORT_TYPE.BUS) {
-				return {
-					transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
-					bus_company: "",
-					bus_number: "",
-					departure_point: null,
-					arrival_point: null,
-					departure_time: null,
-					arrival_time: null,
-					departure_timezone: timezone,
-					arrival_timezone: timezone
-				};
-			}
-
-			return {
-				transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
-				airline_code: "",
-				flight_number: "",
-				departure_airport_code: "",
-				arrival_airport_code: "",
-				departure_time: null,
-				arrival_time: null,
-				departure_timezone: timezone,
-				arrival_timezone: timezone,
-				departure_terminal: "",
-				departure_gate: "",
-				arrival_terminal: "",
-				arrival_gate: ""
-			};
-		},
-		[]
-	);
-
 	const handleAddFlight = () => {
-		append(createEmptySegment(formState?.general?.transport_type));
+		append(createEmptyTransportSegment(formState?.general?.transport_type));
 	};
 
 	const handleTabChange = (value: ENUM_FLIGHT_TRANSPORT_TYPE_TYPE) => {
@@ -129,7 +91,7 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 
 		form.setValue(
 			`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}`,
-			[createEmptySegment(value)]
+			[createEmptyTransportSegment(value)]
 		);
 	};
 
@@ -140,8 +102,32 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 		[remove]
 	);
 
+	const handleOverrideChange = (next: boolean) => {
+		form.setValue(ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE, next);
+	};
+
 	const showProductLink =
 		formState?.general?.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN;
+	const eventTyp = ((): ENUM_EVENT_BACKEND_TYPE => {
+		switch (formState?.general?.transport_type) {
+			case ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN:
+				return ENUM_EVENT_BACKEND.TRAIN;
+			case ENUM_FLIGHT_TRANSPORT_TYPE.BUS:
+				return ENUM_EVENT_BACKEND.BUS;
+			default:
+				return ENUM_EVENT_BACKEND.FLIGHT;
+		}
+	})();
+	const supplierTyp = ((): ENUM_SUPPLIER_TYPE_TYPE => {
+		switch (formState?.general?.transport_type) {
+			case ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN:
+				return ENUM_SUPPLIER_TYPE.TRAIN;
+			case ENUM_FLIGHT_TRANSPORT_TYPE.BUS:
+				return ENUM_SUPPLIER_TYPE.BUS;
+			default:
+				return ENUM_SUPPLIER_TYPE.FLIGHT;
+		}
+	})();
 
 	return (
 		<div className="grid gap-6">
@@ -153,6 +139,13 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 						description={t("form.inherited.lock_description")}
 					/>
 				) : null}
+				<EventPoolControls
+					form={form}
+					variant={poolVariant}
+					onSelect={onPoolSelect}
+					eventTyp={eventTyp}
+					supplierTyp={supplierTyp}
+				/>
 				{showProductLink ? (
 					<>
 						<EventProductLinkControls
@@ -160,17 +153,14 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({ form }) => {
 							productId={productId}
 							variantId={variantId}
 							hasOverride={Boolean(hasOverride)}
+							supplyId={supplyId}
 						/>
 						<EventOverrideControls
 							kind="train"
 							isInherited={isInherited}
 							hasOverride={Boolean(hasOverride)}
-							onAfterChange={(next) =>
-								form.setValue(
-									ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE,
-									next
-								)
-							}
+							supplyId={supplyId}
+							onAfterChange={handleOverrideChange}
 						/>
 					</>
 				) : null}

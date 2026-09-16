@@ -8,21 +8,34 @@ interface IUseRevisionEventOverrideMutationsArgs {
 	bookingId: string;
 	eventId: string;
 	optionIndex?: number | null;
+	supplyId?: string;
 }
 
 export const useRevisionEventOverrideMutations = ({
 	bookingId,
 	eventId,
-	optionIndex
+	optionIndex,
+	supplyId
 }: IUseRevisionEventOverrideMutationsArgs) => {
 	const [setOverride, setState] = useSetRevisionEventOverrideMutation();
 	const [clearOverride, clearState] = useClearRevisionEventOverrideMutation();
 
 	const set = (data: TEventOverride) =>
-		setOverride({ bookingId, eventId, optionIndex, data }).unwrap();
+		setOverride({
+			bookingId,
+			eventId,
+			supplyId: supplyId ?? "",
+			optionIndex,
+			data
+		}).unwrap();
 
 	const clear = () =>
-		clearOverride({ bookingId, eventId, optionIndex }).unwrap();
+		clearOverride({
+			bookingId,
+			eventId,
+			supplyId: supplyId ?? "",
+			optionIndex
+		}).unwrap();
 
 	return {
 		set,

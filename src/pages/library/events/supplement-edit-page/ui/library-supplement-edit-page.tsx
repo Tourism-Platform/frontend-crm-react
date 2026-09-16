@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,8 +21,11 @@ import {
 	type TSupplementEditSchema,
 	useCreateEventLibraryMutation,
 	useGetEventLibraryRawQuery,
+	useGetEventLibraryTemplateQuery,
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
+
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
 
 import { SupplementEdit } from "@/widgets/tours";
 import { type ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/supplement-edit/model";
@@ -32,13 +35,19 @@ export const LibrarySupplementEditPage: FC = () => {
 	const navigate = useNavigate();
 	const { libraryId = "" } = useParams<{ libraryId: string }>();
 	const isCreate = libraryId === LIBRARY_EVENT_CREATE_ID;
+	const [supplyId, setSupplyId] = useState<string | undefined>();
 
 	const { data: libraryEvent, isRealError: isLoadError } =
 		useOptionalResourceQuery(
-			useGetEventLibraryRawQuery(libraryId, {
-				skip: !libraryId || isCreate
-			})
+			useGetEventLibraryRawQuery(
+				{ libraryId, supplyId },
+				{ skip: !libraryId || isCreate }
+			)
 		);
+	const { data: libraryTemplate } = useGetEventLibraryTemplateQuery(
+		libraryId,
+		{ skip: !libraryId || isCreate }
+	);
 
 	const [createEventLibrary, { isLoading: isCreateLoading }] =
 		useCreateEventLibraryMutation();
@@ -97,7 +106,8 @@ export const LibrarySupplementEditPage: FC = () => {
 				libraryId,
 				type: ENUM_EVENT.SUPPLEMENT,
 				language,
-				data
+				data,
+				currentDetails: libraryTemplate?.event.details
 			}).unwrap();
 			toast.success(t("toasts.update.success"));
 		} catch (error) {
@@ -113,6 +123,8 @@ export const LibrarySupplementEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isCreateLoading || isUpdateLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.LIBRARY}
+			onPoolSelect={setSupplyId}
 		/>
 	);
 };

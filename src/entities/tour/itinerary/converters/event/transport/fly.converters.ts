@@ -9,6 +9,7 @@ import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
+	TEventDetailsBackend,
 	TFlightEditSchema,
 	TFlightSingleEventBackend,
 	TFlyRouteSegment,
@@ -21,6 +22,8 @@ import {
 	ENUM_FORM_FLIGHT,
 	ENUM_HOUSING_SOURCE
 } from "../../../types";
+import { mapInlinePoolWrite } from "../details-read-to-write.converters";
+import { getPoolMember } from "../event-pool.helpers";
 import { isInheritedFlightDetails } from "../flight-details.helpers";
 import {
 	mapFlightPricingFromBackend,
@@ -35,7 +38,7 @@ import { toTimezoneOffset } from "../timezone.helpers";
 
 import { mapEventMetaToForm } from "./shared.helpers";
 
-const createEmptyFlySegment = (): TFlyRouteSegment => {
+export const createEmptyFlySegment = (): TFlyRouteSegment => {
 	const timezone = getDeviceUtcOffset();
 	return {
 		[ENUM_FORM_FLIGHT.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
@@ -141,12 +144,15 @@ const assertFlyEvent = (
 };
 
 export const mapFlyEventToForm = (
-	data: TTourEventBackendResponce
+	data: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TFlightEditSchema => {
 	const event = assertFlyEvent(data);
 	const details = event.details ?? null;
 	const plan = details?.plan;
-	const legs = details?.spec?.legs ?? [];
+	const member = getPoolMember(details, selectedSupplyId);
+	const supplyId = member?.id;
+	const legs = member?.spec?.legs ?? [];
 	const route: TFlyRouteSegment[] =
 		legs.length > 0
 			? legs.map((leg, index) =>
@@ -154,10 +160,10 @@ export const mapFlyEventToForm = (
 				)
 			: [createEmptyFlySegment()];
 
-	if (isInheritedFlightDetails(details)) {
+	if (isInheritedFlightDetails(details, supplyId)) {
 		return {
 			...mapEventMetaToForm(event),
-			...mapInheritedProductLinkToForm(details),
+			...mapInheritedProductLinkToForm(member),
 			general: {
 				description: event.description ?? "",
 				transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.FLY,
@@ -172,6 +178,7 @@ export const mapFlyEventToForm = (
 
 	return {
 		...mapEventMetaToForm(event),
+		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: supplyId,
 		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
 		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
@@ -180,14 +187,15 @@ export const mapFlyEventToForm = (
 			route
 		},
 		pricing: applyEventPackageIdToPricing(
-			mapFlightPricingFromBackend(details),
+			mapFlightPricingFromBackend(details, supplyId),
 			event.package_id
 		)
 	};
 };
 
 export const mapFlyFormToUpdate = (
-	frontend: Partial<TFlightEditSchema>
+	frontend: Partial<TFlightEditSchema>,
+	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
 	const g = frontend.general;
@@ -229,7 +237,14 @@ export const mapFlyFormToUpdate = (
 
 	const details: FlightDetailsWrite = {
 		plan,
-		...(spec && { supply: { source: "inline", spec } })
+		...(spec && {
+			pool: mapInlinePoolWrite(
+				ENUM_EVENT_BACKEND.FLIGHT,
+				currentDetails,
+				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
+				{ source: "inline", spec }
+			) as FlightDetailsWrite["pool"]
+		})
 	};
 
 	return {

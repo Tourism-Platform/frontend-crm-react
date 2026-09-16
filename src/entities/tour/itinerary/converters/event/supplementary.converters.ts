@@ -1,14 +1,18 @@
 import type { SupplementaryDetailsWrite } from "@/shared/api";
 
-import { ENUM_EVENT_BACKEND } from "../../types";
-import type {
-	TSupplementEditSchema,
-	TSupplementarySingleEventBackend,
-	TTourEventBackendResponce,
-	TTourEventUpdateBackend
+import {
+	ENUM_EVENT_BACKEND,
+	ENUM_FORM_EVENT_PRODUCT,
+	ENUM_SUPPLEMENT_FORM_SECTION as ENUM_FORM_SECTION,
+	type TEventDetailsBackend,
+	type TSupplementEditSchema,
+	type TSupplementarySingleEventBackend,
+	type TTourEventBackendResponce,
+	type TTourEventUpdateBackend
 } from "../../types";
-import { ENUM_SUPPLEMENT_FORM_SECTION as ENUM_FORM_SECTION } from "../../types";
 
+import { mapInlinePoolWrite } from "./details-read-to-write.converters";
+import { getPoolMember } from "./event-pool.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
@@ -22,13 +26,16 @@ import {
 type TSupplementaryEvent = TSupplementarySingleEventBackend;
 
 export const mapSupplementaryEventToForm = (
-	data: TTourEventBackendResponce
+	data: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TSupplementEditSchema => {
 	const event = data?.event as TSupplementaryEvent;
-	// Contract 3.1: supplementary lines live on `details.spec.item`.
-	const backendItems = event?.details?.spec?.item;
+	// Contract 6: supplementary lines live on the pool member `spec.item`.
+	const member = getPoolMember(event?.details, selectedSupplyId);
+	const backendItems = member?.spec?.item;
 
 	return {
+		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: member?.id,
 		[ENUM_FORM_SECTION.NAME]: event?.name || "",
 		[ENUM_FORM_SECTION.DESCRIPTION]: event?.description || "",
 		[ENUM_FORM_SECTION.DAY]: event.day,
@@ -42,7 +49,8 @@ export const mapSupplementaryEventToForm = (
 };
 
 export const mapSupplementaryFormToUpdate = (
-	frontend: Partial<TSupplementEditSchema>
+	frontend: Partial<TSupplementEditSchema>,
+	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
 	const itemsList = frontend.items?.items;
 	const pricing = frontend.pricing;
@@ -52,15 +60,19 @@ export const mapSupplementaryFormToUpdate = (
 	// lines sit inside the inline supply's spec. When the form states no
 	// items at all the spec's `item` stays omitted rather than wiping the
 	// backend's list with [].
+	const inlineSpec = {
+		...(hasSpec && {
+			item: mapItemsAndPricingToBackend(itemsList, pricing)
+		})
+	};
+
 	const details: SupplementaryDetailsWrite = {
-		supply: {
-			source: "inline",
-			spec: {
-				...(hasSpec && {
-					item: mapItemsAndPricingToBackend(itemsList, pricing)
-				})
-			}
-		}
+		pool: mapInlinePoolWrite(
+			ENUM_EVENT_BACKEND.SUPPLEMENTARY,
+			currentDetails,
+			undefined,
+			{ source: "inline", spec: inlineSpec }
+		) as SupplementaryDetailsWrite["pool"]
 	};
 
 	return {

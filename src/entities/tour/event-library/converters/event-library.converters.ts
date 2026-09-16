@@ -8,10 +8,14 @@ import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
 	type ENUM_EVENT_TYPE,
+	type TEventDetailsBackend,
+	type TEventDetailsWriteBackend,
+	type TEventPoolMemberNewBackend,
 	type TTourEvent,
 	type TTourEventBackendResponce,
 	type TTourEventUpdate,
 	backendEventTypeMapper,
+	mapEventDetailsReadToWrite,
 	mapEventTypeToBackendTyps,
 	mapEventUpdateToBackend
 } from "@/entities/tour/itinerary";
@@ -24,6 +28,7 @@ import {
 	mapSupplementaryEventToForm,
 	mapTransferEventToForm
 } from "@/entities/tour/itinerary/converters/event";
+import { getMainPoolMember } from "@/entities/tour/itinerary/converters/event/event-pool.helpers";
 
 import type {
 	IEventLibraryFilters,
@@ -46,15 +51,17 @@ const joinRange = (from: string | null, to: string | null): string | null => {
 };
 
 /**
- * Short summary for the library table (contract 3.1 shapes):
- * times live in `details.plan`, route data in the scoped `details.spec`.
+ * Short summary for the library table (contract 6):
+ * times live in `details.plan`, route data in the main pool member `spec`.
  */
 const mapEventLibrarySummary = (
 	event: TEventLibraryItemBackend["event"]
 ): string | null => {
 	switch (event.typ) {
 		case ENUM_EVENT_BACKEND.FLIGHT: {
-			const leg = event.details.spec?.legs?.[0];
+			const spec = getMainPoolMember(event.details)?.spec;
+			const rawLeg = spec && "legs" in spec ? spec.legs?.[0] : undefined;
+			const leg = rawLeg && "airline_code" in rawLeg ? rawLeg : undefined;
 
 			const flightCode = leg
 				? [
@@ -114,11 +121,11 @@ const mapEventLibrarySummary = (
 	}
 };
 
-/** Supplier id for the list row — from `details.supply` (contract 3.1). */
+/** Supplier id for the list row — from the main pool member `supply` (contract 6). */
 const resolveEventSupplierId = (
 	event: TEventLibraryItemBackend["event"]
 ): string | null => {
-	const supply = event.details?.supply;
+	const supply = getMainPoolMember(event.details)?.supply;
 	if (!supply) return null;
 	return supply.source === "product"
 		? supply.supplier.id
@@ -231,41 +238,65 @@ const adaptLibraryEventToTourResponse = (
 
 /** Library response → form (same as mapEventToFrontend in itinerary). */
 export const mapEventLibraryToForm = (
-	backend: TEventLibraryItemBackend
+	backend: TEventLibraryItemBackend,
+	selectedSupplyId?: string
 ): TTourEvent => {
 	const adapted = adaptLibraryEventToTourResponse(backend);
 
 	switch (backend.event?.typ) {
 		case ENUM_EVENT_BACKEND.FLIGHT:
-			return mapFlyEventToForm(adapted);
+			return mapFlyEventToForm(adapted, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.TRANSFER:
-			return mapTransferEventToForm(adapted);
+			return mapTransferEventToForm(adapted, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.HOUSING:
-			return mapAccommodationEventToForm(adapted);
+			return mapAccommodationEventToForm(adapted, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.ACTIVITY:
-			return mapActivityEventToForm(adapted);
+			return mapActivityEventToForm(adapted, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.REF:
-			return mapInfoEventToForm(adapted);
+			return mapInfoEventToForm(adapted, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.SUPPLEMENTARY:
-			return mapSupplementaryEventToForm(adapted);
+			return mapSupplementaryEventToForm(adapted, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.GUIDE:
-			return mapGuideEventToForm(adapted);
+			return mapGuideEventToForm(adapted, selectedSupplyId);
 		default:
 			throw new Error("Unsupported library event typ");
 	}
 };
 
 /**
- * Form → library create/update body. The library write union IS the
- * option-row WRITE union of contract 3.1, so this delegates to the same
- * form converters the itinerary update flow uses.
+ * Form → library create/update body. Delegates to itinerary form converters,
+ * then always echoes the full pool (library has no omit-pool PATCH).
  */
 export const mapEventLibraryUpdateToBackend = (
 	type: ENUM_EVENT_TYPE,
 	frontend: TTourEventUpdate,
-	language?: ENUM_LANGUAGES_TYPE
-): TUpdateEventLibraryBackend =>
-	mapEventUpdateToBackend(type, frontend, language);
+	language?: ENUM_LANGUAGES_TYPE,
+	currentDetails?: TEventDetailsBackend
+): TUpdateEventLibraryBackend => {
+	const body = mapEventUpdateToBackend(
+		type,
+		frontend,
+		language,
+		currentDetails
+	);
+	if (!currentDetails) {
+		return body;
+	}
+
+	const echoed = mapEventDetailsReadToWrite(
+		body.typ as ENUM_EVENT_BACKEND_TYPE,
+		currentDetails
+	);
+	const details = body.details as { pool?: unknown } | undefined;
+	if (details?.pool) {
+		return body;
+	}
+
+	return {
+		...body,
+		details: { ...body.details, pool: echoed.pool }
+	} as TUpdateEventLibraryBackend;
+};
 
 export const mapEventLibraryCreateToBackend = (
 	type: ENUM_EVENT_TYPE,
@@ -273,3 +304,45 @@ export const mapEventLibraryCreateToBackend = (
 	language?: ENUM_LANGUAGES_TYPE
 ): TCreateEventLibraryBackend =>
 	mapEventUpdateToBackend(type, frontend, language);
+
+const asLibraryUpdateBody = (
+	template: TEventLibraryItemBackend,
+	pool: TEventDetailsWriteBackend["pool"]
+): TUpdateEventLibraryBackend => {
+	const typ = template.event.typ as ENUM_EVENT_BACKEND_TYPE;
+	const echoed = mapEventDetailsReadToWrite(typ, template.event.details);
+
+	return {
+		typ,
+		name: template.event.name,
+		description: template.event.description,
+		details: { ...echoed, pool }
+	} as TUpdateEventLibraryBackend;
+};
+
+export const mapLibraryPoolAddToBackend = (
+	template: TEventLibraryItemBackend,
+	member: TEventPoolMemberNewBackend
+): TUpdateEventLibraryBackend => {
+	const typ = template.event.typ as ENUM_EVENT_BACKEND_TYPE;
+	const echoed = mapEventDetailsReadToWrite(typ, template.event.details);
+	const pool = [
+		...(echoed.pool ?? []),
+		{ supply: member.supply }
+	] as TEventDetailsWriteBackend["pool"];
+
+	return asLibraryUpdateBody(template, pool);
+};
+
+export const mapLibraryPoolRemoveToBackend = (
+	template: TEventLibraryItemBackend,
+	supplyId: string
+): TUpdateEventLibraryBackend => {
+	const typ = template.event.typ as ENUM_EVENT_BACKEND_TYPE;
+	const echoed = mapEventDetailsReadToWrite(typ, template.event.details);
+	const pool = (echoed.pool ?? []).filter(
+		(member) => member.id !== supplyId
+	) as TEventDetailsWriteBackend["pool"];
+
+	return asLibraryUpdateBody(template, pool);
+};

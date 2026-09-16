@@ -1,4 +1,7 @@
-import { type ENUM_EVENT_TYPE } from "./event.types";
+import type { ENUM_EVENT_BACKEND_TYPE } from "../../itinerary/types/event-backend-enum.types";
+import type { IEventPoolMemberSummary } from "../../itinerary/types/event-pool.types";
+
+import type { ENUM_EVENT_TYPE } from "./event.types";
 import type {
 	ENUM_BREAKDOWN_LEG_TYPE,
 	ENUM_PRICING_REVIEW_ROW_TYPE,
@@ -13,6 +16,7 @@ export interface ITourReviewItem {
 	plannedCost?: string;
 	estimatedRevenue?: string;
 	type?: ENUM_EVENT_TYPE;
+	backendTyp?: ENUM_EVENT_BACKEND_TYPE;
 	day: number;
 	position: number;
 	optionIndex: number;
@@ -21,6 +25,7 @@ export interface ITourReviewItem {
 	warnings?: ENUM_PRICING_WARNING_TYPE[];
 	rowKind?: ENUM_PRICING_REVIEW_ROW_TYPE;
 	breakdownLeg?: ENUM_BREAKDOWN_LEG_TYPE;
+	pool?: IEventPoolMemberSummary[];
 }
 
 export interface ITourSummaryRange {

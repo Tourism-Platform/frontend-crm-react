@@ -158,30 +158,38 @@ describe("mapTrainOverrideFromBackend", () => {
 	});
 });
 
-describe("mapEventOverrideFromDetails (contract 3.1: supply.override)", () => {
+describe("mapEventOverrideFromDetails (contract 6: pool member override)", () => {
+	const HOTEL_SPEC = {
+		pricing: "whole" as const,
+		images: [] as [],
+		name: null,
+		location: null,
+		stars: null,
+		typs: [] as [],
+		amenities: [] as [],
+		policy: null,
+		price: { base: FIXED_CHARGE_OUTPUT, seasons: [] as [] },
+		categories: [] as []
+	};
+
 	const buildDetails = (
 		override: HotelOverrideOutput | null
 	): HousingDetailsOutput => ({
 		plan: {},
-		supply: {
-			source: "product",
-			product_id: "p1",
-			supplier: { id: "s1", name: "S" },
-			scope: { typ: "all" },
-			override
-		},
-		spec: {
-			pricing: "whole",
-			images: [],
-			name: null,
-			location: null,
-			stars: null,
-			typs: [],
-			amenities: [],
-			policy: null,
-			price: { base: FIXED_CHARGE_OUTPUT, seasons: [] },
-			categories: []
-		}
+		pool: [
+			{
+				id: "11111111-1111-1111-1111-111111111111",
+				is_main: true,
+				supply: {
+					source: "product",
+					product_id: "p1",
+					supplier: { id: "s1", name: "S" },
+					scope: { typ: "all" },
+					override
+				},
+				spec: HOTEL_SPEC
+			}
+		]
 	});
 
 	it("returns null for inline supply", () => {
@@ -189,19 +197,14 @@ describe("mapEventOverrideFromDetails (contract 3.1: supply.override)", () => {
 			mapEventOverrideFromDetails(
 				{
 					plan: {},
-					supply: { source: "inline", supplier_id: null },
-					spec: {
-						pricing: "whole",
-						images: [],
-						name: null,
-						location: null,
-						stars: null,
-						typs: [],
-						amenities: [],
-						policy: null,
-						price: { base: FIXED_CHARGE_OUTPUT, seasons: [] },
-						categories: []
-					}
+					pool: [
+						{
+							id: "11111111-1111-1111-1111-111111111111",
+							is_main: true,
+							supply: { source: "inline", supplier_id: null },
+							spec: HOTEL_SPEC
+						}
+					]
 				},
 				"housing"
 			)

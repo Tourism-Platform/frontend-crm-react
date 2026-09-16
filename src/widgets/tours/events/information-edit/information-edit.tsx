@@ -7,11 +7,13 @@ import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TInfoEditSchema } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import { EventTitleInput } from "../ui";
 
 import { INFORMATION_EDIT_TABS_LIST } from "./model";
 
-export interface IInformationEditProps {
+export interface IInformationEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TInfoEditSchema>;
 	createSectionSubmit: () => Promise<void>;
 	isLoading: boolean;
@@ -22,6 +24,8 @@ export const InformationEdit: FC<IInformationEditProps> = ({
 	form,
 	createSectionSubmit,
 	isLoading,
+	poolVariant,
+	onPoolSelect,
 	tabs = INFORMATION_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("information_edit_page");
@@ -43,6 +47,7 @@ export const InformationEdit: FC<IInformationEditProps> = ({
 							form={form}
 							createSectionSubmit={createSectionSubmit}
 							isLoading={isLoading}
+							slotContext={{ poolVariant, onPoolSelect }}
 						/>
 					</CardContent>
 				</Card>

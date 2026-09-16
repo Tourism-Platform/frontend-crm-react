@@ -18,6 +18,7 @@ import {
 	type TTransportDetailsWithPricingBackend
 } from "../../types";
 
+import { getPoolMember } from "./event-pool.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
 
 /** Write-side whole-route/fleet charge (contract 3.1 `spec.charge`). */
@@ -69,17 +70,18 @@ const getDefaultFlightPricing = (): TFlightPricingSchema => ({
 });
 
 /**
- * Pricing section of the form, read from `details.spec` (contract 3.1).
+ * Pricing section of the form, read from the selected pool member spec.
  * Only a whole route/fleet (`spec.pricing === "whole"`) carries an
  * event-stated charge the form can show; per-fare / per-vehicle specs
  * price their own units, which the event form does not edit — those read
  * as the default (unpriced) pricing.
  */
 export const mapFlightPricingFromBackend = (
-	details?: TTransportDetailsWithPricingBackend | null
+	details?: TTransportDetailsWithPricingBackend | null,
+	supplyId?: string | null
 ): TFlightPricingSchema => {
 	const defaults = getDefaultFlightPricing();
-	const spec = details?.spec;
+	const spec = getPoolMember(details, supplyId)?.spec;
 
 	if (!spec || spec.pricing !== "whole") {
 		return defaults;

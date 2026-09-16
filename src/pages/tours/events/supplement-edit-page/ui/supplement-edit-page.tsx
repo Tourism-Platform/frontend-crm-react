@@ -14,12 +14,14 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+
 import { SupplementEdit } from "@/widgets/tours";
 import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/supplement-edit/model";
 
 export const SupplementEditPage: FC = () => {
 	const { t, i18n } = useTranslation("supplement_edit_page");
-	const { data, isError, isLoading, update } =
+	const { data, selectPoolMember, isError, isLoading, update } =
 		useTourEventEdit<TSupplementEditSchema>(ENUM_EVENT.SUPPLEMENT);
 
 	const form = useForm<TSupplementEditSchema>({
@@ -66,6 +68,8 @@ export const SupplementEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
+			onPoolSelect={selectPoolMember}
 		/>
 	);
 };

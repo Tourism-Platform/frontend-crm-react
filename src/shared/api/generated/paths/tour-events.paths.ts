@@ -1,22 +1,28 @@
 import type {
 	ActivityEvent,
+	ActivityMemberNew,
 	ActivityOverrideInput,
 	ActivitySingleEvent,
 	AttachBody,
 	BusEvent,
+	BusMemberNew,
 	BusOverrideInput,
 	BusSingleEvent,
 	DetachBody,
 	EventOptionalSchema,
 	EventReorderSchema,
 	FlightEvent,
+	FlightMemberNew,
 	FlightSingleEvent,
 	GuideEvent,
+	GuideMemberNew,
 	GuideSingleEvent,
 	HotelOverrideInput,
 	HousingEvent,
+	HousingMemberNew,
 	HousingSingleEvent,
 	InformationEvent,
+	InformationMemberNew,
 	InformationSingleEvent,
 	LanguageCode,
 	MoveToMultiResult,
@@ -29,12 +35,15 @@ import type {
 	RouteOverrideInput,
 	ScopeBody,
 	SupplementaryEvent,
+	SupplementaryMemberNew,
 	SupplementarySingleEvent,
 	SupplierPolicyWarningSchemaOutput,
 	TourEventResponse,
 	TrainEvent,
+	TrainMemberNew,
 	TrainSingleEvent,
 	TransferEvent,
+	TransferMemberNew,
 	TransferOverrideInput,
 	TransferSingleEvent
 } from "../Api";
@@ -124,14 +133,71 @@ export const TOUR_EVENTS_PATHS = {
 				response: PublishBlockSchema[];
 			}
 		}) as const,
-	setOptionOverride: (
+	addPoolMember: (
 		tourId: string,
 		optionId: string,
 		eventId: string,
 		eventOptionId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/override`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool`,
+			method: "POST",
+			_types: {} as {
+				body:
+					| HousingMemberNew
+					| TrainMemberNew
+					| FlightMemberNew
+					| BusMemberNew
+					| TransferMemberNew
+					| ActivityMemberNew
+					| InformationMemberNew
+					| GuideMemberNew
+					| SupplementaryMemberNew;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	removePoolMember: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string,
+		supplyId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	setPoolMemberMain: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string,
+		supplyId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}/main`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	setPoolMemberOverride: (
+		tourId: string,
+		optionId: string,
+		eventId: string,
+		eventOptionId: string,
+		supplyId: string
+	) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}/override`,
 			method: "PATCH",
 			_types: {} as {
 				body:
@@ -144,14 +210,15 @@ export const TOUR_EVENTS_PATHS = {
 				response: TourEventResponse;
 			}
 		}) as const,
-	clearOptionOverride: (
+	clearPoolMemberOverride: (
 		tourId: string,
 		optionId: string,
 		eventId: string,
-		eventOptionId: string
+		eventOptionId: string,
+		supplyId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/override`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}/override`,
 			method: "DELETE",
 			_types: {} as {
 				body: void;
@@ -159,14 +226,15 @@ export const TOUR_EVENTS_PATHS = {
 				response: TourEventResponse;
 			}
 		}) as const,
-	attachOptionProduct: (
+	attachPoolMemberProduct: (
 		tourId: string,
 		optionId: string,
 		eventId: string,
-		eventOptionId: string
+		eventOptionId: string,
+		supplyId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/attach`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}/attach`,
 			method: "POST",
 			_types: {} as {
 				body: AttachBody;
@@ -174,14 +242,15 @@ export const TOUR_EVENTS_PATHS = {
 				response: TourEventResponse;
 			}
 		}) as const,
-	relinkOptionProduct: (
+	relinkPoolMemberProduct: (
 		tourId: string,
 		optionId: string,
 		eventId: string,
-		eventOptionId: string
+		eventOptionId: string,
+		supplyId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/relink`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}/relink`,
 			method: "POST",
 			_types: {} as {
 				body: RelinkBody;
@@ -189,14 +258,15 @@ export const TOUR_EVENTS_PATHS = {
 				response: TourEventResponse;
 			}
 		}) as const,
-	scopeOptionProduct: (
+	scopePoolMemberProduct: (
 		tourId: string,
 		optionId: string,
 		eventId: string,
-		eventOptionId: string
+		eventOptionId: string,
+		supplyId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/scope`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}/scope`,
 			method: "PATCH",
 			_types: {} as {
 				body: ScopeBody;
@@ -204,14 +274,15 @@ export const TOUR_EVENTS_PATHS = {
 				response: TourEventResponse;
 			}
 		}) as const,
-	detachOptionProduct: (
+	detachPoolMemberProduct: (
 		tourId: string,
 		optionId: string,
 		eventId: string,
-		eventOptionId: string
+		eventOptionId: string,
+		supplyId: string
 	) =>
 		({
-			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/detach`,
+			url: `/tour/${tourId}/${optionId}/event/${eventId}/option/${eventOptionId}/pool/${supplyId}/detach`,
 			method: "POST",
 			_types: {} as {
 				body: DetachBody;

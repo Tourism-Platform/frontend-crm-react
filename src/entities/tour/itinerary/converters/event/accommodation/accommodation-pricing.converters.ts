@@ -39,6 +39,7 @@ import {
 	type THousingSpecInputBackend,
 	type TRoomsSchema
 } from "../../../types";
+import { getPoolMember } from "../event-pool.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
 import { isInheritedHousingDetails } from "../housing-details.helpers";
 import { housingRoomTypeConverter } from "../housing-room-type.converters";
@@ -385,20 +386,21 @@ export const getDefaultAccommodationPricing = (
 });
 
 /**
- * Pricing section of the form, read from `details.spec` (contract 3.1):
+ * Pricing section of the form, read from the selected pool member spec:
  * - `{ pricing: "per_room" }` — per-room rows (flat or by class);
  * - `{ pricing: "whole" }` — `price.base` maps to flat-rate (fixed /
  *   per-duration) or per-person form rows.
  */
 export const mapAccommodationPricingFromBackend = (
 	details?: HousingDetailsOutput | null,
-	roomsList: TRoomsList = []
+	roomsList: TRoomsList = [],
+	supplyId?: string | null
 ): TAccommodationPricingSchema => {
-	if (!details || isInheritedHousingDetails(details)) {
+	if (!details || isInheritedHousingDetails(details, supplyId)) {
 		return getDefaultAccommodationPricing(roomsList);
 	}
 
-	const spec = details.spec;
+	const spec = getPoolMember(details, supplyId)?.spec;
 	const defaults = getDefaultAccommodationPricing(roomsList);
 
 	if (!spec) {

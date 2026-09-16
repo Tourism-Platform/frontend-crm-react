@@ -7,6 +7,8 @@ import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TAccommodationEditSchema } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import {
 	useHasProductOverride,
 	useIsInheritedProduct
@@ -18,7 +20,7 @@ import {
 	type ENUM_FORM_SECTION_TYPE
 } from "./model";
 
-export interface IAccommodationEditProps {
+export interface IAccommodationEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TAccommodationEditSchema>;
 	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
@@ -29,6 +31,8 @@ export const AccommodationEdit: FC<IAccommodationEditProps> = ({
 	form,
 	createSectionSubmit,
 	isLoading,
+	poolVariant,
+	onPoolSelect,
 	tabs = ACCOMMODATION_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("accommodation_edit_page");
@@ -63,6 +67,7 @@ export const AccommodationEdit: FC<IAccommodationEditProps> = ({
 							form={form}
 							createSectionSubmit={createSectionSubmit}
 							isLoading={isLoading}
+							slotContext={{ poolVariant, onPoolSelect }}
 						/>
 					</CardContent>
 				</Card>

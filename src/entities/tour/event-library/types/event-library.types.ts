@@ -3,6 +3,7 @@ import type { IPaginationRequest } from "@/shared/types";
 
 import type {
 	ENUM_EVENT_TYPE,
+	TEventDetailsBackend,
 	TTourEventUpdate
 } from "@/entities/tour/itinerary";
 
@@ -27,6 +28,8 @@ export interface IEventLibraryUpdate {
 	data: TTourEventUpdate;
 	/** Язык UI — конвертируется в LanguageCode при save */
 	language?: ENUM_LANGUAGES_TYPE;
+	/** Current READ details — library PATCH always echoes the full pool. */
+	currentDetails?: TEventDetailsBackend;
 }
 
 export interface IEventLibraryCreate {

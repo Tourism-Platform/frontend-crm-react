@@ -3,17 +3,33 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, LoaderButton, withErrorBoundary } from "@/shared/ui";
 
+import { ENUM_EVENT_BACKEND } from "@/entities/tour";
+
+import { EventPoolControls, type TEventPoolUiProps } from "@/features/tours";
+
 import {
 	ENUM_FORM_SECTION,
 	INFORMATION_DATA_LIST,
 	type TSlotProps
 } from "../../model";
 
-const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
+	form,
+	onSubmit,
+	isLoading,
+	poolVariant,
+	onPoolSelect
+}) => {
 	const { t } = useTranslation("information_edit_page");
 	return (
 		<div className="grid gap-12">
 			<div className="grid gap-8">
+				<EventPoolControls
+					form={form}
+					variant={poolVariant}
+					onSelect={onPoolSelect}
+					eventTyp={ENUM_EVENT_BACKEND.REF}
+				/>
 				<div className="grid grid-cols-4 gap-x-4 gap-y-1">
 					{INFORMATION_DATA_LIST().map(({ key, ...item }) => (
 						<CustomField

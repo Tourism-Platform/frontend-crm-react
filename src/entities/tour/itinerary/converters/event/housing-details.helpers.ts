@@ -1,18 +1,12 @@
-import type {
-	HotelProductSupplyOutput,
-	HousingDetailsOutput
-} from "@/shared/api";
+import type { HousingDetailsOutput } from "@/shared/api";
 
-/** Read-side housing details narrowed to a product-linked supply (3.1). */
-export type TInheritedHousingDetailsBackend = HousingDetailsOutput & {
-	supply: { source: "product" } & HotelProductSupplyOutput;
-};
+import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
 
 /**
- * Contract 3.1: an event is product-linked when `details.supply.source`
- * is `"product"` (the old flat `details.source === "inherited"` is gone).
+ * Contract 6: a stay is product-linked when the selected (or first) pool
+ * member has `supply.source === "product"`.
  */
 export const isInheritedHousingDetails = (
-	details: HousingDetailsOutput | null | undefined
-): details is TInheritedHousingDetailsBackend =>
-	details?.supply?.source === "product";
+	details: HousingDetailsOutput | null | undefined,
+	supplyId?: string | null
+): boolean => isProductPoolMember(getPoolMember(details, supplyId));

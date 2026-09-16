@@ -2,6 +2,7 @@ import { getDeviceUtcOffset } from "@/shared/hooks";
 
 import {
 	ENUM_EVENT_BACKEND,
+	ENUM_FORM_EVENT_PRODUCT,
 	type TInfoEditSchema,
 	type TInformationDetailsWriteBackend,
 	type TInformationSingleEventBackend,
@@ -10,19 +11,23 @@ import {
 	type TTourEventUpdateBackend
 } from "../../types";
 
+import { getPoolMember } from "./event-pool.helpers";
 import { toTimezoneOffset } from "./timezone.helpers";
 
 export const mapInfoEventToForm = (
-	data: TTourEventBackendResponce
+	data: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TInfoEditSchema => {
 	const event = data?.event as TInformationSingleEventBackend;
 	// Contract 3.1: an information entry's hours are its `plan`.
 	const plan = event?.details?.plan;
+	const supplyId = getPoolMember(event?.details, selectedSupplyId)?.id;
 
 	return {
 		name: event?.name || "",
 		day: event.day,
 		position: event.position,
+		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: supplyId,
 		general: {
 			description: event?.description || "",
 			info_start_time: plan?.start_time?.time || "",

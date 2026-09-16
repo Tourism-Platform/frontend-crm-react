@@ -6,6 +6,8 @@ import {
 	type TTransportationEditSchema
 } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import { Media } from "../../../ui";
 import { CarsInfo, GeneralInfo, Pricing } from "../../ui";
 import { ENUM_FORM_SECTION, type ENUM_FORM_SECTION_TYPE } from "../types";
@@ -14,13 +16,15 @@ export const TRANSPORTATION_EDIT_TABS_LIST: IQueryTab<
 	ENUM_TRANSPORTATION_EDIT_TAB_TYPE,
 	"transportation_edit_page",
 	ENUM_FORM_SECTION_TYPE,
-	TTransportationEditSchema
+	TTransportationEditSchema,
+	TEventPoolUiProps
 >[] = [
 	{
 		label: "tabs.general",
 		type: ENUM_TRANSPORTATION_EDIT_TAB.GENERAL,
 		slot: GeneralInfo,
-		section: ENUM_FORM_SECTION.GENERAL
+		section: ENUM_FORM_SECTION.GENERAL,
+		getSlotProps: (ctx) => ctx
 	},
 	{
 		label: "tabs.cars",

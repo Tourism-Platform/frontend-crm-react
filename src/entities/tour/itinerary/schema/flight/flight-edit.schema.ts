@@ -15,6 +15,7 @@ export const FLIGHT_EDIT_SCHEMA = z.object({
 	[ENUM_FORM_SECTION.NAME]: z.string().optional(),
 	[ENUM_FORM_SECTION.DAY]: z.number().min(1).optional(),
 	[ENUM_FORM_SECTION.POSITION]: z.number().optional(),
+	[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: z.string().uuid().optional(),
 	[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID]: z.string().uuid().optional(),
 	[ENUM_FORM_EVENT_PRODUCT.VARIANT_ID]: z
 		.string()

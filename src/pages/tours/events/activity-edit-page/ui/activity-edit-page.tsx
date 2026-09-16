@@ -14,12 +14,14 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+
 import { ActivityEdit } from "@/widgets/tours";
 import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/activity-edit/model";
 
 export const ActivityEditPage: FC = () => {
 	const { t, i18n } = useTranslation("activity_edit_page");
-	const { data, isError, isLoading, update } =
+	const { data, selectPoolMember, isError, isLoading, update } =
 		useTourEventEdit<TActivityEditSchema>(ENUM_EVENT.ACTIVITY);
 
 	const form = useForm<TActivityEditSchema>({
@@ -66,6 +68,8 @@ export const ActivityEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
+			onPoolSelect={selectPoolMember}
 		/>
 	);
 };

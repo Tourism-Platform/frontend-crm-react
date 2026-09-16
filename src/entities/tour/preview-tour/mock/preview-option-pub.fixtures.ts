@@ -55,39 +55,33 @@ export const locationAirportTashkent = (): LocationOutSchema => ({
 	long: 69.2812
 });
 
-const housingDetails = (city: LocationOutSchema) => ({
-	name: null,
-	location: city,
-	stars: null,
-	amenities: [AmenitiesTypes.Wifi, AmenitiesTypes.Breakfast],
+const housingDetails = () => ({
 	duration: 1,
 	check_in: time("14:00:00"),
 	check_out: time("12:00:00"),
-	categories: [
-		{
-			name: "Rooms",
-			rooms: [
-				{
-					name: "Standard Double",
-					typ: HousingRoomTypes.Double,
-					pax: 2,
-					description:
-						"Comfortable double room with air conditioning, a private bathroom, and city views.",
-					images: []
-				},
-				{
-					name: "Family Suite",
-					typ: HousingRoomTypes.Family,
-					pax: 4,
-					description:
-						"Spacious suite with two sleeping areas, suitable for families travelling together.",
-					images: []
-				}
-			]
-		}
-	],
-	images: [],
-	typs: [HotelKind.Hotel]
+	spec: {
+		stars: null,
+		typs: [HotelKind.Hotel],
+		amenities: [AmenitiesTypes.Wifi, AmenitiesTypes.Breakfast],
+		rooms: [
+			{
+				name: "Standard Double",
+				typ: HousingRoomTypes.Double,
+				pax: 2,
+				description:
+					"Comfortable double room with air conditioning, a private bathroom, and city views.",
+				images: []
+			},
+			{
+				name: "Family Suite",
+				typ: HousingRoomTypes.Family,
+				pax: 4,
+				description:
+					"Spacious suite with two sleeping areas, suitable for families travelling together.",
+				images: []
+			}
+		]
+	}
 });
 
 export const infoEvent = (
@@ -125,25 +119,25 @@ export const flightEvent = (
 	images: [],
 	date: null,
 	details: {
-		name: null,
-		hop: [
-			{
-				airline_code: "HY",
-				flight_number: 101,
-				departure_airport_code: "IST",
-				arrival_airport_code: "TAS",
-				departure_location: locationAirportTashkent(),
-				arrival_location: locationTashkent(),
-				departure_date: "2026-06-01",
-				arrival_date: "2026-06-01",
-				departure_time: time("08:30:00"),
-				arrival_time: time("14:45:00"),
-				departure_terminal: "1",
-				departure_gate: "A1",
-				amenities: []
-			}
-		],
-		images: []
+		spec: {
+			hop: [
+				{
+					airline_code: "HY",
+					flight_number: 101,
+					departure_airport_code: "IST",
+					arrival_airport_code: "TAS",
+					departure_location: locationAirportTashkent(),
+					arrival_location: locationTashkent(),
+					departure_date: "2026-06-01",
+					arrival_date: "2026-06-01",
+					departure_time: time("08:30:00"),
+					arrival_time: time("14:45:00"),
+					departure_terminal: "1",
+					departure_gate: "A1",
+					amenities: []
+				}
+			]
+		}
 	}
 });
 
@@ -162,7 +156,6 @@ export const transferEvent = (
 	images: [],
 	date: null,
 	details: {
-		name: null,
 		typ: TransferTypes.AirportTransfer,
 		departure: {
 			date: "2026-06-01",
@@ -174,33 +167,31 @@ export const transferEvent = (
 			time: time("16:00:00"),
 			location: locationTashkent()
 		},
-		cars: [
-			{
-				name: null,
-				typ: VehicleBodyType.Sedan,
-				pax: 2,
-				description:
-					"Air-conditioned sedan for a private transfer with space for light luggage.",
-				categories: []
-			},
-			{
-				name: null,
-				typ: VehicleBodyType.Minivan,
-				pax: 7,
-				description:
-					"Spacious minivan for a small group, with air conditioning and room for bags.",
-				categories: []
-			},
-			{
-				name: null,
-				typ: VehicleBodyType.Minibus,
-				pax: 21,
-				description:
-					"Comfortable minibus for group transfers between the airport, hotel, and route stops.",
-				categories: []
-			}
-		],
-		images: []
+		spec: {
+			cars: [
+				{
+					name: null,
+					typ: VehicleBodyType.Sedan,
+					pax: 2,
+					description: null,
+					categories: []
+				},
+				{
+					name: null,
+					typ: VehicleBodyType.Minivan,
+					pax: 7,
+					description: null,
+					categories: []
+				},
+				{
+					name: null,
+					typ: VehicleBodyType.Minibus,
+					pax: 21,
+					description: null,
+					categories: []
+				}
+			]
+		}
 	}
 });
 
@@ -219,22 +210,22 @@ export const trainEvent = (
 	images: [],
 	date: null,
 	details: {
-		name: null,
-		hop: [
-			{
-				departure: {
-					date: "2026-06-02",
-					time: time("08:00:00"),
-					location: locationTashkent()
-				},
-				arrival: {
-					date: "2026-06-02",
-					time: time("10:30:00"),
-					location: locationSamarkand()
+		spec: {
+			hop: [
+				{
+					departure: {
+						date: "2026-06-02",
+						time: time("08:00:00"),
+						location: locationTashkent()
+					},
+					arrival: {
+						date: "2026-06-02",
+						time: time("10:30:00"),
+						location: locationSamarkand()
+					}
 				}
-			}
-		],
-		images: []
+			]
+		}
 	}
 });
 
@@ -253,7 +244,6 @@ export const busEvent = (
 	images: [],
 	date: null,
 	details: {
-		name: null,
 		hop: [
 			{
 				departure: {
@@ -268,8 +258,7 @@ export const busEvent = (
 				}
 			}
 		],
-		vehicles: [],
-		images: []
+		spec: { vehicles: [] }
 	}
 });
 
@@ -277,8 +266,7 @@ export const housingEvent = (
 	day: number,
 	position: number,
 	name: string,
-	description: string,
-	city: LocationOutSchema
+	description: string
 ): { typ: "housing" } & HousingEventPubReadOutput => ({
 	typ: "housing",
 	name,
@@ -288,7 +276,7 @@ export const housingEvent = (
 	is_optional: false,
 	images: [],
 	date: null,
-	details: housingDetails(city)
+	details: housingDetails()
 });
 
 export const activityEvent = (
@@ -338,8 +326,7 @@ export const multiplyHotels = (
 				day,
 				1,
 				"Holiday Inn Tashkent City (4*)",
-				"Modern hotel near Amir Timur Square with rooftop bar and fitness centre.",
-				locationTashkent()
+				"Modern hotel near Amir Timur Square with rooftop bar and fitness centre."
 			),
 			[
 				PREVIEW_MOCK_IMAGE_URLS.hotelA,
@@ -354,8 +341,7 @@ export const multiplyHotels = (
 				day,
 				2,
 				"Uzbekistan Hotel (3*)",
-				"Historic landmark hotel with central location and local cuisine restaurant.",
-				locationTashkent()
+				"Historic landmark hotel with central location and local cuisine restaurant."
 			),
 			[
 				PREVIEW_MOCK_IMAGE_URLS.hotelB,
@@ -368,8 +354,7 @@ export const multiplyHotels = (
 				day,
 				3,
 				"Ibis Styles Tashkent (3*)",
-				"Design hotel in Yunusabad with metro access to the city centre.",
-				locationTashkent()
+				"Design hotel in Yunusabad with metro access to the city centre."
 			),
 			[PREVIEW_MOCK_IMAGE_URLS.hotelC, PREVIEW_MOCK_IMAGE_URLS.hotelD]
 		)
@@ -513,8 +498,7 @@ export const PREVIEW_OPTION_BACKEND_MOCK: TourOptionPublicResponse = {
 				2,
 				4,
 				"Overnight in Samarkand",
-				"Boutique hotel near the city centre with breakfast and Wi-Fi.",
-				locationSamarkand()
+				"Boutique hotel near the city centre with breakfast and Wi-Fi."
 			),
 			[
 				PREVIEW_MOCK_IMAGE_URLS.hotelA,

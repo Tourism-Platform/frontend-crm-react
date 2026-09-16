@@ -29,19 +29,27 @@ const feeRow = (cost: number, currency: string) => ({
 	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
 });
 
+type TFlightPoolSpec = FlightDetailsOutput["pool"][number]["spec"];
+
 const wholeFlightDetails = (
-	charge: Extract<FlightDetailsOutput["spec"], { pricing: "whole" }>["charge"]
+	charge: Extract<TFlightPoolSpec, { pricing: "whole" }>["charge"]
 ): FlightDetailsOutput => ({
 	plan: {},
-	supply: { source: "inline", supplier_id: null },
-	spec: {
-		pricing: "whole",
-		images: [],
-		name: null,
-		legs: [],
-		fares: [],
-		charge
-	}
+	pool: [
+		{
+			id: "supply-1",
+			is_main: true,
+			supply: { source: "inline", supplier_id: null },
+			spec: {
+				pricing: "whole",
+				images: [],
+				name: null,
+				legs: [],
+				fares: [],
+				charge
+			}
+		}
+	]
 });
 
 const basePricing = (

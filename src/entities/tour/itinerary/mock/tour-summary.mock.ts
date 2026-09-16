@@ -29,7 +29,16 @@ const costRange = (min: number, max: number): TTourMinMaxCostBackend => ({
 	max: { val: max }
 });
 
-const inlineSupply = { source: "inline", supplier_id: null } as const;
+const inlineSupply = { source: "inline" as const, supplier_id: null };
+
+const inlinePool = <T>(spec: T) => [
+	{
+		id: "11111111-1111-1111-1111-111111111111",
+		is_main: true,
+		supply: inlineSupply,
+		spec
+	}
+];
 
 const breakdownLine = (
 	overrides: Partial<TBreakdownLineBackend> &
@@ -37,6 +46,7 @@ const breakdownLine = (
 ): TBreakdownLineBackend => ({
 	kind: BreakdownLineKind.Unit,
 	unit_id: null,
+	supply_id: null,
 	pricing: ExpenseType.Fixed,
 	rate: null,
 	quantity: 1,
@@ -49,28 +59,26 @@ const breakdownLine = (
 
 const flightDetails = (): FlightDetailsOutput => ({
 	plan: {},
-	supply: inlineSupply,
-	spec: {
-		pricing: "whole",
+	pool: inlinePool({
+		pricing: "whole" as const,
 		images: [],
 		name: null,
 		legs: [],
 		charge: {
-			typ: "fixed",
+			typ: "fixed" as const,
 			cost: { val: 0 },
 			fees: null,
 			extra_costs: [],
 			markup: null
 		},
 		fares: []
-	}
+	})
 });
 
 const housingDetails = (): HousingDetailsOutput => ({
 	plan: {},
-	supply: inlineSupply,
-	spec: {
-		pricing: "per_room",
+	pool: inlinePool({
+		pricing: "per_room" as const,
 		images: [],
 		name: null,
 		location: null,
@@ -79,40 +87,35 @@ const housingDetails = (): HousingDetailsOutput => ({
 		amenities: [],
 		policy: null,
 		categories: []
-	}
+	})
 });
 
 const activityDetails = (): ActivityDetailsOutput => ({
 	plan: {},
-	supply: inlineSupply,
-	// The generated spec union intersects the literal discriminant with the
-	// native enum (`{ sub_typ: "sightseeing" } & GeneralVenueOutput`), which TS
-	// reduces to never — a targeted cast is the only way to state a sub_typ.
-	spec: {
+	pool: inlinePool({
 		sub_typ: GeneralVenueOutputSubTypEnum.Sightseeing,
 		images: [],
 		name: null,
 		location: null,
 		offerings: []
-	} as { sub_typ: "sightseeing" } & GeneralVenueOutput
+	} as { sub_typ: "sightseeing" } & GeneralVenueOutput)
 });
 
 const transferDetails = (): TransferDetailsOutput => ({
 	plan: { typ: null, departure: null, arrival: null },
-	supply: inlineSupply,
-	spec: {
-		pricing: "whole",
+	pool: inlinePool({
+		pricing: "whole" as const,
 		images: [],
 		name: null,
 		charge: {
-			typ: "fixed",
+			typ: "fixed" as const,
 			cost: { val: 0 },
 			fees: null,
 			extra_costs: [],
 			markup: null
 		},
 		cars: []
-	}
+	})
 });
 
 const MOCK_EVENTS: TTourSummaryEventBackend[] = [

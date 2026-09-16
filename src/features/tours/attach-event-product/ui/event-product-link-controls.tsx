@@ -18,6 +18,7 @@ interface IEventProductLinkControlsProps {
 	productId?: string;
 	variantId?: string | null;
 	hasOverride?: boolean;
+	supplyId?: string;
 }
 
 /**
@@ -29,11 +30,12 @@ export const EventProductLinkControls: FC<IEventProductLinkControlsProps> = ({
 	typ,
 	productId,
 	variantId,
-	hasOverride
+	hasOverride,
+	supplyId
 }) => {
 	const { t } = useTranslation("common_events");
 	const { attach, relink, detach, isLoading } =
-		useEventProductLinkMutations();
+		useEventProductLinkMutations(supplyId);
 	const [open, setOpen] = useState(false);
 	const [overrideWarnOpen, setOverrideWarnOpen] = useState(false);
 	const [detachOpen, setDetachOpen] = useState(false);

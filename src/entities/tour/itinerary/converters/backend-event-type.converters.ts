@@ -1,7 +1,18 @@
 import { EventTypes } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import { ENUM_EVENT, type ENUM_EVENT_TYPE } from "../types";
+import {
+	ENUM_EVENT,
+	type ENUM_EVENT_BACKEND_TYPE,
+	type ENUM_EVENT_TYPE
+} from "../types";
+
+const EVENT_BACKEND_TYP_VALUES = new Set<string>(Object.values(EventTypes));
+
+export const isEventBackendTyp = (
+	value: unknown
+): value is ENUM_EVENT_BACKEND_TYPE =>
+	typeof value === "string" && EVENT_BACKEND_TYP_VALUES.has(value);
 
 /**
  * Backend `EventTypes` → UI event kind.

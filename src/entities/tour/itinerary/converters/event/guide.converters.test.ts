@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
 import { Currency, GuideType, LanguageCode } from "@/shared/api";
+import type { GuideDetailsOutput, GuideSpecInput } from "@/shared/api";
 
 import { ENUM_LANGUAGES } from "@/entities/tour/landing/types/languages.types";
 
@@ -78,17 +79,39 @@ const baseForm = (
 	...overrides
 });
 
-describe("mapGuidesFromBackend", () => {
-	it("maps typ_tiers[0].typ to guide_type", () => {
-		const result = mapGuidesFromBackend({
-			plan: { duration: 2 },
+type TGuideSpec = NonNullable<GuideDetailsOutput["pool"][number]["spec"]>;
+
+const guideReadDetails = (
+	spec: TGuideSpec,
+	plan: GuideDetailsOutput["plan"] = {}
+): GuideDetailsOutput => ({
+	plan,
+	pool: [
+		{
+			id: "supply-1",
+			is_main: true,
 			supply: { source: "inline", supplier_id: null },
-			spec: {
-				name: null,
-				typ_tiers: [{ up_to_pax: 15, typ: GuideType.Route }],
-				categories: []
-			}
-		});
+			spec
+		}
+	]
+});
+
+const inlineGuidePool = (spec: GuideSpecInput) => [
+	{ supply: { source: "inline" as const, spec } }
+];
+
+describe("mapGuidesFromBackend", () => {
+	it("maps typ_tiers entries to guides_list", () => {
+		const result = mapGuidesFromBackend(
+			guideReadDetails(
+				{
+					name: null,
+					typ_tiers: [{ up_to_pax: 15, typ: GuideType.Route }],
+					categories: []
+				},
+				{ duration: 2 }
+			)
+		);
 
 		expect(result).toEqual({
 			[ENUM_FORM_GUIDES.GUIDES_LIST]: [
@@ -100,33 +123,42 @@ describe("mapGuidesFromBackend", () => {
 		});
 	});
 
-	it("defaults guide_type to local when typ_tiers is empty", () => {
-		const result = mapGuidesFromBackend({
-			plan: { duration: 1 },
-			supply: { source: "inline", supplier_id: null },
-			spec: { name: null, typ_tiers: [], categories: [] }
-		});
+	it("returns empty guides_list when typ_tiers is empty", () => {
+		const result = mapGuidesFromBackend(
+			guideReadDetails(
+				{ name: null, typ_tiers: [], categories: [] },
+				{ duration: 1 }
+			)
+		);
 
-		expect(result.guides_list[0].guide_type).toBe(ENUM_GUIDE_TYPE.LOCAL);
+		expect(result.guides_list).toEqual([]);
 	});
 
-	// Known Variant A limit: multi-tier typ_tiers is not editable in UI —
-	// LOAD takes only the first tier; SAVE will rewrite a single DEFAULT tier.
-	it("uses only the first typ_tiers entry when multiple exist", () => {
-		const result = mapGuidesFromBackend({
-			plan: {},
-			supply: { source: "inline", supplier_id: null },
-			spec: {
-				name: null,
-				typ_tiers: [
-					{ up_to_pax: 10, typ: GuideType.Local },
-					{ up_to_pax: 20, typ: GuideType.Route }
-				],
-				categories: []
-			}
-		});
+	it("maps every typ_tiers entry to guides_list", () => {
+		const result = mapGuidesFromBackend(
+			guideReadDetails(
+				{
+					name: null,
+					typ_tiers: [
+						{ up_to_pax: 10, typ: GuideType.Local },
+						{ up_to_pax: 20, typ: GuideType.Route }
+					],
+					categories: []
+				},
+				{ duration: 3 }
+			)
+		);
 
-		expect(result.guides_list[0].guide_type).toBe(ENUM_GUIDE_TYPE.LOCAL);
+		expect(result.guides_list).toEqual([
+			{
+				[ENUM_FORM_GUIDES.GUIDE_TYPE]: ENUM_GUIDE_TYPE.LOCAL,
+				[ENUM_FORM_GUIDES.DURATION_DAYS]: 3
+			},
+			{
+				[ENUM_FORM_GUIDES.GUIDE_TYPE]: ENUM_GUIDE_TYPE.ACCOMPANYING,
+				[ENUM_FORM_GUIDES.DURATION_DAYS]: 3
+			}
+		]);
 	});
 });
 
@@ -136,17 +168,14 @@ describe("mapGuideFormToUpdate", () => {
 
 		expect(result.details).toMatchObject({
 			plan: { duration: 1 },
-			supply: {
-				source: "inline",
-				spec: {
-					typ_tiers: [
-						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							typ: GuideType.Local
-						}
-					]
-				}
-			}
+			pool: inlineGuidePool({
+				typ_tiers: [
+					{
+						up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+						typ: GuideType.Local
+					}
+				]
+			})
 		});
 		expect(result.details).not.toHaveProperty("typ");
 	});
@@ -168,17 +197,54 @@ describe("mapGuideFormToUpdate", () => {
 
 		expect(result.details).toMatchObject({
 			plan: { duration: 3 },
-			supply: {
-				source: "inline",
-				spec: {
-					typ_tiers: [
+			pool: inlineGuidePool({
+				typ_tiers: [
+					{
+						up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+						typ: GuideType.Route
+					}
+				]
+			})
+		});
+	});
+
+	it("preserves up_to_pax from currentDetails when mapping all tiers", () => {
+		const result = mapGuideFormToUpdate(
+			baseForm({
+				[ENUM_GUIDE_FORM_SECTION.GUIDES]: {
+					[ENUM_FORM_GUIDES.GUIDES_LIST]: [
 						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							typ: GuideType.Route
+							[ENUM_FORM_GUIDES.GUIDE_TYPE]:
+								ENUM_GUIDE_TYPE.LOCAL,
+							[ENUM_FORM_GUIDES.DURATION_DAYS]: 2
+						},
+						{
+							[ENUM_FORM_GUIDES.GUIDE_TYPE]:
+								ENUM_GUIDE_TYPE.ACCOMPANYING,
+							[ENUM_FORM_GUIDES.DURATION_DAYS]: 2
 						}
 					]
 				}
-			}
+			}),
+			undefined,
+			guideReadDetails({
+				name: null,
+				typ_tiers: [
+					{ up_to_pax: 10, typ: GuideType.Local },
+					{ up_to_pax: 20, typ: GuideType.Route }
+				],
+				categories: []
+			})
+		);
+
+		expect(result.details).toMatchObject({
+			plan: { duration: 2 },
+			pool: inlineGuidePool({
+				typ_tiers: [
+					{ up_to_pax: 10, typ: GuideType.Local },
+					{ up_to_pax: 20, typ: GuideType.Route }
+				]
+			})
 		});
 	});
 
@@ -222,23 +288,22 @@ describe("mapGuideFormToUpdate", () => {
 			name: "Guide",
 			details: {
 				plan: { duration: 1 },
-				supply: {
-					source: "inline",
-					spec: {
-						typ_tiers: [
-							{
-								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-								typ: GuideType.Local
-							}
-						]
-					}
-				}
+				pool: inlineGuidePool({
+					typ_tiers: [
+						{
+							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+							typ: GuideType.Local
+						}
+					]
+				})
 			}
 		});
 		const details = expectGuideWrite(result);
-		expect(details.supply).toMatchObject({ source: "inline" });
-		if (details.supply?.source === "inline") {
-			expect(details.supply.spec).not.toHaveProperty("categories");
+		expect(details.pool?.[0]?.supply).toMatchObject({ source: "inline" });
+		if (details.pool?.[0]?.supply?.source === "inline") {
+			expect(details.pool[0].supply.spec).not.toHaveProperty(
+				"categories"
+			);
 		}
 	});
 
@@ -272,37 +337,34 @@ describe("mapGuideFormToUpdate", () => {
 
 		expect(result.details).toEqual({
 			plan: { duration: 1 },
-			supply: {
-				source: "inline",
-				spec: {
-					typ_tiers: [
-						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							typ: GuideType.Local
-						}
-					],
-					categories: [
-						{
-							expenses: {
-								typ: "per_duration",
-								rate: {
-									typ: "per_group",
-									tiers: [
-										{
-											up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-											cost: {
-												val: 120,
-												currency: Currency.USD
-											}
+			pool: inlineGuidePool({
+				typ_tiers: [
+					{
+						up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+						typ: GuideType.Local
+					}
+				],
+				categories: [
+					{
+						expenses: {
+							typ: "per_duration",
+							rate: {
+								typ: "per_group",
+								tiers: [
+									{
+										up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
+										cost: {
+											val: 120,
+											currency: Currency.USD
 										}
-									]
-								},
-								fees: null
-							}
+									}
+								]
+							},
+							fees: null
 						}
-					]
-				}
-			}
+					}
+				]
+			})
 		});
 	});
 
@@ -369,8 +431,8 @@ describe("mapGuideFormToUpdate", () => {
 
 		const details = expectGuideWrite(result);
 		expect(
-			details.supply?.source === "inline"
-				? details.supply.spec?.categories
+			details.pool?.[0]?.supply?.source === "inline"
+				? details.pool[0].supply.spec?.categories
 				: undefined
 		).toEqual([
 			{
@@ -419,64 +481,60 @@ describe("mapGuideFormToUpdate", () => {
 describe("mapGuidePricingFromBackend", () => {
 	it("maps tiers[0] cost and keeps multiple languages in guides[0].categories", () => {
 		const pricing = mapGuidePricingFromBackend(
-			{
-				plan: {},
-				supply: { source: "inline", supplier_id: null },
-				spec: {
-					name: null,
-					typ_tiers: [],
-					categories: [
-						{
-							lang: LanguageCode.En,
-							expenses: {
-								typ: "per_duration",
-								rate: {
-									typ: "per_group",
-									tiers: [
-										{
-											up_to_pax: 15,
-											cost: {
-												val: 120,
-												currency: Currency.USD
-											}
-										}
-									]
-								},
-								fees: [
+			guideReadDetails({
+				name: null,
+				typ_tiers: [],
+				categories: [
+					{
+						lang: LanguageCode.En,
+						expenses: {
+							typ: "per_duration",
+							rate: {
+								typ: "per_group",
+								tiers: [
 									{
-										name: null,
-										description: null,
-										cost: { val: 5, currency: Currency.USD }
-									}
-								],
-								extra_costs: [],
-								markup: { typ: "percentage", percentage: 0.1 }
-							}
-						},
-						{
-							lang: LanguageCode.Ru,
-							expenses: {
-								typ: "per_duration",
-								rate: {
-									typ: "per_group",
-									tiers: [
-										{
-											up_to_pax: 15,
-											cost: {
-												val: 150,
-												currency: Currency.EUR
-											}
+										up_to_pax: 15,
+										cost: {
+											val: 120,
+											currency: Currency.USD
 										}
-									]
-								},
-								fees: null,
-								extra_costs: [],
-								markup: null
-							}
+									}
+								]
+							},
+							fees: [
+								{
+									name: null,
+									description: null,
+									cost: { val: 5, currency: Currency.USD }
+								}
+							],
+							extra_costs: [],
+							markup: { typ: "percentage", percentage: 0.1 }
 						}
-					]
-				}
-			},
+					},
+					{
+						lang: LanguageCode.Ru,
+						expenses: {
+							typ: "per_duration",
+							rate: {
+								typ: "per_group",
+								tiers: [
+									{
+										up_to_pax: 15,
+										cost: {
+											val: 150,
+											currency: Currency.EUR
+										}
+									}
+								]
+							},
+							fees: null,
+							extra_costs: [],
+							markup: null
+						}
+					}
+				]
+			}),
 			[
 				{
 					[ENUM_FORM_GUIDES.GUIDE_TYPE]: ENUM_GUIDE_TYPE.LOCAL,
@@ -527,44 +585,40 @@ describe("mapGuidePricingFromBackend", () => {
 	// Known Variant A limit: multi price tiers collapse to tiers[0] on LOAD.
 	it("loads only the first price tier when multiple exist", () => {
 		const pricing = mapGuidePricingFromBackend(
-			{
-				plan: {},
-				supply: { source: "inline", supplier_id: null },
-				spec: {
-					name: null,
-					typ_tiers: [],
-					categories: [
-						{
-							lang: null,
-							expenses: {
-								typ: "per_duration",
-								rate: {
-									typ: "per_group",
-									tiers: [
-										{
-											up_to_pax: 10,
-											cost: {
-												val: 100,
-												currency: Currency.USD
-											}
-										},
-										{
-											up_to_pax: 20,
-											cost: {
-												val: 200,
-												currency: Currency.USD
-											}
+			guideReadDetails({
+				name: null,
+				typ_tiers: [],
+				categories: [
+					{
+						lang: null,
+						expenses: {
+							typ: "per_duration",
+							rate: {
+								typ: "per_group",
+								tiers: [
+									{
+										up_to_pax: 10,
+										cost: {
+											val: 100,
+											currency: Currency.USD
 										}
-									]
-								},
-								fees: null,
-								extra_costs: [],
-								markup: null
-							}
+									},
+									{
+										up_to_pax: 20,
+										cost: {
+											val: 200,
+											currency: Currency.USD
+										}
+									}
+								]
+							},
+							fees: null,
+							extra_costs: [],
+							markup: null
 						}
-					]
-				}
-			},
+					}
+				]
+			}),
 			[
 				{
 					[ENUM_FORM_GUIDES.GUIDE_TYPE]: ENUM_GUIDE_TYPE.LOCAL,
@@ -644,12 +698,12 @@ describe("guide converters round-trip", () => {
 		const write = expectGuideWrite(mapGuideFormToUpdate(form));
 
 		expect(write.plan?.duration).toBe(2);
-		expect(write.supply?.source).toBe("inline");
-		if (write.supply?.source === "inline") {
-			expect(write.supply.spec?.typ_tiers?.[0]?.typ).toBe(
+		expect(write.pool?.[0]?.supply?.source).toBe("inline");
+		if (write.pool?.[0]?.supply?.source === "inline") {
+			expect(write.pool[0].supply.spec?.typ_tiers?.[0]?.typ).toBe(
 				GuideType.Local
 			);
-			expect(write.supply.spec?.categories).toHaveLength(1);
+			expect(write.pool[0].supply.spec?.categories).toHaveLength(1);
 		}
 	});
 });

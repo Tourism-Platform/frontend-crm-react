@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 import type {
 	ActivityEventPubReadOutput,
 	BusEventPubReadOutput,
@@ -13,6 +11,7 @@ import type {
 	TransferEventPubReadOutput,
 	VehicleBodyType
 } from "@/shared/api";
+import { formatSheetDate } from "@/shared/utils";
 
 import {
 	type TEventImageBackend,
@@ -50,7 +49,7 @@ export const formatJourneyPoint = (point?: {
 	location?: unknown;
 }): IOptionEventSheetPoint => {
 	const place = formatLocation(point?.location) || "—";
-	const datePart = point?.date ? format(new Date(point.date), "MMM d") : "";
+	const datePart = formatSheetDate(point?.date, "MMM d");
 	const timePart = formatPubTime(point?.time);
 	const dateTime = [datePart, timePart].filter(Boolean).join(" • ") || "—";
 
@@ -146,27 +145,35 @@ const mapTransferSheet = (
 	event: { typ: "transfer" } & TransferEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "transfer",
-	pickup: formatJourneyPoint(event?.details?.departure ?? undefined),
-	dropoff: formatJourneyPoint(event?.details?.arrival ?? undefined),
-	cars: mapSheetCarsFromExpenses({ cars: event?.details?.cars })
+	pickup: formatJourneyPoint(event.details?.departure ?? undefined),
+	dropoff: formatJourneyPoint(event.details?.arrival ?? undefined),
+	cars: (event.details?.spec?.cars ?? []).map((car) => ({
+		typ: vehicleBodyTypeConverter.from(car.typ) ?? null,
+		pax: car.pax ?? null,
+		description: ""
+	}))
 });
 
 const mapHousingSheet = (
 	event: { typ: "housing" } & HousingEventPubReadOutput
 ): TOptionEventSheetExtra => {
 	const details = event.details;
+	const spec = details?.spec;
 
 	return {
 		kind: "accommodation",
 		amenities: accommodationAmenityConverter.fromMany(
-			details?.amenities ?? []
+			spec?.amenities ?? []
 		),
 		nights: `${details?.duration ?? 0} night${details?.duration === 1 ? "" : "s"}`,
 		checkIn: formatPubTime(details?.check_in ?? undefined),
 		checkOut: formatPubTime(details?.check_out ?? undefined),
-		rooms: mapSheetRoomsFromExpenses({
-			categories: details?.categories
-		})
+		rooms: (spec?.rooms ?? []).map((room) => ({
+			name: "",
+			typ: housingRoomTypeConverter.from(room.typ) ?? null,
+			pax: room.pax ?? null,
+			description: ""
+		}))
 	};
 };
 
@@ -174,9 +181,9 @@ const mapActivitySheet = (
 	event: { typ: "activity" } & ActivityEventPubReadOutput
 ): TOptionEventSheetExtra => ({
 	kind: "activity",
-	location: formatLocation(event?.details?.location ?? undefined) || "—",
-	startTime: formatPubTime(event?.details?.start_time ?? undefined),
-	endTime: formatPubTime(event?.details?.end_time ?? undefined)
+	location: formatLocation(event.details?.spec?.location ?? undefined) || "—",
+	startTime: formatPubTime(event.details?.start_time ?? undefined),
+	endTime: formatPubTime(event.details?.end_time ?? undefined)
 });
 
 const mapInfoSheet = (
@@ -218,17 +225,16 @@ const mapHopToSegment = (
 	routeLabel: string
 ): IOptionFlightSegment => {
 	if ("departure_airport_code" in hop && hop.departure_airport_code) {
-		const depDate = hop.departure_date
-			? format(new Date(hop.departure_date), "d MMM, yyyy")
-			: "";
-		const arrDate = hop.arrival_date
-			? format(new Date(hop.arrival_date), "d MMM, yyyy")
-			: "";
 		return {
 			airlineCode: hop.airline_code ?? "",
 			flightNumber: String(hop.flight_number ?? ""),
 			route: routeLabel,
-			dateRange: [depDate, arrDate].filter(Boolean).join(" - "),
+			dateRange: [
+				formatSheetDate(hop.departure_date),
+				formatSheetDate(hop.arrival_date)
+			]
+				.filter(Boolean)
+				.join(" - "),
 			departureCode: hop.departure_airport_code,
 			departureTime: formatPubTime(hop.departure_time ?? undefined),
 			departurePlace: `${formatLocation(hop.departure_location ?? undefined)}${hop.departure_terminal ? `, Terminal ${hop.departure_terminal}` : ""}${hop.departure_gate ? ` • Gate ${hop.departure_gate}` : ""}`,
@@ -246,7 +252,7 @@ const mapHopToSegment = (
 		route: routeLabel,
 		dateRange: [dep?.date, arr?.date]
 			.filter((d): d is string => Boolean(d))
-			.map((d) => format(new Date(d), "d MMM, yyyy"))
+			.map((d) => formatSheetDate(d))
 			.join(" - "),
 		departureCode: "—",
 		departureTime: formatPubTime(dep?.time ?? undefined),
@@ -263,8 +269,9 @@ const mapFlightSheet = (
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
 	segments:
-		event?.details?.hop?.map((hop) => mapHopToSegment(hop, routeLabel)) ??
-		[]
+		event.details?.spec?.hop?.map((hop) =>
+			mapHopToSegment(hop, routeLabel)
+		) ?? []
 });
 
 const mapTrainBusSheet = (
@@ -273,7 +280,8 @@ const mapTrainBusSheet = (
 		| ({ typ: "bus" } & BusEventPubReadOutput),
 	routeLabel: string
 ): TOptionEventSheetExtra => {
-	const hops = event.details?.hop;
+	const hops =
+		event.typ === "bus" ? event.details?.hop : event.details?.spec?.hop;
 
 	return {
 		kind: "flight",

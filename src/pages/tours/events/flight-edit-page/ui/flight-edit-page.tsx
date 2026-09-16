@@ -14,12 +14,14 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+
 import { FlightEdit } from "@/widgets/tours";
 import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/flight-edit/model";
 
 export const FlightEditPage: FC = () => {
 	const { t, i18n } = useTranslation("flight_edit_page");
-	const { data, isError, isLoading, update } =
+	const { data, selectPoolMember, isError, isLoading, update } =
 		useTourEventEdit<TFlightEditSchema>(ENUM_EVENT.FLIGHT);
 
 	const form = useForm<TFlightEditSchema>({
@@ -66,6 +68,8 @@ export const FlightEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
+			onPoolSelect={selectPoolMember}
 		/>
 	);
 };

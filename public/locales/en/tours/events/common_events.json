@@ -23,7 +23,7 @@
 		},
 		"dialog": {
 			"title": "Select supplier product",
-			"description": "Link this event to a catalog product. Tour-specific fields stay editable.",
+			"description": "Link this event to a product from the suppliers library. Tour-specific fields stay editable.",
 			"fields": {
 				"search": {
 					"label": "Search",
@@ -179,6 +179,66 @@
 	},
 	"revision": {
 		"frozen_price": "Price is frozen at attach"
+	},
+	"pool": {
+		"list": "Suppliers",
+		"add": "Add supplier",
+		"add_description": "Add an empty supplier, link a supplier from the library, or link one of their products.",
+		"add_inline": "Add empty supplier",
+		"add_supplier": "Link supplier",
+		"add_product": "Add supplier product",
+		"adding": "Adding",
+		"remove": "Remove",
+		"cancel": "Cancel",
+		"main": "Main",
+		"set_main": "Make main",
+		"last_member_disabled": "The last supplier cannot be removed",
+		"source": {
+			"inline": "Inline",
+			"product": "Product"
+		},
+		"attach_supplier": {
+			"dialog": {
+				"title": "Select supplier",
+				"description": "Link this event to a supplier from the library. Spec stays editable on the event.",
+				"fields": {
+					"search": {
+						"label": "Search",
+						"placeholder": "Search by brand name"
+					}
+				},
+				"loading": "Loading suppliers…",
+				"empty": "No suppliers found",
+				"load_error": "Could not load suppliers",
+				"retry": "Retry",
+				"cancel": "Cancel",
+				"confirm": "Link supplier",
+				"confirming": "Linking"
+			}
+		},
+		"toasts": {
+			"add": {
+				"success": "Supplier added",
+				"error": "Could not add supplier"
+			},
+			"remove": {
+				"success": "Supplier removed",
+				"error": "Could not remove supplier"
+			},
+			"set_main": {
+				"success": "Main supplier updated",
+				"error": "Could not set the main supplier"
+			}
+		},
+		"errors": {
+			"POOL_MEMBER_NOT_FOUND": "This supplier is no longer on the event",
+			"POOL_LAST_MEMBER": "The last supplier cannot be removed",
+			"POOL_ECHO_MISMATCH": "Add or remove suppliers from the list, not by saving the form",
+			"POOL_SUPPLY_MOVE": "Change a linked product with attach, change or detach",
+			"POOL_REQUIRED": "A new option must state where its supply comes from",
+			"POOL_TYP_MISMATCH": "This supplier type does not match the event",
+			"EVENT_OPTION_NOT_FOUND": "Event option not found"
+		}
 	},
 	"fees": {
 		"title": "Internal fees (operator)",

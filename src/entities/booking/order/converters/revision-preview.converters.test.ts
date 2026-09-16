@@ -22,6 +22,7 @@ describe("mapRevisionPreviewBreakdownToFrontend", () => {
 							kind: BreakdownLineKind.Unit,
 							label: "Economy",
 							unit_id: "fare_1",
+							supply_id: null,
 							pricing: ExpenseType.Fixed,
 							rate: null,
 							unit_cost: { val: 100 },

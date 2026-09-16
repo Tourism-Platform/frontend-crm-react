@@ -1,19 +1,12 @@
-import type {
-	TInheritedTransferDetailsBackend,
-	TTransferDetailsBackend,
-	TTransferEventDetailsBackend
-} from "../../../types";
+import type { TTransferEventDetailsBackend } from "../../../types";
+import { getPoolMember, isProductPoolMember } from "../event-pool.helpers";
 
-/**
- * Contract 3.1: an event is product-linked when `details.supply.source`
- * is `"product"` (the old flat `details.source === "inherited"` is gone).
- */
 export const isInheritedTransferDetails = (
-	details: TTransferEventDetailsBackend | null | undefined
-): details is TInheritedTransferDetailsBackend =>
-	details?.supply?.source === "product";
+	details: TTransferEventDetailsBackend | null | undefined,
+	supplyId?: string | null
+): boolean => isProductPoolMember(getPoolMember(details, supplyId));
 
 export const isCustomTransferDetails = (
-	details: TTransferEventDetailsBackend | null | undefined
-): details is TTransferDetailsBackend =>
-	details != null && details.supply?.source !== "product";
+	details: TTransferEventDetailsBackend | null | undefined,
+	supplyId?: string | null
+): boolean => details != null && !isInheritedTransferDetails(details, supplyId);

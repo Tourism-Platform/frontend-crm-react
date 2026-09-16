@@ -9,7 +9,6 @@ import type {
 import {
 	ENUM_EVENT,
 	ENUM_EVENT_BACKEND,
-	type ENUM_EVENT_BACKEND_TYPE,
 	type ITourPricingReview,
 	type TGetPricingBreakdownBackendResponse,
 	type TOperatorEventBackend,
@@ -18,11 +17,19 @@ import {
 	type TTourSummaryEventBackend
 } from "../types";
 
-import { backendEventTypeMapper } from "./backend-event-type.converters";
+import {
+	backendEventTypeMapper,
+	isEventBackendTyp
+} from "./backend-event-type.converters";
+import {
+	getMainPoolMember,
+	getPoolMember,
+	mapEventPoolToSummary
+} from "./event/event-pool.helpers";
 import { attachBreakdownToReviewItem } from "./pricing-breakdown.converters";
 
 /**
- * Supplier label for display (contract 3.1): a linked product carries the
+ * Supplier label for display (contract 6): a linked product carries the
  * resolved `supplier` ref; inline supply only has `supplier_id`.
  */
 const resolveSupplierLabel = (
@@ -34,6 +41,18 @@ const resolveSupplierLabel = (
 		return supply.supplier.name || supply.supplier.id;
 	}
 	return supply.supplier_id ?? "-";
+};
+
+const resolveSupplierLabelFromDetails = (
+	details:
+		| { pool?: { supply: Parameters<typeof resolveSupplierLabel>[0] }[] }
+		| null
+		| undefined
+): string => {
+	const supply =
+		getPoolMember(details)?.supply ?? getMainPoolMember(details)?.supply;
+	if (!supply) return "-";
+	return resolveSupplierLabel(supply);
 };
 
 const isPackageBillable = (
@@ -79,34 +98,49 @@ const mapEventPayloadToReviewItem = (
 			position: event.position,
 			optionIndex: 0,
 			rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
-			subRows: (event.details ?? []).map((detail, index) => ({
-				id: detail.id ?? `${eventId}:${index}`,
-				item: detail.name ?? "-",
-				supplier: resolveSupplierLabel(detail.details.supply),
-				plannedCost: "-",
-				estimatedRevenue: "-",
-				type: backendEventTypeMapper.to(
-					detail.typ as ENUM_EVENT_BACKEND_TYPE
-				),
-				day: event.day,
-				position: event.position,
-				optionIndex: index,
-				rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
-			}))
+			subRows: (event.details ?? []).flatMap((detail, index) => {
+				if (!isEventBackendTyp(detail.typ)) {
+					return [];
+				}
+				return [
+					{
+						id: detail.id ?? `${eventId}:${index}`,
+						item: detail.name ?? "-",
+						supplier: resolveSupplierLabelFromDetails(
+							detail.details
+						),
+						plannedCost: "-",
+						estimatedRevenue: "-",
+						type: backendEventTypeMapper.to(detail.typ),
+						backendTyp: detail.typ,
+						day: event.day,
+						position: event.position,
+						optionIndex: index,
+						rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
+						pool: mapEventPoolToSummary(detail.details)
+					}
+				];
+			})
 		};
+	}
+
+	if (!isEventBackendTyp(event.typ)) {
+		throw new Error("Unexpected event typ");
 	}
 
 	return {
 		id: eventId,
 		item: event.name ?? "",
-		supplier: resolveSupplierLabel(event.details.supply),
+		supplier: resolveSupplierLabelFromDetails(event.details),
 		plannedCost,
 		estimatedRevenue,
-		type: backendEventTypeMapper.to(event.typ as ENUM_EVENT_BACKEND_TYPE),
+		type: backendEventTypeMapper.to(event.typ),
+		backendTyp: event.typ,
 		day: event.day,
 		position: event.position,
 		optionIndex: 0,
-		rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
+		rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
+		pool: mapEventPoolToSummary(event.details)
 	};
 };
 

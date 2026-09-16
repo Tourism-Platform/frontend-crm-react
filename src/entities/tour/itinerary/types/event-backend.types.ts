@@ -50,7 +50,8 @@ export type TSingleEventReadBackend = Extract<
 
 /**
  * READ details union — `details` of a single event or of one alternative.
- * Shape: `{ plan, supply, spec }` — never send this back as a WRITE body.
+ * Shape: `{ plan, pool: [{ id, is_main, supply, spec }] }` — never send this
+ * back as a WRITE body.
  */
 export type TEventDetailsBackend =
 	| HousingDetailsOutput
@@ -65,7 +66,8 @@ export type TEventDetailsBackend =
 
 /**
  * WRITE details union — `details` accepted by create/update option bodies.
- * Shape: `{ plan?, supply? }` — built only by WRITE converters.
+ * Shape: `{ plan?, pool?: [{ id?, supply }] }` — built only by WRITE converters.
+ * `is_main` is never sent.
  */
 export type TEventDetailsWriteBackend =
 	| HousingDetailsWrite
@@ -124,5 +126,5 @@ export type TEventProductScopeBodyBackend = ScopeBody;
 export type TEventProductScopeBackend = NonNullable<AttachBody["scope"]>;
 
 export type TEventProductReadLangQueryBackend = ReturnType<
-	typeof TOUR_EVENTS_PATHS.attachOptionProduct
+	typeof TOUR_EVENTS_PATHS.attachPoolMemberProduct
 >["_types"]["query"];

@@ -7,6 +7,8 @@ import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TTransportationEditSchema } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import { EventTitleInput } from "../ui";
 
 import {
@@ -14,7 +16,7 @@ import {
 	TRANSPORTATION_EDIT_TABS_LIST
 } from "./model";
 
-export interface ITransportationEditProps {
+export interface ITransportationEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TTransportationEditSchema>;
 	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
@@ -25,6 +27,8 @@ export const TransportationEdit: FC<ITransportationEditProps> = ({
 	form,
 	createSectionSubmit,
 	isLoading,
+	poolVariant,
+	onPoolSelect,
 	tabs = TRANSPORTATION_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("transportation_edit_page");
@@ -46,6 +50,7 @@ export const TransportationEdit: FC<ITransportationEditProps> = ({
 							form={form}
 							createSectionSubmit={createSectionSubmit}
 							isLoading={isLoading}
+							slotContext={{ poolVariant, onPoolSelect }}
 						/>
 					</CardContent>
 				</Card>

@@ -1,4 +1,5 @@
 export const ENUM_FORM_EVENT_PRODUCT = {
+	SUPPLY_ID: "supply_id",
 	PRODUCT_ID: "product_id",
 	VARIANT_ID: "variant_id",
 	SOURCE: "source",

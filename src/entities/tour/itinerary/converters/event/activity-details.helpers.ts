@@ -1,19 +1,13 @@
-import type {
-	TActivityDetailsBackend,
-	TActivityEventDetailsBackend,
-	TInheritedActivityDetailsBackend
-} from "../../types";
+import type { TActivityEventDetailsBackend } from "../../types";
 
-/**
- * Contract 3.1: an event is product-linked when `details.supply.source`
- * is `"product"` (the old flat `details.source === "inherited"` is gone).
- */
+import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
+
 export const isInheritedActivityDetails = (
-	details: TActivityEventDetailsBackend | null | undefined
-): details is TInheritedActivityDetailsBackend =>
-	details?.supply?.source === "product";
+	details: TActivityEventDetailsBackend | null | undefined,
+	supplyId?: string | null
+): boolean => isProductPoolMember(getPoolMember(details, supplyId));
 
 export const isCustomActivityDetails = (
-	details: TActivityEventDetailsBackend | null | undefined
-): details is TActivityDetailsBackend =>
-	details != null && !isInheritedActivityDetails(details);
+	details: TActivityEventDetailsBackend | null | undefined,
+	supplyId?: string | null
+): boolean => details != null && !isInheritedActivityDetails(details, supplyId);

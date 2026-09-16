@@ -9,8 +9,10 @@ import {
 	mapRevisionEventProductQueryToBackend
 } from "../converters/revision-event-product.converters";
 import type {
+	IAddRevisionPoolMember,
 	IClearRevisionEventOverride,
 	IClearRevisionEventProduct,
+	IRemoveRevisionPoolMember,
 	ISetRevisionEventOverride,
 	ISetRevisionEventProduct,
 	TRevisionPreviewBackend
@@ -45,8 +47,12 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 			TRevisionPreviewBackend,
 			ISetRevisionEventProduct
 		>({
-			query: ({ bookingId, eventId, data, optionIndex }) => ({
-				...BOOKING_REVISION_PATHS.setEventProduct(bookingId, eventId),
+			query: ({ bookingId, eventId, supplyId, data, optionIndex }) => ({
+				...BOOKING_REVISION_PATHS.setPoolMemberProduct(
+					bookingId,
+					eventId,
+					supplyId
+				),
 				params: mapRevisionEventProductQueryToBackend(optionIndex),
 				body: mapRevisionEventProductLinkToBackend(data)
 			}),
@@ -57,8 +63,12 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 			TRevisionPreviewBackend,
 			IClearRevisionEventProduct
 		>({
-			query: ({ bookingId, eventId, optionIndex }) => ({
-				...BOOKING_REVISION_PATHS.clearEventProduct(bookingId, eventId),
+			query: ({ bookingId, eventId, supplyId, optionIndex }) => ({
+				...BOOKING_REVISION_PATHS.clearPoolMemberProduct(
+					bookingId,
+					eventId,
+					supplyId
+				),
 				params: mapRevisionEventProductQueryToBackend(optionIndex)
 			}),
 			invalidatesTags: (_result, _error, { bookingId }) =>
@@ -68,8 +78,12 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 			TRevisionPreviewBackend,
 			ISetRevisionEventOverride
 		>({
-			query: ({ bookingId, eventId, data, optionIndex }) => ({
-				...BOOKING_REVISION_PATHS.setEventOverride(bookingId, eventId),
+			query: ({ bookingId, eventId, supplyId, data, optionIndex }) => ({
+				...BOOKING_REVISION_PATHS.setPoolMemberOverride(
+					bookingId,
+					eventId,
+					supplyId
+				),
 				params: mapRevisionEventProductQueryToBackend(optionIndex),
 				body: mapEventOverrideToBackend(data)
 			}),
@@ -80,10 +94,38 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 			TRevisionPreviewBackend,
 			IClearRevisionEventOverride
 		>({
-			query: ({ bookingId, eventId, optionIndex }) => ({
-				...BOOKING_REVISION_PATHS.clearEventOverride(
+			query: ({ bookingId, eventId, supplyId, optionIndex }) => ({
+				...BOOKING_REVISION_PATHS.clearPoolMemberOverride(
 					bookingId,
-					eventId
+					eventId,
+					supplyId
+				),
+				params: mapRevisionEventProductQueryToBackend(optionIndex)
+			}),
+			invalidatesTags: (_result, _error, { bookingId }) =>
+				revisionInvalidation(bookingId)
+		}),
+		addRevisionPoolMember: builder.mutation<
+			TRevisionPreviewBackend,
+			IAddRevisionPoolMember
+		>({
+			query: ({ bookingId, eventId, data, optionIndex }) => ({
+				...BOOKING_REVISION_PATHS.addPoolMember(bookingId, eventId),
+				params: mapRevisionEventProductQueryToBackend(optionIndex),
+				body: data
+			}),
+			invalidatesTags: (_result, _error, { bookingId }) =>
+				revisionInvalidation(bookingId)
+		}),
+		removeRevisionPoolMember: builder.mutation<
+			TRevisionPreviewBackend,
+			IRemoveRevisionPoolMember
+		>({
+			query: ({ bookingId, eventId, supplyId, optionIndex }) => ({
+				...BOOKING_REVISION_PATHS.removePoolMember(
+					bookingId,
+					eventId,
+					supplyId
 				),
 				params: mapRevisionEventProductQueryToBackend(optionIndex)
 			}),
@@ -98,5 +140,7 @@ export const {
 	useSetRevisionEventProductMutation,
 	useClearRevisionEventProductMutation,
 	useSetRevisionEventOverrideMutation,
-	useClearRevisionEventOverrideMutation
+	useClearRevisionEventOverrideMutation,
+	useAddRevisionPoolMemberMutation,
+	useRemoveRevisionPoolMemberMutation
 } = bookingRevisionProductApi;

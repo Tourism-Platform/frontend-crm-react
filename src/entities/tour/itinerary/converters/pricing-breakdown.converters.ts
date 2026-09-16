@@ -100,7 +100,8 @@ export const mapBreakdownLineToFrontend = (
 	fxRate: backend.fx_rate,
 	cost: mapPricingMoneyToFrontend(backend.cost),
 	fee: mapPricingMoneyToFrontend(backend.fee),
-	markup: mapPricingMoneyToFrontend(backend.markup)
+	markup: mapPricingMoneyToFrontend(backend.markup),
+	supplyId: backend.supply_id
 });
 
 export const mapBreakdownSpreadToFrontend = (
@@ -130,7 +131,7 @@ const mapBreakdownLineToReviewItem = (
 	day: number,
 	position: number
 ): ITourReviewItem => ({
-	id: `${parentId}:${leg}:${line.unitId ?? index}`,
+	id: `${parentId}:${leg}:${line.supplyId ?? ""}:${line.unitId ?? index}`,
 	item: formatBreakdownLineTitle(line),
 	supplier: line.kind,
 	plannedCost: formatToDollars(line.cost.val),

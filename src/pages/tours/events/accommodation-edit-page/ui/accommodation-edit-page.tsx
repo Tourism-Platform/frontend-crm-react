@@ -14,12 +14,14 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+
 import { AccommodationEdit } from "@/widgets/tours";
 import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/accommodation-edit/model";
 
 export const AccommodationEditPage: FC = () => {
 	const { t, i18n } = useTranslation("accommodation_edit_page");
-	const { data, isError, isLoading, update } =
+	const { data, selectPoolMember, isError, isLoading, update } =
 		useTourEventEdit<TAccommodationEditSchema>(ENUM_EVENT.ACCOMMODATION);
 
 	const form = useForm<TAccommodationEditSchema>({
@@ -66,6 +68,8 @@ export const AccommodationEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
+			onPoolSelect={selectPoolMember}
 		/>
 	);
 };

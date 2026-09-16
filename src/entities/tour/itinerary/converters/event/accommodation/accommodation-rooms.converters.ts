@@ -4,8 +4,8 @@ import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../../types";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
-/** Read-side housing spec (`details.spec`, contract 3.1). */
-type THousingSpecOutput = HousingDetailsOutput["spec"];
+/** Read-side housing spec (`pool[i].spec`, contract 6). */
+type THousingSpecOutput = HousingDetailsOutput["pool"][number]["spec"];
 
 /**
  * Contract 3.1 merged the old flat `per_room` / `per_room_category`
@@ -22,7 +22,7 @@ export const isClassPricedHousingSpec = (
 		(spec.categories.length === 1 && spec.categories[0]?.name != null));
 
 /**
- * Rooms section of the form, read from `details.spec` (3.1):
+ * Rooms section of the form, read from the selected pool member spec:
  * - per-room spec, flat mode — the single category's rooms;
  * - per-room spec, class mode — one form "room" per category;
  * - whole spec — the descriptive rooms of all categories (they carry no

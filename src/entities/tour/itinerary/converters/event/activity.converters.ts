@@ -1,8 +1,4 @@
-import {
-	ActivityType,
-	GeneralVenueInputSubTypEnum,
-	LanguageCode
-} from "@/shared/api";
+import { ActivityType, LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
@@ -23,6 +19,7 @@ import {
 	type TActivitySingleEventBackend,
 	type TActivitySpecBackend,
 	type TActivitySpecInputBackend,
+	type TEventDetailsBackend,
 	type TTimesBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
@@ -37,7 +34,12 @@ import {
 	mapActivityPricingFromBackend,
 	mapActivityPricingToBackend
 } from "./activity-pricing.converters";
-import { activityTypeMapper } from "./activity-type.converters";
+import {
+	ACTIVITY_TYPE_TO_GENERAL_SUB_TYP,
+	activityTypeMapper
+} from "./activity-type.converters";
+import { mapInlinePoolWrite } from "./details-read-to-write.converters";
+import { getPoolMember } from "./event-pool.helpers";
 import { mapInheritedProductLinkToForm } from "./inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
@@ -52,54 +54,38 @@ import { zeroFixedCharge } from "./zero-fixed-charge.helpers";
  * `never`; the runtime value is the matching enum member, whose values
  * equal `ActivityType`'s — so the tag flows out without a cast.
  */
+
+/** Generated READ union collapses non-food `sub_typ` to `never`; read via cast. */
 const normalizeActivitySpecSubTyp = (
-	subTyp: TActivitySpecBackend["sub_typ"]
-): ActivityType | null | undefined => {
-	if (subTyp === "food") {
-		return ActivityType.Food;
-	}
+	spec: TActivitySpecBackend | undefined
+): ActivityType | undefined => {
+	if (!spec) return undefined;
+	if (spec.sub_typ === "food") return ActivityType.Food;
+	// literal ∩ enum → never; runtime всё ещё ActivityType-строка
+	const subTyp: ActivityType = spec.sub_typ;
 	return subTyp;
 };
 
-/**
- * Form activity type → WRITE venue subtype. The generated WRITE union
- * types the general-venue discriminant as `"sightseeing" &
- * GeneralVenueInputSubTypEnum` (which reduces to `never`), so the tag is
- * cast to `never` at the write boundary — the runtime value is the
- * matching enum member. Same quirk as `details-read-to-write.converters`.
- */
-const ACTIVITY_TYPE_TO_GENERAL_SUB_TYP: Partial<
-	Record<ActivityType, GeneralVenueInputSubTypEnum>
-> = {
-	[ActivityType.MasterClass]: GeneralVenueInputSubTypEnum.MasterClass,
-	[ActivityType.Sightseeing]: GeneralVenueInputSubTypEnum.Sightseeing,
-	[ActivityType.Outdoor]: GeneralVenueInputSubTypEnum.Outdoor,
-	[ActivityType.Riding]: GeneralVenueInputSubTypEnum.Riding,
-	[ActivityType.Extreme]: GeneralVenueInputSubTypEnum.Extreme,
-	[ActivityType.Wellness]: GeneralVenueInputSubTypEnum.Wellness,
-	[ActivityType.Entertainment]: GeneralVenueInputSubTypEnum.Entertainment,
-	[ActivityType.WaterActivities]: GeneralVenueInputSubTypEnum.WaterActivities,
-	[ActivityType.Photography]: GeneralVenueInputSubTypEnum.Photography,
-	[ActivityType.Spiritual]: GeneralVenueInputSubTypEnum.Spiritual
-};
-
 export const mapActivityEventToForm = (
-	data: TTourEventBackendResponce
+	data: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TActivityEditSchema => {
 	const event = data?.event as TActivitySingleEventBackend;
 	const details = event?.details ?? null;
 	const plan = details?.plan;
-	const spec = details?.spec;
+	const member = getPoolMember(details, selectedSupplyId);
+	const spec = member?.spec;
+	const supplyId = member?.id;
 
-	const activityTyp = normalizeActivitySpecSubTyp(spec?.sub_typ);
+	const activityTyp = normalizeActivitySpecSubTyp(spec);
 	const isFood = spec?.sub_typ === "food";
 
-	if (isInheritedActivityDetails(details)) {
+	if (isInheritedActivityDetails(details, supplyId)) {
 		return {
 			name: event?.name || "",
 			day: event.day,
 			position: event.position,
-			...mapInheritedProductLinkToForm(details),
+			...mapInheritedProductLinkToForm(member),
 			general: {
 				description: event.description || "",
 				activity_subtype: activityTypeMapper.from(activityTyp),
@@ -125,6 +111,7 @@ export const mapActivityEventToForm = (
 		name: event?.name || "",
 		day: event.day,
 		position: event.position,
+		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: supplyId,
 		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
 		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
@@ -145,7 +132,7 @@ export const mapActivityEventToForm = (
 				: []
 		},
 		pricing: applyEventPackageIdToPricing(
-			mapActivityPricingFromBackend(details),
+			mapActivityPricingFromBackend(details, supplyId),
 			event.package_id
 		)
 	};
@@ -153,7 +140,8 @@ export const mapActivityEventToForm = (
 
 export const mapActivityFormToUpdate = (
 	frontend: Partial<TActivityEditSchema>,
-	language?: ENUM_LANGUAGES_TYPE
+	language?: ENUM_LANGUAGES_TYPE,
+	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
 	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
@@ -232,7 +220,14 @@ export const mapActivityFormToUpdate = (
 	// one (a full replace would wipe it).
 	const details: TActivityDetailsInputBackend = {
 		plan,
-		...(spec && { supply: { source: "inline", spec } })
+		...(spec && {
+			pool: mapInlinePoolWrite(
+				ENUM_EVENT_BACKEND.ACTIVITY,
+				currentDetails,
+				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
+				{ source: "inline", spec }
+			) as TActivityDetailsInputBackend["pool"]
+		})
 	};
 
 	return {

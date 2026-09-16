@@ -40,22 +40,25 @@ import type {
 	TEventProductScopeBackend
 } from "../../types";
 
+import type { TEventPoolMemberBackend } from "./event-pool.helpers";
+
 /**
  * READ → WRITE boundary for event details.
  *
- * READ:  details { plan, supply(inline|product+supplier+scope+override), spec }
- * WRITE: details { plan?, supply?(inline{supplier_id?, spec}|product{product_id, scope?}) | null }
+ * READ:  details { plan, pool: [{ id, is_main, supply, spec }] }
+ * WRITE: details { plan?, pool?: [{ id, supply }] }
  *
  * Rules enforced here:
  * - product supply keeps only { source, product_id, scope } — supplier, override
  *   and the resolved spec are server-owned and are dropped;
- * - inline supply keeps { source, supplier_id, spec } — the read `details.spec`
- *   moves INTO the inline supply; `details.spec` is never sent at top level;
+ * - inline supply keeps { source, supplier_id, spec } — the read member `spec`
+ *   moves INTO the inline supply;
+ * - `is_main` is never echoed;
  * - server-owned `images` are stripped from specs and spec nodes.
  */
 
 type TProductSupplyRead = Extract<
-	TEventDetailsBackend["supply"],
+	TEventPoolMemberBackend["supply"],
 	{ source: "product" }
 >;
 
@@ -92,7 +95,7 @@ const stripImages = <T extends { images?: NodeImageSchema[] }>(
 
 /* ---------------------------------- hotel --------------------------------- */
 
-type THousingSpecRead = HousingDetailsOutput["spec"];
+type THousingSpecRead = HousingDetailsOutput["pool"][number]["spec"];
 type THousingSpecWrite = HousingInlineSupplyNew["spec"];
 
 const mapHousingSpecReadToWrite = (
@@ -121,19 +124,22 @@ const mapHousingDetailsReadToWrite = (
 	details: HousingDetailsOutput
 ): HousingDetailsWrite => ({
 	plan: details.plan,
-	supply:
-		details.supply.source === "product"
-			? mapProductSupplyReadToWrite(details.supply)
-			: {
-					source: "inline",
-					supplier_id: details.supply.supplier_id,
-					spec: mapHousingSpecReadToWrite(details.spec)
-				}
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply:
+			member.supply.source === "product"
+				? mapProductSupplyReadToWrite(member.supply)
+				: {
+						source: "inline",
+						supplier_id: member.supply.supplier_id,
+						spec: mapHousingSpecReadToWrite(member.spec)
+					}
+	}))
 });
 
 /* ------------------------------ train / flight ----------------------------- */
 
-type TTrainSpecRead = TrainDetailsOutput["spec"];
+type TTrainSpecRead = TrainDetailsOutput["pool"][number]["spec"];
 type TTrainSpecWrite = TrainInlineSupplyNew["spec"];
 
 const mapTrainSpecReadToWrite = (spec: TTrainSpecRead): TTrainSpecWrite => {
@@ -160,17 +166,20 @@ const mapTrainDetailsReadToWrite = (
 	details: TrainDetailsOutput
 ): TrainDetailsWrite => ({
 	plan: details.plan,
-	supply:
-		details.supply.source === "product"
-			? mapProductSupplyReadToWrite(details.supply)
-			: {
-					source: "inline",
-					supplier_id: details.supply.supplier_id,
-					spec: mapTrainSpecReadToWrite(details.spec)
-				}
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply:
+			member.supply.source === "product"
+				? mapProductSupplyReadToWrite(member.supply)
+				: {
+						source: "inline",
+						supplier_id: member.supply.supplier_id,
+						spec: mapTrainSpecReadToWrite(member.spec)
+					}
+	}))
 });
 
-type TFlightSpecRead = FlightDetailsOutput["spec"];
+type TFlightSpecRead = FlightDetailsOutput["pool"][number]["spec"];
 type TFlightSpecWrite = FlightInlineSupplyNew["spec"];
 
 const mapFlightSpecReadToWrite = (spec: TFlightSpecRead): TFlightSpecWrite => {
@@ -197,19 +206,22 @@ const mapFlightDetailsReadToWrite = (
 	details: FlightDetailsOutput
 ): FlightDetailsWrite => ({
 	plan: details.plan,
-	supply:
-		details.supply.source === "product"
-			? mapProductSupplyReadToWrite(details.supply)
-			: {
-					source: "inline",
-					supplier_id: details.supply.supplier_id,
-					spec: mapFlightSpecReadToWrite(details.spec)
-				}
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply:
+			member.supply.source === "product"
+				? mapProductSupplyReadToWrite(member.supply)
+				: {
+						source: "inline",
+						supplier_id: member.supply.supplier_id,
+						spec: mapFlightSpecReadToWrite(member.spec)
+					}
+	}))
 });
 
 /* ----------------------------------- bus ---------------------------------- */
 
-type TBusSpecRead = BusDetailsOutput["spec"];
+type TBusSpecRead = BusDetailsOutput["pool"][number]["spec"];
 type TBusSpecWrite = BusInlineSupplyNew["spec"];
 
 const mapBusSpecReadToWrite = (spec: TBusSpecRead): TBusSpecWrite => {
@@ -234,19 +246,22 @@ const mapBusDetailsReadToWrite = (
 	details: BusDetailsOutput
 ): BusDetailsWrite => ({
 	plan: details.plan,
-	supply:
-		details.supply.source === "product"
-			? mapProductSupplyReadToWrite(details.supply)
-			: {
-					source: "inline",
-					supplier_id: details.supply.supplier_id,
-					spec: mapBusSpecReadToWrite(details.spec)
-				}
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply:
+			member.supply.source === "product"
+				? mapProductSupplyReadToWrite(member.supply)
+				: {
+						source: "inline",
+						supplier_id: member.supply.supplier_id,
+						spec: mapBusSpecReadToWrite(member.spec)
+					}
+	}))
 });
 
 /* --------------------------------- transfer -------------------------------- */
 
-type TTransferSpecRead = TransferDetailsOutput["spec"];
+type TTransferSpecRead = TransferDetailsOutput["pool"][number]["spec"];
 type TTransferSpecWrite = TransferInlineSupplyNew["spec"];
 
 const mapTransferSpecReadToWrite = (
@@ -287,19 +302,22 @@ const mapTransferDetailsReadToWrite = (
 	details: TransferDetailsOutput
 ): TransferDetailsWrite => ({
 	plan: details.plan,
-	supply:
-		details.supply.source === "product"
-			? mapProductSupplyReadToWrite(details.supply)
-			: {
-					source: "inline",
-					supplier_id: details.supply.supplier_id,
-					spec: mapTransferSpecReadToWrite(details.spec)
-				}
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply:
+			member.supply.source === "product"
+				? mapProductSupplyReadToWrite(member.supply)
+				: {
+						source: "inline",
+						supplier_id: member.supply.supplier_id,
+						spec: mapTransferSpecReadToWrite(member.spec)
+					}
+	}))
 });
 
 /* --------------------------------- activity -------------------------------- */
 
-type TActivitySpecRead = ActivityDetailsOutput["spec"];
+type TActivitySpecRead = ActivityDetailsOutput["pool"][number]["spec"];
 type TActivitySpecWrite = ActivityInlineSupplyNew["spec"];
 
 /**
@@ -363,14 +381,17 @@ const mapActivityDetailsReadToWrite = (
 	details: ActivityDetailsOutput
 ): ActivityDetailsWrite => ({
 	plan: details.plan,
-	supply:
-		details.supply.source === "product"
-			? mapProductSupplyReadToWrite(details.supply)
-			: {
-					source: "inline",
-					supplier_id: details.supply.supplier_id,
-					spec: mapActivitySpecReadToWrite(details.spec)
-				}
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply:
+			member.supply.source === "product"
+				? mapProductSupplyReadToWrite(member.supply)
+				: {
+						source: "inline",
+						supplier_id: member.supply.supplier_id,
+						spec: mapActivitySpecReadToWrite(member.spec)
+					}
+	}))
 });
 
 /* ------------------------- guide / info / supplementary -------------------- */
@@ -379,40 +400,49 @@ const mapGuideDetailsReadToWrite = (
 	details: GuideDetailsOutput
 ): GuideDetailsWrite => ({
 	plan: details.plan,
-	supply: {
-		source: "inline",
-		supplier_id: details.supply.supplier_id,
-		spec: {
-			name: details.spec.name,
-			typ_tiers: details.spec.typ_tiers.map((tier) => ({ ...tier })),
-			categories: details.spec.categories.map((category) => ({
-				...category
-			}))
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply: {
+			source: "inline" as const,
+			supplier_id: member.supply.supplier_id,
+			spec: {
+				name: member.spec.name,
+				typ_tiers: member.spec.typ_tiers.map((tier) => ({ ...tier })),
+				categories: member.spec.categories.map((category) => ({
+					...category
+				}))
+			}
 		}
-	}
+	}))
 });
 
 const mapInformationDetailsReadToWrite = (
 	details: InformationDetailsOutput
 ): InformationDetailsWrite => ({
 	plan: details.plan,
-	supply: {
-		source: "inline",
-		supplier_id: details.supply.supplier_id
-	}
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply: {
+			source: "inline" as const,
+			supplier_id: member.supply.supplier_id
+		}
+	}))
 });
 
 const mapSupplementaryDetailsReadToWrite = (
 	details: SupplementaryDetailsOutput
 ): SupplementaryDetailsWrite => ({
 	plan: details.plan,
-	supply: {
-		source: "inline",
-		supplier_id: details.supply.supplier_id,
-		spec: {
-			item: details.spec.item.map((item) => ({ ...item }))
+	pool: details.pool.map((member) => ({
+		id: member.id,
+		supply: {
+			source: "inline" as const,
+			supplier_id: member.supply.supplier_id,
+			spec: {
+				item: member.spec.item.map((item) => ({ ...item }))
+			}
 		}
-	}
+	}))
 });
 
 /* --------------------------------- entrypoint ------------------------------ */
@@ -459,6 +489,55 @@ export const mapEventDetailsReadToWrite = (
 				`Unsupported event typ for READ→WRITE: ${backendTyp}`
 			);
 	}
+};
+
+/**
+ * Replaces the selected pool member's WRITE supply (inline spec save).
+ * Other members keep their echoed `{ id, supply }`. `is_main` stays off.
+ */
+export const replaceSelectedPoolMemberSupply = (
+	writeDetails: TEventDetailsWriteBackend,
+	supplyId: string | undefined,
+	supply: NonNullable<TEventDetailsWriteBackend["pool"]>[number]["supply"]
+): TEventDetailsWriteBackend => {
+	const pool = writeDetails.pool;
+	if (!pool?.length) {
+		return {
+			...writeDetails,
+			pool: [{ supply }]
+		} as TEventDetailsWriteBackend;
+	}
+
+	return {
+		...writeDetails,
+		pool: pool.map((member, index) => {
+			const isSelected = supplyId ? member.id === supplyId : index === 0;
+			return isSelected ? { id: member.id, supply } : member;
+		})
+	} as TEventDetailsWriteBackend;
+};
+
+export const mapInlinePoolWrite = (
+	backendTyp: ENUM_EVENT_BACKEND_TYPE,
+	currentDetails: TEventDetailsBackend | undefined,
+	supplyId: string | undefined,
+	inlineSupply: NonNullable<
+		TEventDetailsWriteBackend["pool"]
+	>[number]["supply"]
+): NonNullable<TEventDetailsWriteBackend["pool"]> => {
+	if (!currentDetails) {
+		return [{ supply: inlineSupply }] as NonNullable<
+			TEventDetailsWriteBackend["pool"]
+		>;
+	}
+
+	return (replaceSelectedPoolMemberSupply(
+		mapEventDetailsReadToWrite(backendTyp, currentDetails),
+		supplyId,
+		inlineSupply
+	).pool ?? [{ supply: inlineSupply }]) as NonNullable<
+		TEventDetailsWriteBackend["pool"]
+	>;
 };
 
 /**

@@ -32,7 +32,10 @@ vi.mock("@/entities/commission", () => ({
 
 const inlineSpec = (
 	details: ReturnType<typeof mapActivityFormToUpdate>["details"]
-) => (details?.supply?.source === "inline" ? details.supply.spec : undefined);
+) => {
+	const supply = details?.pool?.[0]?.supply;
+	return supply?.source === "inline" ? supply.spec : undefined;
+};
 
 describe("mapActivityFormToUpdate food branch", () => {
 	it("sends sub_typ food and echoes menu id on the inline offering", () => {

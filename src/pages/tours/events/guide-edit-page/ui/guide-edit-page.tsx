@@ -14,11 +14,13 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+
 import { GuideEdit } from "@/widgets/tours";
 
 export const GuideEditPage: FC = () => {
 	const { t, i18n } = useTranslation("guide_edit_page");
-	const { data, isError, isLoading, update } =
+	const { data, selectPoolMember, isError, isLoading, update } =
 		useTourEventEdit<TGuideEditSchema>(ENUM_EVENT.GUIDE);
 
 	const form = useForm<TGuideEditSchema>({
@@ -64,6 +66,8 @@ export const GuideEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
+			onPoolSelect={selectPoolMember}
 		/>
 	);
 };

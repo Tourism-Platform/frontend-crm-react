@@ -7,6 +7,8 @@ import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
 
 import type { TSupplementEditSchema } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import { EventTitleInput } from "../ui";
 
 import {
@@ -14,7 +16,7 @@ import {
 	SUPPLEMENT_EDIT_TABS_LIST
 } from "./model";
 
-export interface ISupplementEditProps {
+export interface ISupplementEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TSupplementEditSchema>;
 	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
@@ -25,6 +27,8 @@ export const SupplementEdit: FC<ISupplementEditProps> = ({
 	form,
 	createSectionSubmit,
 	isLoading,
+	poolVariant,
+	onPoolSelect,
 	tabs = SUPPLEMENT_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("supplement_edit_page");
@@ -46,6 +50,7 @@ export const SupplementEdit: FC<ISupplementEditProps> = ({
 							form={form}
 							createSectionSubmit={createSectionSubmit}
 							isLoading={isLoading}
+							slotContext={{ poolVariant, onPoolSelect }}
 						/>
 					</CardContent>
 				</Card>

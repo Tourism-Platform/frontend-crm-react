@@ -33,33 +33,51 @@ export const formatLocation = (location: unknown): string => {
 export const cityFromLocation = (location: unknown): string | undefined =>
 	isLocationOut(location) ? (location.city ?? undefined) : undefined;
 
+const cityFromHops = <T>(
+	hops: T[] | undefined,
+	cityOf: (hop: T) => string | undefined
+): string | undefined => {
+	for (const hop of hops ?? []) {
+		const city = cityOf(hop);
+		if (city) return city;
+	}
+	return undefined;
+};
+
 const extractCityFromPubDetails = (
 	event: TPubDetailsEvent
 ): string | undefined => {
 	switch (event.typ) {
 		case ENUM_EVENT_BACKEND.HOUSING:
+			return undefined;
 		case ENUM_EVENT_BACKEND.ACTIVITY:
-			return cityFromLocation(event.details?.location);
+			return cityFromLocation(event.details?.spec?.location);
 		case ENUM_EVENT_BACKEND.TRANSFER:
 			return (
 				cityFromLocation(event.details?.departure.location) ??
 				cityFromLocation(event.details?.arrival.location)
 			);
-		case ENUM_EVENT_BACKEND.FLIGHT: {
-			const hop = event.details?.hop[0];
-			return (
-				cityFromLocation(hop?.departure_location) ??
-				cityFromLocation(hop?.arrival_location)
+		case ENUM_EVENT_BACKEND.FLIGHT:
+			return cityFromHops(
+				event.details?.spec?.hop,
+				(hop) =>
+					cityFromLocation(hop.departure_location) ??
+					cityFromLocation(hop.arrival_location)
 			);
-		}
 		case ENUM_EVENT_BACKEND.TRAIN:
-		case ENUM_EVENT_BACKEND.BUS: {
-			const hop = event.details?.hop[0];
-			return (
-				cityFromLocation(hop?.departure.location) ??
-				cityFromLocation(hop?.arrival.location)
+			return cityFromHops(
+				event.details?.spec?.hop,
+				(hop) =>
+					cityFromLocation(hop.departure.location) ??
+					cityFromLocation(hop.arrival.location)
 			);
-		}
+		case ENUM_EVENT_BACKEND.BUS:
+			return cityFromHops(
+				event.details?.hop,
+				(hop) =>
+					cityFromLocation(hop.departure.location) ??
+					cityFromLocation(hop.arrival.location)
+			);
 		default:
 			return undefined;
 	}

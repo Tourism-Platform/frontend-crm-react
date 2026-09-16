@@ -9,18 +9,26 @@ import {
 	useGeoFormFieldEnrichment,
 	useGeoSearchFieldProps
 } from "@/entities/geo";
+import { ENUM_SUPPLIER_TYPE } from "@/entities/supplier";
 import {
+	ENUM_EVENT_BACKEND,
 	ENUM_FORM_TRANSPORTATION,
 	type TTransportationEditSchema
 } from "@/entities/tour";
 
+import { EventPoolControls, type TEventPoolUiProps } from "@/features/tours";
+
 import { ENUM_FORM_SECTION, TRANSPORTATION_DATA_LIST } from "../../model";
 
-interface ITransportationInfoProps {
+interface ITransportationInfoProps extends TEventPoolUiProps {
 	form: UseFormReturn<TTransportationEditSchema>;
 }
 
-const TransportationInfoBase: FC<ITransportationInfoProps> = ({ form }) => {
+const TransportationInfoBase: FC<ITransportationInfoProps> = ({
+	form,
+	poolVariant,
+	onPoolSelect
+}) => {
 	const { t, i18n } = useTranslation("transportation_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 	const meetPointFieldName =
@@ -35,6 +43,13 @@ const TransportationInfoBase: FC<ITransportationInfoProps> = ({ form }) => {
 	return (
 		<div className="grid gap-8">
 			<h2 className="text-xl">{t("form.general.details.title")}</h2>
+			<EventPoolControls
+				form={form}
+				variant={poolVariant}
+				onSelect={onPoolSelect}
+				eventTyp={ENUM_EVENT_BACKEND.TRANSFER}
+				supplierTyp={ENUM_SUPPLIER_TYPE.TRANSFER}
+			/>
 
 			<div className="grid grid-cols-4 gap-x-4 gap-y-1">
 				{TRANSPORTATION_DATA_LIST({

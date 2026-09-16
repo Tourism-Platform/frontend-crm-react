@@ -64,6 +64,7 @@ export interface IPricingBreakdownLine {
 	cost: IPricingMoney;
 	fee: IPricingMoney;
 	markup: IPricingMoney;
+	supplyId: string | null;
 }
 
 export interface IPricingBreakdownSpread {

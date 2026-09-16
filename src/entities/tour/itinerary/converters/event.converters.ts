@@ -108,27 +108,28 @@ export const mapAllEventsToFrontend = (
 };
 
 export const mapEventToFrontend = (
-	backend: TTourEventBackendResponce
+	backend: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TTourEvent => {
 	switch (backend?.event?.typ) {
 		case ENUM_EVENT_BACKEND.FLIGHT:
-			return mapFlyEventToForm(backend);
+			return mapFlyEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.TRAIN:
-			return mapTrainEventToForm(backend);
+			return mapTrainEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.BUS:
-			return mapBusEventToForm(backend);
+			return mapBusEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.TRANSFER:
-			return mapTransferEventToForm(backend);
+			return mapTransferEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.HOUSING:
-			return mapAccommodationEventToForm(backend);
+			return mapAccommodationEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.ACTIVITY:
-			return mapActivityEventToForm(backend);
+			return mapActivityEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.REF:
-			return mapInfoEventToForm(backend);
+			return mapInfoEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.GUIDE:
-			return mapGuideEventToForm(backend);
+			return mapGuideEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.SUPPLEMENTARY:
-			return mapSupplementaryEventToForm(backend);
+			return mapSupplementaryEventToForm(backend, selectedSupplyId);
 		case ENUM_EVENT_BACKEND.OPTIONS:
 			return mapMultiplyOptionEventToForm(backend);
 		default:
@@ -139,7 +140,8 @@ export const mapEventToFrontend = (
 
 export const mapEventOptionToFrontend = (
 	backend: TTourEventBackendResponce,
-	eventOptionId: string
+	eventOptionId: string,
+	selectedSupplyId?: string
 ): TTourEvent => {
 	if (backend.event?.typ !== ENUM_EVENT_BACKEND.OPTIONS) {
 		throw new Error("Event is not a multiply option");
@@ -169,12 +171,12 @@ export const mapEventOptionToFrontend = (
 		}
 	};
 
-	return mapEventToFrontend(asResponse);
+	return mapEventToFrontend(asResponse, selectedSupplyId);
 };
 
 /**
  * Typed READ details of the addressed option row —
- * `{ plan, supply, spec }`; never send back as a WRITE body.
+ * `{ plan, pool: [{ id, is_main, supply, spec }] }`; never send back as a WRITE body.
  */
 export const mapTourEventDetailsFromBackend = (
 	backend: TTourEventBackendResponce,
@@ -192,48 +194,62 @@ export const mapTourEventDetailsFromBackend = (
 
 export const mapGetTourEventToFrontend = (
 	backend: TTourEventBackendResponce,
-	eventOptionId?: string
+	eventOptionId?: string,
+	selectedSupplyId?: string
 ): IGetTourEventResult => ({
 	form: eventOptionId
-		? mapEventOptionToFrontend(backend, eventOptionId)
-		: mapEventToFrontend(backend),
+		? mapEventOptionToFrontend(backend, eventOptionId, selectedSupplyId)
+		: mapEventToFrontend(backend, selectedSupplyId),
 	details: mapTourEventDetailsFromBackend(backend, eventOptionId),
 	eventOptionId:
 		backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS
 			? eventOptionId
-			: backend.event?.id
+			: backend.event?.id,
+	response: backend
 });
 
 export const mapEventUpdateToBackend = (
 	type: ENUM_EVENT_TYPE,
 	frontend: TTourEventUpdate,
-	language?: ENUM_LANGUAGES_TYPE
+	language?: ENUM_LANGUAGES_TYPE,
+	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
 	if (type === ENUM_EVENT.FLIGHT)
 		return mapTransportFormToUpdate(
 			frontend as TFlightEditSchema,
-			language
+			language,
+			currentDetails
 		);
 	else if (type === ENUM_EVENT.TRANSPORTATION)
 		return mapTransferFormToUpdate(
 			frontend as TTransportationEditSchema,
-			language
+			language,
+			currentDetails
 		);
 	else if (type === ENUM_EVENT.SUPPLEMENT)
-		return mapSupplementaryFormToUpdate(frontend as TSupplementEditSchema);
+		return mapSupplementaryFormToUpdate(
+			frontend as TSupplementEditSchema,
+			currentDetails
+		);
 	else if (type === ENUM_EVENT.INFO) return mapInfoFormToUpdate(frontend);
 	else if (type === ENUM_EVENT.ACCOMMODATION)
 		return mapAccommodationFormToUpdate(
 			frontend as TAccommodationEditSchema,
-			language
+			language,
+			currentDetails
 		);
 	else if (type === ENUM_EVENT.ACTIVITY)
 		return mapActivityFormToUpdate(
 			frontend as TActivityEditSchema,
-			language
+			language,
+			currentDetails
 		);
 	else if (type === ENUM_EVENT.GUIDE)
-		return mapGuideFormToUpdate(frontend as TGuideEditSchema);
+		return mapGuideFormToUpdate(
+			frontend as TGuideEditSchema,
+			language,
+			currentDetails
+		);
 
 	throw new Error(`Unsupported event type for update: ${type}`);
 };

@@ -5,9 +5,12 @@ import {
 	ENUM_PRICING_REVIEW_ROW,
 	attachBreakdownToReviewItem,
 	backendEventTypeMapper,
-	isPricingReviewBreakdownRow
+	getMainPoolMember,
+	getPoolMember,
+	isEventBackendTyp,
+	isPricingReviewBreakdownRow,
+	mapEventPoolToSummary
 } from "@/entities/tour";
-import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour";
 
 import type {
 	IBookingEventAvailability,
@@ -42,7 +45,7 @@ const formatRevenue = (
 	});
 
 /**
- * Supplier label for display (contract 3.1): a linked product carries the
+ * Supplier label for display (contract 6): a linked product carries the
  * resolved `supplier` ref; inline supply only has `supplier_id`.
  */
 const resolveSupplierLabel = (
@@ -54,6 +57,15 @@ const resolveSupplierLabel = (
 		return supply.supplier.name || supply.supplier.id;
 	}
 	return supply.supplier_id ?? "-";
+};
+
+const resolveSupplierLabelFromDetails = (details: {
+	pool?: { supply: Parameters<typeof resolveSupplierLabel>[0] }[];
+}): string => {
+	const supply =
+		getPoolMember(details)?.supply ?? getMainPoolMember(details)?.supply;
+	if (!supply) return "-";
+	return resolveSupplierLabel(supply);
 };
 
 const toOrderReviewItem = (
@@ -73,51 +85,74 @@ const mapEventToItem = (
 	const plannedCost = formatCostWithoutFees(cost);
 	const estimatedRevenue = formatRevenue(cost, markup, fees);
 
-	const base =
-		event.typ === "options"
-			? {
-					id: event_id,
-					eventId: event_id,
-					item: "",
-					supplier: "-",
-					plannedCost,
-					estimatedRevenue,
-					type: ENUM_EVENT.MULTIPLY_OPTION,
-					day: event.day,
-					position: event.position,
-					optionIndex: 0,
-					rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
-					subRows: (event.details ?? []).map((detail, index) => ({
+	if (event.typ === "options") {
+		const base = {
+			id: event_id,
+			eventId: event_id,
+			item: "",
+			supplier: "-",
+			plannedCost,
+			estimatedRevenue,
+			type: ENUM_EVENT.MULTIPLY_OPTION,
+			day: event.day,
+			position: event.position,
+			optionIndex: 0,
+			rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
+			subRows: (event.details ?? []).flatMap((detail, index) => {
+				if (!isEventBackendTyp(detail.typ)) {
+					return [];
+				}
+				return [
+					{
 						id: `${event_id}:${index}`,
 						eventId: event_id,
 						item: detail.name ?? "-",
-						supplier: resolveSupplierLabel(detail.details.supply),
+						supplier: resolveSupplierLabelFromDetails(
+							detail.details
+						),
 						plannedCost: "-",
 						estimatedRevenue: "-",
-						type: backendEventTypeMapper.to(
-							detail.typ as ENUM_EVENT_BACKEND_TYPE
-						),
+						type: backendEventTypeMapper.to(detail.typ),
+						backendTyp: detail.typ,
 						day: event.day,
 						position: event.position,
 						optionIndex: index,
-						rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
-					}))
-				}
-			: {
-					id: event_id,
-					eventId: event_id,
-					item: event.name ?? "-",
-					supplier: resolveSupplierLabel(event.details.supply),
-					plannedCost,
-					estimatedRevenue,
-					type: backendEventTypeMapper.to(
-						event.typ as ENUM_EVENT_BACKEND_TYPE
-					),
-					day: event.day,
-					position: event.position,
-					optionIndex: selected_option_index ?? 0,
-					rowKind: ENUM_PRICING_REVIEW_ROW.EVENT
-				};
+						rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
+						pool: mapEventPoolToSummary(detail.details)
+					}
+				];
+			})
+		};
+
+		return toOrderReviewItem(
+			attachBreakdownToReviewItem(
+				base,
+				backend.breakdown,
+				backend.warnings
+			),
+			event_id
+		);
+	}
+
+	if (!isEventBackendTyp(event.typ)) {
+		throw new Error("Unexpected event typ");
+	}
+
+	const base = {
+		id: event_id,
+		eventId: event_id,
+		item: event.name ?? "-",
+		supplier: resolveSupplierLabelFromDetails(event.details),
+		plannedCost,
+		estimatedRevenue,
+		type: backendEventTypeMapper.to(event.typ),
+		backendTyp: event.typ,
+		day: event.day,
+		position: event.position,
+		optionIndex: selected_option_index ?? 0,
+		rowKind: ENUM_PRICING_REVIEW_ROW.EVENT,
+		pool: mapEventPoolToSummary(event.details)
+	};
 
 	return toOrderReviewItem(
 		attachBreakdownToReviewItem(base, backend.breakdown, backend.warnings),

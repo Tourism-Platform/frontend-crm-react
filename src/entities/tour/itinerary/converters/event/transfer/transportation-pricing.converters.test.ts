@@ -21,21 +21,26 @@ vi.mock("@/shared/config", () => ({
 	i18nKey: () => (key: string) => key
 }));
 
+type TTransferPoolSpec = TransferDetailsOutput["pool"][number]["spec"];
+
 const wholeTransferDetails = (
-	charge: Extract<
-		TransferDetailsOutput["spec"],
-		{ pricing: "whole" }
-	>["charge"]
+	charge: Extract<TTransferPoolSpec, { pricing: "whole" }>["charge"]
 ): TransferDetailsOutput => ({
 	plan: { typ: null, departure: null, arrival: null },
-	supply: { source: "inline", supplier_id: null },
-	spec: {
-		pricing: "whole",
-		images: [],
-		name: null,
-		cars: [],
-		charge
-	}
+	pool: [
+		{
+			id: "supply-1",
+			is_main: true,
+			supply: { source: "inline", supplier_id: null },
+			spec: {
+				pricing: "whole",
+				images: [],
+				name: null,
+				cars: [],
+				charge
+			}
+		}
+	]
 });
 
 const basePricing = (

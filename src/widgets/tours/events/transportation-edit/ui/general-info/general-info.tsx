@@ -3,17 +3,29 @@ import { useTranslation } from "react-i18next";
 
 import { LoaderButton, Separator, withErrorBoundary } from "@/shared/ui";
 
+import type { TEventPoolUiProps } from "@/features/tours";
+
 import { type TSlotProps } from "../../model";
 
 import { DescriptionInfo } from "./description-info";
 import { TransportationInfo } from "./transportation-info";
 
-const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
+	form,
+	onSubmit,
+	isLoading,
+	poolVariant,
+	onPoolSelect
+}) => {
 	const { t } = useTranslation("transportation_edit_page");
 
 	return (
 		<div className="grid gap-12">
-			<TransportationInfo form={form} />
+			<TransportationInfo
+				form={form}
+				poolVariant={poolVariant}
+				onPoolSelect={onPoolSelect}
+			/>
 			<Separator />
 			<DescriptionInfo form={form} />
 

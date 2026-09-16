@@ -13,11 +13,17 @@ import {
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_HOUSING_SOURCE,
 	type TAccommodationEditSchema,
+	type TEventDetailsBackend,
 	type THousingSingleEventBackend,
 	type THousingSpecInputBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../../types";
+import {
+	mapEventDetailsReadToWrite,
+	replaceSelectedPoolMemberSupply
+} from "../details-read-to-write.converters";
+import { getPoolMember } from "../event-pool.helpers";
 import { isInheritedHousingDetails } from "../housing-details.helpers";
 import {
 	mapInheritedHousingProductSnapshotToForm,
@@ -38,15 +44,22 @@ import {
 import { mapRoomsFromBackend } from "./accommodation-rooms.converters";
 
 export const mapAccommodationEventToForm = (
-	data: TTourEventBackendResponce
+	data: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TAccommodationEditSchema => {
 	const event = data?.event as THousingSingleEventBackend;
 	const details = event?.details;
 	const plan = details?.plan;
 
-	if (isInheritedHousingDetails(details)) {
-		const link = mapInheritedProductLinkToForm(details);
-		const snapshot = mapInheritedHousingProductSnapshotToForm(details);
+	const member = getPoolMember(details, selectedSupplyId);
+	const supplyId = member?.id;
+
+	if (isInheritedHousingDetails(details, supplyId)) {
+		const link = mapInheritedProductLinkToForm(member);
+		const snapshot = mapInheritedHousingProductSnapshotToForm(
+			details,
+			supplyId
+		);
 
 		return {
 			name: event?.name || "",
@@ -76,13 +89,14 @@ export const mapAccommodationEventToForm = (
 		};
 	}
 
-	const spec = details?.spec;
+	const spec = member?.spec;
 	const rooms = mapRoomsFromBackend(spec);
 
 	return {
 		name: event?.name || "",
 		day: event.day,
 		position: event.position,
+		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: supplyId,
 		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
 		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
@@ -104,7 +118,7 @@ export const mapAccommodationEventToForm = (
 		},
 		rooms,
 		pricing: applyEventPackageIdToPricing(
-			mapAccommodationPricingFromBackend(details, rooms.rooms),
+			mapAccommodationPricingFromBackend(details, rooms.rooms, supplyId),
 			event.package_id
 		)
 	};
@@ -134,16 +148,16 @@ const mapStayPlanToBackend = (
 
 export const mapAccommodationFormToUpdate = (
 	frontend: Partial<TAccommodationEditSchema>,
-	language?: ENUM_LANGUAGES_TYPE
+	language?: ENUM_LANGUAGES_TYPE,
+	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
 	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
+	const supplyId = frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID];
 	const g = frontend.general;
 	const plan = mapStayPlanToBackend(g);
 
 	if (productId) {
-		// Product-linked stay: the update keeps the link exactly where it
-		// is — `supply` is omitted, only the tour's own plan is stated.
 		return {
 			typ: ENUM_EVENT_BACKEND.HOUSING,
 			...(frontend.name !== undefined &&
@@ -176,11 +190,27 @@ export const mapAccommodationFormToUpdate = (
 			}
 		: undefined;
 
+	const inlineSupply = spec ? { source: "inline" as const, spec } : undefined;
+
+	const echoed =
+		inlineSupply && currentDetails
+			? replaceSelectedPoolMemberSupply(
+					mapEventDetailsReadToWrite(
+						ENUM_EVENT_BACKEND.HOUSING,
+						currentDetails
+					),
+					supplyId,
+					inlineSupply
+				)
+			: undefined;
+
 	const details: HousingDetailsWrite = {
 		plan,
-		// No constructible spec → `supply` is omitted so the backend keeps
-		// the current one (a full replace would wipe it).
-		...(spec && { supply: { source: "inline", spec } })
+		...(inlineSupply && {
+			pool: (echoed?.pool ?? [
+				{ supply: inlineSupply }
+			]) as HousingDetailsWrite["pool"]
+		})
 	};
 
 	return {

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect } from "react";
+import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
@@ -18,8 +18,11 @@ import {
 	useCreateEventLibraryMutation,
 	useGetEventLibraryQuery,
 	useGetEventLibraryRawQuery,
+	useGetEventLibraryTemplateQuery,
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
+
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
 
 import { TransportationEdit } from "@/widgets/tours";
 import { type ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/transportation-edit/model";
@@ -28,6 +31,7 @@ export const LibraryTransferEditPage: FC = () => {
 	const { t, i18n } = useTranslation("event_templates_page");
 	const { libraryId = "" } = useParams<{ libraryId: string }>();
 	const isCreate = libraryId === LIBRARY_EVENT_CREATE_ID;
+	const [supplyId, setSupplyId] = useState<string | undefined>();
 
 	const { data: libraryItem, isRealError: isLoadError } =
 		useOptionalResourceQuery(
@@ -45,9 +49,16 @@ export const LibraryTransferEditPage: FC = () => {
 	});
 
 	const { data: libraryEvent } = useOptionalResourceQuery(
-		useGetEventLibraryRawQuery(libraryId, {
-			skip: !libraryId || isCreate || !libraryItem || !isExpectedType
-		})
+		useGetEventLibraryRawQuery(
+			{ libraryId, supplyId },
+			{
+				skip: !libraryId || isCreate || !libraryItem || !isExpectedType
+			}
+		)
+	);
+	const { data: libraryTemplate } = useGetEventLibraryTemplateQuery(
+		libraryId,
+		{ skip: !libraryId || isCreate }
 	);
 
 	const [createEventLibrary, { isLoading: isCreateLoading }] =
@@ -106,7 +117,8 @@ export const LibraryTransferEditPage: FC = () => {
 				libraryId,
 				type: ENUM_EVENT.TRANSPORTATION,
 				language,
-				data
+				data,
+				currentDetails: libraryTemplate?.event.details
 			}).unwrap();
 			toast.success(t("toasts.update.success"));
 		} catch (error) {
@@ -126,6 +138,8 @@ export const LibraryTransferEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isCreateLoading || isUpdateLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.LIBRARY}
+			onPoolSelect={setSupplyId}
 		/>
 	);
 };

@@ -16,11 +16,15 @@ import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_EVENT_PRODUCT,
+	ENUM_HOUSING_SOURCE,
+	type TEventDetailsBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend,
 	type TTransferSingleEventBackend,
 	type TTransportationEditSchema
 } from "../../../types";
+import { mapInlinePoolWrite } from "../details-read-to-write.converters";
+import { getPoolMember } from "../event-pool.helpers";
 import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
@@ -39,20 +43,23 @@ import {
 type TTransferGeneral = TTransportationEditSchema["general"];
 
 export const mapTransferEventToForm = (
-	data: TTourEventBackendResponce
+	data: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TTransportationEditSchema => {
 	const event = data?.event as TTransferSingleEventBackend;
 	const details = event?.details ?? null;
+	const member = getPoolMember(details, selectedSupplyId);
+	const supplyId = member?.id;
 	// Contract 3.1: the run (kind, points, hours) is the tour's own `plan`,
 	// whoever supplies the fleet.
 	const plan = details?.plan;
 
-	if (isInheritedTransferDetails(details)) {
+	if (isInheritedTransferDetails(details, supplyId)) {
 		return {
 			name: event?.name || "",
 			day: event.day,
 			position: event.position,
-			...mapInheritedProductLinkToForm(details),
+			...mapInheritedProductLinkToForm(member),
 			general: {
 				description: event.description || "",
 				transfer_type: transferTypeMapper.from(plan?.typ),
@@ -77,12 +84,15 @@ export const mapTransferEventToForm = (
 		};
 	}
 
-	const cars = mapCarsFromBackend(details?.spec);
+	const cars = mapCarsFromBackend(member?.spec);
 
 	return {
 		name: event?.name || "",
 		day: event.day,
 		position: event.position,
+		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: supplyId,
+		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
+		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
 			description: event.description || "",
 			transfer_type: transferTypeMapper.from(plan?.typ),
@@ -99,7 +109,7 @@ export const mapTransferEventToForm = (
 		},
 		cars,
 		pricing: applyEventPackageIdToPricing(
-			mapTransportationPricingFromBackend(details, cars.cars),
+			mapTransportationPricingFromBackend(details, cars.cars, supplyId),
 			event.package_id
 		)
 	};
@@ -154,7 +164,8 @@ const mapTransferLegToBackend = (
 
 export const mapTransferFormToUpdate = (
 	frontend: Partial<TTransportationEditSchema>,
-	language?: ENUM_LANGUAGES_TYPE
+	language?: ENUM_LANGUAGES_TYPE,
+	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
 	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
@@ -186,7 +197,14 @@ export const mapTransferFormToUpdate = (
 	// current one (a full replace would wipe it).
 	const details: TransferDetailsWrite = {
 		plan,
-		...(spec && { supply: { source: "inline", spec } })
+		...(spec && {
+			pool: mapInlinePoolWrite(
+				ENUM_EVENT_BACKEND.TRANSFER,
+				currentDetails,
+				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
+				{ source: "inline", spec }
+			) as TransferDetailsWrite["pool"]
+		})
 	};
 
 	return {

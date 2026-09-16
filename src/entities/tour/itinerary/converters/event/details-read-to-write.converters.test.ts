@@ -22,28 +22,36 @@ const FIXED_CHARGE = {
 	markup: null
 };
 
+const MEMBER_ID = "11111111-1111-1111-1111-111111111111";
+
 describe("mapEventDetailsReadToWrite — product supply", () => {
-	it("keeps only { source, product_id, scope } and drops supplier/override/spec", () => {
+	it("echoes pool id and keeps only { source, product_id, scope }", () => {
 		const details: HousingDetailsOutput = {
 			plan: { duration: 2, check_in: null, check_out: null },
-			supply: {
-				source: "product",
-				product_id: "product-1",
-				supplier: { id: "sup-1", name: "Supplier" },
-				scope: { typ: "only", ids: ["unit-1"] },
-				override: null
-			},
-			spec: {
-				pricing: "per_room",
-				images: [IMAGE],
-				name: "Hotel",
-				location: null,
-				stars: 4,
-				typs: [],
-				amenities: [],
-				policy: null,
-				categories: []
-			}
+			pool: [
+				{
+					id: MEMBER_ID,
+					is_main: true,
+					supply: {
+						source: "product",
+						product_id: "product-1",
+						supplier: { id: "sup-1", name: "Supplier" },
+						scope: { typ: "only", ids: ["unit-1"] },
+						override: null
+					},
+					spec: {
+						pricing: "per_room",
+						images: [IMAGE],
+						name: "Hotel",
+						location: null,
+						stars: 4,
+						typs: [],
+						amenities: [],
+						policy: null,
+						categories: []
+					}
+				}
+			]
 		};
 
 		const result = mapEventDetailsReadToWrite(
@@ -53,23 +61,34 @@ describe("mapEventDetailsReadToWrite — product supply", () => {
 
 		expect(result).toEqual({
 			plan: { duration: 2, check_in: null, check_out: null },
-			supply: {
-				source: "product",
-				product_id: "product-1",
-				scope: { typ: "only", ids: ["unit-1"] }
-			}
+			pool: [
+				{
+					id: MEMBER_ID,
+					supply: {
+						source: "product",
+						product_id: "product-1",
+						scope: { typ: "only", ids: ["unit-1"] }
+					}
+				}
+			]
 		});
-		// READ-only fields must not leak into the WRITE body
 		expect(JSON.stringify(result)).not.toContain("supplier");
 		expect(JSON.stringify(result)).not.toContain("override");
+		expect(JSON.stringify(result)).not.toContain("is_main");
 		expect(result).not.toHaveProperty("spec");
 	});
 
-	it("maps scope all", () => {
+	it("echoes an information member without a spec", () => {
 		const details: InformationDetailsOutput = {
 			plan: {},
-			supply: { source: "inline", supplier_id: null },
-			spec: {}
+			pool: [
+				{
+					id: MEMBER_ID,
+					is_main: true,
+					supply: { source: "inline", supplier_id: null },
+					spec: {}
+				}
+			]
 		};
 
 		const result = mapEventDetailsReadToWrite(
@@ -79,43 +98,57 @@ describe("mapEventDetailsReadToWrite — product supply", () => {
 
 		expect(result).toEqual({
 			plan: {},
-			supply: { source: "inline", supplier_id: null }
+			pool: [
+				{
+					id: MEMBER_ID,
+					supply: { source: "inline", supplier_id: null }
+				}
+			]
 		});
 	});
 });
 
 describe("mapEventDetailsReadToWrite — inline supply", () => {
-	it("moves the read spec into supply.inline.spec and strips images", () => {
+	it("moves the read spec into the member supply and strips images", () => {
 		const details: HousingDetailsOutput = {
 			plan: { duration: null, check_in: null, check_out: null },
-			supply: { source: "inline", supplier_id: "sup-9" },
-			spec: {
-				pricing: "per_room",
-				images: [IMAGE],
-				name: "Inline hotel",
-				location: null,
-				stars: null,
-				typs: [],
-				amenities: [],
-				policy: null,
-				categories: [
-					{
-						id: "cat-1",
-						name: null,
-						rooms: [
+			pool: [
+				{
+					id: MEMBER_ID,
+					is_main: true,
+					supply: { source: "inline", supplier_id: "sup-9" },
+					spec: {
+						pricing: "per_room",
+						images: [IMAGE],
+						name: "Inline hotel",
+						location: null,
+						stars: null,
+						typs: [],
+						amenities: [],
+						policy: null,
+						categories: [
 							{
-								id: "room-1",
-								images: [IMAGE],
-								typ: HousingRoomTypes.Double,
-								pax: 2,
-								name: "Std",
-								description: null,
-								rate: { base: FIXED_CHARGE, seasons: [] }
+								id: "cat-1",
+								name: null,
+								rooms: [
+									{
+										id: "room-1",
+										images: [IMAGE],
+										typ: HousingRoomTypes.Double,
+										pax: 2,
+										name: "Std",
+										description: null,
+										rate: {
+											base: FIXED_CHARGE,
+											seasons: []
+										}
+									}
+								]
 							}
 						]
 					}
-				]
-			}
+				}
+			]
 		};
 
 		const result = mapEventDetailsReadToWrite(
@@ -124,13 +157,21 @@ describe("mapEventDetailsReadToWrite — inline supply", () => {
 		);
 
 		expect(result).not.toHaveProperty("spec");
-		const supply = (result as { supply?: unknown }).supply;
-		expect(supply).toMatchObject({
+		const pool = (
+			result as {
+				pool: {
+					id: string;
+					supply: { spec: Record<string, unknown> };
+				}[];
+			}
+		).pool;
+		expect(pool[0].id).toBe(MEMBER_ID);
+		expect(pool[0].supply).toMatchObject({
 			source: "inline",
 			supplier_id: "sup-9"
 		});
 
-		const spec = (supply as { spec: Record<string, unknown> }).spec;
+		const spec = pool[0].supply.spec;
 		expect(spec).not.toHaveProperty("images");
 		expect(spec.pricing).toBe("per_room");
 
@@ -144,28 +185,34 @@ describe("mapEventDetailsReadToWrite — inline supply", () => {
 	it("strips menu item images from activity food spec", () => {
 		const details: ActivityDetailsOutput = {
 			plan: { start_time: null, end_time: null },
-			supply: { source: "inline", supplier_id: null },
-			spec: {
-				sub_typ: "food",
-				images: [IMAGE],
-				name: "Dinner",
-				location: null,
-				offerings: [
-					{
-						id: "off-1",
-						name: "Set menu",
-						charge: FIXED_CHARGE,
-						menu: [
+			pool: [
+				{
+					id: MEMBER_ID,
+					is_main: true,
+					supply: { source: "inline", supplier_id: null },
+					spec: {
+						sub_typ: "food",
+						images: [IMAGE],
+						name: "Dinner",
+						location: null,
+						offerings: [
 							{
-								id: "menu-1",
-								images: [IMAGE],
-								name: "Soup",
-								description: null
+								id: "off-1",
+								name: "Set menu",
+								charge: FIXED_CHARGE,
+								menu: [
+									{
+										id: "menu-1",
+										images: [IMAGE],
+										name: "Soup",
+										description: null
+									}
+								]
 							}
 						]
 					}
-				]
-			}
+				}
+			]
 		};
 
 		const result = mapEventDetailsReadToWrite(
@@ -173,8 +220,12 @@ describe("mapEventDetailsReadToWrite — inline supply", () => {
 			details
 		);
 
-		const supply = (result as { supply: { spec: unknown } }).supply;
-		const spec = supply.spec as {
+		const pool = (
+			result as {
+				pool: { supply: { spec: unknown } }[];
+			}
+		).pool;
+		const spec = pool[0].supply.spec as {
 			sub_typ: string;
 			offerings: { menu: Record<string, unknown>[] }[];
 		};
@@ -189,9 +240,8 @@ describe("mapEventDetailsReadToWrite — unsupported typ", () => {
 		expect(() =>
 			mapEventDetailsReadToWrite(ENUM_EVENT_BACKEND.OPTIONS, {
 				plan: {},
-				supply: { source: "inline", supplier_id: null },
-				spec: {}
-			})
+				pool: []
+			} as never)
 		).toThrow();
 	});
 });

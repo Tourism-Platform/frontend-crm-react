@@ -1,4 +1,4 @@
-import { ActivityType } from "@/shared/api";
+import { ActivityType, GeneralVenueInputSubTypEnum } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
 import { ENUM_ACTIVITY_TYPE, type ENUM_ACTIVITY_TYPE_TYPE } from "../../types";
@@ -23,3 +23,19 @@ export const activityTypeMapper = createEnumMapper<
 	ENUM_ACTIVITY_TYPE_TYPE,
 	ActivityType
 >(MAP_ACTIVITY_TYPE);
+
+/** Form `ActivityType` → WRITE general-venue `sub_typ` (excludes food). */
+export const ACTIVITY_TYPE_TO_GENERAL_SUB_TYP: Partial<
+	Record<ActivityType, GeneralVenueInputSubTypEnum>
+> = {
+	[ActivityType.MasterClass]: GeneralVenueInputSubTypEnum.MasterClass,
+	[ActivityType.Sightseeing]: GeneralVenueInputSubTypEnum.Sightseeing,
+	[ActivityType.Outdoor]: GeneralVenueInputSubTypEnum.Outdoor,
+	[ActivityType.Riding]: GeneralVenueInputSubTypEnum.Riding,
+	[ActivityType.Extreme]: GeneralVenueInputSubTypEnum.Extreme,
+	[ActivityType.Wellness]: GeneralVenueInputSubTypEnum.Wellness,
+	[ActivityType.Entertainment]: GeneralVenueInputSubTypEnum.Entertainment,
+	[ActivityType.WaterActivities]: GeneralVenueInputSubTypEnum.WaterActivities,
+	[ActivityType.Photography]: GeneralVenueInputSubTypEnum.Photography,
+	[ActivityType.Spiritual]: GeneralVenueInputSubTypEnum.Spiritual
+};

@@ -13,11 +13,13 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
+import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+
 import { InformationEdit } from "@/widgets/tours";
 
 export const InformationEditPage: FC = () => {
 	const { t } = useTranslation("information_edit_page");
-	const { data, isError, isLoading, update } =
+	const { data, selectPoolMember, isError, isLoading, update } =
 		useTourEventEdit<TInfoEditSchema>(ENUM_EVENT.INFO);
 
 	const form = useForm<TInfoEditSchema>({
@@ -57,6 +59,8 @@ export const InformationEditPage: FC = () => {
 			form={form}
 			createSectionSubmit={createSectionSubmit}
 			isLoading={isLoading}
+			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
+			onPoolSelect={selectPoolMember}
 		/>
 	);
 };

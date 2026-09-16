@@ -16,6 +16,7 @@ import {
 } from "@/entities/geo";
 import { ENUM_SUPPLIER_TYPE } from "@/entities/supplier";
 import {
+	ENUM_EVENT_BACKEND,
 	ENUM_FORM_ACCOMMODATION,
 	ENUM_FORM_EVENT_PRODUCT
 } from "@/entities/tour";
@@ -23,8 +24,10 @@ import {
 import {
 	EventOverrideControls,
 	EventPolicyWarnings,
+	EventPoolControls,
 	EventProductLinkControls,
-	InheritedProductSeasonRates
+	InheritedProductSeasonRates,
+	type TEventPoolUiProps
 } from "@/features/tours";
 
 import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
@@ -38,7 +41,13 @@ import {
 import { AccommodationDetails } from "./accommodation-details";
 import { Schedule } from "./schedule";
 
-const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
+	form,
+	onSubmit,
+	isLoading,
+	poolVariant,
+	onPoolSelect
+}) => {
 	const { t, i18n } = useTranslation("accommodation_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 	const propertyFieldName =
@@ -58,6 +67,14 @@ const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 		control: form.control,
 		name: ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE
 	});
+	const supplyId = useWatch({
+		control: form.control,
+		name: ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID
+	});
+
+	const handleOverrideChange = (next: boolean) => {
+		form.setValue(ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE, next);
+	};
 
 	return (
 		<div className="grid gap-12">
@@ -69,22 +86,26 @@ const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 					/>
 				) : null}
 				<EventPolicyWarnings />
+				<EventPoolControls
+					form={form}
+					variant={poolVariant}
+					onSelect={onPoolSelect}
+					eventTyp={ENUM_EVENT_BACKEND.HOUSING}
+					supplierTyp={ENUM_SUPPLIER_TYPE.HOTEL}
+				/>
 				<EventProductLinkControls
 					typ={ENUM_SUPPLIER_TYPE.HOTEL}
 					productId={productId}
 					variantId={variantId}
 					hasOverride={Boolean(hasOverride)}
+					supplyId={supplyId}
 				/>
 				<EventOverrideControls
 					kind="housing"
 					isInherited={isInherited}
 					hasOverride={Boolean(hasOverride)}
-					onAfterChange={(next) =>
-						form.setValue(
-							ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE,
-							next
-						)
-					}
+					supplyId={supplyId}
+					onAfterChange={handleOverrideChange}
 				/>
 				{isInherited ? <InheritedProductSeasonRates /> : null}
 			</div>

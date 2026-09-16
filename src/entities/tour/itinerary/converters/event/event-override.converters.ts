@@ -6,6 +6,7 @@ import type {
 	TTrainOverrideOutputBackend
 } from "../../types";
 
+import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
 import {
 	mapHousingEventOverrideToBackend,
 	mapHousingOverrideFromBackend
@@ -29,20 +30,19 @@ export const mapEventOverrideToBackend = (
 };
 
 /**
- * Reads the override from typed READ details.
- * Contract 3.1: the override lives at `details.supply.override` and exists
- * only on product supply (`details.override` is gone).
+ * Reads the override from a pool member's product supply (contract 6).
  */
 export const mapEventOverrideFromDetails = (
 	details: TEventDetailsBackend | undefined,
-	kind: TEventOverrideKind
+	kind: TEventOverrideKind,
+	supplyId?: string | null
 ): TEventOverride | null => {
-	const supply = details?.supply;
-	if (!supply || supply.source !== "product") {
+	const member = getPoolMember(details, supplyId);
+	if (!isProductPoolMember(member)) {
 		return null;
 	}
 
-	const override = supply.override;
+	const override = member.supply.override;
 	if (!override) {
 		return null;
 	}

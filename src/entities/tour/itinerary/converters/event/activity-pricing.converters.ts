@@ -18,6 +18,7 @@ import {
 	type TCommissionMarkupInputBackend
 } from "../../types";
 
+import { getPoolMember } from "./event-pool.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
 
 /** Write-side venue offering charge (contract 3.1 `spec.offerings[].charge`). */
@@ -71,15 +72,17 @@ const getDefaultActivityPricing = (): TActivityPricingSchema => ({
 });
 
 /**
- * Pricing section of the form, read from `details.spec` (contract 3.1).
+ * Pricing section of the form, read from the selected pool member spec.
  * A venue prices its offerings (`spec.offerings[].charge`); the event form
  * shows a single price, so the first offering's charge is read.
  */
 export const mapActivityPricingFromBackend = (
-	details?: TActivityDetailsBackend | null
+	details?: TActivityDetailsBackend | null,
+	supplyId?: string | null
 ): TActivityPricingSchema => {
 	const defaults = getDefaultActivityPricing();
-	const charge = details?.spec?.offerings?.[0]?.charge;
+	const charge = getPoolMember(details, supplyId)?.spec?.offerings?.[0]
+		?.charge;
 
 	if (!charge) {
 		return defaults;

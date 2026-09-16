@@ -9,7 +9,8 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config/languages";
 import type { IHotelPolicy } from "./accommodation";
 
 /**
- * Override domain model (contract 3.1).
+ * Override domain model (contract 6). Override lives on a pool member's
+ * product supply (`pool[i].supply.override`).
  *
  * Overrides reprice the LINKED product's scoped units. The override dialog
  * edits a single whole-arm charge (flat / per-duration / per-person) plus the
@@ -47,6 +48,8 @@ export interface ISetOptionOverride {
 	eventId: string;
 	/** Option row id — for single events it is `event.id` from the read. */
 	eventOptionId: string;
+	/** Pool member id — `details.pool[i].id`. */
+	supplyId: string;
 	data: TEventOverride;
 	language?: ENUM_LANGUAGES_TYPE;
 }
@@ -57,5 +60,7 @@ export interface IClearOptionOverride {
 	eventId: string;
 	/** Option row id — for single events it is `event.id` from the read. */
 	eventOptionId: string;
+	/** Pool member id — `details.pool[i].id`. */
+	supplyId: string;
 	language?: ENUM_LANGUAGES_TYPE;
 }

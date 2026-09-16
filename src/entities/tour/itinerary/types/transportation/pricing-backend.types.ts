@@ -5,28 +5,24 @@ import type {
 	PerCarTransferOutput,
 	PricedCarOutput,
 	TransferDetailsOutput,
-	TransferInlineSupplyNew,
-	TransferProductSupplyOutput
+	TransferInlineSupplyNew
 } from "@/shared/api";
 
 /**
- * Backend shapes for a transfer event (contract 3.1).
+ * Backend shapes for a transfer event (contract 6).
  *
- * Read: `details` = `TransferDetailsOutput` — `{ plan, supply, spec }` where
- * `supply.source` discriminates inline vs product-linked events.
- * Write: `TransferDetailsWrite` = `{ plan?, supply? }` (spec lives inside
- * `supply.inline.spec`).
+ * Read: `details` = `TransferDetailsOutput` — `{ plan, pool: [{ id, is_main, supply, spec }] }`.
+ * Write: `TransferDetailsWrite` = `{ plan?, pool? }` (spec lives inside
+ * inline pool member `supply.spec`).
  */
 
-/** Read-side transfer details (`{ plan, supply, spec }`). */
+/** Read-side transfer details. */
 export type TTransferDetailsBackend = TransferDetailsOutput;
 
-/** Read-side transfer details narrowed to a product-linked supply. */
-export type TInheritedTransferDetailsBackend = TransferDetailsOutput & {
-	supply: { source: "product" } & TransferProductSupplyOutput;
-};
+/** @deprecated Product-linked supply is on `pool[].supply`, not `details.supply`. */
+export type TInheritedTransferDetailsBackend = never;
 
-/** Read-side transfer details (single 3.1 shape; supply discriminates). */
+/** Read-side transfer details (operator read). */
 export type TTransferEventDetailsBackend = TransferDetailsOutput;
 
 /** Read-side per-car priced car (`spec.cars[]` of a per-car spec). */
@@ -44,5 +40,5 @@ export type TPerCarExpenseBackend = PerCarTransferOutput;
 /** Read-side per-car-category transfer spec member. */
 export type TPerCarCategoryExpenseBackend = PerCarCategoryTransferOutput;
 
-/** Write-side transfer spec — goes into `supply.inline.spec`. */
+/** Write-side transfer spec — goes into `pool[].supply.spec`. */
 export type TTransferSpecInputBackend = TransferInlineSupplyNew["spec"];

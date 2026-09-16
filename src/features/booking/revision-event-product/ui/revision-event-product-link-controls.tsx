@@ -24,6 +24,7 @@ interface IRevisionEventProductLinkControlsProps {
 	productId?: string;
 	variantId?: string | null;
 	hasOverride?: boolean;
+	supplyId?: string;
 	onAfterChange?: () => void;
 }
 
@@ -37,6 +38,7 @@ export const RevisionEventProductLinkControls: FC<
 	productId,
 	variantId,
 	hasOverride,
+	supplyId,
 	onAfterChange
 }) => {
 	const { t } = useTranslation("common_events");
@@ -44,7 +46,8 @@ export const RevisionEventProductLinkControls: FC<
 		useRevisionEventProductMutations({
 			bookingId,
 			eventId,
-			optionIndex
+			optionIndex,
+			supplyId
 		});
 	const [open, setOpen] = useState(false);
 	const [overrideWarnOpen, setOverrideWarnOpen] = useState(false);

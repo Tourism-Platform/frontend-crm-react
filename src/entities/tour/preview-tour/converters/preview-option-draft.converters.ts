@@ -6,7 +6,8 @@ import {
 	type TMultiEventReadBackend,
 	type TOperatorEventBackend,
 	type TStandaloneBillableBackend,
-	type TTourSummaryEventBackend
+	type TTourSummaryEventBackend,
+	getMainPoolMember
 } from "@/entities/tour/itinerary";
 
 import type {
@@ -37,10 +38,17 @@ type TOperatorCitySource = Exclude<
 const extractCityFromOperatorDetails = (
 	event: TOperatorCitySource
 ): string | undefined => {
+	const details = event.details;
+	if (!details || Array.isArray(details)) {
+		return undefined;
+	}
+	const spec = getMainPoolMember(details)?.spec;
 	switch (event.typ) {
 		case ENUM_EVENT_BACKEND.HOUSING:
 		case ENUM_EVENT_BACKEND.ACTIVITY:
-			return cityFromLocation(event.details.spec.location);
+			return cityFromLocation(
+				spec && "location" in spec ? spec.location : undefined
+			);
 		case ENUM_EVENT_BACKEND.TRANSFER:
 			return (
 				cityFromLocation(event.details.plan.departure?.location) ??
@@ -54,14 +62,17 @@ const extractCityFromOperatorDetails = (
 			);
 		}
 		case ENUM_EVENT_BACKEND.FLIGHT: {
-			const leg = event.details.spec.legs[0];
+			const rawLeg = spec && "legs" in spec ? spec.legs?.[0] : undefined;
+			const leg =
+				rawLeg && "departure_location" in rawLeg ? rawLeg : undefined;
 			return (
 				cityFromLocation(leg?.departure_location) ??
 				cityFromLocation(leg?.arrival_location)
 			);
 		}
 		case ENUM_EVENT_BACKEND.TRAIN: {
-			const leg = event.details.spec.legs[0];
+			const rawLeg = spec && "legs" in spec ? spec.legs?.[0] : undefined;
+			const leg = rawLeg && "departure" in rawLeg ? rawLeg : undefined;
 			return (
 				cityFromLocation(leg?.departure?.location) ??
 				cityFromLocation(leg?.arrival?.location)

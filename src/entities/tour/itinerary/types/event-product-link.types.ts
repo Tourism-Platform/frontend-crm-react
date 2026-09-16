@@ -41,6 +41,8 @@ interface IEventOptionProductArgsBase {
 	eventId: string;
 	/** Option row id — for single events it is `event.id` from the read. */
 	eventOptionId: string;
+	/** Pool member id — `details.pool[i].id`. */
+	supplyId: string;
 	language?: ENUM_LANGUAGES_TYPE;
 }
 

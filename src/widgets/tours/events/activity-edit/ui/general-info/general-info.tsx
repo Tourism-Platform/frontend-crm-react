@@ -8,7 +8,10 @@ import {
 	useGeoFormFieldEnrichment,
 	useGeoSearchFieldProps
 } from "@/entities/geo";
-import { ENUM_FORM_ACTIVITY } from "@/entities/tour";
+import { ENUM_SUPPLIER_TYPE } from "@/entities/supplier";
+import { ENUM_EVENT_BACKEND, ENUM_FORM_ACTIVITY } from "@/entities/tour";
+
+import { EventPoolControls, type TEventPoolUiProps } from "@/features/tours";
 
 import {
 	ENUM_FORM_SECTION,
@@ -18,7 +21,13 @@ import {
 
 import { ActivityMenu } from "./activity-menu";
 
-const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
+const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
+	form,
+	onSubmit,
+	isLoading,
+	poolVariant,
+	onPoolSelect
+}) => {
 	const { t, i18n } = useTranslation("activity_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 	const locationFieldName =
@@ -30,6 +39,13 @@ const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 		<div className="grid gap-12">
 			<div className="grid gap-8">
 				<h2 className="text-xl">{t("form.general.details.title")}</h2>
+				<EventPoolControls
+					form={form}
+					variant={poolVariant}
+					onSelect={onPoolSelect}
+					eventTyp={ENUM_EVENT_BACKEND.ACTIVITY}
+					supplierTyp={ENUM_SUPPLIER_TYPE.ACTIVITY}
+				/>
 				<div className="grid grid-cols-4 gap-x-4 gap-y-1">
 					{EVENT_DATA_LIST(geoProps).map(({ key, ...item }) => (
 						<CustomField

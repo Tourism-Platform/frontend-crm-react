@@ -14,7 +14,7 @@ import {
  * Unified override mutations (contract 3.1) — set/clear address the option
  * row (`eventId` slot + resolved `eventOptionId`).
  */
-export const useEventOverrideMutations = () => {
+export const useEventOverrideMutations = (supplyId?: string) => {
 	const { i18n } = useTranslation();
 	const { tourId, optionId, eventId } = useEventEditIds();
 	const eventOptionId = useResolvedEventOptionId();
@@ -30,6 +30,7 @@ export const useEventOverrideMutations = () => {
 			optionId,
 			eventId,
 			eventOptionId,
+			supplyId: supplyId ?? "",
 			data,
 			language
 		}).unwrap();
@@ -40,6 +41,7 @@ export const useEventOverrideMutations = () => {
 			optionId,
 			eventId,
 			eventOptionId,
+			supplyId: supplyId ?? "",
 			language
 		}).unwrap();
 

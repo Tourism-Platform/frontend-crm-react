@@ -33,6 +33,7 @@ import {
 	type TTransferSpecInputBackend,
 	type TTransportationPricingSchema
 } from "../../../types";
+import { getPoolMember } from "../event-pool.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
 import { vehicleBodyTypeConverter } from "../vehicle-body-type.converters";
 import { zeroFixedCharge } from "../zero-fixed-charge.helpers";
@@ -315,7 +316,7 @@ export const getDefaultTransportationPricing = (
 });
 
 /**
- * Pricing section of the form, read from `details.spec` (contract 3.1):
+ * Pricing section of the form, read from the selected pool member spec:
  * - `{ pricing: "per_car" }` — one price row per car (`spec.cars[].charge`);
  * - `{ pricing: "per_car_category" }` — class rows per car
  *   (`spec.cars[].categories[].charge`);
@@ -324,10 +325,11 @@ export const getDefaultTransportationPricing = (
  */
 export const mapTransportationPricingFromBackend = (
 	details?: TTransferDetailsBackend | null,
-	carsList: TCarsList = []
+	carsList: TCarsList = [],
+	supplyId?: string | null
 ): TTransportationPricingSchema => {
 	const defaults = getDefaultTransportationPricing(carsList);
-	const spec = details?.spec;
+	const spec = getPoolMember(details, supplyId)?.spec;
 
 	if (!spec) {
 		return defaults;

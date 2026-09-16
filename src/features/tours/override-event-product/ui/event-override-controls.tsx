@@ -21,6 +21,7 @@ interface IEventOverrideControlsProps {
 	kind: TOverrideEventKind;
 	isInherited: boolean;
 	hasOverride?: boolean;
+	supplyId?: string;
 	onAfterChange?: (hasOverride: boolean) => void;
 }
 
@@ -28,10 +29,11 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 	kind,
 	isInherited,
 	hasOverride,
+	supplyId,
 	onAfterChange
 }) => {
 	const { t } = useTranslation("common_events");
-	const { set, clear, isLoading } = useEventOverrideMutations();
+	const { set, clear, isLoading } = useEventOverrideMutations(supplyId);
 	const { tourId, optionId, eventId, eventOptionId, mode } =
 		useEventEditIds();
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -47,7 +49,11 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 		{ skip: !isInherited || !tourId || !optionId || !eventId }
 	);
 
-	const initialOverride = mapEventOverrideFromDetails(event?.details, kind);
+	const initialOverride = mapEventOverrideFromDetails(
+		event?.details,
+		kind,
+		supplyId
+	);
 
 	if (!isInherited) {
 		return null;

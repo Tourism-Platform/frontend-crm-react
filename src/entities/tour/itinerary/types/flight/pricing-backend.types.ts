@@ -11,7 +11,7 @@ import type {
 /**
  * Backend pricing shapes for flight/train event specs (contract 3.1).
  *
- * Read: `details.spec` = `{ pricing: "per_fare" } & PerFare*RouteOutput`
+ * Read: `pool[].spec` = `{ pricing: "per_fare" } & PerFare*RouteOutput`
  *   | `{ pricing: "whole" } & Whole*RouteOutput`
  * Write (inside `supply.inline.spec`): the matching `*Input` members.
  */

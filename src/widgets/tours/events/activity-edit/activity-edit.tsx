@@ -13,11 +13,13 @@ import {
 
 import type { TActivityEditSchema } from "@/entities/tour";
 
+import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
+
 import { EventTitleInput } from "../ui";
 
 import { type ENUM_FORM_SECTION_TYPE, EVENT_EDIT_TABS_LIST } from "./model";
 
-export interface IActivityEditProps {
+export interface IActivityEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TActivityEditSchema>;
 	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
@@ -28,6 +30,8 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 	form,
 	createSectionSubmit,
 	isLoading,
+	poolVariant,
+	onPoolSelect,
 	tabs = EVENT_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("activity_edit_page");
@@ -49,6 +53,7 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 							form={form}
 							createSectionSubmit={createSectionSubmit}
 							isLoading={isLoading}
+							slotContext={{ poolVariant, onPoolSelect }}
 						/>
 					</CardContent>
 				</Card>

@@ -27,6 +27,7 @@ import {
 } from "@/entities/tour";
 
 import { ApplyReviewAction } from "@/features/booking";
+import { RevisionEventPoolControls } from "@/features/booking/revision-event-pool";
 
 const resolveOrderReviewTitle = (
 	item: IOrderTourReviewItem,
@@ -116,7 +117,15 @@ export const TOUR_REVIEW_COLUMNS = (
 			header: t("tour_review.table.supplier"),
 			cell: ({
 				row: {
-					original: { supplier, rowKind }
+					original: {
+						supplier,
+						rowKind,
+						pool,
+						eventId,
+						optionIndex,
+						backendTyp,
+						type
+					}
 				}
 			}) => {
 				const label =
@@ -127,11 +136,27 @@ export const TOUR_REVIEW_COLUMNS = (
 						? t(`tour_review.table.kind.${supplier}`)
 						: supplier;
 
+				const showPool =
+					orderStatus === ENUM_ORDER_STATUS.IN_PROCESSING &&
+					!isPricingReviewBreakdownRow({ rowKind }) &&
+					type !== ENUM_EVENT.MULTIPLY_OPTION &&
+					Boolean(eventId) &&
+					Boolean(backendTyp);
+
 				return (
-					<div className="min-w-0 w-full">
+					<div className="min-w-0 w-full grid gap-2">
 						<span title={label} className="block truncate">
 							{label}
 						</span>
+						{showPool && backendTyp && eventId ? (
+							<RevisionEventPoolControls
+								bookingId={bookingId}
+								eventId={eventId}
+								optionIndex={optionIndex}
+								eventTyp={backendTyp}
+								pool={pool}
+							/>
+						) : null}
 					</div>
 				);
 			},

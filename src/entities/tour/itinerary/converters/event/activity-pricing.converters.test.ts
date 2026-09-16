@@ -29,8 +29,10 @@ const feeRow = (cost: number, currency: string) => ({
 	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
 });
 
+type TActivityPoolSpec = ActivityDetailsOutput["pool"][number]["spec"];
+
 const activityDetails = (
-	charge: NonNullable<ActivityDetailsOutput["spec"]> extends {
+	charge: NonNullable<TActivityPoolSpec> extends {
 		offerings: infer O;
 	}
 		? O extends Array<infer I>
@@ -41,21 +43,27 @@ const activityDetails = (
 		: never
 ): ActivityDetailsOutput => ({
 	plan: {},
-	supply: { source: "inline", supplier_id: null },
-	spec: {
-		sub_typ: "food",
-		images: [],
-		name: null,
-		location: null,
-		offerings: [
-			{
-				id: "off-1",
+	pool: [
+		{
+			id: "supply-1",
+			is_main: true,
+			supply: { source: "inline", supplier_id: null },
+			spec: {
+				sub_typ: "food",
+				images: [],
 				name: null,
-				charge,
-				menu: []
+				location: null,
+				offerings: [
+					{
+						id: "off-1",
+						name: null,
+						charge,
+						menu: []
+					}
+				]
 			}
-		]
-	}
+		}
+	]
 });
 
 const basePricing = (

@@ -63,33 +63,46 @@ describe("mapTrainEventToForm — inherited", () => {
 						departure_time: { time: "08:00" },
 						arrival_time: { time: "10:10" }
 					},
-					supply: {
-						source: "product",
-						product_id: "b0c1c0de-0000-0000-0000-000000000002",
-						supplier: {
-							id: "5upp0000-0000-0000-0000-000000000001",
-							name: "Afrosiyob TAS–SKD"
-						},
-						scope: { typ: "all" },
-						override: null
-					},
-					spec: {
-						pricing: "whole",
-						images: [],
-						name: "Afrosiyob TAS–SKD",
-						legs: [
-							{
-								departure: {
-									location: { lat: 41.29, long: 69.28 }
+					pool: [
+						{
+							id: "supply-1",
+							is_main: true,
+							supply: {
+								source: "product",
+								product_id:
+									"b0c1c0de-0000-0000-0000-000000000002",
+								supplier: {
+									id: "5upp0000-0000-0000-0000-000000000001",
+									name: "Afrosiyob TAS–SKD"
 								},
-								arrival: {
-									location: { lat: 39.65, long: 66.97 }
-								}
+								scope: { typ: "all" },
+								override: null
+							},
+							spec: {
+								pricing: "whole",
+								images: [],
+								name: "Afrosiyob TAS–SKD",
+								legs: [
+									{
+										departure: {
+											location: {
+												lat: 41.29,
+												long: 69.28
+											}
+										},
+										arrival: {
+											location: {
+												lat: 39.65,
+												long: 66.97
+											}
+										}
+									}
+								],
+								fares: [],
+								charge: ZERO_FIXED
 							}
-						],
-						fares: [],
-						charge: ZERO_FIXED
-					}
+						}
+					]
 				}
 			}
 		});
@@ -149,7 +162,7 @@ describe("mapTrainFormToUpdate — inherited", () => {
 				}
 			}
 		});
-		expect(body.details).not.toHaveProperty("supply");
+		expect(body.details).not.toHaveProperty("pool");
 		expect(body.details).not.toHaveProperty("hop");
 		expect(body.details).not.toHaveProperty("spec");
 	});
@@ -195,13 +208,13 @@ describe("mapTrainFormToUpdate — custom", () => {
 
 		expect(body.details).not.toHaveProperty("product_id");
 		expect(body.details).not.toHaveProperty("hop");
-		expect(body.details?.supply?.source).toBe("inline");
+		expect(body.details?.pool?.[0]?.supply?.source).toBe("inline");
 		expect(body.details?.plan).toMatchObject({
 			departure_time: { time: "08:00" },
 			arrival_time: { time: "10:10" }
 		});
-		if (body.details?.supply?.source === "inline") {
-			expect(body.details.supply.spec).toMatchObject({
+		if (body.details?.pool?.[0]?.supply?.source === "inline") {
+			expect(body.details.pool[0].supply.spec).toMatchObject({
 				pricing: "whole",
 				legs: [{}]
 			});

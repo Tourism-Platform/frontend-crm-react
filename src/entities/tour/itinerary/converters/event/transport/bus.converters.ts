@@ -11,8 +11,16 @@ import type {
 	TTourEventBackendResponce,
 	TTourEventUpdateBackend
 } from "../../../types";
-import { ENUM_FLIGHT_TRANSPORT_TYPE, ENUM_FORM_BUS } from "../../../types";
+import {
+	ENUM_FLIGHT_TRANSPORT_TYPE,
+	ENUM_FORM_BUS,
+	ENUM_FORM_EVENT_PRODUCT,
+	ENUM_HOUSING_SOURCE
+} from "../../../types";
+import type { TEventDetailsBackend } from "../../../types";
 import { isInheritedBusDetails } from "../bus-details.helpers";
+import { mapInlinePoolWrite } from "../details-read-to-write.converters";
+import { getPoolMember } from "../event-pool.helpers";
 import {
 	mapFlightPricingFromBackend,
 	mapFlightPricingToBackend
@@ -26,7 +34,7 @@ import {
 import { mapBusHopToSegment, mapBusSegmentToHop } from "./journey.helpers";
 import { mapEventMetaToForm } from "./shared.helpers";
 
-const createEmptyBusSegment = (): TBusRouteSegment => ({
+export const createEmptyBusSegment = (): TBusRouteSegment => ({
 	[ENUM_FORM_BUS.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
 	[ENUM_FORM_BUS.BUS_COMPANY]: "",
 	[ENUM_FORM_BUS.BUS_NUMBER]: "",
@@ -50,10 +58,13 @@ const assertBusEvent = (
 };
 
 export const mapBusEventToForm = (
-	data: TTourEventBackendResponce
+	data: TTourEventBackendResponce,
+	selectedSupplyId?: string
 ): TFlightEditSchema => {
 	const event = assertBusEvent(data);
 	const details = event.details ?? null;
+	const member = getPoolMember(details, selectedSupplyId);
+	const supplyId = member?.id;
 
 	// Contract 3.1: a coach run is the tour's own statement — the legs sit
 	// on `plan` (with their hours), whoever supplies the fleet.
@@ -63,10 +74,10 @@ export const mapBusEventToForm = (
 			? legs.map(mapBusHopToSegment)
 			: [createEmptyBusSegment()];
 
-	if (isInheritedBusDetails(details)) {
+	if (isInheritedBusDetails(details, supplyId)) {
 		return {
 			...mapEventMetaToForm(event),
-			...mapInheritedProductLinkToForm(details),
+			...mapInheritedProductLinkToForm(member),
 			general: {
 				description: event.description ?? "",
 				transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
@@ -81,13 +92,16 @@ export const mapBusEventToForm = (
 
 	return {
 		...mapEventMetaToForm(event),
+		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: supplyId,
+		[ENUM_FORM_EVENT_PRODUCT.SOURCE]: ENUM_HOUSING_SOURCE.CUSTOM,
+		[ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE]: false,
 		general: {
 			description: event.description ?? "",
 			transport_type: ENUM_FLIGHT_TRANSPORT_TYPE.BUS,
 			route
 		},
 		pricing: applyEventPackageIdToPricing(
-			mapFlightPricingFromBackend(details),
+			mapFlightPricingFromBackend(details, supplyId),
 			event.package_id
 		)
 	};
@@ -95,7 +109,8 @@ export const mapBusEventToForm = (
 
 export const mapBusFormToUpdate = (
 	frontend: Partial<TFlightEditSchema>,
-	language?: ENUM_LANGUAGES_TYPE
+	language?: ENUM_LANGUAGES_TYPE,
+	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
 	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
 	const g = frontend.general;
@@ -121,7 +136,14 @@ export const mapBusFormToUpdate = (
 				)
 			}
 		}),
-		...(spec && { supply: { source: "inline", spec } })
+		...(spec && {
+			pool: mapInlinePoolWrite(
+				ENUM_EVENT_BACKEND.BUS,
+				currentDetails,
+				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
+				{ source: "inline", spec }
+			) as BusDetailsWrite["pool"]
+		})
 	};
 
 	return {

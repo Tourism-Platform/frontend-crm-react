@@ -1,20 +1,14 @@
-import type { BusDetailsOutput, BusProductSupplyOutput } from "@/shared/api";
+import type { BusDetailsOutput } from "@/shared/api";
 
-/** Read-side bus details narrowed to a product-linked supply (3.1). */
-export type TInheritedBusDetailsBackend = BusDetailsOutput & {
-	supply: { source: "product" } & BusProductSupplyOutput;
-};
+import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
 
-/**
- * Contract 3.1: an event is product-linked when `details.supply.source`
- * is `"product"` (the old flat `details.source === "inherited"` is gone).
- */
 export const isInheritedBusDetails = (
-	details: BusDetailsOutput | null | undefined
-): details is TInheritedBusDetailsBackend =>
-	details?.supply?.source === "product";
+	details: BusDetailsOutput | null | undefined,
+	supplyId?: string | null
+): boolean => isProductPoolMember(getPoolMember(details, supplyId));
 
 export const isCustomBusDetails = (
-	details: BusDetailsOutput | null | undefined
+	details: BusDetailsOutput | null | undefined,
+	supplyId?: string | null
 ): details is BusDetailsOutput =>
-	details != null && details.supply?.source !== "product";
+	details != null && !isInheritedBusDetails(details, supplyId);

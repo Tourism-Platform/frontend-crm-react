@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
@@ -16,12 +18,14 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 ) => {
 	const { tourId, optionId, eventId, eventOptionId, mode } =
 		useEventEditIds();
+	const [supplyId, setSupplyId] = useState<string | undefined>();
 
 	const eventQuery = useGetTourEventQuery(
 		{
 			tourId,
 			optionId,
 			eventId,
+			supplyId,
 			...(mode === ENUM_EVENT_MODE.MULTI && { eventOptionId })
 		},
 		{ skip: !tourId || !optionId || !eventId }
@@ -31,17 +35,13 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 	const [updateOption, { isLoading: isUpdateLoading }] =
 		useUpdateOptionMutation();
 
+	const resolvedEventOptionId =
+		mode === ENUM_EVENT_MODE.MULTI ? eventOptionId : data?.eventOptionId;
+
 	const update = async (
 		formData: TTourEventUpdate,
 		language?: ENUM_LANGUAGES_TYPE
 	) => {
-		// Unified updateOption always addresses the option ROW:
-		// multi — the URL param; single — `event.id` resolved by the read.
-		const resolvedEventOptionId =
-			mode === ENUM_EVENT_MODE.MULTI
-				? eventOptionId
-				: data?.eventOptionId;
-
 		if (!resolvedEventOptionId) {
 			throw new Error("Event option id is not resolved yet");
 		}
@@ -53,17 +53,16 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 			eventOptionId: resolvedEventOptionId,
 			type,
 			language,
-			data: formData
+			data: formData,
+			currentDetails: data?.details
 		}).unwrap();
 	};
 
 	return {
 		data: data?.form as T | undefined,
 		details: data?.details,
-		eventOptionId:
-			mode === ENUM_EVENT_MODE.MULTI
-				? eventOptionId
-				: data?.eventOptionId,
+		eventOptionId: resolvedEventOptionId,
+		selectPoolMember: setSupplyId,
 		isError,
 		isLoading: isUpdateLoading,
 		update
