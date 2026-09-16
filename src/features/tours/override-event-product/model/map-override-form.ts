@@ -5,6 +5,8 @@ import {
 	currencyConverter
 } from "@/entities/commission";
 import {
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE,
 	ENUM_FLIGHT_PRICING_TYPE,
 	type IHousingEventOverride,
 	type ITrainEventOverride,
@@ -20,8 +22,6 @@ import {
 	ENUM_OVERRIDE_CHARGE,
 	type TOverrideProductFormValues
 } from "./types";
-
-export type TOverrideEventKind = "housing" | "train";
 
 const emptyFormValues = (): TOverrideProductFormValues => ({
 	[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE]:
@@ -50,9 +50,8 @@ const chargeToFormValues = (
 				charge.cost_per_person?.val ?? null,
 			[ENUM_FORM_OVERRIDE_PRODUCT.FEES]: mapFeesFromBackend(charge.fees),
 			[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
-				currencyConverter.from(
-					charge.cost_per_person?.currency ?? Currency.USD
-				) ?? DEFAULT_EVENT_CURRENCY
+				currencyConverter.from(charge.cost_per_person?.currency) ??
+				DEFAULT_EVENT_CURRENCY
 		};
 	}
 
@@ -68,8 +67,7 @@ const chargeToFormValues = (
 			[ENUM_FORM_OVERRIDE_PRODUCT.FEES]: mapFeesFromBackend(charge.fees),
 			[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
 				currencyConverter.from(
-					(rate.typ === "fixed" ? rate.cost?.currency : undefined) ??
-						Currency.USD
+					rate.typ === "fixed" ? rate.cost?.currency : undefined
 				) ?? DEFAULT_EVENT_CURRENCY
 		};
 	}
@@ -81,13 +79,13 @@ const chargeToFormValues = (
 		[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE]: charge.cost?.val ?? null,
 		[ENUM_FORM_OVERRIDE_PRODUCT.FEES]: mapFeesFromBackend(charge.fees),
 		[ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY]:
-			currencyConverter.from(charge.cost?.currency ?? Currency.USD) ??
+			currencyConverter.from(charge.cost?.currency) ??
 			DEFAULT_EVENT_CURRENCY
 	};
 };
 
 export const mapOverrideToFormValues = (
-	kind: TOverrideEventKind,
+	eventTyp: ENUM_EVENT_BACKEND_TYPE,
 	override: TEventOverride | null | undefined
 ): TOverrideProductFormValues => {
 	const defaults = emptyFormValues();
@@ -96,7 +94,7 @@ export const mapOverrideToFormValues = (
 		return defaults;
 	}
 
-	if (kind === "housing" && override.typ === "housing") {
+	if (eventTyp === ENUM_EVENT_BACKEND.HOUSING && override.typ === "housing") {
 		return {
 			...defaults,
 			...chargeToFormValues(override.rate?.base),
@@ -107,7 +105,7 @@ export const mapOverrideToFormValues = (
 		};
 	}
 
-	if (kind === "train" && override.typ === "train") {
+	if (eventTyp !== ENUM_EVENT_BACKEND.HOUSING && override.typ === "train") {
 		return {
 			...defaults,
 			...chargeToFormValues(override.charge)
@@ -119,7 +117,7 @@ export const mapOverrideToFormValues = (
 
 /** Form fields → domain charge (contract 3.1 charge union). */
 const formValuesToCharge = (
-	kind: TOverrideEventKind,
+	eventTyp: ENUM_EVENT_BACKEND_TYPE,
 	values: TOverrideProductFormValues
 ): TEventOverrideCharge => {
 	const total = values[ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE];
@@ -142,7 +140,7 @@ const formValuesToCharge = (
 	}
 
 	if (
-		kind === "housing" &&
+		eventTyp === ENUM_EVENT_BACKEND.HOUSING &&
 		values[ENUM_FORM_OVERRIDE_PRODUCT.CHARGE_TYP] ===
 			ENUM_OVERRIDE_CHARGE.PER_DURATION
 	) {
@@ -168,12 +166,12 @@ const formValuesToCharge = (
 };
 
 export const mapFormValuesToOverride = (
-	kind: TOverrideEventKind,
+	eventTyp: ENUM_EVENT_BACKEND_TYPE,
 	values: TOverrideProductFormValues
 ): TEventOverride => {
-	const charge = formValuesToCharge(kind, values);
+	const charge = formValuesToCharge(eventTyp, values);
 
-	if (kind === "train") {
+	if (eventTyp !== ENUM_EVENT_BACKEND.HOUSING) {
 		if (charge.typ === "per_duration") {
 			throw new Error("Train override supports fixed/per_person charges");
 		}

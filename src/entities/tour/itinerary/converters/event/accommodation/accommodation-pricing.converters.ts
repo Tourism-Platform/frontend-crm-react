@@ -41,11 +41,11 @@ import {
 } from "../../../types";
 import { getPoolMember } from "../event-pool.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
-import { isInheritedHousingDetails } from "../housing-details.helpers";
-import { housingRoomTypeConverter } from "../housing-room-type.converters";
 import { zeroFixedCharge } from "../zero-fixed-charge.helpers";
 
 import { isClassPricedHousingSpec } from "./accommodation-rooms.converters";
+import { isInheritedHousingDetails } from "./housing-details.helpers";
+import { housingRoomTypeConverter } from "./housing-room-type.converters";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 

@@ -16,7 +16,7 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import type { TEventOverride } from "@/entities/tour";
+import type { ENUM_EVENT_BACKEND_TYPE, TEventOverride } from "@/entities/tour";
 import { ENUM_FLIGHT_PRICING_TYPE } from "@/entities/tour";
 
 import { FeeLinesField } from "@/features/pricing";
@@ -26,14 +26,13 @@ import {
 	FORM_OVERRIDE_HOUSING_CHARGE_LIST,
 	FORM_OVERRIDE_POLICY_LIST,
 	FORM_OVERRIDE_PRICING_LIST,
-	type TOverrideEventKind,
 	useOverrideEventDialog
 } from "../model";
 
 interface IOverrideEventDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	kind: TOverrideEventKind;
+	eventTyp: ENUM_EVENT_BACKEND_TYPE;
 	initialOverride?: TEventOverride | null;
 	isSubmitting?: boolean;
 	onConfirm: (data: TEventOverride) => void | Promise<void>;
@@ -42,7 +41,7 @@ interface IOverrideEventDialogProps {
 export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 	open,
 	onOpenChange,
-	kind,
+	eventTyp,
 	initialOverride,
 	isSubmitting,
 	onConfirm
@@ -51,7 +50,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 	const { form, handleConfirm, showPolicy, showChargeTyp } =
 		useOverrideEventDialog({
 			open,
-			kind,
+			eventTyp,
 			initialOverride,
 			onConfirm
 		});

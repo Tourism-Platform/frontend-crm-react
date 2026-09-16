@@ -6,7 +6,7 @@ import {
 	ENUM_FORM_TRAIN_HOP as ENUM_HOP
 } from "@/entities/supplier";
 
-import type { TForm, THopForm } from "../types";
+import type { TForm } from "../types";
 
 export const TRAIN_PRODUCT_NAME_FIELD: TForm = {
 	key: ENUM_FORM.NAME,
@@ -20,26 +20,30 @@ type THopGeoProps = {
 	arrival: TGeoFieldProps;
 };
 
-export const TRAIN_HOP_FIELDS_LIST = ({
+export const TRAIN_DATA_LIST = ({
 	departure,
 	arrival
-}: THopGeoProps): THopForm[] => [
+}: THopGeoProps): TForm[] => [
 	{
-		key: ENUM_HOP.DEPARTURE_LOCATION,
+		key: ENUM_HOP.DEPARTURE_STATION,
 		fieldType: "geo",
 		icon: MapPin,
-		label: "form.general.fields.hops.departure_station.label",
-		placeholder: "form.general.fields.hops.departure_station.placeholder",
-		emptyText: "form.general.fields.hops.departure_station.empty",
+		label: "form.general.flights.form.train.fields.departure_station.label",
+		placeholder:
+			"form.general.flights.form.train.fields.departure_station.placeholder",
+		emptyText:
+			"form.general.flights.form.train.fields.departure_station.empty",
 		...departure
 	},
 	{
-		key: ENUM_HOP.ARRIVAL_LOCATION,
+		key: ENUM_HOP.ARRIVAL_STATION,
 		fieldType: "geo",
 		icon: MapPin,
-		label: "form.general.fields.hops.arrival_station.label",
-		placeholder: "form.general.fields.hops.arrival_station.placeholder",
-		emptyText: "form.general.fields.hops.arrival_station.empty",
+		label: "form.general.flights.form.train.fields.arrival_station.label",
+		placeholder:
+			"form.general.flights.form.train.fields.arrival_station.placeholder",
+		emptyText:
+			"form.general.flights.form.train.fields.arrival_station.empty",
 		...arrival
 	}
 ];

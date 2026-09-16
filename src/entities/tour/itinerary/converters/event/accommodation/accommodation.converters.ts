@@ -24,7 +24,6 @@ import {
 	replaceSelectedPoolMemberSupply
 } from "../details-read-to-write.converters";
 import { getPoolMember } from "../event-pool.helpers";
-import { isInheritedHousingDetails } from "../housing-details.helpers";
 import {
 	mapInheritedHousingProductSnapshotToForm,
 	mapInheritedProductLinkToForm
@@ -42,6 +41,7 @@ import {
 	mapAccommodationPricingToBackend
 } from "./accommodation-pricing.converters";
 import { mapRoomsFromBackend } from "./accommodation-rooms.converters";
+import { isInheritedHousingDetails } from "./housing-details.helpers";
 
 export const mapAccommodationEventToForm = (
 	data: TTourEventBackendResponce,

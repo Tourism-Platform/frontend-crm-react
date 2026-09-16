@@ -24,11 +24,6 @@ import {
 } from "../../../types";
 import { mapInlinePoolWrite } from "../details-read-to-write.converters";
 import { getPoolMember } from "../event-pool.helpers";
-import { isInheritedFlightDetails } from "../flight-details.helpers";
-import {
-	mapFlightPricingFromBackend,
-	mapFlightPricingToBackend
-} from "../flight-pricing.converters";
 import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
@@ -36,6 +31,11 @@ import {
 } from "../package-id.helpers";
 import { toTimezoneOffset } from "../timezone.helpers";
 
+import { isInheritedFlightDetails } from "./flight-details.helpers";
+import {
+	mapFlightPricingFromBackend,
+	mapFlightPricingToBackend
+} from "./flight-pricing.converters";
 import { mapEventMetaToForm } from "./shared.helpers";
 
 export const createEmptyFlySegment = (): TFlyRouteSegment => {

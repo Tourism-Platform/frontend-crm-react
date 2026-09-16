@@ -2,3 +2,8 @@ export * from "./accommodation-amenity.converters";
 export * from "./accommodation-rooms.converters";
 export * from "./accommodation-pricing.converters";
 export * from "./accommodation.converters";
+export * from "./hotel-policy.converters";
+export * from "./housing-details.helpers";
+export * from "./housing-override.converters";
+export * from "./housing-room-type.converters";
+export * from "./housing-source.converters";

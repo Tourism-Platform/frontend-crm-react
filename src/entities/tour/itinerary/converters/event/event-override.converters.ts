@@ -6,17 +6,15 @@ import type {
 	TTrainOverrideOutputBackend
 } from "../../types";
 
-import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
 import {
 	mapHousingEventOverrideToBackend,
 	mapHousingOverrideFromBackend
-} from "./housing-override.converters";
+} from "./accommodation/housing-override.converters";
+import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
 import {
 	mapTrainEventOverrideToBackend,
 	mapTrainOverrideFromBackend
 } from "./train-override.converters";
-
-export type TEventOverrideKind = "housing" | "train";
 
 export const mapEventOverrideToBackend = (
 	data: TEventOverride
@@ -31,10 +29,10 @@ export const mapEventOverrideToBackend = (
 
 /**
  * Reads the override from a pool member's product supply (contract 6).
+ * Dispatch is by the backend `override.typ` — no caller-supplied kind.
  */
 export const mapEventOverrideFromDetails = (
 	details: TEventDetailsBackend | undefined,
-	kind: TEventOverrideKind,
 	supplyId?: string | null
 ): TEventOverride | null => {
 	const member = getPoolMember(details, supplyId);
@@ -47,11 +45,17 @@ export const mapEventOverrideFromDetails = (
 		return null;
 	}
 
-	if (kind === "housing") {
-		return mapHousingOverrideFromBackend(
-			override as THousingOverrideOutputBackend
-		);
+	switch (override.typ) {
+		case "housing":
+			return mapHousingOverrideFromBackend(
+				override as THousingOverrideOutputBackend
+			);
+		case "train":
+		case "flight":
+			return mapTrainOverrideFromBackend(
+				override as TTrainOverrideOutputBackend
+			);
+		default:
+			return null;
 	}
-
-	return mapTrainOverrideFromBackend(override as TTrainOverrideOutputBackend);
 };

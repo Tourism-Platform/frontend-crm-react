@@ -1,10 +1,13 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import type { TEventOverride } from "@/entities/tour";
+import {
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE,
+	type TEventOverride
+} from "@/entities/tour";
 
 import {
-	type TOverrideEventKind,
 	mapFormValuesToOverride,
 	mapOverrideToFormValues
 } from "./map-override-form";
@@ -12,19 +15,19 @@ import type { TOverrideProductFormValues } from "./types";
 
 interface IUseOverrideEventDialogParams {
 	open: boolean;
-	kind: TOverrideEventKind;
+	eventTyp: ENUM_EVENT_BACKEND_TYPE;
 	initialOverride?: TEventOverride | null;
 	onConfirm: (data: TEventOverride) => void | Promise<void>;
 }
 
 export const useOverrideEventDialog = ({
 	open,
-	kind,
+	eventTyp,
 	initialOverride,
 	onConfirm
 }: IUseOverrideEventDialogParams) => {
 	const form = useForm<TOverrideProductFormValues>({
-		defaultValues: mapOverrideToFormValues(kind, initialOverride)
+		defaultValues: mapOverrideToFormValues(eventTyp, initialOverride)
 	});
 
 	useEffect(() => {
@@ -32,17 +35,19 @@ export const useOverrideEventDialog = ({
 			return;
 		}
 
-		form.reset(mapOverrideToFormValues(kind, initialOverride));
-	}, [open, kind, initialOverride, form]);
+		form.reset(mapOverrideToFormValues(eventTyp, initialOverride));
+	}, [open, eventTyp, initialOverride, form]);
 
 	const handleConfirm = form.handleSubmit(async (values) => {
-		await onConfirm(mapFormValuesToOverride(kind, values));
+		await onConfirm(mapFormValuesToOverride(eventTyp, values));
 	});
+
+	const isHousing = eventTyp === ENUM_EVENT_BACKEND.HOUSING;
 
 	return {
 		form,
 		handleConfirm,
-		showPolicy: kind === "housing",
-		showChargeTyp: kind === "housing"
+		showPolicy: isHousing,
+		showChargeTyp: isHousing
 	};
 };

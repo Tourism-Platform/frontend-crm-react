@@ -156,7 +156,7 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 							supplyId={supplyId}
 						/>
 						<EventOverrideControls
-							kind="train"
+							eventTyp={eventTyp}
 							isInherited={isInherited}
 							hasOverride={Boolean(hasOverride)}
 							supplyId={supplyId}

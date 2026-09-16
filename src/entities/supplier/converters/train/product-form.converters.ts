@@ -27,15 +27,15 @@ const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
 	languageCodeMapper.to(language) ?? LanguageCode.En;
 
 export const emptyHopFormRow = (): TTrainHopFormSchema => ({
-	[ENUM_HOP.DEPARTURE_LOCATION]: null,
-	[ENUM_HOP.ARRIVAL_LOCATION]: null
+	[ENUM_HOP.DEPARTURE_STATION]: null,
+	[ENUM_HOP.ARRIVAL_STATION]: null
 });
 
 const mapHopDomainToForm = (hop: ITrainHop): TTrainHopFormSchema => ({
-	[ENUM_HOP.DEPARTURE_LOCATION]: mapBackendLocationToGeoForm(
+	[ENUM_HOP.DEPARTURE_STATION]: mapBackendLocationToGeoForm(
 		hop.departure?.location ?? null
 	),
-	[ENUM_HOP.ARRIVAL_LOCATION]: mapBackendLocationToGeoForm(
+	[ENUM_HOP.ARRIVAL_STATION]: mapBackendLocationToGeoForm(
 		hop.arrival?.location ?? null
 	)
 });
@@ -60,8 +60,8 @@ const mapHopFormToBackend = (
 	hop: TTrainHopFormSchema,
 	lang: LanguageCode
 ): TTrainLegInputBackend => ({
-	departure: mapHopPointToBackend(hop[ENUM_HOP.DEPARTURE_LOCATION], lang),
-	arrival: mapHopPointToBackend(hop[ENUM_HOP.ARRIVAL_LOCATION], lang)
+	departure: mapHopPointToBackend(hop[ENUM_HOP.DEPARTURE_STATION], lang),
+	arrival: mapHopPointToBackend(hop[ENUM_HOP.ARRIVAL_STATION], lang)
 });
 
 const mapGeneralFormToDetails = (

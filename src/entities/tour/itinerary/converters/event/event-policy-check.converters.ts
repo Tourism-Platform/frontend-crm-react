@@ -9,7 +9,7 @@ import {
 	type TSupplierPolicyWarningListBackend
 } from "../../types";
 
-import { mapHotelPolicySurchargeFromBackend } from "./hotel-policy.converters";
+import { mapHotelPolicySurchargeFromBackend } from "./accommodation/hotel-policy.converters";
 
 const MAP_SUPPLIER_POLICY_WARNING: Partial<
 	Record<ENUM_SUPPLIER_POLICY_WARNING_TYPE, SupplierPolicyWarning>

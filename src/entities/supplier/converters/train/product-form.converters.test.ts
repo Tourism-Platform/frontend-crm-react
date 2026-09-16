@@ -13,14 +13,14 @@ const formValues = {
 	name: "Afrosiyob TAS–SKD",
 	hops: [
 		{
-			departureLocation: {
+			departure_station: {
 				lat: 41.29,
 				long: 69.28,
 				city: "Tashkent",
 				street: "Station",
 				label: "Station, Tashkent"
 			},
-			arrivalLocation: {
+			arrival_station: {
 				lat: 39.65,
 				long: 66.97,
 				city: "Samarkand",
@@ -54,8 +54,8 @@ describe("mapTrainProductGeneralToCreate", () => {
 				...formValues,
 				hops: [
 					{
-						departureLocation: null,
-						arrivalLocation: null
+						departure_station: null,
+						arrival_station: null
 					}
 				]
 			},

@@ -7,18 +7,12 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useTransferProductImages } from "../model";
+import { type TSlotProps, useTransferProductImages } from "../model";
 
-interface ITransferProductImagesProps {
-	supplierId: string;
-	productId: string;
-	disabled?: boolean;
-}
-
-const TransferProductImagesBase: FC<ITransferProductImagesProps> = ({
+const TransferProductImagesBase: FC<TSlotProps> = ({
 	supplierId,
 	productId,
-	disabled = false
+	disabled
 }) => {
 	const { t } = useTranslation("transfer_product_edit_page");
 	const { productUpload } = useTransferProductImages({

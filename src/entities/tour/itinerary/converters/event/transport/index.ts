@@ -30,6 +30,11 @@ export {
 	mapTrainEventToForm,
 	mapTrainFormToUpdate
 } from "./train.converters";
+export * from "./flight-details.helpers";
+export * from "./flight-pricing.converters";
+export * from "./flight-transport-type.converters";
+export * from "./train-details.helpers";
+export * from "./bus-details.helpers";
 
 export const createEmptyTransportSegment = (
 	transportType: ENUM_FLIGHT_TRANSPORT_TYPE_TYPE | undefined

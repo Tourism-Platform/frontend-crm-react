@@ -101,7 +101,7 @@ const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 					supplyId={supplyId}
 				/>
 				<EventOverrideControls
-					kind="housing"
+					eventTyp={ENUM_EVENT_BACKEND.HOUSING}
 					isInherited={isInherited}
 					hasOverride={Boolean(hasOverride)}
 					supplyId={supplyId}

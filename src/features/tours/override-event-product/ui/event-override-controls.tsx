@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Button, LoaderButton } from "@/shared/ui";
 
 import {
+	type ENUM_EVENT_BACKEND_TYPE,
 	ENUM_EVENT_MODE,
 	type TEventOverride,
 	mapEventOverrideFromDetails,
@@ -12,13 +13,13 @@ import {
 	useGetTourEventQuery
 } from "@/entities/tour";
 
-import { type TOverrideEventKind, useEventOverrideMutations } from "../model";
+import { useEventOverrideMutations } from "../model";
 
 import { ClearOverrideAlert } from "./clear-override-alert";
 import { OverrideEventDialog } from "./override-event-dialog";
 
 interface IEventOverrideControlsProps {
-	kind: TOverrideEventKind;
+	eventTyp: ENUM_EVENT_BACKEND_TYPE;
 	isInherited: boolean;
 	hasOverride?: boolean;
 	supplyId?: string;
@@ -26,7 +27,7 @@ interface IEventOverrideControlsProps {
 }
 
 export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
-	kind,
+	eventTyp,
 	isInherited,
 	hasOverride,
 	supplyId,
@@ -51,7 +52,6 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 
 	const initialOverride = mapEventOverrideFromDetails(
 		event?.details,
-		kind,
 		supplyId
 	);
 
@@ -116,7 +116,7 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 			<OverrideEventDialog
 				open={dialogOpen}
 				onOpenChange={setDialogOpen}
-				kind={kind}
+				eventTyp={eventTyp}
 				initialOverride={initialOverride}
 				isSubmitting={isLoading}
 				onConfirm={handleConfirmSet}

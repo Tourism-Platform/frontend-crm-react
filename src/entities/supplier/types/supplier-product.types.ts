@@ -37,6 +37,7 @@ import type {
 	ITrainProduct,
 	ITrainVariantWrite
 } from "./train";
+import type { TTrainPricingSwitchBackend } from "./train/product-backend.types";
 import type { TTrainProductGeneralSchema } from "./train/product-form.types";
 import type {
 	ENUM_TRANSFER_PRICING_TYPE,
@@ -160,6 +161,12 @@ export interface IUpdateTrainProduct {
 	values: TTrainProductGeneralSchema;
 	language?: ENUM_LANGUAGES_TYPE;
 	existing?: ITrainProduct | null;
+}
+
+export interface ISwitchTrainProductPricing {
+	supplierId: string;
+	productId: string;
+	body: TTrainPricingSwitchBackend;
 }
 
 export interface IDeleteSupplierProduct {

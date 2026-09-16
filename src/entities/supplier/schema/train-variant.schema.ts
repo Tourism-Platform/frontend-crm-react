@@ -9,7 +9,7 @@ import { ENUM_FORM_TRAIN_VARIANT } from "../types/train/variant-form.types";
 
 const msg = i18nKey<TTrainProductEditPageKeys>();
 
-const TRAIN_VARIANT_FEE_SCHEMA = z.object({
+export const TRAIN_VARIANT_FEE_SCHEMA = z.object({
 	[ENUM_SUPPLIER_FEE_FIELD.NAME]: z.string().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.COST]: z.number().nullable(),
 	[ENUM_SUPPLIER_FEE_FIELD.CURRENCY]: z

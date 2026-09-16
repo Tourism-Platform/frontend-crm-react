@@ -25,20 +25,20 @@ import {
 } from "../../../types";
 import { mapInlinePoolWrite } from "../details-read-to-write.converters";
 import { getPoolMember } from "../event-pool.helpers";
-import {
-	mapFlightPricingFromBackend,
-	mapFlightPricingToBackend
-} from "../flight-pricing.converters";
 import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
 } from "../package-id.helpers";
 import { toTimezoneOffset } from "../timezone.helpers";
-import { isInheritedTrainDetails } from "../train-details.helpers";
 
+import {
+	mapFlightPricingFromBackend,
+	mapFlightPricingToBackend
+} from "./flight-pricing.converters";
 import { mapTrainHopToSegment, mapTrainSegmentToHop } from "./journey.helpers";
 import { mapEventMetaToForm } from "./shared.helpers";
+import { isInheritedTrainDetails } from "./train-details.helpers";
 
 export const createEmptyTrainSegment = (): TTrainRouteSegment => ({
 	[ENUM_FORM_TRAIN.TRANSPORT_TYPE]: ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN,

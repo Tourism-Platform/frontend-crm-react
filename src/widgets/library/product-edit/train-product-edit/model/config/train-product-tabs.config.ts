@@ -1,98 +1,83 @@
 import { type IQueryTab } from "@/shared/ui";
 
 import {
-	TrainProductGeneral,
-	TrainProductImages,
-	TrainProductVariants
-} from "../../ui";
-import {
 	ENUM_TRAIN_PRODUCT_EDIT_TAB,
-	type ITrainProductEditSlotContext
+	type ENUM_TRAIN_PRODUCT_EDIT_TAB_TYPE,
+	type TTrainProductEditSchema
+} from "@/entities/supplier";
+
+import { FaresInfo } from "../../ui/fares";
+import { GeneralInfo } from "../../ui/general-info";
+import { TrainProductImages } from "../../ui/images";
+import { Pricing } from "../../ui/pricing";
+import {
+	ENUM_FORM_SECTION,
+	type ENUM_FORM_SECTION_TYPE,
+	type ITrainProductEditSlotContext,
+	type TSlotProps
 } from "../types";
 
-type TTrainGeneralTabExtra = Pick<
-	ITrainProductEditSlotContext,
-	"supplierId" | "productId" | "isCreate" | "product"
+type TTrainProductTabExtra = Omit<
+	TSlotProps,
+	"form" | "onSubmit" | "isLoading"
 >;
 
-type TTrainVariantsTabExtra = Pick<
-	ITrainProductEditSlotContext,
-	"supplierId" | "productId" | "product" | "variants"
-> & { disabled: boolean };
-
-type TTrainMediaTabExtra = Pick<
-	ITrainProductEditSlotContext,
-	"supplierId" | "productId"
-> & { disabled: boolean };
-
-type TTrainGeneralTab = IQueryTab<
-	typeof ENUM_TRAIN_PRODUCT_EDIT_TAB.GENERAL,
+export const TRAIN_PRODUCT_EDIT_TABS_LIST: IQueryTab<
+	ENUM_TRAIN_PRODUCT_EDIT_TAB_TYPE,
 	"train_product_edit_page",
-	string,
-	never,
+	ENUM_FORM_SECTION_TYPE,
+	TTrainProductEditSchema,
 	ITrainProductEditSlotContext,
-	TTrainGeneralTabExtra
->;
-
-type TTrainMediaTab = IQueryTab<
-	typeof ENUM_TRAIN_PRODUCT_EDIT_TAB.MEDIA,
-	"train_product_edit_page",
-	string,
-	never,
-	ITrainProductEditSlotContext,
-	TTrainMediaTabExtra
->;
-
-type TTrainVariantsTab = IQueryTab<
-	typeof ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS,
-	"train_product_edit_page",
-	string,
-	never,
-	ITrainProductEditSlotContext,
-	TTrainVariantsTabExtra
->;
-
-export const TRAIN_PRODUCT_EDIT_TABS_LIST: (
-	| TTrainGeneralTab
-	| TTrainMediaTab
-	| TTrainVariantsTab
-)[] = [
+	TTrainProductTabExtra
+>[] = [
 	{
-		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.GENERAL,
 		label: "tabs.general",
-		slot: TrainProductGeneral,
+		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.GENERAL,
+		slot: GeneralInfo,
+		section: ENUM_FORM_SECTION.GENERAL,
 		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
 			isCreate,
-			product
+			product,
+			disabled: false
 		})
 	},
 	{
-		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.MEDIA,
-		label: "tabs.media",
-		slot: TrainProductImages,
-		getSlotProps: ({ supplierId, productId, isCreate }) => ({
+		label: "tabs.fares",
+		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.FARES,
+		slot: FaresInfo,
+		section: ENUM_FORM_SECTION.FARES,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
+			product,
 			disabled: isCreate
 		})
 	},
 	{
-		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.VARIANTS,
-		label: "tabs.variants",
-		slot: TrainProductVariants,
-		getSlotProps: ({
+		label: "tabs.media",
+		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.MEDIA,
+		slot: TrainProductImages,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
 			product,
-			variants,
-			isCreate
-		}) => ({
+			disabled: isCreate
+		})
+	},
+	{
+		label: "tabs.pricing",
+		type: ENUM_TRAIN_PRODUCT_EDIT_TAB.PRICING,
+		slot: Pricing,
+		section: ENUM_FORM_SECTION.PRICING,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
 			product,
-			variants,
 			disabled: isCreate
 		})
 	}

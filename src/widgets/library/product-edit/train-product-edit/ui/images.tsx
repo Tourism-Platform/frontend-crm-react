@@ -7,18 +7,12 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useTrainProductImages } from "../model";
+import { type TSlotProps, useTrainProductImages } from "../model";
 
-interface ITrainProductImagesProps {
-	supplierId: string;
-	productId: string;
-	disabled?: boolean;
-}
-
-const TrainProductImagesBase: FC<ITrainProductImagesProps> = ({
+const TrainProductImagesBase: FC<TSlotProps> = ({
 	supplierId,
 	productId,
-	disabled = false
+	disabled
 }) => {
 	const { t } = useTranslation("train_product_edit_page");
 	const { productUpload } = useTrainProductImages({

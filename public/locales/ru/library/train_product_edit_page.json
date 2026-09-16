@@ -3,8 +3,9 @@
 	"back": "К поставщику",
 	"tabs": {
 		"general": "Основное",
+		"fares": "Тарифы",
 		"media": "Медиа",
-		"variants": "Варианты"
+		"pricing": "Цены и бронирование"
 	},
 	"form": {
 		"create_hint": {
@@ -13,48 +14,35 @@
 		"general": {
 			"fields": {
 				"name": {
-					"label": "Название",
+					"label": "Номер поезда",
 					"placeholder": "Введите номер поезда",
 					"errors": {
-						"required": "Укажите название"
+						"required": "Номер поезда обязателен",
+						"max": "Номер поезда слишком длинный"
 					}
+				}
+			},
+			"flights": {
+				"buttons": {
+					"add": "Добавить сегмент"
 				},
-				"hops": {
-					"add": "Добавить поезд",
+				"form": {
+					"train": {
+						"fields": {
+							"departure_station": {
+								"label": "Станция отправления",
+								"placeholder": "Введите станцию отправления",
+								"empty": "Локации не найдены"
+							},
+							"arrival_station": {
+								"label": "Станция прибытия",
+								"placeholder": "Введите станцию прибытия",
+								"empty": "Локации не найдены"
+							}
+						}
+					},
 					"errors": {
-						"min_segments": "Должен быть хотя бы один маршрут"
-					},
-					"departure_time": {
-						"label": "Время отправления",
-						"placeholder": "Выберите время",
-						"errors": {
-							"required": "Время отправления обязательно",
-							"invalid": "Недопустимый формат времени"
-						}
-					},
-					"arrival_time": {
-						"label": "Время прибытия",
-						"placeholder": "Выберите время",
-						"errors": {
-							"required": "Время прибытия обязательно",
-							"invalid": "Недопустимый формат времени"
-						}
-					},
-					"departure_station": {
-						"label": "Станция отправления",
-						"placeholder": "Введите станцию отправления",
-						"empty": "Локации не найдены",
-						"errors": {
-							"required": "Станция отправления обязательна"
-						}
-					},
-					"arrival_station": {
-						"label": "Станция прибытия",
-						"placeholder": "Введите станцию прибытия",
-						"empty": "Локации не найдены",
-						"errors": {
-							"required": "Станция прибытия обязательна"
-						}
+						"min_segments": "Должен быть хотя бы один сегмент маршрута"
 					}
 				}
 			},
@@ -64,62 +52,123 @@
 				"saving": "Сохранение"
 			}
 		},
+		"fares": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение"
+			},
+			"details": {
+				"title": "Тарифы",
+				"fare_item": "Тариф {{index}}",
+				"form": {
+					"fields": {
+						"name": {
+							"label": "Название тарифа",
+							"placeholder": "Эконом",
+							"errors": {
+								"required": "Укажите название тарифа"
+							}
+						}
+					}
+				}
+			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение"
+			},
+			"title": "Цены",
+			"whole_warning": "Цены по тарифам будут сброшены",
+			"pricing_type": {
+				"title": "Как тарифицируется этот поезд?",
+				"tabs": {
+					"flat_rate": "Фикс",
+					"per_fare": "По тарифу",
+					"per_person": "За человека"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Детали цены",
+					"fields": {
+						"total_price": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Цена должна быть не меньше 0",
+								"max": "Цена не должна превышать 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Укажите валюту",
+								"max": "Слишком длинный код валюты"
+							}
+						}
+					}
+				},
+				"per_fare": {
+					"empty_fares": "Добавьте тарифы на вкладке «Тарифы», чтобы настроить цены.",
+					"checkboxes": {
+						"add_margin_separately": "Добавить наценку отдельно"
+					},
+					"fields": {
+						"charge_typ": {
+							"label": "Тип списания",
+							"placeholder": "Выберите тип"
+						},
+						"total_cost": {
+							"label": "Стоимость",
+							"placeholder": "Введите..."
+						},
+						"markup": {
+							"value": {
+								"label": "Наценка",
+								"placeholder": "Введите...",
+								"errors": {
+									"required": "Укажите наценку"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"variants": {
-			"title": "Варианты",
-			"add": "Добавить вариант",
+			"add": "Добавить тариф",
 			"fields": {
 				"name": {
-					"label": "Название варианта",
-					"placeholder": "Standard",
+					"label": "Название тарифа",
+					"placeholder": "Эконом",
 					"errors": {
-						"required": "Укажите название варианта"
-					}
-				},
-				"charge_typ": {
-					"label": "Режим оплаты",
-					"placeholder": "Выберите режим",
-					"errors": {
-						"required": "Выберите тип тарифа"
-					}
-				},
-				"cost": {
-					"label": "Цена",
-					"placeholder": "Введите цену",
-					"errors": {
-						"required": "Укажите стоимость"
-					}
-				},
-				"currency": {
-					"label": "Валюта",
-					"placeholder": "Выберите валюту",
-					"errors": {
-						"required": "Выберите валюту"
+						"required": "Укажите название тарифа"
 					}
 				}
 			},
-			"charge": {
-				"fixed": "Фикс",
-				"per_person": "За человека"
-			},
 			"buttons": {
-				"save": "Сохранить вариант",
-				"saving": "Сохранение",
-				"delete": "Удалить вариант",
+				"delete": "Удалить тариф",
 				"deleting": "Удаление"
 			},
 			"create_dialog": {
-				"title": "Добавить вариант",
+				"title": "Добавить тариф",
 				"cancel": "Отмена",
 				"confirm": "Создать",
 				"confirming": "Создание",
 				"toasts": {
-					"success": "Вариант создан",
-					"error": "Не удалось создать вариант"
+					"success": "Тариф создан",
+					"error": "Не удалось создать тариф"
 				}
 			},
 			"delete_dialog": {
-				"title": "Удалить вариант",
-				"warning": "Удалить вариант «{{name}}»? Это действие нельзя отменить.",
+				"title": "Удалить тариф",
+				"warning": "Удалить тариф «{{name}}»? Это действие нельзя отменить.",
 				"cancel": "Отмена",
 				"confirm": "Удалить",
 				"confirming": "Удаление"

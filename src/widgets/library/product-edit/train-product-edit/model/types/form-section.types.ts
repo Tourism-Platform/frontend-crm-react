@@ -1,0 +1,25 @@
+import type { TTrainProductEditPageKeys } from "@/shared/config";
+import type { TFormField } from "@/shared/types";
+
+import {
+	ENUM_FORM_TRAIN_SECTION as ENUM_FORM_SECTION,
+	type ENUM_FORM_TRAIN_FARES_TYPE,
+	type ENUM_FORM_TRAIN_HOP_TYPE,
+	type ENUM_FORM_TRAIN_PRODUCT_TYPE,
+	type ENUM_TRAIN_PRODUCT_FARE_PRICE_ROW_FIELD_TYPE,
+	type ENUM_TRAIN_PRODUCT_PRICING_FIELD_TYPE
+} from "@/entities/supplier";
+
+export { ENUM_FORM_SECTION };
+
+export type ENUM_FORM_SECTION_TYPE =
+	(typeof ENUM_FORM_SECTION)[keyof typeof ENUM_FORM_SECTION];
+
+export type TForm = TFormField<
+	TTrainProductEditPageKeys,
+	| ENUM_FORM_TRAIN_PRODUCT_TYPE
+	| ENUM_FORM_TRAIN_HOP_TYPE
+	| ENUM_FORM_TRAIN_FARES_TYPE
+	| ENUM_TRAIN_PRODUCT_PRICING_FIELD_TYPE
+	| ENUM_TRAIN_PRODUCT_FARE_PRICE_ROW_FIELD_TYPE
+>;

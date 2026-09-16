@@ -18,19 +18,19 @@ import {
 	ENUM_HOUSING_SOURCE
 } from "../../../types";
 import type { TEventDetailsBackend } from "../../../types";
-import { isInheritedBusDetails } from "../bus-details.helpers";
 import { mapInlinePoolWrite } from "../details-read-to-write.converters";
 import { getPoolMember } from "../event-pool.helpers";
-import {
-	mapFlightPricingFromBackend,
-	mapFlightPricingToBackend
-} from "../flight-pricing.converters";
 import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
 } from "../package-id.helpers";
 
+import { isInheritedBusDetails } from "./bus-details.helpers";
+import {
+	mapFlightPricingFromBackend,
+	mapFlightPricingToBackend
+} from "./flight-pricing.converters";
 import { mapBusHopToSegment, mapBusSegmentToHop } from "./journey.helpers";
 import { mapEventMetaToForm } from "./shared.helpers";
 

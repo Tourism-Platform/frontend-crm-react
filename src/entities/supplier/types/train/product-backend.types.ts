@@ -2,6 +2,8 @@ import type {
 	Fare,
 	PerFareTrainVariantWrite,
 	PricedFareOutput,
+	ToPerFare,
+	ToWholeRoute,
 	TrainLegInput,
 	TrainLegOutput,
 	TrainProductCreate,
@@ -28,3 +30,4 @@ export type TTrainVariantWriteBackend =
 export type TTrainVariantReadBackend = PricedFareOutput | Fare;
 export type TTrainLegInputBackend = TrainLegInput;
 export type TTrainLegReadBackend = TrainLegOutput;
+export type TTrainPricingSwitchBackend = ToPerFare | ToWholeRoute;

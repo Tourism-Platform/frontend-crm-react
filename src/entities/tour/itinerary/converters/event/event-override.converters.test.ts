@@ -8,14 +8,14 @@ import {
 } from "@/shared/api";
 
 import {
-	mapEventOverrideFromDetails,
-	mapEventOverrideToBackend
-} from "./event-override.converters";
-import {
 	getDefaultHousingOverrideForm,
 	mapHousingEventOverrideToBackend,
 	mapHousingOverrideFromBackend
-} from "./housing-override.converters";
+} from "./accommodation/housing-override.converters";
+import {
+	mapEventOverrideFromDetails,
+	mapEventOverrideToBackend
+} from "./event-override.converters";
 import {
 	getDefaultTrainOverrideForm,
 	mapTrainEventOverrideToBackend,
@@ -194,27 +194,22 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 
 	it("returns null for inline supply", () => {
 		expect(
-			mapEventOverrideFromDetails(
-				{
-					plan: {},
-					pool: [
-						{
-							id: "11111111-1111-1111-1111-111111111111",
-							is_main: true,
-							supply: { source: "inline", supplier_id: null },
-							spec: HOTEL_SPEC
-						}
-					]
-				},
-				"housing"
-			)
+			mapEventOverrideFromDetails({
+				plan: {},
+				pool: [
+					{
+						id: "11111111-1111-1111-1111-111111111111",
+						is_main: true,
+						supply: { source: "inline", supplier_id: null },
+						spec: HOTEL_SPEC
+					}
+				]
+			})
 		).toBeNull();
 	});
 
 	it("returns null when override is null", () => {
-		expect(
-			mapEventOverrideFromDetails(buildDetails(null), "housing")
-		).toBeNull();
+		expect(mapEventOverrideFromDetails(buildDetails(null))).toBeNull();
 	});
 
 	it("reads the override from supply.override", () => {
@@ -226,8 +221,7 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 					pricing: "whole",
 					price: { base: FIXED_CHARGE_OUTPUT, seasons: [] }
 				}
-			}),
-			"housing"
+			})
 		);
 
 		expect(form?.typ).toBe("housing");

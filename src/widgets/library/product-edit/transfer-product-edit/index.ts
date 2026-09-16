@@ -1,4 +1,1 @@
-export {
-	TransferProductEdit,
-	type ITransferProductEditProps
-} from "./ui/transfer-product-edit";
+export { TransferProductEdit } from "./ui/transfer-product-edit";
