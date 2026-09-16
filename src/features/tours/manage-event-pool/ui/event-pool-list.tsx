@@ -73,7 +73,7 @@ export const EventPoolList = ({
 					onClick={() => setAddOpen(true)}
 					disabled={isBusy}
 				>
-					{t("pool.add")}
+					{t("pool.add.title")}
 				</Button>
 			</div>
 

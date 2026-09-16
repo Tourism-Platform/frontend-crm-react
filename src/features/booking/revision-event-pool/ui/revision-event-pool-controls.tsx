@@ -101,7 +101,7 @@ export const RevisionEventPoolControls: FC<IRevisionEventPoolControlsProps> = ({
 				onClick={handleAdd}
 				disabled={isAdding || isLoading}
 			>
-				{t("pool.add")}
+				{t("pool.add.title")}
 			</Button>
 		</div>
 	);

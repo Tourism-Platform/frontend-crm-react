@@ -336,6 +336,27 @@
 		"train": "Train",
 		"bus": "Bus"
 	},
+	"hotel_pricing": {
+		"per_room": "Per room",
+		"whole": "Whole stay"
+	},
+	"transfer_pricing": {
+		"per_car": "Per car",
+		"per_car_category": "Per car class",
+		"whole": "Whole fleet"
+	},
+	"flight_pricing": {
+		"per_fare": "Per fare",
+		"whole": "Whole route"
+	},
+	"train_pricing": {
+		"per_fare": "Per fare",
+		"whole": "Whole route"
+	},
+	"bus_pricing": {
+		"per_vehicle": "Per vehicle",
+		"whole": "Whole fleet"
+	},
 	"hotel_amenity": {
 		"wifi": "Wi‑Fi",
 		"pool": "Pool",

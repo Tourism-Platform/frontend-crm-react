@@ -25,9 +25,15 @@
 			"title": "Select supplier product",
 			"description": "Link this event to a product from the suppliers library. Tour-specific fields stay editable.",
 			"fields": {
-				"search": {
-					"label": "Search",
-					"placeholder": "Search by product name"
+				"product": {
+					"label": "Product",
+					"placeholder": "Search by product name",
+					"empty": "No products found",
+					"option": {
+						"product": "Product",
+						"supplier": "Supplier",
+						"pricing": "Pricing"
+					}
 				},
 				"variant": {
 					"label": "Category",
@@ -41,7 +47,13 @@
 			"retry": "Retry",
 			"cancel": "Cancel",
 			"confirm": "Attach",
-			"confirming": "Attaching"
+			"confirming": "Attaching",
+			"meta": {
+				"variants_one": "{{count}} variant",
+				"variants_other": "{{count}} variants",
+				"supplier": "Supplier",
+				"pricing": "Pricing"
+			}
 		},
 		"override_warn": {
 			"title": "Contract price will be cleared",
@@ -182,11 +194,22 @@
 	},
 	"pool": {
 		"list": "Suppliers",
-		"add": "Add supplier",
-		"add_description": "Add an empty supplier, link a supplier from the library, or link one of their products.",
-		"add_inline": "Add empty supplier",
-		"add_supplier": "Link supplier",
-		"add_product": "Add supplier product",
+		"add": {
+			"title": "Add supplier",
+			"description": "Add an empty supplier, link a supplier from the library, or link one of their products.",
+			"inline": {
+				"title": "Add empty supplier",
+				"description": "Empty inline shell with no library link"
+			},
+			"supplier": {
+				"title": "Link supplier",
+				"description": "Inline shell with a library supplier_id"
+			},
+			"product": {
+				"title": "Add supplier product",
+				"description": "Pool member from a supplier product"
+			}
+		},
 		"adding": "Adding",
 		"remove": "Remove",
 		"cancel": "Cancel",
@@ -202,15 +225,20 @@
 				"title": "Select supplier",
 				"description": "Link this event to a supplier from the library. Spec stays editable on the event.",
 				"fields": {
-					"search": {
-						"label": "Search",
-						"placeholder": "Search by brand name"
+					"supplier": {
+						"label": "Supplier",
+						"placeholder": "Search by supplier name",
+						"empty": "No suppliers found",
+						"option": {
+							"brand": "Brand",
+							"legal": "Legal name",
+							"types": "Types"
+						}
 					}
 				},
 				"loading": "Loading suppliers…",
 				"empty": "No suppliers found",
 				"load_error": "Could not load suppliers",
-				"retry": "Retry",
 				"cancel": "Cancel",
 				"confirm": "Link supplier",
 				"confirming": "Linking"

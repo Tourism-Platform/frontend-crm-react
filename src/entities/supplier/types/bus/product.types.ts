@@ -25,6 +25,7 @@ export interface IBusVariant {
 export interface IBusProduct {
 	id: string;
 	supplierId: string;
+	supplierName: string | null;
 	typ: ENUM_SUPPLIER_TYPE_TYPE;
 	name: string;
 	pricing: ENUM_BUS_PRICING_TYPE;

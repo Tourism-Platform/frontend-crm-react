@@ -336,6 +336,27 @@
 		"train": "Поезд",
 		"bus": "Автобус"
 	},
+	"hotel_pricing": {
+		"per_room": "За номер",
+		"whole": "За всё"
+	},
+	"transfer_pricing": {
+		"per_car": "За машину",
+		"per_car_category": "За класс машины",
+		"whole": "За всё"
+	},
+	"flight_pricing": {
+		"per_fare": "За тариф",
+		"whole": "За всё"
+	},
+	"train_pricing": {
+		"per_fare": "За тариф",
+		"whole": "За всё"
+	},
+	"bus_pricing": {
+		"per_vehicle": "За транспорт",
+		"whole": "За всё"
+	},
 	"hotel_amenity": {
 		"wifi": "Wi‑Fi",
 		"pool": "Бассейн",

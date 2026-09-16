@@ -13,6 +13,7 @@ export interface IActivityVariant {
 export interface IActivityProduct {
 	id: string;
 	supplierId: string;
+	supplierName: string | null;
 	typ: ENUM_SUPPLIER_TYPE_TYPE;
 	name: string;
 	subTyp: ENUM_ACTIVITY_SUB_TYPE_TYPE | null;

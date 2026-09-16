@@ -56,6 +56,7 @@ export interface ITrainVariant {
 export interface ITrainProduct {
 	id: string;
 	supplierId: string;
+	supplierName: string | null;
 	typ: ENUM_SUPPLIER_TYPE_TYPE;
 	name: string;
 	pricing: ENUM_TRAIN_PRICING_TYPE;

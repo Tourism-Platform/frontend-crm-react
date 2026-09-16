@@ -383,6 +383,7 @@ describe("mapHotelProductFromBackend", () => {
 		expect(product).toMatchObject({
 			id: "b0c1-hotel",
 			supplierId: "5upp",
+			supplierName: null,
 			typ: ENUM_SUPPLIER_TYPE.HOTEL,
 			name: "Hyatt Regency Tashkent",
 			pricing: ENUM_HOTEL_PRICING.PER_ROOM,

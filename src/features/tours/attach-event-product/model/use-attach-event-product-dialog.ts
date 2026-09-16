@@ -1,19 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
 
 import {
 	type ENUM_SUPPLIER_TYPE_TYPE,
-	useListAllProductsQuery
+	useSupplierProductSearchOptions
 } from "@/entities/supplier";
 import type { IEventProductLink } from "@/entities/tour";
 
 import { FORM_ATTACH_PRODUCT_VARIANT_FIELD } from "./config";
+import { ATTACH_PRODUCT_PICKER_SCHEMA } from "./form.schema";
 import {
-	ATTACH_PRODUCT_PICKER_SCHEMA,
+	ENUM_FORM_ATTACH_PRODUCT,
 	type TAttachProductPickerSchema
-} from "./form.schema";
-import { ENUM_FORM_ATTACH_PRODUCT } from "./types";
+} from "./types";
 
 interface IUseAttachEventProductDialogParams {
 	open: boolean;
@@ -30,49 +30,59 @@ export const useAttachEventProductDialog = ({
 	initialVariantId,
 	onConfirm
 }: IUseAttachEventProductDialogParams) => {
-	const [selectedProductId, setSelectedProductId] = useState<string | null>(
-		null
-	);
+	const products = useSupplierProductSearchOptions({
+		typ,
+		enabled: open
+	});
+	const previousProductIdRef = useRef<string | undefined>(undefined);
 
 	const form = useForm<TAttachProductPickerSchema>({
 		resolver: zodResolver(ATTACH_PRODUCT_PICKER_SCHEMA),
 		defaultValues: {
-			[ENUM_FORM_ATTACH_PRODUCT.SEARCH]: "",
+			[ENUM_FORM_ATTACH_PRODUCT.PRODUCT_ID]: undefined,
 			[ENUM_FORM_ATTACH_PRODUCT.VARIANT_ID]: null
 		},
 		mode: "onSubmit"
 	});
 
-	const search = useWatch({
+	const selectedProductId = useWatch({
 		control: form.control,
-		name: ENUM_FORM_ATTACH_PRODUCT.SEARCH
+		name: ENUM_FORM_ATTACH_PRODUCT.PRODUCT_ID
 	});
 
 	useEffect(() => {
 		if (!open) {
+			previousProductIdRef.current = undefined;
 			return;
 		}
 
 		form.reset({
-			[ENUM_FORM_ATTACH_PRODUCT.SEARCH]: "",
+			[ENUM_FORM_ATTACH_PRODUCT.PRODUCT_ID]: initialProductId,
 			[ENUM_FORM_ATTACH_PRODUCT.VARIANT_ID]: initialVariantId ?? null
 		});
-		setSelectedProductId(initialProductId ?? null);
+		previousProductIdRef.current = initialProductId;
 	}, [open, initialProductId, initialVariantId, form]);
 
-	const { data, isFetching, isError, refetch } = useListAllProductsQuery(
-		{
-			page: 1,
-			limit: 50,
-			search: search?.trim() || undefined,
-			typ
-		},
-		{ skip: !open }
-	);
+	useEffect(() => {
+		if (!open || !selectedProductId) {
+			return;
+		}
 
-	const products = data?.data ?? [];
+		if (
+			previousProductIdRef.current &&
+			previousProductIdRef.current !== selectedProductId
+		) {
+			form.setValue(ENUM_FORM_ATTACH_PRODUCT.VARIANT_ID, null);
+		}
+
+		previousProductIdRef.current = selectedProductId;
+	}, [open, selectedProductId, form]);
+
 	const selectedProduct = useMemo(
-		() => products.find((item) => item.id === selectedProductId) ?? null,
+		() =>
+			selectedProductId
+				? (products.getProductById(selectedProductId) ?? null)
+				: null,
 		[products, selectedProductId]
 	);
 
@@ -86,37 +96,21 @@ export const useAttachEventProductDialog = ({
 		return FORM_ATTACH_PRODUCT_VARIANT_FIELD(options);
 	}, [selectedProduct]);
 
-	const handleSelectProduct = (nextProductId: string) => {
-		setSelectedProductId(nextProductId);
-		form.setValue(ENUM_FORM_ATTACH_PRODUCT.VARIANT_ID, null);
-	};
-
-	const handleConfirm = async () => {
-		if (!selectedProductId) {
-			return;
-		}
-
-		const values = form.getValues();
+	async function onSubmit(values: TAttachProductPickerSchema) {
+		const productId = values[ENUM_FORM_ATTACH_PRODUCT.PRODUCT_ID];
 		const variantId = values[ENUM_FORM_ATTACH_PRODUCT.VARIANT_ID];
 
-		// Contract 3.1: the picked variant becomes `scope.only.ids[0]`;
-		// no variant picked = whole product (scope omitted).
 		await onConfirm({
-			productId: selectedProductId,
+			productId,
 			scope: variantId ? { typ: "only", ids: [variantId] } : undefined
 		});
-	};
+	}
 
 	return {
 		form,
 		products,
-		selectedProductId,
 		selectedProduct,
-		isFetching,
-		isError,
-		refetch,
 		variantField,
-		handleSelectProduct,
-		handleConfirm
+		onSubmit
 	};
 };

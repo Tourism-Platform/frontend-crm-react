@@ -16,15 +16,18 @@ import {
 	Separator
 } from "@/shared/ui";
 
-import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
+import {
+	type ENUM_SUPPLIER_TYPE_TYPE,
+	SupplierProductOptionCard,
+	SupplierProductOptionCardSkeleton,
+	type TSupplierProductSelectOption
+} from "@/entities/supplier";
 import type { IEventProductLink } from "@/entities/tour";
 
 import {
-	FORM_ATTACH_PRODUCT_SEARCH_LIST,
+	ENUM_FORM_ATTACH_PRODUCT,
 	useAttachEventProductDialog
 } from "../model";
-
-import { ProductList } from "./product-list";
 
 interface IAttachEventProductDialogProps {
 	open: boolean;
@@ -46,94 +49,90 @@ export const AttachEventProductDialog: FC<IAttachEventProductDialogProps> = ({
 	onConfirm
 }) => {
 	const { t } = useTranslation("common_events");
-	const {
-		form,
-		products,
-		selectedProductId,
-		selectedProduct,
-		isFetching,
-		isError,
-		refetch,
-		variantField,
-		handleSelectProduct,
-		handleConfirm
-	} = useAttachEventProductDialog({
-		open,
-		typ,
-		initialProductId,
-		initialVariantId,
-		onConfirm
-	});
+	const { form, products, selectedProduct, variantField, onSubmit } =
+		useAttachEventProductDialog({
+			open,
+			typ,
+			initialProductId,
+			initialVariantId,
+			onConfirm
+		});
 
 	const { key: variantKey, ...variantItem } = variantField;
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="min-w-[640px] max-w-3xl">
+			<DialogContent className="flex min-h-[36rem] flex-col gap-4 sm:max-w-[52rem]">
 				<DialogHeader>
 					<DialogTitle>
 						{t("attach_product.dialog.title")}
 					</DialogTitle>
-					<DialogDescription>
+					<DialogDescription className="sr-only">
 						{t("attach_product.dialog.description")}
 					</DialogDescription>
 				</DialogHeader>
+				<Separator />
 
 				<Form {...form}>
-					<div className="grid gap-4">
-						{FORM_ATTACH_PRODUCT_SEARCH_LIST.map(
-							({ key, ...item }) => (
-								<CustomField
-									key={key}
-									control={form.control}
-									name={key}
-									t={t}
-									{...item}
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="flex flex-1 flex-col space-y-6"
+					>
+						<CustomField
+							fieldType="asyncSelect"
+							control={form.control}
+							name={ENUM_FORM_ATTACH_PRODUCT.PRODUCT_ID}
+							t={t}
+							label="attach_product.dialog.fields.product.label"
+							placeholder="attach_product.dialog.fields.product.placeholder"
+							emptyText="attach_product.dialog.fields.product.empty"
+							options={products.options}
+							onQueryChange={products.setQuery}
+							onLoadMore={products.loadMore}
+							hasMore={products.hasMore}
+							isLoading={products.isLoading}
+							isLoadingMore={products.isLoadingMore}
+							renderOption={(option) => (
+								<SupplierProductOptionCard
+									option={
+										option as TSupplierProductSelectOption
+									}
 								/>
-							)
-						)}
-						<ProductList
-							products={products}
-							selectedProductId={selectedProductId}
-							isFetching={isFetching}
-							isError={isError}
-							onSelect={handleSelectProduct}
-							onRetry={() => refetch()}
+							)}
+							renderSkeleton={() => (
+								<SupplierProductOptionCardSkeleton />
+							)}
 						/>
 						{selectedProduct ? (
-							<>
-								<Separator />
-								<CustomField
-									key={variantKey}
-									control={form.control}
-									name={variantKey}
-									t={t}
-									{...variantItem}
-								/>
-							</>
+							<CustomField
+								key={variantKey}
+								control={form.control}
+								name={variantKey}
+								t={t}
+								{...variantItem}
+							/>
 						) : null}
-					</div>
+						<DialogFooter className="mt-auto">
+							<DialogClose asChild>
+								<Button
+									type="reset"
+									variant="outline"
+									onClick={() => form.reset()}
+									disabled={isSubmitting}
+								>
+									{t("attach_product.dialog.cancel")}
+								</Button>
+							</DialogClose>
+							<LoaderButton
+								isLoading={Boolean(isSubmitting)}
+								label={t("attach_product.dialog.confirm")}
+								loadingLabel={t(
+									"attach_product.dialog.confirming"
+								)}
+							/>
+						</DialogFooter>
+					</form>
 				</Form>
-
-				<DialogFooter>
-					<DialogClose asChild>
-						<Button
-							type="button"
-							variant="outline"
-							disabled={isSubmitting}
-						>
-							{t("attach_product.dialog.cancel")}
-						</Button>
-					</DialogClose>
-					<LoaderButton
-						type="button"
-						onClick={handleConfirm}
-						isLoading={Boolean(isSubmitting)}
-						disabled={!selectedProductId}
-						label={t("attach_product.dialog.confirm")}
-						loadingLabel={t("attach_product.dialog.confirming")}
-					/>
-				</DialogFooter>
 			</DialogContent>
 		</Dialog>
 	);

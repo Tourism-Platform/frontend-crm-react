@@ -9,8 +9,7 @@ import {
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
-	DialogTitle,
-	LoaderButton
+	DialogTitle
 } from "@/shared/ui";
 
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
@@ -35,6 +34,9 @@ interface IAddEventPoolMemberDialogProps {
 	onAdd: (intent: TAddPoolMemberIntent) => Promise<void>;
 }
 
+const choiceClassName =
+	"rounded-xl border bg-card p-4 text-left transition-colors hover:bg-muted/40 disabled:pointer-events-none disabled:opacity-50";
+
 export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 	open,
 	onOpenChange,
@@ -50,23 +52,6 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 	const handleInline = async () => {
 		try {
 			await onAdd({ kind: "empty", typ: eventTyp });
-			onOpenChange(false);
-			toast.success(t("pool.toasts.add.success"));
-		} catch (error) {
-			toast.error(
-				t(resolvePoolErrorMessage(error, "pool.toasts.add.error"))
-			);
-		}
-	};
-
-	const handleSupplier = async (supplierId: string) => {
-		try {
-			await onAdd({
-				kind: "supplier",
-				typ: eventTyp,
-				supplierId
-			});
-			setSupplierOpen(false);
 			onOpenChange(false);
 			toast.success(t("pool.toasts.add.success"));
 		} catch (error) {
@@ -94,40 +79,57 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 			<Dialog open={open} onOpenChange={onOpenChange}>
 				<DialogContent>
 					<DialogHeader>
-						<DialogTitle>{t("pool.add")}</DialogTitle>
+						<DialogTitle>{t("pool.add.title")}</DialogTitle>
 						<DialogDescription>
-							{t("pool.add_description")}
+							{t("pool.add.description")}
 						</DialogDescription>
 					</DialogHeader>
-					<DialogFooter className="flex flex-wrap gap-2 sm:justify-start">
-						<LoaderButton
+					<div className="grid gap-3">
+						<button
 							type="button"
-							variant="outline"
+							disabled={isSubmitting}
 							onClick={handleInline}
-							isLoading={Boolean(isSubmitting)}
-							label={t("pool.add_inline")}
-							loadingLabel={t("pool.adding")}
-						/>
+							className={choiceClassName}
+						>
+							<p className="font-semibold">
+								{t("pool.add.inline.title")}
+							</p>
+							<p className="mt-1 text-sm text-muted-foreground">
+								{t("pool.add.inline.description")}
+							</p>
+						</button>
 						{supplierTyp ? (
 							<>
-								<Button
+								<button
 									type="button"
-									variant="outline"
+									disabled={isSubmitting}
 									onClick={() => setSupplierOpen(true)}
-									disabled={isSubmitting}
+									className={choiceClassName}
 								>
-									{t("pool.add_supplier")}
-								</Button>
-								<Button
+									<p className="font-semibold">
+										{t("pool.add.supplier.title")}
+									</p>
+									<p className="mt-1 text-sm text-muted-foreground">
+										{t("pool.add.supplier.description")}
+									</p>
+								</button>
+								<button
 									type="button"
-									variant="outline"
-									onClick={() => setProductOpen(true)}
 									disabled={isSubmitting}
+									onClick={() => setProductOpen(true)}
+									className={choiceClassName}
 								>
-									{t("pool.add_product")}
-								</Button>
+									<p className="font-semibold">
+										{t("pool.add.product.title")}
+									</p>
+									<p className="mt-1 text-sm text-muted-foreground">
+										{t("pool.add.product.description")}
+									</p>
+								</button>
 							</>
 						) : null}
+					</div>
+					<DialogFooter>
 						<Button
 							type="button"
 							variant="ghost"
@@ -145,9 +147,11 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 					<AttachEventSupplierDialog
 						open={supplierOpen}
 						onOpenChange={setSupplierOpen}
+						eventTyp={eventTyp}
 						supplierTyp={supplierTyp}
 						isSubmitting={isSubmitting}
-						onConfirm={handleSupplier}
+						onAdd={onAdd}
+						onAdded={() => onOpenChange(false)}
 					/>
 					<AttachEventProductDialog
 						open={productOpen}

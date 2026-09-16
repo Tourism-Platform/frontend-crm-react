@@ -12,6 +12,12 @@ export interface ISupplier {
 	supplierTypes: ENUM_SUPPLIER_TYPE_TYPE[];
 }
 
+/** asyncSelect option — domain supplier + label/value required by CustomAsyncSelect */
+export type TSupplierSelectOption = {
+	label: string;
+	value: string;
+} & ISupplier;
+
 export interface ISupplierCreate {
 	brandName: string;
 	legalName?: string | null;

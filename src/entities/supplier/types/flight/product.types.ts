@@ -32,6 +32,7 @@ export interface IFlightVariant {
 export interface IFlightProduct {
 	id: string;
 	supplierId: string;
+	supplierName: string | null;
 	typ: ENUM_SUPPLIER_TYPE_TYPE;
 	name: string;
 	pricing: ENUM_FLIGHT_PRICING_TYPE;

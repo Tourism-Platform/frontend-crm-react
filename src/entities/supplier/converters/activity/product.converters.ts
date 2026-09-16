@@ -46,6 +46,7 @@ export const mapActivityProductFromBackend = (
 	return {
 		id: row.id,
 		supplierId: row.supplier_id,
+		supplierName: row.supplier_name ?? null,
 		typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
 		name: spec.name ?? row.name,
 		subTyp:

@@ -46,6 +46,7 @@ const VARIANT: IHotelVariant = {
 const PRODUCT: IHotelProduct = {
 	id: "p1",
 	supplierId: "s1",
+	supplierName: null,
 	typ: ENUM_SUPPLIER_TYPE.HOTEL,
 	name: "Hyatt",
 	pricing: ENUM_HOTEL_PRICING.PER_ROOM,

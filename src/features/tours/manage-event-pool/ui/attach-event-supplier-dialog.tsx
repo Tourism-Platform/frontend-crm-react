@@ -1,189 +1,165 @@
-import { Loader } from "lucide-react";
-import { type FC, useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { type FC, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import {
 	Button,
+	CustomField,
 	Dialog,
+	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	Input,
-	Label,
+	Form,
 	LoaderButton,
-	ScrollArea
+	Separator
 } from "@/shared/ui";
 
 import {
 	type ENUM_SUPPLIER_TYPE_TYPE,
-	type ISupplier,
-	useListSuppliersQuery
+	SupplierOptionCard,
+	SupplierOptionCardSkeleton,
+	type TSupplierSelectOption,
+	useSupplierSearchOptions
 } from "@/entities/supplier";
+import {
+	type ENUM_EVENT_BACKEND_TYPE,
+	type TAddPoolMemberIntent
+} from "@/entities/tour";
+
+import {
+	ATTACH_SUPPLIER_PICKER_SCHEMA,
+	ENUM_FORM_ATTACH_SUPPLIER,
+	type TAttachSupplierPickerSchema,
+	resolvePoolErrorMessage
+} from "../model";
 
 interface IAttachEventSupplierDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
+	eventTyp: ENUM_EVENT_BACKEND_TYPE;
 	supplierTyp: ENUM_SUPPLIER_TYPE_TYPE;
 	isSubmitting?: boolean;
-	onConfirm: (supplierId: string) => void | Promise<void>;
+	onAdd: (intent: TAddPoolMemberIntent) => Promise<void>;
+	onAdded?: () => void;
 }
 
 export const AttachEventSupplierDialog: FC<IAttachEventSupplierDialogProps> = ({
 	open,
 	onOpenChange,
+	eventTyp,
 	supplierTyp,
 	isSubmitting,
-	onConfirm
+	onAdd,
+	onAdded
 }) => {
 	const { t } = useTranslation("common_events");
-	const [search, setSearch] = useState("");
-	const [selectedSupplierId, setSelectedSupplierId] = useState<string | null>(
-		null
-	);
+	const suppliers = useSupplierSearchOptions({
+		supplierTyp,
+		enabled: open
+	});
+
+	const form = useForm<TAttachSupplierPickerSchema>({
+		resolver: zodResolver(ATTACH_SUPPLIER_PICKER_SCHEMA),
+		mode: "onSubmit"
+	});
 
 	useEffect(() => {
-		if (!open) return;
-		setSearch("");
-		setSelectedSupplierId(null);
-	}, [open]);
+		if (!open) {
+			return;
+		}
+		form.reset();
+	}, [open, form]);
 
-	const { data, isFetching, isError, refetch } = useListSuppliersQuery(
-		{
-			page: 1,
-			limit: 50,
-			search: search.trim() || undefined,
-			supplierType: supplierTyp
-		},
-		{ skip: !open }
-	);
-
-	const suppliers: ISupplier[] = data?.data ?? [];
-
-	const handleConfirm = async () => {
-		if (!selectedSupplierId) return;
-		await onConfirm(selectedSupplierId);
+	const handleOpenChange = (nextOpen: boolean) => {
+		if (!nextOpen) {
+			form.reset();
+		}
+		onOpenChange(nextOpen);
 	};
 
+	async function onSubmit(data: TAttachSupplierPickerSchema) {
+		try {
+			await onAdd({
+				kind: "supplier",
+				typ: eventTyp,
+				supplierId: data[ENUM_FORM_ATTACH_SUPPLIER.SUPPLIER_ID]
+			});
+			onOpenChange(false);
+			onAdded?.();
+			toast.success(t("pool.toasts.add.success"));
+		} catch (error) {
+			toast.error(
+				t(resolvePoolErrorMessage(error, "pool.toasts.add.error"))
+			);
+		}
+	}
+
 	return (
-		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="min-w-[640px] max-w-3xl">
+		<Dialog open={open} onOpenChange={handleOpenChange}>
+			<DialogContent className="flex min-h-[36rem] flex-col gap-4 sm:max-w-[52rem]">
 				<DialogHeader>
 					<DialogTitle>
 						{t("pool.attach_supplier.dialog.title")}
 					</DialogTitle>
-					<DialogDescription>
+					<DialogDescription className="sr-only">
 						{t("pool.attach_supplier.dialog.description")}
 					</DialogDescription>
 				</DialogHeader>
-
-				<div className="grid gap-4">
-					<div className="grid gap-2">
-						<Label htmlFor="pool-attach-supplier-search">
-							{t(
-								"pool.attach_supplier.dialog.fields.search.label"
+				<Separator />
+				<Form {...form}>
+					<form
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="flex flex-1 flex-col space-y-6"
+					>
+						<CustomField
+							fieldType="asyncSelect"
+							control={form.control}
+							name={ENUM_FORM_ATTACH_SUPPLIER.SUPPLIER_ID}
+							t={t}
+							label="pool.attach_supplier.dialog.fields.supplier.label"
+							placeholder="pool.attach_supplier.dialog.fields.supplier.placeholder"
+							emptyText="pool.attach_supplier.dialog.fields.supplier.empty"
+							options={suppliers.options}
+							onQueryChange={suppliers.setQuery}
+							onLoadMore={suppliers.loadMore}
+							hasMore={suppliers.hasMore}
+							isLoading={suppliers.isLoading}
+							isLoadingMore={suppliers.isLoadingMore}
+							renderOption={(option) => (
+								<SupplierOptionCard
+									option={option as TSupplierSelectOption}
+								/>
 							)}
-						</Label>
-						<Input
-							id="pool-attach-supplier-search"
-							value={search}
-							onChange={(event) => setSearch(event.target.value)}
-							placeholder={t(
-								"pool.attach_supplier.dialog.fields.search.placeholder"
+							renderSkeleton={() => (
+								<SupplierOptionCardSkeleton />
 							)}
 						/>
-					</div>
-
-					<div className="grid gap-2">
-						{isError ? (
-							<div className="flex items-center justify-between gap-3 rounded-md border p-3 text-sm">
-								<span>
-									{t(
-										"pool.attach_supplier.dialog.load_error"
-									)}
-								</span>
+						<DialogFooter className="mt-auto">
+							<DialogClose asChild>
 								<Button
-									type="button"
+									type="reset"
 									variant="outline"
-									size="sm"
-									onClick={() => refetch()}
+									onClick={() => form.reset()}
+									disabled={isSubmitting}
 								>
-									{t("pool.attach_supplier.dialog.retry")}
+									{t("pool.attach_supplier.dialog.cancel")}
 								</Button>
-							</div>
-						) : null}
-
-						<ScrollArea className="h-64 rounded-md border">
-							<div className="grid gap-1 p-2">
-								{isFetching && !suppliers.length ? (
-									<div className="flex items-center justify-center gap-2 p-6 text-sm text-muted-foreground">
-										<Loader className="h-4 w-4 animate-spin" />
-										{t(
-											"pool.attach_supplier.dialog.loading"
-										)}
-									</div>
-								) : null}
-								{!isFetching && !suppliers.length ? (
-									<p className="p-6 text-center text-sm text-muted-foreground">
-										{t("pool.attach_supplier.dialog.empty")}
-									</p>
-								) : null}
-								{suppliers.map((supplier) => {
-									const isSelected =
-										supplier.id === selectedSupplierId;
-
-									return (
-										<button
-											key={supplier.id}
-											type="button"
-											className={`rounded-md px-3 py-2 text-left text-sm transition-colors ${
-												isSelected
-													? "bg-primary text-primary-foreground"
-													: "hover:bg-muted"
-											}`}
-											onClick={() =>
-												setSelectedSupplierId(
-													supplier.id
-												)
-											}
-										>
-											<p className="font-medium">
-												{supplier.brandName}
-											</p>
-											{supplier.legalName ? (
-												<p className="text-xs opacity-80">
-													{supplier.legalName}
-												</p>
-											) : null}
-										</button>
-									);
-								})}
-							</div>
-						</ScrollArea>
-					</div>
-				</div>
-
-				<DialogFooter>
-					<Button
-						type="button"
-						variant="ghost"
-						onClick={() => onOpenChange(false)}
-						disabled={isSubmitting}
-					>
-						{t("pool.attach_supplier.dialog.cancel")}
-					</Button>
-					<LoaderButton
-						type="button"
-						onClick={handleConfirm}
-						disabled={!selectedSupplierId}
-						isLoading={Boolean(isSubmitting)}
-						label={t("pool.attach_supplier.dialog.confirm")}
-						loadingLabel={t(
-							"pool.attach_supplier.dialog.confirming"
-						)}
-					/>
-				</DialogFooter>
+							</DialogClose>
+							<LoaderButton
+								isLoading={Boolean(isSubmitting)}
+								label={t("pool.attach_supplier.dialog.confirm")}
+								loadingLabel={t(
+									"pool.attach_supplier.dialog.confirming"
+								)}
+							/>
+						</DialogFooter>
+					</form>
+				</Form>
 			</DialogContent>
 		</Dialog>
 	);

@@ -18,6 +18,7 @@ import {
 const PRODUCT: IFlightProduct = {
 	id: "p1",
 	supplierId: "s1",
+	supplierName: null,
 	typ: ENUM_SUPPLIER_TYPE.FLIGHT,
 	name: "HY TAS–SKD",
 	pricing: ENUM_FLIGHT_PRICING.PER_FARE,

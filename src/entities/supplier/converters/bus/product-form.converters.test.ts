@@ -18,6 +18,7 @@ import {
 const PRODUCT: IBusProduct = {
 	id: "p1",
 	supplierId: "s1",
+	supplierName: null,
 	typ: ENUM_SUPPLIER_TYPE.BUS,
 	name: "Coach fleet",
 	pricing: ENUM_BUS_PRICING.PER_VEHICLE,

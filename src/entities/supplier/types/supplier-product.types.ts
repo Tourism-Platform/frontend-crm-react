@@ -54,6 +54,12 @@ export type TSupplierProduct =
 	| ITransferProduct
 	| IActivityProduct;
 
+/** asyncSelect option — domain product + label/value required by CustomAsyncSelect */
+export type TSupplierProductSelectOption = {
+	label: string;
+	value: string;
+} & TSupplierProduct;
+
 export interface ISupplierProductFilters
 	extends Omit<IPaginationRequest, "status"> {
 	supplierId?: string;

@@ -17,6 +17,7 @@ import {
 const PRODUCT: ITransferProduct = {
 	id: "p1",
 	supplierId: "s1",
+	supplierName: null,
 	typ: ENUM_SUPPLIER_TYPE.TRANSFER,
 	name: "Airport fleet",
 	pricing: ENUM_TRANSFER_PRICING.PER_CAR,
