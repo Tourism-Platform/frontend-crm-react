@@ -94,6 +94,26 @@
 			"title": "Contract price",
 			"description": "Replaces product rate and policy for this tour only. Saving sends a full replace of both fields.",
 			"fields": {
+				"pricing_arm": {
+					"label": "Reprice",
+					"placeholder": "Select what to reprice",
+					"options": {
+						"whole": "Whole product",
+						"per_unit": "Per unit"
+					}
+				},
+				"units": {
+					"label": "Units",
+					"empty": "No units in the linked product"
+				},
+				"unit_charge": {
+					"label": "Charge mode",
+					"options": {
+						"fixed": "Fixed",
+						"per_person": "Per person",
+						"per_duration": "Per night"
+					}
+				},
 				"pricing_type": {
 					"label": "Pricing type",
 					"placeholder": "Select pricing type",

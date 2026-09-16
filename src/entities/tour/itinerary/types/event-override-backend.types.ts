@@ -1,17 +1,6 @@
-import type {
-	HotelOverrideInput,
-	HotelOverrideOutput,
-	RouteOverrideInput,
-	RouteOverrideOutput,
-	TOUR_EVENTS_PATHS
-} from "@/shared/api";
+import type { TOUR_EVENTS_PATHS } from "@/shared/api";
 
+/** PATCH body union — all six override types the backend accepts. */
 export type TEventOverrideInputBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.setPoolMemberOverride
 >["_types"]["body"];
-
-export type THousingOverrideInputBackend = HotelOverrideInput;
-export type TTrainOverrideInputBackend = RouteOverrideInput;
-
-export type THousingOverrideOutputBackend = HotelOverrideOutput;
-export type TTrainOverrideOutputBackend = RouteOverrideOutput;

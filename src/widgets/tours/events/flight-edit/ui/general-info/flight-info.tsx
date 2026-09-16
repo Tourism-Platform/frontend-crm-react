@@ -12,13 +12,6 @@ import {
 } from "@/shared/ui";
 
 import {
-	ENUM_SUPPLIER_TYPE,
-	type ENUM_SUPPLIER_TYPE_TYPE
-} from "@/entities/supplier";
-import {
-	ENUM_EVENT_BACKEND,
-	type ENUM_EVENT_BACKEND_TYPE,
-	ENUM_FLIGHT_TRANSPORT_TYPE,
 	type ENUM_FLIGHT_TRANSPORT_TYPE_TYPE,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_FLIGHT,
@@ -36,7 +29,10 @@ import {
 
 import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { InheritedLockBanner } from "../../../ui/inherited-lock-banner";
-import { FLIGHT_TRANSPORT_TYPE_TABS_LIST } from "../../model";
+import {
+	FLIGHT_TRANSPORT_TYPE_TABS_LIST,
+	getFlightTransportTypeConfig
+} from "../../model";
 
 import { FlightCard } from "./flight-card";
 
@@ -106,28 +102,9 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 		form.setValue(ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE, next);
 	};
 
-	const showProductLink =
-		formState?.general?.transport_type === ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN;
-	const eventTyp = ((): ENUM_EVENT_BACKEND_TYPE => {
-		switch (formState?.general?.transport_type) {
-			case ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN:
-				return ENUM_EVENT_BACKEND.TRAIN;
-			case ENUM_FLIGHT_TRANSPORT_TYPE.BUS:
-				return ENUM_EVENT_BACKEND.BUS;
-			default:
-				return ENUM_EVENT_BACKEND.FLIGHT;
-		}
-	})();
-	const supplierTyp = ((): ENUM_SUPPLIER_TYPE_TYPE => {
-		switch (formState?.general?.transport_type) {
-			case ENUM_FLIGHT_TRANSPORT_TYPE.TRAIN:
-				return ENUM_SUPPLIER_TYPE.TRAIN;
-			case ENUM_FLIGHT_TRANSPORT_TYPE.BUS:
-				return ENUM_SUPPLIER_TYPE.BUS;
-			default:
-				return ENUM_SUPPLIER_TYPE.FLIGHT;
-		}
-	})();
+	const { eventTyp, supplierTyp } = getFlightTransportTypeConfig(
+		formState?.general?.transport_type
+	);
 
 	return (
 		<div className="grid gap-6">
@@ -146,24 +123,20 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 					eventTyp={eventTyp}
 					supplierTyp={supplierTyp}
 				/>
-				{showProductLink ? (
-					<>
-						<EventProductLinkControls
-							typ={ENUM_SUPPLIER_TYPE.TRAIN}
-							productId={productId}
-							variantId={variantId}
-							hasOverride={Boolean(hasOverride)}
-							supplyId={supplyId}
-						/>
-						<EventOverrideControls
-							eventTyp={eventTyp}
-							isInherited={isInherited}
-							hasOverride={Boolean(hasOverride)}
-							supplyId={supplyId}
-							onAfterChange={handleOverrideChange}
-						/>
-					</>
-				) : null}
+				<EventProductLinkControls
+					typ={supplierTyp}
+					productId={productId}
+					variantId={variantId}
+					hasOverride={Boolean(hasOverride)}
+					supplyId={supplyId}
+				/>
+				<EventOverrideControls
+					eventTyp={eventTyp}
+					isInherited={isInherited}
+					hasOverride={Boolean(hasOverride)}
+					supplyId={supplyId}
+					onAfterChange={handleOverrideChange}
+				/>
 				<CustomOptionTabs
 					value={formState?.general?.transport_type}
 					onValueChange={(value) =>

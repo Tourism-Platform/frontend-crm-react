@@ -7,13 +7,15 @@ import { Button, LoaderButton } from "@/shared/ui";
 import {
 	type ENUM_EVENT_BACKEND_TYPE,
 	ENUM_EVENT_MODE,
-	type TEventOverride,
+	type TOverrideProductFormValues,
+	getOverridePerUnitPricing,
+	getOverrideUnitOptions,
 	mapEventOverrideFromDetails,
 	useEventEditIds,
 	useGetTourEventQuery
 } from "@/entities/tour";
 
-import { useEventOverrideMutations } from "../model";
+import { getPerUnitArm, useEventOverrideMutations } from "../model";
 
 import { ClearOverrideAlert } from "./clear-override-alert";
 import { OverrideEventDialog } from "./override-event-dialog";
@@ -54,14 +56,19 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 		event?.details,
 		supplyId
 	);
+	const units = getOverrideUnitOptions(event?.details, supplyId);
+	const perUnitArm = getPerUnitArm(
+		eventTyp,
+		getOverridePerUnitPricing(event?.details, supplyId)
+	);
 
 	if (!isInherited) {
 		return null;
 	}
 
-	const handleConfirmSet = async (data: TEventOverride) => {
+	const handleConfirmSet = async (values: TOverrideProductFormValues) => {
 		try {
-			await set(data);
+			await set(eventTyp, values);
 			toast.success(t("override_product.toasts.set.success"));
 			setDialogOpen(false);
 			onAfterChange?.(true);
@@ -118,6 +125,8 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 				onOpenChange={setDialogOpen}
 				eventTyp={eventTyp}
 				initialOverride={initialOverride}
+				units={units}
+				perUnitArm={perUnitArm}
 				isSubmitting={isLoading}
 				onConfirm={handleConfirmSet}
 			/>

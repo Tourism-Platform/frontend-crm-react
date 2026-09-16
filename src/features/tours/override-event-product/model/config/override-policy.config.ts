@@ -1,7 +1,7 @@
 import {
 	ENUM_FORM_OVERRIDE_PRODUCT,
 	type TOverrideProductForm
-} from "../types";
+} from "@/entities/tour";
 
 export const FORM_OVERRIDE_POLICY_LIST: TOverrideProductForm[] = [
 	{

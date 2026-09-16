@@ -15,6 +15,10 @@
 		"pricing": "Pricing & booking"
 	},
 	"form": {
+		"inherited": {
+			"lock_title": "Linked to supplier product",
+			"lock_description": "Activity details come from the supplier product and cannot be edited here"
+		},
 		"toasts": {
 			"load": {
 				"error": "Error while loading data"

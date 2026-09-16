@@ -652,6 +652,7 @@ export const tourEventApi = authApi.injectEndpoints({
 				eventId,
 				eventOptionId,
 				supplyId,
+				eventTyp,
 				data,
 				language
 			}) => ({
@@ -663,7 +664,7 @@ export const tourEventApi = authApi.injectEndpoints({
 					supplyId
 				),
 				params: mapEventReadLangQueryToBackend(language),
-				body: mapEventOverrideToBackend(data)
+				body: mapEventOverrideToBackend(eventTyp, data)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),

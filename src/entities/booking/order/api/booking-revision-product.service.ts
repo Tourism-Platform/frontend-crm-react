@@ -78,14 +78,21 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 			TRevisionPreviewBackend,
 			ISetRevisionEventOverride
 		>({
-			query: ({ bookingId, eventId, supplyId, data, optionIndex }) => ({
+			query: ({
+				bookingId,
+				eventId,
+				supplyId,
+				eventTyp,
+				data,
+				optionIndex
+			}) => ({
 				...BOOKING_REVISION_PATHS.setPoolMemberOverride(
 					bookingId,
 					eventId,
 					supplyId
 				),
 				params: mapRevisionEventProductQueryToBackend(optionIndex),
-				body: mapEventOverrideToBackend(data)
+				body: mapEventOverrideToBackend(eventTyp, data)
 			}),
 			invalidatesTags: (_result, _error, { bookingId }) =>
 				revisionInvalidation(bookingId)

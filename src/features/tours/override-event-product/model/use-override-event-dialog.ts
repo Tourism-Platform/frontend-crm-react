@@ -4,30 +4,32 @@ import { useForm } from "react-hook-form";
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
-	type TEventOverride
+	type IOverrideUnitOption,
+	type TEventOverrideInputBackend,
+	type TOverrideProductFormValues,
+	mapEventOverrideToForm
 } from "@/entities/tour";
 
-import {
-	mapFormValuesToOverride,
-	mapOverrideToFormValues
-} from "./map-override-form";
-import type { TOverrideProductFormValues } from "./types";
+import { getUnitChargeOptions } from "./config/override-pricing.config";
 
 interface IUseOverrideEventDialogParams {
 	open: boolean;
 	eventTyp: ENUM_EVENT_BACKEND_TYPE;
-	initialOverride?: TEventOverride | null;
-	onConfirm: (data: TEventOverride) => void | Promise<void>;
+	initialOverride?: TEventOverrideInputBackend | null;
+	/** Units the per-unit arm can reprice — from the pool member's spec. */
+	units: IOverrideUnitOption[];
+	onConfirm: (values: TOverrideProductFormValues) => void | Promise<void>;
 }
 
 export const useOverrideEventDialog = ({
 	open,
 	eventTyp,
 	initialOverride,
+	units,
 	onConfirm
 }: IUseOverrideEventDialogParams) => {
 	const form = useForm<TOverrideProductFormValues>({
-		defaultValues: mapOverrideToFormValues(eventTyp, initialOverride)
+		defaultValues: mapEventOverrideToForm(eventTyp, initialOverride, units)
 	});
 
 	useEffect(() => {
@@ -35,19 +37,23 @@ export const useOverrideEventDialog = ({
 			return;
 		}
 
-		form.reset(mapOverrideToFormValues(eventTyp, initialOverride));
-	}, [open, eventTyp, initialOverride, form]);
+		form.reset(mapEventOverrideToForm(eventTyp, initialOverride, units));
+	}, [open, eventTyp, initialOverride, units, form]);
 
 	const handleConfirm = form.handleSubmit(async (values) => {
-		await onConfirm(mapFormValuesToOverride(eventTyp, values));
+		await onConfirm(values);
 	});
 
 	const isHousing = eventTyp === ENUM_EVENT_BACKEND.HOUSING;
+	const isActivity = eventTyp === ENUM_EVENT_BACKEND.ACTIVITY;
 
 	return {
 		form,
 		handleConfirm,
 		showPolicy: isHousing,
-		showChargeTyp: isHousing
+		showChargeTyp: isHousing,
+		/** Activity prices per offering only — there is no whole arm. */
+		showArmSelector: !isActivity,
+		unitChargeOptions: getUnitChargeOptions(eventTyp)
 	};
 };

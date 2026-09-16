@@ -1,10 +1,11 @@
 import type { BOOKING_REVISION_PATHS } from "@/shared/api/generated/paths/booking-revision.paths";
 
 import type {
+	ENUM_EVENT_BACKEND_TYPE,
 	ENUM_PRICING_WARNING_TYPE,
 	IEventProductLink,
 	IPricingBreakdownLine,
-	TEventOverride
+	TOverrideProductFormValues
 } from "@/entities/tour";
 
 export type TRevisionPreviewBackend = ReturnType<
@@ -51,7 +52,8 @@ export interface ISetRevisionEventOverride {
 	bookingId: string;
 	eventId: string;
 	supplyId: string;
-	data: TEventOverride;
+	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	data: TOverrideProductFormValues;
 	optionIndex?: number | null;
 }
 

@@ -11,6 +11,7 @@ export * from "./event-product-link.types";
 export * from "./event-pool.types";
 export * from "./event-override.types";
 export * from "./event-override-backend.types";
+export * from "./event-override-form.types";
 export * from "./event-backend.types";
 export * from "./event-single-backend.types";
 export * from "./event-media.types";

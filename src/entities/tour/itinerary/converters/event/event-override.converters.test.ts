@@ -4,68 +4,34 @@ import {
 	Currency,
 	type HotelOverrideOutput,
 	type HousingDetailsOutput,
+	RouteOverrideInputTypEnum,
 	RouteOverrideOutputTypEnum
 } from "@/shared/api";
 
-import {
-	getDefaultHousingOverrideForm,
-	mapHousingEventOverrideToBackend,
-	mapHousingOverrideFromBackend
-} from "./accommodation/housing-override.converters";
-import {
-	mapEventOverrideFromDetails,
-	mapEventOverrideToBackend
-} from "./event-override.converters";
-import {
-	getDefaultTrainOverrideForm,
-	mapTrainEventOverrideToBackend,
-	mapTrainOverrideFromBackend
-} from "./train-override.converters";
+import type { TEventDetailsBackend } from "../../types";
 
-const FIXED_CHARGE = {
+import { mapHousingOverrideFromBackend } from "./accommodation/housing-override.converters";
+import { mapActivityOverrideFromBackend } from "./activity/activity-override.converters";
+import { mapEventOverrideFromDetails } from "./event-override.converters";
+import { mapBusOverrideFromBackend } from "./transport/bus-override.converters";
+import { mapRouteOverrideFromBackend } from "./transport/route-override.converters";
+import { mapTransferOverrideFromBackend } from "./transport/transfer-override.converters";
+
+const FIXED_CHARGE_OUTPUT = {
 	typ: "fixed" as const,
 	cost: { val: 95, currency: Currency.USD },
 	fees: null,
+	extra_costs: [],
 	markup: null
 };
 
-const FIXED_CHARGE_OUTPUT = {
-	...FIXED_CHARGE,
-	extra_costs: []
+const PER_PERSON_CHARGE_OUTPUT = {
+	typ: "per_person" as const,
+	cost_per_person: { val: 20, currency: Currency.USD },
+	fees: null,
+	extra_costs: [],
+	markup: null
 };
-
-describe("mapHousingEventOverrideToBackend", () => {
-	it("writes the whole arm with the dialog rate", () => {
-		const body = mapHousingEventOverrideToBackend({
-			typ: "housing",
-			rate: { base: FIXED_CHARGE, seasons: [] },
-			policy: {
-				checkInFrom: "10:00",
-				checkOutUntil: "12:00",
-				earlyCheckIn: [],
-				lateCheckOut: []
-			}
-		});
-
-		expect(body.typ).toBe("housing");
-		expect(body.rates).toMatchObject({
-			pricing: "whole",
-			price: { base: { typ: "fixed", cost: { val: 95 } } }
-		});
-		expect(body.policy).toMatchObject({
-			check_in_from: "10:00",
-			check_out_until: "12:00"
-		});
-	});
-
-	it("writes null rates when no rate is set", () => {
-		const body = mapHousingEventOverrideToBackend(
-			getDefaultHousingOverrideForm()
-		);
-
-		expect(body.rates).toBeNull();
-	});
-});
 
 describe("mapHousingOverrideFromBackend", () => {
 	it("null-in → null", () => {
@@ -73,9 +39,9 @@ describe("mapHousingOverrideFromBackend", () => {
 		expect(mapHousingOverrideFromBackend(undefined)).toBeNull();
 	});
 
-	it("reads the whole arm back into the dialog model", () => {
-		const form = mapHousingOverrideFromBackend({
-			typ: "housing",
+	it("passes the whole arm through (Output → Input)", () => {
+		const override = {
+			typ: "housing" as const,
 			policy: {
 				check_in_from: "10:00",
 				check_out_until: null,
@@ -83,25 +49,26 @@ describe("mapHousingOverrideFromBackend", () => {
 				late_check_out: []
 			},
 			rates: {
-				pricing: "whole",
+				pricing: "whole" as const,
 				price: { base: FIXED_CHARGE_OUTPUT, seasons: [] }
 			}
-		});
+		};
 
-		expect(form?.typ).toBe("housing");
-		expect(form?.rate?.base).toMatchObject({
-			typ: "fixed",
-			cost: { val: 95 }
+		const input = mapHousingOverrideFromBackend(override);
+
+		expect(input).toEqual({
+			typ: "housing",
+			policy: override.policy,
+			rates: override.rates
 		});
-		expect(form?.policy?.checkInFrom).toBe("10:00");
 	});
 
-	it("per_room arm is not editable in the dialog → rate null", () => {
-		const form = mapHousingOverrideFromBackend({
-			typ: "housing",
+	it("passes the per_room arm through", () => {
+		const override = {
+			typ: "housing" as const,
 			policy: null,
 			rates: {
-				pricing: "per_room",
+				pricing: "per_room" as const,
 				rooms: [
 					{
 						room_id: "room-1",
@@ -109,52 +76,160 @@ describe("mapHousingOverrideFromBackend", () => {
 					}
 				]
 			}
-		});
+		};
 
-		expect(form?.rate).toBeNull();
+		const input = mapHousingOverrideFromBackend(override);
+
+		expect(input).toEqual({
+			typ: "housing",
+			policy: null,
+			rates: override.rates
+		});
 	});
 });
 
-describe("mapTrainEventOverrideToBackend", () => {
-	it("writes the whole arm charge", () => {
-		const body = mapTrainEventOverrideToBackend({
-			typ: "train",
-			charge: FIXED_CHARGE
-		});
-
-		expect(body.rates).toEqual({
-			pricing: "whole",
-			charge: FIXED_CHARGE
-		});
+describe("mapRouteOverrideFromBackend", () => {
+	it("null-in → null", () => {
+		expect(mapRouteOverrideFromBackend(null)).toBeNull();
+		expect(mapRouteOverrideFromBackend(undefined)).toBeNull();
 	});
 
-	it("throws instead of fabricating a charge", () => {
-		expect(() =>
-			mapTrainEventOverrideToBackend(getDefaultTrainOverrideForm())
-		).toThrow();
-	});
-});
-
-describe("mapTrainOverrideFromBackend", () => {
-	it("reads the whole arm charge", () => {
-		const form = mapTrainOverrideFromBackend({
-			typ: RouteOverrideOutputTypEnum.Train,
+	it("maps the Output typ enum onto the Input typ enum (flight)", () => {
+		const input = mapRouteOverrideFromBackend({
+			typ: RouteOverrideOutputTypEnum.Flight,
 			rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
 		});
 
-		expect(form?.charge).toMatchObject({ typ: "fixed" });
+		expect(input?.typ).toBe(RouteOverrideInputTypEnum.Flight);
+		expect(input?.rates).toEqual({
+			pricing: "whole",
+			charge: FIXED_CHARGE_OUTPUT
+		});
 	});
 
-	it("per_fare arm is not editable in the dialog → charge null", () => {
-		const form = mapTrainOverrideFromBackend({
+	it("passes the per_fare arm through (train)", () => {
+		const input = mapRouteOverrideFromBackend({
 			typ: RouteOverrideOutputTypEnum.Train,
 			rates: {
 				pricing: "per_fare",
-				fares: [{ fare_id: "fare-1", charge: FIXED_CHARGE_OUTPUT }]
+				fares: [
+					{ fare_id: "fare-1", charge: FIXED_CHARGE_OUTPUT },
+					{ fare_id: "fare-2", charge: PER_PERSON_CHARGE_OUTPUT }
+				]
 			}
 		});
 
-		expect(form?.charge).toBeNull();
+		expect(input?.typ).toBe(RouteOverrideInputTypEnum.Train);
+		expect(input?.rates).toMatchObject({
+			pricing: "per_fare",
+			fares: [{ fare_id: "fare-1" }, { fare_id: "fare-2" }]
+		});
+	});
+});
+
+describe("mapBusOverrideFromBackend", () => {
+	it("null-in → null", () => {
+		expect(mapBusOverrideFromBackend(null)).toBeNull();
+	});
+
+	it("passes the whole arm through", () => {
+		const input = mapBusOverrideFromBackend({
+			typ: "bus",
+			rates: { pricing: "whole", charge: PER_PERSON_CHARGE_OUTPUT }
+		});
+
+		expect(input).toEqual({
+			typ: "bus",
+			rates: { pricing: "whole", charge: PER_PERSON_CHARGE_OUTPUT }
+		});
+	});
+
+	it("passes the per_vehicle arm through", () => {
+		const input = mapBusOverrideFromBackend({
+			typ: "bus",
+			rates: {
+				pricing: "per_vehicle",
+				vehicles: [{ vehicle_id: "v-1", charge: FIXED_CHARGE_OUTPUT }]
+			}
+		});
+
+		expect(input?.rates).toMatchObject({
+			pricing: "per_vehicle",
+			vehicles: [{ vehicle_id: "v-1" }]
+		});
+	});
+});
+
+describe("mapTransferOverrideFromBackend", () => {
+	it("null-in → null", () => {
+		expect(mapTransferOverrideFromBackend(null)).toBeNull();
+	});
+
+	it("passes the whole arm through", () => {
+		const input = mapTransferOverrideFromBackend({
+			typ: "transfer",
+			rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
+		});
+
+		expect(input?.rates).toMatchObject({ pricing: "whole" });
+	});
+
+	it("passes the per_car arm through", () => {
+		const input = mapTransferOverrideFromBackend({
+			typ: "transfer",
+			rates: {
+				pricing: "per_car",
+				cars: [{ car_id: "car-1", charge: FIXED_CHARGE_OUTPUT }]
+			}
+		});
+
+		expect(input?.rates).toMatchObject({
+			pricing: "per_car",
+			cars: [{ car_id: "car-1" }]
+		});
+	});
+
+	it("passes the per_car_category arm through", () => {
+		const input = mapTransferOverrideFromBackend({
+			typ: "transfer",
+			rates: {
+				pricing: "per_car_category",
+				categories: [
+					{ category_id: "cat-1", charge: FIXED_CHARGE_OUTPUT }
+				]
+			}
+		});
+
+		expect(input?.rates).toMatchObject({
+			pricing: "per_car_category",
+			categories: [{ category_id: "cat-1" }]
+		});
+	});
+});
+
+describe("mapActivityOverrideFromBackend", () => {
+	it("null-in → null", () => {
+		expect(mapActivityOverrideFromBackend(null)).toBeNull();
+	});
+
+	it("passes the offerings through", () => {
+		const input = mapActivityOverrideFromBackend({
+			typ: "activity",
+			rates: {
+				offerings: [
+					{ offering_id: "off-1", charge: PER_PERSON_CHARGE_OUTPUT }
+				]
+			}
+		});
+
+		expect(input).toEqual({
+			typ: "activity",
+			rates: {
+				offerings: [
+					{ offering_id: "off-1", charge: PER_PERSON_CHARGE_OUTPUT }
+				]
+			}
+		});
 	});
 });
 
@@ -172,7 +247,7 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 		categories: [] as []
 	};
 
-	const buildDetails = (
+	const buildHousingDetails = (
 		override: HotelOverrideOutput | null
 	): HousingDetailsOutput => ({
 		plan: {},
@@ -192,6 +267,26 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 		]
 	});
 
+	/** Dispatch reads only `supply.override` — the spec shape is irrelevant here. */
+	const buildDetails = (override: unknown): TEventDetailsBackend =>
+		({
+			plan: {},
+			pool: [
+				{
+					id: "11111111-1111-1111-1111-111111111111",
+					is_main: true,
+					supply: {
+						source: "product",
+						product_id: "p1",
+						supplier: { id: "s1", name: "S" },
+						scope: { typ: "all" },
+						override
+					},
+					spec: {}
+				}
+			]
+		}) as unknown as TEventDetailsBackend;
+
 	it("returns null for inline supply", () => {
 		expect(
 			mapEventOverrideFromDetails({
@@ -209,12 +304,14 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 	});
 
 	it("returns null when override is null", () => {
-		expect(mapEventOverrideFromDetails(buildDetails(null))).toBeNull();
+		expect(
+			mapEventOverrideFromDetails(buildHousingDetails(null))
+		).toBeNull();
 	});
 
-	it("reads the override from supply.override", () => {
-		const form = mapEventOverrideFromDetails(
-			buildDetails({
+	it("reads a housing override from supply.override", () => {
+		const input = mapEventOverrideFromDetails(
+			buildHousingDetails({
 				typ: "housing",
 				policy: null,
 				rates: {
@@ -224,24 +321,65 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 			})
 		);
 
-		expect(form?.typ).toBe("housing");
-		if (form?.typ === "housing") {
-			expect(form.rate?.base).toMatchObject({ typ: "fixed" });
-		}
+		expect(input).toMatchObject({
+			typ: "housing",
+			rates: { pricing: "whole" }
+		});
 	});
-});
 
-describe("mapEventOverrideToBackend dispatch", () => {
-	it("dispatches housing and train", () => {
+	it("dispatches train and flight onto the route reader", () => {
 		expect(
-			mapEventOverrideToBackend({
-				typ: "train",
-				charge: FIXED_CHARGE
-			}).rates
-		).toEqual({ pricing: "whole", charge: FIXED_CHARGE });
+			mapEventOverrideFromDetails(
+				buildDetails({
+					typ: RouteOverrideOutputTypEnum.Train,
+					rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
+				})
+			)?.typ
+		).toBe(RouteOverrideInputTypEnum.Train);
 
 		expect(
-			mapEventOverrideToBackend(getDefaultHousingOverrideForm()).typ
-		).toBe("housing");
+			mapEventOverrideFromDetails(
+				buildDetails({
+					typ: RouteOverrideOutputTypEnum.Flight,
+					rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
+				})
+			)?.typ
+		).toBe(RouteOverrideInputTypEnum.Flight);
+	});
+
+	it("dispatches bus, transfer and activity onto their readers", () => {
+		expect(
+			mapEventOverrideFromDetails(
+				buildDetails({
+					typ: "bus",
+					rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
+				})
+			)?.typ
+		).toBe("bus");
+
+		expect(
+			mapEventOverrideFromDetails(
+				buildDetails({
+					typ: "transfer",
+					rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
+				})
+			)?.typ
+		).toBe("transfer");
+
+		expect(
+			mapEventOverrideFromDetails(
+				buildDetails({
+					typ: "activity",
+					rates: {
+						offerings: [
+							{
+								offering_id: "off-1",
+								charge: FIXED_CHARGE_OUTPUT
+							}
+						]
+					}
+				})
+			)?.typ
+		).toBe("activity");
 	});
 });
