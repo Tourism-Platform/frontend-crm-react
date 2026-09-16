@@ -20,6 +20,10 @@ import {
 	mapSupplierVariantChargeToBackend
 } from "../supplier-variant-charge.converters";
 
+import {
+	mapActivityMenuFromBackend,
+	mapActivityMenuToBackend
+} from "./activity-menu.converters";
 import { activitySubTypeConverter } from "./activity-sub-type.converters";
 
 export const mapActivityVariantFromBackend = (
@@ -27,16 +31,24 @@ export const mapActivityVariantFromBackend = (
 ): IActivityVariant => ({
 	id: variant.id,
 	name: variant.name ?? "",
-	expenses: mapSupplierVariantChargeFromBackend(variant.charge)
+	expenses: mapSupplierVariantChargeFromBackend(variant.charge),
+	...("menu" in variant
+		? { menu: mapActivityMenuFromBackend(variant.menu) }
+		: {})
 });
 
 export const mapActivityVariantToWrite = (
 	data: IActivityVariantWrite
-): TActivityVariantWriteBackend => ({
-	typ: "activity",
-	name: data.name,
-	charge: mapSupplierVariantChargeToBackend(data.expenses)
-});
+): TActivityVariantWriteBackend => {
+	const menu = mapActivityMenuToBackend(data.menu);
+
+	return {
+		typ: "activity",
+		name: data.name,
+		charge: mapSupplierVariantChargeToBackend(data.expenses),
+		...(menu ? { menu } : {})
+	};
+};
 
 export const mapActivityProductFromBackend = (
 	row: TActivityProductReadBackend

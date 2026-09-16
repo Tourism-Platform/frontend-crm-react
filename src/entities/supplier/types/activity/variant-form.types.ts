@@ -10,7 +10,8 @@ export const ENUM_FORM_ACTIVITY_VARIANT = {
 	CHARGE_TYP: "chargeTyp",
 	COST: "cost",
 	CURRENCY: "currency",
-	FEES: "fees"
+	FEES: "fees",
+	MENU: "menu"
 } as const;
 
 export type ENUM_FORM_ACTIVITY_VARIANT_TYPE =

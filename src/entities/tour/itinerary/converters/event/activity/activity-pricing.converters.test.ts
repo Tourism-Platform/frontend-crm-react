@@ -11,7 +11,7 @@ import {
 	ENUM_FEE_FIELD,
 	type TActivityPricingSchema,
 	createEmptyFeeRow
-} from "../../types";
+} from "../../../types";
 
 import {
 	mapActivityPricingFromBackend,

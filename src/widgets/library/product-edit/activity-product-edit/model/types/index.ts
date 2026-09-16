@@ -1,11 +1,2 @@
-import type { IActivityProduct } from "@/entities/supplier";
-
 export * from "./activity-product-tabs.types";
-export * from "./form.types";
-
-export interface IActivityProductEditProps {
-	supplierId: string;
-	productId: string;
-	isCreate: boolean;
-	product?: IActivityProduct | null;
-}
+export * from "./form-section.types";

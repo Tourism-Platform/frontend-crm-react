@@ -23,7 +23,16 @@ import {
 	type TTimesBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
-} from "../../types";
+} from "../../../types";
+import { mapInlinePoolWrite } from "../details-read-to-write.converters";
+import { getPoolMember } from "../event-pool.helpers";
+import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
+import {
+	applyEventPackageIdToPricing,
+	mapEventPackageIdToBackend
+} from "../package-id.helpers";
+import { toTimezoneOffset } from "../timezone.helpers";
+import { zeroFixedCharge } from "../zero-fixed-charge.helpers";
 
 import { isInheritedActivityDetails } from "./activity-details.helpers";
 import {
@@ -38,15 +47,6 @@ import {
 	ACTIVITY_TYPE_TO_GENERAL_SUB_TYP,
 	activityTypeMapper
 } from "./activity-type.converters";
-import { mapInlinePoolWrite } from "./details-read-to-write.converters";
-import { getPoolMember } from "./event-pool.helpers";
-import { mapInheritedProductLinkToForm } from "./inherited-housing-form.helpers";
-import {
-	applyEventPackageIdToPricing,
-	mapEventPackageIdToBackend
-} from "./package-id.helpers";
-import { toTimezoneOffset } from "./timezone.helpers";
-import { zeroFixedCharge } from "./zero-fixed-charge.helpers";
 
 /**
  * The generated READ union types a general venue's discriminant as

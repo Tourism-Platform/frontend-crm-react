@@ -68,7 +68,8 @@ describe("mapActivityVariantFormToWrite", () => {
 
 		expect(write.expenses).toMatchObject({
 			typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-			cost: { val: 0, currency: DEFAULT_EVENT_CURRENCY }
+			cost: { val: 0, currency: DEFAULT_EVENT_CURRENCY },
+			markup: null
 		});
 	});
 });

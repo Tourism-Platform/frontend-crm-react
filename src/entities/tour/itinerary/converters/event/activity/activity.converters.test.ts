@@ -9,7 +9,7 @@ import {
 	ENUM_ACTIVITY_TYPE,
 	ENUM_FORM_ACTIVITY,
 	ENUM_FORM_ACTIVITY_MENU
-} from "../../types";
+} from "../../../types";
 
 import { mapActivityFormToUpdate } from "./activity.converters";
 

@@ -2,8 +2,8 @@ import type {
 	IActivityMenuItem,
 	TActivityMenuItemBackend,
 	TActivityMenuItemInputBackend
-} from "../../types";
-import { ENUM_FORM_ACTIVITY_MENU } from "../../types";
+} from "../../../types";
+import { ENUM_FORM_ACTIVITY_MENU } from "../../../types";
 
 export const mapMenuItemFromBackend = (
 	item: TActivityMenuItemBackend

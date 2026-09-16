@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import type { ACTIVITY_PRODUCT_EDIT_SCHEMA } from "../../schema/activity-product-edit.schema";
 import type { ACTIVITY_PRODUCT_GENERAL_SCHEMA } from "../../schema/activity-product.schema";
 
 export const ENUM_FORM_ACTIVITY_PRODUCT = {
@@ -13,4 +14,8 @@ export type ENUM_FORM_ACTIVITY_PRODUCT_TYPE =
 
 export type TActivityProductGeneralSchema = z.infer<
 	typeof ACTIVITY_PRODUCT_GENERAL_SCHEMA
+>;
+
+export type TActivityProductEditSchema = z.infer<
+	typeof ACTIVITY_PRODUCT_EDIT_SCHEMA
 >;

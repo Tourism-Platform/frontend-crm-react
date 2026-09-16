@@ -11,6 +11,8 @@ export * from "./event/transfer/transfer-type.converters";
 export * from "./event/transfer/transportation-pricing.converters";
 export * from "./event/accommodation/accommodation-amenity.converters";
 export * from "./event/accommodation/accommodation-pricing.converters";
+export * from "./event/activity/activity-menu.converters";
+export * from "./event/activity/activity-pricing.converters";
 export * from "./event/housing-room-type.converters";
 export * from "./event/housing-source.converters";
 export * from "./event/housing-details.helpers";

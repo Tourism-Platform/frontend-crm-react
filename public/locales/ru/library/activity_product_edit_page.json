@@ -74,6 +74,22 @@
 					}
 				}
 			},
+			"menu": {
+				"title": "Меню",
+				"buttons": {
+					"add": "Добавить блюдо"
+				},
+				"fields": {
+					"name": {
+						"label": "Название блюда",
+						"placeholder": "Введите название"
+					},
+					"description": {
+						"label": "Описание",
+						"placeholder": "Краткое описание"
+					}
+				}
+			},
 			"buttons": {
 				"save": "Сохранить вариант",
 				"saving": "Сохранение",

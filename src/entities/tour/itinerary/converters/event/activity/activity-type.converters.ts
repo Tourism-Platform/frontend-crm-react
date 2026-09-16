@@ -1,7 +1,10 @@
 import { ActivityType, GeneralVenueInputSubTypEnum } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import { ENUM_ACTIVITY_TYPE, type ENUM_ACTIVITY_TYPE_TYPE } from "../../types";
+import {
+	ENUM_ACTIVITY_TYPE,
+	type ENUM_ACTIVITY_TYPE_TYPE
+} from "../../../types";
 
 const MAP_ACTIVITY_TYPE: Partial<
 	Record<ENUM_ACTIVITY_TYPE_TYPE, ActivityType>

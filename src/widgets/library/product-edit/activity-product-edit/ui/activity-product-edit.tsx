@@ -1,5 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { type FC } from "react";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -10,20 +11,37 @@ import {
 	Card,
 	CardContent,
 	CustomQueryTabs,
+	Form,
 	useSetBreadcrumbLabels,
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useGetSupplierQuery } from "@/entities/supplier";
+import {
+	type TActivityProductEditSchema,
+	useGetSupplierQuery
+} from "@/entities/supplier";
 
 import { DeleteSupplierProduct } from "@/features/library";
 
 import {
 	ACTIVITY_PRODUCT_EDIT_TABS_LIST,
-	type IActivityProductEditProps
+	type ENUM_FORM_SECTION_TYPE,
+	type IActivityProductEditSlotContext
 } from "../model";
 
+export interface IActivityProductEditProps
+	extends IActivityProductEditSlotContext {
+	form: UseFormReturn<TActivityProductEditSchema>;
+	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
+	isLoading: boolean;
+	tabs?: typeof ACTIVITY_PRODUCT_EDIT_TABS_LIST;
+}
+
 const ActivityProductEditBase: FC<IActivityProductEditProps> = ({
+	form,
+	createSectionSubmit,
+	isLoading,
+	tabs = ACTIVITY_PRODUCT_EDIT_TABS_LIST,
 	supplierId,
 	productId,
 	isCreate,
@@ -31,7 +49,6 @@ const ActivityProductEditBase: FC<IActivityProductEditProps> = ({
 }) => {
 	const { t } = useTranslation("activity_product_edit_page");
 	const navigate = useNavigate();
-	const variants = product?.variants ?? [];
 
 	const { data: supplier } = useOptionalResourceQuery(
 		useGetSupplierQuery({ supplierId }, { skip: !supplierId })
@@ -47,45 +64,48 @@ const ActivityProductEditBase: FC<IActivityProductEditProps> = ({
 	});
 
 	return (
-		<section className="flex flex-col gap-6">
-			<div className="flex flex-wrap items-center justify-between gap-3">
-				<div className="flex flex-col gap-2">
-					<h1 className="text-2xl font-semibold">
-						{product?.name || t("page_name")}
-					</h1>
+		<Form {...form}>
+			<section className="flex flex-col gap-6">
+				<div className="flex flex-wrap items-center justify-between gap-3">
+					<div className="flex flex-col gap-2">
+						<h1 className="text-2xl font-semibold">
+							{product?.name || t("page_name")}
+						</h1>
+					</div>
+					{!isCreate ? (
+						<DeleteSupplierProduct
+							supplierId={supplierId}
+							productId={productId}
+							ns="activity_product_edit_page"
+							onSuccess={() => navigate(supplierPath)}
+							trigger={
+								<Button variant="destructive">
+									<Trash2 className="mr-2 h-4 w-4" />
+									{t("menu.delete.button")}
+								</Button>
+							}
+						/>
+					) : null}
 				</div>
-				{!isCreate ? (
-					<DeleteSupplierProduct
-						supplierId={supplierId}
-						productId={productId}
-						ns="activity_product_edit_page"
-						onSuccess={() => navigate(supplierPath)}
-						trigger={
-							<Button variant="destructive">
-								<Trash2 className="mr-2 h-4 w-4" />
-								{t("menu.delete.button")}
-							</Button>
-						}
-					/>
-				) : null}
-			</div>
-
-			<Card>
-				<CardContent>
-					<CustomQueryTabs
-						ns="activity_product_edit_page"
-						tabs={ACTIVITY_PRODUCT_EDIT_TABS_LIST}
-						slotContext={{
-							supplierId,
-							productId,
-							isCreate,
-							product,
-							variants
-						}}
-					/>
-				</CardContent>
-			</Card>
-		</section>
+				<Card>
+					<CardContent>
+						<CustomQueryTabs
+							ns="activity_product_edit_page"
+							tabs={tabs}
+							form={form}
+							createSectionSubmit={createSectionSubmit}
+							isLoading={isLoading}
+							slotContext={{
+								supplierId,
+								productId,
+								isCreate,
+								product
+							}}
+						/>
+					</CardContent>
+				</Card>
+			</section>
+		</Form>
 	);
 };
 

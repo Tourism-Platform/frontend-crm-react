@@ -7,18 +7,12 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useActivityProductImages } from "../model";
+import { type TSlotProps, useActivityProductImages } from "../model";
 
-interface IActivityProductImagesProps {
-	supplierId: string;
-	productId: string;
-	disabled?: boolean;
-}
-
-const ActivityProductImagesBase: FC<IActivityProductImagesProps> = ({
+const ActivityProductImagesBase: FC<TSlotProps> = ({
 	supplierId,
 	productId,
-	disabled = false
+	disabled
 }) => {
 	const { t } = useTranslation("activity_product_edit_page");
 	const { productUpload } = useActivityProductImages({

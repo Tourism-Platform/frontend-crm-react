@@ -74,6 +74,22 @@
 					}
 				}
 			},
+			"menu": {
+				"title": "Menu",
+				"buttons": {
+					"add": "Add dish"
+				},
+				"fields": {
+					"name": {
+						"label": "Dish name",
+						"placeholder": "Enter dish name"
+					},
+					"description": {
+						"label": "Description",
+						"placeholder": "Short description"
+					}
+				}
+			},
 			"buttons": {
 				"save": "Save variant",
 				"saving": "Saving",

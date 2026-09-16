@@ -6,25 +6,16 @@ import { toast } from "sonner";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
-	ENUM_SUPPLIER_TYPE,
-	type IActivityProduct,
 	LIBRARY_SUPPLIER_PRODUCT_CREATE_ID,
-	type TSupplierProduct,
 	useGetSupplierProductQuery
 } from "@/entities/supplier";
 
 import { ActivityProductEdit } from "@/widgets/library";
 
-const isActivityProduct = (
-	product?: TSupplierProduct
-): product is IActivityProduct => product?.typ === ENUM_SUPPLIER_TYPE.ACTIVITY;
+import { useLibraryActivityProductEdit } from "../model";
 
 export const LibraryActivityProductEditPage: FC = () => {
-	const { t } = useTranslation([
-		"activity_product_edit_page",
-		"common_events",
-		"options"
-	]);
+	const { t } = useTranslation("activity_product_edit_page");
 	const { supplierId = "", productId = "" } = useParams<{
 		supplierId: string;
 		productId: string;
@@ -44,10 +35,28 @@ export const LibraryActivityProductEditPage: FC = () => {
 		}
 	}, [isRealError, t]);
 
-	const activityProduct = isActivityProduct(product) ? product : null;
+	const {
+		form,
+		createSectionSubmit,
+		isLoading,
+		isExpectedType,
+		product: activityProduct
+	} = useLibraryActivityProductEdit({
+		supplierId,
+		productId,
+		isCreate,
+		product
+	});
+
+	if (!isCreate && product && !isExpectedType) {
+		return null;
+	}
 
 	return (
 		<ActivityProductEdit
+			form={form}
+			createSectionSubmit={createSectionSubmit}
+			isLoading={isLoading}
 			supplierId={supplierId}
 			productId={productId}
 			isCreate={isCreate}

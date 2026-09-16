@@ -1,1 +1,4 @@
-export { ActivityProductEdit } from "./ui/activity-product-edit";
+export {
+	ActivityProductEdit,
+	type IActivityProductEditProps
+} from "./ui/activity-product-edit";

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { ENUM_FORM_ACTIVITY_MENU } from "../../types";
+import { ENUM_FORM_ACTIVITY_MENU } from "../../../types";
 
 import {
 	mapMenuFromBackend,

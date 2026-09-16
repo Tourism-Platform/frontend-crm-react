@@ -3,6 +3,7 @@ import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 import {
 	ENUM_FORM_ACTIVITY_VARIANT,
 	ENUM_SUPPLIER_VARIANT_CHARGE,
+	type IActivityMenuItem,
 	type IActivityVariant,
 	type IActivityVariantWrite,
 	type TActivityVariantFormSchema
@@ -49,7 +50,10 @@ export const mapActivityVariantToForm = (
 };
 
 export const mapActivityVariantFormToWrite = (
-	values: TActivityVariantFormSchema
+	values: TActivityVariantFormSchema & {
+		[ENUM_FORM_ACTIVITY_VARIANT.MENU]?: IActivityMenuItem[];
+	},
+	existing?: IActivityVariant | null
 ): IActivityVariantWrite => {
 	const money = {
 		val: values[ENUM_FORM_ACTIVITY_VARIANT.COST] ?? 0,
@@ -60,29 +64,28 @@ export const mapActivityVariantFormToWrite = (
 	const fees = values[ENUM_FORM_ACTIVITY_VARIANT.FEES].length
 		? values[ENUM_FORM_ACTIVITY_VARIANT.FEES]
 		: null;
+	const markup = existing?.expenses?.markup ?? null;
+	const menu = values[ENUM_FORM_ACTIVITY_VARIANT.MENU];
 
-	if (
+	const expenses =
 		values[ENUM_FORM_ACTIVITY_VARIANT.CHARGE_TYP] ===
 		ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON
-	) {
-		return {
-			name: values[ENUM_FORM_ACTIVITY_VARIANT.NAME].trim(),
-			expenses: {
-				typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
-				costPerPerson: money,
-				fees,
-				markup: null
-			}
-		};
-	}
+			? {
+					typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
+					costPerPerson: money,
+					fees,
+					markup
+				}
+			: {
+					typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+					cost: money,
+					fees,
+					markup
+				};
 
 	return {
 		name: values[ENUM_FORM_ACTIVITY_VARIANT.NAME].trim(),
-		expenses: {
-			typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-			cost: money,
-			fees,
-			markup: null
-		}
+		expenses,
+		...(menu ? { menu } : {})
 	};
 };

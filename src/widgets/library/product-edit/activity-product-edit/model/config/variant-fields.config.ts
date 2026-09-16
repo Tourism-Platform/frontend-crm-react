@@ -6,15 +6,15 @@ import {
 	ENUM_FORM_ACTIVITY_VARIANT as ENUM_FORM
 } from "@/entities/supplier";
 
-import type { TVariantForm } from "../types";
+import type { TForm } from "../types";
 
-export const ACTIVITY_VARIANT_FIELDS_LIST = (): TVariantForm[] => [
+export const ACTIVITY_VARIANT_FIELDS_LIST = (): TForm[] => [
 	{
 		key: ENUM_FORM.NAME,
 		fieldType: "input",
 		label: "form.variants.fields.name.label",
 		placeholder: "form.variants.fields.name.placeholder",
-		className: "md:col-span-3"
+		className: "col-span-3"
 	},
 	{
 		key: ENUM_FORM.CHARGE_TYP,

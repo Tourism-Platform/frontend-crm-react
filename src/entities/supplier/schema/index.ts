@@ -20,3 +20,5 @@ export * from "./transfer-product-edit.schema";
 export * from "./transfer-variant.schema";
 export * from "./activity-product.schema";
 export * from "./activity-variant.schema";
+export * from "./activity-variants.schema";
+export * from "./activity-product-edit.schema";

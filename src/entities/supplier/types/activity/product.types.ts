@@ -3,11 +3,13 @@ import type { ENUM_SUPPLIER_TYPE_TYPE } from "../supplier-type.types";
 import type { TSupplierVariantCharge } from "../supplier-variant-charge.types";
 
 import type { ENUM_ACTIVITY_SUB_TYPE_TYPE } from "./activity-sub-type.types";
+import type { IActivityMenuItem } from "./menu.types";
 
 export interface IActivityVariant {
 	id: string;
 	name: string;
 	expenses: TSupplierVariantCharge | null;
+	menu?: IActivityMenuItem[];
 }
 
 export interface IActivityProduct {
@@ -32,4 +34,5 @@ export interface IActivityProductCreate {
 export interface IActivityVariantWrite {
 	name: string;
 	expenses: TSupplierVariantCharge;
+	menu?: IActivityMenuItem[];
 }
