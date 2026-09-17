@@ -24,7 +24,26 @@ export const mapEventProductScopeToBackend = (
 	scope: TEventProductScope
 ): TEventProductScopeBackend => {
 	if (scope.typ === "only") {
-		return { typ: "only", ids: [...scope.ids] };
+		return {
+			typ: "only",
+			ids: [...scope.ids],
+			units: [...scope.units],
+			categories: [...scope.categories]
+		};
+	}
+	return { typ: "all" };
+};
+
+export const mapEventProductScopeFromBackend = (
+	scope: TEventProductScopeBackend
+): TEventProductScope => {
+	if (scope.typ === "only") {
+		return {
+			typ: "only",
+			ids: [...(scope.ids ?? [])],
+			units: [...(scope.units ?? [])],
+			categories: [...(scope.categories ?? [])]
+		};
 	}
 	return { typ: "all" };
 };

@@ -68,7 +68,9 @@ const mapScopeReadToWrite = (
 	if (scope.typ === "only") {
 		const only: { typ: "only" } & OnlyVariants = {
 			typ: "only",
-			ids: [...scope.ids]
+			ids: [...(scope.ids ?? [])],
+			units: [...(scope.units ?? [])],
+			categories: [...(scope.categories ?? [])]
 		};
 		return only;
 	}
@@ -276,15 +278,16 @@ const mapTransferSpecReadToWrite = (
 		};
 	}
 	if (spec.pricing === "per_car_category") {
-		const { cars, ...rest } = stripImages(spec);
+		const { cars, categories, ...rest } = stripImages(spec);
 		return {
 			...rest,
 			pricing: "per_car_category",
+			categories: categories.map((category) => ({ ...category })),
 			cars: cars.map((car) => {
-				const { categories, ...carRest } = stripImages(car);
+				const { prices, ...carRest } = stripImages(car);
 				return {
 					...carRest,
-					categories: categories.map((category) => ({ ...category }))
+					prices: prices.map((price) => ({ ...price }))
 				};
 			})
 		};

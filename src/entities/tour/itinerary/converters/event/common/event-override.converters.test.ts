@@ -194,15 +194,13 @@ describe("mapTransferOverrideFromBackend", () => {
 			typ: "transfer",
 			rates: {
 				pricing: "per_car_category",
-				categories: [
-					{ category_id: "cat-1", charge: FIXED_CHARGE_OUTPUT }
-				]
+				prices: [{ price_id: "cat-1", charge: FIXED_CHARGE_OUTPUT }]
 			}
 		});
 
 		expect(input?.rates).toMatchObject({
 			pricing: "per_car_category",
-			categories: [{ category_id: "cat-1" }]
+			prices: [{ price_id: "cat-1" }]
 		});
 	});
 });

@@ -21,9 +21,19 @@ describe("mapEventProductScopeToBackend", () => {
 
 	it("maps only scope with a copied ids list", () => {
 		const ids = ["unit-1", "unit-2"];
-		const result = mapEventProductScopeToBackend({ typ: "only", ids });
+		const result = mapEventProductScopeToBackend({
+			typ: "only",
+			ids,
+			units: [],
+			categories: []
+		});
 
-		expect(result).toEqual({ typ: "only", ids: ["unit-1", "unit-2"] });
+		expect(result).toEqual({
+			typ: "only",
+			ids: ["unit-1", "unit-2"],
+			units: [],
+			categories: []
+		});
 		expect(result).not.toBe(ids);
 		if (result.typ === "only") {
 			expect(result.ids).not.toBe(ids);
@@ -54,11 +64,21 @@ describe("mapEventProductLinkToBackend (attach)", () => {
 		expect(
 			mapEventProductLinkToBackend({
 				productId: "p1",
-				scope: { typ: "only", ids: ["v1"] }
+				scope: {
+					typ: "only",
+					ids: ["v1"],
+					units: [],
+					categories: []
+				}
 			})
 		).toEqual({
 			product_id: "p1",
-			scope: { typ: "only", ids: ["v1"] }
+			scope: {
+				typ: "only",
+				ids: ["v1"],
+				units: [],
+				categories: []
+			}
 		});
 	});
 });
@@ -88,12 +108,22 @@ describe("mapEventProductRelinkToBackend", () => {
 		expect(
 			mapEventProductRelinkToBackend({
 				productId: "p2",
-				scope: { typ: "only", ids: ["v9"] },
+				scope: {
+					typ: "only",
+					ids: ["v9"],
+					units: [],
+					categories: []
+				},
 				dropOverride: false
 			})
 		).toEqual({
 			product_id: "p2",
-			scope: { typ: "only", ids: ["v9"] },
+			scope: {
+				typ: "only",
+				ids: ["v9"],
+				units: [],
+				categories: []
+			},
 			drop_override: false
 		});
 	});
@@ -113,11 +143,21 @@ describe("mapEventProductScopeUpdateToBackend", () => {
 
 		expect(
 			mapEventProductScopeUpdateToBackend({
-				scope: { typ: "only", ids: ["v1"] },
+				scope: {
+					typ: "only",
+					ids: ["v1"],
+					units: [],
+					categories: []
+				},
 				dropStrayOverrides: true
 			})
 		).toEqual({
-			scope: { typ: "only", ids: ["v1"] },
+			scope: {
+				typ: "only",
+				ids: ["v1"],
+				units: [],
+				categories: []
+			},
 			drop_stray_overrides: true
 		});
 	});

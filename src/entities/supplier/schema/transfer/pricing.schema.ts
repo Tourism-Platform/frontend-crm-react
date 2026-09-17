@@ -11,6 +11,7 @@ import { ENUM_SUPPLIER_SURCHARGE } from "../../types";
 import {
 	ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD,
 	ENUM_TRANSFER_PRODUCT_EXPENSE_TYP,
+	ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD,
 	ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICE_ROW_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICING_FIELD,
@@ -48,12 +49,19 @@ const perCarPriceRowSchema = z.object({
 	[ENUM_TRANSFER_PRODUCT_PRICE_ROW_FIELD.MARKUP]: markupSchema
 });
 
-const categoryRowSchema = z.object({
-	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME]: z.string().min(1, {
+const fleetCategoryRowSchema = z.object({
+	[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.ID]: z.string().optional(),
+	[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME]: z.string().min(1, {
 		message: msg(
 			"form.pricing.form.per_car.fields.category_name.errors.required"
 		)
-	}),
+	})
+});
+
+const categoryRowSchema = z.object({
+	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.CATEGORY_ID]: z.string().min(1),
+	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.PRICE_ID]: z.string().optional(),
+	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME]: z.string(),
 	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.COST]: nonNegativeNullableNumber,
 	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.FEES]: z.array(
 		TRANSFER_VARIANT_FEE_SCHEMA
@@ -128,6 +136,9 @@ export const TRANSFER_PRODUCT_PRICING_SCHEMA = z
 		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICE_BASED_ON_CLASS]: z.boolean(),
 		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]:
 			z.boolean(),
+		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.FLEET_CATEGORIES]: z
+			.array(fleetCategoryRowSchema)
+			.optional(),
 		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES]: z
 			.union([perCarExpensesSchema, perCarCategoryExpensesSchema])
 			.nullable()
@@ -142,6 +153,25 @@ export const TRANSFER_PRODUCT_PRICING_SCHEMA = z
 	})
 	.superRefine((data, ctx) => {
 		if (data.pricing_type === ENUM_TRANSFER_PRODUCT_PRICING_TYPE.PER_CAR) {
+			if (
+				data.price_based_on_class &&
+				(!data.fleet_categories?.length ||
+					data.fleet_categories.some(
+						(row) =>
+							!row[
+								ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME
+							]?.trim()
+					))
+			) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: msg(
+						"form.pricing.form.per_car.fields.categories.errors.min"
+					),
+					path: [ENUM_TRANSFER_PRODUCT_PRICING_FIELD.FLEET_CATEGORIES]
+				});
+			}
+
 			const expensesResult = data.price_based_on_class
 				? perCarCategoryExpensesSchema.safeParse(data.expenses)
 				: perCarExpensesSchema.safeParse(data.expenses);

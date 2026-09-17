@@ -40,11 +40,11 @@ describe("mapTransferVariantFromBackend", () => {
 				typ: "fixed",
 				cost: { val: 40, currency: DEFAULT_EVENT_CURRENCY }
 			},
-			categories: []
+			prices: []
 		});
 	});
 
-	it("maps categorised classes", () => {
+	it("maps categorised prices", () => {
 		expect(
 			mapTransferVariantFromBackend({
 				id: "v1",
@@ -53,10 +53,10 @@ describe("mapTransferVariantFromBackend", () => {
 				pax: 3,
 				description: null,
 				images: [],
-				categories: [
+				prices: [
 					{
-						id: "c1",
-						name: "economy",
+						id: "p1",
+						category_id: "fc1",
 						charge: {
 							typ: "fixed",
 							cost: {
@@ -72,10 +72,10 @@ describe("mapTransferVariantFromBackend", () => {
 			})
 		).toMatchObject({
 			expenses: null,
-			categories: [
+			prices: [
 				{
-					id: "c1",
-					name: "economy",
+					id: "p1",
+					categoryId: "fc1",
 					expenses: {
 						typ: "fixed",
 						cost: { val: 30, currency: DEFAULT_EVENT_CURRENCY }
@@ -98,10 +98,10 @@ describe("mapTransferVariantToWrite", () => {
 			fees: null,
 			markup: null
 		},
-		categories: [
+		prices: [
 			{
-				id: "c1",
-				name: "economy",
+				id: "p1",
+				categoryId: "fc1",
 				expenses: {
 					typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
 					cost: { val: 30, currency: DEFAULT_EVENT_CURRENCY },
@@ -112,7 +112,7 @@ describe("mapTransferVariantToWrite", () => {
 		]
 	};
 
-	it("sends per_car without categories", () => {
+	it("sends per_car without prices", () => {
 		expect(
 			mapTransferVariantToWrite(write, ENUM_TRANSFER_PRICING.PER_CAR)
 		).toMatchObject({
@@ -124,10 +124,10 @@ describe("mapTransferVariantToWrite", () => {
 		});
 		expect(
 			mapTransferVariantToWrite(write, ENUM_TRANSFER_PRICING.PER_CAR)
-		).not.toHaveProperty("categories");
+		).not.toHaveProperty("prices");
 	});
 
-	it("echoes category ids on per_car_category", () => {
+	it("echoes price ids on per_car_category", () => {
 		expect(
 			mapTransferVariantToWrite(
 				write,
@@ -140,10 +140,10 @@ describe("mapTransferVariantToWrite", () => {
 			body_type: "sedan",
 			pax: 3,
 			description: null,
-			categories: [
+			prices: [
 				{
-					id: "c1",
-					name: "economy",
+					id: "p1",
+					category_id: "fc1",
 					charge: {
 						typ: "fixed",
 						cost: { val: 30, currency: DEFAULT_EVENT_CURRENCY },
@@ -155,7 +155,7 @@ describe("mapTransferVariantToWrite", () => {
 		});
 	});
 
-	it("omits charge and categories on whole", () => {
+	it("omits charge and prices on whole", () => {
 		expect(
 			mapTransferVariantToWrite(write, ENUM_TRANSFER_PRICING.WHOLE)
 		).toEqual({

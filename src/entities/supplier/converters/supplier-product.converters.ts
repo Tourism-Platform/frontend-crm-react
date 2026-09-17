@@ -252,7 +252,9 @@ export const mapSupplierVariantFormToWrite = (
 			return {
 				typ: ENUM_SUPPLIER_TYPE.TRANSFER,
 				pricing: input.existing.pricing,
-				data: mapTransferCarRowToVariantWrite(input.row, input.existing)
+				data:
+					input.variantWrite ??
+					mapTransferCarRowToVariantWrite(input.row, input.existing)
 			};
 		case ENUM_SUPPLIER_TYPE.ACTIVITY:
 			return {

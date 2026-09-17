@@ -1,6 +1,10 @@
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
 import {
+	alignPerCarMatrixToFleet,
+	mapPriceToCategoryRow
+} from "../../lib/transfer-fleet-category.helpers";
+import {
 	ENUM_FORM_TRANSFER_CARS,
 	ENUM_FORM_TRANSFER_SECTION,
 	ENUM_SUPPLIER_TYPE,
@@ -8,13 +12,17 @@ import {
 	ENUM_TRANSFER_PRICING,
 	ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD,
 	ENUM_TRANSFER_PRODUCT_EXPENSE_TYP,
+	ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD,
 	ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICE_ROW_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICING_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICING_TYPE,
 	type ISupplierFixedCharge,
+	type ITransferCarPriceWrite,
+	type ITransferFleetCategory,
 	type ITransferProduct,
 	type ITransferProductCategoryPriceRow,
+	type ITransferProductFleetCategoryRow,
 	type ITransferProductPerCarByClassPriceRow,
 	type ITransferProductPerCarCategoryExpenses,
 	type ITransferProductPerCarExpenses,
@@ -23,6 +31,7 @@ import {
 	type ITransferVariant,
 	type TSupplierVariantCharge,
 	type TTransferPricingSwitchBackend,
+	type TTransferProductDetailsBackend,
 	type TTransferProductEditSchema,
 	type TTransferProductPricingSchema
 } from "../../types";
@@ -45,6 +54,8 @@ const createEmptyPerCarPriceRow = (): ITransferProductPerCarPriceRow => ({
 
 export const createEmptyTransferProductCategoryRow =
 	(): ITransferProductCategoryPriceRow => ({
+		[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.CATEGORY_ID]: "",
+		[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.PRICE_ID]: undefined,
 		[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME]: "",
 		[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.COST]: null,
 		[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.FEES]: [],
@@ -53,12 +64,19 @@ export const createEmptyTransferProductCategoryRow =
 		[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.MARKUP]: null
 	});
 
-const createEmptyPerCarByClassPriceRow =
-	(): ITransferProductPerCarByClassPriceRow => ({
+const createEmptyFleetCategoryRow = (): ITransferProductFleetCategoryRow => ({
+	[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.ID]: undefined,
+	[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME]: ""
+});
+
+const createEmptyPerCarByClassPriceRow = (
+	fleetCategories: readonly ITransferFleetCategory[]
+): ITransferProductPerCarByClassPriceRow =>
+	alignPerCarMatrixToFleet(1, fleetCategories)[0] ?? {
 		[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES]: [
 			createEmptyTransferProductCategoryRow()
 		]
-	});
+	};
 
 const applyMarkupToPerCarExpenses = (
 	expenses:
@@ -109,25 +127,44 @@ const alignPerCarPriceRows = (
 		return createEmptyPerCarPriceRow();
 	});
 
-const alignPerCarByClassPriceRows = (
-	carsListLength: number,
-	existing: ITransferProductPerCarByClassPriceRow[] = []
-): ITransferProductPerCarByClassPriceRow[] =>
-	Array.from({ length: carsListLength }, (_, index) => {
-		if (existing[index]) {
-			return existing[index];
-		}
-		return createEmptyPerCarByClassPriceRow();
-	});
+const mapFleetRowsFromProduct = (
+	product: ITransferProduct
+): ITransferProductFleetCategoryRow[] =>
+	product.fleetCategories.length
+		? product.fleetCategories.map((category) => ({
+				[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.ID]:
+					category.id || undefined,
+				[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME]:
+					category.name ?? ""
+			}))
+		: [createEmptyFleetCategoryRow()];
+
+const fleetRowsToDomain = (
+	rows: ITransferProductFleetCategoryRow[]
+): ITransferFleetCategory[] =>
+	rows
+		.filter((row) => row[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME])
+		.map((row) => ({
+			id:
+				row[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.ID] ??
+				crypto.randomUUID(),
+			name: row[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME].trim()
+		}));
 
 export const alignTransferPerCarExpenses = (options: {
 	priceBasedOnClass: boolean;
 	carsListLength: number;
 	current?: TTransferProductPricingSchema["expenses"] | null;
+	fleetCategories?: readonly ITransferFleetCategory[];
 	addMarginSeparately?: boolean;
 }): ITransferProductPerCarExpenses | ITransferProductPerCarCategoryExpenses => {
-	const { priceBasedOnClass, carsListLength, current, addMarginSeparately } =
-		options;
+	const {
+		priceBasedOnClass,
+		carsListLength,
+		current,
+		fleetCategories = [],
+		addMarginSeparately
+	} = options;
 
 	let aligned:
 		| ITransferProductPerCarExpenses
@@ -142,7 +179,11 @@ export const alignTransferPerCarExpenses = (options: {
 		aligned = {
 			typ: ENUM_TRANSFER_PRODUCT_EXPENSE_TYP.PER_CAR_CATEGORY,
 			[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CARS]:
-				alignPerCarByClassPriceRows(carsListLength, existing)
+				alignPerCarMatrixToFleet(
+					carsListLength,
+					fleetCategories,
+					existing
+				)
 		};
 	} else {
 		const existing =
@@ -186,21 +227,6 @@ const mapPerCarPriceFromVariant = (
 	)
 });
 
-const mapCategoryRowFromVariant = (
-	category: ITransferVariant["categories"][number]
-): ITransferProductCategoryPriceRow => ({
-	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME]: category.name ?? "",
-	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.COST]:
-		category.expenses.cost.val ?? null,
-	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.FEES]:
-		category.expenses.fees ?? [],
-	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.CURRENCY]:
-		category.expenses.cost.currency ?? DEFAULT_EVENT_CURRENCY,
-	[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.MARKUP]: mapTransferMarkupToForm(
-		category.expenses.markup
-	)
-});
-
 export const mapPricingFromProduct = (
 	product: ITransferProduct | null | undefined,
 	carsListLength: number
@@ -210,6 +236,9 @@ export const mapPricingFromProduct = (
 			ENUM_TRANSFER_PRODUCT_PRICING_TYPE.FLAT_RATE,
 		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICE_BASED_ON_CLASS]: false,
 		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: false,
+		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.FLEET_CATEGORIES]: [
+			createEmptyFleetCategoryRow()
+		],
 		[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES]:
 			alignTransferPerCarExpenses({
 				priceBasedOnClass: false,
@@ -241,13 +270,24 @@ export const mapPricingFromProduct = (
 	}
 
 	if (product.pricing === ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY) {
-		const cars = product.variants.map((variant) => ({
-			[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES]: variant
-				.categories.length
-				? variant.categories.map(mapCategoryRowFromVariant)
-				: [createEmptyTransferProductCategoryRow()]
-		}));
-		const categories = cars.flatMap(
+		const fleetCategories = product.fleetCategories;
+		const fleetRows = mapFleetRowsFromProduct(product);
+		const cars = alignPerCarMatrixToFleet(
+			carsListLength,
+			fleetCategories,
+			product.variants.map((variant) => ({
+				[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES]:
+					variant.prices.length
+						? variant.prices.map((price) =>
+								mapPriceToCategoryRow(price, fleetCategories)
+							)
+						: createEmptyPerCarByClassPriceRow(fleetCategories)[
+								ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD
+									.CATEGORIES
+							]
+			}))
+		);
+		const categoryRows = cars.flatMap(
 			(car) =>
 				car[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES]
 		);
@@ -256,12 +296,12 @@ export const mapPricingFromProduct = (
 			[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICING_TYPE]:
 				ENUM_TRANSFER_PRODUCT_PRICING_TYPE.PER_CAR,
 			[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICE_BASED_ON_CLASS]: true,
+			[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.FLEET_CATEGORIES]: fleetRows,
 			[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]:
-				hasAnyMarkup(categories),
+				hasAnyMarkup(categoryRows),
 			[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES]: {
 				typ: ENUM_TRANSFER_PRODUCT_EXPENSE_TYP.PER_CAR_CATEGORY,
-				[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CARS]:
-					alignPerCarByClassPriceRows(carsListLength, cars)
+				[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CARS]: cars
 			}
 		};
 	}
@@ -299,7 +339,10 @@ export const mapPricingFromProduct = (
 };
 
 const mapRowToFixedCharge = (
-	row: ITransferProductPerCarPriceRow | undefined,
+	row:
+		| ITransferProductPerCarPriceRow
+		| ITransferProductCategoryPriceRow
+		| undefined,
 	addMarginSeparately: boolean
 ): ISupplierFixedCharge => {
 	const currency =
@@ -359,6 +402,28 @@ const mapWholeCharge = (
 	};
 };
 
+const getFleetCategoriesFromPricing = (
+	pricing: TTransferProductPricingSchema
+): ITransferFleetCategory[] =>
+	fleetRowsToDomain(
+		pricing[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.FLEET_CATEGORIES] ?? []
+	);
+
+export const mapTransferPricingToDetailsPatch = (
+	pricing: TTransferProductPricingSchema,
+	productName: string
+): Extract<TTransferProductDetailsBackend, { pricing: "per_car_category" }> => {
+	const fleetCategories = getFleetCategoriesFromPricing(pricing);
+	return {
+		name: productName,
+		pricing: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY,
+		categories: fleetCategories.map((category) => ({
+			...(category.id ? { id: category.id } : {}),
+			name: category.name
+		}))
+	};
+};
+
 export const mapTransferEditFormToPricingSwitch = (
 	values: TTransferProductEditSchema
 ): TTransferPricingSwitchBackend => {
@@ -373,13 +438,15 @@ export const mapTransferEditFormToPricingSwitch = (
 		pricing[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICING_TYPE];
 
 	if (pricingType === ENUM_TRANSFER_PRODUCT_PRICING_TYPE.PER_CAR) {
+		const fleetCategories = getFleetCategoriesFromPricing(pricing);
 		const aligned = alignTransferPerCarExpenses({
 			priceBasedOnClass:
 				pricing[
 					ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICE_BASED_ON_CLASS
 				],
 			carsListLength: cars.length,
-			current: pricing[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES]
+			current: pricing[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES],
+			fleetCategories
 		});
 
 		if (pricing[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICE_BASED_ON_CLASS]) {
@@ -389,25 +456,41 @@ export const mapTransferEditFormToPricingSwitch = (
 					? aligned[ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CARS]
 					: [];
 
+			const categories = fleetCategories.map((category) => ({
+				...(category.id ? { id: category.id } : {}),
+				name: category.name
+			}));
+
+			const prices = cars.flatMap((car, carIndex) => {
+				const categoryRows =
+					rows[carIndex]?.[
+						ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES
+					] ?? [];
+				return categoryRows
+					.filter(
+						(row) =>
+							row[
+								ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.COST
+							] != null
+					)
+					.map((row) => ({
+						variant_id: car[ENUM_FORM_TRANSFER_CARS.VARIANT_ID],
+						category_id:
+							row[
+								ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD
+									.CATEGORY_ID
+							],
+						charge: mapSupplierFixedChargeToBackend(
+							mapRowToFixedCharge(row, addMargin)
+						)
+					}));
+			});
+
 			return {
 				typ: ENUM_SUPPLIER_TYPE.TRANSFER,
 				to: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY,
-				cars: cars.map((car, index) => ({
-					variant_id: car[ENUM_FORM_TRANSFER_CARS.VARIANT_ID],
-					categories: (
-						rows[index]?.[
-							ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD
-								.CATEGORIES
-						] ?? []
-					).map((category) => ({
-						name: category[
-							ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME
-						],
-						charge: mapSupplierFixedChargeToBackend(
-							mapRowToFixedCharge(category, addMargin)
-						)
-					}))
-				}))
+				categories,
+				prices
 			};
 		}
 
@@ -440,3 +523,52 @@ export const isTransferWholePricingType = (
 ) =>
 	pricingType === ENUM_TRANSFER_PRODUCT_PRICING_TYPE.FLAT_RATE ||
 	pricingType === ENUM_TRANSFER_PRODUCT_PRICING_TYPE.PER_PERSON;
+
+export const resolveTransferTargetPricing = (
+	values: TTransferProductEditSchema
+):
+	| typeof ENUM_TRANSFER_PRICING.PER_CAR
+	| typeof ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY
+	| typeof ENUM_TRANSFER_PRICING.WHOLE => {
+	const pricing = values[ENUM_FORM_TRANSFER_SECTION.PRICING];
+	if (
+		pricing[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICING_TYPE] ===
+		ENUM_TRANSFER_PRODUCT_PRICING_TYPE.PER_CAR
+	) {
+		return pricing[ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICE_BASED_ON_CLASS]
+			? ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY
+			: ENUM_TRANSFER_PRICING.PER_CAR;
+	}
+	return ENUM_TRANSFER_PRICING.WHOLE;
+};
+
+export const mapTransferCategoryRowsToPriceWrites = (
+	rows: ITransferProductCategoryPriceRow[],
+	addMarginSeparately: boolean
+): ITransferCarPriceWrite[] =>
+	rows.flatMap((row) => {
+		if (row[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.COST] == null) {
+			return [];
+		}
+		const categoryId =
+			row[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.CATEGORY_ID];
+		if (!categoryId) {
+			return [];
+		}
+		const priceId = row[ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.PRICE_ID];
+		return [
+			{
+				...(priceId ? { id: priceId } : {}),
+				categoryId,
+				expenses: mapRowToFixedCharge(row, addMarginSeparately)
+			}
+		];
+	});
+
+export const mapTransferProductWithPricingFleet = (
+	product: ITransferProduct,
+	pricing: TTransferProductPricingSchema
+): ITransferProduct => ({
+	...product,
+	fleetCategories: getFleetCategoriesFromPricing(pricing)
+});

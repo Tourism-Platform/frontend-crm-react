@@ -3,6 +3,7 @@ import {
 	type ENUM_CURRENCY_OPTIONS_TYPE
 } from "@/entities/commission";
 
+import { fleetCategoryNameById } from "../../lib/transfer-fleet-category.helpers";
 import {
 	ENUM_FORM_TRANSFER_CATEGORY,
 	ENUM_FORM_TRANSFER_MARKUP,
@@ -11,8 +12,9 @@ import {
 	ENUM_SUPPLIER_VARIANT_CHARGE,
 	ENUM_VEHICLE_BODY_TYPE,
 	type ISupplierFixedCharge,
-	type ITransferCarCategory,
-	type ITransferCarCategoryWrite,
+	type ITransferCarPrice,
+	type ITransferCarPriceWrite,
+	type ITransferFleetCategory,
 	type ITransferVariant,
 	type ITransferVariantWrite,
 	type TSupplierSurcharge,
@@ -66,6 +68,7 @@ export const mapTransferMarkupFormToDomain = (
 export const emptyTransferVariantCategory =
 	(): TTransferVariantCategoryFormSchema => ({
 		[ENUM_FORM_TRANSFER_CATEGORY.ID]: undefined,
+		[ENUM_FORM_TRANSFER_CATEGORY.CATEGORY_ID]: "",
 		[ENUM_FORM_TRANSFER_CATEGORY.NAME]: "",
 		[ENUM_FORM_TRANSFER_CATEGORY.COST]: null,
 		[ENUM_FORM_TRANSFER_CATEGORY.CURRENCY]: DEFAULT_EVENT_CURRENCY,
@@ -98,29 +101,32 @@ const mapCategoryFormToFixedCharge = (
 	};
 };
 
-const mapCategoryToForm = (
-	category: ITransferCarCategory
+const mapPriceToForm = (
+	price: ITransferCarPrice,
+	fleetCategories: readonly ITransferFleetCategory[] = []
 ): TTransferVariantCategoryFormSchema => ({
-	[ENUM_FORM_TRANSFER_CATEGORY.ID]: category.id,
-	[ENUM_FORM_TRANSFER_CATEGORY.NAME]: category.name ?? "",
-	[ENUM_FORM_TRANSFER_CATEGORY.COST]: category.expenses.cost.val ?? null,
+	[ENUM_FORM_TRANSFER_CATEGORY.ID]: price.id,
+	[ENUM_FORM_TRANSFER_CATEGORY.CATEGORY_ID]: price.categoryId,
+	[ENUM_FORM_TRANSFER_CATEGORY.NAME]:
+		fleetCategoryNameById(fleetCategories, price.categoryId) ?? "",
+	[ENUM_FORM_TRANSFER_CATEGORY.COST]: price.expenses.cost.val ?? null,
 	[ENUM_FORM_TRANSFER_CATEGORY.CURRENCY]:
-		category.expenses.cost.currency ?? DEFAULT_EVENT_CURRENCY,
-	[ENUM_FORM_TRANSFER_CATEGORY.FEES]: category.expenses.fees ?? [],
+		price.expenses.cost.currency ?? DEFAULT_EVENT_CURRENCY,
+	[ENUM_FORM_TRANSFER_CATEGORY.FEES]: price.expenses.fees ?? [],
 	[ENUM_FORM_TRANSFER_CATEGORY.MARKUP]: mapTransferMarkupToForm(
-		category.expenses.markup
+		price.expenses.markup
 	)
 });
 
-const mapCategoryFormToWrite = (
+const mapCategoryFormToPriceWrite = (
 	values: TTransferVariantCategoryFormSchema,
 	addMarginSeparately: boolean
-): ITransferCarCategoryWrite => {
-	const categoryId = values[ENUM_FORM_TRANSFER_CATEGORY.ID];
+): ITransferCarPriceWrite => {
+	const priceId = values[ENUM_FORM_TRANSFER_CATEGORY.ID];
 
 	return {
-		...(categoryId ? { id: categoryId } : {}),
-		name: values[ENUM_FORM_TRANSFER_CATEGORY.NAME].trim() || null,
+		...(priceId ? { id: priceId } : {}),
+		categoryId: values[ENUM_FORM_TRANSFER_CATEGORY.CATEGORY_ID],
 		expenses: mapCategoryFormToFixedCharge(values, addMarginSeparately)
 	};
 };
@@ -139,7 +145,8 @@ export const emptyTransferVariantForm = (): TTransferVariantFormSchema => ({
 });
 
 export const mapTransferVariantToForm = (
-	variant?: ITransferVariant | null
+	variant?: ITransferVariant | null,
+	fleetCategories: readonly ITransferFleetCategory[] = []
 ): TTransferVariantFormSchema => {
 	if (!variant) return emptyTransferVariantForm();
 
@@ -155,12 +162,14 @@ export const mapTransferVariantToForm = (
 		[ENUM_FORM_TRANSFER_VARIANT.CURRENCY]:
 			expenses?.cost?.currency ?? DEFAULT_EVENT_CURRENCY,
 		[ENUM_FORM_TRANSFER_VARIANT.FEES]: expenses?.fees ?? [],
-		[ENUM_FORM_TRANSFER_VARIANT.CATEGORIES]: variant.categories.length
-			? variant.categories.map(mapCategoryToForm)
+		[ENUM_FORM_TRANSFER_VARIANT.CATEGORIES]: variant.prices.length
+			? variant.prices.map((price) =>
+					mapPriceToForm(price, fleetCategories)
+				)
 			: [emptyTransferVariantCategory()],
 		[ENUM_FORM_TRANSFER_VARIANT.ADD_MARGIN_SEPARATELY]:
 			Boolean(variant.expenses?.markup) ||
-			variant.categories.some((category) => category.expenses.markup),
+			variant.prices.some((price) => price.expenses.markup),
 		[ENUM_FORM_TRANSFER_VARIANT.MARKUP]: mapTransferMarkupToForm(
 			variant.expenses?.markup
 		)
@@ -198,8 +207,12 @@ export const mapTransferVariantFormToWrite = (
 				addMarginSeparately
 			)
 		},
-		categories: values[ENUM_FORM_TRANSFER_VARIANT.CATEGORIES].map(
-			(category) => mapCategoryFormToWrite(category, addMarginSeparately)
-		)
+		prices: values[ENUM_FORM_TRANSFER_VARIANT.CATEGORIES]
+			.filter((category) =>
+				category[ENUM_FORM_TRANSFER_CATEGORY.CATEGORY_ID].trim()
+			)
+			.map((category) =>
+				mapCategoryFormToPriceWrite(category, addMarginSeparately)
+			)
 	};
 };

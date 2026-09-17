@@ -14,9 +14,16 @@ export const ENUM_TRANSFER_PRICING = {
 export type ENUM_TRANSFER_PRICING_TYPE =
 	(typeof ENUM_TRANSFER_PRICING)[keyof typeof ENUM_TRANSFER_PRICING];
 
-export interface ITransferCarCategory {
+/** Car class declared once on the fleet (no charge). */
+export interface ITransferFleetCategory {
 	id: string;
 	name: string | null;
+}
+
+/** Price of one car in one fleet category. */
+export interface ITransferCarPrice {
+	id: string;
+	categoryId: string;
 	expenses: ISupplierFixedCharge;
 }
 
@@ -27,7 +34,7 @@ export interface ITransferVariant {
 	pax: number | null;
 	description: string | null;
 	expenses: ISupplierFixedCharge | null;
-	categories: ITransferCarCategory[];
+	prices: ITransferCarPrice[];
 }
 
 export interface ITransferProduct {
@@ -39,6 +46,8 @@ export interface ITransferProduct {
 	pricing: ENUM_TRANSFER_PRICING_TYPE;
 	/** Fleet-level charge of a whole-priced fleet; null for per-car ones. */
 	charge: TSupplierVariantCharge | null;
+	/** Declared car classes when `pricing === per_car_category`. */
+	fleetCategories: ITransferFleetCategory[];
 	imagePaths: string[];
 	primaryImagePath: string | null;
 	variants: ITransferVariant[];
@@ -48,9 +57,9 @@ export interface ITransferProductCreate {
 	name: string;
 }
 
-export interface ITransferCarCategoryWrite {
+export interface ITransferCarPriceWrite {
 	id?: string;
-	name: string | null;
+	categoryId: string;
 	expenses: ISupplierFixedCharge;
 }
 
@@ -60,5 +69,5 @@ export interface ITransferVariantWrite {
 	pax: number;
 	description: string | null;
 	expenses: ISupplierFixedCharge;
-	categories: ITransferCarCategoryWrite[];
+	prices: ITransferCarPriceWrite[];
 }

@@ -102,7 +102,14 @@ export const useAttachEventProductDialog = ({
 
 		await onConfirm({
 			productId,
-			scope: variantId ? { typ: "only", ids: [variantId] } : undefined
+			scope: variantId
+				? {
+						typ: "only",
+						ids: [variantId],
+						units: [],
+						categories: []
+					}
+				: undefined
 		});
 	}
 

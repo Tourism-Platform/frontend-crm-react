@@ -60,7 +60,22 @@ export const getOverrideUnitOptions = (
 	// transfer fleet — cars, or car categories when the fleet prices by class
 	if ("cars" in spec) {
 		if (spec.pricing === "per_car_category") {
-			return spec.cars.flatMap((car) => toUnitOptions(car.categories));
+			const fleetCategories =
+				"categories" in spec ? (spec.categories ?? []) : [];
+			return spec.cars.flatMap((car) =>
+				(car.prices ?? []).flatMap((price) => {
+					const category = fleetCategories.find(
+						(row) => row.id === price.category_id
+					);
+					const carLabel = car.name ?? car.id;
+					const categoryLabel = category?.name ?? price.category_id;
+					const option = toUnitOption({
+						id: price.id,
+						name: `${carLabel} — ${categoryLabel}`
+					});
+					return option ? [option] : [];
+				})
+			);
 		}
 		return toUnitOptions(spec.cars);
 	}

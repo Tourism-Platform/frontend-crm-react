@@ -2999,26 +2999,12 @@ export interface Car {
 }
 
 /**
- * CarCategoriesSwitch
- * The classes one car body is taken in once the fleet charges by class.
- */
-export interface CarCategoriesSwitch {
-	/**
-	 * Variant Id
-	 * @format uuid
-	 */
-	variant_id: string;
-	/** Categories */
-	categories: CategorySwitch[];
-}
-
-/**
  * CarCategory
- * One class a car is taken in — economy, comfort, business — and what it
- * costs. Stored inside the variant, so a category sent without an ``id``
- * is minted one here.
+ * One class a fleet sells its cars in — economy, comfort, luxury — declared
+ * once for the whole fleet. Echo ``id`` to keep the class the same class; one
+ * sent without an id is new.
  */
-export interface CarCategoryInput {
+export interface CarCategory {
 	/**
 	 * Id
 	 * @format uuid
@@ -3026,88 +3012,6 @@ export interface CarCategoryInput {
 	id?: string;
 	/** Name */
 	name?: string | null;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-}
-
-/**
- * CarCategory
- * One class a car is taken in — economy, comfort, business — and what it
- * costs. Stored inside the variant, so a category sent without an ``id``
- * is minted one here.
- */
-export interface CarCategoryOutput {
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Name */
-	name: string | null;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeOutput;
-}
-
-/**
- * CarCategoryChargeOverride
- * What one class a car is taken in costs this tour.
- */
-export interface CarCategoryChargeOverrideInput {
-	/**
-	 * Category Id
-	 * @format uuid
-	 */
-	category_id: string;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-}
-
-/**
- * CarCategoryChargeOverride
- * What one class a car is taken in costs this tour.
- */
-export interface CarCategoryChargeOverrideOutput {
-	/**
-	 * Category Id
-	 * @format uuid
-	 */
-	category_id: string;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeOutput;
-}
-
-/**
- * CarCategoryChargesOverride
- * The car classes this tour repriced, each named once.
- */
-export interface CarCategoryChargesOverrideInput {
-	/**
-	 * Pricing
-	 * @default "per_car_category"
-	 */
-	pricing: "per_car_category";
-	/**
-	 * Categories
-	 * @minItems 1
-	 */
-	categories: CarCategoryChargeOverrideInput[];
-}
-
-/**
- * CarCategoryChargesOverride
- * The car classes this tour repriced, each named once.
- */
-export interface CarCategoryChargesOverrideOutput {
-	/**
-	 * Pricing
-	 * @default "per_car_category"
-	 */
-	pricing: "per_car_category";
-	/**
-	 * Categories
-	 * @minItems 1
-	 */
-	categories: CarCategoryChargeOverrideOutput[];
 }
 
 /**
@@ -3187,6 +3091,146 @@ export interface CarChargesOverrideOutput {
 }
 
 /**
+ * CarPrice
+ * What a car costs in one category of its fleet: the unit a fleet priced by
+ * category sells, named by ``id`` wherever a tour negotiates it or a booking
+ * takes it.
+ */
+export interface CarPriceInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
+	 * Category Id
+	 * @format uuid
+	 */
+	category_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
+}
+
+/**
+ * CarPrice
+ * What a car costs in one category of its fleet: the unit a fleet priced by
+ * category sells, named by ``id`` wherever a tour negotiates it or a booking
+ * takes it.
+ */
+export interface CarPriceOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Category Id
+	 * @format uuid
+	 */
+	category_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeOutput;
+}
+
+/**
+ * CarPriceChargeOverride
+ * What one car costs this tour in one category: the price row of the fleet
+ * it replaces, by its ``id``.
+ */
+export interface CarPriceChargeOverrideInput {
+	/**
+	 * Price Id
+	 * @format uuid
+	 */
+	price_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
+}
+
+/**
+ * CarPriceChargeOverride
+ * What one car costs this tour in one category: the price row of the fleet
+ * it replaces, by its ``id``.
+ */
+export interface CarPriceChargeOverrideOutput {
+	/**
+	 * Price Id
+	 * @format uuid
+	 */
+	price_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeOutput;
+}
+
+/**
+ * CarPriceChargesOverride
+ * The car prices this tour repriced, each named once.
+ */
+export interface CarPriceChargesOverrideInput {
+	/**
+	 * Pricing
+	 * @default "per_car_category"
+	 */
+	pricing: "per_car_category";
+	/**
+	 * Prices
+	 * @minItems 1
+	 */
+	prices: CarPriceChargeOverrideInput[];
+}
+
+/**
+ * CarPriceChargesOverride
+ * The car prices this tour repriced, each named once.
+ */
+export interface CarPriceChargesOverrideOutput {
+	/**
+	 * Pricing
+	 * @default "per_car_category"
+	 */
+	pricing: "per_car_category";
+	/**
+	 * Prices
+	 * @minItems 1
+	 */
+	prices: CarPriceChargeOverrideOutput[];
+}
+
+/**
+ * CarPriceSwitch
+ * What one car costs in one category once the fleet prices by category.
+ */
+export interface CarPriceSwitch {
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variant_id: string;
+	/**
+	 * Category Id
+	 * @format uuid
+	 */
+	category_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
+}
+
+/**
+ * CarPriceWrite
+ * What a car costs in one category of its fleet, as a write takes it: the
+ * category by the id the fleet declares it under.
+ */
+export interface CarPriceWrite {
+	/**
+	 * Category Id
+	 * @format uuid
+	 */
+	category_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
+}
+
+/**
  * CarWrite
  * One car category of a whole fleet as a create takes it: what the car is
  * and how many it seats, never what it costs — the leg carries the charge. No
@@ -3219,8 +3263,8 @@ export interface CatalogFiltersSchema {
 
 /**
  * CategorisedCar
- * A car of a per-car-category fleet: one body, several classes, each with
- * its own price.
+ * A car of a fleet priced by category: sold in every category it has a
+ * price in and in none of the others.
  */
 export interface CategorisedCarInput {
 	/**
@@ -3245,14 +3289,14 @@ export interface CategorisedCarInput {
 	name?: string | null;
 	/** Description */
 	description?: string | null;
-	/** Categories */
-	categories?: CarCategoryInput[];
+	/** Prices */
+	prices?: CarPriceInput[];
 }
 
 /**
  * CategorisedCar
- * A car of a per-car-category fleet: one body, several classes, each with
- * its own price.
+ * A car of a fleet priced by category: sold in every category it has a
+ * price in and in none of the others.
  */
 export interface CategorisedCarOutput {
 	/**
@@ -3277,14 +3321,15 @@ export interface CategorisedCarOutput {
 	name: string | null;
 	/** Description */
 	description: string | null;
-	/** Categories */
-	categories: CarCategoryOutput[];
+	/** Prices */
+	prices: CarPriceOutput[];
 }
 
 /**
  * CategorisedCarWrite
- * One car category of a per-car-category fleet as a create takes it: one
- * body, several classes, each with its own price.
+ * One car of a fleet priced by category as a create takes it, with what it
+ * costs in each category it is sold in; a car priced in none is sold in none
+ * until it is.
  */
 export interface CategorisedCarWrite {
 	/**
@@ -3301,8 +3346,8 @@ export interface CategorisedCarWrite {
 	pax: number;
 	/** Description */
 	description?: string | null;
-	/** Categories */
-	categories?: CarCategoryInput[];
+	/** Prices */
+	prices?: CarPriceWrite[];
 }
 
 /**
@@ -3339,18 +3384,6 @@ export interface CategoryOutput {
 	name: string | null;
 	/** Rooms */
 	rooms: Room[];
-}
-
-/**
- * CategorySwitch
- * One class a car is taken in and what it costs. The classes are minted
- * with the switch, so none of them carries an id yet.
- */
-export interface CategorySwitch {
-	/** Name */
-	name: string | null;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
 }
 
 /**
@@ -7720,9 +7753,15 @@ export interface OfferingChargesOverrideOutput {
 
 /**
  * OnlyVariants
- * The event takes the variants it names and ignores the rest. The ids are
- * rows in ``tour_event_option_variant``, so one can only name a variant of the
- * linked product and a scoped variant cannot be deleted.
+ * The event takes part of the product and ignores the rest. Every pin is a
+ * row whose foreign keys name the linked product, so a pin can only name a
+ * unit of that product and a pinned unit cannot be deleted.
+ *
+ * ``ids`` are the variants it takes; left empty it takes every one, which only
+ * ``categories`` may narrow. ``units`` are rooms of pinned hotel categories: a
+ * pinned category none of whose rooms is listed takes all of them, now and
+ * later. ``categories`` are car categories of a fleet priced by category, taken
+ * across every car in scope, now and later.
  */
 export interface OnlyVariants {
 	/**
@@ -7730,11 +7769,18 @@ export interface OnlyVariants {
 	 * @default "only"
 	 */
 	typ: "only";
+	/** Ids */
+	ids?: string[];
 	/**
-	 * Ids
-	 * @minItems 1
+	 * Units
+	 * Rooms of the pinned hotel categories the event takes.
 	 */
-	ids: string[];
+	units?: string[];
+	/**
+	 * Categories
+	 * Car categories the event takes across every car in scope.
+	 */
+	categories?: string[];
 }
 
 /** OperatorCreateSchema */
@@ -8700,8 +8746,9 @@ export interface PaymentRouteUpdate {
 
 /**
  * PerCarCategoryTransfer
- * A fleet priced by the class a car is taken in: a group pays for the
- * cheapest combination of car and category that seats it.
+ * A fleet priced by category: a group rides one category, packed into the
+ * cheapest combination of the cars priced in it, and the cheapest and the
+ * dearest category bound the spread.
  */
 export interface PerCarCategoryTransferInput {
 	/**
@@ -8716,14 +8763,17 @@ export interface PerCarCategoryTransferInput {
 	pricing: "per_car_category";
 	/** Name */
 	name?: string | null;
+	/** Categories */
+	categories?: CarCategory[];
 	/** Cars */
 	cars?: CategorisedCarInput[];
 }
 
 /**
  * PerCarCategoryTransfer
- * A fleet priced by the class a car is taken in: a group pays for the
- * cheapest combination of car and category that seats it.
+ * A fleet priced by category: a group rides one category, packed into the
+ * cheapest combination of the cars priced in it, and the cheapest and the
+ * dearest category bound the spread.
  */
 export interface PerCarCategoryTransferOutput {
 	/**
@@ -8738,14 +8788,21 @@ export interface PerCarCategoryTransferOutput {
 	pricing: "per_car_category";
 	/** Name */
 	name: string | null;
+	/** Categories */
+	categories: CarCategory[];
 	/** Cars */
 	cars: CategorisedCarOutput[];
 }
 
 /**
  * PerCarCategoryTransferCreate
- * A transfer fleet priced by the class a car is taken in, as a create takes
- * it: every car brings the classes it is sold in.
+ * A transfer fleet priced by category as a create takes it: the categories
+ * it opens with and its cars, each priced in the categories it is sold in. A
+ * price names its category by the ``id`` the body gives it; the create mints
+ * the stored ids and keeps every price pointing at its category.
+ *
+ * Check: ``POST /supplier/{supplier_id}/product/{product_id}/variant`` adds a
+ * car to a fleet that already stands.
  */
 export interface PerCarCategoryTransferCreate {
 	/**
@@ -8760,14 +8817,18 @@ export interface PerCarCategoryTransferCreate {
 	 * @maxLength 255
 	 */
 	name: string;
+	/** Categories */
+	categories: CarCategory[];
 	/** Cars */
 	cars?: CategorisedCarWrite[];
 }
 
 /**
  * PerCarCategoryTransferDetails
- * A transfer fleet priced by the class a car is taken in, as the API takes
- * it.
+ * A transfer fleet priced by category as the API takes it: its name and
+ * the categories it sells its cars in, replaced whole on every write — echo a
+ * category's ``id`` to keep it, leave one out to remove it with every price
+ * its cars have in it.
  */
 export interface PerCarCategoryTransferDetails {
 	/**
@@ -8782,11 +8843,15 @@ export interface PerCarCategoryTransferDetails {
 	 * @maxLength 255
 	 */
 	name: string;
+	/** Categories */
+	categories: CarCategory[];
 }
 
 /**
  * PerCarCategoryTransferVariantWrite
- * One car body taken in several classes, each with its own price.
+ * One car of a fleet priced by category, with what it costs in each
+ * category it is sold in — replaced whole, a price keeping its ``id`` for as
+ * long as its category is sent back.
  */
 export interface PerCarCategoryTransferVariantWrite {
 	/**
@@ -8810,8 +8875,8 @@ export interface PerCarCategoryTransferVariantWrite {
 	typ?: "transfer";
 	/** Pricing */
 	pricing: "per_car_category";
-	/** Categories */
-	categories?: CarCategoryInput[];
+	/** Prices */
+	prices?: CarPriceWrite[];
 }
 
 /**
@@ -12344,16 +12409,20 @@ export interface ToPerCar {
 
 /**
  * ToPerCarCategory
- * Switch a transfer fleet to charging the class a car is taken in: every
- * car of the fleet brings the classes it is sold in.
+ * Switch a transfer fleet to pricing by category: the categories it will
+ * sell in, and what each car costs in the ones it is sold in. A price names
+ * its category by the ``id`` the body gives it; a car priced in none is sold
+ * in none until it is.
  */
 export interface ToPerCarCategory {
 	/** Typ */
 	typ: "transfer";
 	/** To */
 	to: "per_car_category";
-	/** Cars */
-	cars: CarCategoriesSwitch[];
+	/** Categories */
+	categories: CarCategory[];
+	/** Prices */
+	prices: CarPriceSwitch[];
 }
 
 /**
@@ -13730,8 +13799,9 @@ export interface TransferCarCategoryPubSchema {
 
 /**
  * TransferCarPubSchema
- * One car of the ride. ``categories`` is the trim a tour prices its own
- * cars by; a supplier's fleet names its cars instead and leaves it empty.
+ * One car class of the ride. ``categories``, like the inherited ``name``
+ * and ``description``, stays empty: they are one fleet's, and a card promises
+ * the class.
  */
 export interface TransferCarPubSchema {
 	/** Name */
@@ -14040,7 +14110,7 @@ export interface TransferOverrideInput {
 		  } & CarChargesOverrideInput)
 		| ({
 				pricing: "per_car_category";
-		  } & CarCategoryChargesOverrideInput)
+		  } & CarPriceChargesOverrideInput)
 		| ({
 				pricing: "whole";
 		  } & WholeTransferChargeOverrideInput);
@@ -14066,7 +14136,7 @@ export interface TransferOverrideOutput {
 		  } & CarChargesOverrideOutput)
 		| ({
 				pricing: "per_car_category";
-		  } & CarCategoryChargesOverrideOutput)
+		  } & CarPriceChargesOverrideOutput)
 		| ({
 				pricing: "whole";
 		  } & WholeTransferChargeOverrideOutput);
@@ -14407,7 +14477,9 @@ export interface ValidationError {
 /**
  * VariantCreated
  * One unit just added and the product it now sits in: ``variant_id`` is
- * the new entry of ``product.spec.categories|fares|vehicles|cars|offerings``.
+ * the new entry of a hotel's ``product.spec.categories``, a route's ``fares``,
+ * a fleet's ``vehicles`` or ``cars``, or a venue's ``offerings`` — a fleet
+ * priced by category also lists ``categories``, which are not its units.
  *
  * Check
  *
@@ -14551,8 +14623,8 @@ export interface VehicleChargesOverrideOutput {
 
 /**
  * VehiclePubSchema
- * One coach or car category: body, seats and description survive, its price
- * does not.
+ * One coach or car class: body and seats. ``name`` and ``description`` stay
+ * empty — they are one fleet's — and the price never crosses.
  */
 export interface VehiclePubSchema {
 	/** Name */
@@ -16263,6 +16335,9 @@ export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum4 {
 
 export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum5 {
 	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
 	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
 }
 
@@ -16491,7 +16566,10 @@ export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPo
 }
 
 export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
 }
 
 /** Member */
@@ -16800,7 +16878,10 @@ export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOpti
 }
 
 export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
 }
 
 export interface AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostParams {
@@ -16858,7 +16939,10 @@ export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOpti
 }
 
 export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
 }
 
 export interface RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostParams {
@@ -16912,7 +16996,10 @@ export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptio
 }
 
 export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum4 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have"
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
 }
 
 export interface ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchParams {
@@ -17145,6 +17232,9 @@ export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum4 {
 
 export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum5 {
 	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
 	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
 }
 
@@ -17227,6 +17317,9 @@ export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDe
 
 export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum5 {
 	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
 	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
 }
 
@@ -18602,7 +18695,8 @@ export enum UpdateProductSupplierSupplierIdProductProductIdPatchDetailEnum3 {
 
 export enum UpdateProductSupplierSupplierIdProductProductIdPatchDetailEnum4 {
 	PayloadPricesForAnArmTheProductDoesNotPriceBy = "payload prices for an arm the product does not price by",
-	PricingSwitchWouldOrphanTourOverrides = "pricing switch would orphan tour overrides"
+	PricingSwitchWouldOrphanTourOverrides = "pricing switch would orphan tour overrides",
+	CarCategoryIsReferencedByTourEvents = "Car category is referenced by tour events"
 }
 
 /** Payload */
@@ -18714,7 +18808,8 @@ export enum SwitchProductPricingSupplierSupplierIdProductProductIdPricingPostDet
 
 export enum SwitchProductPricingSupplierSupplierIdProductProductIdPricingPostDetailEnum4 {
 	PayloadPricesForAnArmTheProductDoesNotPriceBy = "payload prices for an arm the product does not price by",
-	PricingSwitchWouldOrphanTourOverrides = "pricing switch would orphan tour overrides"
+	PricingSwitchWouldOrphanTourOverrides = "pricing switch would orphan tour overrides",
+	PricingSwitchWouldDropCarCategoriesToursPin = "pricing switch would drop car categories tours pin"
 }
 
 export enum SwitchProductPricingSupplierSupplierIdProductProductIdPricingPostDetailEnum5 {
@@ -18792,6 +18887,10 @@ export enum CreateVariantSupplierSupplierIdProductProductIdVariantPostDetailEnum
 
 export enum CreateVariantSupplierSupplierIdProductProductIdVariantPostDetailEnum4 {
 	PayloadPricesForAnArmTheProductDoesNotPriceBy = "payload prices for an arm the product does not price by"
+}
+
+export enum CreateVariantSupplierSupplierIdProductProductIdVariantPostDetailEnum5 {
+	CarIsPricedInACategoryTheFleetDoesNotDeclare = "Car is priced in a category the fleet does not declare"
 }
 
 /** Payload */
@@ -18875,6 +18974,10 @@ export enum UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatch
 export enum UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchDetailEnum4 {
 	PayloadPricesForAnArmTheProductDoesNotPriceBy = "payload prices for an arm the product does not price by",
 	SupplierProductVariantIsReferencedByTourEvents = "Supplier product variant is referenced by tour events"
+}
+
+export enum UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchDetailEnum5 {
+	CarIsPricedInACategoryTheFleetDoesNotDeclare = "Car is priced in a category the fleet does not declare"
 }
 
 /** Payload */

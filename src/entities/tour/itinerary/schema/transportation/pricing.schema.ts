@@ -50,6 +50,8 @@ const perCarPriceRowSchema = z.object({
 });
 
 const categoryRowSchema = z.object({
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CATEGORY_ID]: z.string().min(1),
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.PRICE_ID]: z.string().optional(),
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: z.string().min(1, {
 		message: msg(
 			"form.pricing.form.per_car.fields.category_name.errors.required"

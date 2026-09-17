@@ -4,6 +4,7 @@ import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
 import { TRANSFER_VARIANT_FORM_SCHEMA } from "../../schema/transfer/variant.schema";
 import {
+	ENUM_FORM_TRANSFER_CATEGORY,
 	ENUM_SUPPLIER_SURCHARGE,
 	ENUM_SUPPLIER_VARIANT_CHARGE,
 	ENUM_VEHICLE_BODY_TYPE
@@ -12,85 +13,9 @@ import {
 import {
 	emptyTransferVariantCategory,
 	emptyTransferVariantForm,
-	mapTransferMarkupFormToDomain,
-	mapTransferMarkupToForm,
 	mapTransferVariantFormToWrite,
 	mapTransferVariantToForm
 } from "./transfer-variant-form.converters";
-
-describe("mapTransferMarkupToForm", () => {
-	it("maps percentage from a 0..1 share to a form percent", () => {
-		expect(
-			mapTransferMarkupToForm({
-				typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-				percentage: 0.1
-			})
-		).toEqual({
-			typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-			value: "10"
-		});
-	});
-
-	it("maps a fixed cost", () => {
-		expect(
-			mapTransferMarkupToForm({
-				typ: ENUM_SUPPLIER_SURCHARGE.FIXED,
-				cost: { val: 15, currency: DEFAULT_EVENT_CURRENCY }
-			})
-		).toEqual({
-			typ: ENUM_SUPPLIER_SURCHARGE.FIXED,
-			value: "15"
-		});
-	});
-
-	it("maps missing markup to null", () => {
-		expect(mapTransferMarkupToForm(null)).toBeNull();
-	});
-});
-
-describe("mapTransferMarkupFormToDomain", () => {
-	it("maps a form percent 10 to percentage 0.1", () => {
-		expect(
-			mapTransferMarkupFormToDomain(
-				{
-					typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-					value: "10"
-				},
-				DEFAULT_EVENT_CURRENCY,
-				true
-			)
-		).toEqual({
-			typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-			percentage: 0.1
-		});
-	});
-
-	it("maps checkbox off to null", () => {
-		expect(
-			mapTransferMarkupFormToDomain(
-				{
-					typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-					value: "10"
-				},
-				DEFAULT_EVENT_CURRENCY,
-				false
-			)
-		).toBeNull();
-	});
-
-	it("maps an empty value to null", () => {
-		expect(
-			mapTransferMarkupFormToDomain(
-				{
-					typ: ENUM_SUPPLIER_SURCHARGE.FIXED,
-					value: ""
-				},
-				DEFAULT_EVENT_CURRENCY,
-				true
-			)
-		).toBeNull();
-	});
-});
 
 describe("mapTransferVariantToForm", () => {
 	it("maps empty variant", () => {
@@ -112,12 +37,12 @@ describe("mapTransferVariantToForm", () => {
 				fees: null,
 				markup: null
 			},
-			categories: []
+			prices: []
 		});
 
 		expect(form).toMatchObject({
 			name: "Sedan",
-			bodyType: ENUM_VEHICLE_BODY_TYPE.SEDAN,
+			body_type: ENUM_VEHICLE_BODY_TYPE.SEDAN,
 			pax: 3,
 			description: "Airport",
 			cost: 40,
@@ -129,35 +54,39 @@ describe("mapTransferVariantToForm", () => {
 		expect(form.categories).toEqual([emptyTransferVariantCategory()]);
 	});
 
-	it("maps category rows", () => {
-		const form = mapTransferVariantToForm({
-			id: "v1",
-			name: "Sedan",
-			bodyType: ENUM_VEHICLE_BODY_TYPE.SEDAN,
-			pax: 3,
-			description: null,
-			expenses: null,
-			categories: [
-				{
-					id: "c1",
-					name: "economy",
-					expenses: {
-						typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-						cost: { val: 30, currency: DEFAULT_EVENT_CURRENCY },
-						fees: null,
-						markup: {
-							typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
-							percentage: 0.1
+	it("maps price rows", () => {
+		const form = mapTransferVariantToForm(
+			{
+				id: "v1",
+				name: "Sedan",
+				bodyType: ENUM_VEHICLE_BODY_TYPE.SEDAN,
+				pax: 3,
+				description: null,
+				expenses: null,
+				prices: [
+					{
+						id: "p1",
+						categoryId: "fc1",
+						expenses: {
+							typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+							cost: { val: 30, currency: DEFAULT_EVENT_CURRENCY },
+							fees: null,
+							markup: {
+								typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
+								percentage: 0.1
+							}
 						}
 					}
-				}
-			]
-		});
+				]
+			},
+			[{ id: "fc1", name: "economy" }]
+		);
 
 		expect(form.addMarginSeparately).toBe(true);
 		expect(form.categories).toEqual([
 			{
-				id: "c1",
+				id: "p1",
+				category_id: "fc1",
 				name: "economy",
 				cost: 30,
 				currency: DEFAULT_EVENT_CURRENCY,
@@ -172,14 +101,15 @@ describe("mapTransferVariantToForm", () => {
 });
 
 describe("mapTransferVariantFormToWrite", () => {
-	it("maps fixed charge and echoes category id", () => {
+	it("maps fixed charge and echoes price id", () => {
 		const write = mapTransferVariantFormToWrite({
 			...emptyTransferVariantForm(),
 			name: "Sedan",
 			cost: 25,
 			categories: [
 				{
-					id: "c1",
+					id: "p1",
+					category_id: "fc1",
 					name: "economy",
 					cost: 30,
 					currency: DEFAULT_EVENT_CURRENCY,
@@ -200,10 +130,10 @@ describe("mapTransferVariantFormToWrite", () => {
 				fees: null,
 				markup: null
 			},
-			categories: [
+			prices: [
 				{
-					id: "c1",
-					name: "economy",
+					id: "p1",
+					categoryId: "fc1",
 					expenses: {
 						typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
 						cost: { val: 30, currency: DEFAULT_EVENT_CURRENCY },
@@ -215,7 +145,7 @@ describe("mapTransferVariantFormToWrite", () => {
 		});
 	});
 
-	it("echoes category id and writes markup when the checkbox is on", () => {
+	it("echoes price id and writes markup when the checkbox is on", () => {
 		const write = mapTransferVariantFormToWrite({
 			...emptyTransferVariantForm(),
 			name: "Sedan",
@@ -227,7 +157,8 @@ describe("mapTransferVariantFormToWrite", () => {
 			},
 			categories: [
 				{
-					id: "c1",
+					id: "p1",
+					category_id: "fc1",
 					name: "economy",
 					cost: 30,
 					currency: DEFAULT_EVENT_CURRENCY,
@@ -244,10 +175,10 @@ describe("mapTransferVariantFormToWrite", () => {
 			typ: ENUM_SUPPLIER_SURCHARGE.PERCENTAGE,
 			percentage: 0.1
 		});
-		expect(write.categories).toEqual([
+		expect(write.prices).toEqual([
 			{
-				id: "c1",
-				name: "economy",
+				id: "p1",
+				categoryId: "fc1",
 				expenses: {
 					typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
 					cost: { val: 30, currency: DEFAULT_EVENT_CURRENCY },
@@ -273,7 +204,8 @@ describe("mapTransferVariantFormToWrite", () => {
 			},
 			categories: [
 				{
-					id: "c1",
+					id: "p1",
+					category_id: "fc1",
 					name: "economy",
 					cost: 30,
 					currency: DEFAULT_EVENT_CURRENCY,
@@ -287,7 +219,7 @@ describe("mapTransferVariantFormToWrite", () => {
 		});
 
 		expect(write.expenses.markup).toBeNull();
-		expect(write.categories[0]?.expenses.markup).toBeNull();
+		expect(write.prices[0]?.expenses.markup).toBeNull();
 	});
 
 	it("maps null cost to zero", () => {
@@ -307,17 +239,28 @@ describe("mapTransferVariantFormToWrite", () => {
 describe("TRANSFER_VARIANT_FORM_SCHEMA", () => {
 	it("rejects empty name", () => {
 		expect(
-			TRANSFER_VARIANT_FORM_SCHEMA.safeParse(emptyTransferVariantForm())
-				.success
+			TRANSFER_VARIANT_FORM_SCHEMA.safeParse({
+				...emptyTransferVariantForm(),
+				name: ""
+			}).success
 		).toBe(false);
 	});
 
-	it("accepts a named variant", () => {
+	it("requires category_id on category rows", () => {
 		expect(
 			TRANSFER_VARIANT_FORM_SCHEMA.safeParse({
 				...emptyTransferVariantForm(),
-				name: "Sedan"
+				categories: [
+					{
+						[ENUM_FORM_TRANSFER_CATEGORY.NAME]: "economy",
+						[ENUM_FORM_TRANSFER_CATEGORY.COST]: 10,
+						[ENUM_FORM_TRANSFER_CATEGORY.CURRENCY]:
+							DEFAULT_EVENT_CURRENCY,
+						[ENUM_FORM_TRANSFER_CATEGORY.FEES]: [],
+						[ENUM_FORM_TRANSFER_CATEGORY.MARKUP]: null
+					}
+				]
 			}).success
-		).toBe(true);
+		).toBe(false);
 	});
 });

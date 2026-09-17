@@ -317,8 +317,8 @@ export const mapEventOverrideToForm = (
 					ENUM_OVERRIDE_PRICING_ARM.PER_CAR_CATEGORY;
 				values[ENUM_FORM.UNITS] = mergeUnitRows(
 					units,
-					rates.categories,
-					(row) => row.category_id,
+					rates.prices,
+					(row) => row.price_id,
 					(row) => row.charge
 				);
 				values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = hasAnyMarkup(
@@ -655,8 +655,8 @@ const buildTransferOverride = (
 			typ: "transfer",
 			rates: {
 				pricing: "per_car_category",
-				categories: rows.map((row) => ({
-					category_id: row.unit_id,
+				prices: rows.map((row) => ({
+					price_id: row.unit_id,
 					charge: buildFixedUnitCharge(row, addMarginSeparately)
 				}))
 			}

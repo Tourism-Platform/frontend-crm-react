@@ -31,7 +31,7 @@ const VARIANT: ITransferVariant = {
 			percentage: 0.1
 		}
 	},
-	categories: []
+	prices: []
 };
 
 const PRODUCT: ITransferProduct = {
@@ -42,6 +42,7 @@ const PRODUCT: ITransferProduct = {
 	name: "Airport fleet",
 	pricing: ENUM_TRANSFER_PRICING.PER_CAR,
 	charge: null,
+	fleetCategories: [],
 	imagePaths: [],
 	primaryImagePath: null,
 	variants: [VARIANT]
@@ -90,14 +91,15 @@ describe("mapTransferProductToEditForm", () => {
 		const form = mapTransferProductToEditForm({
 			...PRODUCT,
 			pricing: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY,
+			fleetCategories: [{ id: "fc1", name: "economy" }],
 			variants: [
 				{
 					...VARIANT,
 					expenses: null,
-					categories: [
+					prices: [
 						{
-							id: "c1",
-							name: "economy",
+							id: "p1",
+							categoryId: "fc1",
 							expenses: {
 								typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
 								cost: {
@@ -119,7 +121,17 @@ describe("mapTransferProductToEditForm", () => {
 		expect(form.pricing.price_based_on_class).toBe(true);
 		expect(form.pricing.expenses).toMatchObject({
 			typ: ENUM_TRANSFER_PRODUCT_EXPENSE_TYP.PER_CAR_CATEGORY,
-			cars: [{ categories: [{ name: "economy", cost: 30 }] }]
+			cars: [
+				{
+					categories: [
+						{
+							category_id: "fc1",
+							name: "economy",
+							cost: 30
+						}
+					]
+				}
+			]
 		});
 	});
 

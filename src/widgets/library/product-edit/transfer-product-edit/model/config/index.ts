@@ -5,5 +5,6 @@ export * from "./pricing-individual-tabs.config";
 export * from "./pricing-markup.config";
 export * from "./pricing-per-car-row.config";
 export * from "./pricing-per-car-category-row.config";
+export * from "./fleet-categories.config";
 export * from "./pricing-price-details-flat-rate.config";
 export * from "./pricing-price-details-per-person.config";

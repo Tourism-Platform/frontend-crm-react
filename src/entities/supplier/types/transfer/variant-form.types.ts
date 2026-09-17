@@ -37,6 +37,7 @@ export type ENUM_FORM_TRANSFER_VARIANT_TYPE =
 
 export const ENUM_FORM_TRANSFER_CATEGORY = {
 	ID: "id",
+	CATEGORY_ID: "category_id",
 	NAME: "name",
 	COST: "cost",
 	CURRENCY: "currency",

@@ -2,7 +2,7 @@ import {
 	ENUM_SUPPLIER_TYPE,
 	ENUM_TRANSFER_PRICING,
 	type ENUM_TRANSFER_PRICING_TYPE,
-	type ITransferCarCategory,
+	type ITransferCarPrice,
 	type ITransferProduct,
 	type ITransferProductCreate,
 	type ITransferVariant,
@@ -24,21 +24,21 @@ const emptyToNull = (value: string | null | undefined): string | null => {
 	return trimmed ? trimmed : null;
 };
 
-const mapCategoriesFromBackend = (
+const mapPricesFromBackend = (
 	variant: TTransferVariantReadBackend
-): ITransferCarCategory[] => {
-	if (!("categories" in variant) || !variant.categories) {
+): ITransferCarPrice[] => {
+	if (!("prices" in variant) || !variant.prices?.length) {
 		return [];
 	}
 
-	return variant.categories.flatMap((category) => {
-		const expenses = mapSupplierFixedChargeFromBackend(category.charge);
+	return variant.prices.flatMap((price) => {
+		const expenses = mapSupplierFixedChargeFromBackend(price.charge);
 		if (!expenses) return [];
 
 		return [
 			{
-				id: category.id,
-				name: category.name ?? null,
+				id: price.id,
+				categoryId: price.category_id,
 				expenses
 			}
 		];
@@ -57,7 +57,7 @@ export const mapTransferVariantFromBackend = (
 		"charge" in variant
 			? mapSupplierFixedChargeFromBackend(variant.charge)
 			: null,
-	categories: mapCategoriesFromBackend(variant)
+	prices: mapPricesFromBackend(variant)
 });
 
 export const mapTransferVariantToWrite = (
@@ -83,10 +83,10 @@ export const mapTransferVariantToWrite = (
 				...base,
 				typ: "transfer",
 				pricing: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY,
-				categories: data.categories.map((category) => ({
-					...(category.id ? { id: category.id } : {}),
-					name: category.name,
-					charge: mapSupplierFixedChargeToBackend(category.expenses)
+				prices: data.prices.map((price) => ({
+					...(price.id ? { id: price.id } : {}),
+					category_id: price.categoryId,
+					charge: mapSupplierFixedChargeToBackend(price.expenses)
 				}))
 			};
 		default:
@@ -103,6 +103,13 @@ export const mapTransferProductFromBackend = (
 	row: TTransferProductReadBackend
 ): ITransferProduct => {
 	const spec = row.spec;
+	const fleetCategories =
+		spec.pricing === ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY
+			? (spec.categories ?? []).map((category) => ({
+					id: category.id ?? "",
+					name: category.name ?? null
+				}))
+			: [];
 
 	return {
 		id: row.id,
@@ -115,9 +122,10 @@ export const mapTransferProductFromBackend = (
 			spec.pricing === ENUM_TRANSFER_PRICING.WHOLE
 				? mapSupplierVariantChargeFromBackend(spec.charge)
 				: null,
+		fleetCategories,
 		imagePaths: row.image_paths ?? [],
 		primaryImagePath: row.primary_image_path ?? null,
-		variants: spec.cars.map(mapTransferVariantFromBackend)
+		variants: spec.cars.map((car) => mapTransferVariantFromBackend(car))
 	};
 };
 

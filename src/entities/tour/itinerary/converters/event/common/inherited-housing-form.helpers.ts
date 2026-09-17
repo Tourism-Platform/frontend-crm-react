@@ -18,7 +18,7 @@ import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
 type TProductScope = TProductPoolMemberBackend["supply"]["scope"];
 
 const onlyScopeId = (scope: TProductScope): string | null =>
-	scope.typ === "only" ? (scope.ids[0] ?? null) : null;
+	scope.typ === "only" ? (scope.ids?.[0] ?? null) : null;
 
 export type TEventProductLinkFormFields = {
 	[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]?: string;

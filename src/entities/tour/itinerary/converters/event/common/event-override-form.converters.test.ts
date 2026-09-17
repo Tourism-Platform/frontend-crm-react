@@ -107,9 +107,7 @@ describe("mapEventOverrideToForm", () => {
 				typ: "transfer",
 				rates: {
 					pricing: "per_car_category",
-					categories: [
-						{ category_id: "unit-1", charge: FIXED_CHARGE }
-					]
+					prices: [{ price_id: "unit-1", charge: FIXED_CHARGE }]
 				}
 			},
 			UNITS

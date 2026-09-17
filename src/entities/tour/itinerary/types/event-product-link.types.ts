@@ -9,6 +9,10 @@ export interface IEventProductScopeOnly {
 	typ: "only";
 	/** Product unit ids (hotel category / fare / vehicle / car / offering). */
 	ids: string[];
+	/** Hotel rooms inside pinned categories. */
+	units: string[];
+	/** Car categories for fleets priced by category. */
+	categories: string[];
 }
 
 export type TEventProductScope = IEventProductScopeAll | IEventProductScopeOnly;

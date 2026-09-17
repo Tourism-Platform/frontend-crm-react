@@ -173,6 +173,7 @@ export type TUpdateSupplierVariant =
 			variantId: string;
 			row: TTransferCarRow;
 			existing: ITransferProduct;
+			variantWrite?: ITransferVariantWrite;
 	  }
 	| {
 			typ: typeof ENUM_SUPPLIER_TYPE.ACTIVITY;

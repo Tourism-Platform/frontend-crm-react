@@ -35,7 +35,7 @@ const VARIANT: ITransferVariant = {
 			percentage: 0.1
 		}
 	},
-	categories: []
+	prices: []
 };
 
 const PRODUCT: ITransferProduct = {
@@ -46,6 +46,7 @@ const PRODUCT: ITransferProduct = {
 	name: "Airport fleet",
 	pricing: ENUM_TRANSFER_PRICING.PER_CAR,
 	charge: null,
+	fleetCategories: [],
 	imagePaths: [],
 	primaryImagePath: null,
 	variants: [VARIANT]
@@ -96,18 +97,19 @@ describe("mapTransferEditFormToPricingSwitch", () => {
 		).toBeNull();
 	});
 
-	it("builds ToPerCarCategory without category ids", () => {
+	it("builds ToPerCarCategory with fleet categories and prices", () => {
 		const values = mapTransferProductToEditForm({
 			...PRODUCT,
 			pricing: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY,
+			fleetCategories: [{ id: "fc1", name: "economy" }],
 			variants: [
 				{
 					...VARIANT,
 					expenses: null,
-					categories: [
+					prices: [
 						{
-							id: "c1",
-							name: "economy",
+							id: "p1",
+							categoryId: "fc1",
 							expenses: {
 								typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
 								cost: {
@@ -129,26 +131,20 @@ describe("mapTransferEditFormToPricingSwitch", () => {
 		expect(mapTransferEditFormToPricingSwitch(values)).toEqual({
 			typ: "transfer",
 			to: "per_car_category",
-			cars: [
+			categories: [{ id: "fc1", name: "economy" }],
+			prices: [
 				{
 					variant_id: "v1",
-					categories: [
-						{
-							name: "economy",
-							charge: {
-								typ: "fixed",
-								cost: {
-									val: 30,
-									currency: DEFAULT_EVENT_CURRENCY
-								},
-								fees: null,
-								markup: {
-									typ: "percentage",
-									percentage: 0.1
-								}
-							}
-						}
-					]
+					category_id: "fc1",
+					charge: {
+						typ: "fixed",
+						cost: {
+							val: 30,
+							currency: DEFAULT_EVENT_CURRENCY
+						},
+						fees: null,
+						markup: null
+					}
 				}
 			]
 		});

@@ -1,5 +1,6 @@
 import type {
-	CarCategoryOutput,
+	CarCategory,
+	CarPriceOutput,
 	CategorisedCarOutput,
 	PerCarCategoryTransferOutput,
 	PerCarTransferOutput,
@@ -28,8 +29,11 @@ export type TTransferEventDetailsBackend = TransferDetailsOutput;
 /** Read-side per-car priced car (`spec.cars[]` of a per-car spec). */
 export type TTransferCarVariantBackend = PricedCarOutput;
 
-/** Read-side price category of a categorised car. */
-export type TTransferCarPackageCategoryBackend = CarCategoryOutput;
+/** Read-side price row of a categorised car. */
+export type TTransferCarPackageCategoryBackend = CarPriceOutput;
+
+/** Read-side fleet car category (`spec.categories[]`). */
+export type TTransferFleetCategoryBackend = CarCategory;
 
 /** Read-side categorised car (`spec.cars[]` of a per-car-category spec). */
 export type TTransferCarCategoriesVariantBackend = CategorisedCarOutput;

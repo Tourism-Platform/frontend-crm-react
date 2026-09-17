@@ -1,11 +1,9 @@
-import { Plus, Trash2 } from "lucide-react";
 import { type FC, Fragment } from "react";
-import { type UseFormReturn, useFieldArray } from "react-hook-form";
+import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import {
-	Button,
 	Card,
 	CardContent,
 	CardHeader,
@@ -18,6 +16,7 @@ import {
 	ENUM_FORM_TRANSFER_CARS,
 	ENUM_FORM_TRANSFER_SECTION,
 	ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD,
+	ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD,
 	ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICING_FIELD,
 	type ENUM_VEHICLE_BODY_TYPE_TYPE,
@@ -29,8 +28,7 @@ import { FeeLinesField } from "@/features/pricing";
 
 import {
 	PER_CAR_CATEGORY_ROW_FIELDS_LIST,
-	PER_CAR_MARKUP_FIELD,
-	createEmptyPerCarCategoryRow
+	PER_CAR_MARKUP_FIELD
 } from "../../model";
 
 interface IPerCarByClassCardProps {
@@ -51,10 +49,17 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 	const carsPath =
 		`${ENUM_FORM_TRANSFER_SECTION.PRICING}.${ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES}.${ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CARS}.${index}` as const;
 
-	const { fields, append, remove } = useFieldArray({
-		control: form.control,
-		name: `${carsPath}.${ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES}`
-	});
+	const fleetCategories =
+		useWatch({
+			control: form.control,
+			name: `${ENUM_FORM_TRANSFER_SECTION.PRICING}.${ENUM_TRANSFER_PRODUCT_PRICING_FIELD.FLEET_CATEGORIES}`
+		}) ?? [];
+
+	const categoryRows =
+		useWatch({
+			control: form.control,
+			name: `${carsPath}.${ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES}`
+		}) ?? [];
 
 	return (
 		<Card>
@@ -68,81 +73,78 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 				</h4>
 			</CardHeader>
 			<CardContent className="grid gap-4">
-				{fields.map((field, categoryIndex) => {
+				{categoryRows.map((_, categoryIndex) => {
 					const categoryPath =
 						`${carsPath}.${ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD.CATEGORIES}.${categoryIndex}` as const;
+					const fleetRow = fleetCategories[categoryIndex];
+					const categoryLabel =
+						fleetRow?.[
+							ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME
+						] ?? "";
 
 					return (
-						<Fragment key={field.id}>
+						<Fragment key={categoryPath}>
 							<div className="grid gap-3">
+								<p className="text-sm font-medium">
+									{categoryLabel}
+								</p>
 								<div
 									className={cn(
-										"grid max-w-3xl grid-cols-[minmax(0,10rem)_minmax(0,8rem)_minmax(0,8rem)_auto] gap-3 items-center",
+										"grid max-w-3xl grid-cols-[minmax(0,8rem)_minmax(0,8rem)_auto] gap-3 items-center",
 										addMarginSeparately &&
-											"max-w-4xl grid-cols-[minmax(0,10rem)_minmax(0,8rem)_minmax(0,12rem)_minmax(0,8rem)_auto]"
+											"max-w-4xl grid-cols-[minmax(0,8rem)_minmax(0,12rem)_minmax(0,8rem)_auto]"
 									)}
 								>
-									{PER_CAR_CATEGORY_ROW_FIELDS_LIST.map(
-										({ key, ...item }, fieldIndex) => (
-											<Fragment key={key}>
-												{addMarginSeparately &&
-												fieldIndex ===
-													PER_CAR_CATEGORY_ROW_FIELDS_LIST.length -
-														1 ? (
-													<CustomInputSelect
-														control={form.control}
-														name={`${categoryPath}.${PER_CAR_MARKUP_FIELD.key}`}
-														label={
-															PER_CAR_MARKUP_FIELD.label
-														}
-														placeholder={
-															PER_CAR_MARKUP_FIELD.placeholder
-														}
-														selectOptions={[
-															...PER_CAR_MARKUP_FIELD.selectOptions
-														]}
-														t={t}
-													/>
-												) : null}
-												<CustomField
+									{PER_CAR_CATEGORY_ROW_FIELDS_LIST.filter(
+										({ key }) =>
+											key !==
+											ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME
+									).map(({ key, ...item }, fieldIndex) => (
+										<Fragment key={key}>
+											{addMarginSeparately &&
+											fieldIndex ===
+												PER_CAR_CATEGORY_ROW_FIELDS_LIST.filter(
+													({ key: fieldKey }) =>
+														fieldKey !==
+														ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME
+												).length -
+													1 ? (
+												<CustomInputSelect
 													control={form.control}
-													name={`${categoryPath}.${key}`}
+													name={`${categoryPath}.${PER_CAR_MARKUP_FIELD.key}`}
+													label={
+														PER_CAR_MARKUP_FIELD.label
+													}
+													placeholder={
+														PER_CAR_MARKUP_FIELD.placeholder
+													}
+													selectOptions={[
+														...PER_CAR_MARKUP_FIELD.selectOptions
+													]}
 													t={t}
-													className="min-w-0"
-													{...item}
 												/>
-											</Fragment>
-										)
-									)}
-									<Button
-										type="button"
-										variant={"destructive"}
-										size={"icon"}
-										onClick={() => remove(categoryIndex)}
-									>
-										<Trash2 className="h-4 w-4" />
-									</Button>
+											) : null}
+											<CustomField
+												control={form.control}
+												name={`${categoryPath}.${key}`}
+												t={t}
+												className="min-w-0"
+												{...item}
+											/>
+										</Fragment>
+									))}
 								</div>
 								<FeeLinesField
 									control={form.control}
 									name={`${categoryPath}.${ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.FEES}`}
 								/>
 							</div>
-							{categoryIndex < fields.length - 1 ? (
+							{categoryIndex < categoryRows.length - 1 ? (
 								<Separator />
 							) : null}
 						</Fragment>
 					);
 				})}
-				<Button
-					type="button"
-					variant="outline"
-					className="w-fit"
-					onClick={() => append(createEmptyPerCarCategoryRow())}
-				>
-					<Plus className="mr-2 h-4 w-4" />
-					{t("form.pricing.form.per_car.buttons.add_category")}
-				</Button>
 			</CardContent>
 		</Card>
 	);

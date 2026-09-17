@@ -8,6 +8,7 @@ import {
 	ENUM_FORM_TRANSFER_CARS,
 	ENUM_FORM_TRANSFER_SECTION,
 	ENUM_TRANSFER_PRODUCT_EXPENSE_TYP,
+	ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD,
 	ENUM_TRANSFER_PRODUCT_PER_CAR_EXPENSES_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICING_FIELD,
 	ENUM_TRANSFER_PRODUCT_PRICING_TYPE,
@@ -15,8 +16,24 @@ import {
 	alignTransferPerCarExpenses
 } from "@/entities/supplier";
 
+import { FleetCategories } from "./fleet-categories";
 import { PerCarByClassCard } from "./per-car-by-class-card";
 import { PerCarCard } from "./per-car-card";
+
+const getFleetCategoriesFromForm = (
+	form: UseFormReturn<TTransferProductEditSchema>
+) => {
+	const rows =
+		form.getValues(
+			`${ENUM_FORM_TRANSFER_SECTION.PRICING}.${ENUM_TRANSFER_PRODUCT_PRICING_FIELD.FLEET_CATEGORIES}`
+		) ?? [];
+	return rows.map((row) => ({
+		id:
+			row[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.ID] ??
+			crypto.randomUUID(),
+		name: row[ENUM_TRANSFER_PRODUCT_FLEET_CATEGORY_FIELD.NAME] ?? null
+	}));
+};
 
 const syncPerCarExpenses = (
 	form: UseFormReturn<TTransferProductEditSchema>
@@ -32,6 +49,9 @@ const syncPerCarExpenses = (
 	const priceBasedOnClass = form.getValues(
 		`${ENUM_FORM_TRANSFER_SECTION.PRICING}.${ENUM_TRANSFER_PRODUCT_PRICING_FIELD.PRICE_BASED_ON_CLASS}`
 	);
+	const fleetCategories = priceBasedOnClass
+		? getFleetCategoriesFromForm(form)
+		: [];
 	const expectedTyp = priceBasedOnClass
 		? ENUM_TRANSFER_PRODUCT_EXPENSE_TYP.PER_CAR_CATEGORY
 		: ENUM_TRANSFER_PRODUCT_EXPENSE_TYP.PER_CAR;
@@ -57,6 +77,7 @@ const syncPerCarExpenses = (
 			priceBasedOnClass,
 			carsListLength,
 			current: expenses,
+			fleetCategories,
 			...(form.getValues(
 				`${ENUM_FORM_TRANSFER_SECTION.PRICING}.${ENUM_TRANSFER_PRODUCT_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
 			) && { addMarginSeparately: true })
@@ -100,6 +121,9 @@ const PerCarDetailsBase: FC<{
 			alignTransferPerCarExpenses({
 				priceBasedOnClass: checked,
 				carsListLength: carsList?.length ?? 0,
+				fleetCategories: checked
+					? getFleetCategoriesFromForm(form)
+					: [],
 				...(addMarginSeparately && { addMarginSeparately: true }),
 				current: form.getValues(
 					`${ENUM_FORM_TRANSFER_SECTION.PRICING}.${ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES}`
@@ -118,6 +142,9 @@ const PerCarDetailsBase: FC<{
 			alignTransferPerCarExpenses({
 				priceBasedOnClass: Boolean(priceBasedOnClass),
 				carsListLength: carsList?.length ?? 0,
+				fleetCategories: priceBasedOnClass
+					? getFleetCategoriesFromForm(form)
+					: [],
 				addMarginSeparately: checked,
 				current: form.getValues(
 					`${ENUM_FORM_TRANSFER_SECTION.PRICING}.${ENUM_TRANSFER_PRODUCT_PRICING_FIELD.EXPENSES}`
@@ -177,6 +204,10 @@ const PerCarDetailsBase: FC<{
 					</div>
 				</div>
 			</div>
+
+			{priceBasedOnClass ? (
+				<FleetCategories form={form} carsListLength={carsList.length} />
+			) : null}
 
 			<div className="grid gap-4">
 				{carsList.map((_, index) =>

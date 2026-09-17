@@ -5,12 +5,15 @@ import {
 	ENUM_SUPPLIER_VARIANT_CHARGE,
 	ENUM_VEHICLE_BODY_TYPE,
 	type ISupplierFixedCharge,
-	type ITransferCarCategoryWrite,
+	type ITransferCarPriceWrite,
 	type ITransferProduct,
+	type ITransferProductCategoryPriceRow,
 	type ITransferVariant,
 	type ITransferVariantWrite,
 	type TTransferCarRow
 } from "../../types";
+
+import { mapTransferCategoryRowsToPriceWrites } from "./transfer-product-pricing.converters";
 
 const EMPTY_FIXED_CHARGE = (): ISupplierFixedCharge => ({
 	typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
@@ -30,21 +33,33 @@ export const mapCarRowFromVariant = (
 	[ENUM_FORM_TRANSFER_CARS.DESCRIPTION]: variant.description ?? undefined
 });
 
-const mapCategoryToWrite = (
-	category: ITransferVariant["categories"][number]
-): ITransferCarCategoryWrite => ({
-	id: category.id,
-	name: category.name,
-	expenses: category.expenses
+const mapPriceToWrite = (
+	price: ITransferVariant["prices"][number]
+): ITransferCarPriceWrite => ({
+	id: price.id,
+	categoryId: price.categoryId,
+	expenses: price.expenses
 });
 
 export const mapTransferCarRowToVariantWrite = (
 	row: TTransferCarRow,
-	product: ITransferProduct
+	product: ITransferProduct,
+	options?: {
+		categoryRows?: ITransferProductCategoryPriceRow[];
+		addMarginSeparately?: boolean;
+	}
 ): ITransferVariantWrite => {
 	const existing = product.variants.find(
 		(variant) => variant.id === row[ENUM_FORM_TRANSFER_CARS.VARIANT_ID]
 	);
+
+	const pricesFromMatrix =
+		options?.categoryRows && options.addMarginSeparately !== undefined
+			? mapTransferCategoryRowsToPriceWrites(
+					options.categoryRows,
+					options.addMarginSeparately
+				)
+			: null;
 
 	return {
 		name: row[ENUM_FORM_TRANSFER_CARS.NAME],
@@ -52,6 +67,6 @@ export const mapTransferCarRowToVariantWrite = (
 		pax: row[ENUM_FORM_TRANSFER_CARS.PAX] ?? 1,
 		description: row[ENUM_FORM_TRANSFER_CARS.DESCRIPTION]?.trim() || null,
 		expenses: existing?.expenses ?? EMPTY_FIXED_CHARGE(),
-		categories: existing?.categories.map(mapCategoryToWrite) ?? []
+		prices: pricesFromMatrix ?? existing?.prices.map(mapPriceToWrite) ?? []
 	};
 };

@@ -22,6 +22,7 @@ const PRODUCT: ITransferProduct = {
 	name: "Airport fleet",
 	pricing: ENUM_TRANSFER_PRICING.PER_CAR,
 	charge: null,
+	fleetCategories: [],
 	imagePaths: [],
 	primaryImagePath: null,
 	variants: []

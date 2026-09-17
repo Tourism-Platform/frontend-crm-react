@@ -30,6 +30,7 @@ import {
 	type TTransferCarPackageCategoryBackend,
 	type TTransferCarVariantBackend,
 	type TTransferDetailsBackend,
+	type TTransferFleetCategoryBackend,
 	type TTransferSpecInputBackend,
 	type TTransportationPricingSchema
 } from "../../../types";
@@ -58,6 +59,8 @@ const createEmptyPerCarPriceRow = (): ITransportationPerCarPriceRow => ({
 });
 
 const createEmptyCategoryRow = (): ITransportationCategoryPriceRow => ({
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CATEGORY_ID]: "",
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.PRICE_ID]: undefined,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: "",
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: null,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: [],
@@ -114,23 +117,44 @@ const mapPerCarPriceFromBackend = (
 	)
 });
 
-const mapCategoryRowFromBackend = (
-	category: TTransferCarPackageCategoryBackend
+const fleetCategoryName = (
+	fleetCategories: readonly TTransferFleetCategoryBackend[],
+	categoryId: string
+) => fleetCategories.find((category) => category.id === categoryId)?.name ?? "";
+
+const mapPriceRowFromBackend = (
+	price: TTransferCarPackageCategoryBackend,
+	fleetCategories: readonly TTransferFleetCategoryBackend[]
 ): ITransportationCategoryPriceRow => ({
-	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: category.name ?? "",
-	...mapPriceRowFromFixedCharge(category.charge),
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CATEGORY_ID]: price.category_id,
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.PRICE_ID]: price.id,
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: fleetCategoryName(
+		fleetCategories,
+		price.category_id
+	),
+	...mapPriceRowFromFixedCharge(price.charge),
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.MARKUP]: mapMarkupFromBackend(
-		category.charge?.markup
+		price.charge?.markup
 	)
 });
 
 const mapPerCarByClassPriceFromBackend = (
-	car: TTransferCarCategoriesVariantBackend
+	car: TTransferCarCategoriesVariantBackend,
+	fleetCategories: readonly TTransferFleetCategoryBackend[]
 ): ITransportationPerCarByClassPriceRow => ({
-	[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES]: car?.categories
-		?.length
-		? car.categories.map(mapCategoryRowFromBackend)
-		: [createEmptyCategoryRow()]
+	[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES]: car?.prices?.length
+		? car.prices.map((price) =>
+				mapPriceRowFromBackend(price, fleetCategories)
+			)
+		: fleetCategories.length
+			? fleetCategories.map((category) => ({
+					...createEmptyCategoryRow(),
+					[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CATEGORY_ID]:
+						category.id ?? "",
+					[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]:
+						category.name ?? ""
+				}))
+			: [createEmptyCategoryRow()]
 });
 
 const alignPerCarPriceRows = (
@@ -151,7 +175,8 @@ const alignPerCarPriceRows = (
 const alignPerCarByClassPriceRows = (
 	carsListLength: number,
 	existing: ITransportationPerCarByClassPriceRow[] = [],
-	apiRows?: TTransferCarCategoriesVariantBackend[] | null
+	apiRows?: TTransferCarCategoriesVariantBackend[] | null,
+	fleetCategories: readonly TTransferFleetCategoryBackend[] = []
 ): ITransportationPerCarByClassPriceRow[] =>
 	Array.from({ length: carsListLength }, (_, index) => {
 		const row = existing[index];
@@ -159,7 +184,10 @@ const alignPerCarByClassPriceRows = (
 			return row;
 		}
 		if (apiRows?.[index]) {
-			return mapPerCarByClassPriceFromBackend(apiRows[index]);
+			return mapPerCarByClassPriceFromBackend(
+				apiRows[index],
+				fleetCategories
+			);
 		}
 		return createEmptyPerCarByClassPriceRow();
 	});
@@ -354,10 +382,12 @@ export const mapTransportationPricingFromBackend = (
 	}
 
 	if (spec.pricing === "per_car_category") {
+		const fleetCategories = spec.categories ?? [];
 		const cars = alignPerCarByClassPriceRows(
 			carsList.length,
 			[],
-			spec.cars
+			spec.cars,
+			fleetCategories
 		);
 		const categories = cars.flatMap(
 			(car) => car[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES]
@@ -466,54 +496,111 @@ export const mapTransportationPricingToBackend = (
 					? aligned[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]
 					: [];
 
+			const categoryRows = rows.flatMap(
+				(row) =>
+					row?.[
+						ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CATEGORIES
+					] ?? []
+			);
+			const fleetCategories = Array.from(
+				new Map(
+					categoryRows
+						.filter((row) =>
+							row[
+								ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+									.CATEGORY_ID
+							]?.trim()
+						)
+						.map((row) => [
+							row[
+								ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+									.CATEGORY_ID
+							],
+							{
+								id: row[
+									ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+										.CATEGORY_ID
+								],
+								name:
+									row[
+										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+											.NAME
+									] || null
+							}
+						])
+				).values()
+			);
+
 			return {
 				spec: {
 					pricing: "per_car_category",
+					categories: fleetCategories.map((category) => ({
+						...(category.id ? { id: category.id } : {}),
+						name: category.name
+					})),
 					cars: carsList.map((car, index) => ({
 						body_type:
 							vehicleBodyTypeConverter.to(car.car_name) ??
 							DEFAULT_CAR_BODY_TYPE,
 						pax: car.pax ?? DEFAULT_CAR_PAX,
 						description: car.description || null,
-						categories: (
+						prices: (
 							rows[index]?.[
 								ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD
 									.CATEGORIES
 							] ?? []
-						).map((category) => {
-							const rowCurrency =
-								category[
-									ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-										.CURRENCY
-								];
-							return {
-								name:
+						)
+							.filter(
+								(category) =>
 									category[
 										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-											.NAME
-									] || null,
-								charge:
-									mapToFixedCharge(
+											.COST
+									] != null &&
+									category[
+										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+											.CATEGORY_ID
+									]
+							)
+							.map((category) => {
+								const rowCurrency =
+									category[
+										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+											.CURRENCY
+									];
+								const priceId =
+									category[
+										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+											.PRICE_ID
+									];
+								return {
+									...(priceId ? { id: priceId } : {}),
+									category_id:
 										category[
 											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-												.COST
+												.CATEGORY_ID
 										],
-										category[
-											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-												.FEES
-										],
-										rowCurrency,
-										mapMarkupToBackend(
+									charge:
+										mapToFixedCharge(
 											category[
 												ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-													.MARKUP
+													.COST
+											],
+											category[
+												ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+													.FEES
 											],
 											rowCurrency,
-											addMargin
-										)
-									) ?? zeroFixedCharge(rowCurrency)
-							};
-						})
+											mapMarkupToBackend(
+												category[
+													ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+														.MARKUP
+												],
+												rowCurrency,
+												addMargin
+											)
+										) ?? zeroFixedCharge(rowCurrency)
+								};
+							})
 					}))
 				}
 			};

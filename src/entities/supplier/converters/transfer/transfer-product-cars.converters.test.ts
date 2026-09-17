@@ -30,7 +30,7 @@ const VARIANT: ITransferVariant = {
 			percentage: 0.1
 		}
 	},
-	categories: []
+	prices: []
 };
 
 const PRODUCT: ITransferProduct = {
@@ -41,6 +41,7 @@ const PRODUCT: ITransferProduct = {
 	name: "Airport fleet",
 	pricing: ENUM_TRANSFER_PRICING.PER_CAR,
 	charge: null,
+	fleetCategories: [],
 	imagePaths: [],
 	primaryImagePath: null,
 	variants: [VARIANT]

@@ -15,6 +15,14 @@ export const mapTransferProductToGeneralForm = (
 	[ENUM_FORM.NAME]: product?.name ?? ""
 });
 
+const mapFleetCategoriesToDetails = (
+	fleetCategories: ITransferProduct["fleetCategories"]
+) =>
+	fleetCategories.map((category) => ({
+		...(category.id ? { id: category.id } : {}),
+		name: category.name
+	}));
+
 const mapGeneralFormToDetails = (
 	values: TTransferProductGeneralSchema,
 	existing: ITransferProduct | null | undefined
@@ -34,7 +42,13 @@ const mapGeneralFormToDetails = (
 				charge: mapSupplierVariantChargeToBackend(existing.charge)
 			};
 		case ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY:
-			return { name, pricing: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY };
+			return {
+				name,
+				pricing: ENUM_TRANSFER_PRICING.PER_CAR_CATEGORY,
+				categories: mapFleetCategoriesToDetails(
+					existing?.fleetCategories ?? []
+				)
+			};
 		default:
 			return { name, pricing: ENUM_TRANSFER_PRICING.PER_CAR };
 	}
@@ -49,7 +63,7 @@ export const mapTransferProductGeneralToCreate = (
 
 export const mapTransferProductGeneralToUpdate = (
 	values: TTransferProductGeneralSchema,
-	existing?: ITransferProduct | null
+	existing: ITransferProduct | null | undefined
 ): TUpdateTransferProductBackend => ({
 	typ: "transfer",
 	details: mapGeneralFormToDetails(values, existing)

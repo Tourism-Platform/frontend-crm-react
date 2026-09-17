@@ -117,14 +117,24 @@ describe("mapProductPoolMemberNew", () => {
 		expect(
 			mapProductPoolMemberNew(ENUM_EVENT_BACKEND.HOUSING, {
 				productId: "prod-1",
-				scope: { typ: "only", ids: ["cat-1"] }
+				scope: {
+					typ: "only",
+					ids: ["cat-1"],
+					units: [],
+					categories: []
+				}
 			})
 		).toEqual({
 			typ: ENUM_EVENT_BACKEND.HOUSING,
 			supply: {
 				source: "product",
 				product_id: "prod-1",
-				scope: { typ: "only", ids: ["cat-1"] }
+				scope: {
+					typ: "only",
+					ids: ["cat-1"],
+					units: [],
+					categories: []
+				}
 			}
 		});
 	});
