@@ -1,4 +1,4 @@
-import type { ENUM_SUPPLIER_TYPE_TYPE } from "../supplier-type.types";
+import { ENUM_SUPPLIER_TYPE } from "../supplier-type.types";
 import type {
 	ISupplierFixedCharge,
 	TSupplierVariantCharge
@@ -26,7 +26,7 @@ export interface IBusProduct {
 	id: string;
 	supplierId: string;
 	supplierName: string | null;
-	typ: ENUM_SUPPLIER_TYPE_TYPE;
+	typ: typeof ENUM_SUPPLIER_TYPE.BUS;
 	name: string;
 	pricing: ENUM_BUS_PRICING_TYPE;
 	/** Fleet-level charge of a whole-priced fleet; null for per-vehicle ones. */

@@ -1,5 +1,5 @@
 import type { ISupplierLocation } from "../supplier-location.types";
-import type { ENUM_SUPPLIER_TYPE_TYPE } from "../supplier-type.types";
+import { ENUM_SUPPLIER_TYPE } from "../supplier-type.types";
 import type { TSupplierVariantCharge } from "../supplier-variant-charge.types";
 
 import type { ENUM_ACTIVITY_SUB_TYPE_TYPE } from "./activity-sub-type.types";
@@ -16,7 +16,7 @@ export interface IActivityProduct {
 	id: string;
 	supplierId: string;
 	supplierName: string | null;
-	typ: ENUM_SUPPLIER_TYPE_TYPE;
+	typ: typeof ENUM_SUPPLIER_TYPE.ACTIVITY;
 	name: string;
 	subTyp: ENUM_ACTIVITY_SUB_TYPE_TYPE | null;
 	location: ISupplierLocation | null;

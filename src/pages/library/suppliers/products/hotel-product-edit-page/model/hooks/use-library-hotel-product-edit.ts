@@ -1,11 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
-import { useNavigateByType } from "@/shared/hooks";
 
 import {
 	ENUM_FORM_HOTEL_PRODUCT_ROOMS,
@@ -13,17 +10,13 @@ import {
 	type ENUM_FORM_HOTEL_SECTION_TYPE,
 	ENUM_HOTEL_PRICING,
 	ENUM_SUPPLIER_TYPE,
-	HOTEL_PRODUCT_EDIT_SCHEMA,
 	type IHotelProduct,
 	type THotelProductEditSchema,
 	type TSupplierProduct,
-	buildSupplierProductEditRoute,
 	isHotelWholePricingType,
-	mapHotelProductToEditForm,
-	mapHotelRoomRowToVariantWrite,
-	useCreateHotelProductMutation,
-	useSwitchHotelProductPricingMutation,
-	useUpdateHotelProductMutation,
+	useCreateSupplierProductMutation,
+	useSwitchSupplierProductPricingMutation,
+	useUpdateSupplierProductMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
 
@@ -31,45 +24,28 @@ export const useLibraryHotelProductEdit = ({
 	supplierId,
 	productId,
 	isCreate,
-	product
+	form,
+	product,
+	onCreated
 }: {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	product?: TSupplierProduct | null;
+	form: UseFormReturn<THotelProductEditSchema>;
+	product?: IHotelProduct;
+	onCreated: (productId: string, typ: TSupplierProduct["typ"]) => void;
 }) => {
 	const { t, i18n } = useTranslation("hotel_product_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
-	const { navigateToType, isExpectedType } = useNavigateByType({
-		expectedType: ENUM_SUPPLIER_TYPE.HOTEL,
-		actualType: product?.typ,
-		params: { supplierId, productId: product?.id ?? productId },
-		resolvePath: buildSupplierProductEditRoute,
-		enabled: !isCreate && Boolean(product)
-	});
 
-	const hotelProduct = isExpectedType
-		? ((product ?? null) as IHotelProduct | null)
-		: null;
-
-	const form = useForm<THotelProductEditSchema>({
-		resolver: zodResolver(HOTEL_PRODUCT_EDIT_SCHEMA),
-		mode: "onSubmit",
-		defaultValues: mapHotelProductToEditForm(hotelProduct)
-	});
-
-	useEffect(() => {
-		form.reset(mapHotelProductToEditForm(hotelProduct));
-	}, [hotelProduct, form]);
-
-	const [createHotelProduct, { isLoading: isCreating }] =
-		useCreateHotelProductMutation();
-	const [updateHotelProduct, { isLoading: isUpdating }] =
-		useUpdateHotelProductMutation();
+	const [createSupplierProduct, { isLoading: isCreating }] =
+		useCreateSupplierProductMutation();
+	const [updateSupplierProduct, { isLoading: isUpdating }] =
+		useUpdateSupplierProductMutation();
 	const [updateVariant, { isLoading: isUpdatingVariant }] =
 		useUpdateVariantMutation();
-	const [switchHotelProductPricing, { isLoading: isSwitching }] =
-		useSwitchHotelProductPricingMutation();
+	const [switchSupplierProductPricing, { isLoading: isSwitching }] =
+		useSwitchSupplierProductPricingMutation();
 	const isLoading =
 		isCreating || isUpdating || isUpdatingVariant || isSwitching;
 
@@ -90,68 +66,66 @@ export const useLibraryHotelProductEdit = ({
 					form.getValues()[ENUM_FORM_HOTEL_SECTION.GENERAL];
 
 				if (isCreate) {
-					const created = await createHotelProduct({
+					const created = await createSupplierProduct({
+						typ: ENUM_SUPPLIER_TYPE.HOTEL,
 						supplierId,
 						values,
 						language
 					}).unwrap();
 					toast.success(t("form.toasts.create.success"));
-					navigateToType(
-						created.typ,
-						{ replace: true },
-						{ productId: created.id }
-					);
+					onCreated(created.id, created.typ);
 					return;
 				}
 
-				await updateHotelProduct({
+				await updateSupplierProduct({
+					typ: ENUM_SUPPLIER_TYPE.HOTEL,
 					supplierId,
 					productId,
 					values,
 					language,
-					existing: hotelProduct
+					existing: product
 				}).unwrap();
-			} else if (section === ENUM_FORM_HOTEL_SECTION.ROOMS) {
-				if (!hotelProduct) return;
+			} else {
+				if (!product) return;
 
-				const rooms =
-					form.getValues()[ENUM_FORM_HOTEL_SECTION.ROOMS][
-						ENUM_FORM_HOTEL_PRODUCT_ROOMS.ROOMS_LIST
-					];
+				if (section === ENUM_FORM_HOTEL_SECTION.ROOMS) {
+					const rooms =
+						form.getValues()[ENUM_FORM_HOTEL_SECTION.ROOMS][
+							ENUM_FORM_HOTEL_PRODUCT_ROOMS.ROOMS_LIST
+						];
 
-				await Promise.all(
-					rooms.map((room) =>
-						updateVariant({
-							supplierId,
-							productId,
-							variantId:
-								room[ENUM_FORM_HOTEL_PRODUCT_ROOMS.VARIANT_ID],
-							typ: ENUM_SUPPLIER_TYPE.HOTEL,
-							pricing: hotelProduct.pricing,
-							data: mapHotelRoomRowToVariantWrite(
-								room,
-								hotelProduct
-							)
-						}).unwrap()
-					)
-				);
-			} else if (section === ENUM_FORM_HOTEL_SECTION.PRICING) {
-				if (!hotelProduct) return;
+					await Promise.all(
+						rooms.map((room) =>
+							updateVariant({
+								typ: ENUM_SUPPLIER_TYPE.HOTEL,
+								supplierId,
+								productId,
+								variantId:
+									room[
+										ENUM_FORM_HOTEL_PRODUCT_ROOMS.VARIANT_ID
+									],
+								row: room,
+								existing: product
+							}).unwrap()
+						)
+					);
+				} else if (section === ENUM_FORM_HOTEL_SECTION.PRICING) {
+					const values = form.getValues();
+					if (
+						isHotelWholePricingType(values.pricing.pricing_type) &&
+						product.pricing !== ENUM_HOTEL_PRICING.WHOLE
+					) {
+						toast.warning(t("form.pricing.whole_warning"));
+					}
 
-				const values = form.getValues();
-				if (
-					isHotelWholePricingType(values.pricing.pricing_type) &&
-					hotelProduct.pricing !== ENUM_HOTEL_PRICING.WHOLE
-				) {
-					toast.warning(t("form.pricing.whole_warning"));
+					await switchSupplierProductPricing({
+						typ: ENUM_SUPPLIER_TYPE.HOTEL,
+						supplierId,
+						productId,
+						values,
+						existing: product
+					}).unwrap();
 				}
-
-				await switchHotelProductPricing({
-					supplierId,
-					productId,
-					values,
-					existing: hotelProduct
-				}).unwrap();
 			}
 
 			toast.success(t("form.toasts.save.success"));
@@ -166,10 +140,7 @@ export const useLibraryHotelProductEdit = ({
 	};
 
 	return {
-		form,
 		createSectionSubmit,
-		isLoading,
-		isExpectedType,
-		product: hotelProduct
+		isLoading
 	};
 };

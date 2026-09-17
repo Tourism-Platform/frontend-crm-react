@@ -1,35 +1,37 @@
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import type { IPaginationRequest } from "@/shared/types";
 
-import type { IActivityProduct, IActivityVariantWrite } from "./activity";
-import type { TActivityProductGeneralSchema } from "./activity/product-form.types";
+import type {
+	IActivityProduct,
+	IActivityVariantWrite,
+	TActivityProductEditSchema,
+	TActivityProductGeneralSchema,
+	TActivityVariantRow
+} from "./activity";
 import type {
 	ENUM_BUS_PRICING_TYPE,
 	IBusProduct,
-	IBusVariantWrite
-} from "./bus";
-import type {
+	IBusVariantWrite,
 	TBusProductEditSchema,
-	TBusProductGeneralSchema
-} from "./bus/product-form.types";
+	TBusProductGeneralSchema,
+	TBusVehicleRow
+} from "./bus";
 import type {
 	ENUM_FLIGHT_PRICING_TYPE,
 	IFlightProduct,
-	IFlightVariantWrite
-} from "./flight";
-import type {
+	IFlightVariantWrite,
+	TFlightFareRow,
 	TFlightProductEditSchema,
 	TFlightProductGeneralSchema
-} from "./flight/product-form.types";
+} from "./flight";
 import type {
 	ENUM_HOTEL_PRICING_TYPE,
 	IHotelProduct,
-	IHotelVariantWrite
-} from "./hotel";
-import type {
+	IHotelVariantWrite,
 	THotelProductEditSchema,
-	THotelProductGeneralSchema
-} from "./hotel/product-form.types";
+	THotelProductGeneralSchema,
+	THotelRoomRow
+} from "./hotel";
 import {
 	ENUM_SUPPLIER_TYPE,
 	type ENUM_SUPPLIER_TYPE_TYPE
@@ -37,21 +39,19 @@ import {
 import type {
 	ENUM_TRAIN_PRICING_TYPE,
 	ITrainProduct,
-	ITrainVariantWrite
-} from "./train";
-import type {
+	ITrainVariantWrite,
+	TTrainFareRow,
 	TTrainProductEditSchema,
 	TTrainProductGeneralSchema
-} from "./train/product-form.types";
+} from "./train";
 import type {
 	ENUM_TRANSFER_PRICING_TYPE,
 	ITransferProduct,
-	ITransferVariantWrite
-} from "./transfer";
-import type {
+	ITransferVariantWrite,
+	TTransferCarRow,
 	TTransferProductEditSchema,
 	TTransferProductGeneralSchema
-} from "./transfer/product-form.types";
+} from "./transfer";
 
 export type TSupplierProduct =
 	| IHotelProduct
@@ -60,6 +60,14 @@ export type TSupplierProduct =
 	| IBusProduct
 	| ITransferProduct
 	| IActivityProduct;
+
+export type TSupplierProductEditForm =
+	| THotelProductEditSchema
+	| TTrainProductEditSchema
+	| TFlightProductEditSchema
+	| TBusProductEditSchema
+	| TTransferProductEditSchema
+	| TActivityProductEditSchema;
 
 /** asyncSelect option — domain product + label/value required by CustomAsyncSelect */
 export type TSupplierProductSelectOption = {
@@ -125,9 +133,55 @@ export type TCreateSupplierVariant = {
 	productId: string;
 } & TSupplierVariantWriteInput;
 
-export type TUpdateSupplierVariant = TCreateSupplierVariant & {
-	variantId: string;
-};
+export type TUpdateSupplierVariant =
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.HOTEL;
+			supplierId: string;
+			productId: string;
+			variantId: string;
+			row: THotelRoomRow;
+			existing: IHotelProduct;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRAIN;
+			supplierId: string;
+			productId: string;
+			variantId: string;
+			row: TTrainFareRow;
+			existing: ITrainProduct;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.FLIGHT;
+			supplierId: string;
+			productId: string;
+			variantId: string;
+			row: TFlightFareRow;
+			existing: IFlightProduct;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.BUS;
+			supplierId: string;
+			productId: string;
+			variantId: string;
+			row: TBusVehicleRow;
+			existing: IBusProduct;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRANSFER;
+			supplierId: string;
+			productId: string;
+			variantId: string;
+			row: TTransferCarRow;
+			existing: ITransferProduct;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.ACTIVITY;
+			supplierId: string;
+			productId: string;
+			variantId: string;
+			row: TActivityVariantRow;
+			existing: IActivityProduct;
+	  };
 
 export interface IDeleteSupplierVariant {
 	supplierId: string;
@@ -135,117 +189,123 @@ export interface IDeleteSupplierVariant {
 	variantId: string;
 }
 
-export interface ICreateHotelProduct {
-	supplierId: string;
-	values: THotelProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-}
-
-export interface IUpdateHotelProduct {
-	supplierId: string;
-	productId: string;
-	values: THotelProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-	existing?: IHotelProduct | null;
-}
-
-export interface ISwitchHotelProductPricing {
-	supplierId: string;
-	productId: string;
-	values: THotelProductEditSchema;
-	existing: IHotelProduct;
-}
-
-export interface ICreateTrainProduct {
-	supplierId: string;
-	values: TTrainProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-}
-
-export interface IUpdateTrainProduct {
-	supplierId: string;
-	productId: string;
-	values: TTrainProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-	existing?: ITrainProduct | null;
-}
-
-export interface ISwitchTrainProductPricing {
-	supplierId: string;
-	productId: string;
-	values: TTrainProductEditSchema;
-}
-
 export interface IDeleteSupplierProduct {
 	supplierId: string;
 	productId: string;
 }
 
-export interface ICreateFlightProduct {
-	supplierId: string;
-	values: TFlightProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-}
+export type TCreateSupplierProduct =
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.HOTEL;
+			supplierId: string;
+			values: THotelProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRAIN;
+			supplierId: string;
+			values: TTrainProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.FLIGHT;
+			supplierId: string;
+			values: TFlightProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.BUS;
+			supplierId: string;
+			values: TBusProductGeneralSchema;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRANSFER;
+			supplierId: string;
+			values: TTransferProductGeneralSchema;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.ACTIVITY;
+			supplierId: string;
+			values: TActivityProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+	  };
 
-export interface IUpdateFlightProduct {
-	supplierId: string;
-	productId: string;
-	values: TFlightProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-	existing?: IFlightProduct | null;
-}
+export type TUpdateSupplierProduct =
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.HOTEL;
+			supplierId: string;
+			productId: string;
+			values: THotelProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+			existing?: IHotelProduct | null;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRAIN;
+			supplierId: string;
+			productId: string;
+			values: TTrainProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+			existing?: ITrainProduct | null;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.FLIGHT;
+			supplierId: string;
+			productId: string;
+			values: TFlightProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+			existing?: IFlightProduct | null;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.BUS;
+			supplierId: string;
+			productId: string;
+			values: TBusProductGeneralSchema;
+			existing?: IBusProduct | null;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRANSFER;
+			supplierId: string;
+			productId: string;
+			values: TTransferProductGeneralSchema;
+			existing?: ITransferProduct | null;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.ACTIVITY;
+			supplierId: string;
+			productId: string;
+			values: TActivityProductGeneralSchema;
+			language?: ENUM_LANGUAGES_TYPE;
+	  };
 
-export interface ISwitchFlightProductPricing {
-	supplierId: string;
-	productId: string;
-	values: TFlightProductEditSchema;
-}
-
-export interface ICreateBusProduct {
-	supplierId: string;
-	values: TBusProductGeneralSchema;
-}
-
-export interface IUpdateBusProduct {
-	supplierId: string;
-	productId: string;
-	values: TBusProductGeneralSchema;
-	existing?: IBusProduct | null;
-}
-
-export interface ISwitchBusProductPricing {
-	supplierId: string;
-	productId: string;
-	values: TBusProductEditSchema;
-}
-
-export interface ICreateTransferProduct {
-	supplierId: string;
-	values: TTransferProductGeneralSchema;
-}
-
-export interface IUpdateTransferProduct {
-	supplierId: string;
-	productId: string;
-	values: TTransferProductGeneralSchema;
-	existing?: ITransferProduct | null;
-}
-
-export interface ISwitchTransferProductPricing {
-	supplierId: string;
-	productId: string;
-	values: TTransferProductEditSchema;
-}
-
-export interface ICreateActivityProduct {
-	supplierId: string;
-	values: TActivityProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-}
-
-export interface IUpdateActivityProduct {
-	supplierId: string;
-	productId: string;
-	values: TActivityProductGeneralSchema;
-	language?: ENUM_LANGUAGES_TYPE;
-}
+export type TSwitchSupplierProductPricing =
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.HOTEL;
+			supplierId: string;
+			productId: string;
+			values: THotelProductEditSchema;
+			existing: IHotelProduct;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRAIN;
+			supplierId: string;
+			productId: string;
+			values: TTrainProductEditSchema;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.FLIGHT;
+			supplierId: string;
+			productId: string;
+			values: TFlightProductEditSchema;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.BUS;
+			supplierId: string;
+			productId: string;
+			values: TBusProductEditSchema;
+	  }
+	| {
+			typ: typeof ENUM_SUPPLIER_TYPE.TRANSFER;
+			supplierId: string;
+			productId: string;
+			values: TTransferProductEditSchema;
+	  };

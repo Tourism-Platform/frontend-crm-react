@@ -2,7 +2,6 @@ import {
 	ENUM_BUS_PRICING,
 	ENUM_FORM_BUS_PRODUCT as ENUM_FORM,
 	type IBusProduct,
-	type IUpdateBusProduct,
 	type TBusProductDetailsBackend,
 	type TBusProductGeneralSchema,
 	type TCreateBusProductBackend,
@@ -52,9 +51,3 @@ export const mapBusProductGeneralToUpdate = (
 	typ: "bus",
 	details: mapGeneralFormToDetails(values, existing)
 });
-
-export const mapBusProductToUpdate = ({
-	values,
-	existing
-}: IUpdateBusProduct): TUpdateBusProductBackend =>
-	mapBusProductGeneralToUpdate(values, existing);

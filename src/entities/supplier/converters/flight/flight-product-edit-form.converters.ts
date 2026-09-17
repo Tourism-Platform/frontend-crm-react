@@ -9,6 +9,9 @@ import { mapFareRowFromVariant } from "./flight-product-fares.converters";
 import { mapFlightPricingFromProduct } from "./flight-product-pricing.converters";
 import { mapFlightProductToGeneralForm } from "./product-form.converters";
 
+export const emptyFlightProductEditForm = (): TFlightProductEditSchema =>
+	mapFlightProductToEditForm(null);
+
 export const mapFlightProductToEditForm = (
 	product?: IFlightProduct | null
 ): TFlightProductEditSchema => {

@@ -9,6 +9,9 @@ import { mapCarRowFromVariant } from "./transfer-product-cars.converters";
 import { mapTransferProductToGeneralForm } from "./transfer-product-form.converters";
 import { mapPricingFromProduct } from "./transfer-product-pricing.converters";
 
+export const emptyTransferProductEditForm = (): TTransferProductEditSchema =>
+	mapTransferProductToEditForm(null);
+
 export const mapTransferProductToEditForm = (
 	product?: ITransferProduct | null
 ): TTransferProductEditSchema => {

@@ -1,11 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
-import { useNavigateByType } from "@/shared/hooks";
 
 import {
 	ENUM_FLIGHT_PRICING,
@@ -13,17 +10,13 @@ import {
 	ENUM_FORM_FLIGHT_SECTION,
 	type ENUM_FORM_FLIGHT_SECTION_TYPE,
 	ENUM_SUPPLIER_TYPE,
-	FLIGHT_PRODUCT_EDIT_SCHEMA,
 	type IFlightProduct,
 	type TFlightProductEditSchema,
 	type TSupplierProduct,
-	buildSupplierProductEditRoute,
 	isFlightWholePricingType,
-	mapFareRowToVariantWrite,
-	mapFlightProductToEditForm,
-	useCreateFlightProductMutation,
-	useSwitchFlightProductPricingMutation,
-	useUpdateFlightProductMutation,
+	useCreateSupplierProductMutation,
+	useSwitchSupplierProductPricingMutation,
+	useUpdateSupplierProductMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
 
@@ -31,45 +24,28 @@ export const useLibraryFlightProductEdit = ({
 	supplierId,
 	productId,
 	isCreate,
-	product
+	form,
+	product,
+	onCreated
 }: {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	product?: TSupplierProduct | null;
+	form: UseFormReturn<TFlightProductEditSchema>;
+	product?: IFlightProduct;
+	onCreated: (productId: string, typ: TSupplierProduct["typ"]) => void;
 }) => {
 	const { t, i18n } = useTranslation("flight_product_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
-	const { navigateToType, isExpectedType } = useNavigateByType({
-		expectedType: ENUM_SUPPLIER_TYPE.FLIGHT,
-		actualType: product?.typ,
-		params: { supplierId, productId: product?.id ?? productId },
-		resolvePath: buildSupplierProductEditRoute,
-		enabled: !isCreate && Boolean(product)
-	});
 
-	const flightProduct = isExpectedType
-		? ((product ?? null) as IFlightProduct | null)
-		: null;
-
-	const form = useForm<TFlightProductEditSchema>({
-		resolver: zodResolver(FLIGHT_PRODUCT_EDIT_SCHEMA),
-		mode: "onSubmit",
-		defaultValues: mapFlightProductToEditForm(flightProduct)
-	});
-
-	useEffect(() => {
-		form.reset(mapFlightProductToEditForm(flightProduct));
-	}, [flightProduct, form]);
-
-	const [createFlightProduct, { isLoading: isCreating }] =
-		useCreateFlightProductMutation();
-	const [updateFlightProduct, { isLoading: isUpdating }] =
-		useUpdateFlightProductMutation();
+	const [createSupplierProduct, { isLoading: isCreating }] =
+		useCreateSupplierProductMutation();
+	const [updateSupplierProduct, { isLoading: isUpdating }] =
+		useUpdateSupplierProductMutation();
 	const [updateVariant, { isLoading: isUpdatingVariant }] =
 		useUpdateVariantMutation();
-	const [switchFlightProductPricing, { isLoading: isSwitching }] =
-		useSwitchFlightProductPricingMutation();
+	const [switchSupplierProductPricing, { isLoading: isSwitching }] =
+		useSwitchSupplierProductPricingMutation();
 	const isLoading =
 		isCreating || isUpdating || isUpdatingVariant || isSwitching;
 
@@ -90,63 +66,63 @@ export const useLibraryFlightProductEdit = ({
 					form.getValues()[ENUM_FORM_FLIGHT_SECTION.GENERAL];
 
 				if (isCreate) {
-					const created = await createFlightProduct({
+					const created = await createSupplierProduct({
+						typ: ENUM_SUPPLIER_TYPE.FLIGHT,
 						supplierId,
 						values,
 						language
 					}).unwrap();
 					toast.success(t("form.toasts.create.success"));
-					navigateToType(
-						created.typ,
-						{ replace: true },
-						{ productId: created.id }
-					);
+					onCreated(created.id, created.typ);
 					return;
 				}
 
-				await updateFlightProduct({
+				await updateSupplierProduct({
+					typ: ENUM_SUPPLIER_TYPE.FLIGHT,
 					supplierId,
 					productId,
 					values,
 					language,
-					existing: flightProduct
+					existing: product
 				}).unwrap();
-			} else if (section === ENUM_FORM_FLIGHT_SECTION.FARES) {
-				if (!flightProduct) return;
+			} else {
+				if (!product) return;
 
-				const rows =
-					form.getValues()[ENUM_FORM_FLIGHT_SECTION.FARES][
-						ENUM_FORM_FLIGHT_FARES.FARES_LIST
-					];
+				if (section === ENUM_FORM_FLIGHT_SECTION.FARES) {
+					const rows =
+						form.getValues()[ENUM_FORM_FLIGHT_SECTION.FARES][
+							ENUM_FORM_FLIGHT_FARES.FARES_LIST
+						];
 
-				await Promise.all(
-					rows.map((row) =>
-						updateVariant({
-							supplierId,
-							productId,
-							variantId: row[ENUM_FORM_FLIGHT_FARES.VARIANT_ID],
-							typ: ENUM_SUPPLIER_TYPE.FLIGHT,
-							pricing: flightProduct.pricing,
-							data: mapFareRowToVariantWrite(row, flightProduct)
-						}).unwrap()
-					)
-				);
-			} else if (section === ENUM_FORM_FLIGHT_SECTION.PRICING) {
-				if (!flightProduct) return;
+					await Promise.all(
+						rows.map((row) =>
+							updateVariant({
+								typ: ENUM_SUPPLIER_TYPE.FLIGHT,
+								supplierId,
+								productId,
+								variantId:
+									row[ENUM_FORM_FLIGHT_FARES.VARIANT_ID],
+								row,
+								existing: product
+							}).unwrap()
+						)
+					);
+				} else if (section === ENUM_FORM_FLIGHT_SECTION.PRICING) {
+					const values = form.getValues();
+					if (
+						isFlightWholePricingType(values.pricing.pricing_type) &&
+						product.pricing !== ENUM_FLIGHT_PRICING.WHOLE
+					) {
+						toast.warning(t("form.pricing.whole_warning"));
+					}
 
-				const values = form.getValues();
-				if (
-					isFlightWholePricingType(values.pricing.pricing_type) &&
-					flightProduct.pricing !== ENUM_FLIGHT_PRICING.WHOLE
-				) {
-					toast.warning(t("form.pricing.whole_warning"));
+					await switchSupplierProductPricing({
+						typ: ENUM_SUPPLIER_TYPE.FLIGHT,
+						supplierId,
+						productId,
+						values
+					}).unwrap();
 				}
-
-				await switchFlightProductPricing({
-					supplierId,
-					productId,
-					values
-				}).unwrap();
 			}
 
 			toast.success(t("form.toasts.save.success"));
@@ -161,10 +137,7 @@ export const useLibraryFlightProductEdit = ({
 	};
 
 	return {
-		form,
 		createSectionSubmit,
-		isLoading,
-		isExpectedType,
-		product: flightProduct
+		isLoading
 	};
 };

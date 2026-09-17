@@ -9,6 +9,9 @@ import { mapTrainProductToGeneralForm } from "./product-form.converters";
 import { mapFareRowFromVariant } from "./train-product-fares.converters";
 import { mapTrainPricingFromProduct } from "./train-product-pricing.converters";
 
+export const emptyTrainProductEditForm = (): TTrainProductEditSchema =>
+	mapTrainProductToEditForm(null);
+
 export const mapTrainProductToEditForm = (
 	product?: ITrainProduct | null
 ): TTrainProductEditSchema => {

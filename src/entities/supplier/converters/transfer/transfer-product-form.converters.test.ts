@@ -10,8 +10,8 @@ import {
 } from "../../types";
 
 import {
-	mapTransferProductToGeneralForm,
-	mapTransferProductToUpdate
+	mapTransferProductGeneralToUpdate,
+	mapTransferProductToGeneralForm
 } from "./transfer-product-form.converters";
 
 const PRODUCT: ITransferProduct = {
@@ -38,18 +38,16 @@ const WHOLE_PRODUCT: ITransferProduct = {
 	}
 };
 
-describe("mapTransferProductToUpdate", () => {
+describe("mapTransferProductGeneralToUpdate", () => {
 	it("keeps the existing per_car arm and only updates the name", () => {
 		expect(
-			mapTransferProductToUpdate({
-				supplierId: PRODUCT.supplierId,
-				productId: PRODUCT.id,
-				values: mapTransferProductToGeneralForm({
+			mapTransferProductGeneralToUpdate(
+				mapTransferProductToGeneralForm({
 					...PRODUCT,
 					name: "New fleet"
 				}),
-				existing: PRODUCT
-			})
+				PRODUCT
+			)
 		).toMatchObject({
 			details: {
 				pricing: "per_car",
@@ -60,12 +58,10 @@ describe("mapTransferProductToUpdate", () => {
 
 	it("echoes the existing whole charge on a name update", () => {
 		expect(
-			mapTransferProductToUpdate({
-				supplierId: WHOLE_PRODUCT.supplierId,
-				productId: WHOLE_PRODUCT.id,
-				values: mapTransferProductToGeneralForm(WHOLE_PRODUCT),
-				existing: WHOLE_PRODUCT
-			})
+			mapTransferProductGeneralToUpdate(
+				mapTransferProductToGeneralForm(WHOLE_PRODUCT),
+				WHOLE_PRODUCT
+			)
 		).toMatchObject({
 			details: {
 				pricing: "whole",

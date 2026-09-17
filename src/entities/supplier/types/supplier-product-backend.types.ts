@@ -10,6 +10,14 @@ export type TCreateProductBodyBackend = ReturnType<
 	typeof SUPPLIER_PRODUCT_PATHS.createProduct
 >["_types"]["body"];
 
+export type TUpdateProductBodyBackend = ReturnType<
+	typeof SUPPLIER_PRODUCT_PATHS.updateProduct
+>["_types"]["body"];
+
+export type TSwitchProductPricingBodyBackend = ReturnType<
+	typeof SUPPLIER_PRODUCT_PATHS.switchProductPricing
+>["_types"]["body"];
+
 export type TSupplierVariantWriteBackend = ReturnType<
 	typeof SUPPLIER_PRODUCT_PATHS.createVariant
 >["_types"]["body"];

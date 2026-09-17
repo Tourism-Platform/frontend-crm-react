@@ -8,6 +8,9 @@ import {
 import { mapActivityOfferingRowFromVariant } from "./activity-product-variants.converters";
 import { mapActivityProductToGeneralForm } from "./product-form.converters";
 
+export const emptyActivityProductEditForm = (): TActivityProductEditSchema =>
+	mapActivityProductToEditForm(null);
+
 export const mapActivityProductToEditForm = (
 	product?: IActivityProduct | null
 ): TActivityProductEditSchema => ({

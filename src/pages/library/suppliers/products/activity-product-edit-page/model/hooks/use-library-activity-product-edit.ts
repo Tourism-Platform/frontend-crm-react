@@ -1,14 +1,10 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
-import { useNavigateByType } from "@/shared/hooks";
 
 import {
-	ACTIVITY_PRODUCT_EDIT_SCHEMA,
 	ENUM_FORM_ACTIVITY_SECTION,
 	type ENUM_FORM_ACTIVITY_SECTION_TYPE,
 	ENUM_FORM_ACTIVITY_VARIANTS,
@@ -16,11 +12,8 @@ import {
 	type IActivityProduct,
 	type TActivityProductEditSchema,
 	type TSupplierProduct,
-	buildSupplierProductEditRoute,
-	mapActivityOfferingRowToVariantWrite,
-	mapActivityProductToEditForm,
-	useCreateActivityProductMutation,
-	useUpdateActivityProductMutation,
+	useCreateSupplierProductMutation,
+	useUpdateSupplierProductMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
 
@@ -28,41 +21,24 @@ export const useLibraryActivityProductEdit = ({
 	supplierId,
 	productId,
 	isCreate,
-	product
+	form,
+	product,
+	onCreated
 }: {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	product?: TSupplierProduct | null;
+	form: UseFormReturn<TActivityProductEditSchema>;
+	product?: IActivityProduct;
+	onCreated: (productId: string, typ: TSupplierProduct["typ"]) => void;
 }) => {
 	const { t, i18n } = useTranslation("activity_product_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
-	const { navigateToType, isExpectedType } = useNavigateByType({
-		expectedType: ENUM_SUPPLIER_TYPE.ACTIVITY,
-		actualType: product?.typ,
-		params: { supplierId, productId: product?.id ?? productId },
-		resolvePath: buildSupplierProductEditRoute,
-		enabled: !isCreate && Boolean(product)
-	});
 
-	const activityProduct = isExpectedType
-		? ((product ?? null) as IActivityProduct | null)
-		: null;
-
-	const form = useForm<TActivityProductEditSchema>({
-		resolver: zodResolver(ACTIVITY_PRODUCT_EDIT_SCHEMA),
-		mode: "onSubmit",
-		defaultValues: mapActivityProductToEditForm(activityProduct)
-	});
-
-	useEffect(() => {
-		form.reset(mapActivityProductToEditForm(activityProduct));
-	}, [activityProduct, form]);
-
-	const [createActivityProduct, { isLoading: isCreating }] =
-		useCreateActivityProductMutation();
-	const [updateActivityProduct, { isLoading: isUpdating }] =
-		useUpdateActivityProductMutation();
+	const [createSupplierProduct, { isLoading: isCreating }] =
+		useCreateSupplierProductMutation();
+	const [updateSupplierProduct, { isLoading: isUpdating }] =
+		useUpdateSupplierProductMutation();
 	const [updateVariant, { isLoading: isUpdatingVariant }] =
 		useUpdateVariantMutation();
 	const isLoading = isCreating || isUpdating || isUpdatingVariant;
@@ -84,49 +60,47 @@ export const useLibraryActivityProductEdit = ({
 					form.getValues()[ENUM_FORM_ACTIVITY_SECTION.GENERAL];
 
 				if (isCreate) {
-					const created = await createActivityProduct({
+					const created = await createSupplierProduct({
+						typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
 						supplierId,
 						values,
 						language
 					}).unwrap();
 					toast.success(t("form.toasts.create.success"));
-					navigateToType(
-						created.typ,
-						{ replace: true },
-						{ productId: created.id }
-					);
+					onCreated(created.id, created.typ);
 					return;
 				}
 
-				await updateActivityProduct({
+				await updateSupplierProduct({
+					typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
 					supplierId,
 					productId,
 					values,
 					language
 				}).unwrap();
-			} else if (section === ENUM_FORM_ACTIVITY_SECTION.VARIANTS) {
-				if (!activityProduct) return;
+			} else {
+				if (!product) return;
 
-				const rows =
-					form.getValues()[ENUM_FORM_ACTIVITY_SECTION.VARIANTS][
-						ENUM_FORM_ACTIVITY_VARIANTS.VARIANTS_LIST
-					];
+				if (section === ENUM_FORM_ACTIVITY_SECTION.VARIANTS) {
+					const rows =
+						form.getValues()[ENUM_FORM_ACTIVITY_SECTION.VARIANTS][
+							ENUM_FORM_ACTIVITY_VARIANTS.VARIANTS_LIST
+						];
 
-				await Promise.all(
-					rows.map((row) =>
-						updateVariant({
-							supplierId,
-							productId,
-							variantId:
-								row[ENUM_FORM_ACTIVITY_VARIANTS.VARIANT_ID],
-							typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
-							data: mapActivityOfferingRowToVariantWrite(
+					await Promise.all(
+						rows.map((row) =>
+							updateVariant({
+								typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
+								supplierId,
+								productId,
+								variantId:
+									row[ENUM_FORM_ACTIVITY_VARIANTS.VARIANT_ID],
 								row,
-								activityProduct
-							)
-						}).unwrap()
-					)
-				);
+								existing: product
+							}).unwrap()
+						)
+					);
+				}
 			}
 
 			toast.success(t("form.toasts.save.success"));
@@ -141,10 +115,7 @@ export const useLibraryActivityProductEdit = ({
 	};
 
 	return {
-		form,
 		createSectionSubmit,
-		isLoading,
-		isExpectedType,
-		product: activityProduct
+		isLoading
 	};
 };

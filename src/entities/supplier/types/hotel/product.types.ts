@@ -1,5 +1,5 @@
 import type { ISupplierLocation } from "../supplier-location.types";
-import type { ENUM_SUPPLIER_TYPE_TYPE } from "../supplier-type.types";
+import { ENUM_SUPPLIER_TYPE } from "../supplier-type.types";
 
 import type { ENUM_HOTEL_AMENITY_TYPE } from "./amenity.types";
 import type { IHotelPolicy } from "./policy.types";
@@ -25,7 +25,7 @@ export interface IHotelProduct {
 	id: string;
 	supplierId: string;
 	supplierName: string | null;
-	typ: ENUM_SUPPLIER_TYPE_TYPE;
+	typ: typeof ENUM_SUPPLIER_TYPE.HOTEL;
 	name: string;
 	pricing: ENUM_HOTEL_PRICING_TYPE;
 	details: IHotelProductDetails;

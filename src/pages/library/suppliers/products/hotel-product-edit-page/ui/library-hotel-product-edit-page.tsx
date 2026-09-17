@@ -1,12 +1,20 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-import { useOptionalResourceQuery } from "@/shared/hooks";
+import { useNavigateByType, useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
+	ENUM_SUPPLIER_TYPE,
+	HOTEL_PRODUCT_EDIT_SCHEMA,
 	LIBRARY_SUPPLIER_PRODUCT_CREATE_ID,
+	type THotelProductEditSchema,
+	buildSupplierProductEditRoute,
+	emptyHotelProductEditForm,
+	useGetSupplierProductFormQuery,
 	useGetSupplierProductQuery
 } from "@/entities/supplier";
 
@@ -29,23 +37,57 @@ export const LibraryHotelProductEditPage: FC = () => {
 		)
 	);
 
+	const { navigateToType, isExpectedType } = useNavigateByType({
+		expectedType: ENUM_SUPPLIER_TYPE.HOTEL,
+		actualType: product?.typ,
+		params: { supplierId, productId: product?.id ?? productId },
+		resolvePath: buildSupplierProductEditRoute,
+		enabled: !isCreate && Boolean(product)
+	});
+
+	const { data: formValues } = useOptionalResourceQuery(
+		useGetSupplierProductFormQuery(
+			{ supplierId, productId },
+			{
+				skip:
+					!supplierId ||
+					!productId ||
+					isCreate ||
+					!product ||
+					!isExpectedType
+			}
+		)
+	);
+
+	const form = useForm<THotelProductEditSchema>({
+		resolver: zodResolver(HOTEL_PRODUCT_EDIT_SCHEMA),
+		mode: "onSubmit",
+		defaultValues: emptyHotelProductEditForm()
+	});
+
 	useEffect(() => {
 		if (isRealError) {
 			toast.error(t("form.toasts.load.error"));
 		}
 	}, [isRealError, t]);
 
-	const {
-		form,
-		createSectionSubmit,
-		isLoading,
-		isExpectedType,
-		product: hotelProduct
-	} = useLibraryHotelProductEdit({
+	useEffect(() => {
+		if (!isCreate && formValues) {
+			form.reset(formValues as THotelProductEditSchema);
+		}
+	}, [formValues, form, isCreate]);
+
+	const hotelProduct =
+		product?.typ === ENUM_SUPPLIER_TYPE.HOTEL ? product : undefined;
+
+	const { createSectionSubmit, isLoading } = useLibraryHotelProductEdit({
 		supplierId,
 		productId,
 		isCreate,
-		product
+		form,
+		product: hotelProduct,
+		onCreated: (id, typ) =>
+			navigateToType(typ, { replace: true }, { productId: id })
 	});
 
 	if (!isCreate && product && !isExpectedType) {

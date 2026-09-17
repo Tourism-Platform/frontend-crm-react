@@ -10,8 +10,8 @@ import {
 } from "../../types";
 
 import {
-	mapBusProductToGeneralForm,
-	mapBusProductToUpdate
+	mapBusProductGeneralToUpdate,
+	mapBusProductToGeneralForm
 } from "./product-form.converters";
 
 const PRODUCT: IBusProduct = {
@@ -27,15 +27,13 @@ const PRODUCT: IBusProduct = {
 	variants: []
 };
 
-describe("mapBusProductToUpdate", () => {
+describe("mapBusProductGeneralToUpdate", () => {
 	it("uses the general mapper", () => {
 		expect(
-			mapBusProductToUpdate({
-				supplierId: PRODUCT.supplierId,
-				productId: PRODUCT.id,
-				values: mapBusProductToGeneralForm(PRODUCT),
-				existing: PRODUCT
-			})
+			mapBusProductGeneralToUpdate(
+				mapBusProductToGeneralForm(PRODUCT),
+				PRODUCT
+			)
 		).toMatchObject({
 			details: {
 				pricing: "per_vehicle",
@@ -46,19 +44,14 @@ describe("mapBusProductToUpdate", () => {
 
 	it("keeps whole charge from existing product", () => {
 		expect(
-			mapBusProductToUpdate({
-				supplierId: PRODUCT.supplierId,
-				productId: PRODUCT.id,
-				values: mapBusProductToGeneralForm(PRODUCT),
-				existing: {
-					...PRODUCT,
-					pricing: ENUM_BUS_PRICING.WHOLE,
-					charge: {
-						typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-						cost: { val: 400, currency: DEFAULT_EVENT_CURRENCY },
-						fees: null,
-						markup: null
-					}
+			mapBusProductGeneralToUpdate(mapBusProductToGeneralForm(PRODUCT), {
+				...PRODUCT,
+				pricing: ENUM_BUS_PRICING.WHOLE,
+				charge: {
+					typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+					cost: { val: 400, currency: DEFAULT_EVENT_CURRENCY },
+					fees: null,
+					markup: null
 				}
 			})
 		).toMatchObject({

@@ -4,7 +4,7 @@ import type {
 	IMonetaryValue,
 	TSupplierSurcharge
 } from "../supplier-money.types";
-import type { ENUM_SUPPLIER_TYPE_TYPE } from "../supplier-type.types";
+import { ENUM_SUPPLIER_TYPE } from "../supplier-type.types";
 
 export const ENUM_TRAIN_VARIANT_CHARGE = {
 	FIXED: "fixed",
@@ -57,7 +57,7 @@ export interface ITrainProduct {
 	id: string;
 	supplierId: string;
 	supplierName: string | null;
-	typ: ENUM_SUPPLIER_TYPE_TYPE;
+	typ: typeof ENUM_SUPPLIER_TYPE.TRAIN;
 	name: string;
 	pricing: ENUM_TRAIN_PRICING_TYPE;
 	/** Route-level charge of a whole-priced route; null for per-fare ones. */

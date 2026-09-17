@@ -12,7 +12,11 @@ import {
 
 import {
 	mapSupplierProductFromBackend,
+	mapSupplierProductGeneralToCreate,
 	mapSupplierProductListToFrontend,
+	mapSupplierProductReadToEditForm,
+	mapSupplierProductToEditForm,
+	mapSupplierVariantFormToWrite,
 	mapSupplierVariantToWrite
 } from "./supplier-product.converters";
 
@@ -147,5 +151,77 @@ describe("mapSupplierVariantToWrite", () => {
 
 		expect(body.typ).toBe("activity");
 		expect(body.name).toBe("Dinner");
+	});
+});
+
+describe("mapSupplierProductToEditForm", () => {
+	it("maps a loaded product onto the edit form", () => {
+		const hotel = mapSupplierProductFromBackend(HOTEL_READ);
+		const form = mapSupplierProductToEditForm(hotel);
+
+		expect(hotel.typ).toBe(ENUM_SUPPLIER_TYPE.HOTEL);
+		expect("general" in form).toBe(true);
+		expect(form.general.name).toBe("Hyatt");
+	});
+
+	it("builds empty defaults from typ when there is no product", () => {
+		const form = mapSupplierProductToEditForm(
+			null,
+			ENUM_SUPPLIER_TYPE.ACTIVITY
+		);
+
+		expect(form.general.name).toBe("");
+	});
+});
+
+describe("mapSupplierProductReadToEditForm", () => {
+	it("maps a backend read onto the edit form", () => {
+		const form = mapSupplierProductReadToEditForm(HOTEL_READ);
+
+		expect("general" in form).toBe(true);
+		expect(form.general.name).toBe("Hyatt");
+	});
+});
+
+describe("mapSupplierProductGeneralToCreate", () => {
+	it("dispatches bus create by typ", () => {
+		const body = mapSupplierProductGeneralToCreate({
+			typ: ENUM_SUPPLIER_TYPE.BUS,
+			supplierId: "s1",
+			values: { name: "Coach" }
+		});
+
+		expect(body).toMatchObject({
+			typ: "bus",
+			details: { name: "Coach" }
+		});
+	});
+});
+
+describe("mapSupplierVariantFormToWrite", () => {
+	it("takes pricing from the existing hotel product", () => {
+		const existing = mapSupplierProductFromBackend(HOTEL_READ);
+		if (existing.typ !== ENUM_SUPPLIER_TYPE.HOTEL) {
+			throw new Error("expected hotel product");
+		}
+
+		const write = mapSupplierVariantFormToWrite({
+			typ: ENUM_SUPPLIER_TYPE.HOTEL,
+			supplierId: existing.supplierId,
+			productId: existing.id,
+			variantId: "v1",
+			row: {
+				variant_id: "v1",
+				room_name: "Deluxe",
+				description: undefined
+			},
+			existing
+		});
+
+		expect(write).toMatchObject({
+			typ: ENUM_SUPPLIER_TYPE.HOTEL,
+			pricing: existing.pricing,
+			data: { name: "Deluxe" }
+		});
 	});
 });

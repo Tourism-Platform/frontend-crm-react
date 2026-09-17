@@ -1,10 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-
-import { useNavigateByType } from "@/shared/hooks";
 
 import {
 	ENUM_FORM_TRANSFER_CARS,
@@ -13,16 +9,12 @@ import {
 	ENUM_SUPPLIER_TYPE,
 	ENUM_TRANSFER_PRICING,
 	type ITransferProduct,
-	TRANSFER_PRODUCT_EDIT_SCHEMA,
 	type TSupplierProduct,
 	type TTransferProductEditSchema,
-	buildSupplierProductEditRoute,
 	isTransferWholePricingType,
-	mapTransferCarRowToVariantWrite,
-	mapTransferProductToEditForm,
-	useCreateTransferProductMutation,
-	useSwitchTransferProductPricingMutation,
-	useUpdateTransferProductMutation,
+	useCreateSupplierProductMutation,
+	useSwitchSupplierProductPricingMutation,
+	useUpdateSupplierProductMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
 
@@ -30,44 +22,27 @@ export const useLibraryTransferProductEdit = ({
 	supplierId,
 	productId,
 	isCreate,
-	product
+	form,
+	product,
+	onCreated
 }: {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	product?: TSupplierProduct | null;
+	form: UseFormReturn<TTransferProductEditSchema>;
+	product?: ITransferProduct;
+	onCreated: (productId: string, typ: TSupplierProduct["typ"]) => void;
 }) => {
 	const { t } = useTranslation("transfer_product_edit_page");
-	const { navigateToType, isExpectedType } = useNavigateByType({
-		expectedType: ENUM_SUPPLIER_TYPE.TRANSFER,
-		actualType: product?.typ,
-		params: { supplierId, productId: product?.id ?? productId },
-		resolvePath: buildSupplierProductEditRoute,
-		enabled: !isCreate && Boolean(product)
-	});
 
-	const transferProduct = isExpectedType
-		? ((product ?? null) as ITransferProduct | null)
-		: null;
-
-	const form = useForm<TTransferProductEditSchema>({
-		resolver: zodResolver(TRANSFER_PRODUCT_EDIT_SCHEMA),
-		mode: "onSubmit",
-		defaultValues: mapTransferProductToEditForm(transferProduct)
-	});
-
-	useEffect(() => {
-		form.reset(mapTransferProductToEditForm(transferProduct));
-	}, [transferProduct, form]);
-
-	const [createTransferProduct, { isLoading: isCreating }] =
-		useCreateTransferProductMutation();
-	const [updateTransferProduct, { isLoading: isUpdating }] =
-		useUpdateTransferProductMutation();
+	const [createSupplierProduct, { isLoading: isCreating }] =
+		useCreateSupplierProductMutation();
+	const [updateSupplierProduct, { isLoading: isUpdating }] =
+		useUpdateSupplierProductMutation();
 	const [updateVariant, { isLoading: isUpdatingVariant }] =
 		useUpdateVariantMutation();
-	const [switchTransferProductPricing, { isLoading: isSwitching }] =
-		useSwitchTransferProductPricingMutation();
+	const [switchSupplierProductPricing, { isLoading: isSwitching }] =
+		useSwitchSupplierProductPricingMutation();
 	const isLoading =
 		isCreating || isUpdating || isUpdatingVariant || isSwitching;
 
@@ -88,64 +63,63 @@ export const useLibraryTransferProductEdit = ({
 					form.getValues()[ENUM_FORM_TRANSFER_SECTION.GENERAL];
 
 				if (isCreate) {
-					const created = await createTransferProduct({
+					const created = await createSupplierProduct({
+						typ: ENUM_SUPPLIER_TYPE.TRANSFER,
 						supplierId,
 						values
 					}).unwrap();
 					toast.success(t("form.toasts.create.success"));
-					navigateToType(
-						created.typ,
-						{ replace: true },
-						{ productId: created.id }
-					);
+					onCreated(created.id, created.typ);
 					return;
 				}
 
-				await updateTransferProduct({
+				await updateSupplierProduct({
+					typ: ENUM_SUPPLIER_TYPE.TRANSFER,
 					supplierId,
 					productId,
 					values,
-					existing: transferProduct
+					existing: product
 				}).unwrap();
-			} else if (section === ENUM_FORM_TRANSFER_SECTION.CARS) {
-				if (!transferProduct) return;
+			} else {
+				if (!product) return;
 
-				const cars =
-					form.getValues()[ENUM_FORM_TRANSFER_SECTION.CARS][
-						ENUM_FORM_TRANSFER_CARS.CARS_LIST
-					];
+				if (section === ENUM_FORM_TRANSFER_SECTION.CARS) {
+					const cars =
+						form.getValues()[ENUM_FORM_TRANSFER_SECTION.CARS][
+							ENUM_FORM_TRANSFER_CARS.CARS_LIST
+						];
 
-				await Promise.all(
-					cars.map((car) =>
-						updateVariant({
-							supplierId,
-							productId,
-							variantId: car[ENUM_FORM_TRANSFER_CARS.VARIANT_ID],
-							typ: ENUM_SUPPLIER_TYPE.TRANSFER,
-							pricing: transferProduct.pricing,
-							data: mapTransferCarRowToVariantWrite(
-								car,
-								transferProduct
-							)
-						}).unwrap()
-					)
-				);
-			} else if (section === ENUM_FORM_TRANSFER_SECTION.PRICING) {
-				if (!transferProduct) return;
+					await Promise.all(
+						cars.map((car) =>
+							updateVariant({
+								typ: ENUM_SUPPLIER_TYPE.TRANSFER,
+								supplierId,
+								productId,
+								variantId:
+									car[ENUM_FORM_TRANSFER_CARS.VARIANT_ID],
+								row: car,
+								existing: product
+							}).unwrap()
+						)
+					);
+				} else if (section === ENUM_FORM_TRANSFER_SECTION.PRICING) {
+					const values = form.getValues();
+					if (
+						isTransferWholePricingType(
+							values.pricing.pricing_type
+						) &&
+						product.pricing !== ENUM_TRANSFER_PRICING.WHOLE
+					) {
+						toast.warning(t("form.pricing.whole_warning"));
+					}
 
-				const values = form.getValues();
-				if (
-					isTransferWholePricingType(values.pricing.pricing_type) &&
-					transferProduct.pricing !== ENUM_TRANSFER_PRICING.WHOLE
-				) {
-					toast.warning(t("form.pricing.whole_warning"));
+					await switchSupplierProductPricing({
+						typ: ENUM_SUPPLIER_TYPE.TRANSFER,
+						supplierId,
+						productId,
+						values
+					}).unwrap();
 				}
-
-				await switchTransferProductPricing({
-					supplierId,
-					productId,
-					values
-				}).unwrap();
 			}
 
 			toast.success(t("form.toasts.save.success"));
@@ -160,10 +134,7 @@ export const useLibraryTransferProductEdit = ({
 	};
 
 	return {
-		form,
 		createSectionSubmit,
-		isLoading,
-		isExpectedType,
-		product: transferProduct
+		isLoading
 	};
 };

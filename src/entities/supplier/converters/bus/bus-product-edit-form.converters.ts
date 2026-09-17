@@ -9,6 +9,9 @@ import { mapBusPricingFromProduct } from "./bus-product-pricing.converters";
 import { mapVehicleRowFromVariant } from "./bus-product-vehicles.converters";
 import { mapBusProductToGeneralForm } from "./product-form.converters";
 
+export const emptyBusProductEditForm = (): TBusProductEditSchema =>
+	mapBusProductToEditForm(null);
+
 export const mapBusProductToEditForm = (
 	product?: IBusProduct | null
 ): TBusProductEditSchema => {

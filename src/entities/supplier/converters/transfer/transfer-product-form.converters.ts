@@ -2,7 +2,6 @@ import {
 	ENUM_FORM_TRANSFER_PRODUCT as ENUM_FORM,
 	ENUM_TRANSFER_PRICING,
 	type ITransferProduct,
-	type IUpdateTransferProduct,
 	type TCreateTransferProductBackend,
 	type TTransferProductDetailsBackend,
 	type TTransferProductGeneralSchema,
@@ -55,9 +54,3 @@ export const mapTransferProductGeneralToUpdate = (
 	typ: "transfer",
 	details: mapGeneralFormToDetails(values, existing)
 });
-
-export const mapTransferProductToUpdate = ({
-	values,
-	existing
-}: IUpdateTransferProduct): TUpdateTransferProductBackend =>
-	mapTransferProductGeneralToUpdate(values, existing);

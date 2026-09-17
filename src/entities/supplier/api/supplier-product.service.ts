@@ -6,52 +6,24 @@ import type { IPaginationResponse } from "@/shared/types";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
-	mapActivityProductFromBackend,
-	mapActivityProductGeneralToCreate,
-	mapActivityProductGeneralToUpdate,
-	mapBusEditFormToPricingSwitch,
-	mapBusProductFromBackend,
-	mapBusProductGeneralToCreate,
-	mapBusProductToUpdate,
-	mapFlightEditFormToPricingSwitch,
-	mapFlightProductFromBackend,
-	mapFlightProductGeneralToCreate,
-	mapFlightProductGeneralToUpdate,
-	mapHotelEditFormToPricingSwitch,
-	mapHotelProductFromBackend,
-	mapHotelProductGeneralToCreate,
-	mapHotelProductGeneralToUpdate,
 	mapSupplierNodeImageToFrontend,
+	mapSupplierProductEditFormToPricingSwitch,
 	mapSupplierProductFiltersToBackend,
 	mapSupplierProductFromBackend,
+	mapSupplierProductGeneralToCreate,
+	mapSupplierProductGeneralToUpdate,
 	mapSupplierProductImageToFrontend,
 	mapSupplierProductListToFrontend,
-	mapSupplierVariantToWrite,
-	mapTrainEditFormToPricingSwitch,
-	mapTrainProductFromBackend,
-	mapTrainProductGeneralToCreate,
-	mapTrainProductGeneralToUpdate,
-	mapTransferEditFormToPricingSwitch,
-	mapTransferProductFromBackend,
-	mapTransferProductGeneralToCreate,
-	mapTransferProductToUpdate
+	mapSupplierProductReadToEditForm,
+	mapSupplierVariantFormToWrite,
+	mapSupplierVariantToWrite
 } from "../converters";
 import type {
-	IActivityProduct,
-	IBusProduct,
-	ICreateActivityProduct,
-	ICreateBusProduct,
-	ICreateFlightProduct,
-	ICreateHotelProduct,
-	ICreateTrainProduct,
-	ICreateTransferProduct,
 	IDeleteNodeImage,
 	IDeleteProductImage,
 	IDeleteSupplierProduct,
 	IDeleteSupplierVariant,
-	IFlightProduct,
 	IGetSupplierProduct,
-	IHotelProduct,
 	IListProductImages,
 	ISetPrimaryNodeImage,
 	ISetPrimaryProductImage,
@@ -59,34 +31,19 @@ import type {
 	ISupplierProductFilters,
 	ISupplierProductImage,
 	ISupplierVariantCreated,
-	ISwitchBusProductPricing,
-	ISwitchFlightProductPricing,
-	ISwitchHotelProductPricing,
-	ISwitchTrainProductPricing,
-	ISwitchTransferProductPricing,
-	ITrainProduct,
-	ITransferProduct,
-	IUpdateActivityProduct,
-	IUpdateBusProduct,
-	IUpdateFlightProduct,
-	IUpdateHotelProduct,
-	IUpdateTrainProduct,
-	IUpdateTransferProduct,
 	IUploadNodeImages,
 	IUploadProductImages,
-	TActivityProductReadBackend,
-	TBusProductReadBackend,
+	TCreateSupplierProduct,
 	TCreateSupplierVariant,
-	TFlightProductReadBackend,
-	THotelProductReadBackend,
 	TSupplierNodeImageBackend,
 	TSupplierProduct,
+	TSupplierProductEditForm,
 	TSupplierProductImageBackend,
 	TSupplierProductListBackend,
 	TSupplierProductReadBackend,
 	TSupplierVariantProductReadBackend,
-	TTrainProductReadBackend,
-	TTransferProductReadBackend,
+	TSwitchSupplierProductPricing,
+	TUpdateSupplierProduct,
 	TUpdateSupplierVariant
 } from "../types";
 
@@ -133,57 +90,46 @@ export const supplierProductApi = authApi.injectEndpoints({
 				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: productId }
 			]
 		}),
-		createHotelProduct: builder.mutation<
-			IHotelProduct,
-			ICreateHotelProduct
+		getSupplierProductForm: builder.query<
+			TSupplierProductEditForm,
+			IGetSupplierProduct
 		>({
-			query: ({ supplierId, values, language }) => ({
-				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapHotelProductGeneralToCreate(values, language)
+			query: ({ supplierId, productId }) => ({
+				...SUPPLIER_PRODUCT_PATHS.getProduct(supplierId, productId)
 			}),
-			transformResponse: (response: THotelProductReadBackend) =>
-				mapHotelProductFromBackend(response),
+			transformResponse: (response: TSupplierProductReadBackend) =>
+				mapSupplierProductReadToEditForm(response),
+			providesTags: (_result, _error, { productId }) => [
+				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: productId }
+			]
+		}),
+		createSupplierProduct: builder.mutation<
+			TSupplierProduct,
+			TCreateSupplierProduct
+		>({
+			query: (input) => ({
+				...SUPPLIER_PRODUCT_PATHS.createProduct(input.supplierId),
+				body: mapSupplierProductGeneralToCreate(input)
+			}),
+			transformResponse: (response: TSupplierProductReadBackend) =>
+				mapSupplierProductFromBackend(response),
 			invalidatesTags: [
 				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
 			]
 		}),
-		updateHotelProduct: builder.mutation<
-			IHotelProduct,
-			IUpdateHotelProduct
+		updateSupplierProduct: builder.mutation<
+			TSupplierProduct,
+			TUpdateSupplierProduct
 		>({
-			query: ({ supplierId, productId, values, language, existing }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapHotelProductGeneralToUpdate(values, existing, language)
+			query: (input) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(
+					input.supplierId,
+					input.productId
+				),
+				body: mapSupplierProductGeneralToUpdate(input)
 			}),
-			transformResponse: (response: THotelProductReadBackend) =>
-				mapHotelProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		createTrainProduct: builder.mutation<
-			ITrainProduct,
-			ICreateTrainProduct
-		>({
-			query: ({ supplierId, values, language }) => ({
-				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapTrainProductGeneralToCreate(values, language)
-			}),
-			transformResponse: (response: TTrainProductReadBackend) =>
-				mapTrainProductFromBackend(response),
-			invalidatesTags: [
-				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
-			]
-		}),
-		updateTrainProduct: builder.mutation<
-			ITrainProduct,
-			IUpdateTrainProduct
-		>({
-			query: ({ supplierId, productId, values, language, existing }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapTrainProductGeneralToUpdate(values, existing, language)
-			}),
-			transformResponse: (response: TTrainProductReadBackend) =>
-				mapTrainProductFromBackend(response),
+			transformResponse: (response: TSupplierProductReadBackend) =>
+				mapSupplierProductFromBackend(response),
 			invalidatesTags: (_result, _error, { productId }) =>
 				productInvalidateTags(productId)
 		}),
@@ -194,198 +140,19 @@ export const supplierProductApi = authApi.injectEndpoints({
 			invalidatesTags: (_result, _error, { productId }) =>
 				productInvalidateTags(productId)
 		}),
-		createFlightProduct: builder.mutation<
-			IFlightProduct,
-			ICreateFlightProduct
+		switchSupplierProductPricing: builder.mutation<
+			TSupplierProduct,
+			TSwitchSupplierProductPricing
 		>({
-			query: ({ supplierId, values, language }) => ({
-				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapFlightProductGeneralToCreate(values, language)
-			}),
-			transformResponse: (response: TFlightProductReadBackend) =>
-				mapFlightProductFromBackend(response),
-			invalidatesTags: [
-				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
-			]
-		}),
-		updateFlightProduct: builder.mutation<
-			IFlightProduct,
-			IUpdateFlightProduct
-		>({
-			query: ({ supplierId, productId, values, language, existing }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapFlightProductGeneralToUpdate(
-					values,
-					existing,
-					language
-				)
-			}),
-			transformResponse: (response: TFlightProductReadBackend) =>
-				mapFlightProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		switchFlightProductPricing: builder.mutation<
-			IFlightProduct,
-			ISwitchFlightProductPricing
-		>({
-			query: (data) => ({
+			query: (input) => ({
 				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
-					data.supplierId,
-					data.productId
+					input.supplierId,
+					input.productId
 				),
-				body: mapFlightEditFormToPricingSwitch(data.values)
+				body: mapSupplierProductEditFormToPricingSwitch(input)
 			}),
-			transformResponse: (response: TFlightProductReadBackend) =>
-				mapFlightProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		createBusProduct: builder.mutation<IBusProduct, ICreateBusProduct>({
-			query: ({ supplierId, values }) => ({
-				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapBusProductGeneralToCreate(values)
-			}),
-			transformResponse: (response: TBusProductReadBackend) =>
-				mapBusProductFromBackend(response),
-			invalidatesTags: [
-				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
-			]
-		}),
-		updateBusProduct: builder.mutation<IBusProduct, IUpdateBusProduct>({
-			query: (data) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(
-					data.supplierId,
-					data.productId
-				),
-				body: mapBusProductToUpdate(data)
-			}),
-			transformResponse: (response: TBusProductReadBackend) =>
-				mapBusProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		switchBusProductPricing: builder.mutation<
-			IBusProduct,
-			ISwitchBusProductPricing
-		>({
-			query: (data) => ({
-				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
-					data.supplierId,
-					data.productId
-				),
-				body: mapBusEditFormToPricingSwitch(data.values)
-			}),
-			transformResponse: (response: TBusProductReadBackend) =>
-				mapBusProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		createTransferProduct: builder.mutation<
-			ITransferProduct,
-			ICreateTransferProduct
-		>({
-			query: ({ supplierId, values }) => ({
-				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapTransferProductGeneralToCreate(values)
-			}),
-			transformResponse: (response: TTransferProductReadBackend) =>
-				mapTransferProductFromBackend(response),
-			invalidatesTags: [
-				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
-			]
-		}),
-		updateTransferProduct: builder.mutation<
-			ITransferProduct,
-			IUpdateTransferProduct
-		>({
-			query: (data) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(
-					data.supplierId,
-					data.productId
-				),
-				body: mapTransferProductToUpdate(data)
-			}),
-			transformResponse: (response: TTransferProductReadBackend) =>
-				mapTransferProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		switchTransferProductPricing: builder.mutation<
-			ITransferProduct,
-			ISwitchTransferProductPricing
-		>({
-			query: (data) => ({
-				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
-					data.supplierId,
-					data.productId
-				),
-				body: mapTransferEditFormToPricingSwitch(data.values)
-			}),
-			transformResponse: (response: TTransferProductReadBackend) =>
-				mapTransferProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		switchTrainProductPricing: builder.mutation<
-			ITrainProduct,
-			ISwitchTrainProductPricing
-		>({
-			query: (data) => ({
-				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
-					data.supplierId,
-					data.productId
-				),
-				body: mapTrainEditFormToPricingSwitch(data.values)
-			}),
-			transformResponse: (response: TTrainProductReadBackend) =>
-				mapTrainProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		switchHotelProductPricing: builder.mutation<
-			IHotelProduct,
-			ISwitchHotelProductPricing
-		>({
-			query: (data) => ({
-				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
-					data.supplierId,
-					data.productId
-				),
-				body: mapHotelEditFormToPricingSwitch(
-					data.values,
-					data.existing
-				)
-			}),
-			transformResponse: (response: THotelProductReadBackend) =>
-				mapHotelProductFromBackend(response),
-			invalidatesTags: (_result, _error, { productId }) =>
-				productInvalidateTags(productId)
-		}),
-		createActivityProduct: builder.mutation<
-			IActivityProduct,
-			ICreateActivityProduct
-		>({
-			query: ({ supplierId, values, language }) => ({
-				...SUPPLIER_PRODUCT_PATHS.createProduct(supplierId),
-				body: mapActivityProductGeneralToCreate(values, language)
-			}),
-			transformResponse: (response: TActivityProductReadBackend) =>
-				mapActivityProductFromBackend(response),
-			invalidatesTags: [
-				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: "LIST" }
-			]
-		}),
-		updateActivityProduct: builder.mutation<
-			IActivityProduct,
-			IUpdateActivityProduct
-		>({
-			query: ({ supplierId, productId, values, language }) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
-				body: mapActivityProductGeneralToUpdate(values, language)
-			}),
-			transformResponse: (response: TActivityProductReadBackend) =>
-				mapActivityProductFromBackend(response),
+			transformResponse: (response: TSupplierProductReadBackend) =>
+				mapSupplierProductFromBackend(response),
 			invalidatesTags: (_result, _error, { productId }) =>
 				productInvalidateTags(productId)
 		}),
@@ -410,13 +177,15 @@ export const supplierProductApi = authApi.injectEndpoints({
 			TSupplierProduct,
 			TUpdateSupplierVariant
 		>({
-			query: ({ supplierId, productId, variantId, ...write }) => ({
+			query: (input) => ({
 				...SUPPLIER_PRODUCT_PATHS.updateVariant(
-					supplierId,
-					productId,
-					variantId
+					input.supplierId,
+					input.productId,
+					input.variantId
 				),
-				body: mapSupplierVariantToWrite(write)
+				body: mapSupplierVariantToWrite(
+					mapSupplierVariantFormToWrite(input)
+				)
 			}),
 			transformResponse: (response: TSupplierVariantProductReadBackend) =>
 				mapSupplierProductFromBackend(response),
@@ -555,25 +324,12 @@ export const {
 	useListAllProductsQuery,
 	useLazyListAllProductsQuery,
 	useGetSupplierProductQuery,
+	useGetSupplierProductFormQuery,
 	useLazyGetSupplierProductQuery,
-	useCreateHotelProductMutation,
-	useUpdateHotelProductMutation,
-	useCreateTrainProductMutation,
-	useUpdateTrainProductMutation,
+	useCreateSupplierProductMutation,
+	useUpdateSupplierProductMutation,
 	useDeleteSupplierProductMutation,
-	useCreateFlightProductMutation,
-	useUpdateFlightProductMutation,
-	useSwitchFlightProductPricingMutation,
-	useCreateBusProductMutation,
-	useUpdateBusProductMutation,
-	useSwitchBusProductPricingMutation,
-	useCreateTransferProductMutation,
-	useUpdateTransferProductMutation,
-	useSwitchTransferProductPricingMutation,
-	useSwitchTrainProductPricingMutation,
-	useSwitchHotelProductPricingMutation,
-	useCreateActivityProductMutation,
-	useUpdateActivityProductMutation,
+	useSwitchSupplierProductPricingMutation,
 	useCreateVariantMutation,
 	useUpdateVariantMutation,
 	useDeleteVariantMutation,

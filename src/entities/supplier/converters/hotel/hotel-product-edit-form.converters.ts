@@ -9,6 +9,9 @@ import { mapHotelPricingFromProduct } from "./hotel-product-pricing.converters";
 import { mapRoomRowFromVariant } from "./hotel-product-rooms.converters";
 import { mapHotelProductToGeneralForm } from "./product-form.converters";
 
+export const emptyHotelProductEditForm = (): THotelProductEditSchema =>
+	mapHotelProductToEditForm(null);
+
 export const mapHotelProductToEditForm = (
 	product?: IHotelProduct | null
 ): THotelProductEditSchema => {

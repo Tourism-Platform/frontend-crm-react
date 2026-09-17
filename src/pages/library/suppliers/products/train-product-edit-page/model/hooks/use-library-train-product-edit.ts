@@ -1,11 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
-import { useNavigateByType } from "@/shared/hooks";
 
 import {
 	ENUM_FORM_TRAIN_FARES,
@@ -14,16 +11,12 @@ import {
 	ENUM_SUPPLIER_TYPE,
 	ENUM_TRAIN_PRICING,
 	type ITrainProduct,
-	TRAIN_PRODUCT_EDIT_SCHEMA,
 	type TSupplierProduct,
 	type TTrainProductEditSchema,
-	buildSupplierProductEditRoute,
 	isTrainWholePricingType,
-	mapFareRowToVariantWrite,
-	mapTrainProductToEditForm,
-	useCreateTrainProductMutation,
-	useSwitchTrainProductPricingMutation,
-	useUpdateTrainProductMutation,
+	useCreateSupplierProductMutation,
+	useSwitchSupplierProductPricingMutation,
+	useUpdateSupplierProductMutation,
 	useUpdateVariantMutation
 } from "@/entities/supplier";
 
@@ -31,45 +24,28 @@ export const useLibraryTrainProductEdit = ({
 	supplierId,
 	productId,
 	isCreate,
-	product
+	form,
+	product,
+	onCreated
 }: {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
-	product?: TSupplierProduct | null;
+	form: UseFormReturn<TTrainProductEditSchema>;
+	product?: ITrainProduct;
+	onCreated: (productId: string, typ: TSupplierProduct["typ"]) => void;
 }) => {
 	const { t, i18n } = useTranslation("train_product_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
-	const { navigateToType, isExpectedType } = useNavigateByType({
-		expectedType: ENUM_SUPPLIER_TYPE.TRAIN,
-		actualType: product?.typ,
-		params: { supplierId, productId: product?.id ?? productId },
-		resolvePath: buildSupplierProductEditRoute,
-		enabled: !isCreate && Boolean(product)
-	});
 
-	const trainProduct = isExpectedType
-		? ((product ?? null) as ITrainProduct | null)
-		: null;
-
-	const form = useForm<TTrainProductEditSchema>({
-		resolver: zodResolver(TRAIN_PRODUCT_EDIT_SCHEMA),
-		mode: "onSubmit",
-		defaultValues: mapTrainProductToEditForm(trainProduct)
-	});
-
-	useEffect(() => {
-		form.reset(mapTrainProductToEditForm(trainProduct));
-	}, [trainProduct, form]);
-
-	const [createTrainProduct, { isLoading: isCreating }] =
-		useCreateTrainProductMutation();
-	const [updateTrainProduct, { isLoading: isUpdating }] =
-		useUpdateTrainProductMutation();
+	const [createSupplierProduct, { isLoading: isCreating }] =
+		useCreateSupplierProductMutation();
+	const [updateSupplierProduct, { isLoading: isUpdating }] =
+		useUpdateSupplierProductMutation();
 	const [updateVariant, { isLoading: isUpdatingVariant }] =
 		useUpdateVariantMutation();
-	const [switchTrainProductPricing, { isLoading: isSwitching }] =
-		useSwitchTrainProductPricingMutation();
+	const [switchSupplierProductPricing, { isLoading: isSwitching }] =
+		useSwitchSupplierProductPricingMutation();
 	const isLoading =
 		isCreating || isUpdating || isUpdatingVariant || isSwitching;
 
@@ -90,63 +66,63 @@ export const useLibraryTrainProductEdit = ({
 					form.getValues()[ENUM_FORM_TRAIN_SECTION.GENERAL];
 
 				if (isCreate) {
-					const created = await createTrainProduct({
+					const created = await createSupplierProduct({
+						typ: ENUM_SUPPLIER_TYPE.TRAIN,
 						supplierId,
 						values,
 						language
 					}).unwrap();
 					toast.success(t("form.toasts.create.success"));
-					navigateToType(
-						created.typ,
-						{ replace: true },
-						{ productId: created.id }
-					);
+					onCreated(created.id, created.typ);
 					return;
 				}
 
-				await updateTrainProduct({
+				await updateSupplierProduct({
+					typ: ENUM_SUPPLIER_TYPE.TRAIN,
 					supplierId,
 					productId,
 					values,
 					language,
-					existing: trainProduct
+					existing: product
 				}).unwrap();
-			} else if (section === ENUM_FORM_TRAIN_SECTION.FARES) {
-				if (!trainProduct) return;
+			} else {
+				if (!product) return;
 
-				const rows =
-					form.getValues()[ENUM_FORM_TRAIN_SECTION.FARES][
-						ENUM_FORM_TRAIN_FARES.FARES_LIST
-					];
+				if (section === ENUM_FORM_TRAIN_SECTION.FARES) {
+					const rows =
+						form.getValues()[ENUM_FORM_TRAIN_SECTION.FARES][
+							ENUM_FORM_TRAIN_FARES.FARES_LIST
+						];
 
-				await Promise.all(
-					rows.map((row) =>
-						updateVariant({
-							supplierId,
-							productId,
-							variantId: row[ENUM_FORM_TRAIN_FARES.VARIANT_ID],
-							typ: ENUM_SUPPLIER_TYPE.TRAIN,
-							pricing: trainProduct.pricing,
-							data: mapFareRowToVariantWrite(row, trainProduct)
-						}).unwrap()
-					)
-				);
-			} else if (section === ENUM_FORM_TRAIN_SECTION.PRICING) {
-				if (!trainProduct) return;
+					await Promise.all(
+						rows.map((row) =>
+							updateVariant({
+								typ: ENUM_SUPPLIER_TYPE.TRAIN,
+								supplierId,
+								productId,
+								variantId:
+									row[ENUM_FORM_TRAIN_FARES.VARIANT_ID],
+								row,
+								existing: product
+							}).unwrap()
+						)
+					);
+				} else if (section === ENUM_FORM_TRAIN_SECTION.PRICING) {
+					const values = form.getValues();
+					if (
+						isTrainWholePricingType(values.pricing.pricing_type) &&
+						product.pricing !== ENUM_TRAIN_PRICING.WHOLE
+					) {
+						toast.warning(t("form.pricing.whole_warning"));
+					}
 
-				const values = form.getValues();
-				if (
-					isTrainWholePricingType(values.pricing.pricing_type) &&
-					trainProduct.pricing !== ENUM_TRAIN_PRICING.WHOLE
-				) {
-					toast.warning(t("form.pricing.whole_warning"));
+					await switchSupplierProductPricing({
+						typ: ENUM_SUPPLIER_TYPE.TRAIN,
+						supplierId,
+						productId,
+						values
+					}).unwrap();
 				}
-
-				await switchTrainProductPricing({
-					supplierId,
-					productId,
-					values
-				}).unwrap();
 			}
 
 			toast.success(t("form.toasts.save.success"));
@@ -161,10 +137,7 @@ export const useLibraryTrainProductEdit = ({
 	};
 
 	return {
-		form,
 		createSectionSubmit,
-		isLoading,
-		isExpectedType,
-		product: trainProduct
+		isLoading
 	};
 };
