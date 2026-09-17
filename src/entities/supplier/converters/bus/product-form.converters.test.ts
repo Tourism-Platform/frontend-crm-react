@@ -10,7 +10,6 @@ import {
 } from "../../types";
 
 import {
-	mapBusProductPricingToUpdate,
 	mapBusProductToGeneralForm,
 	mapBusProductToUpdate
 } from "./product-form.converters";
@@ -28,87 +27,8 @@ const PRODUCT: IBusProduct = {
 	variants: []
 };
 
-describe("mapBusProductPricingToUpdate", () => {
-	it("sends per_vehicle without a fleet charge", () => {
-		expect(
-			mapBusProductPricingToUpdate(PRODUCT, {
-				pricing: ENUM_BUS_PRICING.PER_VEHICLE,
-				chargeTyp: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-				cost: 90,
-				currency: DEFAULT_EVENT_CURRENCY,
-				fees: []
-			})
-		).toMatchObject({
-			typ: "bus",
-			details: {
-				pricing: "per_vehicle",
-				name: "Coach fleet"
-			}
-		});
-		expect(
-			mapBusProductPricingToUpdate(PRODUCT, {
-				pricing: ENUM_BUS_PRICING.PER_VEHICLE,
-				chargeTyp: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-				cost: 90,
-				currency: DEFAULT_EVENT_CURRENCY,
-				fees: []
-			}).details
-		).not.toHaveProperty("charge");
-	});
-
-	it("sends whole with a fleet charge", () => {
-		expect(
-			mapBusProductPricingToUpdate(PRODUCT, {
-				pricing: ENUM_BUS_PRICING.WHOLE,
-				chargeTyp: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-				cost: 400,
-				currency: DEFAULT_EVENT_CURRENCY,
-				fees: []
-			})
-		).toMatchObject({
-			typ: "bus",
-			details: {
-				pricing: "whole",
-				name: "Coach fleet",
-				charge: {
-					typ: "fixed",
-					cost: { val: 400, currency: DEFAULT_EVENT_CURRENCY },
-					fees: null,
-					markup: null
-				}
-			}
-		});
-	});
-});
-
 describe("mapBusProductToUpdate", () => {
-	it("uses the pricing mapper when pricing and existing are set", () => {
-		expect(
-			mapBusProductToUpdate({
-				supplierId: PRODUCT.supplierId,
-				productId: PRODUCT.id,
-				values: mapBusProductToGeneralForm(PRODUCT),
-				existing: PRODUCT,
-				pricing: {
-					pricing: ENUM_BUS_PRICING.WHOLE,
-					chargeTyp: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-					cost: 400,
-					currency: DEFAULT_EVENT_CURRENCY,
-					fees: []
-				}
-			})
-		).toMatchObject({
-			details: {
-				pricing: "whole",
-				charge: {
-					typ: "fixed",
-					cost: { val: 400, currency: DEFAULT_EVENT_CURRENCY }
-				}
-			}
-		});
-	});
-
-	it("uses the general mapper when pricing is omitted", () => {
+	it("uses the general mapper", () => {
 		expect(
 			mapBusProductToUpdate({
 				supplierId: PRODUCT.supplierId,
@@ -120,6 +40,35 @@ describe("mapBusProductToUpdate", () => {
 			details: {
 				pricing: "per_vehicle",
 				name: "Coach fleet"
+			}
+		});
+	});
+
+	it("keeps whole charge from existing product", () => {
+		expect(
+			mapBusProductToUpdate({
+				supplierId: PRODUCT.supplierId,
+				productId: PRODUCT.id,
+				values: mapBusProductToGeneralForm(PRODUCT),
+				existing: {
+					...PRODUCT,
+					pricing: ENUM_BUS_PRICING.WHOLE,
+					charge: {
+						typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+						cost: { val: 400, currency: DEFAULT_EVENT_CURRENCY },
+						fees: null,
+						markup: null
+					}
+				}
+			})
+		).toMatchObject({
+			details: {
+				pricing: "whole",
+				name: "Coach fleet",
+				charge: {
+					typ: "fixed",
+					cost: { val: 400, currency: DEFAULT_EVENT_CURRENCY }
+				}
 			}
 		});
 	});

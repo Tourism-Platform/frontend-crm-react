@@ -7,18 +7,12 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useBusProductImages } from "../model";
+import { type TSlotProps, useBusProductImages } from "../model";
 
-interface IBusProductImagesProps {
-	supplierId: string;
-	productId: string;
-	disabled?: boolean;
-}
-
-const BusProductImagesBase: FC<IBusProductImagesProps> = ({
+const BusProductImagesBase: FC<TSlotProps> = ({
 	supplierId,
 	productId,
-	disabled = false
+	disabled
 }) => {
 	const { t } = useTranslation("bus_product_edit_page");
 	const { productUpload } = useBusProductImages({

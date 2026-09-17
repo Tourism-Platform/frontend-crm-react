@@ -9,8 +9,8 @@ import type {
 	IBusVariantWrite
 } from "./bus";
 import type {
-	TBusProductGeneralSchema,
-	TBusProductPricingSchema
+	TBusProductEditSchema,
+	TBusProductGeneralSchema
 } from "./bus/product-form.types";
 import type {
 	ENUM_FLIGHT_PRICING_TYPE,
@@ -26,8 +26,10 @@ import type {
 	IHotelProduct,
 	IHotelVariantWrite
 } from "./hotel";
-import type { THotelPricingSwitchBackend } from "./hotel/product-backend.types";
-import type { THotelProductGeneralSchema } from "./hotel/product-form.types";
+import type {
+	THotelProductEditSchema,
+	THotelProductGeneralSchema
+} from "./hotel/product-form.types";
 import {
 	ENUM_SUPPLIER_TYPE,
 	type ENUM_SUPPLIER_TYPE_TYPE
@@ -37,15 +39,19 @@ import type {
 	ITrainProduct,
 	ITrainVariantWrite
 } from "./train";
-import type { TTrainPricingSwitchBackend } from "./train/product-backend.types";
-import type { TTrainProductGeneralSchema } from "./train/product-form.types";
+import type {
+	TTrainProductEditSchema,
+	TTrainProductGeneralSchema
+} from "./train/product-form.types";
 import type {
 	ENUM_TRANSFER_PRICING_TYPE,
 	ITransferProduct,
-	ITransferVariantWrite,
-	TTransferPricingSwitchBackend
+	ITransferVariantWrite
 } from "./transfer";
-import type { TTransferProductGeneralSchema } from "./transfer/product-form.types";
+import type {
+	TTransferProductEditSchema,
+	TTransferProductGeneralSchema
+} from "./transfer/product-form.types";
 
 export type TSupplierProduct =
 	| IHotelProduct
@@ -146,7 +152,8 @@ export interface IUpdateHotelProduct {
 export interface ISwitchHotelProductPricing {
 	supplierId: string;
 	productId: string;
-	body: THotelPricingSwitchBackend;
+	values: THotelProductEditSchema;
+	existing: IHotelProduct;
 }
 
 export interface ICreateTrainProduct {
@@ -166,7 +173,7 @@ export interface IUpdateTrainProduct {
 export interface ISwitchTrainProductPricing {
 	supplierId: string;
 	productId: string;
-	body: TTrainPricingSwitchBackend;
+	values: TTrainProductEditSchema;
 }
 
 export interface IDeleteSupplierProduct {
@@ -199,7 +206,12 @@ export interface IUpdateBusProduct {
 	productId: string;
 	values: TBusProductGeneralSchema;
 	existing?: IBusProduct | null;
-	pricing?: TBusProductPricingSchema;
+}
+
+export interface ISwitchBusProductPricing {
+	supplierId: string;
+	productId: string;
+	values: TBusProductEditSchema;
 }
 
 export interface ICreateTransferProduct {
@@ -217,7 +229,7 @@ export interface IUpdateTransferProduct {
 export interface ISwitchTransferProductPricing {
 	supplierId: string;
 	productId: string;
-	body: TTransferPricingSwitchBackend;
+	values: TTransferProductEditSchema;
 }
 
 export interface ICreateActivityProduct {

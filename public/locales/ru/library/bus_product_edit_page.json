@@ -3,8 +3,9 @@
 	"back": "К поставщику",
 	"tabs": {
 		"general": "Основное",
+		"vehicles": "Машины",
 		"media": "Медиа",
-		"variants": "Варианты"
+		"pricing": "Цены и бронирование"
 	},
 	"form": {
 		"create_hint": {
@@ -26,22 +27,119 @@
 				"saving": "Сохранение"
 			}
 		},
+		"vehicles": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение"
+			},
+			"details": {
+				"title": "Детали машин",
+				"vehicle_item": "Машина {{index}}",
+				"form": {
+					"fields": {
+						"body_type": {
+							"label": "Тип",
+							"placeholder": "Выберите тип",
+							"errors": {
+								"required": "Выберите тип"
+							}
+						},
+						"pax": {
+							"label": "Вместимость (pax)",
+							"placeholder": "Количество человек",
+							"errors": {
+								"required": "Укажите вместимость",
+								"max": "Слишком большое значение"
+							}
+						}
+					}
+				}
+			},
+			"description": {
+				"title": "Описание",
+				"description": {
+					"label": "Дополнительная информация",
+					"placeholder": "Введите детали...",
+					"errors": {
+						"min": "Описание слишком короткое",
+						"max": "Описание слишком длинное",
+						"required": "Описание обязательно"
+					}
+				}
+			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Сохранить",
+				"saving": "Сохранение"
+			},
+			"title": "Цены",
+			"whole_warning": "Цены по машинам будут сброшены",
+			"pricing_type": {
+				"title": "Как тарифицируется этот автобус?",
+				"tabs": {
+					"flat_rate": "Фикс",
+					"per_vehicle": "За машину",
+					"per_person": "За человека"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Детали цены",
+					"fields": {
+						"total_price": {
+							"label": "Общая стоимость",
+							"placeholder": "Введите...",
+							"errors": {
+								"min": "Цена должна быть не меньше 0",
+								"max": "Цена не должна превышать 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Стоимость за человека",
+							"placeholder": "Введите..."
+						},
+						"currency": {
+							"label": "Валюта",
+							"placeholder": "Выберите",
+							"errors": {
+								"required": "Укажите валюту",
+								"max": "Слишком длинный код валюты"
+							}
+						}
+					}
+				},
+				"per_vehicle": {
+					"empty_vehicles": "Добавьте машины на вкладке «Машины», чтобы настроить цены.",
+					"checkboxes": {
+						"add_margin_separately": "Добавить маржу к этому компоненту отдельно"
+					},
+					"fields": {
+						"total_cost": {
+							"label": "Стоимость за машину",
+							"placeholder": "Введите..."
+						},
+						"markup": {
+							"value": {
+								"label": "Наценка",
+								"placeholder": "Введите...",
+								"errors": {
+									"required": "Укажите наценку"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"variants": {
-			"title": "Варианты",
-			"add": "Добавить вариант",
+			"add": "Добавить машину",
 			"fields": {
 				"name": {
 					"label": "Название варианта",
 					"placeholder": "Стандартный автобус",
 					"errors": {
 						"required": "Укажите название варианта"
-					}
-				},
-				"body_type": {
-					"label": "Тип",
-					"placeholder": "Выберите тип",
-					"errors": {
-						"required": "Выберите тип"
 					}
 				},
 				"pax": {
@@ -51,50 +149,9 @@
 						"required": "Укажите вместимость",
 						"min": "Минимум 1"
 					}
-				},
-				"description": {
-					"label": "Описание",
-					"placeholder": "Введите описание",
-					"errors": {
-						"max": "Описание слишком длинное"
-					}
-				},
-				"pricing": {
-					"label": "Тарификация",
-					"placeholder": "Выберите тарификацию",
-					"per_vehicle": "За машину",
-					"whole": "За всё",
-					"errors": {
-						"required": "Выберите тарификацию"
-					}
-				},
-				"charge_typ": {
-					"label": "Режим оплаты",
-					"placeholder": "Выберите режим",
-					"errors": {
-						"required": "Выберите тип тарифа"
-					}
-				},
-				"cost": {
-					"label": "Цена",
-					"placeholder": "Введите цену",
-					"errors": {
-						"required": "Укажите стоимость"
-					}
-				},
-				"currency": {
-					"label": "Валюта",
-					"placeholder": "Выберите валюту",
-					"errors": {
-						"required": "Выберите валюту"
-					}
 				}
 			},
 			"buttons": {
-				"save": "Сохранить вариант",
-				"saving": "Сохранение",
-				"save_pricing": "Сохранить",
-				"saving_pricing": "Сохранение",
 				"delete": "Удалить вариант",
 				"deleting": "Удаление"
 			},

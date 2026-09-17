@@ -8,12 +8,14 @@ import {
 
 import type { TForm } from "../types";
 
-export const TRAIN_PRODUCT_NAME_FIELD: TForm = {
-	key: ENUM_FORM.NAME,
-	fieldType: "input",
-	label: "form.general.fields.name.label",
-	placeholder: "form.general.fields.name.placeholder"
-};
+export const TRAIN_PRODUCT_NAME_FIELD: TForm[] = [
+	{
+		key: ENUM_FORM.NAME,
+		fieldType: "input",
+		label: "form.general.fields.name.label",
+		placeholder: "form.general.fields.name.placeholder"
+	}
+];
 
 type THopGeoProps = {
 	departure: TGeoFieldProps;

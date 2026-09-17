@@ -20,7 +20,6 @@ import {
 	buildSupplierProductEditRoute,
 	isTrainWholePricingType,
 	mapFareRowToVariantWrite,
-	mapTrainEditFormToPricingSwitch,
 	mapTrainProductToEditForm,
 	useCreateTrainProductMutation,
 	useSwitchTrainProductPricingMutation,
@@ -146,7 +145,7 @@ export const useLibraryTrainProductEdit = ({
 				await switchTrainProductPricing({
 					supplierId,
 					productId,
-					body: mapTrainEditFormToPricingSwitch(values)
+					values
 				}).unwrap();
 			}
 

@@ -93,6 +93,21 @@
 		"dialog": {
 			"title": "Contract price",
 			"description": "Replaces product rate and policy for this tour only. Saving sends a full replace of both fields.",
+			"pricing": {
+				"title": "How is this product priced?",
+				"details_title": "Pricing details",
+				"add_margin_separately": "Add margin to this component separately",
+				"tabs": {
+					"flat_rate": "Flat rate",
+					"per_person": "Per person",
+					"per_vehicle": "Per vehicle",
+					"per_fare": "Per fare",
+					"per_car": "Per car",
+					"per_room": "Per room",
+					"per_car_category": "Per class",
+					"offerings": "Per offering"
+				}
+			},
 			"fields": {
 				"pricing_arm": {
 					"label": "Reprice",
@@ -134,6 +149,10 @@
 					"label": "Price",
 					"placeholder": "Enter price"
 				},
+				"total_price_per_person": {
+					"label": "Price per person",
+					"placeholder": "Enter price"
+				},
 				"taxes": {
 					"label": "Taxes / fees",
 					"placeholder": "Enter taxes"
@@ -141,6 +160,12 @@
 				"currency": {
 					"label": "Currency",
 					"placeholder": "Select currency"
+				},
+				"markup": {
+					"value": {
+						"label": "Unique margin",
+						"placeholder": "Enter..."
+					}
 				},
 				"check_in_from": {
 					"label": "Check-in from",

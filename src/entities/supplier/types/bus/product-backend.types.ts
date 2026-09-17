@@ -4,6 +4,8 @@ import type {
 	BusProductUpdate,
 	PerVehicleBusVariantWrite,
 	PricedVehicleOutput,
+	ToPerVehicle,
+	ToWholeFleet,
 	Vehicle,
 	WholeBusVariantWrite
 } from "@/shared/api/generated/Api";
@@ -24,3 +26,4 @@ export type TBusVariantWriteBackend =
 	| PerVehicleBusVariantWrite
 	| WholeBusVariantWrite;
 export type TBusVariantReadBackend = PricedVehicleOutput | Vehicle;
+export type TBusPricingSwitchBackend = ToPerVehicle | ToWholeFleet;

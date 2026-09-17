@@ -3,48 +3,12 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
 import { BUS_VARIANT_FORM_SCHEMA } from "../../schema/bus-variant.schema";
-import {
-	ENUM_SUPPLIER_VARIANT_CHARGE,
-	ENUM_VEHICLE_BODY_TYPE
-} from "../../types";
+import { ENUM_VEHICLE_BODY_TYPE } from "../../types";
 
 import {
 	emptyBusVariantForm,
-	mapBusVariantFormToWrite,
-	mapBusVariantToForm
+	mapBusVariantFormToWrite
 } from "./variant-form.converters";
-
-describe("mapBusVariantToForm", () => {
-	it("maps empty variant", () => {
-		expect(mapBusVariantToForm(null)).toEqual(emptyBusVariantForm());
-	});
-
-	it("maps fixed expenses", () => {
-		const form = mapBusVariantToForm({
-			id: "v1",
-			name: "Coach",
-			bodyType: ENUM_VEHICLE_BODY_TYPE.COACH,
-			pax: 45,
-			description: "Standard",
-			expenses: {
-				typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
-				cost: { val: 40, currency: DEFAULT_EVENT_CURRENCY },
-				fees: null,
-				markup: null
-			}
-		});
-
-		expect(form).toMatchObject({
-			name: "Coach",
-			bodyType: ENUM_VEHICLE_BODY_TYPE.COACH,
-			pax: 45,
-			description: "Standard",
-			cost: 40,
-			currency: DEFAULT_EVENT_CURRENCY,
-			fees: []
-		});
-	});
-});
 
 describe("mapBusVariantFormToWrite", () => {
 	it("maps fixed charge", () => {
@@ -60,7 +24,7 @@ describe("mapBusVariantFormToWrite", () => {
 			pax: 1,
 			description: null,
 			expenses: {
-				typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+				typ: "fixed",
 				cost: { val: 25, currency: DEFAULT_EVENT_CURRENCY },
 				fees: null,
 				markup: null
@@ -76,7 +40,7 @@ describe("mapBusVariantFormToWrite", () => {
 		});
 
 		expect(write.expenses).toMatchObject({
-			typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+			typ: "fixed",
 			cost: { val: 0, currency: DEFAULT_EVENT_CURRENCY }
 		});
 	});

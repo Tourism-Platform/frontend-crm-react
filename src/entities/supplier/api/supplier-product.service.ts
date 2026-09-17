@@ -9,12 +9,14 @@ import {
 	mapActivityProductFromBackend,
 	mapActivityProductGeneralToCreate,
 	mapActivityProductGeneralToUpdate,
+	mapBusEditFormToPricingSwitch,
 	mapBusProductFromBackend,
 	mapBusProductGeneralToCreate,
 	mapBusProductToUpdate,
 	mapFlightProductFromBackend,
 	mapFlightProductGeneralToCreate,
 	mapFlightProductToUpdate,
+	mapHotelEditFormToPricingSwitch,
 	mapHotelProductFromBackend,
 	mapHotelProductGeneralToCreate,
 	mapHotelProductGeneralToUpdate,
@@ -24,9 +26,11 @@ import {
 	mapSupplierProductImageToFrontend,
 	mapSupplierProductListToFrontend,
 	mapSupplierVariantToWrite,
+	mapTrainEditFormToPricingSwitch,
 	mapTrainProductFromBackend,
 	mapTrainProductGeneralToCreate,
 	mapTrainProductGeneralToUpdate,
+	mapTransferEditFormToPricingSwitch,
 	mapTransferProductFromBackend,
 	mapTransferProductGeneralToCreate,
 	mapTransferProductToUpdate
@@ -54,6 +58,7 @@ import type {
 	ISupplierProductFilters,
 	ISupplierProductImage,
 	ISupplierVariantCreated,
+	ISwitchBusProductPricing,
 	ISwitchHotelProductPricing,
 	ISwitchTrainProductPricing,
 	ISwitchTransferProductPricing,
@@ -241,6 +246,22 @@ export const supplierProductApi = authApi.injectEndpoints({
 			invalidatesTags: (_result, _error, { productId }) =>
 				productInvalidateTags(productId)
 		}),
+		switchBusProductPricing: builder.mutation<
+			IBusProduct,
+			ISwitchBusProductPricing
+		>({
+			query: (data) => ({
+				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
+					data.supplierId,
+					data.productId
+				),
+				body: mapBusEditFormToPricingSwitch(data.values)
+			}),
+			transformResponse: (response: TBusProductReadBackend) =>
+				mapBusProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
 		createTransferProduct: builder.mutation<
 			ITransferProduct,
 			ICreateTransferProduct
@@ -280,7 +301,7 @@ export const supplierProductApi = authApi.injectEndpoints({
 					data.supplierId,
 					data.productId
 				),
-				body: data.body
+				body: mapTransferEditFormToPricingSwitch(data.values)
 			}),
 			transformResponse: (response: TTransferProductReadBackend) =>
 				mapTransferProductFromBackend(response),
@@ -296,7 +317,7 @@ export const supplierProductApi = authApi.injectEndpoints({
 					data.supplierId,
 					data.productId
 				),
-				body: data.body
+				body: mapTrainEditFormToPricingSwitch(data.values)
 			}),
 			transformResponse: (response: TTrainProductReadBackend) =>
 				mapTrainProductFromBackend(response),
@@ -312,7 +333,10 @@ export const supplierProductApi = authApi.injectEndpoints({
 					data.supplierId,
 					data.productId
 				),
-				body: data.body
+				body: mapHotelEditFormToPricingSwitch(
+					data.values,
+					data.existing
+				)
 			}),
 			transformResponse: (response: THotelProductReadBackend) =>
 				mapHotelProductFromBackend(response),
@@ -522,6 +546,7 @@ export const {
 	useUpdateFlightProductMutation,
 	useCreateBusProductMutation,
 	useUpdateBusProductMutation,
+	useSwitchBusProductPricingMutation,
 	useCreateTransferProductMutation,
 	useUpdateTransferProductMutation,
 	useSwitchTransferProductPricingMutation,

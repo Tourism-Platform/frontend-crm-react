@@ -1,11 +1,3 @@
-import type { IBusProduct } from "@/entities/supplier";
-
 export * from "./bus-product-tabs.types";
-export * from "./form.types";
-
-export interface IBusProductEditProps {
-	supplierId: string;
-	productId: string;
-	isCreate: boolean;
-	product?: IBusProduct | null;
-}
+export * from "./form-section.types";
+export * from "./pricing.types";

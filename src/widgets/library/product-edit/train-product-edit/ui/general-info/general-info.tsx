@@ -28,7 +28,6 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 }) => {
 	const { t, i18n } = useTranslation("train_product_edit_page");
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
-	const { key: nameKey, ...nameField } = TRAIN_PRODUCT_NAME_FIELD;
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
@@ -37,12 +36,17 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 
 	return (
 		<div className="grid gap-4">
-			<CustomField
-				control={form.control}
-				name={`${ENUM_FORM_TRAIN_SECTION.GENERAL}.${nameKey ?? ENUM_FORM_TRAIN_PRODUCT.NAME}`}
-				t={t}
-				{...nameField}
-			/>
+			<div className="grid gap-x-4 gap-y-1 grid-cols-2">
+				{TRAIN_PRODUCT_NAME_FIELD.map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={form.control}
+						name={`${ENUM_FORM_TRAIN_SECTION.GENERAL}.${key}`}
+						t={t}
+						{...item}
+					/>
+				))}
+			</div>
 
 			<div className="grid gap-4">
 				{fields.map((field, index) => (

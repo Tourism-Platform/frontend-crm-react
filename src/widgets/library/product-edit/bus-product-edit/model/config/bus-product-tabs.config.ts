@@ -1,98 +1,80 @@
 import { type IQueryTab } from "@/shared/ui";
 
 import {
-	BusProductGeneral,
-	BusProductImages,
-	BusProductVariants
-} from "../../ui";
-import {
 	ENUM_BUS_PRODUCT_EDIT_TAB,
-	type IBusProductEditSlotContext
+	type ENUM_BUS_PRODUCT_EDIT_TAB_TYPE,
+	type TBusProductEditSchema
+} from "@/entities/supplier";
+
+import { GeneralInfo } from "../../ui/general-info";
+import { BusProductImages } from "../../ui/images";
+import { Pricing } from "../../ui/pricing";
+import { VehiclesInfo } from "../../ui/vehicles";
+import {
+	ENUM_FORM_SECTION,
+	type ENUM_FORM_SECTION_TYPE,
+	type IBusProductEditSlotContext,
+	type TSlotProps
 } from "../types";
 
-type TBusGeneralTabExtra = Pick<
-	IBusProductEditSlotContext,
-	"supplierId" | "productId" | "isCreate" | "product"
->;
+type TBusProductTabExtra = Omit<TSlotProps, "form" | "onSubmit" | "isLoading">;
 
-type TBusVariantsTabExtra = Pick<
-	IBusProductEditSlotContext,
-	"supplierId" | "productId" | "product" | "variants"
-> & { disabled: boolean };
-
-type TBusMediaTabExtra = Pick<
-	IBusProductEditSlotContext,
-	"supplierId" | "productId"
-> & { disabled: boolean };
-
-type TBusGeneralTab = IQueryTab<
-	typeof ENUM_BUS_PRODUCT_EDIT_TAB.GENERAL,
+export const BUS_PRODUCT_EDIT_TABS_LIST: IQueryTab<
+	ENUM_BUS_PRODUCT_EDIT_TAB_TYPE,
 	"bus_product_edit_page",
-	string,
-	never,
+	ENUM_FORM_SECTION_TYPE,
+	TBusProductEditSchema,
 	IBusProductEditSlotContext,
-	TBusGeneralTabExtra
->;
-
-type TBusMediaTab = IQueryTab<
-	typeof ENUM_BUS_PRODUCT_EDIT_TAB.MEDIA,
-	"bus_product_edit_page",
-	string,
-	never,
-	IBusProductEditSlotContext,
-	TBusMediaTabExtra
->;
-
-type TBusVariantsTab = IQueryTab<
-	typeof ENUM_BUS_PRODUCT_EDIT_TAB.VARIANTS,
-	"bus_product_edit_page",
-	string,
-	never,
-	IBusProductEditSlotContext,
-	TBusVariantsTabExtra
->;
-
-export const BUS_PRODUCT_EDIT_TABS_LIST: (
-	| TBusGeneralTab
-	| TBusMediaTab
-	| TBusVariantsTab
-)[] = [
+	TBusProductTabExtra
+>[] = [
 	{
-		type: ENUM_BUS_PRODUCT_EDIT_TAB.GENERAL,
 		label: "tabs.general",
-		slot: BusProductGeneral,
+		type: ENUM_BUS_PRODUCT_EDIT_TAB.GENERAL,
+		slot: GeneralInfo,
+		section: ENUM_FORM_SECTION.GENERAL,
 		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
 			isCreate,
-			product
+			product,
+			disabled: false
 		})
 	},
 	{
-		type: ENUM_BUS_PRODUCT_EDIT_TAB.MEDIA,
-		label: "tabs.media",
-		slot: BusProductImages,
-		getSlotProps: ({ supplierId, productId, isCreate }) => ({
+		label: "tabs.vehicles",
+		type: ENUM_BUS_PRODUCT_EDIT_TAB.VEHICLES,
+		slot: VehiclesInfo,
+		section: ENUM_FORM_SECTION.VEHICLES,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
+			product,
 			disabled: isCreate
 		})
 	},
 	{
-		type: ENUM_BUS_PRODUCT_EDIT_TAB.VARIANTS,
-		label: "tabs.variants",
-		slot: BusProductVariants,
-		getSlotProps: ({
+		label: "tabs.media",
+		type: ENUM_BUS_PRODUCT_EDIT_TAB.MEDIA,
+		slot: BusProductImages,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
 			product,
-			variants,
-			isCreate
-		}) => ({
+			disabled: isCreate
+		})
+	},
+	{
+		label: "tabs.pricing",
+		type: ENUM_BUS_PRODUCT_EDIT_TAB.PRICING,
+		slot: Pricing,
+		section: ENUM_FORM_SECTION.PRICING,
+		getSlotProps: ({ supplierId, productId, isCreate, product }) => ({
 			supplierId,
 			productId,
+			isCreate,
 			product,
-			variants,
 			disabled: isCreate
 		})
 	}

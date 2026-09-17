@@ -19,7 +19,6 @@ import {
 	type TSupplierProduct,
 	buildSupplierProductEditRoute,
 	isHotelWholePricingType,
-	mapHotelEditFormToPricingSwitch,
 	mapHotelProductToEditForm,
 	mapHotelRoomRowToVariantWrite,
 	useCreateHotelProductMutation,
@@ -150,7 +149,8 @@ export const useLibraryHotelProductEdit = ({
 				await switchHotelProductPricing({
 					supplierId,
 					productId,
-					body: mapHotelEditFormToPricingSwitch(values, hotelProduct)
+					values,
+					existing: hotelProduct
 				}).unwrap();
 			}
 

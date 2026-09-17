@@ -1,40 +1,63 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import {
+	CURRENCY_OPTIONS,
+	DEFAULT_EVENT_CURRENCY
+} from "@/entities/commission";
 import { HOTEL_ROOM_CHARGE_LABELS } from "@/entities/supplier";
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
-	ENUM_FLIGHT_PRICING_TYPE,
 	ENUM_FORM_OVERRIDE_PRODUCT,
 	ENUM_OVERRIDE_CHARGE,
 	ENUM_OVERRIDE_PRICING_ARM,
-	type ENUM_OVERRIDE_PRICING_ARM_TYPE,
 	ENUM_OVERRIDE_UNIT_CHARGE,
 	type ENUM_OVERRIDE_UNIT_CHARGE_TYPE,
 	type TOverridePerUnitPricing,
 	type TOverrideProductForm
 } from "@/entities/tour";
 
-const PRICING_TYPE_OPTIONS = [
-	{
-		value: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
-		label: "override_product.dialog.fields.pricing_type.options.flat_rate"
-	},
-	{
-		value: ENUM_FLIGHT_PRICING_TYPE.PER_PERSON,
-		label: "override_product.dialog.fields.pricing_type.options.per_person"
-	}
-];
+export const FORM_OVERRIDE_FLAT_RATE_PRICE_DETAILS_LIST: TOverrideProductForm[] =
+	[
+		{
+			label: "override_product.dialog.fields.total_price.label",
+			placeholder:
+				"override_product.dialog.fields.total_price.placeholder",
+			key: ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE,
+			fieldType: "input",
+			type: "number"
+		},
+		{
+			label: "override_product.dialog.fields.currency.label",
+			placeholder: "override_product.dialog.fields.currency.placeholder",
+			key: ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY,
+			fieldType: "select",
+			options: CURRENCY_OPTIONS,
+			defaultValue: DEFAULT_EVENT_CURRENCY
+		}
+	];
 
-export const FORM_OVERRIDE_PRICING_LIST: TOverrideProductForm[] = [
-	{
-		label: "override_product.dialog.fields.pricing_type.label",
-		placeholder: "override_product.dialog.fields.pricing_type.placeholder",
-		key: ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE,
-		fieldType: "select",
-		options: PRICING_TYPE_OPTIONS
-	},
+export const FORM_OVERRIDE_PER_PERSON_PRICE_DETAILS_LIST: TOverrideProductForm[] =
+	[
+		{
+			label: "override_product.dialog.fields.total_price_per_person.label",
+			placeholder:
+				"override_product.dialog.fields.total_price_per_person.placeholder",
+			key: ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE,
+			fieldType: "input",
+			type: "number"
+		},
+		{
+			label: "override_product.dialog.fields.currency.label",
+			placeholder: "override_product.dialog.fields.currency.placeholder",
+			key: ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY,
+			fieldType: "select",
+			options: CURRENCY_OPTIONS,
+			defaultValue: DEFAULT_EVENT_CURRENCY
+		}
+	];
+
+export const FORM_OVERRIDE_UNIT_ROW_FIELDS_LIST: TOverrideProductForm[] = [
 	{
 		label: "override_product.dialog.fields.total_price.label",
 		placeholder: "override_product.dialog.fields.total_price.placeholder",
@@ -47,7 +70,8 @@ export const FORM_OVERRIDE_PRICING_LIST: TOverrideProductForm[] = [
 		placeholder: "override_product.dialog.fields.currency.placeholder",
 		key: ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY,
 		fieldType: "select",
-		options: CURRENCY_OPTIONS
+		options: CURRENCY_OPTIONS,
+		defaultValue: DEFAULT_EVENT_CURRENCY
 	}
 ];
 
@@ -59,28 +83,6 @@ export const FORM_OVERRIDE_HOUSING_CHARGE_LIST = (): TOverrideProductForm[] => [
 		fieldType: "select",
 		options: useValueToTranslateLabel(HOTEL_ROOM_CHARGE_LABELS),
 		defaultValue: ENUM_OVERRIDE_CHARGE.FIXED
-	}
-];
-
-/** Arm selector: reprice whole vs per unit. `perUnitArm` is the backend pricing key for this event type. */
-export const FORM_OVERRIDE_ARM_LIST = (
-	perUnitArm: ENUM_OVERRIDE_PRICING_ARM_TYPE
-): TOverrideProductForm[] => [
-	{
-		label: "override_product.dialog.fields.pricing_arm.label",
-		placeholder: "override_product.dialog.fields.pricing_arm.placeholder",
-		key: ENUM_FORM_OVERRIDE_PRODUCT.PRICING_ARM,
-		fieldType: "select",
-		options: [
-			{
-				value: ENUM_OVERRIDE_PRICING_ARM.WHOLE,
-				label: "override_product.dialog.fields.pricing_arm.options.whole"
-			},
-			{
-				value: perUnitArm,
-				label: "override_product.dialog.fields.pricing_arm.options.per_unit"
-			}
-		]
 	}
 ];
 
@@ -141,7 +143,7 @@ export const getUnitChargeOptions = (
 export const getPerUnitArm = (
 	eventTyp: ENUM_EVENT_BACKEND_TYPE,
 	specArm: TOverridePerUnitPricing | null
-): ENUM_OVERRIDE_PRICING_ARM_TYPE => {
+): TOverridePerUnitPricing => {
 	if (specArm) {
 		return specArm;
 	}

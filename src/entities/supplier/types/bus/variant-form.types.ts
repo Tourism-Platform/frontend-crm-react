@@ -7,7 +7,7 @@ import type {
 
 export const ENUM_FORM_BUS_VARIANT = {
 	NAME: "name",
-	BODY_TYPE: "bodyType",
+	BODY_TYPE: "body_type",
 	PAX: "pax",
 	DESCRIPTION: "description",
 	COST: "cost",

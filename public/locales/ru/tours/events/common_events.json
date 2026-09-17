@@ -95,6 +95,21 @@
 		"dialog": {
 			"title": "Договорная цена",
 			"description": "Заменяет цену и политику продукта только для этого тура. Сохранение полностью перезаписывает оба поля.",
+			"pricing": {
+				"title": "Как тарифицируется этот продукт?",
+				"details_title": "Детали цены",
+				"add_margin_separately": "Добавить маржу к этому компоненту отдельно",
+				"tabs": {
+					"flat_rate": "Фикс",
+					"per_person": "За человека",
+					"per_vehicle": "За машину",
+					"per_fare": "По тарифу",
+					"per_car": "За машину",
+					"per_room": "За номер",
+					"per_car_category": "За класс",
+					"offerings": "За предложение"
+				}
+			},
 			"fields": {
 				"pricing_arm": {
 					"label": "Переоценка",
@@ -136,6 +151,10 @@
 					"label": "Цена",
 					"placeholder": "Введите цену"
 				},
+				"total_price_per_person": {
+					"label": "Цена за человека",
+					"placeholder": "Введите цену"
+				},
 				"taxes": {
 					"label": "Налоги / сборы",
 					"placeholder": "Введите сумму"
@@ -143,6 +162,12 @@
 				"currency": {
 					"label": "Валюта",
 					"placeholder": "Выберите валюту"
+				},
+				"markup": {
+					"value": {
+						"label": "Уникальная маржа",
+						"placeholder": "Введите..."
+					}
 				},
 				"check_in_from": {
 					"label": "Заезд с",

@@ -1,6 +1,7 @@
 import {
 	type ActivityOverrideInput,
 	type BusOverrideInput,
+	Currency,
 	type DurationChargeInput,
 	type FeeInput,
 	type FixedChargeInput,
@@ -19,6 +20,10 @@ import {
 	currencyConverter
 } from "@/entities/commission";
 
+import type {
+	TCommissionMarkupBackend,
+	TCommissionMarkupInputBackend
+} from "../../types/commission-backend.types";
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE
@@ -33,7 +38,11 @@ import {
 	type IOverrideUnitFormRow,
 	type TOverrideProductFormValues
 } from "../../types/event-override-form.types";
-import { ENUM_FLIGHT_PRICING_TYPE } from "../../types/flight/pricing.types";
+import {
+	ENUM_FLIGHT_MARKUP_TYP,
+	ENUM_FLIGHT_PRICING_TYPE,
+	type IFlightPriceRowMarkup
+} from "../../types/flight/pricing.types";
 
 import { type IOverrideUnitOption } from "./event-override-units.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
@@ -45,7 +54,48 @@ interface IChargeLike {
 	cost_per_person?: MonetaryValueSchema | null;
 	rate?: { typ?: string; cost?: MonetaryValueSchema | null } | null;
 	fees?: FeeInput[] | null;
+	markup?: TCommissionMarkupBackend | null;
 }
+
+const mapMarkupFromBackend = (
+	markup?: TCommissionMarkupBackend | null
+): IFlightPriceRowMarkup | null => {
+	if (!markup) return null;
+	if (markup.typ === "percentage") {
+		return {
+			typ: ENUM_FLIGHT_MARKUP_TYP.PERCENTAGE,
+			value: String((markup.percentage ?? 0) * 100)
+		};
+	}
+	return {
+		typ: ENUM_FLIGHT_MARKUP_TYP.FIXED,
+		value: String(markup.cost?.val ?? "")
+	};
+};
+
+const mapMarkupToBackend = (
+	markup: IFlightPriceRowMarkup | null,
+	rowCurrency: ENUM_CURRENCY_OPTIONS_TYPE,
+	addMarginSeparately: boolean
+): TCommissionMarkupInputBackend | null => {
+	if (!addMarginSeparately || !markup?.value) return null;
+	if (markup.typ === ENUM_FLIGHT_MARKUP_TYP.PERCENTAGE) {
+		return {
+			typ: "percentage",
+			percentage: Number(markup.value) / 100
+		};
+	}
+	return {
+		typ: "fixed",
+		cost: {
+			val: Number(markup.value),
+			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
+		}
+	};
+};
+
+const hasAnyMarkup = (rows: IOverrideUnitFormRow[]) =>
+	rows.some((row) => row.markup?.value);
 
 // ---------------------------------------------------------------------------
 // Form values construction (Input -> form)
@@ -57,7 +107,8 @@ const emptyUnitRow = (unit: IOverrideUnitOption): IOverrideUnitFormRow => ({
 	charge_typ: ENUM_OVERRIDE_UNIT_CHARGE.FIXED,
 	total_price: null,
 	currency: DEFAULT_EVENT_CURRENCY,
-	fees: []
+	fees: [],
+	markup: null
 });
 
 const emptyFormValues = (
@@ -71,7 +122,9 @@ const emptyFormValues = (
 	[ENUM_FORM.CHECK_IN_FROM]: "",
 	[ENUM_FORM.CHECK_OUT_UNTIL]: "",
 	[ENUM_FORM.PRICING_ARM]: ENUM_OVERRIDE_PRICING_ARM.WHOLE,
-	[ENUM_FORM.UNITS]: units.map(emptyUnitRow)
+	[ENUM_FORM.UNITS]: units.map(emptyUnitRow),
+	[ENUM_FORM.ADD_MARGIN_SEPARATELY]: false,
+	[ENUM_FORM.MARKUP]: null
 });
 
 const readChargePrice = (charge: IChargeLike): number | null => {
@@ -109,7 +162,8 @@ const chargeToUnitRow = (
 				: ENUM_OVERRIDE_UNIT_CHARGE.FIXED,
 	total_price: readChargePrice(charge),
 	currency: readChargeCurrency(charge),
-	fees: mapFeesFromBackend(charge.fees)
+	fees: mapFeesFromBackend(charge.fees),
+	markup: mapMarkupFromBackend(charge.markup)
 });
 
 /**
@@ -149,6 +203,9 @@ const applyWholeCharge = (
 	values[ENUM_FORM.TOTAL_PRICE] = readChargePrice(charge);
 	values[ENUM_FORM.CURRENCY] = readChargeCurrency(charge);
 	values[ENUM_FORM.FEES] = mapFeesFromBackend(charge.fees);
+	const markup = mapMarkupFromBackend(charge.markup);
+	values[ENUM_FORM.MARKUP] = markup;
+	values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = Boolean(markup?.value);
 };
 
 /**
@@ -185,6 +242,9 @@ export const mapEventOverrideToForm = (
 					(row) => row.room_id,
 					(row) => row.rate.base
 				);
+				values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = hasAnyMarkup(
+					values[ENUM_FORM.UNITS]
+				);
 			} else if (rates?.pricing === "whole") {
 				applyWholeCharge(values, rates.price?.base);
 			}
@@ -205,6 +265,9 @@ export const mapEventOverrideToForm = (
 					(row) => row.fare_id,
 					(row) => row.charge
 				);
+				values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = hasAnyMarkup(
+					values[ENUM_FORM.UNITS]
+				);
 			} else if (rates?.pricing === "whole") {
 				applyWholeCharge(values, rates.charge);
 			}
@@ -223,6 +286,9 @@ export const mapEventOverrideToForm = (
 					rates.vehicles,
 					(row) => row.vehicle_id,
 					(row) => row.charge
+				);
+				values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = hasAnyMarkup(
+					values[ENUM_FORM.UNITS]
 				);
 			} else if (rates?.pricing === "whole") {
 				applyWholeCharge(values, rates.charge);
@@ -243,6 +309,9 @@ export const mapEventOverrideToForm = (
 					(row) => row.car_id,
 					(row) => row.charge
 				);
+				values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = hasAnyMarkup(
+					values[ENUM_FORM.UNITS]
+				);
 			} else if (rates?.pricing === "per_car_category") {
 				values[ENUM_FORM.PRICING_ARM] =
 					ENUM_OVERRIDE_PRICING_ARM.PER_CAR_CATEGORY;
@@ -251,6 +320,9 @@ export const mapEventOverrideToForm = (
 					rates.categories,
 					(row) => row.category_id,
 					(row) => row.charge
+				);
+				values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = hasAnyMarkup(
+					values[ENUM_FORM.UNITS]
 				);
 			} else if (rates?.pricing === "whole") {
 				applyWholeCharge(values, rates.charge);
@@ -267,6 +339,9 @@ export const mapEventOverrideToForm = (
 				override.rates?.offerings ?? [],
 				(row) => row.offering_id,
 				(row) => row.charge
+			);
+			values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = hasAnyMarkup(
+				values[ENUM_FORM.UNITS]
 			);
 			return values;
 		}
@@ -286,19 +361,23 @@ type TDurationCharge = { typ: "per_duration" } & DurationChargeInput;
 const buildFixedCharge = (
 	total: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE,
-	fees: FeeInput[] | null
+	fees: FeeInput[] | null,
+	markup: IFlightPriceRowMarkup | null,
+	addMarginSeparately: boolean
 ): TFixedCharge => ({
 	typ: "fixed",
 	cost: { val: total ?? 0, currency: currencyConverter.to(currency)! },
 	fees,
 	extra_costs: [],
-	markup: null
+	markup: mapMarkupToBackend(markup, currency, addMarginSeparately)
 });
 
 const buildPerPersonCharge = (
 	total: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE,
-	fees: FeeInput[] | null
+	fees: FeeInput[] | null,
+	markup: IFlightPriceRowMarkup | null,
+	addMarginSeparately: boolean
 ): TPerPersonCharge => ({
 	typ: "per_person",
 	cost_per_person: {
@@ -307,13 +386,15 @@ const buildPerPersonCharge = (
 	},
 	fees,
 	extra_costs: [],
-	markup: null
+	markup: mapMarkupToBackend(markup, currency, addMarginSeparately)
 });
 
 const buildPerDurationCharge = (
 	total: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE,
-	fees: FeeInput[] | null
+	fees: FeeInput[] | null,
+	markup: IFlightPriceRowMarkup | null,
+	addMarginSeparately: boolean
 ): TDurationCharge => ({
 	typ: "per_duration",
 	rate: {
@@ -322,7 +403,7 @@ const buildPerDurationCharge = (
 	},
 	fees,
 	extra_costs: [],
-	markup: null
+	markup: mapMarkupToBackend(markup, currency, addMarginSeparately)
 });
 
 /** Whole arm of housing: fixed / per-night / per-person. */
@@ -332,16 +413,30 @@ const buildStayCharge = (
 	const total = values[ENUM_FORM.TOTAL_PRICE];
 	const currency = values[ENUM_FORM.CURRENCY];
 	const fees = mapFeesToBackend(values[ENUM_FORM.FEES]);
+	const markup = values[ENUM_FORM.MARKUP];
+	const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 
 	if (
 		values[ENUM_FORM.PRICING_TYPE] === ENUM_FLIGHT_PRICING_TYPE.PER_PERSON
 	) {
-		return buildPerPersonCharge(total, currency, fees);
+		return buildPerPersonCharge(
+			total,
+			currency,
+			fees,
+			markup,
+			addMarginSeparately
+		);
 	}
 	if (values[ENUM_FORM.CHARGE_TYP] === ENUM_OVERRIDE_CHARGE.PER_DURATION) {
-		return buildPerDurationCharge(total, currency, fees);
+		return buildPerDurationCharge(
+			total,
+			currency,
+			fees,
+			markup,
+			addMarginSeparately
+		);
 	}
-	return buildFixedCharge(total, currency, fees);
+	return buildFixedCharge(total, currency, fees, markup, addMarginSeparately);
 };
 
 /** Whole arm of route / bus / transfer: fixed or per-person only. */
@@ -351,25 +446,49 @@ const buildFlatOrPerPersonCharge = (
 	const total = values[ENUM_FORM.TOTAL_PRICE];
 	const currency = values[ENUM_FORM.CURRENCY];
 	const fees = mapFeesToBackend(values[ENUM_FORM.FEES]);
+	const markup = values[ENUM_FORM.MARKUP];
+	const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 
 	return values[ENUM_FORM.PRICING_TYPE] ===
 		ENUM_FLIGHT_PRICING_TYPE.PER_PERSON
-		? buildPerPersonCharge(total, currency, fees)
-		: buildFixedCharge(total, currency, fees);
+		? buildPerPersonCharge(
+				total,
+				currency,
+				fees,
+				markup,
+				addMarginSeparately
+			)
+		: buildFixedCharge(total, currency, fees, markup, addMarginSeparately);
 };
 
 /** Fare / offering rows: fixed or per-person. */
 const buildFlatOrPerPersonUnitCharge = (
-	row: IOverrideUnitFormRow
+	row: IOverrideUnitFormRow,
+	addMarginSeparately: boolean
 ): TFixedCharge | TPerPersonCharge => {
 	const fees = mapFeesToBackend(row.fees);
 	return row.charge_typ === ENUM_OVERRIDE_UNIT_CHARGE.PER_PERSON
-		? buildPerPersonCharge(row.total_price, row.currency, fees)
-		: buildFixedCharge(row.total_price, row.currency, fees);
+		? buildPerPersonCharge(
+				row.total_price,
+				row.currency,
+				fees,
+				row.markup,
+				addMarginSeparately
+			)
+		: buildFixedCharge(
+				row.total_price,
+				row.currency,
+				fees,
+				row.markup,
+				addMarginSeparately
+			);
 };
 
 /** Room rows: fixed or per-night. */
-const buildRoomCharge = (row: IOverrideUnitFormRow): RoomRateInput["base"] => {
+const buildRoomCharge = (
+	row: IOverrideUnitFormRow,
+	addMarginSeparately: boolean
+): RoomRateInput["base"] => {
 	const fees = mapFeesToBackend(row.fees);
 	if (row.charge_typ === ENUM_OVERRIDE_UNIT_CHARGE.PER_DURATION) {
 		return {
@@ -383,15 +502,34 @@ const buildRoomCharge = (row: IOverrideUnitFormRow): RoomRateInput["base"] => {
 			},
 			fees,
 			extra_costs: [],
-			markup: null
+			markup: mapMarkupToBackend(
+				row.markup,
+				row.currency,
+				addMarginSeparately
+			)
 		};
 	}
-	return buildFixedCharge(row.total_price, row.currency, fees);
+	return buildFixedCharge(
+		row.total_price,
+		row.currency,
+		fees,
+		row.markup,
+		addMarginSeparately
+	);
 };
 
 /** Vehicle / car / car-category rows: fixed only. */
-const buildFixedUnitCharge = (row: IOverrideUnitFormRow): TFixedCharge =>
-	buildFixedCharge(row.total_price, row.currency, mapFeesToBackend(row.fees));
+const buildFixedUnitCharge = (
+	row: IOverrideUnitFormRow,
+	addMarginSeparately: boolean
+): TFixedCharge =>
+	buildFixedCharge(
+		row.total_price,
+		row.currency,
+		mapFeesToBackend(row.fees),
+		row.markup,
+		addMarginSeparately
+	);
 
 const buildHousingOverride = (
 	values: TOverrideProductFormValues,
@@ -406,6 +544,7 @@ const buildHousingOverride = (
 	};
 
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_ROOM) {
+		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 		return {
 			typ: "housing",
 			policy,
@@ -413,7 +552,10 @@ const buildHousingOverride = (
 				pricing: "per_room",
 				rooms: rows.map((row) => ({
 					room_id: row.unit_id,
-					rate: { base: buildRoomCharge(row), seasons: [] }
+					rate: {
+						base: buildRoomCharge(row, addMarginSeparately),
+						seasons: []
+					}
 				}))
 			}
 		};
@@ -441,13 +583,17 @@ const buildRouteOverride = (
 			: RouteOverrideInputTypEnum.Flight;
 
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_FARE) {
+		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 		return {
 			typ,
 			rates: {
 				pricing: "per_fare",
 				fares: rows.map((row) => ({
 					fare_id: row.unit_id,
-					charge: buildFlatOrPerPersonUnitCharge(row)
+					charge: buildFlatOrPerPersonUnitCharge(
+						row,
+						addMarginSeparately
+					)
 				}))
 			}
 		};
@@ -465,13 +611,14 @@ const buildBusOverride = (
 	rows: IOverrideUnitFormRow[]
 ): BusOverrideInput => {
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_VEHICLE) {
+		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 		return {
 			typ: "bus",
 			rates: {
 				pricing: "per_vehicle",
 				vehicles: rows.map((row) => ({
 					vehicle_id: row.unit_id,
-					charge: buildFixedUnitCharge(row)
+					charge: buildFixedUnitCharge(row, addMarginSeparately)
 				}))
 			}
 		};
@@ -489,26 +636,28 @@ const buildTransferOverride = (
 	rows: IOverrideUnitFormRow[]
 ): TransferOverrideInput => {
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_CAR) {
+		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 		return {
 			typ: "transfer",
 			rates: {
 				pricing: "per_car",
 				cars: rows.map((row) => ({
 					car_id: row.unit_id,
-					charge: buildFixedUnitCharge(row)
+					charge: buildFixedUnitCharge(row, addMarginSeparately)
 				}))
 			}
 		};
 	}
 
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_CAR_CATEGORY) {
+		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 		return {
 			typ: "transfer",
 			rates: {
 				pricing: "per_car_category",
 				categories: rows.map((row) => ({
 					category_id: row.unit_id,
-					charge: buildFixedUnitCharge(row)
+					charge: buildFixedUnitCharge(row, addMarginSeparately)
 				}))
 			}
 		};
@@ -521,16 +670,20 @@ const buildTransferOverride = (
 };
 
 const buildActivityOverride = (
+	values: TOverrideProductFormValues,
 	rows: IOverrideUnitFormRow[]
-): ActivityOverrideInput => ({
-	typ: "activity",
-	rates: {
-		offerings: rows.map((row) => ({
-			offering_id: row.unit_id,
-			charge: buildFlatOrPerPersonUnitCharge(row)
-		}))
-	}
-});
+): ActivityOverrideInput => {
+	const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
+	return {
+		typ: "activity",
+		rates: {
+			offerings: rows.map((row) => ({
+				offering_id: row.unit_id,
+				charge: buildFlatOrPerPersonUnitCharge(row, addMarginSeparately)
+			}))
+		}
+	};
+};
 
 /**
  * Builds the PATCH body in the generated Input union (contract 6) from the
@@ -558,7 +711,7 @@ export const mapEventOverrideToBackend = (
 		case ENUM_EVENT_BACKEND.TRANSFER:
 			return buildTransferOverride(values, arm, filledRows);
 		case ENUM_EVENT_BACKEND.ACTIVITY:
-			return buildActivityOverride(filledRows);
+			return buildActivityOverride(values, filledRows);
 		default:
 			throw new Error(
 				`Override is not supported for event type "${eventTyp}"`

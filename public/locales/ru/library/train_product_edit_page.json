@@ -117,7 +117,7 @@
 				"per_fare": {
 					"empty_fares": "Добавьте тарифы на вкладке «Тарифы», чтобы настроить цены.",
 					"checkboxes": {
-						"add_margin_separately": "Добавить наценку отдельно"
+						"add_margin_separately": "Добавить маржу к этому компоненту отдельно"
 					},
 					"fields": {
 						"charge_typ": {

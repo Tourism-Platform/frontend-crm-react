@@ -61,7 +61,7 @@
 				"pricing_details": {
 					"title": "Детали цены",
 					"checkboxes": {
-						"add_margin_separately": "Добавить наценку отдельно"
+						"add_margin_separately": "Добавить маржу к этому компоненту отдельно"
 					},
 					"fields": {
 						"total_price": {

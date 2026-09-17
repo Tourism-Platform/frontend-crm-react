@@ -1,18 +1,20 @@
-import type { IBusProduct, IBusVariant } from "@/entities/supplier";
+import type { IQueryTabSlotProps } from "@/shared/ui";
 
-export const ENUM_BUS_PRODUCT_EDIT_TAB = {
-	GENERAL: "general",
-	MEDIA: "media",
-	VARIANTS: "variants"
-} as const;
-
-export type ENUM_BUS_PRODUCT_EDIT_TAB_TYPE =
-	(typeof ENUM_BUS_PRODUCT_EDIT_TAB)[keyof typeof ENUM_BUS_PRODUCT_EDIT_TAB];
+import type { IBusProduct, TBusProductEditSchema } from "@/entities/supplier";
 
 export interface IBusProductEditSlotContext {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
 	product?: IBusProduct | null;
-	variants: IBusVariant[];
 }
+
+export type TSlotProps = Required<
+	Pick<
+		IQueryTabSlotProps<TBusProductEditSchema>,
+		"form" | "onSubmit" | "isLoading"
+	>
+> &
+	IBusProductEditSlotContext & {
+		disabled: boolean;
+	};

@@ -15,6 +15,8 @@ export * from "./flight-product-pricing.schema";
 export * from "./flight-variant.schema";
 export * from "./bus-product.schema";
 export * from "./bus-product-pricing.schema";
+export * from "./bus-vehicles.schema";
+export * from "./bus-product-edit.schema";
 export * from "./bus-variant.schema";
 export * from "./transfer-product.schema";
 export * from "./transfer-product-pricing.schema";

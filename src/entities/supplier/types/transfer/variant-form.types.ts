@@ -21,7 +21,7 @@ export type TTransferMarkupForm = {
 
 export const ENUM_FORM_TRANSFER_VARIANT = {
 	NAME: "name",
-	BODY_TYPE: "bodyType",
+	BODY_TYPE: "body_type",
 	PAX: "pax",
 	DESCRIPTION: "description",
 	COST: "cost",

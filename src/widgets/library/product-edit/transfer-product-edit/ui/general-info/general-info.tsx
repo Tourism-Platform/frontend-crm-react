@@ -3,10 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, LoaderButton, withErrorBoundary } from "@/shared/ui";
 
-import {
-	ENUM_FORM_TRANSFER_PRODUCT,
-	ENUM_FORM_TRANSFER_SECTION
-} from "@/entities/supplier";
+import { ENUM_FORM_TRANSFER_SECTION } from "@/entities/supplier";
 
 import { TRANSFER_PRODUCT_NAME_FIELD, type TSlotProps } from "../../model";
 
@@ -17,16 +14,20 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 	isCreate
 }) => {
 	const { t } = useTranslation("transfer_product_edit_page");
-	const { key: nameKey, ...nameField } = TRANSFER_PRODUCT_NAME_FIELD;
 
 	return (
 		<div className="grid gap-4">
-			<CustomField
-				control={form.control}
-				name={`${ENUM_FORM_TRANSFER_SECTION.GENERAL}.${nameKey ?? ENUM_FORM_TRANSFER_PRODUCT.NAME}`}
-				t={t}
-				{...nameField}
-			/>
+			<div className="grid gap-x-4 gap-y-1 grid-cols-2">
+				{TRANSFER_PRODUCT_NAME_FIELD.map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={form.control}
+						name={`${ENUM_FORM_TRANSFER_SECTION.GENERAL}.${key}`}
+						t={t}
+						{...item}
+					/>
+				))}
+			</div>
 			<div className="flex justify-end">
 				<LoaderButton
 					type="button"

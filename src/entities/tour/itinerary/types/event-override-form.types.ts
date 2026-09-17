@@ -4,7 +4,10 @@ import type { TFormField } from "@/shared/types";
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
 import type { IFeeFormRow } from "./fee.types";
-import type { ENUM_FLIGHT_PRICING_TYPE_TYPE } from "./flight/pricing.types";
+import type {
+	ENUM_FLIGHT_PRICING_TYPE_TYPE,
+	IFlightPriceRowMarkup
+} from "./flight/pricing.types";
 
 /** Housing whole-arm charge modes (fixed whole stay vs per-night rate). */
 export const ENUM_OVERRIDE_CHARGE = {
@@ -52,7 +55,9 @@ export const ENUM_FORM_OVERRIDE_PRODUCT = {
 	CHECK_IN_FROM: "check_in_from",
 	CHECK_OUT_UNTIL: "check_out_until",
 	PRICING_ARM: "pricing_arm",
-	UNITS: "units"
+	UNITS: "units",
+	ADD_MARGIN_SEPARATELY: "add_margin_separately",
+	MARKUP: "markup"
 } as const;
 
 export type ENUM_FORM_OVERRIDE_PRODUCT_TYPE =
@@ -72,6 +77,7 @@ export interface IOverrideUnitFormRow {
 	total_price: number | null;
 	currency: ENUM_CURRENCY_OPTIONS_TYPE;
 	fees: IFeeFormRow[];
+	markup: IFlightPriceRowMarkup | null;
 }
 
 export type TOverrideProductFormValues = {
@@ -84,4 +90,6 @@ export type TOverrideProductFormValues = {
 	[ENUM_FORM_OVERRIDE_PRODUCT.CHECK_OUT_UNTIL]: string;
 	[ENUM_FORM_OVERRIDE_PRODUCT.PRICING_ARM]: ENUM_OVERRIDE_PRICING_ARM_TYPE;
 	[ENUM_FORM_OVERRIDE_PRODUCT.UNITS]: IOverrideUnitFormRow[];
+	[ENUM_FORM_OVERRIDE_PRODUCT.ADD_MARGIN_SEPARATELY]: boolean;
+	[ENUM_FORM_OVERRIDE_PRODUCT.MARKUP]: IFlightPriceRowMarkup | null;
 };

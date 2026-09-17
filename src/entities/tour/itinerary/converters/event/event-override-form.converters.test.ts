@@ -10,6 +10,7 @@ import {
 	ENUM_OVERRIDE_PRICING_ARM,
 	ENUM_OVERRIDE_UNIT_CHARGE
 } from "../../types/event-override-form.types";
+import { ENUM_FLIGHT_MARKUP_TYP } from "../../types/flight/pricing.types";
 
 import {
 	mapEventOverrideToBackend,
@@ -366,6 +367,102 @@ describe("mapEventOverrideToBackend", () => {
 						rate: { base: FIXED_CHARGE, seasons: [] }
 					}
 				]
+			}
+		});
+	});
+
+	it("round-trips a fixed markup on the whole arm", () => {
+		const source = {
+			typ: "bus" as const,
+			rates: {
+				pricing: "whole" as const,
+				charge: {
+					...FIXED_CHARGE,
+					markup: {
+						typ: "fixed" as const,
+						cost: { val: 25, currency: Currency.USD }
+					}
+				}
+			}
+		};
+
+		const values = mapEventOverrideToForm(
+			ENUM_EVENT_BACKEND.BUS,
+			source,
+			UNITS
+		);
+
+		expect(values[ENUM_FORM.ADD_MARGIN_SEPARATELY]).toBe(true);
+		expect(values[ENUM_FORM.MARKUP]).toEqual({
+			typ: ENUM_FLIGHT_MARKUP_TYP.FIXED,
+			value: "25"
+		});
+
+		expect(
+			mapEventOverrideToBackend(ENUM_EVENT_BACKEND.BUS, values)
+		).toEqual(source);
+	});
+
+	it("round-trips a percentage markup on a unit row", () => {
+		const source = {
+			typ: "activity" as const,
+			rates: {
+				offerings: [
+					{
+						offering_id: "unit-1",
+						charge: {
+							...FIXED_CHARGE,
+							markup: {
+								typ: "percentage" as const,
+								percentage: 0.1
+							}
+						}
+					}
+				]
+			}
+		};
+
+		const values = mapEventOverrideToForm(
+			ENUM_EVENT_BACKEND.ACTIVITY,
+			source,
+			UNITS
+		);
+
+		expect(values[ENUM_FORM.ADD_MARGIN_SEPARATELY]).toBe(true);
+		expect(values[ENUM_FORM.UNITS][0].markup).toEqual({
+			typ: ENUM_FLIGHT_MARKUP_TYP.PERCENTAGE,
+			value: "10"
+		});
+		expect(values[ENUM_FORM.UNITS][1].markup).toBeNull();
+
+		const body = mapEventOverrideToBackend(
+			ENUM_EVENT_BACKEND.ACTIVITY,
+			values
+		);
+
+		expect(body).toEqual(source);
+	});
+
+	it("sends markup null when the margin flag is off", () => {
+		const values = mapEventOverrideToForm(
+			ENUM_EVENT_BACKEND.BUS,
+			null,
+			UNITS
+		);
+		values[ENUM_FORM.TOTAL_PRICE] = 80;
+		values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = false;
+		values[ENUM_FORM.MARKUP] = {
+			typ: ENUM_FLIGHT_MARKUP_TYP.FIXED,
+			value: "15"
+		};
+
+		const body = mapEventOverrideToBackend(ENUM_EVENT_BACKEND.BUS, values);
+
+		expect(body).toMatchObject({
+			typ: "bus",
+			rates: {
+				pricing: "whole",
+				charge: { markup: null }
 			}
 		});
 	});

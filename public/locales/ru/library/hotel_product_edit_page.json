@@ -143,7 +143,7 @@
 					"empty_rooms": "Добавьте номера на вкладке «Номера», чтобы задать цену за номер.",
 					"checkboxes": {
 						"price_based_on_class": "Цена по классу",
-						"add_margin_separately": "Добавить наценку отдельно"
+						"add_margin_separately": "Добавить маржу к этому компоненту отдельно"
 					},
 					"fields": {
 						"total_cost": {

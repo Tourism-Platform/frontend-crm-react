@@ -4,13 +4,20 @@ import { useForm } from "react-hook-form";
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
+	ENUM_FORM_OVERRIDE_PRODUCT,
 	type IOverrideUnitOption,
 	type TEventOverrideInputBackend,
+	type TOverridePerUnitPricing,
 	type TOverrideProductFormValues,
 	mapEventOverrideToForm
 } from "@/entities/tour";
 
-import { getUnitChargeOptions } from "./config/override-pricing.config";
+import {
+	applyOverridePricingTab,
+	createEmptyOverrideMarkup,
+	getOverridePricingTab,
+	getUnitChargeOptions
+} from "./config";
 
 interface IUseOverrideEventDialogParams {
 	open: boolean;
@@ -18,6 +25,7 @@ interface IUseOverrideEventDialogParams {
 	initialOverride?: TEventOverrideInputBackend | null;
 	/** Units the per-unit arm can reprice — from the pool member's spec. */
 	units: IOverrideUnitOption[];
+	perUnitArm: TOverridePerUnitPricing;
 	onConfirm: (values: TOverrideProductFormValues) => void | Promise<void>;
 }
 
@@ -26,6 +34,7 @@ export const useOverrideEventDialog = ({
 	eventTyp,
 	initialOverride,
 	units,
+	perUnitArm,
 	onConfirm
 }: IUseOverrideEventDialogParams) => {
 	const form = useForm<TOverrideProductFormValues>({
@@ -46,6 +55,40 @@ export const useOverrideEventDialog = ({
 
 	const isHousing = eventTyp === ENUM_EVENT_BACKEND.HOUSING;
 	const isActivity = eventTyp === ENUM_EVENT_BACKEND.ACTIVITY;
+	const pricingType = form.watch(ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE);
+	const arm = form.watch(ENUM_FORM_OVERRIDE_PRODUCT.PRICING_ARM);
+
+	const handleTabChange = (tab: string) => {
+		const next = applyOverridePricingTab(tab, perUnitArm);
+		form.setValue(ENUM_FORM_OVERRIDE_PRODUCT.PRICING_ARM, next.pricing_arm);
+		if (next.pricing_type) {
+			form.setValue(
+				ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE,
+				next.pricing_type
+			);
+		}
+	};
+
+	const addMarginSeparately = form.watch(
+		ENUM_FORM_OVERRIDE_PRODUCT.ADD_MARGIN_SEPARATELY
+	);
+
+	const handleAddMarginSeparatelyChange = (checked: boolean) => {
+		form.setValue(
+			ENUM_FORM_OVERRIDE_PRODUCT.ADD_MARGIN_SEPARATELY,
+			checked
+		);
+		form.setValue(
+			ENUM_FORM_OVERRIDE_PRODUCT.MARKUP,
+			checked ? createEmptyOverrideMarkup() : null
+		);
+		form.getValues(ENUM_FORM_OVERRIDE_PRODUCT.UNITS).forEach((_, index) => {
+			form.setValue(
+				`${ENUM_FORM_OVERRIDE_PRODUCT.UNITS}.${index}.markup`,
+				checked ? createEmptyOverrideMarkup() : null
+			);
+		});
+	};
 
 	return {
 		form,
@@ -54,6 +97,10 @@ export const useOverrideEventDialog = ({
 		showChargeTyp: isHousing,
 		/** Activity prices per offering only — there is no whole arm. */
 		showArmSelector: !isActivity,
-		unitChargeOptions: getUnitChargeOptions(eventTyp)
+		unitChargeOptions: getUnitChargeOptions(eventTyp),
+		activeTab: getOverridePricingTab(arm, pricingType, perUnitArm),
+		handleTabChange,
+		addMarginSeparately,
+		handleAddMarginSeparatelyChange
 	};
 };

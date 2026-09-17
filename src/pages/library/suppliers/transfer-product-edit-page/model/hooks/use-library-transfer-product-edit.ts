@@ -19,7 +19,6 @@ import {
 	buildSupplierProductEditRoute,
 	isTransferWholePricingType,
 	mapTransferCarRowToVariantWrite,
-	mapTransferEditFormToPricingSwitch,
 	mapTransferProductToEditForm,
 	useCreateTransferProductMutation,
 	useSwitchTransferProductPricingMutation,
@@ -145,7 +144,7 @@ export const useLibraryTransferProductEdit = ({
 				await switchTransferProductPricing({
 					supplierId,
 					productId,
-					body: mapTransferEditFormToPricingSwitch(values)
+					values
 				}).unwrap();
 			}
 
