@@ -132,10 +132,19 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 				</div>
 				<div
 					className={cn(
-						"grid max-w-xl grid-cols-2 gap-4",
-						withHousingCharge && "max-w-3xl grid-cols-3",
-						addMarginSeparately &&
-							"max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)]"
+						"grid w-full min-w-0 gap-4",
+						withHousingCharge &&
+							addMarginSeparately &&
+							"grid-cols-[0.5fr_1fr_0.5fr_0.5fr]",
+						withHousingCharge &&
+							!addMarginSeparately &&
+							"grid-cols-[0.5fr_1fr_0.5fr]",
+						!withHousingCharge &&
+							addMarginSeparately &&
+							"grid-cols-[1fr_0.5fr_0.5fr]",
+						!withHousingCharge &&
+							!addMarginSeparately &&
+							"grid-cols-[1fr_0.5fr]"
 					)}
 				>
 					{detailsList.map(({ key, ...item }, fieldIndex) => (
@@ -174,7 +183,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="min-w-[720px] max-w-3xl max-h-[calc(100%-2rem)] overflow-y-auto">
+			<DialogContent className="max-h-[calc(100%-2rem)] w-full overflow-y-auto sm:max-w-4xl">
 				<DialogHeader>
 					<DialogTitle>
 						{t("override_product.dialog.title")}
@@ -255,7 +264,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 						{showPolicy ? (
 							<>
 								<Separator />
-								<div className="grid max-w-xl grid-cols-2 gap-4">
+								<div className="grid w-full grid-cols-2 gap-4">
 									{FORM_OVERRIDE_POLICY_LIST.map(
 										({ key, ...item }) => (
 											<CustomField

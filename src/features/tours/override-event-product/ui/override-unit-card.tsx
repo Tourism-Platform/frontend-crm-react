@@ -51,10 +51,19 @@ export const OverrideUnitCard: FC<IOverrideUnitCardProps> = ({
 			<CardContent className="grid gap-4">
 				<div
 					className={cn(
-						"grid max-w-xl grid-cols-2 gap-4",
-						showUnitCharge && "max-w-3xl grid-cols-3",
-						addMarginSeparately &&
-							"max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)]"
+						"grid w-full min-w-0 gap-4",
+						showUnitCharge &&
+							addMarginSeparately &&
+							"grid-cols-[0.5fr_1fr_0.5fr_0.5fr]",
+						showUnitCharge &&
+							!addMarginSeparately &&
+							"grid-cols-[0.5fr_1fr_0.5fr]",
+						!showUnitCharge &&
+							addMarginSeparately &&
+							"grid-cols-[1fr_0.5fr_0.5fr]",
+						!showUnitCharge &&
+							!addMarginSeparately &&
+							"grid-cols-[1fr_0.5fr]"
 					)}
 				>
 					{showUnitCharge ? (

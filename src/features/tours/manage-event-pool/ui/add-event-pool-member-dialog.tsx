@@ -35,7 +35,7 @@ interface IAddEventPoolMemberDialogProps {
 }
 
 const choiceClassName =
-	"rounded-xl border bg-card p-4 text-left transition-colors hover:bg-muted/40 disabled:pointer-events-none disabled:opacity-50";
+	"cursor-pointer rounded-xl border bg-card p-4 text-left transition-colors hover:bg-muted/40 disabled:pointer-events-none disabled:opacity-50";
 
 export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 	open,
@@ -77,7 +77,7 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 	return (
 		<>
 			<Dialog open={open} onOpenChange={onOpenChange}>
-				<DialogContent>
+				<DialogContent className="sm:max-w-xl">
 					<DialogHeader>
 						<DialogTitle>{t("pool.add.title")}</DialogTitle>
 						<DialogDescription>
