@@ -3,7 +3,7 @@ import { z } from "zod";
 import type {
 	BUS_VARIANT_CREATE_SCHEMA,
 	BUS_VARIANT_FORM_SCHEMA
-} from "../../schema/bus-variant.schema";
+} from "../../schema/bus/variant.schema";
 
 export const ENUM_FORM_BUS_VARIANT = {
 	NAME: "name",

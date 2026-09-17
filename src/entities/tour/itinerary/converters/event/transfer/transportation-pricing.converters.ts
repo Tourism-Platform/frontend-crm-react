@@ -33,10 +33,14 @@ import {
 	type TTransferSpecInputBackend,
 	type TTransportationPricingSchema
 } from "../../../types";
-import { getPoolMember } from "../event-pool.helpers";
-import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
-import { vehicleBodyTypeConverter } from "../vehicle-body-type.converters";
-import { zeroFixedCharge } from "../zero-fixed-charge.helpers";
+import { getPoolMember } from "../common/event-pool.helpers";
+import {
+	mapFeesFromBackend,
+	mapFeesToBackend
+} from "../common/fees.converters";
+import { zeroFixedCharge } from "../common/zero-fixed-charge.helpers";
+
+import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
 /**
  * The form lets a car row leave `pax` empty and its body type always maps

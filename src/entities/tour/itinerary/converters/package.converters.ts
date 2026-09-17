@@ -17,7 +17,10 @@ import {
 	type TTourPackageBackend
 } from "../types";
 
-import { mapFeesFromBackend, mapFeesToBackend } from "./event/fees.converters";
+import {
+	mapFeesFromBackend,
+	mapFeesToBackend
+} from "./event/common/fees.converters";
 
 const mapMarkupFromBackend = (
 	markup?: TTourPackageBackend["markup"]

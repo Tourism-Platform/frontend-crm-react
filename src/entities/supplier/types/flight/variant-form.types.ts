@@ -3,7 +3,7 @@ import { z } from "zod";
 import type {
 	FLIGHT_VARIANT_CREATE_SCHEMA,
 	FLIGHT_VARIANT_FORM_SCHEMA
-} from "../../schema/flight-variant.schema";
+} from "../../schema/flight/variant.schema";
 
 export const ENUM_FORM_FLIGHT_VARIANT = {
 	NAME: "name",

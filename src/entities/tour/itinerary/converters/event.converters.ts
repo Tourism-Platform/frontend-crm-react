@@ -57,7 +57,7 @@ import {
 } from "./event";
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
 import { eventTypeMapper } from "./event-type.converters";
-import { mapEventDetailsWriteOrEmpty } from "./event/empty-event-details.converters";
+import { mapEventDetailsWriteOrEmpty } from "./event/common/empty-event-details.converters";
 
 /**
  * Slot read → board/list domain model.

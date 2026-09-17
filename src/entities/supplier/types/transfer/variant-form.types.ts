@@ -3,7 +3,7 @@ import { z } from "zod";
 import type {
 	TRANSFER_VARIANT_CREATE_SCHEMA,
 	TRANSFER_VARIANT_FORM_SCHEMA
-} from "../../schema/transfer-variant.schema";
+} from "../../schema/transfer/variant.schema";
 import type { ENUM_SUPPLIER_SURCHARGE_TYPE } from "../supplier-money.types";
 
 export const ENUM_FORM_TRANSFER_MARKUP = {

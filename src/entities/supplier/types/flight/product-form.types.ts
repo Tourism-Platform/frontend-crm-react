@@ -3,12 +3,12 @@ import { z } from "zod";
 import type { TFlightProductEditPageKeys } from "@/shared/config";
 import type { TFormField } from "@/shared/types";
 
-import type { FLIGHT_PRODUCT_EDIT_SCHEMA } from "../../schema/flight-product-edit.schema";
-import type { FLIGHT_PRODUCT_PRICING_SCHEMA } from "../../schema/flight-product-pricing.schema";
+import type { FLIGHT_PRODUCT_PRICING_SCHEMA } from "../../schema/flight/pricing.schema";
+import type { FLIGHT_PRODUCT_EDIT_SCHEMA } from "../../schema/flight/product-edit.schema";
 import type {
 	FLIGHT_HOP_SCHEMA,
 	FLIGHT_PRODUCT_GENERAL_SCHEMA
-} from "../../schema/flight-product.schema";
+} from "../../schema/flight/product.schema";
 
 export const ENUM_FORM_FLIGHT_PRODUCT = {
 	NAME: "name",

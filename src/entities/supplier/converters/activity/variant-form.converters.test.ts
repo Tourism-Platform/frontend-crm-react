@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
-import { ACTIVITY_VARIANT_FORM_SCHEMA } from "../../schema/activity-variant.schema";
+import { ACTIVITY_VARIANT_FORM_SCHEMA } from "../../schema/activity/variant.schema";
 import { ENUM_SUPPLIER_VARIANT_CHARGE } from "../../types";
 
 import {

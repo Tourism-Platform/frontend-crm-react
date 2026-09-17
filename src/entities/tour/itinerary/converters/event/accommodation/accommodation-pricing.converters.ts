@@ -39,9 +39,12 @@ import {
 	type THousingSpecInputBackend,
 	type TRoomsSchema
 } from "../../../types";
-import { getPoolMember } from "../event-pool.helpers";
-import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
-import { zeroFixedCharge } from "../zero-fixed-charge.helpers";
+import { getPoolMember } from "../common/event-pool.helpers";
+import {
+	mapFeesFromBackend,
+	mapFeesToBackend
+} from "../common/fees.converters";
+import { zeroFixedCharge } from "../common/zero-fixed-charge.helpers";
 
 import { isClassPricedHousingSpec } from "./accommodation-rooms.converters";
 import { isInheritedHousingDetails } from "./housing-details.helpers";

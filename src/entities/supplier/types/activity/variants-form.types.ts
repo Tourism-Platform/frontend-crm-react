@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { ACTIVITY_VARIANTS_SCHEMA } from "../../schema/activity-variants.schema";
+import type { ACTIVITY_VARIANTS_SCHEMA } from "../../schema/activity/variants.schema";
 
 export const ENUM_FORM_ACTIVITY_VARIANTS = {
 	VARIANTS_LIST: "variants",

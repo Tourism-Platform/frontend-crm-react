@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import type { ACTIVITY_PRODUCT_EDIT_SCHEMA } from "../../schema/activity-product-edit.schema";
-import type { ACTIVITY_PRODUCT_GENERAL_SCHEMA } from "../../schema/activity-product.schema";
+import type { ACTIVITY_PRODUCT_EDIT_SCHEMA } from "../../schema/activity/product-edit.schema";
+import type { ACTIVITY_PRODUCT_GENERAL_SCHEMA } from "../../schema/activity/product.schema";
 
 export const ENUM_FORM_ACTIVITY_PRODUCT = {
 	NAME: "name",

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
-import { TRAIN_VARIANT_FORM_SCHEMA } from "../../schema/train-variant.schema";
+import { TRAIN_VARIANT_FORM_SCHEMA } from "../../schema/train/variant.schema";
 import { ENUM_TRAIN_VARIANT_CHARGE } from "../../types";
 
 import {

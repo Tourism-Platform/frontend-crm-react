@@ -1,5 +1,8 @@
 import type { TTransferEventDetailsBackend } from "../../../types";
-import { getPoolMember, isProductPoolMember } from "../event-pool.helpers";
+import {
+	getPoolMember,
+	isProductPoolMember
+} from "../common/event-pool.helpers";
 
 export const isInheritedTransferDetails = (
 	details: TTransferEventDetailsBackend | null | undefined,

@@ -17,8 +17,11 @@ import {
 	type TCommissionMarkupBackend,
 	type TCommissionMarkupInputBackend
 } from "../../../types";
-import { getPoolMember } from "../event-pool.helpers";
-import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
+import { getPoolMember } from "../common/event-pool.helpers";
+import {
+	mapFeesFromBackend,
+	mapFeesToBackend
+} from "../common/fees.converters";
 
 /** Write-side venue offering charge (contract 3.1 `spec.offerings[].charge`). */
 export type TActivityOfferingChargeInput =

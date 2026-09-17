@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
-import { HOTEL_VARIANT_FORM_SCHEMA } from "../../schema/hotel-variant.schema";
+import { HOTEL_VARIANT_FORM_SCHEMA } from "../../schema/hotel/variant.schema";
 import {
 	ENUM_HOTEL_ROOM_CHARGE,
 	ENUM_HOTEL_ROOM_TYPE,

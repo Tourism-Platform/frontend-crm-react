@@ -17,8 +17,11 @@ import {
 	type TFlightPricingSchema,
 	type TTransportDetailsWithPricingBackend
 } from "../../../types";
-import { getPoolMember } from "../event-pool.helpers";
-import { mapFeesFromBackend, mapFeesToBackend } from "../fees.converters";
+import { getPoolMember } from "../common/event-pool.helpers";
+import {
+	mapFeesFromBackend,
+	mapFeesToBackend
+} from "../common/fees.converters";
 
 /** Write-side whole-route/fleet charge (contract 3.1 `spec.charge`). */
 export type TWholeRouteChargeInput = FixedChargeInput | PerPersonChargeInput;

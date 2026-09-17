@@ -1,11 +1,11 @@
 import { z } from "zod";
 
-import type { TRAIN_PRODUCT_EDIT_SCHEMA } from "../../schema/train-product-edit.schema";
-import type { TRAIN_PRODUCT_PRICING_SCHEMA } from "../../schema/train-product-pricing.schema";
+import type { TRAIN_PRODUCT_PRICING_SCHEMA } from "../../schema/train/pricing.schema";
+import type { TRAIN_PRODUCT_EDIT_SCHEMA } from "../../schema/train/product-edit.schema";
 import type {
 	TRAIN_HOP_SCHEMA,
 	TRAIN_PRODUCT_GENERAL_SCHEMA
-} from "../../schema/train-product.schema";
+} from "../../schema/train/product.schema";
 
 export const ENUM_FORM_TRAIN_PRODUCT = {
 	NAME: "name",

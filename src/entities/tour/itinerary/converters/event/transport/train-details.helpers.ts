@@ -1,6 +1,9 @@
 import type { TrainDetailsOutput } from "@/shared/api";
 
-import { getPoolMember, isProductPoolMember } from "../event-pool.helpers";
+import {
+	getPoolMember,
+	isProductPoolMember
+} from "../common/event-pool.helpers";
 
 export const isInheritedTrainDetails = (
 	details: TrainDetailsOutput | null | undefined,

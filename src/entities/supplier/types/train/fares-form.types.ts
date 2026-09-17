@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { TRAIN_FARES_SCHEMA } from "../../schema/train-fares.schema";
+import type { TRAIN_FARES_SCHEMA } from "../../schema/train/fares.schema";
 
 export const ENUM_FORM_TRAIN_FARES = {
 	FARES_LIST: "fares",

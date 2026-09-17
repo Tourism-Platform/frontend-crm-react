@@ -1,7 +1,8 @@
 import type { TransferDetailsOutput } from "@/shared/api";
 
 import type { TCarsSchema } from "../../../types";
-import { vehicleBodyTypeConverter } from "../vehicle-body-type.converters";
+
+import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
 /** Read-side transfer spec (`pool[].spec`, contract 6). */
 type TTransferSpecOutput = TransferDetailsOutput["pool"][number]["spec"];

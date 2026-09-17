@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { BUS_VEHICLES_SCHEMA } from "../../schema/bus-vehicles.schema";
+import type { BUS_VEHICLES_SCHEMA } from "../../schema/bus/vehicles.schema";
 
 export const ENUM_FORM_BUS_VEHICLES = {
 	VEHICLES_LIST: "vehicles",

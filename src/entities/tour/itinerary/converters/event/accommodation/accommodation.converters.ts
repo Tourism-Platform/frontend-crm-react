@@ -22,17 +22,17 @@ import {
 import {
 	mapEventDetailsReadToWrite,
 	replaceSelectedPoolMemberSupply
-} from "../details-read-to-write.converters";
-import { getPoolMember } from "../event-pool.helpers";
+} from "../common/details-read-to-write.converters";
+import { getPoolMember } from "../common/event-pool.helpers";
 import {
 	mapInheritedHousingProductSnapshotToForm,
 	mapInheritedProductLinkToForm
-} from "../inherited-housing-form.helpers";
+} from "../common/inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
-} from "../package-id.helpers";
-import { toTimezoneOffset } from "../timezone.helpers";
+} from "../common/package-id.helpers";
+import { toTimezoneOffset } from "../common/timezone.helpers";
 
 import { accommodationAmenityConverter } from "./accommodation-amenity.converters";
 import {

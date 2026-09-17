@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import type { HOTEL_PRODUCT_EDIT_SCHEMA } from "../../schema/hotel-product-edit.schema";
-import type { HOTEL_PRODUCT_PRICING_SCHEMA } from "../../schema/hotel-product-pricing.schema";
-import type { HOTEL_PRODUCT_GENERAL_SCHEMA } from "../../schema/hotel-product.schema";
+import type { HOTEL_PRODUCT_PRICING_SCHEMA } from "../../schema/hotel/pricing.schema";
+import type { HOTEL_PRODUCT_EDIT_SCHEMA } from "../../schema/hotel/product-edit.schema";
+import type { HOTEL_PRODUCT_GENERAL_SCHEMA } from "../../schema/hotel/product.schema";
 
 export const ENUM_FORM_HOTEL_PRODUCT = {
 	NAME: "name",

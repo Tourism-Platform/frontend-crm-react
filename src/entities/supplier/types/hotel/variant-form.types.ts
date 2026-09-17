@@ -5,7 +5,7 @@ import type {
 	HOTEL_VARIANT_FORM_SCHEMA,
 	HOTEL_VARIANT_ROOM_SCHEMA,
 	HOTEL_VARIANT_ROOM_SEASON_SCHEMA
-} from "../../schema/hotel-variant.schema";
+} from "../../schema/hotel/variant.schema";
 
 export const ENUM_FORM_HOTEL_VARIANT = {
 	NAME: "name",

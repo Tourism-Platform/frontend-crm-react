@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
-import { FLIGHT_VARIANT_FORM_SCHEMA } from "../../schema/flight-variant.schema";
+import { FLIGHT_VARIANT_FORM_SCHEMA } from "../../schema/flight/variant.schema";
 import { ENUM_FLIGHT_VARIANT_CHARGE } from "../../types";
 
 import {

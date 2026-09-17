@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import type { BUS_PRODUCT_EDIT_SCHEMA } from "../../schema/bus-product-edit.schema";
-import type { BUS_PRODUCT_PRICING_SCHEMA } from "../../schema/bus-product-pricing.schema";
-import type { BUS_PRODUCT_GENERAL_SCHEMA } from "../../schema/bus-product.schema";
+import type { BUS_PRODUCT_PRICING_SCHEMA } from "../../schema/bus/pricing.schema";
+import type { BUS_PRODUCT_EDIT_SCHEMA } from "../../schema/bus/product-edit.schema";
+import type { BUS_PRODUCT_GENERAL_SCHEMA } from "../../schema/bus/product.schema";
 
 export const ENUM_FORM_BUS_PRODUCT = {
 	NAME: "name"

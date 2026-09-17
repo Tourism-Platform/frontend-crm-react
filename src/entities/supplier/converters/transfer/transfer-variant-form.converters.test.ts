@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
-import { TRANSFER_VARIANT_FORM_SCHEMA } from "../../schema/transfer-variant.schema";
+import { TRANSFER_VARIANT_FORM_SCHEMA } from "../../schema/transfer/variant.schema";
 import {
 	ENUM_SUPPLIER_SURCHARGE,
 	ENUM_SUPPLIER_VARIANT_CHARGE,

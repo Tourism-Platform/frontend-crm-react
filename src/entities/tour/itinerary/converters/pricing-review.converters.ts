@@ -25,7 +25,7 @@ import {
 	getMainPoolMember,
 	getPoolMember,
 	mapEventPoolToSummary
-} from "./event/event-pool.helpers";
+} from "./event/common/event-pool.helpers";
 import { attachBreakdownToReviewItem } from "./pricing-breakdown.converters";
 
 /**

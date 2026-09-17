@@ -335,32 +335,32 @@ const LibrarySupplierIdPage = React.lazy(() =>
 );
 const LibraryHotelProductEditPage = React.lazy(() =>
 	import(
-		"@/pages/library/suppliers/hotel-product-edit-page/ui/library-hotel-product-edit-page"
+		"@/pages/library/suppliers/products/hotel-product-edit-page/ui/library-hotel-product-edit-page"
 	).then((m) => ({ default: m.LibraryHotelProductEditPage }))
 );
 const LibraryTrainProductEditPage = React.lazy(() =>
 	import(
-		"@/pages/library/suppliers/train-product-edit-page/ui/library-train-product-edit-page"
+		"@/pages/library/suppliers/products/train-product-edit-page/ui/library-train-product-edit-page"
 	).then((m) => ({ default: m.LibraryTrainProductEditPage }))
 );
 const LibraryFlightProductEditPage = React.lazy(() =>
 	import(
-		"@/pages/library/suppliers/flight-product-edit-page/ui/library-flight-product-edit-page"
+		"@/pages/library/suppliers/products/flight-product-edit-page/ui/library-flight-product-edit-page"
 	).then((m) => ({ default: m.LibraryFlightProductEditPage }))
 );
 const LibraryBusProductEditPage = React.lazy(() =>
 	import(
-		"@/pages/library/suppliers/bus-product-edit-page/ui/library-bus-product-edit-page"
+		"@/pages/library/suppliers/products/bus-product-edit-page/ui/library-bus-product-edit-page"
 	).then((m) => ({ default: m.LibraryBusProductEditPage }))
 );
 const LibraryTransferProductEditPage = React.lazy(() =>
 	import(
-		"@/pages/library/suppliers/transfer-product-edit-page/ui/library-transfer-product-edit-page"
+		"@/pages/library/suppliers/products/transfer-product-edit-page/ui/library-transfer-product-edit-page"
 	).then((m) => ({ default: m.LibraryTransferProductEditPage }))
 );
 const LibraryActivityProductEditPage = React.lazy(() =>
 	import(
-		"@/pages/library/suppliers/activity-product-edit-page/ui/library-activity-product-edit-page"
+		"@/pages/library/suppliers/products/activity-product-edit-page/ui/library-activity-product-edit-page"
 	).then((m) => ({ default: m.LibraryActivityProductEditPage }))
 );
 

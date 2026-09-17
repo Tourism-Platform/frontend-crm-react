@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { HOTEL_ROOMS_SCHEMA } from "../../schema/hotel-rooms.schema";
+import type { HOTEL_ROOMS_SCHEMA } from "../../schema/hotel/rooms.schema";
 
 export const ENUM_FORM_HOTEL_PRODUCT_ROOMS = {
 	ROOMS_LIST: "rooms",

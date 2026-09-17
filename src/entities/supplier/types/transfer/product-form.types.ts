@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import type { TRANSFER_PRODUCT_EDIT_SCHEMA } from "../../schema/transfer-product-edit.schema";
-import type { TRANSFER_PRODUCT_PRICING_SCHEMA } from "../../schema/transfer-product-pricing.schema";
-import type { TRANSFER_PRODUCT_GENERAL_SCHEMA } from "../../schema/transfer-product.schema";
+import type { TRANSFER_PRODUCT_PRICING_SCHEMA } from "../../schema/transfer/pricing.schema";
+import type { TRANSFER_PRODUCT_EDIT_SCHEMA } from "../../schema/transfer/product-edit.schema";
+import type { TRANSFER_PRODUCT_GENERAL_SCHEMA } from "../../schema/transfer/product.schema";
 
 export const ENUM_FORM_TRANSFER_PRODUCT = {
 	NAME: "name"

@@ -3,7 +3,7 @@ import { z } from "zod";
 import type {
 	TRAIN_VARIANT_CREATE_SCHEMA,
 	TRAIN_VARIANT_FORM_SCHEMA
-} from "../../schema/train-variant.schema";
+} from "../../schema/train/variant.schema";
 
 export const ENUM_FORM_TRAIN_VARIANT = {
 	NAME: "name",

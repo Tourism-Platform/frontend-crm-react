@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
-import { BUS_VARIANT_FORM_SCHEMA } from "../../schema/bus-variant.schema";
+import { BUS_VARIANT_FORM_SCHEMA } from "../../schema/bus/variant.schema";
 import { ENUM_VEHICLE_BODY_TYPE } from "../../types";
 
 import {

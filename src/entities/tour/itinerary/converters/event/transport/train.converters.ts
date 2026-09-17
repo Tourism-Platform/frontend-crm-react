@@ -23,14 +23,14 @@ import {
 	ENUM_FORM_TRAIN,
 	ENUM_HOUSING_SOURCE
 } from "../../../types";
-import { mapInlinePoolWrite } from "../details-read-to-write.converters";
-import { getPoolMember } from "../event-pool.helpers";
-import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
+import { mapInlinePoolWrite } from "../common/details-read-to-write.converters";
+import { getPoolMember } from "../common/event-pool.helpers";
+import { mapInheritedProductLinkToForm } from "../common/inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
-} from "../package-id.helpers";
-import { toTimezoneOffset } from "../timezone.helpers";
+} from "../common/package-id.helpers";
+import { toTimezoneOffset } from "../common/timezone.helpers";
 
 import {
 	mapFlightPricingFromBackend,

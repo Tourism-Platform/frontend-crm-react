@@ -20,6 +20,7 @@ import {
 	mapEventUpdateToBackend
 } from "@/entities/tour/itinerary";
 import {
+	getMainPoolMember,
 	mapAccommodationEventToForm,
 	mapActivityEventToForm,
 	mapFlyEventToForm,
@@ -28,7 +29,6 @@ import {
 	mapSupplementaryEventToForm,
 	mapTransferEventToForm
 } from "@/entities/tour/itinerary/converters/event";
-import { getMainPoolMember } from "@/entities/tour/itinerary/converters/event/event-pool.helpers";
 
 import type {
 	IEventLibraryFilters,

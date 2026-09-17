@@ -24,15 +24,15 @@ import {
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../../types";
-import { mapInlinePoolWrite } from "../details-read-to-write.converters";
-import { getPoolMember } from "../event-pool.helpers";
-import { mapInheritedProductLinkToForm } from "../inherited-housing-form.helpers";
+import { mapInlinePoolWrite } from "../common/details-read-to-write.converters";
+import { getPoolMember } from "../common/event-pool.helpers";
+import { mapInheritedProductLinkToForm } from "../common/inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
-} from "../package-id.helpers";
-import { toTimezoneOffset } from "../timezone.helpers";
-import { zeroFixedCharge } from "../zero-fixed-charge.helpers";
+} from "../common/package-id.helpers";
+import { toTimezoneOffset } from "../common/timezone.helpers";
+import { zeroFixedCharge } from "../common/zero-fixed-charge.helpers";
 
 import { isInheritedActivityDetails } from "./activity-details.helpers";
 import {

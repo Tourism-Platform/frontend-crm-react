@@ -3,7 +3,7 @@ import { z } from "zod";
 import type {
 	ACTIVITY_VARIANT_CREATE_SCHEMA,
 	ACTIVITY_VARIANT_FORM_SCHEMA
-} from "../../schema/activity-variant.schema";
+} from "../../schema/activity/variant.schema";
 
 export const ENUM_FORM_ACTIVITY_VARIANT = {
 	NAME: "name",

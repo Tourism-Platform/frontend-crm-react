@@ -1,6 +1,9 @@
 import type { HousingDetailsOutput } from "@/shared/api";
 
-import { getPoolMember, isProductPoolMember } from "../event-pool.helpers";
+import {
+	getPoolMember,
+	isProductPoolMember
+} from "../common/event-pool.helpers";
 
 /**
  * Contract 6: a stay is product-linked when the selected (or first) pool

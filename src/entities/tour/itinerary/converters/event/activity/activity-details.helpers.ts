@@ -1,5 +1,8 @@
 import type { TActivityEventDetailsBackend } from "../../../types";
-import { getPoolMember, isProductPoolMember } from "../event-pool.helpers";
+import {
+	getPoolMember,
+	isProductPoolMember
+} from "../common/event-pool.helpers";
 
 export const isInheritedActivityDetails = (
 	details: TActivityEventDetailsBackend | null | undefined,
