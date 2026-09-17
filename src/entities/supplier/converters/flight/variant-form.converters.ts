@@ -1,17 +1,17 @@
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
 import {
+	ENUM_FLIGHT_VARIANT_CHARGE,
 	ENUM_FORM_FLIGHT_VARIANT,
-	ENUM_SUPPLIER_VARIANT_CHARGE,
 	type IFlightVariant,
 	type IFlightVariantWrite,
 	type TFlightChargeFormFields,
-	type TFlightVariantFormSchema,
-	type TSupplierVariantCharge
+	type TFlightVariantCharge,
+	type TFlightVariantFormSchema
 } from "../../types";
 
 export const emptyFlightChargeForm = (): TFlightChargeFormFields => ({
-	[ENUM_FORM_FLIGHT_VARIANT.CHARGE_TYP]: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+	[ENUM_FORM_FLIGHT_VARIANT.CHARGE_TYP]: ENUM_FLIGHT_VARIANT_CHARGE.FIXED,
 	[ENUM_FORM_FLIGHT_VARIANT.COST]: null,
 	[ENUM_FORM_FLIGHT_VARIANT.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_FORM_FLIGHT_VARIANT.FEES]: []
@@ -23,12 +23,12 @@ export const emptyFlightVariantForm = (): TFlightVariantFormSchema => ({
 });
 
 export const mapFlightExpensesToChargeForm = (
-	expenses?: TSupplierVariantCharge | null
+	expenses?: TFlightVariantCharge | null
 ): TFlightChargeFormFields => {
 	if (!expenses) return emptyFlightChargeForm();
 
 	const money =
-		expenses.typ === ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON
+		expenses.typ === ENUM_FLIGHT_VARIANT_CHARGE.PER_PERSON
 			? expenses.costPerPerson
 			: expenses.cost;
 
@@ -43,7 +43,7 @@ export const mapFlightExpensesToChargeForm = (
 
 export const mapFlightChargeFormToExpenses = (
 	values: TFlightChargeFormFields
-): TSupplierVariantCharge => {
+): TFlightVariantCharge => {
 	const money = {
 		val: values[ENUM_FORM_FLIGHT_VARIANT.COST] ?? 0,
 		currency:
@@ -55,10 +55,10 @@ export const mapFlightChargeFormToExpenses = (
 
 	if (
 		values[ENUM_FORM_FLIGHT_VARIANT.CHARGE_TYP] ===
-		ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON
+		ENUM_FLIGHT_VARIANT_CHARGE.PER_PERSON
 	) {
 		return {
-			typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
+			typ: ENUM_FLIGHT_VARIANT_CHARGE.PER_PERSON,
 			costPerPerson: money,
 			fees,
 			markup: null
@@ -66,7 +66,7 @@ export const mapFlightChargeFormToExpenses = (
 	}
 
 	return {
-		typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+		typ: ENUM_FLIGHT_VARIANT_CHARGE.FIXED,
 		cost: money,
 		fees,
 		markup: null

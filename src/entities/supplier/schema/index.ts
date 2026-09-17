@@ -12,6 +12,8 @@ export * from "./train-product-edit.schema";
 export * from "./train-variant.schema";
 export * from "./flight-product.schema";
 export * from "./flight-product-pricing.schema";
+export * from "./flight-fares.schema";
+export * from "./flight-product-edit.schema";
 export * from "./flight-variant.schema";
 export * from "./bus-product.schema";
 export * from "./bus-product-pricing.schema";

@@ -6,14 +6,16 @@ import {
 	ENUM_FORM_FLIGHT_HOP as ENUM_HOP
 } from "@/entities/supplier";
 
-import type { TForm, THopForm } from "../types";
+import type { TForm } from "../types";
 
-export const FLIGHT_PRODUCT_NAME_FIELD: TForm = {
-	key: ENUM_FORM.NAME,
-	fieldType: "input",
-	label: "form.general.fields.name.label",
-	placeholder: "form.general.fields.name.placeholder"
-};
+export const FLIGHT_PRODUCT_NAME_FIELD: TForm[] = [
+	{
+		key: ENUM_FORM.NAME,
+		fieldType: "input",
+		label: "form.general.fields.name.label",
+		placeholder: "form.general.fields.name.placeholder"
+	}
+];
 
 type THopGeoProps = {
 	departure: TGeoFieldProps;
@@ -23,7 +25,7 @@ type THopGeoProps = {
 export const FLIGHT_HOP_FIELDS_LIST = ({
 	departure,
 	arrival
-}: THopGeoProps): THopForm[] => [
+}: THopGeoProps): TForm[] => [
 	{
 		key: ENUM_HOP.AIRLINE_CODE,
 		fieldType: "input",

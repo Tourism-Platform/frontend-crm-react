@@ -7,6 +7,8 @@ import type {
 	FlightProductUpdate,
 	PerFareFlightVariantWrite,
 	PricedFareOutput,
+	ToPerFare,
+	ToWholeRoute,
 	WholeFlightVariantWrite
 } from "@/shared/api/generated/Api";
 
@@ -28,3 +30,4 @@ export type TFlightVariantWriteBackend =
 export type TFlightVariantReadBackend = PricedFareOutput | Fare;
 export type TFlightLegInputBackend = FlightLegInput;
 export type TFlightLegReadBackend = FlightLegOutput;
+export type TFlightPricingSwitchBackend = ToPerFare | ToWholeRoute;

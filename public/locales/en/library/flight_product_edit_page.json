@@ -2,13 +2,14 @@
 	"page_name": "Flight product",
 	"back": "Back to supplier",
 	"tabs": {
-		"general": "General",
+		"general": "General info",
+		"fares": "Fares",
 		"media": "Media",
-		"variants": "Variants"
+		"pricing": "Pricing & booking"
 	},
 	"form": {
 		"create_hint": {
-			"save_general_first": "Create the flight on the General tab first"
+			"save_general_first": "Create the flight on the General info tab first"
 		},
 		"general": {
 			"fields": {
@@ -20,7 +21,6 @@
 					}
 				},
 				"hops": {
-					"add": "Add flight",
 					"errors": {
 						"min_segments": "At least one route segment is required"
 					},
@@ -98,75 +98,134 @@
 					}
 				}
 			},
+			"flights": {
+				"buttons": {
+					"add": "Add segment"
+				}
+			},
 			"buttons": {
 				"create": "Create",
 				"save": "Save",
 				"saving": "Saving"
 			}
 		},
+		"fares": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving"
+			},
+			"details": {
+				"title": "Fare details",
+				"fare_item": "Fare {{index}}",
+				"form": {
+					"fields": {
+						"name": {
+							"label": "Fare name",
+							"placeholder": "Economy",
+							"errors": {
+								"required": "Fare name is required"
+							}
+						}
+					}
+				}
+			}
+		},
+		"pricing": {
+			"buttons": {
+				"save": "Save",
+				"saving": "Saving"
+			},
+			"title": "Pricing",
+			"whole_warning": "Per-fare prices will be cleared",
+			"pricing_type": {
+				"title": "How is this flight priced?",
+				"tabs": {
+					"flat_rate": "Flat rate",
+					"per_fare": "Per fare",
+					"per_person": "Per person"
+				}
+			},
+			"form": {
+				"pricing_details": {
+					"title": "Pricing details",
+					"fields": {
+						"total_price": {
+							"label": "Total cost",
+							"placeholder": "Enter...",
+							"errors": {
+								"min": "Price must be at least 0",
+								"max": "Price must not exceed 100000"
+							}
+						},
+						"total_price_per_person": {
+							"label": "Total cost per person",
+							"placeholder": "Enter..."
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose",
+							"errors": {
+								"required": "Currency is required",
+								"max": "Currency code is too long"
+							}
+						}
+					}
+				},
+				"per_fare": {
+					"empty_fares": "Add fares on the Fares tab to configure per-fare pricing.",
+					"checkboxes": {
+						"add_margin_separately": "Add margin to this component separately"
+					},
+					"fields": {
+						"charge_typ": {
+							"label": "Charge mode",
+							"placeholder": "Select charge mode"
+						},
+						"total_cost": {
+							"label": "Total cost",
+							"placeholder": "Enter..."
+						},
+						"markup": {
+							"value": {
+								"label": "Unique margin",
+								"placeholder": "Enter...",
+								"errors": {
+									"required": "Margin is required"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"variants": {
-			"title": "Variants",
-			"add": "Add variant",
+			"add": "Add fare",
 			"fields": {
 				"name": {
-					"label": "Variant name",
+					"label": "Fare name",
 					"placeholder": "Economy",
 					"errors": {
-						"required": "Variant name is required"
-					}
-				},
-				"pricing": {
-					"label": "Pricing",
-					"placeholder": "Select pricing",
-					"per_fare": "Per fare",
-					"whole": "Whole route",
-					"errors": {
-						"required": "Select pricing"
-					}
-				},
-				"charge_typ": {
-					"label": "Charge mode",
-					"placeholder": "Select charge mode",
-					"errors": {
-						"required": "Select a charge type"
-					}
-				},
-				"cost": {
-					"label": "Price",
-					"placeholder": "Enter price",
-					"errors": {
-						"required": "Cost is required"
-					}
-				},
-				"currency": {
-					"label": "Currency",
-					"placeholder": "Select currency",
-					"errors": {
-						"required": "Select a currency"
+						"required": "Fare name is required"
 					}
 				}
 			},
 			"buttons": {
-				"save": "Save variant",
-				"saving": "Saving",
-				"save_pricing": "Save",
-				"saving_pricing": "Saving",
-				"delete": "Delete variant",
+				"delete": "Delete fare",
 				"deleting": "Deleting"
 			},
 			"create_dialog": {
-				"title": "Add variant",
+				"title": "Add fare",
 				"cancel": "Cancel",
 				"confirm": "Create",
 				"confirming": "Creating",
 				"toasts": {
-					"success": "Variant created",
-					"error": "Failed to create variant"
+					"success": "Fare created",
+					"error": "Failed to create fare"
 				}
 			},
 			"delete_dialog": {
-				"title": "Delete variant",
-				"warning": "Delete variant “{{name}}”? This cannot be undone.",
+				"title": "Delete fare",
+				"warning": "Delete fare “{{name}}”? This cannot be undone.",
 				"cancel": "Cancel",
 				"confirm": "Delete",
 				"confirming": "Deleting"

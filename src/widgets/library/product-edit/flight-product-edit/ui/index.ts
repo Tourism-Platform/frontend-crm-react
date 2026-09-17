@@ -1,3 +1,2 @@
-export { FlightProductGeneral } from "./general";
-export { FlightProductVariants } from "./variants";
+export { FlightProductEdit } from "./flight-product-edit";
 export { FlightProductImages } from "./images";

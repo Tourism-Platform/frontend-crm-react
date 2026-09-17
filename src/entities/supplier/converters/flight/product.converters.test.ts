@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { ENUM_FLIGHT_PRICING, ENUM_SUPPLIER_VARIANT_CHARGE } from "../../types";
+import { ENUM_FLIGHT_PRICING, ENUM_FLIGHT_VARIANT_CHARGE } from "../../types";
 
 import {
 	mapFlightProductToCreate,
@@ -55,7 +55,7 @@ describe("mapFlightVariantToWrite", () => {
 				{
 					name: "Economy",
 					expenses: {
-						typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
+						typ: ENUM_FLIGHT_VARIANT_CHARGE.PER_PERSON,
 						costPerPerson: { val: 120, currency: "USD" },
 						fees: null,
 						markup: null
@@ -82,7 +82,7 @@ describe("mapFlightVariantToWrite", () => {
 				{
 					name: "Economy",
 					expenses: {
-						typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+						typ: ENUM_FLIGHT_VARIANT_CHARGE.FIXED,
 						cost: { val: 120, currency: "USD" },
 						fees: null,
 						markup: null

@@ -13,9 +13,10 @@ import {
 	mapBusProductFromBackend,
 	mapBusProductGeneralToCreate,
 	mapBusProductToUpdate,
+	mapFlightEditFormToPricingSwitch,
 	mapFlightProductFromBackend,
 	mapFlightProductGeneralToCreate,
-	mapFlightProductToUpdate,
+	mapFlightProductGeneralToUpdate,
 	mapHotelEditFormToPricingSwitch,
 	mapHotelProductFromBackend,
 	mapHotelProductGeneralToCreate,
@@ -59,6 +60,7 @@ import type {
 	ISupplierProductImage,
 	ISupplierVariantCreated,
 	ISwitchBusProductPricing,
+	ISwitchFlightProductPricing,
 	ISwitchHotelProductPricing,
 	ISwitchTrainProductPricing,
 	ISwitchTransferProductPricing,
@@ -210,12 +212,29 @@ export const supplierProductApi = authApi.injectEndpoints({
 			IFlightProduct,
 			IUpdateFlightProduct
 		>({
+			query: ({ supplierId, productId, values, language, existing }) => ({
+				...SUPPLIER_PRODUCT_PATHS.updateProduct(supplierId, productId),
+				body: mapFlightProductGeneralToUpdate(
+					values,
+					existing,
+					language
+				)
+			}),
+			transformResponse: (response: TFlightProductReadBackend) =>
+				mapFlightProductFromBackend(response),
+			invalidatesTags: (_result, _error, { productId }) =>
+				productInvalidateTags(productId)
+		}),
+		switchFlightProductPricing: builder.mutation<
+			IFlightProduct,
+			ISwitchFlightProductPricing
+		>({
 			query: (data) => ({
-				...SUPPLIER_PRODUCT_PATHS.updateProduct(
+				...SUPPLIER_PRODUCT_PATHS.switchProductPricing(
 					data.supplierId,
 					data.productId
 				),
-				body: mapFlightProductToUpdate(data)
+				body: mapFlightEditFormToPricingSwitch(data.values)
 			}),
 			transformResponse: (response: TFlightProductReadBackend) =>
 				mapFlightProductFromBackend(response),
@@ -544,6 +563,7 @@ export const {
 	useDeleteSupplierProductMutation,
 	useCreateFlightProductMutation,
 	useUpdateFlightProductMutation,
+	useSwitchFlightProductPricingMutation,
 	useCreateBusProductMutation,
 	useUpdateBusProductMutation,
 	useSwitchBusProductPricingMutation,

@@ -7,18 +7,12 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import { useFlightProductImages } from "../model";
+import { type TSlotProps, useFlightProductImages } from "../model";
 
-interface IFlightProductImagesProps {
-	supplierId: string;
-	productId: string;
-	disabled?: boolean;
-}
-
-const FlightProductImagesBase: FC<IFlightProductImagesProps> = ({
+const FlightProductImagesBase: FC<TSlotProps> = ({
 	supplierId,
 	productId,
-	disabled = false
+	disabled
 }) => {
 	const { t } = useTranslation("flight_product_edit_page");
 	const { productUpload } = useFlightProductImages({

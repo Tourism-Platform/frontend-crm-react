@@ -1,0 +1,181 @@
+import { type FC, Fragment } from "react";
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+
+import {
+	Checkbox,
+	CustomField,
+	CustomInputSelect,
+	CustomOptionTabs,
+	CustomOptionTabsContent,
+	CustomOptionTabsList,
+	CustomOptionTabsTrigger,
+	Label,
+	withErrorBoundary
+} from "@/shared/ui";
+
+import {
+	ENUM_FLIGHT_PRODUCT_PRICING_FIELD,
+	ENUM_FLIGHT_PRODUCT_PRICING_TYPE,
+	ENUM_FORM_FLIGHT_SECTION
+} from "@/entities/supplier";
+
+import { FeeLinesField } from "@/features/pricing";
+
+import {
+	PRICING_INDIVIDUAL_TABS_LIST,
+	PRICING_MARKUP_FIELD,
+	type TSlotProps,
+	createEmptyPricingMarkup
+} from "../../model";
+
+import { PerFareDetails } from "./per-fare-details";
+
+const InvoicingIndividualBase: FC<
+	Pick<TSlotProps, "form" | "onSubmit" | "isLoading">
+> = ({ form }) => {
+	const { t } = useTranslation("flight_product_edit_page");
+	const pricingType = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_FLIGHT_SECTION.PRICING}.${ENUM_FLIGHT_PRODUCT_PRICING_FIELD.PRICING_TYPE}`
+	});
+	const addMarginSeparately = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_FLIGHT_SECTION.PRICING}.${ENUM_FLIGHT_PRODUCT_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`
+	});
+
+	const handleAddMarginSeparatelyChange = (checked: boolean) => {
+		form.setValue(
+			`${ENUM_FORM_FLIGHT_SECTION.PRICING}.${ENUM_FLIGHT_PRODUCT_PRICING_FIELD.ADD_MARGIN_SEPARATELY}`,
+			checked
+		);
+		form.setValue(
+			`${ENUM_FORM_FLIGHT_SECTION.PRICING}.${ENUM_FLIGHT_PRODUCT_PRICING_FIELD.MARKUP}`,
+			checked ? createEmptyPricingMarkup() : null
+		);
+	};
+
+	return (
+		<div className="grid gap-5">
+			<div className="grid gap-1">
+				<h3 className="text-lg">
+					{t("form.pricing.pricing_type.title")}
+				</h3>
+				<CustomOptionTabs
+					value={
+						pricingType ??
+						ENUM_FLIGHT_PRODUCT_PRICING_TYPE.FLAT_RATE
+					}
+					onValueChange={(val) =>
+						form.setValue(
+							`${ENUM_FORM_FLIGHT_SECTION.PRICING}.${ENUM_FLIGHT_PRODUCT_PRICING_FIELD.PRICING_TYPE}`,
+							val as typeof ENUM_FLIGHT_PRODUCT_PRICING_TYPE.FLAT_RATE
+						)
+					}
+				>
+					<CustomOptionTabsList className="grid grid-cols-3 w-fit">
+						{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (
+							<CustomOptionTabsTrigger
+								key={tab.type}
+								value={tab.type}
+								variant={"outline"}
+							>
+								{t(tab.label)}
+							</CustomOptionTabsTrigger>
+						))}
+					</CustomOptionTabsList>
+					{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (
+						<CustomOptionTabsContent
+							key={tab.type}
+							value={tab.type}
+						>
+							{tab.priceDetailsList ? (
+								<div className="grid gap-4 mb-8">
+									<div className="flex flex-wrap items-center justify-between gap-4">
+										<h3 className="text-lg">
+											{t(
+												"form.pricing.form.pricing_details.title"
+											)}
+										</h3>
+										<div className="flex items-center gap-2">
+											<Checkbox
+												id={`add-margin-separately-${tab.type}`}
+												checked={Boolean(
+													addMarginSeparately
+												)}
+												onCheckedChange={(checked) =>
+													handleAddMarginSeparatelyChange(
+														Boolean(checked)
+													)
+												}
+											/>
+											<Label
+												htmlFor={`add-margin-separately-${tab.type}`}
+											>
+												{t(
+													"form.pricing.form.per_fare.checkboxes.add_margin_separately"
+												)}
+											</Label>
+										</div>
+									</div>
+									<div
+										className={
+											addMarginSeparately
+												? "grid max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)] gap-4"
+												: "grid max-w-xl grid-cols-2 gap-4"
+										}
+									>
+										{tab.priceDetailsList.map(
+											({ key, ...item }, fieldIndex) => (
+												<Fragment key={key}>
+													{addMarginSeparately &&
+													fieldIndex ===
+														tab.priceDetailsList!
+															.length -
+															1 ? (
+														<CustomInputSelect
+															control={
+																form.control
+															}
+															name={`${ENUM_FORM_FLIGHT_SECTION.PRICING}.${PRICING_MARKUP_FIELD.key}`}
+															label={
+																PRICING_MARKUP_FIELD.label
+															}
+															placeholder={
+																PRICING_MARKUP_FIELD.placeholder
+															}
+															selectOptions={[
+																...PRICING_MARKUP_FIELD.selectOptions
+															]}
+															t={t}
+														/>
+													) : null}
+													<CustomField
+														name={`${ENUM_FORM_FLIGHT_SECTION.PRICING}.${key}`}
+														control={form.control}
+														t={t}
+														{...item}
+													/>
+												</Fragment>
+											)
+										)}
+									</div>
+									<FeeLinesField
+										control={form.control}
+										name={`${ENUM_FORM_FLIGHT_SECTION.PRICING}.${ENUM_FLIGHT_PRODUCT_PRICING_FIELD.FEES}`}
+									/>
+								</div>
+							) : (
+								<div className="mb-8">
+									<PerFareDetails form={form} />
+								</div>
+							)}
+						</CustomOptionTabsContent>
+					))}
+				</CustomOptionTabs>
+			</div>
+		</div>
+	);
+};
+
+export const InvoicingIndividual = withErrorBoundary(InvoicingIndividualBase);

@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
 
 import { FLIGHT_VARIANT_FORM_SCHEMA } from "../../schema/flight-variant.schema";
-import { ENUM_SUPPLIER_VARIANT_CHARGE } from "../../types";
+import { ENUM_FLIGHT_VARIANT_CHARGE } from "../../types";
 
 import {
 	emptyFlightVariantForm,
@@ -21,7 +21,7 @@ describe("mapFlightVariantToForm", () => {
 			id: "v1",
 			name: "Economy",
 			expenses: {
-				typ: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
+				typ: ENUM_FLIGHT_VARIANT_CHARGE.PER_PERSON,
 				costPerPerson: { val: 40, currency: DEFAULT_EVENT_CURRENCY },
 				fees: null,
 				markup: null
@@ -30,7 +30,7 @@ describe("mapFlightVariantToForm", () => {
 
 		expect(form).toMatchObject({
 			name: "Economy",
-			chargeTyp: ENUM_SUPPLIER_VARIANT_CHARGE.PER_PERSON,
+			chargeTyp: ENUM_FLIGHT_VARIANT_CHARGE.PER_PERSON,
 			cost: 40,
 			currency: DEFAULT_EVENT_CURRENCY,
 			fees: []
@@ -49,7 +49,7 @@ describe("mapFlightVariantFormToWrite", () => {
 		expect(write).toEqual({
 			name: "Economy",
 			expenses: {
-				typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+				typ: ENUM_FLIGHT_VARIANT_CHARGE.FIXED,
 				cost: { val: 25, currency: DEFAULT_EVENT_CURRENCY },
 				fees: null,
 				markup: null
@@ -65,7 +65,7 @@ describe("mapFlightVariantFormToWrite", () => {
 		});
 
 		expect(write.expenses).toMatchObject({
-			typ: ENUM_SUPPLIER_VARIANT_CHARGE.FIXED,
+			typ: ENUM_FLIGHT_VARIANT_CHARGE.FIXED,
 			cost: { val: 0, currency: DEFAULT_EVENT_CURRENCY }
 		});
 	});

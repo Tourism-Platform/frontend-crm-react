@@ -1,18 +1,23 @@
-import type { IFlightProduct, IFlightVariant } from "@/entities/supplier";
+import type { IQueryTabSlotProps } from "@/shared/ui";
 
-export const ENUM_FLIGHT_PRODUCT_EDIT_TAB = {
-	GENERAL: "general",
-	MEDIA: "media",
-	VARIANTS: "variants"
-} as const;
-
-export type ENUM_FLIGHT_PRODUCT_EDIT_TAB_TYPE =
-	(typeof ENUM_FLIGHT_PRODUCT_EDIT_TAB)[keyof typeof ENUM_FLIGHT_PRODUCT_EDIT_TAB];
+import type {
+	IFlightProduct,
+	TFlightProductEditSchema
+} from "@/entities/supplier";
 
 export interface IFlightProductEditSlotContext {
 	supplierId: string;
 	productId: string;
 	isCreate: boolean;
 	product?: IFlightProduct | null;
-	variants: IFlightVariant[];
 }
+
+export type TSlotProps = Required<
+	Pick<
+		IQueryTabSlotProps<TFlightProductEditSchema>,
+		"form" | "onSubmit" | "isLoading"
+	>
+> &
+	IFlightProductEditSlotContext & {
+		disabled: boolean;
+	};

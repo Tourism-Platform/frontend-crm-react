@@ -11,8 +11,9 @@ import {
 } from "@/entities/geo";
 import {
 	ENUM_FORM_FLIGHT_PRODUCT as ENUM_FORM,
+	ENUM_FORM_FLIGHT_SECTION,
 	ENUM_FORM_FLIGHT_HOP as ENUM_HOP,
-	type TFlightProductGeneralSchema
+	type TFlightProductEditSchema
 } from "@/entities/supplier";
 
 import { FLIGHT_HOP_FIELDS_LIST } from "../model";
@@ -20,7 +21,7 @@ import { FLIGHT_HOP_FIELDS_LIST } from "../model";
 import { RowRemoveMenu } from "./row-remove-menu";
 
 interface IFlightHopRowProps {
-	form: UseFormReturn<TFlightProductGeneralSchema>;
+	form: UseFormReturn<TFlightProductEditSchema>;
 	index: number;
 	language: ENUM_LANGUAGES_TYPE;
 	onRemove: () => void;
@@ -35,20 +36,22 @@ export const FlightHopRow: FC<IFlightHopRowProps> = ({
 	const { t } = useTranslation("flight_product_edit_page");
 	const departureGeo = useGeoSearchFieldProps(language);
 	const arrivalGeo = useGeoSearchFieldProps(language);
+	const hopsPath =
+		`${ENUM_FORM_FLIGHT_SECTION.GENERAL}.${ENUM_FORM.HOPS}.${index}` as const;
 
 	useGeoFormFieldEnrichment({
 		form,
-		name: `${ENUM_FORM.HOPS}.${index}.${ENUM_HOP.DEPARTURE_LOCATION}` as const,
+		name: `${hopsPath}.${ENUM_HOP.DEPARTURE_LOCATION}` as const,
 		language
 	});
 	useGeoFormFieldEnrichment({
 		form,
-		name: `${ENUM_FORM.HOPS}.${index}.${ENUM_HOP.ARRIVAL_LOCATION}` as const,
+		name: `${hopsPath}.${ENUM_HOP.ARRIVAL_LOCATION}` as const,
 		language
 	});
 
 	return (
-		<Card className="relative">
+		<Card className="relative pb-2">
 			<CardContent>
 				<div className="absolute top-0 right-0">
 					<RowRemoveMenu onRemove={onRemove} />
@@ -61,7 +64,7 @@ export const FlightHopRow: FC<IFlightHopRowProps> = ({
 						<CustomField
 							key={key}
 							control={form.control}
-							name={`${ENUM_FORM.HOPS}.${index}.${key}`}
+							name={`${hopsPath}.${key}`}
 							t={t}
 							{...item}
 						/>

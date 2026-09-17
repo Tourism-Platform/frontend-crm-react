@@ -25,6 +25,7 @@ export {
 	useUpdateTrainProductMutation,
 	useUpdateTransferProductMutation,
 	useSwitchBusProductPricingMutation,
+	useSwitchFlightProductPricingMutation,
 	useSwitchHotelProductPricingMutation,
 	useSwitchTrainProductPricingMutation,
 	useSwitchTransferProductPricingMutation,

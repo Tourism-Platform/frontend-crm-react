@@ -6,25 +6,16 @@ import { toast } from "sonner";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
-	ENUM_SUPPLIER_TYPE,
-	type IFlightProduct,
 	LIBRARY_SUPPLIER_PRODUCT_CREATE_ID,
-	type TSupplierProduct,
 	useGetSupplierProductQuery
 } from "@/entities/supplier";
 
 import { FlightProductEdit } from "@/widgets/library";
 
-const isFlightProduct = (
-	product?: TSupplierProduct
-): product is IFlightProduct => product?.typ === ENUM_SUPPLIER_TYPE.FLIGHT;
+import { useLibraryFlightProductEdit } from "../model";
 
 export const LibraryFlightProductEditPage: FC = () => {
-	const { t } = useTranslation([
-		"flight_product_edit_page",
-		"common_events",
-		"options"
-	]);
+	const { t } = useTranslation("flight_product_edit_page");
 	const { supplierId = "", productId = "" } = useParams<{
 		supplierId: string;
 		productId: string;
@@ -44,10 +35,28 @@ export const LibraryFlightProductEditPage: FC = () => {
 		}
 	}, [isRealError, t]);
 
-	const flightProduct = isFlightProduct(product) ? product : null;
+	const {
+		form,
+		createSectionSubmit,
+		isLoading,
+		isExpectedType,
+		product: flightProduct
+	} = useLibraryFlightProductEdit({
+		supplierId,
+		productId,
+		isCreate,
+		product
+	});
+
+	if (!isCreate && product && !isExpectedType) {
+		return null;
+	}
 
 	return (
 		<FlightProductEdit
+			form={form}
+			createSectionSubmit={createSectionSubmit}
+			isLoading={isLoading}
 			supplierId={supplierId}
 			productId={productId}
 			isCreate={isCreate}

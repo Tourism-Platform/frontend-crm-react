@@ -1,0 +1,25 @@
+import type { TFlightProductEditPageKeys } from "@/shared/config";
+import type { TFormField } from "@/shared/types";
+
+import {
+	type ENUM_FLIGHT_PRODUCT_FARE_PRICE_ROW_FIELD_TYPE,
+	type ENUM_FLIGHT_PRODUCT_PRICING_FIELD_TYPE,
+	type ENUM_FORM_FLIGHT_FARES_TYPE,
+	type ENUM_FORM_FLIGHT_HOP_TYPE,
+	type ENUM_FORM_FLIGHT_PRODUCT_TYPE,
+	ENUM_FORM_FLIGHT_SECTION as ENUM_FORM_SECTION
+} from "@/entities/supplier";
+
+export { ENUM_FORM_SECTION };
+
+export type ENUM_FORM_SECTION_TYPE =
+	(typeof ENUM_FORM_SECTION)[keyof typeof ENUM_FORM_SECTION];
+
+export type TForm = TFormField<
+	TFlightProductEditPageKeys,
+	| ENUM_FORM_FLIGHT_PRODUCT_TYPE
+	| ENUM_FORM_FLIGHT_HOP_TYPE
+	| ENUM_FORM_FLIGHT_FARES_TYPE
+	| ENUM_FLIGHT_PRODUCT_PRICING_FIELD_TYPE
+	| ENUM_FLIGHT_PRODUCT_FARE_PRICE_ROW_FIELD_TYPE
+>;
