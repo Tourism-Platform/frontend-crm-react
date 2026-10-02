@@ -9754,6 +9754,24 @@ export interface PercentageMarkup {
 	percentage: number;
 }
 
+/**
+ * PercentageSurcharge
+ * A supplier's share of one unit of a cost billed on top of it — half a
+ * night for an early arrival, the whole of one for an arrival before dawn. A
+ * markup stays under the whole; a surcharge may reach it.
+ */
+export interface PercentageSurcharge {
+	/** Typ */
+	typ: "percentage";
+	/**
+	 * Percentage
+	 * e.g., 0.5 for half a night, 1.0 for a whole
+	 * @exclusiveMin 0
+	 * @max 1
+	 */
+	percentage: number;
+}
+
 /** PermissionCatalog */
 export interface PermissionCatalog {
 	/** Permissions */
@@ -12091,8 +12109,10 @@ export interface SupplierPaymentUpdate {
 /**
  * SupplierPolicyBand
  * Half-open window (``from_time`` inclusive, ``to_time`` exclusive, unset =
- * open) and the surcharge for landing in it. Bands match first-hit; the
- * surcharge inflates base cost before operator markup.
+ * open) and the surcharge for landing in it. Bands match first-hit. A
+ * percentage is a share of one room night — the first for an early arrival,
+ * the last for a late departure — up to the whole of it; the surcharge
+ * inflates base cost before operator markup.
  */
 export interface SupplierPolicyBandInput {
 	/** From Time */
@@ -12101,7 +12121,7 @@ export interface SupplierPolicyBandInput {
 	to_time?: string | null;
 	/**
 	 * Surcharge
-	 * The markup calculation strategy.
+	 * The surcharge calculation strategy.
 	 */
 	surcharge?:
 		| (
@@ -12110,7 +12130,7 @@ export interface SupplierPolicyBandInput {
 				  } & FixedExpenseInput)
 				| ({
 						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PercentageSurcharge)
 		  )
 		| null;
 	/** Note */
@@ -12120,8 +12140,10 @@ export interface SupplierPolicyBandInput {
 /**
  * SupplierPolicyBand
  * Half-open window (``from_time`` inclusive, ``to_time`` exclusive, unset =
- * open) and the surcharge for landing in it. Bands match first-hit; the
- * surcharge inflates base cost before operator markup.
+ * open) and the surcharge for landing in it. Bands match first-hit. A
+ * percentage is a share of one room night — the first for an early arrival,
+ * the last for a late departure — up to the whole of it; the surcharge
+ * inflates base cost before operator markup.
  */
 export interface SupplierPolicyBandOutput {
 	/** From Time */
@@ -12130,7 +12152,7 @@ export interface SupplierPolicyBandOutput {
 	to_time: string | null;
 	/**
 	 * Surcharge
-	 * The markup calculation strategy.
+	 * The surcharge calculation strategy.
 	 */
 	surcharge:
 		| (
@@ -12139,7 +12161,7 @@ export interface SupplierPolicyBandOutput {
 				  } & FixedExpenseOutput)
 				| ({
 						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PercentageSurcharge)
 		  )
 		| null;
 	/** Note */
@@ -12191,7 +12213,7 @@ export interface SupplierPolicyWarningSchemaOutput {
 	detail: string;
 	/**
 	 * Expected Surcharge
-	 * The markup calculation strategy.
+	 * The surcharge calculation strategy.
 	 */
 	expected_surcharge:
 		| (
@@ -12200,7 +12222,7 @@ export interface SupplierPolicyWarningSchemaOutput {
 				  } & FixedExpenseOutput)
 				| ({
 						typ: "percentage";
-				  } & PercentageMarkup)
+				  } & PercentageSurcharge)
 		  )
 		| null;
 }
