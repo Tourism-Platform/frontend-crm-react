@@ -16,3 +16,7 @@ export const isAgencyUserRole = (role: ENUM_USER_ROLE_TYPE | null) =>
 
 export const isOperatorUserRole = (role: ENUM_USER_ROLE_TYPE | null) =>
 	role && OPERATOR_ROLES.includes(role);
+
+/** Доступ в кабинет есть только у операторских и агентских ролей */
+export const hasPlatformAccessRole = (role: ENUM_USER_ROLE_TYPE | null) =>
+	Boolean(isAgencyUserRole(role) || isOperatorUserRole(role));

@@ -52,5 +52,10 @@
 		"title": "Unable to verify session",
 		"description": "A temporary error occurred while checking your session. Please try again.",
 		"retry": "Retry"
+	},
+	"access_denied": {
+		"title": "Access denied",
+		"description": "The account {{email}} is not linked to any tour operator or agency. Please contact your administrator.",
+		"description_no_email": "Your account is not linked to any tour operator or agency. Please contact your administrator."
 	}
 }

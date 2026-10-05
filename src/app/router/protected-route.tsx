@@ -19,7 +19,10 @@ import {
 	SuspenseLoader
 } from "@/shared/ui";
 
-import { useGetAuthAccountQuery } from "@/entities/auth";
+import {
+	isAuthAccessDeniedError,
+	useGetAuthAccountQuery
+} from "@/entities/auth";
 
 const SessionCheckError = ({ onRetry }: { onRetry: () => void }) => {
 	const { t } = useTranslation("login_page");
@@ -75,7 +78,12 @@ export const ProtectedRoute = ({ route }: { route: IRouting }) => {
 		}
 
 		if (isAuthAccountError) {
-			if (isUnauthorizedError(authAccountError)) {
+			// Нет доступа по роли — getAuthAccount уже сделал signout
+			const sessionUnreadable =
+				isUnauthorizedError(authAccountError) ||
+				isAuthAccessDeniedError(authAccountError);
+
+			if (sessionUnreadable) {
 				return <Navigate to={ENUM_PATH.LOGIN} replace />;
 			}
 

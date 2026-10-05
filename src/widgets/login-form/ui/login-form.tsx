@@ -7,6 +7,10 @@ import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
 import {
+	Alert,
+	AlertContent,
+	AlertDescription,
+	AlertTitle,
 	Button,
 	Card,
 	CardContent,
@@ -15,6 +19,8 @@ import {
 	ThemeToggle,
 	withErrorBoundary
 } from "@/shared/ui";
+
+import { isAuthAccessDeniedError, useAuthAccountState } from "@/entities/auth";
 
 import { useSignInAction, useSignUpAction } from "@/features/auth";
 
@@ -50,6 +56,17 @@ const LoginFormBase: FC = () => {
 		},
 		mode: "onSubmit"
 	});
+
+	// Вход прошёл, но роль не операторская и не агентская — signout уже сделан
+	const { error: authAccountError } = useAuthAccountState();
+	const isFormAccessDenied =
+		isAuthAccessDeniedError(signInError) ||
+		isAuthAccessDeniedError(signUpError);
+	const isAccessDenied =
+		isFormAccessDenied || isAuthAccessDeniedError(authAccountError);
+	const accessDeniedEmail = isFormAccessDenied
+		? form.getValues(ENUM_FORM_LOGIN.EMAIL)
+		: null;
 
 	async function onSubmit(data: TLoginSchema) {
 		const { login_type, ...rest } = data;
@@ -97,6 +114,21 @@ const LoginFormBase: FC = () => {
 						</span>
 					</Link>
 				</div>
+
+				{isAccessDenied && (
+					<Alert variant="destructive" appearance="outline">
+						<AlertContent>
+							<AlertTitle>{t("access_denied.title")}</AlertTitle>
+							<AlertDescription>
+								{accessDeniedEmail
+									? t("access_denied.description", {
+											email: accessDeniedEmail
+										})
+									: t("access_denied.description_no_email")}
+							</AlertDescription>
+						</AlertContent>
+					</Alert>
+				)}
 
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>
