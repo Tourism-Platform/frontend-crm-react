@@ -1,10 +1,10 @@
 import type { DragEndEvent } from "@dnd-kit/core";
 import { describe, expect, it } from "vitest";
 
-import { ENUM_EVENT } from "@/entities/tour";
+import { ENUM_EVENT, type IEventLibraryItem } from "@/entities/tour";
 
 import { handleDragEnd } from "../handlers/drag-end-handler";
-import { itemId } from "../helpers/id-convention";
+import { containerIdDay, itemId, libraryId } from "../helpers/id-convention";
 import type { IDayItem } from "../types";
 import type { TOptionsData } from "../types";
 
@@ -75,6 +75,51 @@ describe("handleDragEnd → reorderOptions", () => {
 			dragEvent(itemId("row-a"), itemId("row-c")),
 			optionsData,
 			ACTIVE_OPTION
+		);
+
+		expect(result.action).toBeUndefined();
+	});
+});
+
+describe("handleDragEnd → createFromLibrary", () => {
+	const libraryItem: IEventLibraryItem = {
+		id: "lib-1",
+		name: "Kichiksoy",
+		eventType: ENUM_EVENT.ACTIVITY,
+		supplierId: null,
+		summary: null,
+		primaryImagePath: null
+	};
+
+	// The library sheet unmounts the draggable on drag start, so dnd-kit
+	// reports `active.data.current === null` by drag end.
+	const unmountedLibraryDrag = (): DragEndEvent =>
+		({
+			active: { id: libraryId("lib-1"), data: { current: null } },
+			over: { id: containerIdDay(1) }
+		}) as unknown as DragEndEvent;
+
+	it("resolves the item from the lookup when the draggable data is gone", () => {
+		const result = handleDragEnd(
+			unmountedLibraryDrag(),
+			buildOptionsData([]),
+			ACTIVE_OPTION,
+			{ [libraryItem.id]: libraryItem }
+		);
+
+		expect(result.action).toMatchObject({
+			type: "createFromLibrary",
+			templateId: "lib-1",
+			title: "Kichiksoy"
+		});
+	});
+
+	it("drops silently when the item is in neither the data nor the lookup", () => {
+		const result = handleDragEnd(
+			unmountedLibraryDrag(),
+			buildOptionsData([]),
+			ACTIVE_OPTION,
+			{}
 		);
 
 		expect(result.action).toBeUndefined();

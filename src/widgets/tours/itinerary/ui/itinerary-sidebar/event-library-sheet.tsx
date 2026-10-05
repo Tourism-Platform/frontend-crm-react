@@ -1,8 +1,10 @@
-import { type FC, useMemo, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { type FC, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
 	Input,
+	ScrollArea,
 	SelectPicker,
 	Sheet,
 	SheetContent,
@@ -15,20 +17,14 @@ import { useValueToTranslateLabel } from "@/shared/utils";
 import {
 	type ENUM_EVENT_TYPE,
 	EVENT_LIBRARY_TYPE_LABELS,
-	type IEventLibraryFilters,
-	useListEventLibraryQuery
+	useEventLibrarySearchOptions
 } from "@/entities/tour";
 
 import { DraggableLibraryItem } from "./draggable-library-item";
 
 const ALL_TYPES = "all";
-
-const DEFAULT_FILTERS: IEventLibraryFilters = {
-	search: "",
-	status: [],
-	page: 1,
-	limit: 100
-};
+/** Start loading the next page this far before the list end. */
+const LOAD_MORE_MARGIN_PX = 500;
 
 interface IEventLibrarySheetProps {
 	open: boolean;
@@ -40,16 +36,52 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 	onOpenChange
 }) => {
 	const { t } = useTranslation("tour_itinerary_page");
-	const [filters, setFilters] =
-		useState<IEventLibraryFilters>(DEFAULT_FILTERS);
 
-	const { data, isLoading, isFetching } = useListEventLibraryQuery(filters, {
-		skip: !open
-	});
+	const {
+		items,
+		isLoading,
+		isLoadingMore,
+		hasMore,
+		query,
+		setQuery,
+		status,
+		setStatus,
+		loadMore,
+		reset
+	} = useEventLibrarySearchOptions({ enabled: open });
 
-	const items = data?.data ?? [];
+	const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (!open || !hasMore || isLoading || isLoadingMore) {
+			return;
+		}
+
+		const node = loadMoreRef.current;
+		if (!node) {
+			return;
+		}
+
+		const root = node.closest("[data-slot='scroll-area-viewport']");
+		const observer = new IntersectionObserver(
+			(entries) => {
+				if (entries[0]?.isIntersecting) {
+					loadMore();
+				}
+			},
+			{
+				root,
+				rootMargin: `0px 0px ${LOAD_MORE_MARGIN_PX}px 0px`,
+				threshold: 0
+			}
+		);
+
+		observer.observe(node);
+		return () => observer.disconnect();
+	}, [open, hasMore, isLoading, isLoadingMore, items.length, loadMore]);
+
 	const typeOptions = useValueToTranslateLabel(EVENT_LIBRARY_TYPE_LABELS);
-	const selectedType = filters.status[0] ?? ALL_TYPES;
+	const selectedType = status[0] ?? ALL_TYPES;
 
 	const pickerOptions = useMemo(
 		() => [
@@ -62,23 +94,17 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 		[t, typeOptions]
 	);
 
-	const handleSearchChange = (search: string) => {
-		setFilters((prev) => ({ ...prev, search, page: 1 }));
-	};
-
 	const handleTypeChange = (value: string) => {
-		setFilters((prev) => ({
-			...prev,
-			status: value === ALL_TYPES ? [] : [value as ENUM_EVENT_TYPE],
-			page: 1
-		}));
+		setStatus(value === ALL_TYPES ? [] : [value as ENUM_EVENT_TYPE]);
 	};
 
 	return (
 		<Sheet
 			open={open}
 			onOpenChange={(next) => {
-				if (!next) setFilters(DEFAULT_FILTERS);
+				if (!next) {
+					reset();
+				}
 				onOpenChange(next);
 			}}
 		>
@@ -94,8 +120,8 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 						{t("sidebar.event_library.sheet_title")}
 					</SheetDescription>
 					<Input
-						value={filters.search}
-						onChange={(e) => handleSearchChange(e.target.value)}
+						value={query}
+						onChange={(e) => setQuery(e.target.value)}
 						placeholder={t(
 							"sidebar.event_library.search_placeholder"
 						)}
@@ -110,17 +136,33 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 					/>
 				</SheetHeader>
 
-				<div className="flex-1 space-y-2 overflow-y-auto px-6 py-4">
-					{!isLoading && !isFetching && items.length === 0 ? (
-						<p className="text-sm text-muted-foreground">
-							{t("sidebar.event_library.empty")}
-						</p>
-					) : (
-						items.map((item) => (
-							<DraggableLibraryItem key={item.id} item={item} />
-						))
-					)}
-				</div>
+				<ScrollArea className="min-h-0 flex-1">
+					<div className="space-y-2 px-6 py-4">
+						{isLoading ? (
+							<div className="flex justify-center py-2">
+								<Loader2 className="size-4 animate-spin text-muted-foreground" />
+							</div>
+						) : items.length === 0 ? (
+							<p className="text-sm text-muted-foreground">
+								{t("sidebar.event_library.empty")}
+							</p>
+						) : (
+							items.map((item) => (
+								<DraggableLibraryItem key={item.id} item={item} />
+							))
+						)}
+						{hasMore && !isLoading ? (
+							<div
+								ref={loadMoreRef}
+								className="flex justify-center py-2"
+							>
+								{isLoadingMore ? (
+									<Loader2 className="size-4 animate-spin text-muted-foreground" />
+								) : null}
+							</div>
+						) : null}
+					</div>
+				</ScrollArea>
 			</SheetContent>
 		</Sheet>
 	);

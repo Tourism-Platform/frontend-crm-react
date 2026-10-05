@@ -149,6 +149,11 @@ export const mapEventLibraryItemToFrontend = (
 	};
 };
 
+/** Cache key of the infinite list: one merged entry per status + search. */
+export const getEventLibraryFilterKey = (
+	filters: Pick<IEventLibraryFilters, "status" | "search">
+): string => `${filters.status.join(",")}/${filters.search?.trim() ?? ""}`;
+
 const getFilterBackendTyps = (filters?: IEventLibraryFilters) =>
 	(filters?.status ?? []).flatMap(mapEventTypeToBackendTyps);
 

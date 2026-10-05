@@ -9,6 +9,7 @@ import {
 } from "@/entities/tour/itinerary";
 
 import {
+	getEventLibraryFilterKey,
 	mapEventLibraryCreateToBackend,
 	mapEventLibraryFiltersToBackend,
 	mapEventLibraryItemToFrontend,
@@ -21,6 +22,7 @@ import {
 import type {
 	IEventLibraryCreate,
 	IEventLibraryFilters,
+	IEventLibraryInfiniteResponse,
 	IEventLibraryItem,
 	IEventLibraryUpdate,
 	TEventLibraryItemBackend,
@@ -42,6 +44,52 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				_meta,
 				arg
 			) => mapEventLibraryListToFrontend(response, arg),
+			providesTags: [ENUM_API_TAGS.EVENT_LIBRARY]
+		}),
+		/**
+		 * Infinite list: one cache entry per status + search, pages merged into
+		 * it — page 1 replaces the entry, next pages append.
+		 */
+		listEventLibraryInfinite: builder.query<
+			IEventLibraryInfiniteResponse,
+			IEventLibraryFilters
+		>({
+			query: (filters) => ({
+				...TOUR_EVENT_LIBRARY_PATHS.listLibraryEvents,
+				params: mapEventLibraryFiltersToBackend(filters)
+			}),
+			transformResponse: (
+				response: TEventLibraryListBackendResponse,
+				_meta,
+				arg
+			) => ({
+				...mapEventLibraryListToFrontend(response, arg),
+				page: arg.page,
+				filterKey: getEventLibraryFilterKey(arg)
+			}),
+			serializeQueryArgs: ({ endpointName, queryArgs }) =>
+				`${endpointName}/${getEventLibraryFilterKey(queryArgs)}`,
+			merge: (currentCache, newItems, { arg }) => {
+				if (arg.page === 1) {
+					return newItems;
+				}
+
+				const existingIds = new Set(
+					currentCache.data.map((item) => item.id)
+				);
+				return {
+					...newItems,
+					data: [
+						...currentCache.data,
+						...newItems.data.filter(
+							(item) => !existingIds.has(item.id)
+						)
+					]
+				};
+			},
+			forceRefetch: ({ currentArg, previousArg }) =>
+				currentArg?.page !== previousArg?.page ||
+				currentArg?.limit !== previousArg?.limit,
 			providesTags: [ENUM_API_TAGS.EVENT_LIBRARY]
 		}),
 		getEventLibrary: builder.query<IEventLibraryItem, string>({
@@ -161,6 +209,7 @@ export const eventLibraryApi = authApi.injectEndpoints({
 
 export const {
 	useListEventLibraryQuery,
+	useListEventLibraryInfiniteQuery,
 	useGetEventLibraryQuery,
 	useGetEventLibraryRawQuery,
 	useGetEventLibraryTemplateQuery,

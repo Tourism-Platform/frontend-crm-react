@@ -522,11 +522,18 @@ export const useItineraryDnd = ({
 	const onDragEnd = (event: DragEndEvent) => {
 		const prevOptionsData = { ...optionsData };
 
+		// The library sheet closes on drag start, unmounting the draggable —
+		// dnd-kit then drops `active.data`, and `libraryItemsById` only holds
+		// the first page. Keep the item captured at drag start resolvable.
+		const libraryLookup = activeLibraryItem
+			? { ...libraryItemsById, [activeLibraryItem.id]: activeLibraryItem }
+			: libraryItemsById;
+
 		const result = handleDragEnd(
 			event,
 			optionsData,
 			activeOption,
-			libraryItemsById
+			libraryLookup
 		);
 
 		if (result.shouldUpdate && result.newData) {

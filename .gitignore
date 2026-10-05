@@ -30,3 +30,5 @@ stats.html
 
 scripts
 data
+
+*.playwright-mcp
