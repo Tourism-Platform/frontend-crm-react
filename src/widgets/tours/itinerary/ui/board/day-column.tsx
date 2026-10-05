@@ -30,10 +30,11 @@ const DayColumnBase: FC<IDayColumnProps> = ({
 	return (
 		<div
 			className={cn(
-				"w-100 flex-shrink-0 flex flex-col transition-opacity",
+				"flex w-100 flex-shrink-0 flex-col transition-opacity",
+				!isOverlay && "min-h-0 flex-1",
 				isDragging && !isOverlay && "opacity-30",
 				isOverlay &&
-					"opacity-90 shadow-2xl cursor-grabbing ring-2 ring-primary bg-background rounded-lg border"
+					"cursor-grabbing rounded-lg border bg-background opacity-90 shadow-2xl ring-2 ring-primary"
 			)}
 		>
 			<DroppableDayContainer

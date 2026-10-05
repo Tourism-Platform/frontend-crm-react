@@ -5,7 +5,7 @@ import {
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-import { ScrollArea, ScrollBar, withErrorBoundary } from "@/shared/ui";
+import { CustomScroll, withErrorBoundary } from "@/shared/ui";
 
 import {
 	type IBaseDnDProps,
@@ -35,8 +35,11 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 	);
 
 	return (
-		<ScrollArea className="flex-1 overflow-x-auto p-4">
-			<div className="flex gap-4 min-w-max ">
+		<CustomScroll
+			orientation="horizontal"
+			className="min-w-0 flex-1 overflow-y-hidden p-4"
+		>
+			<div className="flex h-full min-w-max gap-4">
 				{/* Trip details */}
 				{/* <div className="w-100 flex-shrink-0">
 					<h3 className="font-semibold px-1 mb-3">
@@ -60,9 +63,9 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 						return (
 							<div
 								key={day}
-								className="w-100 flex-shrink-0 flex flex-col"
+								className="flex h-full min-h-0 w-100 flex-shrink-0 flex-col"
 							>
-								<h3 className="font-semibold mb-3 text-center">
+								<h3 className="mb-3 shrink-0 text-center font-semibold">
 									{t("day_details.title", {
 										day: index + 1
 									})}
@@ -81,8 +84,7 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 					})}
 				</SortableContext>
 			</div>
-			<ScrollBar orientation="horizontal" />
-		</ScrollArea>
+		</CustomScroll>
 	);
 };
 

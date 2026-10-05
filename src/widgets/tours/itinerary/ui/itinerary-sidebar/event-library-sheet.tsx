@@ -148,7 +148,10 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 							</p>
 						) : (
 							items.map((item) => (
-								<DraggableLibraryItem key={item.id} item={item} />
+								<DraggableLibraryItem
+									key={item.id}
+									item={item}
+								/>
 							))
 						)}
 						{hasMore && !isLoading ? (

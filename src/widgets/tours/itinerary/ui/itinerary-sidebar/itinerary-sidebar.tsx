@@ -3,7 +3,12 @@ import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CustomScroll,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ENUM_EVENT,
@@ -33,7 +38,7 @@ const ItinerarySidebarBase: FC<IItinerarySidebarProps> = ({
 		<>
 			<Card
 				className={cn(
-					"py-0  transition-all duration-300 flex flex-col rounded-none gap-0",
+					"flex h-full min-h-0 shrink-0 flex-col gap-0 overflow-hidden rounded-none py-0 transition-all duration-300",
 					sidebarOpen ? "w-80" : "w-12"
 				)}
 			>
@@ -54,7 +59,7 @@ const ItinerarySidebarBase: FC<IItinerarySidebarProps> = ({
 				</button>
 
 				{sidebarOpen && (
-					<div className="flex-1 overflow-y-auto p-4">
+					<CustomScroll className="flex-1 p-4">
 						<div className="mb-6">
 							<h3 className="text-sm font-medium text-gray-500 mb-3 truncate">
 								{t("sidebar.library")}
@@ -100,7 +105,7 @@ const ItinerarySidebarBase: FC<IItinerarySidebarProps> = ({
 								)}
 							</div>
 						</div>
-					</div>
+					</CustomScroll>
 				)}
 			</Card>
 

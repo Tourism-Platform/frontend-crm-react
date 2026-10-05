@@ -18,6 +18,7 @@ import {
 	Card,
 	CardContent,
 	CardHeader,
+	CustomScroll,
 	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -55,11 +56,11 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 		<Card
 			ref={setNodeRef}
 			className={cn(
-				"min-h-[400px] rounded-lg border-2 border-dashed gap-3 pt-2",
+				"h-full min-h-0 gap-0 overflow-hidden rounded-lg pt-2 pb-0",
 				isOverContainer ? "ring-2 ring-primary" : ""
 			)}
 		>
-			<CardHeader className="flex justify-end pr-2">
+			<CardHeader className="flex shrink-0 justify-end pr-2 pb-3">
 				<Button
 					variant={"ghost"}
 					size={"icon"}
@@ -71,43 +72,48 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 				</Button>
 			</CardHeader>
 			<Separator />
-			<CardContent className={cn("px-3 pb-24")}>
-				<SortableContext
-					items={items.map((it) => itemId(it.block_id))}
-					strategy={verticalListSortingStrategy}
-				>
-					{items.length === 0 ? (
-						<div className="h-32 flex items-center justify-center text-gray-400 text-sm">
-							{t("day_details.container.empty")}
-						</div>
-					) : (
-						items.map((item, index) => (
-							<div key={item.block_id} className="mb-2">
-								<DraggableDayItem
-									item={item}
-									optionId={optionId}
-									onRemove={() =>
-										onRemoveItem({
-											optionId,
-											location: "day",
-											day,
-											index
-										})
-									}
-									onRemoveNested={(nestedIdx) =>
-										onRemoveItem({
-											optionId,
-											location: "day",
-											day,
-											index,
-											nestedIndex: nestedIdx
-										})
-									}
-								/>
+			<CardContent className="min-h-0 flex-1 overflow-hidden p-0">
+				<CustomScroll className="h-full px-3">
+					<SortableContext
+						items={items.map((it) => itemId(it.block_id))}
+						strategy={verticalListSortingStrategy}
+					>
+						{items.length === 0 ? (
+							<div className="flex h-32 items-center justify-center text-sm text-gray-400">
+								{t("day_details.container.empty")}
 							</div>
-						))
-					)}
-				</SortableContext>
+						) : (
+							items.map((item, index) => (
+								<div
+									key={item.block_id}
+									className="mt-2 last:mb-2"
+								>
+									<DraggableDayItem
+										item={item}
+										optionId={optionId}
+										onRemove={() =>
+											onRemoveItem({
+												optionId,
+												location: "day",
+												day,
+												index
+											})
+										}
+										onRemoveNested={(nestedIdx) =>
+											onRemoveItem({
+												optionId,
+												location: "day",
+												day,
+												index,
+												nestedIndex: nestedIdx
+											})
+										}
+									/>
+								</div>
+							))
+						)}
+					</SortableContext>
+				</CustomScroll>
 			</CardContent>
 		</Card>
 	);

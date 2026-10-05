@@ -29,6 +29,9 @@ import {
 } from "./ui";
 import { ItineraryLoadingSkeleton } from "./ui/itinerary-loading-skeleton";
 
+const itineraryShellClassName =
+	"flex h-[calc(100dvh-70px-2.5rem)] min-h-0 -mb-30 flex-col gap-6 overflow-hidden";
+
 const ItineraryBase: FC = () => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
@@ -90,7 +93,7 @@ const ItineraryBase: FC = () => {
 
 	if (isLoading) {
 		return (
-			<section className="flex flex-col gap-6 container">
+			<section className={itineraryShellClassName}>
 				<ConnectedTourHeader
 					title={t("page_name")}
 					actions={actionsJsx}
@@ -101,7 +104,7 @@ const ItineraryBase: FC = () => {
 	}
 
 	return (
-		<section className="flex flex-col gap-6">
+		<section className={itineraryShellClassName}>
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<DndContext
 				sensors={sensors}
@@ -110,7 +113,7 @@ const ItineraryBase: FC = () => {
 				onDragOver={onDragOver}
 				onDragEnd={onDragEnd}
 			>
-				<div className="h-full flex flex-col">
+				<div className="flex min-h-0 flex-1 flex-col">
 					<BoardTabs
 						tourId={tourId}
 						activeOption={activeOption}
@@ -121,7 +124,7 @@ const ItineraryBase: FC = () => {
 
 					<Separator />
 
-					<div className="flex-1 flex overflow-hidden">
+					<div className="flex min-h-0 flex-1 overflow-hidden">
 						<BoardColumns
 							data={currentData}
 							optionId={activeOption}
