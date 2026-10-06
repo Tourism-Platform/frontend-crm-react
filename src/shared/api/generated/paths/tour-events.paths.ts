@@ -9,6 +9,7 @@ import type {
 	BusOverrideInput,
 	BusSingleEvent,
 	DetachBody,
+	EventCopySchema,
 	EventOptionalSchema,
 	EventReorderSchema,
 	FlightEvent,
@@ -88,6 +89,16 @@ export const TOUR_EVENTS_PATHS = {
 					| GuideSingleEvent
 					| SupplementarySingleEvent
 					| MultiEvent;
+				query: { read_lang?: LanguageCode };
+				response: TourEventResponse;
+			}
+		}) as const,
+	copyEvent: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/${optionId}/event/copy`,
+			method: "POST",
+			_types: {} as {
+				body: EventCopySchema;
 				query: { read_lang?: LanguageCode };
 				response: TourEventResponse;
 			}

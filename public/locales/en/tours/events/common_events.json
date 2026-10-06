@@ -334,5 +334,22 @@
 				"placeholder": "Optional note"
 			}
 		}
+	},
+	"copy": {
+		"duplicate": "Duplicate",
+		"toasts": {
+			"revision_duplicate": {
+				"loading": "Duplicating event…",
+				"success": "Event duplicated in the booking",
+				"error": "Could not duplicate event"
+			}
+		},
+		"errors": {
+			"NOT_FOUND": "Source event not found",
+			"ARCHIVED_TOUR": "Archived tours cannot be changed",
+			"GUIDE_LANGUAGES": "The guide does not price every tour language; add the missing guide prices or narrow the tour's languages",
+			"BOOKING_NOT_PROCESSING": "Events can only be revised while the booking is in processing",
+			"NO_PERMISSION": "You don't have permission to copy this event"
+		}
 	}
 }

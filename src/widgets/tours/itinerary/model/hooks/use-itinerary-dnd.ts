@@ -5,11 +5,15 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
+
 import {
 	type IEventLibraryItem,
 	type ITemplateItem,
 	mapLibraryTemplateToCreateEvent,
 	useAddOptionMutation,
+	useCopyEventLibraryMutation,
+	useCopyTourEventMutation,
 	useCreateEventMutation,
 	useDeleteTourEventMutation,
 	useDeleteTourEventOptionMutation,
@@ -20,6 +24,8 @@ import {
 	useReorderEventMutation,
 	useReorderEventOptionsMutation
 } from "@/entities/tour";
+
+import { resolveCopyEventErrorCode } from "@/features/tours";
 
 import {
 	type TDragAction,
@@ -50,10 +56,11 @@ interface IUseItineraryDndParams {
 const patchItemBackendId = (
 	item: IDayItem,
 	tempBlockId: string,
-	backendId: string
+	backendId: string,
+	id: string = backendId
 ): IDayItem | null => {
 	if (item.block_id === tempBlockId) {
-		return { ...item, backendId, id: backendId };
+		return { ...item, backendId, id };
 	}
 	if (!item.items?.length) return null;
 
@@ -61,7 +68,7 @@ const patchItemBackendId = (
 	const items = item.items.map((child) => {
 		if (child.block_id !== tempBlockId) return child;
 		changed = true;
-		return { ...child, backendId, id: backendId };
+		return { ...child, backendId, id };
 	});
 	return changed ? { ...item, items } : null;
 };
@@ -70,7 +77,8 @@ const patchBackendId = (
 	optionsData: TOptionsData,
 	activeOption: string,
 	tempBlockId: string,
-	backendId: string
+	backendId: string,
+	id?: string
 ): IOptionData | null => {
 	const optData = optionsData[activeOption];
 	if (!optData) return null;
@@ -81,7 +89,12 @@ const patchBackendId = (
 	for (const [dayKey, dayItems] of Object.entries(optData.days)) {
 		const day = Number(dayKey);
 		days[day] = dayItems.map((item) => {
-			const patched = patchItemBackendId(item, tempBlockId, backendId);
+			const patched = patchItemBackendId(
+				item,
+				tempBlockId,
+				backendId,
+				id
+			);
 			if (patched) {
 				found = true;
 				return patched;
@@ -91,7 +104,7 @@ const patchBackendId = (
 	}
 
 	const tripDetails = optData.tripDetails.map((item) => {
-		const patched = patchItemBackendId(item, tempBlockId, backendId);
+		const patched = patchItemBackendId(item, tempBlockId, backendId, id);
 		if (patched) {
 			found = true;
 			return patched;
@@ -129,7 +142,9 @@ export const useItineraryDnd = ({
 	eventsAsOptionData,
 	emptyOptionData
 }: IUseItineraryDndParams) => {
-	const { t } = useTranslation("tour_itinerary_page");
+	const { t, i18n } = useTranslation("tour_itinerary_page");
+	const { t: tEvents } = useTranslation("common_events");
+	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 
 	const { watch, setValue } = useForm<{ optionsData: TOptionsData }>({
 		defaultValues: { optionsData: {} }
@@ -181,6 +196,8 @@ export const useItineraryDnd = ({
 	const [activeColumn, setActiveColumn] = useState<number | null>(null);
 
 	const [createEvent] = useCreateEventMutation();
+	const [copyTourEvent] = useCopyTourEventMutation();
+	const [copyEventLibrary] = useCopyEventLibraryMutation();
 	const [getEventLibraryTemplate] = useLazyGetEventLibraryTemplateQuery();
 	const [reorderEvent] = useReorderEventMutation();
 	const [deleteEvent] = useDeleteTourEventMutation();
@@ -190,13 +207,19 @@ export const useItineraryDnd = ({
 	const [moveEventToMulti] = useMoveEventToMultiMutation();
 	const [moveOptionToSingle] = useMoveOptionToSingleMutation();
 
-	const applyBackendIdPatch = (tempBlockId: string, backendId: string) => {
+	/** `id` — option row id (`event.id`); defaults to `backendId` for alternatives. */
+	const applyBackendIdPatch = (
+		tempBlockId: string,
+		backendId: string,
+		id?: string
+	) => {
 		const current = watch("optionsData");
 		const updated = patchBackendId(
 			current,
 			activeOption,
 			tempBlockId,
-			backendId
+			backendId,
+			id
 		);
 		if (updated) {
 			setValue(
@@ -236,7 +259,11 @@ export const useItineraryDnd = ({
 			toast.promise(createPromise, {
 				loading: t("toasts.event.create.loading"),
 				success: (newEvent) => {
-					applyBackendIdPatch(action.tempBlockId, newEvent.id);
+					applyBackendIdPatch(
+						action.tempBlockId,
+						newEvent.id,
+						newEvent.eventOptionId
+					);
 					return t("toasts.event.create.success");
 				},
 				error: () => {
@@ -245,31 +272,34 @@ export const useItineraryDnd = ({
 				}
 			});
 		} else if (action.type === "createFromLibrary") {
-			const createFromLibraryPromise = (async () => {
-				const template = await getEventLibraryTemplate(
-					action.templateId
-				).unwrap();
-				const data = mapLibraryTemplateToCreateEvent(
-					template,
-					action.day,
-					action.position
-				);
-				return createEvent({
-					tourId,
-					optionId: activeOption,
-					data
-				}).unwrap();
-			})();
+			// Server-side copy: pool with pins/overrides and pictures (new files).
+			const createFromLibraryPromise = copyTourEvent({
+				tourId,
+				optionId: activeOption,
+				source: {
+					kind: "library",
+					libraryId: action.templateId,
+					day: action.day,
+					position: action.position
+				}
+			}).unwrap();
 
 			toast.promise(createFromLibraryPromise, {
 				loading: t("toasts.event.create.loading"),
 				success: (newEvent) => {
-					applyBackendIdPatch(action.tempBlockId, newEvent.id);
+					applyBackendIdPatch(
+						action.tempBlockId,
+						newEvent.id,
+						newEvent.eventOptionId
+					);
 					return t("toasts.event.create.success");
 				},
-				error: () => {
+				error: (error: unknown) => {
 					rollbackTempItem(action.tempBlockId);
-					return t("toasts.event.create.error");
+					const code = resolveCopyEventErrorCode(error);
+					return code
+						? tEvents(`copy.errors.${code}`)
+						: t("toasts.event.create.error");
 				}
 			});
 		} else if (action.type === "addOption") {
@@ -511,6 +541,71 @@ export const useItineraryDnd = ({
 		}
 	};
 
+	const getItemAt = (loc: IItemLocation): IDayItem | undefined => {
+		const optData = optionsData[loc.optionId];
+		const parent =
+			loc.location === "day" && loc.day !== undefined
+				? optData?.days[loc.day]?.[loc.index]
+				: optData?.tripDetails[loc.index];
+
+		return loc.nestedIndex !== undefined
+			? parent?.items?.[loc.nestedIndex]
+			: parent;
+	};
+
+	const copyErrorMessage = (
+		error: unknown,
+		fallback:
+			| "toasts.event.duplicate.error"
+			| "toasts.event.save_to_library.error"
+	) => {
+		const code = resolveCopyEventErrorCode(error);
+		return code ? tEvents(`copy.errors.${code}`) : t(fallback);
+	};
+
+	const handleDuplicateItem = (loc: IItemLocation) => {
+		const item = getItemAt(loc);
+		if (!item?.backendId) return;
+
+		// The copy lands right after its source; the list refetches by tag.
+		const duplicatePromise = copyTourEvent({
+			tourId,
+			optionId: activeOption,
+			source: { kind: "event", eventId: item.backendId },
+			language
+		}).unwrap();
+
+		toast.promise(duplicatePromise, {
+			loading: t("toasts.event.duplicate.loading"),
+			success: t("toasts.event.duplicate.success"),
+			error: (error: unknown) =>
+				copyErrorMessage(error, "toasts.event.duplicate.error")
+		});
+	};
+
+	const handleSaveItemToLibrary = (loc: IItemLocation) => {
+		const item = getItemAt(loc);
+		if (!item?.backendId) return;
+
+		// `item.id` is the option row: `event.id` on a single, `details[].id` on an alternative.
+		const savePromise = copyEventLibrary({
+			source: {
+				kind: "event",
+				tourId,
+				optionId: activeOption,
+				eventOptionId: item.id
+			},
+			language
+		}).unwrap();
+
+		toast.promise(savePromise, {
+			loading: t("toasts.event.save_to_library.loading"),
+			success: t("toasts.event.save_to_library.success"),
+			error: (error: unknown) =>
+				copyErrorMessage(error, "toasts.event.save_to_library.error")
+		});
+	};
+
 	const onDragStart = (event: DragStartEvent) => {
 		const state = handleDragStart(event, optionsData, libraryItemsById);
 		setActiveDayItem(state.activeDayItem);
@@ -570,6 +665,8 @@ export const useItineraryDnd = ({
 		onDragStart,
 		onDragEnd,
 		onDragOver,
-		handleRemoveItem
+		handleRemoveItem,
+		handleDuplicateItem,
+		handleSaveItemToLibrary
 	};
 };

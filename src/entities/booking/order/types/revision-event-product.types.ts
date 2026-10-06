@@ -27,6 +27,10 @@ export type TRevisionPoolMemberNewBackend = ReturnType<
 	typeof BOOKING_REVISION_PATHS.addPoolMember
 >["_types"]["body"];
 
+export type TRevisionEventCopyBackend = ReturnType<
+	typeof BOOKING_REVISION_PATHS.copyEvent
+>["_types"]["body"];
+
 export interface IRevisionEventBreakdown {
 	eventId: string;
 	lines: IPricingBreakdownLine[];
@@ -76,4 +80,19 @@ export interface IRemoveRevisionPoolMember {
 	eventId: string;
 	supplyId: string;
 	optionIndex?: number | null;
+}
+
+/**
+ * Copy source for `copyRevisionEvent`. `event` — a live event of the booked
+ * tour option (frozen into the booking); `revision` — an event of the
+ * booking's snapshot (duplicated right after itself).
+ */
+export interface IRevisionEventCopySource {
+	kind: "event" | "revision";
+	eventId: string;
+}
+
+export interface ICopyRevisionEvent {
+	bookingId: string;
+	source: IRevisionEventCopySource;
 }

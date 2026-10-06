@@ -48,5 +48,25 @@ export interface IEventLibraryCreate {
 	language?: ENUM_LANGUAGES_TYPE;
 }
 
+/**
+ * Copy source for `copyEventLibrary`. `library` — duplicate an entry;
+ * `event` — save one alternative of a tour event (`eventOptionId` is
+ * `event.id` on a single event, `details[].id` on a choice).
+ */
+export type TEventLibraryCopySource =
+	| { kind: "library"; libraryId: string }
+	| {
+			kind: "event";
+			tourId: string;
+			optionId: string;
+			eventOptionId: string;
+	  };
+
+export interface IEventLibraryCopy {
+	source: TEventLibraryCopySource;
+	/** Language for location `city`/`address` written into the copy. */
+	language?: ENUM_LANGUAGES_TYPE;
+}
+
 /** Placeholder libraryId for create route `/library/events/new/transfer`. */
 export const LIBRARY_EVENT_CREATE_ID = "new";

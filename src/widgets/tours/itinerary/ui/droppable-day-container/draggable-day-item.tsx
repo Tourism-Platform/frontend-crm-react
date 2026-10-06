@@ -46,6 +46,9 @@ interface IDraggableDayItemProps {
 	parentEventId?: string;
 	onRemove?: (index: number) => void;
 	onRemoveNested?: (index: number, nestedIndex: number) => void;
+	onDuplicate?: (index: number) => void;
+	onSaveToLibrary?: (index: number) => void;
+	onSaveNestedToLibrary?: (index: number, nestedIndex: number) => void;
 }
 
 const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
@@ -56,7 +59,10 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 		isOverlay,
 		parentEventId,
 		onRemove,
-		onRemoveNested
+		onRemoveNested,
+		onDuplicate,
+		onSaveToLibrary,
+		onSaveNestedToLibrary
 	}) => {
 		const {
 			attributes,
@@ -84,6 +90,9 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 
 		const { tourId } = useParams<{ tourId: string }>();
 		const eventId = item.backendId ?? item.id;
+
+		// Temp items (optimistic, not yet created) have no backendId.
+		const canCopy = Boolean(item.backendId);
 		const href =
 			parentEventId && EVENT_TYPE_TO_OPTION_PATH[item.eventType]
 				? buildRoute(EVENT_TYPE_TO_OPTION_PATH[item.eventType], {
@@ -142,6 +151,18 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 						<div className="absolute -right-3 -top-4">
 							<DraggableDayItemMenu
 								onRemove={() => onRemove?.(index)}
+								onDuplicate={
+									canCopy && onDuplicate
+										? () => onDuplicate(index)
+										: undefined
+								}
+								onSaveToLibrary={
+									canCopy &&
+									!isMultiplyOption &&
+									onSaveToLibrary
+										? () => onSaveToLibrary(index)
+										: undefined
+								}
 							/>
 						</div>
 					</div>
@@ -157,6 +178,9 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 									? (nestedIndex) =>
 											onRemoveNested(index, nestedIndex)
 									: () => {}
+							}
+							onSaveNestedToLibrary={(nestedIndex) =>
+								onSaveNestedToLibrary?.(index, nestedIndex)
 							}
 						/>
 					)}

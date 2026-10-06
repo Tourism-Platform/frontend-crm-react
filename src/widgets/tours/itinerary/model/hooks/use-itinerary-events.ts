@@ -13,7 +13,8 @@ const DEFAULT_EVENTS: ITourEvent[] = [];
 
 const toDayItem = (ev: ITourEvent): IDayItem => {
 	const item: IDayItem = {
-		id: ev.id,
+		// Option row (`event.id`) on a single event; choice slots have none.
+		id: ev.eventOptionId ?? ev.id,
 		block_id: ev.id,
 		eventType: ev.eventType,
 		title: ev.name,

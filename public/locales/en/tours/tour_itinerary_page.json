@@ -118,7 +118,23 @@
 				"loading": "Deleting event",
 				"success": "Event deleted",
 				"error": "Failed to delete event"
+			},
+			"duplicate": {
+				"loading": "Duplicating event…",
+				"success": "Event duplicated",
+				"error": "Failed to duplicate event"
+			},
+			"save_to_library": {
+				"loading": "Saving to library…",
+				"success": "Saved to library",
+				"error": "Failed to save to library"
 			}
 		}
+	},
+
+	"menu": {
+		"remove": "Remove",
+		"duplicate": "Duplicate",
+		"save_to_library": "Save to library"
 	}
 }

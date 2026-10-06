@@ -5,6 +5,7 @@ import { authApi } from "@/entities/auth/api/auth.api";
 import {
 	mapAddPoolMemberToBackend,
 	mapAllEventsToFrontend,
+	mapEventCopyToBackend,
 	mapEventCreateToBackend,
 	mapEventOptionCreateToBackend,
 	mapEventOptionReadToWriteBody,
@@ -28,6 +29,7 @@ import type {
 	IAddEventPoolMember,
 	IAttachOptionProduct,
 	IClearOptionOverride,
+	ICopyTourEvent,
 	IDeleteEventOption,
 	IDetachOptionProduct,
 	IGetTourEventResult,
@@ -177,6 +179,19 @@ export const tourEventApi = authApi.injectEndpoints({
 			query: ({ tourId, optionId, data }) => ({
 				...TOUR_EVENTS_PATHS.createEvent(tourId, optionId),
 				body: mapEventCreateToBackend(data)
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
+			invalidatesTags: (_result, _error, { tourId, optionId }) => [
+				eventsTag(tourId, optionId),
+				pricingTag(tourId, optionId)
+			]
+		}),
+		copyTourEvent: builder.mutation<ITourEvent, ICopyTourEvent>({
+			query: ({ tourId, optionId, source, language }) => ({
+				...TOUR_EVENTS_PATHS.copyEvent(tourId, optionId),
+				params: mapEventReadLangQueryToBackend(language),
+				body: mapEventCopyToBackend(source)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),
@@ -723,6 +738,7 @@ export const {
 	useListTourEventsQuery,
 	useGetTourEventQuery,
 	useCreateEventMutation,
+	useCopyTourEventMutation,
 	useDeleteTourEventMutation,
 	useReorderEventMutation,
 	useAddOptionMutation,

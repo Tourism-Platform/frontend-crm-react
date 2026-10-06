@@ -25,7 +25,9 @@ const DayColumnBase: FC<IDayColumnProps> = ({
 	attributes,
 	listeners,
 	optionId,
-	onRemoveItem
+	onRemoveItem,
+	onDuplicateItem,
+	onSaveItemToLibrary
 }) => {
 	return (
 		<div
@@ -44,6 +46,8 @@ const DayColumnBase: FC<IDayColumnProps> = ({
 				sortableProps={{ attributes, listeners }}
 				optionId={optionId}
 				onRemoveItem={onRemoveItem}
+				onDuplicateItem={onDuplicateItem}
+				onSaveItemToLibrary={onSaveItemToLibrary}
 			/>
 		</div>
 	);

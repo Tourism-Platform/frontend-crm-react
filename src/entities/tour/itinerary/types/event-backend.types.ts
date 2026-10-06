@@ -89,6 +89,10 @@ export type TTourEventCreateBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.createEvent
 >["_types"]["body"];
 
+export type TTourEventCopyBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.copyEvent
+>["_types"]["body"];
+
 export type TTourEventReorderBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.reorderEvent
 >["_types"]["body"];

@@ -19,6 +19,12 @@ export type TListEventLibraryQuery = {
 export type TCreateEventLibraryBackend =
 	(typeof TOUR_EVENT_LIBRARY_PATHS.createLibraryEvent)["_types"]["body"];
 
+export type TCopyEventLibraryBackend =
+	(typeof TOUR_EVENT_LIBRARY_PATHS.copyLibraryEvent)["_types"]["body"];
+
+export type TCopyEventLibraryQueryBackend =
+	(typeof TOUR_EVENT_LIBRARY_PATHS.copyLibraryEvent)["_types"]["query"];
+
 export type TUpdateEventLibraryBackend = ReturnType<
 	typeof TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent
 >["_types"]["body"];

@@ -43,7 +43,9 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 	containerId,
 	sortableProps,
 	optionId,
-	onRemoveItem
+	onRemoveItem,
+	onDuplicateItem,
+	onSaveItemToLibrary
 }) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const { setNodeRef, isOver } = useDroppable({ id: containerId });
@@ -101,6 +103,31 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 										}
 										onRemoveNested={(nestedIdx) =>
 											onRemoveItem({
+												optionId,
+												location: "day",
+												day,
+												index,
+												nestedIndex: nestedIdx
+											})
+										}
+										onDuplicate={() =>
+											onDuplicateItem?.({
+												optionId,
+												location: "day",
+												day,
+												index
+											})
+										}
+										onSaveToLibrary={() =>
+											onSaveItemToLibrary?.({
+												optionId,
+												location: "day",
+												day,
+												index
+											})
+										}
+										onSaveNestedToLibrary={(nestedIdx) =>
+											onSaveItemToLibrary?.({
 												optionId,
 												location: "day",
 												day,

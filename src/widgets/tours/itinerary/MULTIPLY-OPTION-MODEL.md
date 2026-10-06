@@ -11,15 +11,15 @@
 - Alternatives: `event.details[]`; у каждого на **read** есть свой `id` (`eventOptionId`). Day/position живут на parent, не на option.
 - Не плоский список с `parent_event_id` — nested `details` + dedicated endpoints:
 
-| UI | Path |
-|----|------|
-| Update single (typ 1–9) | `PATCH .../event/single/{eventId}/update` |
-| Add option into multi | `POST .../event/multi/{eventId}/add-option` |
-| Update option | `PATCH .../event/multi/{eventId}/update-option/{eventOptionId}` |
-| Remove option | `DELETE .../event/multi/{eventId}/remove-option/{eventOptionId}` |
-| Reorder options | `POST .../event/multi/{eventId}/reorder-options` body `{ order: number[] }` |
-| Single → multi | `POST .../event/single/{eventId}/move-to-multi/{targetEventId}` |
-| Option → single | `POST .../event/multi/{eventId}/move-to-single/{eventOptionId}` |
+| UI                      | Path                                                                        |
+| ----------------------- | --------------------------------------------------------------------------- |
+| Update single (typ 1–9) | `PATCH .../event/single/{eventId}/update`                                   |
+| Add option into multi   | `POST .../event/multi/{eventId}/add-option`                                 |
+| Update option           | `PATCH .../event/multi/{eventId}/update-option/{eventOptionId}`             |
+| Remove option           | `DELETE .../event/multi/{eventId}/remove-option/{eventOptionId}`            |
+| Reorder options         | `POST .../event/multi/{eventId}/reorder-options` body `{ order: number[] }` |
+| Single → multi          | `POST .../event/single/{eventId}/move-to-multi/{targetEventId}`             |
+| Option → single         | `POST .../event/multi/{eventId}/move-to-single/{eventOptionId}`             |
 
 Фронт: `mapAllEventsToFrontend` → `ITourEvent.options[]`; виджет → `IDayItem.items` с `backendId = details[i].id`.
 
@@ -31,53 +31,53 @@
 
 ```json
 [
-  {
-    "id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-    "tour_option_id": "option-uuid-1",
-    "event": {
-      "name": "Вариант перелёта",
-      "description": "Выбрать один",
-      "day": 2,
-      "position": 1,
-      "typ": "8",
-      "details": [
-        {
-          "typ": "1",
-          "name": "Рейс A",
-          "day": 2,
-          "position": 1,
-          "hop": []
-        },
-        {
-          "typ": "5",
-          "name": "Отель B",
-          "day": 2,
-          "position": 1,
-          "location": { "lat": 0, "long": 0 },
-          "duration": 1
-        }
-      ]
-    }
-  },
-  {
-    "id": "ffffffff-eeee-dddd-cccc-222222222222",
-    "tour_option_id": "option-uuid-1",
-    "event": {
-      "name": "Обед",
-      "typ": "6",
-      "day": 2,
-      "position": 2
-    }
-  }
+	{
+		"id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+		"tour_option_id": "option-uuid-1",
+		"event": {
+			"name": "Вариант перелёта",
+			"description": "Выбрать один",
+			"day": 2,
+			"position": 1,
+			"typ": "8",
+			"details": [
+				{
+					"typ": "1",
+					"name": "Рейс A",
+					"day": 2,
+					"position": 1,
+					"hop": []
+				},
+				{
+					"typ": "5",
+					"name": "Отель B",
+					"day": 2,
+					"position": 1,
+					"location": { "lat": 0, "long": 0 },
+					"duration": 1
+				}
+			]
+		}
+	},
+	{
+		"id": "ffffffff-eeee-dddd-cccc-222222222222",
+		"tour_option_id": "option-uuid-1",
+		"event": {
+			"name": "Обед",
+			"typ": "6",
+			"day": 2,
+			"position": 2
+		}
+	}
 ]
 ```
 
-| Сущность | UUID (`TourEventResponse.id`) | Где живёт |
-|----------|-------------------------------|-----------|
-| Multiply-option (typ 8) | `aaaaaaaa-...` | Корень списка |
-| «Рейс A» внутри option | **нет** | `event.details[0]` |
-| «Отель B» | **нет** | `event.details[1]` |
-| «Обед» typ 6 | `ffffffff-...` | Корень списка |
+| Сущность                | UUID (`TourEventResponse.id`) | Где живёт          |
+| ----------------------- | ----------------------------- | ------------------ |
+| Multiply-option (typ 8) | `aaaaaaaa-...`                | Корень списка      |
+| «Рейс A» внутри option  | **нет**                       | `event.details[0]` |
+| «Отель B»               | **нет**                       | `event.details[1]` |
+| «Обед» typ 6            | `ffffffff-...`                | Корень списка      |
 
 ### TypeScript (OpenAPI)
 
@@ -109,47 +109,49 @@ interface MultipleOptionEventOutput {
 ```ts
 // mapAllEventsToFrontend — плоско, details не разворачиваются
 const tourEvent: ITourEvent = {
-  id: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-  eventType: "multiply-option",
-  day: 2,
-  position: 1,
-  name: "Вариант перелёта",
-  details: { /* весь массив как Record */ }
+	id: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+	eventType: "multiply-option",
+	day: 2,
+	position: 1,
+	name: "Вариант перелёта",
+	details: {
+		/* весь массив как Record */
+	}
 };
 
 // На доске (как должно быть после гидратации)
 const dayItem: IDayItem = {
-  id: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-  block_id: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-  backendId: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-  eventType: "multiply-option",
-  title: "Вариант перелёта",
-  items: [
-    {
-      id: "aaaaaaaa-...-detail-0", // клиентский ключ, не с бэка
-      block_id: "aaaaaaaa-...-detail-0",
-      eventType: "flight",
-      title: "Рейс A"
-      // backendId — нет
-    },
-    {
-      id: "aaaaaaaa-...-detail-1",
-      block_id: "aaaaaaaa-...-detail-1",
-      eventType: "accommodation",
-      title: "Отель B"
-    }
-  ]
+	id: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+	block_id: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+	backendId: "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+	eventType: "multiply-option",
+	title: "Вариант перелёта",
+	items: [
+		{
+			id: "aaaaaaaa-...-detail-0", // клиентский ключ, не с бэка
+			block_id: "aaaaaaaa-...-detail-0",
+			eventType: "flight",
+			title: "Рейс A"
+			// backendId — нет
+		},
+		{
+			id: "aaaaaaaa-...-detail-1",
+			block_id: "aaaaaaaa-...-detail-1",
+			eventType: "accommodation",
+			title: "Отель B"
+		}
+	]
 };
 ```
 
 ### Операции при текущем API
 
-| Действие UI | API |
-|-------------|-----|
-| Reorder «Обед» на day 2 | `POST .../event/ffffffff-.../reorder` `{ day: 2, position: 0 }` |
-| Reorder «Рейс A» внутри multiply | `PATCH .../event/aaaaaaaa-...` body `{ typ: "8", details: [/* весь массив */] }` |
-| Удалить «Рейс A» из multiply | тот же PATCH без элемента |
-| Вынести «Рейс A» на day (promote) | `POST /event` (новый UUID) + PATCH parent `details` |
+| Действие UI                       | API                                                                              |
+| --------------------------------- | -------------------------------------------------------------------------------- |
+| Reorder «Обед» на day 2           | `POST .../event/ffffffff-.../reorder` `{ day: 2, position: 0 }`                  |
+| Reorder «Рейс A» внутри multiply  | `PATCH .../event/aaaaaaaa-...` body `{ typ: "8", details: [/* весь массив */] }` |
+| Удалить «Рейс A» из multiply      | тот же PATCH без элемента                                                        |
+| Вынести «Рейс A» на day (promote) | `POST /event` (новый UUID) + PATCH parent `details`                              |
 
 ---
 
@@ -157,10 +159,10 @@ const dayItem: IDayItem = {
 
 ### Порядок: два уровня (важно)
 
-| Уровень | Поля | Что задаёт |
-|---------|------|------------|
-| **Слот на доске** (родитель typ 8, обычные typ 1–7) | `day` + `position` | порядок карточек в колонке дня |
-| **Внутри multiply** (только children) | `option_index` | порядок вариантов **внутри** родителя |
+| Уровень                                             | Поля               | Что задаёт                            |
+| --------------------------------------------------- | ------------------ | ------------------------------------- |
+| **Слот на доске** (родитель typ 8, обычные typ 1–7) | `day` + `position` | порядок карточек в колонке дня        |
+| **Внутри multiply** (только children)               | `option_index`     | порядок вариантов **внутри** родителя |
 
 `day`/`position` у child — **копия слота родителя** (для booking/pricing по `day+position+typ`), **не** порядок среди siblings.
 
@@ -169,8 +171,8 @@ const dayItem: IDayItem = {
 ```ts
 // Сборка items[] — сортировка по option_index, не по position
 children
-  .filter((e) => e.parentEventId === parent.id)
-  .sort((a, b) => a.optionIndex - b.optionIndex);
+	.filter((e) => e.parentEventId === parent.id)
+	.sort((a, b) => a.optionIndex - b.optionIndex);
 ```
 
 **Reorder внутри nested (DND):**
@@ -193,48 +195,48 @@ POST /tour/{tourId}/{optionId}/event/{childId}/reorder
 
 ```json
 [
-  {
-    "id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-    "tour_option_id": "option-uuid-1",
-    "parent_event_id": null,
-    "event": {
-      "typ": "8",
-      "name": "Вариант перелёта",
-      "day": 2,
-      "position": 1
-    }
-  },
-  {
-    "id": "child-1111-2222-3333-444444444444",
-    "tour_option_id": "option-uuid-1",
-    "parent_event_id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-    "option_index": 0,
-    "event": {
-      "typ": "1",
-      "name": "Рейс A",
-      "day": 2,
-      "position": 1,
-      "hop": []
-    }
-  },
-  {
-    "id": "child-5555-6666-7777-888888888888",
-    "tour_option_id": "option-uuid-1",
-    "parent_event_id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
-    "option_index": 1,
-    "event": {
-      "typ": "5",
-      "name": "Отель B",
-      "day": 2,
-      "position": 1
-    }
-  },
-  {
-    "id": "ffffffff-eeee-dddd-cccc-222222222222",
-    "tour_option_id": "option-uuid-1",
-    "parent_event_id": null,
-    "event": { "typ": "6", "name": "Обед", "day": 2, "position": 2 }
-  }
+	{
+		"id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+		"tour_option_id": "option-uuid-1",
+		"parent_event_id": null,
+		"event": {
+			"typ": "8",
+			"name": "Вариант перелёта",
+			"day": 2,
+			"position": 1
+		}
+	},
+	{
+		"id": "child-1111-2222-3333-444444444444",
+		"tour_option_id": "option-uuid-1",
+		"parent_event_id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+		"option_index": 0,
+		"event": {
+			"typ": "1",
+			"name": "Рейс A",
+			"day": 2,
+			"position": 1,
+			"hop": []
+		}
+	},
+	{
+		"id": "child-5555-6666-7777-888888888888",
+		"tour_option_id": "option-uuid-1",
+		"parent_event_id": "aaaaaaaa-bbbb-cccc-dddd-111111111111",
+		"option_index": 1,
+		"event": {
+			"typ": "5",
+			"name": "Отель B",
+			"day": 2,
+			"position": 1
+		}
+	},
+	{
+		"id": "ffffffff-eeee-dddd-cccc-222222222222",
+		"tour_option_id": "option-uuid-1",
+		"parent_event_id": null,
+		"event": { "typ": "6", "name": "Обед", "day": 2, "position": 2 }
+	}
 ]
 ```
 
@@ -242,43 +244,43 @@ POST /tour/{tourId}/{optionId}/event/{childId}/reorder
 
 ```ts
 interface ITourEvent {
-  id: string;
-  parentEventId?: string | null;
-  optionIndex?: number; // порядок внутри typ 8
-  eventType: ENUM_EVENT_TYPE;
-  day: number;
-  position: number;
-  // ...
+	id: string;
+	parentEventId?: string | null;
+	optionIndex?: number; // порядок внутри typ 8
+	eventType: ENUM_EVENT_TYPE;
+	day: number;
+	position: number;
+	// ...
 }
 
 // Сборка доски
 function buildDayColumns(events: ITourEvent[]) {
-  const roots = events.filter((e) => !e.parentEventId);
-  return roots.map((parent) => {
-    if (parent.eventType !== "multiply-option") {
-      return toDayItem(parent);
-    }
-    const children = events
-      .filter((e) => e.parentEventId === parent.id)
-      .sort((a, b) => a.optionIndex - b.optionIndex); // порядок внутри parent
-    return {
-      ...toDayItem(parent),
-      items: children.map(toDayItem) // у каждого свой backendId
-    };
-  });
+	const roots = events.filter((e) => !e.parentEventId);
+	return roots.map((parent) => {
+		if (parent.eventType !== "multiply-option") {
+			return toDayItem(parent);
+		}
+		const children = events
+			.filter((e) => e.parentEventId === parent.id)
+			.sort((a, b) => a.optionIndex - b.optionIndex); // порядок внутри parent
+		return {
+			...toDayItem(parent),
+			items: children.map(toDayItem) // у каждого свой backendId
+		};
+	});
 }
 ```
 
 ### Операции при целевой схеме
 
-| Действие UI | API |
-|-------------|-----|
-| Reorder карточки на day (root) | `POST .../reorder` `{ day, position }` |
-| Reorder «Рейс A» внутри multiply | `POST .../reorder` `{ parent_event_id, option_index }` **или** bulk reorder options |
-| Удалить «Рейс A» | `DELETE .../event/child-1111-...` |
-| Добавить шаблон в multiply | `POST /event` `{ parent_event_id, option_index: last+1, typ: "1", day, position /* parent's */ }` |
-| Вынести на day | `PATCH` `{ parent_event_id: null }` + `reorder` `{ day, position }` |
-| Загнать с day в multiply | `PATCH` `{ parent_event_id, option_index }` |
+| Действие UI                      | API                                                                                               |
+| -------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Reorder карточки на day (root)   | `POST .../reorder` `{ day, position }`                                                            |
+| Reorder «Рейс A» внутри multiply | `POST .../reorder` `{ parent_event_id, option_index }` **или** bulk reorder options               |
+| Удалить «Рейс A»                 | `DELETE .../event/child-1111-...`                                                                 |
+| Добавить шаблон в multiply       | `POST /event` `{ parent_event_id, option_index: last+1, typ: "1", day, position /* parent's */ }` |
+| Вынести на day                   | `PATCH` `{ parent_event_id: null }` + `reorder` `{ day, position }`                               |
+| Загнать с day в multiply         | `PATCH` `{ parent_event_id, option_index }`                                                       |
 
 После delete/reorder внутри parent — бэк перенумеровывает `option_index` у siblings (0..n-1), как сдвиг массива `details[]`.
 

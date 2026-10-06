@@ -2,6 +2,7 @@ export * from "./option.converters";
 export * from "./pricing-review.converters";
 export * from "./pricing-breakdown.converters";
 export * from "./event.converters";
+export * from "./event-copy.converters";
 export * from "./event-media.converters";
 export * from "./event-time-range.converters";
 export * from "./event-type.converters";

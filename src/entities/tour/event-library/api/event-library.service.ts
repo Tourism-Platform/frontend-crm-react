@@ -10,6 +10,8 @@ import {
 
 import {
 	getEventLibraryFilterKey,
+	mapEventLibraryCopyQueryToBackend,
+	mapEventLibraryCopyToBackend,
 	mapEventLibraryCreateToBackend,
 	mapEventLibraryFiltersToBackend,
 	mapEventLibraryItemToFrontend,
@@ -20,6 +22,7 @@ import {
 	mapLibraryPoolRemoveToBackend
 } from "../converters";
 import type {
+	IEventLibraryCopy,
 	IEventLibraryCreate,
 	IEventLibraryFilters,
 	IEventLibraryInfiniteResponse,
@@ -143,6 +146,19 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				mapEventLibraryItemToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.EVENT_LIBRARY]
 		}),
+		copyEventLibrary: builder.mutation<
+			IEventLibraryItem,
+			IEventLibraryCopy
+		>({
+			query: ({ source, language }) => ({
+				...TOUR_EVENT_LIBRARY_PATHS.copyLibraryEvent,
+				params: mapEventLibraryCopyQueryToBackend(language),
+				body: mapEventLibraryCopyToBackend(source)
+			}),
+			transformResponse: (response: TEventLibraryItemBackend) =>
+				mapEventLibraryItemToFrontend(response),
+			invalidatesTags: [ENUM_API_TAGS.EVENT_LIBRARY]
+		}),
 		updateEventLibrary: builder.mutation<
 			IEventLibraryItem,
 			IEventLibraryUpdate
@@ -215,6 +231,7 @@ export const {
 	useGetEventLibraryTemplateQuery,
 	useLazyGetEventLibraryTemplateQuery,
 	useCreateEventLibraryMutation,
+	useCopyEventLibraryMutation,
 	useUpdateEventLibraryMutation,
 	usePatchEventLibraryPoolMutation,
 	useDeleteEventLibraryMutation

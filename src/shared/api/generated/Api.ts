@@ -3814,6 +3814,75 @@ export interface EventBreakdownSchemaOutput {
 }
 
 /**
+ * EventCopyFromEvent
+ * Copy an event of the same tour option — every alternative, its pool with
+ * pins and overrides, its pictures.
+ */
+export interface EventCopyFromEvent {
+	/** Kind */
+	kind: "event";
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/**
+	 * Day
+	 * Day the copy lands on; the source's day.
+	 */
+	day?: number | null;
+	/**
+	 * Position
+	 * Position within the day, clamped to append; right after the source on its own day, the end of any other day.
+	 */
+	position?: number | null;
+}
+
+/**
+ * EventCopyFromLibrary
+ * Copy one of the operator's library entries into the tour option — its
+ * pool with pins, its pictures onto the slot.
+ */
+export interface EventCopyFromLibrary {
+	/** Kind */
+	kind: "library";
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	library_id: string;
+	/**
+	 * Day
+	 * Day the copy lands on
+	 * @min 1
+	 */
+	day: number;
+	/**
+	 * Position
+	 * Position within the day, clamped to append
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+}
+
+/** EventCopySchema */
+export interface EventCopySchema {
+	/** Source */
+	source:
+		| ({
+				kind: "event";
+		  } & EventCopyFromEvent)
+		| ({
+				kind: "library";
+		  } & EventCopyFromLibrary);
+}
+
+/**
  * EventEditOp
  * Append-only revision log. CREATE and UPDATE carry the full snapshot event
  * UPDATE and DELETE name the existing snapshot event by ``target_id``. ``seq`` is the order and
@@ -7269,6 +7338,58 @@ export interface LedgerEntryResponseOutput {
 	note: string | null;
 }
 
+/**
+ * LibraryCopyFromEvent
+ * Save one alternative of a tour event — its texts, plan and pool with
+ * pins, and the slot's pictures.
+ */
+export interface LibraryCopyFromEvent {
+	/** Kind */
+	kind: "event";
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tour_id: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	option_id: string;
+	/**
+	 * Event Option Id
+	 * The alternative: ``event.id`` on a single event, ``event.details[].id`` on a choice.
+	 * @format uuid
+	 */
+	event_option_id: string;
+}
+
+/**
+ * LibraryCopyFromLibrary
+ * Duplicate a library entry with its pictures.
+ */
+export interface LibraryCopyFromLibrary {
+	/** Kind */
+	kind: "library";
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	library_id: string;
+}
+
+/** LibraryCopySchema */
+export interface LibraryCopySchema {
+	/** Source */
+	source:
+		| ({
+				kind: "event";
+		  } & LibraryCopyFromEvent)
+		| ({
+				kind: "library";
+		  } & LibraryCopyFromLibrary);
+}
+
 /** LocationInSchema */
 export interface LocationInSchema {
 	/**
@@ -10694,6 +10815,47 @@ export interface RelinkBody {
 	 * @default false
 	 */
 	drop_override?: boolean;
+}
+
+/**
+ * RevisionCopyFromEvent
+ * Freeze a live event of the booked tour option into the booking, the way
+ * the booking froze its own events.
+ */
+export interface RevisionCopyFromEvent {
+	/** Kind */
+	kind: "event";
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+}
+
+/**
+ * RevisionCopyFromRevision
+ * Duplicate an event of the booking's revised snapshot.
+ */
+export interface RevisionCopyFromRevision {
+	/** Kind */
+	kind: "revision";
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+}
+
+/** RevisionCopySchema */
+export interface RevisionCopySchema {
+	/** Source */
+	source:
+		| ({
+				kind: "event";
+		  } & RevisionCopyFromEvent)
+		| ({
+				kind: "revision";
+		  } & RevisionCopyFromRevision);
 }
 
 /**
@@ -16155,6 +16317,18 @@ export interface ListLibraryEventsTourEventLibraryGetParams {
 	limit?: number;
 }
 
+export enum CopyLibraryEventTourEventLibraryCopyPostDetailEnum {
+	LibraryEventNotFound = "Library event not found",
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour",
+	EventOptionNotFound = "Event option not found"
+}
+
+export interface CopyLibraryEventTourEventLibraryCopyPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+}
+
 export interface GetLibraryEventTourEventLibraryLibraryIdGetParams {
 	/**
 	 * Library Id
@@ -16397,6 +16571,42 @@ export type CreateEventTourTourIdOptionIdEventCreatePostPayload =
 	| MultiEvent;
 
 export interface CreateEventTourTourIdOptionIdEventCreatePostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum2 {
+	LibraryEventNotFound = "Library event not found"
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum4 {
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+export interface CopyEventTourTourIdOptionIdEventCopyPostParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**
@@ -19694,6 +19904,24 @@ export interface RemoveEventBookingRevisionBookingIdEventEventIdDeleteParams {
 	 * @format uuid
 	 */
 	eventId: string;
+}
+
+export enum CopyEventBookingRevisionBookingIdEventCopyPostDetailEnum {
+	NoSuchEventOnTheBookedTourOption = "No such event on the booked tour option",
+	NoSuchEventInThisBookingsSnapshot = "No such event in this booking's snapshot"
+}
+
+export enum CopyEventBookingRevisionBookingIdEventCopyPostDetailEnum1 {
+	EventsCanOnlyBeRevisedWhileTheBookingIsInProcessing = "Events can only be revised while the booking is in processing",
+	BookingHasNoSnapshotToRevise = "Booking has no snapshot to revise"
+}
+
+export interface CopyEventBookingRevisionBookingIdEventCopyPostParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
 }
 
 /** Member */

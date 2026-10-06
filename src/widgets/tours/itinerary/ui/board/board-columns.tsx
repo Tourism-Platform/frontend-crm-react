@@ -25,7 +25,9 @@ interface IBoardColumnsProps extends IBaseDnDProps {
 const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 	data,
 	optionId,
-	onRemoveItem
+	onRemoveItem,
+	onDuplicateItem,
+	onSaveItemToLibrary
 }) => {
 	const { t } = useTranslation("tour_itinerary_page");
 
@@ -78,6 +80,8 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 									items={data.days[day]}
 									optionId={optionId}
 									onRemoveItem={onRemoveItem}
+									onDuplicateItem={onDuplicateItem}
+									onSaveItemToLibrary={onSaveItemToLibrary}
 								/>
 							</div>
 						);

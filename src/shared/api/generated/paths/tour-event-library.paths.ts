@@ -9,6 +9,8 @@ import type {
 	GuideEvent,
 	HousingEvent,
 	InformationEvent,
+	LanguageCode,
+	LibraryCopySchema,
 	SupplementaryEvent,
 	TourEventLibraryImageModel,
 	TrainEvent,
@@ -48,6 +50,15 @@ export const TOUR_EVENT_LIBRARY_PATHS = {
 				| GuideEvent
 				| SupplementaryEvent;
 			query: void;
+			response: EventLibraryResponse;
+		}
+	} as const,
+	copyLibraryEvent: {
+		url: "/tour/event/library/copy",
+		method: "POST",
+		_types: {} as {
+			body: LibraryCopySchema;
+			query: { read_lang?: LanguageCode };
 			response: EventLibraryResponse;
 		}
 	} as const,

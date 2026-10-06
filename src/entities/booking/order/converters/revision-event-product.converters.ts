@@ -4,6 +4,8 @@ import {
 } from "@/entities/tour";
 
 import type {
+	IRevisionEventCopySource,
+	TRevisionEventCopyBackend,
 	TRevisionEventProductLinkBackend,
 	TRevisionEventProductQueryBackend
 } from "../types/revision-event-product.types";
@@ -26,3 +28,13 @@ export const mapRevisionEventProductQueryToBackend = (
 
 	return { option_index: optionIndex };
 };
+
+/** Body for `copyRevisionEvent` — `{ source }` discriminated by `kind`. */
+export const mapRevisionEventCopyToBackend = (
+	source: IRevisionEventCopySource
+): TRevisionEventCopyBackend => ({
+	source:
+		source.kind === "event"
+			? { kind: "event", event_id: source.eventId }
+			: { kind: "revision", event_id: source.eventId }
+});

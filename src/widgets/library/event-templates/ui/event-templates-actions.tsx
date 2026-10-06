@@ -15,10 +15,12 @@ import {
 
 import {
 	type IEventLibraryItem,
-	mapEventTypeToLibraryEditPath
+	mapEventTypeToLibraryEditPath,
+	useCopyEventLibraryMutation
 } from "@/entities/tour";
 
 import { DeleteEventTemplate } from "@/features/library";
+import { resolveCopyEventErrorCode } from "@/features/tours";
 
 interface IEventTemplatesActionsProps {
 	item?: IEventLibraryItem;
@@ -28,7 +30,10 @@ export const EventTemplatesActions: FC<IEventTemplatesActionsProps> = ({
 	item
 }) => {
 	const { t } = useTranslation("event_templates_page");
+	const { t: tEvents } = useTranslation("common_events");
 	const navigate = useNavigate();
+	const [copyEventLibrary, { isLoading: isDuplicating }] =
+		useCopyEventLibraryMutation();
 
 	if (!item) return null;
 
@@ -40,6 +45,22 @@ export const EventTemplatesActions: FC<IEventTemplatesActionsProps> = ({
 		}
 
 		navigate(buildRoute(path, { libraryId: item.id }));
+	};
+
+	const handleDuplicate = async () => {
+		try {
+			await copyEventLibrary({
+				source: { kind: "library", libraryId: item.id }
+			}).unwrap();
+			toast.success(t("menu.duplicate.toasts.success"));
+		} catch (error) {
+			const code = resolveCopyEventErrorCode(error);
+			toast.error(
+				code
+					? tEvents(`copy.errors.${code}`)
+					: t("menu.duplicate.toasts.error")
+			);
+		}
 	};
 
 	return (
@@ -59,6 +80,12 @@ export const EventTemplatesActions: FC<IEventTemplatesActionsProps> = ({
 			<DropdownMenuContent align="end">
 				<DropdownMenuItem onClick={handleEdit}>
 					{t("menu.edit.button")}
+				</DropdownMenuItem>
+				<DropdownMenuItem
+					onClick={handleDuplicate}
+					disabled={isDuplicating}
+				>
+					{t("menu.duplicate.button")}
 				</DropdownMenuItem>
 				<DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
 					<DeleteEventTemplate

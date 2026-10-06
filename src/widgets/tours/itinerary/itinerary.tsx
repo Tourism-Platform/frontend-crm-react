@@ -60,7 +60,9 @@ const ItineraryBase: FC = () => {
 		onDragStart,
 		onDragEnd,
 		onDragOver,
-		handleRemoveItem
+		handleRemoveItem,
+		handleDuplicateItem,
+		handleSaveItemToLibrary
 	} = useItineraryDnd({
 		tourId,
 		activeOption,
@@ -129,6 +131,8 @@ const ItineraryBase: FC = () => {
 							data={currentData}
 							optionId={activeOption}
 							onRemoveItem={handleRemoveItem}
+							onDuplicateItem={handleDuplicateItem}
+							onSaveItemToLibrary={handleSaveItemToLibrary}
 						/>
 						<ItinerarySidebar
 							librarySheetOpen={librarySheetOpen}

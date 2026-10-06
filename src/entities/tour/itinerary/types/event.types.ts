@@ -120,6 +120,33 @@ export interface ITourEventReorder {
 	position: number;
 }
 
+/**
+ * Copy source for `copyEvent`. `event` — an event of the same tour option
+ * (day/position default to right after the source); `library` — a library
+ * entry, placement is required.
+ */
+export type TTourEventCopySource =
+	| {
+			kind: "event";
+			eventId: string;
+			day?: number | null;
+			position?: number | null;
+	  }
+	| {
+			kind: "library";
+			libraryId: string;
+			day: number;
+			position: number;
+			isOptional?: boolean;
+	  };
+
+export interface ICopyTourEvent {
+	tourId: string;
+	optionId: string;
+	source: TTourEventCopySource;
+	language?: ENUM_LANGUAGES_TYPE;
+}
+
 /** Option reorder is ID-based: every alternative's option row id in the new order. */
 export interface IEventOptionReorder {
 	order: string[];

@@ -12,4 +12,6 @@ export interface IItemLocation extends IItemBaseLocation {
 export interface IBaseDnDProps {
 	optionId: string;
 	onRemoveItem: (loc: IItemLocation) => void;
+	onDuplicateItem?: (loc: IItemLocation) => void;
+	onSaveItemToLibrary?: (loc: IItemLocation) => void;
 }

@@ -16,6 +16,13 @@
 			"button": "Edit",
 			"unavailable": "Edit is not available for this type yet"
 		},
+		"duplicate": {
+			"button": "Duplicate",
+			"toasts": {
+				"success": "Template duplicated",
+				"error": "Failed to duplicate template"
+			}
+		},
 		"delete": {
 			"button": "Delete",
 			"form": {

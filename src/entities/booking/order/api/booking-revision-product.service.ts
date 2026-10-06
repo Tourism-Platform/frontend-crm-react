@@ -5,6 +5,7 @@ import { authApi } from "@/entities/auth/api/auth.api";
 import { mapEventOverrideToBackend } from "@/entities/tour";
 
 import {
+	mapRevisionEventCopyToBackend,
 	mapRevisionEventProductLinkToBackend,
 	mapRevisionEventProductQueryToBackend
 } from "../converters/revision-event-product.converters";
@@ -12,6 +13,7 @@ import type {
 	IAddRevisionPoolMember,
 	IClearRevisionEventOverride,
 	IClearRevisionEventProduct,
+	ICopyRevisionEvent,
 	IRemoveRevisionPoolMember,
 	ISetRevisionEventOverride,
 	ISetRevisionEventProduct,
@@ -138,6 +140,17 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 			}),
 			invalidatesTags: (_result, _error, { bookingId }) =>
 				revisionInvalidation(bookingId)
+		}),
+		copyRevisionEvent: builder.mutation<
+			TRevisionPreviewBackend,
+			ICopyRevisionEvent
+		>({
+			query: ({ bookingId, source }) => ({
+				...BOOKING_REVISION_PATHS.copyEvent(bookingId),
+				body: mapRevisionEventCopyToBackend(source)
+			}),
+			invalidatesTags: (_result, _error, { bookingId }) =>
+				revisionInvalidation(bookingId)
 		})
 	})
 });
@@ -149,5 +162,6 @@ export const {
 	useSetRevisionEventOverrideMutation,
 	useClearRevisionEventOverrideMutation,
 	useAddRevisionPoolMemberMutation,
-	useRemoveRevisionPoolMemberMutation
+	useRemoveRevisionPoolMemberMutation,
+	useCopyRevisionEventMutation
 } = bookingRevisionProductApi;

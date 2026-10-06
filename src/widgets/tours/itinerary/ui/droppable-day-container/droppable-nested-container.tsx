@@ -19,6 +19,7 @@ interface IDroppableNestedContainerProps {
 	parentBlockId: string;
 	parentEventId?: string;
 	onRemoveNested: (index: number) => void;
+	onSaveNestedToLibrary?: (index: number) => void;
 }
 
 const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
@@ -26,7 +27,8 @@ const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
 	optionId,
 	parentBlockId,
 	parentEventId,
-	onRemoveNested
+	onRemoveNested,
+	onSaveNestedToLibrary
 }) => {
 	const { t } = useTranslation("tour_itinerary_page");
 	const containerId = `container:nested:${parentBlockId}`;
@@ -60,6 +62,9 @@ const DroppableNestedContainerBase: FC<IDroppableNestedContainerProps> = ({
 								item={item}
 								parentEventId={parentEventId}
 								onRemove={() => onRemoveNested(index)}
+								onSaveToLibrary={() =>
+									onSaveNestedToLibrary?.(index)
+								}
 							/>
 						</div>
 					))}

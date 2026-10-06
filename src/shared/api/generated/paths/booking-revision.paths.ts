@@ -17,6 +17,7 @@ import type {
 	InformationSingleEvent,
 	MultiEvent,
 	ProductSupplyNew,
+	RevisionCopySchema,
 	RevisionPreview,
 	RouteOverrideInput,
 	SupplementaryMemberNew,
@@ -77,6 +78,16 @@ export const BOOKING_REVISION_PATHS = {
 			url: `/booking/revision/${bookingId}/event/${eventId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: RevisionPreview }
+		}) as const,
+	copyEvent: (bookingId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/event/copy`,
+			method: "POST",
+			_types: {} as {
+				body: RevisionCopySchema;
+				query: void;
+				response: RevisionPreview;
+			}
 		}) as const,
 	addPoolMember: (bookingId: string, eventId: string) =>
 		({

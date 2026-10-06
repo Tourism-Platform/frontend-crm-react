@@ -26,7 +26,10 @@ import {
 	isPricingReviewBreakdownRow
 } from "@/entities/tour";
 
-import { ApplyReviewAction } from "@/features/booking";
+import {
+	ApplyReviewAction,
+	RevisionEventDuplicateButton
+} from "@/features/booking";
 import { RevisionEventPoolControls } from "@/features/booking/revision-event-pool";
 
 const resolveOrderReviewTitle = (
@@ -117,6 +120,7 @@ export const TOUR_REVIEW_COLUMNS = (
 			header: t("tour_review.table.supplier"),
 			cell: ({
 				row: {
+					depth,
 					original: {
 						supplier,
 						rowKind,
@@ -143,6 +147,13 @@ export const TOUR_REVIEW_COLUMNS = (
 					Boolean(eventId) &&
 					Boolean(backendTyp);
 
+				// Whole snapshot event only — alternatives of a choice are sub-rows.
+				const showDuplicate =
+					orderStatus === ENUM_ORDER_STATUS.IN_PROCESSING &&
+					rowKind === ENUM_PRICING_REVIEW_ROW.EVENT &&
+					depth === 0 &&
+					Boolean(eventId);
+
 				return (
 					<div className="min-w-0 w-full grid gap-2">
 						<span title={label} className="block truncate">
@@ -155,6 +166,12 @@ export const TOUR_REVIEW_COLUMNS = (
 								optionIndex={optionIndex}
 								eventTyp={backendTyp}
 								pool={pool}
+							/>
+						) : null}
+						{showDuplicate && eventId ? (
+							<RevisionEventDuplicateButton
+								bookingId={bookingId}
+								eventId={eventId}
 							/>
 						) : null}
 					</div>

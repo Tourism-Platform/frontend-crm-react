@@ -17,7 +17,9 @@ const SortableDayColumnBase: FC<ISortableDayColumnProps> = ({
 	day,
 	items,
 	optionId,
-	onRemoveItem
+	onRemoveItem,
+	onDuplicateItem,
+	onSaveItemToLibrary
 }) => {
 	const id = columnId(day);
 
@@ -49,6 +51,8 @@ const SortableDayColumnBase: FC<ISortableDayColumnProps> = ({
 				listeners={listeners}
 				optionId={optionId}
 				onRemoveItem={onRemoveItem}
+				onDuplicateItem={onDuplicateItem}
+				onSaveItemToLibrary={onSaveItemToLibrary}
 			/>
 		</div>
 	);
