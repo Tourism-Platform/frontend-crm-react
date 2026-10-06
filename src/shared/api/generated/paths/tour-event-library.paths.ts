@@ -27,7 +27,7 @@ export const TOUR_EVENT_LIBRARY_PATHS = {
 		_types: {} as {
 			body: void;
 			query: {
-				typ?: EventTypes | null;
+				typ?: EventTypes[] | null;
 				q?: string | null;
 				skip?: number;
 				limit?: number;

@@ -76,8 +76,8 @@ export const useEventLibrarySearchOptions = (
 			? (currentData ?? data)
 			: undefined;
 
-	// `total` is the backend count: a client-filtered type (flight) adds
-	// fewer items than `limit` per page, so compare pages, not item counts.
+	// `total` is the backend count for the current filter. A short last page
+	// has fewer items than `limit`, so compare pages, not item counts.
 	const hasMore = !!list && list.page * limit < list.total;
 
 	const loadMore = useCallback(() => {

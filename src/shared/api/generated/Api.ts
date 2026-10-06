@@ -16299,7 +16299,7 @@ export type CreateLibraryEventTourEventLibraryPostPayload =
 
 export interface ListLibraryEventsTourEventLibraryGetParams {
 	/** Typ */
-	typ?: EventTypes | null;
+	typ?: EventTypes[] | null;
 	/** Q */
 	q?: string | null;
 	/**

@@ -158,34 +158,22 @@ const getFilterBackendTyps = (filters?: IEventLibraryFilters) =>
 	(filters?.status ?? []).flatMap(mapEventTypeToBackendTyps);
 
 export const mapEventLibraryListToFrontend = (
-	response: TEventLibraryListBackendResponse,
-	filters?: IEventLibraryFilters
-): IPaginationResponse<IEventLibraryItem> => {
-	let data = response.data.map(mapEventLibraryItemToFrontend);
-	const backendTyps = getFilterBackendTyps(filters);
-
-	if (filters?.status.length && backendTyps.length !== 1) {
-		const allowed = new Set(filters.status);
-		data = data.filter((item) => allowed.has(item.eventType));
-	}
-
-	return {
-		data,
-		total: response.total_count
-	};
-};
+	response: TEventLibraryListBackendResponse
+): IPaginationResponse<IEventLibraryItem> => ({
+	data: response.data.map(mapEventLibraryItemToFrontend),
+	total: response.total_count
+});
 
 export const mapEventLibraryFiltersToBackend = (
 	filters: IEventLibraryFilters
 ): TListEventLibraryQuery => {
-	const backendTyps = getFilterBackendTyps(filters);
-	const typ = backendTyps.length === 1 ? backendTyps[0] : undefined;
+	const typ = getFilterBackendTyps(filters);
 
 	return {
 		...(filters.page > 1 && { skip: (filters.page - 1) * filters.limit }),
 		...(filters.limit && { limit: filters.limit }),
 		...(!!filters.search?.trim().length && { q: filters.search.trim() }),
-		...(typ && { typ })
+		...(typ.length > 0 && { typ })
 	};
 };
 

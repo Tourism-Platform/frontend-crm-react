@@ -1,11 +1,11 @@
 import { Loader2 } from "lucide-react";
-import { type FC, useEffect, useMemo, useRef } from "react";
+import { type FC, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
 	Input,
+	MultipleSelector,
 	ScrollArea,
-	SelectPicker,
 	Sheet,
 	SheetContent,
 	SheetDescription,
@@ -22,7 +22,6 @@ import {
 
 import { DraggableLibraryItem } from "./draggable-library-item";
 
-const ALL_TYPES = "all";
 /** Start loading the next page this far before the list end. */
 const LOAD_MORE_MARGIN_PX = 500;
 
@@ -81,22 +80,6 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 	}, [open, hasMore, isLoading, isLoadingMore, items.length, loadMore]);
 
 	const typeOptions = useValueToTranslateLabel(EVENT_LIBRARY_TYPE_LABELS);
-	const selectedType = status[0] ?? ALL_TYPES;
-
-	const pickerOptions = useMemo(
-		() => [
-			{
-				value: ALL_TYPES,
-				label: t("sidebar.event_library.type_all")
-			},
-			...typeOptions
-		],
-		[t, typeOptions]
-	);
-
-	const handleTypeChange = (value: string) => {
-		setStatus(value === ALL_TYPES ? [] : [value as ENUM_EVENT_TYPE]);
-	};
 
 	return (
 		<Sheet
@@ -126,13 +109,23 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 							"sidebar.event_library.search_placeholder"
 						)}
 					/>
-					<SelectPicker
-						value={selectedType}
-						onChange={handleTypeChange}
-						options={pickerOptions}
+					<MultipleSelector
+						options={typeOptions}
+						value={typeOptions.filter((option) =>
+							status.includes(option.value as ENUM_EVENT_TYPE)
+						)}
+						onChange={(options) =>
+							setStatus(
+								options.map(
+									(option) => option.value as ENUM_EVENT_TYPE
+								)
+							)
+						}
 						placeholder={t(
 							"sidebar.event_library.type_placeholder"
 						)}
+						// displayMode="badge"
+						badgeVariant="secondary"
 					/>
 				</SheetHeader>
 

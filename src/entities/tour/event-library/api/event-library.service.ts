@@ -42,11 +42,8 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				...TOUR_EVENT_LIBRARY_PATHS.listLibraryEvents,
 				params: mapEventLibraryFiltersToBackend(filters)
 			}),
-			transformResponse: (
-				response: TEventLibraryListBackendResponse,
-				_meta,
-				arg
-			) => mapEventLibraryListToFrontend(response, arg),
+			transformResponse: (response: TEventLibraryListBackendResponse) =>
+				mapEventLibraryListToFrontend(response),
 			providesTags: [ENUM_API_TAGS.EVENT_LIBRARY]
 		}),
 		/**
@@ -66,7 +63,7 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				_meta,
 				arg
 			) => ({
-				...mapEventLibraryListToFrontend(response, arg),
+				...mapEventLibraryListToFrontend(response),
 				page: arg.page,
 				filterKey: getEventLibraryFilterKey(arg)
 			}),
