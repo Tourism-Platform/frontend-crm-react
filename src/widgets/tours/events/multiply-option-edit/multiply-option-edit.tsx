@@ -3,7 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { TaskSquareIcon } from "@/shared/assets";
-import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
+import { Card, CardContent, CustomQuerySections, Form } from "@/shared/ui";
 
 import type { TMultiplyOptionEditSchema } from "@/entities/tour";
 
@@ -35,7 +35,7 @@ export const MultiplyOptionEdit: FC<IMultiplyOptionEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomQueryTabs
+						<CustomQuerySections
 							ns="multiply_option_edit_page"
 							tabs={MULTIPLY_OPTION_EDIT_TABS_LIST}
 							form={form}

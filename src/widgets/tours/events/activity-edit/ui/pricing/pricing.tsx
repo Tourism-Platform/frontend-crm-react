@@ -1,4 +1,5 @@
 import { type FC } from "react";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -17,6 +18,8 @@ import {
 	useEventEditIds
 } from "@/entities/tour";
 
+import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
+import { InheritedLockBanner } from "../../../ui/inherited-lock-banner";
 import {
 	ENUM_FORM_SECTION,
 	PRICING_TABS_LIST,
@@ -24,18 +27,37 @@ import {
 } from "../../model";
 
 import { InvoicingIndividual } from "./invoicing-individual";
+import { InvoicingPart } from "./invoicing-part";
 
 const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 	const { t } = useTranslation("activity_edit_page");
 	const { mode } = useEventEditIds();
 	const isMultiplyChild = mode === ENUM_EVENT_MODE.MULTI;
+	const isInherited = useIsInheritedProduct(form);
+	const invoicing = useWatch({
+		control: form.control,
+		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_ACTIVITY_PRICING_FIELD.INVOICING}`
+	});
+	const isPartOfPackage =
+		invoicing === ENUM_ACTIVITY_PRICING_INVOICING.PART_OF_PACKAGE;
 
 	return (
 		<div className="grid gap-6">
 			<h2 className="text-xl">{t("form.pricing.title")}</h2>
 			<div className="grid gap-1">
-				{isMultiplyChild ? (
+				{isInherited && !isPartOfPackage ? (
+					<InheritedLockBanner
+						title={t("form.inherited.pricing_title")}
+						description={t("form.inherited.pricing_description")}
+					/>
+				) : isMultiplyChild ? (
 					<InvoicingIndividual
+						form={form}
+						onSubmit={onSubmit}
+						isLoading={isLoading}
+					/>
+				) : isInherited && isPartOfPackage ? (
+					<InvoicingPart
 						form={form}
 						onSubmit={onSubmit}
 						isLoading={isLoading}
@@ -91,6 +113,9 @@ const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 						type="button"
 						onClick={onSubmit}
 						isLoading={isLoading}
+						disabled={
+							(isInherited && !isPartOfPackage) || undefined
+						}
 						label={t("form.pricing.buttons.save")}
 						loadingLabel={t("form.pricing.buttons.saving")}
 					/>

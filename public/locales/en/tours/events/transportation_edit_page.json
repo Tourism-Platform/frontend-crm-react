@@ -12,7 +12,11 @@
 	"form": {
 		"inherited": {
 			"lock_title": "Linked to supplier product",
-			"lock_description": "Transfer details come from the supplier product and cannot be edited here"
+			"lock_description": "Transfer details come from the supplier product and cannot be edited here",
+			"pricing_title": "Pricing from product",
+			"pricing_description": "Rates are managed on the supplier product",
+			"override_title": "Contract price applied",
+			"override_description": "This event uses a negotiated price instead of the product rate"
 		},
 		"toasts": {
 			"load": {

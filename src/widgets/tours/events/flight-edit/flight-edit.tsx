@@ -3,7 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { PlaneIcon } from "@/shared/assets";
-import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
+import { Card, CardContent, CustomQuerySections, Form } from "@/shared/ui";
 
 import type { TFlightEditSchema } from "@/entities/tour";
 
@@ -57,7 +57,7 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 				</div>
 				<Card>
 					<CardContent>
-						<CustomQueryTabs
+						<CustomQuerySections
 							ns="flight_edit_page"
 							tabs={tabs}
 							form={form}

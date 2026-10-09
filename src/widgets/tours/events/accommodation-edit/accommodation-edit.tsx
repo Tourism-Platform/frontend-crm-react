@@ -3,7 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { HouseIcon } from "@/shared/assets";
-import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
+import { Card, CardContent, CustomQuerySections, Form } from "@/shared/ui";
 
 import type { TAccommodationEditSchema } from "@/entities/tour";
 
@@ -61,7 +61,7 @@ export const AccommodationEdit: FC<IAccommodationEditProps> = ({
 				</div>
 				<Card>
 					<CardContent>
-						<CustomQueryTabs
+						<CustomQuerySections
 							ns="accommodation_edit_page"
 							tabs={tabs}
 							form={form}

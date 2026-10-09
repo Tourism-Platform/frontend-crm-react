@@ -3,7 +3,7 @@ import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { BoxOutlineIcon } from "@/shared/assets";
-import { Card, CardContent, CustomQueryTabs, Form } from "@/shared/ui";
+import { Card, CardContent, CustomQuerySections, Form } from "@/shared/ui";
 
 import type { TSupplementEditSchema } from "@/entities/tour";
 
@@ -44,7 +44,7 @@ export const SupplementEdit: FC<ISupplementEditProps> = ({
 				/>
 				<Card>
 					<CardContent>
-						<CustomQueryTabs
+						<CustomQuerySections
 							ns="supplement_edit_page"
 							tabs={tabs}
 							form={form}

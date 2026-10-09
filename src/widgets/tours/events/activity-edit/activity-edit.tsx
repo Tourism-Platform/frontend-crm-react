@@ -6,7 +6,7 @@ import { TicketStarIcon } from "@/shared/assets";
 import {
 	Card,
 	CardContent,
-	CustomQueryTabs,
+	CustomQuerySections,
 	Form,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -15,7 +15,11 @@ import type { TActivityEditSchema } from "@/entities/tour";
 
 import type { TEventPoolUiProps } from "@/features/tours/manage-event-pool";
 
-import { EventTitleInput } from "../ui";
+import {
+	useHasProductOverride,
+	useIsInheritedProduct
+} from "../model/use-is-inherited-product";
+import { EventTitleInput, InheritedLockBanner } from "../ui";
 
 import { type ENUM_FORM_SECTION_TYPE, EVENT_EDIT_TABS_LIST } from "./model";
 
@@ -35,19 +39,32 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 	tabs = EVENT_EDIT_TABS_LIST
 }) => {
 	const { t } = useTranslation("activity_edit_page");
+	const isInherited = useIsInheritedProduct(form);
+	const hasOverride = useHasProductOverride(form);
 
 	return (
 		<Form {...form}>
 			<section className="flex flex-col gap-6">
-				<EventTitleInput
-					control={form.control}
-					icon={TicketStarIcon}
-					placeholder={t("input.title.placeholder")}
-					className="bg-sky-500"
-				/>
+				<div className="flex flex-col gap-2">
+					<EventTitleInput
+						control={form.control}
+						icon={TicketStarIcon}
+						placeholder={t("input.title.placeholder")}
+						className="bg-sky-500"
+					/>
+					{isInherited && hasOverride ? (
+						<InheritedLockBanner
+							variant="override"
+							title={t("form.inherited.override_title")}
+							description={t(
+								"form.inherited.override_description"
+							)}
+						/>
+					) : null}
+				</div>
 				<Card>
 					<CardContent>
-						<CustomQueryTabs
+						<CustomQuerySections
 							ns="activity_edit_page"
 							tabs={tabs}
 							form={form}
