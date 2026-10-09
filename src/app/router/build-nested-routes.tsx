@@ -15,6 +15,7 @@ import {
 import {
 	BookingSectionLayout,
 	FinanceSectionLayout,
+	LibraryEventsSectionLayout,
 	LibrarySectionLayout,
 	SettingsSectionLayout,
 	TourDetailSectionLayout,
@@ -30,6 +31,7 @@ const SECTION_LAYOUTS: Record<TRouteSection, ComponentType> = {
 	"booking-operator": BookingSectionLayout,
 	"settings-operator": SettingsSectionLayout,
 	library: LibrarySectionLayout,
+	"library-events": LibraryEventsSectionLayout,
 	"booking-agency": BookingAgencySectionLayout,
 	"settings-agency": SettingsAgencySectionLayout
 };

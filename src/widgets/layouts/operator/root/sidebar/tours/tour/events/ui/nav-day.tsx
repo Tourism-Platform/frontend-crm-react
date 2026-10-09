@@ -15,7 +15,7 @@ import {
 	useSidebar
 } from "@/shared/ui";
 
-import { useAutoOpen } from "../model/use-auto-open";
+import { useAutoOpen } from "../../../../model/use-auto-open";
 import type { IEventNavDay } from "../model/use-event-nav-days";
 
 import { NavEvent } from "./nav-event";

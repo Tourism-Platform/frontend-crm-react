@@ -1,4 +1,19 @@
 {
+	"event_nav": {
+		"title": "Event library",
+		"back": "Back to library",
+		"empty": "No events yet",
+		"untitled": "Untitled",
+		"tabs": {
+			"general": "General info",
+			"media": "Media",
+			"pricing": "Pricing & booking",
+			"rooms": "Rooms",
+			"cars": "Cars",
+			"guides": "Guides",
+			"items": "Items"
+		}
+	},
 	"page_name": "Events templates",
 	"templates_title": "Templates",
 	"new_template": {

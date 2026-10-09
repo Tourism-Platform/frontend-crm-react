@@ -11,6 +11,7 @@ type TI18nBlockKey = keyof typeof TRANSLATION_BLOCKS;
 const SECTION_I18N_BLOCKS: Partial<Record<TRouteSection, TI18nBlockKey>> = {
 	finance: "finance",
 	library: "library",
+	"library-events": "library",
 	"booking-operator": "booking",
 	"booking-agency": "booking",
 	"tour-detail": "tours",

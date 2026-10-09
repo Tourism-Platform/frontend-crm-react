@@ -13,6 +13,7 @@ import { SidebarInset, SidebarProvider } from "@/shared/ui";
 import { BookingOperatorLayout } from "../root/sidebar/booking/layout";
 import { FinanceOperatorLayout } from "../root/sidebar/finance/layout";
 import { SideBarOperatorLayout } from "../root/sidebar/layout";
+import { LibraryEventNavSidebar } from "../root/sidebar/library/events/ui";
 import { LibraryOperatorLayout } from "../root/sidebar/library/layout";
 import { SettingsOperatorLayout } from "../root/sidebar/settings/layout";
 import { EventOperatorLayout } from "../root/sidebar/tours/tour/events/layout";
@@ -87,6 +88,21 @@ export const LibrarySectionLayout = () => {
 				<Outlet />
 			</LibraryOperatorLayout>
 		</SideBarOperatorLayout>
+	);
+};
+
+export const LibraryEventsSectionLayout = () => {
+	useSectionI18nPreload("library-events");
+
+	return (
+		<SidebarProvider>
+			<LibraryEventNavSidebar />
+			<SidebarInset className="min-w-0">
+				<LibraryOperatorLayout>
+					<Outlet />
+				</LibraryOperatorLayout>
+			</SidebarInset>
+		</SidebarProvider>
 	);
 };
 

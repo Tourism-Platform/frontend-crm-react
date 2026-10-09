@@ -11,6 +11,7 @@ export type TRouteSection =
 	| "booking-operator"
 	| "settings-operator"
 	| "library"
+	| "library-events"
 	| "booking-agency"
 	| "settings-agency";
 
@@ -21,6 +22,7 @@ export const SECTION_BASE_PATHS: Record<TRouteSection, string> = {
 	"booking-operator": "/operator/booking",
 	"settings-operator": "/operator/settings",
 	library: "/library",
+	"library-events": "/library/events/:libraryId",
 	"booking-agency": "/agency/booking",
 	"settings-agency": "/agency/settings"
 };

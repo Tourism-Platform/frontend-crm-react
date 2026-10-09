@@ -850,49 +850,49 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: LibraryTransferEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "library"
+		section: "library-events"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_SUPPLEMENT,
 		component: LibrarySupplementEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "library"
+		section: "library-events"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_GUIDE,
 		component: LibraryGuideEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "library"
+		section: "library-events"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_FLIGHT,
 		component: LibraryFlightEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "library"
+		section: "library-events"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_ACCOMMODATION,
 		component: LibraryAccommodationEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "library"
+		section: "library-events"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_ACTIVITY,
 		component: LibraryActivityEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "library"
+		section: "library-events"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.EVENT_INFO,
 		component: LibraryInfoEditPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		section: "library"
+		section: "library-events"
 	},
 	{
 		path: ENUM_PATH.LIBRARY.ITINERARIES,

@@ -24,7 +24,7 @@ import {
 	type ITourEvent
 } from "@/entities/tour";
 
-import { useAutoOpen } from "../model/use-auto-open";
+import { useAutoOpen } from "../../../../model/use-auto-open";
 import { isMultiplyOptionEvent } from "../model/use-event-nav-days";
 
 interface INavEventNodeProps {
