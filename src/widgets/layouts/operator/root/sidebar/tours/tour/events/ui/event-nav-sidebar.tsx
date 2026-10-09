@@ -15,7 +15,6 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarMenuSkeleton,
 	SidebarRail,
 	SidebarTrigger,
 	useSidebar
@@ -24,6 +23,7 @@ import {
 import { useEventNavDays } from "../model/use-event-nav-days";
 
 import { NavDay } from "./nav-day";
+import { NavDaySkeleton } from "./nav-day-skeleton";
 
 export const EventNavSidebar: FC = () => {
 	const { t } = useTranslation("common_events");
@@ -79,9 +79,10 @@ export const EventNavSidebar: FC = () => {
 						<SidebarMenu>
 							{isLoading
 								? Array.from({ length: 3 }, (_, i) => (
-										<SidebarMenuItem key={i}>
-											<SidebarMenuSkeleton showIcon />
-										</SidebarMenuItem>
+										<NavDaySkeleton
+											key={i}
+											eventsCount={i === 0 ? 3 : 0}
+										/>
 									))
 								: days.map((day) => (
 										<NavDay key={day.day} day={day} />

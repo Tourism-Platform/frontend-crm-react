@@ -45,10 +45,11 @@ const ItineraryBase: FC = () => {
 		handleOptionDeleted
 	} = useItineraryOptions(tourId);
 
-	const { eventsAsOptionData, EMPTY_OPTION_DATA } = useItineraryEvents(
-		tourId,
-		activeOption
-	);
+	const {
+		eventsAsOptionData,
+		EMPTY_OPTION_DATA,
+		isLoading: isEventsLoading
+	} = useItineraryEvents(tourId, activeOption);
 
 	const {
 		sensors,
@@ -130,6 +131,7 @@ const ItineraryBase: FC = () => {
 						<BoardColumns
 							data={currentData}
 							optionId={activeOption}
+							isLoading={isEventsLoading}
 							onRemoveItem={handleRemoveItem}
 							onDuplicateItem={handleDuplicateItem}
 							onSaveItemToLibrary={handleSaveItemToLibrary}

@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronRightCircleIcon, Loader2 } from "lucide-react";
+import { ArrowLeft, ChevronRightCircleIcon } from "lucide-react";
 import { type FC, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -15,7 +15,6 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarMenuSkeleton,
 	SidebarRail,
 	SidebarTrigger,
 	useSidebar
@@ -24,9 +23,11 @@ import {
 import { useEventLibrarySearchOptions } from "@/entities/tour";
 
 import { NavLibraryEvent } from "./nav-library-event";
+import { NavLibraryEventSkeleton } from "./nav-library-event-skeleton";
 
 /** Start loading the next page this far before the list end. */
 const LOAD_MORE_MARGIN_PX = 300;
+const SKELETON_TITLE_WIDTHS = ["70%", "55%", "80%", "60%", "75%"];
 
 export const LibraryEventNavSidebar: FC = () => {
 	const { t } = useTranslation("event_templates_page");
@@ -100,10 +101,11 @@ export const LibraryEventNavSidebar: FC = () => {
 						</SidebarGroupLabel>
 						<SidebarMenu>
 							{isLoading ? (
-								Array.from({ length: 5 }, (_, i) => (
-									<SidebarMenuItem key={i}>
-										<SidebarMenuSkeleton showIcon />
-									</SidebarMenuItem>
+								SKELETON_TITLE_WIDTHS.map((width, i) => (
+									<NavLibraryEventSkeleton
+										key={i}
+										width={width}
+									/>
 								))
 							) : items.length ? (
 								items.map((item) => (
@@ -119,12 +121,18 @@ export const LibraryEventNavSidebar: FC = () => {
 							)}
 						</SidebarMenu>
 						{hasMore && !isLoading ? (
-							<div
-								ref={loadMoreRef}
-								className="flex justify-center py-2"
-							>
+							<div ref={loadMoreRef}>
 								{isLoadingMore ? (
-									<Loader2 className="size-4 animate-spin text-muted-foreground" />
+									<SidebarMenu className="mt-1">
+										{SKELETON_TITLE_WIDTHS.slice(0, 3).map(
+											(width, i) => (
+												<NavLibraryEventSkeleton
+													key={i}
+													width={width}
+												/>
+											)
+										)}
+									</SidebarMenu>
 								) : null}
 							</div>
 						) : null}

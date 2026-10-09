@@ -1,4 +1,3 @@
-import { Loader2 } from "lucide-react";
 import { type FC, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,6 +20,7 @@ import {
 } from "@/entities/tour";
 
 import { DraggableLibraryItem } from "./draggable-library-item";
+import { DraggableLibraryItemsSkeleton } from "./draggable-library-item-skeleton";
 
 /** Start loading the next page this far before the list end. */
 const LOAD_MORE_MARGIN_PX = 500;
@@ -132,9 +132,7 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 				<ScrollArea className="min-h-0 flex-1">
 					<div className="space-y-2 px-6 py-4">
 						{isLoading ? (
-							<div className="flex justify-center py-2">
-								<Loader2 className="size-4 animate-spin text-muted-foreground" />
-							</div>
+							<DraggableLibraryItemsSkeleton />
 						) : items.length === 0 ? (
 							<p className="text-sm text-muted-foreground">
 								{t("sidebar.event_library.empty")}
@@ -148,12 +146,9 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 							))
 						)}
 						{hasMore && !isLoading ? (
-							<div
-								ref={loadMoreRef}
-								className="flex justify-center py-2"
-							>
+							<div ref={loadMoreRef} className="space-y-2">
 								{isLoadingMore ? (
-									<Loader2 className="size-4 animate-spin text-muted-foreground" />
+									<DraggableLibraryItemsSkeleton count={3} />
 								) : null}
 							</div>
 						) : null}

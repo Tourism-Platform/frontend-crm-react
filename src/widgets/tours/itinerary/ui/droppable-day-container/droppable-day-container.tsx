@@ -26,11 +26,13 @@ import {
 import { type IBaseDnDProps, type IDayItem, itemId } from "../../model";
 
 import { DraggableDayItem } from "./draggable-day-item";
+import { DayItemsSkeleton } from "./draggable-day-item-skeleton";
 
 interface IDroppableDayContainerProps extends IBaseDnDProps {
 	items: IDayItem[];
 	day: number;
 	containerId: string;
+	isLoading?: boolean;
 	sortableProps?: {
 		attributes: DraggableAttributes | undefined;
 		listeners: SyntheticListenerMap | undefined;
@@ -41,6 +43,7 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 	items,
 	day,
 	containerId,
+	isLoading,
 	sortableProps,
 	optionId,
 	onRemoveItem,
@@ -80,7 +83,9 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 						items={items.map((it) => itemId(it.block_id))}
 						strategy={verticalListSortingStrategy}
 					>
-						{items.length === 0 ? (
+						{isLoading ? (
+							<DayItemsSkeleton />
+						) : items.length === 0 ? (
 							<div className="flex h-32 items-center justify-center text-sm text-gray-400">
 								{t("day_details.container.empty")}
 							</div>

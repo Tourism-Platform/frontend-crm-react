@@ -13,6 +13,7 @@ export interface IDayColumnProps extends IBaseDnDProps {
 	items: IDayItem[];
 	isDragging?: boolean;
 	isOverlay?: boolean;
+	isLoading?: boolean;
 	attributes?: DraggableAttributes;
 	listeners?: SyntheticListenerMap;
 }
@@ -22,6 +23,7 @@ const DayColumnBase: FC<IDayColumnProps> = ({
 	items,
 	isDragging,
 	isOverlay,
+	isLoading,
 	attributes,
 	listeners,
 	optionId,
@@ -45,6 +47,7 @@ const DayColumnBase: FC<IDayColumnProps> = ({
 				containerId={containerIdDay(day)}
 				sortableProps={{ attributes, listeners }}
 				optionId={optionId}
+				isLoading={isLoading}
 				onRemoveItem={onRemoveItem}
 				onDuplicateItem={onDuplicateItem}
 				onSaveItemToLibrary={onSaveItemToLibrary}

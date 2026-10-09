@@ -41,10 +41,16 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 		skip: !tourId
 	});
 
-	const { data: backendEvents = DEFAULT_EVENTS } = useListTourEventsQuery(
+	const {
+		data: backendEvents = DEFAULT_EVENTS,
+		currentData,
+		isFetching
+	} = useListTourEventsQuery(
 		{ tourId, optionId: activeOption },
 		{ skip: !tourId || !activeOption }
 	);
+	// No events for the current option yet (first load or option switch).
+	const isLoading = isFetching && !currentData;
 
 	const tourDuration = useMemo(() => {
 		if (!tour?.duration) return 1;
@@ -123,5 +129,5 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 		return { tripDetails, days, dayOrder };
 	}, [backendEvents, daysCount, EMPTY_OPTION_DATA]);
 
-	return { eventsAsOptionData, EMPTY_OPTION_DATA };
+	return { eventsAsOptionData, EMPTY_OPTION_DATA, isLoading };
 };

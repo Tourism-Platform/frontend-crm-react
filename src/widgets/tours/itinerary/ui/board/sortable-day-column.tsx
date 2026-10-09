@@ -11,12 +11,14 @@ import { DayColumn } from "./day-column";
 interface ISortableDayColumnProps extends IBaseDnDProps {
 	day: number;
 	items: IDayItem[];
+	isLoading?: boolean;
 }
 
 const SortableDayColumnBase: FC<ISortableDayColumnProps> = ({
 	day,
 	items,
 	optionId,
+	isLoading,
 	onRemoveItem,
 	onDuplicateItem,
 	onSaveItemToLibrary
@@ -50,6 +52,7 @@ const SortableDayColumnBase: FC<ISortableDayColumnProps> = ({
 				attributes={attributes}
 				listeners={listeners}
 				optionId={optionId}
+				isLoading={isLoading}
 				onRemoveItem={onRemoveItem}
 				onDuplicateItem={onDuplicateItem}
 				onSaveItemToLibrary={onSaveItemToLibrary}

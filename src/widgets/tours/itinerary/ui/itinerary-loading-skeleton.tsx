@@ -2,6 +2,8 @@ import type { FC } from "react";
 
 import { Separator, Skeleton } from "@/shared/ui";
 
+import { DayColumnSkeleton } from "./board/day-column-skeleton";
+
 export const ItineraryLoadingSkeleton: FC = () => {
 	return (
 		<div className="flex min-h-0 flex-1 flex-col">
@@ -13,13 +15,13 @@ export const ItineraryLoadingSkeleton: FC = () => {
 
 			<Separator />
 
-			<div className="flex min-h-0 flex-1 overflow-hidden p-4">
-				<div className="flex min-h-0 flex-1 gap-4">
-					<Skeleton className="h-full min-h-0 flex-1" />
-					<Skeleton className="h-full min-h-0 flex-1" />
-					<Skeleton className="h-full min-h-0 flex-1" />
+			<div className="flex min-h-0 flex-1 overflow-hidden">
+				<div className="flex min-w-0 flex-1 gap-4 overflow-hidden p-4">
+					<DayColumnSkeleton />
+					<DayColumnSkeleton itemsCount={2} />
+					<DayColumnSkeleton itemsCount={4} />
 				</div>
-				<Skeleton className="ml-4 h-full min-h-0 w-64 shrink-0" />
+				<Skeleton className="m-4 ml-0 h-auto w-64 shrink-0" />
 			</div>
 		</div>
 	);

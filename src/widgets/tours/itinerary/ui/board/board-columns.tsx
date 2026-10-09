@@ -20,11 +20,13 @@ import { SortableDayColumn } from "./sortable-day-column";
 
 interface IBoardColumnsProps extends IBaseDnDProps {
 	data: IOptionData;
+	isLoading?: boolean;
 }
 
 const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 	data,
 	optionId,
+	isLoading,
 	onRemoveItem,
 	onDuplicateItem,
 	onSaveItemToLibrary
@@ -79,6 +81,7 @@ const BoardColumnsBase: FC<IBoardColumnsProps> = ({
 									day={day}
 									items={data.days[day]}
 									optionId={optionId}
+									isLoading={isLoading}
 									onRemoveItem={onRemoveItem}
 									onDuplicateItem={onDuplicateItem}
 									onSaveItemToLibrary={onSaveItemToLibrary}
