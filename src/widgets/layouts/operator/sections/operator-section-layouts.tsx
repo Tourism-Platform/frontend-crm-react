@@ -8,6 +8,7 @@ import {
 	TOURS_SIDEBAR_LIST
 } from "@/shared/config";
 import { useSectionI18nPreload } from "@/shared/hooks";
+import { SidebarInset, SidebarProvider } from "@/shared/ui";
 
 import { BookingOperatorLayout } from "../root/sidebar/booking/layout";
 import { FinanceOperatorLayout } from "../root/sidebar/finance/layout";
@@ -15,6 +16,7 @@ import { SideBarOperatorLayout } from "../root/sidebar/layout";
 import { LibraryOperatorLayout } from "../root/sidebar/library/layout";
 import { SettingsOperatorLayout } from "../root/sidebar/settings/layout";
 import { EventOperatorLayout } from "../root/sidebar/tours/tour/events/layout";
+import { EventNavSidebar } from "../root/sidebar/tours/tour/events/ui";
 import { TourOperatorLayout } from "../root/sidebar/tours/tour/layout";
 
 export const TourDetailSectionLayout = () => {
@@ -33,11 +35,14 @@ export const TourEventsSectionLayout = () => {
 	useSectionI18nPreload("tour-events");
 
 	return (
-		<SideBarOperatorLayout items={TOURS_SIDEBAR_LIST}>
-			<EventOperatorLayout>
-				<Outlet />
-			</EventOperatorLayout>
-		</SideBarOperatorLayout>
+		<SidebarProvider>
+			<EventNavSidebar />
+			<SidebarInset className="min-w-0">
+				<EventOperatorLayout>
+					<Outlet />
+				</EventOperatorLayout>
+			</SidebarInset>
+		</SidebarProvider>
 	);
 };
 

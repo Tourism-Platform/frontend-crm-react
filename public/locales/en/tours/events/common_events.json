@@ -13,6 +13,22 @@
 			"info": "Info edit"
 		}
 	},
+	"event_nav": {
+		"title": "Itinerary",
+		"back": "Back to itinerary",
+		"day": "Day {{day}}",
+		"empty_day": "No events",
+		"untitled": "Untitled",
+		"tabs": {
+			"general": "General info",
+			"media": "Media",
+			"pricing": "Pricing & booking",
+			"rooms": "Rooms",
+			"cars": "Cars",
+			"guides": "Guides",
+			"items": "Items"
+		}
+	},
 	"attach_product": {
 		"buttons": {
 			"attach": "Choose supplier product",

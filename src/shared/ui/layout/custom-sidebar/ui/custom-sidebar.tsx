@@ -2,6 +2,7 @@ import { ChevronRightCircleIcon } from "lucide-react";
 import type { FC } from "react";
 
 import {
+	CustomScroll,
 	Sidebar,
 	SidebarContent,
 	SidebarRail,
@@ -28,8 +29,10 @@ export const CustomSidebar: FC<ICustomSidebarProps> = ({ items }) => {
 					/>
 				}
 			/>
-			<SidebarContent className="group-data-[state=expanded]:pt-5 transition-transform duration-200 ease-linear pt-10">
-				<NavMain items={items} />
+			<SidebarContent className="group-data-[state=expanded]:pt-5 transition-transform duration-200 ease-linear pt-10 overflow-hidden">
+				<CustomScroll className="flex min-h-0 flex-1 flex-col gap-2 group-data-[collapsible=icon]:overflow-hidden">
+					<NavMain items={items} />
+				</CustomScroll>
 			</SidebarContent>
 			<SidebarRail />
 		</Sidebar>
