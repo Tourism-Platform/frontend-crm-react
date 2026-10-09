@@ -1,7 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { InfoCircleIcon } from "@/shared/assets";
 import { buildRoute } from "@/shared/config";
@@ -25,19 +25,19 @@ import {
 	mapEventTypeToLibraryEditPath
 } from "@/entities/tour";
 
+import { useActiveSection } from "../../../model/use-active-section";
 import { useAutoOpen } from "../../../model/use-auto-open";
 
 export const NavLibraryEvent: FC<{ item: IEventLibraryItem }> = ({ item }) => {
 	const { t } = useTranslation("event_templates_page");
 	const { libraryId } = useParams();
-	const [searchParams] = useSearchParams();
 
 	const isCurrent = libraryId === item.id;
 	const [open, setOpen] = useAutoOpen(isCurrent);
 
 	const path = mapEventTypeToLibraryEditPath(item.eventType);
 	const tabs = EVENT_TYPE_TO_TABS[item.eventType] ?? [];
-	const activeTab = searchParams.get("tab") ?? tabs[0];
+	const activeTab = useActiveSection(tabs, isCurrent);
 	const title = item.name || t("event_nav.untitled");
 
 	const meta = EVENT_METADATA[item.eventType];
@@ -45,15 +45,14 @@ export const NavLibraryEvent: FC<{ item: IEventLibraryItem }> = ({ item }) => {
 
 	if (!path) return null;
 
-	const buildTabHref = (tab: string) =>
-		buildRoute(path, { libraryId: item.id }, { tab });
+	const eventHref = buildRoute(path, { libraryId: item.id });
 
 	return (
 		<Collapsible open={open} onOpenChange={setOpen} asChild>
 			<SidebarMenuItem>
 				<SidebarMenuButton tooltip={title} isActive={isCurrent} asChild>
 					<Link
-						to={buildTabHref(tabs[0])}
+						to={eventHref}
 						onClick={(e) => {
 							// Already on this event: keep the selected tab, just expand.
 							if (isCurrent) e.preventDefault();
@@ -90,7 +89,11 @@ export const NavLibraryEvent: FC<{ item: IEventLibraryItem }> = ({ item }) => {
 									size="sm"
 									isActive={isCurrent && activeTab === tab}
 								>
-									<Link to={buildTabHref(tab)}>
+									<Link
+										to={eventHref}
+										state={{ section: tab }}
+										preventScrollReset
+									>
 										<span>
 											{t(
 												`event_nav.tabs.${tab}` as never

@@ -1,7 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import { InfoCircleIcon } from "@/shared/assets";
 import { buildRoute } from "@/shared/config";
@@ -24,6 +24,7 @@ import {
 	type ITourEvent
 } from "@/entities/tour";
 
+import { useActiveSection } from "../../../../model/use-active-section";
 import { useAutoOpen } from "../../../../model/use-auto-open";
 import { isMultiplyOptionEvent } from "../model/use-event-nav-days";
 
@@ -45,7 +46,6 @@ const NavEventNode: FC<INavEventNodeProps> = ({
 }) => {
 	const { t } = useTranslation("common_events");
 	const params = useParams();
-	const [searchParams] = useSearchParams();
 
 	const isCurrent = eventOptionId
 		? params.eventOptionId === eventOptionId
@@ -58,22 +58,20 @@ const NavEventNode: FC<INavEventNodeProps> = ({
 		? EVENT_TYPE_TO_OPTION_PATH[eventType]
 		: EVENT_TYPE_TO_PATH[eventType];
 	const tabs = EVENT_TYPE_TO_TABS[eventType] ?? [];
-	const activeTab = searchParams.get("tab") ?? tabs[0];
+	const activeTab = useActiveSection(tabs, isCurrent);
 
 	const meta = EVENT_METADATA[eventType];
 	const Icon = meta?.icon ?? InfoCircleIcon;
 
-	const buildTabHref = (tab: string) =>
-		buildRoute(
-			path,
-			{
+	// Unknown event types have no route; links are not rendered for them.
+	const eventHref = path
+		? buildRoute(path, {
 				tourId: params.tourId ?? "",
 				optionId: params.optionId ?? "",
 				eventId,
 				...(eventOptionId && { eventOptionId })
-			},
-			{ tab }
-		);
+			})
+		: "";
 
 	const rowContent = (
 		<>
@@ -102,7 +100,7 @@ const NavEventNode: FC<INavEventNodeProps> = ({
 					>
 						{path ? (
 							<Link
-								to={buildTabHref(tabs[0])}
+								to={eventHref}
 								onClick={(e) => {
 									// Already on this event: keep the selected tab, just expand.
 									if (isCurrent) e.preventDefault();
@@ -146,7 +144,11 @@ const NavEventNode: FC<INavEventNodeProps> = ({
 												isCurrent && activeTab === tab
 											}
 										>
-											<Link to={buildTabHref(tab)}>
+											<Link
+												to={eventHref}
+												state={{ section: tab }}
+												preventScrollReset
+											>
 												<span>
 													{t(
 														`event_nav.tabs.${tab}` as never
