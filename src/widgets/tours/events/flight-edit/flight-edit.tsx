@@ -19,14 +19,18 @@ import { type ENUM_FORM_SECTION_TYPE, FLIGHT_EDIT_TABS_LIST } from "./model";
 
 export interface IFlightEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TFlightEditSchema>;
-	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
+	/** Manual save; autosaved pages omit it and the section buttons hide. */
+	createSectionSubmit?: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
+	/** Blur of any field inside: saves pending text right away. */
+	onBlur?: () => void;
 	tabs?: typeof FLIGHT_EDIT_TABS_LIST;
 }
 
 export const FlightEdit: FC<IFlightEditProps> = ({
 	form,
 	createSectionSubmit,
+	onBlur,
 	isLoading,
 	poolVariant,
 	onPoolSelect,
@@ -38,7 +42,7 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 
 	return (
 		<Form {...form}>
-			<section className="flex flex-col gap-6">
+			<section className="flex flex-col gap-6" onBlur={onBlur}>
 				<div className="flex flex-col gap-2">
 					<EventTitleInput
 						control={form.control}

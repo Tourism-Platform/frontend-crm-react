@@ -25,7 +25,10 @@ import {
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
 
-import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+import {
+	ENUM_EVENT_POOL_VARIANT,
+	useLibraryEventAutosave
+} from "@/features/tours";
 
 import { GuideEdit } from "@/widgets/tours";
 
@@ -55,7 +58,18 @@ export const LibraryGuideEditPage: FC = () => {
 
 	const form = useForm<TGuideEditSchema>({
 		resolver: zodResolver(GUIDE_EDIT_SCHEMA),
-		mode: "onSubmit"
+		mode: "onChange"
+	});
+
+	// Existing entries autosave (debounced); `new` is created by its button.
+	const autosave = useLibraryEventAutosave(ENUM_EVENT.GUIDE, form, {
+		libraryId,
+		enabled: !isCreate,
+		data: isCreate
+			? undefined
+			: (libraryEvent as TGuideEditSchema | undefined),
+		recordKey: `${libraryId}:${supplyId ?? "main"}`,
+		currentDetails: libraryTemplate?.event.details
 	});
 
 	useEffect(() => {
@@ -63,12 +77,6 @@ export const LibraryGuideEditPage: FC = () => {
 			toast.error(t("toasts.load.error"));
 		}
 	}, [isLoadError, t]);
-
-	useEffect(() => {
-		if (!isCreate && libraryEvent) {
-			form.reset(libraryEvent as TGuideEditSchema);
-		}
-	}, [libraryEvent, form, isCreate]);
 
 	const createSectionSubmit = async () => {
 		if (
@@ -117,10 +125,11 @@ export const LibraryGuideEditPage: FC = () => {
 	return (
 		<GuideEdit
 			form={form}
-			createSectionSubmit={createSectionSubmit}
+			createSectionSubmit={isCreate ? createSectionSubmit : undefined}
+			onBlur={autosave.handleBlur}
 			isLoading={isCreateLoading || isUpdateLoading}
 			poolVariant={ENUM_EVENT_POOL_VARIANT.LIBRARY}
-			onPoolSelect={setSupplyId}
+			onPoolSelect={(id) => autosave.flush().then(() => setSupplyId(id))}
 		/>
 	);
 };

@@ -14,6 +14,7 @@ import {
 	alignTransportationPerCarExpenses
 } from "@/entities/tour";
 
+import { useConfirmPricingChange } from "../../../model";
 import { ENUM_FORM_SECTION } from "../../model";
 
 import { PerCarByClassCard } from "./per-car-by-class-card";
@@ -66,6 +67,7 @@ const PerCarDetailsBase: FC<{
 	form: UseFormReturn<TTransportationEditSchema>;
 }> = ({ form }) => {
 	const { t } = useTranslation("transportation_edit_page");
+	const confirmPricingChange = useConfirmPricingChange();
 
 	const carsList = useWatch({
 		control: form.control,
@@ -88,7 +90,8 @@ const PerCarDetailsBase: FC<{
 		syncPerCarExpenses(form);
 	}, [carsList, pricingType, priceBasedOnClass, form]);
 
-	const handlePriceBasedOnClassChange = (checked: boolean) => {
+	const handlePriceBasedOnClassChange = async (checked: boolean) => {
+		if (!(await confirmPricingChange())) return;
 		form.setValue(
 			`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`,
 			checked

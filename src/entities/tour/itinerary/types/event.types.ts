@@ -6,7 +6,9 @@ import type { ENUM_EVENT_BACKEND_TYPE } from "./event-backend-enum.types";
 import type {
 	TEventDetailsBackend,
 	TEventDetailsWriteBackend,
-	TTourEventBackendResponce
+	TTourEventBackendResponce,
+	TTourEventMemberUpdateBackend,
+	TTourEventOptionUpdateBackend
 } from "./event-backend.types";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
 import type { TFlightEditSchema } from "./flight";
@@ -81,6 +83,25 @@ export interface ITourEventUpdate {
 	language?: ENUM_LANGUAGES_TYPE;
 	/** Current READ details — used to echo pool ids on inline spec save. */
 	currentDetails?: TEventDetailsBackend;
+}
+
+interface IEventOptionTarget {
+	tourId: string;
+	optionId: string;
+	eventId: string;
+	/** Option row id — for single events it is `event.id` from the read. */
+	eventOptionId: string;
+}
+
+/** `PATCH O`: texts, package and plan of the option (fe6.4 §3). */
+export interface IUpdateEventOptionBody extends IEventOptionTarget {
+	body: TTourEventOptionUpdateBackend;
+}
+
+/** `PATCH M`: one inline pool member, replaced as a whole (fe6.4 §4). */
+export interface IUpdateEventPoolMemberBody extends IEventOptionTarget {
+	supplyId: string;
+	body: TTourEventMemberUpdateBackend;
 }
 
 export type TTourEvent =

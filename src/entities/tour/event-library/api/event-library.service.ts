@@ -29,7 +29,8 @@ import type {
 	IEventLibraryItem,
 	IEventLibraryUpdate,
 	TEventLibraryItemBackend,
-	TEventLibraryListBackendResponse
+	TEventLibraryListBackendResponse,
+	TUpdateEventLibraryBackend
 } from "../types";
 
 export const eventLibraryApi = authApi.injectEndpoints({
@@ -176,6 +177,22 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
 			]
 		}),
+		/** Autosave: PATCH with a body already built (de-duplicated by the caller). */
+		updateEventLibraryBody: builder.mutation<
+			IEventLibraryItem,
+			{ libraryId: string; body: TUpdateEventLibraryBackend }
+		>({
+			query: ({ libraryId, body }) => ({
+				...TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent(libraryId),
+				body
+			}),
+			transformResponse: (response: TEventLibraryItemBackend) =>
+				mapEventLibraryItemToFrontend(response),
+			invalidatesTags: (_result, _error, { libraryId }) => [
+				ENUM_API_TAGS.EVENT_LIBRARY,
+				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
+			]
+		}),
 		patchEventLibraryPool: builder.mutation<
 			IEventLibraryItem,
 			| {
@@ -230,6 +247,7 @@ export const {
 	useCreateEventLibraryMutation,
 	useCopyEventLibraryMutation,
 	useUpdateEventLibraryMutation,
+	useUpdateEventLibraryBodyMutation,
 	usePatchEventLibraryPoolMutation,
 	useDeleteEventLibraryMutation
 } = eventLibraryApi;

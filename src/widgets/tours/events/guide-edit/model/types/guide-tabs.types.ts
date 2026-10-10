@@ -12,11 +12,10 @@ import {
 } from "@/entities/tour";
 
 export type TSlotProps = Required<
-	Pick<
-		IQueryTabSlotProps<TGuideEditSchema>,
-		"form" | "onSubmit" | "isLoading"
-	>
->;
+	Pick<IQueryTabSlotProps<TGuideEditSchema>, "form" | "isLoading">
+> &
+	// Manual save only: autosaved pages pass no `onSubmit` and the slot hides its button.
+	Pick<IQueryTabSlotProps<TGuideEditSchema>, "onSubmit">;
 
 export type TGuidePricingFormField = TFormField<
 	TTourEventGuideEditPageKeys,

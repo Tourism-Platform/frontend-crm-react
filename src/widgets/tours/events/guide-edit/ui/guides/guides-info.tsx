@@ -30,15 +30,17 @@ const GuidesInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 			/>
 			<GuidesDetails form={form} />
 
-			<div className="flex justify-end mt-6">
-				<LoaderButton
-					type="button"
-					onClick={onSubmit}
-					isLoading={isLoading}
-					label={t("form.guides.buttons.save")}
-					loadingLabel={t("form.guides.buttons.saving")}
-				/>
-			</div>
+			{onSubmit ? (
+				<div className="flex justify-end mt-6">
+					<LoaderButton
+						type="button"
+						onClick={onSubmit}
+						isLoading={isLoading}
+						label={t("form.guides.buttons.save")}
+						loadingLabel={t("form.guides.buttons.saving")}
+					/>
+				</div>
+			) : null}
 		</div>
 	);
 };

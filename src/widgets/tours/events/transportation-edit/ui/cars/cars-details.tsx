@@ -13,7 +13,7 @@ import {
 	type TTransportationEditSchema
 } from "@/entities/tour";
 
-import { removeWithPriceRow } from "../../../model/remove-with-price-row";
+import { removeWithPriceRow, useConfirmRemoveLastNode } from "../../../model";
 import { ENUM_FORM_SECTION } from "../../model";
 
 import { CarsCard } from "./cars-card";
@@ -27,11 +27,18 @@ interface ICarsDetailsProps {
 
 const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 	const { t } = useTranslation("transportation_edit_page");
+	const confirmRemoveLastNode = useConfirmRemoveLastNode();
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
 		name: `${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}`
 	});
+
+	// The last node going away deletes its photos too: ask first (fe6.4 §6).
+	const handleRemove = async (index: number) => {
+		if (fields.length === 1 && !(await confirmRemoveLastNode())) return;
+		removeWithPriceRow(form, remove, CAR_PRICE_ROWS_PATH, index);
+	};
 
 	const handleAddCar = () => {
 		append({
@@ -51,14 +58,7 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 						key={field.id}
 						form={form}
 						index={index}
-						onRemove={() =>
-							removeWithPriceRow(
-								form,
-								remove,
-								CAR_PRICE_ROWS_PATH,
-								index
-							)
-						}
+						onRemove={() => handleRemove(index)}
 					/>
 				))}
 

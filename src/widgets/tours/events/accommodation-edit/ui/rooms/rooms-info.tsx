@@ -14,15 +14,17 @@ const RoomsInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 		<div className="grid gap-12">
 			<RoomsDetails form={form} />
 
-			<div className="flex justify-end mt-6">
-				<LoaderButton
-					type="button"
-					onClick={onSubmit}
-					isLoading={isLoading}
-					label={t("form.rooms.buttons.save")}
-					loadingLabel={t("form.rooms.buttons.saving")}
-				/>
-			</div>
+			{onSubmit ? (
+				<div className="flex justify-end mt-6">
+					<LoaderButton
+						type="button"
+						onClick={onSubmit}
+						isLoading={isLoading}
+						label={t("form.rooms.buttons.save")}
+						loadingLabel={t("form.rooms.buttons.saving")}
+					/>
+				</div>
+			) : null}
 		</div>
 	);
 };

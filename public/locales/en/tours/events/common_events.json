@@ -1,4 +1,19 @@
 {
+	"autosave": {
+		"error": "Changes were not saved. Edit any field to retry."
+	},
+	"confirm": {
+		"pricing_type": {
+			"title": "Change the pricing method?",
+			"description": "Prices of the current method will be deleted when the change is saved."
+		},
+		"remove_last_node": {
+			"title": "Remove the last item?",
+			"description": "Its photos will be deleted permanently."
+		},
+		"action": "Change",
+		"remove": "Remove"
+	},
 	"breadcrumb": {
 		"itinerary": "Full Itinerary",
 		"events": {

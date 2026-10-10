@@ -30,15 +30,17 @@ const ItemsInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 			/>
 			<ItemsDetails form={form} />
 
-			<div className="flex justify-end mt-6">
-				<LoaderButton
-					type="button"
-					onClick={onSubmit}
-					isLoading={isLoading}
-					label={t("form.items.buttons.save")}
-					loadingLabel={t("form.items.buttons.saving")}
-				/>
-			</div>
+			{onSubmit ? (
+				<div className="flex justify-end mt-6">
+					<LoaderButton
+						type="button"
+						onClick={onSubmit}
+						isLoading={isLoading}
+						label={t("form.items.buttons.save")}
+						loadingLabel={t("form.items.buttons.saving")}
+					/>
+				</div>
+			) : null}
 		</div>
 	);
 };

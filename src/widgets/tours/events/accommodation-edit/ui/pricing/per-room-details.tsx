@@ -14,6 +14,7 @@ import {
 	alignAccommodationPerRoomExpenses
 } from "@/entities/tour";
 
+import { useConfirmPricingChange } from "../../../model";
 import { ENUM_FORM_SECTION } from "../../model";
 
 import { PerRoomByClassCard } from "./per-room-by-class-card";
@@ -67,6 +68,7 @@ const PerRoomDetailsBase: FC<{
 	form: UseFormReturn<TAccommodationEditSchema>;
 }> = ({ form }) => {
 	const { t } = useTranslation("accommodation_edit_page");
+	const confirmPricingChange = useConfirmPricingChange();
 
 	const roomsList = useWatch({
 		control: form.control,
@@ -89,7 +91,8 @@ const PerRoomDetailsBase: FC<{
 		syncPerRoomExpenses(form);
 	}, [roomsList, pricingType, priceBasedOnClass, form]);
 
-	const handlePriceBasedOnClassChange = (checked: boolean) => {
+	const handlePriceBasedOnClassChange = async (checked: boolean) => {
+		if (!(await confirmPricingChange())) return;
 		form.setValue(
 			`${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.PRICE_BASED_ON_CLASS}`,
 			checked

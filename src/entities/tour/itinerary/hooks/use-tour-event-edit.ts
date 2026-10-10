@@ -62,6 +62,11 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 		data: data?.form as T | undefined,
 		details: data?.details,
 		eventOptionId: resolvedEventOptionId,
+		/** Edited record identity (option row + pool member); a new key is a new autosave baseline. */
+		recordKey: resolvedEventOptionId
+			? `${resolvedEventOptionId}:${supplyId ?? "main"}`
+			: undefined,
+		ids: { tourId, optionId, eventId },
 		selectPoolMember: setSupplyId,
 		isError,
 		isLoading: isUpdateLoading,

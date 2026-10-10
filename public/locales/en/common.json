@@ -1,4 +1,14 @@
 {
+	"autosave": {
+		"saving": "Saving…",
+		"saved": "Saved",
+		"invalid": "Fix the highlighted fields",
+		"error": "Not saved"
+	},
+	"confirm": {
+		"ok": "Confirm",
+		"cancel": "Cancel"
+	},
 	"actions": {
 		"show_more": "Show more"
 	},

@@ -90,15 +90,17 @@ const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 					</>
 				)}
 
-				<div className="flex justify-end mt-6">
-					<LoaderButton
-						type="button"
-						onClick={onSubmit}
-						isLoading={isLoading}
-						label={t("form.pricing.buttons.save")}
-						loadingLabel={t("form.pricing.buttons.saving")}
-					/>
-				</div>
+				{onSubmit ? (
+					<div className="flex justify-end mt-6">
+						<LoaderButton
+							type="button"
+							onClick={onSubmit}
+							isLoading={isLoading}
+							label={t("form.pricing.buttons.save")}
+							loadingLabel={t("form.pricing.buttons.saving")}
+						/>
+					</div>
+				) : null}
 			</div>
 		</div>
 	);

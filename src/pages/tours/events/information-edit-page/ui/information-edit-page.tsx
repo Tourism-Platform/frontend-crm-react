@@ -4,8 +4,6 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { validateFormWithSectionToast } from "@/shared/lib";
-
 import {
 	ENUM_EVENT,
 	INFO_EDIT_SCHEMA,
@@ -13,54 +11,41 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
-import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+import { ENUM_EVENT_POOL_VARIANT, useEventAutosave } from "@/features/tours";
 
 import { InformationEdit } from "@/widgets/tours";
 
 export const InformationEditPage: FC = () => {
 	const { t } = useTranslation("information_edit_page");
-	const { data, selectPoolMember, isError, isLoading, update } =
-		useTourEventEdit<TInfoEditSchema>(ENUM_EVENT.INFO);
+	const edit = useTourEventEdit<TInfoEditSchema>(ENUM_EVENT.INFO);
 
 	const form = useForm<TInfoEditSchema>({
 		resolver: zodResolver(INFO_EDIT_SCHEMA),
-		mode: "onSubmit"
+		mode: "onChange"
 	});
 
+	// Saves on change (debounced), keeps the form in sync with the server.
+	const autosave = useEventAutosave(ENUM_EVENT.INFO, form, edit);
+
 	useEffect(() => {
-		if (isError) {
+		if (edit.isError) {
 			toast.error(t("form.toasts.load.error"));
 		}
-	}, [isError, t]);
+	}, [edit.isError, t]);
 
-	useEffect(() => {
-		if (data) {
-			form.reset(data);
-		}
-	}, [data, form]);
-
-	const createSectionSubmit = async () => {
-		const isValid = await validateFormWithSectionToast(form, t, {
-			keyPrefix: "form.toasts.validation.error"
-		});
-		if (!isValid) return;
-
-		try {
-			await update(form.getValues());
-			toast.success(t("form.toasts.save.success"));
-		} catch (error) {
-			toast.error(t("form.toasts.save.error"));
-			console.log(error);
-		}
+	// Pending edits belong to the current supplier: save them before switching.
+	const handlePoolSelect = async (supplyId: string | undefined) => {
+		await autosave.flush();
+		edit.selectPoolMember(supplyId);
 	};
 
 	return (
 		<InformationEdit
 			form={form}
-			createSectionSubmit={createSectionSubmit}
-			isLoading={isLoading}
+			isLoading={false}
+			onBlur={autosave.handleBlur}
 			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
-			onPoolSelect={selectPoolMember}
+			onPoolSelect={handlePoolSelect}
 		/>
 	);
 };

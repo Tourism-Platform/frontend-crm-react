@@ -22,14 +22,18 @@ import {
 
 export interface ITransportationEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TTransportationEditSchema>;
-	createSectionSubmit: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
+	/** Manual save; autosaved pages omit it and the section buttons hide. */
+	createSectionSubmit?: (section?: ENUM_FORM_SECTION_TYPE) => Promise<void>;
 	isLoading: boolean;
+	/** Blur of any field inside: saves pending text right away. */
+	onBlur?: () => void;
 	tabs?: typeof TRANSPORTATION_EDIT_TABS_LIST;
 }
 
 export const TransportationEdit: FC<ITransportationEditProps> = ({
 	form,
 	createSectionSubmit,
+	onBlur,
 	isLoading,
 	poolVariant,
 	onPoolSelect,
@@ -41,7 +45,7 @@ export const TransportationEdit: FC<ITransportationEditProps> = ({
 
 	return (
 		<Form {...form}>
-			<section className="flex flex-col gap-6">
+			<section className="flex flex-col gap-6" onBlur={onBlur}>
 				<div className="flex flex-col gap-2">
 					<EventTitleInput
 						control={form.control}

@@ -15,14 +15,18 @@ import { GUIDE_EDIT_TABS_LIST } from "./model";
 
 export interface IGuideEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TGuideEditSchema>;
-	createSectionSubmit: () => Promise<void>;
+	/** Manual save; autosaved pages omit it and the section buttons hide. */
+	createSectionSubmit?: () => Promise<void>;
 	isLoading: boolean;
+	/** Blur of any field inside: saves pending text right away. */
+	onBlur?: () => void;
 	tabs?: typeof GUIDE_EDIT_TABS_LIST;
 }
 
 export const GuideEdit: FC<IGuideEditProps> = ({
 	form,
 	createSectionSubmit,
+	onBlur,
 	isLoading,
 	poolVariant,
 	onPoolSelect,
@@ -32,7 +36,7 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 
 	return (
 		<Form {...form}>
-			<section className="flex flex-col gap-6">
+			<section className="flex flex-col gap-6" onBlur={onBlur}>
 				<EventTitleInput
 					control={form.control}
 					icon={UsersIcon}

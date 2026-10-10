@@ -21,6 +21,7 @@ import {
 
 import { FeeLinesField } from "@/features/pricing";
 
+import { useConfirmPricingChange } from "../../../model";
 import {
 	ENUM_FORM_SECTION,
 	PRICING_INDIVIDUAL_TABS_LIST,
@@ -33,6 +34,7 @@ import { PerItemDetails } from "./per-item-details";
 
 const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 	const { t } = useTranslation("supplement_edit_page");
+	const confirmPricingChange = useConfirmPricingChange();
 	const pricingType = useWatch({
 		control: form.control,
 		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE}`
@@ -63,12 +65,13 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 					value={
 						pricingType ?? ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE
 					}
-					onValueChange={(val) =>
+					onValueChange={async (val) => {
+						if (!(await confirmPricingChange())) return;
 						form.setValue(
 							`${ENUM_FORM_SECTION.PRICING}.${ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE}`,
 							val as typeof ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE
-						)
-					}
+						);
+					}}
 				>
 					<CustomOptionTabsList className="grid grid-cols-3 w-fit">
 						{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (

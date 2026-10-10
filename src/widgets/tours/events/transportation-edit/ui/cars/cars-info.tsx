@@ -14,15 +14,17 @@ const CarsInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 		<div className="grid gap-12">
 			<CarsDetails form={form} />
 
-			<div className="flex justify-end mt-6">
-				<LoaderButton
-					type="button"
-					onClick={onSubmit}
-					isLoading={isLoading}
-					label={t("form.cars.buttons.save")}
-					loadingLabel={t("form.cars.buttons.saving")}
-				/>
-			</div>
+			{onSubmit ? (
+				<div className="flex justify-end mt-6">
+					<LoaderButton
+						type="button"
+						onClick={onSubmit}
+						isLoading={isLoading}
+						label={t("form.cars.buttons.save")}
+						loadingLabel={t("form.cars.buttons.saving")}
+					/>
+				</div>
+			) : null}
 		</div>
 	);
 };

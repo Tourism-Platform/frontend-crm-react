@@ -4,9 +4,6 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
-import { validateFormWithSectionToast } from "@/shared/lib";
-
 import {
 	ENUM_EVENT,
 	TRANSPORTATION_EDIT_SCHEMA,
@@ -14,62 +11,43 @@ import {
 	useTourEventEdit
 } from "@/entities/tour";
 
-import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+import { ENUM_EVENT_POOL_VARIANT, useEventAutosave } from "@/features/tours";
 
 import { TransportationEdit } from "@/widgets/tours";
-import type { ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/transportation-edit/model";
 
 export const TransportationEditPage: FC = () => {
-	const { t, i18n } = useTranslation("transportation_edit_page");
-	const { data, selectPoolMember, isError, isLoading, update } =
-		useTourEventEdit<TTransportationEditSchema>(ENUM_EVENT.TRANSPORTATION);
+	const { t } = useTranslation("transportation_edit_page");
+	const edit = useTourEventEdit<TTransportationEditSchema>(
+		ENUM_EVENT.TRANSPORTATION
+	);
 
 	const form = useForm<TTransportationEditSchema>({
 		resolver: zodResolver(TRANSPORTATION_EDIT_SCHEMA),
-		mode: "onSubmit"
+		mode: "onChange"
 	});
 
+	// Saves on change (debounced), keeps the form in sync with the server.
+	const autosave = useEventAutosave(ENUM_EVENT.TRANSPORTATION, form, edit);
+
 	useEffect(() => {
-		if (isError) {
+		if (edit.isError) {
 			toast.error(t("form.toasts.load.error"));
 		}
-	}, [isError, t]);
+	}, [edit.isError, t]);
 
-	useEffect(() => {
-		if (data) {
-			form.reset(data);
-		}
-	}, [data, form]);
-
-	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
-		if (
-			!(await validateFormWithSectionToast(form, t, {
-				keyPrefix: "form.toasts.validation.error",
-				...(section && { fields: section })
-			}))
-		) {
-			return;
-		}
-
-		try {
-			await update(
-				form.getValues(),
-				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
-			);
-			toast.success(t("form.toasts.save.success"));
-		} catch (error) {
-			toast.error(t("form.toasts.save.error"));
-			console.log(error);
-		}
+	// Pending edits belong to the current supplier: save them before switching.
+	const handlePoolSelect = async (supplyId: string | undefined) => {
+		await autosave.flush();
+		edit.selectPoolMember(supplyId);
 	};
 
 	return (
 		<TransportationEdit
 			form={form}
-			createSectionSubmit={createSectionSubmit}
-			isLoading={isLoading}
+			isLoading={false}
+			onBlur={autosave.handleBlur}
 			poolVariant={ENUM_EVENT_POOL_VARIANT.TOUR}
-			onPoolSelect={selectPoolMember}
+			onPoolSelect={handlePoolSelect}
 		/>
 	);
 };

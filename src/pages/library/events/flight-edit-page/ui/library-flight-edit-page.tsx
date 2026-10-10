@@ -25,7 +25,10 @@ import {
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
 
-import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+import {
+	ENUM_EVENT_POOL_VARIANT,
+	useLibraryEventAutosave
+} from "@/features/tours";
 
 import { FlightEdit } from "@/widgets/tours";
 import { type ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/flight-edit/model";
@@ -56,7 +59,18 @@ export const LibraryFlightEditPage: FC = () => {
 
 	const form = useForm<TFlightEditSchema>({
 		resolver: zodResolver(FLIGHT_EDIT_SCHEMA),
-		mode: "onSubmit"
+		mode: "onChange"
+	});
+
+	// Existing entries autosave (debounced); `new` is created by its button.
+	const autosave = useLibraryEventAutosave(ENUM_EVENT.FLIGHT, form, {
+		libraryId,
+		enabled: !isCreate,
+		data: isCreate
+			? undefined
+			: (libraryEvent as TFlightEditSchema | undefined),
+		recordKey: `${libraryId}:${supplyId ?? "main"}`,
+		currentDetails: libraryTemplate?.event.details
 	});
 
 	useEffect(() => {
@@ -64,12 +78,6 @@ export const LibraryFlightEditPage: FC = () => {
 			toast.error(t("toasts.load.error"));
 		}
 	}, [isLoadError, t]);
-
-	useEffect(() => {
-		if (!isCreate && libraryEvent) {
-			form.reset(libraryEvent as TFlightEditSchema);
-		}
-	}, [libraryEvent, form, isCreate]);
 
 	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
 		if (
@@ -121,10 +129,11 @@ export const LibraryFlightEditPage: FC = () => {
 	return (
 		<FlightEdit
 			form={form}
-			createSectionSubmit={createSectionSubmit}
+			createSectionSubmit={isCreate ? createSectionSubmit : undefined}
+			onBlur={autosave.handleBlur}
 			isLoading={isCreateLoading || isUpdateLoading}
 			poolVariant={ENUM_EVENT_POOL_VARIANT.LIBRARY}
-			onPoolSelect={setSupplyId}
+			onPoolSelect={(id) => autosave.flush().then(() => setSupplyId(id))}
 		/>
 	);
 };

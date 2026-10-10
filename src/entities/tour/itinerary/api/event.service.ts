@@ -25,7 +25,8 @@ import {
 	mapMoveToSingleResultToFrontend,
 	mapOptionReorderToBackend,
 	mapSupplierPolicyWarningListToFrontend,
-	splitEventUpdate
+	splitEventUpdate,
+	withIndividualPricing
 } from "../converters";
 import { ENUM_FORM_EVENT_PRODUCT } from "../types";
 import type {
@@ -54,24 +55,14 @@ import type {
 	ITourEventCreate,
 	ITourEventReorder,
 	ITourEventUpdate,
+	IUpdateEventOptionBody,
 	IUpdateEventOptionContent,
+	IUpdateEventPoolMemberBody,
 	TMoveToMultiResultBackend,
 	TMoveToSingleResultBackend,
 	TTourEventBackendResponce,
-	TTourEventUpdate,
 	TTourEventUpdateBackend
 } from "../types";
-
-/** The form with `pricing.invoicing` forced to individual (same value for every event type). */
-const withIndividualPricing = (data: TTourEventUpdate): TTourEventUpdate => {
-	const pricing = (data as { pricing?: Record<string, unknown> }).pricing;
-	return pricing
-		? ({
-				...data,
-				pricing: { ...pricing, invoicing: "individual" }
-			} as TTourEventUpdate)
-		: data;
-};
 
 type TBaseQuery = (arg: {
 	url: string;
@@ -360,6 +351,75 @@ export const tourEventApi = authApi.injectEndpoints({
 					)
 				};
 			},
+			invalidatesTags: (
+				_result,
+				_error,
+				{ tourId, optionId, eventId, eventOptionId }
+			) => [
+				eventsTag(tourId, optionId),
+				eventDetailTag(tourId, optionId, eventId),
+				eventDetailTag(tourId, optionId, eventId, eventOptionId),
+				pricingTag(tourId, optionId),
+				...policyInvalidation(tourId, optionId, eventId)
+			]
+		}),
+		/** `PATCH O` alone: texts, package and plan (autosave "option" part). */
+		updateEventOption: builder.mutation<ITourEvent, IUpdateEventOptionBody>(
+			{
+				query: ({
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId,
+					body
+				}) => ({
+					...TOUR_EVENTS_PATHS.updateOption(
+						tourId,
+						optionId,
+						eventId,
+						eventOptionId
+					),
+					body
+				}),
+				transformResponse: (response: TTourEventBackendResponce) =>
+					mapAllEventsToFrontend(response),
+				invalidatesTags: (
+					_result,
+					_error,
+					{ tourId, optionId, eventId, eventOptionId }
+				) => [
+					eventsTag(tourId, optionId),
+					eventDetailTag(tourId, optionId, eventId),
+					eventDetailTag(tourId, optionId, eventId, eventOptionId),
+					pricingTag(tourId, optionId),
+					...policyInvalidation(tourId, optionId, eventId)
+				]
+			}
+		),
+		/** `PATCH M` alone: one inline supplier spec (autosave "member" part). */
+		updateEventPoolMember: builder.mutation<
+			ITourEvent,
+			IUpdateEventPoolMemberBody
+		>({
+			query: ({
+				tourId,
+				optionId,
+				eventId,
+				eventOptionId,
+				supplyId,
+				body
+			}) => ({
+				...TOUR_EVENTS_PATHS.updatePoolMember(
+					tourId,
+					optionId,
+					eventId,
+					eventOptionId,
+					supplyId
+				),
+				body
+			}),
+			transformResponse: (response: TTourEventBackendResponce) =>
+				mapAllEventsToFrontend(response),
 			invalidatesTags: (
 				_result,
 				_error,
@@ -825,6 +885,8 @@ export const {
 	useReorderEventMutation,
 	useAddOptionMutation,
 	useUpdateOptionMutation,
+	useUpdateEventOptionMutation,
+	useUpdateEventPoolMemberMutation,
 	useUpdateOptionContentMutation,
 	// Aliased: `useDeleteOptionMutation` collides with the tour-OPTION service.
 	useDeleteOptionMutation: useDeleteTourEventOptionMutation,

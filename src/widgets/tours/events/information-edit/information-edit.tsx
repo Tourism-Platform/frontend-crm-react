@@ -15,14 +15,18 @@ import { INFORMATION_EDIT_TABS_LIST } from "./model";
 
 export interface IInformationEditProps extends TEventPoolUiProps {
 	form: UseFormReturn<TInfoEditSchema>;
-	createSectionSubmit: () => Promise<void>;
+	/** Manual save; autosaved pages omit it and the section buttons hide. */
+	createSectionSubmit?: () => Promise<void>;
 	isLoading: boolean;
+	/** Blur of any field inside: saves pending text right away. */
+	onBlur?: () => void;
 	tabs?: typeof INFORMATION_EDIT_TABS_LIST;
 }
 
 export const InformationEdit: FC<IInformationEditProps> = ({
 	form,
 	createSectionSubmit,
+	onBlur,
 	isLoading,
 	poolVariant,
 	onPoolSelect,
@@ -32,7 +36,7 @@ export const InformationEdit: FC<IInformationEditProps> = ({
 
 	return (
 		<Form {...form}>
-			<section className="flex flex-col gap-6">
+			<section className="flex flex-col gap-6" onBlur={onBlur}>
 				<EventTitleInput
 					icon={InfoCircleIcon}
 					control={form.control}

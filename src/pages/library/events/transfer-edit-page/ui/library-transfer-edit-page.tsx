@@ -22,7 +22,10 @@ import {
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
 
-import { ENUM_EVENT_POOL_VARIANT } from "@/features/tours";
+import {
+	ENUM_EVENT_POOL_VARIANT,
+	useLibraryEventAutosave
+} from "@/features/tours";
 
 import { TransportationEdit } from "@/widgets/tours";
 import { type ENUM_FORM_SECTION_TYPE } from "@/widgets/tours/events/transportation-edit/model";
@@ -68,7 +71,18 @@ export const LibraryTransferEditPage: FC = () => {
 
 	const form = useForm<TTransportationEditSchema>({
 		resolver: zodResolver(TRANSPORTATION_EDIT_SCHEMA),
-		mode: "onSubmit"
+		mode: "onChange"
+	});
+
+	// Existing entries autosave (debounced); `new` is created by its button.
+	const autosave = useLibraryEventAutosave(ENUM_EVENT.TRANSPORTATION, form, {
+		libraryId,
+		enabled: !isCreate,
+		data: isCreate
+			? undefined
+			: (libraryEvent as TTransportationEditSchema | undefined),
+		recordKey: `${libraryId}:${supplyId ?? "main"}`,
+		currentDetails: libraryTemplate?.event.details
 	});
 
 	useEffect(() => {
@@ -76,12 +90,6 @@ export const LibraryTransferEditPage: FC = () => {
 			toast.error(t("toasts.load.error"));
 		}
 	}, [isLoadError, t]);
-
-	useEffect(() => {
-		if (!isCreate && libraryEvent) {
-			form.reset(libraryEvent as TTransportationEditSchema);
-		}
-	}, [libraryEvent, form, isCreate]);
 
 	const createSectionSubmit = async (section?: ENUM_FORM_SECTION_TYPE) => {
 		if (
@@ -136,10 +144,11 @@ export const LibraryTransferEditPage: FC = () => {
 	return (
 		<TransportationEdit
 			form={form}
-			createSectionSubmit={createSectionSubmit}
+			createSectionSubmit={isCreate ? createSectionSubmit : undefined}
+			onBlur={autosave.handleBlur}
 			isLoading={isCreateLoading || isUpdateLoading}
 			poolVariant={ENUM_EVENT_POOL_VARIANT.LIBRARY}
-			onPoolSelect={setSupplyId}
+			onPoolSelect={(id) => autosave.flush().then(() => setSupplyId(id))}
 		/>
 	);
 };

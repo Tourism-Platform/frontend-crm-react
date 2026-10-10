@@ -16,6 +16,7 @@ import {
 	ENUM_GUIDE_PRICING_TYPE
 } from "@/entities/tour";
 
+import { useConfirmPricingChange } from "../../../model";
 import {
 	ENUM_FORM_SECTION,
 	PRICING_INDIVIDUAL_TABS_LIST,
@@ -26,6 +27,7 @@ import { PerGuideDetails } from "./per-guide-details";
 
 const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 	const { t } = useTranslation("guide_edit_page");
+	const confirmPricingChange = useConfirmPricingChange();
 	const pricingType = useWatch({
 		control: form.control,
 		name: `${ENUM_FORM_SECTION.PRICING}.${ENUM_GUIDE_PRICING_FIELD.PRICING_TYPE}`
@@ -39,12 +41,13 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 				</h3>
 				<CustomOptionTabs
 					value={pricingType ?? ENUM_GUIDE_PRICING_TYPE.PER_GUIDE}
-					onValueChange={(val) =>
+					onValueChange={async (val) => {
+						if (!(await confirmPricingChange())) return;
 						form.setValue(
 							`${ENUM_FORM_SECTION.PRICING}.${ENUM_GUIDE_PRICING_FIELD.PRICING_TYPE}`,
 							val as typeof ENUM_GUIDE_PRICING_TYPE.PER_GUIDE
-						)
-					}
+						);
+					}}
 				>
 					<CustomOptionTabsList className="grid grid-cols-1 w-fit">
 						{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (

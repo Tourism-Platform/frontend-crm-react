@@ -2,10 +2,28 @@ import type {
 	TEventDetailsBackend,
 	TTourEventMemberUpdateBackend,
 	TTourEventOptionUpdateBackend,
+	TTourEventUpdate,
 	TTourEventUpdateBackend
 } from "../../../types";
 
 import { getEventPool } from "./event-pool.helpers";
+
+/**
+ * The form with `pricing.invoicing` forced to individual (same value for every
+ * event type): the member spec is built as if not in a package, so a package
+ * never wipes the supplier prices (fe6.4 §7).
+ */
+export const withIndividualPricing = (
+	data: TTourEventUpdate
+): TTourEventUpdate => {
+	const pricing = (data as { pricing?: Record<string, unknown> }).pricing;
+	return pricing
+		? ({
+				...data,
+				pricing: { ...pricing, invoicing: "individual" }
+			} as TTourEventUpdate)
+		: data;
+};
 
 export interface ISplitEventUpdate {
 	/** `PATCH O`: texts, package and plan. Always sent. */
