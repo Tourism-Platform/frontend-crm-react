@@ -49,6 +49,8 @@ export const mapRoomsFromBackend = (
 		return {
 			rooms: (spec.categories[0]?.rooms ?? []).map((room) => ({
 				[ENUM_FORM_ROOMS.ID]: room.id,
+				[ENUM_FORM_ROOMS.TYP]: room.typ,
+				[ENUM_FORM_ROOMS.PAX]: room.pax,
 				[ENUM_FORM_ROOMS.ROOM_NAME]: room.name ?? "",
 				[ENUM_FORM_ROOMS.DESCRIPTION]: room.description ?? ""
 			}))
@@ -59,6 +61,8 @@ export const mapRoomsFromBackend = (
 		rooms: (spec.categories ?? []).flatMap((category) =>
 			(category.rooms ?? []).map((room) => ({
 				[ENUM_FORM_ROOMS.ID]: room.id,
+				[ENUM_FORM_ROOMS.TYP]: room.typ,
+				[ENUM_FORM_ROOMS.PAX]: room.pax,
 				[ENUM_FORM_ROOMS.ROOM_NAME]: room.name ?? room.typ ?? "Room",
 				[ENUM_FORM_ROOMS.DESCRIPTION]: room.description ?? ""
 			}))

@@ -6,14 +6,20 @@ import { useTranslation } from "react-i18next";
 import { Button, withErrorBoundary } from "@/shared/ui";
 
 import {
+	ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD,
+	ENUM_ACCOMMODATION_PRICING_FIELD,
 	ENUM_FORM_ROOMS,
 	type TAccommodationEditSchema
 } from "@/entities/tour";
 
+import { removeWithPriceRow } from "../../../model/remove-with-price-row";
 import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { ENUM_FORM_SECTION } from "../../model";
 
 import { RoomCard } from "./room-card";
+
+/** Per-room price rows, index-aligned to the rooms list. */
+const ROOM_PRICE_ROWS_PATH = `${ENUM_FORM_SECTION.PRICING}.${ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES}.${ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS}`;
 
 interface IRoomsProps {
 	form: UseFormReturn<TAccommodationEditSchema>;
@@ -44,7 +50,14 @@ const RoomsDetailsBase: FC<IRoomsProps> = ({ form }) => {
 						key={field.id}
 						form={form}
 						index={index}
-						onRemove={() => remove(index)}
+						onRemove={() =>
+							removeWithPriceRow(
+								form,
+								remove,
+								ROOM_PRICE_ROWS_PATH,
+								index
+							)
+						}
 						readOnly={isInherited}
 					/>
 				))}

@@ -71,6 +71,10 @@ export type ENUM_ACCOMMODATION_PRICE_ROW_FIELD_TYPE =
 	(typeof ENUM_ACCOMMODATION_PRICE_ROW_FIELD)[keyof typeof ENUM_ACCOMMODATION_PRICE_ROW_FIELD];
 
 export const ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD = {
+	/** Hidden: backend id of the class room — echoed so its photos survive. */
+	ID: "id",
+	/** Hidden: backend pax of the class room, kept for suite / family. */
+	PAX: "pax",
 	NAME: "name",
 	COST: ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST,
 	FEES: ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES,
@@ -103,6 +107,8 @@ export interface IAccommodationPerRoomPriceRow {
 
 export interface IAccommodationCategoryPriceRow
 	extends IAccommodationPerRoomPriceRow {
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.ID]?: string;
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.PAX]?: number | null;
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: string;
 }
 

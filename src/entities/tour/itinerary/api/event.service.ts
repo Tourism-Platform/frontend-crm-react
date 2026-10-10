@@ -1,3 +1,5 @@
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+
 import { ENUM_API_TAGS, TOUR_EVENTS_PATHS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
@@ -22,8 +24,10 @@ import {
 	mapMoveToMultiToBackend,
 	mapMoveToSingleResultToFrontend,
 	mapOptionReorderToBackend,
-	mapSupplierPolicyWarningListToFrontend
+	mapSupplierPolicyWarningListToFrontend,
+	splitEventUpdate
 } from "../converters";
+import { ENUM_FORM_EVENT_PRODUCT } from "../types";
 import type {
 	IAddEventOption,
 	IAddEventPoolMember,
@@ -53,8 +57,27 @@ import type {
 	IUpdateEventOptionContent,
 	TMoveToMultiResultBackend,
 	TMoveToSingleResultBackend,
-	TTourEventBackendResponce
+	TTourEventBackendResponce,
+	TTourEventUpdate,
+	TTourEventUpdateBackend
 } from "../types";
+
+/** The form with `pricing.invoicing` forced to individual (same value for every event type). */
+const withIndividualPricing = (data: TTourEventUpdate): TTourEventUpdate => {
+	const pricing = (data as { pricing?: Record<string, unknown> }).pricing;
+	return pricing
+		? ({
+				...data,
+				pricing: { ...pricing, invoicing: "individual" }
+			} as TTourEventUpdate)
+		: data;
+};
+
+type TBaseQuery = (arg: {
+	url: string;
+	method?: string;
+	body?: unknown;
+}) => Promise<{ data?: unknown; error?: FetchBaseQueryError }>;
 
 const eventsTag = (tourId: string, optionId: string) => ({
 	type: ENUM_API_TAGS.TOURS_EVENTS,
@@ -257,33 +280,86 @@ export const tourEventApi = authApi.injectEndpoints({
 				pricingTag(tourId, optionId)
 			]
 		}),
-		/** Form-driven option update (single events and multi alternatives alike). */
+		/**
+		 * Form-driven option update (single events and multi alternatives alike):
+		 * `PATCH O` (texts, package, plan), then `PATCH M` for the edited inline
+		 * pool member — the option route rejects `details.pool` (fe6.4 §1).
+		 */
 		updateOption: builder.mutation<ITourEvent, ITourEventUpdate>({
-			query: ({
-				tourId,
-				optionId,
-				eventId,
-				eventOptionId,
-				type,
-				data,
-				language,
-				currentDetails
-			}) => ({
-				...TOUR_EVENTS_PATHS.updateOption(
+			async queryFn(
+				{
 					tourId,
 					optionId,
 					eventId,
-					eventOptionId
-				),
-				body: mapEventUpdateToBackend(
+					eventOptionId,
 					type,
 					data,
 					language,
 					currentDetails
-				)
-			}),
-			transformResponse: (response: TTourEventBackendResponce) =>
-				mapAllEventsToFrontend(response),
+				},
+				_api,
+				_extraOptions,
+				baseQuery
+			) {
+				const query = baseQuery as TBaseQuery;
+				const supplyId = (data as Record<string, unknown>)[
+					ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID
+				] as string | undefined;
+				const { option, member } = splitEventUpdate(
+					mapEventUpdateToBackend(
+						type,
+						data,
+						language,
+						currentDetails
+					),
+					supplyId,
+					currentDetails,
+					// A package lives on the option only; the supplier keeps its prices.
+					mapEventUpdateToBackend(
+						type,
+						withIndividualPricing(data),
+						language,
+						currentDetails
+					)
+				);
+
+				const optionResult = await query({
+					...TOUR_EVENTS_PATHS.updateOption(
+						tourId,
+						optionId,
+						eventId,
+						eventOptionId
+					),
+					body: option
+				});
+				if (optionResult.error) return { error: optionResult.error };
+				if (!member) {
+					return {
+						data: mapAllEventsToFrontend(
+							optionResult.data as TTourEventBackendResponce
+						)
+					};
+				}
+
+				const memberResult = await query({
+					...TOUR_EVENTS_PATHS.updatePoolMember(
+						tourId,
+						optionId,
+						eventId,
+						eventOptionId,
+						member.supplyId
+					),
+					body: member.body
+				});
+				if (memberResult.error) return { error: memberResult.error };
+
+				// Both routes return the whole event; the last one is the freshest.
+				return {
+					data: mapAllEventsToFrontend(
+						memberResult.data as TTourEventBackendResponce
+					)
+				};
+			},
 			invalidatesTags: (
 				_result,
 				_error,
@@ -308,7 +384,13 @@ export const tourEventApi = authApi.injectEndpoints({
 					eventId,
 					eventOptionId
 				),
-				body: mapEventOptionReadToWriteBody(option)
+				// Texts and plan only: the option route rejects `details.pool`.
+				body: splitEventUpdate(
+					mapEventOptionReadToWriteBody(
+						option
+					) as TTourEventUpdateBackend,
+					undefined
+				).option
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),

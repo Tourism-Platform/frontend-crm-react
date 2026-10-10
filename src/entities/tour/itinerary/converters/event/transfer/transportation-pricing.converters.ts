@@ -6,6 +6,7 @@ import {
 } from "@/entities/commission";
 
 import {
+	ENUM_FORM_CARS,
 	ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD,
 	ENUM_TRANSPORTATION_EXPENSE_TYP,
 	ENUM_TRANSPORTATION_MARKUP_TYP,
@@ -39,7 +40,6 @@ import {
 	mapFeesFromBackend,
 	mapFeesToBackend
 } from "../common/fees.converters";
-import { zeroFixedCharge } from "../common/zero-fixed-charge.helpers";
 
 import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
@@ -49,7 +49,20 @@ import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
  * `Car` require both — contract gap bridged with documented defaults.
  */
 const DEFAULT_CAR_BODY_TYPE = VehicleBodyType.Sedan;
-const DEFAULT_CAR_PAX = 1;
+
+/**
+ * Write-side car node. The id is always echoed — a car without one is a new
+ * node and the old one is deleted with its photos (fe6.4 §5). `pax` is
+ * required by the form; there is no default (fe6.4 §14).
+ */
+const mapCarBase = (car: TCarsList[number]) => ({
+	...(car[ENUM_FORM_CARS.ID] ? { id: car[ENUM_FORM_CARS.ID] } : {}),
+	body_type:
+		vehicleBodyTypeConverter.to(car.car_name) ?? DEFAULT_CAR_BODY_TYPE,
+	// Non-null after CARS_SCHEMA validation.
+	pax: car.pax as number,
+	description: car.description || null
+});
 
 const createEmptyPerCarPriceRow = (): ITransportationPerCarPriceRow => ({
 	[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST]: null,
@@ -455,11 +468,7 @@ const mapCarsOnlySpec = (
 		? {
 				pricing: "per_car_category",
 				cars: carsList.map((car) => ({
-					body_type:
-						vehicleBodyTypeConverter.to(car.car_name) ??
-						DEFAULT_CAR_BODY_TYPE,
-					pax: car.pax ?? DEFAULT_CAR_PAX,
-					description: car.description || null
+					...mapCarBase(car)
 				}))
 			}
 		: undefined;
@@ -539,11 +548,7 @@ export const mapTransportationPricingToBackend = (
 						name: category.name
 					})),
 					cars: carsList.map((car, index) => ({
-						body_type:
-							vehicleBodyTypeConverter.to(car.car_name) ??
-							DEFAULT_CAR_BODY_TYPE,
-						pax: car.pax ?? DEFAULT_CAR_PAX,
-						description: car.description || null,
+						...mapCarBase(car),
 						prices: (
 							rows[index]?.[
 								ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD
@@ -579,26 +584,25 @@ export const mapTransportationPricingToBackend = (
 											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
 												.CATEGORY_ID
 										],
-									charge:
-										mapToFixedCharge(
+									charge: mapToFixedCharge(
+										category[
+											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+												.COST
+										],
+										category[
+											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+												.FEES
+										],
+										rowCurrency,
+										mapMarkupToBackend(
 											category[
 												ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-													.COST
-											],
-											category[
-												ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-													.FEES
+													.MARKUP
 											],
 											rowCurrency,
-											mapMarkupToBackend(
-												category[
-													ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-														.MARKUP
-												],
-												rowCurrency,
-												addMargin
-											)
-										) ?? zeroFixedCharge(rowCurrency)
+											addMargin
+										)
+									) as TFixedChargeInputBackend // rows without a cost are filtered above
 								};
 							})
 					}))
@@ -611,39 +615,37 @@ export const mapTransportationPricingToBackend = (
 				? aligned[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]
 				: [];
 
+		const cars = carsList.map((car, index) => {
+			const priceRow = rows[index] ?? createEmptyPerCarPriceRow();
+			const rowCurrency =
+				priceRow[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY];
+			return {
+				...mapCarBase(car),
+				charge: mapToFixedCharge(
+					priceRow[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST],
+					priceRow[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES],
+					rowCurrency,
+					mapMarkupToBackend(
+						priceRow[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.MARKUP],
+						rowCurrency,
+						addMargin
+					)
+				)
+			};
+		});
+
+		// `per_car` requires a charge per car and 0 means "free" (fe6.4 §6, §8):
+		// a car still without a price falls back to the unpriced category arm.
+		if (!cars.every((car) => car.charge)) {
+			return { spec: mapCarsOnlySpec(carsList) };
+		}
+
 		return {
 			spec: {
 				pricing: "per_car",
-				cars: carsList.map((car, index) => {
-					const priceRow = rows[index] ?? createEmptyPerCarPriceRow();
-					const rowCurrency =
-						priceRow[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY];
-					return {
-						body_type:
-							vehicleBodyTypeConverter.to(car.car_name) ??
-							DEFAULT_CAR_BODY_TYPE,
-						pax: car.pax ?? DEFAULT_CAR_PAX,
-						description: car.description || null,
-						charge:
-							mapToFixedCharge(
-								priceRow[
-									ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST
-								],
-								priceRow[
-									ENUM_TRANSPORTATION_PRICE_ROW_FIELD.FEES
-								],
-								rowCurrency,
-								mapMarkupToBackend(
-									priceRow[
-										ENUM_TRANSPORTATION_PRICE_ROW_FIELD
-											.MARKUP
-									],
-									rowCurrency,
-									addMargin
-								)
-							) ?? zeroFixedCharge(rowCurrency)
-					};
-				})
+				cars: cars as (typeof cars)[number] extends infer C
+					? (C & { charge: TFixedChargeInputBackend })[]
+					: never
 			}
 		};
 	}
@@ -669,11 +671,7 @@ export const mapTransportationPricingToBackend = (
 	);
 	const cars = carsList.length
 		? carsList.map((car) => ({
-				body_type:
-					vehicleBodyTypeConverter.to(car.car_name) ??
-					DEFAULT_CAR_BODY_TYPE,
-				pax: car.pax ?? DEFAULT_CAR_PAX,
-				description: car.description || null
+				...mapCarBase(car)
 			}))
 		: undefined;
 

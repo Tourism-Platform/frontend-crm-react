@@ -1,5 +1,7 @@
 /** Фронтовое значение geo-поля в react-hook-form */
 export type TGeoFormValue = {
+	/** Saved location id from the backend; dropped when a new place is picked. */
+	id?: string | null;
 	lat: number;
 	long: number;
 	/** Label для инпута — задаётся в конвертерах при transform */

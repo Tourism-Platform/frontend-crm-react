@@ -38,6 +38,17 @@ const markupSchema = z
 		typ: z.enum(ENUM_SUPPLEMENT_MARKUP_TYP),
 		value: z.string()
 	})
+	// Backend percentage is strictly between 0 and 1 (fe6.4 §12); the form keeps percent.
+	.refine(
+		(markup) =>
+			markup.typ !== ENUM_SUPPLEMENT_MARKUP_TYP.PERCENTAGE ||
+			markup.value.trim() === "" ||
+			(Number(markup.value) > 0 && Number(markup.value) < 100),
+		{
+			message: msg("markup_errors.percentage_range"),
+			path: ["value"]
+		}
+	)
 	.nullable();
 
 const perItemPriceRowSchema = z.object({

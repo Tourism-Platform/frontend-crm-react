@@ -111,3 +111,91 @@ describe("mapActivityFormToUpdate food branch", () => {
 		);
 	});
 });
+
+describe("mapActivityFormToUpdate offerings (fe6.4 §5, §14)", () => {
+	const pricing = (total: number | null) => ({
+		invoicing: ENUM_ACTIVITY_PRICING_INVOICING.INDIVIDUAL,
+		pricing_type: ENUM_ACTIVITY_PRICING_TYPE.FLAT_RATE,
+		add_margin_separately: false,
+		markup: null,
+		package_id: "",
+		total_price: total,
+		fees: [],
+		currency: "USD"
+	});
+
+	const charge = (val: number) => ({
+		typ: "fixed",
+		cost: { val, currency: "USD" },
+		fees: null,
+		markup: null
+	});
+
+	const currentDetails = {
+		plan: { start_time: null, end_time: null },
+		pool: [
+			{
+				id: "supply-1",
+				is_main: true,
+				supply: { source: "inline", supplier_id: null },
+				spec: {
+					sub_typ: "food",
+					images: [],
+					name: null,
+					location: null,
+					offerings: [
+						{
+							id: "off-1",
+							name: "Обед",
+							charge: charge(40),
+							menu: []
+						},
+						{
+							id: "off-2",
+							name: "Ужин",
+							charge: charge(60),
+							menu: []
+						}
+					]
+				}
+			}
+		]
+	} as unknown as Parameters<typeof mapActivityFormToUpdate>[2];
+
+	const form = (total: number | null, menu: unknown[] = []) =>
+		({
+			supply_id: "supply-1",
+			[ENUM_ACTIVITY_FORM_SECTION.GENERAL]: {
+				[ENUM_FORM_ACTIVITY.ACTIVITY_SUBTYPE]: ENUM_ACTIVITY_TYPE.FOOD,
+				[ENUM_FORM_ACTIVITY.MENU]: menu
+			},
+			[ENUM_ACTIVITY_FORM_SECTION.PRICING]: pricing(total)
+		}) as unknown as Parameters<typeof mapActivityFormToUpdate>[0];
+
+	it("keeps the first offering's id and name and writes the others back", () => {
+		const result = mapActivityFormToUpdate(
+			form(45),
+			ENUM_LANGUAGES.EN,
+			currentDetails
+		);
+
+		expect(inlineSpec(result.details)).toMatchObject({
+			sub_typ: "food",
+			offerings: [
+				{ id: "off-1", name: "Обед", charge: { cost: { val: 45 } } },
+				{ id: "off-2", name: "Ужин" }
+			]
+		});
+	});
+
+	it("does not write a menu without a price as free", () => {
+		const result = mapActivityFormToUpdate(
+			form(null, [{ name: "Plov", description: "" }]),
+			ENUM_LANGUAGES.EN,
+			currentDetails
+		);
+
+		expect(inlineSpec(result.details)).toBeUndefined();
+		expect(JSON.stringify(result)).not.toContain('"val":0');
+	});
+});

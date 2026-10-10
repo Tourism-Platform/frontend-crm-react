@@ -5,6 +5,10 @@ import type { ACCOMMODATION_ROOMS_SCHEMA as ROOMS_SCHEMA } from "../../schema";
 export const ENUM_FORM_ROOMS = {
 	ROOMS_LIST: "rooms",
 	ID: "id",
+	/** Hidden: backend room type, echoed back (no UI). */
+	TYP: "typ",
+	/** Hidden: backend pax, kept for suite / family (no UI). */
+	PAX: "pax",
 	ROOM_NAME: "room_name",
 	DESCRIPTION: "description"
 } as const;

@@ -80,9 +80,22 @@ export type TEventDetailsWriteBackend =
 	| InformationDetailsWrite
 	| SupplementaryDetailsWrite;
 
-/** Unified option update body (single and multi alike). */
+/**
+ * Full event write body (plan + pool) built by the form converters.
+ * The itinerary PATCH splits it (`splitEventUpdate`); the library PATCH sends it as is.
+ */
 export type TTourEventUpdateBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.addOption
+>["_types"]["body"];
+
+/** `PATCH O` body: texts, package and plan only — `details.pool` is 422 here. */
+export type TTourEventOptionUpdateBackend = ReturnType<
 	typeof TOUR_EVENTS_PATHS.updateOption
+>["_types"]["body"];
+
+/** `PATCH M` body: one inline pool member, replaced as a whole. */
+export type TTourEventMemberUpdateBackend = ReturnType<
+	typeof TOUR_EVENTS_PATHS.updatePoolMember
 >["_types"]["body"];
 
 export type TTourEventCreateBackend = ReturnType<

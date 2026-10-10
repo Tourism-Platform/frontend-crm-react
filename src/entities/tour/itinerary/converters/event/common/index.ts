@@ -11,3 +11,4 @@ export * from "./event-override-form.converters";
 export * from "./event-override-units.helpers";
 export * from "./event-policy-check.converters";
 export * from "./package-id.helpers";
+export * from "./split-event-update.converters";

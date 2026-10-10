@@ -38,6 +38,17 @@ const markupSchema = z
 		typ: z.enum(ENUM_TRANSPORTATION_MARKUP_TYP),
 		value: z.string()
 	})
+	// Backend percentage is strictly between 0 and 1 (fe6.4 §12); the form keeps percent.
+	.refine(
+		(markup) =>
+			markup.typ !== ENUM_TRANSPORTATION_MARKUP_TYP.PERCENTAGE ||
+			markup.value.trim() === "" ||
+			(Number(markup.value) > 0 && Number(markup.value) < 100),
+		{
+			message: msg("markup_errors.percentage_range"),
+			path: ["value"]
+		}
+	)
 	.nullable();
 
 const optionalCurrencySchema = z.enum(ENUM_CURRENCY_OPTIONS).optional();
@@ -52,11 +63,8 @@ const perCarPriceRowSchema = z.object({
 const categoryRowSchema = z.object({
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CATEGORY_ID]: z.string().min(1),
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.PRICE_ID]: z.string().optional(),
-	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: z.string().min(1, {
-		message: msg(
-			"form.pricing.form.per_car.fields.category_name.errors.required"
-		)
-	}),
+	// Optional on the backend (`CarCategory.name`, fe6.4 §14).
+	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME]: z.string(),
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.COST]: nonNegativeNullableNumber,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.FEES]: feesArraySchema,
 	[ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.CURRENCY]: optionalCurrencySchema,
@@ -177,6 +185,31 @@ export const TRANSPORTATION_PRICING_SCHEMA = z
 						path: [
 							ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES,
 							...issue.path
+						]
+					});
+				});
+				return;
+			}
+
+			// `per_car` needs a charge on every car; 0 would mean "free" (fe6.4 §6, §14).
+			if (
+				data.expenses?.typ === ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR
+			) {
+				data.expenses[
+					ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS
+				].forEach((row, index) => {
+					if (row[ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST] != null)
+						return;
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: msg(
+							"form.pricing.form.per_car.fields.total_cost.errors.required"
+						),
+						path: [
+							ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES,
+							ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS,
+							index,
+							ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST
 						]
 					});
 				});

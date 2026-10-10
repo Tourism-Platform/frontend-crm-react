@@ -7,6 +7,7 @@ export {
 	mapBackendLocationToGeoForm,
 	mapGeoFormPartsToLabel,
 	mapGeoFormToBackendLocation,
+	mapGeoFormToBackendLocationRef,
 	mapGeoFormToDisplayLabel,
 	mapGeoFormToLocationIn,
 	mapLocationOutToGeoForm

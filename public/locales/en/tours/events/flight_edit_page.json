@@ -1,4 +1,7 @@
 {
+	"markup_errors": {
+		"percentage_range": "Margin must be greater than 0% and less than 100%"
+	},
 	"input": {
 		"title": {
 			"placeholder": "Enter flight title or it will automatically generated",

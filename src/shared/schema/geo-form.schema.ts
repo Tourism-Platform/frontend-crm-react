@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const GEO_FORM_VALUE_SCHEMA = z.object({
+	id: z.string().nullish(),
 	lat: z.number(),
 	long: z.number(),
 	label: z.string().nullish(),

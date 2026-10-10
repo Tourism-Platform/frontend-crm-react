@@ -3,7 +3,7 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
 	mapBackendLocationToGeoForm,
-	mapGeoFormToBackendLocation
+	mapGeoFormToBackendLocationRef
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
@@ -24,15 +24,17 @@ import {
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../../types";
-import { mapInlinePoolWrite } from "../common/details-read-to-write.converters";
-import { getPoolMember } from "../common/event-pool.helpers";
+import {
+	mapEventDetailsReadToWrite,
+	mapInlinePoolWrite
+} from "../common/details-read-to-write.converters";
+import { getEventPool, getPoolMember } from "../common/event-pool.helpers";
 import { mapInheritedProductLinkToForm } from "../common/inherited-housing-form.helpers";
 import {
 	applyEventPackageIdToPricing,
 	mapEventPackageIdToBackend
 } from "../common/package-id.helpers";
 import { toTimezoneOffset } from "../common/timezone.helpers";
-import { zeroFixedCharge } from "../common/zero-fixed-charge.helpers";
 
 import { isInheritedActivityDetails } from "./activity-details.helpers";
 import {
@@ -138,6 +140,51 @@ export const mapActivityEventToForm = (
 	};
 };
 
+type TWriteOffering = { id?: string; name?: string | null } & Record<
+	string,
+	unknown
+>;
+
+/**
+ * The form edits only the first offering of the venue. The others (copied
+ * from the library or a product) are written back as read — a member write
+ * replaces the whole spec, so leaving them out would delete them and their
+ * menu photos (fe6.4 §5, §14). They are kept only while `sub_typ` is the
+ * same: another venue kind has another offering shape.
+ */
+const getCurrentOfferings = (
+	currentDetails: TEventDetailsBackend | undefined,
+	supplyId: string | undefined,
+	subTyp: string
+): { first?: TWriteOffering; rest: TWriteOffering[] } => {
+	if (!currentDetails) return { rest: [] };
+
+	const pool = getEventPool(
+		mapEventDetailsReadToWrite(
+			ENUM_EVENT_BACKEND.ACTIVITY,
+			currentDetails
+		) as {
+			pool?: readonly unknown[];
+		}
+	) as {
+		id?: string;
+		supply: {
+			source: string;
+			spec?: { sub_typ?: string; offerings?: TWriteOffering[] };
+		};
+	}[];
+	const member = supplyId
+		? pool.find((poolMember) => poolMember.id === supplyId)
+		: pool[0];
+	const spec =
+		member?.supply.source === "inline" ? member.supply.spec : undefined;
+
+	if (spec?.sub_typ !== subTyp) return { rest: [] };
+
+	const [first, ...rest] = spec.offerings ?? [];
+	return { first, rest };
+};
+
 export const mapActivityFormToUpdate = (
 	frontend: Partial<TActivityEditSchema>,
 	language?: ENUM_LANGUAGES_TYPE,
@@ -181,38 +228,69 @@ export const mapActivityFormToUpdate = (
 	const isFood = g?.activity_subtype === ENUM_ACTIVITY_TYPE.FOOD;
 	const location =
 		g !== undefined
-			? mapGeoFormToBackendLocation(g.location, lang)
+			? mapGeoFormToBackendLocationRef(g.location, lang)
 			: undefined;
 
 	let spec: TActivitySpecInputBackend | undefined;
+	const supplyId = frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID];
+
+	// The edited (first) offering keeps its id and name, so it is the same node.
+	const editedOffering = (first?: TWriteOffering) => ({
+		...(first?.id ? { id: first.id } : {}),
+		name: first?.name ?? null
+	});
 
 	if (isFood) {
 		const menu = mapMenuToBackend(g?.[ENUM_FORM_ACTIVITY.MENU]);
-		const offerings: TActivityFoodOfferingInputBackend[] | undefined =
-			charge
-				? [{ name: null, charge, ...(menu && { menu }) }]
-				: menu
-					? [{ name: null, charge: zeroFixedCharge(), menu }]
-					: undefined;
+		const { first, rest } = getCurrentOfferings(
+			currentDetails,
+			supplyId,
+			"food"
+		);
 
-		spec = {
-			sub_typ: "food",
-			...(location !== undefined && { location }),
-			...(offerings && { offerings })
-		};
+		// A menu hangs on an offering and an offering requires a charge — 0
+		// would mean "free" (fe6.4 §6, §14). A menu without a price is not
+		// written: the backend keeps the current spec.
+		spec =
+			menu && !charge
+				? undefined
+				: {
+						sub_typ: "food",
+						...(location !== undefined && { location }),
+						offerings: [
+							...(charge
+								? [
+										{
+											...editedOffering(first),
+											charge,
+											...(menu && { menu })
+										}
+									]
+								: []),
+							...rest
+						] as unknown as TActivityFoodOfferingInputBackend[]
+					};
 	} else if (g?.activity_subtype) {
 		const activityType = activityTypeMapper.to(g.activity_subtype);
 		const subTyp = activityType
 			? ACTIVITY_TYPE_TO_GENERAL_SUB_TYP[activityType]
 			: undefined;
 
-		spec = subTyp
-			? {
-					sub_typ: subTyp as never,
-					...(location !== undefined && { location }),
-					offerings: charge ? [{ name: null, charge }] : []
-				}
-			: undefined;
+		if (subTyp) {
+			const { first, rest } = getCurrentOfferings(
+				currentDetails,
+				supplyId,
+				subTyp
+			);
+			spec = {
+				sub_typ: subTyp as never,
+				...(location !== undefined && { location }),
+				offerings: [
+					...(charge ? [{ ...editedOffering(first), charge }] : []),
+					...rest
+				] as never
+			};
+		}
 	}
 
 	// No subtype → no spec is constructible (a venue spec requires

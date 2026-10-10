@@ -4,7 +4,7 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
 	mapBackendLocationToGeoForm,
-	mapGeoFormToBackendLocation
+	mapGeoFormToBackendLocationRef
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
@@ -183,7 +183,7 @@ export const mapAccommodationFormToUpdate = (
 		? {
 				...pricingSpec,
 				...(g !== undefined && {
-					location: mapGeoFormToBackendLocation(g.property, lang)
+					location: mapGeoFormToBackendLocationRef(g.property, lang)
 				}),
 				stars: g?.stars ?? null,
 				...(amenities && { amenities })

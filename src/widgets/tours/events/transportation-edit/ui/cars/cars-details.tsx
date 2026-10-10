@@ -7,13 +7,19 @@ import { Button, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_FORM_CARS,
+	ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD,
+	ENUM_TRANSPORTATION_PRICING_FIELD,
 	ENUM_VEHICLE_BODY_TYPE,
 	type TTransportationEditSchema
 } from "@/entities/tour";
 
+import { removeWithPriceRow } from "../../../model/remove-with-price-row";
 import { ENUM_FORM_SECTION } from "../../model";
 
 import { CarsCard } from "./cars-card";
+
+/** Per-car price rows, index-aligned to the cars list. */
+const CAR_PRICE_ROWS_PATH = `${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES}.${ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS}`;
 
 interface ICarsDetailsProps {
 	form: UseFormReturn<TTransportationEditSchema>;
@@ -45,7 +51,14 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 						key={field.id}
 						form={form}
 						index={index}
-						onRemove={() => remove(index)}
+						onRemove={() =>
+							removeWithPriceRow(
+								form,
+								remove,
+								CAR_PRICE_ROWS_PATH,
+								index
+							)
+						}
 					/>
 				))}
 

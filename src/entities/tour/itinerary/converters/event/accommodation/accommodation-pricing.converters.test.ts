@@ -50,31 +50,6 @@ const roomsList = [
 	}
 ];
 
-const roomsOnlySpec = {
-	spec: {
-		pricing: "per_room" as const,
-		categories: [
-			{
-				name: null,
-				rooms: [
-					{
-						typ: HousingRoomTypes.Double,
-						pax: 2,
-						name: "Deluxe",
-						description: "Deluxe class",
-						rate: {
-							base: {
-								typ: "fixed" as const,
-								cost: { val: 0, currency: Currency.USD }
-							}
-						}
-					}
-				]
-			}
-		]
-	}
-};
-
 const namedCategoryDetails = (): HousingDetailsOutput => ({
 	plan: {},
 	pool: [
@@ -165,13 +140,13 @@ describe("mapAccommodationPricingFromBackend", () => {
 });
 
 describe("mapAccommodationPricingToBackend", () => {
-	it("returns a rooms-only spec without pricing", () => {
+	it("writes no spec without pricing (fe6.4 §8: per_room needs a rate)", () => {
 		expect(mapAccommodationPricingToBackend(undefined, roomsList)).toEqual(
-			roomsOnlySpec
+			{}
 		);
 	});
 
-	it("returns a rooms-only spec for part_of_package invoicing", () => {
+	it("writes no spec for part_of_package (the package lives on PATCH O, fe6.4 §7)", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -182,7 +157,7 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual(roomsOnlySpec);
+		).toEqual({});
 	});
 
 	it("maps flat_rate to a whole spec with price.base", () => {
@@ -259,7 +234,7 @@ describe("mapAccommodationPricingToBackend", () => {
 		});
 	});
 
-	it("returns a rooms-only spec for flat_rate without currency", () => {
+	it("writes no spec for flat_rate without currency", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -268,10 +243,10 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual(roomsOnlySpec);
+		).toEqual({});
 	});
 
-	it("returns a rooms-only spec for flat_rate without total_price", () => {
+	it("writes no spec for flat_rate without total_price", () => {
 		expect(
 			mapAccommodationPricingToBackend(
 				basePricing({
@@ -279,7 +254,7 @@ describe("mapAccommodationPricingToBackend", () => {
 				}),
 				roomsList
 			)
-		).toEqual(roomsOnlySpec);
+		).toEqual({});
 	});
 
 	it("maps per_person to a whole spec", () => {

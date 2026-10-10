@@ -640,9 +640,20 @@ export interface ActivityDetailsPubSchemaOutput {
 }
 
 /**
+ * ActivityDetailsUpdate
+ * The half of a visit an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface ActivityDetailsUpdate {
+	/** When the group is somewhere: an activity's hours, an information entry's. */
+	plan?: Times;
+}
+
+/**
  * ActivityDetailsWrite
- * A visit as the API takes it. A create states the pool; an update may
- * leave it out to keep every member exactly where it is.
+ * A visit as a create takes it: the tour's plan and the venues that host it.
  */
 export interface ActivityDetailsWrite {
 	/** When the group is somewhere: an activity's hours, an information entry's. */
@@ -670,10 +681,7 @@ export interface ActivityEvent {
 	 * @default "activity"
 	 */
 	typ: "activity";
-	/**
-	 * A visit as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
-	 */
+	/** A visit as a create takes it: the tour's plan and the venues that host it. */
 	details: ActivityDetailsWrite;
 }
 
@@ -731,6 +739,34 @@ export interface ActivityEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** ActivityEventUpdate */
+export interface ActivityEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ: "activity";
+	/**
+	 * The half of a visit an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: ActivityDetailsUpdate;
 }
 
 /**
@@ -875,9 +911,67 @@ export interface ActivityMemberNew {
 }
 
 /**
+ * ActivityMemberUpdate
+ * A venue of a visit's pool restated in place: who it is bought from and
+ * the venue it states, both replaced whole.
+ */
+export interface ActivityMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Spec
+	 * What the venue sells.
+	 */
+	spec:
+		| ({
+				sub_typ: "entertainment";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "extreme";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "food";
+		  } & FoodVenueInput)
+		| ({
+				sub_typ: "master_class";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "other";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "outdoor";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "photography";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "riding";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "sightseeing";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "spiritual";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "water_activities";
+		  } & GeneralVenueInput)
+		| ({
+				sub_typ: "wellness";
+		  } & GeneralVenueInput);
+	/** Typ */
+	typ: "activity";
+}
+
+/**
  * ActivityMemberWrite
- * One venue of a visit's pool as the API takes it. Echo ``id`` to keep the
- * member; one sent without an id is a new member.
+ * One venue of a visit's pool as the API takes it. An ``id`` it carries is
+ * ignored: every member a write lands is new.
  */
 export interface ActivityMemberWrite {
 	/** Id */
@@ -1137,10 +1231,7 @@ export interface ActivitySingleEvent {
 	 * @default "activity"
 	 */
 	typ: "activity";
-	/**
-	 * A visit as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
-	 */
+	/** A visit as a create takes it: the tour's plan and the venues that host it. */
 	details: ActivityDetailsWrite;
 }
 
@@ -2437,9 +2528,24 @@ export interface BusDetailsOutput {
 }
 
 /**
+ * BusDetailsUpdate
+ * The half of a coach run an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface BusDetailsUpdate {
+	/**
+	 * The run a coach drives: the tour's own statement, whoever supplies the
+	 * fleet.
+	 */
+	plan?: BusRouteInput;
+}
+
+/**
  * BusDetailsWrite
- * A coach run as the API takes it. A create states the pool; an update may
- * leave it out to keep every member exactly where it is.
+ * A coach run as a create takes it: the tour's plan and the coach suppliers that
+ * drive it.
  */
 export interface BusDetailsWrite {
 	/**
@@ -2471,8 +2577,8 @@ export interface BusEvent {
 	 */
 	typ: "bus";
 	/**
-	 * A coach run as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * A coach run as a create takes it: the tour's plan and the coach suppliers that
+	 * drive it.
 	 */
 	details: BusDetailsWrite;
 }
@@ -2531,6 +2637,34 @@ export interface BusEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** BusEventUpdate */
+export interface BusEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
+	/**
+	 * The half of a coach run an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: BusDetailsUpdate;
 }
 
 /**
@@ -2639,9 +2773,37 @@ export interface BusMemberNew {
 }
 
 /**
+ * BusMemberUpdate
+ * A coach supplier of a run's pool restated in place: who it is bought from
+ * and the fleet it states, both replaced whole.
+ */
+export interface BusMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Spec
+	 * How the fleet prices a run.
+	 */
+	spec:
+		| ({
+				pricing: "per_vehicle";
+		  } & PerVehicleFleetInput)
+		| ({
+				pricing: "whole";
+		  } & WholeFleetInput);
+	/** Typ */
+	typ: "bus";
+}
+
+/**
  * BusMemberWrite
- * One coach supplier of a run's pool as the API takes it. Echo ``id`` to
- * keep the member; one sent without an id is a new member.
+ * One coach supplier of a run's pool as the API takes it. An ``id`` it carries
+ * is ignored: every member a write lands is new.
  */
 export interface BusMemberWrite {
 	/** Id */
@@ -2898,8 +3060,8 @@ export interface BusSingleEvent {
 	 */
 	typ: "bus";
 	/**
-	 * A coach run as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * A coach run as a create takes it: the tour's plan and the coach suppliers that
+	 * drive it.
 	 */
 	details: BusDetailsWrite;
 }
@@ -4716,9 +4878,28 @@ export interface FlightDetailsPubSchemaOutput {
 }
 
 /**
+ * FlightDetailsUpdate
+ * The half of an air leg an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface FlightDetailsUpdate {
+	/**
+	 * When a rail or air leg this tour runs leaves and lands.
+	 *
+	 * The hours are the operator's own statement, not the supplier's: a route
+	 * carries a timetable only if its supplier publishes one, and one stated here
+	 * is what the leg runs to regardless. Event-level on purpose: a route's legs
+	 * carry no ids to align a per-leg list against.
+	 */
+	plan?: Schedule;
+}
+
+/**
  * FlightDetailsWrite
- * An air leg as the API takes it. A create states the pool; an update may
- * leave it out to keep every member exactly where it is.
+ * An air leg as a create takes it: the tour's plan and the air suppliers that
+ * fly it.
  */
 export interface FlightDetailsWrite {
 	/**
@@ -4754,8 +4935,8 @@ export interface FlightEvent {
 	 */
 	typ: "flight";
 	/**
-	 * An air leg as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * An air leg as a create takes it: the tour's plan and the air suppliers that
+	 * fly it.
 	 */
 	details: FlightDetailsWrite;
 }
@@ -4814,6 +4995,34 @@ export interface FlightEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** FlightEventUpdate */
+export interface FlightEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ: "flight";
+	/**
+	 * The half of an air leg an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: FlightDetailsUpdate;
 }
 
 /**
@@ -5057,9 +5266,37 @@ export interface FlightMemberNew {
 }
 
 /**
+ * FlightMemberUpdate
+ * An air supplier of a leg's pool restated in place: who it is bought from
+ * and the route it states, both replaced whole.
+ */
+export interface FlightMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Spec
+	 * How the route prices a leg.
+	 */
+	spec:
+		| ({
+				pricing: "per_fare";
+		  } & PerFareFlightRouteInput)
+		| ({
+				pricing: "whole";
+		  } & WholeFlightRouteInput);
+	/** Typ */
+	typ: "flight";
+}
+
+/**
  * FlightMemberWrite
- * One air supplier of a leg's pool as the API takes it. Echo ``id`` to keep
- * the member; one sent without an id is a new member.
+ * One air supplier of a leg's pool as the API takes it. An ``id`` it carries is
+ * ignored: every member a write lands is new.
  */
 export interface FlightMemberWrite {
 	/** Id */
@@ -5197,8 +5434,8 @@ export interface FlightSingleEvent {
 	 */
 	typ: "flight";
 	/**
-	 * An air leg as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * An air leg as a create takes it: the tour's plan and the air suppliers that
+	 * fly it.
 	 */
 	details: FlightDetailsWrite;
 }
@@ -5798,9 +6035,21 @@ export interface GuideDetailsOutput {
 }
 
 /**
+ * GuideDetailsUpdate
+ * The half of a guide an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface GuideDetailsUpdate {
+	/** How long a guide is engaged for. */
+	plan?: GuidePlan;
+}
+
+/**
  * GuideDetailsWrite
- * A guide as the API takes it. A create states the pool; an update may
- * leave it out to keep every member exactly where it is.
+ * A guide as a create takes it: the tour's plan and the guide suppliers that
+ * staff it.
  */
 export interface GuideDetailsWrite {
 	/** How long a guide is engaged for. */
@@ -5829,8 +6078,8 @@ export interface GuideEvent {
 	 */
 	typ: "guide";
 	/**
-	 * A guide as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * A guide as a create takes it: the tour's plan and the guide suppliers that
+	 * staff it.
 	 */
 	details: GuideDetailsWrite;
 }
@@ -5862,6 +6111,34 @@ export interface GuideEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** GuideEventUpdate */
+export interface GuideEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "guide"
+	 */
+	typ: "guide";
+	/**
+	 * The half of a guide an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: GuideDetailsUpdate;
 }
 
 /**
@@ -5929,9 +6206,31 @@ export interface GuideMemberNew {
 }
 
 /**
+ * GuideMemberUpdate
+ * A guide supplier of an engagement's pool restated in place: who it is
+ * bought from and the guide it states, both replaced whole.
+ */
+export interface GuideMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * A guide as the event states it. No supplier product backs a guide, so the
+	 * spec is always the tour's own.
+	 */
+	spec: GuideSpecInput;
+	/** Typ */
+	typ: "guide";
+}
+
+/**
  * GuideMemberWrite
- * One guide supplier of an engagement's pool as the API takes it. Echo
- * ``id`` to keep the member; one sent without an id is a new member.
+ * One guide supplier of an engagement's pool as the API takes it. An ``id`` it
+ * carries is ignored: every member a write lands is new.
  */
 export interface GuideMemberWrite {
 	/** Id */
@@ -5997,8 +6296,8 @@ export interface GuideSingleEvent {
 	 */
 	typ: "guide";
 	/**
-	 * A guide as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * A guide as a create takes it: the tour's plan and the guide suppliers that
+	 * staff it.
 	 */
 	details: GuideDetailsWrite;
 }
@@ -6348,10 +6647,24 @@ export interface HousingDetailsPubSchemaOutput {
 }
 
 /**
+ * HousingDetailsUpdate
+ * The half of a stay an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface HousingDetailsUpdate {
+	/**
+	 * How long a stay runs and at what hours — the tour's own statement,
+	 * whoever supplies the hotel.
+	 */
+	plan?: Stay;
+}
+
+/**
  * HousingDetailsWrite
- * A stay as the API takes it: the tour's plan and the hotels that together
- * fill it. A create states the pool; an update may leave it out to keep every
- * member exactly where it is.
+ * A stay as a create takes it: the tour's plan and the hotels that together fill
+ * it.
  */
 export interface HousingDetailsWrite {
 	/**
@@ -6383,9 +6696,8 @@ export interface HousingEvent {
 	 */
 	typ: "housing";
 	/**
-	 * A stay as the API takes it: the tour's plan and the hotels that together
-	 * fill it. A create states the pool; an update may leave it out to keep every
-	 * member exactly where it is.
+	 * A stay as a create takes it: the tour's plan and the hotels that together fill
+	 * it.
 	 */
 	details: HousingDetailsWrite;
 }
@@ -6444,6 +6756,34 @@ export interface HousingEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** HousingEventUpdate */
+export interface HousingEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "housing"
+	 */
+	typ: "housing";
+	/**
+	 * The half of a stay an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: HousingDetailsUpdate;
 }
 
 /**
@@ -6529,9 +6869,37 @@ export interface HousingMemberNew {
 }
 
 /**
+ * HousingMemberUpdate
+ * A hotel of a stay's pool restated in place: who it is bought from and the
+ * hotel it states, both replaced whole.
+ */
+export interface HousingMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Spec
+	 * Where the hotel's price sits.
+	 */
+	spec:
+		| ({
+				pricing: "per_room";
+		  } & PerRoomHotelInput)
+		| ({
+				pricing: "whole";
+		  } & WholeHotelInput);
+	/** Typ */
+	typ: "housing";
+}
+
+/**
  * HousingMemberWrite
- * One hotel of a stay's pool as the API takes it. Echo ``id`` to keep the
- * member; one sent without an id is a new member.
+ * One hotel of a stay's pool as the API takes it. An ``id`` it carries is
+ * ignored: every member a write lands is new.
  */
 export interface HousingMemberWrite {
 	/** Id */
@@ -6605,9 +6973,8 @@ export interface HousingSingleEvent {
 	 */
 	typ: "housing";
 	/**
-	 * A stay as the API takes it: the tour's plan and the hotels that together
-	 * fill it. A create states the pool; an update may leave it out to keep every
-	 * member exactly where it is.
+	 * A stay as a create takes it: the tour's plan and the hotels that together fill
+	 * it.
 	 */
 	details: HousingDetailsWrite;
 }
@@ -6701,10 +7068,21 @@ export interface InformationDetailsOutput {
 }
 
 /**
+ * InformationDetailsUpdate
+ * The half of an information entry an alternative update writes: its
+ * hours, replaced whole.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface InformationDetailsUpdate {
+	/** When the group is somewhere: an activity's hours, an information entry's. */
+	plan?: Times;
+}
+
+/**
  * InformationDetailsWrite
- * An information entry as the API takes it. No product supplies one, so a
- * create that leaves the pool out gets a single member naming no supplier; an
- * update that leaves it out keeps every member exactly where it is.
+ * An information entry as a create takes it. No product supplies one, so a
+ * create that leaves the pool out gets a single member naming no supplier.
  */
 export interface InformationDetailsWrite {
 	/** When the group is somewhere: an activity's hours, an information entry's. */
@@ -6733,9 +7111,8 @@ export interface InformationEvent {
 	 */
 	typ: "ref";
 	/**
-	 * An information entry as the API takes it. No product supplies one, so a
-	 * create that leaves the pool out gets a single member naming no supplier; an
-	 * update that leaves it out keeps every member exactly where it is.
+	 * An information entry as a create takes it. No product supplies one, so a
+	 * create that leaves the pool out gets a single member naming no supplier.
 	 */
 	details?: InformationDetailsWrite;
 }
@@ -6794,6 +7171,34 @@ export interface InformationEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** InformationEventUpdate */
+export interface InformationEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "ref"
+	 */
+	typ: "ref";
+	/**
+	 * The half of an information entry an alternative update writes: its
+	 * hours, replaced whole.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details?: InformationDetailsUpdate;
 }
 
 /**
@@ -6861,9 +7266,31 @@ export interface InformationMemberNew {
 }
 
 /**
+ * InformationMemberUpdate
+ * A member of an information entry's pool restated in place: who it is
+ * bought from.
+ */
+export interface InformationMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * The half a type states nothing in: a supplementary entry's plan, an
+	 * information entry's spec.
+	 */
+	spec?: Empty;
+	/** Typ */
+	typ: "ref";
+}
+
+/**
  * InformationMemberWrite
- * One member of an information entry's pool as the API takes it. Echo
- * ``id`` to keep the member; one sent without an id is a new member.
+ * One member of an information entry's pool as the API takes it. An ``id`` it
+ * carries is ignored: every member a write lands is new.
  */
 export interface InformationMemberWrite {
 	/** Id */
@@ -6917,9 +7344,8 @@ export interface InformationSingleEvent {
 	 */
 	typ: "ref";
 	/**
-	 * An information entry as the API takes it. No product supplies one, so a
-	 * create that leaves the pool out gets a single member naming no supplier; an
-	 * update that leaves it out keeps every member exactly where it is.
+	 * An information entry as a create takes it. No product supplies one, so a
+	 * create that leaves the pool out gets a single member naming no supplier.
 	 */
 	details?: InformationDetailsWrite;
 }
@@ -11738,9 +12164,24 @@ export interface SupplementaryDetailsOutput {
 }
 
 /**
+ * SupplementaryDetailsUpdate
+ * The half of supplementary lines an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface SupplementaryDetailsUpdate {
+	/**
+	 * The half a type states nothing in: a supplementary entry's plan, an
+	 * information entry's spec.
+	 */
+	plan?: Empty;
+}
+
+/**
  * SupplementaryDetailsWrite
- * Supplementary lines as the API takes them. A create states the pool; an
- * update may leave it out to keep every member exactly where it is.
+ * Supplementary lines as a create takes them: the tour's plan and the suppliers
+ * that bill them.
  */
 export interface SupplementaryDetailsWrite {
 	/**
@@ -11772,8 +12213,8 @@ export interface SupplementaryEvent {
 	 */
 	typ: "supplementary";
 	/**
-	 * Supplementary lines as the API takes them. A create states the pool; an
-	 * update may leave it out to keep every member exactly where it is.
+	 * Supplementary lines as a create takes them: the tour's plan and the suppliers
+	 * that bill them.
 	 */
 	details: SupplementaryDetailsWrite;
 }
@@ -11805,6 +12246,34 @@ export interface SupplementaryEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** SupplementaryEventUpdate */
+export interface SupplementaryEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "supplementary"
+	 */
+	typ: "supplementary";
+	/**
+	 * The half of supplementary lines an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: SupplementaryDetailsUpdate;
 }
 
 /**
@@ -11902,9 +12371,28 @@ export interface SupplementaryMemberNew {
 }
 
 /**
+ * SupplementaryMemberUpdate
+ * A supplier of the supplementary lines' pool restated in place: who it is
+ * bought from and the lines it states, both replaced whole.
+ */
+export interface SupplementaryMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/** Whatever else the tour bills for, each line carrying its own charge. */
+	spec: SupplementarySpecInput;
+	/** Typ */
+	typ: "supplementary";
+}
+
+/**
  * SupplementaryMemberWrite
- * One supplier of the supplementary lines' pool as the API takes it. Echo
- * ``id`` to keep the member; one sent without an id is a new member.
+ * One supplier of the supplementary lines' pool as the API takes it. An ``id``
+ * it carries is ignored: every member a write lands is new.
  */
 export interface SupplementaryMemberWrite {
 	/** Id */
@@ -11955,8 +12443,8 @@ export interface SupplementarySingleEvent {
 	 */
 	typ: "supplementary";
 	/**
-	 * Supplementary lines as the API takes them. A create states the pool; an
-	 * update may leave it out to keep every member exactly where it is.
+	 * Supplementary lines as a create takes them: the tour's plan and the suppliers
+	 * that bill them.
 	 */
 	details: SupplementaryDetailsWrite;
 }
@@ -13537,9 +14025,28 @@ export interface TrainDetailsOutput {
 }
 
 /**
+ * TrainDetailsUpdate
+ * The half of a rail leg an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface TrainDetailsUpdate {
+	/**
+	 * When a rail or air leg this tour runs leaves and lands.
+	 *
+	 * The hours are the operator's own statement, not the supplier's: a route
+	 * carries a timetable only if its supplier publishes one, and one stated here
+	 * is what the leg runs to regardless. Event-level on purpose: a route's legs
+	 * carry no ids to align a per-leg list against.
+	 */
+	plan?: Schedule;
+}
+
+/**
  * TrainDetailsWrite
- * A rail leg as the API takes it. A create states the pool; an update may
- * leave it out to keep every member exactly where it is.
+ * A rail leg as a create takes it: the tour's plan and the rail suppliers that
+ * run it.
  */
 export interface TrainDetailsWrite {
 	/**
@@ -13575,8 +14082,8 @@ export interface TrainEvent {
 	 */
 	typ: "train";
 	/**
-	 * A rail leg as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * A rail leg as a create takes it: the tour's plan and the rail suppliers that
+	 * run it.
 	 */
 	details: TrainDetailsWrite;
 }
@@ -13635,6 +14142,34 @@ export interface TrainEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** TrainEventUpdate */
+export interface TrainEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ: "train";
+	/**
+	 * The half of a rail leg an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: TrainDetailsUpdate;
 }
 
 /**
@@ -13741,9 +14276,37 @@ export interface TrainMemberNew {
 }
 
 /**
+ * TrainMemberUpdate
+ * A rail supplier of a leg's pool restated in place: who it is bought from
+ * and the route it states, both replaced whole.
+ */
+export interface TrainMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Spec
+	 * How the route prices a leg.
+	 */
+	spec:
+		| ({
+				pricing: "per_fare";
+		  } & PerFareTrainRouteInput)
+		| ({
+				pricing: "whole";
+		  } & WholeTrainRouteInput);
+	/** Typ */
+	typ: "train";
+}
+
+/**
  * TrainMemberWrite
- * One rail supplier of a leg's pool as the API takes it. Echo ``id`` to
- * keep the member; one sent without an id is a new member.
+ * One rail supplier of a leg's pool as the API takes it. An ``id`` it carries is
+ * ignored: every member a write lands is new.
  */
 export interface TrainMemberWrite {
 	/** Id */
@@ -13881,8 +14444,8 @@ export interface TrainSingleEvent {
 	 */
 	typ: "train";
 	/**
-	 * A rail leg as the API takes it. A create states the pool; an update may
-	 * leave it out to keep every member exactly where it is.
+	 * A rail leg as a create takes it: the tour's plan and the rail suppliers that
+	 * run it.
 	 */
 	details: TrainDetailsWrite;
 }
@@ -14047,9 +14610,24 @@ export interface TransferDetailsPubSchemaOutput {
 }
 
 /**
+ * TransferDetailsUpdate
+ * The half of a ride an alternative update writes: the tour's plan,
+ * replaced whole. Its pool is written member by member.
+ *
+ * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+ */
+export interface TransferDetailsUpdate {
+	/**
+	 * What kind of run a transfer is and where it leaves from and arrives at,
+	 * whoever drives it.
+	 */
+	plan?: TransferLegInput;
+}
+
+/**
  * TransferDetailsWrite
- * A ride as the API takes it. A create states the pool; an update may leave
- * it out to keep every member exactly where it is.
+ * A ride as a create takes it: the tour's plan and the car suppliers that drive
+ * it.
  */
 export interface TransferDetailsWrite {
 	/**
@@ -14081,8 +14659,8 @@ export interface TransferEvent {
 	 */
 	typ: "transfer";
 	/**
-	 * A ride as the API takes it. A create states the pool; an update may leave
-	 * it out to keep every member exactly where it is.
+	 * A ride as a create takes it: the tour's plan and the car suppliers that drive
+	 * it.
 	 */
 	details: TransferDetailsWrite;
 }
@@ -14141,6 +14719,34 @@ export interface TransferEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
+}
+
+/** TransferEventUpdate */
+export interface TransferEventUpdate {
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
+	/**
+	 * The half of a ride an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: TransferDetailsUpdate;
 }
 
 /**
@@ -14257,9 +14863,40 @@ export interface TransferMemberNew {
 }
 
 /**
+ * TransferMemberUpdate
+ * A car supplier of a ride's pool restated in place: who it is bought from
+ * and the fleet it states, both replaced whole.
+ */
+export interface TransferMemberUpdate {
+	/**
+	 * Source
+	 * @default "inline"
+	 */
+	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
+	/**
+	 * Spec
+	 * How the fleet prices a leg.
+	 */
+	spec:
+		| ({
+				pricing: "per_car";
+		  } & PerCarTransferInput)
+		| ({
+				pricing: "per_car_category";
+		  } & PerCarCategoryTransferInput)
+		| ({
+				pricing: "whole";
+		  } & WholeTransferInput);
+	/** Typ */
+	typ: "transfer";
+}
+
+/**
  * TransferMemberWrite
- * One car supplier of a ride's pool as the API takes it. Echo ``id`` to
- * keep the member; one sent without an id is a new member.
+ * One car supplier of a ride's pool as the API takes it. An ``id`` it carries is
+ * ignored: every member a write lands is new.
  */
 export interface TransferMemberWrite {
 	/** Id */
@@ -14511,8 +15148,8 @@ export interface TransferSingleEvent {
 	 */
 	typ: "transfer";
 	/**
-	 * A ride as the API takes it. A create states the pool; an update may leave
-	 * it out to keep every member exactly where it is.
+	 * A ride as a create takes it: the tour's plan and the car suppliers that drive
+	 * it.
 	 */
 	details: TransferDetailsWrite;
 }
@@ -16912,6 +17549,94 @@ export interface RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOption
 	supplyId: string;
 }
 
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum {
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierNotFound = "Supplier not found"
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum4 {
+	PoolMemberReadsASupplierProductDetachItToStateItsOwnSpec = "Pool member reads a supplier product; detach it to state its own spec"
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum5 {
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+/** Member */
+export type UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchPayload =
+
+		| ({
+				typ: "housing";
+		  } & HousingMemberUpdate)
+		| ({
+				typ: "train";
+		  } & TrainMemberUpdate)
+		| ({
+				typ: "flight";
+		  } & FlightMemberUpdate)
+		| ({
+				typ: "bus";
+		  } & BusMemberUpdate)
+		| ({
+				typ: "transfer";
+		  } & TransferMemberUpdate)
+		| ({
+				typ: "activity";
+		  } & ActivityMemberUpdate)
+		| ({
+				typ: "ref";
+		  } & InformationMemberUpdate)
+		| ({
+				typ: "guide";
+		  } & GuideMemberUpdate)
+		| ({
+				typ: "supplementary";
+		  } & SupplementaryMemberUpdate);
+
+export interface UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
 export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum {
 	AuthenticationRequired = "Authentication required."
 }
@@ -17521,9 +18246,7 @@ export interface AddOptionTourTourIdOptionIdEventEventIdOptionPostParams {
 }
 
 export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum {
-	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
-	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
-	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
 }
 
 export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum1 {
@@ -17537,22 +18260,11 @@ export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDe
 
 export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum3 {
 	EventOptionNotFound = "Event option not found",
-	SupplierNotFound = "Supplier not found",
-	SupplierProductNotFound = "Supplier product not found",
 	PackageNotFound = "Package not found"
 }
 
 export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum4 {
-	SupplyMovesThroughAttachRelinkScopeOrDetach = "Supply moves through attach, relink, scope or detach",
-	PoolMembersAreAddedAndRemovedThroughThePoolRoutes = "Pool members are added and removed through the pool routes"
-}
-
-export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
-	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+	OptionTypeChangesThroughRetype = "Option type changes through retype"
 }
 
 /** Option */
@@ -17560,31 +18272,31 @@ export type UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchPa
 
 		| ({
 				typ: "ref";
-		  } & InformationEvent)
+		  } & InformationEventUpdate)
 		| ({
 				typ: "bus";
-		  } & BusEvent)
+		  } & BusEventUpdate)
 		| ({
 				typ: "train";
-		  } & TrainEvent)
+		  } & TrainEventUpdate)
 		| ({
 				typ: "transfer";
-		  } & TransferEvent)
+		  } & TransferEventUpdate)
 		| ({
 				typ: "activity";
-		  } & ActivityEvent)
+		  } & ActivityEventUpdate)
 		| ({
 				typ: "housing";
-		  } & HousingEvent)
+		  } & HousingEventUpdate)
 		| ({
 				typ: "flight";
-		  } & FlightEvent)
+		  } & FlightEventUpdate)
 		| ({
 				typ: "guide";
-		  } & GuideEvent)
+		  } & GuideEventUpdate)
 		| ({
 				typ: "supplementary";
-		  } & SupplementaryEvent);
+		  } & SupplementaryEventUpdate);
 
 export interface UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchParams {
 	/** @default "en" */
@@ -17633,6 +18345,97 @@ export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteD
 }
 
 export interface DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum {
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
+	OptionAlreadyHasThisTypeUpdateItInPlace = "Option already has this type; update it in place",
+	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	SupplierNotFound = "Supplier not found",
+	SupplierProductNotFound = "Supplier product not found",
+	PackageNotFound = "Package not found"
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+/** Option */
+export type RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostPayload =
+
+		| ({
+				typ: "ref";
+		  } & InformationEvent)
+		| ({
+				typ: "bus";
+		  } & BusEvent)
+		| ({
+				typ: "train";
+		  } & TrainEvent)
+		| ({
+				typ: "transfer";
+		  } & TransferEvent)
+		| ({
+				typ: "activity";
+		  } & ActivityEvent)
+		| ({
+				typ: "housing";
+		  } & HousingEvent)
+		| ({
+				typ: "flight";
+		  } & FlightEvent)
+		| ({
+				typ: "guide";
+		  } & GuideEvent)
+		| ({
+				typ: "supplementary";
+		  } & SupplementaryEvent);
+
+export interface RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostParams {
 	/** @default "en" */
 	read_lang?: LanguageCode;
 	/**

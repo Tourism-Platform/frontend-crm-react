@@ -12,6 +12,7 @@ const msg = i18nKey<TTourEventTransportationEditPageKeys>();
 export const CARS_SCHEMA = z.object({
 	[ENUM_FORM_CARS.CARS_LIST]: z.array(
 		z.object({
+			[ENUM_FORM_CARS.ID]: z.string().optional(),
 			[ENUM_FORM_CARS.CAR_NAME]: z.enum(ENUM_VEHICLE_BODY_TYPE, {
 				message: msg(
 					"form.cars.details.form.fields.car_name.errors.required"
@@ -31,7 +32,13 @@ export const CARS_SCHEMA = z.object({
 				.max(99, {
 					message: msg("form.cars.details.form.fields.pax.errors.max")
 				})
-				.nullable(),
+				.nullable()
+				// Empty input is `null`; the backend requires pax ≥ 1 (fe6.4 §14).
+				.refine((value) => value !== null, {
+					message: msg(
+						"form.cars.details.form.fields.pax.errors.required"
+					)
+				}),
 			[ENUM_FORM_CARS.DESCRIPTION]: z
 				.string({
 					// message: msg(

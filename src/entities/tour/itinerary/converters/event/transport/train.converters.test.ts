@@ -25,6 +25,7 @@ vi.mock("@/shared/converters", () => ({
 			? { lat: location.lat, long: location.long }
 			: null,
 	mapGeoFormToBackendLocation: () => ({ lat: 0, long: 0 }),
+	mapGeoFormToBackendLocationRef: () => ({ lat: 0, long: 0 }),
 	languageCodeMapper: {
 		to: () => LanguageCode.En
 	}

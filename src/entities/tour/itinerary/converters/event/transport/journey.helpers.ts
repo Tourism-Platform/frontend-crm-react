@@ -9,7 +9,7 @@ import type {
 } from "@/shared/api";
 import {
 	mapBackendLocationToGeoForm,
-	mapGeoFormToBackendLocation
+	mapGeoFormToBackendLocationRef
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
@@ -29,7 +29,7 @@ const buildBusPointInput = (
 ): BusPointInput => ({
 	...(time && timezone ? { time: { time, timezone: Number(timezone) } } : {}),
 	...(location !== undefined && {
-		location: mapGeoFormToBackendLocation(location, lang)
+		location: mapGeoFormToBackendLocationRef(location, lang)
 	})
 });
 
@@ -38,7 +38,7 @@ const buildTrainStopInput = (
 	lang: LanguageCode
 ): TrainStopInput => ({
 	...(location !== undefined && {
-		location: mapGeoFormToBackendLocation(location, lang)
+		location: mapGeoFormToBackendLocationRef(location, lang)
 	})
 });
 

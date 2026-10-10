@@ -36,6 +36,7 @@ vi.mock("@/shared/config", () => ({
 vi.mock("@/shared/converters", () => ({
 	mapBackendLocationToGeoForm: () => null,
 	mapGeoFormToBackendLocation: () => null,
+	mapGeoFormToBackendLocationRef: () => null,
 	languageCodeMapper: {
 		to: () => LanguageCode.En
 	}
@@ -150,6 +151,8 @@ describe("mapRoomsFromBackend", () => {
 			rooms: [
 				{
 					id: ROOM_ID,
+					typ: HousingRoomTypes.Double,
+					pax: 2,
 					room_name: "Deluxe",
 					description: "Deluxe class"
 				}
@@ -280,7 +283,7 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 		});
 	});
 
-	it("echoes room id on a rooms-only spec when invoicing is part of package", () => {
+	it("writes no spec while in a package (the package lives on PATCH O)", () => {
 		const result = mapAccommodationFormToUpdate({
 			name: "Hotel",
 			pricing: {
@@ -295,10 +298,32 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 300,
 				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
 			},
+			rooms: { [ENUM_FORM_ROOMS.ROOMS_LIST]: roomsList }
+		});
+
+		expect(inlineSpec(result.details)).toBeUndefined();
+	});
+
+	it("echoes room id, type and pax on a whole spec", () => {
+		const result = mapAccommodationFormToUpdate({
+			name: "Hotel",
+			pricing: {
+				[ENUM_ACCOMMODATION_PRICING_FIELD.INVOICING]:
+					ENUM_ACCOMMODATION_PRICING_INVOICING.INDIVIDUAL,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.PRICING_TYPE]:
+					ENUM_ACCOMMODATION_PRICING_TYPE.FLAT_RATE,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.PRICE_BASED_ON_CLASS]: false,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: false,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: "",
+				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 300,
+				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
+			},
 			rooms: {
 				[ENUM_FORM_ROOMS.ROOMS_LIST]: [
 					{
 						[ENUM_FORM_ROOMS.ID]: ROOM_ID,
+						[ENUM_FORM_ROOMS.TYP]: HousingRoomTypes.Triple,
 						[ENUM_FORM_ROOMS.ROOM_NAME]: "Deluxe",
 						[ENUM_FORM_ROOMS.DESCRIPTION]: "Deluxe class"
 					}
@@ -307,13 +332,15 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 		});
 
 		expect(inlineSpec(result.details)).toMatchObject({
-			pricing: "per_room",
+			pricing: "whole",
 			categories: [
 				{
 					name: null,
 					rooms: [
 						{
 							id: ROOM_ID,
+							typ: HousingRoomTypes.Triple,
+							pax: 3,
 							name: "Deluxe",
 							description: "Deluxe class"
 						}

@@ -8,7 +8,7 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
 	mapBackendLocationToGeoForm,
-	mapGeoFormToBackendLocation
+	mapGeoFormToBackendLocationRef
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
@@ -130,7 +130,7 @@ const mapPointToBackend = (
 			time: { time, timezone: toTimezoneOffset(timezone) }
 		}),
 		...(location !== undefined && {
-			location: mapGeoFormToBackendLocation(location, lang)
+			location: mapGeoFormToBackendLocationRef(location, lang)
 		})
 	};
 };

@@ -4,8 +4,7 @@ import type { SUPPLEMENT_ITEMS_SCHEMA as ITEMS_SCHEMA } from "../../schema";
 
 export const ENUM_FORM_SUPPLEMENT_ITEMS = {
 	ITEMS_LIST: "items",
-	NAME: "name",
-	DESCRIPTION: "description"
+	NAME: "name"
 } as const;
 
 export type ENUM_FORM_SUPPLEMENT_ITEMS_TYPE =

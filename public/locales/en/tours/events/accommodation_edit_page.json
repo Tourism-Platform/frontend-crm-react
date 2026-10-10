@@ -1,4 +1,7 @@
 {
+	"markup_errors": {
+		"percentage_range": "Margin must be greater than 0% and less than 100%"
+	},
 	"input": {
 		"title": {
 			"placeholder": "Enter accommodation title or it will automatically generated",
@@ -276,7 +279,10 @@
 					"fields": {
 						"total_cost": {
 							"label": "Total cost per room",
-							"placeholder": "Enter..."
+							"placeholder": "Enter...",
+							"errors": {
+								"required": "Cost per room is required"
+							}
 						},
 						"taxes_fees": {
 							"label": "Taxes & Fees per room",

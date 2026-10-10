@@ -7,12 +7,18 @@ import { Button, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_FORM_SUPPLEMENT_ITEMS,
+	ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD,
+	ENUM_SUPPLEMENT_PRICING_FIELD,
 	type TSupplementEditSchema
 } from "@/entities/tour";
 
+import { removeWithPriceRow } from "../../../model/remove-with-price-row";
 import { ENUM_FORM_SECTION } from "../../model";
 
 import { ItemsCard } from "./items-card";
+
+/** Per-item price rows, index-aligned to the items list. */
+const ITEM_PRICE_ROWS_PATH = `${ENUM_FORM_SECTION.PRICING}.${ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES}.${ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS}`;
 
 interface IItemsDetailsProps {
 	form: UseFormReturn<TSupplementEditSchema>;
@@ -28,8 +34,7 @@ const ItemsDetailsBase: FC<IItemsDetailsProps> = ({ form }) => {
 
 	const handleAddItem = () => {
 		append({
-			[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: "",
-			[ENUM_FORM_SUPPLEMENT_ITEMS.DESCRIPTION]: ""
+			[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: ""
 		});
 	};
 
@@ -43,7 +48,14 @@ const ItemsDetailsBase: FC<IItemsDetailsProps> = ({ form }) => {
 						key={field.id}
 						form={form}
 						index={index}
-						onRemove={() => remove(index)}
+						onRemove={() =>
+							removeWithPriceRow(
+								form,
+								remove,
+								ITEM_PRICE_ROWS_PATH,
+								index
+							)
+						}
 					/>
 				))}
 

@@ -82,6 +82,7 @@ export const mapLocationOutToGeoForm = (
 	location: LocationOutSchema
 ): TGeoFormValue =>
 	withGeoFormLabel({
+		id: location.id ?? null,
 		lat: location.lat,
 		long: location.long,
 		name: location.address ?? location.city ?? null,
@@ -93,6 +94,16 @@ export const mapLocationOutToGeoForm = (
 		housenumber: null,
 		postcode: null
 	});
+
+/**
+ * Event write: an unchanged saved location goes by `{ id }` — coordinates
+ * would create a new location on every save (fe6.4 §11).
+ */
+export const mapGeoFormToBackendLocationRef = (
+	value: TGeoFormValue | null | undefined,
+	lang: LanguageCode
+): LocationInSchema | LocationOutSchema | LocationRefSchema | null =>
+	value?.id ? { id: value.id } : mapGeoFormToBackendLocation(value, lang);
 
 export const mapBackendLocationToGeoForm = (
 	location:
@@ -115,6 +126,7 @@ export const mapBackendLocationToGeoForm = (
 	if (isLocationOut(location)) return mapLocationOutToGeoForm(location);
 
 	return withGeoFormLabel({
+		id: typeof raw.id === "string" ? raw.id : null,
 		lat,
 		long,
 		name: typeof raw.name === "string" ? raw.name : null,

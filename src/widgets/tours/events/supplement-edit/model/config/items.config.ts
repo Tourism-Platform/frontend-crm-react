@@ -8,12 +8,6 @@ export const ITEMS_DATA_LIST: TForm[] = [
 		placeholder: "form.items.details.form.fields.name.placeholder",
 		key: ENUM_FORM_SUPPLEMENT_ITEMS.NAME,
 		fieldType: "input"
-	},
-	{
-		label: "form.items.details.form.fields.description.label",
-		placeholder: "form.items.details.form.fields.description.placeholder",
-		key: ENUM_FORM_SUPPLEMENT_ITEMS.DESCRIPTION,
-		fieldType: "editor",
-		className: "col-span-2"
 	}
+	// No item description: the backend item has none and drops it (fe6.4 §14).
 ];

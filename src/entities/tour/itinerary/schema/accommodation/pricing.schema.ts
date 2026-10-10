@@ -38,6 +38,17 @@ const markupSchema = z
 		typ: z.enum(ENUM_ACCOMMODATION_MARKUP_TYP),
 		value: z.string()
 	})
+	// Backend percentage is strictly between 0 and 1 (fe6.4 §12); the form keeps percent.
+	.refine(
+		(markup) =>
+			markup.typ !== ENUM_ACCOMMODATION_MARKUP_TYP.PERCENTAGE ||
+			markup.value.trim() === "" ||
+			(Number(markup.value) > 0 && Number(markup.value) < 100),
+		{
+			message: msg("markup_errors.percentage_range"),
+			path: ["value"]
+		}
+	)
 	.nullable();
 
 const perRoomPriceRowSchema = z.object({
@@ -48,6 +59,8 @@ const perRoomPriceRowSchema = z.object({
 });
 
 const categoryRowSchema = z.object({
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.ID]: z.string().optional(),
+	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.PAX]: z.number().nullish(),
 	[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.NAME]: z.string().min(1, {
 		message: msg(
 			"form.pricing.form.per_room.fields.category_name.errors.required"
@@ -142,6 +155,49 @@ const validatePerRoomPricing = (
 		});
 		return;
 	}
+
+	// Every room needs a rate and 0 would mean "free" (fe6.4 §6, §14).
+	const requireCost = (cost: number | null, path: (string | number)[]) => {
+		if (cost != null) return;
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: msg(
+				"form.pricing.form.per_room.fields.total_cost.errors.required"
+			),
+			path: [ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES, ...path]
+		});
+	};
+	const rooms =
+		expensesResult.data[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS];
+
+	if (expensesResult.data.typ === ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM) {
+		(rooms as z.infer<typeof perRoomExpensesSchema>["rooms"]).forEach(
+			(row, index) =>
+				requireCost(row[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST], [
+					ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS,
+					index,
+					ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST
+				])
+		);
+		return;
+	}
+
+	(rooms as z.infer<typeof perRoomCategoryExpensesSchema>["rooms"]).forEach(
+		(room, roomIndex) =>
+			room[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES].forEach(
+				(category, categoryIndex) =>
+					requireCost(
+						category[ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST],
+						[
+							ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS,
+							roomIndex,
+							ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.CATEGORIES,
+							categoryIndex,
+							ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD.COST
+						]
+					)
+			)
+	);
 };
 
 /**

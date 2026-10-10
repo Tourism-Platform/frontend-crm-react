@@ -166,8 +166,7 @@ export const mapItemsFromBackend = (
 ): TSupplementEditSchema["items"] => ({
 	[ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST]: (backendItems ?? []).map(
 		(item) => ({
-			[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: item.name ?? "",
-			[ENUM_FORM_SUPPLEMENT_ITEMS.DESCRIPTION]: ""
+			[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: item.name ?? ""
 		})
 	)
 });
@@ -178,8 +177,7 @@ export const mapPricingFromBackend = (
 	const list = backendItems ?? [];
 	const defaults = getDefaultSupplementPricing(
 		list.map((item) => ({
-			[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: item.name ?? "",
-			[ENUM_FORM_SUPPLEMENT_ITEMS.DESCRIPTION]: ""
+			[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: item.name ?? ""
 		}))
 	);
 
@@ -213,7 +211,15 @@ export const mapPricingFromBackend = (
 		return false;
 	});
 
-	if (allSameExpenseTyp && allSameCost && first.expenses) {
+	// Whole-supplement price: only the first item is priced (current write),
+	// or every item repeats it (legacy write, re-saved as the first only).
+	const onlyFirstPriced =
+		list.length > 1 && list.slice(1).every((item) => !item.expenses);
+
+	if (
+		first.expenses &&
+		(onlyFirstPriced || (allSameExpenseTyp && allSameCost))
+	) {
 		if (first.expenses.typ === "per_person") {
 			const markup = mapMarkupFromBackend(first.expenses.markup);
 			return {
@@ -331,11 +337,13 @@ export const mapItemsAndPricingToBackend = (
 			)
 		: null;
 
+	// The backend sums item prices (fe6.4 §14): a total for the whole
+	// supplement goes on the first item only, the others carry no price.
 	if (pricingType === ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE) {
-		return list.map((item) => ({
+		return list.map((item, index) => ({
 			name: item[ENUM_FORM_SUPPLEMENT_ITEMS.NAME] || null,
 			expenses:
-				total != null
+				index === 0 && total != null
 					? {
 							typ: "fixed",
 							cost: {
@@ -350,10 +358,10 @@ export const mapItemsAndPricingToBackend = (
 	}
 
 	if (pricingType === ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON) {
-		return list.map((item) => ({
+		return list.map((item, index) => ({
 			name: item[ENUM_FORM_SUPPLEMENT_ITEMS.NAME] || null,
 			expenses:
-				total != null
+				index === 0 && total != null
 					? {
 							typ: "per_person",
 							cost_per_person: {

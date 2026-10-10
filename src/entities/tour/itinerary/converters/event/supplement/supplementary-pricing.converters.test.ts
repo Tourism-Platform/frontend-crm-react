@@ -25,8 +25,7 @@ vi.mock("@/shared/config", () => ({
 
 const items = [
 	{
-		[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: "Extra",
-		[ENUM_FORM_SUPPLEMENT_ITEMS.DESCRIPTION]: ""
+		[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: "Extra"
 	}
 ];
 
@@ -431,6 +430,94 @@ describe("mapPricingFromBackend", () => {
 					}
 				]
 			}
+		});
+	});
+});
+
+describe("supplement whole price (fe6.4 §14: items are summed)", () => {
+	const twoItems = [
+		{ [ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: "Water" },
+		{ [ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: "Juice" }
+	];
+
+	it("writes the flat total on the first item only", () => {
+		const result = mapItemsAndPricingToBackend(
+			twoItems,
+			basePricing({
+				[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 30,
+				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD
+			})
+		);
+
+		expect(result).toEqual([
+			expect.objectContaining({
+				name: "Water",
+				expenses: expect.objectContaining({
+					typ: "fixed",
+					cost: { val: 30, currency: Currency.USD }
+				})
+			}),
+			{ name: "Juice", expenses: null }
+		]);
+	});
+
+	it("writes the per-person total on the first item only", () => {
+		const result = mapItemsAndPricingToBackend(
+			twoItems,
+			basePricing({
+				[ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE]:
+					ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON,
+				[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 12,
+				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD
+			})
+		);
+
+		expect(result[0].expenses).toMatchObject({ typ: "per_person" });
+		expect(result[1].expenses).toBeNull();
+	});
+
+	it.each([
+		[
+			"only the first item priced (current write)",
+			[
+				{
+					name: "Water",
+					expenses: {
+						typ: "fixed",
+						cost: { val: 30, currency: Currency.USD }
+					}
+				},
+				{ name: "Juice", expenses: null }
+			]
+		],
+		[
+			"every item repeating the price (legacy write)",
+			[
+				{
+					name: "Water",
+					expenses: {
+						typ: "fixed",
+						cost: { val: 30, currency: Currency.USD }
+					}
+				},
+				{
+					name: "Juice",
+					expenses: {
+						typ: "fixed",
+						cost: { val: 30, currency: Currency.USD }
+					}
+				}
+			]
+		]
+	])("reads a flat total of 30 from %s", (_label, backendItems) => {
+		expect(
+			mapPricingFromBackend(
+				backendItems as Parameters<typeof mapPricingFromBackend>[0]
+			)
+		).toMatchObject({
+			[ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE]:
+				ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE,
+			[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 30
 		});
 	});
 });

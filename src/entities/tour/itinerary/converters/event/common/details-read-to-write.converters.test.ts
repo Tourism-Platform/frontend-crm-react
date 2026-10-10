@@ -67,7 +67,13 @@ describe("mapEventDetailsReadToWrite — product supply", () => {
 					supply: {
 						source: "product",
 						product_id: "product-1",
-						scope: { typ: "only", ids: ["unit-1"] }
+						// `only` scope always states every axis (OnlyVariants).
+						scope: {
+							typ: "only",
+							ids: ["unit-1"],
+							units: [],
+							categories: []
+						}
 					}
 				}
 			]

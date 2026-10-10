@@ -23,8 +23,7 @@ export const ITEMS_SCHEMA = z.object({
 					message: msg(
 						"form.items.details.form.fields.name.errors.max"
 					)
-				}),
-			[ENUM_FORM_SUPPLEMENT_ITEMS.DESCRIPTION]: z.string().optional()
+				})
 		})
 	)
 });

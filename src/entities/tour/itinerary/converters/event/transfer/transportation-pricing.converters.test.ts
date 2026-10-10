@@ -137,3 +137,54 @@ describe("transportation flat/per_person markup", () => {
 		});
 	});
 });
+
+describe("transportation per_car write (fe6.4 §5, §6)", () => {
+	const cars = [
+		{ id: "car-1", car_name: "sedan", pax: 3, description: "" },
+		{ car_name: "minivan", pax: 6, description: "" }
+	] as Parameters<typeof mapTransportationPricingToBackend>[1];
+
+	const perCarPricing = (costs: (number | null)[]) =>
+		basePricing({
+			[ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE]:
+				ENUM_TRANSPORTATION_PRICING_TYPE.PER_CAR,
+			[ENUM_TRANSPORTATION_PRICING_FIELD.EXPENSES]: {
+				typ: "per_car",
+				cars: costs.map((cost) => ({
+					cost,
+					fees: [],
+					currency: "USD",
+					markup: null
+				}))
+			}
+		} as Partial<TTransportationPricingSchema>);
+
+	it("echoes the car id and never invents pax", () => {
+		const { spec } = mapTransportationPricingToBackend(
+			perCarPricing([50, 80]),
+			cars
+		);
+
+		expect(spec).toMatchObject({
+			pricing: "per_car",
+			cars: [
+				{ id: "car-1", pax: 3, charge: { cost: { val: 50 } } },
+				{ pax: 6, charge: { cost: { val: 80 } } }
+			]
+		});
+		expect((spec as { cars: object[] }).cars[1]).not.toHaveProperty("id");
+	});
+
+	it("falls back to the unpriced category arm instead of a zero price", () => {
+		const { spec } = mapTransportationPricingToBackend(
+			perCarPricing([50, null]),
+			cars
+		);
+
+		expect(spec).toMatchObject({
+			pricing: "per_car_category",
+			cars: [{ id: "car-1", pax: 3 }, { pax: 6 }]
+		});
+		expect(JSON.stringify(spec)).not.toContain('"val":0');
+	});
+});

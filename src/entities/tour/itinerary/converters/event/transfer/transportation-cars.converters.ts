@@ -1,6 +1,6 @@
 import type { TransferDetailsOutput } from "@/shared/api";
 
-import type { TCarsSchema } from "../../../types";
+import { ENUM_FORM_CARS, type TCarsSchema } from "../../../types";
 
 import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
@@ -24,6 +24,7 @@ export const mapCarsFromBackend = (
 
 	return {
 		cars: source.map((car) => ({
+			...(car.id ? { [ENUM_FORM_CARS.ID]: car.id } : {}),
 			// The enum map is total over the generated VehicleBodyType.
 			car_name: vehicleBodyTypeConverter.from(car.body_type)!,
 			pax: car.pax ?? null,

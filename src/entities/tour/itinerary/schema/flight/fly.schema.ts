@@ -18,16 +18,17 @@ export const FLY_SEGMENT_SCHEMA = z
 			.optional()
 			.nullable(),
 
+		// Backend: integer 1–9999 (fe6.4 §14); letters would be a 422.
 		[ENUM_FORM_FLIGHT.FLIGHT_NUMBER]: z
 			.string()
-			// .min(1, {
-			// 	message: msg(
-			// 		"form.general.flights.form.fly.fields.flight_number.errors.min"
-			// 	)
-			// })
-			.max(10, {
+			.regex(/^d{0,4}$/, {
 				message: msg(
-					"form.general.flights.form.fly.fields.flight_number.errors.max"
+					"form.general.flights.form.fly.fields.flight_number.errors.invalid"
+				)
+			})
+			.refine((value) => !value || Number(value) >= 1, {
+				message: msg(
+					"form.general.flights.form.fly.fields.flight_number.errors.invalid"
 				)
 			})
 			.optional()
@@ -81,9 +82,10 @@ export const FLY_SEGMENT_SCHEMA = z
 			.optional()
 			.nullable(),
 
+		// Backend: 1–5 characters (fe6.4 §14).
 		[ENUM_FORM_FLIGHT.DEPARTURE_TERMINAL]: z
 			.string()
-			.max(10, {
+			.max(5, {
 				message: msg(
 					"form.general.flights.form.fly.fields.departure_terminal.errors.max"
 				)
@@ -93,7 +95,7 @@ export const FLY_SEGMENT_SCHEMA = z
 
 		[ENUM_FORM_FLIGHT.DEPARTURE_GATE]: z
 			.string()
-			.max(10, {
+			.max(5, {
 				message: msg(
 					"form.general.flights.form.fly.fields.departure_gate.errors.max"
 				)
