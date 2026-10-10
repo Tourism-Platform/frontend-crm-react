@@ -15,7 +15,7 @@ import {
 	useSortable
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Star, Trash2, Upload, ZoomInIcon } from "lucide-react";
+import { Loader2, Star, Trash2, Upload, ZoomInIcon } from "lucide-react";
 import { type FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -164,6 +164,10 @@ interface ICustomUploadImagesProps {
 	onAdd?: (files: File[]) => void;
 	onRemove?: (id: string) => void;
 	onReorder?: (items: TUploadImageItem[]) => void;
+	/** Saving in progress: a loader covers the grid and blocks add / remove / drag. */
+	isBusy?: boolean;
+	/** No changes allowed (e.g. the owner is not created yet). */
+	disabled?: boolean;
 }
 
 export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
@@ -173,7 +177,9 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 	className,
 	onAdd = () => {},
 	onRemove = () => {},
-	onReorder = () => {}
+	onReorder = () => {},
+	isBusy = false,
+	disabled = false
 }) => {
 	const { t } = useTranslation("common");
 	const [previewSrc, setPreviewSrc] = useState<string | null>(null);
@@ -184,7 +190,10 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 		useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
 	);
 
+	const isLocked = isBusy || disabled;
+
 	const handleDragEnd = (event: DragEndEvent) => {
+		if (isLocked) return;
 		const { active, over } = event;
 		if (!over || active.id === over.id) return;
 		const oldIndex = items.findIndex(
@@ -201,8 +210,13 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 	};
 
 	return (
-		<div className={cn("w-full", className)}>
-			{items.length < maxFiles && (
+		<div className={cn("relative w-full", className)} aria-busy={isBusy}>
+			{isBusy ? (
+				<div className="absolute inset-0 z-30 flex items-center justify-center rounded-lg bg-background/60">
+					<Loader2 className="size-6 animate-spin text-muted-foreground" />
+				</div>
+			) : null}
+			{items.length < maxFiles && !disabled && (
 				<div
 					className="flex cursor-pointer items-center justify-center rounded-lg border border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-muted-foreground/50 mb-4"
 					onClick={() => fileInputRef.current?.click()}
@@ -253,7 +267,9 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 										item={item}
 										isPrimary={idx === 0}
 										gridArea={layout?.areas[idx]}
-										onRemove={onRemove}
+										onRemove={
+											isLocked ? () => {} : onRemove
+										}
 										onPreview={setPreviewSrc}
 									/>
 								))}
@@ -266,7 +282,9 @@ export const CustomUploadImages: FC<ICustomUploadImagesProps> = ({
 											key={getUploadItemId(item)}
 											item={item}
 											isPrimary={false}
-											onRemove={onRemove}
+											onRemove={
+												isLocked ? () => {} : onRemove
+											}
 											onPreview={setPreviewSrc}
 										/>
 									))}

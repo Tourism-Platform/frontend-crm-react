@@ -5,8 +5,8 @@ import { toast } from "sonner";
 import type { TResources } from "@/shared/config";
 import {
 	CustomUploadImages,
-	LoaderButton,
-	useCustomUploadImages,
+	useAutosaveToast,
+	useAutosaveUploadImages,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -16,34 +16,31 @@ export interface IMediaProps {
 	ns?: keyof TResources;
 }
 
+/** Event photos, saved on every action (no submit button). */
 const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 	const { t } = useTranslation(ns);
+	const { t: tEvents } = useTranslation("common_events");
 	const {
+		canUpload,
 		serverImages,
 		isListLoading,
 		isError,
-		isMutating,
 		addImages,
 		removeImage,
 		setPrimaryImage
 	} = useEventMedia();
 
-	const {
-		items,
-		isLoading,
-		handleAdd,
-		handleRemove,
-		handleReorder,
-		handlePhotosSubmit
-	} = useCustomUploadImages({
-		images: serverImages,
-		isServerLoading: isListLoading || isMutating,
-		addImages,
-		removeImage,
-		setPrimaryImage,
-		onSuccess: () => toast.success(t("form.toasts.save.success")),
-		onError: () => toast.error(t("form.toasts.save.error"))
-	});
+	const { items, status, isBusy, handleAdd, handleRemove, handleReorder } =
+		useAutosaveUploadImages({
+			images: serverImages,
+			isServerLoading: isListLoading,
+			addImages,
+			removeImage,
+			setPrimaryImage,
+			enabled: canUpload
+		});
+
+	useAutosaveToast(status, t("form.toasts.save.error"));
 
 	useEffect(() => {
 		if (isError) {
@@ -55,21 +52,18 @@ const MediaBase: FC<IMediaProps> = ({ ns = "flight_edit_page" }) => {
 		<div className="grid gap-6">
 			<CustomUploadImages
 				items={items}
+				isBusy={isBusy}
+				disabled={!canUpload}
 				onAdd={handleAdd}
 				onRemove={handleRemove}
 				onReorder={handleReorder}
 				maxFiles={5}
 			/>
-			<div className="flex justify-end mt-6">
-				<LoaderButton
-					size="lg"
-					type="button"
-					onClick={handlePhotosSubmit}
-					isLoading={isLoading}
-					label={t("form.media.buttons.save")}
-					loadingLabel={t("form.media.buttons.saving")}
-				/>
-			</div>
+			{!canUpload ? (
+				<p className="text-sm text-muted-foreground">
+					{tEvents("media.create_first")}
+				</p>
+			) : null}
 		</div>
 	);
 };

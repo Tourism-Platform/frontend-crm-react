@@ -135,6 +135,8 @@ export const useEventMedia = () => {
 	);
 
 	return {
+		/** A library entry being created has no images route yet. */
+		canUpload: isLibrary ? !skipLibrary : !skipTour,
 		serverImages: activeQuery.data ?? EMPTY_IMAGES,
 		isListLoading: activeQuery.isLoading,
 		isError: activeQuery.isRealError,

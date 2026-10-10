@@ -1,4 +1,7 @@
 {
+	"media": {
+		"create_first": "Save the event first to add photos"
+	},
 	"autosave": {
 		"error": "Changes were not saved. Edit any field to retry."
 	},
