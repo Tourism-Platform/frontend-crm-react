@@ -166,23 +166,20 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 					) : null}
 				</div>
 
-				<div className="mb-6 flex items-end justify-between">
-					<span className="font-semibold">
-						{t("sidebar.estimated_total")}
-					</span>
-					<div className="flex flex-col items-end">
-						<span className="text-2xl font-bold">
-							{submittedBooking?.tourCurrency ?? "$"}
-							{total.toFixed(2)}
+				<div className="mb-6 flex flex-col gap-2">
+					<div className="flex items-center justify-between gap-4">
+						<span className="font-semibold">
+							{t("sidebar.estimated_total")}
 						</span>
-						{travellersCount > 0 && pricePerPerson > 0 && (
-							<span className="text-xs text-muted-foreground">
-								{travellersCount} {t("sidebar.person")} X{" "}
-								{submittedBooking?.tourCurrency ?? "$"}
-								{pricePerPerson.toFixed(2)}
-							</span>
-						)}
+						<span className="text-right text-2xl font-bold">
+							{t("sidebar.price_from", {
+								price: `${submittedBooking?.tourCurrency ?? "$"}${total.toFixed(2)}`
+							})}
+						</span>
 					</div>
+					<p className="text-xs text-muted-foreground">
+						{t("sidebar.price_note")}
+					</p>
 				</div>
 
 				{action ? (

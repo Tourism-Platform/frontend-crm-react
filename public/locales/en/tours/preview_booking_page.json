@@ -181,6 +181,8 @@
 		"price_per_person": "Price per person",
 		"group_total": "Group total",
 		"estimated_total": "Estimated total",
+		"price_from": "from {{price}}",
+		"price_note": "This is an estimated price. The final price will be confirmed after booking.",
 		"not_selected": "Not selected",
 		"days": "days",
 		"person": "person"
