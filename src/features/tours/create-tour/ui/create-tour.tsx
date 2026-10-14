@@ -56,6 +56,8 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 			[ENUM_FORM.TOUR_TYPE]: undefined,
 			[ENUM_FORM.AGENCY_ID]: null,
 			[ENUM_FORM.GROUP_SIZE]: undefined,
+			[ENUM_FORM.GROUP_SIZE_MIN]: null,
+			[ENUM_FORM.DURATION_HOURS]: null,
 			[ENUM_FORM.DURATION]: { from: undefined, to: undefined },
 			[ENUM_FORM.AGE_REQUIRES]: { from: undefined, to: undefined },
 			[ENUM_FORM.TOUR_CATEGORIES]: [],

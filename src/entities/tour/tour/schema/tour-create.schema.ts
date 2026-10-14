@@ -24,26 +24,33 @@ export const TOUR_CREATE_SCHEMA = z
 		[ENUM_FORM.GROUP_SIZE]: z
 			.number({ message: msg("create.form.errors.groupSize.min") })
 			.min(1, msg("create.form.errors.groupSize.min")),
+		[ENUM_FORM.GROUP_SIZE_MIN]: z
+			.number({ message: msg("create.form.errors.groupSizeMin.min") })
+			.min(1, msg("create.form.errors.groupSizeMin.min"))
+			.nullable()
+			.optional(),
 		[ENUM_FORM.DURATION]: z
 			.object({
 				from: z
-					.number({
-						message: msg(
-							"create.form.errors.duration.from.required"
-						)
-					})
-					.min(1, msg("create.form.errors.duration.from.required")),
+					.number()
+					.min(1, msg("create.form.errors.duration.from.required"))
+					.or(z.literal(""))
+					.optional(),
 				to: z
-					.number({
-						message: msg("create.form.errors.duration.to.required")
-					})
+					.number()
 					.min(1, msg("create.form.errors.duration.to.required"))
+					.or(z.literal(""))
+					.optional()
 			})
 			.superRefine((val, ctx) => {
 				const days = val.from;
 				const nights = val.to;
 
-				if (nights < days - 1 || nights > days + 1) {
+				if (
+					typeof days === "number" &&
+					typeof nights === "number" &&
+					(nights < days - 1 || nights > days + 1)
+				) {
 					ctx.addIssue({
 						code: "custom",
 						message: msg(
@@ -53,6 +60,12 @@ export const TOUR_CREATE_SCHEMA = z
 					});
 				}
 			}),
+		[ENUM_FORM.DURATION_HOURS]: z
+			.number({ message: msg("create.form.errors.durationHours.min") })
+			.min(1, msg("create.form.errors.durationHours.min"))
+			.max(14, msg("create.form.errors.durationHours.max"))
+			.nullable()
+			.optional(),
 		[ENUM_FORM.AGE_REQUIRES]: z
 			.object({
 				from: z
@@ -97,5 +110,44 @@ export const TOUR_CREATE_SCHEMA = z
 				message: msg("create.form.errors.agencyId.required"),
 				path: [ENUM_FORM.AGENCY_ID]
 			});
+		}
+
+		const groupSizeMin = data[ENUM_FORM.GROUP_SIZE_MIN];
+		if (groupSizeMin != null && groupSizeMin > data[ENUM_FORM.GROUP_SIZE]) {
+			ctx.addIssue({
+				code: "custom",
+				message: msg("create.form.errors.groupSizeMin.max"),
+				path: [ENUM_FORM.GROUP_SIZE_MIN]
+			});
+		}
+
+		const { from: days, to: nights } = data[ENUM_FORM.DURATION];
+		const hasDuration =
+			typeof days === "number" || typeof nights === "number";
+		const hasHours = data[ENUM_FORM.DURATION_HOURS] != null;
+
+		if (hasDuration && hasHours) {
+			ctx.addIssue({
+				code: "custom",
+				message: msg("create.form.errors.durationHours.either"),
+				path: [ENUM_FORM.DURATION_HOURS]
+			});
+		}
+
+		if (!hasHours) {
+			if (typeof days !== "number") {
+				ctx.addIssue({
+					code: "custom",
+					message: msg("create.form.errors.duration.from.required"),
+					path: [ENUM_FORM.DURATION, "from"]
+				});
+			}
+			if (typeof nights !== "number") {
+				ctx.addIssue({
+					code: "custom",
+					message: msg("create.form.errors.duration.to.required"),
+					path: [ENUM_FORM.DURATION, "to"]
+				});
+			}
 		}
 	});

@@ -55,7 +55,10 @@ export const useItineraryEvents = (tourId: string, activeOption: string) => {
 	const tourDuration = useMemo(() => {
 		if (!tour?.duration) return 1;
 		if (typeof tour.duration === "object") {
-			return Math.max(tour.duration.from ?? 1, tour.duration.to ?? 1);
+			return Math.max(
+				Number(tour.duration.from) || 1,
+				Number(tour.duration.to) || 1
+			);
 		}
 		return Number(tour.duration) || 1;
 	}, [tour?.duration]);

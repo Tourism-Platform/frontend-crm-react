@@ -23,6 +23,19 @@ export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 		options: useValueToTranslateLabel(TOUR_TYPE_LABELS)
 	},
 	{
+		label: "create.form.fields.ageRequires.label",
+		placeholder: "create.form.fields.ageRequires.placeholder_left",
+		key: ENUM_FORM.AGE_REQUIRES,
+		fieldType: "input"
+	},
+	{
+		label: "create.form.fields.groupSizeMin.label",
+		placeholder: "create.form.fields.groupSizeMin.placeholder",
+		key: ENUM_FORM.GROUP_SIZE_MIN,
+		fieldType: "input",
+		type: "number"
+	},
+	{
 		label: "create.form.fields.groupSize.label",
 		placeholder: "create.form.fields.groupSize.placeholder",
 		key: ENUM_FORM.GROUP_SIZE,
@@ -30,15 +43,16 @@ export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 		type: "number"
 	},
 	{
+		label: "create.form.fields.durationHours.label",
+		placeholder: "create.form.fields.durationHours.placeholder",
+		key: ENUM_FORM.DURATION_HOURS,
+		fieldType: "input",
+		type: "number"
+	},
+	{
 		label: "create.form.fields.duration.label",
 		placeholder: "create.form.fields.duration.placeholder_left",
 		key: ENUM_FORM.DURATION,
-		fieldType: "input"
-	},
-	{
-		label: "create.form.fields.ageRequires.label",
-		placeholder: "create.form.fields.ageRequires.placeholder_left",
-		key: ENUM_FORM.AGE_REQUIRES,
 		fieldType: "input"
 	},
 	{

@@ -41,10 +41,18 @@
 					"label": "Размер группы",
 					"placeholder": "Введите..."
 				},
+				"groupSizeMin": {
+					"label": "Мин. размер группы",
+					"placeholder": "Введите..."
+				},
 				"duration": {
 					"label": "Продолжительность",
 					"placeholder_left": "Дни",
 					"placeholder_right": "Ночи"
+				},
+				"durationHours": {
+					"label": "Длительность, часы",
+					"placeholder": "Введите..."
 				},
 				"ageRequires": {
 					"label": "Возрастные требования",
@@ -85,6 +93,10 @@
 					"invalid": "Некорректное значение",
 					"min": "Минимум 1 человек"
 				},
+				"groupSizeMin": {
+					"min": "Минимум 1 человек",
+					"max": "Не больше размера группы"
+				},
 				"duration": {
 					"nightsMismatch": "Неверный диапазон",
 					"from": {
@@ -93,6 +105,11 @@
 					"to": {
 						"required": "Обязательно"
 					}
+				},
+				"durationHours": {
+					"min": "Минимум 1 час",
+					"max": "Максимум 14 часов",
+					"either": "Либо дни, либо часы"
 				},
 				"ageRequires": {
 					"toMismatch": "Неверный диапазон",

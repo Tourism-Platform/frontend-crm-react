@@ -41,10 +41,18 @@
 					"label": "Group size",
 					"placeholder": "Enter..."
 				},
+				"groupSizeMin": {
+					"label": "Min group size",
+					"placeholder": "Enter..."
+				},
 				"duration": {
 					"label": "Duration",
 					"placeholder_left": "Days",
 					"placeholder_right": "Nights"
+				},
+				"durationHours": {
+					"label": "Duration, hours",
+					"placeholder": "Enter..."
 				},
 				"ageRequires": {
 					"label": "Age requires",
@@ -85,6 +93,10 @@
 					"invalid": "Invalid value",
 					"min": "Minimum 1 person"
 				},
+				"groupSizeMin": {
+					"min": "At least 1 person",
+					"max": "Cannot exceed group size"
+				},
 				"duration": {
 					"nightsMismatch": "Uncorrect range",
 					"from": {
@@ -93,6 +105,11 @@
 					"to": {
 						"required": "Required"
 					}
+				},
+				"durationHours": {
+					"min": "At least 1 hour",
+					"max": "At most 14 hours",
+					"either": "Either days or hours"
 				},
 				"ageRequires": {
 					"toMismatch": "Uncorrect range",

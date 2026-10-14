@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { type FC, Fragment, useEffect } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
@@ -13,17 +13,23 @@ import {
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
-import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
 	ENUM_TOUR_SETTINGS_GENERAL_FORM,
-	TOUR_CATEGORY_LABELS,
+	ENUM_TOUR_TYPES,
 	TOUR_SETTINGS_GENERAL_FORM_SCHEMA,
 	type TTourSettingsGeneralFormSchema,
 	TourLanguagesField,
 	useGetTourGeneralQuery,
 	useUpdateTourGeneralMutation
 } from "@/entities/tour";
+import {
+	AgencyOptionCard,
+	AgencyOptionCardSkeleton,
+	type TAgencySelectOption,
+	useAgencySearchOptions,
+	useGetOperatorAgencyInfoByIdQuery
+} from "@/entities/user";
 
 import { GENERAL_FORM_LIST } from "../../model/config/general.config";
 
@@ -47,6 +53,27 @@ const GeneralInfoBase: FC = () => {
 		resolver: zodResolver(TOUR_SETTINGS_GENERAL_FORM_SCHEMA),
 		mode: "onSubmit"
 	});
+
+	const tourType = useWatch({
+		control: form.control,
+		name: ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_TYPE
+	});
+	const isPrivateTour = tourType === ENUM_TOUR_TYPES.PRIVATE;
+	const agency = useAgencySearchOptions({ enabled: isPrivateTour });
+	const { data: tourAgency } = useGetOperatorAgencyInfoByIdQuery(
+		tour?.agencyId ?? "",
+		{ skip: !tour?.agencyId }
+	);
+	const agencyId = useWatch({
+		control: form.control,
+		name: ENUM_TOUR_SETTINGS_GENERAL_FORM.AGENCY_ID
+	});
+
+	useEffect(() => {
+		if (tourType && !isPrivateTour) {
+			form.setValue(ENUM_TOUR_SETTINGS_GENERAL_FORM.AGENCY_ID, null);
+		}
+	}, [tourType, isPrivateTour, form]);
 
 	useEffect(() => {
 		if (tour) {
@@ -80,43 +107,93 @@ const GeneralInfoBase: FC = () => {
 				<h2 className="text-xl">{t("general.title")}</h2>
 				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 					{GENERAL_FORM_LIST({ defaultValues: tour }).map(
-						({ key, ...item }) => (
-							<CustomField
-								key={key}
-								control={form.control}
-								name={key}
-								t={t}
-								{...item}
-							/>
-						)
+						({ key, ...item }) => {
+							if (
+								key ===
+									ENUM_TOUR_SETTINGS_GENERAL_FORM.DURATION ||
+								key ===
+									ENUM_TOUR_SETTINGS_GENERAL_FORM.AGE_REQUIRES
+							) {
+								return (
+									<CustomRangeField
+										key={key}
+										control={form.control}
+										name={key}
+										label={`general.form.fields.${key}.label`}
+										placeholder_left={`general.form.fields.${key}.placeholder_left`}
+										placeholder_right={`general.form.fields.${key}.placeholder_right`}
+										t={t}
+									/>
+								);
+							}
+
+							if (
+								key ===
+								ENUM_TOUR_SETTINGS_GENERAL_FORM.GROUP_SIZE
+							) {
+								return (
+									<Fragment key={key}>
+										<CustomField
+											control={form.control}
+											name={key}
+											t={t}
+											{...item}
+										/>
+										{isPrivateTour ? (
+											<CustomField
+												fieldType="asyncSelect"
+												control={form.control}
+												className="col-span-2"
+												name={
+													ENUM_TOUR_SETTINGS_GENERAL_FORM.AGENCY_ID
+												}
+												t={t}
+												label="general.form.fields.agencyId.label"
+												placeholder="general.form.fields.agencyId.placeholder"
+												emptyText="general.form.fields.agencyId.empty"
+												selectedLabel={
+													agencyId &&
+													agencyId === tour?.agencyId
+														? (tourAgency?.businessName ??
+															tourAgency?.legalName ??
+															undefined)
+														: undefined
+												}
+												options={agency.options}
+												onQueryChange={agency.setQuery}
+												onLoadMore={agency.loadMore}
+												hasMore={agency.hasMore}
+												isLoading={agency.isLoading}
+												isLoadingMore={
+													agency.isLoadingMore
+												}
+												renderOption={(option) => (
+													<AgencyOptionCard
+														option={
+															option as TAgencySelectOption
+														}
+													/>
+												)}
+												renderSkeleton={() => (
+													<AgencyOptionCardSkeleton />
+												)}
+											/>
+										) : null}
+									</Fragment>
+								);
+							}
+
+							return (
+								<CustomField
+									key={key}
+									control={form.control}
+									name={key}
+									t={t}
+									{...item}
+								/>
+							);
+						}
 					)}
-					<CustomRangeField
-						control={form.control}
-						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.DURATION}
-						label="general.form.fields.duration.label"
-						placeholder_left="general.form.fields.duration.placeholder_left"
-						placeholder_right="general.form.fields.duration.placeholder_right"
-						t={t}
-					/>
-					<CustomRangeField
-						control={form.control}
-						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.AGE_REQUIRES}
-						label="general.form.fields.ageRequires.label"
-						placeholder_left="general.form.fields.ageRequires.placeholder_left"
-						placeholder_right="general.form.fields.ageRequires.placeholder_right"
-						t={t}
-					/>
-					<CustomField
-						control={form.control}
-						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES}
-						label="general.form.fields.tourCategories.label"
-						placeholder="general.form.fields.tourCategories.placeholder"
-						options={useValueToTranslateLabel(TOUR_CATEGORY_LABELS)}
-						fieldType="multiselect"
-						className="col-span-2"
-						badgeVariant="secondary"
-						t={t}
-					/>
 					<TourLanguagesField
 						control={form.control}
 						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.LANGUAGES}

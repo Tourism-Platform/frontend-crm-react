@@ -11,7 +11,9 @@ export const ENUM_TOUR_CREATE_FORM = {
 	TOUR_TYPE: "tourType",
 	AGENCY_ID: "agencyId",
 	GROUP_SIZE: "groupSize",
+	GROUP_SIZE_MIN: "groupSizeMin",
 	DURATION: "duration",
+	DURATION_HOURS: "durationHours",
 	AGE_REQUIRES: "ageRequires",
 	TOUR_CATEGORIES: "tourCategories",
 	LANGUAGES: "languages"

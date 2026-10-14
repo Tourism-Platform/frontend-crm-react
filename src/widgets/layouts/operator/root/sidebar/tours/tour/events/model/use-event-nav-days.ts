@@ -28,7 +28,7 @@ export const useEventNavDays = (tourId: string, optionId: string) => {
 		const tourDuration = !duration
 			? 1
 			: typeof duration === "object"
-				? Math.max(duration.from ?? 1, duration.to ?? 1)
+				? Math.max(Number(duration.from) || 1, Number(duration.to) || 1)
 				: Number(duration) || 1;
 
 		const maxEventDay = events.reduce(
