@@ -1,4 +1,5 @@
 import { BOOKING_ORDER_OPERATOR_PATHS, ENUM_API_TAGS } from "@/shared/api";
+import { mapOrderLangQueryToBackend } from "@/shared/converters";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -8,6 +9,7 @@ import {
 } from "../converters";
 import type {
 	ENUM_ORDER_STATUS_TYPE,
+	IBookingOrderQueryArgs,
 	IOperatorOrderDetail,
 	TBookingCancelBackend,
 	TOperatorBookingItineraryBackend,
@@ -18,16 +20,20 @@ import type {
 
 export const bookingOrderOperatorApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getOperatorBookingOrder: builder.query<IOperatorOrderDetail, string>({
-			query: (bookingId) => ({
+		getOperatorBookingOrder: builder.query<
+			IOperatorOrderDetail,
+			IBookingOrderQueryArgs
+		>({
+			query: ({ bookingId, language }) => ({
 				...BOOKING_ORDER_OPERATOR_PATHS.getOperatorBookingOrder(
 					bookingId
-				)
+				),
+				params: mapOrderLangQueryToBackend(language)
 			}),
 			transformResponse: (response: TOperatorOrderDetailBackend) =>
 				mapOperatorBookingOrderToFrontend(response),
-			providesTags: (_result, _error, id) => [
-				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
+			providesTags: (_result, _error, { bookingId }) => [
+				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id: bookingId }
 			]
 		}),
 		getOperatorBookingItinerary: builder.query<

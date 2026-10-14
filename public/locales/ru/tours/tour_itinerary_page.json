@@ -4,6 +4,9 @@
 		"title": "Детали поездки",
 		"container": {
 			"empty": "Перетащи событие сюда"
+		},
+		"translation": {
+			"pending": "Перевод…"
 		}
 	},
 	"day_details": {

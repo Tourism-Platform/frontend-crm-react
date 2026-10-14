@@ -7,6 +7,7 @@ export * from "./event-media.converters";
 export * from "./event-time-range.converters";
 export * from "./event-type.converters";
 export * from "./backend-event-type.converters";
+export * from "./event-translation.converters";
 export * from "./event/common/fees.converters";
 export * from "./event/transfer/transfer-type.converters";
 export * from "./event/transfer/transportation-pricing.converters";

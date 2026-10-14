@@ -3,12 +3,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { cva } from "class-variance-authority";
 import { GripVertical } from "lucide-react";
 import React, { type FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
 import { InfoCircleIcon } from "@/shared/assets";
 import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import {
+	Badge,
 	Button,
 	Card,
 	CardContent,
@@ -88,6 +90,7 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 
 		const isMultiplyOption = item.eventType === ENUM_EVENT.MULTIPLY_OPTION;
 
+		const { t } = useTranslation("tour_itinerary_page");
 		const { tourId } = useParams<{ tourId: string }>();
 		const eventId = item.backendId ?? item.id;
 
@@ -131,6 +134,11 @@ const DraggableDayItemBase: FC<IDraggableDayItemProps> = React.memo(
 						</div>
 						<div className="flex-1">
 							<p className="text-sm font-medium">{item.title}</p>
+							{item.isTranslating && (
+								<Badge variant="secondary" className="mt-1">
+									{t("trip_details.translation.pending")}
+								</Badge>
+							)}
 							{item.subtitle && (
 								<PreviewerSimple
 									text={item.subtitle}

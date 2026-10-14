@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import {
 	ENUM_EVENT,
+	ENUM_EVENT_TRANSLATION,
 	type ITourEvent,
 	useGetTourGeneralQuery,
 	useListTourEventsQuery
@@ -19,7 +20,8 @@ const toDayItem = (ev: ITourEvent): IDayItem => {
 		eventType: ev.eventType,
 		title: ev.name,
 		subtitle: ev.timeSubtitle,
-		backendId: ev.id
+		backendId: ev.id,
+		isTranslating: ev.translation === ENUM_EVENT_TRANSLATION.PENDING
 	};
 
 	if (ev.eventType === ENUM_EVENT.MULTIPLY_OPTION && ev.options?.length) {

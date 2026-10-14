@@ -12,5 +12,9 @@ export {
 	mapGeoFormToLocationIn,
 	mapLocationOutToGeoForm
 } from "./geo-location.converters";
-export { languageCodeMapper } from "./language-code.converters";
+export {
+	languageCodeMapper,
+	mapOrderLangQueryToBackend,
+	mapReadLangQueryToBackend
+} from "./language-code.converters";
 export { userRoleMapper } from "./user-role.converters";

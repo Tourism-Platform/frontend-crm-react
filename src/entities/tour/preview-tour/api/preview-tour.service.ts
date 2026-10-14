@@ -13,6 +13,7 @@ import {
 	TOUR_PATHS,
 	TOUR_PUBLIC_PATHS
 } from "@/shared/api";
+import { mapReadLangQueryToBackend } from "@/shared/converters";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 import type {
@@ -36,8 +37,10 @@ import type {
 	IOptionDetail,
 	IPreviewOperator,
 	IPreviewOptionCard,
+	IPreviewOptionQueryArgs,
 	IPreviewTourData,
 	IPreviewTourGeneral,
+	IPreviewTourQueryArgs,
 	IPreviewTourSchedule,
 	TGetPreviewTourBackendResponse,
 	TOptionDetailBackend,
@@ -63,16 +66,21 @@ const toQueryArgs = (path: {
 
 export const tourPreviewTourApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getPreviewTourGeneral: builder.query<IPreviewTourGeneral, string>({
-			query: (tourId) => ({
-				...TOUR_PUBLIC_PATHS.getTour(tourId)
+		getPreviewTourGeneral: builder.query<
+			IPreviewTourGeneral,
+			IPreviewTourQueryArgs
+		>({
+			query: ({ tourId, language }) => ({
+				...TOUR_PUBLIC_PATHS.getTour(tourId),
+				params: mapReadLangQueryToBackend(language)
 			}),
 			transformResponse: (response: TGetPreviewTourBackendResponse) =>
 				mapPreviewTourGeneralToFrontend(response)
 		}),
-		getPreviewTour: builder.query<IPreviewTourData, string>({
-			query: (tourId) => ({
-				...TOUR_PUBLIC_PATHS.getPublicLandingPage(tourId)
+		getPreviewTour: builder.query<IPreviewTourData, IPreviewTourQueryArgs>({
+			query: ({ tourId, language }) => ({
+				...TOUR_PUBLIC_PATHS.getPublicLandingPage(tourId),
+				params: mapReadLangQueryToBackend(language)
 			}),
 			transformResponse: (response: TPreviewTourBackend) =>
 				mapPreviewTourToFrontend(response)
@@ -84,16 +92,16 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			transformResponse: (response: TPreviewOperatorBackend) =>
 				mapPreviewOperatorToFrontend(response)
 		}),
-		getPreviewOption: builder.query<
-			IOptionDetail,
-			{ tourId: string; optionId: string }
-		>({
-			query: ({ tourId, optionId }) => ({
-				...TOUR_PUBLIC_PATHS.getPublicTourOption(tourId, optionId)
-			}),
-			transformResponse: (response: TOptionDetailBackend) =>
-				mapPreviewOptionToFrontend(response)
-		}),
+		getPreviewOption: builder.query<IOptionDetail, IPreviewOptionQueryArgs>(
+			{
+				query: ({ tourId, optionId, language }) => ({
+					...TOUR_PUBLIC_PATHS.getPublicTourOption(tourId, optionId),
+					params: mapReadLangQueryToBackend(language)
+				}),
+				transformResponse: (response: TOptionDetailBackend) =>
+					mapPreviewOptionToFrontend(response)
+			}
+		),
 		getPreviewTourOptions: builder.query<IPreviewOptionCard[], string>({
 			query: (tourId) => ({
 				...TOUR_PUBLIC_PATHS.listPublicTourOptions(tourId)
@@ -123,12 +131,23 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			transformResponse: (response: TourMetaResponse) =>
 				mapPreviewTourGeneralToFrontend(response)
 		}),
-		getDraftPreviewLanding: builder.query<IPreviewTourData, string>({
-			async queryFn(tourId, _api, _extraOptions, baseQuery) {
+		getDraftPreviewLanding: builder.query<
+			IPreviewTourData,
+			IPreviewTourQueryArgs
+		>({
+			async queryFn(
+				{ tourId, language },
+				_api,
+				_extraOptions,
+				baseQuery
+			) {
 				const query = baseQuery as TBaseQuery;
 
 				const landingResult = await query(
-					toQueryArgs(TOUR_LANDING_PAGE_PATHS.getLandingPage(tourId))
+					toQueryArgs({
+						...TOUR_LANDING_PAGE_PATHS.getLandingPage(tourId),
+						params: mapReadLangQueryToBackend(language)
+					})
 				);
 				if (landingResult.error) {
 					return { error: landingResult.error };
@@ -151,8 +170,16 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 				};
 			}
 		}),
-		getDraftPreviewOptions: builder.query<IPreviewOptionCard[], string>({
-			async queryFn(tourId, _api, _extraOptions, baseQuery) {
+		getDraftPreviewOptions: builder.query<
+			IPreviewOptionCard[],
+			IPreviewTourQueryArgs
+		>({
+			async queryFn(
+				{ tourId, language },
+				_api,
+				_extraOptions,
+				baseQuery
+			) {
 				const query = baseQuery as TBaseQuery;
 
 				const listResult = await query(
@@ -167,12 +194,13 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 				const cards = await Promise.all(
 					options.map(async (option) => {
 						const summaryResult = await query(
-							toQueryArgs(
-								TOUR_OPTION_PATHS.getPricingBreakdown(
+							toQueryArgs({
+								...TOUR_OPTION_PATHS.getPricingBreakdown(
 									tourId,
 									option.id
-								)
-							)
+								),
+								params: mapReadLangQueryToBackend(language)
+							})
 						);
 
 						if (summaryResult.error || !summaryResult.data) {
@@ -194,10 +222,10 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 		}),
 		getDraftPreviewOption: builder.query<
 			IOptionDetail,
-			{ tourId: string; optionId: string }
+			IPreviewOptionQueryArgs
 		>({
 			async queryFn(
-				{ tourId, optionId },
+				{ tourId, optionId, language },
 				_api,
 				_extraOptions,
 				baseQuery
@@ -205,9 +233,13 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 				const query = baseQuery as TBaseQuery;
 
 				const summaryResult = await query(
-					toQueryArgs(
-						TOUR_OPTION_PATHS.getPricingBreakdown(tourId, optionId)
-					)
+					toQueryArgs({
+						...TOUR_OPTION_PATHS.getPricingBreakdown(
+							tourId,
+							optionId
+						),
+						params: mapReadLangQueryToBackend(language)
+					})
 				);
 				if (summaryResult.error) {
 					return { error: summaryResult.error };

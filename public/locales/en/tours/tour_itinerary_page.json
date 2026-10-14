@@ -5,6 +5,9 @@
 		"title": "Trip details",
 		"container": {
 			"empty": "Drag & drop Event here"
+		},
+		"translation": {
+			"pending": "Translating…"
 		}
 	},
 

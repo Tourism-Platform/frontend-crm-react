@@ -1,4 +1,4 @@
-import { useOptionalResourceQuery } from "@/shared/hooks";
+import { useCurrentLanguage, useOptionalResourceQuery } from "@/shared/hooks";
 
 import type { IOptionDetail, IPreviewTourGeneral } from "../types";
 
@@ -28,10 +28,14 @@ export const usePreviewOptionPageData = ({
 }: IUsePreviewOptionPageDataArgs): IUsePreviewOptionPageDataResult => {
 	const skipPublic = !tourId || isDraft;
 	const skipDraft = !tourId || !isDraft;
+	const language = useCurrentLanguage();
 
-	const publicTour = useGetPreviewTourGeneralQuery(tourId, {
-		skip: skipPublic
-	});
+	const publicTour = useGetPreviewTourGeneralQuery(
+		{ tourId, language },
+		{
+			skip: skipPublic
+		}
+	);
 	const draftTour = useGetDraftPreviewTourGeneralQuery(tourId, {
 		skip: skipDraft
 	});

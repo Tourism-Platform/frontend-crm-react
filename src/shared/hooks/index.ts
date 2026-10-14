@@ -11,3 +11,4 @@ export * from "./use-section-navigation";
 export * from "./use-image-status";
 export * from "./use-copy-to-clipboard";
 export * from "./use-navigate-by-type";
+export * from "./use-current-language";

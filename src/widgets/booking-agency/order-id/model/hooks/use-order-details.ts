@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useCurrentLanguage } from "@/shared/hooks";
+
 import {
 	mapBookingItineraryToTourReviewItems,
 	mapBookingPaxListToPaxReview,
@@ -13,10 +15,12 @@ import { getContactItems, getOrderItems } from "../helpers";
 
 export const useOrderDetails = (orderId: string) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
+	const language = useCurrentLanguage();
 
-	const orderQuery = useGetAgencyBookingOrderQuery(orderId, {
-		skip: !orderId
-	});
+	const orderQuery = useGetAgencyBookingOrderQuery(
+		{ bookingId: orderId, language },
+		{ skip: !orderId }
+	);
 	const order = orderQuery.data;
 
 	const itineraryQuery = useGetBookingItineraryQuery(orderId, {

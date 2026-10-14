@@ -15,3 +15,25 @@ export const languageCodeMapper = createEnumMapper<
 	ENUM_LANGUAGES_TYPE,
 	LanguageCode
 >(MAP_LANGUAGE_CODE);
+
+/** `?read_lang=` for content reads; always an object — no ternary in services. */
+export const mapReadLangQueryToBackend = (
+	language?: ENUM_LANGUAGES_TYPE
+): { read_lang?: LanguageCode } => {
+	if (!language) {
+		return {};
+	}
+
+	return { read_lang: languageCodeMapper.to(language) ?? LanguageCode.En };
+};
+
+/** `?lang=` for booking order details. */
+export const mapOrderLangQueryToBackend = (
+	language?: ENUM_LANGUAGES_TYPE
+): { lang?: LanguageCode } => {
+	if (!language) {
+		return {};
+	}
+
+	return { lang: languageCodeMapper.to(language) ?? LanguageCode.En };
+};

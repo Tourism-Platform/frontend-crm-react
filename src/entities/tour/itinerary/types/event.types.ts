@@ -11,6 +11,7 @@ import type {
 	TTourEventOptionUpdateBackend
 } from "./event-backend.types";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
+import type { ENUM_EVENT_TRANSLATION_TYPE } from "./event-translation.types";
 import type { TFlightEditSchema } from "./flight";
 import type { TGuideEditSchema } from "./guide";
 import type { TInfoEditSchema } from "./info";
@@ -55,6 +56,8 @@ export interface ITourEvent {
 	timeSubtitle?: string;
 	/** Nested alternatives for multiply-option slots */
 	options?: ITourEventOption[];
+	/** Slot-level translation state into the tour languages. */
+	translation: ENUM_EVENT_TRANSLATION_TYPE;
 }
 
 export interface ITourEventCreate {

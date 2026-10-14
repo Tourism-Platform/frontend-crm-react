@@ -8,4 +8,5 @@ export interface IDayItem {
 	subtitle?: string;
 	items?: IDayItem[];
 	backendId?: string; // UUID из ответа бэкенда после создания
+	isTranslating?: boolean; // слот ещё переводится на языки тура
 }

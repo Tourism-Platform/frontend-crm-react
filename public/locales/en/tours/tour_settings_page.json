@@ -116,6 +116,26 @@
 					"error": "Error loading tour data"
 				}
 			}
+		},
+		"translations": {
+			"title": "Translations",
+			"description": "Translates the landing page and itinerary into the tour languages. After changing languages, save the settings first, then run the translation.",
+			"actions": {
+				"regenerate": "Translate tour",
+				"regenerating": "Scheduling...",
+				"force": "Re-translate everything"
+			},
+			"force": {
+				"confirm": {
+					"title": "Re-translate the whole tour?",
+					"description": "Existing translations, including ready ones, will be replaced with new machine translations.",
+					"confirm": "Re-translate"
+				}
+			},
+			"toasts": {
+				"success": "Translation scheduled: {{events}} events into {{languages}} languages",
+				"error": "Failed to start translation"
+			}
 		}
 	},
 	"finance": {

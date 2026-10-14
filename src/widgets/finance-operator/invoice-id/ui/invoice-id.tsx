@@ -2,6 +2,8 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { useCurrentLanguage } from "@/shared/hooks";
+
 import { useGetOperatorBookingOrderQuery } from "@/entities/booking";
 import { useGetInvoiceByIdQuery } from "@/entities/finance";
 
@@ -16,6 +18,7 @@ import { InvoicePaymentTable } from "./invoice-payment-table";
 export const InvoiceId: FC = () => {
 	const { invoiceId } = useParams<{ invoiceId: string }>();
 	const { t } = useTranslation("invoice_id_page");
+	const language = useCurrentLanguage();
 
 	const {
 		data: invoice,
@@ -25,9 +28,10 @@ export const InvoiceId: FC = () => {
 
 	const bookingId = invoice?.bookingId ?? "";
 	const { data: booking, isLoading: isBookingLoading } =
-		useGetOperatorBookingOrderQuery(bookingId, {
-			skip: !bookingId
-		});
+		useGetOperatorBookingOrderQuery(
+			{ bookingId, language },
+			{ skip: !bookingId }
+		);
 
 	if (isInvoiceLoading || (!!bookingId && isBookingLoading)) {
 		return <InvoiceIdSkeleton />;

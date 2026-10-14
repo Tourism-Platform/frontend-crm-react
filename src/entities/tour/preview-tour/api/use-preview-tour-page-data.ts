@@ -1,4 +1,4 @@
-import { useOptionalResourceQuery } from "@/shared/hooks";
+import { useCurrentLanguage, useOptionalResourceQuery } from "@/shared/hooks";
 
 import type {
 	IOptionDetail,
@@ -39,15 +39,23 @@ export const usePreviewTourPageData = ({
 }: IUsePreviewTourPageDataArgs): IUsePreviewTourPageDataResult => {
 	const skipPublic = !tourId || isDraft;
 	const skipDraft = !tourId || !isDraft;
+	const language = useCurrentLanguage();
 
-	const publicLanding = useGetPreviewTourQuery(tourId, { skip: skipPublic });
-	const draftLanding = useGetDraftPreviewLandingQuery(tourId, {
-		skip: skipDraft
-	});
+	const publicLanding = useGetPreviewTourQuery(
+		{ tourId, language },
+		{ skip: skipPublic }
+	);
+	const draftLanding = useGetDraftPreviewLandingQuery(
+		{ tourId, language },
+		{ skip: skipDraft }
+	);
 
-	const publicTour = useGetPreviewTourGeneralQuery(tourId, {
-		skip: skipPublic
-	});
+	const publicTour = useGetPreviewTourGeneralQuery(
+		{ tourId, language },
+		{
+			skip: skipPublic
+		}
+	);
 	const draftTour = useGetDraftPreviewTourGeneralQuery(tourId, {
 		skip: skipDraft
 	});
@@ -55,9 +63,12 @@ export const usePreviewTourPageData = ({
 	const publicOptions = useGetPreviewTourOptionsQuery(tourId, {
 		skip: skipPublic
 	});
-	const draftOptions = useGetDraftPreviewOptionsQuery(tourId, {
-		skip: skipDraft
-	});
+	const draftOptions = useGetDraftPreviewOptionsQuery(
+		{ tourId, language },
+		{
+			skip: skipDraft
+		}
+	);
 
 	const landingQuery = useOptionalResourceQuery(
 		isDraft ? draftLanding : publicLanding

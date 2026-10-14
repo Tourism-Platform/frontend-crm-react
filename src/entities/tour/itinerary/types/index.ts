@@ -17,6 +17,7 @@ export * from "./event-single-backend.types";
 export * from "./event-media.types";
 export * from "./event-media-backend.types";
 export * from "./event-enum.types";
+export * from "./event-translation.types";
 export * from "./event-backend-enum.types";
 export * from "./event-product-form.types";
 export * from "./event-policy-check.types";

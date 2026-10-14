@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { useCurrentLanguage } from "@/shared/hooks";
+
 import { enrichOptionDetailTitle } from "../converters";
 import type { IOptionDetail, IPreviewOptionCard } from "../types";
 
@@ -26,14 +28,15 @@ export const usePreviewOptionDetail = ({
 	optionsList: optionsListProp
 }: IUsePreviewOptionDetailArgs) => {
 	const shouldSkip = skip || !tourId || !optionId;
+	const language = useCurrentLanguage();
 
 	const publicQuery = useGetPreviewOptionQuery(
-		{ tourId, optionId },
+		{ tourId, optionId, language },
 		{ skip: shouldSkip || isDraft }
 	);
 
 	const draftQuery = useGetDraftPreviewOptionQuery(
-		{ tourId, optionId },
+		{ tourId, optionId, language },
 		{ skip: shouldSkip || !isDraft }
 	);
 
@@ -41,9 +44,12 @@ export const usePreviewOptionDetail = ({
 		skip: shouldSkip || isDraft || Boolean(optionsListProp)
 	});
 
-	const { data: draftOptionsList } = useGetDraftPreviewOptionsQuery(tourId, {
-		skip: shouldSkip || !isDraft || Boolean(optionsListProp)
-	});
+	const { data: draftOptionsList } = useGetDraftPreviewOptionsQuery(
+		{ tourId, language },
+		{
+			skip: shouldSkip || !isDraft || Boolean(optionsListProp)
+		}
+	);
 
 	const query = isDraft ? draftQuery : publicQuery;
 	const optionsList =

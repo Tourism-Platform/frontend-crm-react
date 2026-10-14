@@ -1,6 +1,8 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useCurrentLanguage } from "@/shared/hooks";
+
 import {
 	ENUM_ORDER_STATUS,
 	attachAvailabilityToItineraryItems,
@@ -17,10 +19,12 @@ import { getContactItems, getOrderItems } from "../helpers";
 
 export const useOrderDetails = (orderId: string) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
+	const language = useCurrentLanguage();
 
-	const orderQuery = useGetOperatorBookingOrderQuery(orderId, {
-		skip: !orderId
-	});
+	const orderQuery = useGetOperatorBookingOrderQuery(
+		{ bookingId: orderId, language },
+		{ skip: !orderId }
+	);
 	const order = orderQuery.data;
 
 	const financialsQuery = useGetOperatorOrderFinancialsQuery(orderId, {

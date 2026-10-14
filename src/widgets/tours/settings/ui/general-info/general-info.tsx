@@ -31,6 +31,8 @@ import {
 	useGetOperatorAgencyInfoByIdQuery
 } from "@/entities/user";
 
+import { RegenerateTranslationsButton } from "@/features/tours";
+
 import { GENERAL_FORM_LIST } from "../../model/config/general.config";
 
 const GeneralInfoBase: FC = () => {
@@ -99,122 +101,128 @@ const GeneralInfoBase: FC = () => {
 	}
 
 	return (
-		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex flex-col gap-6"
-			>
-				<h2 className="text-xl">{t("general.title")}</h2>
-				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-					{GENERAL_FORM_LIST({ defaultValues: tour }).map(
-						({ key, ...item }) => {
-							if (
-								key ===
-									ENUM_TOUR_SETTINGS_GENERAL_FORM.DURATION ||
-								key ===
-									ENUM_TOUR_SETTINGS_GENERAL_FORM.AGE_REQUIRES
-							) {
+		<div className="flex flex-col gap-10">
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="flex flex-col gap-6"
+				>
+					<h2 className="text-xl">{t("general.title")}</h2>
+					<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+						{GENERAL_FORM_LIST({ defaultValues: tour }).map(
+							({ key, ...item }) => {
+								if (
+									key ===
+										ENUM_TOUR_SETTINGS_GENERAL_FORM.DURATION ||
+									key ===
+										ENUM_TOUR_SETTINGS_GENERAL_FORM.AGE_REQUIRES
+								) {
+									return (
+										<CustomRangeField
+											key={key}
+											control={form.control}
+											name={key}
+											label={`general.form.fields.${key}.label`}
+											placeholder_left={`general.form.fields.${key}.placeholder_left`}
+											placeholder_right={`general.form.fields.${key}.placeholder_right`}
+											t={t}
+										/>
+									);
+								}
+
+								if (
+									key ===
+									ENUM_TOUR_SETTINGS_GENERAL_FORM.GROUP_SIZE
+								) {
+									return (
+										<Fragment key={key}>
+											<CustomField
+												control={form.control}
+												name={key}
+												t={t}
+												{...item}
+											/>
+											{isPrivateTour ? (
+												<CustomField
+													fieldType="asyncSelect"
+													control={form.control}
+													className="col-span-2"
+													name={
+														ENUM_TOUR_SETTINGS_GENERAL_FORM.AGENCY_ID
+													}
+													t={t}
+													label="general.form.fields.agencyId.label"
+													placeholder="general.form.fields.agencyId.placeholder"
+													emptyText="general.form.fields.agencyId.empty"
+													selectedLabel={
+														agencyId &&
+														agencyId ===
+															tour?.agencyId
+															? (tourAgency?.businessName ??
+																tourAgency?.legalName ??
+																undefined)
+															: undefined
+													}
+													options={agency.options}
+													onQueryChange={
+														agency.setQuery
+													}
+													onLoadMore={agency.loadMore}
+													hasMore={agency.hasMore}
+													isLoading={agency.isLoading}
+													isLoadingMore={
+														agency.isLoadingMore
+													}
+													renderOption={(option) => (
+														<AgencyOptionCard
+															option={
+																option as TAgencySelectOption
+															}
+														/>
+													)}
+													renderSkeleton={() => (
+														<AgencyOptionCardSkeleton />
+													)}
+												/>
+											) : null}
+										</Fragment>
+									);
+								}
+
 								return (
-									<CustomRangeField
+									<CustomField
 										key={key}
 										control={form.control}
 										name={key}
-										label={`general.form.fields.${key}.label`}
-										placeholder_left={`general.form.fields.${key}.placeholder_left`}
-										placeholder_right={`general.form.fields.${key}.placeholder_right`}
 										t={t}
+										{...item}
 									/>
 								);
 							}
-
-							if (
-								key ===
-								ENUM_TOUR_SETTINGS_GENERAL_FORM.GROUP_SIZE
-							) {
-								return (
-									<Fragment key={key}>
-										<CustomField
-											control={form.control}
-											name={key}
-											t={t}
-											{...item}
-										/>
-										{isPrivateTour ? (
-											<CustomField
-												fieldType="asyncSelect"
-												control={form.control}
-												className="col-span-2"
-												name={
-													ENUM_TOUR_SETTINGS_GENERAL_FORM.AGENCY_ID
-												}
-												t={t}
-												label="general.form.fields.agencyId.label"
-												placeholder="general.form.fields.agencyId.placeholder"
-												emptyText="general.form.fields.agencyId.empty"
-												selectedLabel={
-													agencyId &&
-													agencyId === tour?.agencyId
-														? (tourAgency?.businessName ??
-															tourAgency?.legalName ??
-															undefined)
-														: undefined
-												}
-												options={agency.options}
-												onQueryChange={agency.setQuery}
-												onLoadMore={agency.loadMore}
-												hasMore={agency.hasMore}
-												isLoading={agency.isLoading}
-												isLoadingMore={
-													agency.isLoadingMore
-												}
-												renderOption={(option) => (
-													<AgencyOptionCard
-														option={
-															option as TAgencySelectOption
-														}
-													/>
-												)}
-												renderSkeleton={() => (
-													<AgencyOptionCardSkeleton />
-												)}
-											/>
-										) : null}
-									</Fragment>
-								);
+						)}
+						<TourLanguagesField
+							control={form.control}
+							name={ENUM_TOUR_SETTINGS_GENERAL_FORM.LANGUAGES}
+							label={t("general.form.fields.languages.label")}
+						/>
+					</div>
+					<div className="flex justify-end mt-6">
+						<LoaderButton
+							type="submit"
+							disabled={isUpdating || isTourLoading}
+							isLoading={isUpdating || isTourLoading}
+							label={t("general.form.buttons.save")}
+							loadingLabel={
+								isTourLoading
+									? t("general.form.buttons.loading")
+									: t("general.form.buttons.saving")
 							}
-
-							return (
-								<CustomField
-									key={key}
-									control={form.control}
-									name={key}
-									t={t}
-									{...item}
-								/>
-							);
-						}
-					)}
-					<TourLanguagesField
-						control={form.control}
-						name={ENUM_TOUR_SETTINGS_GENERAL_FORM.LANGUAGES}
-						label={t("general.form.fields.languages.label")}
-					/>
-				</div>
-				<div className="flex justify-end mt-6">
-					<LoaderButton
-						type="submit"
-						disabled={isUpdating || isTourLoading}
-						isLoading={isUpdating || isTourLoading}
-						label={t("general.form.buttons.save")}
-						loadingLabel={
-							isTourLoading
-								? t("general.form.buttons.loading")
-								: t("general.form.buttons.saving")
-						}
-					/>
-				</div>
-			</form>
-		</Form>
+						/>
+					</div>
+				</form>
+			</Form>
+			<RegenerateTranslationsButton tourId={tourId} />
+		</div>
 	);
 };
 

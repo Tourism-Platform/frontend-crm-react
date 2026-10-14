@@ -4,6 +4,8 @@ import {
 	ENUM_EVENT,
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
+	ENUM_EVENT_TRANSLATION,
+	type ENUM_EVENT_TRANSLATION_TYPE,
 	type ENUM_EVENT_TYPE,
 	type IEventOptionReorder,
 	type IGetTourEventResult,
@@ -56,6 +58,7 @@ import {
 	mapTransportFormToUpdate
 } from "./event";
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
+import { eventTranslationMapper } from "./event-translation.converters";
 import { eventTypeMapper } from "./event-type.converters";
 import { mapEventDetailsWriteOrEmpty } from "./event/common/empty-event-details.converters";
 
@@ -67,6 +70,12 @@ import { mapEventDetailsWriteOrEmpty } from "./event/common/empty-event-details.
  * - `eventOptionId` — option ROW id (`event.id` on the read); single events only,
  *                     multi alternatives carry their own ids inside `options`.
  */
+const mapEventTranslationToFrontend = (
+	backend: TTourEventBackendResponce
+): ENUM_EVENT_TRANSLATION_TYPE =>
+	eventTranslationMapper.from(backend.translation) ??
+	ENUM_EVENT_TRANSLATION.SOURCE;
+
 export const mapAllEventsToFrontend = (
 	backend: TTourEventBackendResponce
 ): ITourEvent => {
@@ -85,7 +94,8 @@ export const mapAllEventsToFrontend = (
 			details: null,
 			options: (slot.details ?? [])
 				.map(mapMultiplyOptionDetailToOption)
-				.filter((opt): opt is NonNullable<typeof opt> => opt !== null)
+				.filter((opt): opt is NonNullable<typeof opt> => opt !== null),
+			translation: mapEventTranslationToFrontend(backend)
 		};
 	}
 
@@ -103,7 +113,8 @@ export const mapAllEventsToFrontend = (
 			backendEventTypeMapper.to(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
 		backendTyp,
 		details: slot.details,
-		timeSubtitle: mapBackendEventToTimeSubtitle(slot)
+		timeSubtitle: mapBackendEventToTimeSubtitle(slot),
+		translation: mapEventTranslationToFrontend(backend)
 	};
 };
 

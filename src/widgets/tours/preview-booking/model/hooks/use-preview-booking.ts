@@ -6,6 +6,7 @@ import { generatePath, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
+import { useCurrentLanguage } from "@/shared/hooks";
 import { parseStoredLocalDate } from "@/shared/lib";
 import { formatDateToISO } from "@/shared/utils";
 
@@ -62,13 +63,18 @@ export const usePreviewBooking = () => {
 		getInitialPreviewCalendarRange
 	);
 	const hasSyncedPax = useRef(false);
+	const readLanguage = useCurrentLanguage();
 
 	const { data: tourData, isLoading: isTourLoading } =
-		useGetPreviewTourGeneralQuery(tourId, { skip: !tourId });
+		useGetPreviewTourGeneralQuery(
+			{ tourId, language: readLanguage },
+			{ skip: !tourId }
+		);
 
-	const { data: previewLanding } = useGetPreviewTourQuery(tourId, {
-		skip: !tourId
-	});
+	const { data: previewLanding } = useGetPreviewTourQuery(
+		{ tourId, language: readLanguage },
+		{ skip: !tourId }
+	);
 
 	const availableLanguages = previewLanding?.languages ?? [];
 
