@@ -577,6 +577,28 @@ export const mapTransportationPricingToBackend = (
 										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
 											.PRICE_ID
 									];
+								const charge = mapToFixedCharge(
+									category[
+										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+											.COST
+									],
+									category[
+										ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+											.FEES
+									],
+									rowCurrency,
+									mapMarkupToBackend(
+										category[
+											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
+												.MARKUP
+										],
+										rowCurrency,
+										addMargin
+									)
+								);
+								// Без cost/валюты charge не собрать — строку не пишем
+								if (!charge) return null;
+
 								return {
 									...(priceId ? { id: priceId } : {}),
 									category_id:
@@ -584,27 +606,10 @@ export const mapTransportationPricingToBackend = (
 											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
 												.CATEGORY_ID
 										],
-									charge: mapToFixedCharge(
-										category[
-											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-												.COST
-										],
-										category[
-											ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-												.FEES
-										],
-										rowCurrency,
-										mapMarkupToBackend(
-											category[
-												ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD
-													.MARKUP
-											],
-											rowCurrency,
-											addMargin
-										)
-									) as TFixedChargeInputBackend // rows without a cost are filtered above
+									charge
 								};
 							})
+							.filter((price) => price !== null)
 					}))
 				}
 			};

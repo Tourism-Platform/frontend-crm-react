@@ -13,8 +13,6 @@ import {
 	type ICatalogListFilters,
 	type ICatalogTourCard,
 	type ICatalogTourFilters,
-	type ICatalogTourInfo,
-	type ICatalogTourInfoBackend,
 	type TCatalogFiltersBackend,
 	type TCatalogFiltersQuery,
 	type TCatalogTourBackend,
@@ -40,17 +38,6 @@ const mapDurationFiltersToQuery = (
 
 const mapTourLanguageBadge = (code: LanguageCode): string =>
 	(languageCodeMapper.from(code) ?? code).toUpperCase();
-
-export const mapCatalogTourStatsToFrontend = (
-	data: ICatalogTourInfoBackend
-): ICatalogTourInfo => ({
-	total: data.total,
-	completed: data.completed,
-	inProgress: data.in_progress,
-	tourists: data.tourists,
-	confirmedRevenue: data.confirmed_revenue,
-	potentialRevenue: data.potential_revenue
-});
 
 export const mapCatalogTourToFrontend = (
 	data: TCatalogTourBackend

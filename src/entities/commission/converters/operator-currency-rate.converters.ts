@@ -26,7 +26,7 @@ export const mapOperatorCurrencyRateListToFrontend = (
 	data: TOperatorCurrencyRateResponse
 ): IPaginationResponse<IOperatorCurrencyRate> => ({
 	data: data.map(mapOperatorCurrencyRateToFrontend),
-	total: 100
+	total: data.length
 });
 
 export const mapOperatorCurrencyRateToBackend = (

@@ -64,7 +64,7 @@ export const splitEventUpdate = (
 	const option = {
 		...top,
 		details: plan !== undefined ? { plan } : {}
-	} as TTourEventOptionUpdateBackend;
+	} satisfies TTourEventOptionUpdateBackend;
 
 	// Write pools may be `null`; `getEventPool` treats a non-array as empty.
 	const pool = getEventPool(

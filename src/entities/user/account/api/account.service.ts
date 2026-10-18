@@ -7,7 +7,11 @@ import {
 	mapAccountToFrontend,
 	mapPasswordChangeToBackend
 } from "../converters";
-import type { TAccountBackend, TChangePasswordSchema } from "../types";
+import type {
+	TAccountBackend,
+	TChangePasswordSchema,
+	TMyAccountBackend
+} from "../types";
 import type { TAccountSchema } from "../types";
 
 export const accountApi = authApi.injectEndpoints({
@@ -16,7 +20,7 @@ export const accountApi = authApi.injectEndpoints({
 			query: () => ({
 				...PROFILE_INFO_PATHS.getMyAccount
 			}),
-			transformResponse: (response: TAccountBackend) =>
+			transformResponse: (response: TMyAccountBackend) =>
 				mapAccountToFrontend(response),
 			providesTags: [ENUM_API_TAGS.USER]
 		}),

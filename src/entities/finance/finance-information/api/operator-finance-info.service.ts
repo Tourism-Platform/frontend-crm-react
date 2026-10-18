@@ -8,17 +8,22 @@ import {
 } from "../converters";
 import type {
 	TOperatorFinanceInfo,
-	TOperatorFinanceInfoBackend
+	TOperatorFinanceInfoBackendResponse
 } from "../types";
 
 export const operatorFinanceInfoApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getOperatorFinanceInfo: builder.query<TOperatorFinanceInfo, void>({
+		getOperatorFinanceInfo: builder.query<
+			TOperatorFinanceInfo | null,
+			void
+		>({
 			query: () => ({
 				...OPERATOR_PATHS.getOperatorFinancials
 			}),
-			transformResponse: (response: TOperatorFinanceInfoBackend) =>
-				mapOperatorFinanceInfoToFrontend(response),
+			// Бэкенд возвращает null, пока оператор не создал финансовые настройки
+			transformResponse: (
+				response: TOperatorFinanceInfoBackendResponse
+			) => (response ? mapOperatorFinanceInfoToFrontend(response) : null),
 			providesTags: [ENUM_API_TAGS.OPERATOR.FINANCIAL_INFORMATION]
 		}),
 		updateOperatorFinanceInfo: builder.mutation<

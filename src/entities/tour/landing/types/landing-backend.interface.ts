@@ -3,19 +3,6 @@ import type {
 	TOUR_LANDING_PAGE_PATHS
 } from "@/shared/api";
 
-import type { ENUM_PICKUP_TYPE_TYPE } from "./index";
-
-export interface ILandingBackend {
-	photos: string;
-	description: string;
-	includedAmenities: string[];
-	notIncludedAmenities: string[];
-	pickupType: ENUM_PICKUP_TYPE_TYPE[];
-	pickupDescription: string;
-	cancellationPolicy: string;
-	additionalInfo: string;
-}
-
 export type TLandingBackend = LandingPagePubSchema;
 
 export type TGetLandingBackendResponse = ReturnType<

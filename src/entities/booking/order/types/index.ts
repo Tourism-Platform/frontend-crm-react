@@ -13,7 +13,6 @@ export * from "./order-agency-backend.interface";
 export * from "./order-user-backend.interface";
 export * from "./order-operator-backend.interface";
 export * from "./order-filter.interface";
-export * from "./apply-review-item.types";
 export * from "./supplier-payment-status.types";
 export * from "./supplier-payment.interface";
 export * from "./order-tour-review.types";

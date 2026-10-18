@@ -112,7 +112,7 @@ export const mapPackageToForm = (
 
 const mapPackageFormToPayload = (
 	form: TPackageEditSchema
-): TPackageUpdateBackend => {
+): TPackageCreateBackend => {
 	const totalPrice = form[ENUM_PACKAGE_FIELD.TOTAL_PRICE];
 	const currency = form[ENUM_PACKAGE_FIELD.CURRENCY];
 	const fees = mapFeesToBackend(form[ENUM_PACKAGE_FIELD.FEES]);
@@ -160,8 +160,7 @@ const mapPackageFormToPayload = (
 
 export const mapPackageCreateToBackend = (
 	form: TPackageEditSchema
-): TPackageCreateBackend =>
-	mapPackageFormToPayload(form) as TPackageCreateBackend;
+): TPackageCreateBackend => mapPackageFormToPayload(form);
 
 export const mapPackageUpdateToBackend = (
 	form: TPackageEditSchema

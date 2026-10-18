@@ -5,7 +5,8 @@ import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
 	mapOperatorCurrencyRateListToFrontend,
-	mapOperatorCurrencyRateToBackend
+	mapOperatorCurrencyRateToBackend,
+	mapOperatorCurrencyRateToFrontend
 } from "../converters/operator-currency-rate.converters";
 import type {
 	IOperatorCurrencyRate,
@@ -13,6 +14,7 @@ import type {
 	TOperatorCurrencyRateResponse,
 	TOperatorCurrencyRateUpdateSchema
 } from "../types";
+import type { TOperatorCurrencyRateBackend } from "../types/operator-currency-rate-backend.interface";
 
 export const operatorCurrencyRateApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -45,6 +47,8 @@ export const operatorCurrencyRateApi = authApi.injectEndpoints({
 				...OPERATOR_FX_RATE_PATHS.updateFxRate(id),
 				body: data
 			}),
+			transformResponse: (response: TOperatorCurrencyRateBackend) =>
+				mapOperatorCurrencyRateToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.OPERATOR.CURRENCY_RATES]
 		}),
 		deleteOperatorCurrencyRate: builder.mutation<void, string>({

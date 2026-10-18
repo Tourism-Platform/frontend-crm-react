@@ -8,11 +8,8 @@ import type {
 	IBookingVariance,
 	IEventVarianceLine,
 	IReconciliation,
-	IReconciliationDetail,
-	IReconciliationDetailBackend,
 	IReconciliationFilters,
 	IReconciliationPaginatedResponse,
-	IReconciliationSupplierPayment,
 	IReconciliationTotals,
 	TBookingFinancialsBackend,
 	TBookingVarianceBackend,
@@ -58,40 +55,6 @@ export const mapReconciliationToFrontend = (
 	settledProfit: parseAmount(row.settled_profit),
 	variance: parseAmount(row.variance),
 	status: orderStatusMapper.from(row.status)!
-});
-
-export const mapReconciliationDetailToFrontend = (
-	data: IReconciliationDetailBackend
-): IReconciliationDetail => ({
-	id: data.booking_id,
-	orderId: data.order_number,
-	client: data.client_name,
-	currency: String(data.currency),
-	plannedRevenue: data.planned_revenue,
-	actualRevenue: data.revenue_accrued,
-	plannedCost: data.planned_cost,
-	actualCost: data.cost_accrued,
-	variance: data.variance,
-	plannedMargin: data.planned_margin,
-	actualMargin: data.actual_margin,
-	supplierPayments: data.supplier_payments.map(
-		(p): IReconciliationSupplierPayment => ({
-			id: p.id,
-			orderId: p.order_id,
-			note: p.note,
-			files: p.files?.map((file) => ({
-				id: file.id,
-				name: file.name,
-				size: file.size,
-				type: file.type,
-				url: file.url
-			})),
-			component: p.component,
-			plannedAmount: p.planned_amount,
-			actualAmount: p.actual_amount,
-			variance: p.variance
-		})
-	)
 });
 
 export const mapReconciliationPaginatedToFrontend = (

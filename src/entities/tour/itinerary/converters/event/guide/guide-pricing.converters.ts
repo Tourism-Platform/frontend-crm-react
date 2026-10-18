@@ -522,11 +522,11 @@ export const mapGuideCategoriesToBackend = (
 					.map((category) =>
 						mapRowToBackendCategory(category, addMargin)
 					)
-					.filter(Boolean) as TGuideByLanguageCategoryInputBackend[]
+					.filter((category) => category !== null)
 		);
 	}
 
 	return aligned[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]
 		.map((row) => mapRowToBackendCategory(row, addMargin))
-		.filter(Boolean) as TGuideByLanguageCategoryInputBackend[];
+		.filter((category) => category !== null);
 };

@@ -448,7 +448,7 @@ export const tourEventApi = authApi.injectEndpoints({
 				body: splitEventUpdate(
 					mapEventOptionReadToWriteBody(
 						option
-					) as TTourEventUpdateBackend,
+					) satisfies TTourEventUpdateBackend,
 					undefined
 				).option
 			}),

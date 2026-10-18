@@ -1,4 +1,7 @@
-import type { TOperatorFinanceInfoBackend } from "../types";
+import type {
+	TOperatorFinanceInfoBackend,
+	TOperatorFinanceInfoBackendUpdate
+} from "../types";
 import type { TOperatorFinanceInfo } from "../types";
 
 export const mapOperatorFinanceInfoToFrontend = (
@@ -22,7 +25,7 @@ export const mapOperatorFinanceInfoToFrontend = (
 
 export const mapOperatorFinanceInfoToBackend = (
 	frontend: Partial<TOperatorFinanceInfo>
-): Partial<TOperatorFinanceInfoBackend> => ({
+): TOperatorFinanceInfoBackendUpdate => ({
 	...(frontend.vatEnabled !== undefined && {
 		vat_enabled: frontend.vatEnabled
 	}),

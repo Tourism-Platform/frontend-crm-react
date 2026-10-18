@@ -518,6 +518,14 @@ const mapRoomBase = (room: TRoomsList[number]) => {
 	};
 };
 
+type TRoomRateDraft = { rate: { base: FixedChargeInput | undefined } };
+
+/** Сужает тип: у комнаты есть base-ставка (иначе спека не пишется). */
+const hasBaseRate = <T extends TRoomRateDraft>(
+	room: T
+): room is T & { rate: { base: FixedChargeInput } } =>
+	room.rate.base !== undefined;
+
 /**
  * Write-side housing spec for `supply.inline.spec` (contract 3.1). The
  * descriptive fields (location / stars / amenities) are merged in by the
@@ -599,15 +607,20 @@ export const mapAccommodationPricingToBackend = (
 				})
 			}));
 
-			const isPriced = categories.every((category) =>
-				category.rooms.every((room) => room.rate.base)
+			const pricedCategories = categories.map((category) => ({
+				...category,
+				rooms: category.rooms.filter(hasBaseRate)
+			}));
+			const isPriced = pricedCategories.every(
+				(category, index) =>
+					category.rooms.length === categories[index].rooms.length
 			);
 			return isPriced
 				? {
 						spec: {
 							pricing: "per_room",
-							categories
-						} as THousingSpecInputBackend
+							categories: pricedCategories
+						} satisfies THousingSpecInputBackend
 					}
 				: {};
 		}
@@ -621,7 +634,7 @@ export const mapAccommodationPricingToBackend = (
 			rate: { base: toRate(rows[index] ?? createEmptyPerRoomPriceRow()) }
 		}));
 
-		if (!rooms.every((room) => room.rate.base)) {
+		if (!rooms.every(hasBaseRate)) {
 			return {};
 		}
 
@@ -629,7 +642,7 @@ export const mapAccommodationPricingToBackend = (
 			spec: {
 				pricing: "per_room",
 				...(rooms.length ? { categories: [{ name: null, rooms }] } : {})
-			} as THousingSpecInputBackend
+			} satisfies THousingSpecInputBackend
 		};
 	}
 

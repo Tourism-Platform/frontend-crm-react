@@ -3,11 +3,12 @@ import type { Currency } from "@/shared/api";
 import type {
 	TAccountBackend,
 	TAccountSchema,
+	TMyAccountBackend,
 	TUpdateAccountBackend
 } from "../types";
 
 export const mapAccountToFrontend = (
-	backend: TAccountBackend
+	backend: TMyAccountBackend | TAccountBackend
 ): TAccountSchema => ({
 	avatar: backend.profile_picture_path ?? undefined,
 	// login: backend.first_name || "",

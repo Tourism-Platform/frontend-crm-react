@@ -1,7 +1,11 @@
 import { currencyConverter } from "@/entities/commission";
 
 import { ENUM_FOC_TIER_FIELD } from "../types";
-import type { TSettingsFinanceFormSchema, TTourFinanceBackend } from "../types";
+import type {
+	TSettingsFinanceFormSchema,
+	TTourFinanceBackend,
+	TTourFinanceCreateBackend
+} from "../types";
 
 export const mapTourFinanceToFrontend = (
 	backend: TTourFinanceBackend
@@ -16,14 +20,15 @@ export const mapTourFinanceToFrontend = (
 
 export const mapTourFinanceToBackend = (
 	frontend: TSettingsFinanceFormSchema
-): Partial<TTourFinanceBackend> => {
+): TTourFinanceCreateBackend => {
 	const completeTiers = frontend.focTiers.filter(
 		(tier): tier is { minPax: number; free: number } =>
 			tier.minPax != null && tier.free != null
 	);
 
 	return {
-		currency_type: currencyConverter.to(frontend.currencyType),
+		// currencyType обязателен в SETTINGS_FINANCE_FORM_SCHEMA
+		currency_type: currencyConverter.to(frontend.currencyType)!,
 		foc:
 			completeTiers.length > 0
 				? {

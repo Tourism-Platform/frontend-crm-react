@@ -140,10 +140,7 @@ export const mapActivityEventToForm = (
 	};
 };
 
-type TWriteOffering = { id?: string; name?: string | null } & Record<
-	string,
-	unknown
->;
+type TWriteOfferingBase = { id?: string; name?: string | null };
 
 /**
  * The form edits only the first offering of the venue. The others (copied
@@ -152,11 +149,11 @@ type TWriteOffering = { id?: string; name?: string | null } & Record<
  * menu photos (fe6.4 §5, §14). They are kept only while `sub_typ` is the
  * same: another venue kind has another offering shape.
  */
-const getCurrentOfferings = (
+const getCurrentOfferings = <TOffering extends TWriteOfferingBase>(
 	currentDetails: TEventDetailsBackend | undefined,
 	supplyId: string | undefined,
 	subTyp: string
-): { first?: TWriteOffering; rest: TWriteOffering[] } => {
+): { first?: TOffering; rest: TOffering[] } => {
 	if (!currentDetails) return { rest: [] };
 
 	const pool = getEventPool(
@@ -170,7 +167,8 @@ const getCurrentOfferings = (
 		id?: string;
 		supply: {
 			source: string;
-			spec?: { sub_typ?: string; offerings?: TWriteOffering[] };
+			// mapEventDetailsReadToWrite отдаёт offerings уже в write-формате
+			spec?: { sub_typ?: string; offerings?: TOffering[] };
 		};
 	}[];
 	const member = supplyId
@@ -235,18 +233,19 @@ export const mapActivityFormToUpdate = (
 	const supplyId = frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID];
 
 	// The edited (first) offering keeps its id and name, so it is the same node.
-	const editedOffering = (first?: TWriteOffering) => ({
+	const editedOffering = (first?: TWriteOfferingBase) => ({
 		...(first?.id ? { id: first.id } : {}),
 		name: first?.name ?? null
 	});
 
 	if (isFood) {
 		const menu = mapMenuToBackend(g?.[ENUM_FORM_ACTIVITY.MENU]);
-		const { first, rest } = getCurrentOfferings(
-			currentDetails,
-			supplyId,
-			"food"
-		);
+		const { first, rest } =
+			getCurrentOfferings<TActivityFoodOfferingInputBackend>(
+				currentDetails,
+				supplyId,
+				"food"
+			);
 
 		// A menu hangs on an offering and an offering requires a charge — 0
 		// would mean "free" (fe6.4 §6, §14). A menu without a price is not
@@ -268,7 +267,7 @@ export const mapActivityFormToUpdate = (
 									]
 								: []),
 							...rest
-						] as unknown as TActivityFoodOfferingInputBackend[]
+						] satisfies TActivityFoodOfferingInputBackend[]
 					};
 	} else if (g?.activity_subtype) {
 		const activityType = activityTypeMapper.to(g.activity_subtype);
