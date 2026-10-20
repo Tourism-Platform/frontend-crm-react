@@ -26,7 +26,7 @@ export const LANDING_SCHEMA = z.object({
 	[ENUM_FORM_LANDING.OVERVIEW]: z
 		.string()
 		.trim()
-		.max(255, {
+		.max(15000, {
 			message: msg("form.overview.fields.overview.errors.max")
 		})
 		.optional(),

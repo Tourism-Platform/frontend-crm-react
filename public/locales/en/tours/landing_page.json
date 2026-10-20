@@ -33,7 +33,6 @@
 				},
 				"overview": {
 					"label": "Short overview",
-					"placeholder": "Enter a short overview...",
 					"errors": {
 						"max": "Overview is too long"
 					}

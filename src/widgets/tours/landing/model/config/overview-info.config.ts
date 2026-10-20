@@ -17,8 +17,7 @@ export const OVERVIEW_INFO_LIST: TForm[] = [
 	{
 		key: ENUM_FORM_LANDING.OVERVIEW,
 		label: "form.overview.fields.overview.label",
-		placeholder: "form.overview.fields.overview.placeholder",
-		fieldType: "input"
+		fieldType: "editor"
 	},
 	{
 		key: ENUM_FORM_LANDING.OVERVIEW_DESCRIPTION,
