@@ -146,6 +146,10 @@
 					"label": "Currency type",
 					"placeholder": "Select..."
 				},
+				"markup": {
+					"label": "Markup",
+					"placeholder": "Enter markup"
+				},
 				"foc": {
 					"title": "FOC (free of charge)",
 					"tierItem": "Tier {{index}}",

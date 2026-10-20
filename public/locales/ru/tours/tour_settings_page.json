@@ -146,6 +146,10 @@
 					"label": "Валюта",
 					"placeholder": "Выберите..."
 				},
+				"markup": {
+					"label": "Наценка",
+					"placeholder": "Введите наценку"
+				},
 				"foc": {
 					"title": "FOC (бесплатные места)",
 					"tierItem": "Уровень {{index}}",

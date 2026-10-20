@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, type ReactNode, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import {
 	Button,
 	CustomField,
+	CustomInputSelect,
 	CustomUploadImages,
 	Dialog,
 	DialogClose,
@@ -24,6 +25,7 @@ import {
 
 import {
 	ENUM_FORM_TOUR_OPTION,
+	ENUM_PACKAGE_MARKUP_TYP,
 	type IOption,
 	TOUR_OPTION_FORM_SCHEMA,
 	type TTourOptionFormSchema,
@@ -32,7 +34,14 @@ import {
 	useUploadOptionCoverMutation
 } from "@/entities/tour";
 
-import { FORM_EDIT_OPTION_LIST } from "../model/config";
+import {
+	FORM_EDIT_OPTION_LIST,
+	OPTION_MARKUP_CURRENCY_FIELD,
+	OPTION_MARKUP_FIELD
+} from "../model/config";
+
+const { key: markupCurrencyKey, ...markupCurrencyField } =
+	OPTION_MARKUP_CURRENCY_FIELD;
 
 interface IEditOptionProps {
 	tourId: string;
@@ -47,7 +56,9 @@ const buildCoverItems = (imageUrl: string): TUploadImageItem[] =>
 const buildDefaultValues = (option: IOption): TTourOptionFormSchema => ({
 	[ENUM_FORM_TOUR_OPTION.NAME]: option.name,
 	[ENUM_FORM_TOUR_OPTION.DESCRIPTION]: option.description,
-	[ENUM_FORM_TOUR_OPTION.LANGUAGES]: option.languages
+	[ENUM_FORM_TOUR_OPTION.LANGUAGES]: option.languages,
+	[ENUM_FORM_TOUR_OPTION.MARKUP]: option.markup,
+	[ENUM_FORM_TOUR_OPTION.MARKUP_CURRENCY]: option.markupCurrency
 });
 
 export const EditOption: FC<IEditOptionProps> = ({
@@ -77,6 +88,12 @@ export const EditOption: FC<IEditOptionProps> = ({
 		mode: "onSubmit"
 	});
 
+	const markup = useWatch({
+		control: form.control,
+		name: ENUM_FORM_TOUR_OPTION.MARKUP
+	});
+	const isFixedMarkup = markup?.typ === ENUM_PACKAGE_MARKUP_TYP.FIXED;
+
 	const isLoading = isUpdating || isUploading || isDeletingCover;
 
 	const hadServerCover = Boolean(option.imageUrl);
@@ -91,7 +108,9 @@ export const EditOption: FC<IEditOptionProps> = ({
 				data: {
 					name: data.name,
 					description: data.description ?? "",
-					languages: data.languages
+					languages: data.languages,
+					markup: data.markup ?? null,
+					markupCurrency: data.markupCurrency
 				}
 			}).unwrap();
 
@@ -144,6 +163,25 @@ export const EditOption: FC<IEditOptionProps> = ({
 									{...item}
 								/>
 							))}
+
+							<CustomInputSelect
+								control={form.control}
+								name={OPTION_MARKUP_FIELD.key}
+								label={OPTION_MARKUP_FIELD.label}
+								placeholder={OPTION_MARKUP_FIELD.placeholder}
+								selectOptions={[
+									...OPTION_MARKUP_FIELD.selectOptions
+								]}
+								t={t}
+							/>
+							{isFixedMarkup && (
+								<CustomField
+									control={form.control}
+									name={markupCurrencyKey}
+									t={t}
+									{...markupCurrencyField}
+								/>
+							)}
 
 							<div className="col-span-2 flex flex-col gap-2">
 								<p className="text-sm font-medium">

@@ -60,6 +60,17 @@
 					"languages": {
 						"label": "Languages",
 						"placeholder": "Select languages"
+					},
+					"markup": {
+						"label": "Markup",
+						"placeholder": "Enter markup"
+					},
+					"markupCurrency": {
+						"label": "Markup currency",
+						"placeholder": "Select currency",
+						"errors": {
+							"required": "Select a currency for a fixed markup"
+						}
 					}
 				},
 				"buttons": {

@@ -4,6 +4,7 @@ import type { SETTINGS_FINANCE_FORM_SCHEMA } from "../schema";
 
 export const ENUM_SETTINGS_FINANCE_FORM = {
 	CURRENCY_TYPE: "currencyType",
+	MARKUP: "markup",
 	FOC_TIERS: "focTiers"
 } as const;
 

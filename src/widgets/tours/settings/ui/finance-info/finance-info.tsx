@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	CustomField,
+	CustomInputSelect,
 	Form,
 	LoaderButton,
 	withErrorBoundary
@@ -22,7 +23,10 @@ import {
 	useUpdateTourFinanceMutation
 } from "@/entities/tour";
 
-import { FINANCE_FORM_LIST } from "../../model/config/finance.config";
+import {
+	FINANCE_FORM_LIST,
+	TOUR_MARKUP_FIELD
+} from "../../model/config/finance.config";
 
 import { FocTiersDetails } from "./foc-tiers-details";
 
@@ -108,6 +112,14 @@ const FinanceInfoBase: FC = () => {
 							{...item}
 						/>
 					))}
+					<CustomInputSelect
+						control={form.control}
+						name={TOUR_MARKUP_FIELD.key}
+						label={TOUR_MARKUP_FIELD.label}
+						placeholder={TOUR_MARKUP_FIELD.placeholder}
+						selectOptions={[...TOUR_MARKUP_FIELD.selectOptions]}
+						t={t}
+					/>
 				</div>
 				<FocTiersDetails form={form} />
 				<div className="col-span-2 flex justify-end">

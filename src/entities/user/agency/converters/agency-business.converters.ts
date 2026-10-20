@@ -37,24 +37,18 @@ export const mapAgencyBusinessInfoToFrontend = (
 
 export const mapAgencyBusinessInfoToBackend = (
 	frontend: TAgencyBusinessSchema
-): TAgencyBusinessInfoUpdateBackend => {
-	const raw = {
-		description: frontend.business.business_description,
-		business_name: frontend.business.business_name,
-		website_url: frontend.business.business_website,
-		legal_name: frontend.legal.legal_company_name,
-		director_name: frontend.legal.director,
-		tax_id: frontend.legal.tin,
-		contact_person: frontend.contact.contact_person,
-		contact_position: frontend.contact.position,
-		contact_email: frontend.contact.email,
-		contact_phone: frontend.contact.phone_number,
-		address_line: frontend.address.address_line,
-		city: frontend.address.city,
-		country: frontend.address.country
-	};
-
-	return Object.fromEntries(
-		Object.entries(raw).filter(([, v]) => !!v)
-	) as TAgencyBusinessInfoUpdateBackend;
-};
+): TAgencyBusinessInfoUpdateBackend => ({
+	description: frontend.business.business_description || null,
+	business_name: frontend.business.business_name || null,
+	website_url: frontend.business.business_website || null,
+	legal_name: frontend.legal.legal_company_name || null,
+	director_name: frontend.legal.director || null,
+	tax_id: frontend.legal.tin || null,
+	contact_person: frontend.contact.contact_person || null,
+	contact_position: frontend.contact.position || null,
+	contact_email: frontend.contact.email || null,
+	contact_phone: frontend.contact.phone_number || null,
+	address_line: frontend.address.address_line || null,
+	city: frontend.address.city || null,
+	country: frontend.address.country || null
+});

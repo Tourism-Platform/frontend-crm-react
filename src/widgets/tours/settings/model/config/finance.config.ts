@@ -1,6 +1,7 @@
 import { CURRENCY_OPTIONS } from "@/entities/commission";
 import {
 	ENUM_FOC_TIER_FIELD,
+	ENUM_PACKAGE_MARKUP_TYP,
 	ENUM_SETTINGS_FINANCE_FORM
 } from "@/entities/tour";
 
@@ -36,3 +37,15 @@ export const FOC_TIER_FORM_LIST = (): TFocTierForm[] => [
 		step: "1"
 	}
 ];
+
+export const TOUR_MARKUP_TYPE_OPTIONS = [
+	{ label: "Fx", value: ENUM_PACKAGE_MARKUP_TYP.FIXED },
+	{ label: "%", value: ENUM_PACKAGE_MARKUP_TYP.PERCENTAGE }
+] as const;
+
+export const TOUR_MARKUP_FIELD = {
+	key: ENUM_SETTINGS_FINANCE_FORM.MARKUP,
+	label: "finance.form.fields.markup.label",
+	placeholder: "finance.form.fields.markup.placeholder",
+	selectOptions: TOUR_MARKUP_TYPE_OPTIONS
+} as const;

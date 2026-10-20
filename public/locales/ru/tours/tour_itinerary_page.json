@@ -56,6 +56,17 @@
 					"languages": {
 						"label": "Языки",
 						"placeholder": "Выберите языки"
+					},
+					"markup": {
+						"label": "Наценка",
+						"placeholder": "Введите наценку"
+					},
+					"markupCurrency": {
+						"label": "Валюта наценки",
+						"placeholder": "Выберите валюту",
+						"errors": {
+							"required": "Выберите валюту для фиксированной наценки"
+						}
 					}
 				},
 				"buttons": {
