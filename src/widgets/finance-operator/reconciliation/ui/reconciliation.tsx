@@ -58,8 +58,9 @@ const ReconciliationBase: FC = () => {
 
 	const filtersJsx = (
 		<Form {...form}>
-			<div className="flex flex-wrap items-end gap-4">
+			<div className="flex flex-wrap items-center gap-4">
 				<CustomField
+					hideLabel
 					fieldType="asyncSelect"
 					control={control}
 					name={ENUM_RECONCILIATION_FILTER.TOUR_ID}
@@ -77,6 +78,7 @@ const ReconciliationBase: FC = () => {
 				/>
 				{RECONCILIATION_FILTERS_LIST.map(({ key, ...item }) => (
 					<CustomField
+						hideLabel
 						key={key}
 						control={control}
 						name={key}
@@ -87,7 +89,6 @@ const ReconciliationBase: FC = () => {
 				<Button
 					type="button"
 					variant="outline"
-					className="mb-5"
 					onClick={handleResetFilters}
 				>
 					{t("filters.reset")}
@@ -162,7 +163,8 @@ const ReconciliationBase: FC = () => {
 			<ReconciliationHeader totals={totals} />
 
 			<Card>
-				<CardContent>
+				<CardContent className="flex flex-col gap-4">
+					{filtersJsx}
 					<SmartTable
 						data={data}
 						columns={columns}
@@ -176,7 +178,6 @@ const ReconciliationBase: FC = () => {
 						status={filters.status}
 						onStatusChange={handleStatusChange}
 						statusOptions={statusOptions}
-						topChildren={filtersJsx}
 					/>
 				</CardContent>
 			</Card>

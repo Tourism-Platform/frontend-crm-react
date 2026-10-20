@@ -216,11 +216,11 @@
 		"filters": {
 			"from_currency": {
 				"label": "From currency",
-				"placeholder": "Any currency"
+				"placeholder": "From: any currency"
 			},
 			"to_currency": {
 				"label": "To currency",
-				"placeholder": "Any currency"
+				"placeholder": "To: any currency"
 			},
 			"reset": "Reset filters"
 		},

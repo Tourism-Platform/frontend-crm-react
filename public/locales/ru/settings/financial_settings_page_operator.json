@@ -216,11 +216,11 @@
 		"filters": {
 			"from_currency": {
 				"label": "Из валюты",
-				"placeholder": "Любая валюта"
+				"placeholder": "Из: любая валюта"
 			},
 			"to_currency": {
 				"label": "В валюту",
-				"placeholder": "Любая валюта"
+				"placeholder": "В: любая валюта"
 			},
 			"reset": "Сбросить фильтры"
 		},

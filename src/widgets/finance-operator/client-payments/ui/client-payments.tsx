@@ -88,8 +88,9 @@ const ClientPaymentsBase: FC = () => {
 
 	const filtersJsx = (
 		<Form {...form}>
-			<div className="flex flex-wrap items-end gap-4">
+			<div className="flex flex-wrap items-center gap-4">
 				<CustomField
+					hideLabel
 					fieldType="asyncSelect"
 					control={control}
 					name={ENUM_PAYMENT_FILTER.BOOKING_ID}
@@ -113,6 +114,7 @@ const ClientPaymentsBase: FC = () => {
 				/>
 				{CLIENT_PAYMENTS_FILTERS_LIST.map(({ key, ...item }) => (
 					<CustomField
+						hideLabel
 						key={key}
 						control={control}
 						name={key}
@@ -124,7 +126,6 @@ const ClientPaymentsBase: FC = () => {
 				<Button
 					type="button"
 					variant="outline"
-					className="mb-5"
 					onClick={handleResetFilters}
 				>
 					{t("filters.reset")}
@@ -178,7 +179,8 @@ const ClientPaymentsBase: FC = () => {
 		<section className="flex gap-5 flex-col">
 			<ClientPaymentsHeader statusCounts={statusCounts} />
 			<Card>
-				<CardContent>
+				<CardContent className="flex flex-col gap-4">
+					{filtersJsx}
 					<SmartTable
 						data={payments}
 						columns={columns}
@@ -193,7 +195,6 @@ const ClientPaymentsBase: FC = () => {
 						status={filters.status}
 						onStatusChange={handleStatusChange}
 						statusOptions={statusOptions}
-						topChildren={filtersJsx}
 					/>
 				</CardContent>
 			</Card>

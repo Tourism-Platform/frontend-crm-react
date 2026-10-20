@@ -61,9 +61,10 @@ const ToursBase: FC = () => {
 
 	const filtersJsx = (
 		<Form {...form}>
-			<div className="flex flex-wrap items-end gap-4">
+			<div className="flex flex-wrap items-center gap-4">
 				{filtersList.map(({ key, ...item }) => (
 					<CustomField
+						hideLabel
 						key={key}
 						control={control}
 						name={key}
@@ -75,7 +76,6 @@ const ToursBase: FC = () => {
 				<Button
 					type="button"
 					variant="outline"
-					className="mb-5"
 					onClick={handleResetFilters}
 				>
 					{t("filters.reset")}
@@ -170,7 +170,8 @@ const ToursBase: FC = () => {
 		<section className="flex gap-5 flex-col">
 			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
-				<CardContent>
+				<CardContent className="flex flex-col gap-4">
+					{filtersJsx}
 					<SmartTable
 						columns={columns}
 						data={tours}
@@ -194,7 +195,6 @@ const ToursBase: FC = () => {
 						onStatusTabChange={handleStatusTabChange}
 						showStatusTabsFilter={true}
 						actions={actionsJsx}
-						topChildren={filtersJsx}
 					/>
 				</CardContent>
 			</Card>

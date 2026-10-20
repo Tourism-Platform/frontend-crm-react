@@ -94,9 +94,10 @@ const CurrencyBase: FC = () => {
 					{t("currency.currency_rate.description")}
 				</p>
 				<Form {...form}>
-					<div className="flex flex-wrap items-end gap-4">
+					<div className="flex flex-wrap items-center gap-4">
 						{CURRENCY_RATE_FILTERS_LIST.map(({ key, ...item }) => (
 							<CustomField
+								hideLabel
 								key={key}
 								control={control}
 								name={key}
@@ -108,7 +109,6 @@ const CurrencyBase: FC = () => {
 						<Button
 							type="button"
 							variant="outline"
-							className="mb-5"
 							onClick={handleResetFilters}
 						>
 							{t("currency.filters.reset")}
