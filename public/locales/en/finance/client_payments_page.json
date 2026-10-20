@@ -53,6 +53,9 @@
 				"orderId": {
 					"required": "Order ID is required",
 					"min": "Order ID cannot be empty"
+				},
+				"files": {
+					"required": "Attach a payment file"
 				}
 			},
 			"buttons": {

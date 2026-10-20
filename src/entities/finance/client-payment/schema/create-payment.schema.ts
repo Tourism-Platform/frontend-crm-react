@@ -23,5 +23,10 @@ export const NEW_PAYMENT_SCHEMA = z.object({
 		})
 		.min(1, msg("new_payment.form.errors.rate.min")),
 	[ENUM_FORM_NEW_PAYMENT.NOTE]: z.string().optional(),
-	[ENUM_FORM_NEW_PAYMENT.FILES]: z.any().array().optional()
+	// Бэкенд принимает платёж только с файлом подтверждения
+	[ENUM_FORM_NEW_PAYMENT.FILES]: z
+		.array(z.object({ file: z.instanceof(File) }), {
+			message: msg("new_payment.form.errors.files.required")
+		})
+		.min(1, msg("new_payment.form.errors.files.required"))
 });

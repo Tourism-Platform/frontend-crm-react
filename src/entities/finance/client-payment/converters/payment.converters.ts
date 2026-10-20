@@ -47,20 +47,14 @@ export const mapPaymentToFrontend = (payment: TPaymentBackend): IPayment => ({
 
 export const mapCreatePaymentToBackend = (
 	payment: TNewPaymentSchema
-): TCreatePaymentBackend => {
-	const fileCandidate = payment.files?.[0]?.file ?? payment.files?.[0];
-
-	return {
-		booking_id: payment.orderId,
-		amount_uzs: payment.amount,
-		exchange_rate: payment.rate,
-		note: payment.note || null,
-		file:
-			fileCandidate instanceof Blob
-				? (fileCandidate as File)
-				: new File([], "payment.pdf", { type: "application/pdf" })
-	};
-};
+): TCreatePaymentBackend => ({
+	booking_id: payment.orderId,
+	amount_uzs: payment.amount,
+	exchange_rate: payment.rate,
+	note: payment.note || null,
+	// Схема гарантирует хотя бы один файл
+	file: payment.files[0].file
+});
 
 export const mapUpdatePaymentToBackend = (
 	payment: Partial<IPayment>

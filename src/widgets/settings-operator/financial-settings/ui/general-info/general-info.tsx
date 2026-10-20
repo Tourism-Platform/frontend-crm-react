@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, useEffect } from "react";
+import { type FC, Fragment, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import type { TFinancialSettingsPageOperatorKeys } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	CustomField,
@@ -14,13 +15,25 @@ import {
 } from "@/shared/ui";
 
 import {
+	ENUM_FORM_OPERATOR_GENERAL_INFO,
 	OPERATOR_GENERAL_INFO_SCHEMA,
 	type TOperatorGeneralInfoSchema,
 	useGetOperatorFinanceInfoQuery,
 	useUpdateOperatorFinanceInfoMutation
 } from "@/entities/finance";
 
-import { GENERAL_INFO_LIST } from "../../model";
+import { GENERAL_INFO_LIST, type TForm } from "../../model";
+
+const SECTION_DESCRIPTIONS: Partial<
+	Record<TForm["key"], TFinancialSettingsPageOperatorKeys>
+> = {
+	[ENUM_FORM_OPERATOR_GENERAL_INFO.TOUR_MARGIN]:
+		"general.form.fields.default_tour_margin.description",
+	[ENUM_FORM_OPERATOR_GENERAL_INFO.STAFF_PAYOUTS]:
+		"general.form.fields.staff_payouts.description",
+	[ENUM_FORM_OPERATOR_GENERAL_INFO.DEFAULT_CURRENCY]:
+		"general.form.fields.default_currency.description"
+};
 
 const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page_operator");
@@ -68,41 +81,28 @@ const GeneralInfoBase: FC = () => {
 				onSubmit={form.handleSubmit(handleSave)}
 				className="flex flex-col gap-8"
 			>
-				<div className="flex flex-col gap-6">
-					<div className="flex flex-col gap-2">
-						<h2 className="text-xl">
-							{t("general.form.fields.default_tour_margin.label")}
-						</h2>
-						<p className="text-sm text-muted-foreground">
-							{t(
-								"general.form.fields.default_tour_margin.description"
-							)}
-						</p>
-					</div>
-					<CustomField
-						control={form.control}
-						{...GENERAL_INFO_LIST[0]}
-						name={GENERAL_INFO_LIST[0].key}
-						t={t}
-					/>
-				</div>
-				<Separator />
-				<div className="flex flex-col gap-6">
-					<div className="flex flex-col gap-2">
-						<h2 className="text-xl">
-							{t("general.form.fields.staff_payouts.label")}
-						</h2>
-						<p className="text-sm text-muted-foreground">
-							{t("general.form.fields.staff_payouts.description")}
-						</p>
-					</div>
-					<CustomField
-						control={form.control}
-						{...GENERAL_INFO_LIST[1]}
-						name={GENERAL_INFO_LIST[1].key}
-						t={t}
-					/>
-				</div>
+				{GENERAL_INFO_LIST.map(({ key, ...item }, index) => (
+					<Fragment key={key}>
+						{index > 0 && <Separator />}
+						<div className="flex flex-col gap-6">
+							<div className="flex flex-col gap-2">
+								<h2 className="text-xl">
+									{item.label && t(item.label)}
+								</h2>
+								<p className="text-sm text-muted-foreground">
+									{SECTION_DESCRIPTIONS[key] &&
+										t(SECTION_DESCRIPTIONS[key])}
+								</p>
+							</div>
+							<CustomField
+								control={form.control}
+								name={key}
+								t={t}
+								{...item}
+							/>
+						</div>
+					</Fragment>
+				))}
 
 				<div>
 					<LoaderButton

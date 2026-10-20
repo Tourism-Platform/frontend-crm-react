@@ -32,6 +32,7 @@
 				},
 				"default_currency": {
 					"label": "Default currency",
+					"description": "The operator currency used by default.",
 					"placeholder": "Select currency",
 					"errors": {
 						"required": "Currency is required"
