@@ -30,6 +30,19 @@
 						"min": "Minimum 3 characters",
 						"max": "Description is too long"
 					}
+				},
+				"overview": {
+					"label": "Short overview",
+					"placeholder": "Enter a short overview...",
+					"errors": {
+						"max": "Overview is too long"
+					}
+				},
+				"overview_description": {
+					"label": "Overview details",
+					"errors": {
+						"max": "Overview details is too long"
+					}
 				}
 			}
 		},

@@ -4,7 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, withErrorBoundary } from "@/shared/ui";
 
-import { ENUM_FORM_LANDING, type TLandingSchema } from "@/entities/tour";
+import type { TLandingSchema } from "@/entities/tour";
+
+import { OVERVIEW_INFO_LIST } from "../model";
 
 interface IOverviewInfoProps {
 	form: UseFormReturn<TLandingSchema>;
@@ -20,21 +22,15 @@ const OverviewInfoBase: FC<IOverviewInfoProps> = ({ form }) => {
 			<p className="text-sm text-muted-foreground">
 				{t("form.overview.description")}
 			</p>
-			<CustomField
-				name={ENUM_FORM_LANDING.TITLE}
-				control={control}
-				label={t("form.overview.fields.title.label")}
-				placeholder={t("form.overview.fields.title.placeholder")}
-				fieldType="input"
-				t={t}
-			/>
-			<CustomField
-				name={ENUM_FORM_LANDING.DESCRIPTION}
-				control={control}
-				label={t("form.overview.fields.description.label")}
-				fieldType="editor"
-				t={t}
-			/>
+			{OVERVIEW_INFO_LIST.map(({ key, ...item }) => (
+				<CustomField
+					key={key}
+					control={control}
+					name={key}
+					t={t}
+					{...item}
+				/>
+			))}
 		</div>
 	);
 };

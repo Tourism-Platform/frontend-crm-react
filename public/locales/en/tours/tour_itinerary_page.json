@@ -56,6 +56,10 @@
 					},
 					"cover": {
 						"label": "Cover image"
+					},
+					"languages": {
+						"label": "Languages",
+						"placeholder": "Select languages"
 					}
 				},
 				"buttons": {

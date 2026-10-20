@@ -1,6 +1,7 @@
 import { TEMP_LIST_TOTAL } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
 
+import { languageMapper } from "../../landing/converters/languages.converters";
 import type {
 	IListTourOptionsArgs,
 	IOption,
@@ -17,7 +18,8 @@ export const mapOptionToFrontend = (backend: TTourOptionBackend): IOption => ({
 	tourMetaId: backend.tour_meta_id,
 	name: backend.name ?? "",
 	description: backend.description ?? "",
-	imageUrl: backend.cover_image_path ?? ""
+	imageUrl: backend.cover_image_path ?? "",
+	languages: languageMapper.fromMany(backend.languages ?? [])
 });
 
 export const mapOptionCreateToBackend = (
@@ -31,7 +33,8 @@ export const mapOptionUpdateToBackend = (
 	data: IOptionFormPayload
 ): TTourOptionUpdateBackend => ({
 	name: data.name,
-	description: data.description || null
+	description: data.description || null,
+	...(data.languages && { languages: languageMapper.toMany(data.languages) })
 });
 
 export const mapTourOptionsQueryToBackend = (

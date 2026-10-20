@@ -12,6 +12,8 @@ export const mapUpdateLandingToBackend = (
 ): TUpdateLandingImageBackendBody => ({
 	title: frontend.title,
 	description: frontend.description,
+	overview: frontend.overview || null,
+	overview_description: frontend.overview_description || null,
 	amenities_included: frontend.included ?? [],
 	amenities_not_included: frontend.not_included ?? [],
 	pickup_type: pickupMapper.toMany(frontend.pickup_type ?? []),
@@ -25,6 +27,8 @@ export const mapLandingToFrontend = (
 ): TLandingSchema => ({
 	title: backend.title || "",
 	description: backend.description || "",
+	overview: backend.overview || "",
+	overview_description: backend.overview_description || "",
 	included: backend.amenities_included ?? [],
 	not_included: backend.amenities_not_included ?? [],
 	pickup_type: pickupMapper.fromMany(backend.pickup_type ?? []),

@@ -5,6 +5,8 @@ import {
 	i18nKey
 } from "@/shared/config";
 
+import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+
 import { ENUM_FORM_OPERATOR_GENERAL_INFO } from "../types";
 
 const msg = i18nKey<TFinancialSettingsPageOperatorKeys>();
@@ -23,5 +25,11 @@ export const OPERATOR_GENERAL_INFO_SCHEMA = z.object({
 			message: msg("general.form.fields.staff_payouts.errors.required")
 		})
 		.min(0, msg("general.form.fields.staff_payouts.errors.min"))
-		.max(100, msg("general.form.fields.staff_payouts.errors.max"))
+		.max(100, msg("general.form.fields.staff_payouts.errors.max")),
+	[ENUM_FORM_OPERATOR_GENERAL_INFO.DEFAULT_CURRENCY]: z.enum(
+		ENUM_CURRENCY_OPTIONS,
+		{
+			message: msg("general.form.fields.default_currency.errors.required")
+		}
+	)
 });

@@ -29,6 +29,13 @@
 						"min": "Staff payouts cannot be empty or less than 0%",
 						"max": "Staff payouts cannot be more than 100%"
 					}
+				},
+				"default_currency": {
+					"label": "Default currency",
+					"placeholder": "Select currency",
+					"errors": {
+						"required": "Currency is required"
+					}
 				}
 			},
 			"buttons": {

@@ -23,6 +23,20 @@ export const LANDING_SCHEMA = z.object({
 			message: msg("form.overview.fields.description.errors.max")
 		})
 		.optional(),
+	[ENUM_FORM_LANDING.OVERVIEW]: z
+		.string()
+		.trim()
+		.max(255, {
+			message: msg("form.overview.fields.overview.errors.max")
+		})
+		.optional(),
+	[ENUM_FORM_LANDING.OVERVIEW_DESCRIPTION]: z
+		.string()
+		.trim()
+		.max(15000, {
+			message: msg("form.overview.fields.overview_description.errors.max")
+		})
+		.optional(),
 	[ENUM_FORM_LANDING.INCLUDED]: z.array(z.string()).optional(),
 	[ENUM_FORM_LANDING.NOT_INCLUDED]: z.array(z.string()).optional(),
 	[ENUM_FORM_LANDING.PICKUP_TYPE]: z

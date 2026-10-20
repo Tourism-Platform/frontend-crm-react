@@ -1,6 +1,7 @@
 export const ENUM_FORM_TOUR_OPTION = {
 	NAME: "name",
-	DESCRIPTION: "description"
+	DESCRIPTION: "description",
+	LANGUAGES: "languages"
 } as const;
 
 export type ENUM_FORM_TOUR_OPTION_TYPE =

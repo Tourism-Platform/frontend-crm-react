@@ -5,6 +5,8 @@ import type { LANDING_SCHEMA } from "../schema";
 export const ENUM_FORM_LANDING = {
 	TITLE: "title",
 	DESCRIPTION: "description",
+	OVERVIEW: "overview",
+	OVERVIEW_DESCRIPTION: "overview_description",
 	INCLUDED: "included",
 	NOT_INCLUDED: "not_included",
 	PICKUP_TYPE: "pickup_type",

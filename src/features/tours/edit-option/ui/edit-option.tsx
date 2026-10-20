@@ -46,7 +46,8 @@ const buildCoverItems = (imageUrl: string): TUploadImageItem[] =>
 
 const buildDefaultValues = (option: IOption): TTourOptionFormSchema => ({
 	[ENUM_FORM_TOUR_OPTION.NAME]: option.name,
-	[ENUM_FORM_TOUR_OPTION.DESCRIPTION]: option.description
+	[ENUM_FORM_TOUR_OPTION.DESCRIPTION]: option.description,
+	[ENUM_FORM_TOUR_OPTION.LANGUAGES]: option.languages
 });
 
 export const EditOption: FC<IEditOptionProps> = ({
@@ -89,7 +90,8 @@ export const EditOption: FC<IEditOptionProps> = ({
 				optionId: option.id,
 				data: {
 					name: data.name,
-					description: data.description ?? ""
+					description: data.description ?? "",
+					languages: data.languages
 				}
 			}).unwrap();
 
@@ -133,7 +135,7 @@ export const EditOption: FC<IEditOptionProps> = ({
 						className="space-y-6"
 					>
 						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_EDIT_OPTION_LIST.map(({ key, ...item }) => (
+							{FORM_EDIT_OPTION_LIST().map(({ key, ...item }) => (
 								<CustomField
 									key={key}
 									control={form.control}

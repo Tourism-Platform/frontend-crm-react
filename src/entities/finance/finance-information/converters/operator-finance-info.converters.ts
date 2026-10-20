@@ -1,3 +1,5 @@
+import { currencyConverter } from "@/entities/commission";
+
 import type {
 	TOperatorFinanceInfoBackend,
 	TOperatorFinanceInfoBackendUpdate
@@ -17,6 +19,8 @@ export const mapOperatorFinanceInfoToFrontend = (
 			? (backend.default_staff_commission.percentage ?? 0) * 100
 			: 0,
 
+	defaultCurrency: currencyConverter.from(backend.default_currency)!,
+
 	vatEnabled: backend.vat_enabled,
 	vatRate: Number(backend.vat_rate ?? 0),
 	profitTaxEnabled: backend.profit_tax_enabled,
@@ -26,6 +30,10 @@ export const mapOperatorFinanceInfoToFrontend = (
 export const mapOperatorFinanceInfoToBackend = (
 	frontend: Partial<TOperatorFinanceInfo>
 ): TOperatorFinanceInfoBackendUpdate => ({
+	...(frontend.defaultCurrency && {
+		default_currency: currencyConverter.to(frontend.defaultCurrency)
+	}),
+
 	...(frontend.vatEnabled !== undefined && {
 		vat_enabled: frontend.vatEnabled
 	}),

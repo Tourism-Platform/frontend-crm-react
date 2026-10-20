@@ -1,3 +1,4 @@
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_FORM_OPERATOR_GENERAL_INFO } from "@/entities/finance";
 
 import type { TForm } from "../types";
@@ -22,5 +23,12 @@ export const GENERAL_INFO_LIST: TForm[] = [
 		step: "0.1",
 		min: 0,
 		max: 100
+	},
+	{
+		key: ENUM_FORM_OPERATOR_GENERAL_INFO.DEFAULT_CURRENCY,
+		label: "general.form.fields.default_currency.label",
+		placeholder: "general.form.fields.default_currency.placeholder",
+		fieldType: "select",
+		options: CURRENCY_OPTIONS
 	}
 ];

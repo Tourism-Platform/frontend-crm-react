@@ -52,6 +52,10 @@
 					},
 					"cover": {
 						"label": "Обложка"
+					},
+					"languages": {
+						"label": "Языки",
+						"placeholder": "Выберите языки"
 					}
 				},
 				"buttons": {
