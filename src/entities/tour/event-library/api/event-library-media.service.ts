@@ -1,10 +1,19 @@
 import { ENUM_API_TAGS, TOUR_EVENT_LIBRARY_PATHS } from "@/shared/api";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 import type { IEventImage } from "@/entities/tour/itinerary";
 
-import { mapLibraryImageToFrontend } from "../converters/event-library-media.converters";
-import type { TEventLibraryImageBackend } from "../types";
+import {
+	mapLibraryImageToFrontend,
+	mapLibraryImagesPaginatedToFrontend,
+	mapLibraryImagesQueryToBackend
+} from "../converters/event-library-media.converters";
+import type {
+	IListLibraryImagesArgs,
+	TEventLibraryImageBackend,
+	TListLibraryImagesBackendResponse
+} from "../types";
 
 const LIBRARY_IMAGE_TAGS = [
 	ENUM_API_TAGS.EVENT_LIBRARY_IMAGES,
@@ -13,12 +22,16 @@ const LIBRARY_IMAGE_TAGS = [
 
 export const eventLibraryMediaApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		listLibraryImages: builder.query<IEventImage[], string>({
-			query: (libraryId) => ({
-				...TOUR_EVENT_LIBRARY_PATHS.listLibraryImages(libraryId)
+		listLibraryImages: builder.query<
+			IPaginationResponse<IEventImage>,
+			IListLibraryImagesArgs
+		>({
+			query: (args) => ({
+				...TOUR_EVENT_LIBRARY_PATHS.listLibraryImages(args.libraryId),
+				params: mapLibraryImagesQueryToBackend(args)
 			}),
-			transformResponse: (response: TEventLibraryImageBackend[]) =>
-				response.map(mapLibraryImageToFrontend),
+			transformResponse: (response: TListLibraryImagesBackendResponse) =>
+				mapLibraryImagesPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.EVENT_LIBRARY_IMAGES]
 		}),
 		uploadLibraryImages: builder.mutation<

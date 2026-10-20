@@ -3,6 +3,7 @@ import { type FC, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
@@ -22,10 +23,10 @@ const ReconciliationBase: FC = () => {
 	const { t } = useTranslation(["reconciliation_page", "options"]);
 	const { watch, setValue } = useForm<IReconciliationFilters>({
 		defaultValues: {
-			search: "",
-			status: [],
 			page: 1,
-			limit: 10
+			limit: INTERSECTION_ELEMENTS.RECONCILIATION,
+			search: "",
+			status: []
 		}
 	});
 

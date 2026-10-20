@@ -1,4 +1,5 @@
 import { ENUM_API_TAGS, OPERATOR_PAYMENT_ROUTES_PATHS } from "@/shared/api";
+import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -6,22 +7,29 @@ import {
 	mapFormToPaymentRouteCreateBackend,
 	mapFormToPaymentRouteUpdateBackend,
 	mapOperatorPaymentRouteToFrontend,
-	mapPaymentRoutesListToFrontend
+	mapPaymentRoutesPaginatedToFrontend,
+	mapPaymentRoutesQueryToBackend
 } from "../converters";
 import type { TOperatorPayoutDetailsSchema } from "../schema";
 import type {
 	TOperatorPaymentRoute,
-	TOperatorPaymentRouteBackend
+	TOperatorPaymentRouteBackend,
+	TOperatorPaymentRoutesBackendResponse
 } from "../types";
 
 export const operatorPaymentRoutesApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getPaymentRoutes: builder.query<TOperatorPaymentRoute[], void>({
-			query: () => ({
-				...OPERATOR_PAYMENT_ROUTES_PATHS.listPaymentRoutes
+		getPaymentRoutes: builder.query<
+			IPaginationResponse<TOperatorPaymentRoute>,
+			IPaginationRequest
+		>({
+			query: (filters) => ({
+				...OPERATOR_PAYMENT_ROUTES_PATHS.listPaymentRoutes,
+				params: mapPaymentRoutesQueryToBackend(filters)
 			}),
-			transformResponse: (response: TOperatorPaymentRouteBackend[]) =>
-				mapPaymentRoutesListToFrontend(response),
+			transformResponse: (
+				response: TOperatorPaymentRoutesBackendResponse
+			) => mapPaymentRoutesPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.OPERATOR.PAYMENT_ROUTES]
 		}),
 		createPaymentRoute: builder.mutation<

@@ -1,3 +1,6 @@
+import { useMemo } from "react";
+
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useCurrentLanguage, useOptionalResourceQuery } from "@/shared/hooks";
 
 import type {
@@ -60,9 +63,10 @@ export const usePreviewTourPageData = ({
 		skip: skipDraft
 	});
 
-	const publicOptions = useGetPreviewTourOptionsQuery(tourId, {
-		skip: skipPublic
-	});
+	const publicOptions = useGetPreviewTourOptionsQuery(
+		{ page: 1, limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS, tourId },
+		{ skip: skipPublic }
+	);
 	const draftOptions = useGetDraftPreviewOptionsQuery(
 		{ tourId, language },
 		{
@@ -80,7 +84,10 @@ export const usePreviewTourPageData = ({
 		isDraft ? draftOptions : publicOptions
 	);
 
-	const options = optionsQuery.data ?? [];
+	const options = useMemo(
+		() => optionsQuery.data?.data ?? [],
+		[optionsQuery.data]
+	);
 	const singleOption = options.length === 1 ? options[0] : undefined;
 
 	const optionDetailQuery = useOptionalResourceQuery(

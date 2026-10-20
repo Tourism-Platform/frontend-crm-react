@@ -17,6 +17,10 @@ export type TUploadLandingImagesBackendResponse = ReturnType<
 	typeof TOUR_LANDING_PAGE_PATHS.uploadLandingImages
 >["_types"]["response"];
 
+export type TListLandingImagesBackendQuery = ReturnType<
+	typeof TOUR_LANDING_PAGE_PATHS.listLandingImages
+>["_types"]["query"];
+
 export type TListLandingImagesBackendResponse = ReturnType<
 	typeof TOUR_LANDING_PAGE_PATHS.listLandingImages
 >["_types"]["response"];

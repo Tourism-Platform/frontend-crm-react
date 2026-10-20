@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -32,11 +33,11 @@ const OrderHistoryBase: FC = () => {
 
 	const { watch, setValue } = useForm<IBookingOrderFilters>({
 		defaultValues: {
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.TOUR_ORDER_HISTORY,
 			tourId,
 			status: [],
-			search: "",
-			page: 1,
-			limit: 10
+			search: ""
 		}
 	});
 

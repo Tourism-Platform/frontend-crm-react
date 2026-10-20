@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -21,15 +22,13 @@ interface ISupplierProductsProps {
 	supplierId: string;
 }
 
-const DEFAULT_FILTERS: ISupplierProductFilters = {
-	page: 1,
-	limit: 10
-};
-
 const SupplierProductsBase: FC<ISupplierProductsProps> = ({ supplierId }) => {
 	const { t } = useTranslation("supplier_id_page");
 	const { watch, setValue } = useForm<ISupplierProductFilters>({
-		defaultValues: DEFAULT_FILTERS
+		defaultValues: {
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.SUPPLIER_PRODUCTS
+		}
 	});
 	const filters = watch();
 

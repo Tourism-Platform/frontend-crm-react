@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -20,12 +21,6 @@ import { CreateSupplier } from "@/features/library";
 
 import { COLUMNS } from "../model";
 
-const DEFAULT_FILTERS: ISupplierFilters = {
-	search: "",
-	page: 1,
-	limit: 10
-};
-
 const SuppliersBase: FC = () => {
 	const { t } = useTranslation("suppliers_page");
 
@@ -33,7 +28,9 @@ const SuppliersBase: FC = () => {
 		ISupplierFilters & { status: ENUM_SUPPLIER_TYPE_TYPE[] }
 	>({
 		defaultValues: {
-			...DEFAULT_FILTERS,
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.SUPPLIERS,
+			search: "",
 			status: []
 		}
 	});

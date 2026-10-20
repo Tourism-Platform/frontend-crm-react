@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useCurrentLanguage } from "@/shared/hooks";
 
 import { enrichOptionDetailTitle } from "../converters";
@@ -40,9 +41,10 @@ export const usePreviewOptionDetail = ({
 		{ skip: shouldSkip || !isDraft }
 	);
 
-	const { data: publicOptionsList } = useGetPreviewTourOptionsQuery(tourId, {
-		skip: shouldSkip || isDraft || Boolean(optionsListProp)
-	});
+	const { data: publicOptionsList } = useGetPreviewTourOptionsQuery(
+		{ page: 1, limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS, tourId },
+		{ skip: shouldSkip || isDraft || Boolean(optionsListProp) }
+	);
 
 	const { data: draftOptionsList } = useGetDraftPreviewOptionsQuery(
 		{ tourId, language },
@@ -53,7 +55,8 @@ export const usePreviewOptionDetail = ({
 
 	const query = isDraft ? draftQuery : publicQuery;
 	const optionsList =
-		optionsListProp ?? (isDraft ? draftOptionsList : publicOptionsList);
+		optionsListProp ??
+		(isDraft ? draftOptionsList : publicOptionsList)?.data;
 
 	const data = useMemo((): IOptionDetail | undefined => {
 		if (!query.data) return undefined;

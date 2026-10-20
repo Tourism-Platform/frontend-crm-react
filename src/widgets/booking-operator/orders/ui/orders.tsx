@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -23,10 +24,10 @@ const OrdersBase: FC = () => {
 	const { t } = useTranslation("orders_page");
 	const { watch, setValue } = useForm<Required<IBookingOrderFilters>>({
 		defaultValues: {
-			status: [ENUM_ORDER_STATUS.NEW],
-			search: "",
 			page: 1,
-			limit: 10
+			limit: INTERSECTION_ELEMENTS.OPERATOR_ORDERS,
+			status: [ENUM_ORDER_STATUS.NEW],
+			search: ""
 		}
 	});
 

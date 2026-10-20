@@ -1,12 +1,15 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 
 import { useListAllTourOptionsQuery } from "@/entities/tour";
 
 export const useItineraryOptions = (tourId: string) => {
-	const { data: options = [], isLoading } = useListAllTourOptionsQuery(
-		tourId,
+	const { data: optionsPage, isLoading } = useListAllTourOptionsQuery(
+		{ page: 1, limit: INTERSECTION_ELEMENTS.TOUR_OPTIONS, tourId },
 		{ skip: !tourId }
 	);
+	const options = useMemo(() => optionsPage?.data ?? [], [optionsPage]);
 
 	const [selectedOptionId, setSelectedOptionId] = useState<string | null>(
 		null

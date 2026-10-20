@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
@@ -8,15 +9,19 @@ import {
 } from "@/entities/tour";
 
 export const usePricingReview = (tourId: string) => {
-	const optionsQuery = useListAllTourOptionsQuery(tourId, { skip: !tourId });
+	const optionsQuery = useListAllTourOptionsQuery(
+		{ page: 1, limit: INTERSECTION_ELEMENTS.TOUR_OPTIONS, tourId },
+		{ skip: !tourId }
+	);
 	const {
-		data: options = [],
+		data: optionsPage,
 		isLoading: isOptionsLoading,
 		isFetching: isOptionsFetching,
 		isSuccess: isOptionsSuccess,
 		isNotFound: isOptionsNotFound,
 		isRealError: isOptionsRealError
 	} = useOptionalResourceQuery(optionsQuery);
+	const options = useMemo(() => optionsPage?.data ?? [], [optionsPage]);
 
 	const [selectedOptionId, setSelectedOptionId] = useState<string | null>(
 		null

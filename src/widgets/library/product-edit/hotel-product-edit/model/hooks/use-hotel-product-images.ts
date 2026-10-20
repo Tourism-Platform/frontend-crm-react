@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { useCustomUploadImages } from "@/shared/ui";
 
@@ -81,15 +82,21 @@ export const useHotelProductImages = ({
 	);
 
 	const {
-		data: serverImages = EMPTY_PRODUCT_IMAGES,
+		data: serverImagesPage,
 		isLoading: isListLoading,
 		isRealError: isError
 	} = useOptionalResourceQuery(
 		useListProductImagesQuery(
-			{ supplierId, productId },
+			{
+				page: 1,
+				limit: INTERSECTION_ELEMENTS.PRODUCT_IMAGES,
+				supplierId,
+				productId
+			},
 			{ skip: disabled || !supplierId || !productId }
 		)
 	);
+	const serverImages = serverImagesPage?.data ?? EMPTY_PRODUCT_IMAGES;
 
 	const [uploadProductImages, { isLoading: isUploading }] =
 		useUploadProductImagesMutation();

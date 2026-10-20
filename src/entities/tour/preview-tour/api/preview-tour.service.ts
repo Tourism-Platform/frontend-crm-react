@@ -13,7 +13,9 @@ import {
 	TOUR_PATHS,
 	TOUR_PUBLIC_PATHS
 } from "@/shared/api";
+import { INTERSECTION_ELEMENTS, TEMP_LIST_TOTAL } from "@/shared/config";
 import { mapReadLangQueryToBackend } from "@/shared/converters";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 import type {
@@ -28,7 +30,8 @@ import {
 	mapDraftPreviewOptionToFrontend,
 	mapPreviewOperatorToFrontend,
 	mapPreviewOptionToFrontend,
-	mapPreviewOptionsListToFrontend,
+	mapPreviewOptionsPaginatedToFrontend,
+	mapPreviewOptionsQueryToBackend,
 	mapPreviewTourGeneralToFrontend,
 	mapPreviewTourScheduleToFrontend,
 	mapPreviewTourToFrontend
@@ -38,6 +41,7 @@ import type {
 	IPreviewOperator,
 	IPreviewOptionCard,
 	IPreviewOptionQueryArgs,
+	IPreviewOptionsListArgs,
 	IPreviewTourData,
 	IPreviewTourGeneral,
 	IPreviewTourQueryArgs,
@@ -45,7 +49,7 @@ import type {
 	TGetPreviewTourBackendResponse,
 	TOptionDetailBackend,
 	TPreviewOperatorBackend,
-	TPreviewOptionListItemBackend,
+	TPreviewOptionsListBackendResponse,
 	TPreviewTourBackend,
 	TPreviewTourScheduleBackend
 } from "../types";
@@ -102,12 +106,16 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 					mapPreviewOptionToFrontend(response)
 			}
 		),
-		getPreviewTourOptions: builder.query<IPreviewOptionCard[], string>({
-			query: (tourId) => ({
-				...TOUR_PUBLIC_PATHS.listPublicTourOptions(tourId)
+		getPreviewTourOptions: builder.query<
+			IPaginationResponse<IPreviewOptionCard>,
+			IPreviewOptionsListArgs
+		>({
+			query: (args) => ({
+				...TOUR_PUBLIC_PATHS.listPublicTourOptions(args.tourId),
+				params: mapPreviewOptionsQueryToBackend(args)
 			}),
-			transformResponse: (response: TPreviewOptionListItemBackend[]) =>
-				mapPreviewOptionsListToFrontend(response)
+			transformResponse: (response: TPreviewOptionsListBackendResponse) =>
+				mapPreviewOptionsPaginatedToFrontend(response)
 		}),
 		getPreviewTourSchedule: builder.query<
 			IPreviewTourSchedule,
@@ -154,9 +162,10 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 				}
 
 				const imagesResult = await query(
-					toQueryArgs(
-						TOUR_LANDING_PAGE_PATHS.listLandingImages(tourId)
-					)
+					toQueryArgs({
+						...TOUR_LANDING_PAGE_PATHS.listLandingImages(tourId),
+						params: { limit: INTERSECTION_ELEMENTS.LANDING_IMAGES }
+					})
 				);
 				if (imagesResult.error) {
 					return { error: imagesResult.error };
@@ -171,7 +180,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			}
 		}),
 		getDraftPreviewOptions: builder.query<
-			IPreviewOptionCard[],
+			IPaginationResponse<IPreviewOptionCard>,
 			IPreviewTourQueryArgs
 		>({
 			async queryFn(
@@ -183,7 +192,10 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 				const query = baseQuery as TBaseQuery;
 
 				const listResult = await query(
-					toQueryArgs(TOUR_OPTION_PATHS.listAllTourOptions(tourId))
+					toQueryArgs({
+						...TOUR_OPTION_PATHS.listAllTourOptions(tourId),
+						params: { limit: INTERSECTION_ELEMENTS.TOUR_OPTIONS }
+					})
 				);
 				if (listResult.error) {
 					return { error: listResult.error };
@@ -217,7 +229,8 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 					})
 				);
 
-				return { data: cards };
+				// Та же форма, что у публичных опций (getPreviewTourOptions)
+				return { data: { data: cards, total: TEMP_LIST_TOTAL } };
 			}
 		}),
 		getDraftPreviewOption: builder.query<

@@ -1,3 +1,5 @@
+import type { IPaginationRequest } from "@/shared/types";
+
 export interface ISupplierProductImage {
 	id: string;
 	productId: string;
@@ -11,7 +13,7 @@ export interface ISupplierNodeImage {
 	isPrimary: boolean;
 }
 
-export interface IListProductImages {
+export interface IListProductImages extends IPaginationRequest {
 	supplierId: string;
 	productId: string;
 }

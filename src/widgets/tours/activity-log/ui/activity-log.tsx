@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
@@ -28,7 +29,6 @@ import { ActivityLogSkeleton } from "./activity-log-skeleton";
 const ActivityLogBase: FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
 	const [page, setPage] = useState(1);
-	const limit = 5;
 
 	const {
 		data,
@@ -38,9 +38,9 @@ const ActivityLogBase: FC = () => {
 	} = useOptionalResourceQuery(
 		useGetActivityLogQuery(
 			{
-				tourId,
 				page,
-				limit
+				limit: INTERSECTION_ELEMENTS.TOUR_ACTIVITY_LOG,
+				tourId
 			},
 			{
 				skip: !tourId

@@ -3,6 +3,7 @@ import { type FC, useEffect, useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
 
 import { useGetSeasonalityQuery } from "@/entities/tour";
@@ -21,9 +22,11 @@ interface ISeasonalityInfoProps {
 const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 	const { t } = useTranslation("tour_schedule_page");
 
-	const { data: seasonalityData } = useGetSeasonalityQuery(tourId, {
-		skip: !tourId
-	});
+	const { data: seasonalityPage } = useGetSeasonalityQuery(
+		{ page: 1, limit: INTERSECTION_ELEMENTS.TOUR_SEASONALITY, tourId },
+		{ skip: !tourId }
+	);
+	const seasonalityData = seasonalityPage?.data;
 
 	const form = useForm<TSeasonalityFormValues>({
 		defaultValues: {

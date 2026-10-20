@@ -2,6 +2,7 @@ import { type FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import {
 	type TFileMetadata,
 	type TFileWithPreview,
@@ -18,8 +19,14 @@ import {
 const DocumentsInfoBase: FC = () => {
 	const { t } = useTranslation("business_settings_page");
 
-	const { data: documents, isRealError: isDocumentsError } =
-		useOptionalResourceQuery(useGetOperatorBusinessDocumentsQuery());
+	const { data: documentsPage, isRealError: isDocumentsError } =
+		useOptionalResourceQuery(
+			useGetOperatorBusinessDocumentsQuery({
+				page: 1,
+				limit: INTERSECTION_ELEMENTS.OPERATOR_DOCUMENTS
+			})
+		);
+	const documents = documentsPage?.data;
 
 	const [uploadDocument, { isLoading: isUploading }] =
 		useUploadOperatorBusinessDocumentMutation();

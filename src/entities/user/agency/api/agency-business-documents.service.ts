@@ -1,19 +1,31 @@
 import { AGENCY_PATHS, ENUM_API_TAGS } from "@/shared/api";
 import type { TFileMetadata } from "@/shared/hooks";
+import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
-import { mapAgencyDocumentsToFrontend } from "../converters";
-import type { TAgencyDocumentBackend } from "../types";
+import {
+	mapAgencyDocumentsPaginatedToFrontend,
+	mapAgencyDocumentsQueryToBackend,
+	mapAgencyDocumentsToFrontend
+} from "../converters";
+import type {
+	TAgencyDocumentBackend,
+	TAgencyDocumentsBackendResponse
+} from "../types";
 
 export const agencyBusinessDocumentsApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getAgencyBusinessDocuments: builder.query<TFileMetadata[], void>({
-			query: () => ({
-				...AGENCY_PATHS.listAgencyDocuments
+		getAgencyBusinessDocuments: builder.query<
+			IPaginationResponse<TFileMetadata>,
+			IPaginationRequest
+		>({
+			query: (filters) => ({
+				...AGENCY_PATHS.listAgencyDocuments,
+				params: mapAgencyDocumentsQueryToBackend(filters)
 			}),
-			transformResponse: (response: TAgencyDocumentBackend[]) =>
-				mapAgencyDocumentsToFrontend(response),
+			transformResponse: (response: TAgencyDocumentsBackendResponse) =>
+				mapAgencyDocumentsPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		uploadAgencyBusinessDocument: builder.mutation<

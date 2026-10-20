@@ -6,6 +6,8 @@ import type { IPaginationResponse } from "@/shared/types";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapProductImagesPaginatedToFrontend,
+	mapProductImagesQueryToBackend,
 	mapSupplierNodeImageToFrontend,
 	mapSupplierProductEditFormToPricingSwitch,
 	mapSupplierProductFiltersToBackend,
@@ -35,6 +37,7 @@ import type {
 	IUploadProductImages,
 	TCreateSupplierProduct,
 	TCreateSupplierVariant,
+	TListProductImagesBackendResponse,
 	TSupplierNodeImageBackend,
 	TSupplierProduct,
 	TSupplierProductEditForm,
@@ -204,17 +207,18 @@ export const supplierProductApi = authApi.injectEndpoints({
 				productInvalidateTags(productId)
 		}),
 		listProductImages: builder.query<
-			ISupplierProductImage[],
+			IPaginationResponse<ISupplierProductImage>,
 			IListProductImages
 		>({
-			query: ({ supplierId, productId }) => ({
+			query: (args) => ({
 				...SUPPLIER_PRODUCT_PATHS.listProductImages(
-					supplierId,
-					productId
-				)
+					args.supplierId,
+					args.productId
+				),
+				params: mapProductImagesQueryToBackend(args)
 			}),
-			transformResponse: (response: TSupplierProductImageBackend[]) =>
-				response.map(mapSupplierProductImageToFrontend),
+			transformResponse: (response: TListProductImagesBackendResponse) =>
+				mapProductImagesPaginatedToFrontend(response),
 			providesTags: (_result, _error, { productId }) => [
 				{ type: ENUM_API_TAGS.SUPPLIER_PRODUCTS, id: productId }
 			]

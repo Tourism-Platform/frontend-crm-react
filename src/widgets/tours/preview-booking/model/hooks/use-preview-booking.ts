@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
 import { useCurrentLanguage } from "@/shared/hooks";
 import { parseStoredLocalDate } from "@/shared/lib";
@@ -79,10 +80,14 @@ export const usePreviewBooking = () => {
 	const availableLanguages = previewLanding?.languages ?? [];
 
 	const {
-		data: options = [],
+		data: optionsPage,
 		isLoading: isOptionsLoading,
 		isError: isOptionsError
-	} = useGetPreviewTourOptionsQuery(tourId, { skip: !tourId });
+	} = useGetPreviewTourOptionsQuery(
+		{ page: 1, limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS, tourId },
+		{ skip: !tourId }
+	);
+	const options = useMemo(() => optionsPage?.data ?? [], [optionsPage]);
 
 	const { data: scheduleData } = useGetPreviewTourScheduleQuery(
 		{

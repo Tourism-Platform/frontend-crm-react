@@ -2,6 +2,7 @@ import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { withErrorBoundary } from "@/shared/ui";
 
@@ -13,8 +14,13 @@ import { PaymentRouteActions } from "./payment-route-actions";
 
 const PaymentSettingsBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page_operator");
-	const { data: routes = [], isRealError: isError } =
-		useOptionalResourceQuery(useGetPaymentRoutesQuery());
+	const { data: routesPage, isRealError: isError } = useOptionalResourceQuery(
+		useGetPaymentRoutesQuery({
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.OPERATOR_PAYMENT_ROUTES
+		})
+	);
+	const routes = routesPage?.data ?? [];
 
 	useEffect(() => {
 		if (isError) {

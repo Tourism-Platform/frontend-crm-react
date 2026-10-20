@@ -1,4 +1,6 @@
 import type { ClassicSwiftDetails, CustomDetails } from "@/shared/api";
+import { TEMP_LIST_TOTAL } from "@/shared/config";
+import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import { currencyConverter } from "@/entities/commission";
 
@@ -9,6 +11,8 @@ import type {
 	TOperatorPaymentRouteBackend,
 	TOperatorPaymentRouteCreateBackend,
 	TOperatorPaymentRouteUpdateBackend,
+	TOperatorPaymentRoutesBackendQuery,
+	TOperatorPaymentRoutesBackendResponse,
 	TWiseDetails
 } from "../types";
 import { ENUM_PAYMENT_ROUTE_METHODS } from "../types";
@@ -57,10 +61,19 @@ export const mapOperatorPaymentRouteToFrontend = (
 	};
 };
 
-export const mapPaymentRoutesListToFrontend = (
-	backendList: TOperatorPaymentRouteBackend[]
-): TOperatorPaymentRoute[] =>
-	backendList.map(mapOperatorPaymentRouteToFrontend);
+export const mapPaymentRoutesQueryToBackend = (
+	filters: IPaginationRequest
+): TOperatorPaymentRoutesBackendQuery => ({
+	...(filters.page > 1 && { skip: (filters.page - 1) * filters.limit }),
+	...(filters.limit && { limit: filters.limit })
+});
+
+export const mapPaymentRoutesPaginatedToFrontend = (
+	response: TOperatorPaymentRoutesBackendResponse
+): IPaginationResponse<TOperatorPaymentRoute> => ({
+	data: response.map(mapOperatorPaymentRouteToFrontend),
+	total: TEMP_LIST_TOTAL
+});
 
 export const mapFormToPaymentRouteCreateBackend = (
 	frontend: TOperatorPayoutDetailsSchema

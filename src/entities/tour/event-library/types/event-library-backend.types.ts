@@ -25,3 +25,11 @@ export type TUpdateEventLibraryBackend = ReturnType<
 >["_types"]["body"];
 
 export type TEventLibraryImageBackend = TourEventLibraryImageModel;
+
+export type TListLibraryImagesBackendQuery = ReturnType<
+	typeof TOUR_EVENT_LIBRARY_PATHS.listLibraryImages
+>["_types"]["query"];
+
+export type TListLibraryImagesBackendResponse = ReturnType<
+	typeof TOUR_EVENT_LIBRARY_PATHS.listLibraryImages
+>["_types"]["response"];

@@ -1,21 +1,35 @@
 import { ENUM_API_TAGS, TOUR_EVENT_MEDIA_PATHS } from "@/shared/api";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
-import { mapEventImageToFrontend } from "../converters";
-import type { IEventImage, TEventImageBackend } from "../types";
+import {
+	mapEventImageToFrontend,
+	mapEventImagesPaginatedToFrontend,
+	mapEventImagesQueryToBackend
+} from "../converters";
+import type {
+	IEventImage,
+	IListEventImagesArgs,
+	TEventImageBackend,
+	TListEventImagesBackendResponse
+} from "../types";
 
 export const tourEventMediaApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		listEventImages: builder.query<
-			IEventImage[],
-			{ tourId: string; eventId: string }
+			IPaginationResponse<IEventImage>,
+			IListEventImagesArgs
 		>({
-			query: ({ tourId, eventId }) => ({
-				...TOUR_EVENT_MEDIA_PATHS.listEventImages(tourId, eventId)
+			query: (args) => ({
+				...TOUR_EVENT_MEDIA_PATHS.listEventImages(
+					args.tourId,
+					args.eventId
+				),
+				params: mapEventImagesQueryToBackend(args)
 			}),
-			transformResponse: (response: TEventImageBackend[]) =>
-				response.map(mapEventImageToFrontend),
+			transformResponse: (response: TListEventImagesBackendResponse) =>
+				mapEventImagesPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.EVENT_IMAGES]
 		}),
 		uploadEventImages: builder.mutation<

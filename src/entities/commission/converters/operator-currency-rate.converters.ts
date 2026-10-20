@@ -1,4 +1,5 @@
-import type { IPaginationResponse } from "@/shared/types";
+import { TEMP_LIST_TOTAL } from "@/shared/config";
+import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import type {
 	IOperatorCurrencyRate,
@@ -6,6 +7,7 @@ import type {
 } from "../types";
 import type {
 	TOperatorCurrencyRateBackend,
+	TOperatorCurrencyRateBackendQuery,
 	TOperatorCurrencyRateCreateBackend,
 	TOperatorCurrencyRateResponse
 } from "../types/operator-currency-rate-backend.interface";
@@ -22,11 +24,18 @@ export const mapOperatorCurrencyRateToFrontend = (
 	valid_from: data.valid_from
 });
 
+export const mapOperatorCurrencyRateFiltersToBackend = (
+	filters: IPaginationRequest
+): TOperatorCurrencyRateBackendQuery => ({
+	...(filters.page > 1 && { skip: (filters.page - 1) * filters.limit }),
+	...(filters.limit && { limit: filters.limit })
+});
+
 export const mapOperatorCurrencyRateListToFrontend = (
 	data: TOperatorCurrencyRateResponse
 ): IPaginationResponse<IOperatorCurrencyRate> => ({
 	data: data.map(mapOperatorCurrencyRateToFrontend),
-	total: data.length
+	total: TEMP_LIST_TOTAL
 });
 
 export const mapOperatorCurrencyRateToBackend = (

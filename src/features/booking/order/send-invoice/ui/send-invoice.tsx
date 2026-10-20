@@ -2,6 +2,7 @@ import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
@@ -49,12 +50,16 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 	const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
 
 	const {
-		data: routes = [],
+		data: routesPage,
 		isLoading,
 		isRealError: isError
 	} = useOptionalResourceQuery(
-		useGetPaymentRoutesQuery(undefined, { skip: !isActive })
+		useGetPaymentRoutesQuery(
+			{ page: 1, limit: INTERSECTION_ELEMENTS.OPERATOR_PAYMENT_ROUTES },
+			{ skip: !isActive }
+		)
 	);
+	const routes = routesPage?.data ?? [];
 
 	const [updateBookingStatus, { isLoading: isConfirming }] =
 		useUpdateBookingStatusMutation();

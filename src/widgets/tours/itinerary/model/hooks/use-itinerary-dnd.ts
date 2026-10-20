@@ -5,7 +5,11 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
+import {
+	ENUM_LANGUAGES,
+	INTERSECTION_ELEMENTS,
+	i18nLanguageMapper
+} from "@/shared/config";
 
 import {
 	type IEventLibraryItem,
@@ -163,10 +167,10 @@ export const useItineraryDnd = ({
 	const currentData = optionsData[activeOption] ?? emptyOptionData;
 
 	const { data: libraryList } = useListEventLibraryQuery({
-		search: "",
-		status: [],
 		page: 1,
-		limit: 100
+		limit: INTERSECTION_ELEMENTS.ITINERARY_LIBRARY_EVENTS,
+		search: "",
+		status: []
 	});
 
 	const libraryItems = useMemo(

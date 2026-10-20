@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useParams } from "react-router";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
@@ -42,12 +43,24 @@ export const useEventMedia = () => {
 
 	const tourQuery = useOptionalResourceQuery(
 		useListEventImagesQuery(
-			{ tourId, eventId: mediaEventId },
+			{
+				page: 1,
+				limit: INTERSECTION_ELEMENTS.EVENT_IMAGES,
+				tourId,
+				eventId: mediaEventId
+			},
 			{ skip: skipTour }
 		)
 	);
 	const libraryQuery = useOptionalResourceQuery(
-		useListLibraryImagesQuery(libraryId, { skip: skipLibrary })
+		useListLibraryImagesQuery(
+			{
+				page: 1,
+				limit: INTERSECTION_ELEMENTS.LIBRARY_IMAGES,
+				libraryId
+			},
+			{ skip: skipLibrary }
+		)
 	);
 
 	const [uploadTour, { isLoading: isTourUploading }] =
@@ -137,7 +150,7 @@ export const useEventMedia = () => {
 	return {
 		/** A library entry being created has no images route yet. */
 		canUpload: isLibrary ? !skipLibrary : !skipTour,
-		serverImages: activeQuery.data ?? EMPTY_IMAGES,
+		serverImages: activeQuery.data?.data ?? EMPTY_IMAGES,
 		isListLoading: activeQuery.isLoading,
 		isError: activeQuery.isRealError,
 		isMutating:

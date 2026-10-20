@@ -70,3 +70,7 @@ export interface IEventLibraryCopy {
 
 /** Placeholder libraryId for create route `/library/events/new/transfer`. */
 export const LIBRARY_EVENT_CREATE_ID = "new";
+
+export interface IListLibraryImagesArgs extends IPaginationRequest {
+	libraryId: string;
+}

@@ -1,6 +1,10 @@
-import { type FC, useMemo } from "react";
+import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
+import { type FC, useCallback, useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
+import type { IPaginationRequest } from "@/shared/types";
 import { withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
@@ -12,11 +16,21 @@ import { OPERATOR_CURRENCY_RATE_COLUMNS } from "../../model";
 
 const CurrencyBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page_operator");
+
+	const { watch, setValue } = useForm<IPaginationRequest>({
+		defaultValues: {
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.OPERATOR_FX_RATES
+		}
+	});
+
+	const filters = watch();
+
 	const {
 		data: currencyRates,
 		isLoading,
 		isFetching
-	} = useGetOperatorCurrencyRatesQuery();
+	} = useGetOperatorCurrencyRatesQuery(filters);
 
 	const currencyRatesData = useMemo(
 		() => currencyRates?.data ?? [],
@@ -25,6 +39,32 @@ const CurrencyBase: FC = () => {
 	const totalCount = currencyRates?.total ?? 0;
 
 	const columns = useMemo(() => OPERATOR_CURRENCY_RATE_COLUMNS(t), [t]);
+
+	const paginationObj = useMemo(
+		() => ({
+			pageIndex: filters.page - 1,
+			pageSize: filters.limit
+		}),
+		[filters.page, filters.limit]
+	);
+
+	const handlePaginationChange: OnChangeFn<PaginationState> = useCallback(
+		(updaterOrValue) => {
+			const currentPagination = {
+				pageIndex: filters.page - 1,
+				pageSize: filters.limit
+			};
+
+			const nextValue =
+				typeof updaterOrValue === "function"
+					? updaterOrValue(currentPagination)
+					: updaterOrValue;
+
+			setValue("page", nextValue.pageIndex + 1);
+			setValue("limit", nextValue.pageSize);
+		},
+		[filters.page, filters.limit, setValue]
+	);
 
 	const actionsJsx = useMemo(() => <NewCurrencyRate />, []);
 
@@ -48,9 +88,9 @@ const CurrencyBase: FC = () => {
 					recordCount={totalCount}
 					columns={columns}
 					actions={actionsJsx}
-					defaultPageSize={5}
+					pagination={paginationObj}
+					onPaginationChange={handlePaginationChange}
 					showTopFilters={false}
-					showPagination={false}
 					isLoading={isLoading || isFetching}
 					topChildren={topChildrenJsx}
 				/>

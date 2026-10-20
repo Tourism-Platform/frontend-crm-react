@@ -1,8 +1,9 @@
 "use client";
 
-import { type FC, useEffect, useRef, useState } from "react";
+import { type FC, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { withErrorBoundary } from "@/shared/ui";
 import {
 	CustomUploadImages,
@@ -39,9 +40,14 @@ interface IPhotosInfoProps {
 const PhotosInfoBase: FC<IPhotosInfoProps> = ({ tourId, onChanges }) => {
 	const { t } = useTranslation("landing_page");
 
-	const { data: serverImages = [] } = useListLandingImagesQuery(tourId, {
-		skip: !tourId
-	});
+	const { data: serverImagesPage } = useListLandingImagesQuery(
+		{ page: 1, limit: INTERSECTION_ELEMENTS.LANDING_IMAGES, tourId },
+		{ skip: !tourId }
+	);
+	const serverImages = useMemo(
+		() => serverImagesPage?.data ?? [],
+		[serverImagesPage]
+	);
 
 	const [items, setItems] = useState<TUploadImageItem[]>([]);
 	const toDeleteRef = useRef<string[]>([]);

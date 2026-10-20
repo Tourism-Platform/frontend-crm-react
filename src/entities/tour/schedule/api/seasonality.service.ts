@@ -1,21 +1,34 @@
 import { SEASONAL_COMMISSION_PATHS } from "@/shared/api";
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapSeasonalityPaginatedToFrontend,
+	mapSeasonalityQueryToBackend,
 	mapSeasonalityToBackend,
 	mapSeasonalityToFrontend
 } from "../converters";
-import type { ISeasonality, TSeasonalityCommissionBackend } from "../types";
+import type {
+	IListSeasonalityArgs,
+	ISeasonality,
+	TListSeasonalityBackendResponse,
+	TSeasonalityCommissionBackend
+} from "../types";
 
 export const tourSeasonalityApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getSeasonality: builder.query<ISeasonality[], string>({
-			query: (tourId) => ({
-				...SEASONAL_COMMISSION_PATHS.getTourCommissions(tourId)
+		getSeasonality: builder.query<
+			IPaginationResponse<ISeasonality>,
+			IListSeasonalityArgs
+		>({
+			query: (args) => ({
+				...SEASONAL_COMMISSION_PATHS.getTourCommissions(args.tourId),
+				params: mapSeasonalityQueryToBackend(args)
 			}),
-			transformResponse: (response: TSeasonalityCommissionBackend[]) =>
-				response.map(mapSeasonalityToFrontend)
+			transformResponse: (response: TListSeasonalityBackendResponse) =>
+				mapSeasonalityPaginatedToFrontend(response)
 		}),
 		createSeasonality: builder.mutation<
 			ISeasonality,
@@ -33,9 +46,13 @@ export const tourSeasonalityApi = authApi.injectEndpoints({
 					dispatch(
 						tourSeasonalityApi.util.updateQueryData(
 							"getSeasonality",
-							tourId,
+							{
+								page: 1,
+								limit: INTERSECTION_ELEMENTS.TOUR_SEASONALITY,
+								tourId
+							},
 							(draft) => {
-								draft.push(newSeasonality);
+								draft.data.push(newSeasonality);
 							}
 						)
 					);
@@ -66,13 +83,17 @@ export const tourSeasonalityApi = authApi.injectEndpoints({
 					dispatch(
 						tourSeasonalityApi.util.updateQueryData(
 							"getSeasonality",
-							tourId,
+							{
+								page: 1,
+								limit: INTERSECTION_ELEMENTS.TOUR_SEASONALITY,
+								tourId
+							},
 							(draft) => {
-								const index = draft.findIndex(
+								const index = draft.data.findIndex(
 									(s) => s.id === commissionId
 								);
 								if (index !== -1) {
-									draft[index] = updatedSeasonality;
+									draft.data[index] = updatedSeasonality;
 								}
 							}
 						)
@@ -101,9 +122,13 @@ export const tourSeasonalityApi = authApi.injectEndpoints({
 					dispatch(
 						tourSeasonalityApi.util.updateQueryData(
 							"getSeasonality",
-							tourId,
+							{
+								page: 1,
+								limit: INTERSECTION_ELEMENTS.TOUR_SEASONALITY,
+								tourId
+							},
 							(draft) => {
-								return draft.filter(
+								draft.data = draft.data.filter(
 									(s) => s.id !== commissionId
 								);
 							}

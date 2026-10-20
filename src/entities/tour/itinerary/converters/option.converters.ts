@@ -1,6 +1,12 @@
+import { TEMP_LIST_TOTAL } from "@/shared/config";
+import type { IPaginationResponse } from "@/shared/types";
+
 import type {
+	IListTourOptionsArgs,
 	IOption,
 	IOptionFormPayload,
+	TListAllTourOptionsBackendQuery,
+	TListAllTourOptionsBackendResponce,
 	TTourOptionBackend,
 	TTourOptionCreateBackend,
 	TTourOptionUpdateBackend
@@ -26,4 +32,18 @@ export const mapOptionUpdateToBackend = (
 ): TTourOptionUpdateBackend => ({
 	name: data.name,
 	description: data.description || null
+});
+
+export const mapTourOptionsQueryToBackend = (
+	args: IListTourOptionsArgs
+): TListAllTourOptionsBackendQuery => ({
+	...(args.page > 1 && { skip: (args.page - 1) * args.limit }),
+	...(args.limit && { limit: args.limit })
+});
+
+export const mapTourOptionsPaginatedToFrontend = (
+	response: TListAllTourOptionsBackendResponce
+): IPaginationResponse<IOption> => ({
+	data: response.map(mapOptionToFrontend),
+	total: TEMP_LIST_TOTAL
 });

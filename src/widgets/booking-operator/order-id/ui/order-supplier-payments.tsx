@@ -3,6 +3,7 @@ import { type FC, useCallback, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import {
 	Card,
 	CardAction,
@@ -39,11 +40,11 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 
 	const { watch, setValue } = useForm<ISupplierPaymentFilters>({
 		defaultValues: {
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.ORDER_SUPPLIER_PAYMENTS,
 			bookingId,
 			search: "",
-			status: [],
-			page: 1,
-			limit: 10
+			status: []
 		}
 	});
 

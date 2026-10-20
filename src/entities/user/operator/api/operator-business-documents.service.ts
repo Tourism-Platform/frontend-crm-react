@@ -1,19 +1,31 @@
 import { ENUM_API_TAGS, OPERATOR_DOCUMENTS_PATHS } from "@/shared/api";
 import type { TFileMetadata } from "@/shared/hooks";
+import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
-import { mapOperatorDocumentsToFrontend } from "../converters";
-import type { TOperatorDocumentBackend } from "../types";
+import {
+	mapOperatorDocumentsPaginatedToFrontend,
+	mapOperatorDocumentsQueryToBackend,
+	mapOperatorDocumentsToFrontend
+} from "../converters";
+import type {
+	TOperatorDocumentBackend,
+	TOperatorDocumentsBackendResponse
+} from "../types";
 
 export const operatorBusinessDocumentsApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		getOperatorBusinessDocuments: builder.query<TFileMetadata[], void>({
-			query: () => ({
-				...OPERATOR_DOCUMENTS_PATHS.listFiles
+		getOperatorBusinessDocuments: builder.query<
+			IPaginationResponse<TFileMetadata>,
+			IPaginationRequest
+		>({
+			query: (filters) => ({
+				...OPERATOR_DOCUMENTS_PATHS.listFiles,
+				params: mapOperatorDocumentsQueryToBackend(filters)
 			}),
-			transformResponse: (response: TOperatorDocumentBackend[]) =>
-				mapOperatorDocumentsToFrontend(response),
+			transformResponse: (response: TOperatorDocumentsBackendResponse) =>
+				mapOperatorDocumentsPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.BUSINESS]
 		}),
 		uploadOperatorBusinessDocument: builder.mutation<

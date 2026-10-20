@@ -1,7 +1,13 @@
 import { format } from "date-fns";
 
+import { TEMP_LIST_TOTAL } from "@/shared/config";
+import type { IPaginationResponse } from "@/shared/types";
+
 import type {
+	IListSeasonalityArgs,
 	ISeasonality,
+	TListSeasonalityBackendQuery,
+	TListSeasonalityBackendResponse,
 	TSeasonalityCommissionBackend,
 	TSeasonalityCommissionCreateBackend
 } from "../types";
@@ -21,4 +27,18 @@ export const mapSeasonalityToFrontend = (
 	commission: backend.commission,
 	from: new Date(backend.valid_from),
 	to: new Date(backend.valid_until)
+});
+
+export const mapSeasonalityQueryToBackend = (
+	args: IListSeasonalityArgs
+): TListSeasonalityBackendQuery => ({
+	...(args.page > 1 && { skip: (args.page - 1) * args.limit }),
+	...(args.limit && { limit: args.limit })
+});
+
+export const mapSeasonalityPaginatedToFrontend = (
+	response: TListSeasonalityBackendResponse
+): IPaginationResponse<ISeasonality> => ({
+	data: response.map(mapSeasonalityToFrontend),
+	total: TEMP_LIST_TOTAL
 });

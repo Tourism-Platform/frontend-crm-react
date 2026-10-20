@@ -1,10 +1,9 @@
-import { ENUM_PATH } from "@/shared/config";
+import { ENUM_PATH, INTERSECTION_ELEMENTS } from "@/shared/config";
 
 import { ENUM_CATALOG_QUERY_PARAM } from "../config/catalog-query.config";
 import type { TCatalogUrlQuery } from "../types/catalog-query.types";
 
 const DEFAULT_PAGE = 1;
-const DEFAULT_LIMIT = 10;
 
 const appendArray = (
 	searchParams: URLSearchParams,
@@ -61,7 +60,7 @@ export const buildCatalogQueryString = (query: TCatalogUrlQuery): string => {
 		searchParams.set(ENUM_CATALOG_QUERY_PARAM.PAGE, String(query.page));
 	}
 
-	if (query.limit && query.limit !== DEFAULT_LIMIT) {
+	if (query.limit && query.limit !== INTERSECTION_ELEMENTS.CATALOG_TOURS) {
 		searchParams.set(ENUM_CATALOG_QUERY_PARAM.LIMIT, String(query.limit));
 	}
 

@@ -1,9 +1,11 @@
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
+
 import type { ICatalogTourFilters } from "@/entities/tour";
 
 export const DEFAULT_CATALOG_FILTERS: ICatalogTourFilters = {
-	search: "",
 	page: 1,
-	limit: 10,
+	limit: INTERSECTION_ELEMENTS.CATALOG_TOURS,
+	search: "",
 	filters: {
 		country: [],
 		city: [],

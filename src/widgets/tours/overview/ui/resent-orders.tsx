@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Card,
@@ -28,10 +29,10 @@ const LastOrdersBase: FC = () => {
 
 	const { watch } = useForm<IBookingOrderFilters>({
 		defaultValues: {
-			tourId,
-			search: "",
 			page: 1,
-			limit: 5
+			limit: INTERSECTION_ELEMENTS.TOUR_RECENT_ORDERS,
+			tourId,
+			search: ""
 		}
 	});
 

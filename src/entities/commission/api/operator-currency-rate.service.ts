@@ -1,9 +1,10 @@
 import { ENUM_API_TAGS, OPERATOR_FX_RATE_PATHS } from "@/shared/api";
-import type { IPaginationResponse } from "@/shared/types";
+import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapOperatorCurrencyRateFiltersToBackend,
 	mapOperatorCurrencyRateListToFrontend,
 	mapOperatorCurrencyRateToBackend,
 	mapOperatorCurrencyRateToFrontend
@@ -20,10 +21,11 @@ export const operatorCurrencyRateApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getOperatorCurrencyRates: builder.query<
 			IPaginationResponse<IOperatorCurrencyRate>,
-			void
+			IPaginationRequest
 		>({
-			query: () => ({
-				...OPERATOR_FX_RATE_PATHS.listFxRates
+			query: (filters) => ({
+				...OPERATOR_FX_RATE_PATHS.listFxRates,
+				params: mapOperatorCurrencyRateFiltersToBackend(filters)
 			}),
 			transformResponse: (response: TOperatorCurrencyRateResponse) =>
 				mapOperatorCurrencyRateListToFrontend(response),

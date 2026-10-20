@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -20,18 +21,16 @@ import { CreateEventTemplate } from "@/features/library";
 
 import { COLUMNS } from "../model";
 
-const DEFAULT_FILTERS: IEventLibraryFilters = {
-	search: "",
-	status: [],
-	page: 1,
-	limit: 10
-};
-
 const EventTemplatesBase: FC = () => {
 	const { t } = useTranslation("event_templates_page");
 
 	const { watch, setValue } = useForm<IEventLibraryFilters>({
-		defaultValues: DEFAULT_FILTERS
+		defaultValues: {
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.EVENT_TEMPLATES,
+			search: "",
+			status: []
+		}
 	});
 
 	const filters = watch();

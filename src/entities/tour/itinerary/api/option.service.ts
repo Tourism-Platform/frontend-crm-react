@@ -1,13 +1,17 @@
 import { ENUM_API_TAGS, TOUR_OPTION_PATHS } from "@/shared/api";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
 	mapOptionCreateToBackend,
 	mapOptionToFrontend,
-	mapOptionUpdateToBackend
+	mapOptionUpdateToBackend,
+	mapTourOptionsPaginatedToFrontend,
+	mapTourOptionsQueryToBackend
 } from "../converters";
 import type {
+	IListTourOptionsArgs,
 	IOption,
 	IOptionFormPayload,
 	TCreateTourOptionBackendResponce,
@@ -16,13 +20,17 @@ import type {
 
 export const tourOptionApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		listAllTourOptions: builder.query<IOption[], string>({
-			query: (tourId) => ({
-				...TOUR_OPTION_PATHS.listAllTourOptions(tourId)
+		listAllTourOptions: builder.query<
+			IPaginationResponse<IOption>,
+			IListTourOptionsArgs
+		>({
+			query: (args) => ({
+				...TOUR_OPTION_PATHS.listAllTourOptions(args.tourId),
+				params: mapTourOptionsQueryToBackend(args)
 			}),
 			transformResponse: (response: TListAllTourOptionsBackendResponce) =>
-				response.map(mapOptionToFrontend),
-			providesTags: (_result, _error, tourId) => [
+				mapTourOptionsPaginatedToFrontend(response),
+			providesTags: (_result, _error, { tourId }) => [
 				{ type: ENUM_API_TAGS.TOURS_OPTIONS, id: tourId }
 			]
 		}),

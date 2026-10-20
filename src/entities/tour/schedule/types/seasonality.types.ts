@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import type { IPaginationRequest } from "@/shared/types";
+
 import type { SEASONALITY_SCHEMA } from "../schema";
 
 export const ENUM_FORM_SEASONALITY = {
@@ -18,4 +20,8 @@ export interface ISeasonality {
 	commission: number;
 	from: Date;
 	to: Date;
+}
+
+export interface IListSeasonalityArgs extends IPaginationRequest {
+	tourId: string;
 }

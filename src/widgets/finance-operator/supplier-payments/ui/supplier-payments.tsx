@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -25,10 +26,10 @@ const SupplierPaymentsBase: FC = () => {
 	const { t: tCols } = useTranslation(["supplier_payments_page", "options"]);
 	const { watch, setValue } = useForm<ISupplierPaymentFilters>({
 		defaultValues: {
-			search: "",
-			status: [],
 			page: 1,
-			limit: 10
+			limit: INTERSECTION_ELEMENTS.SUPPLIER_PAYMENTS,
+			search: "",
+			status: []
 		}
 	});
 

@@ -1,4 +1,6 @@
 import type { MultiEventPubOutput } from "@/shared/api";
+import { TEMP_LIST_TOTAL } from "@/shared/config";
+import type { IPaginationResponse } from "@/shared/types";
 import { formatToDollars } from "@/shared/utils";
 
 import {
@@ -11,9 +13,12 @@ import type {
 	IOptionDetail,
 	IOptionEvent,
 	IPreviewOptionCard,
+	IPreviewOptionsListArgs,
 	ISubOption,
 	TOptionDetailBackend,
-	TPreviewOptionListItemBackend
+	TPreviewOptionListItemBackend,
+	TPreviewOptionsListBackendQuery,
+	TPreviewOptionsListBackendResponse
 } from "../types";
 import {
 	ENUM_PREVIEW_OPTION_EVENT,
@@ -130,10 +135,19 @@ const mapPreviewOptionPreviewToFrontend = (
 		: ""
 });
 
-export const mapPreviewOptionsListToFrontend = (
-	backend?: TPreviewOptionListItemBackend[] | null
-): IPreviewOptionCard[] =>
-	(backend ?? []).map(mapPreviewOptionPreviewToFrontend);
+export const mapPreviewOptionsQueryToBackend = (
+	args: IPreviewOptionsListArgs
+): TPreviewOptionsListBackendQuery => ({
+	...(args.page > 1 && { skip: (args.page - 1) * args.limit }),
+	...(args.limit && { limit: args.limit })
+});
+
+export const mapPreviewOptionsPaginatedToFrontend = (
+	response: TPreviewOptionsListBackendResponse
+): IPaginationResponse<IPreviewOptionCard> => ({
+	data: response.map(mapPreviewOptionPreviewToFrontend),
+	total: TEMP_LIST_TOTAL
+});
 
 export const mapPreviewOptionToFrontend = (
 	backend: TOptionDetailBackend,

@@ -1,15 +1,19 @@
 import { ENUM_API_TAGS, TOUR_LANDING_PAGE_PATHS } from "@/shared/api";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import { getTourStatsTag } from "../../tour/constants/tour-stats-tag";
 import {
+	mapLandingImagesPaginatedToFrontend,
+	mapLandingImagesQueryToBackend,
 	mapLandingImagesToFrontend,
 	mapLandingToFrontend,
 	mapUpdateLandingToBackend
 } from "../converters";
 import type {
 	ILandingImageSchema,
+	IListLandingImagesArgs,
 	TGetLandingBackendResponse,
 	TLandingSchema,
 	TListLandingImagesBackendResponse,
@@ -42,12 +46,16 @@ export const tourLandingApi = authApi.injectEndpoints({
 				ENUM_API_TAGS.TOURS
 			]
 		}),
-		listLandingImages: builder.query<ILandingImageSchema[], string>({
-			query: (tourId) => ({
-				...TOUR_LANDING_PAGE_PATHS.listLandingImages(tourId)
+		listLandingImages: builder.query<
+			IPaginationResponse<ILandingImageSchema>,
+			IListLandingImagesArgs
+		>({
+			query: (args) => ({
+				...TOUR_LANDING_PAGE_PATHS.listLandingImages(args.tourId),
+				params: mapLandingImagesQueryToBackend(args)
 			}),
 			transformResponse: (response: TListLandingImagesBackendResponse) =>
-				mapLandingImagesToFrontend(response),
+				mapLandingImagesPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.LANDING_IMAGES]
 		}),
 		uploadLandingImages: builder.mutation<
