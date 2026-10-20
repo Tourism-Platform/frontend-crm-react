@@ -19,7 +19,6 @@ import {
 	ENUM_TOUR_TYPES,
 	TOUR_SETTINGS_GENERAL_FORM_SCHEMA,
 	type TTourSettingsGeneralFormSchema,
-	TourLanguagesField,
 	useGetTourGeneralQuery,
 	useUpdateTourGeneralMutation
 } from "@/entities/tour";
@@ -200,11 +199,6 @@ const GeneralInfoBase: FC = () => {
 								);
 							}
 						)}
-						<TourLanguagesField
-							control={form.control}
-							name={ENUM_TOUR_SETTINGS_GENERAL_FORM.LANGUAGES}
-							label={t("general.form.fields.languages.label")}
-						/>
 					</div>
 					<div className="flex justify-end mt-6">
 						<LoaderButton

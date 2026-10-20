@@ -3,6 +3,7 @@ import { useValueToTranslateLabel } from "@/shared/utils";
 import {
 	ENUM_TOUR_SETTINGS_GENERAL_FORM,
 	type ITourGeneral,
+	LANGUAGES_LABELS,
 	TOUR_CATEGORY_LABELS,
 	TOUR_TYPE_LABELS
 } from "@/entities/tour";
@@ -69,6 +70,15 @@ export const GENERAL_FORM_LIST = ({
 		key: ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(TOUR_CATEGORY_LABELS),
+		className: "col-span-2",
+		badgeVariant: "secondary"
+	},
+	{
+		label: "general.form.fields.languages.label",
+		placeholder: "general.form.fields.languages.placeholder",
+		key: ENUM_TOUR_SETTINGS_GENERAL_FORM.LANGUAGES,
+		fieldType: "multiselect",
+		options: useValueToTranslateLabel(LANGUAGES_LABELS),
 		className: "col-span-2",
 		badgeVariant: "secondary"
 	}

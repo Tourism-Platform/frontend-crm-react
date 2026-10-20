@@ -27,7 +27,6 @@ import {
 	ENUM_TOUR_TYPES,
 	type TCreateTourSchema,
 	TOUR_CREATE_SCHEMA,
-	TourLanguagesField,
 	useCreateTourMutation
 } from "@/entities/tour";
 import {
@@ -191,11 +190,6 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 									/>
 								);
 							})}
-							<TourLanguagesField
-								control={form.control}
-								name={ENUM_FORM.LANGUAGES}
-								label={t("create.form.fields.languages.label")}
-							/>
 						</div>
 						<DialogFooter>
 							<DialogClose asChild onClick={() => setOpen(false)}>

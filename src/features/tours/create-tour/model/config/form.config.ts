@@ -2,6 +2,7 @@ import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
 	ENUM_TOUR_CREATE_FORM as ENUM_FORM,
+	LANGUAGES_LABELS,
 	type TForm,
 	TOUR_CATEGORY_LABELS,
 	TOUR_TYPE_LABELS
@@ -61,6 +62,15 @@ export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 		key: ENUM_FORM.TOUR_CATEGORIES,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(TOUR_CATEGORY_LABELS),
+		className: "col-span-2",
+		badgeVariant: "secondary"
+	},
+	{
+		label: "create.form.fields.languages.label",
+		placeholder: "create.form.fields.languages.placeholder",
+		key: ENUM_FORM.LANGUAGES,
+		fieldType: "multiselect",
+		options: useValueToTranslateLabel(LANGUAGES_LABELS),
 		className: "col-span-2",
 		badgeVariant: "secondary"
 	}
