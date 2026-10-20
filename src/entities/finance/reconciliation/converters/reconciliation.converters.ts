@@ -1,5 +1,5 @@
 import { BOOKING_RECONCILIATION_PATHS } from "@/shared/api/generated/paths/booking-reconciliation.paths";
-import { parseDecimalSafe } from "@/shared/utils";
+import { formatDateToISO, parseDecimalSafe } from "@/shared/utils";
 
 import { orderStatusMapper } from "@/entities/booking/order/converters/order-status.convert";
 
@@ -78,7 +78,16 @@ export const mapReconciliationFiltersToBackend = (
 			filters.status.length > 0
 				? orderStatusMapper.to(filters.status[0])
 				: undefined,
-		...(search ? { q: search } : {})
+		...(search ? { q: search } : {}),
+		...(filters.tourId && { tour_id: filters.tourId }),
+		...(filters.dateRange?.from && {
+			date_from: formatDateToISO(filters.dateRange.from)
+		}),
+		...(filters.dateRange?.to && {
+			date_to: formatDateToISO(filters.dateRange.to)
+		}),
+		...(filters.outstandingOnly && { outstanding_only: true }),
+		...(filters.payableOnly && { payable_only: true })
 	};
 };
 

@@ -1,4 +1,5 @@
 import type { ENUM_TOUR_STATUS_TYPE } from "./tour-status.types";
+import type { ITourCard } from "./tour.interface";
 
 export interface ITourFilters {
 	search: string;
@@ -6,3 +7,8 @@ export interface ITourFilters {
 	page: number;
 	limit: number;
 }
+
+export type TTourSelectOption = {
+	label: string;
+	value: string;
+} & ITourCard;

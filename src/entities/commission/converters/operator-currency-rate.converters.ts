@@ -1,8 +1,9 @@
 import { TEMP_LIST_TOTAL } from "@/shared/config";
-import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
+import type { IPaginationResponse } from "@/shared/types";
 
 import type {
 	IOperatorCurrencyRate,
+	IOperatorCurrencyRateFilters,
 	TOperatorCurrencyRateCreateSchema
 } from "../types";
 import type {
@@ -25,10 +26,16 @@ export const mapOperatorCurrencyRateToFrontend = (
 });
 
 export const mapOperatorCurrencyRateFiltersToBackend = (
-	filters: IPaginationRequest
+	filters: IOperatorCurrencyRateFilters
 ): TOperatorCurrencyRateBackendQuery => ({
 	...(filters.page > 1 && { skip: (filters.page - 1) * filters.limit }),
-	...(filters.limit && { limit: filters.limit })
+	...(filters.limit && { limit: filters.limit }),
+	...(filters.fromCurrency && {
+		from_currency: currencyConverter.to(filters.fromCurrency)
+	}),
+	...(filters.toCurrency && {
+		to_currency: currencyConverter.to(filters.toCurrency)
+	})
 });
 
 export const mapOperatorCurrencyRateListToFrontend = (

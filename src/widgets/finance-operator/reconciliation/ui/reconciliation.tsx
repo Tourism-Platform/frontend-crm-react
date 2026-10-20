@@ -1,27 +1,35 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useCallback, useMemo } from "react";
+import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	CustomField,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import { type ENUM_ORDER_STATUS_TYPE } from "@/entities/booking/order/types/order-status.types";
 import {
+	ENUM_RECONCILIATION_FILTER,
 	type IReconciliationFilters,
 	RECONCILIATION_STATUS_LABELS,
 	useGetReconciliationsQuery
 } from "@/entities/finance";
+import { useTourSearchOptions } from "@/entities/tour";
 
-import { COLUMNS } from "../model";
+import { COLUMNS, RECONCILIATION_FILTERS_LIST } from "../model";
 
 import { ReconciliationHeader } from "./reconciliation-header";
 
 const ReconciliationBase: FC = () => {
 	const { t } = useTranslation(["reconciliation_page", "options"]);
-	const { watch, setValue } = useForm<IReconciliationFilters>({
+	const { watch, setValue, control } = useForm<IReconciliationFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.RECONCILIATION,
@@ -31,6 +39,58 @@ const ReconciliationBase: FC = () => {
 	});
 
 	const filters = watch();
+	const { tourId, dateRange, outstandingOnly, payableOnly } = filters;
+	const tours = useTourSearchOptions();
+
+	// Новый фильтр — снова с первой страницы
+	useEffect(() => {
+		setValue("page", 1);
+	}, [tourId, dateRange, outstandingOnly, payableOnly, setValue]);
+
+	const handleResetFilters = useCallback(() => {
+		setValue(ENUM_RECONCILIATION_FILTER.TOUR_ID, undefined);
+		setValue(ENUM_RECONCILIATION_FILTER.DATE_RANGE, undefined);
+		setValue(ENUM_RECONCILIATION_FILTER.OUTSTANDING_ONLY, false);
+		setValue(ENUM_RECONCILIATION_FILTER.PAYABLE_ONLY, false);
+	}, [setValue]);
+
+	const filtersJsx = (
+		<div className="flex flex-wrap items-end gap-4">
+			<CustomField
+				fieldType="asyncSelect"
+				control={control}
+				name={ENUM_RECONCILIATION_FILTER.TOUR_ID}
+				t={t}
+				label="filters.tour.label"
+				placeholder="filters.tour.placeholder"
+				emptyText="filters.tour.empty"
+				className="w-72"
+				options={tours.options}
+				onQueryChange={tours.setQuery}
+				onLoadMore={tours.loadMore}
+				hasMore={tours.hasMore}
+				isLoading={tours.isLoading}
+				isLoadingMore={tours.isLoadingMore}
+			/>
+			{RECONCILIATION_FILTERS_LIST.map(({ key, ...item }) => (
+				<CustomField
+					key={key}
+					control={control}
+					name={key}
+					t={t}
+					{...item}
+				/>
+			))}
+			<Button
+				type="button"
+				variant="outline"
+				className="mb-5"
+				onClick={handleResetFilters}
+			>
+				{t("filters.reset")}
+			</Button>
+		</div>
+	);
 
 	const {
 		data: reconciliationData,
@@ -112,6 +172,7 @@ const ReconciliationBase: FC = () => {
 						status={filters.status}
 						onStatusChange={handleStatusChange}
 						statusOptions={statusOptions}
+						topChildren={filtersJsx}
 					/>
 				</CardContent>
 			</Card>

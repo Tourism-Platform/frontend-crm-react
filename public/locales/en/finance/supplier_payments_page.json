@@ -69,5 +69,13 @@
 		"load": {
 			"error": "Failed to load payments"
 		}
+	},
+	"filters": {
+		"supplier": {
+			"label": "Supplier",
+			"placeholder": "Any supplier",
+			"empty": "No suppliers found"
+		},
+		"reset": "Reset filters"
 	}
 }

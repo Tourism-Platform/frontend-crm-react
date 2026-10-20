@@ -1,23 +1,29 @@
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
-import { type FC, useCallback, useMemo } from "react";
+import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
-import type { IPaginationRequest } from "@/shared/types";
-import { withErrorBoundary } from "@/shared/ui";
+import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
-import { useGetOperatorCurrencyRatesQuery } from "@/entities/commission";
+import {
+	ENUM_OPERATOR_CURRENCY_RATE_FILTER,
+	type IOperatorCurrencyRateFilters,
+	useGetOperatorCurrencyRatesQuery
+} from "@/entities/commission";
 
 import { NewCurrencyRate } from "@/features/settings";
 
-import { OPERATOR_CURRENCY_RATE_COLUMNS } from "../../model";
+import {
+	CURRENCY_RATE_FILTERS_LIST,
+	OPERATOR_CURRENCY_RATE_COLUMNS
+} from "../../model";
 
 const CurrencyBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page_operator");
 
-	const { watch, setValue } = useForm<IPaginationRequest>({
+	const { watch, setValue, control } = useForm<IOperatorCurrencyRateFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.OPERATOR_FX_RATES
@@ -25,6 +31,17 @@ const CurrencyBase: FC = () => {
 	});
 
 	const filters = watch();
+	const { fromCurrency, toCurrency } = filters;
+
+	// Новый фильтр — снова с первой страницы
+	useEffect(() => {
+		setValue("page", 1);
+	}, [fromCurrency, toCurrency, setValue]);
+
+	const handleResetFilters = useCallback(() => {
+		setValue(ENUM_OPERATOR_CURRENCY_RATE_FILTER.FROM_CURRENCY, undefined);
+		setValue(ENUM_OPERATOR_CURRENCY_RATE_FILTER.TO_CURRENCY, undefined);
+	}, [setValue]);
 
 	const {
 		data: currencyRates,
@@ -75,9 +92,29 @@ const CurrencyBase: FC = () => {
 				<p className="text-sm text-muted-foreground">
 					{t("currency.currency_rate.description")}
 				</p>
+				<div className="flex flex-wrap items-end gap-4">
+					{CURRENCY_RATE_FILTERS_LIST.map(({ key, ...item }) => (
+						<CustomField
+							key={key}
+							control={control}
+							name={key}
+							t={t}
+							className="w-48"
+							{...item}
+						/>
+					))}
+					<Button
+						type="button"
+						variant="outline"
+						className="mb-5"
+						onClick={handleResetFilters}
+					>
+						{t("currency.filters.reset")}
+					</Button>
+				</div>
 			</div>
 		),
-		[t]
+		[t, control, handleResetFilters]
 	);
 
 	return (

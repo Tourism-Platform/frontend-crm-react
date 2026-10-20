@@ -1,6 +1,6 @@
 import { CLIENT_PAYMENT_PATHS, type ClientPaymentFile } from "@/shared/api";
 import type { TFileMetadata } from "@/shared/hooks";
-import { formatDate } from "@/shared/utils";
+import { formatDate, formatDateToISO } from "@/shared/utils";
 
 import { currencyConverter } from "@/entities/commission";
 
@@ -88,6 +88,13 @@ export const mapPaymentFiltersToBackend = (
 			filters.status.length > 0
 				? paymentStatusConverter.to(filters.status[0])
 				: undefined,
-		...(search ? { q: search } : {})
+		...(search ? { q: search } : {}),
+		...(filters.bookingId && { booking_id: filters.bookingId }),
+		...(filters.createdRange?.from && {
+			created_from: formatDateToISO(filters.createdRange.from)
+		}),
+		...(filters.createdRange?.to && {
+			created_to: formatDateToISO(filters.createdRange.to)
+		})
 	};
 };

@@ -185,5 +185,17 @@
 		"load": {
 			"error": "Failed to load payments"
 		}
+	},
+	"filters": {
+		"booking": {
+			"label": "Booking",
+			"placeholder": "Any booking",
+			"empty": "No bookings found"
+		},
+		"created": {
+			"label": "Created",
+			"placeholder": "Select period"
+		},
+		"reset": "Reset filters"
 	}
 }

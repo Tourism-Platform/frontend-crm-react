@@ -213,6 +213,17 @@
 		}
 	},
 	"currency": {
+		"filters": {
+			"from_currency": {
+				"label": "From currency",
+				"placeholder": "Any currency"
+			},
+			"to_currency": {
+				"label": "To currency",
+				"placeholder": "Any currency"
+			},
+			"reset": "Reset filters"
+		},
 		"commission_type": {
 			"title": "Default Currency rate",
 			"description": "Create global commission types for agents to select from when logging bookings.",

@@ -22,5 +22,23 @@
 		"menu": {
 			"open": "Open"
 		}
+	},
+	"filters": {
+		"tour": {
+			"label": "Tour",
+			"placeholder": "Any tour",
+			"empty": "No tours found"
+		},
+		"period": {
+			"label": "Period",
+			"placeholder": "Select period"
+		},
+		"outstanding_only": {
+			"label": "Only with client debt"
+		},
+		"payable_only": {
+			"label": "Only payable to suppliers"
+		},
+		"reset": "Reset filters"
 	}
 }

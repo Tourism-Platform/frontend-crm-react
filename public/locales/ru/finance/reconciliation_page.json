@@ -22,5 +22,23 @@
 		"menu": {
 			"open": "Открыть"
 		}
+	},
+	"filters": {
+		"tour": {
+			"label": "Тур",
+			"placeholder": "Любой тур",
+			"empty": "Туры не найдены"
+		},
+		"period": {
+			"label": "Период",
+			"placeholder": "Выберите период"
+		},
+		"outstanding_only": {
+			"label": "Только с долгом клиента"
+		},
+		"payable_only": {
+			"label": "Только к оплате поставщикам"
+		},
+		"reset": "Сбросить фильтры"
 	}
 }

@@ -1,5 +1,5 @@
 import { ENUM_API_TAGS, OPERATOR_FX_RATE_PATHS } from "@/shared/api";
-import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
+import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -11,6 +11,7 @@ import {
 } from "../converters/operator-currency-rate.converters";
 import type {
 	IOperatorCurrencyRate,
+	IOperatorCurrencyRateFilters,
 	TOperatorCurrencyRateCreateSchema,
 	TOperatorCurrencyRateResponse,
 	TOperatorCurrencyRateUpdateSchema
@@ -21,7 +22,7 @@ export const operatorCurrencyRateApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getOperatorCurrencyRates: builder.query<
 			IPaginationResponse<IOperatorCurrencyRate>,
-			IPaginationRequest
+			IOperatorCurrencyRateFilters
 		>({
 			query: (filters) => ({
 				...OPERATOR_FX_RATE_PATHS.listFxRates,

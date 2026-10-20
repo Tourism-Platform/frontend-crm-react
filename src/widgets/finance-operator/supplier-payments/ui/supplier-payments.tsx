@@ -6,16 +6,29 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	CustomField,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
+	ENUM_SUPPLIER_PAYMENT_FILTER,
 	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
 	type ISupplierPaymentFilters,
 	SUPPLIER_PAYMENT_STATUS_LABELS,
 	useGetSupplierPaymentsQuery
 } from "@/entities/finance";
+import {
+	SupplierOptionCard,
+	SupplierOptionCardSkeleton,
+	type TSupplierSelectOption,
+	useSupplierSearchOptions
+} from "@/entities/supplier";
 
 import { COLUMNS } from "../model";
 
@@ -24,7 +37,7 @@ import { SupplierPaymentsHeader } from "./supplier-payments-header";
 const SupplierPaymentsBase: FC = () => {
 	const { t } = useTranslation("supplier_payments_page");
 	const { t: tCols } = useTranslation(["supplier_payments_page", "options"]);
-	const { watch, setValue } = useForm<ISupplierPaymentFilters>({
+	const { watch, setValue, control } = useForm<ISupplierPaymentFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.SUPPLIER_PAYMENTS,
@@ -34,6 +47,52 @@ const SupplierPaymentsBase: FC = () => {
 	});
 
 	const filters = watch();
+	const { supplierId } = filters;
+	const suppliers = useSupplierSearchOptions({});
+
+	// Новый фильтр — снова с первой страницы
+	useEffect(() => {
+		setValue("page", 1);
+	}, [supplierId, setValue]);
+
+	const handleResetFilters = useCallback(() => {
+		setValue(ENUM_SUPPLIER_PAYMENT_FILTER.SUPPLIER_ID, undefined);
+	}, [setValue]);
+
+	const filtersJsx = (
+		<div className="flex flex-wrap items-end gap-4">
+			<CustomField
+				fieldType="asyncSelect"
+				control={control}
+				name={ENUM_SUPPLIER_PAYMENT_FILTER.SUPPLIER_ID}
+				t={t}
+				label="filters.supplier.label"
+				placeholder="filters.supplier.placeholder"
+				emptyText="filters.supplier.empty"
+				className="w-72"
+				options={suppliers.options}
+				onQueryChange={suppliers.setQuery}
+				onLoadMore={suppliers.loadMore}
+				hasMore={suppliers.hasMore}
+				isLoading={suppliers.isLoading}
+				isLoadingMore={suppliers.isLoadingMore}
+				renderOption={(option) => (
+					<SupplierOptionCard
+						option={option as TSupplierSelectOption}
+					/>
+				)}
+				renderSkeleton={() => <SupplierOptionCardSkeleton />}
+			/>
+			<Button
+				type="button"
+				variant="outline"
+				className="mb-5"
+				onClick={handleResetFilters}
+			>
+				{t("filters.reset")}
+			</Button>
+		</div>
+	);
 
 	const {
 		data: paymentsData,
@@ -118,6 +177,7 @@ const SupplierPaymentsBase: FC = () => {
 						status={filters.status}
 						onStatusChange={handleStatusChange}
 						statusOptions={statusOptions}
+						topChildren={filtersJsx}
 					/>
 				</CardContent>
 			</Card>

@@ -184,6 +184,7 @@ export const mapSupplierPaymentFiltersToBackend = (
 				? supplierPaymentStatusConverter.to(filters.status[0])
 				: undefined,
 		...(filters.bookingId ? { booking_id: filters.bookingId } : {}),
+		...(filters.supplierId && { supplier_id: filters.supplierId }),
 		...(search ? { q: search } : {})
 	};
 };

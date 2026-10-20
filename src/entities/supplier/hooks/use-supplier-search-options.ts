@@ -13,7 +13,8 @@ const DEFAULT_LIMIT = 20;
 const DEFAULT_DEBOUNCE_MS = 300;
 
 type TUseSupplierSearchOptionsParams = {
-	supplierTyp: ENUM_SUPPLIER_TYPE_TYPE;
+	/** Без типа — поиск по всем поставщикам */
+	supplierTyp?: ENUM_SUPPLIER_TYPE_TYPE;
 	limit?: number;
 	debounceMs?: number;
 	enabled?: boolean;
