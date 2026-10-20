@@ -4,6 +4,10 @@ export type TGetPricingBreakdownBackendResponse = ReturnType<
 	typeof TOUR_OPTION_PATHS.getPricingBreakdown
 >["_types"]["response"];
 
+export type TGetPricingBreakdownBackendQuery = ReturnType<
+	typeof TOUR_OPTION_PATHS.getPricingBreakdown
+>["_types"]["query"];
+
 export type TTourMinMaxCostBackend =
 	TGetPricingBreakdownBackendResponse["estimated_cost"];
 

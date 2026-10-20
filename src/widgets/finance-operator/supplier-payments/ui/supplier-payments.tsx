@@ -11,6 +11,7 @@ import {
 	Card,
 	CardContent,
 	CustomField,
+	Form,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -37,7 +38,7 @@ import { SupplierPaymentsHeader } from "./supplier-payments-header";
 const SupplierPaymentsBase: FC = () => {
 	const { t } = useTranslation("supplier_payments_page");
 	const { t: tCols } = useTranslation(["supplier_payments_page", "options"]);
-	const { watch, setValue, control } = useForm<ISupplierPaymentFilters>({
+	const form = useForm<ISupplierPaymentFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.SUPPLIER_PAYMENTS,
@@ -45,6 +46,7 @@ const SupplierPaymentsBase: FC = () => {
 			status: []
 		}
 	});
+	const { watch, setValue, control } = form;
 
 	const filters = watch();
 	const { supplierId } = filters;
@@ -60,38 +62,40 @@ const SupplierPaymentsBase: FC = () => {
 	}, [setValue]);
 
 	const filtersJsx = (
-		<div className="flex flex-wrap items-end gap-4">
-			<CustomField
-				fieldType="asyncSelect"
-				control={control}
-				name={ENUM_SUPPLIER_PAYMENT_FILTER.SUPPLIER_ID}
-				t={t}
-				label="filters.supplier.label"
-				placeholder="filters.supplier.placeholder"
-				emptyText="filters.supplier.empty"
-				className="w-72"
-				options={suppliers.options}
-				onQueryChange={suppliers.setQuery}
-				onLoadMore={suppliers.loadMore}
-				hasMore={suppliers.hasMore}
-				isLoading={suppliers.isLoading}
-				isLoadingMore={suppliers.isLoadingMore}
-				renderOption={(option) => (
-					<SupplierOptionCard
-						option={option as TSupplierSelectOption}
-					/>
-				)}
-				renderSkeleton={() => <SupplierOptionCardSkeleton />}
-			/>
-			<Button
-				type="button"
-				variant="outline"
-				className="mb-5"
-				onClick={handleResetFilters}
-			>
-				{t("filters.reset")}
-			</Button>
-		</div>
+		<Form {...form}>
+			<div className="flex flex-wrap items-end gap-4">
+				<CustomField
+					fieldType="asyncSelect"
+					control={control}
+					name={ENUM_SUPPLIER_PAYMENT_FILTER.SUPPLIER_ID}
+					t={t}
+					label="filters.supplier.label"
+					placeholder="filters.supplier.placeholder"
+					emptyText="filters.supplier.empty"
+					className="w-72"
+					options={suppliers.options}
+					onQueryChange={suppliers.setQuery}
+					onLoadMore={suppliers.loadMore}
+					hasMore={suppliers.hasMore}
+					isLoading={suppliers.isLoading}
+					isLoadingMore={suppliers.isLoadingMore}
+					renderOption={(option) => (
+						<SupplierOptionCard
+							option={option as TSupplierSelectOption}
+						/>
+					)}
+					renderSkeleton={() => <SupplierOptionCardSkeleton />}
+				/>
+				<Button
+					type="button"
+					variant="outline"
+					className="mb-5"
+					onClick={handleResetFilters}
+				>
+					{t("filters.reset")}
+				</Button>
+			</div>
+		</Form>
 	);
 
 	const {

@@ -145,5 +145,16 @@
 		"duration": "{{days}} {{daysUnit}} / {{nights}} {{nightsUnit}}",
 		"group": "{{min}}–{{max}}",
 		"age": "{{from}}–{{to}} y.o."
+	},
+	"filters": {
+		"sort": {
+			"label": "Sort",
+			"placeholder": "Default order"
+		},
+		"type": {
+			"label": "Tour type",
+			"placeholder": "Any type"
+		},
+		"reset": "Reset filters"
 	}
 }

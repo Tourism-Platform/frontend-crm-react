@@ -12,3 +12,4 @@ export * from "./recent-search.interface";
 export * from "./recent-search-backend.interface";
 export * from "./location-suggest.types";
 export * from "./catalog-query.types";
+export * from "./catalog-sort.types";

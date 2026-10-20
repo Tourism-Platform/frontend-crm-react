@@ -9,7 +9,9 @@ import type {
 import {
 	ENUM_EVENT,
 	ENUM_EVENT_BACKEND,
+	type IPricingBreakdownArgs,
 	type ITourPricingReview,
+	type TGetPricingBreakdownBackendQuery,
 	type TGetPricingBreakdownBackendResponse,
 	type TOperatorEventBackend,
 	type TPackageBillableBackend,
@@ -203,4 +205,12 @@ export const mapPricingBreakdownToFrontend = (
 			? mapPackageToReviewItem(item)
 			: mapIndividualBillToReviewItem(item)
 	)
+});
+
+export const mapPricingBreakdownQueryToBackend = (
+	args: IPricingBreakdownArgs
+): TGetPricingBreakdownBackendQuery => ({
+	...(args.currency && { currency: args.currency }),
+	...(args.date && { date: args.date }),
+	...(args.pax != null && args.pax > 0 && { pax: args.pax })
 });

@@ -16,6 +16,7 @@ import type {
 } from "../types";
 
 import { tourCategoriesMapper } from "./tour-categories.converters";
+import { MAP_TOUR_LIST_SORT } from "./tour-list-sort.converters";
 import { tourStatusMapper } from "./tour-status.converters";
 import { tourTypeMapper } from "./tour-type.converters";
 
@@ -115,5 +116,7 @@ export const mapTourFiltersToBackend = (
 	...(!!filters?.status?.length && {
 		status: tourStatusMapper.to(filters.status?.[0])
 	}),
-	...(!!filters?.search?.trim().length && { q: filters.search })
+	...(!!filters?.search?.trim().length && { q: filters.search }),
+	...(filters?.sort && MAP_TOUR_LIST_SORT[filters.sort]),
+	...(filters?.type && { typ: tourTypeMapper.to(filters.type) })
 });

@@ -1,10 +1,13 @@
-import type { Currency } from "@/shared/api";
 import { ENUM_API_TAGS, TOUR_OPTION_PATHS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
-import { mapPricingBreakdownToFrontend } from "../converters";
+import {
+	mapPricingBreakdownQueryToBackend,
+	mapPricingBreakdownToFrontend
+} from "../converters";
 import type {
+	IPricingBreakdownArgs,
 	ITourPricingReview,
 	TGetPricingBreakdownBackendResponse
 } from "../types";
@@ -13,11 +16,14 @@ export const tourPricingReviewApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		getPricingBreakdown: builder.query<
 			ITourPricingReview,
-			{ tourId: string; optionId: string; currency?: Currency }
+			IPricingBreakdownArgs
 		>({
-			query: ({ tourId, optionId, currency }) => ({
-				...TOUR_OPTION_PATHS.getPricingBreakdown(tourId, optionId),
-				params: currency ? { currency } : undefined
+			query: (args) => ({
+				...TOUR_OPTION_PATHS.getPricingBreakdown(
+					args.tourId,
+					args.optionId
+				),
+				params: mapPricingBreakdownQueryToBackend(args)
 			}),
 			transformResponse: (
 				response: TGetPricingBreakdownBackendResponse

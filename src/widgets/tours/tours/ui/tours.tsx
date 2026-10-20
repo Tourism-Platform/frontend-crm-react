@@ -6,11 +6,19 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import {
+	Button,
+	Card,
+	CardContent,
+	CustomField,
+	Form,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
+	ENUM_TOUR_FILTER,
 	ENUM_TOUR_STATUS,
 	type ENUM_TOUR_STATUS_TYPE,
 	type ITourFilters,
@@ -22,12 +30,12 @@ import {
 
 import { CreateTour } from "@/features/tours";
 
-import { COLUMNS } from "../model";
+import { COLUMNS, TOURS_FILTERS_LIST } from "../model";
 
 const ToursBase: FC = () => {
 	const { t } = useTranslation(["tours_page", "options"]);
 
-	const { watch, setValue } = useForm<ITourFilters>({
+	const form = useForm<ITourFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.TOURS,
@@ -35,8 +43,46 @@ const ToursBase: FC = () => {
 			status: [ENUM_TOUR_STATUS.ALL]
 		}
 	});
+	const { watch, setValue, control } = form;
 
 	const filters = watch();
+	const { sort, type } = filters;
+	const filtersList = TOURS_FILTERS_LIST();
+
+	// Новый фильтр или сортировка — снова с первой страницы
+	useEffect(() => {
+		setValue("page", 1);
+	}, [sort, type, setValue]);
+
+	const handleResetFilters = useCallback(() => {
+		setValue(ENUM_TOUR_FILTER.SORT, undefined);
+		setValue(ENUM_TOUR_FILTER.TYPE, undefined);
+	}, [setValue]);
+
+	const filtersJsx = (
+		<Form {...form}>
+			<div className="flex flex-wrap items-end gap-4">
+				{filtersList.map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={control}
+						name={key}
+						t={t}
+						className="w-60"
+						{...item}
+					/>
+				))}
+				<Button
+					type="button"
+					variant="outline"
+					className="mb-5"
+					onClick={handleResetFilters}
+				>
+					{t("filters.reset")}
+				</Button>
+			</div>
+		</Form>
+	);
 
 	const {
 		data: toursData,
@@ -148,6 +194,7 @@ const ToursBase: FC = () => {
 						onStatusTabChange={handleStatusTabChange}
 						showStatusTabsFilter={true}
 						actions={actionsJsx}
+						topChildren={filtersJsx}
 					/>
 				</CardContent>
 			</Card>

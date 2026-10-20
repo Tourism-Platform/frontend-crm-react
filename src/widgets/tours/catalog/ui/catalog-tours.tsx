@@ -19,6 +19,7 @@ const CatalogToursBase: FC = () => {
 		applyLocationBarSubmit,
 		page,
 		limit,
+		sort,
 		tours,
 		totalCount,
 		totalPages,
@@ -29,6 +30,7 @@ const CatalogToursBase: FC = () => {
 		setLocalSearch,
 		searchInputRef,
 		handleReset,
+		handleSortChange,
 		handlePrevPage,
 		handleNextPage,
 		similarParams
@@ -51,6 +53,8 @@ const CatalogToursBase: FC = () => {
 							localSearch={localSearch}
 							onLocalSearchChange={setLocalSearch}
 							searchInputRef={searchInputRef}
+							sort={sort}
+							onSortChange={handleSortChange}
 						/>
 						<CatalogToursList
 							viewMode={viewMode}

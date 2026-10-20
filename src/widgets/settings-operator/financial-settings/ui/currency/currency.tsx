@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
-import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
+import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import {
@@ -23,12 +23,13 @@ import {
 const CurrencyBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page_operator");
 
-	const { watch, setValue, control } = useForm<IOperatorCurrencyRateFilters>({
+	const form = useForm<IOperatorCurrencyRateFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.OPERATOR_FX_RATES
 		}
 	});
+	const { watch, setValue, control } = form;
 
 	const filters = watch();
 	const { fromCurrency, toCurrency } = filters;
@@ -92,29 +93,31 @@ const CurrencyBase: FC = () => {
 				<p className="text-sm text-muted-foreground">
 					{t("currency.currency_rate.description")}
 				</p>
-				<div className="flex flex-wrap items-end gap-4">
-					{CURRENCY_RATE_FILTERS_LIST.map(({ key, ...item }) => (
-						<CustomField
-							key={key}
-							control={control}
-							name={key}
-							t={t}
-							className="w-48"
-							{...item}
-						/>
-					))}
-					<Button
-						type="button"
-						variant="outline"
-						className="mb-5"
-						onClick={handleResetFilters}
-					>
-						{t("currency.filters.reset")}
-					</Button>
-				</div>
+				<Form {...form}>
+					<div className="flex flex-wrap items-end gap-4">
+						{CURRENCY_RATE_FILTERS_LIST.map(({ key, ...item }) => (
+							<CustomField
+								key={key}
+								control={control}
+								name={key}
+								t={t}
+								className="w-48"
+								{...item}
+							/>
+						))}
+						<Button
+							type="button"
+							variant="outline"
+							className="mb-5"
+							onClick={handleResetFilters}
+						>
+							{t("currency.filters.reset")}
+						</Button>
+					</div>
+				</Form>
 			</div>
 		),
-		[t, control, handleResetFilters]
+		[t, form, control, handleResetFilters]
 	);
 
 	return (

@@ -64,6 +64,10 @@ export const buildCatalogQueryString = (query: TCatalogUrlQuery): string => {
 		searchParams.set(ENUM_CATALOG_QUERY_PARAM.LIMIT, String(query.limit));
 	}
 
+	if (query.sort) {
+		searchParams.set(ENUM_CATALOG_QUERY_PARAM.SORT, query.sort);
+	}
+
 	return searchParams.toString();
 };
 

@@ -16,3 +16,4 @@ export * from "./tour-category.types";
 export * from "./tour-status.types";
 export * from "./tour-create.types";
 export * from "./tour-translations.types";
+export * from "./tour-list-sort.types";

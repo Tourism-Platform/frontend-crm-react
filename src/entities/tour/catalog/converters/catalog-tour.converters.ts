@@ -20,6 +20,8 @@ import {
 	type TListCatalogToursBackendResponse
 } from "../types";
 
+import { catalogSortMapper } from "./catalog-sort.converters";
+
 const mapDurationFiltersToQuery = (
 	selected: ENUM_CATALOG_DURATION_TYPE[] | undefined
 ): Pick<
@@ -104,6 +106,7 @@ export const mapCatalogTourFiltersToPublicCatalogQuery = (
 	const query: TCatalogTourQueryBackend = {
 		...(filters?.page > 1 && { skip: (filters.page - 1) * filters?.limit }),
 		...(filters?.limit && { limit: filters.limit }),
+		...(filters?.sort && { sort: catalogSortMapper.to(filters.sort) }),
 		...(!!filters?.filters?.category?.length && {
 			categories: tourCategoriesMapper.toMany(filters.filters.category)
 		}),

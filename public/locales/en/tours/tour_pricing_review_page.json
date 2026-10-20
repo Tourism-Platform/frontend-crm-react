@@ -5,6 +5,16 @@
 		"events": "Events",
 		"packages": "Tour packages"
 	},
+	"params": {
+		"date": {
+			"label": "Tour date"
+		},
+		"pax": {
+			"label": "Number of people",
+			"placeholder": "e.g. 10"
+		},
+		"reset": "Reset"
+	},
 	"overview": {
 		"title": "Overview",
 		"revenue": "Planned revenue",

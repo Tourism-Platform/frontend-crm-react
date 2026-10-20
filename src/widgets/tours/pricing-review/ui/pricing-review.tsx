@@ -3,9 +3,12 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import {
+	Button,
+	CustomField,
 	CustomQueryTabs,
 	EmptyState,
 	ErrorState,
+	Form,
 	PageLoader,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -16,7 +19,11 @@ import {
 	PublishTourButton
 } from "@/features/tours";
 
-import { PRICING_REVIEW_TABLE_TABS, usePricingReview } from "../model";
+import {
+	PRICING_PARAMS_LIST,
+	PRICING_REVIEW_TABLE_TABS,
+	usePricingReview
+} from "../model";
 
 import { PricingReviewSummary } from "./pricing-review-summary";
 import { PricingReviewTabs } from "./pricing-review-tabs";
@@ -29,6 +36,8 @@ const PricingReviewBase: FC = () => {
 		options,
 		activeOptionId,
 		setActiveOptionId,
+		paramsForm,
+		handleResetParams,
 		pricingReview,
 		isOptionsLoading,
 		isOptionsNotFound,
@@ -104,6 +113,29 @@ const PricingReviewBase: FC = () => {
 				activeId={activeOptionId}
 				onChange={setActiveOptionId}
 			/>
+
+			<Form {...paramsForm}>
+				<div className="flex flex-wrap items-end gap-4">
+					{PRICING_PARAMS_LIST.map(({ key, ...item }) => (
+						<CustomField
+							key={key}
+							control={paramsForm.control}
+							name={key}
+							t={t}
+							className="w-60"
+							{...item}
+						/>
+					))}
+					<Button
+						type="button"
+						variant="outline"
+						className="mb-5"
+						onClick={handleResetParams}
+					>
+						{t("params.reset")}
+					</Button>
+				</div>
+			</Form>
 
 			<PricingReviewSummary summary={pricingReview.summary} />
 			<CustomQueryTabs

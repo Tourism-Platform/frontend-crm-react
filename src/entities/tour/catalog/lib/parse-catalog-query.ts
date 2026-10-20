@@ -45,6 +45,11 @@ export const parseCatalogQuery = (
 		query.limit = limit;
 	}
 
+	const sort = params.get(ENUM_CATALOG_QUERY_PARAM.SORT);
+	if (sort) {
+		query.sort = sort;
+	}
+
 	for (const key of CATALOG_QUERY_ARRAY_PARAMS) {
 		const values = params
 			.getAll(key)

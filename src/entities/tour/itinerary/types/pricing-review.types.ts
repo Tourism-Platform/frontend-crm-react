@@ -1,3 +1,5 @@
+import type { Currency } from "@/shared/api";
+
 import type {
 	ITourReviewItem,
 	ITourSummary
@@ -6,4 +8,23 @@ import type {
 export interface ITourPricingReview {
 	summary: ITourSummary;
 	items: ITourReviewItem[];
+}
+
+export const ENUM_PRICING_BREAKDOWN_PARAM = {
+	DATE: "date",
+	PAX: "pax"
+} as const;
+
+export type ENUM_PRICING_BREAKDOWN_PARAM_TYPE =
+	(typeof ENUM_PRICING_BREAKDOWN_PARAM)[keyof typeof ENUM_PRICING_BREAKDOWN_PARAM];
+
+export interface IPricingBreakdownParams {
+	date?: string | null;
+	pax?: number | null;
+}
+
+export interface IPricingBreakdownArgs extends IPricingBreakdownParams {
+	tourId: string;
+	optionId: string;
+	currency?: Currency;
 }

@@ -13,6 +13,7 @@ export type TCatalogUrlQuery = TCatalogLocationQuery & {
 	checkOut?: string;
 	page?: number;
 	limit?: number;
+	sort?: string;
 	duration?: string[];
 	category?: string[];
 	language?: string[];

@@ -58,5 +58,8 @@
 	"view": {
 		"grid": "Grid view",
 		"list": "List view"
+	},
+	"sort": {
+		"placeholder": "Sort by"
 	}
 }

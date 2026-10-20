@@ -81,6 +81,21 @@
 		}
 	},
 	"tour": {
+		"catalogSort": {
+			"price_asc": "Price: low to high",
+			"price_desc": "Price: high to low",
+			"duration_asc": "Duration: shortest first",
+			"duration_desc": "Duration: longest first"
+		},
+		"listSort": {
+			"created_desc": "Newest first",
+			"created_asc": "Oldest first",
+			"title_asc": "Title A–Z",
+			"title_desc": "Title Z–A",
+			"status_asc": "By status",
+			"group_size_asc": "Group size: small first",
+			"group_size_desc": "Group size: large first"
+		},
 		"languages": {
 			"english": "English",
 			"russian": "Russian",

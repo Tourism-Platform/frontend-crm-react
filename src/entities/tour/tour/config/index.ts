@@ -3,3 +3,4 @@ export * from "./pricing-breakdown.config";
 export * from "./tour-type.config";
 export * from "./pricing-visibility.config";
 export * from "./tour-category.config";
+export * from "./tour-list-sort.config";

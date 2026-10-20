@@ -81,6 +81,21 @@
 		}
 	},
 	"tour": {
+		"catalogSort": {
+			"price_asc": "Сначала дешевле",
+			"price_desc": "Сначала дороже",
+			"duration_asc": "Сначала короткие",
+			"duration_desc": "Сначала длинные"
+		},
+		"listSort": {
+			"created_desc": "Сначала новые",
+			"created_asc": "Сначала старые",
+			"title_asc": "Название А–Я",
+			"title_desc": "Название Я–А",
+			"status_asc": "По статусу",
+			"group_size_asc": "Сначала малые группы",
+			"group_size_desc": "Сначала большие группы"
+		},
 		"languages": {
 			"english": "Английский",
 			"russian": "Русский",

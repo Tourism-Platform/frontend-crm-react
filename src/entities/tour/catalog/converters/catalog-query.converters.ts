@@ -8,6 +8,7 @@ import type {
 	TCatalogLocationBar,
 	TCatalogUrlQuery
 } from "../types/catalog-query.types";
+import type { ENUM_CATALOG_SORT_TYPE } from "../types/catalog-sort.types";
 import type { ICatalogTourFilters } from "../types/catalog-tour-filter.interface";
 import { ENUM_LOCATION_SUGGEST_KIND } from "../types/location-suggest.types";
 
@@ -98,6 +99,7 @@ export const mapCatalogQueryToCatalogFilters = (
 	search: query.place ?? "",
 	page: query.page ?? defaults.page,
 	limit: query.limit ?? defaults.limit,
+	sort: query.sort as ENUM_CATALOG_SORT_TYPE | undefined,
 	filters: {
 		country: query.country ?? [],
 		city: query.city ?? [],
@@ -113,6 +115,7 @@ export const mapCatalogFiltersToCatalogQuery = (
 	const query: TCatalogUrlQuery = {
 		page: filters.page,
 		limit: filters.limit,
+		sort: filters.sort,
 		duration: filters.filters?.duration,
 		category: filters.filters?.category,
 		language: filters.filters?.language,

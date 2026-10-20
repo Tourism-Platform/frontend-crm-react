@@ -145,5 +145,16 @@
 		"duration": "{{days}} {{daysUnit}} / {{nights}} {{nightsUnit}}",
 		"group": "{{min}}–{{max}}",
 		"age": "{{from}}–{{to}} лет"
+	},
+	"filters": {
+		"sort": {
+			"label": "Сортировка",
+			"placeholder": "По умолчанию"
+		},
+		"type": {
+			"label": "Тип тура",
+			"placeholder": "Любой тип"
+		},
+		"reset": "Сбросить фильтры"
 	}
 }

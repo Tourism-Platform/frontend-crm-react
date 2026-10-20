@@ -11,6 +11,7 @@ import {
 	Card,
 	CardContent,
 	CustomField,
+	Form,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -38,7 +39,7 @@ import { ClientPaymentsHeader } from "./client-payments-header";
 
 const ClientPaymentsBase: FC = () => {
 	const { t } = useTranslation(["client_payments_page", "options"]);
-	const { watch, setValue, control } = useForm<IPaymentFilters>({
+	const form = useForm<IPaymentFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.CLIENT_PAYMENTS,
@@ -46,6 +47,7 @@ const ClientPaymentsBase: FC = () => {
 			status: []
 		}
 	});
+	const { watch, setValue, control } = form;
 
 	const filters = watch();
 	const { bookingId, createdRange } = filters;
@@ -85,48 +87,50 @@ const ClientPaymentsBase: FC = () => {
 	const actionsJsx = useMemo(() => <NewPayment />, []);
 
 	const filtersJsx = (
-		<div className="flex flex-wrap items-end gap-4">
-			<CustomField
-				fieldType="asyncSelect"
-				control={control}
-				name={ENUM_PAYMENT_FILTER.BOOKING_ID}
-				t={t}
-				label="filters.booking.label"
-				placeholder="filters.booking.placeholder"
-				emptyText="filters.booking.empty"
-				className="w-72"
-				options={orders.options}
-				onQueryChange={orders.setQuery}
-				onLoadMore={orders.loadMore}
-				hasMore={orders.hasMore}
-				isLoading={orders.isLoading}
-				isLoadingMore={orders.isLoadingMore}
-				renderOption={(option) => (
-					<BookingOrderOptionCard
-						option={option as TBookingOrderSelectOption}
-					/>
-				)}
-				renderSkeleton={() => <BookingOrderOptionCardSkeleton />}
-			/>
-			{CLIENT_PAYMENTS_FILTERS_LIST.map(({ key, ...item }) => (
+		<Form {...form}>
+			<div className="flex flex-wrap items-end gap-4">
 				<CustomField
-					key={key}
+					fieldType="asyncSelect"
 					control={control}
-					name={key}
+					name={ENUM_PAYMENT_FILTER.BOOKING_ID}
 					t={t}
+					label="filters.booking.label"
+					placeholder="filters.booking.placeholder"
+					emptyText="filters.booking.empty"
 					className="w-72"
-					{...item}
+					options={orders.options}
+					onQueryChange={orders.setQuery}
+					onLoadMore={orders.loadMore}
+					hasMore={orders.hasMore}
+					isLoading={orders.isLoading}
+					isLoadingMore={orders.isLoadingMore}
+					renderOption={(option) => (
+						<BookingOrderOptionCard
+							option={option as TBookingOrderSelectOption}
+						/>
+					)}
+					renderSkeleton={() => <BookingOrderOptionCardSkeleton />}
 				/>
-			))}
-			<Button
-				type="button"
-				variant="outline"
-				className="mb-5"
-				onClick={handleResetFilters}
-			>
-				{t("filters.reset")}
-			</Button>
-		</div>
+				{CLIENT_PAYMENTS_FILTERS_LIST.map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={control}
+						name={key}
+						t={t}
+						className="w-72"
+						{...item}
+					/>
+				))}
+				<Button
+					type="button"
+					variant="outline"
+					className="mb-5"
+					onClick={handleResetFilters}
+				>
+					{t("filters.reset")}
+				</Button>
+			</div>
+		</Form>
 	);
 	const paginationObj = useMemo(
 		() => ({

@@ -9,6 +9,7 @@ import {
 	Card,
 	CardContent,
 	CustomField,
+	Form,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -29,7 +30,7 @@ import { ReconciliationHeader } from "./reconciliation-header";
 
 const ReconciliationBase: FC = () => {
 	const { t } = useTranslation(["reconciliation_page", "options"]);
-	const { watch, setValue, control } = useForm<IReconciliationFilters>({
+	const form = useForm<IReconciliationFilters>({
 		defaultValues: {
 			page: 1,
 			limit: INTERSECTION_ELEMENTS.RECONCILIATION,
@@ -37,6 +38,7 @@ const ReconciliationBase: FC = () => {
 			status: []
 		}
 	});
+	const { watch, setValue, control } = form;
 
 	const filters = watch();
 	const { tourId, dateRange, outstandingOnly, payableOnly } = filters;
@@ -55,41 +57,43 @@ const ReconciliationBase: FC = () => {
 	}, [setValue]);
 
 	const filtersJsx = (
-		<div className="flex flex-wrap items-end gap-4">
-			<CustomField
-				fieldType="asyncSelect"
-				control={control}
-				name={ENUM_RECONCILIATION_FILTER.TOUR_ID}
-				t={t}
-				label="filters.tour.label"
-				placeholder="filters.tour.placeholder"
-				emptyText="filters.tour.empty"
-				className="w-72"
-				options={tours.options}
-				onQueryChange={tours.setQuery}
-				onLoadMore={tours.loadMore}
-				hasMore={tours.hasMore}
-				isLoading={tours.isLoading}
-				isLoadingMore={tours.isLoadingMore}
-			/>
-			{RECONCILIATION_FILTERS_LIST.map(({ key, ...item }) => (
+		<Form {...form}>
+			<div className="flex flex-wrap items-end gap-4">
 				<CustomField
-					key={key}
+					fieldType="asyncSelect"
 					control={control}
-					name={key}
+					name={ENUM_RECONCILIATION_FILTER.TOUR_ID}
 					t={t}
-					{...item}
+					label="filters.tour.label"
+					placeholder="filters.tour.placeholder"
+					emptyText="filters.tour.empty"
+					className="w-72"
+					options={tours.options}
+					onQueryChange={tours.setQuery}
+					onLoadMore={tours.loadMore}
+					hasMore={tours.hasMore}
+					isLoading={tours.isLoading}
+					isLoadingMore={tours.isLoadingMore}
 				/>
-			))}
-			<Button
-				type="button"
-				variant="outline"
-				className="mb-5"
-				onClick={handleResetFilters}
-			>
-				{t("filters.reset")}
-			</Button>
-		</div>
+				{RECONCILIATION_FILTERS_LIST.map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={control}
+						name={key}
+						t={t}
+						{...item}
+					/>
+				))}
+				<Button
+					type="button"
+					variant="outline"
+					className="mb-5"
+					onClick={handleResetFilters}
+				>
+					{t("filters.reset")}
+				</Button>
+			</div>
+		</Form>
 	);
 
 	const {

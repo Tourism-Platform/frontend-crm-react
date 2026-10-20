@@ -1,9 +1,12 @@
 import { useCallback, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
-import { useOptionalResourceQuery } from "@/shared/hooks";
+import { useDebounce, useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
+	ENUM_PRICING_BREAKDOWN_PARAM,
+	type IPricingBreakdownParams,
 	useGetPricingBreakdownQuery,
 	useListAllTourOptionsQuery
 } from "@/entities/tour";
@@ -42,8 +45,24 @@ export const usePricingReview = (tourId: string) => {
 		setSelectedOptionId(optionId);
 	}, []);
 
+	const paramsForm = useForm<IPricingBreakdownParams>({
+		defaultValues: {
+			date: null,
+			pax: null
+		}
+	});
+	const { watch, setValue } = paramsForm;
+	const { date, pax } = watch();
+	// Не пересчитывать на каждый набранный символ
+	const debouncedPax = useDebounce(pax, 500);
+
+	const handleResetParams = useCallback(() => {
+		setValue(ENUM_PRICING_BREAKDOWN_PARAM.DATE, null);
+		setValue(ENUM_PRICING_BREAKDOWN_PARAM.PAX, null);
+	}, [setValue]);
+
 	const summaryQuery = useGetPricingBreakdownQuery(
-		{ tourId, optionId: activeOptionId },
+		{ tourId, optionId: activeOptionId, date, pax: debouncedPax },
 		{ skip: !tourId || !activeOptionId }
 	);
 	const {
@@ -59,6 +78,8 @@ export const usePricingReview = (tourId: string) => {
 		options,
 		activeOptionId,
 		setActiveOptionId,
+		paramsForm,
+		handleResetParams,
 		pricingReview,
 		isOptionsLoading,
 		isOptionsFetching,

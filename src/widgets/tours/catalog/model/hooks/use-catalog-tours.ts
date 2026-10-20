@@ -9,6 +9,7 @@ import { languageCodeMapper } from "@/shared/converters";
 import { useDebounce, useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
+	type ENUM_CATALOG_SORT_TYPE,
 	type ICatalogTourFilters,
 	type TCatalogLocationBar,
 	useGetCatalogToursQuery
@@ -47,7 +48,7 @@ export const useCatalogTours = () => {
 
 	const { watch, setValue } = methods;
 	const formValues = watch();
-	const { search, page, limit, filters: filterValues } = formValues;
+	const { search, page, limit, sort, filters: filterValues } = formValues;
 
 	const [localSearch, setLocalSearch] = useState(search);
 	const debouncedSearch = useDebounce(localSearch, 500);
@@ -80,6 +81,13 @@ export const useCatalogTours = () => {
 		}
 	}, [debouncedSearch, isHydratingRef, search, setValue]);
 
+	// Новая сортировка — снова с первой страницы
+	useEffect(() => {
+		if (isHydratingRef.current) return;
+
+		setValue("page", 1);
+	}, [sort, isHydratingRef, setValue]);
+
 	const debouncedSource = useMemo(() => filterValues, [filterValues]);
 	const debouncedFilters = useDebounce(debouncedSource, 500);
 
@@ -87,7 +95,14 @@ export const useCatalogTours = () => {
 		if (isHydratingRef.current) return;
 
 		syncUrlFromFilters();
-	}, [debouncedFilters, page, limit, isHydratingRef, syncUrlFromFilters]);
+	}, [
+		debouncedFilters,
+		page,
+		limit,
+		sort,
+		isHydratingRef,
+		syncUrlFromFilters
+	]);
 
 	const {
 		data: toursData,
@@ -99,6 +114,7 @@ export const useCatalogTours = () => {
 			search,
 			page,
 			limit,
+			sort,
 			readLang,
 			filters: debouncedFilters
 		})
@@ -119,6 +135,13 @@ export const useCatalogTours = () => {
 		handleUrlReset();
 	}, [handleUrlReset]);
 
+	const handleSortChange = useCallback(
+		(value: string) => {
+			setValue("sort", value as ENUM_CATALOG_SORT_TYPE);
+		},
+		[setValue]
+	);
+
 	const handlePrevPage = useCallback(() => {
 		setValue("page", Math.max(1, page - 1));
 	}, [page, setValue]);
@@ -132,13 +155,14 @@ export const useCatalogTours = () => {
 			search,
 			page,
 			limit,
+			sort,
 			readLang,
 			filters: {
 				...debouncedFilters,
 				duration: []
 			}
 		}),
-		[search, page, limit, readLang, debouncedFilters]
+		[search, page, limit, sort, readLang, debouncedFilters]
 	);
 
 	return {
@@ -148,6 +172,7 @@ export const useCatalogTours = () => {
 		search,
 		page,
 		limit,
+		sort,
 		tours,
 		totalCount,
 		totalPages,
@@ -158,6 +183,7 @@ export const useCatalogTours = () => {
 		setLocalSearch,
 		searchInputRef,
 		handleReset,
+		handleSortChange,
 		handlePrevPage,
 		handleNextPage,
 		similarParams
