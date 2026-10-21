@@ -1,6 +1,9 @@
 import * as React from "react";
 
-import type { TTourSearchLocationQuery } from "./query.types";
+import type {
+	TPreviewTourQuery,
+	TTourSearchLocationQuery
+} from "./query.types";
 import type { ENUM_PATH } from "./routes.config";
 import { type ENUM_AUTH_TYPE, type ENUM_LAYOUT_TYPE } from "./routes.enum";
 
@@ -77,4 +80,8 @@ export type TQueryParams = {
 		page?: number;
 		limit?: number;
 	};
+	[ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR]: TPreviewTourQuery;
+	[ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION]: TPreviewTourQuery;
+	[ENUM_PATH.TOURS.DRAFT_PREVIEW]: TPreviewTourQuery;
+	[ENUM_PATH.TOURS.DRAFT_PREVIEW_OPTION]: TPreviewTourQuery;
 };

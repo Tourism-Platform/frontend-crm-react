@@ -61,43 +61,6 @@ const SupplierPaymentsBase: FC = () => {
 		setValue(ENUM_SUPPLIER_PAYMENT_FILTER.SUPPLIER_ID, undefined);
 	}, [setValue]);
 
-	const filtersJsx = (
-		<Form {...form}>
-			<div className="flex flex-wrap items-center gap-4">
-				<CustomField
-					hideLabel
-					fieldType="asyncSelect"
-					control={control}
-					name={ENUM_SUPPLIER_PAYMENT_FILTER.SUPPLIER_ID}
-					t={t}
-					label="filters.supplier.label"
-					placeholder="filters.supplier.placeholder"
-					emptyText="filters.supplier.empty"
-					className="w-72"
-					options={suppliers.options}
-					onQueryChange={suppliers.setQuery}
-					onLoadMore={suppliers.loadMore}
-					hasMore={suppliers.hasMore}
-					isLoading={suppliers.isLoading}
-					isLoadingMore={suppliers.isLoadingMore}
-					renderOption={(option) => (
-						<SupplierOptionCard
-							option={option as TSupplierSelectOption}
-						/>
-					)}
-					renderSkeleton={() => <SupplierOptionCardSkeleton />}
-				/>
-				<Button
-					type="button"
-					variant="outline"
-					onClick={handleResetFilters}
-				>
-					{t("filters.reset")}
-				</Button>
-			</div>
-		</Form>
-	);
-
 	const {
 		data: paymentsData,
 		isLoading,
@@ -168,7 +131,42 @@ const SupplierPaymentsBase: FC = () => {
 			<SupplierPaymentsHeader statusCounts={statusCounts} />
 			<Card>
 				<CardContent className="flex flex-col gap-4">
-					{filtersJsx}
+					<Form {...form}>
+						<div className="flex flex-wrap items-center gap-4">
+							<CustomField
+								hideLabel
+								fieldType="asyncSelect"
+								control={control}
+								name={ENUM_SUPPLIER_PAYMENT_FILTER.SUPPLIER_ID}
+								t={t}
+								label="filters.supplier.label"
+								placeholder="filters.supplier.placeholder"
+								emptyText="filters.supplier.empty"
+								className="w-[32rem]"
+								options={suppliers.options}
+								onQueryChange={suppliers.setQuery}
+								onLoadMore={suppliers.loadMore}
+								hasMore={suppliers.hasMore}
+								isLoading={suppliers.isLoading}
+								isLoadingMore={suppliers.isLoadingMore}
+								renderOption={(option) => (
+									<SupplierOptionCard
+										option={option as TSupplierSelectOption}
+									/>
+								)}
+								renderSkeleton={() => (
+									<SupplierOptionCardSkeleton />
+								)}
+							/>
+							<Button
+								type="button"
+								variant="outline"
+								onClick={handleResetFilters}
+							>
+								{t("filters.reset")}
+							</Button>
+						</div>
+					</Form>
 					<SmartTable
 						data={payments}
 						columns={columns}

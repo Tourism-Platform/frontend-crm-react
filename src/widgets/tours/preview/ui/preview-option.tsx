@@ -11,10 +11,15 @@ import { usePreviewOptionPageData } from "@/entities/tour/preview-tour";
 import {
 	PREVIEW_OPTION_TABS_LIST,
 	buildPreviewTourPath,
-	useIsDraftPreview
+	useIsDraftPreview,
+	usePreviewCurrency
 } from "../model";
 
-import { PreviewTourHero, PreviewTourProviderCard } from "./tour";
+import {
+	PreviewCurrencySelect,
+	PreviewTourHero,
+	PreviewTourProviderCard
+} from "./tour";
 
 export const PreviewOptionBase: FC = () => {
 	const { tourId = "", optionId = "" } = useParams<{
@@ -22,6 +27,7 @@ export const PreviewOptionBase: FC = () => {
 		optionId: string;
 	}>();
 	const isDraftPreview = useIsDraftPreview();
+	const { currency } = usePreviewCurrency();
 	const { t, ready } = useTranslation("preview_option_page");
 
 	const {
@@ -31,7 +37,8 @@ export const PreviewOptionBase: FC = () => {
 	} = usePreviewOptionPageData({
 		tourId,
 		optionId,
-		isDraft: isDraftPreview
+		isDraft: isDraftPreview,
+		currency
 	});
 
 	const isLoading = !ready || isPageLoading;
@@ -52,15 +59,19 @@ export const PreviewOptionBase: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-8 container pb-12 mt-6 max-w-6xl mx-auto relative">
-			<Link
-				to={buildPreviewTourPath(tourId, isDraftPreview)}
-				className="absolute top-0 left-0"
-			>
-				<Button variant="ghost" size="sm">
-					<ArrowLeft className="w-4 h-4" />
-					{t("back")}
-				</Button>
-			</Link>
+			<div className="flex items-center justify-between gap-4">
+				<Link
+					to={buildPreviewTourPath(tourId, isDraftPreview, {
+						currency
+					})}
+				>
+					<Button variant="ghost" size="sm">
+						<ArrowLeft className="w-4 h-4" />
+						{t("back")}
+					</Button>
+				</Link>
+				<PreviewCurrencySelect />
+			</div>
 
 			<div className="grid grid-cols-[1fr_auto] gap-8 items-start mb-8">
 				{tourData && <PreviewTourHero tour={tourData} />}

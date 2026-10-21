@@ -37,7 +37,7 @@ const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 		isRealError
 	} = useOptionalResourceQuery(
 		useListPackagesQuery(
-			{ tourId, optionId },
+			{ tourId, optionId, search },
 			{ skip: !tourId || !optionId }
 		)
 	);
@@ -57,21 +57,12 @@ const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 		[t, tourId, optionId]
 	);
 
-	const filteredPackages = useMemo(() => {
-		const query = search.trim().toLowerCase();
-		if (!query) return packages;
-
-		return packages.filter((item) =>
-			item.name.toLowerCase().includes(query)
-		);
-	}, [packages, search]);
-
 	const pagination = useMemo<PaginationState>(
 		() => ({
 			pageIndex: 0,
-			pageSize: Math.max(filteredPackages.length, 10)
+			pageSize: Math.max(packages.length, 10)
 		}),
-		[filteredPackages.length]
+		[packages.length]
 	);
 
 	const actionsJsx = useMemo(
@@ -95,7 +86,7 @@ const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 		<Card>
 			<CardContent>
 				<SmartTable
-					data={filteredPackages}
+					data={packages}
 					columns={columns}
 					actions={actionsJsx}
 					isLoading={isLoading || isFetching}

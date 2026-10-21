@@ -69,6 +69,13 @@
 		"title": "Report"
 	},
 	"supplier_payments": {
+		"filters": {
+			"event": {
+				"placeholder": "Any event",
+				"empty": "No events found"
+			},
+			"reset": "Reset filters"
+		},
 		"title": "Booking & supplier payments",
 		"paid": "paid",
 		"paid_progress": "{{selected}} / {{total}} paid",

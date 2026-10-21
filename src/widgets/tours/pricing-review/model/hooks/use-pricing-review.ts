@@ -48,21 +48,29 @@ export const usePricingReview = (tourId: string) => {
 	const paramsForm = useForm<IPricingBreakdownParams>({
 		defaultValues: {
 			date: null,
-			pax: null
+			pax: null,
+			asOf: null
 		}
 	});
 	const { watch, setValue } = paramsForm;
-	const { date, pax } = watch();
+	const { date, pax, asOf } = watch();
 	// Не пересчитывать на каждый набранный символ
 	const debouncedPax = useDebounce(pax, 500);
 
 	const handleResetParams = useCallback(() => {
 		setValue(ENUM_PRICING_BREAKDOWN_PARAM.DATE, null);
 		setValue(ENUM_PRICING_BREAKDOWN_PARAM.PAX, null);
+		setValue(ENUM_PRICING_BREAKDOWN_PARAM.AS_OF, null);
 	}, [setValue]);
 
 	const summaryQuery = useGetPricingBreakdownQuery(
-		{ tourId, optionId: activeOptionId, date, pax: debouncedPax },
+		{
+			tourId,
+			optionId: activeOptionId,
+			date,
+			pax: debouncedPax,
+			asOf
+		},
 		{ skip: !tourId || !activeOptionId }
 	);
 	const {

@@ -13,6 +13,10 @@ export type TListPackagesBackendResponse = ReturnType<
 	typeof TOUR_PACKAGES_PATHS.listPackages
 >["_types"]["response"];
 
+export type TListPackagesBackendQuery = ReturnType<
+	typeof TOUR_PACKAGES_PATHS.listPackages
+>["_types"]["query"];
+
 export type TGetPackageBackendResponse = ReturnType<
 	typeof TOUR_PACKAGES_PATHS.getPackage
 >["_types"]["response"];

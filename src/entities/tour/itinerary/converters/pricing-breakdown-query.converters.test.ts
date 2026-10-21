@@ -28,6 +28,12 @@ describe("mapPricingBreakdownQueryToBackend", () => {
 		).toEqual({ currency: Currency.USD, date: "2026-11-01", pax: 12 });
 	});
 
+	it("maps asOf to as_of", () => {
+		expect(
+			mapPricingBreakdownQueryToBackend({ ...BASE, asOf: "2026-10-01" })
+		).toEqual({ as_of: "2026-10-01" });
+	});
+
 	it("drops non-positive pax", () => {
 		expect(
 			mapPricingBreakdownQueryToBackend({ ...BASE, pax: 0 })

@@ -28,6 +28,7 @@ import {
 	mapDraftOperatorToFrontend,
 	mapDraftOptionCardToFrontend,
 	mapDraftPreviewOptionToFrontend,
+	mapPreviewCurrencyQueryToBackend,
 	mapPreviewOperatorToFrontend,
 	mapPreviewOptionToFrontend,
 	mapPreviewOptionsPaginatedToFrontend,
@@ -38,6 +39,7 @@ import {
 } from "../converters";
 import type {
 	IOptionDetail,
+	IPreviewDraftOptionsQueryArgs,
 	IPreviewOperator,
 	IPreviewOptionCard,
 	IPreviewOptionQueryArgs,
@@ -98,9 +100,12 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 		}),
 		getPreviewOption: builder.query<IOptionDetail, IPreviewOptionQueryArgs>(
 			{
-				query: ({ tourId, optionId, language }) => ({
+				query: ({ tourId, optionId, language, currency }) => ({
 					...TOUR_PUBLIC_PATHS.getPublicTourOption(tourId, optionId),
-					params: mapReadLangQueryToBackend(language)
+					params: {
+						...mapReadLangQueryToBackend(language),
+						...mapPreviewCurrencyQueryToBackend(currency)
+					}
 				}),
 				transformResponse: (response: TOptionDetailBackend) =>
 					mapPreviewOptionToFrontend(response)
@@ -181,10 +186,10 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 		}),
 		getDraftPreviewOptions: builder.query<
 			IPaginationResponse<IPreviewOptionCard>,
-			IPreviewTourQueryArgs
+			IPreviewDraftOptionsQueryArgs
 		>({
 			async queryFn(
-				{ tourId, language },
+				{ tourId, language, currency },
 				_api,
 				_extraOptions,
 				baseQuery
@@ -211,7 +216,12 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 									tourId,
 									option.id
 								),
-								params: mapReadLangQueryToBackend(language)
+								params: {
+									...mapReadLangQueryToBackend(language),
+									...mapPreviewCurrencyQueryToBackend(
+										currency
+									)
+								}
 							})
 						);
 
@@ -238,7 +248,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			IPreviewOptionQueryArgs
 		>({
 			async queryFn(
-				{ tourId, optionId, language },
+				{ tourId, optionId, language, currency },
 				_api,
 				_extraOptions,
 				baseQuery
@@ -251,7 +261,10 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 							tourId,
 							optionId
 						),
-						params: mapReadLangQueryToBackend(language)
+						params: {
+							...mapReadLangQueryToBackend(language),
+							...mapPreviewCurrencyQueryToBackend(currency)
+						}
 					})
 				);
 				if (summaryResult.error) {

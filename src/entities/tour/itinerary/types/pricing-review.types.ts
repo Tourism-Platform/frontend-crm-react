@@ -12,7 +12,8 @@ export interface ITourPricingReview {
 
 export const ENUM_PRICING_BREAKDOWN_PARAM = {
 	DATE: "date",
-	PAX: "pax"
+	PAX: "pax",
+	AS_OF: "asOf"
 } as const;
 
 export type ENUM_PRICING_BREAKDOWN_PARAM_TYPE =
@@ -21,6 +22,8 @@ export type ENUM_PRICING_BREAKDOWN_PARAM_TYPE =
 export interface IPricingBreakdownParams {
 	date?: string | null;
 	pax?: number | null;
+	/** Дата, на которую считается шаблон цен (`as_of`) */
+	asOf?: string | null;
 }
 
 export interface IPricingBreakdownArgs extends IPricingBreakdownParams {

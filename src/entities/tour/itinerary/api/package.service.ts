@@ -7,10 +7,12 @@ import {
 	mapPackageToForm,
 	mapPackageToFrontend,
 	mapPackageToListItem,
-	mapPackageUpdateToBackend
+	mapPackageUpdateToBackend,
+	mapPackagesQueryToBackend
 } from "../converters/package.converters";
 import type { TPackageEditSchema } from "../schema/package.schema";
 import type {
+	IPackageListArgs,
 	ITourPackage,
 	ITourPackageListItem,
 	TCreatePackageBackendResponse,
@@ -40,12 +42,10 @@ const pricingTag = (tourId: string, optionId: string) => ({
 
 export const tourPackageApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
-		listPackages: builder.query<
-			ITourPackageListItem[],
-			{ tourId: string; optionId: string }
-		>({
-			query: ({ tourId, optionId }) => ({
-				...TOUR_PACKAGES_PATHS.listPackages(tourId, optionId)
+		listPackages: builder.query<ITourPackageListItem[], IPackageListArgs>({
+			query: (args) => ({
+				...TOUR_PACKAGES_PATHS.listPackages(args.tourId, args.optionId),
+				params: mapPackagesQueryToBackend(args)
 			}),
 			transformResponse: (response: TListPackagesBackendResponse) =>
 				response.map(mapPackageToListItem),

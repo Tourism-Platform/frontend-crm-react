@@ -14,6 +14,7 @@ import {
 
 import type {
 	IBookingEventAvailability,
+	IBookingEventOption,
 	IOrderTourReviewItem,
 	TOperatorBookingItineraryBackend,
 	TOperatorItineraryEventBackend,
@@ -233,3 +234,25 @@ export const attachAvailabilityToItineraryItems = (
 	availability: IBookingEventAvailability[]
 ): IOrderTourReviewItem[] =>
 	items.map((item) => attachAvailabilityToItem(item, availability));
+
+const resolveEventLabel = ({
+	event
+}: TOperatorItineraryEventBackend): string => {
+	if (event.typ === "options") {
+		return (event.details ?? [])
+			.map((detail) => detail.name)
+			.filter(Boolean)
+			.join(" / ");
+	}
+
+	return event.name ?? "";
+};
+
+/** События брони → опции селекта (фильтр оплат поставщикам по `event_id`) */
+export const mapOperatorItineraryToEventOptions = (
+	data?: TOperatorBookingItineraryBackend
+): IBookingEventOption[] =>
+	(data?.events ?? []).map((item) => ({
+		value: item.event_id,
+		label: resolveEventLabel(item) || item.event_id
+	}));

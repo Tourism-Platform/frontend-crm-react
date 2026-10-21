@@ -29,6 +29,7 @@ export const OrderId: FC = () => {
 		contactItems,
 		paxDetails,
 		tourReviewItems,
+		eventOptions,
 		availability,
 		financials,
 		isOrderLoading,
@@ -93,7 +94,10 @@ export const OrderId: FC = () => {
 				))}
 
 			{showSupplierPayments && (
-				<OrderSupplierPayments bookingId={orderId || ""} />
+				<OrderSupplierPayments
+					bookingId={orderId || ""}
+					eventOptions={eventOptions}
+				/>
 			)}
 
 			{order &&

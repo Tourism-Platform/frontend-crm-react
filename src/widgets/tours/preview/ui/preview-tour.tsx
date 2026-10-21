@@ -21,10 +21,12 @@ import { usePreviewTourPageData } from "@/entities/tour/preview-tour";
 import {
 	ENUM_PREVIEW_TOUR_TAB,
 	PREVIEW_TOUR_SINGLE_OPTION_TABS,
-	useIsDraftPreview
+	useIsDraftPreview,
+	usePreviewCurrency
 } from "../model";
 
 import {
+	PreviewCurrencySelect,
 	PreviewOptionsCards,
 	PreviewTourHero,
 	PreviewTourInformationSections,
@@ -34,6 +36,7 @@ import {
 const PreviewTourBase: FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
 	const isDraftPreview = useIsDraftPreview();
+	const { currency } = usePreviewCurrency();
 	const { t, ready } = useTranslation([
 		"preview_tour_page",
 		"preview_option_page"
@@ -48,7 +51,11 @@ const PreviewTourBase: FC = () => {
 		isLoading: isPageLoading,
 		isError,
 		isOptionDetailError
-	} = usePreviewTourPageData({ tourId, isDraft: isDraftPreview });
+	} = usePreviewTourPageData({
+		tourId,
+		isDraft: isDraftPreview,
+		currency
+	});
 
 	const isLoading = !ready || isPageLoading;
 	const showOptionsCards = optionsData.length > 1;
@@ -75,27 +82,22 @@ const PreviewTourBase: FC = () => {
 
 	return (
 		<section className="flex flex-col gap-8 container pb-12 max-w-6xl mx-auto relative">
-			{isDraftPreview ? (
-				<Button
-					variant="ghost"
-					size="sm"
-					disabled
-					className="absolute top-0 left-0"
-				>
-					<ArrowLeft className="w-4 h-4" />
-					{t("back", { ns: "preview_tour_page" })}
-				</Button>
-			) : (
-				<Link
-					to={ENUM_PATH.TOURS.CATALOG.ROOT}
-					className="absolute top-0 left-0"
-				>
-					<Button variant="ghost" size="sm">
+			<div className="flex items-center justify-between gap-4">
+				{isDraftPreview ? (
+					<Button variant="ghost" size="sm" disabled>
 						<ArrowLeft className="w-4 h-4" />
 						{t("back", { ns: "preview_tour_page" })}
 					</Button>
-				</Link>
-			)}
+				) : (
+					<Link to={ENUM_PATH.TOURS.CATALOG.ROOT}>
+						<Button variant="ghost" size="sm">
+							<ArrowLeft className="w-4 h-4" />
+							{t("back", { ns: "preview_tour_page" })}
+						</Button>
+					</Link>
+				)}
+				<PreviewCurrencySelect />
+			</div>
 
 			<div className="grid grid-cols-[1fr_auto] gap-8 items-start">
 				<PreviewTourHero tour={tourData} />

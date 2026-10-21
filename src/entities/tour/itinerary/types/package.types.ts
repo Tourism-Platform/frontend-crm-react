@@ -44,6 +44,12 @@ export interface ITourPackageListItem {
 	name: string;
 }
 
+export interface IPackageListArgs {
+	tourId: string;
+	optionId: string;
+	search?: string;
+}
+
 export interface ITourPackage extends ITourPackageListItem {
 	tourOptionId: string;
 	supplierId: string | null;

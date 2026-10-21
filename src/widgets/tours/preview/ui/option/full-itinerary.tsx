@@ -4,7 +4,7 @@ import { useParams } from "react-router";
 import { usePreviewOptionPageData } from "@/entities/tour/preview-tour";
 import type { IOptionDetail } from "@/entities/tour/preview-tour";
 
-import { useIsDraftPreview } from "../../model/hooks";
+import { useIsDraftPreview, usePreviewCurrency } from "../../model/hooks";
 
 import { OptionDaySection } from "./option-day-section";
 
@@ -20,10 +20,12 @@ export const FullItinerary: FC<IFullItineraryProps> = ({
 		optionId: string;
 	}>();
 	const isDraftPreview = useIsDraftPreview();
+	const { currency } = usePreviewCurrency();
 	const { optionDetail } = usePreviewOptionPageData({
 		tourId,
 		optionId,
-		isDraft: isDraftPreview
+		isDraft: isDraftPreview,
+		currency
 	});
 	const optionData = optionDataProp ?? optionDetail;
 	let currentGlobalEventIndex = 0;

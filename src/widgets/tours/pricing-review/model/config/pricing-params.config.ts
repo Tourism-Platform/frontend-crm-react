@@ -22,5 +22,10 @@ export const PRICING_PARAMS_LIST: TFormField<
 		fieldType: "input",
 		type: "number",
 		min: 1
+	},
+	{
+		key: ENUM_PRICING_BREAKDOWN_PARAM.AS_OF,
+		label: "params.as_of.label",
+		fieldType: "date"
 	}
 ];

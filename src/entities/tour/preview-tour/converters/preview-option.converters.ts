@@ -1,8 +1,12 @@
-import type { MultiEventPubOutput } from "@/shared/api";
+import type { Currency, MultiEventPubOutput } from "@/shared/api";
 import { TEMP_LIST_TOTAL } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
 import { formatToDollars } from "@/shared/utils";
 
+import {
+	type ENUM_CURRENCY_OPTIONS_TYPE,
+	currencyConverter
+} from "@/entities/commission";
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE
@@ -135,11 +139,20 @@ const mapPreviewOptionPreviewToFrontend = (
 		: ""
 });
 
+export const mapPreviewCurrencyQueryToBackend = (
+	currency?: ENUM_CURRENCY_OPTIONS_TYPE
+): { currency?: Currency } => {
+	const value = currencyConverter.to(currency);
+
+	return value ? { currency: value } : {};
+};
+
 export const mapPreviewOptionsQueryToBackend = (
 	args: IPreviewOptionsListArgs
 ): TPreviewOptionsListBackendQuery => ({
 	...(args.page > 1 && { skip: (args.page - 1) * args.limit }),
-	...(args.limit && { limit: args.limit })
+	...(args.limit && { limit: args.limit }),
+	...mapPreviewCurrencyQueryToBackend(args.currency)
 });
 
 export const mapPreviewOptionsPaginatedToFrontend = (

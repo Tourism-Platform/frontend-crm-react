@@ -16,4 +16,10 @@ describe("mapSupplierPaymentFiltersToBackend", () => {
 			mapSupplierPaymentFiltersToBackend({ ...BASE, supplierId: "s-1" })
 		).toMatchObject({ supplier_id: "s-1" });
 	});
+
+	it("maps event", () => {
+		expect(
+			mapSupplierPaymentFiltersToBackend({ ...BASE, eventId: "e-1" })
+		).toMatchObject({ event_id: "e-1" });
+	});
 });

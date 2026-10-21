@@ -13,6 +13,9 @@
 			"label": "Number of people",
 			"placeholder": "e.g. 10"
 		},
+		"as_of": {
+			"label": "Rates as of"
+		},
 		"reset": "Reset"
 	},
 	"overview": {

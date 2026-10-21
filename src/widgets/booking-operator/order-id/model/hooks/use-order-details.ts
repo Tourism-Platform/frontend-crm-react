@@ -7,6 +7,7 @@ import {
 	ENUM_ORDER_STATUS,
 	attachAvailabilityToItineraryItems,
 	mapBookingPaxListToPaxReview,
+	mapOperatorItineraryToEventOptions,
 	mapOperatorItineraryToTourReviewItems,
 	useGetOperatorBookingItineraryQuery,
 	useGetOperatorBookingOrderQuery,
@@ -67,6 +68,11 @@ export const useOrderDetails = (orderId: string) => {
 		[itineraryQuery.data, availabilityQuery.data]
 	);
 
+	const eventOptions = useMemo(
+		() => mapOperatorItineraryToEventOptions(itineraryQuery.data),
+		[itineraryQuery.data]
+	);
+
 	const isItineraryLoading = itineraryQuery.isLoading;
 	const isFinancialsLoading = financialsQuery.isLoading;
 
@@ -76,6 +82,7 @@ export const useOrderDetails = (orderId: string) => {
 		contactItems,
 		paxDetails,
 		tourReviewItems,
+		eventOptions,
 		availability: availabilityQuery.data ?? [],
 		financials: financialsQuery.data,
 		isOrderLoading: orderQuery.isLoading,

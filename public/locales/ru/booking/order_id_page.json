@@ -69,6 +69,13 @@
 		"title": "Отчет"
 	},
 	"supplier_payments": {
+		"filters": {
+			"event": {
+				"placeholder": "Любое событие",
+				"empty": "События не найдены"
+			},
+			"reset": "Сбросить фильтры"
+		},
 		"title": "Бронирование и платежи поставщикам",
 		"paid": "оплачено",
 		"paid_progress": "{{selected}} / {{total}} оплачено",
