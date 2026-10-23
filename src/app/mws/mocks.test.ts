@@ -6,9 +6,8 @@ import {
 	BOOKING_ORDER_PATHS,
 	BOOKING_REVISION_PATHS,
 	BookingTransition,
-	Currency,
+	FX_PATHS,
 	MOCK_BASE_URL,
-	OPERATOR_FX_RATE_PATHS,
 	OPERATOR_STAFF_PATHS,
 	PROFILE_INFO_PATHS,
 	SUPPLIER_PATHS,
@@ -252,13 +251,8 @@ describe("MSW mocks", () => {
 			(await call(OPERATOR_STAFF_PATHS.inviteStaff, invited.data)).status
 		).toBe(400);
 
-		const rate = await call(OPERATOR_FX_RATE_PATHS.recordFxRate, {
-			from_currency: Currency.USD,
-			to_currency: Currency.UZS,
-			rate: 12800
-		});
-		const rates = await call(OPERATOR_FX_RATE_PATHS.listFxRates);
-		expect(rates.data[0].id).toBe(rate.data.id);
+		const rates = await call(FX_PATHS.listOperatorRates);
+		expect(rates.data.length).toBeGreaterThan(0);
 
 		const filters = await call(TOUR_CATALOG_PATHS.listFilters);
 		expect(filters.data.cities.length).toBeGreaterThan(0);

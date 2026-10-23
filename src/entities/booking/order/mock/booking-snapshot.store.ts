@@ -168,6 +168,7 @@ export const getRevisionPreview = (
 			events_localized: null,
 			packages: listPackages(optionId),
 			operator_financials: null,
+			fx_margin: "0.02",
 			fx_rates: [],
 			agency_discount: null
 		},
