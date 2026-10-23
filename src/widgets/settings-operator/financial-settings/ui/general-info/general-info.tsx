@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type FC, Fragment, useEffect } from "react";
+import { type FC, Fragment, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -14,6 +14,10 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
+import {
+	CURRENCY_OPTIONS,
+	type ENUM_CURRENCY_OPTIONS_TYPE
+} from "@/entities/commission";
 import {
 	ENUM_FORM_OPERATOR_GENERAL_INFO,
 	OPERATOR_GENERAL_INFO_SCHEMA,
@@ -72,6 +76,28 @@ const GeneralInfoBase: FC = () => {
 		}
 	}
 
+	// default_currency обязан входить в accepted_currencies, иначе бэк ответит 400
+	const fieldsList = useMemo(() => {
+		const accepted = generalInfoData?.acceptedCurrencies;
+		if (!accepted) return GENERAL_INFO_LIST;
+
+		return GENERAL_INFO_LIST.map(
+			(field): TForm =>
+				field.key ===
+					ENUM_FORM_OPERATOR_GENERAL_INFO.DEFAULT_CURRENCY &&
+				field.fieldType === "select"
+					? {
+							...field,
+							options: CURRENCY_OPTIONS.filter(({ value }) =>
+								accepted.includes(
+									value as ENUM_CURRENCY_OPTIONS_TYPE
+								)
+							)
+						}
+					: field
+		);
+	}, [generalInfoData?.acceptedCurrencies]);
+
 	const isLoading =
 		isUpdating || isGeneralInfoLoading || form.formState.isSubmitting;
 
@@ -81,7 +107,7 @@ const GeneralInfoBase: FC = () => {
 				onSubmit={form.handleSubmit(handleSave)}
 				className="flex flex-col gap-8"
 			>
-				{GENERAL_INFO_LIST.map(({ key, ...item }, index) => (
+				{fieldsList.map(({ key, ...item }, index) => (
 					<Fragment key={key}>
 						{index > 0 && <Separator />}
 						<div className="flex flex-col gap-6">

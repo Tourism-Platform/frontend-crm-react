@@ -1,3 +1,6 @@
+import type { Permissions } from "@/shared/api";
+import type { TAssertNever } from "@/shared/types";
+
 export const ENUM_PERMISSION = {
 	TOUR_READ: "tour_read",
 	TOUR_CREATE: "tour_create",
@@ -46,7 +49,6 @@ export const ENUM_PERMISSION = {
 	OPERATOR_AGENCIES_READ: "operator_agencies_read",
 	OPERATOR_AGENCIES_WRITE: "operator_agencies_write",
 	FX_RATE_READ: "fx_rate_read",
-	FX_RATE_WRITE: "fx_rate_write",
 	SUPPLIER_PAYMENT_READ: "supplier_payment_read",
 	SUPPLIER_PAYMENT_WRITE: "supplier_payment_write",
 	PAYMENT_ROUTE_READ: "payment_route_read",
@@ -55,8 +57,15 @@ export const ENUM_PERMISSION = {
 	AGENCY_INFO_WRITE: "agency_info_write",
 	STAFF_READ: "staff_read",
 	STAFF_MANAGE: "staff_manage",
-	AUDIT_READ: "audit_read"
+	AUDIT_READ: "audit_read",
+	TASK_READ: "task_read",
+	TASK_RETRY: "task_retry"
 } as const;
 
 export type ENUM_PERMISSION_TYPE =
 	(typeof ENUM_PERMISSION)[keyof typeof ENUM_PERMISSION];
+
+// Бэк добавил право, а фронт о нём не знает — ошибка компиляции
+export type TPermissionsCoverage = TAssertNever<
+	Exclude<`${Permissions}`, ENUM_PERMISSION_TYPE>
+>;

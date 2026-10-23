@@ -68,7 +68,6 @@
 			"operator_agencies_read": "Read operator agencies",
 			"operator_agencies_write": "Write operator agencies",
 			"fx_rate_read": "Read FX rates",
-			"fx_rate_write": "Write FX rates",
 			"supplier_payment_read": "Read supplier payments",
 			"supplier_payment_write": "Write supplier payments",
 			"payment_route_read": "Read payment routes",
@@ -77,7 +76,9 @@
 			"agency_info_write": "Write agency info",
 			"staff_read": "Read staff",
 			"staff_manage": "Manage staff",
-			"audit_read": "Read audit log"
+			"audit_read": "Read audit log",
+			"task_read": "Read tasks",
+			"task_retry": "Retry tasks"
 		}
 	},
 	"tour": {

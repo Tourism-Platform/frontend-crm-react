@@ -1,17 +1,24 @@
-import type { OperatorFxRateModel } from "@/shared/api";
+import { Currency } from "@/shared/api";
 
-import { CURRENCY_SEED } from "./currency.seed";
+import type { TOperatorCurrencyRateBackend } from "../types/operator-currency-rate-backend.interface";
 
-export const MOCK_OPERATOR_ID = "a0000000-0000-4000-8000-000000000001";
-
-export const CURRENCY_MOCK: OperatorFxRateModel[] = CURRENCY_SEED.map(
-	(item, index) => ({
-		id: `c0000000-0000-4000-8000-${String(index + 1).padStart(12, "0")}`,
-		operator_id: MOCK_OPERATOR_ID,
-		from_currency: item.from_currency,
-		to_currency: item.to_currency,
-		rate: String(item.rate),
-		valid_from: "2026-01-01T00:00:00Z",
-		created_by: null
-	})
-);
+/**
+ * Совпадает с OPERATOR_FINANCIAL_MOCK: default_currency USD, accepted [USD, EUR, UZS],
+ * fx_margin 0.02 — по строке на каждую принятую валюту, кроме default_currency
+ */
+export const CURRENCY_MOCK: TOperatorCurrencyRateBackend[] = [
+	{
+		from_currency: Currency.EUR,
+		to_currency: Currency.USD,
+		rate: "1.08",
+		rate_with_margin: "1.1016",
+		rate_date: "2026-01-01"
+	},
+	{
+		from_currency: Currency.UZS,
+		to_currency: Currency.USD,
+		rate: "0.000079",
+		rate_with_margin: "0.00008058",
+		rate_date: null
+	}
+];

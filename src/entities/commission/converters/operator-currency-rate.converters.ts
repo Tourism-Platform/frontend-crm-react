@@ -1,15 +1,11 @@
-import { TEMP_LIST_TOTAL } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
 
 import type {
 	IOperatorCurrencyRate,
-	IOperatorCurrencyRateFilters,
-	TOperatorCurrencyRateCreateSchema
+	IOperatorCurrencyRateFilters
 } from "../types";
 import type {
 	TOperatorCurrencyRateBackend,
-	TOperatorCurrencyRateBackendQuery,
-	TOperatorCurrencyRateCreateBackend,
 	TOperatorCurrencyRateResponse
 } from "../types/operator-currency-rate-backend.interface";
 
@@ -18,37 +14,32 @@ import { currencyConverter } from "./currency.coverters";
 export const mapOperatorCurrencyRateToFrontend = (
 	data: TOperatorCurrencyRateBackend
 ): IOperatorCurrencyRate => ({
-	id: data.id,
-	from_currency: data.from_currency,
-	to_currency: data.to_currency,
+	id: `${data.from_currency}-${data.to_currency}`,
+	from_currency: currencyConverter.from(data.from_currency)!,
+	to_currency: currencyConverter.from(data.to_currency)!,
 	rate: Number(data.rate),
-	valid_from: data.valid_from
-});
-
-export const mapOperatorCurrencyRateFiltersToBackend = (
-	filters: IOperatorCurrencyRateFilters
-): TOperatorCurrencyRateBackendQuery => ({
-	...(filters.page > 1 && { skip: (filters.page - 1) * filters.limit }),
-	...(filters.limit && { limit: filters.limit }),
-	...(filters.fromCurrency && {
-		from_currency: currencyConverter.to(filters.fromCurrency)
-	}),
-	...(filters.toCurrency && {
-		to_currency: currencyConverter.to(filters.toCurrency)
-	})
+	rate_with_margin: Number(data.rate_with_margin),
+	rate_date: data.rate_date
 });
 
 export const mapOperatorCurrencyRateListToFrontend = (
 	data: TOperatorCurrencyRateResponse
-): IPaginationResponse<IOperatorCurrencyRate> => ({
-	data: data.map(mapOperatorCurrencyRateToFrontend),
-	total: TEMP_LIST_TOTAL
-});
+): IOperatorCurrencyRate[] => data.map(mapOperatorCurrencyRateToFrontend);
 
-export const mapOperatorCurrencyRateToBackend = (
-	data: TOperatorCurrencyRateCreateSchema
-): TOperatorCurrencyRateCreateBackend => ({
-	from_currency: currencyConverter.to(data.from_currency)!,
-	to_currency: currencyConverter.to(data.to_currency)!,
-	rate: String(data.rate)
-});
+/** Бэк отдаёт весь список без фильтров и пагинации — считаем на клиенте */
+export const filterOperatorCurrencyRates = (
+	rates: IOperatorCurrencyRate[],
+	{ page, limit, fromCurrency, toCurrency }: IOperatorCurrencyRateFilters
+): IPaginationResponse<IOperatorCurrencyRate> => {
+	const filtered = rates.filter(
+		(rate) =>
+			(!fromCurrency || rate.from_currency === fromCurrency) &&
+			(!toCurrency || rate.to_currency === toCurrency)
+	);
+	const start = (page - 1) * limit;
+
+	return {
+		data: filtered.slice(start, start + limit),
+		total: filtered.length
+	};
+};

@@ -76,7 +76,6 @@ export const PERMISSION_LABELS: Record<ENUM_PERMISSION_TYPE, TOptionsKeys> = {
 	[ENUM_PERMISSION.OPERATOR_AGENCIES_WRITE]:
 		"staff.permissions.operator_agencies_write",
 	[ENUM_PERMISSION.FX_RATE_READ]: "staff.permissions.fx_rate_read",
-	[ENUM_PERMISSION.FX_RATE_WRITE]: "staff.permissions.fx_rate_write",
 	[ENUM_PERMISSION.SUPPLIER_PAYMENT_READ]:
 		"staff.permissions.supplier_payment_read",
 	[ENUM_PERMISSION.SUPPLIER_PAYMENT_WRITE]:
@@ -89,5 +88,7 @@ export const PERMISSION_LABELS: Record<ENUM_PERMISSION_TYPE, TOptionsKeys> = {
 	[ENUM_PERMISSION.AGENCY_INFO_WRITE]: "staff.permissions.agency_info_write",
 	[ENUM_PERMISSION.STAFF_READ]: "staff.permissions.staff_read",
 	[ENUM_PERMISSION.STAFF_MANAGE]: "staff.permissions.staff_manage",
-	[ENUM_PERMISSION.AUDIT_READ]: "staff.permissions.audit_read"
+	[ENUM_PERMISSION.AUDIT_READ]: "staff.permissions.audit_read",
+	[ENUM_PERMISSION.TASK_READ]: "staff.permissions.task_read",
+	[ENUM_PERMISSION.TASK_RETRY]: "staff.permissions.task_retry"
 };

@@ -20,6 +20,9 @@ export const mapOperatorFinanceInfoToFrontend = (
 			: 0,
 
 	defaultCurrency: currencyConverter.from(backend.default_currency)!,
+	acceptedCurrencies: backend.accepted_currencies.map(
+		(currency) => currencyConverter.from(currency)!
+	),
 
 	vatEnabled: backend.vat_enabled,
 	vatRate: Number(backend.vat_rate ?? 0),

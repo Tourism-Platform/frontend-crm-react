@@ -1,1 +1,0 @@
-export { NewCurrencyRate } from "./ui";

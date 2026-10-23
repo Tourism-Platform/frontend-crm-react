@@ -11,7 +11,8 @@ const MAP_CURENCY: Record<ENUM_CURRENCY_OPTIONS_TYPE, Currency> = {
 	[ENUM_CURRENCY_OPTIONS.USD]: Currency.USD,
 	[ENUM_CURRENCY_OPTIONS.EUR]: Currency.EUR,
 	[ENUM_CURRENCY_OPTIONS.RUB]: Currency.RUB,
-	[ENUM_CURRENCY_OPTIONS.GBP]: Currency.GBP
+	[ENUM_CURRENCY_OPTIONS.GBP]: Currency.GBP,
+	[ENUM_CURRENCY_OPTIONS.CNY]: Currency.CNY
 };
 
 export const currencyConverter = createEnumMapper<

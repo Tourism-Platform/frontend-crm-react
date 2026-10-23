@@ -10,10 +10,9 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 import {
 	ENUM_OPERATOR_CURRENCY_RATE_FILTER,
 	type IOperatorCurrencyRateFilters,
+	filterOperatorCurrencyRates,
 	useGetOperatorCurrencyRatesQuery
 } from "@/entities/commission";
-
-import { NewCurrencyRate } from "@/features/settings";
 
 import {
 	CURRENCY_RATE_FILTERS_LIST,
@@ -48,13 +47,19 @@ const CurrencyBase: FC = () => {
 		data: currencyRates,
 		isLoading,
 		isFetching
-	} = useGetOperatorCurrencyRatesQuery(filters);
+	} = useGetOperatorCurrencyRatesQuery();
 
-	const currencyRatesData = useMemo(
-		() => currencyRates?.data ?? [],
-		[currencyRates]
+	// Бэк отдаёт весь список — фильтр и пагинация на клиенте
+	const { data: currencyRatesData, total: totalCount } = useMemo(
+		() =>
+			filterOperatorCurrencyRates(currencyRates ?? [], {
+				page: filters.page,
+				limit: filters.limit,
+				fromCurrency,
+				toCurrency
+			}),
+		[currencyRates, filters.page, filters.limit, fromCurrency, toCurrency]
 	);
-	const totalCount = currencyRates?.total ?? 0;
 
 	const columns = useMemo(() => OPERATOR_CURRENCY_RATE_COLUMNS(t), [t]);
 
@@ -83,8 +88,6 @@ const CurrencyBase: FC = () => {
 		},
 		[filters.page, filters.limit, setValue]
 	);
-
-	const actionsJsx = useMemo(() => <NewCurrencyRate />, []);
 
 	const topChildrenJsx = useMemo(
 		() => (
@@ -127,7 +130,6 @@ const CurrencyBase: FC = () => {
 					data={currencyRatesData}
 					recordCount={totalCount}
 					columns={columns}
-					actions={actionsJsx}
 					pagination={paginationObj}
 					onPaginationChange={handlePaginationChange}
 					showTopFilters={false}

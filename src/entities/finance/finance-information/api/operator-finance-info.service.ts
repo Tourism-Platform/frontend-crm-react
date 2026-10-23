@@ -34,7 +34,11 @@ export const operatorFinanceInfoApi = authApi.injectEndpoints({
 				...OPERATOR_PATHS.updateOperatorFinancials,
 				body: mapOperatorFinanceInfoToBackend(data)
 			}),
-			invalidatesTags: [ENUM_API_TAGS.OPERATOR.FINANCIAL_INFORMATION]
+			// Курсы зависят от default_currency и fx_margin
+			invalidatesTags: [
+				ENUM_API_TAGS.OPERATOR.FINANCIAL_INFORMATION,
+				ENUM_API_TAGS.OPERATOR.CURRENCY_RATES
+			]
 		})
 	})
 });

@@ -60,7 +60,6 @@ const MAP_PERMISSION: Record<ENUM_PERMISSION_TYPE, Permissions> = {
 	[ENUM_PERMISSION.OPERATOR_AGENCIES_WRITE]:
 		Permissions.OperatorAgenciesWrite,
 	[ENUM_PERMISSION.FX_RATE_READ]: Permissions.FxRateRead,
-	[ENUM_PERMISSION.FX_RATE_WRITE]: Permissions.FxRateWrite,
 	[ENUM_PERMISSION.SUPPLIER_PAYMENT_READ]: Permissions.SupplierPaymentRead,
 	[ENUM_PERMISSION.SUPPLIER_PAYMENT_WRITE]: Permissions.SupplierPaymentWrite,
 	[ENUM_PERMISSION.PAYMENT_ROUTE_READ]: Permissions.PaymentRouteRead,
@@ -69,7 +68,9 @@ const MAP_PERMISSION: Record<ENUM_PERMISSION_TYPE, Permissions> = {
 	[ENUM_PERMISSION.AGENCY_INFO_WRITE]: Permissions.AgencyInfoWrite,
 	[ENUM_PERMISSION.STAFF_READ]: Permissions.StaffRead,
 	[ENUM_PERMISSION.STAFF_MANAGE]: Permissions.StaffManage,
-	[ENUM_PERMISSION.AUDIT_READ]: Permissions.AuditRead
+	[ENUM_PERMISSION.AUDIT_READ]: Permissions.AuditRead,
+	[ENUM_PERMISSION.TASK_READ]: Permissions.TaskRead,
+	[ENUM_PERMISSION.TASK_RETRY]: Permissions.TaskRetry
 };
 
 export const permissionConverter = createEnumMapper<

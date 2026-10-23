@@ -2,13 +2,16 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
 
 import { Skeleton } from "@/shared/ui";
+import { formatDate } from "@/shared/utils";
 
 import {
 	CURRENCY_LABELS,
 	type IOperatorCurrencyRate
 } from "@/entities/commission";
 
-import { FinancialActions } from "../../ui";
+// Курс в слабую валюту бывает вида 0.000079 — дефолтные 3 знака дали бы «0»
+const formatRate = (rate: number) =>
+	rate.toLocaleString(undefined, { maximumFractionDigits: 8 });
 
 export const OPERATOR_CURRENCY_RATE_COLUMNS = (
 	t: TFunction<"financial_settings_page_operator">
@@ -67,20 +70,36 @@ export const OPERATOR_CURRENCY_RATE_COLUMNS = (
 		},
 		accessorKey: "rate",
 		cell: ({ row }) => (
+			<div className="font-medium">{formatRate(row.original.rate)}</div>
+		),
+		size: 160
+	},
+	{
+		header: t("currency.currency_rate.table.rate_with_margin"),
+		meta: {
+			headerTitle: t("currency.currency_rate.table.rate_with_margin"),
+			skeleton: <Skeleton className="h-4 w-[80px]" />
+		},
+		accessorKey: "rate_with_margin",
+		cell: ({ row }) => (
 			<div className="font-medium">
-				{(row.getValue("rate") as number).toLocaleString()}
+				{formatRate(row.original.rate_with_margin)}
 			</div>
 		),
 		size: 160
 	},
 	{
-		id: "actions",
-		header: () => <span className="sr-only">Actions</span>,
-		cell: ({ row }) => <FinancialActions row={row.original} />,
+		header: t("currency.currency_rate.table.rate_date"),
 		meta: {
-			skeleton: <div className="size-9 rounded-md" />
+			headerTitle: t("currency.currency_rate.table.rate_date"),
+			skeleton: <Skeleton className="h-4 w-[100px]" />
 		},
-		size: 60,
-		enableHiding: false
+		accessorKey: "rate_date",
+		cell: ({ row }) => (
+			<div className="text-muted-foreground">
+				{formatDate(row.getValue("rate_date") ?? undefined) || "—"}
+			</div>
+		),
+		size: 160
 	}
 ];

@@ -224,141 +224,15 @@
 			},
 			"reset": "Reset filters"
 		},
-		"commission_type": {
-			"title": "Default Currency rate",
-			"description": "Create global commission types for agents to select from when logging bookings.",
-			"button": "New type",
-			"form": {
-				"title": "Add New Type",
-				"fields": {
-					"currency": {
-						"label": "Currency",
-						"placeholder": "Select currency",
-						"errors": {
-							"required": "Currency name is required"
-						}
-					},
-					"rate": {
-						"label": "Exchange Rate",
-						"placeholder": "Enter exchange rate",
-						"errors": {
-							"required": "Exchange rate is required",
-							"min": "Exchange rate must be greater than 0",
-							"max": "Exchange rate is too high"
-						}
-					}
-				},
-				"buttons": {
-					"decline": "Cancel",
-					"save": "Add",
-					"saving": "Adding"
-				},
-				"toasts": {
-					"success": "Commission type added successfully",
-					"error": "Failed to add commission type"
-				}
-			},
-			"menu": {
-				"edit": {
-					"button": "Edit",
-					"form": {
-						"title": "Edit commission type",
-						"fields": {
-							"currency": {
-								"label": "Currency",
-								"placeholder": "Select currency"
-							},
-							"rate": {
-								"label": "Exchange Rate",
-								"placeholder": "Enter exchange rate"
-							}
-						},
-						"buttons": {
-							"decline": "Cancel",
-							"save": "Save",
-							"saving": "Saving"
-						},
-						"toasts": {
-							"success": "Commission type updated successfully",
-							"error": "Failed to update commission type"
-						}
-					}
-				},
-				"delete": {
-					"button": "Delete",
-					"form": {
-						"title": "Delete commission type",
-						"warning": "This action is irreversible. The commission type will be permanently removed from the system.",
-						"buttons": {
-							"decline": "Cancel",
-							"confirm": "Delete",
-							"confirming": "Deleting"
-						},
-						"toasts": {
-							"success": "Commission type deleted successfully",
-							"error": "Failed to delete commission type"
-						}
-					}
-				}
-			},
-			"table": {
-				"currency": "Currency",
-				"rate": "Exchange rate",
-				"status": "Status"
-			}
-		},
 		"currency_rate": {
 			"title": "Default Currency rate",
-			"description": "Set exchange rates for each currency. These rates are used when calculating tour costs and generating invoices.",
-			"button": "New rate",
-			"form": {
-				"title": "Add currency rate",
-				"fields": {
-					"from_currency": {
-						"label": "From currency",
-						"placeholder": "Select currency",
-						"errors": {
-							"required": "From currency is required"
-						}
-					},
-					"to_currency": {
-						"label": "To currency",
-						"placeholder": "Select currency",
-						"errors": {
-							"required": "To currency is required",
-							"same_currency": "To currency must be different"
-						}
-					},
-					"rate": {
-						"label": "Rate",
-						"placeholder": "Enter rate",
-						"errors": {
-							"required": "Rate is required",
-							"min": "Rate must be greater than 0",
-							"max": "Rate is too high"
-						}
-					},
-					"pair": {
-						"errors": {
-							"same_currency": "From and to currencies must be different"
-						}
-					}
-				},
-				"buttons": {
-					"decline": "Cancel",
-					"save": "Add",
-					"saving": "Adding"
-				},
-				"toasts": {
-					"success": "Currency rate added successfully",
-					"error": "Failed to add currency rate"
-				}
-			},
+			"description": "Exchange rates applied to your tours and invoices. Rates are synced automatically.",
 			"table": {
 				"from_currency": "From",
 				"to_currency": "To",
 				"rate": "Rate",
-				"valid_from": "Valid from"
+				"rate_with_margin": "Rate with margin",
+				"rate_date": "Rate date"
 			}
 		},
 		"commission_rate": {
