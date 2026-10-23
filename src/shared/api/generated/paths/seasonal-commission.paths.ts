@@ -27,6 +27,12 @@ export const SEASONAL_COMMISSION_PATHS = {
 				response: SeasonalityCommissionModel;
 			}
 		}) as const,
+	removeCommission: (tourId: string, commissionId: string) =>
+		({
+			url: `/tour/${tourId}/seasonality/remove/${commissionId}`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
 	updateTourCommissions: (tourId: string, commissionId: string) =>
 		({
 			url: `/tour/${tourId}/seasonality/update/${commissionId}`,
@@ -36,11 +42,5 @@ export const SEASONAL_COMMISSION_PATHS = {
 				query: void;
 				response: SeasonalityCommissionModel;
 			}
-		}) as const,
-	removeCommission: (tourId: string, commissionId: string) =>
-		({
-			url: `/tour/${tourId}/seasonality/remove/${commissionId}`,
-			method: "DELETE",
-			_types: {} as { body: void; query: void; response: void }
 		}) as const
 } as const;

@@ -7,7 +7,7 @@
  * local — спека из API_SPEC_FILE (по умолчанию data/backend/openapi.json) вместо VITE_API_URL
  */
 
-import { writeFileSync, mkdirSync, readFileSync, existsSync } from "fs";
+import { writeFileSync, mkdirSync, readFileSync, existsSync, rmSync } from "fs";
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
@@ -330,6 +330,8 @@ async function main() {
 		}
 	}
 
+	// Удаляем файлы тегов, которых больше нет в спеке
+	rmSync(OUTPUT_DIR, { recursive: true, force: true });
 	mkdirSync(OUTPUT_DIR, { recursive: true });
 	const indexExports: string[] = [];
 

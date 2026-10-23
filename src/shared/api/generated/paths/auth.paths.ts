@@ -10,30 +10,10 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const AUTH_PATHS = {
-	getMyAccount: {
-		url: "/auth/me",
+	googleCallback: {
+		url: "/auth/google/callback",
 		method: "GET",
-		_types: {} as { body: void; query: void; response: MeSchema }
-	} as const,
-	changePassword: {
-		url: "/auth/password/change",
-		method: "PATCH",
-		_types: {} as { body: PasswordChangeIn; query: void; response: void }
-	} as const,
-	authUser: {
-		url: "/auth/signin",
-		method: "POST",
-		_types: {} as { body: SignInIn; query: void; response: string }
-	} as const,
-	logoutUser: {
-		url: "/auth/signout",
-		method: "POST",
 		_types: {} as { body: void; query: void; response: void }
-	} as const,
-	registerUser: {
-		url: "/auth/register",
-		method: "POST",
-		_types: {} as { body: AuthUserIn; query: void; response: BaseUser }
 	} as const,
 	googleLogin: {
 		url: "/auth/google/login",
@@ -44,9 +24,29 @@ export const AUTH_PATHS = {
 			response: void;
 		}
 	} as const,
-	googleCallback: {
-		url: "/auth/google/callback",
+	getMyAccount: {
+		url: "/auth/me",
 		method: "GET",
+		_types: {} as { body: void; query: void; response: MeSchema }
+	} as const,
+	changePassword: {
+		url: "/auth/password/change",
+		method: "PATCH",
+		_types: {} as { body: PasswordChangeIn; query: void; response: void }
+	} as const,
+	registerUser: {
+		url: "/auth/register",
+		method: "POST",
+		_types: {} as { body: AuthUserIn; query: void; response: BaseUser }
+	} as const,
+	authUser: {
+		url: "/auth/signin",
+		method: "POST",
+		_types: {} as { body: SignInIn; query: void; response: string }
+	} as const,
+	logoutUser: {
+		url: "/auth/signout",
+		method: "POST",
 		_types: {} as { body: void; query: void; response: void }
 	} as const
 } as const;

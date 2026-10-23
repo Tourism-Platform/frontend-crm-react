@@ -33,6 +33,16 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const BOOKING_REVISION_PATHS = {
+	listEdits: (bookingId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/edits`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: EventEditOpOutput[];
+			}
+		}) as const,
 	addEvent: (bookingId: string) =>
 		({
 			url: `/booking/revision/${bookingId}/event`,
@@ -49,6 +59,16 @@ export const BOOKING_REVISION_PATHS = {
 					| GuideSingleEvent
 					| SupplementarySingleEvent
 					| MultiEvent;
+				query: void;
+				response: RevisionPreview;
+			}
+		}) as const,
+	copyEvent: (bookingId: string) =>
+		({
+			url: `/booking/revision/${bookingId}/event/copy`,
+			method: "POST",
+			_types: {} as {
+				body: RevisionCopySchema;
 				query: void;
 				response: RevisionPreview;
 			}
@@ -79,16 +99,6 @@ export const BOOKING_REVISION_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: RevisionPreview }
 		}) as const,
-	copyEvent: (bookingId: string) =>
-		({
-			url: `/booking/revision/${bookingId}/event/copy`,
-			method: "POST",
-			_types: {} as {
-				body: RevisionCopySchema;
-				query: void;
-				response: RevisionPreview;
-			}
-		}) as const,
 	addPoolMember: (bookingId: string, eventId: string) =>
 		({
 			url: `/booking/revision/${bookingId}/event/${eventId}/pool`,
@@ -114,6 +124,45 @@ export const BOOKING_REVISION_PATHS = {
 	removePoolMember: (bookingId: string, eventId: string, supplyId: string) =>
 		({
 			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}`,
+			method: "DELETE",
+			_types: {} as {
+				body: void;
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
+				response: RevisionPreview;
+			}
+		}) as const,
+	setPoolMemberOverride: (
+		bookingId: string,
+		eventId: string,
+		supplyId: string
+	) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/override`,
+			method: "PATCH",
+			_types: {} as {
+				body:
+					| HotelOverrideInput
+					| RouteOverrideInput
+					| BusOverrideInput
+					| TransferOverrideInput
+					| ActivityOverrideInput;
+				query: {
+					event_option_id?: string | null;
+					option_index?: number | null;
+				};
+				response: RevisionPreview;
+			}
+		}) as const,
+	clearPoolMemberOverride: (
+		bookingId: string,
+		eventId: string,
+		supplyId: string
+	) =>
+		({
+			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/override`,
 			method: "DELETE",
 			_types: {} as {
 				body: void;
@@ -158,59 +207,10 @@ export const BOOKING_REVISION_PATHS = {
 				response: RevisionPreview;
 			}
 		}) as const,
-	listEdits: (bookingId: string) =>
-		({
-			url: `/booking/revision/${bookingId}/edits`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: EventEditOpOutput[];
-			}
-		}) as const,
 	preview: (bookingId: string) =>
 		({
 			url: `/booking/revision/${bookingId}/preview`,
 			method: "GET",
 			_types: {} as { body: void; query: void; response: RevisionPreview }
-		}) as const,
-	setPoolMemberOverride: (
-		bookingId: string,
-		eventId: string,
-		supplyId: string
-	) =>
-		({
-			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/override`,
-			method: "PATCH",
-			_types: {} as {
-				body:
-					| HotelOverrideInput
-					| RouteOverrideInput
-					| BusOverrideInput
-					| TransferOverrideInput
-					| ActivityOverrideInput;
-				query: {
-					event_option_id?: string | null;
-					option_index?: number | null;
-				};
-				response: RevisionPreview;
-			}
-		}) as const,
-	clearPoolMemberOverride: (
-		bookingId: string,
-		eventId: string,
-		supplyId: string
-	) =>
-		({
-			url: `/booking/revision/${bookingId}/event/${eventId}/pool/${supplyId}/override`,
-			method: "DELETE",
-			_types: {} as {
-				body: void;
-				query: {
-					event_option_id?: string | null;
-					option_index?: number | null;
-				};
-				response: RevisionPreview;
-			}
 		}) as const
 } as const;

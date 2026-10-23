@@ -22,6 +22,16 @@ export const BOOKING_ORDER_OPERATOR_PATHS = {
 				response: BookingOrderDetail;
 			}
 		}) as const,
+	declineBooking: (bookingId: string) =>
+		({
+			url: `/booking/order/operator/${bookingId}/decline`,
+			method: "POST",
+			_types: {} as {
+				body: BookingCancel;
+				query: void;
+				response: BookingOrderResponse;
+			}
+		}) as const,
 	getOperatorOrderFinancials: (bookingId: string) =>
 		({
 			url: `/booking/order/operator/${bookingId}/financials`,
@@ -30,16 +40,6 @@ export const BOOKING_ORDER_OPERATOR_PATHS = {
 				body: void;
 				query: void;
 				response: BookingFinancialsResponse;
-			}
-		}) as const,
-	getOperatorOrderVariance: (bookingId: string) =>
-		({
-			url: `/booking/order/operator/${bookingId}/variance`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: EventVarianceResponse;
 			}
 		}) as const,
 	getOperatorBookingItinerary: (bookingId: string) =>
@@ -62,14 +62,14 @@ export const BOOKING_ORDER_OPERATOR_PATHS = {
 				response: BookingOrderResponse;
 			}
 		}) as const,
-	declineBooking: (bookingId: string) =>
+	getOperatorOrderVariance: (bookingId: string) =>
 		({
-			url: `/booking/order/operator/${bookingId}/decline`,
-			method: "POST",
+			url: `/booking/order/operator/${bookingId}/variance`,
+			method: "GET",
 			_types: {} as {
-				body: BookingCancel;
+				body: void;
 				query: void;
-				response: BookingOrderResponse;
+				response: EventVarianceResponse;
 			}
 		}) as const
 } as const;

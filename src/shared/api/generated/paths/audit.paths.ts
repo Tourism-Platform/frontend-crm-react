@@ -4,15 +4,6 @@ import type { AuditLogListResponse } from "../Api";
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const AUDIT_PATHS = {
-	listOrgAudit: {
-		url: "/audit/all",
-		method: "GET",
-		_types: {} as {
-			body: void;
-			query: { user_id?: string | null; skip?: number; limit?: number };
-			response: AuditLogListResponse;
-		}
-	} as const,
 	listAllAudit: {
 		url: "/audit/admin/all",
 		method: "GET",
@@ -25,6 +16,15 @@ export const AUDIT_PATHS = {
 				skip?: number;
 				limit?: number;
 			};
+			response: AuditLogListResponse;
+		}
+	} as const,
+	listOrgAudit: {
+		url: "/audit/all",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { user_id?: string | null; skip?: number; limit?: number };
 			response: AuditLogListResponse;
 		}
 	} as const

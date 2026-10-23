@@ -32,8 +32,8 @@ export const LEDGER_PATHS = {
 			response: LedgerEntryListResponse;
 		}
 	} as const,
-	listDebtors: {
-		url: "/ledger/operator/debtors",
+	listCreditors: {
+		url: "/ledger/operator/creditors",
 		method: "GET",
 		_types: {} as {
 			body: void;
@@ -41,8 +41,8 @@ export const LEDGER_PATHS = {
 			response: CounterpartyBalanceListResponse;
 		}
 	} as const,
-	listCreditors: {
-		url: "/ledger/operator/creditors",
+	listDebtors: {
+		url: "/ledger/operator/debtors",
 		method: "GET",
 		_types: {} as {
 			body: void;

@@ -14,41 +14,6 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const TOUR_OPTION_PATHS = {
-	getPricingBreakdown: (tourId: string, optionId: string) =>
-		({
-			url: `/tour/${tourId}/option/${optionId}/pricing-breakdown`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: {
-					currency?: Currency;
-					read_lang?: LanguageCode;
-					as_of?: string | null;
-					pax?: number | null;
-					date?: string | null;
-				};
-				response: PricingBreakdownResponse;
-			}
-		}) as const,
-	getPriceMatrix: (tourId: string, optionId: string) =>
-		({
-			url: `/tour/${tourId}/option/${optionId}/price-matrix`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: {
-					currency?: Currency;
-					pax_from?: number | null;
-					pax_to?: number | null;
-					brackets?: string | null;
-					date?: string | null;
-					as_of?: string | null;
-				};
-				response:
-					| PerPaxPriceMatrixSchemaOutput
-					| PerRangePriceMatrixSchemaOutput;
-			}
-		}) as const,
 	listAllTourOptions: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/option/all`,
@@ -100,5 +65,40 @@ export const TOUR_OPTION_PATHS = {
 			url: `/tour/${tourId}/option/${optionId}/cover`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	getPriceMatrix: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/option/${optionId}/price-matrix`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: {
+					currency?: Currency;
+					pax_from?: number | null;
+					pax_to?: number | null;
+					brackets?: string | null;
+					date?: string | null;
+					as_of?: string | null;
+				};
+				response:
+					| PerPaxPriceMatrixSchemaOutput
+					| PerRangePriceMatrixSchemaOutput;
+			}
+		}) as const,
+	getPricingBreakdown: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/option/${optionId}/pricing-breakdown`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: {
+					currency?: Currency;
+					read_lang?: LanguageCode;
+					as_of?: string | null;
+					pax?: number | null;
+					date?: string | null;
+				};
+				response: PricingBreakdownResponse;
+			}
 		}) as const
 } as const;

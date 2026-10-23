@@ -21,20 +21,6 @@ export const OPERATOR_PATHS = {
 			response: OperatorModel;
 		}
 	} as const,
-	getOperatorInfo: {
-		url: "/operator/me/info",
-		method: "GET",
-		_types: {} as { body: void; query: void; response: OperatorInfoModel }
-	} as const,
-	updateOperatorInfo: {
-		url: "/operator/me/info",
-		method: "PATCH",
-		_types: {} as {
-			body: OperatorInfoUpdate;
-			query: void;
-			response: OperatorInfoModel;
-		}
-	} as const,
 	getOperatorFinancials: {
 		url: "/operator/me/financials",
 		method: "GET",
@@ -52,6 +38,39 @@ export const OPERATOR_PATHS = {
 			query: void;
 			response: OperatorFinancialSettingsRead;
 		}
+	} as const,
+	getOperatorInfo: {
+		url: "/operator/me/info",
+		method: "GET",
+		_types: {} as { body: void; query: void; response: OperatorInfoModel }
+	} as const,
+	updateOperatorInfo: {
+		url: "/operator/me/info",
+		method: "PATCH",
+		_types: {} as {
+			body: OperatorInfoUpdate;
+			query: void;
+			response: OperatorInfoModel;
+		}
+	} as const,
+	getLogo: {
+		url: "/operator/me/logo",
+		method: "GET",
+		_types: {} as { body: void; query: void; response: void }
+	} as const,
+	addLogo: {
+		url: "/operator/me/logo",
+		method: "POST",
+		_types: {} as {
+			body: BodyAddLogoOperatorMeLogoPost;
+			query: void;
+			response: OperatorInfoModel;
+		}
+	} as const,
+	deleteLogo: {
+		url: "/operator/me/logo",
+		method: "DELETE",
+		_types: {} as { body: void; query: void; response: void }
 	} as const,
 	getOperator: (id: string) =>
 		({
@@ -74,24 +93,5 @@ export const OPERATOR_PATHS = {
 			url: `/operator/${id}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
-		}) as const,
-	getLogo: {
-		url: "/operator/me/logo",
-		method: "GET",
-		_types: {} as { body: void; query: void; response: void }
-	} as const,
-	addLogo: {
-		url: "/operator/me/logo",
-		method: "POST",
-		_types: {} as {
-			body: BodyAddLogoOperatorMeLogoPost;
-			query: void;
-			response: OperatorInfoModel;
-		}
-	} as const,
-	deleteLogo: {
-		url: "/operator/me/logo",
-		method: "DELETE",
-		_types: {} as { body: void; query: void; response: void }
-	} as const
+		}) as const
 } as const;

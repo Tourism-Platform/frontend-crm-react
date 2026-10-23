@@ -11,6 +11,15 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const OPERATOR_AGENCIES_PATHS = {
+	listAgencies: {
+		url: "/operator/agencies/all",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { q?: string | null; skip?: number; limit?: number };
+			response: AgencyListResponse;
+		}
+	} as const,
 	inviteAgency: {
 		url: "/operator/agencies/invite",
 		method: "POST",
@@ -29,21 +38,6 @@ export const OPERATOR_AGENCIES_PATHS = {
 			response: PartneredAgencyListResponse;
 		}
 	} as const,
-	listAgencies: {
-		url: "/operator/agencies/all",
-		method: "GET",
-		_types: {} as {
-			body: void;
-			query: { q?: string | null; skip?: number; limit?: number };
-			response: AgencyListResponse;
-		}
-	} as const,
-	getAgencyInfoById: (agencyId: string) =>
-		({
-			url: `/operator/agencies/${agencyId}/info`,
-			method: "GET",
-			_types: {} as { body: void; query: void; response: AgencyInfoModel }
-		}) as const,
 	setAgencyDiscount: (agencyId: string) =>
 		({
 			url: `/operator/agencies/${agencyId}/discount`,
@@ -59,5 +53,11 @@ export const OPERATOR_AGENCIES_PATHS = {
 			url: `/operator/agencies/${agencyId}/discount`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	getAgencyInfoById: (agencyId: string) =>
+		({
+			url: `/operator/agencies/${agencyId}/info`,
+			method: "GET",
+			_types: {} as { body: void; query: void; response: AgencyInfoModel }
 		}) as const
 } as const;

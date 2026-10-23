@@ -4,8 +4,12 @@ import type {
 	BookingItineraryResponse,
 	BookingOrderListResponse,
 	BookingOrderResponse,
+	BookingPaxPriceResponse,
+	BookingQuoteResponse,
 	BookingStatus,
-	BookingUpdate
+	BookingUpdate,
+	Currency,
+	LanguageCode
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -38,26 +42,21 @@ export const BOOKING_ORDER_PATHS = {
 			response: BookingOrderListResponse;
 		}
 	} as const,
-	getBookingItinerary: (bookingId: string) =>
-		({
-			url: `/booking/order/${bookingId}/itinerary`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: BookingItineraryResponse;
-			}
-		}) as const,
-	submitBookingOrder: (bookingId: string) =>
-		({
-			url: `/booking/order/${bookingId}/submit`,
-			method: "PATCH",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: BookingOrderResponse;
-			}
-		}) as const,
+	getBookingQuote: {
+		url: "/booking/order/quote",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: {
+				tour_option_id: string;
+				date: string;
+				pax: number;
+				lang?: LanguageCode;
+				currency?: Currency | null;
+			};
+			response: BookingQuoteResponse;
+		}
+	} as const,
 	updateBookingOrder: (bookingId: string) =>
 		({
 			url: `/booking/order/${bookingId}`,
@@ -80,6 +79,36 @@ export const BOOKING_ORDER_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: BookingCancel;
+				query: void;
+				response: BookingOrderResponse;
+			}
+		}) as const,
+	getBookingItinerary: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/itinerary`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: BookingItineraryResponse;
+			}
+		}) as const,
+	getBookingPrice: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/price`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { pax: number; currency?: Currency | null };
+				response: BookingPaxPriceResponse;
+			}
+		}) as const,
+	submitBookingOrder: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/submit`,
+			method: "PATCH",
+			_types: {} as {
+				body: void;
 				query: void;
 				response: BookingOrderResponse;
 			}

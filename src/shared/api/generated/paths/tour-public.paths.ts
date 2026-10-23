@@ -23,26 +23,6 @@ export const TOUR_PUBLIC_PATHS = {
 				response: TourMetaResponse;
 			}
 		}) as const,
-	listPublicTourOptions: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/public/option/all`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: { currency?: Currency; skip?: number; limit?: number };
-				response: TourOptionPreviewSchemaOutput[];
-			}
-		}) as const,
-	getPublicTourOption: (tourId: string, optionId: string) =>
-		({
-			url: `/tour/${tourId}/public/option/${optionId}/itinerary`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: { currency?: Currency; read_lang?: LanguageCode };
-				response: TourOptionPublicResponse;
-			}
-		}) as const,
 	getPublicLandingPage: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/public/landing`,
@@ -61,6 +41,26 @@ export const TOUR_PUBLIC_PATHS = {
 				body: void;
 				query: void;
 				response: OperatorPreviewPubSchema;
+			}
+		}) as const,
+	listPublicTourOptions: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/public/option/all`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { currency?: Currency; skip?: number; limit?: number };
+				response: TourOptionPreviewSchemaOutput[];
+			}
+		}) as const,
+	getPublicTourOption: (tourId: string, optionId: string) =>
+		({
+			url: `/tour/${tourId}/public/option/${optionId}/itinerary`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { currency?: Currency; read_lang?: LanguageCode };
+				response: TourOptionPublicResponse;
 			}
 		}) as const,
 	getPublicTourSchedule: (tourId: string) =>

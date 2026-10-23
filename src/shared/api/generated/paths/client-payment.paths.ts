@@ -64,16 +64,6 @@ export const CLIENT_PAYMENT_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
-	confirmPayment: (paymentId: string) =>
-		({
-			url: `/booking/payment/${paymentId}/confirm`,
-			method: "POST",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: ClientPaymentResponse;
-			}
-		}) as const,
 	listAttachments: (paymentId: string) =>
 		({
 			url: `/booking/payment/${paymentId}/attachment`,
@@ -105,5 +95,15 @@ export const CLIENT_PAYMENT_PATHS = {
 			url: `/booking/payment/${paymentId}/attachment/${fileId}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	confirmPayment: (paymentId: string) =>
+		({
+			url: `/booking/payment/${paymentId}/confirm`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: ClientPaymentResponse;
+			}
 		}) as const
 } as const;
