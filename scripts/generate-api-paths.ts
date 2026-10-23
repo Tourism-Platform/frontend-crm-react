@@ -1,29 +1,45 @@
 /**
- * Скрипт генерации констант API-путей и типов из OpenAPI-спецификации.
+ * Скрипт генерации констант API-путей из OpenAPI-спецификации.
  * Группирует пути по тегам и создаёт отдельный файл на каждый тег.
+ * Api.ts генерирует scripts/generate-api-types.ts — запускать его первым.
  *
- * Использование: npx tsx --env-file=.env scripts/generate-api-paths.ts
+ * Использование: npx tsx --env-file=.env scripts/generate-api-paths.ts [local]
+ * local — спека из API_SPEC_FILE (по умолчанию data/backend/openapi.json) вместо VITE_API_URL
  */
 
-import { writeFileSync, mkdirSync } from "fs";
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from "fs";
 import { join, dirname, resolve } from "path";
 import { fileURLToPath } from "url";
-import { generateApi } from "swagger-typescript-api";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+const IS_LOCAL = process.argv.slice(2).includes("local");
 const API_URL = process.env.VITE_API_URL;
 const PROJECT_ROOT = resolve(__dirname, "..");
 const OUTPUT_DIR = join(PROJECT_ROOT, "src/shared/api/generated/paths");
-const TYPES_OUTPUT = join(PROJECT_ROOT, "src/shared/api/generated");
+const SPEC_FILE = resolve(PROJECT_ROOT, process.env.API_SPEC_FILE ?? "data/backend/openapi.json");
 
-if (!API_URL) {
+if (!IS_LOCAL && !API_URL) {
 	console.error("❌ VITE_API_URL is not defined in .env");
 	process.exit(1);
 }
 
-const SPEC_URL = API_URL.endsWith('/openapi.json') ? API_URL : `${API_URL.replace(/\/$/, '')}/openapi.json`;
+if (IS_LOCAL && !existsSync(SPEC_FILE)) {
+	console.error(`❌ Spec file not found: ${SPEC_FILE}`);
+	process.exit(1);
+}
+
+const SPEC_URL = API_URL?.endsWith('/openapi.json') ? API_URL : `${API_URL?.replace(/\/$/, '')}/openapi.json`;
+const SPEC_SOURCE = IS_LOCAL ? SPEC_FILE : SPEC_URL;
+
+async function loadSpec(): Promise<OpenAPISpec> {
+	if (IS_LOCAL) return JSON.parse(readFileSync(SPEC_FILE, "utf-8")) as OpenAPISpec;
+
+	const response = await fetch(SPEC_URL);
+	if (!response.ok) throw new Error(`Failed to fetch ${SPEC_URL}: ${response.status}`);
+	return await response.json() as OpenAPISpec;
+}
 
 interface OpenAPIOperation {
 	tags?: string[];
@@ -65,6 +81,7 @@ interface OpenAPISpec {
 
 interface PathEntry {
 	name: string;
+	operationId: string;
 	path: string;
 	method: string;
 	pathParams: string[];
@@ -161,7 +178,7 @@ function getTSFromSchema(schema: any): { type: string, deps: string[] } {
 	return { type: schema.type || "any", deps: [] };
 }
 
-function resolveSchemaType(schema: any, operationId: string, prefix: string): { type: string, deps: string[] } {
+function resolveSchemaType(schema: any): { type: string, deps: string[] } {
 	if (!schema) return { type: "void", deps: [] };
 	
 	const info = getTSFromSchema(schema);
@@ -175,9 +192,8 @@ function resolveSchemaType(schema: any, operationId: string, prefix: string): { 
 		return info;
 	}
 
-	// Для инлайновых объектов создаем именованный тип
-	const typeName = `${prefix}${toPascalCase(operationId)}`;
-	return { type: typeName, deps: [typeName] };
+	// Инлайновый объект в спеке не совпадает с именем из Api.ts.
+	return { type: "unknown", deps: [] };
 }
 
 function resolveQueryType(params: any[] | undefined): { type: string, deps: string[] } {
@@ -201,7 +217,13 @@ function tagToFileName(tag: string): string {
 }
 
 function tagToObjectName(tag: string): string {
-	return tag.replace(/[&]/g, "_").replace(/\s+/g, "_").replace(/_+/g, "_").toUpperCase() + "_PATHS";
+	return (
+		tag
+			.replace(/[&-]/g, "_")
+			.replace(/\s+/g, "_")
+			.replace(/_+/g, "_")
+			.toUpperCase() + "_PATHS"
+	);
 }
 
 function extractPathParams(path: string): string[] {
@@ -217,12 +239,23 @@ function toCamelCase(str: string): string {
 	return str.replace(/_([a-z])/g, (_, c) => c.toUpperCase());
 }
 
+/** Одинаковый summary у разных путей тега — имена из operationId, иначе второй путь пропадёт */
+function resolveEntryNames(entries: PathEntry[]): PathEntry[] {
+	const counts = new Map<string, number>();
+	for (const entry of entries) counts.set(entry.name, (counts.get(entry.name) ?? 0) + 1);
+
+	return entries.map((entry) => {
+		if (counts.get(entry.name) === 1) return entry;
+		const name = operationIdToName(entry.operationId);
+		console.warn(`  ⚠ [${entry.method.toUpperCase()}] ${entry.path}: "${entry.name}" занят → ${name}`);
+		return { ...entry, name };
+	});
+}
+
 function generateFileContent(tag: string, entries: PathEntry[]): string {
 	const objectName = tagToObjectName(tag);
-	const allDeps = Array.from(new Set(entries.flatMap(e => e.deps)))
-		.filter(t => t !== "void" && t !== "any" && !t.includes("[]"));
-
-	const lines = entries.map((entry) => {
+	const uniqueEntries = resolveEntryNames(entries);
+	const lines = uniqueEntries.map((entry) => {
 		const params = entry.pathParams;
 		const method = entry.method.toUpperCase();
 		const types = `_types: {} as { body: ${entry.bodyType}, query: ${entry.queryType}, response: ${entry.responseType} }`;
@@ -234,13 +267,16 @@ function generateFileContent(tag: string, entries: PathEntry[]): string {
 		return `\t${entry.name}: { url: "${entry.path}", method: "${method}", ${types} } as const`;
 	});
 
-	const seen = new Set<string>();
-	const uniqueLines = lines.filter((line) => {
-		const name = line.match(/\t(\w+):/)?.[1];
-		if (!name || seen.has(name)) return false;
-		seen.add(name);
-		return true;
-	});
+	const body = lines.join(",\n");
+	const allDeps = Array.from(new Set(uniqueEntries.flatMap((entry) => entry.deps)))
+		.filter(
+			(typeName) =>
+				typeName !== "void" &&
+				typeName !== "any" &&
+				typeName !== "unknown" &&
+				!typeName.includes("[]") &&
+				body.includes(typeName)
+		);
 
 	return [
 		// "/* eslint-disable @typescript-eslint/naming-convention */",
@@ -249,31 +285,14 @@ function generateFileContent(tag: string, entries: PathEntry[]): string {
 		"// Сгенерировано скриптом scripts/generate-api-paths.ts",
 		"",
 		`export const ${objectName} = {`,
-		uniqueLines.join(",\n"),
+		body,
 		"} as const;",
 	].join("\n");
 }
 
 async function main() {
-	console.log(`🚀 Codegen started from ${SPEC_URL}...`);
-
-	// 1. Генерируем типы
-	console.log("📦 Step 1: Generating Api.ts...");
-	await generateApi({
-		fileName: "Api.ts",
-		output: TYPES_OUTPUT,
-		url: SPEC_URL,
-		generateClient: false,
-		extractEnums: true,
-		extractRequestParams: true,
-		extractRequestBody: true,
-		silent: true,
-	});
-
-	// 2. Генерируем пути
-	console.log("🔗 Step 2: Parsing spec & generating pathways...");
-	const response = await fetch(SPEC_URL!);
-	const spec: OpenAPISpec = await response.json() as OpenAPISpec;
+	console.log(`🔗 Parsing spec & generating pathways from ${SPEC_SOURCE}...`);
+	const spec = await loadSpec();
 	const tagMap = new Map<string, PathEntry[]>();
 
 	for (const [path, methods] of Object.entries(spec.paths)) {
@@ -285,12 +304,12 @@ async function main() {
 			const name = operation.summary ? summaryToName(operation.summary) : operationIdToName(operationId);
 			
 			const bodySchema = operation.requestBody?.content?.["application/json"]?.schema || operation.requestBody?.content?.["multipart/form-data"]?.schema;
-			const bodyInfo = resolveSchemaType(bodySchema, operationId, "Body");
+			const bodyInfo = resolveSchemaType(bodySchema);
 			const queryInfo = resolveQueryType(operation.parameters);
 			
 			const resContent = (operation.responses?.["200"] || operation.responses?.["201"] || operation.responses?.["204"])?.content;
 			const responseSchema = resContent ? Object.values(resContent)[0]?.schema : undefined;
-			const responseInfo = resolveSchemaType(responseSchema, operationId, "Response");
+			const responseInfo = resolveSchemaType(responseSchema);
 
 			const deps = Array.from(new Set([...bodyInfo.deps, ...queryInfo.deps, ...responseInfo.deps]));
 
@@ -300,7 +319,7 @@ async function main() {
 			for (const tag of (operation.tags ?? ["Default"])) {
 				if (!tagMap.has(tag)) tagMap.set(tag, []);
 				tagMap.get(tag)!.push({ 
-					name, path, method, 
+					name, operationId, path, method,
 					pathParams: extractPathParams(path), 
 					bodyType: bodyInfo.type, 
 					queryType: queryInfo.type, 
@@ -325,4 +344,7 @@ async function main() {
 	console.log(`\n✅ Done! Check the generated files.`);
 }
 
-main().catch(console.error);
+main().catch((error) => {
+	console.error(error);
+	process.exit(1);
+});
