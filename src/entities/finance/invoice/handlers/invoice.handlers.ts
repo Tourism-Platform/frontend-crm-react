@@ -9,10 +9,7 @@ export const financeInvoiceHandlers = [
 		HttpResponse.json(listInvoicesFromUrl(new URL(request.url)))
 	),
 	createMockHandler(
-		{
-			url: "/invoice/:invoiceId",
-			method: "GET"
-		},
+		INVOICE_PATHS.getInvoice(":invoiceId"),
 		async ({ params }) => {
 			const detail = getInvoiceDetail(String(params.invoiceId));
 
@@ -24,10 +21,7 @@ export const financeInvoiceHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/invoice/:invoiceId/pdf",
-			method: "GET"
-		},
+		INVOICE_PATHS.getInvoicePdf(":invoiceId"),
 		async ({ params }) => {
 			const detail = getInvoiceDetail(String(params.invoiceId));
 

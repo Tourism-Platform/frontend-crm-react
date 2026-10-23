@@ -95,7 +95,7 @@ const buildAmounts = (statusIndex: number, orderIndex: number) => {
 	};
 };
 
-const MOCK_OPERATOR_INFO: OrderOperatorInfo = {
+export const MOCK_OPERATOR_INFO: OrderOperatorInfo = {
 	id: MOCK_OPERATOR_ID,
 	name: "Mock Operator",
 	business_name: "Mock Operator LLC",

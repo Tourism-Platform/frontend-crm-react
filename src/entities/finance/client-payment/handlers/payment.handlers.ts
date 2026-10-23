@@ -15,17 +15,12 @@ import {
 	getAttachmentInStore,
 	getPayment,
 	listAttachmentsInStore,
-	listAvailableBookingIds,
 	listPaymentsFromUrl,
 	removeAttachmentInStore,
 	updatePaymentInStore
 } from "../mock/payment.store";
 
 export const financeClientPaymentHandlers = [
-	createMockHandler(
-		{ url: "/finance/client-payments/available-orders", method: "GET" },
-		async () => HttpResponse.json(listAvailableBookingIds())
-	),
 	createMockHandler(CLIENT_PAYMENT_PATHS.listPayments, async ({ request }) =>
 		HttpResponse.json(listPaymentsFromUrl(new URL(request.url)))
 	),
@@ -43,7 +38,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{ url: "/booking/payment/:paymentId", method: "GET" },
+		CLIENT_PAYMENT_PATHS.getPayment(":paymentId"),
 		async ({ params }) => {
 			const payment = getPayment(String(params.paymentId));
 
@@ -55,7 +50,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{ url: "/booking/payment/:paymentId", method: "PATCH" },
+		CLIENT_PAYMENT_PATHS.updatePayment(":paymentId"),
 		async ({ params, body }) => {
 			const updated = updatePaymentInStore(
 				String(params.paymentId),
@@ -70,7 +65,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{ url: "/booking/payment/:paymentId/confirm", method: "POST" },
+		CLIENT_PAYMENT_PATHS.confirmPayment(":paymentId"),
 		async ({ params }) => {
 			const updated = confirmPaymentInStore(String(params.paymentId));
 
@@ -82,7 +77,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{ url: "/booking/payment/:paymentId/attachment", method: "GET" },
+		CLIENT_PAYMENT_PATHS.listAttachments(":paymentId"),
 		async ({ params }) => {
 			const files = listAttachmentsInStore(String(params.paymentId));
 
@@ -94,7 +89,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{ url: "/booking/payment/:paymentId/attachment", method: "POST" },
+		CLIENT_PAYMENT_PATHS.addAttachment(":paymentId"),
 		async ({ params, request }) => {
 			const formData = await request.formData();
 			const file = formData.get("file");
@@ -116,10 +111,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/payment/:paymentId/attachment/:fileId",
-			method: "GET"
-		},
+		CLIENT_PAYMENT_PATHS.downloadAttachment(":paymentId", ":fileId"),
 		async ({ params }) => {
 			const paymentId = String(params.paymentId);
 			const fileId = String(params.fileId);
@@ -139,10 +131,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/payment/:paymentId/attachment/:fileId",
-			method: "DELETE"
-		},
+		CLIENT_PAYMENT_PATHS.removeAttachment(":paymentId", ":fileId"),
 		async ({ params }) => {
 			const deleted = removeAttachmentInStore(
 				String(params.paymentId),
@@ -157,7 +146,7 @@ export const financeClientPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{ url: "/booking/payment/:paymentId", method: "DELETE" },
+		CLIENT_PAYMENT_PATHS.deletePayment(":paymentId"),
 		async ({ params }) => {
 			const deleted = deletePaymentFromStore(String(params.paymentId));
 

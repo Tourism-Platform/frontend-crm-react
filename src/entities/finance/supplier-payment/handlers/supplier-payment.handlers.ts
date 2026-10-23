@@ -67,10 +67,7 @@ export const financeSupplierPaymentHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/operator/supplier-payment/:paymentId/receipt/:fileId",
-			method: "DELETE"
-		},
+		OPERATOR_SUPPLIER_PAYMENT_PATHS.removeReceipt(":paymentId", ":fileId"),
 		async ({ params }) => {
 			const updated = removeReceiptInStore(
 				String(params.paymentId),

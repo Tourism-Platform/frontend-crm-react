@@ -1,1 +1,1 @@
-export * from "./commission.handlers";
+export * from "./fx-rate.handlers";

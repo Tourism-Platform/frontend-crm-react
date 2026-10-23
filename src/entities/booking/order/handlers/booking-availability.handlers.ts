@@ -1,46 +1,45 @@
 import { HttpResponse } from "msw";
 
-import { ApplyAvailabilityInput, createMockHandler } from "@/shared/api";
-
 import {
-	getBookingAvailabilityList,
-	updateBookingAvailabilityRow
-} from "../mock/booking-order-availability.mock";
+	AvailabilityStatus,
+	BOOKING_AVAILABILITY_PATHS,
+	createMockHandler,
+	mockNotFound
+} from "@/shared/api";
+
+import { getBookingOrderDetail } from "../mock/booking-order.store";
+import {
+	applyAvailability,
+	getAvailabilityRows
+} from "../mock/booking-snapshot.store";
 
 export const bookingAvailabilityHandlers = [
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/availability",
-			method: "GET"
-		},
-		async ({ params }) =>
-			HttpResponse.json(
-				getBookingAvailabilityList(String(params.bookingId))
-			)
+		BOOKING_AVAILABILITY_PATHS.listBookingAvailability(":bookingId"),
+		({ params }) =>
+			getBookingOrderDetail(String(params.bookingId))
+				? HttpResponse.json(
+						getAvailabilityRows(String(params.bookingId))
+					)
+				: mockNotFound("Booking not found")
 	),
+
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/events/:eventId/options/:optionIndex/availability",
-			method: "PATCH"
-		},
-		async ({ params, body }) => {
-			const bookingId = String(params.bookingId);
-			const eventId = String(params.eventId);
-			const optionIndex = Number(params.optionIndex);
-			const { status } = body as { status: ApplyAvailabilityInput };
-
-			const updated = updateBookingAvailabilityRow(
-				bookingId,
-				eventId,
-				optionIndex,
-				status
+		BOOKING_AVAILABILITY_PATHS.applyEventAvailability(
+			":bookingId",
+			":eventId",
+			":optionIndex"
+		),
+		({ params, body }) => {
+			const row = applyAvailability(
+				String(params.bookingId),
+				String(params.eventId),
+				Number(params.optionIndex),
+				body.status as unknown as AvailabilityStatus
 			);
-
-			if (!updated) {
-				return new HttpResponse(null, { status: 404 });
-			}
-
-			return HttpResponse.json(updated);
+			return row
+				? HttpResponse.json(row)
+				: mockNotFound("Availability row not found");
 		}
 	)
 ];

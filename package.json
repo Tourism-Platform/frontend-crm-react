@@ -25,6 +25,7 @@
 		"format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,scss}\" \"public/locales/**/*.json\"",
 		"lint": "eslint .",
 		"test": "vitest run",
+		"mocks:coverage": "vitest run src/app/mws",
 		"build": "tsc -b && npm run format && npm run lint && vite build",
 		"preview": "vite preview"
 	},

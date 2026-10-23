@@ -78,20 +78,16 @@ export const bookingPaxStore = buildInitialPaxStore();
 export const getBookingPaxList = (bookingId: string): PaxWithFiles[] =>
 	bookingPaxStore.get(bookingId) ?? [];
 
+export const resetBookingPaxStore = (): void => {
+	bookingPaxStore.clear();
+	buildInitialPaxStore().forEach((pax, bookingId) =>
+		bookingPaxStore.set(bookingId, pax)
+	);
+};
+
 export const setBookingPaxList = (
 	bookingId: string,
 	pax: PaxWithFiles[]
 ): void => {
 	bookingPaxStore.set(bookingId, pax);
-};
-
-/** Booking ids with Pending status (for availability mock). */
-export const getPendingBookingIds = (): string[] => {
-	const ids: string[] = [];
-	for (const detail of bookingOrderDetailStore.values()) {
-		if (detail.order.status === BookingStatus.Pending) {
-			ids.push(detail.order.id);
-		}
-	}
-	return ids;
 };

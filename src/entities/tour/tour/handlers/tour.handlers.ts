@@ -1,124 +1,210 @@
-import { HttpResponse, delay, http } from "msw";
+import { HttpResponse } from "msw";
 
-import { TOUR_PATHS, createMockHandler } from "@/shared/api";
-import { ENV } from "@/shared/config";
+import {
+	Currency,
+	TOUR_FINANCIAL_PATHS,
+	TOUR_PATHS,
+	TRANSLATIONS_PATHS,
+	type TourListSortField,
+	type TourStatisticsResponse,
+	TourStatus,
+	createMockHandler,
+	mockImageUrl,
+	mockNoContent,
+	mockNotFound,
+	mockValidationError,
+	toListResponse
+} from "@/shared/api";
 
-import { TOUR_FINANCE_MOCK, TOUR_GENERAL_MOCK, TOUR_MOCK } from "../mock";
-import { ENUM_TOUR_STATUS } from "../types";
-import type { ITourCard, TTourFinanceBackend } from "../types";
+import {
+	createTour,
+	deleteTour,
+	getAllTours,
+	getTour,
+	getTourFinancials,
+	listTours,
+	patchTour,
+	saveTourFinancials,
+	setTourStatus,
+	updateTour
+} from "../mock/tour.store";
 
-const BASE_URL = ENV.VITE_API_URL || "";
+const TOUR_NOT_FOUND = "Tour not found";
 
-const tours = [...TOUR_MOCK];
+const money = (value: number) => value.toFixed(2);
+
+/** Детерминированная статистика по туру: зависит только от его позиции */
+const buildTourStatistics = (tourId: string): TourStatisticsResponse => {
+	const seed = getAllTours().findIndex((tour) => tour.id === tourId) + 1;
+	const orders = seed * 3;
+	const revenue = orders * 1250;
+	const cost = orders * 900;
+
+	return {
+		total_orders: orders,
+		completed: seed,
+		in_progress: orders - seed,
+		tourists: orders * 4,
+		planned_revenue: money(revenue),
+		planned_cost: money(cost),
+		planned_profit: money(revenue - cost),
+		confirmed_revenue: money(revenue * 0.8),
+		real_cost: money(cost * 0.75),
+		real_profit: money(revenue * 0.8 - cost * 0.75),
+		revenue_accrued: money(revenue * 0.6),
+		revenue_settled: money(revenue * 0.5),
+		receivable: money(revenue * 0.1),
+		cost_accrued: money(cost * 0.6),
+		cost_settled: money(cost * 0.4),
+		payable: money(cost * 0.2),
+		settled_profit: money(revenue * 0.5 - cost * 0.4),
+		currency: Currency.USD
+	};
+};
+
+const withTour = (
+	tourId: unknown,
+	resolve: (tourId: string) => Response
+): Response =>
+	getTour(String(tourId))
+		? resolve(String(tourId))
+		: mockNotFound(TOUR_NOT_FOUND);
+
+const statusHandler = (
+	endpoint: { url: string; method: string },
+	status: TourStatus
+) =>
+	createMockHandler(endpoint, ({ params }) =>
+		withTour(params.tourId, (tourId) =>
+			HttpResponse.json(setTourStatus(tourId, status))
+		)
+	);
 
 export const tourHandlers = [
-	http.get(`${BASE_URL}/tours`, async ({ request }) => {
-		await delay(500);
-		const url = new URL(request.url);
-		const page = Number(url.searchParams.get("page")) || 1;
-		const limit = Number(url.searchParams.get("limit")) || 10;
-		const search = url.searchParams.get("search");
-		const status = url.searchParams.get("status")?.split(",");
+	createMockHandler(TOUR_PATHS.listTours, ({ query }) =>
+		HttpResponse.json(
+			toListResponse(
+				listTours({
+					q: query.get("q"),
+					status: query.get("status"),
+					typ: query.get("typ"),
+					sortBy: query.get("sort_by") as TourListSortField | null,
+					desc: query.get("desc") === "true"
+				}),
+				query
+			)
+		)
+	),
 
-		let filteredTours = [...tours];
+	createMockHandler(TOUR_PATHS.createTour, ({ body }) =>
+		body.title?.trim()
+			? HttpResponse.json(createTour(body), { status: 201 })
+			: mockValidationError(["body", "title"], "Field required")
+	),
 
-		if (search) {
-			const query = search.toLowerCase();
-			filteredTours = filteredTours.filter(
-				(t) =>
-					t.title.toLowerCase().includes(query) ||
-					t.type.toLowerCase().includes(query)
-			);
-		}
+	createMockHandler(TOUR_PATHS.listOneDayTours, () =>
+		HttpResponse.json(
+			getAllTours().filter(
+				(tour) =>
+					tour.days === 1 && tour.status === TourStatus.Published
+			)
+		)
+	),
 
-		if (
-			status &&
-			status.length > 0 &&
-			!status.includes(ENUM_TOUR_STATUS.ALL)
-		) {
-			filteredTours = filteredTours.filter((t) =>
-				status.includes(t.status)
-			);
-		}
+	createMockHandler(TOUR_PATHS.getTour(":tourId"), ({ params }) =>
+		withTour(params.tourId, (tourId) => HttpResponse.json(getTour(tourId)))
+	),
 
-		const start = (page - 1) * limit;
-		const end = start + limit;
-		const pagedData = filteredTours.slice(start, end);
+	createMockHandler(TOUR_PATHS.updateTour(":tourId"), ({ params, body }) =>
+		withTour(params.tourId, (tourId) =>
+			HttpResponse.json(updateTour(tourId, body))
+		)
+	),
 
-		return HttpResponse.json(
-			{
-				data: pagedData,
-				total: filteredTours.length
-			},
-			{ status: 200 }
-		);
-	}),
-	http.post(`${BASE_URL}/tours`, async ({ request }) => {
-		await delay(500);
-		const body = (await request.json()) as ITourCard;
-		const newTour = {
-			...body,
-			id: (tours.length + 1).toString(),
-			price_from: 100,
-			price_to: 1000,
-			title: body.title,
-			route: ["TAS", "SAM", "BUH", "KHIV"],
-			status: ENUM_TOUR_STATUS.ARCHIVED,
-			image_url:
-				"https://www.atorus.ru/sites/default/files/styles/head_carousel/public/2021-09/ca3023.jpg.webp?itok=Wg-lCwZ0"
-		};
-		return HttpResponse.json(newTour, { status: 201 });
-	}),
-	http.get(`${BASE_URL}/tours/:id/general`, async ({ params }) => {
-		await delay(500);
-		const { id } = params;
-		const tour = tours.find((t) => t.id === id);
+	createMockHandler(TOUR_PATHS.deleteTour(":tourId"), ({ params }) =>
+		withTour(params.tourId, (tourId) => {
+			deleteTour(tourId);
+			return mockNoContent();
+		})
+	),
 
-		if (!tour) {
-			return new HttpResponse(null, { status: 404 });
-		}
+	// Мок всегда валиден: блокеров публикации нет
+	createMockHandler(TOUR_PATHS.validateTour(":tourId"), ({ params }) =>
+		withTour(params.tourId, () => HttpResponse.json([]))
+	),
 
-		const detailTour = {
-			...TOUR_GENERAL_MOCK,
-			id: tour.id
-		};
+	statusHandler(TOUR_PATHS.publishTour(":tourId"), TourStatus.Published),
+	statusHandler(TOUR_PATHS.archiveTour(":tourId"), TourStatus.Archived),
+	statusHandler(TOUR_PATHS.unarchiveTour(":tourId"), TourStatus.Draft),
 
-		return HttpResponse.json(detailTour, { status: 200 });
-	}),
-	createMockHandler(TOUR_PATHS.getTour(":tourId"), () => {
-		return HttpResponse.json(TOUR_GENERAL_MOCK, { status: 200 });
-	}),
-	http.get(`${BASE_URL}/tours/:id/finance`, async ({ params }) => {
-		await delay(500);
-		const { id } = params;
-		const tour = tours.find((t) => t.id === id);
+	createMockHandler(
+		TOUR_PATHS.refreshTourProjection(":tourId"),
+		({ params }) =>
+			withTour(params.tourId, (tourId) =>
+				HttpResponse.json(getTour(tourId))
+			)
+	),
 
-		if (!tour) {
-			return new HttpResponse(null, { status: 404 });
-		}
+	createMockHandler(TOUR_PATHS.uploadTourCover(":tourId"), ({ params }) =>
+		withTour(params.tourId, (tourId) =>
+			HttpResponse.json(
+				patchTour(tourId, {
+					cover_image_path: mockImageUrl(
+						`tour-cover-${tourId}-${Date.now()}`
+					)
+				})
+			)
+		)
+	),
 
-		const financeTour = {
-			...TOUR_FINANCE_MOCK,
-			id: tour.id
-		};
+	createMockHandler(TOUR_PATHS.deleteTourCover(":tourId"), ({ params }) =>
+		withTour(params.tourId, (tourId) => {
+			patchTour(tourId, { cover_image_path: null });
+			return mockNoContent();
+		})
+	),
 
-		return HttpResponse.json(financeTour, { status: 200 });
-	}),
-	http.patch(`${BASE_URL}/tours/:id/finance`, async ({ request, params }) => {
-		await delay(500);
-		const { id } = params;
-		const body = (await request.json()) as Partial<TTourFinanceBackend>;
+	createMockHandler(TOUR_PATHS.getTourStatistics(":tourId"), ({ params }) =>
+		withTour(params.tourId, (tourId) =>
+			HttpResponse.json(buildTourStatistics(tourId))
+		)
+	),
 
-		const updatedFinance = {
-			...TOUR_FINANCE_MOCK,
-			...body,
-			id: id as string
-		};
+	createMockHandler(
+		TOUR_FINANCIAL_PATHS.getTourFinancials(":tourId"),
+		({ params }) =>
+			withTour(params.tourId, (tourId) =>
+				HttpResponse.json(getTourFinancials(tourId) ?? null)
+			)
+	),
 
-		return HttpResponse.json(updatedFinance, { status: 200 });
-	}),
-	http.post(`${BASE_URL}/tours/:id/publish`, async () => {
-		await delay(500);
-		return new HttpResponse(null, { status: 200 });
-	})
+	createMockHandler(
+		TOUR_FINANCIAL_PATHS.createTourFinancials(":tourId"),
+		({ params, body }) =>
+			withTour(params.tourId, (tourId) =>
+				HttpResponse.json(saveTourFinancials(tourId, body), {
+					status: 201
+				})
+			)
+	),
+
+	createMockHandler(
+		TOUR_FINANCIAL_PATHS.updateTourFinancials(":tourId"),
+		({ params, body }) =>
+			withTour(params.tourId, (tourId) =>
+				HttpResponse.json(
+					saveTourFinancials(tourId, {
+						currency_type: body.currency_type ?? undefined,
+						markup: body.markup,
+						foc: body.foc
+					})
+				)
+			)
+	),
+
+	// Переводы в моке не генерируются: сразу «готово»
+	createMockHandler(
+		TRANSLATIONS_PATHS.regenerateTourTranslations(":tourId"),
+		({ params }) => withTour(params.tourId, () => mockNoContent())
+	)
 ];

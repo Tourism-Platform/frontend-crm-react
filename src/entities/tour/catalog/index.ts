@@ -4,7 +4,6 @@ export * from "./hooks";
 export * from "./lib";
 export * from "./constants";
 export * from "./converters";
-export * from "./mock";
 export * from "./schema";
 export * from "./types";
 export * from "./ui";

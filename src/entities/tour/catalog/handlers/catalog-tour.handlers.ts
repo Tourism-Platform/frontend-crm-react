@@ -1,201 +1,117 @@
-import { HttpResponse, delay, http } from "msw";
-
-import { TOUR_CATALOG_PATHS, TourType, createMockHandler } from "@/shared/api";
+import { HttpResponse } from "msw";
 
 import {
-	CATALOG_CATEGORIES_MOCK,
-	CATALOG_DESTINATIONS_MOCK,
-	CATALOG_DURATIONS_MOCK,
-	CATALOG_LANGUAGES_MOCK,
-	CATALOG_REGIONS_MOCK,
-	CATALOG_TOURS_MOCK,
-	POPULAR_TOURS_MOCK,
-	PRICE_HISTOGRAM_MOCK,
-	RECENT_SEARCHES_MOCK
+	type PublicTourCatalogSchemaOutput,
+	SuggestKind,
+	TOUR_CATALOG_PATHS,
+	TourCatalogSort,
+	createMockHandler,
+	getQueryList,
+	matchesQuery,
+	toListResponse
+} from "@/shared/api";
+
+import {
+	CATALOG_PLACES_MOCK,
+	getTourRoute,
+	listPublishedTours,
+	toCatalogTour
 } from "../mock";
 
+const pricePerPerson = (tour: PublicTourCatalogSchemaOutput) =>
+	tour.price_per_person?.min ?? 0;
+
+const SORTERS: Record<
+	TourCatalogSort,
+	(
+		a: PublicTourCatalogSchemaOutput,
+		b: PublicTourCatalogSchemaOutput
+	) => number
+> = {
+	[TourCatalogSort.PriceAsc]: (a, b) => pricePerPerson(a) - pricePerPerson(b),
+	[TourCatalogSort.PriceDesc]: (a, b) =>
+		pricePerPerson(b) - pricePerPerson(a),
+	[TourCatalogSort.DurationAsc]: (a, b) => a.days - b.days,
+	[TourCatalogSort.DurationDesc]: (a, b) => b.days - a.days
+};
+
+const listCatalog = (query: URLSearchParams) => {
+	const categories = getQueryList(query, "categories");
+	const cities = getQueryList(query, "city");
+	const countries = getQueryList(query, "country");
+	const languages = getQueryList(query, "tour_lang");
+	const daysMin = Number(query.get("duration_days_min") ?? 0);
+	const daysMax = Number(query.get("duration_days_max") ?? Infinity);
+	const sort = query.get("sort") as TourCatalogSort | null;
+
+	const tours = listPublishedTours()
+		.filter((tour) => {
+			const route = getTourRoute(tour);
+			return (
+				matchesQuery(query.get("q"), tour.title, ...route.flat()) &&
+				(!categories.length ||
+					tour.categories.some((category) =>
+						categories.includes(category)
+					)) &&
+				(!cities.length ||
+					route.some(([city]) => cities.includes(city))) &&
+				(!countries.length ||
+					route.some(([, country]) => countries.includes(country))) &&
+				(!languages.length ||
+					tour.languages.some((language) =>
+						languages.includes(language)
+					)) &&
+				tour.days >= daysMin &&
+				tour.days <= daysMax
+			);
+		})
+		.map(toCatalogTour);
+
+	return sort && SORTERS[sort] ? tours.sort(SORTERS[sort]) : tours;
+};
+
+const unique = (values: string[]) => [...new Set(values)].sort();
+
 export const tourCatalogHandlers = [
-	createMockHandler(TOUR_CATALOG_PATHS.listPublicCatalog, ({ request }) => {
-		const url = new URL(request.url);
-		const skip = Number(url.searchParams.get("skip")) || 0;
-		const limit = Number(url.searchParams.get("limit")) || 10;
-		const q = url.searchParams.get("q")?.toLowerCase();
+	createMockHandler(TOUR_CATALOG_PATHS.listPublicCatalog, ({ query }) =>
+		HttpResponse.json(toListResponse(listCatalog(query), query))
+	),
 
-		let filteredTours = [...CATALOG_TOURS_MOCK];
+	createMockHandler(TOUR_CATALOG_PATHS.listAgencyCatalog, ({ query }) =>
+		HttpResponse.json(toListResponse(listCatalog(query), query))
+	),
 
-		if (q) {
-			filteredTours = filteredTours.filter((t) =>
-				t.title.toLowerCase().includes(q)
-			);
-		}
+	createMockHandler(TOUR_CATALOG_PATHS.listFilters, () => {
+		const routes = listPublishedTours().flatMap(getTourRoute);
+		return HttpResponse.json({
+			cities: unique(routes.map(([city]) => city)),
+			countries: unique(routes.map(([, country]) => country))
+		});
+	}),
 
-		const pagedData = filteredTours.slice(skip, skip + limit);
+	createMockHandler(TOUR_CATALOG_PATHS.suggestLocations, ({ query }) => {
+		const q = query.get("q");
+		const limit = Number(query.get("limit") ?? 10);
+		const routes = listPublishedTours().flatMap(getTourRoute);
 
-		return HttpResponse.json(
-			pagedData.map((t) => ({
-				tour_id: t.id,
-				name: t.title,
-				cover_image_url: t.image_url,
-				description: t.description,
-				days: t.duration,
-				nights: Math.max(t.duration - 1, 0),
-				duration_hours: null,
-				age_from: 12,
-				age_to: 70,
-				group_size: 20,
-				group_size_min: 2,
-				categories: [],
-				tour_type: TourType.Regular,
-				landing_photos: [],
-				cities: [],
-				languages: [],
-				price_range: {
-					min: t.price_from,
-					currency: "USD"
-				},
-				price_per_person: {
-					min: t.price_from,
-					currency: "USD"
-				},
-				option_count: 1
+		const suggestions = [
+			...unique(routes.map(([city]) => city)).map((city) => ({
+				value: city,
+				kind: SuggestKind.City,
+				city
+			})),
+			...unique(routes.map(([, country]) => country)).map((country) => ({
+				value: country,
+				kind: SuggestKind.Country,
+				city: null
+			})),
+			...CATALOG_PLACES_MOCK.map(([place, city]) => ({
+				value: place,
+				kind: SuggestKind.Place,
+				city
 			}))
-		);
-	}),
-	http.get("*/tours/recently-searched", async () => {
-		await delay(500);
-		return HttpResponse.json(RECENT_SEARCHES_MOCK);
-	}),
-	http.get("*/tours/catalog", async ({ request }) => {
-		await delay(500);
-		const url = new URL(request.url);
-		const page = Number(url.searchParams.get("page")) || 1;
-		const limit = Number(url.searchParams.get("limit")) || 10;
-		const search = url.searchParams.get("search");
+		].filter((item) => matchesQuery(q, item.value));
 
-		// New filters
-		const regions = url.searchParams.get("region")?.split(",");
-		const durations = url.searchParams.get("duration")?.split(",");
-		const languages = url.searchParams.get("language")?.split(",");
-		const categories = url.searchParams.get("category")?.split(",");
-
-		let filteredTours = [...CATALOG_TOURS_MOCK];
-
-		if (search) {
-			const query = search.toLowerCase();
-			filteredTours = filteredTours.filter((t) =>
-				t.title.toLowerCase().includes(query)
-			);
-		}
-
-		// TODO: Implement filtering logic once mock data has these fields
-		// For now, we just receive the params to ensure API contract works
-		if (regions?.length) {
-			// filteredTours = filteredTours.filter(...)
-			console.log("Filtering by regions:", regions);
-		}
-		if (durations?.length) {
-			console.log("Filtering by durations:", durations);
-		}
-		if (languages?.length) {
-			console.log("Filtering by languages:", languages);
-		}
-		if (categories?.length) {
-			console.log("Filtering by categories:", categories);
-		}
-
-		const start = (page - 1) * limit;
-		const end = start + limit;
-		const pagedData = filteredTours.slice(start, end);
-
-		return HttpResponse.json({
-			data: pagedData,
-			total: filteredTours.length
-		});
-	}),
-	http.get("*/tours/catalog/filters/regions", async ({ request }) => {
-		await delay(500);
-		const url = new URL(request.url);
-		const page = Number(url.searchParams.get("page")) || 1;
-		const limit = Number(url.searchParams.get("limit")) || 5;
-
-		const start = (page - 1) * limit;
-		const end = start + limit;
-		const pagedData = CATALOG_REGIONS_MOCK.slice(start, end);
-
-		return HttpResponse.json({
-			data: pagedData,
-			total: CATALOG_REGIONS_MOCK.length
-		});
-	}),
-	http.get("*/tours/catalog/filters/durations", async ({ request }) => {
-		await delay(500);
-		const url = new URL(request.url);
-		const page = Number(url.searchParams.get("page")) || 1;
-		const limit = Number(url.searchParams.get("limit")) || 5;
-
-		const start = (page - 1) * limit;
-		const end = start + limit;
-		const pagedData = CATALOG_DURATIONS_MOCK.slice(start, end);
-
-		return HttpResponse.json({
-			data: pagedData,
-			total: CATALOG_DURATIONS_MOCK.length
-		});
-	}),
-	http.get("*/tours/catalog/filters/languages", async ({ request }) => {
-		await delay(500);
-		const url = new URL(request.url);
-		const page = Number(url.searchParams.get("page")) || 1;
-		const limit = Number(url.searchParams.get("limit")) || 5;
-
-		const start = (page - 1) * limit;
-		const end = start + limit;
-		const pagedData = CATALOG_LANGUAGES_MOCK.slice(start, end);
-
-		return HttpResponse.json({
-			data: pagedData,
-			total: CATALOG_LANGUAGES_MOCK.length
-		});
-	}),
-	http.get("*/tours/catalog/filters/categories", async ({ request }) => {
-		await delay(500);
-		const url = new URL(request.url);
-		const page = Number(url.searchParams.get("page")) || 1;
-		const limit = Number(url.searchParams.get("limit")) || 5;
-
-		const start = (page - 1) * limit;
-		const end = start + limit;
-		const pagedData = CATALOG_CATEGORIES_MOCK.slice(start, end);
-
-		return HttpResponse.json({
-			data: pagedData,
-			total: CATALOG_CATEGORIES_MOCK.length
-		});
-	}),
-	http.get("*/tours/catalog/filters/price-histogram", async ({ request }) => {
-		await delay(500);
-		const url = new URL(request.url);
-		const min = Number(url.searchParams.get("min")) || 0;
-		const max = Number(url.searchParams.get("max")) || 3000;
-		const step = Number(url.searchParams.get("step")) || 200;
-
-		console.log("Price histogram request:", { min, max, step });
-
-		return HttpResponse.json(PRICE_HISTOGRAM_MOCK);
-	}),
-	http.get("*/tours/catalog/filters/destinations", async () => {
-		await delay(500);
-
-		return HttpResponse.json({
-			data: CATALOG_DESTINATIONS_MOCK,
-			total: CATALOG_DESTINATIONS_MOCK.length
-		});
-	}),
-	http.get("*/tours/popular", async () => {
-		await delay(500);
-		return HttpResponse.json({
-			data: POPULAR_TOURS_MOCK,
-			total: POPULAR_TOURS_MOCK.length
-		});
+		return HttpResponse.json(suggestions.slice(0, limit));
 	})
 ];

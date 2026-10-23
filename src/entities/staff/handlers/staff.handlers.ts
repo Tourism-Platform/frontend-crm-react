@@ -1,69 +1,143 @@
+import { HttpResponse } from "msw";
+
+import {
+	OPERATOR_STAFF_PATHS,
+	PERMISSIONS_PATHS,
+	PERMISSION_GROUPS_PATHS,
+	Permissions,
+	createMockHandler,
+	getQueryList,
+	mockBadRequest,
+	mockNoContent,
+	mockNotFound,
+	mockValidationError,
+	toListResponse
+} from "@/shared/api";
+
+import { PERMISSION_GROUPS_MOCK } from "../mock/staff.mock";
+import {
+	createPermissionGroup,
+	deletePermissionGroup,
+	deleteStaff,
+	getStaffPermissions,
+	hasStaffEmail,
+	inviteStaff,
+	listPermissionGroups,
+	listStaff,
+	replaceStaffAccess,
+	updatePermissionGroup,
+	updateStaff
+} from "../mock/staff.store";
+
+const STAFF_NOT_FOUND = "Staff member not found";
+
+const result = (data: unknown, notFound: string) =>
+	data ? HttpResponse.json(data) : mockNotFound(notFound);
+
 export const staffHandlers = [
-	// http.get(`${BASE_URL}/staff`, async ({ request }) => {
-	// 	await delay(500);
-	// 	const url = new URL(request.url);
-	// 	const page = Number(url.searchParams.get("page")) || 1;
-	// 	const limit = Number(url.searchParams.get("limit")) || 10;
-	// 	const search = url.searchParams.get("search");
-	// 	const status = url.searchParams.get("status")?.split(",");
-	// 	let filteredStaff = [...staff];
-	// 	if (search) {
-	// 		const query = search.toLowerCase();
-	// 		filteredStaff = filteredStaff.filter(
-	// 			(s) =>
-	// 				s.first_name.toLowerCase().includes(query) ||
-	// 				s.last_name.toLowerCase().includes(query) ||
-	// 				s.email.toLowerCase().includes(query)
-	// 		);
-	// 	}
-	// 	if (status && status.length > 0) {
-	// 		filteredStaff = filteredStaff.filter((s) =>
-	// 			status.includes(s.status)
-	// 		);
-	// 	}
-	// 	const start = (page - 1) * limit;
-	// 	const end = start + limit;
-	// 	const pagedData = filteredStaff.slice(start, end);
-	// 	return HttpResponse.json(
-	// 		{
-	// 			data: pagedData,
-	// 			total: filteredStaff.length
-	// 		},
-	// 		{ status: 200 }
-	// 	);
-	// }),
-	// http.post(`${BASE_URL}/staff`, async ({ request }) => {
-	// 	await delay(1000);
-	// 	const body = (await request.json()) as Partial<IStaffBackend>;
-	// 	const newMember: IStaffBackend = {
-	// 		...body,
-	// 		id: (staff.length + 1).toString(),
-	// 		first_name: "New",
-	// 		last_name: "Member",
-	// 		email: body.email || "new@example.com",
-	// 		role: body.role || ENUM_STAFF_ROLE_OPTIONS.SALES_MANAGER,
-	// 		status: ENUM_STAFF_STATUS_OPTIONS.PENDING,
-	// 		type: ENUM_COMMISSION_OPTIONS.FIXED,
-	// 		split: null
-	// 	} as IStaffBackend;
-	// 	staff.push(newMember);
-	// 	return HttpResponse.json(newMember, { status: 201 });
-	// }),
-	// http.patch(`${BASE_URL}/staff/:id`, async ({ params, request }) => {
-	// 	await delay(1000);
-	// 	const { id } = params;
-	// 	const body = (await request.json()) as Partial<IStaffBackend>;
-	// 	const index = staff.findIndex((s) => s.id === id);
-	// 	if (index !== -1) {
-	// 		staff[index] = { ...staff[index], ...body };
-	// 		return HttpResponse.json(staff[index], { status: 200 });
-	// 	}
-	// 	return new HttpResponse(null, { status: 404 });
-	// }),
-	// http.delete(`${BASE_URL}/staff/:id`, async ({ params }) => {
-	// 	await delay(500);
-	// 	const { id } = params;
-	// 	staff = staff.filter((s) => s.id !== id);
-	// 	return new HttpResponse(null, { status: 204 });
-	// })
+	createMockHandler(OPERATOR_STAFF_PATHS.listStaff, ({ query }) =>
+		HttpResponse.json(
+			toListResponse(
+				listStaff(query.get("q"), getQueryList(query, "statuses")),
+				query,
+				20
+			)
+		)
+	),
+
+	createMockHandler(OPERATOR_STAFF_PATHS.inviteStaff, ({ body }) => {
+		if (!body.email?.trim()) {
+			return mockValidationError(["body", "email"], "Field required");
+		}
+		if (hasStaffEmail(body.email)) {
+			return mockBadRequest("User with this email already exists");
+		}
+		return HttpResponse.json(inviteStaff(body), { status: 201 });
+	}),
+
+	createMockHandler(
+		OPERATOR_STAFF_PATHS.updateStaffMember(":userId"),
+		({ params, body }) =>
+			result(updateStaff(String(params.userId), body), STAFF_NOT_FOUND)
+	),
+
+	createMockHandler(
+		OPERATOR_STAFF_PATHS.deleteStaffMember(":userId"),
+		({ params }) =>
+			deleteStaff(String(params.userId))
+				? mockNoContent()
+				: mockNotFound(STAFF_NOT_FOUND)
+	),
+
+	createMockHandler(
+		OPERATOR_STAFF_PATHS.getStaffMemberPermissions(":userId"),
+		({ params }) =>
+			result(getStaffPermissions(String(params.userId)), STAFF_NOT_FOUND)
+	),
+
+	createMockHandler(
+		OPERATOR_STAFF_PATHS.replaceStaffMemberAccess(":userId"),
+		({ params, body }) =>
+			result(
+				replaceStaffAccess(
+					String(params.userId),
+					body.permissions ?? [],
+					body.group_ids ?? []
+				),
+				STAFF_NOT_FOUND
+			)
+	),
+
+	createMockHandler(PERMISSIONS_PATHS.getPermissionCatalog, () =>
+		HttpResponse.json({
+			permissions: Object.values(Permissions),
+			default_groups: PERMISSION_GROUPS_MOCK.map(
+				({ name, permissions }) => ({
+					name,
+					permissions
+				})
+			)
+		})
+	),
+
+	createMockHandler(PERMISSION_GROUPS_PATHS.listPermissionGroups, () =>
+		HttpResponse.json({ data: listPermissionGroups() })
+	),
+
+	createMockHandler(
+		PERMISSION_GROUPS_PATHS.createPermissionGroup,
+		({ body }) =>
+			body.name?.trim()
+				? HttpResponse.json(
+						createPermissionGroup(
+							body.name,
+							body.permissions ?? []
+						),
+						{
+							status: 201
+						}
+					)
+				: mockValidationError(["body", "name"], "Field required")
+	),
+
+	createMockHandler(
+		PERMISSION_GROUPS_PATHS.updatePermissionGroup(":groupId"),
+		({ params, body }) =>
+			result(
+				updatePermissionGroup(
+					String(params.groupId),
+					body.name,
+					body.permissions ?? []
+				),
+				"Permission group not found"
+			)
+	),
+
+	createMockHandler(
+		PERMISSION_GROUPS_PATHS.deletePermissionGroup(":groupId"),
+		({ params }) =>
+			deletePermissionGroup(String(params.groupId))
+				? mockNoContent()
+				: mockNotFound("Permission group not found")
+	)
 ];

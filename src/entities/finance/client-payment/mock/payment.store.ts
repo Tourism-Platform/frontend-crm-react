@@ -35,9 +35,6 @@ export const getPayment = (
 ): ClientPaymentResponse | undefined =>
 	payments.find((payment) => payment.id === paymentId);
 
-export const listAvailableBookingIds = (): string[] =>
-	bookingOrderListItems.map((item) => item.id);
-
 export interface IListPaymentsQuery {
 	status: string | null;
 	booking_id: string | null;

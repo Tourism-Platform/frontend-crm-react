@@ -50,3 +50,7 @@ export const deletePaymentRouteFromStore = (id: string): boolean => {
 	paymentRoutesStore = paymentRoutesStore.filter((route) => route.id !== id);
 	return paymentRoutesStore.length < prevLength;
 };
+
+export const resetPaymentRoutesStore = (): void => {
+	paymentRoutesStore = [...OPERATOR_PAYMENT_ROUTES_MOCK];
+};

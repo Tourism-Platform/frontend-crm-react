@@ -1,6 +1,8 @@
 import { HttpResponse } from "msw";
 
 import {
+	BOOKING_PASSENGER_FILES_PATHS,
+	BOOKING_PASSENGER_PATHS,
 	Gender,
 	type PaxCreate,
 	type PaxUpdate,
@@ -14,20 +16,14 @@ import {
 
 export const bookingPaxHandlers = [
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/pax",
-			method: "GET"
-		},
+		BOOKING_PASSENGER_PATHS.listPassengerInfo(":bookingId"),
 		async ({ params }) => {
 			const data = getBookingPaxList(String(params.bookingId));
 			return HttpResponse.json({ count: data.length, data });
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/pax",
-			method: "POST"
-		},
+		BOOKING_PASSENGER_PATHS.addPassengerInfo(":bookingId"),
 		async ({ params, body }) => {
 			const bookingId = String(params.bookingId);
 			const data = body as PaxCreate;
@@ -52,10 +48,7 @@ export const bookingPaxHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/pax/:paxId",
-			method: "PATCH"
-		},
+		BOOKING_PASSENGER_PATHS.updatePassengerInfo(":bookingId", ":paxId"),
 		async ({ params, body }) => {
 			const bookingId = String(params.bookingId);
 			const paxId = String(params.paxId);
@@ -85,10 +78,7 @@ export const bookingPaxHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/pax/:paxId",
-			method: "DELETE"
-		},
+		BOOKING_PASSENGER_PATHS.deletePassengerInfo(":bookingId", ":paxId"),
 		async ({ params }) => {
 			const bookingId = String(params.bookingId);
 			const paxId = String(params.paxId);
@@ -100,10 +90,7 @@ export const bookingPaxHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/:bookingId/pax/:paxId/passport",
-			method: "POST"
-		},
+		BOOKING_PASSENGER_PATHS.uploadPassengerPassport(":bookingId", ":paxId"),
 		async ({ params }) => {
 			const bookingId = String(params.bookingId);
 			const paxId = String(params.paxId);
@@ -135,10 +122,7 @@ export const bookingPaxHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/pax/file/:fileId",
-			method: "GET"
-		},
+		BOOKING_PASSENGER_FILES_PATHS.getFileBinary(":fileId"),
 		async () => {
 			const content = "%PDF-1.4 mock passport file";
 			return new HttpResponse(content, {
@@ -151,10 +135,7 @@ export const bookingPaxHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/booking/order/pax/file/:fileId",
-			method: "DELETE"
-		},
+		BOOKING_PASSENGER_FILES_PATHS.removeFile(":fileId"),
 		async () => new HttpResponse(null, { status: 204 })
 	)
 ];

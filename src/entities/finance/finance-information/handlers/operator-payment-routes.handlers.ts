@@ -43,10 +43,7 @@ export const operatorPaymentRoutesHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/operator/payment-routes/:routeId",
-			method: "PATCH"
-		},
+		OPERATOR_PAYMENT_ROUTES_PATHS.updatePaymentRoute(":routeId"),
 		({ params, body }) => {
 			const patch = body as PaymentRouteUpdate;
 			const routeId = String(params.routeId);
@@ -67,10 +64,7 @@ export const operatorPaymentRoutesHandlers = [
 		}
 	),
 	createMockHandler(
-		{
-			url: "/operator/payment-routes/:routeId",
-			method: "DELETE"
-		},
+		OPERATOR_PAYMENT_ROUTES_PATHS.deletePaymentRoute(":routeId"),
 		({ params }) => {
 			const deleted = deletePaymentRouteFromStore(String(params.routeId));
 

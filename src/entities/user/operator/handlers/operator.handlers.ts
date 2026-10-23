@@ -1,59 +1,223 @@
-import { HttpResponse, delay, http, passthrough } from "msw";
+import { HttpResponse } from "msw";
 
-import { OPERATOR_PATHS } from "@/shared/api";
-import { ENV } from "@/shared/config";
+import {
+	OPERATOR_AGENCIES_PATHS,
+	OPERATOR_DOCUMENTS_PATHS,
+	OPERATOR_PATHS,
+	createMockHandler,
+	matchesQuery,
+	mockFileResponse,
+	mockNoContent,
+	mockNotFound,
+	mockValidationError,
+	readFormFiles,
+	toListResponse
+} from "@/shared/api";
 
-const BASE_URL = ENV.VITE_API_URL || "";
+import { OPERATOR_AGENCY_LIST_MOCK } from "../mock/operator-agencies.mock";
+import {
+	addOperatorDocuments,
+	createOperator,
+	deleteOperator,
+	getAgencyInfoForOperator,
+	getOperator,
+	getOperatorDocument,
+	getOperatorFinancials,
+	getOperatorInfo,
+	getPartneredAgency,
+	inviteAgency,
+	listOperatorDocuments,
+	listPartneredAgencies,
+	removeOperatorDocument,
+	renameOperator,
+	setAgencyDiscount,
+	setOperatorLogo,
+	updateOperatorFinancials,
+	updateOperatorInfo
+} from "../mock/operator.store";
 
-const OPERATOR_ID_UUID =
-	/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-
-const isOperatorEntityId = (id: string) => OPERATOR_ID_UUID.test(id);
+const AGENCY_NOT_FOUND = "Agency not found";
 
 export const operatorHandlers = [
-	http.post(
-		`${BASE_URL}${OPERATOR_PATHS.createOperator.url}`,
+	createMockHandler(OPERATOR_PATHS.createOperator, ({ body }) =>
+		body.name?.trim()
+			? HttpResponse.json(createOperator(body.name), { status: 201 })
+			: mockValidationError(["body", "name"], "Field required")
+	),
+
+	createMockHandler(OPERATOR_PATHS.getOperatorInfo, () =>
+		HttpResponse.json(getOperatorInfo())
+	),
+
+	createMockHandler(OPERATOR_PATHS.updateOperatorInfo, ({ body }) =>
+		HttpResponse.json(updateOperatorInfo(body))
+	),
+
+	createMockHandler(OPERATOR_PATHS.getOperatorFinancials, () =>
+		HttpResponse.json(getOperatorFinancials())
+	),
+
+	createMockHandler(OPERATOR_PATHS.updateOperatorFinancials, ({ body }) =>
+		HttpResponse.json(updateOperatorFinancials(body))
+	),
+
+	createMockHandler(OPERATOR_PATHS.getLogo, () =>
+		getOperatorInfo().logo_path
+			? mockFileResponse("logo.png", "image/png")
+			: mockNotFound("Logo not found")
+	),
+
+	createMockHandler(OPERATOR_PATHS.addLogo, () =>
+		HttpResponse.json(setOperatorLogo(true))
+	),
+
+	createMockHandler(OPERATOR_PATHS.deleteLogo, () => {
+		setOperatorLogo(false);
+		return mockNoContent();
+	}),
+
+	// --- Документы ---
+
+	createMockHandler(OPERATOR_DOCUMENTS_PATHS.listFiles, () =>
+		HttpResponse.json(listOperatorDocuments())
+	),
+
+	createMockHandler(
+		OPERATOR_DOCUMENTS_PATHS.addFiles,
 		async ({ request }) => {
-			await delay(500);
-			const body = (await request.json()) as { name: string };
-			return HttpResponse.json(
-				{
-					id: crypto.randomUUID(),
-					name: body.name
-				},
-				{ status: 201 }
-			);
+			const files = await readFormFiles(request);
+			return files.length
+				? HttpResponse.json(addOperatorDocuments(files), {
+						status: 201
+					})
+				: mockValidationError(["body", "files"], "No file provided");
 		}
 	),
-	http.get(`${BASE_URL}/operator/:id`, async ({ params }) => {
-		const id = String(params.id);
-		if (!isOperatorEntityId(id)) {
-			return passthrough();
-		}
 
-		await delay(500);
-		return HttpResponse.json(
-			{
-				id,
-				name: "Mock Operator"
-			},
-			{ status: 200 }
-		);
+	createMockHandler(
+		OPERATOR_DOCUMENTS_PATHS.getFileUrl(":fileId"),
+		({ params }) => {
+			const file = getOperatorDocument(String(params.fileId));
+			return file
+				? mockFileResponse(file.file_name)
+				: mockNotFound("File not found");
+		}
+	),
+
+	createMockHandler(
+		OPERATOR_DOCUMENTS_PATHS.removeFile(":fileId"),
+		({ params }) =>
+			removeOperatorDocument(String(params.fileId))
+				? mockNoContent()
+				: mockNotFound("File not found")
+	),
+
+	// --- Агентства ---
+
+	createMockHandler(OPERATOR_AGENCIES_PATHS.listAgencies, ({ query }) =>
+		HttpResponse.json(
+			toListResponse(
+				OPERATOR_AGENCY_LIST_MOCK.filter((agency) =>
+					matchesQuery(
+						query.get("q"),
+						agency.name,
+						agency.business_name
+					)
+				),
+				query,
+				20
+			)
+		)
+	),
+
+	createMockHandler(
+		OPERATOR_AGENCIES_PATHS.listPartneredAgencies,
+		({ query }) =>
+			HttpResponse.json(
+				toListResponse(
+					listPartneredAgencies().filter((agency) =>
+						matchesQuery(
+							query.get("q"),
+							agency.name,
+							agency.business_name
+						)
+					),
+					query,
+					20
+				)
+			)
+	),
+
+	createMockHandler(OPERATOR_AGENCIES_PATHS.inviteAgency, ({ body }) =>
+		body.email?.trim()
+			? HttpResponse.json(inviteAgency(body), { status: 201 })
+			: mockValidationError(["body", "email"], "Field required")
+	),
+
+	createMockHandler(
+		OPERATOR_AGENCIES_PATHS.getAgencyInfoById(":agencyId"),
+		({ params }) => {
+			const agency = getAgencyInfoForOperator(String(params.agencyId));
+			return agency
+				? HttpResponse.json(agency)
+				: mockNotFound(AGENCY_NOT_FOUND);
+		}
+	),
+
+	createMockHandler(
+		OPERATOR_AGENCIES_PATHS.setAgencyDiscount(":agencyId"),
+		({ params, body }) => {
+			if (!body.discount) {
+				return mockValidationError(
+					["body", "discount"],
+					"Field required"
+				);
+			}
+			const agency = setAgencyDiscount(
+				String(params.agencyId),
+				body.discount as never
+			);
+			return agency
+				? HttpResponse.json(agency)
+				: mockNotFound(AGENCY_NOT_FOUND);
+		}
+	),
+
+	createMockHandler(
+		OPERATOR_AGENCIES_PATHS.deleteAgencyDiscount(":agencyId"),
+		({ params }) => {
+			const agencyId = String(params.agencyId);
+			if (!getPartneredAgency(agencyId))
+				return mockNotFound(AGENCY_NOT_FOUND);
+			setAgencyDiscount(agencyId, null);
+			return mockNoContent();
+		}
+	)
+];
+
+/**
+ * `/operator/:id` совпадает с `/operator/fx-rate`, `/operator/staff` и т.п.,
+ * поэтому регистрируется после всех остальных хендлеров
+ */
+export const operatorByIdHandlers = [
+	createMockHandler(OPERATOR_PATHS.getOperator(":id"), ({ params }) => {
+		const operator = getOperator(String(params.id));
+		return operator
+			? HttpResponse.json(operator)
+			: mockNotFound("Operator not found");
 	}),
-	http.patch(`${BASE_URL}/operator/:id`, async ({ params }) => {
-		if (!isOperatorEntityId(String(params.id))) {
-			return passthrough();
-		}
 
-		await delay(500);
-		return new HttpResponse(null, { status: 204 });
-	}),
-	http.delete(`${BASE_URL}/operator/:id`, async ({ params }) => {
-		if (!isOperatorEntityId(String(params.id))) {
-			return passthrough();
-		}
+	createMockHandler(
+		OPERATOR_PATHS.udpateOperator(":id"),
+		({ params, body }) =>
+			renameOperator(String(params.id), body.name)
+				? mockNoContent()
+				: mockNotFound("Operator not found")
+	),
 
-		await delay(500);
-		return new HttpResponse(null, { status: 204 });
-	})
+	createMockHandler(OPERATOR_PATHS.deleteOperator(":id"), ({ params }) =>
+		deleteOperator(String(params.id))
+			? mockNoContent()
+			: mockNotFound("Operator not found")
+	)
 ];
