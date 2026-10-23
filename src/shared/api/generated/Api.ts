@@ -2236,6 +2236,57 @@ export interface BookingPaxModel {
 	comment: string | null;
 }
 
+/**
+ * BookingPaxPriceResponse
+ * The booking's minimum price for ``pax`` travellers.
+ *
+ * Check: GET /booking/order/{booking_id}/price
+ */
+export interface BookingPaxPriceResponse {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	booking_id: string;
+	/** Pax */
+	pax: number;
+	currency: Currency;
+	/**
+	 * Total Min Price
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	total_min_price: string;
+}
+
+/**
+ * BookingQuoteResponse
+ * The minimum price a booking of ``tour_option_id`` on ``date`` for ``pax``
+ * travellers in ``lang`` would freeze, before the booking exists.
+ *
+ * Check: GET /booking/order/quote, POST /booking/order
+ */
+export interface BookingQuoteResponse {
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/** Pax */
+	pax: number;
+	lang: LanguageCode;
+	currency: Currency;
+	/**
+	 * Total Min Price
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	total_min_price: string;
+}
+
 /** BookingReconciliationListResponse */
 export interface BookingReconciliationListResponse {
 	/** Total Count */
@@ -20569,7 +20620,44 @@ export interface ListMyBookingsBookingOrderMyGetParams {
 	limit?: number;
 }
 
+export interface GetBookingQuoteBookingOrderQuoteGetParams {
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/**
+	 * Pax
+	 * @min 1
+	 */
+	pax: number;
+	/** @default "en" */
+	lang?: LanguageCode;
+	/** Currency */
+	currency?: Currency | null;
+}
+
 export interface GetBookingItineraryBookingOrderBookingIdItineraryGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetBookingPriceBookingOrderBookingIdPriceGetParams {
+	/**
+	 * Pax
+	 * @min 1
+	 */
+	pax: number;
+	/** Currency */
+	currency?: Currency | null;
 	/**
 	 * Booking Id
 	 * @format uuid

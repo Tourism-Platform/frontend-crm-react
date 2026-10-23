@@ -178,6 +178,7 @@
 		"duration": "Продолжительность",
 		"travellers": "Путешественники",
 		"package": "Пакет",
+		"currency": "Валюта",
 		"price_per_person": "Цена за человека",
 		"group_total": "Итого за группу",
 		"estimated_total": "Итого",

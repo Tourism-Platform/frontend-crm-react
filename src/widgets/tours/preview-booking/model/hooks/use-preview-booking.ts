@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type Resolver, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,7 +8,7 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
-import { useCurrentLanguage } from "@/shared/hooks";
+import { useCurrentLanguage, useDebounce } from "@/shared/hooks";
 import { parseStoredLocalDate } from "@/shared/lib";
 import { formatDateToISO } from "@/shared/utils";
 
@@ -17,11 +18,14 @@ import {
 	getTravellerPassportFile,
 	isTravellerComplete,
 	mapBookingPaxToTravellerForm,
+	mapCreatedBookingToPrice,
 	mapTravellerToPaxCreate,
 	mapTravellerToPaxUpdate,
 	useAddPassengerInfoMutation,
 	useCreateBookingOrderMutation,
 	useDeletePassengerInfoMutation,
+	useGetBookingPriceQuery,
+	useGetBookingQuoteQuery,
 	useListPassengerInfoQuery,
 	useSubmitBookingOrderMutation,
 	useUpdateBookingOrderMutation,
@@ -134,6 +138,42 @@ export const usePreviewBooking = () => {
 	const travellers = form.watch(ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS);
 	const canAddTraveller = (travellers?.length ?? 0) < (travellersCount ?? 0);
 
+	const [date, optionId, language, currency] = form.watch([
+		ENUM_FORM_PREVIEW_BOOKING.DATE,
+		ENUM_FORM_PREVIEW_BOOKING.OPTION_ID,
+		ENUM_FORM_PREVIEW_BOOKING.LANGUAGE,
+		ENUM_FORM_PREVIEW_BOOKING.CURRENCY
+	]);
+	const debouncedPax = useDebounce(travellersCount, 400);
+	const isPaxValid =
+		PREVIEW_BOOKING_SCHEMA.shape[
+			ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT
+		].safeParse(debouncedPax).success;
+
+	const quoteQuery = useGetBookingQuoteQuery(
+		bookingIdParam || !optionId || !date || !language || !isPaxValid
+			? skipToken
+			: {
+					tourOptionId: optionId,
+					date,
+					pax: debouncedPax,
+					lang: language,
+					currency
+				}
+	);
+	const bookingPriceQuery = useGetBookingPriceQuery(
+		bookingIdParam && isPaxValid
+			? { bookingId: bookingIdParam, pax: debouncedPax, currency }
+			: skipToken
+	);
+
+	const { data: quotedPrice, isFetching: isPriceFetching } = bookingIdParam
+		? bookingPriceQuery
+		: quoteQuery;
+	const price = submittedBooking
+		? mapCreatedBookingToPrice(submittedBooking)
+		: quotedPrice;
+
 	const restoreDraft = useCallback(
 		(bookingId: string) => {
 			const draft = loadBookingDraft(bookingId);
@@ -144,6 +184,7 @@ export const usePreviewBooking = () => {
 				travellers_count: draft.travellers_count,
 				option_id: draft.option_id,
 				language: draft.language as ENUM_LANGUAGES_TYPE,
+				currency: form.getValues(ENUM_FORM_PREVIEW_BOOKING.CURRENCY),
 				travellers: Array.from(
 					{ length: draft.travellers_count },
 					() => ({})
@@ -409,6 +450,8 @@ export const usePreviewBooking = () => {
 		tourData,
 		availableLanguages,
 		options,
+		price,
+		isPriceFetching,
 		availableDates,
 		handleCalendarMonthChange,
 		isTourLoading,

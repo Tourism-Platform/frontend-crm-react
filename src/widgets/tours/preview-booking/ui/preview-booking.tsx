@@ -73,6 +73,8 @@ const PreviewBookingBase: FC = () => {
 		tourData,
 		availableLanguages,
 		options,
+		price,
+		isPriceFetching,
 		availableDates,
 		handleCalendarMonthChange,
 		isOptionsLoading,
@@ -212,6 +214,8 @@ const PreviewBookingBase: FC = () => {
 							tourData={tourData}
 							options={options}
 							submittedBooking={submittedBooking}
+							price={price}
+							isPriceFetching={isPriceFetching}
 							action={sidebarAction}
 						/>
 					)}

@@ -7,11 +7,17 @@ import {
 	mapBookingModelToUpdated,
 	mapBookingOrderFiltersToBackend,
 	mapBookingOrderPaginatedToFrontend,
+	mapBookingPriceParamsToBackend,
+	mapBookingPriceToFrontend,
+	mapBookingQuoteParamsToBackend,
 	mapCreateBookingToBackend,
 	mapUpdateBookingToBackend
 } from "../converters";
 import type {
 	IBookingOrderFilters,
+	IBookingPrice,
+	IBookingPriceParams,
+	IBookingQuoteParams,
 	ICreateBookingRequest,
 	ICreatedBooking,
 	IUpdateBookingRequest,
@@ -21,6 +27,8 @@ import type {
 	TBookingModelBackend,
 	TBookingOrderBackendResponse,
 	TBookingOrderPaginatedResponse,
+	TBookingPriceBackend,
+	TBookingQuoteBackend,
 	TSubmittedBooking
 } from "../types";
 
@@ -44,6 +52,25 @@ export const bookingOrderApi = authApi.injectEndpoints({
 			}),
 			providesTags: (_result, _error, id) => [
 				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id }
+			]
+		}),
+		getBookingQuote: builder.query<IBookingPrice, IBookingQuoteParams>({
+			query: (params) => ({
+				...BOOKING_ORDER_PATHS.getBookingQuote,
+				params: mapBookingQuoteParamsToBackend(params)
+			}),
+			transformResponse: (response: TBookingQuoteBackend) =>
+				mapBookingPriceToFrontend(response)
+		}),
+		getBookingPrice: builder.query<IBookingPrice, IBookingPriceParams>({
+			query: ({ bookingId, ...params }) => ({
+				...BOOKING_ORDER_PATHS.getBookingPrice(bookingId),
+				params: mapBookingPriceParamsToBackend(params)
+			}),
+			transformResponse: (response: TBookingPriceBackend) =>
+				mapBookingPriceToFrontend(response),
+			providesTags: (_result, _error, { bookingId }) => [
+				{ type: ENUM_API_TAGS.BOOKING_ORDERS, id: bookingId }
 			]
 		}),
 		createBookingOrder: builder.mutation<
@@ -100,6 +127,8 @@ export const bookingOrderApi = authApi.injectEndpoints({
 export const {
 	useGetBookingOrdersQuery,
 	useGetBookingItineraryQuery,
+	useGetBookingQuoteQuery,
+	useGetBookingPriceQuery,
 	useCreateBookingOrderMutation,
 	useUpdateBookingOrderMutation,
 	useSubmitBookingOrderMutation,

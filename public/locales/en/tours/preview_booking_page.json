@@ -178,6 +178,7 @@
 		"duration": "Duration",
 		"travellers": "Travellers",
 		"package": "Package",
+		"currency": "Currency",
 		"price_per_person": "Price per person",
 		"group_total": "Group total",
 		"estimated_total": "Estimated total",

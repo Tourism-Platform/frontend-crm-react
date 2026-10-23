@@ -5,6 +5,10 @@ import { type TPreviewBookingPageKeys, i18nKey } from "@/shared/config";
 import { isValidCountryCode } from "@/shared/lib/countries";
 
 import { hasTravellerPassportFile } from "@/entities/booking/order/converters/booking-pax.converters";
+import {
+	DEFAULT_EVENT_CURRENCY,
+	ENUM_CURRENCY_OPTIONS
+} from "@/entities/commission";
 
 import { ENUM_LANGUAGES, type ENUM_LANGUAGES_TYPE } from "../../landing";
 import { ENUM_FORM_PREVIEW_BOOKING } from "../types";
@@ -96,6 +100,7 @@ export const PREVIEW_BOOKING_SCHEMA = z.object({
 	[ENUM_FORM_PREVIEW_BOOKING.LANGUAGE]: z.nativeEnum(ENUM_LANGUAGES, {
 		error: msg("step_1.language.errors.required")
 	}),
+	[ENUM_FORM_PREVIEW_BOOKING.CURRENCY]: z.nativeEnum(ENUM_CURRENCY_OPTIONS),
 	[ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS]: z.array(TRAVELLER_DETAILS_SCHEMA)
 });
 
@@ -106,5 +111,6 @@ export const PREVIEW_BOOKING_DEFAULT_VALUES = {
 	[ENUM_FORM_PREVIEW_BOOKING.LANGUAGE]: undefined as
 		| ENUM_LANGUAGES_TYPE
 		| undefined,
+	[ENUM_FORM_PREVIEW_BOOKING.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS]: [{}]
 };

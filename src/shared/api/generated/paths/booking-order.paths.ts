@@ -4,8 +4,12 @@ import type {
 	BookingItineraryResponse,
 	BookingOrderListResponse,
 	BookingOrderResponse,
+	BookingPaxPriceResponse,
+	BookingQuoteResponse,
 	BookingStatus,
-	BookingUpdate
+	BookingUpdate,
+	Currency,
+	LanguageCode
 } from "../Api";
 
 // AUTO-GENERATED — не редактировать вручную
@@ -38,6 +42,21 @@ export const BOOKING_ORDER_PATHS = {
 			response: BookingOrderListResponse;
 		}
 	} as const,
+	getBookingQuote: {
+		url: "/booking/order/quote",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: {
+				tour_option_id: string;
+				date: string;
+				pax: number;
+				lang?: LanguageCode;
+				currency?: Currency | null;
+			};
+			response: BookingQuoteResponse;
+		}
+	} as const,
 	getBookingItinerary: (bookingId: string) =>
 		({
 			url: `/booking/order/${bookingId}/itinerary`,
@@ -46,6 +65,16 @@ export const BOOKING_ORDER_PATHS = {
 				body: void;
 				query: void;
 				response: BookingItineraryResponse;
+			}
+		}) as const,
+	getBookingPrice: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/price`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { pax: number; currency?: Currency | null };
+				response: BookingPaxPriceResponse;
 			}
 		}) as const,
 	submitBookingOrder: (bookingId: string) =>

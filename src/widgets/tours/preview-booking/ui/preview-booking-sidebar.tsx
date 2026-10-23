@@ -3,9 +3,12 @@ import { type FC } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, LoaderButton } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import { Card, CardContent, CustomField, LoaderButton } from "@/shared/ui";
+import { formatMoney } from "@/shared/utils";
 
-import type { TSubmittedBooking } from "@/entities/booking";
+import type { IBookingPrice, TSubmittedBooking } from "@/entities/booking";
+import { CURRENCY_OPTIONS } from "@/entities/commission";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	type TPreviewBookingSchema
@@ -27,16 +30,17 @@ interface ISidebarProps {
 	tourData?: IPreviewTourGeneral;
 	options: IPreviewOptionCard[];
 	submittedBooking?: TSubmittedBooking | null;
+	price?: IBookingPrice;
+	isPriceFetching?: boolean;
 	action?: TSidebarAction;
 }
-
-const parsePrice = (price: string) =>
-	parseFloat(price.replace(/[^0-9.-]+/g, "")) || 0;
 
 export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 	tourData,
 	options,
 	submittedBooking,
+	price,
+	isPriceFetching,
 	action
 }) => {
 	const { t } = useTranslation("preview_booking_page");
@@ -56,15 +60,16 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 	});
 
 	const selectedOption = options.find((opt) => opt.id === optionId);
-	const pricePerPerson = selectedOption
-		? parsePrice(selectedOption.price)
-		: submittedBooking
-			? parseFloat(submittedBooking.tourAmount) / submittedBooking.pax
-			: 0;
 	const travellersCount = submittedBooking?.pax ?? count ?? 1;
-	const total = submittedBooking
-		? parseFloat(submittedBooking.tourAmount)
-		: pricePerPerson * travellersCount;
+	const moneyOptions = { currency: price?.currency, compact: false };
+	const perPersonLabel = price
+		? formatMoney(price.totalMinPrice / price.pax, moneyOptions)
+		: t("sidebar.not_selected");
+	const totalLabel = price
+		? t("sidebar.price_from", {
+				price: formatMoney(price.totalMinPrice, moneyOptions)
+			})
+		: t("sidebar.not_selected");
 
 	const startDate = submittedBooking?.date
 		? new Date(submittedBooking.date)
@@ -144,26 +149,35 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 					</div>
 				</div>
 
-				<div className="mb-4 flex flex-col gap-3 border-y py-4">
+				<div
+					className={cn(
+						"mb-4 flex flex-col gap-3 border-y py-4 transition-opacity",
+						isPriceFetching && "opacity-50"
+					)}
+				>
+					{!submittedBooking ? (
+						<div className="flex items-center justify-between gap-4">
+							<span className="text-sm text-muted-foreground">
+								{t("sidebar.currency")}
+							</span>
+							<CustomField
+								control={form.control}
+								name={ENUM_FORM_PREVIEW_BOOKING.CURRENCY}
+								fieldType="select"
+								label="sidebar.currency"
+								options={[...CURRENCY_OPTIONS]}
+								t={t}
+								hideLabel
+								className="w-28"
+							/>
+						</div>
+					) : null}
 					<div className="flex justify-between">
 						<span className="text-sm text-muted-foreground">
 							{t("sidebar.price_per_person")}
 						</span>
-						<span className="font-semibold">
-							{submittedBooking?.tourCurrency ?? "$"}
-							{pricePerPerson.toFixed(2)}
-						</span>
+						<span className="font-semibold">{perPersonLabel}</span>
 					</div>
-					{selectedOption?.totalPrice ? (
-						<div className="flex justify-between">
-							<span className="text-sm text-muted-foreground">
-								{t("sidebar.group_total")}
-							</span>
-							<span className="font-semibold">
-								{selectedOption.totalPrice}
-							</span>
-						</div>
-					) : null}
 				</div>
 
 				<div className="mb-6 flex flex-col gap-2">
@@ -171,10 +185,13 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 						<span className="font-semibold">
 							{t("sidebar.estimated_total")}
 						</span>
-						<span className="text-right text-2xl font-bold">
-							{t("sidebar.price_from", {
-								price: `${submittedBooking?.tourCurrency ?? "$"}${total.toFixed(2)}`
-							})}
+						<span
+							className={cn(
+								"text-right text-2xl font-bold transition-opacity",
+								isPriceFetching && "opacity-50"
+							)}
+						>
+							{totalLabel}
 						</span>
 					</div>
 					<p className="text-xs text-muted-foreground">
