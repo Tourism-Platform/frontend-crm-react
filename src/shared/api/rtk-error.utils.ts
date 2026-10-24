@@ -23,6 +23,17 @@ export function isUnauthorizedError(error: unknown): boolean {
 	return getHttpErrorStatus(error) === 401;
 }
 
+// Бэк отдаёт 400/409/422 с разными префиксами, общая часть — эта фраза
+const NO_FX_RATE_DETAIL = "no bank fx rate is available yet";
+
+/** Нет курса ЦБ: до первой синхронизации или банк перестал публиковать валюту */
+export function isNoFxRateError(error: unknown): boolean {
+	return (
+		getApiErrorDetail(error)?.toLowerCase().includes(NO_FX_RATE_DETAIL) ??
+		false
+	);
+}
+
 function getErrorPayload(error: unknown): unknown {
 	if (error == null || typeof error !== "object") {
 		return error;

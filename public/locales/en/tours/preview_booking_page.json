@@ -179,6 +179,11 @@
 		"estimated_total": "Estimated total",
 		"price_from": "from {{price}}",
 		"price_note": "This is an estimated price. The final price will be confirmed after booking.",
+		"currency": "Currency",
+		"errors": {
+			"no_fx_rate": "Price is unavailable: the bank exchange rate for this currency is not published yet. Choose another currency.",
+			"price_failed": "Failed to load the price"
+		},
 		"not_selected": "Not selected",
 		"days": "days",
 		"person": "person"

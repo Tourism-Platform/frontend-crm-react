@@ -31,6 +31,7 @@ import {
 import { FocTiersDetails } from "./foc-tiers-details";
 
 const FinanceInfoBase: FC = () => {
+	const financeFields = FINANCE_FORM_LIST();
 	const { t } = useTranslation("tour_settings_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
@@ -103,7 +104,7 @@ const FinanceInfoBase: FC = () => {
 			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 				<h2 className="text-xl col-span-2">{t("finance.title")}</h2>
 				<div className="col-span-2">
-					{FINANCE_FORM_LIST().map(({ key, ...item }) => (
+					{financeFields.map(({ key, ...item }) => (
 						<CustomField
 							key={key}
 							control={form.control}

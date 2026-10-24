@@ -1,17 +1,30 @@
 import { format } from "date-fns";
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, LoaderButton } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	LoaderButton,
+	SelectPicker,
+	Skeleton
+} from "@/shared/ui";
+import { formatMoney } from "@/shared/utils";
 
 import type { TSubmittedBooking } from "@/entities/booking";
+import {
+	type ENUM_CURRENCY_OPTIONS_TYPE,
+	pickCurrencyOptions
+} from "@/entities/commission";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	type TPreviewBookingSchema
 } from "@/entities/tour/preview-booking";
 import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 import type { IPreviewTourGeneral } from "@/entities/tour/preview-tour";
+
+import type { TBookingPriceState } from "../model/hooks/use-booking-price";
 
 type TSidebarAction = {
 	label: string;
@@ -27,16 +40,15 @@ interface ISidebarProps {
 	tourData?: IPreviewTourGeneral;
 	options: IPreviewOptionCard[];
 	submittedBooking?: TSubmittedBooking | null;
+	bookingPriceState: TBookingPriceState;
 	action?: TSidebarAction;
 }
-
-const parsePrice = (price: string) =>
-	parseFloat(price.replace(/[^0-9.-]+/g, "")) || 0;
 
 export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 	tourData,
 	options,
 	submittedBooking,
+	bookingPriceState,
 	action
 }) => {
 	const { t } = useTranslation("preview_booking_page");
@@ -55,16 +67,39 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 		name: ENUM_FORM_PREVIEW_BOOKING.OPTION_ID
 	});
 
+	const {
+		bookingPrice,
+		displayCurrencies,
+		selectedCurrency,
+		isBookingPriceLoading,
+		bookingPriceErrorKey,
+		setCurrency
+	} = bookingPriceState;
+
+	// Сбой загрузки цены не мешает брони; без курса — сначала смените валюту
+	const isNoFxRate = bookingPriceErrorKey === "sidebar.errors.no_fx_rate";
+
 	const selectedOption = options.find((opt) => opt.id === optionId);
-	const pricePerPerson = selectedOption
-		? parsePrice(selectedOption.price)
-		: submittedBooking
-			? parseFloat(submittedBooking.tourAmount) / submittedBooking.pax
-			: 0;
 	const travellersCount = submittedBooking?.pax ?? count ?? 1;
-	const total = submittedBooking
-		? parseFloat(submittedBooking.tourAmount)
-		: pricePerPerson * travellersCount;
+
+	const currencyOptions = useMemo(
+		() => pickCurrencyOptions(displayCurrencies),
+		[displayCurrencies]
+	);
+
+	const formatPrice = (amount: number) =>
+		formatMoney(amount, {
+			currency: bookingPrice?.currency,
+			compact: false
+		});
+	const total = Number(bookingPrice?.totalMinPrice ?? 0);
+	const pricePerPerson = bookingPrice ? total / bookingPrice.pax : 0;
+
+	const renderPrice = (value: string) => {
+		if (isBookingPriceLoading) return <Skeleton className="h-5 w-20" />;
+		if (!bookingPrice) return "—";
+		return value;
+	};
 
 	const startDate = submittedBooking?.date
 		? new Date(submittedBooking.date)
@@ -145,13 +180,29 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 				</div>
 
 				<div className="mb-4 flex flex-col gap-3 border-y py-4">
+					{currencyOptions.length > 1 ? (
+						<div className="flex items-center justify-between gap-4">
+							<span className="text-sm text-muted-foreground">
+								{t("sidebar.currency")}
+							</span>
+							<SelectPicker
+								className="w-28"
+								value={selectedCurrency}
+								options={currencyOptions}
+								onChange={(value) =>
+									setCurrency(
+										value as ENUM_CURRENCY_OPTIONS_TYPE
+									)
+								}
+							/>
+						</div>
+					) : null}
 					<div className="flex justify-between">
 						<span className="text-sm text-muted-foreground">
 							{t("sidebar.price_per_person")}
 						</span>
 						<span className="font-semibold">
-							{submittedBooking?.tourCurrency ?? "$"}
-							{pricePerPerson.toFixed(2)}
+							{renderPrice(formatPrice(pricePerPerson))}
 						</span>
 					</div>
 					{selectedOption?.totalPrice ? (
@@ -172,14 +223,22 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 							{t("sidebar.estimated_total")}
 						</span>
 						<span className="text-right text-2xl font-bold">
-							{t("sidebar.price_from", {
-								price: `${submittedBooking?.tourCurrency ?? "$"}${total.toFixed(2)}`
-							})}
+							{renderPrice(
+								t("sidebar.price_from", {
+									price: formatPrice(total)
+								})
+							)}
 						</span>
 					</div>
-					<p className="text-xs text-muted-foreground">
-						{t("sidebar.price_note")}
-					</p>
+					{bookingPriceErrorKey ? (
+						<p className="text-xs text-destructive">
+							{t(bookingPriceErrorKey)}
+						</p>
+					) : (
+						<p className="text-xs text-muted-foreground">
+							{t("sidebar.price_note")}
+						</p>
+					)}
 				</div>
 
 				{action ? (
@@ -187,7 +246,7 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 						type={action.type ?? "button"}
 						form={action.form}
 						className="w-full"
-						disabled={action.disabled}
+						disabled={action.disabled || isNoFxRate}
 						isLoading={action.isLoading}
 						onClick={action.onClick}
 						label={action.label}

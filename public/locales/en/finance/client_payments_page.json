@@ -108,7 +108,8 @@
 				},
 				"toasts": {
 					"success": "Payment assigned successfully",
-					"error": "Failed to assign payment"
+					"error": "Failed to assign payment",
+					"no_fx_rate": "Cannot confirm the payment: the bank exchange rate to your base currency is not published yet"
 				}
 			}
 		},

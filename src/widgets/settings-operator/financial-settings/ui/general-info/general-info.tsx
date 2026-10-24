@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type FC, Fragment, useEffect, useMemo } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -13,10 +13,7 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
-import {
-	CURRENCY_OPTIONS,
-	type ENUM_CURRENCY_OPTIONS_TYPE
-} from "@/entities/commission";
+import { pickCurrencyOptions } from "@/entities/commission";
 import {
 	ENUM_FORM_OPERATOR_GENERAL_INFO,
 	OPERATOR_GENERAL_INFO_SCHEMA,
@@ -28,7 +25,7 @@ import {
 import {
 	GENERAL_INFO_LIST,
 	GENERAL_INFO_SECTION_DESCRIPTIONS,
-	type TForm
+	resolveFinanceSettingsError
 } from "../../model";
 
 const GeneralInfoBase: FC = () => {
@@ -62,33 +59,22 @@ const GeneralInfoBase: FC = () => {
 		try {
 			await updateOperatorFinanceInfo(data).unwrap();
 			toast.success(t("general.form.toasts.save.success"));
-		} catch (e) {
-			toast.error(t("general.form.toasts.save.error"));
-			console.error(e);
+		} catch (error) {
+			const { key, currency } = resolveFinanceSettingsError(error);
+			toast.error(t(key, { currency }));
 		}
 	}
 
-	// default_currency обязан входить в accepted_currencies, иначе бэк ответит 400
-	const fieldsList = useMemo(() => {
-		const accepted = generalInfoData?.acceptedCurrencies;
-		if (!accepted) return GENERAL_INFO_LIST;
+	const acceptedCurrencies = useWatch({
+		control: form.control,
+		name: ENUM_FORM_OPERATOR_GENERAL_INFO.ACCEPTED_CURRENCIES
+	});
 
-		return GENERAL_INFO_LIST.map(
-			(field): TForm =>
-				field.key ===
-					ENUM_FORM_OPERATOR_GENERAL_INFO.DEFAULT_CURRENCY &&
-				field.fieldType === "select"
-					? {
-							...field,
-							options: CURRENCY_OPTIONS.filter(({ value }) =>
-								accepted.includes(
-									value as ENUM_CURRENCY_OPTIONS_TYPE
-								)
-							)
-						}
-					: field
-		);
-	}, [generalInfoData?.acceptedCurrencies]);
+	// Валюта по умолчанию выбирается только из принятых
+	const fieldsList = useMemo(
+		() => GENERAL_INFO_LIST(pickCurrencyOptions(acceptedCurrencies ?? [])),
+		[acceptedCurrencies]
+	);
 
 	const isLoading =
 		isUpdating || isGeneralInfoLoading || form.formState.isSubmitting;

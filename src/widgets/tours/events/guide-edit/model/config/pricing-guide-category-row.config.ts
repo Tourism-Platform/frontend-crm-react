@@ -1,9 +1,7 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import {
 	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_CHARGE,
@@ -47,7 +45,7 @@ export const PER_GUIDE_CATEGORY_ROW_FIELDS_LIST =
 			placeholder:
 				"form.pricing.form.per_guide.fields.currency.placeholder",
 			fieldType: "select",
-			options: CURRENCY_OPTIONS,
+			options: useAcceptedCurrencyOptions().currencyOptions,
 			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];
@@ -84,7 +82,7 @@ export const PER_GUIDE_ROW_FIELDS_LIST = (): TGuidePricingFormField[] => [
 		label: "form.pricing.form.per_guide.table.currency",
 		placeholder: "form.pricing.form.per_guide.fields.currency.placeholder",
 		fieldType: "select",
-		options: CURRENCY_OPTIONS,
+		options: useAcceptedCurrencyOptions().currencyOptions,
 		defaultValue: DEFAULT_EVENT_CURRENCY
 	}
 ];

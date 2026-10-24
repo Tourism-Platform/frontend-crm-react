@@ -63,5 +63,11 @@
 		"load": {
 			"error": "Failed to load packages"
 		}
+	},
+	"errors": {
+		"no_fx_rate": {
+			"title": "Pricing is unavailable",
+			"description": "The Central Bank exchange rate for one of the tour currencies is not published yet. Try again later."
+		}
 	}
 }

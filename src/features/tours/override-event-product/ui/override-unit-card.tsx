@@ -39,6 +39,7 @@ export const OverrideUnitCard: FC<IOverrideUnitCardProps> = ({
 	unitChargeOptions,
 	addMarginSeparately
 }) => {
+	const rowFields = FORM_OVERRIDE_UNIT_ROW_FIELDS_LIST();
 	const { t } = useTranslation("common_events");
 	const showUnitCharge = unitChargeOptions.length > 1;
 	const rowPath = `${ENUM_FORM_OVERRIDE_PRODUCT.UNITS}.${index}` as const;
@@ -79,35 +80,31 @@ export const OverrideUnitCard: FC<IOverrideUnitCardProps> = ({
 							t={t}
 						/>
 					) : null}
-					{FORM_OVERRIDE_UNIT_ROW_FIELDS_LIST.map(
-						({ key, ...item }, fieldIndex) => (
-							<Fragment key={key}>
-								{addMarginSeparately &&
-								fieldIndex ===
-									FORM_OVERRIDE_UNIT_ROW_FIELDS_LIST.length -
-										1 ? (
-									<CustomInputSelect
-										control={form.control}
-										name={`${rowPath}.${OVERRIDE_MARKUP_FIELD.key}`}
-										label={OVERRIDE_MARKUP_FIELD.label}
-										placeholder={
-											OVERRIDE_MARKUP_FIELD.placeholder
-										}
-										selectOptions={[
-											...OVERRIDE_MARKUP_FIELD.selectOptions
-										]}
-										t={t}
-									/>
-								) : null}
-								<CustomField
+					{rowFields.map(({ key, ...item }, fieldIndex) => (
+						<Fragment key={key}>
+							{addMarginSeparately &&
+							fieldIndex === rowFields.length - 1 ? (
+								<CustomInputSelect
 									control={form.control}
-									name={`${rowPath}.${key}`}
+									name={`${rowPath}.${OVERRIDE_MARKUP_FIELD.key}`}
+									label={OVERRIDE_MARKUP_FIELD.label}
+									placeholder={
+										OVERRIDE_MARKUP_FIELD.placeholder
+									}
+									selectOptions={[
+										...OVERRIDE_MARKUP_FIELD.selectOptions
+									]}
 									t={t}
-									{...item}
 								/>
-							</Fragment>
-						)
-					)}
+							) : null}
+							<CustomField
+								control={form.control}
+								name={`${rowPath}.${key}`}
+								t={t}
+								{...item}
+							/>
+						</Fragment>
+					))}
 				</div>
 				<FeeLinesField
 					control={form.control}

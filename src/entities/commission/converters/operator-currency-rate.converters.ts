@@ -29,12 +29,10 @@ export const mapOperatorCurrencyRateListToFrontend = (
 /** Бэк отдаёт весь список без фильтров и пагинации — считаем на клиенте */
 export const filterOperatorCurrencyRates = (
 	rates: IOperatorCurrencyRate[],
-	{ page, limit, fromCurrency, toCurrency }: IOperatorCurrencyRateFilters
+	{ page, limit, fromCurrency }: IOperatorCurrencyRateFilters
 ): IPaginationResponse<IOperatorCurrencyRate> => {
 	const filtered = rates.filter(
-		(rate) =>
-			(!fromCurrency || rate.from_currency === fromCurrency) &&
-			(!toCurrency || rate.to_currency === toCurrency)
+		(rate) => !fromCurrency || rate.from_currency === fromCurrency
 	);
 	const start = (page - 1) * limit;
 

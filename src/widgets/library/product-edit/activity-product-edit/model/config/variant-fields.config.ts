@@ -1,6 +1,6 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import {
 	ACTIVITY_VARIANT_CHARGE_LABELS,
 	ENUM_FORM_ACTIVITY_VARIANT as ENUM_FORM
@@ -35,7 +35,7 @@ export const ACTIVITY_VARIANT_FIELDS_LIST = (): TForm[] => [
 	{
 		key: ENUM_FORM.CURRENCY,
 		fieldType: "select",
-		options: CURRENCY_OPTIONS,
+		options: useAcceptedCurrencyOptions().currencyOptions,
 		label: "form.variants.fields.currency.label",
 		placeholder: "form.variants.fields.currency.placeholder"
 	}

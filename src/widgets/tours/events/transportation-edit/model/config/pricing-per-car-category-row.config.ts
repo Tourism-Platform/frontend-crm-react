@@ -1,13 +1,11 @@
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import { ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD } from "@/entities/tour";
 
 import type { TTransportationPricingFormField } from "../types";
 
-export const PER_CAR_CATEGORY_ROW_FIELDS_LIST: TTransportationPricingFormField[] =
-	[
+export const PER_CAR_CATEGORY_ROW_FIELDS_LIST =
+	(): TTransportationPricingFormField[] => [
 		{
 			key: ENUM_TRANSPORTATION_CATEGORY_ROW_FIELD.NAME,
 			label: "form.pricing.form.per_car.table.type",
@@ -29,7 +27,7 @@ export const PER_CAR_CATEGORY_ROW_FIELDS_LIST: TTransportationPricingFormField[]
 			placeholder:
 				"form.pricing.form.pricing_details.fields.currency.placeholder",
 			fieldType: "select",
-			options: CURRENCY_OPTIONS,
+			options: useAcceptedCurrencyOptions().currencyOptions,
 			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];

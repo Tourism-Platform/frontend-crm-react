@@ -1,12 +1,10 @@
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import { ENUM_PACKAGE_FIELD } from "@/entities/tour";
 
 import type { TPackageFormField } from "../types";
 
-export const PACKAGE_FLAT_RATE_PRICE_DETAILS_LIST: TPackageFormField[] = [
+export const PACKAGE_FLAT_RATE_PRICE_DETAILS_LIST = (): TPackageFormField[] => [
 	{
 		label: "form.pricing.form.pricing_details.fields.total_price.label",
 		placeholder:
@@ -21,7 +19,7 @@ export const PACKAGE_FLAT_RATE_PRICE_DETAILS_LIST: TPackageFormField[] = [
 			"form.pricing.form.pricing_details.fields.currency.placeholder",
 		key: ENUM_PACKAGE_FIELD.CURRENCY,
 		fieldType: "select",
-		options: CURRENCY_OPTIONS,
+		options: useAcceptedCurrencyOptions().currencyOptions,
 		defaultValue: DEFAULT_EVENT_CURRENCY
 	}
 ];

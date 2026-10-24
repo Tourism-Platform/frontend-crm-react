@@ -47,6 +47,8 @@ import {
 	saveBookingDraft
 } from "../lib";
 
+import { useBookingPrice } from "./use-booking-price";
+
 export const usePreviewBooking = () => {
 	const { t } = useTranslation("preview_booking_page");
 	const navigate = useNavigate();
@@ -78,16 +80,6 @@ export const usePreviewBooking = () => {
 	);
 
 	const availableLanguages = previewLanding?.languages ?? [];
-
-	const {
-		data: optionsPage,
-		isLoading: isOptionsLoading,
-		isError: isOptionsError
-	} = useGetPreviewTourOptionsQuery(
-		{ page: 1, limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS, tourId },
-		{ skip: !tourId }
-	);
-	const options = useMemo(() => optionsPage?.data ?? [], [optionsPage]);
 
 	const { data: scheduleData } = useGetPreviewTourScheduleQuery(
 		{
@@ -130,6 +122,39 @@ export const usePreviewBooking = () => {
 
 	const travellersCount = form.watch(
 		ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS_COUNT
+	);
+	const [optionId, bookingDate, bookingLanguage] = form.watch([
+		ENUM_FORM_PREVIEW_BOOKING.OPTION_ID,
+		ENUM_FORM_PREVIEW_BOOKING.DATE,
+		ENUM_FORM_PREVIEW_BOOKING.LANGUAGE
+	]);
+
+	const bookingPriceState = useBookingPrice({
+		bookingId: bookingIdParam,
+		tourOptionId: optionId,
+		date: bookingDate,
+		pax: travellersCount,
+		lang: bookingLanguage
+	});
+
+	// Карточки опций — в той же валюте отображения, что и итог
+	const {
+		data: optionsPage,
+		isLoading: isOptionsLoading,
+		isError: isOptionsError
+	} = useGetPreviewTourOptionsQuery(
+		{
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS,
+			tourId,
+			currency: bookingPriceState.currency
+		},
+		{ skip: !tourId }
+	);
+	// При ошибке (409 — нет курса) data держит карточки прошлой валюты — не показываем их
+	const options = useMemo(
+		() => (isOptionsError ? [] : (optionsPage?.data ?? [])),
+		[isOptionsError, optionsPage]
 	);
 	const travellers = form.watch(ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS);
 	const canAddTraveller = (travellers?.length ?? 0) < (travellersCount ?? 0);
@@ -406,6 +431,7 @@ export const usePreviewBooking = () => {
 		isUpdating,
 		bookingId: bookingIdParam,
 		submittedBooking,
+		bookingPriceState,
 		tourData,
 		availableLanguages,
 		options,

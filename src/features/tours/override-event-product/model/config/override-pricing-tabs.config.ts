@@ -37,7 +37,7 @@ export const getOverridePricingTabsList = (
 	{
 		label: "override_product.dialog.pricing.tabs.flat_rate",
 		type: ENUM_FLIGHT_PRICING_TYPE.FLAT_RATE,
-		priceDetailsList: FORM_OVERRIDE_FLAT_RATE_PRICE_DETAILS_LIST
+		priceDetailsList: FORM_OVERRIDE_FLAT_RATE_PRICE_DETAILS_LIST()
 	},
 	{
 		label: OVERRIDE_PER_UNIT_TAB_LABELS[perUnitArm],
@@ -46,7 +46,7 @@ export const getOverridePricingTabsList = (
 	{
 		label: "override_product.dialog.pricing.tabs.per_person",
 		type: ENUM_FLIGHT_PRICING_TYPE.PER_PERSON,
-		priceDetailsList: FORM_OVERRIDE_PER_PERSON_PRICE_DETAILS_LIST
+		priceDetailsList: FORM_OVERRIDE_PER_PERSON_PRICE_DETAILS_LIST()
 	}
 ];
 

@@ -11,6 +11,7 @@ import {
 	ENUM_OPERATOR_CURRENCY_RATE_FILTER,
 	type IOperatorCurrencyRateFilters,
 	filterOperatorCurrencyRates,
+	pickCurrencyOptions,
 	useGetOperatorCurrencyRatesQuery
 } from "@/entities/commission";
 
@@ -31,16 +32,15 @@ const CurrencyBase: FC = () => {
 	const { watch, setValue, control } = form;
 
 	const filters = watch();
-	const { fromCurrency, toCurrency } = filters;
+	const { fromCurrency } = filters;
 
 	// Новый фильтр — снова с первой страницы
 	useEffect(() => {
 		setValue("page", 1);
-	}, [fromCurrency, toCurrency, setValue]);
+	}, [fromCurrency, setValue]);
 
 	const handleResetFilters = useCallback(() => {
 		setValue(ENUM_OPERATOR_CURRENCY_RATE_FILTER.FROM_CURRENCY, undefined);
-		setValue(ENUM_OPERATOR_CURRENCY_RATE_FILTER.TO_CURRENCY, undefined);
 	}, [setValue]);
 
 	const {
@@ -55,10 +55,19 @@ const CurrencyBase: FC = () => {
 			filterOperatorCurrencyRates(currencyRates ?? [], {
 				page: filters.page,
 				limit: filters.limit,
-				fromCurrency,
-				toCurrency
+				fromCurrency
 			}),
-		[currencyRates, filters.page, filters.limit, fromCurrency, toCurrency]
+		[currencyRates, filters.page, filters.limit, fromCurrency]
+	);
+
+	const filtersList = useMemo(
+		() =>
+			CURRENCY_RATE_FILTERS_LIST(
+				pickCurrencyOptions(
+					(currencyRates ?? []).map((rate) => rate.from_currency)
+				)
+			),
+		[currencyRates]
 	);
 
 	const columns = useMemo(() => OPERATOR_CURRENCY_RATE_COLUMNS(t), [t]);
@@ -98,7 +107,7 @@ const CurrencyBase: FC = () => {
 				</p>
 				<Form {...form}>
 					<div className="flex flex-wrap items-center gap-4">
-						{CURRENCY_RATE_FILTERS_LIST.map(({ key, ...item }) => (
+						{filtersList.map(({ key, ...item }) => (
 							<CustomField
 								hideLabel
 								key={key}
@@ -120,7 +129,7 @@ const CurrencyBase: FC = () => {
 				</Form>
 			</div>
 		),
-		[t, form, control, handleResetFilters]
+		[t, form, control, handleResetFilters, filtersList]
 	);
 
 	return (

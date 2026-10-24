@@ -1,6 +1,7 @@
 import { resetAuthStore } from "@/entities/auth/mock/auth.store";
 import { resetBookingPaxStore } from "@/entities/booking/order/mock/booking-order-pax.mock";
 import { resetBookingOrderStore } from "@/entities/booking/order/mock/booking-order.store";
+import { resetBookingPriceStore } from "@/entities/booking/order/mock/booking-price.store";
 import { resetBookingSnapshotStore } from "@/entities/booking/order/mock/booking-snapshot.store";
 import { resetClientPaymentsForTests } from "@/entities/finance/client-payment/mock/payment.store";
 import { resetPaymentRoutesStore } from "@/entities/finance/finance-information/mock/operator-payment-routes.mock";
@@ -30,6 +31,7 @@ export const resetMockStores = () => {
 	resetItineraryStore();
 	resetEventLibraryStore();
 	resetBookingOrderStore();
+	resetBookingPriceStore();
 	resetBookingPaxStore();
 	resetBookingSnapshotStore();
 	resetClientPaymentsForTests();

@@ -40,6 +40,7 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 	index,
 	addMarginSeparately
 }) => {
+	const rowFields = PER_CAR_ROW_FIELDS_LIST();
 	const { t } = useTranslation(["transportation_edit_page", "options"]);
 	const carName = form.watch(
 		`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${ENUM_FORM_CARS.CAR_NAME}`
@@ -66,34 +67,31 @@ export const PerCarCard: FC<IPerCarCardProps> = ({
 							"max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)]"
 					)}
 				>
-					{PER_CAR_ROW_FIELDS_LIST.map(
-						({ key, ...item }, fieldIndex) => (
-							<Fragment key={key}>
-								{addMarginSeparately &&
-								fieldIndex ===
-									PER_CAR_ROW_FIELDS_LIST.length - 1 ? (
-									<CustomInputSelect
-										control={form.control}
-										name={`${rowPath}.${PER_CAR_MARKUP_FIELD.key}`}
-										label={PER_CAR_MARKUP_FIELD.label}
-										placeholder={
-											PER_CAR_MARKUP_FIELD.placeholder
-										}
-										selectOptions={[
-											...PER_CAR_MARKUP_FIELD.selectOptions
-										]}
-										t={t}
-									/>
-								) : null}
-								<CustomField
+					{rowFields.map(({ key, ...item }, fieldIndex) => (
+						<Fragment key={key}>
+							{addMarginSeparately &&
+							fieldIndex === rowFields.length - 1 ? (
+								<CustomInputSelect
 									control={form.control}
-									name={`${rowPath}.${key}`}
+									name={`${rowPath}.${PER_CAR_MARKUP_FIELD.key}`}
+									label={PER_CAR_MARKUP_FIELD.label}
+									placeholder={
+										PER_CAR_MARKUP_FIELD.placeholder
+									}
+									selectOptions={[
+										...PER_CAR_MARKUP_FIELD.selectOptions
+									]}
 									t={t}
-									{...item}
 								/>
-							</Fragment>
-						)
-					)}
+							) : null}
+							<CustomField
+								control={form.control}
+								name={`${rowPath}.${key}`}
+								t={t}
+								{...item}
+							/>
+						</Fragment>
+					))}
 				</div>
 				<FeeLinesField
 					control={form.control}

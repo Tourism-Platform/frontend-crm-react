@@ -47,6 +47,7 @@ const PackagePricingBase: FC<TPackagePricingProps> = ({
 	isLoading,
 	backToEventHref
 }) => {
+	const pricingTabs = PACKAGE_PRICING_TABS_LIST();
 	const { t } = useTranslation("tour_package_edit_page");
 	const pricingType = useWatch({
 		control: form.control,
@@ -85,110 +86,96 @@ const PackagePricingBase: FC<TPackagePricingProps> = ({
 						}
 					>
 						<CustomOptionTabsList className="grid grid-cols-2 w-70">
-							{PACKAGE_PRICING_TABS_LIST.map(
-								({ type, label }) => (
-									<CustomOptionTabsTrigger
-										key={type}
-										value={type}
-										variant={"outline"}
-									>
-										{t(label)}
-									</CustomOptionTabsTrigger>
-								)
-							)}
-						</CustomOptionTabsList>
-						{PACKAGE_PRICING_TABS_LIST.map(
-							({ type, priceDetailsList }) => (
-								<CustomOptionTabsContent
+							{pricingTabs.map(({ type, label }) => (
+								<CustomOptionTabsTrigger
 									key={type}
 									value={type}
+									variant={"outline"}
 								>
-									<div className="grid gap-4 mb-8">
-										<div className="flex flex-wrap items-center justify-between gap-4">
-											<h3 className="text-lg">
-												{t(
-													"form.pricing.form.pricing_details.title"
+									{t(label)}
+								</CustomOptionTabsTrigger>
+							))}
+						</CustomOptionTabsList>
+						{pricingTabs.map(({ type, priceDetailsList }) => (
+							<CustomOptionTabsContent key={type} value={type}>
+								<div className="grid gap-4 mb-8">
+									<div className="flex flex-wrap items-center justify-between gap-4">
+										<h3 className="text-lg">
+											{t(
+												"form.pricing.form.pricing_details.title"
+											)}
+										</h3>
+										<div className="flex items-center gap-2">
+											<Checkbox
+												id={`package-add-margin-${type}`}
+												checked={Boolean(
+													addMarginSeparately
 												)}
-											</h3>
-											<div className="flex items-center gap-2">
-												<Checkbox
-													id={`package-add-margin-${type}`}
-													checked={Boolean(
-														addMarginSeparately
-													)}
-													onCheckedChange={(
-														checked
-													) =>
-														handleAddMarginSeparatelyChange(
-															Boolean(checked)
-														)
-													}
-												/>
-												<Label
-													htmlFor={`package-add-margin-${type}`}
-												>
-													{t(
-														"form.pricing.form.pricing_details.checkboxes.add_margin_separately"
-													)}
-												</Label>
-											</div>
+												onCheckedChange={(checked) =>
+													handleAddMarginSeparatelyChange(
+														Boolean(checked)
+													)
+												}
+											/>
+											<Label
+												htmlFor={`package-add-margin-${type}`}
+											>
+												{t(
+													"form.pricing.form.pricing_details.checkboxes.add_margin_separately"
+												)}
+											</Label>
 										</div>
-										<div
-											className={
-												addMarginSeparately
-													? "grid max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)] gap-4"
-													: "grid max-w-xl grid-cols-2 gap-4"
-											}
-										>
-											{priceDetailsList.map(
-												(
-													{ key, ...item },
-													fieldIndex
-												) => (
-													<Fragment key={key}>
-														{addMarginSeparately &&
-														fieldIndex ===
-															priceDetailsList.length -
-																1 ? (
-															<CustomInputSelect
-																control={
-																	form.control
-																}
-																name={
-																	PACKAGE_MARKUP_FIELD.key
-																}
-																label={
-																	PACKAGE_MARKUP_FIELD.label
-																}
-																placeholder={
-																	PACKAGE_MARKUP_FIELD.placeholder
-																}
-																selectOptions={[
-																	...PACKAGE_MARKUP_FIELD.selectOptions
-																]}
-																t={t}
-															/>
-														) : null}
-														<CustomField
-															name={key}
+									</div>
+									<div
+										className={
+											addMarginSeparately
+												? "grid max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)] gap-4"
+												: "grid max-w-xl grid-cols-2 gap-4"
+										}
+									>
+										{priceDetailsList.map(
+											({ key, ...item }, fieldIndex) => (
+												<Fragment key={key}>
+													{addMarginSeparately &&
+													fieldIndex ===
+														priceDetailsList.length -
+															1 ? (
+														<CustomInputSelect
 															control={
 																form.control
 															}
+															name={
+																PACKAGE_MARKUP_FIELD.key
+															}
+															label={
+																PACKAGE_MARKUP_FIELD.label
+															}
+															placeholder={
+																PACKAGE_MARKUP_FIELD.placeholder
+															}
+															selectOptions={[
+																...PACKAGE_MARKUP_FIELD.selectOptions
+															]}
 															t={t}
-															{...item}
 														/>
-													</Fragment>
-												)
-											)}
-										</div>
-										<FeeLinesField
-											control={form.control}
-											name={ENUM_PACKAGE_FIELD.FEES}
-										/>
+													) : null}
+													<CustomField
+														name={key}
+														control={form.control}
+														t={t}
+														{...item}
+													/>
+												</Fragment>
+											)
+										)}
 									</div>
-								</CustomOptionTabsContent>
-							)
-						)}
+									<FeeLinesField
+										control={form.control}
+										name={ENUM_PACKAGE_FIELD.FEES}
+									/>
+								</div>
+							</CustomOptionTabsContent>
+						))}
 					</CustomOptionTabs>
 				</div>
 				<div className="grid gap-1">

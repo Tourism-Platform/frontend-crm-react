@@ -20,9 +20,8 @@ export const mapOperatorFinanceInfoToFrontend = (
 			: 0,
 
 	defaultCurrency: currencyConverter.from(backend.default_currency)!,
-	acceptedCurrencies: backend.accepted_currencies.map(
-		(currency) => currencyConverter.from(currency)!
-	),
+	acceptedCurrencies: currencyConverter.fromMany(backend.accepted_currencies),
+	fxMargin: Number((Number(backend.fx_margin) * 100).toFixed(2)),
 
 	vatEnabled: backend.vat_enabled,
 	vatRate: Number(backend.vat_rate ?? 0),
@@ -35,6 +34,17 @@ export const mapOperatorFinanceInfoToBackend = (
 ): TOperatorFinanceInfoBackendUpdate => ({
 	...(frontend.defaultCurrency && {
 		default_currency: currencyConverter.to(frontend.defaultCurrency)
+	}),
+
+	...(frontend.acceptedCurrencies && {
+		accepted_currencies: currencyConverter.toMany(
+			frontend.acceptedCurrencies
+		)
+	}),
+
+	// 0 — валидная маржа, поэтому проверка на undefined, а не на truthy
+	...(frontend.fxMargin !== undefined && {
+		fx_margin: String(Number((frontend.fxMargin / 100).toFixed(4)))
 	}),
 
 	...(frontend.vatEnabled !== undefined && {

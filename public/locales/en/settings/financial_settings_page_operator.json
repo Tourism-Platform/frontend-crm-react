@@ -30,12 +30,31 @@
 						"max": "Staff payouts cannot be more than 100%"
 					}
 				},
+				"accepted_currencies": {
+					"label": "Accepted currencies",
+					"placeholder": "Select currencies",
+					"description": "Currencies you have accounts in. All prices, payments and payment routes can only use these currencies. A currency cannot be removed while prices or open orders use it.",
+					"errors": {
+						"required": "Select at least one currency"
+					}
+				},
 				"default_currency": {
 					"label": "Default currency",
 					"description": "The operator currency used by default.",
 					"placeholder": "Select currency",
 					"errors": {
-						"required": "Currency is required"
+						"required": "Currency is required",
+						"not_accepted": "Default currency must be one of the accepted currencies"
+					}
+				},
+				"fx_margin": {
+					"label": "FX margin",
+					"placeholder": "Enter rate",
+					"description": "Every conversion at the Central Bank rate is shifted by this margin in your favour.",
+					"errors": {
+						"required": "FX margin is required",
+						"min": "FX margin cannot be less than 0%",
+						"max": "FX margin must be less than 100%"
 					}
 				}
 			},
@@ -47,7 +66,12 @@
 			"toasts": {
 				"save": {
 					"success": "Settings saved successfully",
-					"error": "Failed to save settings"
+					"error": "Failed to save settings",
+					"errors": {
+						"currency_in_use": "Cannot remove {{currency}}: it is still used by prices or open orders",
+						"currency_not_accepted": "Currency {{currency}} is not among accepted currencies",
+						"default_not_accepted": "Default currency must be one of accepted currencies"
+					}
 				}
 			}
 		}
@@ -217,10 +241,6 @@
 			"from_currency": {
 				"label": "From currency",
 				"placeholder": "From: any currency"
-			},
-			"to_currency": {
-				"label": "To currency",
-				"placeholder": "To: any currency"
 			},
 			"reset": "Reset filters"
 		},

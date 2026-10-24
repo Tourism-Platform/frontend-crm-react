@@ -27,3 +27,5 @@ export * from "./booking-order-select.types";
 export * from "./booking-order-query.types";
 export * from "./traveller-pax.types";
 export * from "./order-backend-enum.types";
+export * from "./booking-price.types";
+export * from "./booking-price-backend.types";

@@ -1,9 +1,7 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import { HOTEL_ROOM_CHARGE_LABELS } from "@/entities/supplier";
 import {
 	ENUM_EVENT_KIND,
@@ -17,8 +15,8 @@ import {
 	type TOverrideProductForm
 } from "@/entities/tour";
 
-export const FORM_OVERRIDE_FLAT_RATE_PRICE_DETAILS_LIST: TOverrideProductForm[] =
-	[
+export const FORM_OVERRIDE_FLAT_RATE_PRICE_DETAILS_LIST =
+	(): TOverrideProductForm[] => [
 		{
 			label: "override_product.dialog.fields.total_price.label",
 			placeholder:
@@ -32,13 +30,13 @@ export const FORM_OVERRIDE_FLAT_RATE_PRICE_DETAILS_LIST: TOverrideProductForm[] 
 			placeholder: "override_product.dialog.fields.currency.placeholder",
 			key: ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY,
 			fieldType: "select",
-			options: CURRENCY_OPTIONS,
+			options: useAcceptedCurrencyOptions().currencyOptions,
 			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];
 
-export const FORM_OVERRIDE_PER_PERSON_PRICE_DETAILS_LIST: TOverrideProductForm[] =
-	[
+export const FORM_OVERRIDE_PER_PERSON_PRICE_DETAILS_LIST =
+	(): TOverrideProductForm[] => [
 		{
 			label: "override_product.dialog.fields.total_price_per_person.label",
 			placeholder:
@@ -52,28 +50,30 @@ export const FORM_OVERRIDE_PER_PERSON_PRICE_DETAILS_LIST: TOverrideProductForm[]
 			placeholder: "override_product.dialog.fields.currency.placeholder",
 			key: ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY,
 			fieldType: "select",
-			options: CURRENCY_OPTIONS,
+			options: useAcceptedCurrencyOptions().currencyOptions,
 			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];
 
-export const FORM_OVERRIDE_UNIT_ROW_FIELDS_LIST: TOverrideProductForm[] = [
-	{
-		label: "override_product.dialog.fields.total_price.label",
-		placeholder: "override_product.dialog.fields.total_price.placeholder",
-		key: ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE,
-		fieldType: "input",
-		type: "number"
-	},
-	{
-		label: "override_product.dialog.fields.currency.label",
-		placeholder: "override_product.dialog.fields.currency.placeholder",
-		key: ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY,
-		fieldType: "select",
-		options: CURRENCY_OPTIONS,
-		defaultValue: DEFAULT_EVENT_CURRENCY
-	}
-];
+export const FORM_OVERRIDE_UNIT_ROW_FIELDS_LIST =
+	(): TOverrideProductForm[] => [
+		{
+			label: "override_product.dialog.fields.total_price.label",
+			placeholder:
+				"override_product.dialog.fields.total_price.placeholder",
+			key: ENUM_FORM_OVERRIDE_PRODUCT.TOTAL_PRICE,
+			fieldType: "input",
+			type: "number"
+		},
+		{
+			label: "override_product.dialog.fields.currency.label",
+			placeholder: "override_product.dialog.fields.currency.placeholder",
+			key: ENUM_FORM_OVERRIDE_PRODUCT.CURRENCY,
+			fieldType: "select",
+			options: useAcceptedCurrencyOptions().currencyOptions,
+			defaultValue: DEFAULT_EVENT_CURRENCY
+		}
+	];
 
 export const FORM_OVERRIDE_HOUSING_CHARGE_LIST = (): TOverrideProductForm[] => [
 	{

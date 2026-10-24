@@ -1,26 +1,26 @@
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import { ENUM_TRANSPORTATION_PRICE_ROW_FIELD } from "@/entities/tour";
 
 import type { TTransportationPricingFormField } from "../types";
 
-export const PER_CAR_ROW_FIELDS_LIST: TTransportationPricingFormField[] = [
-	{
-		key: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST,
-		label: "form.pricing.form.per_car.fields.total_cost.label",
-		placeholder: "form.pricing.form.per_car.fields.total_cost.placeholder",
-		fieldType: "input",
-		type: "number"
-	},
-	{
-		key: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY,
-		label: "form.pricing.form.pricing_details.fields.currency.label",
-		placeholder:
-			"form.pricing.form.pricing_details.fields.currency.placeholder",
-		fieldType: "select",
-		options: CURRENCY_OPTIONS,
-		defaultValue: DEFAULT_EVENT_CURRENCY
-	}
-];
+export const PER_CAR_ROW_FIELDS_LIST =
+	(): TTransportationPricingFormField[] => [
+		{
+			key: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.COST,
+			label: "form.pricing.form.per_car.fields.total_cost.label",
+			placeholder:
+				"form.pricing.form.per_car.fields.total_cost.placeholder",
+			fieldType: "input",
+			type: "number"
+		},
+		{
+			key: ENUM_TRANSPORTATION_PRICE_ROW_FIELD.CURRENCY,
+			label: "form.pricing.form.pricing_details.fields.currency.label",
+			placeholder:
+				"form.pricing.form.pricing_details.fields.currency.placeholder",
+			fieldType: "select",
+			options: useAcceptedCurrencyOptions().currencyOptions,
+			defaultValue: DEFAULT_EVENT_CURRENCY
+		}
+	];

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { isNoFxRateError } from "@/shared/api";
 import type { TFileMetadata, TFileWithPreview } from "@/shared/hooks";
 import {
 	Button,
@@ -175,7 +176,14 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 			toast.success(t("form.toasts.success"));
 			setOpen(false);
 		} catch (error) {
-			toast.error(t("form.toasts.error"));
+			// 400 — нет курса ЦБ для валюты выплаты
+			toast.error(
+				t(
+					isNoFxRateError(error)
+						? "form.toasts.no_fx_rate"
+						: "form.toasts.error"
+				)
+			);
 			console.error("Failed to confirm supplier payment:", error);
 		}
 	}

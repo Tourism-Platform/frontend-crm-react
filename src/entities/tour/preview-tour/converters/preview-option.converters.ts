@@ -1,7 +1,8 @@
 import { TEMP_LIST_TOTAL } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
-import { formatToDollars } from "@/shared/utils";
+import { formatMoney } from "@/shared/utils";
 
+import { currencyConverter } from "@/entities/commission";
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE
@@ -115,11 +116,14 @@ const groupEventsIntoDays = (events?: TPubEvent[]): IOptionDay[] => {
 		});
 };
 
-const formatMonetaryPrice = (value?: { val?: number } | null): string => {
+/** Валюта — из ответа: непринятую бэк молча заменяет на USD */
+const formatMonetaryPrice = (
+	value?: { val?: number; currency?: string } | null
+): string => {
 	const amount = value?.val;
 	if (amount == null || Number.isNaN(amount)) return "";
 
-	return formatToDollars(amount);
+	return formatMoney(amount, { currency: value?.currency, compact: false });
 };
 
 const mapPreviewOptionPreviewToFrontend = (
@@ -139,7 +143,8 @@ export const mapPreviewOptionsQueryToBackend = (
 	args: IPreviewOptionsListArgs
 ): TPreviewOptionsListBackendQuery => ({
 	...(args.page > 1 && { skip: (args.page - 1) * args.limit }),
-	...(args.limit && { limit: args.limit })
+	...(args.limit && { limit: args.limit }),
+	...(args.currency && { currency: currencyConverter.to(args.currency) })
 });
 
 export const mapPreviewOptionsPaginatedToFrontend = (

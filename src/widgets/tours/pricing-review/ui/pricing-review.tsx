@@ -46,6 +46,7 @@ const PricingReviewBase: FC = () => {
 		isSummaryFetching,
 		isSummaryNotFound,
 		isSummaryRealError,
+		isSummaryNoFxRate,
 		hasOptions
 	} = usePricingReview(tourId);
 
@@ -82,7 +83,12 @@ const PricingReviewBase: FC = () => {
 					title={t("page_name")}
 					actions={actionsJsx}
 				/>
-				<ErrorState />
+				<ErrorState
+					{...(isSummaryNoFxRate && {
+						title: t("errors.no_fx_rate.title"),
+						description: t("errors.no_fx_rate.description")
+					})}
+				/>
 			</section>
 		);
 	}

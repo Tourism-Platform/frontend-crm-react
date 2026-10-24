@@ -40,9 +40,6 @@ import {
 	OPTION_MARKUP_FIELD
 } from "../model/config";
 
-const { key: markupCurrencyKey, ...markupCurrencyField } =
-	OPTION_MARKUP_CURRENCY_FIELD;
-
 interface IEditOptionProps {
 	tourId: string;
 	option: IOption;
@@ -67,6 +64,8 @@ export const EditOption: FC<IEditOptionProps> = ({
 	trigger,
 	className
 }) => {
+	const { key: markupCurrencyKey, ...markupCurrencyField } =
+		OPTION_MARKUP_CURRENCY_FIELD();
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("tour_itinerary_page");
 	const [updateOption, { isLoading: isUpdating }] =

@@ -42,6 +42,7 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 	index,
 	addMarginSeparately
 }) => {
+	const rowFields = PER_ROOM_CATEGORY_ROW_FIELDS_LIST();
 	const { t } = useTranslation("hotel_product_edit_page");
 	const roomName = form.watch(
 		`${ENUM_FORM_HOTEL_SECTION.ROOMS}.${ENUM_FORM_HOTEL_PRODUCT_ROOMS.ROOMS_LIST}.${index}.${ENUM_FORM_HOTEL_PRODUCT_ROOMS.ROOM_NAME}`
@@ -74,14 +75,12 @@ export const PerRoomByClassCard: FC<IPerRoomByClassCardProps> = ({
 											"max-w-4xl grid-cols-[minmax(0,10rem)_minmax(0,8rem)_minmax(0,12rem)_minmax(0,8rem)_auto]"
 									)}
 								>
-									{PER_ROOM_CATEGORY_ROW_FIELDS_LIST().map(
+									{rowFields.map(
 										({ key, ...item }, fieldIndex) => (
 											<Fragment key={key}>
 												{addMarginSeparately &&
 												fieldIndex ===
-													PER_ROOM_CATEGORY_ROW_FIELDS_LIST()
-														.length -
-														1 ? (
+													rowFields.length - 1 ? (
 													<CustomInputSelect
 														control={form.control}
 														name={`${categoryPath}.${PER_ROOM_MARKUP_FIELD.key}`}

@@ -1,9 +1,7 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import {
 	ENUM_TRAIN_PRODUCT_FARE_PRICE_ROW_FIELD,
 	ENUM_TRAIN_VARIANT_CHARGE,
@@ -34,7 +32,7 @@ export const PER_FARE_ROW_FIELDS_LIST = (): TTrainProductPricingFormField[] => [
 		placeholder:
 			"form.pricing.form.pricing_details.fields.currency.placeholder",
 		fieldType: "select",
-		options: CURRENCY_OPTIONS,
+		options: useAcceptedCurrencyOptions().currencyOptions,
 		defaultValue: DEFAULT_EVENT_CURRENCY
 	}
 ];

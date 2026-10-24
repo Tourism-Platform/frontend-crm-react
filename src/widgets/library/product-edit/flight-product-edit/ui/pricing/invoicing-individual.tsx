@@ -34,6 +34,7 @@ import { PerFareDetails } from "./per-fare-details";
 const InvoicingIndividualBase: FC<
 	Pick<TSlotProps, "form" | "onSubmit" | "isLoading">
 > = ({ form }) => {
+	const pricingTabs = PRICING_INDIVIDUAL_TABS_LIST();
 	const { t } = useTranslation("flight_product_edit_page");
 	const pricingType = useWatch({
 		control: form.control,
@@ -74,7 +75,7 @@ const InvoicingIndividualBase: FC<
 					}
 				>
 					<CustomOptionTabsList className="grid grid-cols-3 w-fit">
-						{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (
+						{pricingTabs.map((tab) => (
 							<CustomOptionTabsTrigger
 								key={tab.type}
 								value={tab.type}
@@ -84,7 +85,7 @@ const InvoicingIndividualBase: FC<
 							</CustomOptionTabsTrigger>
 						))}
 					</CustomOptionTabsList>
-					{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (
+					{pricingTabs.map((tab) => (
 						<CustomOptionTabsContent
 							key={tab.type}
 							value={tab.type}

@@ -1,12 +1,10 @@
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import { ENUM_SUPPLEMENT_PRICE_ROW_FIELD } from "@/entities/tour";
 
 import type { TSupplementPricingFormField } from "../types";
 
-export const PER_ITEM_ROW_FIELDS_LIST: TSupplementPricingFormField[] = [
+export const PER_ITEM_ROW_FIELDS_LIST = (): TSupplementPricingFormField[] => [
 	{
 		key: ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST,
 		label: "form.pricing.form.per_item.fields.total_cost.label",
@@ -20,7 +18,7 @@ export const PER_ITEM_ROW_FIELDS_LIST: TSupplementPricingFormField[] = [
 		placeholder:
 			"form.pricing.form.pricing_details.fields.currency.placeholder",
 		fieldType: "select",
-		options: CURRENCY_OPTIONS,
+		options: useAcceptedCurrencyOptions().currencyOptions,
 		defaultValue: DEFAULT_EVENT_CURRENCY
 	}
 ];

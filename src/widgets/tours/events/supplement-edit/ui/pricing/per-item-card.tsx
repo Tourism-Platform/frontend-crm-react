@@ -38,6 +38,7 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 	index,
 	addMarginSeparately
 }) => {
+	const rowFields = PER_ITEM_ROW_FIELDS_LIST();
 	const { t } = useTranslation("supplement_edit_page");
 	const itemName = form.watch(
 		`${ENUM_FORM_SECTION.ITEMS}.${ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST}.${index}.${ENUM_FORM_SUPPLEMENT_ITEMS.NAME}`
@@ -58,34 +59,31 @@ export const PerItemCard: FC<IPerItemCardProps> = ({
 							"max-w-3xl grid-cols-[minmax(0,12rem)_minmax(0,14rem)_minmax(0,8rem)]"
 					)}
 				>
-					{PER_ITEM_ROW_FIELDS_LIST.map(
-						({ key, ...item }, fieldIndex) => (
-							<Fragment key={key}>
-								{addMarginSeparately &&
-								fieldIndex ===
-									PER_ITEM_ROW_FIELDS_LIST.length - 1 ? (
-									<CustomInputSelect
-										control={form.control}
-										name={`${rowPath}.${PER_ITEM_MARKUP_FIELD.key}`}
-										label={PER_ITEM_MARKUP_FIELD.label}
-										placeholder={
-											PER_ITEM_MARKUP_FIELD.placeholder
-										}
-										selectOptions={[
-											...PER_ITEM_MARKUP_FIELD.selectOptions
-										]}
-										t={t}
-									/>
-								) : null}
-								<CustomField
+					{rowFields.map(({ key, ...item }, fieldIndex) => (
+						<Fragment key={key}>
+							{addMarginSeparately &&
+							fieldIndex === rowFields.length - 1 ? (
+								<CustomInputSelect
 									control={form.control}
-									name={`${rowPath}.${key}`}
+									name={`${rowPath}.${PER_ITEM_MARKUP_FIELD.key}`}
+									label={PER_ITEM_MARKUP_FIELD.label}
+									placeholder={
+										PER_ITEM_MARKUP_FIELD.placeholder
+									}
+									selectOptions={[
+										...PER_ITEM_MARKUP_FIELD.selectOptions
+									]}
 									t={t}
-									{...item}
 								/>
-							</Fragment>
-						)
-					)}
+							) : null}
+							<CustomField
+								control={form.control}
+								name={`${rowPath}.${key}`}
+								t={t}
+								{...item}
+							/>
+						</Fragment>
+					))}
 				</div>
 				<FeeLinesField
 					control={form.control}

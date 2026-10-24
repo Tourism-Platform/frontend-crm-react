@@ -46,7 +46,8 @@
 		},
 		"toasts": {
 			"success": "Supplier payment successfully confirmed",
-			"error": "Failed to confirm supplier payment"
+			"error": "Failed to confirm supplier payment",
+			"no_fx_rate": "Cannot save the payment: the bank exchange rate for this currency is not published yet"
 		}
 	},
 	"table": {

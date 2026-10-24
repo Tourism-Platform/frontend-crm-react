@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button, CustomField } from "@/shared/ui";
 
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import { ENUM_FEE_FIELD, createEmptyFeeRow } from "@/entities/tour";
 
 const FEE_ROW_GRID =
@@ -26,6 +26,7 @@ export const FeeLinesField = <T extends FieldValues>({
 	name,
 	disabled
 }: IFeeLinesFieldProps<T>) => {
+	const { currencyOptions } = useAcceptedCurrencyOptions();
 	const { t } = useTranslation("common_events");
 	const { fields, append, remove } = useFieldArray({
 		control,
@@ -102,7 +103,7 @@ export const FeeLinesField = <T extends FieldValues>({
 						fieldType="select"
 						label="fees.fields.currency.label"
 						placeholder="fees.fields.currency.placeholder"
-						options={[...CURRENCY_OPTIONS]}
+						options={currencyOptions}
 						t={t}
 						disabled={disabled}
 						hideLabel

@@ -1,4 +1,4 @@
-import { CURRENCY_OPTIONS } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import {
 	ENUM_FOC_TIER_FIELD,
 	ENUM_PACKAGE_MARKUP_TYP,
@@ -13,7 +13,7 @@ export const FINANCE_FORM_LIST = (): TFinanceForm[] => [
 		placeholder: "finance.form.fields.currencyType.placeholder",
 		key: ENUM_SETTINGS_FINANCE_FORM.CURRENCY_TYPE,
 		fieldType: "select",
-		options: CURRENCY_OPTIONS
+		options: useAcceptedCurrencyOptions().currencyOptions
 	}
 ];
 

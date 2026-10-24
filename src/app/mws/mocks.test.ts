@@ -217,6 +217,22 @@ describe("MSW mocks", () => {
 		expect(created.data.status).toBe("draft");
 		const bookingId = created.data.id;
 
+		const quote = await call(
+			BOOKING_ORDER_PATHS.getBookingQuote,
+			undefined,
+			`?tour_option_id=${MOCK_TOUR_OPTION_ID}&date=2030-06-01&pax=2&currency=GBP`
+		);
+		// Непринятая валюта молча заменяется на USD
+		expect(quote.data.currency).toBe("USD");
+		expect(quote.data.display_currencies).toContain("USD");
+
+		const price = await call(
+			BOOKING_ORDER_PATHS.getBookingPrice(bookingId),
+			undefined,
+			"?pax=2&currency=EUR"
+		);
+		expect(price.data.currency).toBe("EUR");
+
 		expect(
 			(await call(BOOKING_ORDER_PATHS.submitBookingOrder(bookingId))).data
 				.status

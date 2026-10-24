@@ -21,6 +21,7 @@ import {
 	MOCK_OPERATOR_ID,
 	MOCK_ORDER_AGENCY_TEMPLATE,
 	MOCK_ORDER_USER_TEMPLATE,
+	MOCK_PRICE_PER_PAX_USD,
 	MOCK_TOUR_INFO_TEMPLATE
 } from "./booking-order.mock.constants";
 import {
@@ -210,7 +211,7 @@ export const createBookingOrder = (
 		pax: body.pax,
 		status: ENUM_ORDER_STATUS_BACKEND.DRAFT,
 		paid_amount: "0",
-		tour_amount: String(body.pax * 850),
+		tour_amount: String(body.pax * MOCK_PRICE_PER_PAX_USD),
 		cancelled_at: null,
 		cancellation_reason: null,
 		comment: body.comment ?? null

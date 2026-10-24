@@ -1,9 +1,7 @@
 import { useValueToTranslateLabel } from "@/shared/utils";
 
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import {
 	ENUM_ACCOMMODATION_CATEGORY_ROW_FIELD,
 	HOUSING_ROOM_TYPE_LABELS
@@ -35,7 +33,7 @@ export const PER_ROOM_CATEGORY_ROW_FIELDS_LIST =
 			placeholder:
 				"form.pricing.form.pricing_details.fields.currency.placeholder",
 			fieldType: "select",
-			options: CURRENCY_OPTIONS,
+			options: useAcceptedCurrencyOptions().currencyOptions,
 			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];

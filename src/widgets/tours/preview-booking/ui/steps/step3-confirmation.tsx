@@ -16,8 +16,9 @@ import {
 	CardHeader,
 	CardTitle
 } from "@/shared/ui";
+import { formatMoney } from "@/shared/utils";
 
-import type { TSubmittedBooking } from "@/entities/booking";
+import type { IBookingPrice, TSubmittedBooking } from "@/entities/booking";
 import {
 	ENUM_FORM_PREVIEW_BOOKING,
 	type TPreviewBookingSchema
@@ -31,12 +32,14 @@ import { CONFIRMATION_TIMELINE } from "../../model/config";
 
 interface IStep3Props {
 	submittedBooking?: TSubmittedBooking | null;
+	bookingPrice?: IBookingPrice;
 	tourData?: IPreviewTourGeneral;
 	options: IPreviewOptionCard[];
 }
 
 export const Step3Confirmation: FC<IStep3Props> = ({
 	submittedBooking,
+	bookingPrice,
 	tourData,
 	options
 }) => {
@@ -60,9 +63,18 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 
 	const bookingId = submittedBooking?.id ?? "";
 	const selectedOption = options.find((opt) => opt.id === optionId);
-	const total = submittedBooking
-		? parseFloat(submittedBooking.tourAmount)
-		: 0;
+	// Валюта отображения, выбранная в сайдбаре; иначе — валюта брони
+	const total = bookingPrice
+		? formatMoney(bookingPrice.totalMinPrice, {
+				currency: bookingPrice.currency,
+				compact: false
+			})
+		: submittedBooking
+			? formatMoney(submittedBooking.tourAmount, {
+					currency: submittedBooking.tourCurrency,
+					compact: false
+				})
+			: "—";
 
 	const handleCopy = async () => {
 		if (!bookingId) return;
@@ -217,10 +229,7 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 							<span className="font-semibold">
 								{t("step_3.summary.estimated_total")}
 							</span>
-							<span className="text-2xl font-bold">
-								{submittedBooking?.tourCurrency ?? "$"}
-								{total.toFixed(2)}
-							</span>
+							<span className="text-2xl font-bold">{total}</span>
 						</div>
 					</div>
 				</CardContent>

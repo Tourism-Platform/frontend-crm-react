@@ -49,6 +49,9 @@ export const MOCK_ORDER_USER_TEMPLATE: TOrderUserInfoBackend = {
 	phone_number: ACCOUNT_MOCK.phone_number
 };
 
+/** Цена тура в моке: tour_amount при создании и база для quote/price */
+export const MOCK_PRICE_PER_PAX_USD = 850;
+
 export const MOCK_BOOKING_DEFAULTS = {
 	agency_id: MOCK_AGENCY_ID,
 	user_id: MOCK_USER_ID,

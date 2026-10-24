@@ -5,7 +5,9 @@ import type { OPERATOR_GENERAL_INFO_SCHEMA } from "../schema";
 export const ENUM_FORM_OPERATOR_GENERAL_INFO = {
 	TOUR_MARGIN: "tourMargin",
 	STAFF_PAYOUTS: "staffPayouts",
-	DEFAULT_CURRENCY: "defaultCurrency"
+	ACCEPTED_CURRENCIES: "acceptedCurrencies",
+	DEFAULT_CURRENCY: "defaultCurrency",
+	FX_MARGIN: "fxMargin"
 } as const;
 
 export type ENUM_FORM_OPERATOR_GENERAL_INFO_TYPE =

@@ -13,14 +13,13 @@ export interface IOperatorCurrencyRate {
 }
 
 export const ENUM_OPERATOR_CURRENCY_RATE_FILTER = {
-	FROM_CURRENCY: "fromCurrency",
-	TO_CURRENCY: "toCurrency"
+	FROM_CURRENCY: "fromCurrency"
 } as const;
 
 export type ENUM_OPERATOR_CURRENCY_RATE_FILTER_TYPE =
 	(typeof ENUM_OPERATOR_CURRENCY_RATE_FILTER)[keyof typeof ENUM_OPERATOR_CURRENCY_RATE_FILTER];
 
 export interface IOperatorCurrencyRateFilters extends IPaginationRequest {
+	/** to_currency всегда default_currency оператора — фильтр только по from */
 	fromCurrency?: ENUM_CURRENCY_OPTIONS_TYPE;
-	toCurrency?: ENUM_CURRENCY_OPTIONS_TYPE;
 }

@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
+import { isNoFxRateError } from "@/shared/api";
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useDebounce, useOptionalResourceQuery } from "@/shared/hooks";
 
@@ -67,12 +68,16 @@ export const usePricingReview = (tourId: string) => {
 	);
 	const {
 		data: pricingReview,
+		error: summaryError,
 		isLoading: isSummaryLoading,
 		isFetching: isSummaryFetching,
 		isSuccess: isSummarySuccess,
 		isNotFound: isSummaryNotFound,
 		isRealError: isSummaryRealError
 	} = useOptionalResourceQuery(summaryQuery);
+	// 422 — нет курса ЦБ для одной из валют цен тура
+	const isSummaryNoFxRate =
+		isSummaryRealError && isNoFxRateError(summaryError);
 
 	return {
 		options,
@@ -91,6 +96,7 @@ export const usePricingReview = (tourId: string) => {
 		isSummarySuccess,
 		isSummaryNotFound,
 		isSummaryRealError,
+		isSummaryNoFxRate,
 		hasOptions: options.length > 0
 	};
 };

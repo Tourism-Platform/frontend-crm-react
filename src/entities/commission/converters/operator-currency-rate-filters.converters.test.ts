@@ -55,7 +55,7 @@ describe("filterOperatorCurrencyRates", () => {
 		expect(result.data).toHaveLength(3);
 	});
 
-	it("filters by currency pair", () => {
+	it("filters by source currency", () => {
 		expect(
 			filterOperatorCurrencyRates(RATES, {
 				page: 1,
@@ -63,15 +63,6 @@ describe("filterOperatorCurrencyRates", () => {
 				fromCurrency: ENUM_CURRENCY_OPTIONS.USD
 			}).total
 		).toBe(2);
-
-		expect(
-			filterOperatorCurrencyRates(RATES, {
-				page: 1,
-				limit: 5,
-				fromCurrency: ENUM_CURRENCY_OPTIONS.USD,
-				toCurrency: ENUM_CURRENCY_OPTIONS.EUR
-			}).data.map((rate) => rate.id)
-		).toEqual(["USD-EUR"]);
 	});
 
 	it("paginates after filtering", () => {

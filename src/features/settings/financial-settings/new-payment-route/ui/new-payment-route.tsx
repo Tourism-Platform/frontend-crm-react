@@ -34,6 +34,8 @@ import {
 } from "../model";
 
 export const NewPaymentRoute: FC = () => {
+	const swiftFields = FORM_NEW_PAYMENT_ROUTE_SWIFT_LIST();
+	const wiseFields = FORM_NEW_PAYMENT_ROUTE_WISE_LIST();
 	const [open, setOpen] = useState<boolean>(false);
 	const { t } = useTranslation("financial_settings_page_operator");
 	const [createPaymentRoute, { isLoading }] = useCreatePaymentRouteMutation();
@@ -100,30 +102,26 @@ export const NewPaymentRoute: FC = () => {
 
 							{methodType ===
 								ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT &&
-								FORM_NEW_PAYMENT_ROUTE_SWIFT_LIST.map(
-									({ key, ...item }) => (
-										<CustomField
-											key={key}
-											control={form.control}
-											name={key}
-											t={t}
-											{...item}
-										/>
-									)
-								)}
+								swiftFields.map(({ key, ...item }) => (
+									<CustomField
+										key={key}
+										control={form.control}
+										name={key}
+										t={t}
+										{...item}
+									/>
+								))}
 
 							{methodType === ENUM_PAYMENT_ROUTE_METHODS.WISE &&
-								FORM_NEW_PAYMENT_ROUTE_WISE_LIST.map(
-									({ key, ...item }) => (
-										<CustomField
-											key={key}
-											control={form.control}
-											name={key}
-											t={t}
-											{...item}
-										/>
-									)
-								)}
+								wiseFields.map(({ key, ...item }) => (
+									<CustomField
+										key={key}
+										control={form.control}
+										name={key}
+										t={t}
+										{...item}
+									/>
+								))}
 
 							<CustomField
 								control={form.control}

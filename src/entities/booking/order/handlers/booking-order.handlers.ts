@@ -15,7 +15,10 @@ import {
 } from "@/shared/api";
 
 import { getMockSessionAccount } from "@/entities/auth/mock/auth.store";
-import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+import {
+	ENUM_LANGUAGES_BACKEND,
+	type ENUM_LANGUAGES_BACKEND_TYPE
+} from "@/entities/tour/landing/types/languages.types";
 import { PREVIEW_OPTION_BACKEND_MOCK } from "@/entities/tour/preview-tour/mock/preview-option-pub.fixtures";
 
 import {
@@ -29,6 +32,7 @@ import {
 	transitionBookingStatusInStore,
 	updateBookingOrder
 } from "../mock/booking-order.store";
+import { getBookingPrice, getBookingQuote } from "../mock/booking-price.store";
 import { getOperatorItinerary } from "../mock/booking-snapshot.store";
 import {
 	ENUM_ORDER_STATUS_BACKEND,
@@ -41,6 +45,14 @@ const BOOKING_NOT_FOUND = "Booking not found";
 const orderResult = (order: unknown) =>
 	order ? HttpResponse.json(order) : mockNotFound(BOOKING_NOT_FOUND);
 
+/** Строка — нет курса банка: бэк отвечает 422 с текстом в detail */
+const priceResult = (price: object | string | undefined) => {
+	if (!price) return mockNotFound(BOOKING_NOT_FOUND);
+	if (typeof price === "string")
+		return HttpResponse.json({ detail: price }, { status: 422 });
+	return HttpResponse.json(price);
+};
+
 export const bookingOrderHandlers = [
 	createMockHandler(BOOKING_ORDER_PATHS.listMyBookings, ({ query }) =>
 		HttpResponse.json(
@@ -50,6 +62,51 @@ export const bookingOrderHandlers = [
 				...parseSkipLimit(query)
 			})
 		)
+	),
+
+	createMockHandler(BOOKING_ORDER_PATHS.getBookingQuote, ({ query }) => {
+		const tourOptionId = query.get("tour_option_id");
+		const date = query.get("date");
+		const pax = Number(query.get("pax"));
+		if (!tourOptionId || !date || !pax) {
+			return mockValidationError(
+				["query", "tour_option_id"],
+				"Field required"
+			);
+		}
+
+		return priceResult(
+			getBookingQuote(
+				{
+					tour_option_id: tourOptionId,
+					date,
+					pax,
+					lang:
+						(query.get(
+							"lang"
+						) as ENUM_LANGUAGES_BACKEND_TYPE | null) ??
+						ENUM_LANGUAGES_BACKEND.ENGLISH
+				},
+				query.get("currency")
+			)
+		);
+	}),
+
+	createMockHandler(
+		BOOKING_ORDER_PATHS.getBookingPrice(":bookingId"),
+		({ params, query }) => {
+			const pax = Number(query.get("pax"));
+			if (!pax)
+				return mockValidationError(["query", "pax"], "Field required");
+
+			return priceResult(
+				getBookingPrice(
+					String(params.bookingId),
+					pax,
+					query.get("currency")
+				)
+			);
+		}
 	),
 
 	createMockHandler(BOOKING_ORDER_PATHS.createBookingOrder, ({ body }) => {

@@ -91,6 +91,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 		name: ENUM_FORM_OVERRIDE_PRODUCT.UNITS
 	});
 	const housingChargeList = FORM_OVERRIDE_HOUSING_CHARGE_LIST();
+
 	const tabsList = getOverridePricingTabsList(perUnitArm);
 
 	const renderWholeDetails = (

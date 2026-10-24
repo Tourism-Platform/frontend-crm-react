@@ -44,6 +44,7 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 	index,
 	addMarginSeparately
 }) => {
+	const rowFields = PER_CAR_CATEGORY_ROW_FIELDS_LIST();
 	const { t } = useTranslation(["transportation_edit_page", "options"]);
 	const carName = form.watch(
 		`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${ENUM_FORM_CARS.CAR_NAME}`
@@ -82,13 +83,12 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 											"max-w-4xl grid-cols-[minmax(0,10rem)_minmax(0,8rem)_minmax(0,12rem)_minmax(0,8rem)_auto]"
 									)}
 								>
-									{PER_CAR_CATEGORY_ROW_FIELDS_LIST.map(
+									{rowFields.map(
 										({ key, ...item }, fieldIndex) => (
 											<Fragment key={key}>
 												{addMarginSeparately &&
 												fieldIndex ===
-													PER_CAR_CATEGORY_ROW_FIELDS_LIST.length -
-														1 ? (
+													rowFields.length - 1 ? (
 													<CustomInputSelect
 														control={form.control}
 														name={`${categoryPath}.${PER_CAR_MARKUP_FIELD.key}`}

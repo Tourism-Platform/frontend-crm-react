@@ -49,6 +49,7 @@ const PreviewBookingBase: FC = () => {
 		isCreating,
 		isUpdating,
 		submittedBooking,
+		bookingPriceState,
 		tourData,
 		availableLanguages,
 		options,
@@ -182,6 +183,7 @@ const PreviewBookingBase: FC = () => {
 						{currentStep === 3 && (
 							<Step3Confirmation
 								submittedBooking={submittedBooking}
+								bookingPrice={bookingPriceState.bookingPrice}
 								tourData={tourData}
 								options={options}
 							/>
@@ -193,6 +195,7 @@ const PreviewBookingBase: FC = () => {
 							tourData={tourData}
 							options={options}
 							submittedBooking={submittedBooking}
+							bookingPriceState={bookingPriceState}
 							action={sidebarAction}
 						/>
 					)}

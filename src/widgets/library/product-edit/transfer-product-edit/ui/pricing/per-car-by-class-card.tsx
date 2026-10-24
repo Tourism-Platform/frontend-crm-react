@@ -42,6 +42,7 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 	index,
 	addMarginSeparately
 }) => {
+	const rowFields = PER_CAR_CATEGORY_ROW_FIELDS_LIST();
 	const { t } = useTranslation(["transfer_product_edit_page", "options"]);
 	const carName = form.watch(
 		`${ENUM_FORM_TRANSFER_SECTION.CARS}.${ENUM_FORM_TRANSFER_CARS.CARS_LIST}.${index}.${ENUM_FORM_TRANSFER_CARS.CAR_NAME}`
@@ -95,44 +96,46 @@ export const PerCarByClassCard: FC<IPerCarByClassCardProps> = ({
 											"max-w-4xl grid-cols-[minmax(0,8rem)_minmax(0,12rem)_minmax(0,8rem)_auto]"
 									)}
 								>
-									{PER_CAR_CATEGORY_ROW_FIELDS_LIST.filter(
-										({ key }) =>
-											key !==
-											ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME
-									).map(({ key, ...item }, fieldIndex) => (
-										<Fragment key={key}>
-											{addMarginSeparately &&
-											fieldIndex ===
-												PER_CAR_CATEGORY_ROW_FIELDS_LIST.filter(
-													({ key: fieldKey }) =>
-														fieldKey !==
-														ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME
-												).length -
-													1 ? (
-												<CustomInputSelect
+									{rowFields
+										.filter(
+											({ key }) =>
+												key !==
+												ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME
+										)
+										.map(({ key, ...item }, fieldIndex) => (
+											<Fragment key={key}>
+												{addMarginSeparately &&
+												fieldIndex ===
+													rowFields.filter(
+														({ key: fieldKey }) =>
+															fieldKey !==
+															ENUM_TRANSFER_PRODUCT_CATEGORY_ROW_FIELD.NAME
+													).length -
+														1 ? (
+													<CustomInputSelect
+														control={form.control}
+														name={`${categoryPath}.${PER_CAR_MARKUP_FIELD.key}`}
+														label={
+															PER_CAR_MARKUP_FIELD.label
+														}
+														placeholder={
+															PER_CAR_MARKUP_FIELD.placeholder
+														}
+														selectOptions={[
+															...PER_CAR_MARKUP_FIELD.selectOptions
+														]}
+														t={t}
+													/>
+												) : null}
+												<CustomField
 													control={form.control}
-													name={`${categoryPath}.${PER_CAR_MARKUP_FIELD.key}`}
-													label={
-														PER_CAR_MARKUP_FIELD.label
-													}
-													placeholder={
-														PER_CAR_MARKUP_FIELD.placeholder
-													}
-													selectOptions={[
-														...PER_CAR_MARKUP_FIELD.selectOptions
-													]}
+													name={`${categoryPath}.${key}`}
 													t={t}
+													className="min-w-0"
+													{...item}
 												/>
-											) : null}
-											<CustomField
-												control={form.control}
-												name={`${categoryPath}.${key}`}
-												t={t}
-												className="min-w-0"
-												{...item}
-											/>
-										</Fragment>
-									))}
+											</Fragment>
+										))}
 								</div>
 								<FeeLinesField
 									control={form.control}

@@ -1,13 +1,11 @@
-import {
-	CURRENCY_OPTIONS,
-	DEFAULT_EVENT_CURRENCY
-} from "@/entities/commission";
+import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import { ENUM_TRANSFER_PRODUCT_PRICING_FIELD } from "@/entities/supplier";
 
 import type { TTransferProductPricingFormField } from "../types";
 
-export const PRICING_FLAT_RATE_PRICE_DETAILS_LIST: TTransferProductPricingFormField[] =
-	[
+export const PRICING_FLAT_RATE_PRICE_DETAILS_LIST =
+	(): TTransferProductPricingFormField[] => [
 		{
 			label: "form.pricing.form.pricing_details.fields.total_price.label",
 			placeholder:
@@ -22,7 +20,7 @@ export const PRICING_FLAT_RATE_PRICE_DETAILS_LIST: TTransferProductPricingFormFi
 				"form.pricing.form.pricing_details.fields.currency.placeholder",
 			key: ENUM_TRANSFER_PRODUCT_PRICING_FIELD.CURRENCY,
 			fieldType: "select",
-			options: CURRENCY_OPTIONS,
+			options: useAcceptedCurrencyOptions().currencyOptions,
 			defaultValue: DEFAULT_EVENT_CURRENCY
 		}
 	];

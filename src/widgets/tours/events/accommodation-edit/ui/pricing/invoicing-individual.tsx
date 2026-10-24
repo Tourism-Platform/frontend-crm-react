@@ -33,6 +33,7 @@ import {
 import { PerRoomDetails } from "./per-room-details";
 
 const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
+	const pricingTabs = PRICING_INDIVIDUAL_TABS_LIST();
 	const { t } = useTranslation("accommodation_edit_page");
 	const confirmPricingChange = useConfirmPricingChange();
 	const pricingType = useWatch({
@@ -74,7 +75,7 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 					}}
 				>
 					<CustomOptionTabsList className="grid grid-cols-3 w-fit">
-						{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (
+						{pricingTabs.map((tab) => (
 							<CustomOptionTabsTrigger
 								key={tab.type}
 								value={tab.type}
@@ -84,7 +85,7 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 							</CustomOptionTabsTrigger>
 						))}
 					</CustomOptionTabsList>
-					{PRICING_INDIVIDUAL_TABS_LIST.map((tab) => (
+					{pricingTabs.map((tab) => (
 						<CustomOptionTabsContent
 							key={tab.type}
 							value={tab.type}

@@ -14,3 +14,4 @@ export * from "./booking-pax.converters";
 export * from "./create-booking.converters";
 export * from "./update-booking.converters";
 export * from "./gender.converters";
+export * from "./booking-price.converters";

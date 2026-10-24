@@ -1,7 +1,6 @@
 export * from "./operator-business-backend.interface";
 export * from "./operator-business-documents.types";
 export * from "./operator-documents-backend.interface";
-export * from "./operator-financial-backend.interface";
 export * from "./operator-business.types";
 export * from "./operator-agencies-backend.interface";
 export * from "./operator-agencies.types";

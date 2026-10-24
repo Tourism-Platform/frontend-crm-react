@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { isNoFxRateError } from "@/shared/api";
 import {
 	Button,
 	CustomField,
@@ -79,7 +80,14 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 			toast.success(t("menu.assign.form.toasts.success"));
 			setOpen(false);
 		} catch (error) {
-			toast.error(t("menu.assign.form.toasts.error"));
+			// 422 — нет курса ЦБ для перевода платежа в базовую валюту оператора
+			toast.error(
+				t(
+					isNoFxRateError(error)
+						? "menu.assign.form.toasts.no_fx_rate"
+						: "menu.assign.form.toasts.error"
+				)
+			);
 			console.error("Failed to confirm payment:", error);
 		}
 	}
