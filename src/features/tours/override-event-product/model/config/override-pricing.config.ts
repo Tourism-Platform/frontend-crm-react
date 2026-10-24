@@ -6,8 +6,8 @@ import {
 } from "@/entities/commission";
 import { HOTEL_ROOM_CHARGE_LABELS } from "@/entities/supplier";
 import {
-	ENUM_EVENT_BACKEND,
-	type ENUM_EVENT_BACKEND_TYPE,
+	ENUM_EVENT_KIND,
+	type ENUM_EVENT_KIND_TYPE,
 	ENUM_FORM_OVERRIDE_PRODUCT,
 	ENUM_OVERRIDE_CHARGE,
 	ENUM_OVERRIDE_PRICING_ARM,
@@ -106,21 +106,21 @@ const UNIT_CHARGE_LABELS: Record<
  * vehicles, cars and car categories — fixed only.
  */
 export const getUnitChargeOptions = (
-	eventTyp: ENUM_EVENT_BACKEND_TYPE
+	eventKind: ENUM_EVENT_KIND_TYPE
 ): {
 	value: ENUM_OVERRIDE_UNIT_CHARGE_TYPE;
 	label: (typeof UNIT_CHARGE_LABELS)[ENUM_OVERRIDE_UNIT_CHARGE_TYPE];
 }[] => {
 	let values: ENUM_OVERRIDE_UNIT_CHARGE_TYPE[];
-	switch (eventTyp) {
-		case ENUM_EVENT_BACKEND.HOUSING:
+	switch (eventKind) {
+		case ENUM_EVENT_KIND.HOUSING:
 			values = [
 				ENUM_OVERRIDE_UNIT_CHARGE.FIXED,
 				ENUM_OVERRIDE_UNIT_CHARGE.PER_DURATION
 			];
 			break;
-		case ENUM_EVENT_BACKEND.BUS:
-		case ENUM_EVENT_BACKEND.TRANSFER:
+		case ENUM_EVENT_KIND.BUS:
+		case ENUM_EVENT_KIND.TRANSFER:
 			values = [ENUM_OVERRIDE_UNIT_CHARGE.FIXED];
 			break;
 		default:
@@ -141,20 +141,20 @@ export const getUnitChargeOptions = (
  * per_car).
  */
 export const getPerUnitArm = (
-	eventTyp: ENUM_EVENT_BACKEND_TYPE,
+	eventKind: ENUM_EVENT_KIND_TYPE,
 	specArm: TOverridePerUnitPricing | null
 ): TOverridePerUnitPricing => {
 	if (specArm) {
 		return specArm;
 	}
-	switch (eventTyp) {
-		case ENUM_EVENT_BACKEND.HOUSING:
+	switch (eventKind) {
+		case ENUM_EVENT_KIND.HOUSING:
 			return ENUM_OVERRIDE_PRICING_ARM.PER_ROOM;
-		case ENUM_EVENT_BACKEND.BUS:
+		case ENUM_EVENT_KIND.BUS:
 			return ENUM_OVERRIDE_PRICING_ARM.PER_VEHICLE;
-		case ENUM_EVENT_BACKEND.TRANSFER:
+		case ENUM_EVENT_KIND.TRANSFER:
 			return ENUM_OVERRIDE_PRICING_ARM.PER_CAR;
-		case ENUM_EVENT_BACKEND.ACTIVITY:
+		case ENUM_EVENT_KIND.ACTIVITY:
 			return ENUM_OVERRIDE_PRICING_ARM.OFFERINGS;
 		default:
 			return ENUM_OVERRIDE_PRICING_ARM.PER_FARE;

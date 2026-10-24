@@ -170,7 +170,3 @@ export const SUPPLEMENT_PRICING_SCHEMA = z
 			validateFlatOrPerPersonPricing(data, ctx);
 		}
 	});
-
-export type TSupplementPricingSchema = z.infer<
-	typeof SUPPLEMENT_PRICING_SCHEMA
->;

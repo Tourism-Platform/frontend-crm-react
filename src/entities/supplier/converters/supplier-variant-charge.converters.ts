@@ -1,9 +1,9 @@
 import type {
-	FixedChargeInput,
-	FixedChargeOutput,
-	PerPersonChargeInput
-} from "@/shared/api/generated/Api";
+	TFixedChargeBackend,
+	TPerPersonChargeInputBackend
+} from "@/entities/tour/itinerary/types/commission-backend.types";
 
+import type { TFixedChargeInputBackend } from "../types";
 import { ENUM_SUPPLIER_SURCHARGE } from "../types/supplier-money.types";
 import type {
 	TChargeMarkupInputBackend,
@@ -61,7 +61,7 @@ export const mapSupplierChargeMarkupToBackend = (
 };
 
 export const mapSupplierFixedChargeFromBackend = (
-	expenses?: FixedChargeOutput | null
+	expenses?: TFixedChargeBackend | null
 ): ISupplierFixedCharge | null => {
 	if (!expenses) {
 		return null;
@@ -98,7 +98,7 @@ export const mapSupplierVariantChargeFromBackend = (
 
 export const mapSupplierFixedChargeToBackend = (
 	expenses: ISupplierFixedCharge
-): FixedChargeInput => ({
+): TFixedChargeInputBackend => ({
 	typ: expenses.typ,
 	cost: mapMonetaryToBackend(expenses.cost),
 	fees: mapSupplierFeesToBackend(expenses.fees),
@@ -107,7 +107,7 @@ export const mapSupplierFixedChargeToBackend = (
 
 export const mapSupplierVariantChargeToBackend = (
 	expenses: TSupplierVariantCharge
-): FixedChargeInput | PerPersonChargeInput => {
+): TFixedChargeInputBackend | TPerPersonChargeInputBackend => {
 	if (expenses.typ === "per_person") {
 		return {
 			typ: expenses.typ,

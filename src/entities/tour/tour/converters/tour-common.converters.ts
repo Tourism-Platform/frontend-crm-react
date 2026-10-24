@@ -1,8 +1,9 @@
-import { type LanguageCode, type TOUR_PATHS } from "@/shared/api";
 import { languageCodeMapper } from "@/shared/converters";
 import type { IPaginationResponse } from "@/shared/types";
 
-import { languageMapper } from "../../landing/converters/languages.converters";
+import type { ENUM_LANGUAGES_BACKEND_TYPE } from "@/entities/tour/landing/types/languages.types";
+
+import { languageMapper } from "../../landing";
 import type {
 	ITourCard,
 	ITourFilters,
@@ -10,6 +11,7 @@ import type {
 	TCreateTourSchema,
 	TGetTourBackendResponse,
 	TListToursBackendResponse,
+	TListToursQueryBackend,
 	TTourBackend,
 	TTourSettingsGeneralFormSchema,
 	TTourUpdateBackendBody
@@ -29,7 +31,7 @@ const mapDurationToBackend = ({
 		? { days: 1, nights: 0, duration_hours: durationHours }
 		: { days: Number(duration.from), nights: Number(duration.to) };
 
-const mapTourLanguageBadge = (code: LanguageCode): string =>
+const mapTourLanguageBadge = (code: ENUM_LANGUAGES_BACKEND_TYPE): string =>
 	(languageCodeMapper.from(code) ?? code).toUpperCase();
 
 export const mapTourToFrontend = (backend: TTourBackend): ITourCard => ({
@@ -110,7 +112,7 @@ export const mapTourPaginatedToFrontend = (
 
 export const mapTourFiltersToBackend = (
 	filters: ITourFilters
-): typeof TOUR_PATHS.listTours._types.query => ({
+): TListToursQueryBackend => ({
 	...(filters?.page > 1 && { skip: (filters.page - 1) * filters?.limit }),
 	...(filters?.limit && { limit: filters.limit }),
 	...(!!filters?.status?.length && {

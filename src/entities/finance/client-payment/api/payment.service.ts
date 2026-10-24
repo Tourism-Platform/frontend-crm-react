@@ -1,9 +1,10 @@
 import { CLIENT_PAYMENT_PATHS, ENUM_API_TAGS } from "@/shared/api";
-import type { ClientPaymentFile, ClientPaymentResponse } from "@/shared/api";
+import type { TFileMetadata } from "@/shared/hooks";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapAttachmentToFileMetadata,
 	mapCreatePaymentToBackend,
 	mapPaymentFiltersToBackend,
 	mapPaymentToFrontend,
@@ -14,6 +15,7 @@ import type {
 	IPayment,
 	IPaymentFilters,
 	IPaymentPaginatedResponse,
+	TClientPaymentFileBackend,
 	TNewPaymentSchema,
 	TPaymentBackend,
 	TPaymentListResponseInput
@@ -63,7 +65,7 @@ export const clientPaymentApi = authApi.injectEndpoints({
 					body: formData
 				};
 			},
-			transformResponse: (response: ClientPaymentResponse) =>
+			transformResponse: (response: TPaymentBackend) =>
 				mapPaymentToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
@@ -95,16 +97,18 @@ export const clientPaymentApi = authApi.injectEndpoints({
 				mapPaymentToFrontend(response),
 			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
 		}),
-		listAttachments: builder.query<ClientPaymentFile[], string>({
+		listAttachments: builder.query<TFileMetadata[], string>({
 			query: (paymentId) => ({
 				...CLIENT_PAYMENT_PATHS.listAttachments(paymentId)
 			}),
+			transformResponse: (response: TClientPaymentFileBackend[]) =>
+				response.map(mapAttachmentToFileMetadata),
 			providesTags: (_result, _error, paymentId) => [
 				attachmentTag(paymentId)
 			]
 		}),
 		addAttachment: builder.mutation<
-			ClientPaymentFile,
+			TClientPaymentFileBackend,
 			{ paymentId: string; file: File }
 		>({
 			query: ({ paymentId, file }) => {

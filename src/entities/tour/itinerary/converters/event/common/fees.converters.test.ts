@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	ENUM_FEE_FIELD,
@@ -20,7 +20,7 @@ describe("fees.converters", () => {
 		expect(
 			mapFeeFromBackend({
 				name: "VAT",
-				cost: { val: 12, currency: Currency.USD },
+				cost: { val: 12, currency: ENUM_CURRENCY_BACKEND.USD },
 				description: "tax"
 			})
 		).toEqual({
@@ -36,10 +36,13 @@ describe("fees.converters", () => {
 		expect(mapFeesFromBackend([])).toEqual([]);
 		expect(
 			mapFeesFromBackend([
-				{ name: "VAT", cost: { val: 12, currency: Currency.USD } },
+				{
+					name: "VAT",
+					cost: { val: 12, currency: ENUM_CURRENCY_BACKEND.USD }
+				},
 				{
 					name: "City tax",
-					cost: { val: 3000, currency: Currency.UZS },
+					cost: { val: 3000, currency: ENUM_CURRENCY_BACKEND.UZS },
 					description: "per stay"
 				}
 			])
@@ -67,18 +70,18 @@ describe("fees.converters", () => {
 			{
 				name: "VAT",
 				description: null,
-				cost: { val: 12, currency: Currency.USD }
+				cost: { val: 12, currency: ENUM_CURRENCY_BACKEND.USD }
 			},
 			{
 				name: "City tax",
 				description: "per stay",
-				cost: { val: 3000, currency: Currency.UZS }
+				cost: { val: 3000, currency: ENUM_CURRENCY_BACKEND.UZS }
 			}
 		]);
 		expect(mapFeeToBackend(rows[0])).toEqual({
 			name: "VAT",
 			description: null,
-			cost: { val: 12, currency: Currency.USD }
+			cost: { val: 12, currency: ENUM_CURRENCY_BACKEND.USD }
 		});
 	});
 

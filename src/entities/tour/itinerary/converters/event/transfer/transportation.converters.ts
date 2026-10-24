@@ -1,9 +1,3 @@
-import { LanguageCode } from "@/shared/api";
-import type {
-	TransferDetailsWrite,
-	TransferLegInput,
-	TransferPointInput
-} from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
@@ -14,12 +8,20 @@ import { getDeviceUtcOffset } from "@/shared/hooks";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 
 import {
+	ENUM_LANGUAGES_BACKEND,
+	type ENUM_LANGUAGES_BACKEND_TYPE
+} from "@/entities/tour/landing/types/languages.types";
+
+import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_HOUSING_SOURCE,
 	type TEventDetailsBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend,
+	type TTransferDetailsWriteBackend,
+	type TTransferLegInputBackend,
+	type TTransferPointInputBackend,
 	type TTransferSingleEventBackend,
 	type TTransportationEditSchema
 } from "../../../types";
@@ -119,8 +121,8 @@ const mapPointToBackend = (
 	time: string | null | undefined,
 	timezone: string | null | undefined,
 	location: TGeoFormValue | null | undefined,
-	lang: LanguageCode
-): TransferPointInput | undefined => {
+	lang: ENUM_LANGUAGES_BACKEND_TYPE
+): TTransferPointInputBackend | undefined => {
 	if (time == null && location === undefined) {
 		return undefined;
 	}
@@ -138,8 +140,8 @@ const mapPointToBackend = (
 /** The run a transfer makes (3.1 `plan`): kind, departure, arrival. */
 const mapTransferLegToBackend = (
 	g: TTransferGeneral | undefined,
-	lang: LanguageCode
-): TransferLegInput => {
+	lang: ENUM_LANGUAGES_BACKEND_TYPE
+): TTransferLegInputBackend => {
 	const departure = mapPointToBackend(
 		g?.departure_time,
 		g?.departure_timezone,
@@ -167,7 +169,8 @@ export const mapTransferFormToUpdate = (
 	language?: ENUM_LANGUAGES_TYPE,
 	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
-	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+	const lang =
+		languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
 	const g = frontend.general;
 	const plan = mapTransferLegToBackend(g, lang);
@@ -195,7 +198,7 @@ export const mapTransferFormToUpdate = (
 
 	// No constructible spec → `supply` is omitted so the backend keeps the
 	// current one (a full replace would wipe it).
-	const details: TransferDetailsWrite = {
+	const details: TTransferDetailsWriteBackend = {
 		plan,
 		...(spec && {
 			pool: mapInlinePoolWrite(
@@ -203,7 +206,7 @@ export const mapTransferFormToUpdate = (
 				currentDetails,
 				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
 				{ source: "inline", spec }
-			) as TransferDetailsWrite["pool"]
+			) as TTransferDetailsWriteBackend["pool"]
 		})
 	};
 

@@ -2,7 +2,6 @@ export {
 	decodeGeoOptionValue,
 	encodeGeoOptionValue,
 	formatGeoFeatureLabel,
-	hasGeoFormLabel,
 	isSameGeoLocation,
 	mapBackendLocationToGeoForm,
 	mapGeoFormPartsToLabel,
@@ -15,6 +14,7 @@ export {
 export {
 	languageCodeMapper,
 	mapOrderLangQueryToBackend,
+	mapLocaleToLanguageCode,
 	mapReadLangQueryToBackend
 } from "./language-code.converters";
 export { userRoleMapper } from "./user-role.converters";

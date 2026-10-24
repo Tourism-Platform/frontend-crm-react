@@ -1,18 +1,16 @@
-import type {
-	LandingPageImageModel,
-	LandingPageResponse,
-	LandingPageUpdate
-} from "@/shared/api";
 import { createMockId, createMockIdSequence, mockImageUrl } from "@/shared/api";
 
+import type { TLandingPageResponseBackend } from "@/entities/tour/preview-tour/types/preview-tour-backend.types";
 import { TOURS_MOCK } from "@/entities/tour/tour/mock/tour.mock";
+
+import type { TLandingImageBackend, TLandingPageUpdateBackend } from "../types";
 
 import { TOUR_LANDING_MOCK } from "./landing.mock";
 
 const createLanding = (
 	landingId: string,
 	title: string | null
-): LandingPageResponse => ({
+): TLandingPageResponseBackend => ({
 	...structuredClone(TOUR_LANDING_MOCK),
 	id: landingId,
 	title,
@@ -33,7 +31,7 @@ const createLandingStore = () =>
 	);
 
 const createImageStore = () =>
-	new Map<string, LandingPageImageModel[]>(
+	new Map<string, TLandingImageBackend[]>(
 		TOURS_MOCK.map((tour, index) => {
 			const landingId = tour.landing_id ?? createMockId("b120", index);
 			return [
@@ -78,7 +76,10 @@ export const getLanding = (tourId: string) => {
 	return landing;
 };
 
-export const updateLanding = (tourId: string, update: LandingPageUpdate) => {
+export const updateLanding = (
+	tourId: string,
+	update: TLandingPageUpdateBackend
+) => {
 	const landing = getLanding(tourId);
 	for (const [key, value] of Object.entries(update)) {
 		if (value !== undefined)

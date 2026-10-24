@@ -3,8 +3,7 @@ import { useParams } from "react-router-dom";
 import {
 	ENUM_EVENT_MODE,
 	LIBRARY_EVENT_CREATE_ID,
-	canRemovePoolMember,
-	getEventPool,
+	mapEventPoolToSummary,
 	useEventEditIds,
 	useGetTourEventQuery
 } from "@/entities/tour";
@@ -44,11 +43,11 @@ export const useEventPoolMembers = (variant: ENUM_EVENT_POOL_VARIANT_TYPE) => {
 		variant === ENUM_EVENT_POOL_VARIANT.LIBRARY
 			? libraryPool.template?.event.details
 			: tourQuery.data?.details;
-	const members = getEventPool(details);
+	const members = mapEventPoolToSummary(details);
 
 	return {
 		members,
-		canRemove: canRemovePoolMember(details),
+		canRemove: members.length > 1,
 		isBusy:
 			variant === ENUM_EVENT_POOL_VARIANT.LIBRARY
 				? libraryPool.isLoading

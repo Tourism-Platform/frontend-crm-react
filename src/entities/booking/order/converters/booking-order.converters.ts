@@ -11,7 +11,7 @@ import type {
 
 import { bookingClientTypeMapper } from "./booking-client-type.convert";
 import { bookingTourTypeMapper } from "./booking-tour-type.convert";
-import { orderStatusMapper } from "./order-status.convert";
+import { orderStatusMapper } from "./order-status.converters";
 
 export const mapBookingOrderListItemToFrontend = (
 	data: TBookingOrderListItemBackend

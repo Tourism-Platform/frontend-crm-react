@@ -1,15 +1,14 @@
-import {
-	type ClientPaymentFile,
-	type ClientPaymentListResponse,
-	type ClientPaymentResponse,
-	ClientPaymentStatus,
-	type ClientPaymentUpdate
-} from "@/shared/api";
-
 import { bookingOrderListItems } from "@/entities/booking/order/mock/booking-order.store";
 
-import { ENUM_PAYMENT_STATUS } from "../types";
-import type { TPaymentStatusCounts } from "../types";
+import {
+	ENUM_PAYMENT_STATUS,
+	ENUM_PAYMENT_STATUS_BACKEND,
+	type TClientPaymentFileBackend,
+	type TClientPaymentListResponseBackend,
+	type TPaymentBackend,
+	type TPaymentStatusCounts,
+	type TUpdatePaymentBackend
+} from "../types";
 
 import {
 	MOCK_OPERATOR_ID,
@@ -21,8 +20,8 @@ import {
 	createClientPaymentMocks
 } from "./payment.mock.factory";
 
-let payments: ClientPaymentResponse[] = createClientPaymentMocks();
-let attachmentsByPaymentId: Record<string, ClientPaymentFile[]> =
+let payments: TPaymentBackend[] = createClientPaymentMocks();
+let attachmentsByPaymentId: Record<string, TClientPaymentFileBackend[]> =
 	createClientPaymentAttachmentMocks(payments);
 
 export const resetClientPaymentsForTests = (): void => {
@@ -30,9 +29,7 @@ export const resetClientPaymentsForTests = (): void => {
 	attachmentsByPaymentId = createClientPaymentAttachmentMocks(payments);
 };
 
-export const getPayment = (
-	paymentId: string
-): ClientPaymentResponse | undefined =>
+export const getPayment = (paymentId: string): TPaymentBackend | undefined =>
 	payments.find((payment) => payment.id === paymentId);
 
 export interface IListPaymentsQuery {
@@ -50,7 +47,7 @@ const filterPayments = ({
 }: Pick<
 	IListPaymentsQuery,
 	"status" | "booking_id" | "q"
->): ClientPaymentResponse[] => {
+>): TPaymentBackend[] => {
 	let filtered = [...payments];
 
 	if (status) {
@@ -77,7 +74,7 @@ const filterPayments = ({
 };
 
 const computeStatusCounts = (
-	items: ClientPaymentResponse[]
+	items: TPaymentBackend[]
 ): TPaymentStatusCounts => {
 	const counts: TPaymentStatusCounts = {
 		[ENUM_PAYMENT_STATUS.ASSIGNED]: 0,
@@ -85,7 +82,7 @@ const computeStatusCounts = (
 	};
 
 	for (const item of items) {
-		if (item.status === ClientPaymentStatus.Confirmed) {
+		if (item.status === ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED) {
 			counts[ENUM_PAYMENT_STATUS.ASSIGNED] += 1;
 		} else {
 			counts[ENUM_PAYMENT_STATUS.NOT_ASSIGNED] += 1;
@@ -113,7 +110,7 @@ export const listPayments = ({
 	q,
 	skip,
 	limit
-}: IListPaymentsQuery): ClientPaymentListResponse => {
+}: IListPaymentsQuery): TClientPaymentListResponseBackend => {
 	const filtered = filterPayments({ status, booking_id, q });
 	const data = filtered.slice(skip, skip + limit);
 
@@ -125,7 +122,9 @@ export const listPayments = ({
 
 export const listPaymentsWithStatusCounts = (
 	query: IListPaymentsQuery
-): ClientPaymentListResponse & { status_counts: TPaymentStatusCounts } => {
+): TClientPaymentListResponseBackend & {
+	status_counts: TPaymentStatusCounts;
+} => {
 	const filtered = filterPayments(query);
 	const data = filtered.slice(query.skip, query.skip + query.limit);
 
@@ -138,7 +137,9 @@ export const listPaymentsWithStatusCounts = (
 
 export const listPaymentsFromUrl = (
 	url: URL
-): ClientPaymentListResponse & { status_counts: TPaymentStatusCounts } =>
+): TClientPaymentListResponseBackend & {
+	status_counts: TPaymentStatusCounts;
+} =>
 	listPaymentsWithStatusCounts({
 		status: url.searchParams.get("status"),
 		booking_id: url.searchParams.get("booking_id"),
@@ -149,7 +150,7 @@ export const listPaymentsFromUrl = (
 
 export const createPaymentFromFormData = (
 	formData: FormData
-): ClientPaymentResponse | null => {
+): TPaymentBackend | null => {
 	const bookingId = String(formData.get("booking_id") ?? "");
 	const amountUzs = Number(formData.get("amount_uzs"));
 	const exchangeRate = Number(formData.get("exchange_rate"));
@@ -168,7 +169,7 @@ export const createPaymentFromFormData = (
 			? file.name
 			: `payment-${paymentId}.pdf`;
 
-	const created: ClientPaymentResponse = {
+	const created: TPaymentBackend = {
 		client_name:
 			bookingOrderListItems.find((item) => item.id === bookingId)
 				?.client_name ?? "",
@@ -185,7 +186,7 @@ export const createPaymentFromFormData = (
 		currency: MOCK_PAYMENT_DEFAULTS.currency,
 		rate: String(exchangeRate),
 		base_amount: amountUzs.toFixed(2),
-		status: ClientPaymentStatus.NotConfirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.NOT_ASSIGNED,
 		note: typeof note === "string" && note.length > 0 ? note : null,
 		attachment_count: hasFile ? 1 : 0,
 		created_at: now,
@@ -202,8 +203,8 @@ export const createPaymentFromFormData = (
 
 export const updatePaymentInStore = (
 	paymentId: string,
-	patch: ClientPaymentUpdate
-): ClientPaymentResponse | null => {
+	patch: TUpdatePaymentBackend
+): TPaymentBackend | null => {
 	const index = payments.findIndex((payment) => payment.id === paymentId);
 
 	if (index === -1) {
@@ -211,7 +212,7 @@ export const updatePaymentInStore = (
 	}
 
 	const current = payments[index];
-	const updated: ClientPaymentResponse = {
+	const updated: TPaymentBackend = {
 		...current,
 		amount: patch.amount ?? current.amount,
 		note: patch.note !== undefined ? patch.note : current.note,
@@ -225,16 +226,16 @@ export const updatePaymentInStore = (
 
 export const confirmPaymentInStore = (
 	paymentId: string
-): ClientPaymentResponse | null => {
+): TPaymentBackend | null => {
 	const index = payments.findIndex((payment) => payment.id === paymentId);
 
 	if (index === -1) {
 		return null;
 	}
 
-	const updated: ClientPaymentResponse = {
+	const updated: TPaymentBackend = {
 		...payments[index],
-		status: ClientPaymentStatus.Confirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED,
 		updated_at: new Date().toISOString()
 	};
 
@@ -253,7 +254,7 @@ export const deletePaymentFromStore = (paymentId: string): boolean => {
 
 export const listAttachmentsInStore = (
 	paymentId: string
-): ClientPaymentFile[] | null => {
+): TClientPaymentFileBackend[] | null => {
 	if (!getPayment(paymentId)) {
 		return null;
 	}
@@ -264,13 +265,13 @@ export const listAttachmentsInStore = (
 export const addAttachmentInStore = (
 	paymentId: string,
 	fileName: string
-): ClientPaymentFile | null => {
+): TClientPaymentFileBackend | null => {
 	if (!getPayment(paymentId)) {
 		return null;
 	}
 
 	const current = attachmentsByPaymentId[paymentId] ?? [];
-	const created: ClientPaymentFile = {
+	const created: TClientPaymentFileBackend = {
 		file_id: `${paymentId}-file-${current.length + 1}-${Date.now()}`,
 		file_name: fileName
 	};
@@ -284,7 +285,7 @@ export const addAttachmentInStore = (
 export const getAttachmentInStore = (
 	paymentId: string,
 	fileId: string
-): ClientPaymentFile | null => {
+): TClientPaymentFileBackend | null => {
 	const files = attachmentsByPaymentId[paymentId] ?? [];
 	return files.find((file) => file.file_id === fileId) ?? null;
 };

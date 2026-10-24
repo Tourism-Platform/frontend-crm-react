@@ -225,7 +225,3 @@ export const TRANSPORTATION_PRICING_SCHEMA = z
 			validateFlatOrPerPersonPricing(data, ctx);
 		}
 	});
-
-export type TTransportationPricingSchema = z.infer<
-	typeof TRANSPORTATION_PRICING_SCHEMA
->;

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { LoaderButton, withErrorBoundary } from "@/shared/ui";
 
-import { ENUM_EVENT_BACKEND } from "@/entities/tour";
+import { ENUM_EVENT_KIND } from "@/entities/tour";
 
 import { EventPoolControls, type TEventPoolUiProps } from "@/features/tours";
 
@@ -26,7 +26,7 @@ const GuidesInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 				form={form}
 				variant={poolVariant}
 				onSelect={onPoolSelect}
-				eventTyp={ENUM_EVENT_BACKEND.GUIDE}
+				eventKind={ENUM_EVENT_KIND.GUIDE}
 			/>
 			<GuidesDetails form={form} />
 

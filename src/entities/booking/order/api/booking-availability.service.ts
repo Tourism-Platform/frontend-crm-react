@@ -1,8 +1,4 @@
-import {
-	ApplyAvailabilityInput,
-	BOOKING_AVAILABILITY_PATHS,
-	ENUM_API_TAGS
-} from "@/shared/api";
+import { BOOKING_AVAILABILITY_PATHS, ENUM_API_TAGS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -10,6 +6,7 @@ import {
 	mapBookingAvailabilityListToFrontend,
 	mapBookingAvailabilityToFrontend
 } from "../converters/booking-availability.converters";
+import type { ENUM_APPLY_AVAILABILITY_INPUT_BACKEND_TYPE } from "../types";
 import type { IBookingEventAvailability } from "../types/booking-availability.types";
 
 export const bookingAvailabilityApi = authApi.injectEndpoints({
@@ -35,7 +32,7 @@ export const bookingAvailabilityApi = authApi.injectEndpoints({
 				bookingId: string;
 				eventId: string;
 				optionIndex: number;
-				status: ApplyAvailabilityInput;
+				status: ENUM_APPLY_AVAILABILITY_INPUT_BACKEND_TYPE;
 			}
 		>({
 			query: ({ bookingId, eventId, optionIndex, status }) => ({

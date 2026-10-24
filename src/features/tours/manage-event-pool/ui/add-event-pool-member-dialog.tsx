@@ -14,7 +14,7 @@ import {
 
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
 import {
-	type ENUM_EVENT_BACKEND_TYPE,
+	type ENUM_EVENT_KIND_TYPE,
 	type IEventProductLink,
 	type TAddPoolMemberIntent
 } from "@/entities/tour";
@@ -28,7 +28,7 @@ import { AttachEventSupplierDialog } from "./attach-event-supplier-dialog";
 interface IAddEventPoolMemberDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	supplierTyp?: ENUM_SUPPLIER_TYPE_TYPE;
 	isSubmitting?: boolean;
 	onAdd: (intent: TAddPoolMemberIntent) => Promise<void>;
@@ -40,7 +40,7 @@ const choiceClassName =
 export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 	open,
 	onOpenChange,
-	eventTyp,
+	eventKind,
 	supplierTyp,
 	isSubmitting,
 	onAdd
@@ -51,7 +51,7 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 
 	const handleInline = async () => {
 		try {
-			await onAdd({ kind: "empty", typ: eventTyp });
+			await onAdd({ kind: "empty", eventKind });
 			onOpenChange(false);
 			toast.success(t("pool.toasts.add.success"));
 		} catch (error) {
@@ -63,7 +63,7 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 
 	const handleProduct = async (link: IEventProductLink) => {
 		try {
-			await onAdd({ kind: "product", typ: eventTyp, link });
+			await onAdd({ kind: "product", eventKind, link });
 			setProductOpen(false);
 			onOpenChange(false);
 			toast.success(t("pool.toasts.add.success"));
@@ -147,7 +147,7 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 					<AttachEventSupplierDialog
 						open={supplierOpen}
 						onOpenChange={setSupplierOpen}
-						eventTyp={eventTyp}
+						eventKind={eventKind}
 						supplierTyp={supplierTyp}
 						isSubmitting={isSubmitting}
 						onAdd={onAdd}

@@ -1,9 +1,4 @@
 import {
-	ToPerFareTypEnum,
-	ToWholeRouteTypEnum
-} from "@/shared/api/generated/Api";
-
-import {
 	DEFAULT_EVENT_CURRENCY,
 	type ENUM_CURRENCY_OPTIONS_TYPE
 } from "@/entities/commission";
@@ -14,6 +9,8 @@ import {
 	ENUM_FORM_FLIGHT_FARES,
 	ENUM_FORM_FLIGHT_SECTION,
 	ENUM_SUPPLIER_SURCHARGE,
+	ENUM_TO_PER_FARE_TYP_BACKEND,
+	ENUM_TO_WHOLE_ROUTE_TYP_BACKEND,
 	type IFlightProduct,
 	type IFlightVariant,
 	type TFlightPricingSwitchBackend,
@@ -319,7 +316,7 @@ export const mapFlightEditFormToPricingSwitch = (
 		});
 
 		return {
-			typ: ToPerFareTypEnum.Flight,
+			typ: ENUM_TO_PER_FARE_TYP_BACKEND.FLIGHT,
 			to: ENUM_FLIGHT_PRICING.PER_FARE,
 			fares: aligned.map((row) => ({
 				variant_id:
@@ -332,7 +329,7 @@ export const mapFlightEditFormToPricingSwitch = (
 	}
 
 	return {
-		typ: ToWholeRouteTypEnum.Flight,
+		typ: ENUM_TO_WHOLE_ROUTE_TYP_BACKEND.FLIGHT,
 		to: ENUM_FLIGHT_PRICING.WHOLE,
 		charge: mapFlightVariantChargeToBackend(mapWholeCharge(pricing))
 	};

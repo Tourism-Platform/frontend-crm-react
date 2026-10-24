@@ -1,13 +1,13 @@
-import { GeneralVenueInputSubTypEnum } from "@/shared/api";
-
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE,
+	ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND,
 	type IEventProductLink,
 	type TAddPoolMemberIntent,
 	type TEventDetailsWriteBackend,
 	type TEventPoolMemberNewBackend
 } from "../../../types";
+import { eventKindMapper } from "../../event-kind.converters";
 
 import { mapEventProductScopeToBackend } from "./event-product-link.converters";
 
@@ -37,7 +37,8 @@ export const mapEmptyEventDetailsToWrite = (
 			return wrapInlinePool({
 				source: "inline",
 				spec: {
-					sub_typ: GeneralVenueInputSubTypEnum.Sightseeing as never
+					sub_typ:
+						ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.SIGHTSEEING as never
 				}
 			});
 		case ENUM_EVENT_BACKEND.FLIGHT:
@@ -87,7 +88,7 @@ export const mapEventDetailsWriteOrEmpty = (
 };
 
 /** POST pool body — `*MemberNew` with `typ` on the member, never `is_main`. */
-export const mapEmptyPoolMemberNew = (
+export const mapEmptyPoolMemberToBackend = (
 	typ: ENUM_EVENT_BACKEND_TYPE
 ): TEventPoolMemberNewBackend => {
 	if (typ === ENUM_EVENT_BACKEND.OPTIONS) {
@@ -113,7 +114,7 @@ export const mapEmptyPoolMemberNew = (
  * POST pool body — empty inline shell linked to a library supplier
  * (`source: "inline"`, `supplier_id` set, no product).
  */
-export const mapInlinePoolMemberWithSupplier = (
+export const mapSupplierPoolMemberToBackend = (
 	typ: ENUM_EVENT_BACKEND_TYPE,
 	supplierId: string
 ): TEventPoolMemberNewBackend => {
@@ -128,7 +129,7 @@ export const mapInlinePoolMemberWithSupplier = (
 		};
 	}
 
-	const empty = mapEmptyPoolMemberNew(typ);
+	const empty = mapEmptyPoolMemberToBackend(typ);
 	const supply = empty.supply;
 	if (!supply || supply.source !== "inline") {
 		throw new Error("Inline pool member requires inline supply");
@@ -141,7 +142,7 @@ export const mapInlinePoolMemberWithSupplier = (
 };
 
 /** POST pool body — product supply from an attach-product link. */
-export const mapProductPoolMemberNew = (
+export const mapProductPoolMemberToBackend = (
 	typ: ENUM_EVENT_BACKEND_TYPE,
 	link: IEventProductLink
 ): TEventPoolMemberNewBackend => {
@@ -165,15 +166,14 @@ export const mapProductPoolMemberNew = (
 export const mapAddPoolMemberToBackend = (
 	intent: TAddPoolMemberIntent
 ): TEventPoolMemberNewBackend => {
+	const typ = eventKindMapper.to(intent.eventKind)!;
+
 	switch (intent.kind) {
 		case "empty":
-			return mapEmptyPoolMemberNew(intent.typ);
+			return mapEmptyPoolMemberToBackend(typ);
 		case "supplier":
-			return mapInlinePoolMemberWithSupplier(
-				intent.typ,
-				intent.supplierId
-			);
+			return mapSupplierPoolMemberToBackend(typ, intent.supplierId);
 		case "product":
-			return mapProductPoolMemberNew(intent.typ, intent.link);
+			return mapProductPoolMemberToBackend(typ, intent.link);
 	}
 };

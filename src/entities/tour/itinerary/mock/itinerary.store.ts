@@ -1,19 +1,16 @@
-import type {
-	EventImageSchema,
-	PackageCreate,
-	PackageUpdate,
-	TourEventResponse,
-	TourOptionCreateSchema,
-	TourOptionModel,
-	TourOptionUpdateSchema,
-	TourPackageModel
-} from "@/shared/api";
+import { createMockIdSequence, mockImageUrl, omitKeys } from "@/shared/api";
+
 import {
-	TranslationState,
-	createMockIdSequence,
-	mockImageUrl,
-	omitKeys
-} from "@/shared/api";
+	ENUM_TRANSLATION_STATE_BACKEND,
+	type TEventImageSchemaBackend,
+	type TPackageCreateBackend,
+	type TPackageUpdateBackend,
+	type TTourEventBackendResponce,
+	type TTourOptionBackend,
+	type TTourOptionCreateBackend,
+	type TTourOptionUpdateBackend,
+	type TTourPackageBackend
+} from "../types";
 
 import {
 	type TEventOptionMock,
@@ -36,7 +33,7 @@ import {
 } from "./itinerary.mock";
 
 type TRecord = Record<string, unknown>;
-type TEvent = TourEventResponse;
+type TEvent = TTourEventBackendResponce;
 type TMultiEvent = Extract<TEvent["event"], { typ: "options" }>;
 
 const createOptionStore = () =>
@@ -78,9 +75,9 @@ export const getTourOption = (tourId: string, optionId: string) => {
 
 export const createTourOption = (
 	tourId: string,
-	body: TourOptionCreateSchema | null
-): TourOptionModel => {
-	const option: TourOptionModel = {
+	body: TTourOptionCreateBackend | null
+): TTourOptionBackend => {
+	const option: TTourOptionBackend = {
 		id: optionIds.next(),
 		tour_meta_id: tourId,
 		name: body?.name ?? null,
@@ -97,7 +94,7 @@ export const createTourOption = (
 export const updateTourOption = (
 	tourId: string,
 	optionId: string,
-	body: TourOptionUpdateSchema
+	body: TTourOptionUpdateBackend
 ) => {
 	const option = getTourOption(tourId, optionId);
 	if (!option) return undefined;
@@ -139,7 +136,10 @@ export const getPackage = (optionId: string, packageId: string) => {
 	return item?.tour_option_id === optionId ? item : undefined;
 };
 
-export const createPackage = (optionId: string, body: PackageCreate) => {
+export const createPackage = (
+	optionId: string,
+	body: TPackageCreateBackend
+) => {
 	const item = {
 		id: packageIds.next(),
 		tour_option_id: optionId,
@@ -148,7 +148,7 @@ export const createPackage = (optionId: string, body: PackageCreate) => {
 		expenses: body.expenses ?? null,
 		fees: body.fees ?? null,
 		markup: body.markup ?? null
-	} as TourPackageModel;
+	} as TTourPackageBackend;
 	packageStore.set(item.id, item);
 	return item;
 };
@@ -156,7 +156,7 @@ export const createPackage = (optionId: string, body: PackageCreate) => {
 export const updatePackage = (
 	optionId: string,
 	packageId: string,
-	body: PackageUpdate
+	body: TPackageUpdateBackend
 ) => {
 	const item = getPackage(optionId, packageId);
 	if (!item) return undefined;
@@ -225,7 +225,7 @@ const addEventRecord = (
 			id: recordIds.next(),
 			tour_option_id: optionId,
 			event,
-			translation: TranslationState.Source
+			translation: ENUM_TRANSLATION_STATE_BACKEND.SOURCE
 		}
 	};
 	eventStore.set(record.event.id, record);
@@ -239,7 +239,7 @@ const toSingleEvent = (
 	day: number,
 	position: number,
 	isOptional = false,
-	images: EventImageSchema[] = []
+	images: TEventImageSchemaBackend[] = []
 ) =>
 	({
 		...option,

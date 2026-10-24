@@ -81,8 +81,7 @@ export const LibraryAccommodationEditPage: FC = () => {
 		data: isCreate
 			? undefined
 			: (libraryEvent as TAccommodationEditSchema | undefined),
-		recordKey: `${libraryId}:${supplyId ?? "main"}`,
-		currentDetails: libraryTemplate?.event.details
+		recordKey: `${libraryId}:${supplyId ?? "main"}`
 	});
 
 	useEffect(() => {

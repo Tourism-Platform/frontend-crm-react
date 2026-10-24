@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { LanguageCode } from "@/shared/api";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 
 import { extractCityFromPubEvent } from "./preview-option-location.utils";
 
@@ -43,7 +43,7 @@ describe("extractCityFromPubEvent — hops", () => {
 								address: null,
 								lat: 0,
 								long: 0,
-								lang: LanguageCode.En
+								lang: ENUM_LANGUAGES_BACKEND.ENGLISH
 							},
 							arrival_location: null,
 							departure_date: null,

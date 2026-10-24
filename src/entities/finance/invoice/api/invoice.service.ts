@@ -1,9 +1,4 @@
 import { ENUM_API_TAGS, INVOICE_PATHS } from "@/shared/api";
-import type {
-	InvoiceDetailResponse,
-	InvoiceListResponse,
-	InvoicePdfResponse
-} from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -15,7 +10,10 @@ import {
 import type {
 	IInvoiceDetail,
 	IInvoiceFilters,
-	IInvoicePaginatedResponse
+	IInvoicePaginatedResponse,
+	TInvoiceDetailResponseBackend,
+	TInvoiceListResponseBackend,
+	TInvoicePdfResponseBackend
 } from "../types";
 
 export const invoiceApi = authApi.injectEndpoints({
@@ -30,7 +28,7 @@ export const invoiceApi = authApi.injectEndpoints({
 					? mapInvoiceFiltersToBackend(filters)
 					: undefined
 			}),
-			transformResponse: (response: InvoiceListResponse) =>
+			transformResponse: (response: TInvoiceListResponseBackend) =>
 				mapInvoicePaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.FINANCE_INVOICES]
 		}),
@@ -38,13 +36,13 @@ export const invoiceApi = authApi.injectEndpoints({
 			query: (id) => ({
 				...INVOICE_PATHS.getInvoice(id)
 			}),
-			transformResponse: (response: InvoiceDetailResponse) =>
+			transformResponse: (response: TInvoiceDetailResponseBackend) =>
 				mapInvoiceDetailToFrontend(response),
 			providesTags: (_, __, id) => [
 				{ type: ENUM_API_TAGS.FINANCE_INVOICES, id }
 			]
 		}),
-		getInvoicePdf: builder.query<InvoicePdfResponse, string>({
+		getInvoicePdf: builder.query<TInvoicePdfResponseBackend, string>({
 			query: (id) => ({
 				...INVOICE_PATHS.getInvoicePdf(id)
 			})

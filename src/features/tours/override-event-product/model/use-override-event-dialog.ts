@@ -2,14 +2,11 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import {
-	ENUM_EVENT_BACKEND,
-	type ENUM_EVENT_BACKEND_TYPE,
+	ENUM_EVENT_KIND,
+	type ENUM_EVENT_KIND_TYPE,
 	ENUM_FORM_OVERRIDE_PRODUCT,
-	type IOverrideUnitOption,
-	type TEventOverrideInputBackend,
 	type TOverridePerUnitPricing,
-	type TOverrideProductFormValues,
-	mapEventOverrideToForm
+	type TOverrideProductFormValues
 } from "@/entities/tour";
 
 import {
@@ -21,24 +18,21 @@ import {
 
 interface IUseOverrideEventDialogParams {
 	open: boolean;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
-	initialOverride?: TEventOverrideInputBackend | null;
-	/** Units the per-unit arm can reprice — from the pool member's spec. */
-	units: IOverrideUnitOption[];
+	eventKind: ENUM_EVENT_KIND_TYPE;
+	initialValues: TOverrideProductFormValues;
 	perUnitArm: TOverridePerUnitPricing;
 	onConfirm: (values: TOverrideProductFormValues) => void | Promise<void>;
 }
 
 export const useOverrideEventDialog = ({
 	open,
-	eventTyp,
-	initialOverride,
-	units,
+	eventKind,
+	initialValues,
 	perUnitArm,
 	onConfirm
 }: IUseOverrideEventDialogParams) => {
 	const form = useForm<TOverrideProductFormValues>({
-		defaultValues: mapEventOverrideToForm(eventTyp, initialOverride, units)
+		defaultValues: initialValues
 	});
 
 	useEffect(() => {
@@ -46,15 +40,15 @@ export const useOverrideEventDialog = ({
 			return;
 		}
 
-		form.reset(mapEventOverrideToForm(eventTyp, initialOverride, units));
-	}, [open, eventTyp, initialOverride, units, form]);
+		form.reset(initialValues);
+	}, [open, initialValues, form]);
 
 	const handleConfirm = form.handleSubmit(async (values) => {
 		await onConfirm(values);
 	});
 
-	const isHousing = eventTyp === ENUM_EVENT_BACKEND.HOUSING;
-	const isActivity = eventTyp === ENUM_EVENT_BACKEND.ACTIVITY;
+	const isHousing = eventKind === ENUM_EVENT_KIND.HOUSING;
+	const isActivity = eventKind === ENUM_EVENT_KIND.ACTIVITY;
 	const pricingType = form.watch(ENUM_FORM_OVERRIDE_PRODUCT.PRICING_TYPE);
 	const arm = form.watch(ENUM_FORM_OVERRIDE_PRODUCT.PRICING_ARM);
 
@@ -97,7 +91,7 @@ export const useOverrideEventDialog = ({
 		showChargeTyp: isHousing,
 		/** Activity prices per offering only — there is no whole arm. */
 		showArmSelector: !isActivity,
-		unitChargeOptions: getUnitChargeOptions(eventTyp),
+		unitChargeOptions: getUnitChargeOptions(eventKind),
 		activeTab: getOverridePricingTab(arm, pricingType, perUnitArm),
 		handleTabChange,
 		addMarginSeparately,

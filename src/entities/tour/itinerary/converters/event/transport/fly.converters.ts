@@ -1,26 +1,25 @@
-import type {
-	FlightDetailsWrite,
-	FlightInlineSupplyNew,
-	FlightLegInput,
-	FlightLegOutput,
-	Schedule
-} from "@/shared/api";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
-import { ENUM_EVENT_BACKEND } from "../../../types";
 import type {
-	TEventDetailsBackend,
-	TFlightEditSchema,
-	TFlightSingleEventBackend,
-	TFlyRouteSegment,
-	TTourEventBackendResponce,
-	TTourEventUpdateBackend
-} from "../../../types";
+	TFlightLegInputBackend,
+	TFlightLegReadBackend
+} from "@/entities/supplier/types/flight/product-backend.types";
+
 import {
+	ENUM_EVENT_BACKEND,
 	ENUM_FLIGHT_TRANSPORT_TYPE,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_FLIGHT,
-	ENUM_HOUSING_SOURCE
+	ENUM_HOUSING_SOURCE,
+	type TEventDetailsBackend,
+	type TFlightDetailsWriteBackend,
+	type TFlightEditSchema,
+	type TFlightInlineSupplyNewBackend,
+	type TFlightSingleEventBackend,
+	type TFlyRouteSegment,
+	type TScheduleBackend,
+	type TTourEventBackendResponce,
+	type TTourEventUpdateBackend
 } from "../../../types";
 import { mapInlinePoolWrite } from "../common/details-read-to-write.converters";
 import { getPoolMember } from "../common/event-pool.helpers";
@@ -59,12 +58,12 @@ export const createEmptyFlySegment = (): TFlyRouteSegment => {
 
 /**
  * Contract 3.1: a flight leg (`spec.legs[]`) carries no hours — the
- * event-level `plan` (Schedule) states them, landing on the first
+ * event-level `plan` (TScheduleBackend) states them, landing on the first
  * departure and the last arrival.
  */
 const mapFlightLegToFlySegment = (
-	leg: FlightLegOutput,
-	plan: Schedule | null | undefined,
+	leg: TFlightLegReadBackend,
+	plan: TScheduleBackend | null | undefined,
 	index: number,
 	total: number
 ): TFlyRouteSegment => {
@@ -95,7 +94,9 @@ const mapFlightLegToFlySegment = (
 	};
 };
 
-const mapFlySegmentToHop = (segment: TFlyRouteSegment): FlightLegInput => ({
+const mapFlySegmentToHop = (
+	segment: TFlyRouteSegment
+): TFlightLegInputBackend => ({
 	airline_code: segment.airline_code,
 	flight_number: Number(segment.flight_number) || null,
 	departure_airport_code: segment.departure_airport_code,
@@ -109,7 +110,7 @@ const mapFlySegmentToHop = (segment: TFlyRouteSegment): FlightLegInput => ({
 /** Event-level hours (3.1 `plan`): first departure, last arrival. */
 const mapSchedulePlanToBackend = (
 	route: TFlyRouteSegment[] | undefined
-): Schedule => {
+): TScheduleBackend => {
 	const first = route?.[0];
 	const last = route?.length ? route[route.length - 1] : undefined;
 
@@ -229,13 +230,13 @@ export const mapFlyFormToUpdate = (
 	// `per_fare` spec, which carries no event-level charge. With neither
 	// legs nor charge, `supply` is omitted so the backend keeps the current
 	// one (a full replace would wipe it).
-	const spec: FlightInlineSupplyNew["spec"] | undefined = charge
+	const spec: TFlightInlineSupplyNewBackend["spec"] | undefined = charge
 		? { pricing: "whole", ...(legs && { legs }), charge }
 		: legs
 			? { pricing: "per_fare", legs }
 			: undefined;
 
-	const details: FlightDetailsWrite = {
+	const details: TFlightDetailsWriteBackend = {
 		plan,
 		...(spec && {
 			pool: mapInlinePoolWrite(
@@ -243,7 +244,7 @@ export const mapFlyFormToUpdate = (
 				currentDetails,
 				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
 				{ source: "inline", spec }
-			) as FlightDetailsWrite["pool"]
+			) as TFlightDetailsWriteBackend["pool"]
 		})
 	};
 

@@ -5,5 +5,4 @@ export * from "./flight-event-backend.types";
 export * from "./pricing.types";
 export * from "./pricing-backend.types";
 export * from "./tab.types";
-export type { TFlightPricingSchema } from "../../schema/flight/pricing.schema";
 export { ENUM_FORM_SECTION as ENUM_FLIGHT_FORM_SECTION } from "./section.types";

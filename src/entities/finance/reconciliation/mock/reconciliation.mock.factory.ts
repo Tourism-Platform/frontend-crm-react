@@ -1,11 +1,19 @@
 import {
-	BookingClientType,
-	type BookingReconciliationRowOutput,
-	BookingStatus,
-	BookingStatusLabel,
-	Currency,
-	TourType
-} from "@/shared/api/generated/Api";
+	ENUM_BOOKING_CLIENT_TYPE_BACKEND,
+	ENUM_BOOKING_STATUS_LABEL_BACKEND,
+	type ENUM_BOOKING_STATUS_LABEL_BACKEND_TYPE
+} from "@/entities/booking/order/types/order-backend-enum.types";
+import {
+	ENUM_ORDER_STATUS_BACKEND,
+	type ENUM_ORDER_STATUS_BACKEND_TYPE
+} from "@/entities/booking/order/types/order-status.types";
+import {
+	ENUM_CURRENCY_BACKEND,
+	type ENUM_CURRENCY_BACKEND_TYPE
+} from "@/entities/commission/types/currency.types";
+import { ENUM_TOUR_TYPE_BACKEND } from "@/entities/tour/tour/types/tour-backend-enum.types";
+
+import { type TBookingReconciliationRowOutputBackend } from "../types";
 
 import { buildReconciliationBookingUuid } from "./reconciliation.mock.constants";
 
@@ -16,19 +24,28 @@ interface IReconciliationSeedRow {
 	revenueAccrued: number;
 	plannedCost: number;
 	costAccrued: number;
-	status: BookingStatus;
-	currency: Currency;
+	status: ENUM_ORDER_STATUS_BACKEND_TYPE;
+	currency: ENUM_CURRENCY_BACKEND_TYPE;
 }
 
-const STATUS_LABEL: Record<BookingStatus, BookingStatusLabel> = {
-	[BookingStatus.Draft]: BookingStatusLabel.Draft,
-	[BookingStatus.New]: BookingStatusLabel.New,
-	[BookingStatus.Pending]: BookingStatusLabel.InProcessing,
-	[BookingStatus.Confirmed]: BookingStatusLabel.Booked,
-	[BookingStatus.InProgress]: BookingStatusLabel.InProgress,
-	[BookingStatus.Completed]: BookingStatusLabel.Complete,
-	[BookingStatus.Cancelled]: BookingStatusLabel.Cancelled,
-	[BookingStatus.Declined]: BookingStatusLabel.Declined
+const STATUS_LABEL: Record<
+	ENUM_ORDER_STATUS_BACKEND_TYPE,
+	ENUM_BOOKING_STATUS_LABEL_BACKEND_TYPE
+> = {
+	[ENUM_ORDER_STATUS_BACKEND.DRAFT]: ENUM_BOOKING_STATUS_LABEL_BACKEND.DRAFT,
+	[ENUM_ORDER_STATUS_BACKEND.NEW]: ENUM_BOOKING_STATUS_LABEL_BACKEND.NEW,
+	[ENUM_ORDER_STATUS_BACKEND.IN_PROCESSING]:
+		ENUM_BOOKING_STATUS_LABEL_BACKEND.IN_PROCESSING,
+	[ENUM_ORDER_STATUS_BACKEND.BOOKING]:
+		ENUM_BOOKING_STATUS_LABEL_BACKEND.BOOKED,
+	[ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS]:
+		ENUM_BOOKING_STATUS_LABEL_BACKEND.IN_PROGRESS,
+	[ENUM_ORDER_STATUS_BACKEND.COMPLETED]:
+		ENUM_BOOKING_STATUS_LABEL_BACKEND.COMPLETE,
+	[ENUM_ORDER_STATUS_BACKEND.CANCELLED]:
+		ENUM_BOOKING_STATUS_LABEL_BACKEND.CANCELLED,
+	[ENUM_ORDER_STATUS_BACKEND.DECLINED]:
+		ENUM_BOOKING_STATUS_LABEL_BACKEND.DECLINED
 };
 
 const SEED: IReconciliationSeedRow[] = [
@@ -39,8 +56,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 1500,
 		plannedCost: 1000,
 		costAccrued: 1100,
-		status: BookingStatus.Completed,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12346",
@@ -49,8 +66,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 1800,
 		plannedCost: 1500,
 		costAccrued: 1500,
-		status: BookingStatus.InProgress,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12347",
@@ -59,8 +76,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 3200,
 		plannedCost: 2500,
 		costAccrued: 2400,
-		status: BookingStatus.Completed,
-		currency: Currency.EUR
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.EUR
 	},
 	{
 		orderNumber: "ORD-12348",
@@ -69,8 +86,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 5000,
 		plannedCost: 4000,
 		costAccrued: 4000,
-		status: BookingStatus.InProgress,
-		currency: Currency.RUB
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.RUB
 	},
 	{
 		orderNumber: "ORD-12349",
@@ -79,8 +96,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 9500,
 		plannedCost: 8000,
 		costAccrued: 8500,
-		status: BookingStatus.InProgress,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12350",
@@ -89,8 +106,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 1200,
 		plannedCost: 800,
 		costAccrued: 750,
-		status: BookingStatus.Completed,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12351",
@@ -99,8 +116,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 24500,
 		plannedCost: 20000,
 		costAccrued: 20500,
-		status: BookingStatus.InProgress,
-		currency: Currency.EUR
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.EUR
 	},
 	{
 		orderNumber: "ORD-12352",
@@ -109,8 +126,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 850,
 		plannedCost: 600,
 		costAccrued: 600,
-		status: BookingStatus.Completed,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12353",
@@ -119,8 +136,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 3500,
 		plannedCost: 2800,
 		costAccrued: 3000,
-		status: BookingStatus.InProgress,
-		currency: Currency.RUB
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.RUB
 	},
 	{
 		orderNumber: "ORD-12354",
@@ -129,8 +146,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 15200,
 		plannedCost: 12000,
 		costAccrued: 11500,
-		status: BookingStatus.Completed,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12355",
@@ -139,8 +156,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 4000,
 		plannedCost: 3500,
 		costAccrued: 3500,
-		status: BookingStatus.InProgress,
-		currency: Currency.EUR
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.EUR
 	},
 	{
 		orderNumber: "ORD-12356",
@@ -149,8 +166,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 1800,
 		plannedCost: 1400,
 		costAccrued: 1450,
-		status: BookingStatus.Completed,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12357",
@@ -159,8 +176,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 7700,
 		plannedCost: 6000,
 		costAccrued: 5800,
-		status: BookingStatus.Completed,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12358",
@@ -169,8 +186,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 11000,
 		plannedCost: 9000,
 		costAccrued: 9200,
-		status: BookingStatus.InProgress,
-		currency: Currency.EUR
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.EUR
 	},
 	{
 		orderNumber: "ORD-12359",
@@ -179,8 +196,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 950,
 		plannedCost: 700,
 		costAccrued: 700,
-		status: BookingStatus.Completed,
-		currency: Currency.RUB
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.RUB
 	},
 	{
 		orderNumber: "ORD-12360",
@@ -189,8 +206,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 6100,
 		plannedCost: 4500,
 		costAccrued: 4600,
-		status: BookingStatus.InProgress,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12361",
@@ -199,8 +216,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 2200,
 		plannedCost: 1800,
 		costAccrued: 1750,
-		status: BookingStatus.Completed,
-		currency: Currency.EUR
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.EUR
 	},
 	{
 		orderNumber: "ORD-12362",
@@ -209,8 +226,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 8200,
 		plannedCost: 7000,
 		costAccrued: 7200,
-		status: BookingStatus.InProgress,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	},
 	{
 		orderNumber: "ORD-12363",
@@ -219,8 +236,8 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 1300,
 		plannedCost: 900,
 		costAccrued: 950,
-		status: BookingStatus.Completed,
-		currency: Currency.RUB
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.RUB
 	},
 	{
 		orderNumber: "ORD-12364",
@@ -229,69 +246,70 @@ const SEED: IReconciliationSeedRow[] = [
 		revenueAccrued: 30500,
 		plannedCost: 24000,
 		costAccrued: 23500,
-		status: BookingStatus.Completed,
-		currency: Currency.USD
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
+		currency: ENUM_CURRENCY_BACKEND.USD
 	}
 ];
 
 const toAmount = (value: number): string => value.toFixed(2);
 
-export const createReconciliationMocks = (): BookingReconciliationRowOutput[] =>
-	SEED.map((row, index) => {
-		const plannedProfit = row.plannedRevenue - row.plannedCost;
-		const revenueSettled = Math.round(row.revenueAccrued * 0.7);
-		const costSettled = Math.round(row.costAccrued * 0.6);
-		const receivable = Math.max(row.revenueAccrued - revenueSettled, 0);
-		const payable = Math.max(row.costAccrued - costSettled, 0);
-		const accrualProfit = row.revenueAccrued - row.costAccrued;
-		const settledProfit = revenueSettled - costSettled;
-		const variance = row.plannedCost - row.costAccrued;
+export const createReconciliationMocks =
+	(): TBookingReconciliationRowOutputBackend[] =>
+		SEED.map((row, index) => {
+			const plannedProfit = row.plannedRevenue - row.plannedCost;
+			const revenueSettled = Math.round(row.revenueAccrued * 0.7);
+			const costSettled = Math.round(row.costAccrued * 0.6);
+			const receivable = Math.max(row.revenueAccrued - revenueSettled, 0);
+			const payable = Math.max(row.costAccrued - costSettled, 0);
+			const accrualProfit = row.revenueAccrued - row.costAccrued;
+			const settledProfit = revenueSettled - costSettled;
+			const variance = row.plannedCost - row.costAccrued;
 
-		return {
-			booking_id: buildReconciliationBookingUuid(index + 1),
-			order_number: row.orderNumber,
-			status: row.status,
-			status_label: STATUS_LABEL[row.status],
-			date: "2025-06-01",
-			end_date: "2025-06-07",
-			created_at: "2025-05-20T10:00:00Z",
-			pax: 2,
-			tour_name: "Sample Tour",
-			tour_type: TourType.Regular,
-			client_name: row.clientName,
-			client_type: BookingClientType.Agency,
-			currency: row.currency,
-			planned_revenue: toAmount(row.plannedRevenue),
-			planned_cost: toAmount(row.plannedCost),
-			planned_profit: toAmount(plannedProfit),
-			revenue_accrued: toAmount(row.revenueAccrued),
-			revenue_settled: toAmount(revenueSettled),
-			receivable: toAmount(receivable),
-			cost_accrued: toAmount(row.costAccrued),
-			cost_settled: toAmount(costSettled),
-			payable: toAmount(payable),
-			accrual_profit: toAmount(accrualProfit),
-			settled_profit: toAmount(settledProfit),
-			variance: toAmount(variance),
-			invoice_id: null,
-			invoice_number: null,
-			files: {
-				voucher: false,
-				invoice_pdf: false,
-				supplier_receipts: 0,
-				client_payment_proofs: 0
-			},
-			supplier_lines: {
-				total: 2,
-				paid: 1,
-				unpaid: 1,
-				unassigned_supplier: 0,
-				unpriced: 0
-			},
-			client_payments: {
-				recorded: 1,
-				confirmed: 1,
-				unconfirmed: 0
-			}
-		};
-	});
+			return {
+				booking_id: buildReconciliationBookingUuid(index + 1),
+				order_number: row.orderNumber,
+				status: row.status,
+				status_label: STATUS_LABEL[row.status],
+				date: "2025-06-01",
+				end_date: "2025-06-07",
+				created_at: "2025-05-20T10:00:00Z",
+				pax: 2,
+				tour_name: "Sample Tour",
+				tour_type: ENUM_TOUR_TYPE_BACKEND.REGULAR,
+				client_name: row.clientName,
+				client_type: ENUM_BOOKING_CLIENT_TYPE_BACKEND.AGENCY,
+				currency: row.currency,
+				planned_revenue: toAmount(row.plannedRevenue),
+				planned_cost: toAmount(row.plannedCost),
+				planned_profit: toAmount(plannedProfit),
+				revenue_accrued: toAmount(row.revenueAccrued),
+				revenue_settled: toAmount(revenueSettled),
+				receivable: toAmount(receivable),
+				cost_accrued: toAmount(row.costAccrued),
+				cost_settled: toAmount(costSettled),
+				payable: toAmount(payable),
+				accrual_profit: toAmount(accrualProfit),
+				settled_profit: toAmount(settledProfit),
+				variance: toAmount(variance),
+				invoice_id: null,
+				invoice_number: null,
+				files: {
+					voucher: false,
+					invoice_pdf: false,
+					supplier_receipts: 0,
+					client_payment_proofs: 0
+				},
+				supplier_lines: {
+					total: 2,
+					paid: 1,
+					unpaid: 1,
+					unassigned_supplier: 0,
+					unpriced: 0
+				},
+				client_payments: {
+					recorded: 1,
+					confirmed: 1,
+					unconfirmed: 0
+				}
+			};
+		});

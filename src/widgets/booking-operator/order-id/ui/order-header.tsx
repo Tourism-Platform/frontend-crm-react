@@ -22,6 +22,8 @@ import {
 
 import { SendInvoice } from "@/features/booking";
 
+import { NEXT_STATUS_BUTTON_KEY } from "../model";
+
 interface IOrderHeaderProps {
 	orderId: string;
 	orderNumber: string;
@@ -29,14 +31,6 @@ interface IOrderHeaderProps {
 	invoiceStatus?: ENUM_INVOICE_STATUS_TYPE;
 	availability?: IBookingEventAvailability[];
 }
-
-const NEXT_STATUS_BUTTON_KEY: Partial<Record<ENUM_ORDER_STATUS_TYPE, string>> =
-	{
-		[ENUM_ORDER_STATUS.NEW]: "buttons.accept",
-		[ENUM_ORDER_STATUS.IN_PROCESSING]: "buttons.confirm",
-		[ENUM_ORDER_STATUS.BOOKING]: "buttons.start",
-		[ENUM_ORDER_STATUS.IN_PROGRESS]: "buttons.complete"
-	};
 
 export const OrderHeader: FC<IOrderHeaderProps> = ({
 	orderId,

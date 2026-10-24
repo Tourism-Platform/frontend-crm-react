@@ -1,18 +1,9 @@
-import type {
-	ActivityEventPubReadOutput,
-	BusEventPubReadOutput,
-	FlightEventPubReadOutput,
-	HousingEventPubReadOutput,
-	HousingRoomTypes,
-	InformationEventPubReadOutput,
-	MultiEventPubOutput,
-	TimeSchema,
-	TrainEventPubReadOutput,
-	TransferEventPubReadOutput,
-	VehicleBodyType
-} from "@/shared/api";
 import { formatSheetDate } from "@/shared/utils";
 
+import type {
+	ENUM_HOUSING_ROOM_TYPES_BACKEND_TYPE,
+	ENUM_VEHICLE_BODY_TYPE_BACKEND_TYPE
+} from "@/entities/supplier/types/supplier-backend-enum.types";
 import {
 	type TEventImageBackend,
 	accommodationAmenityConverter,
@@ -20,6 +11,7 @@ import {
 	mapEventImageToFrontend,
 	vehicleBodyTypeConverter
 } from "@/entities/tour/itinerary";
+import type { TTimeSchemaBackend } from "@/entities/tour/itinerary/types/event-backend.types";
 
 import type {
 	IOptionEventSheet,
@@ -27,16 +19,24 @@ import type {
 	IOptionEventSheetPoint,
 	IOptionEventSheetRoom,
 	IOptionFlightSegment,
+	TActivityEventPubBackend,
+	TBusEventPubBackend,
+	TFlightEventPubBackend,
+	THousingEventPubBackend,
+	TInformationEventPubBackend,
+	TMultiEventPubBackend,
 	TOptionDetailBackend,
-	TOptionEventSheetExtra
+	TOptionEventSheetExtra,
+	TTrainEventPubBackend,
+	TTransferEventPubBackend
 } from "../types";
 
 import { formatLocation } from "./preview-option-location.utils";
 
 type TPubEvent = TOptionDetailBackend["events"][number];
-type TPubDetail = NonNullable<MultiEventPubOutput["details"]>[number];
+type TPubDetail = NonNullable<TMultiEventPubBackend["details"]>[number];
 
-export const formatPubTime = (time?: TimeSchema | null): string => {
+export const formatPubTime = (time?: TTimeSchemaBackend | null): string => {
 	if (!time?.time) return "";
 	const tz = time.timezone ?? 5;
 	const sign = tz >= 0 ? "+" : "";
@@ -45,7 +45,7 @@ export const formatPubTime = (time?: TimeSchema | null): string => {
 
 export const formatJourneyPoint = (point?: {
 	date?: string | null;
-	time?: TimeSchema | null;
+	time?: TTimeSchemaBackend | null;
 	location?: unknown;
 }): IOptionEventSheetPoint => {
 	const place = formatLocation(point?.location) || "—";
@@ -57,15 +57,15 @@ export const formatJourneyPoint = (point?: {
 };
 
 type TSheetCarSource = {
-	typ?: VehicleBodyType | null;
-	body_type?: VehicleBodyType | null;
+	typ?: ENUM_VEHICLE_BODY_TYPE_BACKEND_TYPE | null;
+	body_type?: ENUM_VEHICLE_BODY_TYPE_BACKEND_TYPE | null;
 	pax?: number | null;
 	description?: string | null;
 };
 
 type TSheetRoomSource = {
 	name?: string | null;
-	typ?: HousingRoomTypes | null;
+	typ?: ENUM_HOUSING_ROOM_TYPES_BACKEND_TYPE | null;
 	pax?: number | null;
 	description?: string | null;
 };
@@ -142,7 +142,7 @@ export const mapSheetRoomsFromExpenses = (
 };
 
 const mapTransferSheet = (
-	event: { typ: "transfer" } & TransferEventPubReadOutput
+	event: { typ: "transfer" } & TTransferEventPubBackend
 ): TOptionEventSheetExtra => ({
 	kind: "transfer",
 	pickup: formatJourneyPoint(event.details?.departure ?? undefined),
@@ -155,7 +155,7 @@ const mapTransferSheet = (
 });
 
 const mapHousingSheet = (
-	event: { typ: "housing" } & HousingEventPubReadOutput
+	event: { typ: "housing" } & THousingEventPubBackend
 ): TOptionEventSheetExtra => {
 	const details = event.details;
 	const spec = details?.spec;
@@ -178,7 +178,7 @@ const mapHousingSheet = (
 };
 
 const mapActivitySheet = (
-	event: { typ: "activity" } & ActivityEventPubReadOutput
+	event: { typ: "activity" } & TActivityEventPubBackend
 ): TOptionEventSheetExtra => ({
 	kind: "activity",
 	location: formatLocation(event.details?.spec?.location ?? undefined) || "—",
@@ -187,7 +187,7 @@ const mapActivitySheet = (
 });
 
 const mapInfoSheet = (
-	event: { typ: "ref" } & InformationEventPubReadOutput
+	event: { typ: "ref" } & TInformationEventPubBackend
 ): TOptionEventSheetExtra => {
 	const details = event.details;
 	return {
@@ -207,19 +207,19 @@ const mapHopToSegment = (
 		arrival_location?: unknown;
 		departure_date?: string | null;
 		arrival_date?: string | null;
-		departure_time?: TimeSchema | null;
-		arrival_time?: TimeSchema | null;
+		departure_time?: TTimeSchemaBackend | null;
+		arrival_time?: TTimeSchemaBackend | null;
 		departure_terminal?: string | null;
 		departure_gate?: string | null;
 		departure?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TimeSchema | null;
+			time?: TTimeSchemaBackend | null;
 		} | null;
 		arrival?: {
 			location?: unknown;
 			date?: string | null;
-			time?: TimeSchema | null;
+			time?: TTimeSchemaBackend | null;
 		} | null;
 	},
 	routeLabel: string
@@ -264,7 +264,7 @@ const mapHopToSegment = (
 };
 
 const mapFlightSheet = (
-	event: { typ: "flight" } & FlightEventPubReadOutput,
+	event: { typ: "flight" } & TFlightEventPubBackend,
 	routeLabel: string
 ): TOptionEventSheetExtra => ({
 	kind: "flight",
@@ -276,8 +276,8 @@ const mapFlightSheet = (
 
 const mapTrainBusSheet = (
 	event:
-		| ({ typ: "train" } & TrainEventPubReadOutput)
-		| ({ typ: "bus" } & BusEventPubReadOutput),
+		| ({ typ: "train" } & TTrainEventPubBackend)
+		| ({ typ: "bus" } & TBusEventPubBackend),
 	routeLabel: string
 ): TOptionEventSheetExtra => {
 	const hops =
@@ -297,34 +297,34 @@ const mapSheetExtraFromPub = (
 	switch (typ) {
 		case "transfer":
 			return mapTransferSheet(
-				event as { typ: "transfer" } & TransferEventPubReadOutput
+				event as { typ: "transfer" } & TTransferEventPubBackend
 			);
 		case "housing":
 			return mapHousingSheet(
-				event as { typ: "housing" } & HousingEventPubReadOutput
+				event as { typ: "housing" } & THousingEventPubBackend
 			);
 		case "activity":
 			return mapActivitySheet(
-				event as { typ: "activity" } & ActivityEventPubReadOutput
+				event as { typ: "activity" } & TActivityEventPubBackend
 			);
 		case "flight":
 			return mapFlightSheet(
-				event as { typ: "flight" } & FlightEventPubReadOutput,
+				event as { typ: "flight" } & TFlightEventPubBackend,
 				event.name || ""
 			);
 		case "train":
 			return mapTrainBusSheet(
-				event as { typ: "train" } & TrainEventPubReadOutput,
+				event as { typ: "train" } & TTrainEventPubBackend,
 				event.name || ""
 			);
 		case "bus":
 			return mapTrainBusSheet(
-				event as { typ: "bus" } & BusEventPubReadOutput,
+				event as { typ: "bus" } & TBusEventPubBackend,
 				event.name || ""
 			);
 		case "ref":
 			return mapInfoSheet(
-				event as { typ: "ref" } & InformationEventPubReadOutput
+				event as { typ: "ref" } & TInformationEventPubBackend
 			);
 		default:
 			return { kind: "info", startTime: "", endTime: "" };

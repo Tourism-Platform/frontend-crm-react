@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { Currency } from "@/shared/api";
-import type { FlightDetailsOutput } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	ENUM_FEE_FIELD,
@@ -9,6 +8,7 @@ import {
 	ENUM_FLIGHT_PRICING_FIELD,
 	ENUM_FLIGHT_PRICING_INVOICING,
 	ENUM_FLIGHT_PRICING_TYPE,
+	type TFlightDetailsOutputBackend,
 	type TFlightPricingSchema,
 	createEmptyFeeRow
 } from "../../../types";
@@ -29,11 +29,11 @@ const feeRow = (cost: number, currency: string) => ({
 	[ENUM_FEE_FIELD.CURRENCY]: currency as "USD" | "EUR"
 });
 
-type TFlightPoolSpec = FlightDetailsOutput["pool"][number]["spec"];
+type TFlightPoolSpec = TFlightDetailsOutputBackend["pool"][number]["spec"];
 
 const wholeFlightDetails = (
 	charge: Extract<TFlightPoolSpec, { pricing: "whole" }>["charge"]
-): FlightDetailsOutput => ({
+): TFlightDetailsOutputBackend => ({
 	plan: {},
 	pool: [
 		{
@@ -71,12 +71,12 @@ describe("mapFlightPricingFromBackend", () => {
 			mapFlightPricingFromBackend(
 				wholeFlightDetails({
 					typ: "fixed",
-					cost: { val: 200, currency: Currency.USD },
+					cost: { val: 200, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: null,
 					extra_costs: [],
 					markup: {
 						typ: "fixed",
-						cost: { val: 25, currency: Currency.USD }
+						cost: { val: 25, currency: ENUM_CURRENCY_BACKEND.USD }
 					}
 				})
 			)
@@ -95,7 +95,8 @@ describe("mapFlightPricingToBackend", () => {
 				basePricing({
 					[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE]: 200,
 					[ENUM_FLIGHT_PRICING_FIELD.FEES]: [feeRow(10, "USD")],
-					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: Currency.USD,
+					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.USD,
 					[ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_FLIGHT_MARKUP_TYP.FIXED,
@@ -109,12 +110,12 @@ describe("mapFlightPricingToBackend", () => {
 				{
 					name: null,
 					description: null,
-					cost: { val: 10, currency: Currency.USD }
+					cost: { val: 10, currency: ENUM_CURRENCY_BACKEND.USD }
 				}
 			],
 			markup: {
 				typ: "fixed",
-				cost: { val: 25, currency: Currency.USD }
+				cost: { val: 25, currency: ENUM_CURRENCY_BACKEND.USD }
 			}
 		});
 	});
@@ -127,7 +128,8 @@ describe("mapFlightPricingToBackend", () => {
 						ENUM_FLIGHT_PRICING_TYPE.PER_PERSON,
 					[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE]: 90,
 					[ENUM_FLIGHT_PRICING_FIELD.FEES]: [feeRow(3, "EUR")],
-					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: Currency.EUR,
+					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.EUR,
 					[ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_FLIGHT_MARKUP_TYP.PERCENTAGE,
@@ -146,7 +148,8 @@ describe("mapFlightPricingToBackend", () => {
 			mapFlightPricingToBackend(
 				basePricing({
 					[ENUM_FLIGHT_PRICING_FIELD.TOTAL_PRICE]: 200,
-					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]: Currency.USD,
+					[ENUM_FLIGHT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.USD,
 					[ENUM_FLIGHT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_FLIGHT_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_FLIGHT_MARKUP_TYP.FIXED,
@@ -156,11 +159,11 @@ describe("mapFlightPricingToBackend", () => {
 			).charge
 		).toEqual({
 			typ: "fixed",
-			cost: { val: 200, currency: Currency.USD },
+			cost: { val: 200, currency: ENUM_CURRENCY_BACKEND.USD },
 			fees: null,
 			markup: {
 				typ: "fixed",
-				cost: { val: 25, currency: Currency.USD }
+				cost: { val: 25, currency: ENUM_CURRENCY_BACKEND.USD }
 			}
 		});
 	});

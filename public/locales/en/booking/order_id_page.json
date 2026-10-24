@@ -153,11 +153,7 @@
 			"label_items": "items",
 			"type": "Type",
 			"detail": "Detail",
-			"items": "Items",
-			"genders": {
-				"male": "Male",
-				"female": "Female"
-			}
+			"items": "Items"
 		}
 	}
 }

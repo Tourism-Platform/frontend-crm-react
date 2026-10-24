@@ -1,15 +1,10 @@
-import type { HousingDetailsOutput } from "@/shared/api";
-
+import type { THousingDetailsOutputBackend } from "../../../types";
 import {
 	getPoolMember,
 	isProductPoolMember
 } from "../common/event-pool.helpers";
 
-/**
- * Contract 6: a stay is product-linked when the selected (or first) pool
- * member has `supply.source === "product"`.
- */
 export const isInheritedHousingDetails = (
-	details: HousingDetailsOutput | null | undefined,
+	details: THousingDetailsOutputBackend | null | undefined,
 	supplyId?: string | null
 ): boolean => isProductPoolMember(getPoolMember(details, supplyId));

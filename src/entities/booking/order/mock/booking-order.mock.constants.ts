@@ -1,15 +1,14 @@
-import {
-	Currency,
-	type OrderAgencyInfo,
-	type OrderTourInfo,
-	type OrderUserInfo,
-	TourType
-} from "@/shared/api";
-
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import { ENUM_TOUR_TYPE_BACKEND } from "@/entities/tour/tour/types/tour-backend-enum.types";
 import { ACCOUNT_MOCK } from "@/entities/user/account/mock/account.mock";
 import { AGENCY_BUSINESS_MOCK } from "@/entities/user/agency/mock/agency-business.mock";
 
 import { ORDER_TOUR_ID_FALLBACK } from "../constants/order-tour-id.constants";
+import type {
+	TOrderAgencyInfoBackend,
+	TOrderTourInfoBackend,
+	TOrderUserInfoBackend
+} from "../types";
 
 export const MOCK_OPERATOR_ID = "00000000-0000-4000-8000-000000000003";
 export const MOCK_TOUR_OPTION_ID = "00000000-0000-4000-8000-000000000004";
@@ -17,7 +16,7 @@ export const MOCK_AGENCY_ID = AGENCY_BUSINESS_MOCK.agency_id;
 export const MOCK_USER_ID = ACCOUNT_MOCK.user_id;
 export const MOCK_TOUR_ID = ORDER_TOUR_ID_FALLBACK;
 
-export const MOCK_ORDER_AGENCY_TEMPLATE: OrderAgencyInfo = {
+export const MOCK_ORDER_AGENCY_TEMPLATE: TOrderAgencyInfoBackend = {
 	id: MOCK_AGENCY_ID,
 	name: AGENCY_BUSINESS_MOCK.business_name || "",
 	business_name: AGENCY_BUSINESS_MOCK.business_name,
@@ -42,7 +41,7 @@ export const MOCK_EVENT_IDS = {
 	activity: "e1000003-0000-4000-8000-000000000003"
 } as const;
 
-export const MOCK_ORDER_USER_TEMPLATE: OrderUserInfo = {
+export const MOCK_ORDER_USER_TEMPLATE: TOrderUserInfoBackend = {
 	id: MOCK_USER_ID,
 	email: "john.doe@example.com",
 	first_name: ACCOUNT_MOCK.first_name,
@@ -55,8 +54,8 @@ export const MOCK_BOOKING_DEFAULTS = {
 	user_id: MOCK_USER_ID,
 	operator_id: MOCK_OPERATOR_ID,
 	tour_option_id: MOCK_TOUR_OPTION_ID,
-	paid_currency: Currency.USD,
-	tour_currency: Currency.USD,
+	paid_currency: ENUM_CURRENCY_BACKEND.USD,
+	tour_currency: ENUM_CURRENCY_BACKEND.USD,
 	snapshot_id: null,
 	fx_rate_id: null,
 	fx_rate_applied: null,
@@ -64,10 +63,10 @@ export const MOCK_BOOKING_DEFAULTS = {
 	voucher_path: null
 } as const;
 
-export const MOCK_TOUR_INFO_TEMPLATE: OrderTourInfo = {
+export const MOCK_TOUR_INFO_TEMPLATE: TOrderTourInfoBackend = {
 	id: MOCK_TOUR_OPTION_ID,
 	title: "Uzbekistan Cultural Tour",
-	typ: TourType.Regular,
+	typ: ENUM_TOUR_TYPE_BACKEND.REGULAR,
 	days: 8,
 	nights: 7,
 	duration_hours: null,

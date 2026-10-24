@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { Check, Clock, Copy, DollarSign, Star, ThumbsUp } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { type FC, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -27,21 +27,13 @@ import type {
 	IPreviewTourGeneral
 } from "@/entities/tour/preview-tour";
 
+import { CONFIRMATION_TIMELINE } from "../../model/config";
+
 interface IStep3Props {
 	submittedBooking?: TSubmittedBooking | null;
 	tourData?: IPreviewTourGeneral;
 	options: IPreviewOptionCard[];
 }
-
-const TIMELINE_KEYS = [
-	"request_submitted",
-	"provider_review",
-	"booking_confirmed",
-	"payment_info",
-	"voucher_time"
-] as const;
-
-const TIMELINE_ICONS = [Check, Clock, ThumbsUp, DollarSign, Star];
 
 export const Step3Confirmation: FC<IStep3Props> = ({
 	submittedBooking,
@@ -123,41 +115,42 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 					</div>
 
 					<div className="relative flex w-full flex-col gap-6 before:absolute before:top-4 before:bottom-4 before:left-3.5 before:w-px before:bg-border">
-						{TIMELINE_KEYS.map((key, index) => {
-							const Icon = TIMELINE_ICONS[index];
-							const isActive = index === 0;
-							const isPending = index === 1;
+						{CONFIRMATION_TIMELINE.map(
+							({ titleKey, descKey, icon: Icon }, index) => {
+								const isActive = index === 0;
+								const isPending = index === 1;
 
-							return (
-								<div
-									key={key}
-									className="relative z-10 flex gap-4"
-								>
+								return (
 									<div
-										className={cn(
-											"flex size-7 shrink-0 items-center justify-center rounded-full border bg-card",
-											isActive &&
-												"border-emerald-500 text-emerald-500",
-											isPending &&
-												"border-emerald-500/50 text-emerald-500/70",
-											!isActive &&
-												!isPending &&
-												"border-border text-muted-foreground"
-										)}
+										key={titleKey}
+										className="relative z-10 flex gap-4"
 									>
-										<Icon className="size-3.5" />
+										<div
+											className={cn(
+												"flex size-7 shrink-0 items-center justify-center rounded-full border bg-card",
+												isActive &&
+													"border-emerald-500 text-emerald-500",
+												isPending &&
+													"border-emerald-500/50 text-emerald-500/70",
+												!isActive &&
+													!isPending &&
+													"border-border text-muted-foreground"
+											)}
+										>
+											<Icon className="size-3.5" />
+										</div>
+										<div className="flex flex-col gap-1 pt-0.5">
+											<p className="text-sm font-semibold">
+												{t(titleKey)}
+											</p>
+											<p className="text-xs text-muted-foreground">
+												{t(descKey)}
+											</p>
+										</div>
 									</div>
-									<div className="flex flex-col gap-1 pt-0.5">
-										<p className="text-sm font-semibold">
-											{t(`step_3.timeline.${key}.title`)}
-										</p>
-										<p className="text-xs text-muted-foreground">
-											{t(`step_3.timeline.${key}.desc`)}
-										</p>
-									</div>
-								</div>
-							);
-						})}
+								);
+							}
+						)}
 					</div>
 
 					<div className="flex w-full flex-col gap-3 rounded-xl bg-muted p-6">

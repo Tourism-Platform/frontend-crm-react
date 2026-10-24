@@ -1,9 +1,3 @@
-import type {
-	SupplierCreateSchema,
-	SupplierModel,
-	SupplierProductImageModel,
-	SupplierUpdateSchema
-} from "@/shared/api";
 import {
 	createMockIdSequence,
 	matchesQuery,
@@ -15,7 +9,11 @@ import { MOCK_TOUR_OPERATOR_ID } from "@/entities/tour/tour/mock/tour.mock";
 
 import type {
 	TCreateProductBodyBackend,
+	TSupplierBackend,
+	TSupplierCreateBackend,
+	TSupplierProductImageBackend,
 	TSupplierProductReadBackend,
+	TSupplierUpdateSchemaBackend,
 	TSupplierVariantWriteBackend,
 	TSwitchProductPricingBodyBackend,
 	TUpdateProductBodyBackend
@@ -68,7 +66,7 @@ const createProductStore = () =>
 		])
 	);
 const createProductImagesStore = () =>
-	new Map<string, SupplierProductImageModel[]>(
+	new Map<string, TSupplierProductImageBackend[]>(
 		SUPPLIER_PRODUCTS_MOCK.map((product) => [
 			product.id,
 			product.image_paths.map((imagePath) => ({
@@ -139,8 +137,10 @@ export const getSupplier = (supplierId: string) => {
 	return supplier && !supplier.deleted_at ? supplier : undefined;
 };
 
-export const createSupplier = (body: SupplierCreateSchema): SupplierModel => {
-	const supplier: SupplierModel = {
+export const createSupplier = (
+	body: TSupplierCreateBackend
+): TSupplierBackend => {
+	const supplier: TSupplierBackend = {
 		id: supplierIds.next(),
 		operator_id: MOCK_TOUR_OPERATOR_ID,
 		brand_name: body.brand_name,
@@ -157,7 +157,7 @@ export const createSupplier = (body: SupplierCreateSchema): SupplierModel => {
 
 export const updateSupplier = (
 	supplierId: string,
-	body: SupplierUpdateSchema
+	body: TSupplierUpdateSchemaBackend
 ) => {
 	const supplier = getSupplier(supplierId);
 	if (!supplier) return undefined;

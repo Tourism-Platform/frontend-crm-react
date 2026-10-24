@@ -1,7 +1,10 @@
-import { LanguageCode } from "@/shared/api";
-import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
-import { languageCodeMapper } from "@/shared/converters";
+import {
+	languageCodeMapper,
+	mapLocaleToLanguageCode
+} from "@/shared/converters";
 import type { IPaginationResponse } from "@/shared/types";
+
+import { type ENUM_LANGUAGES_BACKEND_TYPE } from "@/entities/tour/landing/types/languages.types";
 
 import { languageMapper } from "../../landing";
 import { tourCategoriesMapper, tourTypeMapper } from "../../tour";
@@ -38,7 +41,7 @@ const mapDurationFiltersToQuery = (
 	};
 };
 
-const mapTourLanguageBadge = (code: LanguageCode): string =>
+const mapTourLanguageBadge = (code: ENUM_LANGUAGES_BACKEND_TYPE): string =>
 	(languageCodeMapper.from(code) ?? code).toUpperCase();
 
 export const mapCatalogTourToFrontend = (
@@ -88,9 +91,9 @@ export const mapCatalogListFiltersToFrontend = (
 });
 
 export const mapCatalogFiltersQueryToBackend = (
-	language: ENUM_LANGUAGES_TYPE
+	locale: string
 ): TCatalogFiltersQuery => ({
-	read_lang: languageCodeMapper.to(language) ?? LanguageCode.En
+	read_lang: mapLocaleToLanguageCode(locale)
 });
 
 export const mapPopularToursPaginatedToFrontend = (
@@ -119,7 +122,9 @@ export const mapCatalogTourFiltersToPublicCatalogQuery = (
 		...(!!filters?.filters?.language?.length && {
 			tour_lang: languageMapper.toMany(filters.filters.language)
 		}),
-		...(filters?.readLang && { read_lang: filters.readLang }),
+		...(filters?.readLang && {
+			read_lang: mapLocaleToLanguageCode(filters.readLang)
+		}),
 		...mapDurationFiltersToQuery(filters?.filters?.duration),
 		...(!!filters?.search?.trim().length && { q: filters.search })
 	};

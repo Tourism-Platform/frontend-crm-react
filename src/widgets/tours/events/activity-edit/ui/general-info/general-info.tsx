@@ -11,7 +11,7 @@ import {
 } from "@/entities/geo";
 import { ENUM_SUPPLIER_TYPE } from "@/entities/supplier";
 import {
-	ENUM_EVENT_BACKEND,
+	ENUM_EVENT_KIND,
 	ENUM_FORM_ACTIVITY,
 	ENUM_FORM_EVENT_PRODUCT
 } from "@/entities/tour";
@@ -82,7 +82,7 @@ const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 					form={form}
 					variant={poolVariant}
 					onSelect={onPoolSelect}
-					eventTyp={ENUM_EVENT_BACKEND.ACTIVITY}
+					eventKind={ENUM_EVENT_KIND.ACTIVITY}
 					supplierTyp={ENUM_SUPPLIER_TYPE.ACTIVITY}
 				/>
 				<EventProductLinkControls
@@ -93,7 +93,7 @@ const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 					supplyId={supplyId}
 				/>
 				<EventOverrideControls
-					eventTyp={ENUM_EVENT_BACKEND.ACTIVITY}
+					eventKind={ENUM_EVENT_KIND.ACTIVITY}
 					isInherited={isInherited}
 					hasOverride={Boolean(hasOverride)}
 					supplyId={supplyId}

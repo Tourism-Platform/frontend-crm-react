@@ -81,8 +81,7 @@ export const LibraryActivityEditPage: FC = () => {
 		data: isCreate
 			? undefined
 			: (libraryEvent as TActivityEditSchema | undefined),
-		recordKey: `${libraryId}:${supplyId ?? "main"}`,
-		currentDetails: libraryTemplate?.event.details
+		recordKey: `${libraryId}:${supplyId ?? "main"}`
 	});
 
 	useEffect(() => {

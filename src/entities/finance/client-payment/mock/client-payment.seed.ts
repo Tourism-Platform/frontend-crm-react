@@ -1,8 +1,11 @@
-import { ClientPaymentStatus } from "../../../../shared/api/generated/Api";
+import {
+	ENUM_PAYMENT_STATUS_BACKEND,
+	type ENUM_PAYMENT_STATUS_BACKEND_TYPE
+} from "../types";
 
 export type TClientPaymentSeedItem = {
 	amount: number;
-	status: ClientPaymentStatus;
+	status: ENUM_PAYMENT_STATUS_BACKEND_TYPE;
 	note?: string;
 	attachment_count: number;
 	created_at: string;
@@ -13,7 +16,7 @@ export type TClientPaymentSeedItem = {
 export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	{
 		amount: 1500,
-		status: ClientPaymentStatus.Confirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED,
 		note: "First payment",
 		attachment_count: 1,
 		created_at: "2024-12-01T10:00:00Z",
@@ -22,7 +25,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 2300,
-		status: ClientPaymentStatus.NotConfirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.NOT_ASSIGNED,
 		note: "Pending payment",
 		attachment_count: 0,
 		created_at: "2024-12-05T14:30:00Z",
@@ -31,7 +34,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 750,
-		status: ClientPaymentStatus.Confirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED,
 		attachment_count: 0,
 		created_at: "2024-12-10T09:15:00Z",
 		amount_uzs: 9_600_000,
@@ -39,7 +42,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 3100,
-		status: ClientPaymentStatus.NotConfirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.NOT_ASSIGNED,
 		attachment_count: 0,
 		created_at: "2024-12-15T16:45:00Z",
 		amount_uzs: 39_680_000,
@@ -47,7 +50,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 1250,
-		status: ClientPaymentStatus.Confirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED,
 		attachment_count: 0,
 		created_at: "2024-12-20T11:20:00Z",
 		amount_uzs: 16_000_000,
@@ -55,7 +58,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 500,
-		status: ClientPaymentStatus.NotConfirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.NOT_ASSIGNED,
 		note: "Partially paid",
 		attachment_count: 0,
 		created_at: "2024-12-21T09:00:00Z",
@@ -64,7 +67,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 4200,
-		status: ClientPaymentStatus.Confirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED,
 		attachment_count: 0,
 		created_at: "2024-12-22T14:15:00Z",
 		amount_uzs: 53_760_000,
@@ -72,7 +75,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 1100,
-		status: ClientPaymentStatus.NotConfirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.NOT_ASSIGNED,
 		note: "Awaiting confirmation",
 		attachment_count: 0,
 		created_at: "2024-12-23T11:45:00Z",
@@ -81,7 +84,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 2750,
-		status: ClientPaymentStatus.Confirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED,
 		attachment_count: 0,
 		created_at: "2024-12-24T16:30:00Z",
 		amount_uzs: 35_200_000,
@@ -89,7 +92,7 @@ export const CLIENT_PAYMENT_SEED: readonly TClientPaymentSeedItem[] = [
 	},
 	{
 		amount: 3500,
-		status: ClientPaymentStatus.NotConfirmed,
+		status: ENUM_PAYMENT_STATUS_BACKEND.NOT_ASSIGNED,
 		attachment_count: 0,
 		created_at: "2024-12-25T10:00:00Z",
 		amount_uzs: 44_800_000,

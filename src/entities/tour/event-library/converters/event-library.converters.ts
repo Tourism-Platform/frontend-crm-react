@@ -1,6 +1,9 @@
-import { TranslationState } from "@/shared/api";
-import type { ENUM_LANGUAGES_TYPE, TLibraryPath } from "@/shared/config";
-import { ENUM_PATH, buildRoute } from "@/shared/config";
+import {
+	type ENUM_LANGUAGES_TYPE,
+	ENUM_PATH,
+	type TLibraryPath,
+	buildRoute
+} from "@/shared/config";
 import { type IPaginationResponse } from "@/shared/types";
 
 import {
@@ -14,21 +17,21 @@ import {
 	type TTourEvent,
 	type TTourEventBackendResponce,
 	type TTourEventUpdate,
-	backendEventTypeMapper,
-	mapEventDetailsReadToWrite,
-	mapEventTypeToBackendTyps,
-	mapEventUpdateToBackend
-} from "@/entities/tour/itinerary";
-import {
+	eventBoardTypeMapper,
+	eventKindMapper,
 	getMainPoolMember,
 	mapAccommodationEventToForm,
 	mapActivityEventToForm,
+	mapEventDetailsReadToWrite,
+	mapEventTypeToBackendTyps,
+	mapEventUpdateToBackend,
 	mapFlyEventToForm,
 	mapGuideEventToForm,
 	mapInfoEventToForm,
 	mapSupplementaryEventToForm,
 	mapTransferEventToForm
-} from "@/entities/tour/itinerary/converters/event";
+} from "@/entities/tour/itinerary";
+import { ENUM_TRANSLATION_STATE_BACKEND } from "@/entities/tour/itinerary/types/itinerary-backend-enum.types";
 
 import type {
 	IEventLibraryFilters,
@@ -136,7 +139,7 @@ export const mapEventLibraryItemToFrontend = (
 	data: TEventLibraryItemBackend
 ): IEventLibraryItem => {
 	const eventType =
-		backendEventTypeMapper.to(data.event?.typ as ENUM_EVENT_BACKEND_TYPE) ??
+		eventBoardTypeMapper.to(eventKindMapper.from(data.event?.typ)) ??
 		ENUM_EVENT.TRANSPORTATION;
 
 	return {
@@ -150,10 +153,6 @@ export const mapEventLibraryItemToFrontend = (
 };
 
 /** Cache key of the infinite list: one merged entry per status + search. */
-export const getEventLibraryFilterKey = (
-	filters: Pick<IEventLibraryFilters, "status" | "search">
-): string => `${filters.status.join(",")}/${filters.search?.trim() ?? ""}`;
-
 const getFilterBackendTyps = (filters?: IEventLibraryFilters) =>
 	(filters?.status ?? []).flatMap(mapEventTypeToBackendTyps);
 
@@ -219,7 +218,7 @@ const adaptLibraryEventToTourResponse = (
 ): TTourEventBackendResponce => ({
 	id: backend.id,
 	tour_option_id: null,
-	translation: TranslationState.Source,
+	translation: ENUM_TRANSLATION_STATE_BACKEND.SOURCE,
 	event: {
 		...backend.event,
 		day: 1,

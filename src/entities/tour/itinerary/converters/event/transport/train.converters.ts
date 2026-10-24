@@ -1,27 +1,24 @@
-import { LanguageCode } from "@/shared/api";
-import type {
-	Schedule,
-	TrainDetailsWrite,
-	TrainInlineSupplyNew
-} from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
-import { ENUM_EVENT_BACKEND } from "../../../types";
-import type {
-	TEventDetailsBackend,
-	TFlightEditSchema,
-	TTourEventBackendResponce,
-	TTourEventUpdateBackend,
-	TTrainRouteSegment,
-	TTrainSingleEventBackend
-} from "../../../types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
 import {
+	ENUM_EVENT_BACKEND,
 	ENUM_FLIGHT_TRANSPORT_TYPE,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_TRAIN,
-	ENUM_HOUSING_SOURCE
+	ENUM_HOUSING_SOURCE,
+	type TEventDetailsBackend,
+	type TFlightEditSchema,
+	type TScheduleBackend,
+	type TTourEventBackendResponce,
+	type TTourEventUpdateBackend,
+	type TTrainDetailsWriteBackend,
+	type TTrainInlineSupplyNewBackend,
+	type TTrainRouteSegment,
+	type TTrainSingleEventBackend
 } from "../../../types";
 import { mapInlinePoolWrite } from "../common/details-read-to-write.converters";
 import { getPoolMember } from "../common/event-pool.helpers";
@@ -65,12 +62,12 @@ const assertTrainEvent = (
 
 /**
  * Contract 3.1: rail legs carry no hours — the event-level `plan`
- * (Schedule) states them, landing on the first segment's departure and the
+ * (TScheduleBackend) states them, landing on the first segment's departure and the
  * last segment's arrival.
  */
 const applyPlanToTrainRoute = (
 	route: TTrainRouteSegment[],
-	plan: Schedule | null | undefined
+	plan: TScheduleBackend | null | undefined
 ): TTrainRouteSegment[] => {
 	if (!route.length || !plan) {
 		return route;
@@ -93,7 +90,7 @@ const applyPlanToTrainRoute = (
 
 const mapSchedulePlanToBackend = (
 	route: TTrainRouteSegment[] | undefined
-): Schedule => {
+): TScheduleBackend => {
 	const first = route?.[0];
 	const last = route?.length ? route[route.length - 1] : undefined;
 
@@ -169,7 +166,8 @@ export const mapTrainFormToUpdate = (
 	language?: ENUM_LANGUAGES_TYPE,
 	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
-	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+	const lang =
+		languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
 	const g = frontend.general;
 	const trainRoute = g?.route?.filter(
@@ -202,13 +200,13 @@ export const mapTrainFormToUpdate = (
 	// `per_fare` spec, which carries no event-level charge. With neither
 	// legs nor charge, `supply` is omitted so the backend keeps the current
 	// one (a full replace would wipe it).
-	const spec: TrainInlineSupplyNew["spec"] | undefined = charge
+	const spec: TTrainInlineSupplyNewBackend["spec"] | undefined = charge
 		? { pricing: "whole", ...(legs && { legs }), charge }
 		: legs
 			? { pricing: "per_fare", legs }
 			: undefined;
 
-	const details: TrainDetailsWrite = {
+	const details: TTrainDetailsWriteBackend = {
 		plan,
 		...(spec && {
 			pool: mapInlinePoolWrite(
@@ -216,7 +214,7 @@ export const mapTrainFormToUpdate = (
 				currentDetails,
 				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
 				{ source: "inline", spec }
-			) as TrainDetailsWrite["pool"]
+			) as TTrainDetailsWriteBackend["pool"]
 		})
 	};
 

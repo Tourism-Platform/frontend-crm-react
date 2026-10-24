@@ -49,5 +49,3 @@ export const TOUR_OPTION_FORM_SCHEMA = z
 			});
 		}
 	});
-
-export type TTourOptionFormSchema = z.infer<typeof TOUR_OPTION_FORM_SCHEMA>;

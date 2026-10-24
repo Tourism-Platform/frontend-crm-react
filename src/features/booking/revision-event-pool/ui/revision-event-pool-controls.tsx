@@ -5,10 +5,7 @@ import { toast } from "sonner";
 import { Badge, Button } from "@/shared/ui";
 
 import type { IEventPoolMemberSummary } from "@/entities/tour";
-import {
-	type ENUM_EVENT_BACKEND_TYPE,
-	mapEmptyPoolMemberNew
-} from "@/entities/tour";
+import { type ENUM_EVENT_KIND_TYPE } from "@/entities/tour";
 
 import { resolvePoolErrorMessage } from "@/features/tours/manage-event-pool";
 
@@ -18,7 +15,7 @@ interface IRevisionEventPoolControlsProps {
 	bookingId: string;
 	eventId: string;
 	optionIndex?: number | null;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	pool?: IEventPoolMemberSummary[];
 }
 
@@ -26,7 +23,7 @@ export const RevisionEventPoolControls: FC<IRevisionEventPoolControlsProps> = ({
 	bookingId,
 	eventId,
 	optionIndex,
-	eventTyp,
+	eventKind,
 	pool = []
 }) => {
 	const { t } = useTranslation("common_events");
@@ -44,7 +41,7 @@ export const RevisionEventPoolControls: FC<IRevisionEventPoolControlsProps> = ({
 	const handleAdd = async () => {
 		setIsAdding(true);
 		try {
-			await add(mapEmptyPoolMemberNew(eventTyp));
+			await add({ kind: "empty", eventKind });
 			toast.success(t("pool.toasts.add.success"));
 		} catch (error) {
 			toast.error(

@@ -9,7 +9,7 @@ import {
 	mapPackageToListItem,
 	mapPackageUpdateToBackend
 } from "../converters/package.converters";
-import type { TPackageEditSchema } from "../schema/package.schema";
+import type { TPackageEditSchema } from "../types";
 import type {
 	ITourPackage,
 	ITourPackageListItem,

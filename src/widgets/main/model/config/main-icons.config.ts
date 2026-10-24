@@ -11,6 +11,7 @@ import {
 	Globe,
 	Hotel,
 	Languages,
+	type LucideIcon,
 	Mail,
 	MapPin,
 	MessageCircle,
@@ -21,6 +22,7 @@ import {
 	ShieldCheck,
 	StickyNote,
 	Timer,
+	Truck,
 	Users,
 	Utensils
 } from "lucide-react";
@@ -35,6 +37,13 @@ import type {
 	IRoadmapRegionCityItem,
 	ISupplierFeatureItem
 } from "../types/main-config.types";
+import type { TAudienceTabId } from "../types/main-i18n.types";
+
+export const AUDIENCE_TAB_ICONS: Record<TAudienceTabId, LucideIcon> = {
+	operator: Building2,
+	agency: Users,
+	supplier: Truck
+};
 
 export const TRUST_ITEMS_LIST: IMainIconItem[] = [
 	{ name: "central-asia", icon: MapPin },

@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { LanguageCode } from "@/shared/api";
 import { ENUM_LANGUAGES } from "@/shared/config";
+
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 
 import { ENUM_HOTEL_AMENITY } from "../../types";
 
@@ -37,7 +38,7 @@ describe("mapHotelProductGeneralToCreate", () => {
 			lat: 41.311,
 			long: 69.279,
 			city: "Tashkent",
-			lang: LanguageCode.En
+			lang: ENUM_LANGUAGES_BACKEND.ENGLISH
 		});
 		expect(body.details.pricing).toBe("per_room");
 		expect(body.details.name).toBe("Hyatt Regency Tashkent");
@@ -50,7 +51,7 @@ describe("mapGeneralFormToDetailsBackend", () => {
 		const body = mapGeneralFormToDetailsBackend(
 			{ ...formValues, location: null },
 			null,
-			LanguageCode.En
+			ENUM_LANGUAGES_BACKEND.ENGLISH
 		);
 
 		expect(body.location).toBeNull();

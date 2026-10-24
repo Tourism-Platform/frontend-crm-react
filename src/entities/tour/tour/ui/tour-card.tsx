@@ -22,19 +22,15 @@ import {
 } from "@/shared/ui";
 
 import { TOUR_CATEGORY_LABELS, TOUR_TYPE_LABELS } from "../config";
-import { TOUR_STATUS_LABELS, TOUR_STATUS_VARIANTS } from "../constants";
-import type { ENUM_TOUR_STATUS_TYPE, ITourCard } from "../types";
-import { ENUM_TOUR_STATUS } from "../types";
+import {
+	TOUR_STATUS_LABELS,
+	TOUR_STATUS_OVERLAY_CLASS,
+	TOUR_STATUS_VARIANTS
+} from "../constants";
+import type { ITourCard } from "../types";
 
 const VISIBLE_CATEGORIES = 2;
 const VISIBLE_LANGUAGES = 5;
-
-const STATUS_OVERLAY_CLASS: Record<ENUM_TOUR_STATUS_TYPE, string> = {
-	[ENUM_TOUR_STATUS.PUBLISHED]: "bg-emerald-600 text-white",
-	[ENUM_TOUR_STATUS.DRAFT]: "bg-sky-600 text-white",
-	[ENUM_TOUR_STATUS.ARCHIVED]: "bg-amber-600 text-white",
-	[ENUM_TOUR_STATUS.ALL]: "bg-foreground text-background"
-};
 
 interface ITourCardProps {
 	data: ITourCard;
@@ -140,7 +136,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 						variant={TOUR_STATUS_VARIANTS[card.status]}
 						className={cn(
 							"border-0 shadow-sm",
-							STATUS_OVERLAY_CLASS[card.status]
+							TOUR_STATUS_OVERLAY_CLASS[card.status]
 						)}
 					>
 						{t(TOUR_STATUS_LABELS[card.status], { ns: "options" })}

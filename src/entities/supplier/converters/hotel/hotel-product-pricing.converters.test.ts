@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency } from "@/shared/api/generated/Api";
-
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	ENUM_HOTEL_PRICING,
@@ -108,7 +107,7 @@ describe("mapHotelEditFormToPricingSwitch", () => {
 			stayRate: {
 				base: {
 					typ: "fixed",
-					cost: { val: 400, currency: Currency.USD },
+					cost: { val: 400, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: null,
 					extra_costs: [],
 					markup: null
@@ -126,7 +125,7 @@ describe("mapHotelEditFormToPricingSwitch", () => {
 				stayRate: {
 					base: {
 						typ: "fixed",
-						cost: { val: 400, currency: Currency.USD },
+						cost: { val: 400, currency: ENUM_CURRENCY_BACKEND.USD },
 						fees: null,
 						extra_costs: [],
 						markup: null

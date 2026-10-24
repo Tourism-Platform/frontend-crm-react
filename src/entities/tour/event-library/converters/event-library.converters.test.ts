@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 
-import { EventTypes } from "@/shared/api";
-
 import { ENUM_EVENT } from "@/entities/tour/itinerary";
+import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary/types/event-backend-enum.types";
 
 import type { IEventLibraryFilters } from "../types";
 
@@ -34,7 +33,7 @@ describe("mapEventLibraryFiltersToBackend", () => {
 			)
 		).toEqual({
 			limit: 10,
-			typ: [EventTypes.Transfer]
+			typ: [ENUM_EVENT_BACKEND.TRANSFER]
 		});
 	});
 
@@ -45,7 +44,11 @@ describe("mapEventLibraryFiltersToBackend", () => {
 			)
 		).toEqual({
 			limit: 10,
-			typ: [EventTypes.Flight, EventTypes.Train, EventTypes.Bus]
+			typ: [
+				ENUM_EVENT_BACKEND.FLIGHT,
+				ENUM_EVENT_BACKEND.TRAIN,
+				ENUM_EVENT_BACKEND.BUS
+			]
 		});
 	});
 
@@ -59,10 +62,10 @@ describe("mapEventLibraryFiltersToBackend", () => {
 		).toEqual({
 			limit: 10,
 			typ: [
-				EventTypes.Flight,
-				EventTypes.Train,
-				EventTypes.Bus,
-				EventTypes.Activity
+				ENUM_EVENT_BACKEND.FLIGHT,
+				ENUM_EVENT_BACKEND.TRAIN,
+				ENUM_EVENT_BACKEND.BUS,
+				ENUM_EVENT_BACKEND.ACTIVITY
 			]
 		});
 	});

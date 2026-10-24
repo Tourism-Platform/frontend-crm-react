@@ -1,4 +1,6 @@
 import type {
+	ClassicSwiftDetails,
+	CustomDetails,
 	OPERATOR_PATHS,
 	OperatorFinancialSettingsRead,
 	OperatorFinancialSettingsUpdate
@@ -9,3 +11,5 @@ export type TOperatorFinanceInfoBackendUpdate = OperatorFinancialSettingsUpdate;
 
 export type TOperatorFinanceInfoBackendResponse =
 	typeof OPERATOR_PATHS.getOperatorFinancials._types.response;
+export type TClassicSwiftDetailsBackend = ClassicSwiftDetails;
+export type TCustomDetailsBackend = CustomDetails;

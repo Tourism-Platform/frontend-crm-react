@@ -3,7 +3,7 @@ import { useWatch } from "react-hook-form";
 
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
 import {
-	type ENUM_EVENT_BACKEND_TYPE,
+	type ENUM_EVENT_KIND_TYPE,
 	ENUM_FORM_EVENT_PRODUCT,
 	type TAddPoolMemberIntent
 } from "@/entities/tour";
@@ -18,7 +18,7 @@ import { EventPoolList } from "./event-pool-list";
 interface IEventPoolControlsProps<T extends FieldValues> {
 	form: UseFormReturn<T>;
 	variant: ENUM_EVENT_POOL_VARIANT_TYPE;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	supplierTyp?: ENUM_SUPPLIER_TYPE_TYPE;
 	onSelect: (supplyId: string | undefined) => void;
 }
@@ -26,7 +26,7 @@ interface IEventPoolControlsProps<T extends FieldValues> {
 export const EventPoolControls = <T extends FieldValues>({
 	form,
 	variant,
-	eventTyp,
+	eventKind,
 	supplierTyp,
 	onSelect
 }: IEventPoolControlsProps<T>) => {
@@ -73,7 +73,7 @@ export const EventPoolControls = <T extends FieldValues>({
 			isAdding={pool.isAdding}
 			isRemoving={pool.isRemoving}
 			isSettingMain={pool.isSettingMain}
-			eventTyp={eventTyp}
+			eventKind={eventKind}
 			supplierTyp={supplierTyp}
 			onSelect={onSelect}
 			onAdd={handleAdd}

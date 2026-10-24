@@ -1,10 +1,9 @@
-import type { TourStatisticsResponse } from "@/shared/api";
-
+import type { TTourStatisticsResponseBackend } from "../types";
 import type { ITourStatistics } from "../types/tour-statistics.types";
 import { subtractDecimalMaxZero } from "../utils/decimal-stat.utils";
 
 export const mapTourStatisticsToFrontend = (
-	data: TourStatisticsResponse
+	data: TTourStatisticsResponseBackend
 ): ITourStatistics => {
 	const confirmed = data.confirmed_revenue ?? "0";
 	const plannedMin = data.planned_revenue ?? "0";

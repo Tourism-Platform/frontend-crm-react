@@ -1,5 +1,4 @@
-import { languageMapper } from "@/entities/tour/landing/converters/languages.converters";
-import { pickupMapper } from "@/entities/tour/landing/converters/pickup.converters";
+import { languageMapper, pickupMapper } from "@/entities/tour/landing";
 
 import type { IPreviewTourData, TPreviewTourBackend } from "../types";
 

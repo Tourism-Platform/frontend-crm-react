@@ -1,14 +1,11 @@
 import type {
-	ActivityOverrideOutput,
-	BusOverrideOutput,
-	HotelOverrideOutput,
-	RouteOverrideOutput,
-	TransferOverrideOutput
-} from "@/shared/api";
-
-import type {
+	TActivityOverrideOutputBackend,
+	TBusOverrideOutputBackend,
 	TEventDetailsBackend,
-	TEventOverrideInputBackend
+	TEventOverrideInputBackend,
+	THotelOverrideOutputBackend,
+	TRouteOverrideOutputBackend,
+	TTransferOverrideOutputBackend
 } from "../../../types";
 import { mapHousingOverrideFromBackend } from "../accommodation/housing-override.converters";
 import { mapActivityOverrideFromBackend } from "../activity/activity-override.converters";
@@ -40,20 +37,24 @@ export const mapEventOverrideFromDetails = (
 	switch (override.typ) {
 		case "housing":
 			return mapHousingOverrideFromBackend(
-				override as HotelOverrideOutput
+				override as THotelOverrideOutputBackend
 			);
 		case "train":
 		case "flight":
-			return mapRouteOverrideFromBackend(override as RouteOverrideOutput);
+			return mapRouteOverrideFromBackend(
+				override as TRouteOverrideOutputBackend
+			);
 		case "bus":
-			return mapBusOverrideFromBackend(override as BusOverrideOutput);
+			return mapBusOverrideFromBackend(
+				override as TBusOverrideOutputBackend
+			);
 		case "transfer":
 			return mapTransferOverrideFromBackend(
-				override as TransferOverrideOutput
+				override as TTransferOverrideOutputBackend
 			);
 		case "activity":
 			return mapActivityOverrideFromBackend(
-				override as ActivityOverrideOutput
+				override as TActivityOverrideOutputBackend
 			);
 	}
 

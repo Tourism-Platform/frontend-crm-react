@@ -1,10 +1,13 @@
-import { SupplierPaymentStatus } from "../../../../shared/api/generated/Api";
+import {
+	ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND,
+	type ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND_TYPE
+} from "../types";
 
 import { MOCK_RECEIPT_URL } from "./supplier-payment.mock.constants";
 
 export type TSupplierPaymentSeedItem = {
 	amount: number;
-	status: SupplierPaymentStatus;
+	status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND_TYPE;
 	component: string;
 	type: string;
 	supplier: string;
@@ -17,7 +20,7 @@ export type TSupplierPaymentSeedItem = {
 export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	{
 		amount: 2100,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Flight from London to Ta...",
 		type: "Transportation (flight)",
 		supplier: "Aviakassa",
@@ -27,7 +30,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 5600,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Hilton Hotel",
 		type: "Accommodation",
 		supplier: '"LLC" Hilton',
@@ -35,7 +38,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 2100,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Meals",
 		type: "Package",
 		supplier: "Aviakassa",
@@ -44,7 +47,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 2100,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Hotel Uzbekistan",
 		type: "Accommodation",
 		supplier: "-",
@@ -53,7 +56,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 1100,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: 'Cafe "OSHKAND"',
 		type: "Activity",
 		supplier: "-",
@@ -62,7 +65,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 1100,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Disneyland",
 		type: "Activity",
 		supplier: "-",
@@ -70,7 +73,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 2000,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Transfer Tour Day 1 + Din...",
 		type: "Transfer",
 		supplier: '"LLC" DARAUZ',
@@ -79,7 +82,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 3200,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Grand Hotel Tashkent",
 		type: "Accommodation",
 		supplier: "Grand Hotel",
@@ -87,7 +90,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 450,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Fast Train To Samarkand",
 		type: "Transportation (train)",
 		supplier: "UzRailways",
@@ -96,7 +99,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 150,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Local Guide Samarkand",
 		type: "Service",
 		supplier: "Guide Services LLC",
@@ -104,7 +107,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 300,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Registan Entrance Fees",
 		type: "Activity",
 		supplier: "Ministry of Culture",
@@ -113,7 +116,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 2800,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Bukhara Boutique Hotel",
 		type: "Accommodation",
 		supplier: "Old City Hotels",
@@ -121,7 +124,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 1200,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Desert Safari",
 		type: "Activity",
 		supplier: "Adventure Uzbekistan",
@@ -129,7 +132,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 4500,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Flight Samarkand to Moscow",
 		type: "Transportation (flight)",
 		supplier: "Uzbekistan Airways",
@@ -139,7 +142,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 200,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Vip Lounge Access",
 		type: "Service",
 		supplier: "Airport Services",
@@ -148,7 +151,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 500,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Limousine Transfer",
 		type: "Transfer",
 		supplier: "Vip Cars",
@@ -156,7 +159,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 350,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Wine Tasting Tour",
 		type: "Activity",
 		supplier: "Vineyards LLC",
@@ -164,7 +167,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 6000,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Lotte Hotel",
 		type: "Accommodation",
 		supplier: "Lotte Central",
@@ -173,7 +176,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 1800,
-		status: SupplierPaymentStatus.NotPaid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Catering Services Samarkand",
 		type: "Package",
 		supplier: "Samarkand Catering",
@@ -181,7 +184,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 	},
 	{
 		amount: 400,
-		status: SupplierPaymentStatus.Paid,
+		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Folklore Show Samarkand",
 		type: "Activity",
 		supplier: "Art Center",

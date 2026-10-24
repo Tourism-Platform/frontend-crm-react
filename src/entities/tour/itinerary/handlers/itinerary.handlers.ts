@@ -5,7 +5,6 @@ import {
 	TOUR_EVENT_MEDIA_PATHS,
 	TOUR_OPTION_PATHS,
 	TOUR_PACKAGES_PATHS,
-	type TourEventResponse,
 	createMockHandler,
 	mockBadRequest,
 	mockNoContent,
@@ -60,6 +59,7 @@ import {
 	updatePoolMember,
 	updateTourOption
 } from "../mock/itinerary.store";
+import type { TTourEventBackendResponce } from "../types";
 
 type TParams = Record<string, unknown>;
 
@@ -81,7 +81,7 @@ const withOption = (
 
 const withEvent = (
 	params: TParams,
-	resolve: (event: TourEventResponse) => Response
+	resolve: (event: TTourEventBackendResponce) => Response
 ) => {
 	const event = getTourEvent(String(params.optionId), String(params.eventId));
 	return event ? resolve(event) : mockNotFound(EVENT_NOT_FOUND);
@@ -94,7 +94,11 @@ const eventResult = (result: unknown, notFound = EVENT_NOT_FOUND) =>
 /** Хендлер операции над опцией события / участником пула */
 const eventMutation = <TBody>(
 	endpoint: { url: string; method: string; _types?: { body: TBody } },
-	mutate: (event: TourEventResponse, params: TParams, body: TBody) => unknown
+	mutate: (
+		event: TTourEventBackendResponce,
+		params: TParams,
+		body: TBody
+	) => unknown
 ) =>
 	createMockHandler(endpoint, ({ params, body }) =>
 		withEvent(params, (event) => eventResult(mutate(event, params, body)))
@@ -526,7 +530,7 @@ const poolHandlers = [
 /** Медиа адресуются /tour/{tourId}/event/{eventId} — без опции тура */
 const withMediaEvent = (
 	params: TParams,
-	resolve: (event: TourEventResponse) => Response
+	resolve: (event: TTourEventBackendResponce) => Response
 ) => {
 	const event = findTourEvent(String(params.tourId), String(params.eventId));
 	return event ? resolve(event) : mockNotFound(EVENT_NOT_FOUND);

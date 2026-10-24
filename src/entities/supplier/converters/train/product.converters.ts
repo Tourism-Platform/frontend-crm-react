@@ -1,7 +1,4 @@
-import type {
-	FixedChargeInput,
-	PerPersonChargeInput
-} from "@/shared/api/generated/Api";
+import type { TPerPersonChargeInputBackend } from "@/entities/tour/itinerary/types/commission-backend.types";
 
 import {
 	ENUM_SUPPLIER_TYPE,
@@ -15,6 +12,7 @@ import {
 	type ITrainVariant,
 	type ITrainVariantWrite,
 	type TCreateTrainProductBackend,
+	type TFixedChargeInputBackend,
 	type TSupplierVariantChargeReadBackend,
 	type TTrainLegInputBackend,
 	type TTrainLegReadBackend,
@@ -80,7 +78,7 @@ export const mapTrainHopFromBackend = (
 
 export const mapTrainVariantChargeToBackend = (
 	data: TTrainVariantCharge
-): FixedChargeInput | PerPersonChargeInput => {
+): TFixedChargeInputBackend | TPerPersonChargeInputBackend => {
 	const fees = mapSupplierFeesToBackend(data.fees);
 	const markup = mapSupplierChargeMarkupToBackend(data.markup);
 

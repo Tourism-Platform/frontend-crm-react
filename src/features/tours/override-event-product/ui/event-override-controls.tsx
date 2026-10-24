@@ -1,16 +1,15 @@
-import { type FC, useState } from "react";
+import { type FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { Button, LoaderButton } from "@/shared/ui";
 
 import {
-	type ENUM_EVENT_BACKEND_TYPE,
+	type ENUM_EVENT_KIND_TYPE,
 	ENUM_EVENT_MODE,
 	type TOverrideProductFormValues,
 	getOverridePerUnitPricing,
-	getOverrideUnitOptions,
-	mapEventOverrideFromDetails,
+	mapEventOverrideDetailsToForm,
 	useEventEditIds,
 	useGetTourEventQuery
 } from "@/entities/tour";
@@ -21,7 +20,7 @@ import { ClearOverrideAlert } from "./clear-override-alert";
 import { OverrideEventDialog } from "./override-event-dialog";
 
 interface IEventOverrideControlsProps {
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	isInherited: boolean;
 	hasOverride?: boolean;
 	supplyId?: string;
@@ -29,7 +28,7 @@ interface IEventOverrideControlsProps {
 }
 
 export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
-	eventTyp,
+	eventKind,
 	isInherited,
 	hasOverride,
 	supplyId,
@@ -52,13 +51,12 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 		{ skip: !isInherited || !tourId || !optionId || !eventId }
 	);
 
-	const initialOverride = mapEventOverrideFromDetails(
-		event?.details,
-		supplyId
+	const initialValues = useMemo(
+		() => mapEventOverrideDetailsToForm(eventKind, event?.details, supplyId),
+		[eventKind, event?.details, supplyId]
 	);
-	const units = getOverrideUnitOptions(event?.details, supplyId);
 	const perUnitArm = getPerUnitArm(
-		eventTyp,
+		eventKind,
 		getOverridePerUnitPricing(event?.details, supplyId)
 	);
 
@@ -68,7 +66,7 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 
 	const handleConfirmSet = async (values: TOverrideProductFormValues) => {
 		try {
-			await set(eventTyp, values);
+			await set(eventKind, values);
 			toast.success(t("override_product.toasts.set.success"));
 			setDialogOpen(false);
 			onAfterChange?.(true);
@@ -123,9 +121,8 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 			<OverrideEventDialog
 				open={dialogOpen}
 				onOpenChange={setDialogOpen}
-				eventTyp={eventTyp}
-				initialOverride={initialOverride}
-				units={units}
+				eventKind={eventKind}
+				initialValues={initialValues}
 				perUnitArm={perUnitArm}
 				isSubmitting={isLoading}
 				onConfirm={handleConfirmSet}

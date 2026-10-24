@@ -12,10 +12,7 @@ import {
 	SUPPLIER_PAYMENT_STATUS_LABELS,
 	SUPPLIER_PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
-import {
-	type ENUM_EVENT_BACKEND_TYPE,
-	EVENT_BACKEND_TYPE_LABELS
-} from "@/entities/tour/itinerary";
+import { getEventKindLabelKey } from "@/entities/tour/itinerary";
 
 import { ConfirmPayment } from "@/features/finance";
 
@@ -114,15 +111,12 @@ export const COLUMNS = (
 			},
 			accessorKey: "type",
 			cell: ({ row }) => {
-				const type = row.getValue("type") as string;
-				const labelKey =
-					EVENT_BACKEND_TYPE_LABELS[type as ENUM_EVENT_BACKEND_TYPE];
+				const labelKey = getEventKindLabelKey(row.original.eventKind);
+				const label = labelKey
+					? t(labelKey, { ns: "options" })
+					: (row.getValue("type") as string);
 
-				return (
-					<div className="font-medium">
-						{labelKey ? t(labelKey, { ns: "options" }) : type}
-					</div>
-				);
+				return <div className="font-medium">{label}</div>;
 			},
 			size: 100
 		},

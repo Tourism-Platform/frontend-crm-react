@@ -3,27 +3,16 @@ import type { FC, ReactNode } from "react";
 
 import { cn } from "@/shared/lib";
 
-import type { TRoadmapPhase, TRoadmapStep } from "../../model";
+import {
+	ROADMAP_BADGE_VARIANT_CLASS,
+	type TRoadmapPhase,
+	type TRoadmapStep
+} from "../../model";
 
 interface INetworkPhasePanelProps {
 	phase: TRoadmapPhase;
 	visual: ReactNode;
 }
-
-const BADGE_VARIANT_CLASS: Record<TRoadmapPhase["badgeVariant"], string> = {
-	now: "bg-emerald-500/10 text-emerald-600",
-	soon: "bg-amber-500/10 text-amber-600",
-	future: "bg-violet-500/10 text-violet-600"
-};
-
-export const BANNER_VARIANT_CLASS: Record<
-	TRoadmapPhase["badgeVariant"],
-	string
-> = {
-	now: "bg-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.3)]",
-	soon: "bg-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.3)]",
-	future: "bg-violet-600 text-white shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
-};
 
 export const NetworkPhasePanel: FC<INetworkPhasePanelProps> = ({
 	phase,
@@ -34,7 +23,7 @@ export const NetworkPhasePanel: FC<INetworkPhasePanelProps> = ({
 			<span
 				className={cn(
 					"mb-3 inline-flex w-fit items-center gap-2 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wide",
-					BADGE_VARIANT_CLASS[phase.badgeVariant]
+					ROADMAP_BADGE_VARIANT_CLASS[phase.badgeVariant]
 				)}
 			>
 				{phase.badgeVariant === "now" ? (

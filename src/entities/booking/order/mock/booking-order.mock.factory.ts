@@ -1,12 +1,18 @@
 import {
-	BookingClientType,
-	type BookingOrderDetail,
-	type BookingOrderResponse,
-	type BookingOrderRow,
-	BookingStatus,
-	type OrderOperatorInfo,
-	TourType
-} from "@/shared/api";
+	ENUM_TOUR_TYPE_BACKEND,
+	type ENUM_TOUR_TYPE_BACKEND_TYPE
+} from "@/entities/tour/tour/types/tour-backend-enum.types";
+
+import {
+	ENUM_BOOKING_CLIENT_TYPE_BACKEND,
+	type ENUM_BOOKING_CLIENT_TYPE_BACKEND_TYPE,
+	ENUM_ORDER_STATUS_BACKEND,
+	type ENUM_ORDER_STATUS_BACKEND_TYPE,
+	type TBookingOrderDetailBackend,
+	type TBookingOrderListItemBackend,
+	type TBookingOrderResponseBackend,
+	type TOrderOperatorInfoBackend
+} from "../types";
 
 import {
 	MOCK_AGENCY_ID,
@@ -21,46 +27,46 @@ import {
 } from "./booking-order.mock.constants";
 
 const STATUS_ROWS: {
-	status: BookingStatus;
+	status: ENUM_ORDER_STATUS_BACKEND_TYPE;
 	label: string;
-	clientType: BookingClientType;
-	tourType: TourType;
+	clientType: ENUM_BOOKING_CLIENT_TYPE_BACKEND_TYPE;
+	tourType: ENUM_TOUR_TYPE_BACKEND_TYPE;
 }[] = [
 	{
-		status: BookingStatus.New,
+		status: ENUM_ORDER_STATUS_BACKEND.NEW,
 		label: "NEW",
-		clientType: BookingClientType.Agency,
-		tourType: TourType.Regular
+		clientType: ENUM_BOOKING_CLIENT_TYPE_BACKEND.AGENCY,
+		tourType: ENUM_TOUR_TYPE_BACKEND.REGULAR
 	},
 	{
-		status: BookingStatus.Pending,
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROCESSING,
 		label: "PROC",
-		clientType: BookingClientType.Tourist,
-		tourType: TourType.Regular
+		clientType: ENUM_BOOKING_CLIENT_TYPE_BACKEND.TOURIST,
+		tourType: ENUM_TOUR_TYPE_BACKEND.REGULAR
 	},
 	{
-		status: BookingStatus.Confirmed,
+		status: ENUM_ORDER_STATUS_BACKEND.BOOKING,
 		label: "BOOK",
-		clientType: BookingClientType.Agency,
-		tourType: TourType.Custom
+		clientType: ENUM_BOOKING_CLIENT_TYPE_BACKEND.AGENCY,
+		tourType: ENUM_TOUR_TYPE_BACKEND.CUSTOM
 	},
 	{
-		status: BookingStatus.InProgress,
+		status: ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS,
 		label: "PROG",
-		clientType: BookingClientType.Tourist,
-		tourType: TourType.Regular
+		clientType: ENUM_BOOKING_CLIENT_TYPE_BACKEND.TOURIST,
+		tourType: ENUM_TOUR_TYPE_BACKEND.REGULAR
 	},
 	{
-		status: BookingStatus.Completed,
+		status: ENUM_ORDER_STATUS_BACKEND.COMPLETED,
 		label: "DONE",
-		clientType: BookingClientType.Tourist,
-		tourType: TourType.Custom
+		clientType: ENUM_BOOKING_CLIENT_TYPE_BACKEND.TOURIST,
+		tourType: ENUM_TOUR_TYPE_BACKEND.CUSTOM
 	},
 	{
-		status: BookingStatus.Cancelled,
+		status: ENUM_ORDER_STATUS_BACKEND.CANCELLED,
 		label: "CNCL",
-		clientType: BookingClientType.Agency,
-		tourType: TourType.Regular
+		clientType: ENUM_BOOKING_CLIENT_TYPE_BACKEND.AGENCY,
+		tourType: ENUM_TOUR_TYPE_BACKEND.REGULAR
 	}
 ];
 
@@ -95,7 +101,7 @@ const buildAmounts = (statusIndex: number, orderIndex: number) => {
 	};
 };
 
-export const MOCK_OPERATOR_INFO: OrderOperatorInfo = {
+export const MOCK_OPERATOR_INFO: TOrderOperatorInfoBackend = {
 	id: MOCK_OPERATOR_ID,
 	name: "Mock Operator",
 	business_name: "Mock Operator LLC",
@@ -108,13 +114,13 @@ export const MOCK_OPERATOR_INFO: OrderOperatorInfo = {
 };
 
 export interface IBookingOrderMockBundle {
-	listItems: BookingOrderRow[];
-	detailsById: Map<string, BookingOrderDetail>;
+	listItems: TBookingOrderListItemBackend[];
+	detailsById: Map<string, TBookingOrderDetailBackend>;
 }
 
 export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
-	const listItems: BookingOrderRow[] = [];
-	const detailsById = new Map<string, BookingOrderDetail>();
+	const listItems: TBookingOrderListItemBackend[] = [];
+	const detailsById = new Map<string, TBookingOrderDetailBackend>();
 
 	STATUS_ROWS.forEach((row, statusIndex) => {
 		for (let orderIndex = 1; orderIndex <= 5; orderIndex += 1) {
@@ -132,9 +138,10 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 			const orderNumber = `RQA-${row.label}-${padOrderNum(orderIndex)}`;
 			const createdMonth = String(statusIndex + 6).padStart(2, "0");
 			const pax = 2 + orderIndex;
-			const isAgencyClient = row.clientType === BookingClientType.Agency;
+			const isAgencyClient =
+				row.clientType === ENUM_BOOKING_CLIENT_TYPE_BACKEND.AGENCY;
 
-			const listItem: BookingOrderRow = {
+			const listItem: TBookingOrderListItemBackend = {
 				id,
 				client_name: clientName,
 				client_type: row.clientType,
@@ -149,7 +156,7 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 				operator: MOCK_OPERATOR_INFO
 			};
 
-			const order: BookingOrderResponse = {
+			const order: TBookingOrderResponseBackend = {
 				...MOCK_BOOKING_DEFAULTS,
 				id,
 				order_number: orderNumber,
@@ -160,20 +167,20 @@ export const createBookingOrderMocks = (): IBookingOrderMockBundle => {
 				agency_id: isAgencyClient ? MOCK_AGENCY_ID : null,
 				user_id: isAgencyClient ? null : MOCK_BOOKING_DEFAULTS.user_id,
 				comment:
-					row.status === BookingStatus.Cancelled
+					row.status === ENUM_ORDER_STATUS_BACKEND.CANCELLED
 						? null
 						: `Mock comment for ${orderNumber}`,
 				cancelled_at:
-					row.status === BookingStatus.Cancelled
+					row.status === ENUM_ORDER_STATUS_BACKEND.CANCELLED
 						? `2025-${createdMonth}-${padOrderNum(orderIndex)}T16:00:00Z`
 						: null,
 				cancellation_reason:
-					row.status === BookingStatus.Cancelled
+					row.status === ENUM_ORDER_STATUS_BACKEND.CANCELLED
 						? "Cancelled by client request (mock)."
 						: null
 			};
 
-			const detail: BookingOrderDetail = {
+			const detail: TBookingOrderDetailBackend = {
 				order,
 				tour: {
 					...MOCK_TOUR_INFO_TEMPLATE,

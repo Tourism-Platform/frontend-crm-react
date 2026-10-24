@@ -1,13 +1,15 @@
-import { LanguageCode, PickupType } from "@/shared/api";
-
-import type { TGetLandingBackendResponse } from "../types";
+import {
+	ENUM_LANGUAGES_BACKEND,
+	ENUM_PICKUP_TYPE_BACKEND,
+	type TGetLandingBackendResponse
+} from "../types";
 
 export const TOUR_LANDING_MOCK: TGetLandingBackendResponse = {
 	id: "landing-mock-1",
 	title: "Silk Road Discovery",
 	overview: null,
 	overview_description: null,
-	languages: [LanguageCode.En, LanguageCode.Ru],
+	languages: [ENUM_LANGUAGES_BACKEND.ENGLISH, ENUM_LANGUAGES_BACKEND.RUSSIAN],
 	created_at: null,
 	updated_at: null,
 	description:
@@ -23,7 +25,10 @@ export const TOUR_LANDING_MOCK: TGetLandingBackendResponse = {
 		"visa_fees",
 		"tips_gratuities"
 	],
-	pickup_type: [PickupType.HotelPickup, PickupType.AirportPickup],
+	pickup_type: [
+		ENUM_PICKUP_TYPE_BACKEND.HOTEL,
+		ENUM_PICKUP_TYPE_BACKEND.AIRPORT
+	],
 	pickup_description:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"We provide pickup from all major hotels in Tashkent and the international airport."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"italic"}],"text":"Please provide your arrival details at least 48 hours before the tour."}]}]}',
 	cancellation_policy:

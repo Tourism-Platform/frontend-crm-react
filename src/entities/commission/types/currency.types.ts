@@ -1,4 +1,4 @@
-import type { Currency } from "@/shared/api";
+import { Currency } from "@/shared/api";
 import type { TAssertNever } from "@/shared/types";
 
 export const ENUM_CURRENCY_OPTIONS = {
@@ -12,6 +12,17 @@ export const ENUM_CURRENCY_OPTIONS = {
 
 export type ENUM_CURRENCY_OPTIONS_TYPE =
 	(typeof ENUM_CURRENCY_OPTIONS)[keyof typeof ENUM_CURRENCY_OPTIONS];
+
+export const ENUM_CURRENCY_BACKEND = {
+	UZS: Currency.UZS,
+	USD: Currency.USD,
+	EUR: Currency.EUR,
+	RUB: Currency.RUB,
+	GBP: Currency.GBP,
+	CNY: Currency.CNY
+} as const;
+
+export type ENUM_CURRENCY_BACKEND_TYPE = Currency;
 
 // Бэк добавил валюту, а фронт о ней не знает — ошибка компиляции
 export type TCurrencyCoverage = TAssertNever<

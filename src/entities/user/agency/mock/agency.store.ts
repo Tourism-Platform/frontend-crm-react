@@ -1,11 +1,15 @@
-import type { AgencyFilesModel, AgencyInfoUpdate } from "@/shared/api";
 import { createMockIdSequence, mockImageUrl } from "@/shared/api";
+
+import type {
+	TAgencyBusinessInfoUpdateBackend,
+	TAgencyDocumentBackend
+} from "../types";
 
 import { AGENCY_BUSINESS_DOCUMENTS_MOCK } from "./agency-business-documents.mock";
 import { AGENCY_BUSINESS_MOCK } from "./agency-business.mock";
 
 let info = structuredClone(AGENCY_BUSINESS_MOCK);
-let documents: AgencyFilesModel[] = structuredClone(
+let documents: TAgencyDocumentBackend[] = structuredClone(
 	AGENCY_BUSINESS_DOCUMENTS_MOCK
 );
 
@@ -16,7 +20,7 @@ export const createAgency = (name: string) => ({ id: agencyIds.next(), name });
 
 export const getAgencyInfo = () => info;
 
-export const updateAgencyInfo = (update: AgencyInfoUpdate) => {
+export const updateAgencyInfo = (update: TAgencyBusinessInfoUpdateBackend) => {
 	for (const [key, value] of Object.entries(update)) {
 		if (value !== undefined) Object.assign(info, { [key]: value });
 	}

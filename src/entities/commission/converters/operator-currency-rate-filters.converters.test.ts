@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency } from "@/shared/api";
-
-import { ENUM_CURRENCY_OPTIONS } from "../types";
+import { ENUM_CURRENCY_BACKEND, ENUM_CURRENCY_OPTIONS } from "../types";
 
 import {
 	filterOperatorCurrencyRates,
@@ -11,22 +9,22 @@ import {
 
 const RATES = mapOperatorCurrencyRateListToFrontend([
 	{
-		from_currency: Currency.USD,
-		to_currency: Currency.UZS,
+		from_currency: ENUM_CURRENCY_BACKEND.USD,
+		to_currency: ENUM_CURRENCY_BACKEND.UZS,
 		rate: "12650",
 		rate_with_margin: "12900",
 		rate_date: "2026-10-01"
 	},
 	{
-		from_currency: Currency.EUR,
-		to_currency: Currency.UZS,
+		from_currency: ENUM_CURRENCY_BACKEND.EUR,
+		to_currency: ENUM_CURRENCY_BACKEND.UZS,
 		rate: "13700",
 		rate_with_margin: "13950",
 		rate_date: null
 	},
 	{
-		from_currency: Currency.USD,
-		to_currency: Currency.EUR,
+		from_currency: ENUM_CURRENCY_BACKEND.USD,
+		to_currency: ENUM_CURRENCY_BACKEND.EUR,
 		rate: "0.92",
 		rate_with_margin: "0.94",
 		rate_date: null

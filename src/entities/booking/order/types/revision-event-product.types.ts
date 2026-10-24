@@ -1,10 +1,11 @@
 import type { BOOKING_REVISION_PATHS } from "@/shared/api/generated/paths/booking-revision.paths";
 
 import type {
-	ENUM_EVENT_BACKEND_TYPE,
+	ENUM_EVENT_KIND_TYPE,
 	ENUM_PRICING_WARNING_TYPE,
 	IEventProductLink,
 	IPricingBreakdownLine,
+	TAddPoolMemberIntent,
 	TOverrideProductFormValues
 } from "@/entities/tour";
 
@@ -56,7 +57,7 @@ export interface ISetRevisionEventOverride {
 	bookingId: string;
 	eventId: string;
 	supplyId: string;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	data: TOverrideProductFormValues;
 	optionIndex?: number | null;
 }
@@ -71,7 +72,7 @@ export interface IClearRevisionEventOverride {
 export interface IAddRevisionPoolMember {
 	bookingId: string;
 	eventId: string;
-	data: TRevisionPoolMemberNewBackend;
+	intent: TAddPoolMemberIntent;
 	optionIndex?: number | null;
 }
 

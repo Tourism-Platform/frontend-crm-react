@@ -1,9 +1,6 @@
-import {
-	type ClientPaymentFile,
-	type ClientPaymentResponse
-} from "@/shared/api";
-
 import { bookingOrderListItems } from "@/entities/booking/order/mock/booking-order.store";
+
+import type { TClientPaymentFileBackend, TPaymentBackend } from "../types";
 
 import { CLIENT_PAYMENT_SEED } from "./client-payment.seed";
 import {
@@ -11,7 +8,7 @@ import {
 	buildPaymentUuid
 } from "./payment.mock.constants";
 
-export const createClientPaymentMocks = (): ClientPaymentResponse[] =>
+export const createClientPaymentMocks = (): TPaymentBackend[] =>
 	CLIENT_PAYMENT_SEED.map((row, index) => {
 		const booking =
 			bookingOrderListItems[index % bookingOrderListItems.length];
@@ -36,9 +33,9 @@ export const createClientPaymentMocks = (): ClientPaymentResponse[] =>
 	});
 
 export const createClientPaymentAttachmentMocks = (
-	payments: ClientPaymentResponse[]
-): Record<string, ClientPaymentFile[]> => {
-	const attachments: Record<string, ClientPaymentFile[]> = {};
+	payments: TPaymentBackend[]
+): Record<string, TClientPaymentFileBackend[]> => {
+	const attachments: Record<string, TClientPaymentFileBackend[]> = {};
 
 	for (const payment of payments) {
 		if (payment.attachment_count <= 0) {

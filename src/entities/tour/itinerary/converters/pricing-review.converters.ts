@@ -19,10 +19,9 @@ import {
 	type TTourSummaryEventBackend
 } from "../types";
 
-import {
-	backendEventTypeMapper,
-	isEventBackendTyp
-} from "./backend-event-type.converters";
+import { eventBoardTypeMapper } from "./event-board-type.converters";
+import { eventKindMapper } from "./event-kind.converters";
+import { isEventBackendTyp } from "./event-type.converters";
 import {
 	getMainPoolMember,
 	getPoolMember,
@@ -104,6 +103,7 @@ const mapEventPayloadToReviewItem = (
 				if (!isEventBackendTyp(detail.typ)) {
 					return [];
 				}
+				const kind = eventKindMapper.from(detail.typ);
 				return [
 					{
 						id: detail.id ?? `${eventId}:${index}`,
@@ -113,8 +113,9 @@ const mapEventPayloadToReviewItem = (
 						),
 						plannedCost: "-",
 						estimatedRevenue: "-",
-						type: backendEventTypeMapper.to(detail.typ),
+						type: eventBoardTypeMapper.to(kind),
 						backendTyp: detail.typ,
+						eventKind: kind,
 						day: event.day,
 						position: event.position,
 						optionIndex: index,
@@ -129,6 +130,7 @@ const mapEventPayloadToReviewItem = (
 	if (!isEventBackendTyp(event.typ)) {
 		throw new Error("Unexpected event typ");
 	}
+	const kind = eventKindMapper.from(event.typ);
 
 	return {
 		id: eventId,
@@ -136,8 +138,9 @@ const mapEventPayloadToReviewItem = (
 		supplier: resolveSupplierLabelFromDetails(event.details),
 		plannedCost,
 		estimatedRevenue,
-		type: backendEventTypeMapper.to(event.typ),
+		type: eventBoardTypeMapper.to(kind),
 		backendTyp: event.typ,
+		eventKind: kind,
 		day: event.day,
 		position: event.position,
 		optionIndex: 0,

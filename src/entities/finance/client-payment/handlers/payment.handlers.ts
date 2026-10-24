@@ -1,10 +1,6 @@
 import { HttpResponse } from "msw";
 
-import {
-	CLIENT_PAYMENT_PATHS,
-	type ClientPaymentUpdate,
-	createMockHandler
-} from "@/shared/api";
+import { CLIENT_PAYMENT_PATHS, createMockHandler } from "@/shared/api";
 
 import {
 	addAttachmentInStore,
@@ -19,6 +15,7 @@ import {
 	removeAttachmentInStore,
 	updatePaymentInStore
 } from "../mock/payment.store";
+import type { TUpdatePaymentBackend } from "../types";
 
 export const financeClientPaymentHandlers = [
 	createMockHandler(CLIENT_PAYMENT_PATHS.listPayments, async ({ request }) =>
@@ -54,7 +51,7 @@ export const financeClientPaymentHandlers = [
 		async ({ params, body }) => {
 			const updated = updatePaymentInStore(
 				String(params.paymentId),
-				body as ClientPaymentUpdate
+				body as TUpdatePaymentBackend
 			);
 
 			if (!updated) {

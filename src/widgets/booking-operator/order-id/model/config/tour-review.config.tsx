@@ -127,7 +127,7 @@ export const TOUR_REVIEW_COLUMNS = (
 						pool,
 						eventId,
 						optionIndex,
-						backendTyp,
+						eventKind,
 						type
 					}
 				}
@@ -145,7 +145,7 @@ export const TOUR_REVIEW_COLUMNS = (
 					!isPricingReviewBreakdownRow({ rowKind }) &&
 					type !== ENUM_EVENT.MULTIPLY_OPTION &&
 					Boolean(eventId) &&
-					Boolean(backendTyp);
+					Boolean(eventKind);
 
 				// Whole snapshot event only — alternatives of a choice are sub-rows.
 				const showDuplicate =
@@ -159,12 +159,12 @@ export const TOUR_REVIEW_COLUMNS = (
 						<span title={label} className="block truncate">
 							{label}
 						</span>
-						{showPool && backendTyp && eventId ? (
+						{showPool && eventKind && eventId ? (
 							<RevisionEventPoolControls
 								bookingId={bookingId}
 								eventId={eventId}
 								optionIndex={optionIndex}
-								eventTyp={backendTyp}
+								eventKind={eventKind}
 								pool={pool}
 							/>
 						) : null}

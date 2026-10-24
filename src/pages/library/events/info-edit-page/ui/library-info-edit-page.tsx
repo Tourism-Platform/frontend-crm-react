@@ -68,8 +68,7 @@ export const LibraryInfoEditPage: FC = () => {
 		data: isCreate
 			? undefined
 			: (libraryEvent as TInfoEditSchema | undefined),
-		recordKey: `${libraryId}:${supplyId ?? "main"}`,
-		currentDetails: libraryTemplate?.event.details
+		recordKey: `${libraryId}:${supplyId ?? "main"}`
 	});
 
 	useEffect(() => {

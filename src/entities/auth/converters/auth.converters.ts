@@ -1,5 +1,6 @@
-import type { UserRoles } from "@/shared/api";
 import { userRoleMapper } from "@/shared/converters";
+
+import type { ENUM_USER_ROLES_BACKEND_TYPE } from "@/entities/staff/types/staff-backend-enum.types";
 
 import type {
 	IAuthAccount,
@@ -23,7 +24,8 @@ export const mapAuthAccountToFrontend = (
 ): IAuthAccount => ({
 	id: user.id,
 	email: user.email,
-	role: userRoleMapper.from(user.role as UserRoles) || null,
+	role:
+		userRoleMapper.from(user.role as ENUM_USER_ROLES_BACKEND_TYPE) || null,
 	picture: user.picture || null,
 	agency_id: user.agency_id || null,
 	operator_id: user.operator_id || null

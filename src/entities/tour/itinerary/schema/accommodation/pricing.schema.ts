@@ -266,7 +266,3 @@ export const ACCOMMODATION_PRICING_SCHEMA = z
 			validateFlatOrPerPersonPricing(data, ctx);
 		}
 	});
-
-export type TAccommodationPricingSchema = z.infer<
-	typeof ACCOMMODATION_PRICING_SCHEMA
->;

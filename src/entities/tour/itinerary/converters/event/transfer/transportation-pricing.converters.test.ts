@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { Currency } from "@/shared/api";
-import type { TransferDetailsOutput } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	ENUM_TRANSPORTATION_MARKUP_TYP,
 	ENUM_TRANSPORTATION_PRICING_FIELD,
 	ENUM_TRANSPORTATION_PRICING_INVOICING,
 	ENUM_TRANSPORTATION_PRICING_TYPE,
+	type TTransferDetailsBackend,
 	type TTransportationPricingSchema
 } from "../../../types";
 
@@ -21,11 +21,11 @@ vi.mock("@/shared/config", () => ({
 	i18nKey: () => (key: string) => key
 }));
 
-type TTransferPoolSpec = TransferDetailsOutput["pool"][number]["spec"];
+type TTransferPoolSpec = TTransferDetailsBackend["pool"][number]["spec"];
 
 const wholeTransferDetails = (
 	charge: Extract<TTransferPoolSpec, { pricing: "whole" }>["charge"]
-): TransferDetailsOutput => ({
+): TTransferDetailsBackend => ({
 	plan: { typ: null, departure: null, arrival: null },
 	pool: [
 		{
@@ -64,12 +64,12 @@ describe("transportation flat/per_person markup", () => {
 			mapTransportationPricingFromBackend(
 				wholeTransferDetails({
 					typ: "fixed",
-					cost: { val: 150, currency: Currency.USD },
+					cost: { val: 150, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: null,
 					extra_costs: [],
 					markup: {
 						typ: "fixed",
-						cost: { val: 12, currency: Currency.USD }
+						cost: { val: 12, currency: ENUM_CURRENCY_BACKEND.USD }
 					}
 				})
 			)
@@ -93,7 +93,8 @@ describe("transportation flat/per_person markup", () => {
 							description: null
 						}
 					],
-					[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]: Currency.USD,
+					[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.USD,
 					[ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_TRANSPORTATION_MARKUP_TYP.FIXED,
@@ -107,7 +108,7 @@ describe("transportation flat/per_person markup", () => {
 				typ: "fixed",
 				markup: {
 					typ: "fixed",
-					cost: { val: 12, currency: Currency.USD }
+					cost: { val: 12, currency: ENUM_CURRENCY_BACKEND.USD }
 				}
 			}
 		});
@@ -120,7 +121,8 @@ describe("transportation flat/per_person markup", () => {
 					[ENUM_TRANSPORTATION_PRICING_FIELD.PRICING_TYPE]:
 						ENUM_TRANSPORTATION_PRICING_TYPE.PER_PERSON,
 					[ENUM_TRANSPORTATION_PRICING_FIELD.TOTAL_PRICE]: 40,
-					[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]: Currency.EUR,
+					[ENUM_TRANSPORTATION_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.EUR,
 					[ENUM_TRANSPORTATION_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_TRANSPORTATION_MARKUP_TYP.PERCENTAGE,

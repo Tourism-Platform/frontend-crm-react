@@ -1,4 +1,3 @@
-import { ActivityType, LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
@@ -6,6 +5,12 @@ import {
 	mapGeoFormToBackendLocationRef
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
+
+import {
+	ENUM_ACTIVITY_TYPE_BACKEND,
+	type ENUM_ACTIVITY_TYPE_BACKEND_TYPE
+} from "@/entities/supplier/types/supplier-backend-enum.types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 
 import {
 	ENUM_ACTIVITY_TYPE,
@@ -60,11 +65,11 @@ import {
 /** Generated READ union collapses non-food `sub_typ` to `never`; read via cast. */
 const normalizeActivitySpecSubTyp = (
 	spec: TActivitySpecBackend | undefined
-): ActivityType | undefined => {
+): ENUM_ACTIVITY_TYPE_BACKEND_TYPE | undefined => {
 	if (!spec) return undefined;
-	if (spec.sub_typ === "food") return ActivityType.Food;
-	// literal ∩ enum → never; runtime всё ещё ActivityType-строка
-	const subTyp: ActivityType = spec.sub_typ;
+	if (spec.sub_typ === "food") return ENUM_ACTIVITY_TYPE_BACKEND.FOOD;
+	// literal ∩ enum → never; runtime всё ещё ENUM_ACTIVITY_TYPE_BACKEND_TYPE-строка
+	const subTyp: ENUM_ACTIVITY_TYPE_BACKEND_TYPE = spec.sub_typ;
 	return subTyp;
 };
 
@@ -188,7 +193,8 @@ export const mapActivityFormToUpdate = (
 	language?: ENUM_LANGUAGES_TYPE,
 	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
-	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+	const lang =
+		languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
 	const g = frontend?.general;
 

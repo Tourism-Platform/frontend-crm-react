@@ -11,7 +11,7 @@ import {
 } from "@/entities/geo";
 import { ENUM_SUPPLIER_TYPE } from "@/entities/supplier";
 import {
-	ENUM_EVENT_BACKEND,
+	ENUM_EVENT_KIND,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_TRANSPORTATION,
 	type TTransportationEditSchema
@@ -82,7 +82,7 @@ const TransportationInfoBase: FC<ITransportationInfoProps> = ({
 				form={form}
 				variant={poolVariant}
 				onSelect={onPoolSelect}
-				eventTyp={ENUM_EVENT_BACKEND.TRANSFER}
+				eventKind={ENUM_EVENT_KIND.TRANSFER}
 				supplierTyp={ENUM_SUPPLIER_TYPE.TRANSFER}
 			/>
 			<EventProductLinkControls
@@ -93,7 +93,7 @@ const TransportationInfoBase: FC<ITransportationInfoProps> = ({
 				supplyId={supplyId}
 			/>
 			<EventOverrideControls
-				eventTyp={ENUM_EVENT_BACKEND.TRANSFER}
+				eventKind={ENUM_EVENT_KIND.TRANSFER}
 				isInherited={isInherited}
 				hasOverride={Boolean(hasOverride)}
 				supplyId={supplyId}

@@ -1,5 +1,4 @@
 import { ENUM_API_TAGS } from "@/shared/api/backend/tags.config";
-import type { VariantCreated } from "@/shared/api/generated/Api";
 import { SUPPLIER_PRODUCT_PATHS } from "@/shared/api/generated/paths/supplier-product.paths";
 import type { IPaginationResponse } from "@/shared/types";
 
@@ -47,7 +46,8 @@ import type {
 	TSupplierVariantProductReadBackend,
 	TSwitchSupplierProductPricing,
 	TUpdateSupplierProduct,
-	TUpdateSupplierVariant
+	TUpdateSupplierVariant,
+	TVariantCreatedBackend
 } from "../types";
 
 const productListTags = (result?: IPaginationResponse<TSupplierProduct>) =>
@@ -168,7 +168,7 @@ export const supplierProductApi = authApi.injectEndpoints({
 				body: mapSupplierVariantToWrite(write)
 			}),
 			transformResponse: (
-				response: VariantCreated
+				response: TVariantCreatedBackend
 			): ISupplierVariantCreated => ({
 				variantId: response.variant_id,
 				product: mapSupplierProductFromBackend(response.product)

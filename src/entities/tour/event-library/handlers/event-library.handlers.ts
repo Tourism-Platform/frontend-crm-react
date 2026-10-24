@@ -1,7 +1,6 @@
 import { HttpResponse } from "msw";
 
 import {
-	type EventLibraryResponse,
 	TOUR_EVENT_LIBRARY_PATHS,
 	createMockHandler,
 	getQueryList,
@@ -28,12 +27,13 @@ import {
 	setPrimaryLibraryImage,
 	updateLibraryEvent
 } from "../mock/event-library.store";
+import type { TEventLibraryItemBackend } from "../types";
 
 const LIBRARY_NOT_FOUND = "Library event not found";
 
 const withLibraryEvent = (
 	libraryId: unknown,
-	resolve: (item: EventLibraryResponse) => Response
+	resolve: (item: TEventLibraryItemBackend) => Response
 ) => {
 	const item = getLibraryEvent(String(libraryId));
 	return item ? resolve(item) : mockNotFound(LIBRARY_NOT_FOUND);

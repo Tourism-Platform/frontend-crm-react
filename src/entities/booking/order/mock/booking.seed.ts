@@ -1,5 +1,5 @@
-import { Gender } from "../../../../shared/api/generated/Api";
 import { BOOKING_PASSENGER_PATHS } from "../../../../shared/api/generated/paths";
+import { ENUM_GENDER_OPTIONS_BACKEND } from "../types";
 
 export type TBookingPaxSeedItem = ReturnType<
 	typeof BOOKING_PASSENGER_PATHS.addPassengerInfo
@@ -8,7 +8,7 @@ export type TBookingPaxSeedItem = ReturnType<
 export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	{
 		full_name: "Ivan Petrov",
-		gender: Gender.M,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.MALE,
 		nationality: "UZ",
 		date_of_birth: "1990-03-15",
 		passport_number: "AA1234567",
@@ -17,7 +17,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "Maria Petrova",
-		gender: Gender.F,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.FEMALE,
 		nationality: "UZ",
 		date_of_birth: "1992-07-22",
 		passport_number: "AA7654321",
@@ -26,7 +26,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "Alex Kim",
-		gender: Gender.M,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.MALE,
 		nationality: "KZ",
 		date_of_birth: "1988-11-05",
 		passport_number: "N12345678",
@@ -35,7 +35,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "Elena Sokolova",
-		gender: Gender.F,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.FEMALE,
 		nationality: "RU",
 		date_of_birth: "1995-01-18",
 		passport_number: "75AB123456",
@@ -44,7 +44,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "John Smith",
-		gender: Gender.M,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.MALE,
 		nationality: "US",
 		date_of_birth: "1985-09-30",
 		passport_number: "P99887766",
@@ -53,7 +53,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "Sara Ahmed",
-		gender: Gender.F,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.FEMALE,
 		nationality: "AE",
 		date_of_birth: "1993-04-12",
 		passport_number: "C11223344",
@@ -62,7 +62,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "Omar Karimov",
-		gender: Gender.M,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.MALE,
 		nationality: "UZ",
 		date_of_birth: "1991-06-08",
 		passport_number: "AB9988776",
@@ -71,7 +71,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "Anna Novak",
-		gender: Gender.F,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.FEMALE,
 		nationality: "PL",
 		date_of_birth: "1994-12-01",
 		passport_number: "EF5566778",
@@ -80,7 +80,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "James Wilson",
-		gender: Gender.M,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.MALE,
 		nationality: "GB",
 		date_of_birth: "1987-02-25",
 		passport_number: "GB1234567",
@@ -89,7 +89,7 @@ export const BOOKING_PAX_SEED: readonly TBookingPaxSeedItem[] = [
 	},
 	{
 		full_name: "Dilnoza Rakhimova",
-		gender: Gender.F,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.FEMALE,
 		nationality: "UZ",
 		date_of_birth: "1996-08-14",
 		passport_number: "AA3344556",

@@ -1,6 +1,8 @@
-import { LanguageCode } from "@/shared/api";
 import { languageCodeMapper } from "@/shared/converters";
 
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
+import { encodeLocationSuggestValue } from "../lib/location-suggest-value";
 import type {
 	TLocationSuggestionBackend,
 	TSuggestLocationsQuery
@@ -13,15 +15,6 @@ import {
 } from "../types/location-suggest.types";
 
 import { suggestKindMapper } from "./suggest-kind.converters";
-
-const SUGGEST_VALUE_SEPARATOR = "::";
-
-export type { TLocationSuggestOption } from "../types/location-suggest.types";
-
-export const encodeLocationSuggestValue = (
-	kind: TLocationSuggestion["kind"],
-	value: string
-): string => `${kind}${SUGGEST_VALUE_SEPARATOR}${value}`;
 
 export const mapLocationSuggestionToFrontend = (
 	item: TLocationSuggestionBackend
@@ -51,7 +44,9 @@ export const mapLocationSuggestParamsToBackend = (
 	params: TLocationSuggestParams
 ): TSuggestLocationsQuery => ({
 	q: params.search.trim(),
-	read_lang: languageCodeMapper.to(params.language) ?? LanguageCode.En,
+	read_lang:
+		languageCodeMapper.to(params.language) ??
+		ENUM_LANGUAGES_BACKEND.ENGLISH,
 	...(params.limit !== undefined && { limit: params.limit })
 });
 

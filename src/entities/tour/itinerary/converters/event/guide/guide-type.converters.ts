@@ -1,14 +1,20 @@
-import { GuideType } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import { ENUM_GUIDE_TYPE, type ENUM_GUIDE_TYPE_TYPE } from "../../../types";
+import {
+	ENUM_GUIDE_TYPE,
+	ENUM_GUIDE_TYPE_BACKEND,
+	type ENUM_GUIDE_TYPE_BACKEND_TYPE,
+	type ENUM_GUIDE_TYPE_TYPE
+} from "../../../types";
 
-const MAP_GUIDE_TYPE: Partial<Record<ENUM_GUIDE_TYPE_TYPE, GuideType>> = {
-	[ENUM_GUIDE_TYPE.LOCAL]: GuideType.Local,
-	[ENUM_GUIDE_TYPE.ACCOMPANYING]: GuideType.Route
+const MAP_GUIDE_TYPE: Partial<
+	Record<ENUM_GUIDE_TYPE_TYPE, ENUM_GUIDE_TYPE_BACKEND_TYPE>
+> = {
+	[ENUM_GUIDE_TYPE.LOCAL]: ENUM_GUIDE_TYPE_BACKEND.LOCAL,
+	[ENUM_GUIDE_TYPE.ACCOMPANYING]: ENUM_GUIDE_TYPE_BACKEND.ROUTE
 };
 
 export const guideTypeMapper = createEnumMapper<
 	ENUM_GUIDE_TYPE_TYPE,
-	GuideType
+	ENUM_GUIDE_TYPE_BACKEND_TYPE
 >(MAP_GUIDE_TYPE);

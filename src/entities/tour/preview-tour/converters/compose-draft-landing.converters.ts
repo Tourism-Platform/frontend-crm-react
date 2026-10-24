@@ -1,14 +1,12 @@
-import type { LandingPageImageModel, LandingPageResponse } from "@/shared/api";
+import { languageMapper, pickupMapper } from "@/entities/tour/landing";
+import type { TLandingImageBackend } from "@/entities/tour/landing/types/landing-image.types";
 
-import { languageMapper } from "@/entities/tour/landing/converters/languages.converters";
-import { pickupMapper } from "@/entities/tour/landing/converters/pickup.converters";
-
-import type { IPreviewTourData } from "../types";
+import type { IPreviewTourData, TLandingPageResponseBackend } from "../types";
 
 import { toPublicImageUrl } from "./preview-option-media.utils";
 
 const mapDraftLandingImagesToUrls = (
-	images: LandingPageImageModel[]
+	images: TLandingImageBackend[]
 ): string[] =>
 	[...images]
 		.sort((a, b) => Number(b.is_primary) - Number(a.is_primary))
@@ -16,8 +14,8 @@ const mapDraftLandingImagesToUrls = (
 		.filter(Boolean);
 
 export const composeDraftLandingToPreview = (
-	landing: LandingPageResponse,
-	images: LandingPageImageModel[]
+	landing: TLandingPageResponseBackend,
+	images: TLandingImageBackend[]
 ): IPreviewTourData => ({
 	description: landing.description || "",
 	images: mapDraftLandingImagesToUrls(images),

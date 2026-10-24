@@ -2,15 +2,6 @@ import React, { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import type {
-	TActivityProductEditPageKeys,
-	TBusProductEditPageKeys,
-	TFlightProductEditPageKeys,
-	THotelProductEditPageKeys,
-	TSupplierIdPageKeys,
-	TTrainProductEditPageKeys,
-	TTransferProductEditPageKeys
-} from "@/shared/config";
 import {
 	Button,
 	Dialog,
@@ -27,100 +18,7 @@ import {
 
 import { useDeleteSupplierProductMutation } from "@/entities/supplier";
 
-type TDeleteProductNs =
-	| "hotel_product_edit_page"
-	| "train_product_edit_page"
-	| "flight_product_edit_page"
-	| "bus_product_edit_page"
-	| "transfer_product_edit_page"
-	| "activity_product_edit_page"
-	| "supplier_id_page";
-
-type TProductDeleteKeys =
-	| THotelProductEditPageKeys
-	| TTrainProductEditPageKeys
-	| TFlightProductEditPageKeys
-	| TBusProductEditPageKeys
-	| TTransferProductEditPageKeys
-	| TActivityProductEditPageKeys
-	| TSupplierIdPageKeys;
-
-const PRODUCT_DELETE_KEYS: Record<
-	TDeleteProductNs,
-	{
-		title: TProductDeleteKeys;
-		warning: TProductDeleteKeys;
-		decline: TProductDeleteKeys;
-		confirm: TProductDeleteKeys;
-		confirming: TProductDeleteKeys;
-		success: TProductDeleteKeys;
-		error: TProductDeleteKeys;
-	}
-> = {
-	hotel_product_edit_page: {
-		title: "menu.delete.form.title",
-		warning: "menu.delete.form.warning",
-		decline: "menu.delete.form.buttons.decline",
-		confirm: "menu.delete.form.buttons.confirm",
-		confirming: "menu.delete.form.buttons.confirming",
-		success: "menu.delete.form.toasts.success",
-		error: "menu.delete.form.toasts.error"
-	},
-	train_product_edit_page: {
-		title: "menu.delete.form.title",
-		warning: "menu.delete.form.warning",
-		decline: "menu.delete.form.buttons.decline",
-		confirm: "menu.delete.form.buttons.confirm",
-		confirming: "menu.delete.form.buttons.confirming",
-		success: "menu.delete.form.toasts.success",
-		error: "menu.delete.form.toasts.error"
-	},
-	flight_product_edit_page: {
-		title: "menu.delete.form.title",
-		warning: "menu.delete.form.warning",
-		decline: "menu.delete.form.buttons.decline",
-		confirm: "menu.delete.form.buttons.confirm",
-		confirming: "menu.delete.form.buttons.confirming",
-		success: "menu.delete.form.toasts.success",
-		error: "menu.delete.form.toasts.error"
-	},
-	bus_product_edit_page: {
-		title: "menu.delete.form.title",
-		warning: "menu.delete.form.warning",
-		decline: "menu.delete.form.buttons.decline",
-		confirm: "menu.delete.form.buttons.confirm",
-		confirming: "menu.delete.form.buttons.confirming",
-		success: "menu.delete.form.toasts.success",
-		error: "menu.delete.form.toasts.error"
-	},
-	transfer_product_edit_page: {
-		title: "menu.delete.form.title",
-		warning: "menu.delete.form.warning",
-		decline: "menu.delete.form.buttons.decline",
-		confirm: "menu.delete.form.buttons.confirm",
-		confirming: "menu.delete.form.buttons.confirming",
-		success: "menu.delete.form.toasts.success",
-		error: "menu.delete.form.toasts.error"
-	},
-	activity_product_edit_page: {
-		title: "menu.delete.form.title",
-		warning: "menu.delete.form.warning",
-		decline: "menu.delete.form.buttons.decline",
-		confirm: "menu.delete.form.buttons.confirm",
-		confirming: "menu.delete.form.buttons.confirming",
-		success: "menu.delete.form.toasts.success",
-		error: "menu.delete.form.toasts.error"
-	},
-	supplier_id_page: {
-		title: "products.menu.delete.form.title",
-		warning: "products.menu.delete.form.warning",
-		decline: "products.menu.delete.form.buttons.decline",
-		confirm: "products.menu.delete.form.buttons.confirm",
-		confirming: "products.menu.delete.form.buttons.confirming",
-		success: "products.menu.delete.form.toasts.success",
-		error: "products.menu.delete.form.toasts.error"
-	}
-};
+import { PRODUCT_DELETE_KEYS, type TDeleteProductNs } from "../model";
 
 interface IDeleteSupplierProductProps {
 	supplierId: string;

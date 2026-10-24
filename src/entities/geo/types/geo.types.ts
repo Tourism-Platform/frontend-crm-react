@@ -1,9 +1,16 @@
-import type { LanguageCode } from "@/shared/api";
+import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import type { IGeoSelectOption } from "@/shared/types/geo-form.types";
 
 export type TGeoSearchParams = {
 	q: string;
-	lang?: LanguageCode;
+	lang?: ENUM_LANGUAGES_TYPE;
+	limit?: number;
+};
+
+export type TReverseGeoParams = {
+	lat: number;
+	long: number;
+	lang?: ENUM_LANGUAGES_TYPE;
 	limit?: number;
 };
 

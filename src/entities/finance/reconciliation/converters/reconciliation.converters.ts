@@ -1,7 +1,6 @@
-import { BOOKING_RECONCILIATION_PATHS } from "@/shared/api/generated/paths/booking-reconciliation.paths";
 import { formatDateToISO, parseDecimalSafe } from "@/shared/utils";
 
-import { orderStatusMapper } from "@/entities/booking/order/converters/order-status.convert";
+import { orderStatusMapper } from "@/entities/booking/order";
 
 import type {
 	IBookingFinancials,
@@ -15,6 +14,7 @@ import type {
 	TBookingVarianceBackend,
 	TEventVarianceLineBackend,
 	TReconciliationListBackend,
+	TReconciliationListQuery,
 	TReconciliationRowBackend,
 	TReconciliationTotalsBackend
 } from "../types";
@@ -68,7 +68,7 @@ export const mapReconciliationPaginatedToFrontend = (
 
 export const mapReconciliationFiltersToBackend = (
 	filters: IReconciliationFilters
-): typeof BOOKING_RECONCILIATION_PATHS.listBookingReconciliation._types.query => {
+): TReconciliationListQuery => {
 	const search = filters.search.trim();
 
 	return {

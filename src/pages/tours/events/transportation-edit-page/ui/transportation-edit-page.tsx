@@ -27,7 +27,7 @@ export const TransportationEditPage: FC = () => {
 	});
 
 	// Saves on change (debounced), keeps the form in sync with the server.
-	const autosave = useEventAutosave(ENUM_EVENT.TRANSPORTATION, form, edit);
+	const autosave = useEventAutosave(form, edit);
 
 	useEffect(() => {
 		if (edit.isError) {

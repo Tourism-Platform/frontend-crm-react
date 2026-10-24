@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { type HousingDetailsOutput } from "@/shared/api";
+import type { THousingDetailsOutputBackend } from "../../../types";
 
 import {
 	canRemovePoolMember,
@@ -24,7 +24,9 @@ const INLINE_SPEC = {
 	categories: []
 };
 
-const details = (pool: HousingDetailsOutput["pool"]): HousingDetailsOutput => ({
+const details = (
+	pool: THousingDetailsOutputBackend["pool"]
+): THousingDetailsOutputBackend => ({
 	plan: PLAN,
 	pool
 });
@@ -32,7 +34,7 @@ const details = (pool: HousingDetailsOutput["pool"]): HousingDetailsOutput => ({
 const inlineMember = (
 	id: string,
 	isMain: boolean
-): HousingDetailsOutput["pool"][number] => ({
+): THousingDetailsOutputBackend["pool"][number] => ({
 	id,
 	is_main: isMain,
 	supply: { source: "inline", supplier_id: null },
@@ -42,7 +44,7 @@ const inlineMember = (
 const productMember = (
 	id: string,
 	isMain: boolean
-): HousingDetailsOutput["pool"][number] => ({
+): THousingDetailsOutputBackend["pool"][number] => ({
 	id,
 	is_main: isMain,
 	supply: {

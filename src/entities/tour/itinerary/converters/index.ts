@@ -6,7 +6,8 @@ export * from "./event-copy.converters";
 export * from "./event-media.converters";
 export * from "./event-time-range.converters";
 export * from "./event-type.converters";
-export * from "./backend-event-type.converters";
+export * from "./event-kind.converters";
+export * from "./event-board-type.converters";
 export * from "./event-translation.converters";
 export * from "./event/common/fees.converters";
 export * from "./event/transfer/transfer-type.converters";
@@ -34,7 +35,6 @@ export * from "./event/common/event-override-units.helpers";
 export * from "./event/common/event-policy-check.converters";
 export * from "./event/accommodation/hotel-policy.converters";
 export * from "./event/transport/flight-pricing.converters";
-export * from "./event/transport/flight-transport-type.converters";
 export * from "./event/transport/train-details.helpers";
 export * from "./event/transport/flight-details.helpers";
 export * from "./event/transport/bus-details.helpers";
@@ -53,3 +53,8 @@ export {
 	createEmptyTrainSegment,
 	createEmptyTransportSegment
 } from "./event/transport";
+export { mapAccommodationEventToForm } from "./event/accommodation/accommodation.converters";
+export { mapActivityEventToForm } from "./event/activity/activity.converters";
+export { mapFlyEventToForm } from "./event/transport/fly.converters";
+export { mapInfoEventToForm } from "./event/info/info.converters";
+export { mapTransferEventToForm } from "./event/transfer/transportation.converters";

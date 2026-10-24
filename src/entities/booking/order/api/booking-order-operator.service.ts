@@ -5,7 +5,7 @@ import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
 	mapOperatorBookingOrderToFrontend,
-	mapOrderStatusToTransition
+	orderTransitionMapper
 } from "../converters";
 import type {
 	ENUM_ORDER_STATUS_TYPE,
@@ -54,7 +54,7 @@ export const bookingOrderOperatorApi = authApi.injectEndpoints({
 			{ id: string; status: ENUM_ORDER_STATUS_TYPE }
 		>({
 			query: ({ id, status }) => {
-				const transition = mapOrderStatusToTransition(status);
+				const transition = orderTransitionMapper.to(status);
 
 				if (!transition) {
 					throw new Error(

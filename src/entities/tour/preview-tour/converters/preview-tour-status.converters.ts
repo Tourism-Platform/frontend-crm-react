@@ -1,5 +1,9 @@
-import { TourStatus } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
+
+import {
+	ENUM_TOUR_STATUS_BACKEND,
+	type ENUM_TOUR_STATUS_BACKEND_TYPE
+} from "@/entities/tour/tour/types/tour-backend-enum.types";
 
 import {
 	ENUM_PREVIEW_TOUR_STATUS,
@@ -7,14 +11,14 @@ import {
 } from "../types";
 
 const MAP_PREVIEW_TOUR_STATUS: Partial<
-	Record<ENUM_PREVIEW_TOUR_STATUS_TYPE, TourStatus>
+	Record<ENUM_PREVIEW_TOUR_STATUS_TYPE, ENUM_TOUR_STATUS_BACKEND_TYPE>
 > = {
-	[ENUM_PREVIEW_TOUR_STATUS.PUBLISHED]: TourStatus.Published,
-	[ENUM_PREVIEW_TOUR_STATUS.ARCHIVED]: TourStatus.Archived,
-	[ENUM_PREVIEW_TOUR_STATUS.DRAFT]: TourStatus.Draft
+	[ENUM_PREVIEW_TOUR_STATUS.PUBLISHED]: ENUM_TOUR_STATUS_BACKEND.PUBLISHED,
+	[ENUM_PREVIEW_TOUR_STATUS.ARCHIVED]: ENUM_TOUR_STATUS_BACKEND.ARCHIVED,
+	[ENUM_PREVIEW_TOUR_STATUS.DRAFT]: ENUM_TOUR_STATUS_BACKEND.DRAFT
 };
 
 export const previewTourStatusMapper = createEnumMapper<
 	ENUM_PREVIEW_TOUR_STATUS_TYPE,
-	TourStatus
+	ENUM_TOUR_STATUS_BACKEND_TYPE
 >(MAP_PREVIEW_TOUR_STATUS);

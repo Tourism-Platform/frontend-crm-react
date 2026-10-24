@@ -26,10 +26,9 @@ import {
 	ENUM_SUPPLEMENT_EDIT_TAB,
 	ENUM_TRANSPORTATION_EDIT_TAB,
 	EVENT_METADATA,
-	EVENT_TYPE_TO_OPTION_PATH,
-	EVENT_TYPE_TO_PATH,
 	type ITourReviewItem,
 	getBreakdownRowMetadata,
+	getEventPath,
 	isPricingReviewBreakdownRow
 } from "@/entities/tour";
 
@@ -158,9 +157,7 @@ export const PRICING_REVIEW_COLUMNS = (
 					parent?.original.type === ENUM_EVENT.MULTIPLY_OPTION &&
 					!isPricingReviewBreakdownRow(parent.original);
 				const eventPath = type
-					? isNestedOption
-						? EVENT_TYPE_TO_OPTION_PATH[type]
-						: EVENT_TYPE_TO_PATH[type]
+					? getEventPath(type, isNestedOption)
 					: undefined;
 				const pricingTab = type ? EVENT_PRICING_TAB[type] : undefined;
 				const href =

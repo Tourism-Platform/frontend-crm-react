@@ -1,12 +1,8 @@
 import { HttpResponse } from "msw";
 
-import {
-	Currency,
-	OPERATOR_PAYMENT_ROUTES_PATHS,
-	type PaymentRouteCreate,
-	type PaymentRouteUpdate,
-	createMockHandler
-} from "@/shared/api";
+import { OPERATOR_PAYMENT_ROUTES_PATHS, createMockHandler } from "@/shared/api";
+
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	MOCK_OPERATOR_ID,
@@ -16,15 +12,19 @@ import {
 	listPaymentRoutesFromStore,
 	updatePaymentRouteInStore
 } from "../mock";
-import type { TOperatorPaymentRouteBackend } from "../types";
+import type {
+	TOperatorPaymentRouteBackend,
+	TOperatorPaymentRouteCreateBackend,
+	TOperatorPaymentRouteUpdateBackend
+} from "../types";
 
 const createRouteFromBody = (
-	body: PaymentRouteCreate
+	body: TOperatorPaymentRouteCreateBackend
 ): TOperatorPaymentRouteBackend => ({
 	id: crypto.randomUUID(),
 	operator_id: MOCK_OPERATOR_ID,
 	internal_label: body.internal_label,
-	currency: body.currency ?? Currency.USD,
+	currency: body.currency ?? ENUM_CURRENCY_BACKEND.USD,
 	note: body.note ?? null,
 	details: body.details
 });
@@ -37,7 +37,7 @@ export const operatorPaymentRoutesHandlers = [
 		OPERATOR_PAYMENT_ROUTES_PATHS.createPaymentRoute,
 		({ body }) => {
 			const created = createPaymentRouteInStore(
-				createRouteFromBody(body as PaymentRouteCreate)
+				createRouteFromBody(body as TOperatorPaymentRouteCreateBackend)
 			);
 			return HttpResponse.json(created, { status: 201 });
 		}
@@ -45,7 +45,7 @@ export const operatorPaymentRoutesHandlers = [
 	createMockHandler(
 		OPERATOR_PAYMENT_ROUTES_PATHS.updatePaymentRoute(":routeId"),
 		({ params, body }) => {
-			const patch = body as PaymentRouteUpdate;
+			const patch = body as TOperatorPaymentRouteUpdateBackend;
 			const routeId = String(params.routeId);
 			const existing = findPaymentRouteInStore(routeId);
 

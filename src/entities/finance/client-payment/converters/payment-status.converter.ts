@@ -1,16 +1,20 @@
-import { ClientPaymentStatus } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import { ENUM_PAYMENT_STATUS, type ENUM_PAYMENT_STATUS_TYPE } from "../types";
+import {
+	ENUM_PAYMENT_STATUS,
+	ENUM_PAYMENT_STATUS_BACKEND,
+	type ENUM_PAYMENT_STATUS_BACKEND_TYPE,
+	type ENUM_PAYMENT_STATUS_TYPE
+} from "../types";
 
 const MAP_PAYMENT_STATUS: Partial<
-	Record<ENUM_PAYMENT_STATUS_TYPE, ClientPaymentStatus>
+	Record<ENUM_PAYMENT_STATUS_TYPE, ENUM_PAYMENT_STATUS_BACKEND_TYPE>
 > = {
-	[ENUM_PAYMENT_STATUS.ASSIGNED]: ClientPaymentStatus.Confirmed,
-	[ENUM_PAYMENT_STATUS.NOT_ASSIGNED]: ClientPaymentStatus.NotConfirmed
+	[ENUM_PAYMENT_STATUS.ASSIGNED]: ENUM_PAYMENT_STATUS_BACKEND.ASSIGNED,
+	[ENUM_PAYMENT_STATUS.NOT_ASSIGNED]: ENUM_PAYMENT_STATUS_BACKEND.NOT_ASSIGNED
 };
 
 export const paymentStatusConverter = createEnumMapper<
 	ENUM_PAYMENT_STATUS_TYPE,
-	ClientPaymentStatus
+	ENUM_PAYMENT_STATUS_BACKEND_TYPE
 >(MAP_PAYMENT_STATUS);

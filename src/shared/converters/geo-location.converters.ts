@@ -6,6 +6,7 @@ import type {
 } from "@/shared/api";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 import { formatGeoFeatureLabel } from "@/shared/utils/geo-display.utils";
+import { hasGeoFormLabel } from "@/shared/utils/geo-form.utils";
 import {
 	decodeGeoOptionValue,
 	encodeGeoOptionValue
@@ -38,9 +39,6 @@ const withGeoFormLabel = (
 	...value,
 	label: mapGeoFormPartsToLabel(value)
 });
-
-export const hasGeoFormLabel = (value: TGeoFormValue): boolean =>
-	Boolean(value.name?.trim() || value.city?.trim() || value.street?.trim());
 
 export const mapGeoFormToLocationIn = (
 	value: TGeoFormValue | null | undefined

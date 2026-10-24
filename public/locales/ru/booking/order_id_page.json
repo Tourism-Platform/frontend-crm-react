@@ -153,11 +153,7 @@
 			"label_items": "элемента(ов)",
 			"type": "Тип",
 			"detail": "Детали",
-			"items": "Items",
-			"genders": {
-				"male": "Мужской",
-				"female": "Женский"
-			}
+			"items": "Items"
 		}
 	}
 }

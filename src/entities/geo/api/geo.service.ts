@@ -1,37 +1,37 @@
 import { GEO_PATHS } from "@/shared/api";
-import type { GeoFeature, LanguageCode } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
 	mapGeoFeatureToFrontend,
-	mapGeoFeaturesToOptions
+	mapGeoFeaturesToOptions,
+	mapGeoSearchParamsToBackend,
+	mapReverseGeoParamsToBackend
 } from "../converters";
-import type { TGeoFormValue, TGeoOption, TGeoSearchParams } from "../types";
-
-export type TReverseGeoParams = {
-	lat: number;
-	long: number;
-	lang?: LanguageCode;
-	limit?: number;
-};
+import type {
+	TGeoFeatureBackend,
+	TGeoFormValue,
+	TGeoOption,
+	TGeoSearchParams,
+	TReverseGeoParams
+} from "../types";
 
 export const geoApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
 		searchGeo: builder.query<TGeoOption[], TGeoSearchParams>({
 			query: (params) => ({
 				...GEO_PATHS.search,
-				params
+				params: mapGeoSearchParamsToBackend(params)
 			}),
-			transformResponse: (response: GeoFeature[]) =>
+			transformResponse: (response: TGeoFeatureBackend[]) =>
 				mapGeoFeaturesToOptions(response)
 		}),
 		reverseGeo: builder.query<TGeoFormValue | null, TReverseGeoParams>({
 			query: (params) => ({
 				...GEO_PATHS.reverse,
-				params
+				params: mapReverseGeoParamsToBackend(params)
 			}),
-			transformResponse: (response: GeoFeature[]) =>
+			transformResponse: (response: TGeoFeatureBackend[]) =>
 				response[0] ? mapGeoFeatureToFrontend(response[0]) : null
 		})
 	})

@@ -1,20 +1,22 @@
 import {
-	type InvoiceDetailResponse,
-	type InvoiceListItem,
-	type InvoiceListResponse,
-	InvoiceStatus
-} from "@/shared/api";
+	ENUM_INVOICE_STATUS_BACKEND,
+	type ENUM_INVOICE_STATUS_BACKEND_TYPE,
+	type TInvoiceDetailResponseBackend,
+	type TInvoiceListItemBackend,
+	type TInvoiceListResponseBackend
+} from "../types";
 
 import { createInvoiceMocks } from "./invoice.mock.factory";
 
 const { listItems, detailsById } = createInvoiceMocks();
 
-export const invoiceListItems: InvoiceListItem[] = listItems;
+export const invoiceListItems: TInvoiceListItemBackend[] = listItems;
 export const invoiceDetailStore = detailsById;
 
 export const getInvoiceDetail = (
 	invoiceId: string
-): InvoiceDetailResponse | undefined => invoiceDetailStore.get(invoiceId);
+): TInvoiceDetailResponseBackend | undefined =>
+	invoiceDetailStore.get(invoiceId);
 
 export interface IListInvoicesQuery {
 	statuses: string[];
@@ -26,7 +28,7 @@ export interface IListInvoicesQuery {
 const filterInvoiceItems = ({
 	statuses,
 	q
-}: Pick<IListInvoicesQuery, "statuses" | "q">): InvoiceListItem[] => {
+}: Pick<IListInvoicesQuery, "statuses" | "q">): TInvoiceListItemBackend[] => {
 	let filtered = [...invoiceListItems];
 
 	if (statuses.length > 0) {
@@ -49,14 +51,14 @@ const parseStatuses = (url: URL): string[] =>
 	url.searchParams.getAll("statuses").filter(Boolean);
 
 const computeStatusCounts = (
-	items: InvoiceListItem[]
-): Record<InvoiceStatus, number> => {
-	const counts = Object.values(InvoiceStatus).reduce(
+	items: TInvoiceListItemBackend[]
+): Record<ENUM_INVOICE_STATUS_BACKEND_TYPE, number> => {
+	const counts = Object.values(ENUM_INVOICE_STATUS_BACKEND).reduce(
 		(acc, status) => {
 			acc[status] = 0;
 			return acc;
 		},
-		{} as Record<InvoiceStatus, number>
+		{} as Record<ENUM_INVOICE_STATUS_BACKEND_TYPE, number>
 	);
 
 	for (const item of items) {
@@ -68,8 +70,8 @@ const computeStatusCounts = (
 
 export const listInvoicesFromUrl = (
 	url: URL
-): InvoiceListResponse & {
-	status_counts: Record<InvoiceStatus, number>;
+): TInvoiceListResponseBackend & {
+	status_counts: Record<ENUM_INVOICE_STATUS_BACKEND_TYPE, number>;
 } => {
 	const query: IListInvoicesQuery = {
 		statuses: parseStatuses(url),
@@ -86,7 +88,7 @@ export const listInvoices = ({
 	q,
 	skip,
 	limit
-}: IListInvoicesQuery): InvoiceListResponse => {
+}: IListInvoicesQuery): TInvoiceListResponseBackend => {
 	const filtered = filterInvoiceItems({ statuses, q });
 	const data = filtered.slice(skip, skip + limit);
 
@@ -95,8 +97,8 @@ export const listInvoices = ({
 
 export const listInvoicesWithStatusCounts = (
 	query: IListInvoicesQuery
-): InvoiceListResponse & {
-	status_counts: Record<InvoiceStatus, number>;
+): TInvoiceListResponseBackend & {
+	status_counts: Record<ENUM_INVOICE_STATUS_BACKEND_TYPE, number>;
 } => {
 	const filtered = filterInvoiceItems(query);
 	const data = filtered.slice(query.skip, query.skip + query.limit);

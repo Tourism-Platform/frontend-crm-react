@@ -1,12 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 import {
-	AmenitiesTypes,
-	Currency,
-	HousingRoomTypes,
-	LanguageCode,
-	TranslationState
-} from "@/shared/api";
+	ENUM_AMENITIES_TYPES_BACKEND,
+	ENUM_HOUSING_ROOM_TYPES_BACKEND
+} from "@/entities/supplier/types/supplier-backend-enum.types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 
 import {
 	ENUM_ACCOMMODATION_AMENITY,
@@ -18,7 +17,8 @@ import {
 	ENUM_ACCOMMODATION_PRICING_TYPE,
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_ROOMS,
-	ENUM_HOUSING_SOURCE
+	ENUM_HOUSING_SOURCE,
+	ENUM_TRANSLATION_STATE_BACKEND
 } from "../../../types";
 
 import { mapRoomsFromBackend } from "./accommodation-rooms.converters";
@@ -38,7 +38,7 @@ vi.mock("@/shared/converters", () => ({
 	mapGeoFormToBackendLocation: () => null,
 	mapGeoFormToBackendLocationRef: () => null,
 	languageCodeMapper: {
-		to: () => LanguageCode.En
+		to: () => ENUM_LANGUAGES_BACKEND.ENGLISH
 	}
 }));
 
@@ -57,7 +57,7 @@ const roomsList = [
 
 const ZERO_FIXED = {
 	typ: "fixed" as const,
-	cost: { val: 0, currency: Currency.USD },
+	cost: { val: 0, currency: ENUM_CURRENCY_BACKEND.USD },
 	fees: null,
 	extra_costs: [] as [],
 	markup: null
@@ -87,7 +87,7 @@ const classSpec = {
 				{
 					id: ROOM_ID,
 					images: [],
-					typ: HousingRoomTypes.Double,
+					typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 					pax: 2,
 					name: null,
 					description: null,
@@ -115,7 +115,7 @@ const flatPerRoomSpec = {
 				{
 					id: ROOM_ID,
 					images: [],
-					typ: HousingRoomTypes.Double,
+					typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 					pax: 2,
 					name: "Deluxe",
 					description: "Deluxe class",
@@ -143,7 +143,9 @@ describe("mapRoomsFromBackend", () => {
 		const result = mapRoomsFromBackend(classSpec);
 
 		expect(result.rooms[0]?.room_name).toBe("Deluxe");
-		expect(result.rooms[0]?.room_name).not.toBe(HousingRoomTypes.Double);
+		expect(result.rooms[0]?.room_name).not.toBe(
+			ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE
+		);
 	});
 
 	it("echoes room id from a flat (unnamed) per_room spec", () => {
@@ -151,7 +153,7 @@ describe("mapRoomsFromBackend", () => {
 			rooms: [
 				{
 					id: ROOM_ID,
-					typ: HousingRoomTypes.Double,
+					typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 					pax: 2,
 					room_name: "Deluxe",
 					description: "Deluxe class"
@@ -177,7 +179,8 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
 				[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: "",
 				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 300,
-				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
+				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD
 			},
 			rooms: { [ENUM_FORM_ROOMS.ROOMS_LIST]: roomsList }
 		});
@@ -187,7 +190,7 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 			price: {
 				base: {
 					typ: "fixed",
-					cost: { val: 300, currency: Currency.USD },
+					cost: { val: 300, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: null,
 					markup: null
 				}
@@ -214,7 +217,8 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
 				[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: "",
 				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 80,
-				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.EUR
+				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.EUR
 			},
 			rooms: { [ENUM_FORM_ROOMS.ROOMS_LIST]: roomsList }
 		});
@@ -224,7 +228,10 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 			price: {
 				base: {
 					typ: "per_person",
-					cost_per_person: { val: 80, currency: Currency.EUR },
+					cost_per_person: {
+						val: 80,
+						currency: ENUM_CURRENCY_BACKEND.EUR
+					},
 					fees: null,
 					markup: null
 				}
@@ -252,7 +259,7 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.COST]: 120,
 							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.FEES]: [],
 							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.CURRENCY]:
-								Currency.USD,
+								ENUM_CURRENCY_BACKEND.USD,
 							[ENUM_ACCOMMODATION_PRICE_ROW_FIELD.MARKUP]: null
 						}
 					]
@@ -273,7 +280,10 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 							rate: {
 								base: {
 									typ: "fixed",
-									cost: { val: 120, currency: Currency.USD }
+									cost: {
+										val: 120,
+										currency: ENUM_CURRENCY_BACKEND.USD
+									}
 								}
 							}
 						}
@@ -296,7 +306,8 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
 				[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: "",
 				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 300,
-				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
+				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD
 			},
 			rooms: { [ENUM_FORM_ROOMS.ROOMS_LIST]: roomsList }
 		});
@@ -317,13 +328,15 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
 				[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: "",
 				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 300,
-				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
+				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD
 			},
 			rooms: {
 				[ENUM_FORM_ROOMS.ROOMS_LIST]: [
 					{
 						[ENUM_FORM_ROOMS.ID]: ROOM_ID,
-						[ENUM_FORM_ROOMS.TYP]: HousingRoomTypes.Triple,
+						[ENUM_FORM_ROOMS.TYP]:
+							ENUM_HOUSING_ROOM_TYPES_BACKEND.TRIPLE,
 						[ENUM_FORM_ROOMS.ROOM_NAME]: "Deluxe",
 						[ENUM_FORM_ROOMS.DESCRIPTION]: "Deluxe class"
 					}
@@ -339,7 +352,7 @@ describe("mapAccommodationFormToUpdate — pricing by active tab", () => {
 					rooms: [
 						{
 							id: ROOM_ID,
-							typ: HousingRoomTypes.Triple,
+							typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.TRIPLE,
 							pax: 3,
 							name: "Deluxe",
 							description: "Deluxe class"
@@ -356,7 +369,7 @@ describe("mapAccommodationEventToForm — inherited", () => {
 		const form = mapAccommodationEventToForm({
 			id: "e11e0000-0000-0000-0000-000000000001",
 			tour_option_id: "0pt00000-0000-0000-0000-000000000001",
-			translation: TranslationState.Source,
+			translation: ENUM_TRANSLATION_STATE_BACKEND.SOURCE,
 			event: {
 				id: "opt-0000-0000-0000-000000000001",
 				typ: ENUM_EVENT_BACKEND.HOUSING,
@@ -400,7 +413,7 @@ describe("mapAccommodationEventToForm — inherited", () => {
 								location: { lat: 41.311, long: 69.279 },
 								stars: 5,
 								typs: [],
-								amenities: [AmenitiesTypes.Wifi],
+								amenities: [ENUM_AMENITIES_TYPES_BACKEND.WIFI],
 								policy: null,
 								categories: [
 									{
@@ -410,7 +423,7 @@ describe("mapAccommodationEventToForm — inherited", () => {
 											{
 												id: ROOM_ID,
 												images: [],
-												typ: HousingRoomTypes.Double,
+												typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 												pax: 2,
 												name: null,
 												description: null,
@@ -441,7 +454,7 @@ describe("mapAccommodationEventToForm — inherited", () => {
 		expect(form.general.stars).toBe(5);
 		expect(form.rooms.rooms[0]).toMatchObject({
 			id: ROOM_ID,
-			room_name: HousingRoomTypes.Double
+			room_name: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE
 		});
 		expect(form.pricing.invoicing).toBe(
 			ENUM_ACCOMMODATION_PRICING_INVOICING.INDIVIDUAL
@@ -480,7 +493,8 @@ describe("mapAccommodationFormToUpdate — inherited", () => {
 				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
 				[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: "",
 				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 300,
-				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
+				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD
 			}
 		});
 
@@ -527,7 +541,8 @@ describe("mapAccommodationFormToUpdate — custom", () => {
 				[ENUM_ACCOMMODATION_PRICING_FIELD.EXPENSES]: null,
 				[ENUM_ACCOMMODATION_PRICING_FIELD.PACKAGE_ID]: "",
 				[ENUM_ACCOMMODATION_PRICING_FIELD.TOTAL_PRICE]: 100,
-				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]: Currency.USD
+				[ENUM_ACCOMMODATION_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD
 			}
 		});
 

@@ -2,7 +2,7 @@ import {
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
 } from "@/entities/commission";
-import { languageMapper } from "@/entities/tour/landing/converters/languages.converters";
+import { languageMapper } from "@/entities/tour/landing";
 import { ENUM_LANGUAGES } from "@/entities/tour/landing/types/languages.types";
 
 import { DEFAULT_GUIDE_UP_TO_PAX } from "../../../config";

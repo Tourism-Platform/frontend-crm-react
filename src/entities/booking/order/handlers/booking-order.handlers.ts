@@ -5,9 +5,6 @@ import {
 	BOOKING_ORDER_OPERATOR_PATHS,
 	BOOKING_ORDER_PATHS,
 	BOOKING_ORDER_USER_PATHS,
-	BookingStatus,
-	BookingTransition,
-	LanguageCode,
 	createMockHandler,
 	mockBadRequest,
 	mockNoContent,
@@ -18,6 +15,7 @@ import {
 } from "@/shared/api";
 
 import { getMockSessionAccount } from "@/entities/auth/mock/auth.store";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 import { PREVIEW_OPTION_BACKEND_MOCK } from "@/entities/tour/preview-tour/mock/preview-option-pub.fixtures";
 
 import {
@@ -32,6 +30,11 @@ import {
 	updateBookingOrder
 } from "../mock/booking-order.store";
 import { getOperatorItinerary } from "../mock/booking-snapshot.store";
+import {
+	ENUM_ORDER_STATUS_BACKEND,
+	ENUM_ORDER_TRANSITION_BACKEND,
+	type ENUM_ORDER_TRANSITION_BACKEND_TYPE
+} from "../types";
 
 const BOOKING_NOT_FOUND = "Booking not found";
 
@@ -83,7 +86,7 @@ export const bookingOrderHandlers = [
 				return mockNotFound(BOOKING_NOT_FOUND);
 			const order = transitionBookingStatusInStore(
 				bookingId,
-				BookingTransition.Submit
+				ENUM_ORDER_TRANSITION_BACKEND.SUBMIT
 			);
 			return order
 				? HttpResponse.json(order)
@@ -97,7 +100,7 @@ export const bookingOrderHandlers = [
 			orderResult(
 				closeBookingOrder(
 					String(params.bookingId),
-					BookingStatus.Cancelled,
+					ENUM_ORDER_STATUS_BACKEND.CANCELLED,
 					body.reason ?? null
 				)
 			)
@@ -121,7 +124,7 @@ export const bookingOrderHandlers = [
 			return HttpResponse.json({
 				booking_id: detail.order.id,
 				order_number: detail.order.order_number,
-				display_lang: LanguageCode.En,
+				display_lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 				events: PREVIEW_OPTION_BACKEND_MOCK.events
 			});
 		}
@@ -163,7 +166,7 @@ export const bookingOrderHandlers = [
 
 			const order = transitionBookingStatusInStore(
 				bookingId,
-				String(params.transition) as BookingTransition
+				String(params.transition) as ENUM_ORDER_TRANSITION_BACKEND_TYPE
 			);
 			return order
 				? HttpResponse.json(order)
@@ -179,7 +182,7 @@ export const bookingOrderHandlers = [
 			orderResult(
 				closeBookingOrder(
 					String(params.bookingId),
-					BookingStatus.Declined,
+					ENUM_ORDER_STATUS_BACKEND.DECLINED,
 					body.reason ?? null
 				)
 			)

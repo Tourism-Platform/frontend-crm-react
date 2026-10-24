@@ -1,13 +1,19 @@
-import { PickupType } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import { ENUM_PICKUP_TYPE, type ENUM_PICKUP_TYPE_TYPE } from "../types";
+import {
+	ENUM_PICKUP_TYPE,
+	ENUM_PICKUP_TYPE_BACKEND,
+	type ENUM_PICKUP_TYPE_BACKEND_TYPE,
+	type ENUM_PICKUP_TYPE_TYPE
+} from "../types";
 
-const MAP_PICKUP: Partial<Record<ENUM_PICKUP_TYPE_TYPE, PickupType>> = {
-	[ENUM_PICKUP_TYPE.AIRPORT]: PickupType.AirportPickup,
-	[ENUM_PICKUP_TYPE.HOTEL]: PickupType.HotelPickup
-};
+const MAP_PICKUP: Record<ENUM_PICKUP_TYPE_TYPE, ENUM_PICKUP_TYPE_BACKEND_TYPE> =
+	{
+		[ENUM_PICKUP_TYPE.AIRPORT]: ENUM_PICKUP_TYPE_BACKEND.AIRPORT,
+		[ENUM_PICKUP_TYPE.HOTEL]: ENUM_PICKUP_TYPE_BACKEND.HOTEL
+	};
 
-export const pickupMapper = createEnumMapper<ENUM_PICKUP_TYPE_TYPE, PickupType>(
-	MAP_PICKUP
-);
+export const pickupMapper = createEnumMapper<
+	ENUM_PICKUP_TYPE_TYPE,
+	ENUM_PICKUP_TYPE_BACKEND_TYPE
+>(MAP_PICKUP);

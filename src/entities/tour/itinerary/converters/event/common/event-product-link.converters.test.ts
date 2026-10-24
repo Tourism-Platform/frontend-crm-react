@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { DetachKeep, LanguageCode } from "@/shared/api/generated/Api";
 import { ENUM_LANGUAGES } from "@/shared/config/languages";
+
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
+import { ENUM_DETACH_KEEP_BACKEND } from "../../../types";
 
 import {
 	mapEventProductDetachToBackend,
@@ -86,7 +89,7 @@ describe("mapEventProductLinkToBackend (attach)", () => {
 describe("mapEventProductDetachToBackend", () => {
 	it("maps keep spec without drop_override when undefined", () => {
 		expect(mapEventProductDetachToBackend({ keep: "spec" })).toEqual({
-			keep: DetachKeep.Spec
+			keep: ENUM_DETACH_KEEP_BACKEND.SPEC
 		});
 	});
 
@@ -97,7 +100,7 @@ describe("mapEventProductDetachToBackend", () => {
 				dropOverride: true
 			})
 		).toEqual({
-			keep: DetachKeep.Nothing,
+			keep: ENUM_DETACH_KEEP_BACKEND.NOTHING,
 			drop_override: true
 		});
 	});
@@ -170,7 +173,7 @@ describe("mapEventReadLangQueryToBackend", () => {
 
 	it("maps UI language to read_lang", () => {
 		expect(mapEventReadLangQueryToBackend(ENUM_LANGUAGES.EN)).toEqual({
-			read_lang: LanguageCode.En
+			read_lang: ENUM_LANGUAGES_BACKEND.ENGLISH
 		});
 	});
 });

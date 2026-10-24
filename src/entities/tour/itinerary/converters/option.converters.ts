@@ -6,7 +6,7 @@ import {
 	currencyConverter
 } from "@/entities/commission";
 
-import { languageMapper } from "../../landing/converters/languages.converters";
+import { languageMapper } from "../../landing";
 import {
 	ENUM_PACKAGE_MARKUP_TYP,
 	type IListTourOptionsArgs,

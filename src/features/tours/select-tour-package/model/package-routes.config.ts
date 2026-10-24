@@ -1,10 +1,6 @@
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 
-import {
-	EVENT_TYPE_TO_OPTION_PATH,
-	EVENT_TYPE_TO_PATH,
-	TOUR_PACKAGE_CREATE_ID
-} from "@/entities/tour";
+import { TOUR_PACKAGE_CREATE_ID, getEventPath } from "@/entities/tour";
 
 interface IPackageCreateRouteParams {
 	tourId: string;
@@ -50,9 +46,7 @@ export const buildEventPricingReturnRoute = ({
 	fromEventType,
 	fromEventOptionId
 }: IEventPricingReturnRouteParams) => {
-	const pathTemplate = fromEventOptionId
-		? EVENT_TYPE_TO_OPTION_PATH[fromEventType]
-		: EVENT_TYPE_TO_PATH[fromEventType];
+	const pathTemplate = getEventPath(fromEventType, !!fromEventOptionId);
 
 	if (!pathTemplate) {
 		return buildRoute(ENUM_PATH.TOURS.PRICING_REVIEW, { tourId });

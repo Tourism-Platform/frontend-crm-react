@@ -7,7 +7,7 @@ export type TProblemMessage = {
 
 export type TFeatureItem = { name: string; desc: string };
 
-export type TAudienceTab = { id: string; label: string };
+export type TAudienceTab = { id: TAudienceTabId; label: string };
 
 export type THeroTourItem = { name: string; meta: string };
 

@@ -1,10 +1,9 @@
-import { Currency } from "@/shared/api";
-import type { FixedChargeInput, PerPersonChargeInput } from "@/shared/api";
-
 import {
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
 } from "@/entities/commission";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import type { TFixedChargeInputBackend } from "@/entities/supplier/types/supplier-money-backend.types";
 
 import {
 	ENUM_ACTIVITY_MARKUP_TYP,
@@ -15,7 +14,8 @@ import {
 	type TActivityDetailsBackend,
 	type TActivityPricingSchema,
 	type TCommissionMarkupBackend,
-	type TCommissionMarkupInputBackend
+	type TCommissionMarkupInputBackend,
+	type TPerPersonChargeInputBackend
 } from "../../../types";
 import { getPoolMember } from "../common/event-pool.helpers";
 import {
@@ -25,8 +25,8 @@ import {
 
 /** Write-side venue offering charge (contract 3.1 `spec.offerings[].charge`). */
 export type TActivityOfferingChargeInput =
-	| FixedChargeInput
-	| PerPersonChargeInput;
+	| TFixedChargeInputBackend
+	| TPerPersonChargeInputBackend;
 
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
@@ -60,7 +60,8 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
+			currency:
+				currencyConverter.to(rowCurrency) ?? ENUM_CURRENCY_BACKEND.USD
 		}
 	};
 };
@@ -151,7 +152,7 @@ export const mapActivityPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currencyConverter.to(currency) ?? Currency.USD
+		currency: currencyConverter.to(currency) ?? ENUM_CURRENCY_BACKEND.USD
 	};
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_ACTIVITY_PRICING_FIELD.MARKUP] ?? null,

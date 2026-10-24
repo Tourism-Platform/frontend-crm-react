@@ -1,4 +1,5 @@
 import type { ENUM_EVENT_BACKEND_TYPE } from "../../itinerary/types/event-backend-enum.types";
+import type { ENUM_EVENT_KIND_TYPE } from "../../itinerary/types/event-enum.types";
 import type { IEventPoolMemberSummary } from "../../itinerary/types/event-pool.types";
 
 import type { ENUM_EVENT_TYPE } from "./event.types";
@@ -17,6 +18,8 @@ export interface ITourReviewItem {
 	estimatedRevenue?: string;
 	type?: ENUM_EVENT_TYPE;
 	backendTyp?: ENUM_EVENT_BACKEND_TYPE;
+	/** Вид события для UI (пул ревизии и т.п.) */
+	eventKind?: ENUM_EVENT_KIND_TYPE;
 	day: number;
 	position: number;
 	optionIndex: number;

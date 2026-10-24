@@ -1,17 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import {
-	AmenitiesTypes,
-	Currency,
-	HousingRoomTypes
-} from "@/shared/api/generated/Api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
+	ENUM_AMENITIES_TYPES_BACKEND,
 	ENUM_FORM_HOTEL_ROOMS,
 	ENUM_HOTEL_AMENITY,
 	ENUM_HOTEL_PRICING,
 	ENUM_HOTEL_ROOM_CHARGE,
 	ENUM_HOTEL_ROOM_TYPE,
+	ENUM_HOUSING_ROOM_TYPES_BACKEND,
 	ENUM_SUPPLIER_SURCHARGE,
 	ENUM_SUPPLIER_TYPE
 } from "../../types";
@@ -341,7 +339,10 @@ describe("mapHotelProductFromBackend", () => {
 				location: { lat: 41.311, long: 69.279 },
 				stars: 5,
 				typs: [],
-				amenities: [AmenitiesTypes.Wifi, AmenitiesTypes.Pool],
+				amenities: [
+					ENUM_AMENITIES_TYPES_BACKEND.WIFI,
+					ENUM_AMENITIES_TYPES_BACKEND.POOL
+				],
 				policy: {
 					check_in_from: "14:00",
 					check_out_until: "12:00",
@@ -356,7 +357,7 @@ describe("mapHotelProductFromBackend", () => {
 							{
 								id: "68375727-0000-0000-0000-000000000001",
 								images: [],
-								typ: HousingRoomTypes.Double,
+								typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 								pax: 2,
 								name: null,
 								description: null,
@@ -365,7 +366,7 @@ describe("mapHotelProductFromBackend", () => {
 										typ: "fixed",
 										cost: {
 											val: 120,
-											currency: Currency.USD
+											currency: ENUM_CURRENCY_BACKEND.USD
 										},
 										fees: null,
 										extra_costs: [],
@@ -418,7 +419,7 @@ describe("mapHotelProductFromBackend", () => {
 		const price = {
 			base: {
 				typ: "fixed" as const,
-				cost: { val: 500, currency: Currency.USD },
+				cost: { val: 500, currency: ENUM_CURRENCY_BACKEND.USD },
 				fees: null,
 				extra_costs: [],
 				markup: null
@@ -452,7 +453,7 @@ describe("mapHotelProductFromBackend", () => {
 							{
 								id: "68375727-0000-0000-0000-000000000001",
 								images: [],
-								typ: HousingRoomTypes.Double,
+								typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 								pax: 2,
 								name: null,
 								description: null

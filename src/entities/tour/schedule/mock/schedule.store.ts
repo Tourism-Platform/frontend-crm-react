@@ -1,8 +1,9 @@
-import type {
-	RecurrenceRuleCreate,
-	SeasonalityCommissionCreate
-} from "@/shared/api";
 import { createMockId, createMockIdSequence } from "@/shared/api";
+
+import type {
+	TRecurrenceRuleCreateBackend,
+	TSeasonalityCommissionCreateBackend
+} from "../types";
 
 import {
 	type IScheduleMockState,
@@ -148,7 +149,7 @@ export const addExcludedDates = (tourId: string, values: string[]) => {
 
 export const addRecurrenceRules = (
 	tourId: string,
-	rules: RecurrenceRuleCreate[]
+	rules: TRecurrenceRuleCreateBackend[]
 ) => {
 	const state = getState(tourId);
 	const created = rules.map((rule) => ({
@@ -185,7 +186,7 @@ export const listCommissions = (tourId: string) => getState(tourId).commissions;
 
 export const saveCommission = (
 	tourId: string,
-	body: SeasonalityCommissionCreate,
+	body: TSeasonalityCommissionCreateBackend,
 	commissionId?: string
 ) => {
 	const state = getState(tourId);

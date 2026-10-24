@@ -1,7 +1,10 @@
-import type { FixedChargeOutput, PerPersonChargeOutput } from "@/shared/api";
-
 /** Фиксированная цена без сборов и наценки */
-export const fixedChargeMock = (val: number): FixedChargeOutput => ({
+import type {
+	TFixedChargeBackend,
+	TPerPersonChargeBackend
+} from "@/entities/tour/itinerary/types/commission-backend.types";
+
+export const fixedChargeMock = (val: number): TFixedChargeBackend => ({
 	typ: "fixed",
 	cost: { val },
 	fees: null,
@@ -9,7 +12,7 @@ export const fixedChargeMock = (val: number): FixedChargeOutput => ({
 	markup: null
 });
 
-export const perPersonChargeMock = (val: number): PerPersonChargeOutput => ({
+export const perPersonChargeMock = (val: number): TPerPersonChargeBackend => ({
 	typ: "per_person",
 	cost_per_person: { val },
 	fees: null,

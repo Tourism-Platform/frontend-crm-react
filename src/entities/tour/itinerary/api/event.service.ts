@@ -18,17 +18,15 @@ import {
 	mapEventProductScopeUpdateToBackend,
 	mapEventReadLangQueryToBackend,
 	mapEventReorderToBackend,
-	mapEventUpdateToBackend,
+	mapEventUpdatePartsToBackend,
 	mapGetTourEventToFrontend,
 	mapMoveToMultiResultToFrontend,
 	mapMoveToMultiToBackend,
 	mapMoveToSingleResultToFrontend,
 	mapOptionReorderToBackend,
 	mapSupplierPolicyWarningListToFrontend,
-	splitEventUpdate,
-	withIndividualPricing
+	splitEventUpdate
 } from "../converters";
-import { ENUM_FORM_EVENT_PRODUCT } from "../types";
 import type {
 	IAddEventOption,
 	IAddEventPoolMember,
@@ -278,41 +276,13 @@ export const tourEventApi = authApi.injectEndpoints({
 		 */
 		updateOption: builder.mutation<ITourEvent, ITourEventUpdate>({
 			async queryFn(
-				{
-					tourId,
-					optionId,
-					eventId,
-					eventOptionId,
-					type,
-					data,
-					language,
-					currentDetails
-				},
+				{ tourId, optionId, eventId, eventOptionId, ...update },
 				_api,
 				_extraOptions,
 				baseQuery
 			) {
 				const query = baseQuery as TBaseQuery;
-				const supplyId = (data as Record<string, unknown>)[
-					ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID
-				] as string | undefined;
-				const { option, member } = splitEventUpdate(
-					mapEventUpdateToBackend(
-						type,
-						data,
-						language,
-						currentDetails
-					),
-					supplyId,
-					currentDetails,
-					// A package lives on the option only; the supplier keeps its prices.
-					mapEventUpdateToBackend(
-						type,
-						withIndividualPricing(data),
-						language,
-						currentDetails
-					)
-				);
+				const { option, member } = mapEventUpdatePartsToBackend(update);
 
 				const optionResult = await query({
 					...TOUR_EVENTS_PATHS.updateOption(
@@ -809,7 +779,7 @@ export const tourEventApi = authApi.injectEndpoints({
 				eventId,
 				eventOptionId,
 				supplyId,
-				eventTyp,
+				eventKind,
 				data,
 				language
 			}) => ({
@@ -821,7 +791,7 @@ export const tourEventApi = authApi.injectEndpoints({
 					supplyId
 				),
 				params: mapEventReadLangQueryToBackend(language),
-				body: mapEventOverrideToBackend(eventTyp, data)
+				body: mapEventOverrideToBackend(eventKind, data)
 			}),
 			transformResponse: (response: TTourEventBackendResponce) =>
 				mapAllEventsToFrontend(response),

@@ -1,4 +1,4 @@
-import { ENUM_EVENT, eventTypeMapper } from "@/entities/tour";
+import { ENUM_EVENT } from "@/entities/tour";
 import type { ITourEvent } from "@/entities/tour/itinerary/types/event.types";
 import type { ITourReviewItem } from "@/entities/tour/tour/types/tour-review.interface";
 
@@ -61,7 +61,7 @@ const findTourEvent = (
 
 	if (backendTyp) {
 		const byBackendTyp = atPosition.find(
-			(event) => eventTypeMapper.to(event.eventType) === backendTyp
+			(event) => event.backendTyp === backendTyp
 		);
 		if (byBackendTyp) return byBackendTyp;
 	}

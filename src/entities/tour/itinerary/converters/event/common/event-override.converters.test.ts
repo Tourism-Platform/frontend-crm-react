@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import {
-	Currency,
-	type HotelOverrideOutput,
-	type HousingDetailsOutput,
-	RouteOverrideInputTypEnum,
-	RouteOverrideOutputTypEnum
-} from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
-import type { TEventDetailsBackend } from "../../../types";
+import {
+	ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND,
+	ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND,
+	type TEventDetailsBackend,
+	type THotelOverrideOutputBackend,
+	type THousingDetailsOutputBackend
+} from "../../../types";
 import { mapHousingOverrideFromBackend } from "../accommodation/housing-override.converters";
 import { mapActivityOverrideFromBackend } from "../activity/activity-override.converters";
 import { mapBusOverrideFromBackend } from "../transport/bus-override.converters";
@@ -19,7 +19,7 @@ import { mapEventOverrideFromDetails } from "./event-override.converters";
 
 const FIXED_CHARGE_OUTPUT = {
 	typ: "fixed" as const,
-	cost: { val: 95, currency: Currency.USD },
+	cost: { val: 95, currency: ENUM_CURRENCY_BACKEND.USD },
 	fees: null,
 	extra_costs: [],
 	markup: null
@@ -27,7 +27,7 @@ const FIXED_CHARGE_OUTPUT = {
 
 const PER_PERSON_CHARGE_OUTPUT = {
 	typ: "per_person" as const,
-	cost_per_person: { val: 20, currency: Currency.USD },
+	cost_per_person: { val: 20, currency: ENUM_CURRENCY_BACKEND.USD },
 	fees: null,
 	extra_costs: [],
 	markup: null
@@ -96,11 +96,11 @@ describe("mapRouteOverrideFromBackend", () => {
 
 	it("maps the Output typ enum onto the Input typ enum (flight)", () => {
 		const input = mapRouteOverrideFromBackend({
-			typ: RouteOverrideOutputTypEnum.Flight,
+			typ: ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND.FLIGHT,
 			rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
 		});
 
-		expect(input?.typ).toBe(RouteOverrideInputTypEnum.Flight);
+		expect(input?.typ).toBe(ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.FLIGHT);
 		expect(input?.rates).toEqual({
 			pricing: "whole",
 			charge: FIXED_CHARGE_OUTPUT
@@ -109,7 +109,7 @@ describe("mapRouteOverrideFromBackend", () => {
 
 	it("passes the per_fare arm through (train)", () => {
 		const input = mapRouteOverrideFromBackend({
-			typ: RouteOverrideOutputTypEnum.Train,
+			typ: ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND.TRAIN,
 			rates: {
 				pricing: "per_fare",
 				fares: [
@@ -119,7 +119,7 @@ describe("mapRouteOverrideFromBackend", () => {
 			}
 		});
 
-		expect(input?.typ).toBe(RouteOverrideInputTypEnum.Train);
+		expect(input?.typ).toBe(ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.TRAIN);
 		expect(input?.rates).toMatchObject({
 			pricing: "per_fare",
 			fares: [{ fare_id: "fare-1" }, { fare_id: "fare-2" }]
@@ -246,8 +246,8 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 	};
 
 	const buildHousingDetails = (
-		override: HotelOverrideOutput | null
-	): HousingDetailsOutput => ({
+		override: THotelOverrideOutputBackend | null
+	): THousingDetailsOutputBackend => ({
 		plan: {},
 		pool: [
 			{
@@ -329,20 +329,20 @@ describe("mapEventOverrideFromDetails (contract 6: pool member override)", () =>
 		expect(
 			mapEventOverrideFromDetails(
 				buildDetails({
-					typ: RouteOverrideOutputTypEnum.Train,
+					typ: ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND.TRAIN,
 					rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
 				})
 			)?.typ
-		).toBe(RouteOverrideInputTypEnum.Train);
+		).toBe(ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.TRAIN);
 
 		expect(
 			mapEventOverrideFromDetails(
 				buildDetails({
-					typ: RouteOverrideOutputTypEnum.Flight,
+					typ: ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND.FLIGHT,
 					rates: { pricing: "whole", charge: FIXED_CHARGE_OUTPUT }
 				})
 			)?.typ
-		).toBe(RouteOverrideInputTypEnum.Flight);
+		).toBe(ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.FLIGHT);
 	});
 
 	it("dispatches bus, transfer and activity onto their readers", () => {

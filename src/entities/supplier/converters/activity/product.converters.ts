@@ -1,6 +1,5 @@
-import { ActivityType } from "@/shared/api/generated/Api";
-
 import {
+	type ENUM_ACTIVITY_TYPE_BACKEND_TYPE,
 	ENUM_SUPPLIER_TYPE,
 	type IActivityProduct,
 	type IActivityProductCreate,
@@ -62,7 +61,9 @@ export const mapActivityProductFromBackend = (
 		typ: ENUM_SUPPLIER_TYPE.ACTIVITY,
 		name: spec.name ?? row.name,
 		subTyp:
-			activitySubTypeConverter.from(spec.sub_typ as ActivityType) ?? null,
+			activitySubTypeConverter.from(
+				spec.sub_typ as ENUM_ACTIVITY_TYPE_BACKEND_TYPE
+			) ?? null,
 		location: mapSupplierLocationFromBackend(spec.location ?? null),
 		imagePaths: row.image_paths ?? [],
 		primaryImagePath: row.primary_image_path ?? null,

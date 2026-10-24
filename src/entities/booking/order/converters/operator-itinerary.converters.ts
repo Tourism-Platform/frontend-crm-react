@@ -4,7 +4,8 @@ import {
 	ENUM_EVENT,
 	ENUM_PRICING_REVIEW_ROW,
 	attachBreakdownToReviewItem,
-	backendEventTypeMapper,
+	eventBoardTypeMapper,
+	eventKindMapper,
 	getMainPoolMember,
 	getPoolMember,
 	isEventBackendTyp,
@@ -102,6 +103,7 @@ const mapEventToItem = (
 				if (!isEventBackendTyp(detail.typ)) {
 					return [];
 				}
+				const kind = eventKindMapper.from(detail.typ);
 				return [
 					{
 						id: `${event_id}:${index}`,
@@ -112,8 +114,9 @@ const mapEventToItem = (
 						),
 						plannedCost: "-",
 						estimatedRevenue: "-",
-						type: backendEventTypeMapper.to(detail.typ),
+						type: eventBoardTypeMapper.to(kind),
 						backendTyp: detail.typ,
+						eventKind: kind,
 						day: event.day,
 						position: event.position,
 						optionIndex: index,
@@ -137,6 +140,7 @@ const mapEventToItem = (
 	if (!isEventBackendTyp(event.typ)) {
 		throw new Error("Unexpected event typ");
 	}
+	const kind = eventKindMapper.from(event.typ);
 
 	const base = {
 		id: event_id,
@@ -145,8 +149,9 @@ const mapEventToItem = (
 		supplier: resolveSupplierLabelFromDetails(event.details),
 		plannedCost,
 		estimatedRevenue,
-		type: backendEventTypeMapper.to(event.typ),
+		type: eventBoardTypeMapper.to(kind),
 		backendTyp: event.typ,
+		eventKind: kind,
 		day: event.day,
 		position: event.position,
 		optionIndex: selected_option_index ?? 0,

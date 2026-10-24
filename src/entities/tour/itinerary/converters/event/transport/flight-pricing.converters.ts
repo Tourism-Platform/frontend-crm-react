@@ -1,10 +1,9 @@
-import { Currency } from "@/shared/api";
-import type { FixedChargeInput, PerPersonChargeInput } from "@/shared/api";
-
 import {
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
 } from "@/entities/commission";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import type { TFixedChargeInputBackend } from "@/entities/supplier/types/supplier-money-backend.types";
 
 import {
 	ENUM_FLIGHT_MARKUP_TYP,
@@ -15,6 +14,7 @@ import {
 	type TCommissionMarkupBackend,
 	type TCommissionMarkupInputBackend,
 	type TFlightPricingSchema,
+	type TPerPersonChargeInputBackend,
 	type TTransportDetailsWithPricingBackend
 } from "../../../types";
 import { getPoolMember } from "../common/event-pool.helpers";
@@ -24,7 +24,9 @@ import {
 } from "../common/fees.converters";
 
 /** Write-side whole-route/fleet charge (contract 3.1 `spec.charge`). */
-export type TWholeRouteChargeInput = FixedChargeInput | PerPersonChargeInput;
+export type TWholeRouteChargeInput =
+	| TFixedChargeInputBackend
+	| TPerPersonChargeInputBackend;
 
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
@@ -58,7 +60,8 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
+			currency:
+				currencyConverter.to(rowCurrency) ?? ENUM_CURRENCY_BACKEND.USD
 		}
 	};
 };
@@ -151,7 +154,7 @@ export const mapFlightPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currencyConverter.to(currency) ?? Currency.USD
+		currency: currencyConverter.to(currency) ?? ENUM_CURRENCY_BACKEND.USD
 	};
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_FLIGHT_PRICING_FIELD.MARKUP] ?? null,

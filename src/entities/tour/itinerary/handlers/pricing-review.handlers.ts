@@ -1,10 +1,7 @@
 import { HttpResponse } from "msw";
 
 import {
-	BreakdownLineKind,
-	ExpenseType,
 	TOUR_OPTION_PATHS,
-	type TourEventResponse,
 	createMockHandler,
 	mockNotFound
 } from "@/shared/api";
@@ -12,10 +9,13 @@ import {
 import { getTour } from "@/entities/tour/tour/mock/tour.store";
 
 import { getTourOption, listTourEvents } from "../mock/itinerary.store";
-import type {
-	TBreakdownLineBackend,
-	TGetPricingBreakdownBackendResponse,
-	TTourSummaryEventBackend
+import {
+	ENUM_BREAKDOWN_LINE_KIND_BACKEND,
+	ENUM_EXPENSE_TYPE_BACKEND,
+	type TBreakdownLineBackend,
+	type TGetPricingBreakdownBackendResponse,
+	type TTourEventBackendResponce,
+	type TTourSummaryEventBackend
 } from "../types";
 
 const range = (min: number, max: number) => ({
@@ -24,11 +24,11 @@ const range = (min: number, max: number) => ({
 });
 
 const line = (label: string | null, cost: number): TBreakdownLineBackend => ({
-	kind: BreakdownLineKind.Unit,
+	kind: ENUM_BREAKDOWN_LINE_KIND_BACKEND.UNIT,
 	label,
 	unit_id: null,
 	supply_id: null,
-	pricing: ExpenseType.Fixed,
+	pricing: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 	rate: null,
 	unit_cost: { val: cost },
 	quantity: 1,
@@ -40,14 +40,14 @@ const line = (label: string | null, cost: number): TBreakdownLineBackend => ({
 	markup: { val: Math.round(cost * 0.1) }
 });
 
-const eventLabel = (event: TourEventResponse) =>
+const eventLabel = (event: TTourEventBackendResponce) =>
 	event.event.typ === "options"
 		? (event.event.details[0]?.name ?? null)
 		: event.event.name;
 
 /** Цена события детерминирована его позицией: min — 1 чел., max — группа */
 const toBillable = (
-	event: TourEventResponse,
+	event: TTourEventBackendResponce,
 	index: number
 ): TTourSummaryEventBackend => {
 	const min = (index + 1) * 50;

@@ -23,6 +23,7 @@ import { type IBookingFinancials } from "@/entities/finance";
 
 import {
 	type IFinancialsStatColumn,
+	ORDER_TABLE_LAYOUT,
 	TOUR_REVIEW_COLUMNS,
 	getFinancialsStats
 } from "../model";
@@ -36,11 +37,6 @@ interface IOrderTourReviewProps {
 	orderStatus: ENUM_ORDER_STATUS_TYPE;
 	availability?: IBookingEventAvailability[];
 }
-
-const TABLE_LAYOUT = {
-	rowBorder: true,
-	headerBackground: false
-};
 
 const getSubRowsFn = (row: IOrderTourReviewItem) => row.subRows;
 
@@ -136,7 +132,7 @@ const OrderTourReviewBase = ({
 					data={items}
 					columns={columns}
 					getSubRows={getSubRowsFn}
-					tableLayout={TABLE_LAYOUT}
+					tableLayout={ORDER_TABLE_LAYOUT}
 					showTopFilters={false}
 					defaultExpanded={true}
 				/>

@@ -10,11 +10,11 @@ import {
 	mapPaymentRoutesPaginatedToFrontend,
 	mapPaymentRoutesQueryToBackend
 } from "../converters";
-import type { TOperatorPayoutDetailsSchema } from "../schema";
 import type {
 	TOperatorPaymentRoute,
 	TOperatorPaymentRouteBackend,
-	TOperatorPaymentRoutesBackendResponse
+	TOperatorPaymentRoutesBackendResponse,
+	TOperatorPayoutDetailsSchema
 } from "../types";
 
 export const operatorPaymentRoutesApi = authApi.injectEndpoints({

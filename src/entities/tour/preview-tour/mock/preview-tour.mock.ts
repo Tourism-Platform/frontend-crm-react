@@ -1,4 +1,6 @@
-import { AmenitiesTypes, LanguageCode, PickupType } from "@/shared/api";
+import { ENUM_AMENITIES_TYPES_BACKEND } from "@/entities/supplier/types/supplier-backend-enum.types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+import { ENUM_PICKUP_TYPE_BACKEND } from "@/entities/tour/landing/types/pickup.types";
 
 import type { TPreviewTourBackend } from "../types";
 import { ENUM_PREVIEW_OPTION_EVENT } from "../types/preview-option-event.types";
@@ -43,10 +45,10 @@ export const TOUR_PREVIEW_TOUR_MOCK: TPreviewTourBackend = {
 	description:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"Embark on an unforgettable journey through the ancient cities of Uzbekistan."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"bold"}],"text":"Discover the rich history, stunning architecture, and warm hospitality of the Silk Road."}]}]}',
 	// cities: ["Tashkent", "Samarkand", "Bukhara", "Khiva"],
-	languages: [LanguageCode.En, LanguageCode.Ru],
-	amenities_included: [AmenitiesTypes.Wifi],
-	amenities_not_included: [AmenitiesTypes.Wifi],
-	pickup_type: [PickupType.AirportPickup],
+	languages: [ENUM_LANGUAGES_BACKEND.ENGLISH, ENUM_LANGUAGES_BACKEND.RUSSIAN],
+	amenities_included: [ENUM_AMENITIES_TYPES_BACKEND.WIFI],
+	amenities_not_included: [ENUM_AMENITIES_TYPES_BACKEND.WIFI],
+	pickup_type: [ENUM_PICKUP_TYPE_BACKEND.AIRPORT],
 	pickup_description:
 		'{"type":"doc","content":[{"type":"paragraph","attrs":{"textAlign":null},"content":[{"type":"text","text":"We provide pickup from all major hotels in Tashkent and the international airport."},{"type":"hardBreak"},{"type":"text","marks":[{"type":"italic"}],"text":"Please provide your arrival details at least 48 hours before the tour."}]}]}',
 	cancellation_policy:

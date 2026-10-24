@@ -1,4 +1,8 @@
-import type { OPERATOR_AGENCIES_PATHS } from "@/shared/api";
+import type {
+	OPERATOR_AGENCIES_PATHS,
+	OperatorCreateSchema,
+	OperatorModel
+} from "@/shared/api";
 
 export type TInviteAgencyBackendBody =
 	typeof OPERATOR_AGENCIES_PATHS.inviteAgency._types.body;
@@ -32,3 +36,5 @@ export type TSetAgencyDiscountBackendBody = ReturnType<
 export type TPartneredAgencyDiscountBackend = NonNullable<
 	TPartneredAgencyItemBackend["discount"]
 >;
+export type TOperatorCreateSchemaBackend = OperatorCreateSchema;
+export type TOperatorModelBackend = OperatorModel;

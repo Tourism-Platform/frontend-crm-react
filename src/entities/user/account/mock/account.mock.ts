@@ -1,4 +1,4 @@
-import { Currency } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import type { TAccountBackend } from "../types";
 
@@ -12,7 +12,7 @@ export const ACCOUNT_MOCK: TAccountBackend = {
 	profile_picture_path:
 		"https://ul5vcs6l0p.ufs.sh/f/iizX6pu5Eb0VzebIeMz6caC1wMEhR7Syjd9H0JNzslbn4xF8",
 	location: "New York, USA",
-	default_currency: Currency.EUR
+	default_currency: ENUM_CURRENCY_BACKEND.EUR
 };
 
 export const AGENCY_ACCOUNT_MOCK: TAccountBackend = {
@@ -24,5 +24,5 @@ export const AGENCY_ACCOUNT_MOCK: TAccountBackend = {
 	phone_number: "+998901234567",
 	profile_picture_path: null,
 	location: "Tashkent, Uzbekistan",
-	default_currency: Currency.USD
+	default_currency: ENUM_CURRENCY_BACKEND.USD
 };

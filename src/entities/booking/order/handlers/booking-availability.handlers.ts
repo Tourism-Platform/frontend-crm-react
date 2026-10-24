@@ -1,7 +1,6 @@
 import { HttpResponse } from "msw";
 
 import {
-	AvailabilityStatus,
 	BOOKING_AVAILABILITY_PATHS,
 	createMockHandler,
 	mockNotFound
@@ -12,6 +11,7 @@ import {
 	applyAvailability,
 	getAvailabilityRows
 } from "../mock/booking-snapshot.store";
+import type { ENUM_AVAILABILITY_STATUS_BACKEND_TYPE } from "../types";
 
 export const bookingAvailabilityHandlers = [
 	createMockHandler(
@@ -35,7 +35,7 @@ export const bookingAvailabilityHandlers = [
 				String(params.bookingId),
 				String(params.eventId),
 				Number(params.optionIndex),
-				body.status as unknown as AvailabilityStatus
+				body.status as unknown as ENUM_AVAILABILITY_STATUS_BACKEND_TYPE
 			);
 			return row
 				? HttpResponse.json(row)

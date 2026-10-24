@@ -27,7 +27,7 @@ import {
 	useSupplierSearchOptions
 } from "@/entities/supplier";
 import {
-	type ENUM_EVENT_BACKEND_TYPE,
+	type ENUM_EVENT_KIND_TYPE,
 	type TAddPoolMemberIntent
 } from "@/entities/tour";
 
@@ -41,7 +41,7 @@ import {
 interface IAttachEventSupplierDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	supplierTyp: ENUM_SUPPLIER_TYPE_TYPE;
 	isSubmitting?: boolean;
 	onAdd: (intent: TAddPoolMemberIntent) => Promise<void>;
@@ -51,7 +51,7 @@ interface IAttachEventSupplierDialogProps {
 export const AttachEventSupplierDialog: FC<IAttachEventSupplierDialogProps> = ({
 	open,
 	onOpenChange,
-	eventTyp,
+	eventKind,
 	supplierTyp,
 	isSubmitting,
 	onAdd,
@@ -86,7 +86,7 @@ export const AttachEventSupplierDialog: FC<IAttachEventSupplierDialogProps> = ({
 		try {
 			await onAdd({
 				kind: "supplier",
-				typ: eventTyp,
+				eventKind,
 				supplierId: data[ENUM_FORM_ATTACH_SUPPLIER.SUPPLIER_ID]
 			});
 			onOpenChange(false);

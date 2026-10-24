@@ -1,8 +1,9 @@
-import { SupplierPolicyWarning } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
 import {
 	ENUM_SUPPLIER_POLICY_WARNING,
+	ENUM_SUPPLIER_POLICY_WARNING_BACKEND,
+	type ENUM_SUPPLIER_POLICY_WARNING_BACKEND_TYPE,
 	type ENUM_SUPPLIER_POLICY_WARNING_TYPE,
 	type ISupplierPolicyWarning,
 	type TSupplierPolicyWarningBackend,
@@ -11,19 +12,22 @@ import {
 import { mapHotelPolicySurchargeFromBackend } from "../accommodation/hotel-policy.converters";
 
 const MAP_SUPPLIER_POLICY_WARNING: Partial<
-	Record<ENUM_SUPPLIER_POLICY_WARNING_TYPE, SupplierPolicyWarning>
+	Record<
+		ENUM_SUPPLIER_POLICY_WARNING_TYPE,
+		ENUM_SUPPLIER_POLICY_WARNING_BACKEND_TYPE
+	>
 > = {
 	[ENUM_SUPPLIER_POLICY_WARNING.EARLY_CHECK_IN]:
-		SupplierPolicyWarning.EarlyCheckIn,
+		ENUM_SUPPLIER_POLICY_WARNING_BACKEND.EARLY_CHECK_IN,
 	[ENUM_SUPPLIER_POLICY_WARNING.LATE_CHECK_OUT]:
-		SupplierPolicyWarning.LateCheckOut,
+		ENUM_SUPPLIER_POLICY_WARNING_BACKEND.LATE_CHECK_OUT,
 	[ENUM_SUPPLIER_POLICY_WARNING.SUPPLIER_TYPE_MISMATCH]:
-		SupplierPolicyWarning.SupplierTypeMismatch
+		ENUM_SUPPLIER_POLICY_WARNING_BACKEND.SUPPLIER_TYPE_MISMATCH
 };
 
 export const supplierPolicyWarningCodeMapper = createEnumMapper<
 	ENUM_SUPPLIER_POLICY_WARNING_TYPE,
-	SupplierPolicyWarning
+	ENUM_SUPPLIER_POLICY_WARNING_BACKEND_TYPE
 >(MAP_SUPPLIER_POLICY_WARNING);
 
 export const mapSupplierPolicyWarningToFrontend = (

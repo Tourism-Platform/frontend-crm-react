@@ -1,5 +1,8 @@
+import type { z } from "zod";
+
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { SUPPLEMENT_PRICING_SCHEMA } from "../../schema/supplement/pricing.schema";
 import type { IFeeFormRow } from "../fee.types";
 
 export const ENUM_SUPPLEMENT_PRICING_INVOICING = {
@@ -76,3 +79,7 @@ export interface ISupplementPerItemExpenses {
 	typ: typeof ENUM_SUPPLEMENT_PRICING_TYPE.PER_ITEM;
 	[ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS]: ISupplementPerItemPriceRow[];
 }
+
+export type TSupplementPricingSchema = z.infer<
+	typeof SUPPLEMENT_PRICING_SCHEMA
+>;

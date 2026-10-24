@@ -1,4 +1,4 @@
-import { UserRoles } from "@/shared/api";
+import { ENUM_USER_ROLES_BACKEND } from "@/entities/staff/types/staff-backend-enum.types";
 
 import type { TAuthAccountBackend } from "../types";
 
@@ -12,7 +12,7 @@ export const MOCK_AUTH_USERS = [
 		account: {
 			id: "00000000-0000-4000-a000-000000000001",
 			email: "damirk355@gmail.com",
-			role: UserRoles.OperatorAdmin,
+			role: ENUM_USER_ROLES_BACKEND.OPERATOR_ADMIN,
 			picture: null,
 			agency_id: null,
 			operator_id: MOCK_OPERATOR_ID
@@ -23,7 +23,7 @@ export const MOCK_AUTH_USERS = [
 		account: {
 			id: "00000000-0000-4000-a000-000000000002",
 			email: "damirk366@gmail.com",
-			role: UserRoles.AgencyAdmin,
+			role: ENUM_USER_ROLES_BACKEND.AGENCY_ADMIN,
 			picture: null,
 			agency_id: MOCK_AGENCY_ID,
 			operator_id: null

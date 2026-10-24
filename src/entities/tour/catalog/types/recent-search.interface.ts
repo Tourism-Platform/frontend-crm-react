@@ -1,6 +1,6 @@
 import type { DateRange } from "react-day-picker";
 
-import type { TSearchTours } from "../schema";
+import type { TSearchTours } from "./search-tours-form.types";
 
 export interface IRecentSearch {
 	id: string;

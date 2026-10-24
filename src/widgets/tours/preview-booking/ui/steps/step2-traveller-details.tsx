@@ -3,7 +3,6 @@ import { type FC, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Gender } from "@/shared/api";
 import { cn } from "@/shared/lib";
 import {
 	Button,
@@ -21,8 +20,10 @@ import {
 	AccordionItem,
 	AccordionTrigger
 } from "@/shared/ui/shadcn-ui/accordion";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
+	GENDER_LABELS,
 	type ITravellerPaxInput,
 	isTravellerComplete
 } from "@/entities/booking";
@@ -40,11 +41,6 @@ interface IStep2Props {
 	isPaxLoading: boolean;
 }
 
-const GENDER_OPTIONS = [
-	{ value: Gender.M, labelKey: "step_2.fields.gender.options.male" },
-	{ value: Gender.F, labelKey: "step_2.fields.gender.options.female" }
-] as const;
-
 export const Step2TravellerDetails: FC<IStep2Props> = ({
 	onPrev,
 	onAddTraveller,
@@ -60,6 +56,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 		name: ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS
 	});
 	const travellers = form.watch(ENUM_FORM_PREVIEW_BOOKING.TRAVELLERS);
+	const genderOptions = useValueToTranslateLabel(GENDER_LABELS);
 
 	const [openIndexes, setOpenIndexes] = useState<number[]>([0]);
 
@@ -208,14 +205,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 												label="step_2.fields.gender.label"
 												placeholder="step_2.fields.gender.placeholder"
 												fieldType="select"
-												options={GENDER_OPTIONS.map(
-													(option) => ({
-														value: option.value,
-														label: t(
-															option.labelKey
-														)
-													})
-												)}
+												options={genderOptions}
 												t={t}
 											/>
 											<CustomField

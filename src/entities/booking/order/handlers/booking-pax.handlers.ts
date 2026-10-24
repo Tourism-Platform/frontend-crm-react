@@ -3,9 +3,6 @@ import { HttpResponse } from "msw";
 import {
 	BOOKING_PASSENGER_FILES_PATHS,
 	BOOKING_PASSENGER_PATHS,
-	Gender,
-	type PaxCreate,
-	type PaxUpdate,
 	createMockHandler
 } from "@/shared/api";
 
@@ -13,6 +10,11 @@ import {
 	getBookingPaxList,
 	setBookingPaxList
 } from "../mock/booking-order-pax.mock";
+import {
+	ENUM_GENDER_OPTIONS_BACKEND,
+	type TPaxCreateBackend,
+	type TPaxUpdateBackend
+} from "../types";
 
 export const bookingPaxHandlers = [
 	createMockHandler(
@@ -26,14 +28,14 @@ export const bookingPaxHandlers = [
 		BOOKING_PASSENGER_PATHS.addPassengerInfo(":bookingId"),
 		async ({ params, body }) => {
 			const bookingId = String(params.bookingId);
-			const data = body as PaxCreate;
+			const data = body as TPaxCreateBackend;
 			const list = getBookingPaxList(bookingId);
 			const now = new Date().toISOString();
 			const created = {
 				id: `p${crypto.randomUUID()}`,
 				booking_id: bookingId,
 				full_name: data.full_name,
-				gender: data.gender ?? Gender.M,
+				gender: data.gender ?? ENUM_GENDER_OPTIONS_BACKEND.MALE,
 				nationality: data.nationality ?? "",
 				date_of_birth: data.date_of_birth ?? "1990-01-01",
 				passport_number: data.passport_number ?? "",
@@ -52,7 +54,7 @@ export const bookingPaxHandlers = [
 		async ({ params, body }) => {
 			const bookingId = String(params.bookingId);
 			const paxId = String(params.paxId);
-			const data = body as PaxUpdate;
+			const data = body as TPaxUpdateBackend;
 			const list = getBookingPaxList(bookingId);
 			const index = list.findIndex((p) => p.id === paxId);
 			if (index < 0) return new HttpResponse(null, { status: 404 });

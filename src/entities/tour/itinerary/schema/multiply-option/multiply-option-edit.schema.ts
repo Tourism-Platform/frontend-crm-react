@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-import { EventTypes } from "@/shared/api";
-
+import { ENUM_EVENT_BACKEND } from "../../types";
 import type { TEventDetailsBackend } from "../../types/event-backend.types";
 import { ENUM_EVENT } from "../../types/event-enum.types";
 
@@ -16,7 +15,7 @@ export const MULTIPLY_OPTION_ITEM_SCHEMA = z.object({
 	name: z.string(),
 	description: z.string(),
 	eventType: z.nativeEnum(ENUM_EVENT),
-	backendTyp: z.nativeEnum(EventTypes),
+	backendTyp: z.nativeEnum(ENUM_EVENT_BACKEND),
 	details: z.custom<TEventDetailsBackend>(
 		(value) => typeof value === "object" && value !== null
 	),

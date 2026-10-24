@@ -9,7 +9,7 @@ import type {
 	TOperatorCurrencyRateResponse
 } from "../types/operator-currency-rate-backend.interface";
 
-import { currencyConverter } from "./currency.coverters";
+import { currencyConverter } from "./currency.converters";
 
 export const mapOperatorCurrencyRateToFrontend = (
 	data: TOperatorCurrencyRateBackend

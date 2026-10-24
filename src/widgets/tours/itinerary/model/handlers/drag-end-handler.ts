@@ -3,10 +3,7 @@ import type { DragEndEvent } from "@dnd-kit/core";
 import {
 	ENUM_EVENT,
 	type ENUM_EVENT_TYPE,
-	type IEventLibraryItem,
-	type TEventDetailsWriteBackend,
-	eventTypeMapper,
-	mapEmptyEventDetailsToWrite
+	type IEventLibraryItem
 } from "@/entities/tour";
 
 import {
@@ -37,7 +34,6 @@ export type TDragAction =
 			eventType: ENUM_EVENT_TYPE;
 			title: string;
 			tempBlockId: string;
-			details: TEventDetailsWriteBackend;
 	  }
 	| {
 			type: "createFromLibrary";
@@ -56,7 +52,6 @@ export type TDragAction =
 			eventType: ENUM_EVENT_TYPE;
 			title: string;
 			tempBlockId: string;
-			details: TEventDetailsWriteBackend;
 	  }
 	| {
 			type: "addOptionFromLibrary";
@@ -184,24 +179,18 @@ const resolveCreateAction = (
 		tempBlockId: string;
 	}
 ): TDragAction | undefined => {
+	// Пустые details по типу события строит converter create/addOption
 	if (targetContainer.nestedIndex === undefined) {
-		const typ = eventTypeMapper.to(base.eventType);
-		return {
-			type: "create",
-			...base,
-			details: typ ? mapEmptyEventDetailsToWrite(typ) : {}
-		};
+		return { type: "create", ...base };
 	}
 
 	const parent = getTargetParent(targetContainer, optionsData, activeOption);
 	if (!parent?.backendId) return undefined;
 
-	const typ = eventTypeMapper.to(base.eventType);
 	return {
 		type: "addOption",
 		parentBackendId: parent.backendId,
-		...base,
-		details: typ ? mapEmptyEventDetailsToWrite(typ) : {}
+		...base
 	};
 };
 

@@ -1,8 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { Currency, LanguageCode } from "@/shared/api";
-
-import { ENUM_LANGUAGES } from "@/entities/tour/landing/types/languages.types";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import {
+	ENUM_LANGUAGES,
+	ENUM_LANGUAGES_BACKEND
+} from "@/entities/tour/landing/types/languages.types";
 
 import { DEFAULT_GUIDE_UP_TO_PAX } from "../../../config";
 import {
@@ -140,7 +142,10 @@ describe("mapGuideCategoriesToBackend", () => {
 						tiers: [
 							{
 								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-								cost: { val: 80, currency: Currency.USD }
+								cost: {
+									val: 80,
+									currency: ENUM_CURRENCY_BACKEND.USD
+								}
 							}
 						]
 					},
@@ -178,7 +183,7 @@ describe("mapGuideCategoriesToBackend", () => {
 			1
 		);
 
-		expect(result).toEqual([{ lang: LanguageCode.En }]);
+		expect(result).toEqual([{ lang: ENUM_LANGUAGES_BACKEND.ENGLISH }]);
 	});
 
 	it("includes currency, fees and markup when provided", () => {
@@ -216,7 +221,10 @@ describe("mapGuideCategoriesToBackend", () => {
 						tiers: [
 							{
 								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-								cost: { val: 50, currency: Currency.EUR }
+								cost: {
+									val: 50,
+									currency: ENUM_CURRENCY_BACKEND.EUR
+								}
 							}
 						]
 					},
@@ -224,7 +232,10 @@ describe("mapGuideCategoriesToBackend", () => {
 						{
 							name: null,
 							description: null,
-							cost: { val: 10, currency: Currency.EUR }
+							cost: {
+								val: 10,
+								currency: ENUM_CURRENCY_BACKEND.EUR
+							}
 						}
 					],
 					markup: { typ: "percentage", percentage: 0.15 }
@@ -257,7 +268,7 @@ describe("mapGuideCategoriesToBackend", () => {
 			{
 				expenses: {
 					typ: "fixed",
-					cost: { val: 300, currency: Currency.USD },
+					cost: { val: 300, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: null
 				}
 			}

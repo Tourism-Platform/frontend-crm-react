@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { LanguageCode } from "@/shared/api";
 import { ENUM_LANGUAGES } from "@/shared/config";
+
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 
 import {
 	mapEventLibraryCopyQueryToBackend,
@@ -44,7 +45,7 @@ describe("mapEventLibraryCopyQueryToBackend", () => {
 
 	it("maps UI language to read_lang", () => {
 		expect(mapEventLibraryCopyQueryToBackend(ENUM_LANGUAGES.EN)).toEqual({
-			read_lang: LanguageCode.En
+			read_lang: ENUM_LANGUAGES_BACKEND.ENGLISH
 		});
 	});
 });

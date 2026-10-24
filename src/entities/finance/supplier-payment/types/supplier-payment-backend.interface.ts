@@ -1,5 +1,7 @@
 import type {
 	OPERATOR_SUPPLIER_PAYMENT_PATHS,
+	SupplierPaymentFile,
+	SupplierPaymentListRowOutput,
 	SupplierPaymentResponse,
 	SupplierPaymentUpdate
 } from "@/shared/api";
@@ -17,3 +19,8 @@ export type TSupplierPaymentListResponseInput =
 	};
 
 export type TUpdateSupplierPaymentBackend = SupplierPaymentUpdate;
+export type TSupplierPaymentFileBackend = SupplierPaymentFile;
+export type TSupplierPaymentListRowOutputBackend = SupplierPaymentListRowOutput;
+
+export type TSupplierPaymentListQueryBackend =
+	typeof OPERATOR_SUPPLIER_PAYMENT_PATHS.listSupplierPayments._types.query;

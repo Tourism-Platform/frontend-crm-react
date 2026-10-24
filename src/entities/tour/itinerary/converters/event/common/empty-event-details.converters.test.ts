@@ -1,16 +1,18 @@
 import { describe, expect, it } from "vitest";
 
-import { GeneralVenueInputSubTypEnum } from "@/shared/api";
-
-import { ENUM_EVENT_BACKEND } from "../../../types";
+import {
+	ENUM_EVENT_BACKEND,
+	ENUM_EVENT_KIND,
+	ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND
+} from "../../../types";
 
 import {
 	mapAddPoolMemberToBackend,
 	mapEmptyEventDetailsToWrite,
-	mapEmptyPoolMemberNew,
+	mapEmptyPoolMemberToBackend,
 	mapEventDetailsWriteOrEmpty,
-	mapInlinePoolMemberWithSupplier,
-	mapProductPoolMemberNew
+	mapProductPoolMemberToBackend,
+	mapSupplierPoolMemberToBackend
 } from "./empty-event-details.converters";
 
 describe("mapEmptyEventDetailsToWrite", () => {
@@ -39,7 +41,8 @@ describe("mapEmptyEventDetailsToWrite", () => {
 					supply: {
 						source: "inline",
 						spec: {
-							sub_typ: GeneralVenueInputSubTypEnum.Sightseeing
+							sub_typ:
+								ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.SIGHTSEEING
 						}
 					}
 				}
@@ -67,9 +70,9 @@ describe("mapEmptyEventDetailsToWrite", () => {
 	});
 });
 
-describe("mapEmptyPoolMemberNew", () => {
+describe("mapEmptyPoolMemberToBackend", () => {
 	it("states typ and inline supply without is_main", () => {
-		const member = mapEmptyPoolMemberNew(ENUM_EVENT_BACKEND.HOUSING);
+		const member = mapEmptyPoolMemberToBackend(ENUM_EVENT_BACKEND.HOUSING);
 		expect(member).toMatchObject({
 			typ: ENUM_EVENT_BACKEND.HOUSING,
 			supply: { source: "inline", spec: { pricing: "per_room" } }
@@ -78,16 +81,16 @@ describe("mapEmptyPoolMemberNew", () => {
 	});
 
 	it("states an information member without a spec", () => {
-		expect(mapEmptyPoolMemberNew(ENUM_EVENT_BACKEND.REF)).toEqual({
+		expect(mapEmptyPoolMemberToBackend(ENUM_EVENT_BACKEND.REF)).toEqual({
 			typ: ENUM_EVENT_BACKEND.REF,
 			supply: { source: "inline" }
 		});
 	});
 });
 
-describe("mapInlinePoolMemberWithSupplier", () => {
+describe("mapSupplierPoolMemberToBackend", () => {
 	it("keeps the empty housing shell and sets supplier_id", () => {
-		const member = mapInlinePoolMemberWithSupplier(
+		const member = mapSupplierPoolMemberToBackend(
 			ENUM_EVENT_BACKEND.HOUSING,
 			"sup-1"
 		);
@@ -104,7 +107,7 @@ describe("mapInlinePoolMemberWithSupplier", () => {
 
 	it("links an information member without a spec", () => {
 		expect(
-			mapInlinePoolMemberWithSupplier(ENUM_EVENT_BACKEND.REF, "sup-2")
+			mapSupplierPoolMemberToBackend(ENUM_EVENT_BACKEND.REF, "sup-2")
 		).toEqual({
 			typ: ENUM_EVENT_BACKEND.REF,
 			supply: { source: "inline", supplier_id: "sup-2" }
@@ -112,10 +115,10 @@ describe("mapInlinePoolMemberWithSupplier", () => {
 	});
 });
 
-describe("mapProductPoolMemberNew", () => {
+describe("mapProductPoolMemberToBackend", () => {
 	it("maps product link with optional scope", () => {
 		expect(
-			mapProductPoolMemberNew(ENUM_EVENT_BACKEND.HOUSING, {
+			mapProductPoolMemberToBackend(ENUM_EVENT_BACKEND.HOUSING, {
 				productId: "prod-1",
 				scope: {
 					typ: "only",
@@ -145,28 +148,28 @@ describe("mapAddPoolMemberToBackend", () => {
 		expect(
 			mapAddPoolMemberToBackend({
 				kind: "empty",
-				typ: ENUM_EVENT_BACKEND.REF
+				eventKind: ENUM_EVENT_KIND.REF
 			})
-		).toEqual(mapEmptyPoolMemberNew(ENUM_EVENT_BACKEND.REF));
+		).toEqual(mapEmptyPoolMemberToBackend(ENUM_EVENT_BACKEND.REF));
 
 		expect(
 			mapAddPoolMemberToBackend({
 				kind: "supplier",
-				typ: ENUM_EVENT_BACKEND.REF,
+				eventKind: ENUM_EVENT_KIND.REF,
 				supplierId: "sup-9"
 			})
 		).toEqual(
-			mapInlinePoolMemberWithSupplier(ENUM_EVENT_BACKEND.REF, "sup-9")
+			mapSupplierPoolMemberToBackend(ENUM_EVENT_BACKEND.REF, "sup-9")
 		);
 
 		expect(
 			mapAddPoolMemberToBackend({
 				kind: "product",
-				typ: ENUM_EVENT_BACKEND.HOUSING,
+				eventKind: ENUM_EVENT_KIND.HOUSING,
 				link: { productId: "prod-2" }
 			})
 		).toEqual(
-			mapProductPoolMemberNew(ENUM_EVENT_BACKEND.HOUSING, {
+			mapProductPoolMemberToBackend(ENUM_EVENT_BACKEND.HOUSING, {
 				productId: "prod-2"
 			})
 		);

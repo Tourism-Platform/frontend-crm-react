@@ -4,7 +4,6 @@ import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate, useParams } from "react-router";
 
-import type { TPreviewBookingPageKeys } from "@/shared/config";
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
 import { useIsMobile } from "@/shared/hooks";
 import {
@@ -17,6 +16,10 @@ import {
 	withErrorBoundary
 } from "@/shared/ui";
 
+import {
+	PREVIEW_BOOKING_LAST_STEP,
+	PREVIEW_BOOKING_STEPS
+} from "../model/config";
 import { usePreviewBooking } from "../model/hooks/use-preview-booking";
 
 import { BookingStepperCarousel } from "./booking-stepper-carousel";
@@ -26,30 +29,6 @@ import { Step2TravellerDetails } from "./steps/step2-traveller-details";
 import { Step3Confirmation } from "./steps/step3-confirmation";
 
 const BOOKING_FORM_ID = "preview-booking-form";
-
-const STEPS: Array<{
-	step: number;
-	labelKey: TPreviewBookingPageKeys;
-	titleKey: TPreviewBookingPageKeys;
-}> = [
-	{
-		step: 1,
-		labelKey: "stepper.step_1.label",
-		titleKey: "stepper.step_1.title"
-	},
-	{
-		step: 2,
-		labelKey: "stepper.step_2.label",
-		titleKey: "stepper.step_2.title"
-	},
-	{
-		step: 3,
-		labelKey: "stepper.step_3.label",
-		titleKey: "stepper.step_3.title"
-	}
-];
-
-const LAST_STEP = STEPS[STEPS.length - 1].step;
 
 const PreviewBookingBase: FC = () => {
 	const { t } = useTranslation("preview_booking_page");
@@ -101,16 +80,18 @@ const PreviewBookingBase: FC = () => {
 					}
 				: undefined;
 
-	const stepperSteps = STEPS.map(({ step, labelKey, titleKey }) => ({
-		step,
-		label: t(labelKey),
-		title: t(titleKey)
-	}));
+	const stepperSteps = PREVIEW_BOOKING_STEPS.map(
+		({ step, labelKey, titleKey }) => ({
+			step,
+			label: t(labelKey),
+			title: t(titleKey)
+		})
+	);
 
 	return (
 		<FormProvider {...form}>
 			<div className="w-full py-8">
-				{currentStep < LAST_STEP && (
+				{currentStep < PREVIEW_BOOKING_LAST_STEP && (
 					<Button
 						type="button"
 						variant="ghost"
@@ -131,7 +112,7 @@ const PreviewBookingBase: FC = () => {
 				)}
 
 				<div
-					className={`mb-8 ${currentStep === LAST_STEP ? "mx-auto max-w-3xl" : "w-full"}`}
+					className={`mb-8 ${currentStep === PREVIEW_BOOKING_LAST_STEP ? "mx-auto max-w-3xl" : "w-full"}`}
 				>
 					{isMobile ? (
 						<BookingStepperCarousel
@@ -140,7 +121,7 @@ const PreviewBookingBase: FC = () => {
 						/>
 					) : (
 						<Stepper value={currentStep}>
-							{STEPS.map(
+							{PREVIEW_BOOKING_STEPS.map(
 								({ step, labelKey, titleKey }, index) => (
 									<StepperItem
 										key={step}
@@ -160,9 +141,9 @@ const PreviewBookingBase: FC = () => {
 												{t(titleKey)}
 											</span>
 										</div>
-										{index < STEPS.length - 1 && (
-											<StepperSeparator />
-										)}
+										{index <
+											PREVIEW_BOOKING_STEPS.length -
+												1 && <StepperSeparator />}
 									</StepperItem>
 								)
 							)}
@@ -171,12 +152,12 @@ const PreviewBookingBase: FC = () => {
 				</div>
 
 				<div
-					className={`grid items-start gap-8 ${currentStep < LAST_STEP ? "grid-cols-1 lg:grid-cols-[1fr_360px]" : "grid-cols-1"}`}
+					className={`grid items-start gap-8 ${currentStep < PREVIEW_BOOKING_LAST_STEP ? "grid-cols-1 lg:grid-cols-[1fr_360px]" : "grid-cols-1"}`}
 				>
 					<form
 						id={BOOKING_FORM_ID}
 						onSubmit={form.handleSubmit(onSubmit)}
-						className={`flex w-full min-w-0 flex-col gap-8 ${currentStep === LAST_STEP ? "mx-auto max-w-3xl" : ""}`}
+						className={`flex w-full min-w-0 flex-col gap-8 ${currentStep === PREVIEW_BOOKING_LAST_STEP ? "mx-auto max-w-3xl" : ""}`}
 					>
 						{currentStep === 1 && (
 							<Step1DateTravellers
@@ -207,7 +188,7 @@ const PreviewBookingBase: FC = () => {
 						)}
 					</form>
 
-					{currentStep < LAST_STEP && (
+					{currentStep < PREVIEW_BOOKING_LAST_STEP && (
 						<PreviewBookingSidebar
 							tourData={tourData}
 							options={options}

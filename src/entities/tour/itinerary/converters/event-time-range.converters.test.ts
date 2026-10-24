@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency } from "@/shared/api";
-import type {
-	ActivityDetailsOutput,
-	BusDetailsOutput,
-	FlightDetailsOutput,
-	GuideDetailsOutput,
-	HousingDetailsOutput,
-	InformationDetailsOutput,
-	SupplementaryDetailsOutput,
-	TransferDetailsOutput
-} from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
-import type { TSingleEventReadBackend } from "../types";
+import type {
+	TActivityDetailsBackend,
+	TBusDetailsOutputBackend,
+	TFlightDetailsOutputBackend,
+	TGuideDetailsBackend,
+	THousingDetailsOutputBackend,
+	TInformationDetailsOutputBackend,
+	TSingleEventReadBackend,
+	TSupplementaryDetailsOutputBackend,
+	TTransferDetailsBackend
+} from "../types";
 
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
 
@@ -41,14 +41,14 @@ const META = {
 
 const ZERO_FIXED = {
 	typ: "fixed" as const,
-	cost: { val: 0, currency: Currency.USD },
+	cost: { val: 0, currency: ENUM_CURRENCY_BACKEND.USD },
 	fees: null,
 	extra_costs: [] as [],
 	markup: null
 };
 
 const activityEvent = (
-	plan: ActivityDetailsOutput["plan"]
+	plan: TActivityDetailsBackend["plan"]
 ): TSingleEventReadBackend => ({
 	...META,
 	typ: "activity",
@@ -65,7 +65,7 @@ const activityEvent = (
 });
 
 const housingEvent = (
-	plan: HousingDetailsOutput["plan"]
+	plan: THousingDetailsOutputBackend["plan"]
 ): TSingleEventReadBackend => ({
 	...META,
 	typ: "housing",
@@ -87,7 +87,7 @@ const housingEvent = (
 });
 
 const transferEvent = (
-	plan: TransferDetailsOutput["plan"]
+	plan: TTransferDetailsBackend["plan"]
 ): TSingleEventReadBackend => ({
 	...META,
 	typ: "transfer",
@@ -104,7 +104,7 @@ const transferEvent = (
 });
 
 const flightEvent = (
-	plan: FlightDetailsOutput["plan"]
+	plan: TFlightDetailsOutputBackend["plan"]
 ): TSingleEventReadBackend => ({
 	...META,
 	typ: "flight",
@@ -121,7 +121,9 @@ const flightEvent = (
 	}
 });
 
-const busEvent = (plan: BusDetailsOutput["plan"]): TSingleEventReadBackend => ({
+const busEvent = (
+	plan: TBusDetailsOutputBackend["plan"]
+): TSingleEventReadBackend => ({
 	...META,
 	typ: "bus",
 	details: {
@@ -137,7 +139,7 @@ const busEvent = (plan: BusDetailsOutput["plan"]): TSingleEventReadBackend => ({
 });
 
 const refEvent = (
-	plan: InformationDetailsOutput["plan"]
+	plan: TInformationDetailsOutputBackend["plan"]
 ): TSingleEventReadBackend => ({
 	...META,
 	typ: "ref",
@@ -153,7 +155,7 @@ const guideEvent = (): TSingleEventReadBackend => ({
 	details: {
 		plan: {},
 		pool: inlinePool({ name: null, typ_tiers: [], categories: [] })
-	} satisfies GuideDetailsOutput
+	} satisfies TGuideDetailsBackend
 });
 
 const supplementaryEvent = (): TSingleEventReadBackend => ({
@@ -162,7 +164,7 @@ const supplementaryEvent = (): TSingleEventReadBackend => ({
 	details: {
 		plan: {},
 		pool: inlinePool({ item: [] })
-	} satisfies SupplementaryDetailsOutput
+	} satisfies TSupplementaryDetailsOutputBackend
 });
 
 describe("mapBackendEventToTimeSubtitle", () => {

@@ -1,19 +1,19 @@
-import {
-	BookingClientType,
-	type BookingCreate,
-	type BookingOrderClientDetail,
-	type BookingOrderDetail,
-	type BookingOrderListResponse,
-	type BookingOrderResponse,
-	BookingStatus,
-	BookingTransition,
-	type BookingUpdate,
-	createMockIdSequence
-} from "@/shared/api";
+import { createMockIdSequence } from "@/shared/api";
 
-import type {
-	TBookingModelBackend,
-	TBookingOrderListItemBackend
+import {
+	ENUM_BOOKING_CLIENT_TYPE_BACKEND,
+	ENUM_ORDER_STATUS_BACKEND,
+	type ENUM_ORDER_STATUS_BACKEND_TYPE,
+	ENUM_ORDER_TRANSITION_BACKEND,
+	type ENUM_ORDER_TRANSITION_BACKEND_TYPE,
+	type TBookingCreateBackend,
+	type TBookingModelBackend,
+	type TBookingOrderClientDetailBackend,
+	type TBookingOrderDetailBackend,
+	type TBookingOrderListItemBackend,
+	type TBookingOrderListResponseBackend,
+	type TBookingOrderResponseBackend,
+	type TBookingUpdateBackend
 } from "../types";
 
 import {
@@ -38,20 +38,21 @@ const bookingIds = createMockIdSequence("d100", 1);
 let nextOrderNumber = 1;
 
 export const detailToBookingModel = (
-	detail: BookingOrderDetail
+	detail: TBookingOrderDetailBackend
 ): TBookingModelBackend => ({ ...detail.order });
 
 export const getBookingOrderDetail = (
 	bookingId: string
-): BookingOrderDetail | undefined => bookingOrderDetailStore.get(bookingId);
+): TBookingOrderDetailBackend | undefined =>
+	bookingOrderDetailStore.get(bookingId);
 
 export const getOperatorBookingOrderDetail = (
 	bookingId: string
-): BookingOrderDetail | undefined => getBookingOrderDetail(bookingId);
+): TBookingOrderDetailBackend | undefined => getBookingOrderDetail(bookingId);
 
 export const getClientBookingOrderDetail = (
 	bookingId: string
-): BookingOrderClientDetail | undefined => {
+): TBookingOrderClientDetailBackend | undefined => {
 	const detail = getBookingOrderDetail(bookingId);
 	if (!detail) return undefined;
 
@@ -85,7 +86,7 @@ export const listBookingOrders = ({
 	q,
 	skip,
 	limit
-}: IListBookingOrdersQuery): BookingOrderListResponse => {
+}: IListBookingOrdersQuery): TBookingOrderListResponseBackend => {
 	let filtered = [...bookingOrderListItems];
 
 	if (booking_status) {
@@ -109,42 +110,42 @@ export const listBookingOrders = ({
 };
 
 const resolveStatusAfterTransition = (
-	current: BookingStatus,
-	transition: BookingTransition
-): BookingStatus | null => {
+	current: ENUM_ORDER_STATUS_BACKEND_TYPE,
+	transition: ENUM_ORDER_TRANSITION_BACKEND_TYPE
+): ENUM_ORDER_STATUS_BACKEND_TYPE | null => {
 	if (
-		transition === BookingTransition.MoveToPending &&
-		current === BookingStatus.New
+		transition === ENUM_ORDER_TRANSITION_BACKEND.IN_PROCESSING &&
+		current === ENUM_ORDER_STATUS_BACKEND.NEW
 	) {
-		return BookingStatus.Pending;
+		return ENUM_ORDER_STATUS_BACKEND.IN_PROCESSING;
 	}
 
 	if (
-		transition === BookingTransition.MoveToConfirmed &&
-		current === BookingStatus.Pending
+		transition === ENUM_ORDER_TRANSITION_BACKEND.BOOKING &&
+		current === ENUM_ORDER_STATUS_BACKEND.IN_PROCESSING
 	) {
-		return BookingStatus.Confirmed;
+		return ENUM_ORDER_STATUS_BACKEND.BOOKING;
 	}
 
 	if (
-		transition === BookingTransition.Submit &&
-		current === BookingStatus.Draft
+		transition === ENUM_ORDER_TRANSITION_BACKEND.SUBMIT &&
+		current === ENUM_ORDER_STATUS_BACKEND.DRAFT
 	) {
-		return BookingStatus.New;
+		return ENUM_ORDER_STATUS_BACKEND.NEW;
 	}
 
 	if (
-		transition === BookingTransition.MoveToInProgress &&
-		current === BookingStatus.Confirmed
+		transition === ENUM_ORDER_TRANSITION_BACKEND.IN_PROGRESS &&
+		current === ENUM_ORDER_STATUS_BACKEND.BOOKING
 	) {
-		return BookingStatus.InProgress;
+		return ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS;
 	}
 
 	if (
-		transition === BookingTransition.MoveToCompleted &&
-		current === BookingStatus.InProgress
+		transition === ENUM_ORDER_TRANSITION_BACKEND.COMPLETED &&
+		current === ENUM_ORDER_STATUS_BACKEND.IN_PROGRESS
 	) {
-		return BookingStatus.Completed;
+		return ENUM_ORDER_STATUS_BACKEND.COMPLETED;
 	}
 
 	return null;
@@ -152,8 +153,8 @@ const resolveStatusAfterTransition = (
 
 /** Статус в детали и в строке списка меняются вместе */
 const setBookingStatus = (
-	detail: BookingOrderDetail,
-	status: BookingStatus
+	detail: TBookingOrderDetailBackend,
+	status: ENUM_ORDER_STATUS_BACKEND_TYPE
 ) => {
 	detail.order.status = status;
 	const listItem = bookingOrderListItems.find(
@@ -164,8 +165,8 @@ const setBookingStatus = (
 
 export const transitionBookingStatusInStore = (
 	bookingId: string,
-	transition: BookingTransition
-): BookingOrderResponse | null => {
+	transition: ENUM_ORDER_TRANSITION_BACKEND_TYPE
+): TBookingOrderResponseBackend | null => {
 	const detail = bookingOrderDetailStore.get(bookingId);
 	if (!detail) return null;
 
@@ -189,15 +190,15 @@ interface IBookingClient {
 }
 
 export const createBookingOrder = (
-	body: BookingCreate,
+	body: TBookingCreateBackend,
 	client: IBookingClient
-): BookingOrderResponse => {
+): TBookingOrderResponseBackend => {
 	const id = bookingIds.next();
 	const orderNumber = `RQA-NEW-${String(100 + nextOrderNumber++)}`;
 	const tour = MOCK_TOUR_INFO_TEMPLATE;
 	const endDate = addDays(body.date, Math.max(tour.days - 1, 0));
 
-	const order: BookingOrderResponse = {
+	const order: TBookingOrderResponseBackend = {
 		...MOCK_BOOKING_DEFAULTS,
 		id,
 		order_number: orderNumber,
@@ -207,7 +208,7 @@ export const createBookingOrder = (
 		date: body.date,
 		end_date: endDate,
 		pax: body.pax,
-		status: BookingStatus.Draft,
+		status: ENUM_ORDER_STATUS_BACKEND.DRAFT,
 		paid_amount: "0",
 		tour_amount: String(body.pax * 850),
 		cancelled_at: null,
@@ -227,8 +228,8 @@ export const createBookingOrder = (
 		id,
 		client_name: client.name,
 		client_type: client.agencyId
-			? BookingClientType.Agency
-			: BookingClientType.Tourist,
+			? ENUM_BOOKING_CLIENT_TYPE_BACKEND.AGENCY
+			: ENUM_BOOKING_CLIENT_TYPE_BACKEND.TOURIST,
 		tour_name: tour.title,
 		tour_type: tour.typ,
 		status: order.status,
@@ -242,7 +243,10 @@ export const createBookingOrder = (
 	return order;
 };
 
-export const updateBookingOrder = (bookingId: string, body: BookingUpdate) => {
+export const updateBookingOrder = (
+	bookingId: string,
+	body: TBookingUpdateBackend
+) => {
 	const detail = getBookingOrderDetail(bookingId);
 	if (!detail) return undefined;
 
@@ -270,7 +274,9 @@ export const updateBookingOrder = (bookingId: string, body: BookingUpdate) => {
 /** Отмена клиентом или отклонение оператором */
 export const closeBookingOrder = (
 	bookingId: string,
-	status: BookingStatus.Cancelled | BookingStatus.Declined,
+	status:
+		| typeof ENUM_ORDER_STATUS_BACKEND.CANCELLED
+		| typeof ENUM_ORDER_STATUS_BACKEND.DECLINED,
 	reason: string | null
 ) => {
 	const detail = getBookingOrderDetail(bookingId);

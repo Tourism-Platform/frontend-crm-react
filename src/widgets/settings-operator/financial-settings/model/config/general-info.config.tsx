@@ -1,3 +1,5 @@
+import type { TFinancialSettingsPageOperatorKeys } from "@/shared/config";
+
 import { CURRENCY_OPTIONS } from "@/entities/commission";
 import { ENUM_FORM_OPERATOR_GENERAL_INFO } from "@/entities/finance";
 
@@ -32,3 +34,15 @@ export const GENERAL_INFO_LIST: TForm[] = [
 		options: CURRENCY_OPTIONS
 	}
 ];
+
+/** Подсказка под полем — только для части полей */
+export const GENERAL_INFO_SECTION_DESCRIPTIONS: Partial<
+	Record<TForm["key"], TFinancialSettingsPageOperatorKeys>
+> = {
+	[ENUM_FORM_OPERATOR_GENERAL_INFO.TOUR_MARGIN]:
+		"general.form.fields.default_tour_margin.description",
+	[ENUM_FORM_OPERATOR_GENERAL_INFO.STAFF_PAYOUTS]:
+		"general.form.fields.staff_payouts.description",
+	[ENUM_FORM_OPERATOR_GENERAL_INFO.DEFAULT_CURRENCY]:
+		"general.form.fields.default_currency.description"
+};

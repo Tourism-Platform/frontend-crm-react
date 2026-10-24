@@ -1,10 +1,12 @@
-import { Currency, InvoiceType } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+
+import { ENUM_INVOICE_TYPE_BACKEND } from "../types";
 
 export const MOCK_BOOKING_ID_PREFIX = "a200";
 
 export const MOCK_INVOICE_DEFAULTS = {
-	currency: Currency.USD,
-	typ: InvoiceType.OperatorToAgency
+	currency: ENUM_CURRENCY_BACKEND.USD,
+	typ: ENUM_INVOICE_TYPE_BACKEND.OPERATOR_TO_AGENCY
 } as const;
 
 export const MOCK_ORDER_NUMBERS = [

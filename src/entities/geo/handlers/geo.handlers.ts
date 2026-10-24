@@ -1,11 +1,11 @@
 import { HttpResponse, delay, http } from "msw";
 
-import type { GeoFeature } from "@/shared/api";
 import { GEO_PATHS } from "@/shared/api";
 import { ENV } from "@/shared/config";
 import { formatGeoFeatureLabel } from "@/shared/utils/geo-display.utils";
 
 import { GEO_MOCK_FEATURES } from "../mock";
+import type { TGeoFeatureBackend } from "../types";
 
 const BASE_URL = (ENV.VITE_API_URL || "").replace(/\/$/, "");
 const COORD_EPSILON = 0.01;
@@ -20,14 +20,17 @@ const filterGeoFeatures = (query: string, limit: number) => {
 	}).slice(0, limit);
 };
 
-const findExactFeature = (lat: number, long: number): GeoFeature | undefined =>
+const findExactFeature = (
+	lat: number,
+	long: number
+): TGeoFeatureBackend | undefined =>
 	GEO_MOCK_FEATURES.find(
 		(feature) =>
 			Math.abs(feature.lat - lat) < COORD_EPSILON &&
 			Math.abs(feature.long - long) < COORD_EPSILON
 	);
 
-const reverseGeoFeature = (lat: number, long: number): GeoFeature[] => {
+const reverseGeoFeature = (lat: number, long: number): TGeoFeatureBackend[] => {
 	const exact = findExactFeature(lat, long);
 	if (exact) {
 		return [{ ...exact, lat, long }];

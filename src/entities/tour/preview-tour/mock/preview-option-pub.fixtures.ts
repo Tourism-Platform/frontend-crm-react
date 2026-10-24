@@ -1,26 +1,29 @@
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 import {
-	type ActivityEventPubReadOutput,
-	AmenitiesTypes,
-	type BusEventPubReadOutput,
-	Currency,
-	type FlightEventPubReadOutput,
-	type GeneralActivityPubSchemaOutput,
-	GeneralActivityPubSchemaOutputTypEnum,
-	HotelKind,
-	type HousingEventPubReadOutput,
-	HousingRoomTypes,
-	type InformationEventPubReadOutput,
-	LanguageCode,
-	type LocationOutSchema,
-	type MultiEventPubOutput,
-	type TimeSchema,
-	type TourOptionPreviewSchemaOutput,
-	type TourOptionPublicResponse,
-	type TrainEventPubReadOutput,
-	type TransferEventPubReadOutput,
-	TransferTypes,
-	VehicleBodyType
-} from "@/shared/api";
+	ENUM_AMENITIES_TYPES_BACKEND,
+	ENUM_HOUSING_ROOM_TYPES_BACKEND,
+	ENUM_VEHICLE_BODY_TYPE_BACKEND
+} from "@/entities/supplier/types/supplier-backend-enum.types";
+import type { TTimeSchemaBackend } from "@/entities/tour/itinerary/types/event-backend.types";
+import { ENUM_TRANSFER_TYPES_BACKEND } from "@/entities/tour/itinerary/types/itinerary-backend-enum.types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
+import {
+	ENUM_GENERAL_ACTIVITY_PUB_SCHEMA_OUTPUT_TYP_BACKEND,
+	ENUM_HOTEL_KIND_BACKEND,
+	type TActivityEventPubBackend,
+	type TBusEventPubBackend,
+	type TFlightEventPubBackend,
+	type TGeneralActivityPubSchemaOutputBackend,
+	type THousingEventPubBackend,
+	type TInformationEventPubBackend,
+	type TMultiEventPubBackend,
+	type TOptionDetailBackend,
+	type TPreviewOptionListItemBackend,
+	type TPubLocationBackend,
+	type TTrainEventPubBackend,
+	type TTransferEventPubBackend
+} from "../types";
 
 import {
 	PREVIEW_MOCK_IMAGE_URLS,
@@ -29,26 +32,26 @@ import {
 
 export const PREVIEW_OPTION_MOCK_ID = "1f2b3d82-5c4d-4b9f-9f7a-1a42e71d1b11";
 
-const time = (t: string): TimeSchema => ({ time: t, timezone: 5 });
+const time = (t: string): TTimeSchemaBackend => ({ time: t, timezone: 5 });
 
-export const locationTashkent = (): LocationOutSchema => ({
-	lang: LanguageCode.En,
+export const locationTashkent = (): TPubLocationBackend => ({
+	lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 	city: "Tashkent",
 	address: "Tashkent",
 	lat: 41.2995,
 	long: 69.2401
 });
 
-export const locationSamarkand = (): LocationOutSchema => ({
-	lang: LanguageCode.En,
+export const locationSamarkand = (): TPubLocationBackend => ({
+	lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 	city: "Samarkand",
 	address: "Samarkand",
 	lat: 39.6542,
 	long: 66.9597
 });
 
-export const locationAirportTashkent = (): LocationOutSchema => ({
-	lang: LanguageCode.En,
+export const locationAirportTashkent = (): TPubLocationBackend => ({
+	lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 	city: "Tashkent",
 	address: "Tashkent International Airport",
 	lat: 41.2579,
@@ -61,12 +64,15 @@ const housingDetails = () => ({
 	check_out: time("12:00:00"),
 	spec: {
 		stars: null,
-		typs: [HotelKind.Hotel],
-		amenities: [AmenitiesTypes.Wifi, AmenitiesTypes.Breakfast],
+		typs: [ENUM_HOTEL_KIND_BACKEND.HOTEL],
+		amenities: [
+			ENUM_AMENITIES_TYPES_BACKEND.WIFI,
+			ENUM_AMENITIES_TYPES_BACKEND.BREAKFAST
+		],
 		rooms: [
 			{
 				name: "Standard Double",
-				typ: HousingRoomTypes.Double,
+				typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 				pax: 2,
 				description:
 					"Comfortable double room with air conditioning, a private bathroom, and city views.",
@@ -74,7 +80,7 @@ const housingDetails = () => ({
 			},
 			{
 				name: "Family Suite",
-				typ: HousingRoomTypes.Family,
+				typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.FAMILY,
 				pax: 4,
 				description:
 					"Spacious suite with two sleeping areas, suitable for families travelling together.",
@@ -89,7 +95,7 @@ export const infoEvent = (
 	position: number,
 	name: string,
 	description: string
-): InformationEventPubReadOutput & { typ: "ref" } => ({
+): TInformationEventPubBackend & { typ: "ref" } => ({
 	typ: "ref",
 	name,
 	description,
@@ -109,7 +115,7 @@ export const flightEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "flight" } & FlightEventPubReadOutput => ({
+): { typ: "flight" } & TFlightEventPubBackend => ({
 	typ: "flight",
 	name,
 	description,
@@ -146,7 +152,7 @@ export const transferEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "transfer" } & TransferEventPubReadOutput => ({
+): { typ: "transfer" } & TTransferEventPubBackend => ({
 	typ: "transfer",
 	name,
 	description,
@@ -156,7 +162,7 @@ export const transferEvent = (
 	images: [],
 	date: null,
 	details: {
-		typ: TransferTypes.AirportTransfer,
+		typ: ENUM_TRANSFER_TYPES_BACKEND.AIRPORT_TRANSFER,
 		departure: {
 			date: "2026-06-01",
 			time: time("15:00:00"),
@@ -171,21 +177,21 @@ export const transferEvent = (
 			cars: [
 				{
 					name: null,
-					typ: VehicleBodyType.Sedan,
+					typ: ENUM_VEHICLE_BODY_TYPE_BACKEND.SEDAN,
 					pax: 2,
 					description: null,
 					categories: []
 				},
 				{
 					name: null,
-					typ: VehicleBodyType.Minivan,
+					typ: ENUM_VEHICLE_BODY_TYPE_BACKEND.MINIVAN,
 					pax: 7,
 					description: null,
 					categories: []
 				},
 				{
 					name: null,
-					typ: VehicleBodyType.Minibus,
+					typ: ENUM_VEHICLE_BODY_TYPE_BACKEND.MINIBUS,
 					pax: 21,
 					description: null,
 					categories: []
@@ -200,7 +206,7 @@ export const trainEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "train" } & TrainEventPubReadOutput => ({
+): { typ: "train" } & TTrainEventPubBackend => ({
 	typ: "train",
 	name,
 	description,
@@ -234,7 +240,7 @@ export const busEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "bus" } & BusEventPubReadOutput => ({
+): { typ: "bus" } & TBusEventPubBackend => ({
 	typ: "bus",
 	name,
 	description,
@@ -267,7 +273,7 @@ export const housingEvent = (
 	position: number,
 	name: string,
 	description: string
-): { typ: "housing" } & HousingEventPubReadOutput => ({
+): { typ: "housing" } & THousingEventPubBackend => ({
 	typ: "housing",
 	name,
 	description,
@@ -284,8 +290,8 @@ export const activityEvent = (
 	position: number,
 	name: string,
 	description: string,
-	city: LocationOutSchema
-): { typ: "activity" } & ActivityEventPubReadOutput => ({
+	city: TPubLocationBackend
+): { typ: "activity" } & TActivityEventPubBackend => ({
 	typ: "activity",
 	name,
 	description,
@@ -295,22 +301,22 @@ export const activityEvent = (
 	images: [],
 	date: null,
 	// The generated details union intersects the literal discriminant with the
-	// native enum (`{ typ: "sightseeing" } & GeneralActivityPubSchemaOutput`),
+	// native enum (`{ typ: "sightseeing" } & TGeneralActivityPubSchemaOutputBackend`),
 	// which TS reduces to never — a targeted cast is the only way to state it.
 	details: {
-		typ: GeneralActivityPubSchemaOutputTypEnum.Sightseeing,
+		typ: ENUM_GENERAL_ACTIVITY_PUB_SCHEMA_OUTPUT_TYP_BACKEND.SIGHTSEEING,
 		name: null,
 		location: city,
 		start_time: time("09:00:00"),
 		end_time: time("17:00:00"),
 		images: []
-	} as { typ: "sightseeing" } & GeneralActivityPubSchemaOutput
+	} as { typ: "sightseeing" } & TGeneralActivityPubSchemaOutputBackend
 });
 
 export const multiplyHotels = (
 	day: number,
 	position: number
-): MultiEventPubOutput => ({
+): TMultiEventPubBackend => ({
 	typ: "options",
 	name: "Overnight in Tashkent (choose one)",
 	description:
@@ -364,7 +370,7 @@ export const multiplyHotels = (
 export const multiplyEvening = (
 	day: number,
 	position: number
-): MultiEventPubOutput => ({
+): TMultiEventPubBackend => ({
 	typ: "options",
 	name: "Evening experience (choose one)",
 	description:
@@ -408,9 +414,12 @@ export const multiplyEvening = (
 	]
 });
 
-const monetary = (val: number) => ({ val, currency: Currency.USD });
+const monetary = (val: number) => ({
+	val,
+	currency: ENUM_CURRENCY_BACKEND.USD
+});
 
-export const PREVIEW_TOUR_OPTIONS_LIST_MOCK: TourOptionPreviewSchemaOutput[] = [
+export const PREVIEW_TOUR_OPTIONS_LIST_MOCK: TPreviewOptionListItemBackend[] = [
 	{
 		id: PREVIEW_OPTION_MOCK_ID,
 		name: "Silk Road Explorer — 6 Days Classic",
@@ -422,7 +431,7 @@ export const PREVIEW_TOUR_OPTIONS_LIST_MOCK: TourOptionPreviewSchemaOutput[] = [
 	}
 ];
 
-export const PREVIEW_OPTION_BACKEND_MOCK: TourOptionPublicResponse = {
+export const PREVIEW_OPTION_BACKEND_MOCK: TOptionDetailBackend = {
 	id: PREVIEW_OPTION_MOCK_ID,
 	total_price: monetary(983),
 	events: [

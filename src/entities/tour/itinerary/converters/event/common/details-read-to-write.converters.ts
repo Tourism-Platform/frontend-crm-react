@@ -1,47 +1,3 @@
-import {
-	type ActivityDetailsOutput,
-	type ActivityDetailsWrite,
-	type ActivityInlineSupplyNew,
-	type AllVariants,
-	type BusDetailsOutput,
-	type BusDetailsWrite,
-	type BusInlineSupplyNew,
-	type FlightDetailsOutput,
-	type FlightDetailsWrite,
-	type FlightInlineSupplyNew,
-	GeneralVenueInputSubTypEnum,
-	GeneralVenueOutputSubTypEnum,
-	type GuideDetailsOutput,
-	type GuideDetailsWrite,
-	type HousingDetailsOutput,
-	type HousingDetailsWrite,
-	type HousingInlineSupplyNew,
-	type InformationDetailsOutput,
-	type InformationDetailsWrite,
-	type NodeImageSchema,
-	type OnlyVariants,
-	type ProductSupplyNew,
-	type SupplementaryDetailsOutput,
-	type SupplementaryDetailsWrite,
-	type TrainDetailsOutput,
-	type TrainDetailsWrite,
-	type TrainInlineSupplyNew,
-	type TransferDetailsOutput,
-	type TransferDetailsWrite,
-	type TransferInlineSupplyNew
-} from "@/shared/api";
-
-import type {
-	ENUM_EVENT_BACKEND_TYPE,
-	ITourEventOption,
-	TEventDetailsBackend,
-	TEventDetailsWriteBackend,
-	TEventOptionBodyBackend,
-	TEventProductScopeBackend
-} from "../../../types";
-
-import type { TEventPoolMemberBackend } from "./event-pool.helpers";
-
 /**
  * READ → WRITE boundary for event details.
  *
@@ -56,6 +12,51 @@ import type { TEventPoolMemberBackend } from "./event-pool.helpers";
  * - `is_main` is never echoed;
  * - server-owned `images` are stripped from specs and spec nodes.
  */
+import {
+	ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND,
+	type ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND_TYPE
+} from "@/entities/supplier/types/supplier-backend-enum.types";
+import type { TSupplierNodeImageBackend } from "@/entities/supplier/types/supplier-product-image-backend.types";
+
+import {
+	type ENUM_EVENT_BACKEND_TYPE,
+	ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND,
+	type ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND_TYPE,
+	type ITourEventOption,
+	type TActivityDetailsBackend,
+	type TActivityDetailsInputBackend,
+	type TActivityInlineSupplyNewBackend,
+	type TAllVariantsBackend,
+	type TBusDetailsOutputBackend,
+	type TBusDetailsWriteBackend,
+	type TBusInlineSupplyNewBackend,
+	type TEventDetailsBackend,
+	type TEventDetailsWriteBackend,
+	type TEventOptionBodyBackend,
+	type TEventProductScopeBackend,
+	type TFlightDetailsOutputBackend,
+	type TFlightDetailsWriteBackend,
+	type TFlightInlineSupplyNewBackend,
+	type TGuideDetailsBackend,
+	type TGuideDetailsWriteBackend,
+	type THousingDetailsOutputBackend,
+	type THousingDetailsWriteBackend,
+	type THousingInlineSupplyNewBackend,
+	type TInformationDetailsOutputBackend,
+	type TInformationDetailsWriteBackend,
+	type TOnlyVariantsBackend,
+	type TProductSupplyNewBackend,
+	type TSupplementaryDetailsOutputBackend,
+	type TSupplementaryDetailsWriteBackend,
+	type TTrainDetailsOutputBackend,
+	type TTrainDetailsWriteBackend,
+	type TTrainInlineSupplyNewBackend,
+	type TTransferDetailsBackend,
+	type TTransferDetailsWriteBackend,
+	type TTransferInlineSupplyNewBackend
+} from "../../../types";
+
+import type { TEventPoolMemberBackend } from "./event-pool.helpers";
 
 type TProductSupplyRead = Extract<
 	TEventPoolMemberBackend["supply"],
@@ -66,7 +67,7 @@ const mapScopeReadToWrite = (
 	scope: TProductSupplyRead["scope"]
 ): TEventProductScopeBackend => {
 	if (scope.typ === "only") {
-		const only: { typ: "only" } & OnlyVariants = {
+		const only: { typ: "only" } & TOnlyVariantsBackend = {
 			typ: "only",
 			ids: [...(scope.ids ?? [])],
 			units: [...(scope.units ?? [])],
@@ -74,20 +75,20 @@ const mapScopeReadToWrite = (
 		};
 		return only;
 	}
-	const all: { typ: "all" } & AllVariants = { typ: "all" };
+	const all: { typ: "all" } & TAllVariantsBackend = { typ: "all" };
 	return all;
 };
 
 const mapProductSupplyReadToWrite = (
 	supply: TProductSupplyRead
-): { source: "product" } & ProductSupplyNew => ({
+): { source: "product" } & TProductSupplyNewBackend => ({
 	source: "product",
 	product_id: supply.product_id,
 	scope: mapScopeReadToWrite(supply.scope)
 });
 
 /** Strips server-owned images from a spec or spec node (room/vehicle/car/offering/menu item). */
-const stripImages = <T extends { images?: NodeImageSchema[] }>(
+const stripImages = <T extends { images?: TSupplierNodeImageBackend[] }>(
 	node: T
 ): Omit<T, "images"> => {
 	const rest = { ...node };
@@ -97,8 +98,8 @@ const stripImages = <T extends { images?: NodeImageSchema[] }>(
 
 /* ---------------------------------- hotel --------------------------------- */
 
-type THousingSpecRead = HousingDetailsOutput["pool"][number]["spec"];
-type THousingSpecWrite = HousingInlineSupplyNew["spec"];
+type THousingSpecRead = THousingDetailsOutputBackend["pool"][number]["spec"];
+type THousingSpecWrite = THousingInlineSupplyNewBackend["spec"];
 
 const mapHousingSpecReadToWrite = (
 	spec: THousingSpecRead
@@ -123,8 +124,8 @@ const mapHousingSpecReadToWrite = (
 };
 
 const mapHousingDetailsReadToWrite = (
-	details: HousingDetailsOutput
-): HousingDetailsWrite => ({
+	details: THousingDetailsOutputBackend
+): THousingDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -141,8 +142,8 @@ const mapHousingDetailsReadToWrite = (
 
 /* ------------------------------ train / flight ----------------------------- */
 
-type TTrainSpecRead = TrainDetailsOutput["pool"][number]["spec"];
-type TTrainSpecWrite = TrainInlineSupplyNew["spec"];
+type TTrainSpecRead = TTrainDetailsOutputBackend["pool"][number]["spec"];
+type TTrainSpecWrite = TTrainInlineSupplyNewBackend["spec"];
 
 const mapTrainSpecReadToWrite = (spec: TTrainSpecRead): TTrainSpecWrite => {
 	if (spec.pricing === "per_fare") {
@@ -165,8 +166,8 @@ const mapTrainSpecReadToWrite = (spec: TTrainSpecRead): TTrainSpecWrite => {
 };
 
 const mapTrainDetailsReadToWrite = (
-	details: TrainDetailsOutput
-): TrainDetailsWrite => ({
+	details: TTrainDetailsOutputBackend
+): TTrainDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -181,8 +182,8 @@ const mapTrainDetailsReadToWrite = (
 	}))
 });
 
-type TFlightSpecRead = FlightDetailsOutput["pool"][number]["spec"];
-type TFlightSpecWrite = FlightInlineSupplyNew["spec"];
+type TFlightSpecRead = TFlightDetailsOutputBackend["pool"][number]["spec"];
+type TFlightSpecWrite = TFlightInlineSupplyNewBackend["spec"];
 
 const mapFlightSpecReadToWrite = (spec: TFlightSpecRead): TFlightSpecWrite => {
 	if (spec.pricing === "per_fare") {
@@ -205,8 +206,8 @@ const mapFlightSpecReadToWrite = (spec: TFlightSpecRead): TFlightSpecWrite => {
 };
 
 const mapFlightDetailsReadToWrite = (
-	details: FlightDetailsOutput
-): FlightDetailsWrite => ({
+	details: TFlightDetailsOutputBackend
+): TFlightDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -223,8 +224,8 @@ const mapFlightDetailsReadToWrite = (
 
 /* ----------------------------------- bus ---------------------------------- */
 
-type TBusSpecRead = BusDetailsOutput["pool"][number]["spec"];
-type TBusSpecWrite = BusInlineSupplyNew["spec"];
+type TBusSpecRead = TBusDetailsOutputBackend["pool"][number]["spec"];
+type TBusSpecWrite = TBusInlineSupplyNewBackend["spec"];
 
 const mapBusSpecReadToWrite = (spec: TBusSpecRead): TBusSpecWrite => {
 	if (spec.pricing === "per_vehicle") {
@@ -245,8 +246,8 @@ const mapBusSpecReadToWrite = (spec: TBusSpecRead): TBusSpecWrite => {
 };
 
 const mapBusDetailsReadToWrite = (
-	details: BusDetailsOutput
-): BusDetailsWrite => ({
+	details: TBusDetailsOutputBackend
+): TBusDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -263,8 +264,8 @@ const mapBusDetailsReadToWrite = (
 
 /* --------------------------------- transfer -------------------------------- */
 
-type TTransferSpecRead = TransferDetailsOutput["pool"][number]["spec"];
-type TTransferSpecWrite = TransferInlineSupplyNew["spec"];
+type TTransferSpecRead = TTransferDetailsBackend["pool"][number]["spec"];
+type TTransferSpecWrite = TTransferInlineSupplyNewBackend["spec"];
 
 const mapTransferSpecReadToWrite = (
 	spec: TTransferSpecRead
@@ -302,8 +303,8 @@ const mapTransferSpecReadToWrite = (
 };
 
 const mapTransferDetailsReadToWrite = (
-	details: TransferDetailsOutput
-): TransferDetailsWrite => ({
+	details: TTransferDetailsBackend
+): TTransferDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -320,37 +321,41 @@ const mapTransferDetailsReadToWrite = (
 
 /* --------------------------------- activity -------------------------------- */
 
-type TActivitySpecRead = ActivityDetailsOutput["pool"][number]["spec"];
-type TActivitySpecWrite = ActivityInlineSupplyNew["spec"];
+type TActivitySpecRead = TActivityDetailsBackend["pool"][number]["spec"];
+type TActivitySpecWrite = TActivityInlineSupplyNewBackend["spec"];
 
 /**
  * Output → Input venue subtype. The generated WRITE union types the
- * general-venue discriminant as `"sightseeing" & GeneralVenueInputSubTypEnum`
+ * general-venue discriminant as `"sightseeing" & ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND_TYPE`
  * (which reduces to `never`), so the tag is cast to `never` at the write
  * boundary — the runtime value is the matching enum member.
  */
 const GENERAL_SUB_TYP_OUT_TO_IN: Record<
-	GeneralVenueOutputSubTypEnum,
-	GeneralVenueInputSubTypEnum
+	ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND_TYPE,
+	ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND_TYPE
 > = {
-	[GeneralVenueOutputSubTypEnum.MasterClass]:
-		GeneralVenueInputSubTypEnum.MasterClass,
-	[GeneralVenueOutputSubTypEnum.Sightseeing]:
-		GeneralVenueInputSubTypEnum.Sightseeing,
-	[GeneralVenueOutputSubTypEnum.Outdoor]: GeneralVenueInputSubTypEnum.Outdoor,
-	[GeneralVenueOutputSubTypEnum.Riding]: GeneralVenueInputSubTypEnum.Riding,
-	[GeneralVenueOutputSubTypEnum.Extreme]: GeneralVenueInputSubTypEnum.Extreme,
-	[GeneralVenueOutputSubTypEnum.Wellness]:
-		GeneralVenueInputSubTypEnum.Wellness,
-	[GeneralVenueOutputSubTypEnum.Entertainment]:
-		GeneralVenueInputSubTypEnum.Entertainment,
-	[GeneralVenueOutputSubTypEnum.WaterActivities]:
-		GeneralVenueInputSubTypEnum.WaterActivities,
-	[GeneralVenueOutputSubTypEnum.Photography]:
-		GeneralVenueInputSubTypEnum.Photography,
-	[GeneralVenueOutputSubTypEnum.Spiritual]:
-		GeneralVenueInputSubTypEnum.Spiritual,
-	[GeneralVenueOutputSubTypEnum.Other]: GeneralVenueInputSubTypEnum.Other
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.MASTER_CLASS]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.MASTER_CLASS,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.SIGHTSEEING]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.SIGHTSEEING,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.OUTDOOR]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.OUTDOOR,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.RIDING]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.RIDING,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.EXTREME]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.EXTREME,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.WELLNESS]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.WELLNESS,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.ENTERTAINMENT]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.ENTERTAINMENT,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.WATER_ACTIVITIES]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.WATER_ACTIVITIES,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.PHOTOGRAPHY]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.PHOTOGRAPHY,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.SPIRITUAL]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.SPIRITUAL,
+	[ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.OTHER]:
+		ENUM_GENERAL_VENUE_INPUT_SUB_TYP_BACKEND.OTHER
 };
 
 const mapActivitySpecReadToWrite = (
@@ -372,7 +377,7 @@ const mapActivitySpecReadToWrite = (
 	}
 	const { offerings, ...rest } = stripImages(spec);
 	// `spec.sub_typ` is `never` on read (see above) — assignable to the enum.
-	const subTyp: GeneralVenueOutputSubTypEnum = spec.sub_typ;
+	const subTyp: ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND_TYPE = spec.sub_typ;
 	return {
 		...rest,
 		sub_typ: GENERAL_SUB_TYP_OUT_TO_IN[subTyp] as never,
@@ -381,8 +386,8 @@ const mapActivitySpecReadToWrite = (
 };
 
 const mapActivityDetailsReadToWrite = (
-	details: ActivityDetailsOutput
-): ActivityDetailsWrite => ({
+	details: TActivityDetailsBackend
+): TActivityDetailsInputBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -400,8 +405,8 @@ const mapActivityDetailsReadToWrite = (
 /* ------------------------- guide / info / supplementary -------------------- */
 
 const mapGuideDetailsReadToWrite = (
-	details: GuideDetailsOutput
-): GuideDetailsWrite => ({
+	details: TGuideDetailsBackend
+): TGuideDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -420,8 +425,8 @@ const mapGuideDetailsReadToWrite = (
 });
 
 const mapInformationDetailsReadToWrite = (
-	details: InformationDetailsOutput
-): InformationDetailsWrite => ({
+	details: TInformationDetailsOutputBackend
+): TInformationDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -433,8 +438,8 @@ const mapInformationDetailsReadToWrite = (
 });
 
 const mapSupplementaryDetailsReadToWrite = (
-	details: SupplementaryDetailsOutput
-): SupplementaryDetailsWrite => ({
+	details: TSupplementaryDetailsOutputBackend
+): TSupplementaryDetailsWriteBackend => ({
 	plan: details.plan,
 	pool: details.pool.map((member) => ({
 		id: member.id,
@@ -461,31 +466,37 @@ export const mapEventDetailsReadToWrite = (
 	switch (backendTyp) {
 		case "housing":
 			return mapHousingDetailsReadToWrite(
-				details as HousingDetailsOutput
+				details as THousingDetailsOutputBackend
 			);
 		case "train":
-			return mapTrainDetailsReadToWrite(details as TrainDetailsOutput);
+			return mapTrainDetailsReadToWrite(
+				details as TTrainDetailsOutputBackend
+			);
 		case "flight":
-			return mapFlightDetailsReadToWrite(details as FlightDetailsOutput);
+			return mapFlightDetailsReadToWrite(
+				details as TFlightDetailsOutputBackend
+			);
 		case "bus":
-			return mapBusDetailsReadToWrite(details as BusDetailsOutput);
+			return mapBusDetailsReadToWrite(
+				details as TBusDetailsOutputBackend
+			);
 		case "transfer":
 			return mapTransferDetailsReadToWrite(
-				details as TransferDetailsOutput
+				details as TTransferDetailsBackend
 			);
 		case "activity":
 			return mapActivityDetailsReadToWrite(
-				details as ActivityDetailsOutput
+				details as TActivityDetailsBackend
 			);
 		case "guide":
-			return mapGuideDetailsReadToWrite(details as GuideDetailsOutput);
+			return mapGuideDetailsReadToWrite(details as TGuideDetailsBackend);
 		case "ref":
 			return mapInformationDetailsReadToWrite(
-				details as InformationDetailsOutput
+				details as TInformationDetailsOutputBackend
 			);
 		case "supplementary":
 			return mapSupplementaryDetailsReadToWrite(
-				details as SupplementaryDetailsOutput
+				details as TSupplementaryDetailsOutputBackend
 			);
 		default:
 			throw new Error(

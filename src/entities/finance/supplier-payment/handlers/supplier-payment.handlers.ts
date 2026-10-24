@@ -2,7 +2,6 @@ import { HttpResponse } from "msw";
 
 import {
 	OPERATOR_SUPPLIER_PAYMENT_PATHS,
-	type SupplierPaymentUpdate,
 	createMockHandler
 } from "@/shared/api";
 
@@ -13,6 +12,7 @@ import {
 	updateSupplierPaymentInStore,
 	uploadReceiptInStore
 } from "../mock/supplier-payment.store";
+import type { TUpdateSupplierPaymentBackend } from "../types";
 
 export const financeSupplierPaymentHandlers = [
 	createMockHandler(
@@ -37,7 +37,7 @@ export const financeSupplierPaymentHandlers = [
 		async ({ params, body }) => {
 			const updated = updateSupplierPaymentInStore(
 				String(params.paymentId),
-				body as SupplierPaymentUpdate
+				body as TUpdateSupplierPaymentBackend
 			);
 
 			if (!updated) {

@@ -1,4 +1,4 @@
-import type { StayRateOutput } from "@/shared/api/generated/Api";
+import type { THousingStayRateBackend } from "@/entities/tour/itinerary/types/accommodation/pricing-backend.types";
 
 import {
 	ENUM_HOTEL_PRICING,
@@ -21,13 +21,8 @@ import {
 } from "./policy.converters";
 import { mapHotelVariantFromBackend } from "./rooms.converters";
 
-/**
- * The whole-stay price is carried through untouched: every output charge leaf
- * is structurally assignable to its input counterpart, so this is a plain
- * re-wrap, verified by the compiler.
- */
 const mapStayRateFromBackend = (
-	price: StayRateOutput
+	price: THousingStayRateBackend
 ): THotelStayRateInputBackend => ({
 	base: price.base,
 	seasons: price.seasons

@@ -114,5 +114,3 @@ export const FLIGHT_PRICING_SCHEMA = z
 
 		validateFlatOrPerPersonPricing(data, ctx);
 	});
-
-export type TFlightPricingSchema = z.infer<typeof FLIGHT_PRICING_SCHEMA>;

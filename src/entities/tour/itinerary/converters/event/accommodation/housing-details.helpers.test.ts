@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency } from "@/shared/api";
-import type { HousingDetailsOutput } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+
+import type { THousingDetailsOutputBackend } from "../../../types";
 
 import { isInheritedHousingDetails } from "./housing-details.helpers";
 
-const WHOLE_SPEC: HousingDetailsOutput["pool"][number]["spec"] = {
+const WHOLE_SPEC: THousingDetailsOutputBackend["pool"][number]["spec"] = {
 	pricing: "whole",
 	images: [],
 	name: null,
@@ -17,7 +18,7 @@ const WHOLE_SPEC: HousingDetailsOutput["pool"][number]["spec"] = {
 	price: {
 		base: {
 			typ: "fixed",
-			cost: { val: 0, currency: Currency.USD },
+			cost: { val: 0, currency: ENUM_CURRENCY_BACKEND.USD },
 			fees: null,
 			extra_costs: [],
 			markup: null
@@ -29,7 +30,7 @@ const WHOLE_SPEC: HousingDetailsOutput["pool"][number]["spec"] = {
 
 const member = (
 	source: "product" | "inline"
-): HousingDetailsOutput["pool"][number] => ({
+): THousingDetailsOutputBackend["pool"][number] => ({
 	id: "11111111-1111-1111-1111-111111111111",
 	is_main: true,
 	supply:

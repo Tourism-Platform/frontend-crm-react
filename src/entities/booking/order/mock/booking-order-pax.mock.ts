@@ -1,11 +1,15 @@
-import { BookingStatus, Gender, type PaxWithFiles } from "@/shared/api";
+import {
+	ENUM_GENDER_OPTIONS_BACKEND,
+	ENUM_ORDER_STATUS_BACKEND,
+	type TBookingPaxBackend
+} from "../types";
 
 import { bookingOrderDetailStore } from "./booking-order.store";
 
 const PAX_TEMPLATES = [
 	{
 		full_name: "Saimon Bill",
-		gender: Gender.M,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.MALE,
 		nationality: "US",
 		date_of_birth: "1988-05-13",
 		passport_number: "13213467",
@@ -14,7 +18,7 @@ const PAX_TEMPLATES = [
 	},
 	{
 		full_name: "Amanda Jally",
-		gender: Gender.F,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.FEMALE,
 		nationality: "US",
 		date_of_birth: "1999-01-17",
 		passport_number: "13289067",
@@ -23,7 +27,7 @@ const PAX_TEMPLATES = [
 	},
 	{
 		full_name: "Amad Diallo",
-		gender: Gender.M,
+		gender: ENUM_GENDER_OPTIONS_BACKEND.MALE,
 		nationality: "CI",
 		date_of_birth: "2002-07-11",
 		passport_number: "AD998877",
@@ -41,7 +45,7 @@ const buildFileId = (paxId: string) =>
 const createPaxForBooking = (
 	bookingId: string,
 	count: number
-): PaxWithFiles[] =>
+): TBookingPaxBackend[] =>
 	PAX_TEMPLATES.slice(0, count).map((template, index) => {
 		const id = buildPaxId(bookingId, index + 1);
 		const now = new Date().toISOString();
@@ -61,11 +65,12 @@ const createPaxForBooking = (
 		};
 	});
 
-const buildInitialPaxStore = (): Map<string, PaxWithFiles[]> => {
-	const store = new Map<string, PaxWithFiles[]>();
+const buildInitialPaxStore = (): Map<string, TBookingPaxBackend[]> => {
+	const store = new Map<string, TBookingPaxBackend[]>();
 
 	for (const detail of bookingOrderDetailStore.values()) {
-		if (detail.order.status === BookingStatus.Cancelled) continue;
+		if (detail.order.status === ENUM_ORDER_STATUS_BACKEND.CANCELLED)
+			continue;
 		const count = Math.min(3, Math.max(1, detail.order.pax - 1));
 		store.set(detail.order.id, createPaxForBooking(detail.order.id, count));
 	}
@@ -75,7 +80,7 @@ const buildInitialPaxStore = (): Map<string, PaxWithFiles[]> => {
 
 export const bookingPaxStore = buildInitialPaxStore();
 
-export const getBookingPaxList = (bookingId: string): PaxWithFiles[] =>
+export const getBookingPaxList = (bookingId: string): TBookingPaxBackend[] =>
 	bookingPaxStore.get(bookingId) ?? [];
 
 export const resetBookingPaxStore = (): void => {
@@ -87,7 +92,7 @@ export const resetBookingPaxStore = (): void => {
 
 export const setBookingPaxList = (
 	bookingId: string,
-	pax: PaxWithFiles[]
+	pax: TBookingPaxBackend[]
 ): void => {
 	bookingPaxStore.set(bookingId, pax);
 };

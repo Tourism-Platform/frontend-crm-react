@@ -12,10 +12,12 @@ import {
 } from "@/shared/ui";
 
 import {
+	ENUM_FLIGHT_TRANSPORT_TYPE,
 	type ENUM_FLIGHT_TRANSPORT_TYPE_TYPE,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_FLIGHT,
 	ENUM_FLIGHT_FORM_SECTION as ENUM_FORM_SECTION,
+	FLIGHT_TRANSPORT_TYPE_CONFIG,
 	type TFlightEditSchema,
 	createEmptyTransportSegment
 } from "@/entities/tour";
@@ -29,10 +31,7 @@ import {
 
 import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { InheritedLockBanner } from "../../../ui/inherited-lock-banner";
-import {
-	FLIGHT_TRANSPORT_TYPE_TABS_LIST,
-	getFlightTransportTypeConfig
-} from "../../model";
+import { FLIGHT_TRANSPORT_TYPE_TABS_LIST } from "../../model";
 
 import { FlightCard } from "./flight-card";
 
@@ -102,9 +101,10 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 		form.setValue(ENUM_FORM_EVENT_PRODUCT.HAS_OVERRIDE, next);
 	};
 
-	const { eventTyp, supplierTyp } = getFlightTransportTypeConfig(
-		formState?.general?.transport_type
-	);
+	const { eventKind, supplierTyp } =
+		FLIGHT_TRANSPORT_TYPE_CONFIG[
+			formState?.general?.transport_type ?? ENUM_FLIGHT_TRANSPORT_TYPE.FLY
+		];
 
 	return (
 		<div className="grid gap-6">
@@ -120,7 +120,7 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 					form={form}
 					variant={poolVariant}
 					onSelect={onPoolSelect}
-					eventTyp={eventTyp}
+					eventKind={eventKind}
 					supplierTyp={supplierTyp}
 				/>
 				<EventProductLinkControls
@@ -131,7 +131,7 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 					supplyId={supplyId}
 				/>
 				<EventOverrideControls
-					eventTyp={eventTyp}
+					eventKind={eventKind}
 					isInherited={isInherited}
 					hasOverride={Boolean(hasOverride)}
 					supplyId={supplyId}

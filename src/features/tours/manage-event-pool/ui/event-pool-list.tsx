@@ -6,11 +6,9 @@ import { Badge, Button } from "@/shared/ui";
 
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
 import {
-	type ENUM_EVENT_BACKEND_TYPE,
-	type TAddPoolMemberIntent,
-	type TEventPoolMemberBackend,
-	getPoolMemberLabel,
-	isProductPoolMember
+	type ENUM_EVENT_KIND_TYPE,
+	type IEventPoolMemberSummary,
+	type TAddPoolMemberIntent
 } from "@/entities/tour";
 
 import {
@@ -24,14 +22,14 @@ import { SetEventPoolMemberMainButton } from "./set-event-pool-member-main-butto
 
 interface IEventPoolListProps {
 	variant: ENUM_EVENT_POOL_VARIANT_TYPE;
-	members: TEventPoolMemberBackend[];
+	members: IEventPoolMemberSummary[];
 	selectedSupplyId?: string;
 	canRemove: boolean;
 	isBusy: boolean;
 	isAdding?: boolean;
 	isRemoving?: boolean;
 	isSettingMain?: boolean;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	supplierTyp?: ENUM_SUPPLIER_TYPE_TYPE;
 	onSelect: (supplyId: string | undefined) => void;
 	onAdd: (intent: TAddPoolMemberIntent) => Promise<void>;
@@ -48,7 +46,7 @@ export const EventPoolList = ({
 	isAdding,
 	isRemoving,
 	isSettingMain,
-	eventTyp,
+	eventKind,
 	supplierTyp,
 	onSelect,
 	onAdd,
@@ -80,8 +78,7 @@ export const EventPoolList = ({
 			<ul className="grid gap-2">
 				{members.map((member) => {
 					const isSelected = member.id === selectedSupplyId;
-					const isMain =
-						Boolean(member.is_main) || members.length === 1;
+					const isMain = member.isMain || members.length === 1;
 
 					return (
 						<li key={member.id}>
@@ -97,10 +94,10 @@ export const EventPoolList = ({
 									onClick={() => onSelect(member.id)}
 								>
 									<span className="truncate font-medium">
-										{getPoolMemberLabel(member)}
+										{member.supplierLabel}
 									</span>
 									<Badge variant="outline" size="sm">
-										{isProductPoolMember(member)
+										{member.isProduct
 											? t("pool.source.product")
 											: t("pool.source.inline")}
 									</Badge>
@@ -136,7 +133,7 @@ export const EventPoolList = ({
 			<AddEventPoolMemberDialog
 				open={addOpen}
 				onOpenChange={setAddOpen}
-				eventTyp={eventTyp}
+				eventKind={eventKind}
 				supplierTyp={supplierTyp}
 				isSubmitting={isAdding}
 				onAdd={onAdd}

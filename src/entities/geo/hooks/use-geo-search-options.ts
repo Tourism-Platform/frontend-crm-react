@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 
-import { LanguageCode } from "@/shared/api";
 import { ENUM_LANGUAGES, type ENUM_LANGUAGES_TYPE } from "@/shared/config";
-import { languageCodeMapper } from "@/shared/converters";
 import { useDebounce } from "@/shared/hooks";
 
 import { useSearchGeoQuery } from "../api";
@@ -36,11 +34,6 @@ export const useGeoSearchOptions = (
 		debounceMs = DEFAULT_DEBOUNCE_MS
 	} = params;
 
-	const lang = useMemo(
-		() => languageCodeMapper.to(language) ?? LanguageCode.En,
-		[language]
-	);
-
 	const [query, setQuery] = useState("");
 	const debouncedQuery = useDebounce(query, debounceMs);
 
@@ -52,7 +45,7 @@ export const useGeoSearchOptions = (
 		isLoading,
 		isFetching
 	} = useSearchGeoQuery(
-		{ q: trimmedQuery, lang, limit },
+		{ q: trimmedQuery, lang: language, limit },
 		{ skip: shouldSkip }
 	);
 

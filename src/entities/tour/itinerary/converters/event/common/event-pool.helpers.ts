@@ -98,6 +98,7 @@ export const mapEventPoolToSummary = (
 		return {
 			id: record.id,
 			supplierLabel: getPoolMemberLabel(record),
-			isMain: Boolean(record.is_main)
+			isMain: Boolean(record.is_main),
+			isProduct: isProductPoolMember(record)
 		};
 	});

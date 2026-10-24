@@ -1,5 +1,3 @@
-import { LanguageCode } from "@/shared/api";
-import type { HousingDetailsWrite, Stay } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
@@ -8,14 +6,18 @@ import {
 } from "@/shared/converters";
 import { getDeviceUtcOffset } from "@/shared/hooks";
 
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
 import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_HOUSING_SOURCE,
 	type TAccommodationEditSchema,
 	type TEventDetailsBackend,
+	type THousingDetailsWriteBackend,
 	type THousingSingleEventBackend,
 	type THousingSpecInputBackend,
+	type TStayBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../../types";
@@ -126,7 +128,7 @@ export const mapAccommodationEventToForm = (
 
 const mapStayPlanToBackend = (
 	g?: TAccommodationEditSchema["general"]
-): Stay => {
+): TStayBackend => {
 	const duration = Number(g?.length_of_stay);
 
 	return {
@@ -151,7 +153,8 @@ export const mapAccommodationFormToUpdate = (
 	language?: ENUM_LANGUAGES_TYPE,
 	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
-	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+	const lang =
+		languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 	const productId = frontend[ENUM_FORM_EVENT_PRODUCT.PRODUCT_ID];
 	const supplyId = frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID];
 	const g = frontend.general;
@@ -204,12 +207,12 @@ export const mapAccommodationFormToUpdate = (
 				)
 			: undefined;
 
-	const details: HousingDetailsWrite = {
+	const details: THousingDetailsWriteBackend = {
 		plan,
 		...(inlineSupply && {
 			pool: (echoed?.pool ?? [
 				{ supply: inlineSupply }
-			]) as HousingDetailsWrite["pool"]
+			]) as THousingDetailsWriteBackend["pool"]
 		})
 	};
 

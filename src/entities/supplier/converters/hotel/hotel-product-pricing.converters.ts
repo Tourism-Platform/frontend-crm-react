@@ -1,10 +1,3 @@
-import type {
-	FeeInput,
-	MonetaryValueSchema,
-	RoomRateSwitch,
-	StayRateInput
-} from "@/shared/api/generated/Api";
-
 import {
 	DEFAULT_EVENT_CURRENCY,
 	type ENUM_CURRENCY_OPTIONS_TYPE,
@@ -38,6 +31,10 @@ import {
 	type THotelProductEditSchema,
 	type THotelProductPricingSchema,
 	type THotelRoomCharge,
+	type THotelStayRateInputBackend,
+	type TMonetaryValueBackend,
+	type TRoomRateSwitchBackend,
+	type TSupplierFeeInputBackend,
 	type TSupplierSurcharge,
 	type TSupplierVariantCharge
 } from "../../types";
@@ -86,8 +83,8 @@ const mapMarkupToForm = (
 };
 
 const getStayChargeMoney = (
-	charge: StayRateInput["base"]
-): MonetaryValueSchema | undefined => {
+	charge: THotelStayRateInputBackend["base"]
+): TMonetaryValueBackend | undefined => {
 	if (charge.typ === "per_person") {
 		return charge.cost_per_person;
 	}
@@ -107,7 +104,7 @@ const getStayChargeMoney = (
 };
 
 const mapStayRateMarkupToForm = (
-	markup?: StayRateInput["base"]["markup"]
+	markup?: THotelStayRateInputBackend["base"]["markup"]
 ): IHotelProductPriceRowMarkup | null => {
 	if (!markup) return null;
 	if (markup.typ === "percentage") {
@@ -123,7 +120,7 @@ const mapStayRateMarkupToForm = (
 };
 
 const mapStayRateFeesToForm = (
-	fees?: FeeInput[] | null
+	fees?: TSupplierFeeInputBackend[] | null
 ): ISupplierFeeFormRow[] =>
 	(fees ?? []).map((fee) => ({
 		[ENUM_SUPPLIER_FEE_FIELD.NAME]: fee.name ?? null,
@@ -332,7 +329,8 @@ export const mapHotelPricingFromProduct = (
 		};
 	}
 
-	const charge: StayRateInput["base"] | undefined = product.stayRate?.base;
+	const charge: THotelStayRateInputBackend["base"] | undefined =
+		product.stayRate?.base;
 	if (!charge) {
 		return {
 			...defaults,
@@ -483,42 +481,45 @@ export const mapHotelEditFormToPricingSwitch = (
 			current: pricing[ENUM_HOTEL_PRODUCT_PRICING_FIELD.EXPENSES]
 		});
 
-		const switchedRooms: RoomRateSwitch[] = rooms.flatMap((row, index) => {
-			const variant = product.variants.find(
-				(item) =>
-					item.id === row[ENUM_FORM_HOTEL_PRODUCT_ROOMS.VARIANT_ID]
-			);
-			const roomId = variant?.rooms[0]?.id;
-			if (!roomId) return [];
+		const switchedRooms: TRoomRateSwitchBackend[] = rooms.flatMap(
+			(row, index) => {
+				const variant = product.variants.find(
+					(item) =>
+						item.id ===
+						row[ENUM_FORM_HOTEL_PRODUCT_ROOMS.VARIANT_ID]
+				);
+				const roomId = variant?.rooms[0]?.id;
+				if (!roomId) return [];
 
-			const priceRow =
-				aligned.typ === ENUM_HOTEL_PRODUCT_EXPENSE_TYP.PER_ROOM
-					? aligned[ENUM_HOTEL_PRODUCT_PER_ROOM_EXPENSES_FIELD.ROOMS][
-							index
-						]
-					: aligned[ENUM_HOTEL_PRODUCT_PER_ROOM_EXPENSES_FIELD.ROOMS][
-							index
-						]?.[
-							ENUM_HOTEL_PRODUCT_PER_ROOM_EXPENSES_FIELD
-								.CATEGORIES
-						]?.[0];
+				const priceRow =
+					aligned.typ === ENUM_HOTEL_PRODUCT_EXPENSE_TYP.PER_ROOM
+						? aligned[
+								ENUM_HOTEL_PRODUCT_PER_ROOM_EXPENSES_FIELD.ROOMS
+							][index]
+						: aligned[
+								ENUM_HOTEL_PRODUCT_PER_ROOM_EXPENSES_FIELD.ROOMS
+							][index]?.[
+								ENUM_HOTEL_PRODUCT_PER_ROOM_EXPENSES_FIELD
+									.CATEGORIES
+							]?.[0];
 
-			return [
-				{
-					room_id: roomId,
-					rate: {
-						base: mapHotelRoomChargeToBackend(
-							mapRowToRoomCharge(
-								priceRow,
-								variant?.rooms[0]?.expenses,
-								addMargin
-							)
-						),
-						seasons: mapSeasonsToSwitch(variant)
+				return [
+					{
+						room_id: roomId,
+						rate: {
+							base: mapHotelRoomChargeToBackend(
+								mapRowToRoomCharge(
+									priceRow,
+									variant?.rooms[0]?.expenses,
+									addMargin
+								)
+							),
+							seasons: mapSeasonsToSwitch(variant)
+						}
 					}
-				}
-			];
-		});
+				];
+			}
+		);
 
 		return {
 			typ: ENUM_SUPPLIER_TYPE.HOTEL,
@@ -527,7 +528,7 @@ export const mapHotelEditFormToPricingSwitch = (
 		};
 	}
 
-	const price: StayRateInput = {
+	const price: THotelStayRateInputBackend = {
 		base: mapSupplierVariantChargeToBackend(mapWholeCharge(pricing)),
 		seasons: product.stayRate?.seasons ?? []
 	};

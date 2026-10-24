@@ -1,3 +1,7 @@
+import type { z } from "zod";
+
+import type { ACTIVITY_PRICING_SCHEMA } from "../../schema/activity/pricing.schema";
+
 export const ENUM_ACTIVITY_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -40,3 +44,5 @@ export interface IActivityPriceRowMarkup {
 	typ: ENUM_ACTIVITY_MARKUP_TYP_TYPE;
 	value: string;
 }
+
+export type TActivityPricingSchema = z.infer<typeof ACTIVITY_PRICING_SCHEMA>;

@@ -1,23 +1,23 @@
-import { LanguageCode } from "@/shared/api";
-import type { BusDetailsWrite, BusInlineSupplyNew } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { languageCodeMapper } from "@/shared/converters";
 
-import { ENUM_EVENT_BACKEND } from "../../../types";
-import type {
-	TBusRouteSegment,
-	TBusSingleEventBackend,
-	TFlightEditSchema,
-	TTourEventBackendResponce,
-	TTourEventUpdateBackend
-} from "../../../types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
 import {
+	ENUM_EVENT_BACKEND,
 	ENUM_FLIGHT_TRANSPORT_TYPE,
 	ENUM_FORM_BUS,
 	ENUM_FORM_EVENT_PRODUCT,
-	ENUM_HOUSING_SOURCE
+	ENUM_HOUSING_SOURCE,
+	type TBusDetailsWriteBackend,
+	type TBusInlineSupplyNewBackend,
+	type TBusRouteSegment,
+	type TBusSingleEventBackend,
+	type TEventDetailsBackend,
+	type TFlightEditSchema,
+	type TTourEventBackendResponce,
+	type TTourEventUpdateBackend
 } from "../../../types";
-import type { TEventDetailsBackend } from "../../../types";
 import { mapInlinePoolWrite } from "../common/details-read-to-write.converters";
 import { getPoolMember } from "../common/event-pool.helpers";
 import { mapInheritedProductLinkToForm } from "../common/inherited-housing-form.helpers";
@@ -112,7 +112,8 @@ export const mapBusFormToUpdate = (
 	language?: ENUM_LANGUAGES_TYPE,
 	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
-	const lang = languageCodeMapper.to(language) ?? LanguageCode.En;
+	const lang =
+		languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 	const g = frontend.general;
 	const busRoute = g?.route?.filter(
 		(segment): segment is TBusRouteSegment =>
@@ -124,11 +125,11 @@ export const mapBusFormToUpdate = (
 	// spec; without one `supply` is omitted so the backend keeps the
 	// current one (a full replace would wipe it — and could replace a
 	// product link with an empty inline supply).
-	const spec: BusInlineSupplyNew["spec"] | undefined = charge
+	const spec: TBusInlineSupplyNewBackend["spec"] | undefined = charge
 		? { pricing: "whole", charge }
 		: undefined;
 
-	const details: BusDetailsWrite = {
+	const details: TBusDetailsWriteBackend = {
 		...(busRoute?.length && {
 			plan: {
 				legs: busRoute.map((segment) =>
@@ -142,7 +143,7 @@ export const mapBusFormToUpdate = (
 				currentDetails,
 				frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID],
 				{ source: "inline", spec }
-			) as BusDetailsWrite["pool"]
+			) as TBusDetailsWriteBackend["pool"]
 		})
 	};
 

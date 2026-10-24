@@ -4,7 +4,6 @@ import {
 	OPERATOR_STAFF_PATHS,
 	PERMISSIONS_PATHS,
 	PERMISSION_GROUPS_PATHS,
-	Permissions,
 	createMockHandler,
 	getQueryList,
 	mockBadRequest,
@@ -28,6 +27,7 @@ import {
 	updatePermissionGroup,
 	updateStaff
 } from "../mock/staff.store";
+import { ENUM_PERMISSION_BACKEND } from "../types";
 
 const STAFF_NOT_FOUND = "Staff member not found";
 
@@ -90,7 +90,7 @@ export const staffHandlers = [
 
 	createMockHandler(PERMISSIONS_PATHS.getPermissionCatalog, () =>
 		HttpResponse.json({
-			permissions: Object.values(Permissions),
+			permissions: Object.values(ENUM_PERMISSION_BACKEND),
 			default_groups: PERMISSION_GROUPS_MOCK.map(
 				({ name, permissions }) => ({
 					name,

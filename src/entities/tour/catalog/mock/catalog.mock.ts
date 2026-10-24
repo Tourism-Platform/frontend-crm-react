@@ -1,13 +1,11 @@
-import {
-	Currency,
-	type PublicTourCatalogSchemaOutput,
-	type TourMetaResponse,
-	TourStatus
-} from "@/shared/api";
-
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 import { listTourOptions } from "@/entities/tour/itinerary/mock/itinerary.store";
 import { listLandingImages } from "@/entities/tour/landing/mock/landing.store";
 import { getAllTours } from "@/entities/tour/tour/mock/tour.store";
+import { ENUM_TOUR_STATUS_BACKEND } from "@/entities/tour/tour/types/tour-backend-enum.types";
+import type { TTourBackend } from "@/entities/tour/tour/types/tour-backend.interface";
+
+import type { TPublicTourCatalogSchemaOutputBackend } from "../types";
 
 const ROUTES: [string, string][][] = [
 	[
@@ -30,18 +28,18 @@ const ROUTES: [string, string][][] = [
 	]
 ];
 
-const tourIndex = (tour: TourMetaResponse) =>
+const tourIndex = (tour: TTourBackend) =>
 	getAllTours().findIndex((item) => item.id === tour.id);
 
-export const getTourRoute = (tour: TourMetaResponse) =>
+export const getTourRoute = (tour: TTourBackend) =>
 	ROUTES[Math.max(tourIndex(tour), 0) % ROUTES.length];
 
-const price = (min: number) => ({ min, currency: Currency.USD });
+const price = (min: number) => ({ min, currency: ENUM_CURRENCY_BACKEND.USD });
 
 /** Карточка каталога из тура стора: цены и города детерминированы по индексу */
 export const toCatalogTour = (
-	tour: TourMetaResponse
-): PublicTourCatalogSchemaOutput => {
+	tour: TTourBackend
+): TPublicTourCatalogSchemaOutputBackend => {
 	const index = Math.max(tourIndex(tour), 0);
 	const basePrice = 300 + (index % 7) * 150 + tour.days * 40;
 	const discount = index % 4 === 1 ? 10 : null;
@@ -76,7 +74,9 @@ export const toCatalogTour = (
 };
 
 export const listPublishedTours = () =>
-	getAllTours().filter((tour) => tour.status === TourStatus.Published);
+	getAllTours().filter(
+		(tour) => tour.status === ENUM_TOUR_STATUS_BACKEND.PUBLISHED
+	);
 
 /** Места для подсказок поиска помимо городов */
 export const CATALOG_PLACES_MOCK = [

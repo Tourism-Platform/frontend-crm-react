@@ -1,0 +1,22 @@
+import {
+	ENUM_FORM_FLIGHT_HOP,
+	ENUM_FORM_TRAIN_HOP,
+	type TFlightHopFormSchema,
+	type TTrainHopFormSchema
+} from "../types";
+
+export const emptyFlightHopFormRow = (): TFlightHopFormSchema => ({
+	[ENUM_FORM_FLIGHT_HOP.AIRLINE_CODE]: "",
+	[ENUM_FORM_FLIGHT_HOP.FLIGHT_NUMBER]: "",
+	[ENUM_FORM_FLIGHT_HOP.DEPARTURE_AIRPORT_CODE]: "",
+	[ENUM_FORM_FLIGHT_HOP.ARRIVAL_AIRPORT_CODE]: "",
+	[ENUM_FORM_FLIGHT_HOP.DEPARTURE_LOCATION]: null,
+	[ENUM_FORM_FLIGHT_HOP.ARRIVAL_LOCATION]: null,
+	[ENUM_FORM_FLIGHT_HOP.DEPARTURE_TERMINAL]: "",
+	[ENUM_FORM_FLIGHT_HOP.DEPARTURE_GATE]: ""
+});
+
+export const emptyTrainHopFormRow = (): TTrainHopFormSchema => ({
+	[ENUM_FORM_TRAIN_HOP.DEPARTURE_STATION]: null,
+	[ENUM_FORM_TRAIN_HOP.ARRIVAL_STATION]: null
+});

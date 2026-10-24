@@ -1,4 +1,3 @@
-import type { MultiEventPubOutput } from "@/shared/api";
 import { TEMP_LIST_TOTAL } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
 import { formatToDollars } from "@/shared/utils";
@@ -15,6 +14,7 @@ import type {
 	IPreviewOptionCard,
 	IPreviewOptionsListArgs,
 	ISubOption,
+	TMultiEventPubBackend,
 	TOptionDetailBackend,
 	TPreviewOptionListItemBackend,
 	TPreviewOptionsListBackendQuery,
@@ -38,7 +38,7 @@ type TPubEvent = TOptionDetailBackend["events"][number];
 const mapDetailToSubOption = (
 	parentKey: string,
 	index: number,
-	detail: NonNullable<MultiEventPubOutput["details"]>[number]
+	detail: NonNullable<TMultiEventPubBackend["details"]>[number]
 ): ISubOption => {
 	const sheet = buildSheetFromMultiplyChild(detail);
 
@@ -50,7 +50,7 @@ const mapDetailToSubOption = (
 	};
 };
 
-const mapMultiplyOptionEvent = (event: MultiEventPubOutput): IOptionEvent => {
+const mapMultiplyOptionEvent = (event: TMultiEventPubBackend): IOptionEvent => {
 	const eventKey = `d${event.day}-p${event.position}`;
 	const sheet = buildSheetFromPubEvent(event);
 

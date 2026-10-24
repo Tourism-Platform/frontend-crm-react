@@ -1,4 +1,7 @@
-import type { TOUR_CATALOG_PATHS } from "@/shared/api";
+import type {
+	PublicTourCatalogSchemaOutput,
+	TOUR_CATALOG_PATHS
+} from "@/shared/api";
 
 export type TCatalogTourBackend =
 	(typeof TOUR_CATALOG_PATHS.listPublicCatalog._types.response.data)[number];
@@ -27,3 +30,5 @@ export type TPopularToursBackendResponse = {
 	data: TCatalogTourBackend[];
 	total: number;
 };
+export type TPublicTourCatalogSchemaOutputBackend =
+	PublicTourCatalogSchemaOutput;

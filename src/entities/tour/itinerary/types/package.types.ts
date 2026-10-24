@@ -1,4 +1,8 @@
+import type { z } from "zod";
+
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
+import type { PACKAGE_EDIT_SCHEMA } from "../schema/package.schema";
 
 import type { IFeeFormRow } from "./fee.types";
 
@@ -64,3 +68,5 @@ export interface IPackageFormPayload {
 	markup?: IPackageFormMarkup | null;
 	supplier_id?: string | null;
 }
+
+export type TPackageEditSchema = z.infer<typeof PACKAGE_EDIT_SCHEMA>;

@@ -1,4 +1,3 @@
-import { CLIENT_PAYMENT_PATHS, type ClientPaymentFile } from "@/shared/api";
 import type { TFileMetadata } from "@/shared/hooks";
 import { formatDate, formatDateToISO } from "@/shared/utils";
 
@@ -10,9 +9,11 @@ import {
 	type IPayment,
 	type IPaymentFilters,
 	type IPaymentPaginatedResponse,
+	type TClientPaymentFileBackend,
 	type TCreatePaymentBackend,
 	type TNewPaymentSchema,
 	type TPaymentBackend,
+	type TPaymentListQueryBackend,
 	type TPaymentListResponseInput,
 	type TUpdatePaymentBackend
 } from "../types";
@@ -20,7 +21,7 @@ import {
 import { paymentStatusConverter } from "./payment-status.converter";
 
 export const mapAttachmentToFileMetadata = (
-	file: ClientPaymentFile
+	file: TClientPaymentFileBackend
 ): TFileMetadata => ({
 	id: file.file_id,
 	name: file.file_name,
@@ -78,7 +79,7 @@ export const mapPaymentsPaginatedToFrontend = (
 
 export const mapPaymentFiltersToBackend = (
 	filters: IPaymentFilters
-): typeof CLIENT_PAYMENT_PATHS.listPayments._types.query & { q?: string } => {
+): TPaymentListQueryBackend & { q?: string } => {
 	const search = filters.search.trim();
 
 	return {

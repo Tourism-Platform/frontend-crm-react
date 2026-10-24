@@ -1,10 +1,13 @@
-import { Building2, Truck, Users } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 
-import type { TAudienceTab, TAudienceTabId } from "../../model";
+import {
+	AUDIENCE_TAB_ICONS,
+	type TAudienceTab,
+	type TAudienceTabId
+} from "../../model";
 import { SectionHeader } from "../section-header";
 
 import { AgencyPanel } from "./agency-panel";
@@ -16,12 +19,6 @@ interface IAudienceSectionProps {
 	onTabChange: (tab: TAudienceTabId) => void;
 	sectionRef: React.RefObject<HTMLElement | null>;
 }
-
-const TAB_ICONS = {
-	operator: Building2,
-	agency: Users,
-	supplier: Truck
-} as const;
 
 const AUDIENCE_PANELS: Record<TAudienceTabId, FC> = {
 	operator: OperatorPanel,
@@ -53,7 +50,7 @@ export const AudienceSection: FC<IAudienceSectionProps> = ({
 			<div className="mx-auto mb-10 flex justify-center">
 				<div className="inline-flex rounded-full border bg-muted p-1">
 					{tabs.map((tab) => {
-						const Icon = TAB_ICONS[tab.id as TAudienceTabId];
+						const Icon = AUDIENCE_TAB_ICONS[tab.id];
 						const isActive = activeTab === tab.id;
 
 						return (
@@ -66,9 +63,7 @@ export const AudienceSection: FC<IAudienceSectionProps> = ({
 										? "bg-primary text-primary-foreground shadow-sm"
 										: "text-muted-foreground hover:text-foreground"
 								)}
-								onClick={() =>
-									onTabChange(tab.id as TAudienceTabId)
-								}
+								onClick={() => onTabChange(tab.id)}
 							>
 								<Icon className="size-4" />
 								{tab.label}

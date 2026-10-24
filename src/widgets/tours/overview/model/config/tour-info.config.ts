@@ -1,4 +1,3 @@
-import type { TTourOverviewPageKeys } from "@/shared/config";
 import {
 	formatCompactAmount,
 	isDecimalRangeEqual,
@@ -7,9 +6,9 @@ import {
 
 import type { ITourStatRange, ITourStatistics } from "@/entities/tour";
 
-import type { ITourStatCardConfig } from "../types";
+import type { ITourRevenueStatField, ITourStatCardConfig } from "../types";
 
-const REVENUE_STAT_FIELDS = [
+const REVENUE_STAT_FIELDS: ITourRevenueStatField[] = [
 	{
 		label: "info.fields.estimated_revenue",
 		key: "estimatedRevenue"
@@ -22,13 +21,7 @@ const REVENUE_STAT_FIELDS = [
 		label: "info.fields.unconfirmed_revenue",
 		key: "unconfirmedRevenue"
 	}
-] as const satisfies ReadonlyArray<{
-	label: TTourOverviewPageKeys;
-	key: keyof Pick<
-		ITourStatistics,
-		"estimatedRevenue" | "confirmedRevenue" | "unconfirmedRevenue"
-	>;
-}>;
+];
 
 const buildRevenueCardValue = (
 	currency: string,

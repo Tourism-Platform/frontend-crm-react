@@ -1,16 +1,16 @@
-import {
-	LanguageCode,
-	type TourEventResponse,
-	type TourOptionModel,
-	type TourPackageModel,
-	TranslationState,
-	createMockId,
-	mockImageUrl
-} from "@/shared/api";
+import { createMockId, mockImageUrl } from "@/shared/api";
 
 import { MOCK_TOUR_OPTION_ID } from "@/entities/booking/order/mock/booking-order.mock.constants";
 import { buildSupplierProductId } from "@/entities/supplier/mock/supplier.mock";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 import { TOURS_MOCK } from "@/entities/tour/tour/mock/tour.mock";
+
+import {
+	ENUM_TRANSLATION_STATE_BACKEND,
+	type TTourEventBackendResponce,
+	type TTourOptionBackend,
+	type TTourPackageBackend
+} from "../types";
 
 import {
 	type TEventOptionMock,
@@ -24,7 +24,7 @@ import { createPackageMock } from "./package.mock";
 export interface IEventMockRecord {
 	tourId: string;
 	optionId: string;
-	event: TourEventResponse;
+	event: TTourEventBackendResponce;
 }
 
 /** Продукты поставщиков из supplier.mock (индексы buildSupplierProductId) */
@@ -80,7 +80,7 @@ const singleEvent = (
 	position: number,
 	eventOption: TEventOptionMock,
 	isOptional = false
-): TourEventResponse => ({
+): TTourEventBackendResponce => ({
 	id: nextSeedId("b430"),
 	tour_option_id: optionId,
 	event: {
@@ -89,8 +89,8 @@ const singleEvent = (
 		position,
 		is_optional: isOptional,
 		images: []
-	} as TourEventResponse["event"],
-	translation: TranslationState.Source
+	} as TTourEventBackendResponce["event"],
+	translation: ENUM_TRANSLATION_STATE_BACKEND.SOURCE
 });
 
 const multiEvent = (
@@ -98,7 +98,7 @@ const multiEvent = (
 	day: number,
 	position: number,
 	options: TEventOptionMock[]
-): TourEventResponse => ({
+): TTourEventBackendResponce => ({
 	id: nextSeedId("b430"),
 	tour_option_id: optionId,
 	event: {
@@ -109,14 +109,14 @@ const multiEvent = (
 		images: [],
 		details: options
 	},
-	translation: TranslationState.Source
+	translation: ENUM_TRANSLATION_STATE_BACKEND.SOURCE
 });
 
 /** Маршрут опции: прилёт, отели на выбор, экскурсии, поезд, вылет */
 const buildItinerary = (
 	optionId: string,
 	days: number
-): TourEventResponse[] => {
+): TTourEventBackendResponce[] => {
 	const lastDay = Math.max(days, 1);
 	const events = [
 		singleEvent(
@@ -231,8 +231,8 @@ const buildItinerary = (
 
 const OPTION_NAMES = ["Standard", "Comfort", "Premium"];
 
-export const TOUR_OPTIONS_MOCK: TourOptionModel[] = [];
-export const TOUR_PACKAGES_MOCK: TourPackageModel[] = [];
+export const TOUR_OPTIONS_MOCK: TTourOptionBackend[] = [];
+export const TOUR_PACKAGES_MOCK: TTourPackageBackend[] = [];
 export const TOUR_EVENTS_MOCK: IEventMockRecord[] = [];
 
 let optionIndex = 0;
@@ -249,7 +249,10 @@ TOURS_MOCK.forEach((tour, tourIndex) => {
 			cover_image_path: mockImageUrl(`option-${optionId}`),
 			deleted_at: null,
 			markup: { typ: "percentage", percentage: 10 + index * 5 },
-			languages: [LanguageCode.En, LanguageCode.Ru]
+			languages: [
+				ENUM_LANGUAGES_BACKEND.ENGLISH,
+				ENUM_LANGUAGES_BACKEND.RUSSIAN
+			]
 		});
 		TOUR_PACKAGES_MOCK.push(
 			createPackageMock({

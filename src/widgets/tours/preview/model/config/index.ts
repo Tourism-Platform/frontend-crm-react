@@ -4,3 +4,5 @@ export * from "./provider.config";
 export * from "./hero.config";
 export * from "./pickup.config";
 export * from "./meta.config";
+export * from "./option-event-sheet-icons.config";
+export * from "./option-event-sheet-amenities.config";

@@ -255,8 +255,7 @@ export const useItineraryDnd = ({
 					description: "",
 					day: action.day,
 					position: action.position,
-					eventType: action.eventType,
-					details: action.details
+					eventType: action.eventType
 				}
 			}).unwrap();
 
@@ -328,8 +327,7 @@ export const useItineraryDnd = ({
 								description: "",
 								day: action.day,
 								position: action.position,
-								eventType: action.eventType,
-								details: action.details
+								eventType: action.eventType
 							}
 						}).unwrap();
 

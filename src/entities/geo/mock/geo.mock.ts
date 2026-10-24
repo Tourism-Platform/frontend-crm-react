@@ -1,6 +1,6 @@
-import type { GeoFeature } from "@/shared/api";
+import type { TGeoFeatureBackend } from "../types";
 
-export const GEO_MOCK_FEATURES: GeoFeature[] = [
+export const GEO_MOCK_FEATURES: TGeoFeatureBackend[] = [
 	{
 		lat: 41.2995,
 		long: 69.2401,

@@ -1,9 +1,12 @@
 import type {
+	CreateFinancialSchema,
 	TOUR_FINANCIAL_PATHS,
 	TOUR_PATHS,
 	TourFinSettingsModel,
+	TourMetaCreateSchema,
 	TourMetaResponse,
-	TourMetaUpdateSchema
+	TourMetaUpdateSchema,
+	TourStatisticsResponse
 } from "@/shared/api";
 
 export type TTourBackend = TourMetaResponse;
@@ -33,3 +36,8 @@ export type TTourFinanceBackend = TourFinSettingsModel;
 export type TTourFinanceCreateBackend = ReturnType<
 	typeof TOUR_FINANCIAL_PATHS.createTourFinancials
 >["_types"]["body"];
+export type TTourStatisticsResponseBackend = TourStatisticsResponse;
+export type TCreateFinancialSchemaBackend = CreateFinancialSchema;
+export type TTourMetaCreateSchemaBackend = TourMetaCreateSchema;
+
+export type TListToursQueryBackend = typeof TOUR_PATHS.listTours._types.query;

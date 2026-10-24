@@ -3,3 +3,4 @@ export * from "./account.types";
 export * from "./password-backend.interface";
 export * from "./password.types";
 export * from "./role.types";
+export * from "./account-backend-enum.types";

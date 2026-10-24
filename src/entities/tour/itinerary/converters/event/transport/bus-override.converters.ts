@@ -1,12 +1,11 @@
-import type { BusOverrideInput, BusOverrideOutput } from "@/shared/api";
+import type {
+	TBusOverrideInputBackend,
+	TBusOverrideOutputBackend
+} from "../../../types";
 
-/**
- * Bus override READ (contract 6): Output → Input. Both arms map through:
- * `whole` charge and `per_vehicle` vehicle rows.
- */
 export const mapBusOverrideFromBackend = (
-	override?: BusOverrideOutput | null
-): BusOverrideInput | null => {
+	override?: TBusOverrideOutputBackend | null
+): TBusOverrideInputBackend | null => {
 	if (!override) {
 		return null;
 	}

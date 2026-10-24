@@ -1,10 +1,8 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-import { LanguageCode } from "@/shared/api";
 import { ENUM_LANGUAGES, type ENUM_LANGUAGES_TYPE } from "@/shared/config";
-import { hasGeoFormLabel, languageCodeMapper } from "@/shared/converters";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
-import { encodeGeoOptionValue } from "@/shared/utils/geo-option.utils";
+import { encodeGeoOptionValue, hasGeoFormLabel } from "@/shared/utils";
 
 import { useReverseGeoQuery } from "../api";
 
@@ -19,11 +17,6 @@ export const useEnrichGeoFormLocation = ({
 	onEnriched,
 	language = ENUM_LANGUAGES.EN
 }: TUseEnrichGeoFormLocationParams): void => {
-	const lang = useMemo(
-		() => languageCodeMapper.to(language) ?? LanguageCode.En,
-		[language]
-	);
-
 	const needsEnrich = Boolean(location && !hasGeoFormLabel(location));
 	const onEnrichedRef = useRef(onEnriched);
 	const appliedKeyRef = useRef<string | null>(null);
@@ -38,7 +31,7 @@ export const useEnrichGeoFormLocation = ({
 		{
 			lat: location?.lat ?? 0,
 			long: location?.long ?? 0,
-			lang,
+			lang: language,
 			limit: 1
 		},
 		{ skip: !needsEnrich }

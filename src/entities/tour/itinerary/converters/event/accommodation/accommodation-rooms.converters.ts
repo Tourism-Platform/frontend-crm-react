@@ -1,11 +1,13 @@
-import type { HousingDetailsOutput } from "@/shared/api";
-
-import { ENUM_FORM_ROOMS, type TRoomsSchema } from "../../../types";
+import {
+	ENUM_FORM_ROOMS,
+	type THousingDetailsOutputBackend,
+	type TRoomsSchema
+} from "../../../types";
 
 type TRoomsList = TRoomsSchema[typeof ENUM_FORM_ROOMS.ROOMS_LIST];
 
 /** Read-side housing spec (`pool[i].spec`, contract 6). */
-type THousingSpecOutput = HousingDetailsOutput["pool"][number]["spec"];
+type THousingSpecOutput = THousingDetailsOutputBackend["pool"][number]["spec"];
 
 /**
  * Contract 3.1 merged the old flat `per_room` / `per_room_category`

@@ -1,4 +1,4 @@
-import type { Currency } from "@/shared/api";
+import type { ENUM_CURRENCY_BACKEND_TYPE } from "@/entities/commission/types/currency.types";
 
 import type {
 	TAccountBackend,
@@ -28,5 +28,5 @@ export const mapAccountToBackend = (
 	title: frontend.title,
 	phone_number: frontend.phone_number,
 	location: frontend.location,
-	default_currency: frontend.currency as Currency
+	default_currency: frontend.currency as ENUM_CURRENCY_BACKEND_TYPE
 });

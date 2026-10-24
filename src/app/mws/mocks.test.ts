@@ -5,7 +5,6 @@ import {
 	BOOKING_ORDER_OPERATOR_PATHS,
 	BOOKING_ORDER_PATHS,
 	BOOKING_REVISION_PATHS,
-	BookingTransition,
 	FX_PATHS,
 	MOCK_BASE_URL,
 	OPERATOR_STAFF_PATHS,
@@ -23,6 +22,7 @@ import {
 	MOCK_TOUR_ID,
 	MOCK_TOUR_OPTION_ID
 } from "@/entities/booking/order/mock/booking-order.mock.constants";
+import { ENUM_ORDER_TRANSITION_BACKEND } from "@/entities/booking/order/types/order-status.types";
 
 import { setupMswServer } from "./setup-msw-server";
 
@@ -224,7 +224,7 @@ describe("MSW mocks", () => {
 		const pending = await call(
 			BOOKING_ORDER_OPERATOR_PATHS.transitionBookingStatus(
 				bookingId,
-				BookingTransition.MoveToPending
+				ENUM_ORDER_TRANSITION_BACKEND.IN_PROCESSING
 			)
 		);
 		expect(pending.data.status).toBe("pending");

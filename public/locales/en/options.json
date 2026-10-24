@@ -452,5 +452,9 @@
 		"bus": "Bus",
 		"suv": "SUV",
 		"coach": "Coach"
+	},
+	"gender": {
+		"male": "Male",
+		"female": "Female"
 	}
 }

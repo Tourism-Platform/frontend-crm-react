@@ -1,17 +1,21 @@
 import {
-	type CreateFinancialSchema,
-	type TourFinSettingsModel,
-	type TourListSortField,
-	type TourMetaCreateSchema,
-	type TourMetaResponse,
-	type TourMetaUpdateSchema,
-	TourStatus,
-	TourType,
 	createMockId,
 	createMockIdSequence,
 	matchesQuery,
 	sortBy
 } from "@/shared/api";
+
+import {
+	type ENUM_TOUR_LIST_SORT_FIELD_BACKEND_TYPE,
+	ENUM_TOUR_STATUS_BACKEND,
+	type ENUM_TOUR_STATUS_BACKEND_TYPE,
+	ENUM_TOUR_TYPE_BACKEND,
+	type TCreateFinancialSchemaBackend,
+	type TTourBackend,
+	type TTourFinanceBackend,
+	type TTourMetaCreateSchemaBackend,
+	type TTourUpdateBackendBody
+} from "../types";
 
 import {
 	MOCK_TOUR_OPERATOR_ID,
@@ -48,7 +52,7 @@ interface ITourListFilter {
 	q: string | null;
 	status: string | null;
 	typ: string | null;
-	sortBy: TourListSortField | null;
+	sortBy: ENUM_TOUR_LIST_SORT_FIELD_BACKEND_TYPE | null;
 	desc: boolean;
 }
 
@@ -74,9 +78,11 @@ export const getTour = (tourId: string) => tourStore.get(tourId);
 
 export const getAllTours = () => [...tourStore.values()];
 
-export const createTour = (body: TourMetaCreateSchema): TourMetaResponse => {
+export const createTour = (
+	body: TTourMetaCreateSchemaBackend
+): TTourBackend => {
 	const id = tourIds.next();
-	const tour: TourMetaResponse = {
+	const tour: TTourBackend = {
 		id,
 		created_at: now(),
 		updated_at: now(),
@@ -94,8 +100,8 @@ export const createTour = (body: TourMetaCreateSchema): TourMetaResponse => {
 		duration_hours: body.duration_hours ?? null,
 		age_from: body.age_from ?? null,
 		age_to: body.age_to ?? null,
-		typ: body.typ ?? TourType.Regular,
-		status: TourStatus.Draft,
+		typ: body.typ ?? ENUM_TOUR_TYPE_BACKEND.REGULAR,
+		status: ENUM_TOUR_STATUS_BACKEND.DRAFT,
 		categories: body.categories ?? [],
 		languages: body.languages ?? []
 	};
@@ -103,7 +109,7 @@ export const createTour = (body: TourMetaCreateSchema): TourMetaResponse => {
 	return tour;
 };
 
-export const updateTour = (tourId: string, update: TourMetaUpdateSchema) => {
+export const updateTour = (tourId: string, update: TTourUpdateBackendBody) => {
 	const tour = tourStore.get(tourId);
 	if (!tour) return undefined;
 
@@ -117,15 +123,17 @@ export const updateTour = (tourId: string, update: TourMetaUpdateSchema) => {
 	return tour;
 };
 
-export const patchTour = (tourId: string, patch: Partial<TourMetaResponse>) => {
+export const patchTour = (tourId: string, patch: Partial<TTourBackend>) => {
 	const tour = tourStore.get(tourId);
 	if (!tour) return undefined;
 	Object.assign(tour, patch, { updated_at: now() });
 	return tour;
 };
 
-export const setTourStatus = (tourId: string, status: TourStatus) =>
-	patchTour(tourId, { status });
+export const setTourStatus = (
+	tourId: string,
+	status: ENUM_TOUR_STATUS_BACKEND_TYPE
+) => patchTour(tourId, { status });
 
 export const deleteTour = (tourId: string) => {
 	financialsStore.delete(tourId);
@@ -137,12 +145,12 @@ export const getTourFinancials = (tourId: string) =>
 
 export const saveTourFinancials = (
 	tourId: string,
-	body: Partial<CreateFinancialSchema>
-): TourFinSettingsModel => {
+	body: Partial<TCreateFinancialSchemaBackend>
+): TTourFinanceBackend => {
 	const current =
 		financialsStore.get(tourId) ??
 		createTourFinancialsMock(tourId, financialsStore.size);
-	const next: TourFinSettingsModel = {
+	const next: TTourFinanceBackend = {
 		...current,
 		...(body.currency_type ? { currency_type: body.currency_type } : {}),
 		...(body.markup !== undefined ? { markup: body.markup } : {}),

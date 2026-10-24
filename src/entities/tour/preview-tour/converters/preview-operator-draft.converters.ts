@@ -1,11 +1,11 @@
-import type { OperatorInfoModel } from "@/shared/api";
+import type { TOperatorBusinessInfoBackend } from "@/entities/user/operator/types/operator-business-backend.interface";
 
 import type { IPreviewOperator } from "../types";
 
 import { toPublicImageUrl } from "./preview-option-media.utils";
 
 export const mapDraftOperatorToFrontend = (
-	backend: OperatorInfoModel
+	backend: TOperatorBusinessInfoBackend
 ): IPreviewOperator => ({
 	id: backend.operator_id,
 	business_name: backend.business_name || "",

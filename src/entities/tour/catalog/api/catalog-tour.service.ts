@@ -1,5 +1,4 @@
 import { ENUM_API_TAGS, TOUR_CATALOG_PATHS } from "@/shared/api";
-import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
@@ -40,13 +39,10 @@ export const catalogTourApi = authApi.injectEndpoints({
 				mapCatalogTourPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.TOURS_CATALOG]
 		}),
-		getCatalogFilters: builder.query<
-			ICatalogListFilters,
-			ENUM_LANGUAGES_TYPE
-		>({
-			query: (language) => ({
+		getCatalogFilters: builder.query<ICatalogListFilters, string>({
+			query: (locale) => ({
 				...TOUR_CATALOG_PATHS.listFilters,
-				params: mapCatalogFiltersQueryToBackend(language)
+				params: mapCatalogFiltersQueryToBackend(locale)
 			}),
 			transformResponse: (response: TCatalogFiltersBackend) =>
 				mapCatalogListFiltersToFrontend(response),

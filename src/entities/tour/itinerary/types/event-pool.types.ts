@@ -1,13 +1,15 @@
 import type { TOUR_EVENTS_PATHS } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config/languages";
 
-import type { ENUM_EVENT_BACKEND_TYPE } from "./event-backend-enum.types";
+import type { ENUM_EVENT_KIND_TYPE } from "./event-enum.types";
 import type { IEventProductLink } from "./event-product-link.types";
 
 export interface IEventPoolMemberSummary {
 	id: string;
 	supplierLabel: string;
 	isMain: boolean;
+	/** Linked supplier product (not an inline spec). */
+	isProduct: boolean;
 }
 
 export type TEventPoolMemberNewBackend = ReturnType<
@@ -16,15 +18,15 @@ export type TEventPoolMemberNewBackend = ReturnType<
 
 /** Domain intent for POST/PATCH pool add — mapped to body at the API boundary. */
 export type TAddPoolMemberIntent =
-	| { kind: "empty"; typ: ENUM_EVENT_BACKEND_TYPE }
+	| { kind: "empty"; eventKind: ENUM_EVENT_KIND_TYPE }
 	| {
 			kind: "supplier";
-			typ: ENUM_EVENT_BACKEND_TYPE;
+			eventKind: ENUM_EVENT_KIND_TYPE;
 			supplierId: string;
 	  }
 	| {
 			kind: "product";
-			typ: ENUM_EVENT_BACKEND_TYPE;
+			eventKind: ENUM_EVENT_KIND_TYPE;
 			link: IEventProductLink;
 	  };
 

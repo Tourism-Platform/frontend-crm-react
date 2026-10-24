@@ -3,9 +3,6 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { LanguageCode } from "@/shared/api";
-import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
-import { languageCodeMapper } from "@/shared/converters";
 import { useDebounce, useOptionalResourceQuery } from "@/shared/hooks";
 
 import {
@@ -27,13 +24,7 @@ export const useCatalogTours = () => {
 	const searchInputRef = useRef<HTMLInputElement>(null);
 	const [viewMode, setViewMode] = useState<TCatalogViewMode>("grid");
 
-	const readLang = useMemo(
-		() =>
-			languageCodeMapper.to(
-				i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN
-			) ?? LanguageCode.En,
-		[i18n.language]
-	);
+	const readLang = i18n.language;
 
 	const methods = useForm<ICatalogTourFilters>({
 		defaultValues: DEFAULT_CATALOG_FILTERS

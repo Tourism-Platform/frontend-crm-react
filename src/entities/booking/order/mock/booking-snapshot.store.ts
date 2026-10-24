@@ -1,18 +1,4 @@
-import {
-	AvailabilityStatus,
-	BreakdownLineKind,
-	Currency,
-	EditOp,
-	type EventBreakdownSchemaOutput,
-	type EventEditOpOutput,
-	ExpenseType,
-	LanguageCode,
-	type OperatorItineraryResponse,
-	type OrderTourEventSchemaOutput,
-	type RevisionPreview,
-	TranslationState
-} from "@/shared/api";
-
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 import {
 	type TEventOptionMock,
 	cloneEventOption,
@@ -29,9 +15,27 @@ import {
 	listTourEvents
 } from "@/entities/tour/itinerary/mock/itinerary.store";
 import {
+	ENUM_BREAKDOWN_LINE_KIND_BACKEND,
+	ENUM_EXPENSE_TYPE_BACKEND,
+	ENUM_TRANSLATION_STATE_BACKEND
+} from "@/entities/tour/itinerary/types/itinerary-backend-enum.types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+import {
 	getTour,
 	getTourFinancials
 } from "@/entities/tour/tour/mock/tour.store";
+
+import {
+	ENUM_AVAILABILITY_STATUS_BACKEND,
+	type ENUM_AVAILABILITY_STATUS_BACKEND_TYPE,
+	ENUM_EDIT_OP_BACKEND,
+	type ENUM_EDIT_OP_BACKEND_TYPE,
+	type TEventBreakdownSchemaOutputBackend,
+	type TEventEditOpOutputBackend,
+	type TOperatorItineraryResponseBackend,
+	type TOrderTourEventSchemaOutputBackend,
+	type TRevisionPreviewBackend
+} from "../types";
 
 import {
 	MOCK_TOUR_ID,
@@ -40,11 +44,11 @@ import {
 import { getBookingOrderDetail } from "./booking-order.store";
 
 type TRecord = Record<string, unknown>;
-type TSnapshotEvent = OrderTourEventSchemaOutput;
+type TSnapshotEvent = TOrderTourEventSchemaOutputBackend;
 
 interface IBookingSnapshot {
 	events: TSnapshotEvent[];
-	edits: EventEditOpOutput[];
+	edits: TEventEditOpOutputBackend[];
 }
 
 let snapshots = new Map<string, IBookingSnapshot>();
@@ -77,18 +81,18 @@ const getSnapshot = (bookingId: string): IBookingSnapshot | undefined => {
 export const getSnapshotEvents = (bookingId: string) =>
 	getSnapshot(bookingId)?.events ?? [];
 
-const money = (val: number) => ({ val, currency: Currency.USD });
+const money = (val: number) => ({ val, currency: ENUM_CURRENCY_BACKEND.USD });
 
 /** Детерминированная цена события: зависит от его позиции в маршруте */
 const eventCost = (index: number, pax: number) =>
 	(index + 1) * 40 * Math.max(pax, 1);
 
 const breakdownLine = (label: string | null, cost: number) => ({
-	kind: BreakdownLineKind.Unit,
+	kind: ENUM_BREAKDOWN_LINE_KIND_BACKEND.UNIT,
 	label,
 	unit_id: null,
 	supply_id: null,
-	pricing: ExpenseType.Fixed,
+	pricing: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 	rate: null,
 	unit_cost: money(cost),
 	quantity: 1,
@@ -108,7 +112,7 @@ const eventLabel = (event: TSnapshotEvent) =>
 const buildBreakdown = (
 	events: TSnapshotEvent[],
 	pax: number
-): EventBreakdownSchemaOutput[] =>
+): TEventBreakdownSchemaOutputBackend[] =>
 	events.map((event, index) => ({
 		event_id: event.id,
 		lines: [breakdownLine(eventLabel(event), eventCost(index, pax))],
@@ -117,7 +121,7 @@ const buildBreakdown = (
 
 export const getRevisionPreview = (
 	bookingId: string
-): RevisionPreview | undefined => {
+): TRevisionPreviewBackend | undefined => {
 	const snapshot = getSnapshot(bookingId);
 	const detail = getBookingOrderDetail(bookingId);
 	if (!snapshot || !detail) return undefined;
@@ -164,7 +168,7 @@ export const getRevisionPreview = (
 					}
 				: null,
 			events: snapshot.events,
-			display_lang: LanguageCode.En,
+			display_lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 			events_localized: null,
 			packages: listPackages(optionId),
 			operator_financials: null,
@@ -183,10 +187,10 @@ export const listRevisionEdits = (bookingId: string) =>
 
 const recordEdit = (
 	snapshot: IBookingSnapshot,
-	op: EditOp,
+	op: ENUM_EDIT_OP_BACKEND_TYPE,
 	targetId: string | null,
 	event: TSnapshotEvent | null,
-	extra: Partial<EventEditOpOutput> = {}
+	extra: Partial<TEventEditOpOutputBackend> = {}
 ) => {
 	snapshot.edits.push({
 		op,
@@ -227,7 +231,7 @@ const toSnapshotEvent = (body: unknown, id = eventMockIds.next()) => {
 		id,
 		tour_option_id: null,
 		event,
-		translation: TranslationState.Source,
+		translation: ENUM_TRANSLATION_STATE_BACKEND.SOURCE,
 		origin_event_id: null
 	} as unknown as TSnapshotEvent;
 };
@@ -236,7 +240,7 @@ const toSnapshotEvent = (body: unknown, id = eventMockIds.next()) => {
 const mutate = (
 	bookingId: string,
 	run: (snapshot: IBookingSnapshot) => boolean
-): RevisionPreview | undefined => {
+): TRevisionPreviewBackend | undefined => {
 	const snapshot = getSnapshot(bookingId);
 	if (!snapshot || !run(snapshot)) return undefined;
 	return getRevisionPreview(bookingId);
@@ -249,7 +253,7 @@ export const addRevisionEvent = (bookingId: string, body: unknown) =>
 	mutate(bookingId, (snapshot) => {
 		const event = toSnapshotEvent(body);
 		snapshot.events.push(event);
-		recordEdit(snapshot, EditOp.Create, event.id, event);
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.CREATE, event.id, event);
 		return true;
 	});
 
@@ -268,7 +272,7 @@ export const updateRevisionEvent = (
 			origin_event_id: snapshot.events[index].origin_event_id
 		};
 		snapshot.events[index] = next;
-		recordEdit(snapshot, EditOp.Update, eventId, next);
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.UPDATE, eventId, next);
 		return true;
 	});
 
@@ -278,7 +282,7 @@ export const removeRevisionEvent = (bookingId: string, eventId: string) =>
 		snapshot.events = snapshot.events.filter(
 			(event) => event.id !== eventId
 		);
-		recordEdit(snapshot, EditOp.Delete, eventId, null);
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.DELETE, eventId, null);
 		return snapshot.events.length !== before;
 	});
 
@@ -306,7 +310,7 @@ export const copyRevisionEvent = (
 		copy.id = eventMockIds.next();
 		copy.origin_event_id = null;
 		snapshot.events.push(copy);
-		recordEdit(snapshot, EditOp.Create, copy.id, copy);
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.CREATE, copy.id, copy);
 		return true;
 	});
 
@@ -346,7 +350,7 @@ export const addRevisionPoolMember = (target: IRevisionTarget, body: unknown) =>
 	mutateOption(target, (option, snapshot, event) => {
 		const pool = option.details.pool as unknown[];
 		pool.push(normalizeMember(option.typ, body, pool.length === 0));
-		recordEdit(snapshot, EditOp.Update, event.id, event);
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.UPDATE, event.id, event);
 		return true;
 	});
 
@@ -361,7 +365,7 @@ export const removeRevisionPoolMember = (
 		if (next.length && !next.some((member) => member.is_main))
 			next[0].is_main = true;
 		option.details.pool = next as never;
-		recordEdit(snapshot, EditOp.Update, event.id, event, {
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.UPDATE, event.id, event, {
 			supply_id: supplyId
 		});
 		return true;
@@ -388,7 +392,7 @@ export const setRevisionPoolMemberProduct = (
 			supplyId,
 			scope
 		);
-		recordEdit(snapshot, EditOp.Update, event.id, event, {
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.UPDATE, event.id, event, {
 			supply_id: supplyId
 		});
 		return true;
@@ -407,7 +411,7 @@ export const clearRevisionPoolMemberProduct = (
 			...member,
 			supply: { source: "inline", supplier_id: null }
 		};
-		recordEdit(snapshot, EditOp.Update, event.id, event, {
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.UPDATE, event.id, event, {
 			supply_id: supplyId
 		});
 		return true;
@@ -426,7 +430,7 @@ export const setRevisionPoolMemberOverride = (
 		).supply;
 		if (supply.source !== "product") return false;
 		supply.override = override;
-		recordEdit(snapshot, EditOp.Override, event.id, event, {
+		recordEdit(snapshot, ENUM_EDIT_OP_BACKEND.OVERRIDE, event.id, event, {
 			supply_id: supplyId,
 			override: override as never
 		});
@@ -440,7 +444,7 @@ interface IAvailabilityRow {
 	booking_id: string;
 	event_id: string;
 	option_index: number;
-	status: AvailabilityStatus;
+	status: ENUM_AVAILABILITY_STATUS_BACKEND_TYPE;
 	event_name: string | null;
 	event_typ: string | null;
 }
@@ -459,8 +463,8 @@ export const getAvailabilityRows = (bookingId: string) => {
 				option_index: optionIndex,
 				status:
 					event.event.typ === "options"
-						? AvailabilityStatus.Pending
-						: AvailabilityStatus.Selected,
+						? ENUM_AVAILABILITY_STATUS_BACKEND.PENDING
+						: ENUM_AVAILABILITY_STATUS_BACKEND.SELECTED,
 				event_name: option.name,
 				event_typ: option.typ
 			}))
@@ -474,7 +478,7 @@ export const applyAvailability = (
 	bookingId: string,
 	eventId: string,
 	optionIndex: number,
-	status: AvailabilityStatus
+	status: ENUM_AVAILABILITY_STATUS_BACKEND_TYPE
 ) => {
 	const rows = getAvailabilityRows(bookingId);
 	const row = rows.find(
@@ -484,11 +488,11 @@ export const applyAvailability = (
 
 	row.status = status;
 	// В multi-событии выбранной может быть только одна опция
-	if (status === AvailabilityStatus.Selected) {
+	if (status === ENUM_AVAILABILITY_STATUS_BACKEND.SELECTED) {
 		rows.filter(
 			(item) => item.event_id === eventId && item !== row
 		).forEach((item) => {
-			item.status = AvailabilityStatus.Deselected;
+			item.status = ENUM_AVAILABILITY_STATUS_BACKEND.DESELECTED;
 		});
 	}
 	return row;
@@ -506,7 +510,7 @@ const costRange = (val: number) => ({
 
 export const getOperatorItinerary = (
 	bookingId: string
-): OperatorItineraryResponse | undefined => {
+): TOperatorItineraryResponseBackend | undefined => {
 	const detail = getBookingOrderDetail(bookingId);
 	if (!detail) return undefined;
 
@@ -517,14 +521,15 @@ export const getOperatorItinerary = (
 		const selected = rows.find(
 			(row) =>
 				row.event_id === event.id &&
-				row.status === AvailabilityStatus.Selected
+				row.status === ENUM_AVAILABILITY_STATUS_BACKEND.SELECTED
 		);
 		return {
 			event_id: event.id,
 			tour_option_id: order.tour_option_id,
 			date: addDays(order.date, event.event.day - 1),
 			event: event.event,
-			availability: selected?.status ?? AvailabilityStatus.Pending,
+			availability:
+				selected?.status ?? ENUM_AVAILABILITY_STATUS_BACKEND.PENDING,
 			selected_option_index: selected?.option_index ?? null,
 			guide_typ: null,
 			billed_via_package_id: null,
@@ -548,8 +553,8 @@ export const getOperatorItinerary = (
 		order_number: order.order_number,
 		date: order.date,
 		pax: order.pax,
-		currency: Currency.USD,
-		display_lang: LanguageCode.En,
+		currency: ENUM_CURRENCY_BACKEND.USD,
+		display_lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 		events,
 		packages: listPackages(getOptionId(bookingId)).map((item) => ({
 			package_id: item.id,

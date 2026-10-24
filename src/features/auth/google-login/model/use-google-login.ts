@@ -1,10 +1,8 @@
-import { AUTH_PATHS } from "@/shared/api";
-import { ENV } from "@/shared/config";
+import { getGoogleLoginUrl } from "@/entities/auth";
 
 export function useGoogleLogin() {
 	const handleGoogleLogin = () => {
-		const baseUrl = (ENV.VITE_API_URL ?? "").replace(/\/$/, "");
-		window.location.assign(`${baseUrl}${AUTH_PATHS.googleLogin.url}`);
+		window.location.assign(getGoogleLoginUrl());
 	};
 
 	return { handleGoogleLogin };

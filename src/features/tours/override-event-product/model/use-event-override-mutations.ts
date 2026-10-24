@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
 
 import {
-	type ENUM_EVENT_BACKEND_TYPE,
+	type ENUM_EVENT_KIND_TYPE,
 	type TOverrideProductFormValues,
 	useClearOptionOverrideMutation,
 	useEventEditIds,
@@ -26,7 +26,7 @@ export const useEventOverrideMutations = (supplyId?: string) => {
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 
 	const set = async (
-		eventTyp: ENUM_EVENT_BACKEND_TYPE,
+		eventKind: ENUM_EVENT_KIND_TYPE,
 		data: TOverrideProductFormValues
 	) =>
 		setOption({
@@ -35,7 +35,7 @@ export const useEventOverrideMutations = (supplyId?: string) => {
 			eventId,
 			eventOptionId,
 			supplyId: supplyId ?? "",
-			eventTyp,
+			eventKind,
 			data,
 			language
 		}).unwrap();

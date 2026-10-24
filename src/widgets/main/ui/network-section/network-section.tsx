@@ -6,7 +6,11 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import { Card } from "@/shared/ui";
 
-import type { TRoadmapPhase, TRoadmapStep } from "../../model";
+import {
+	ROADMAP_BANNER_VARIANT_CLASS,
+	type TRoadmapPhase,
+	type TRoadmapStep
+} from "../../model";
 import { SectionHeader } from "../section-header";
 
 import { useRoadmapAutoplay } from "./lib/use-roadmap-autoplay";
@@ -14,7 +18,6 @@ import { NetworkBeamVisual } from "./network-beam-visual";
 import { NetworkPhaseAiVisual } from "./network-phase-ai-visual";
 import { NetworkPhaseModulesVisual } from "./network-phase-modules-visual";
 import {
-	BANNER_VARIANT_CLASS,
 	NetworkPhaseMobileSteps,
 	NetworkPhasePanel
 } from "./network-phase-panel";
@@ -81,7 +84,7 @@ export const NetworkSection: FC = () => {
 						<span
 							className={cn(
 								"absolute top-6 right-6 z-10 rounded-full px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide transition-opacity duration-300",
-								BANNER_VARIANT_CLASS[
+								ROADMAP_BANNER_VARIANT_CLASS[
 									activePhaseData.badgeVariant
 								]
 							)}

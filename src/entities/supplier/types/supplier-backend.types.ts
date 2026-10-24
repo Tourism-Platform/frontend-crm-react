@@ -1,4 +1,9 @@
 import type {
+	RoomRateSwitch,
+	SupplierUpdateSchema,
+	VariantCreated
+} from "@/shared/api";
+import type {
 	SupplierCreateSchema,
 	SupplierListResponse,
 	SupplierModel
@@ -13,3 +18,6 @@ export type TSupplierUpdateBackend = ReturnType<
 export type TSupplierListBackend = SupplierListResponse;
 export type TListSuppliersQueryBackend =
 	(typeof SUPPLIER_PATHS.listSuppliers)["_types"]["query"];
+export type TVariantCreatedBackend = VariantCreated;
+export type TRoomRateSwitchBackend = RoomRateSwitch;
+export type TSupplierUpdateSchemaBackend = SupplierUpdateSchema;

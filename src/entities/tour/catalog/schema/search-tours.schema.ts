@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { ENUM_LOCATION_SUGGEST_KIND } from "../types/location-suggest.types";
 
-const dateRangeSchema = z.object({
+export const dateRangeSchema = z.object({
 	from: z.union([z.date(), z.undefined()]),
 	to: z.union([z.date(), z.undefined()]).optional()
 });
@@ -13,7 +13,7 @@ const locationSuggestKindSchema = z.enum([
 	ENUM_LOCATION_SUGGEST_KIND.PLACE
 ]);
 
-const locationSuggestSchema = z.object({
+export const locationSuggestSchema = z.object({
 	value: z.string().min(1),
 	kind: locationSuggestKindSchema,
 	label: z.string().optional()
@@ -33,8 +33,3 @@ export function createSearchToursSchema(destinationRequiredMessage: string) {
 export const searchToursSchema = createSearchToursSchema(
 	"Please choose a destination"
 );
-
-export type TDateRange = z.infer<typeof dateRangeSchema>;
-export type TLocationSuggestFormValue = z.infer<typeof locationSuggestSchema>;
-export type TSearchTours = z.infer<ReturnType<typeof createSearchToursSchema>>;
-export type TSearchToursSchema = TSearchTours;

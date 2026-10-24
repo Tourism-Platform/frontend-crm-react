@@ -1,7 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { BreakdownLineKind, ExpenseType, PricingWarning } from "@/shared/api";
-
 import {
 	ENUM_BREAKDOWN_LEG,
 	ENUM_BREAKDOWN_LINE_KIND,
@@ -10,7 +8,12 @@ import {
 	ENUM_PRICING_WARNING
 } from "../../tour/types";
 import { TOUR_SUMMARY_MOCK } from "../mock/tour-summary.mock";
-import { ENUM_EVENT } from "../types";
+import {
+	ENUM_BREAKDOWN_LINE_KIND_BACKEND,
+	ENUM_EVENT,
+	ENUM_EXPENSE_TYPE_BACKEND,
+	ENUM_PRICING_WARNING_BACKEND
+} from "../types";
 
 import {
 	mapBreakdownLineToFrontend,
@@ -22,12 +25,12 @@ describe("mapBreakdownLineToFrontend", () => {
 	it("maps wire fields to camelCase and keeps the cost identity", () => {
 		expect(
 			mapBreakdownLineToFrontend({
-				kind: BreakdownLineKind.Unit,
+				kind: ENUM_BREAKDOWN_LINE_KIND_BACKEND.UNIT,
 				label: "Standard / double",
 				unit_id: "room_1",
 				supply_id: "supply-1",
-				pricing: ExpenseType.PerDuration,
-				rate: ExpenseType.Fixed,
+				pricing: ENUM_EXPENSE_TYPE_BACKEND.PER_DURATION,
+				rate: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 				unit_cost: { val: 200 },
 				quantity: 2,
 				pax: null,
@@ -57,11 +60,11 @@ describe("mapBreakdownLineToFrontend", () => {
 
 	it("matches cost = unit_cost × quantity × (pax|1) × (duration|1) × (fx_rate|1)", () => {
 		const line = mapBreakdownLineToFrontend({
-			kind: BreakdownLineKind.ExtraCost,
+			kind: ENUM_BREAKDOWN_LINE_KIND_BACKEND.EXTRA_COST,
 			label: "Breakfast",
 			unit_id: null,
 			supply_id: null,
-			pricing: ExpenseType.PerPerson,
+			pricing: ENUM_EXPENSE_TYPE_BACKEND.PER_PERSON,
 			rate: null,
 			unit_cost: { val: 10 },
 			quantity: 2,
@@ -88,8 +91,8 @@ describe("mapPricingWarningsToFrontend", () => {
 	it("maps generated warning codes", () => {
 		expect(
 			mapPricingWarningsToFrontend([
-				PricingWarning.FixedChargeOnSightseeing,
-				PricingWarning.EmptySupply
+				ENUM_PRICING_WARNING_BACKEND.FIXED_CHARGE_ON_SIGHTSEEING,
+				ENUM_PRICING_WARNING_BACKEND.EMPTY_SUPPLY
 			])
 		).toEqual([
 			ENUM_PRICING_WARNING.FIXED_CHARGE_ON_SIGHTSEEING,

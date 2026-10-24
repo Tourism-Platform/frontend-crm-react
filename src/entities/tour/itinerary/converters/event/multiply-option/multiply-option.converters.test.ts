@@ -1,19 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import type { InformationDetailsOutput } from "@/shared/api";
-
-import type { TMultiEventDetailBackend } from "../../../types";
+import type {
+	TInformationDetailsOutputBackend,
+	TMultiEventDetailBackend
+} from "../../../types";
 import { ENUM_EVENT_BACKEND } from "../../../types/event-backend-enum.types";
 import { ENUM_EVENT } from "../../../types/event-enum.types";
 
-import {
-	getRemovedMultiplyOptions,
-	hasMultiplyOptionsOrderChanged,
-	mapMultiplyOptionDetailToOption,
-	mapMultiplyOptionReorderToBackend
-} from "./multiply-option.converters";
+import { mapMultiplyOptionDetailToOption } from "./multiply-option.converters";
 
-const INFO_DETAILS: InformationDetailsOutput = {
+const INFO_DETAILS: TInformationDetailsOutputBackend = {
 	plan: {},
 	pool: [
 		{
@@ -54,46 +50,5 @@ describe("mapMultiplyOptionDetailToOption", () => {
 			backendTyp: ENUM_EVENT_BACKEND.REF,
 			details: INFO_DETAILS
 		});
-	});
-});
-
-describe("mapMultiplyOptionReorderToBackend", () => {
-	it("builds the order from option row IDs (never indices)", () => {
-		expect(
-			mapMultiplyOptionReorderToBackend([
-				{ id: "uuid-b" },
-				{ id: "uuid-a" },
-				{ id: "uuid-c" }
-			])
-		).toEqual({ order: ["uuid-b", "uuid-a", "uuid-c"] });
-	});
-});
-
-describe("hasMultiplyOptionsOrderChanged", () => {
-	it("detects reordering among surviving options", () => {
-		expect(
-			hasMultiplyOptionsOrderChanged(
-				[{ id: "a" }, { id: "b" }],
-				[{ id: "b" }, { id: "a" }]
-			)
-		).toBe(true);
-
-		expect(
-			hasMultiplyOptionsOrderChanged(
-				[{ id: "a" }, { id: "b" }],
-				[{ id: "a" }, { id: "b" }]
-			)
-		).toBe(false);
-	});
-});
-
-describe("getRemovedMultiplyOptions", () => {
-	it("returns options missing from current form state", () => {
-		const removed = getRemovedMultiplyOptions(
-			[{ id: "a" }, { id: "b" }, { id: "c" }],
-			[{ id: "a" }, { id: "c" }]
-		);
-
-		expect(removed.map((item) => item.id)).toEqual(["b"]);
 	});
 });

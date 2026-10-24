@@ -17,3 +17,12 @@ export const TOUR_STATUS_VARIANTS: Record<ENUM_TOUR_STATUS_TYPE, BadgeVariant> =
 		[ENUM_TOUR_STATUS.DRAFT]: "cyan",
 		[ENUM_TOUR_STATUS.ALL]: "default"
 	};
+
+/** Плашка статуса поверх обложки карточки тура */
+export const TOUR_STATUS_OVERLAY_CLASS: Record<ENUM_TOUR_STATUS_TYPE, string> =
+	{
+		[ENUM_TOUR_STATUS.PUBLISHED]: "bg-emerald-600 text-white",
+		[ENUM_TOUR_STATUS.DRAFT]: "bg-sky-600 text-white",
+		[ENUM_TOUR_STATUS.ARCHIVED]: "bg-amber-600 text-white",
+		[ENUM_TOUR_STATUS.ALL]: "bg-foreground text-background"
+	};

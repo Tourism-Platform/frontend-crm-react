@@ -1,12 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { Currency, LanguageCode, TranslationState } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 
 import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FLIGHT_TRANSPORT_TYPE,
 	ENUM_FORM_TRAIN,
-	ENUM_HOUSING_SOURCE
+	ENUM_HOUSING_SOURCE,
+	ENUM_TRANSLATION_STATE_BACKEND
 } from "../../../types";
 
 import { mapTrainEventToForm, mapTrainFormToUpdate } from "./train.converters";
@@ -27,7 +29,7 @@ vi.mock("@/shared/converters", () => ({
 	mapGeoFormToBackendLocation: () => ({ lat: 0, long: 0 }),
 	mapGeoFormToBackendLocationRef: () => ({ lat: 0, long: 0 }),
 	languageCodeMapper: {
-		to: () => LanguageCode.En
+		to: () => ENUM_LANGUAGES_BACKEND.ENGLISH
 	}
 }));
 
@@ -37,7 +39,7 @@ vi.mock("@/shared/hooks", () => ({
 
 const ZERO_FIXED = {
 	typ: "fixed" as const,
-	cost: { val: 0, currency: Currency.USD },
+	cost: { val: 0, currency: ENUM_CURRENCY_BACKEND.USD },
 	fees: null,
 	extra_costs: [] as [],
 	markup: null
@@ -48,7 +50,7 @@ describe("mapTrainEventToForm — inherited", () => {
 		const form = mapTrainEventToForm({
 			id: "e11e0000-0000-0000-0000-000000000002",
 			tour_option_id: "0pt00000-0000-0000-0000-000000000002",
-			translation: TranslationState.Source,
+			translation: ENUM_TRANSLATION_STATE_BACKEND.SOURCE,
 			event: {
 				id: "opt-0000-0000-0000-000000000002",
 				typ: ENUM_EVENT_BACKEND.TRAIN,

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 
-import { AmenitiesTypes, HotelKind, HousingRoomTypes } from "@/shared/api";
+import {
+	ENUM_AMENITIES_TYPES_BACKEND,
+	ENUM_HOUSING_ROOM_TYPES_BACKEND
+} from "@/entities/supplier/types/supplier-backend-enum.types";
+
+import { ENUM_HOTEL_KIND_BACKEND } from "../types";
 
 import { buildSheetFromPubEvent } from "./preview-option-sheet.converters";
 
@@ -21,11 +26,11 @@ describe("buildSheetFromPubEvent — housing spec aggregate", () => {
 				check_out: null,
 				spec: {
 					stars: 3,
-					typs: [HotelKind.Hotel],
-					amenities: [AmenitiesTypes.Wifi],
+					typs: [ENUM_HOTEL_KIND_BACKEND.HOTEL],
+					amenities: [ENUM_AMENITIES_TYPES_BACKEND.WIFI],
 					rooms: [
 						{
-							typ: HousingRoomTypes.Double,
+							typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 							pax: 2,
 							name: "Deluxe King",
 							description: "Should not surface",

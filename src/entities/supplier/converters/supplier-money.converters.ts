@@ -1,8 +1,8 @@
-import { currencyConverter } from "@/entities/commission/converters/currency.coverters";
 import {
 	DEFAULT_EVENT_CURRENCY,
-	type ENUM_CURRENCY_OPTIONS_TYPE
-} from "@/entities/commission/types/currency.types";
+	type ENUM_CURRENCY_OPTIONS_TYPE,
+	currencyConverter
+} from "@/entities/commission";
 
 import type { TMonetaryValueBackend } from "../types";
 import type { IMonetaryValue } from "../types/supplier-money.types";

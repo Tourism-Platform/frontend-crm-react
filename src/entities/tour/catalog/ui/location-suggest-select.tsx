@@ -25,11 +25,11 @@ import {
 	getLocationSuggestKindBadgeClass,
 	getLocationSuggestKindIcon
 } from "../config";
-import {
-	type TLocationSuggestOption,
-	encodeLocationSuggestValue
-} from "../converters/location-suggest.converters";
-import type { TLocationSuggestFormValue } from "../schema/search-tours.schema";
+import { encodeLocationSuggestValue } from "../lib";
+import type {
+	TLocationSuggestFormValue,
+	TLocationSuggestOption
+} from "../types";
 
 export interface ILocationSuggestSelectProps {
 	options: TLocationSuggestOption[];

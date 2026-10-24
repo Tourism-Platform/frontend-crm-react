@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import type { TFinancialSettingsPageOperatorKeys } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	CustomField,
@@ -26,18 +25,11 @@ import {
 	useUpdateOperatorFinanceInfoMutation
 } from "@/entities/finance";
 
-import { GENERAL_INFO_LIST, type TForm } from "../../model";
-
-const SECTION_DESCRIPTIONS: Partial<
-	Record<TForm["key"], TFinancialSettingsPageOperatorKeys>
-> = {
-	[ENUM_FORM_OPERATOR_GENERAL_INFO.TOUR_MARGIN]:
-		"general.form.fields.default_tour_margin.description",
-	[ENUM_FORM_OPERATOR_GENERAL_INFO.STAFF_PAYOUTS]:
-		"general.form.fields.staff_payouts.description",
-	[ENUM_FORM_OPERATOR_GENERAL_INFO.DEFAULT_CURRENCY]:
-		"general.form.fields.default_currency.description"
-};
+import {
+	GENERAL_INFO_LIST,
+	GENERAL_INFO_SECTION_DESCRIPTIONS,
+	type TForm
+} from "../../model";
 
 const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("financial_settings_page_operator");
@@ -116,8 +108,12 @@ const GeneralInfoBase: FC = () => {
 									{item.label && t(item.label)}
 								</h2>
 								<p className="text-sm text-muted-foreground">
-									{SECTION_DESCRIPTIONS[key] &&
-										t(SECTION_DESCRIPTIONS[key])}
+									{GENERAL_INFO_SECTION_DESCRIPTIONS[key] &&
+										t(
+											GENERAL_INFO_SECTION_DESCRIPTIONS[
+												key
+											]
+										)}
 								</p>
 							</div>
 							<CustomField

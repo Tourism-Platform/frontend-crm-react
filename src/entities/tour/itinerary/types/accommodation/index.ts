@@ -9,4 +9,4 @@ export * from "./rooms.types";
 export * from "./pricing.types";
 export * from "./pricing-backend.types";
 export * from "./tab.types";
-export type { TAccommodationPricingSchema } from "../../schema/accommodation/pricing.schema";
+export * from "./season-rates.types";

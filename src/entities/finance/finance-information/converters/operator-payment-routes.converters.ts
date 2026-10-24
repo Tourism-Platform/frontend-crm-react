@@ -1,25 +1,28 @@
-import type { ClassicSwiftDetails, CustomDetails } from "@/shared/api";
 import { TEMP_LIST_TOTAL } from "@/shared/config";
 import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import { currencyConverter } from "@/entities/commission";
 
-import type { TOperatorPayoutDetailsSchema } from "../schema";
-import type {
-	TClassicSwiftDetails,
-	TOperatorPaymentRoute,
-	TOperatorPaymentRouteBackend,
-	TOperatorPaymentRouteCreateBackend,
-	TOperatorPaymentRouteUpdateBackend,
-	TOperatorPaymentRoutesBackendQuery,
-	TOperatorPaymentRoutesBackendResponse,
-	TWiseDetails
+import {
+	ENUM_PAYMENT_ROUTE_METHODS,
+	type TClassicSwiftDetails,
+	type TClassicSwiftDetailsBackend,
+	type TCustomDetailsBackend,
+	type TOperatorPaymentRoute,
+	type TOperatorPaymentRouteBackend,
+	type TOperatorPaymentRouteCreateBackend,
+	type TOperatorPaymentRouteUpdateBackend,
+	type TOperatorPaymentRoutesBackendQuery,
+	type TOperatorPaymentRoutesBackendResponse,
+	type TOperatorPayoutDetailsSchema,
+	type TWiseDetails
 } from "../types";
-import { ENUM_PAYMENT_ROUTE_METHODS } from "../types";
 
 import { paymentRouteMethodConverter } from "./operator-payment-route-method.converters";
 
-const mapWiseDetailsToFrontend = (data: CustomDetails): TWiseDetails => {
+const mapWiseDetailsToFrontend = (
+	data: TCustomDetailsBackend
+): TWiseDetails => {
 	return {
 		typ: ENUM_PAYMENT_ROUTE_METHODS.WISE,
 		accountIdEmail:
@@ -31,7 +34,7 @@ const mapWiseDetailsToFrontend = (data: CustomDetails): TWiseDetails => {
 };
 
 const mapClassicSwiftDetailsToFrontend = (
-	data: ClassicSwiftDetails
+	data: TClassicSwiftDetailsBackend
 ): TClassicSwiftDetails => {
 	return {
 		typ: ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT,

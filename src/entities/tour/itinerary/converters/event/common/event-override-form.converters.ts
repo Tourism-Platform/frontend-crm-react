@@ -1,25 +1,26 @@
 import {
-	type ActivityOverrideInput,
-	type BusOverrideInput,
-	Currency,
-	type DurationChargeInput,
-	type FeeInput,
-	type FixedChargeInput,
-	type HotelOverrideInput,
-	type MonetaryValueSchema,
-	type PerPersonChargeInput,
-	type RoomRateInput,
-	type RouteOverrideInput,
-	RouteOverrideInputTypEnum,
-	type TransferOverrideInput
-} from "@/shared/api";
-
-import {
 	DEFAULT_EVENT_CURRENCY,
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
 } from "@/entities/commission";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import type { TDurationChargeInputBackend } from "@/entities/supplier/types/hotel/rooms-backend.types";
+import type { TSupplierFeeInputBackend } from "@/entities/supplier/types/supplier-fee-backend.types";
+import type {
+	TFixedChargeInputBackend,
+	TMonetaryValueBackend
+} from "@/entities/supplier/types/supplier-money-backend.types";
 
+import {
+	ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND,
+	type TActivityOverrideInputBackend,
+	type TBusOverrideInputBackend,
+	type THotelOverrideInputBackend,
+	type TPerPersonChargeInputBackend,
+	type TRoomRateInputBackend,
+	type TRouteOverrideInputBackend,
+	type TTransferOverrideInputBackend
+} from "../../../types";
 import type {
 	TCommissionMarkupBackend,
 	TCommissionMarkupInputBackend
@@ -28,6 +29,7 @@ import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE
 } from "../../../types/event-backend-enum.types";
+import type { ENUM_EVENT_KIND_TYPE } from "../../../types/event-enum.types";
 import type { TEventOverrideInputBackend } from "../../../types/event-override-backend.types";
 import {
 	ENUM_FORM_OVERRIDE_PRODUCT as ENUM_FORM,
@@ -43,17 +45,24 @@ import {
 	ENUM_FLIGHT_PRICING_TYPE,
 	type IFlightPriceRowMarkup
 } from "../../../types/flight/pricing.types";
+import { eventKindMapper } from "../../event-kind.converters";
 
-import { type IOverrideUnitOption } from "./event-override-units.helpers";
+import type { TEventDetailsBackend } from "../../../types/event-backend.types";
+
+import { mapEventOverrideFromDetails } from "./event-override.converters";
+import {
+	type IOverrideUnitOption,
+	getOverrideUnitOptions
+} from "./event-override-units.helpers";
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
 
 /** Structural view over every charge shape the override arms carry. */
 interface IChargeLike {
 	typ: string;
-	cost?: MonetaryValueSchema | null;
-	cost_per_person?: MonetaryValueSchema | null;
-	rate?: { typ?: string; cost?: MonetaryValueSchema | null } | null;
-	fees?: FeeInput[] | null;
+	cost?: TMonetaryValueBackend | null;
+	cost_per_person?: TMonetaryValueBackend | null;
+	rate?: { typ?: string; cost?: TMonetaryValueBackend | null } | null;
+	fees?: TSupplierFeeInputBackend[] | null;
 	markup?: TCommissionMarkupBackend | null;
 }
 
@@ -89,7 +98,8 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
+			currency:
+				currencyConverter.to(rowCurrency) ?? ENUM_CURRENCY_BACKEND.USD
 		}
 	};
 };
@@ -214,10 +224,11 @@ const applyWholeCharge = (
  * repriced ones by id.
  */
 export const mapEventOverrideToForm = (
-	eventTyp: ENUM_EVENT_BACKEND_TYPE,
+	eventKind: ENUM_EVENT_KIND_TYPE,
 	override: TEventOverrideInputBackend | null | undefined,
 	units: IOverrideUnitOption[]
 ): TOverrideProductFormValues => {
+	const eventTyp = eventKindMapper.to(eventKind);
 	const values = emptyFormValues(units);
 	if (!override) {
 		return values;
@@ -354,14 +365,14 @@ export const mapEventOverrideToForm = (
 // Override construction (form -> Input)
 // ---------------------------------------------------------------------------
 
-type TFixedCharge = { typ: "fixed" } & FixedChargeInput;
-type TPerPersonCharge = { typ: "per_person" } & PerPersonChargeInput;
-type TDurationCharge = { typ: "per_duration" } & DurationChargeInput;
+type TFixedCharge = { typ: "fixed" } & TFixedChargeInputBackend;
+type TPerPersonCharge = { typ: "per_person" } & TPerPersonChargeInputBackend;
+type TDurationCharge = { typ: "per_duration" } & TDurationChargeInputBackend;
 
 const buildFixedCharge = (
 	total: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE,
-	fees: FeeInput[] | null,
+	fees: TSupplierFeeInputBackend[] | null,
 	markup: IFlightPriceRowMarkup | null,
 	addMarginSeparately: boolean
 ): TFixedCharge => ({
@@ -375,7 +386,7 @@ const buildFixedCharge = (
 const buildPerPersonCharge = (
 	total: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE,
-	fees: FeeInput[] | null,
+	fees: TSupplierFeeInputBackend[] | null,
 	markup: IFlightPriceRowMarkup | null,
 	addMarginSeparately: boolean
 ): TPerPersonCharge => ({
@@ -392,7 +403,7 @@ const buildPerPersonCharge = (
 const buildPerDurationCharge = (
 	total: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE,
-	fees: FeeInput[] | null,
+	fees: TSupplierFeeInputBackend[] | null,
 	markup: IFlightPriceRowMarkup | null,
 	addMarginSeparately: boolean
 ): TDurationCharge => ({
@@ -488,7 +499,7 @@ const buildFlatOrPerPersonUnitCharge = (
 const buildRoomCharge = (
 	row: IOverrideUnitFormRow,
 	addMarginSeparately: boolean
-): RoomRateInput["base"] => {
+): TRoomRateInputBackend["base"] => {
 	const fees = mapFeesToBackend(row.fees);
 	if (row.charge_typ === ENUM_OVERRIDE_UNIT_CHARGE.PER_DURATION) {
 		return {
@@ -535,7 +546,7 @@ const buildHousingOverride = (
 	values: TOverrideProductFormValues,
 	arm: ENUM_OVERRIDE_PRICING_ARM_TYPE,
 	rows: IOverrideUnitFormRow[]
-): HotelOverrideInput => {
+): THotelOverrideInputBackend => {
 	const policy = {
 		check_in_from: values[ENUM_FORM.CHECK_IN_FROM],
 		check_out_until: values[ENUM_FORM.CHECK_OUT_UNTIL],
@@ -576,11 +587,11 @@ const buildRouteOverride = (
 	values: TOverrideProductFormValues,
 	arm: ENUM_OVERRIDE_PRICING_ARM_TYPE,
 	rows: IOverrideUnitFormRow[]
-): RouteOverrideInput => {
+): TRouteOverrideInputBackend => {
 	const typ =
 		eventTyp === ENUM_EVENT_BACKEND.TRAIN
-			? RouteOverrideInputTypEnum.Train
-			: RouteOverrideInputTypEnum.Flight;
+			? ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.TRAIN
+			: ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.FLIGHT;
 
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_FARE) {
 		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
@@ -609,7 +620,7 @@ const buildBusOverride = (
 	values: TOverrideProductFormValues,
 	arm: ENUM_OVERRIDE_PRICING_ARM_TYPE,
 	rows: IOverrideUnitFormRow[]
-): BusOverrideInput => {
+): TBusOverrideInputBackend => {
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_VEHICLE) {
 		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 		return {
@@ -634,7 +645,7 @@ const buildTransferOverride = (
 	values: TOverrideProductFormValues,
 	arm: ENUM_OVERRIDE_PRICING_ARM_TYPE,
 	rows: IOverrideUnitFormRow[]
-): TransferOverrideInput => {
+): TTransferOverrideInputBackend => {
 	if (arm === ENUM_OVERRIDE_PRICING_ARM.PER_CAR) {
 		const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 		return {
@@ -672,7 +683,7 @@ const buildTransferOverride = (
 const buildActivityOverride = (
 	values: TOverrideProductFormValues,
 	rows: IOverrideUnitFormRow[]
-): ActivityOverrideInput => {
+): TActivityOverrideInputBackend => {
 	const addMarginSeparately = values[ENUM_FORM.ADD_MARGIN_SEPARATELY];
 	return {
 		typ: "activity",
@@ -692,9 +703,10 @@ const buildActivityOverride = (
  * an empty row would zero a unit out.
  */
 export const mapEventOverrideToBackend = (
-	eventTyp: ENUM_EVENT_BACKEND_TYPE,
+	eventKind: ENUM_EVENT_KIND_TYPE,
 	values: TOverrideProductFormValues
 ): TEventOverrideInputBackend => {
+	const eventTyp = eventKindMapper.to(eventKind);
 	const arm = values[ENUM_FORM.PRICING_ARM];
 	const filledRows = values[ENUM_FORM.UNITS].filter(
 		(row) => row.total_price != null
@@ -718,3 +730,18 @@ export const mapEventOverrideToBackend = (
 			);
 	}
 };
+
+/**
+ * Override dialog values of a pool member straight from the event READ
+ * details: its current override (if any) over the units of its spec.
+ */
+export const mapEventOverrideDetailsToForm = (
+	eventKind: ENUM_EVENT_KIND_TYPE,
+	details: TEventDetailsBackend | undefined,
+	supplyId?: string | null
+): TOverrideProductFormValues =>
+	mapEventOverrideToForm(
+		eventKind,
+		mapEventOverrideFromDetails(details, supplyId),
+		getOverrideUnitOptions(details, supplyId)
+	);

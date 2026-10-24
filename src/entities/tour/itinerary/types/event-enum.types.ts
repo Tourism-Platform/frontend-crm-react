@@ -38,3 +38,20 @@ export interface IEventTemplate {
 	library: ITemplateItem[];
 	components: ITemplateItem[];
 }
+
+/** Вид события как у бэка (flight/train/bus — отдельно), для таблиц и лейблов */
+export const ENUM_EVENT_KIND = {
+	FLIGHT: "flight",
+	TRAIN: "train",
+	BUS: "bus",
+	TRANSFER: "transfer",
+	HOUSING: "housing",
+	ACTIVITY: "activity",
+	REF: "ref",
+	GUIDE: "guide",
+	SUPPLEMENTARY: "supplementary",
+	OPTIONS: "options"
+} as const;
+
+export type ENUM_EVENT_KIND_TYPE =
+	(typeof ENUM_EVENT_KIND)[keyof typeof ENUM_EVENT_KIND];

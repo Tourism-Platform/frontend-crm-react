@@ -8,9 +8,9 @@ import {
 	ENUM_EVENT,
 	MULTIPLY_OPTION_EDIT_SCHEMA,
 	type TMultiplyOptionEditSchema,
+	getMultiplyOptionsOrder,
 	getRemovedMultiplyOptions,
 	hasMultiplyOptionsOrderChanged,
-	mapMultiplyOptionReorderToBackend,
 	useDeleteTourEventOptionMutation,
 	useEventEditIds,
 	useReorderEventOptionsMutation,
@@ -99,8 +99,7 @@ export const MultiplyOptionEditPage: FC = () => {
 
 			if (orderChanged) {
 				// Contract 3.1: reorder payload is option row IDs, not indices.
-				const orderPayload =
-					mapMultiplyOptionReorderToBackend(currentOptions);
+				const orderPayload = getMultiplyOptionsOrder(currentOptions);
 
 				await reorderEventOptions({
 					tourId,

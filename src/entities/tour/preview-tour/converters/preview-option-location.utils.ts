@@ -1,8 +1,6 @@
-import type { LocationOutSchema } from "@/shared/api";
-
 import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary";
 
-import type { TOptionDetailBackend } from "../types";
+import type { TOptionDetailBackend, TPubLocationBackend } from "../types";
 
 type TPubEvent = TOptionDetailBackend["events"][number];
 
@@ -17,11 +15,11 @@ type TPubDetailsEvent =
 
 export const isLocationOut = (
 	location: unknown
-): location is LocationOutSchema =>
+): location is TPubLocationBackend =>
 	typeof location === "object" &&
 	location !== null &&
 	"city" in location &&
-	typeof (location as LocationOutSchema).city === "string";
+	typeof (location as TPubLocationBackend).city === "string";
 
 export const formatLocation = (location: unknown): string => {
 	if (!isLocationOut(location)) return "";

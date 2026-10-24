@@ -1,15 +1,18 @@
-import type {
-	AgencyInfoModel,
-	OperatorFilesModel,
-	OperatorFinancialSettingsRead,
-	OperatorFinancialSettingsUpdate,
-	OperatorInfoUpdate,
-	OperatorModel,
-	PartneredAgencyItem
-} from "@/shared/api";
 import { createMockIdSequence, mockImageUrl } from "@/shared/api";
 
+import type { TOperatorFile } from "@/entities/booking/order/types/order-pax-backend.types";
+import type {
+	TOperatorFinanceInfoBackend,
+	TOperatorFinanceInfoBackendUpdate
+} from "@/entities/finance/finance-information/types/operator-finance-info-backend.interface";
 import { AGENCY_BUSINESS_MOCK } from "@/entities/user/agency/mock/agency-business.mock";
+import type { TAgencyBusinessInfoBackend } from "@/entities/user/agency/types/agency-business-backend.interface";
+
+import type {
+	TOperatorBusinessInfoUpdateBackend,
+	TOperatorModelBackend,
+	TPartneredAgencyItemBackend
+} from "../types";
 
 import { OPERATOR_AGENCY_LIST_MOCK } from "./operator-agencies.mock";
 import { OPERATOR_BUSINESS_DOCUMENTS_MOCK } from "./operator-business-documents.mock";
@@ -17,7 +20,7 @@ import { OPERATOR_BUSINESS_MOCK } from "./operator-business.mock";
 import { OPERATOR_FINANCIAL_MOCK } from "./operator-financial.mock";
 
 /** Агентства-партнёры: часть каталога + агентство мок-пользователя */
-const PARTNERED_SEED: PartneredAgencyItem[] = [
+const PARTNERED_SEED: TPartneredAgencyItemBackend[] = [
 	{
 		agency_id: AGENCY_BUSINESS_MOCK.agency_id,
 		name: AGENCY_BUSINESS_MOCK.business_name ?? "Agency",
@@ -56,16 +59,16 @@ const PARTNERED_SEED: PartneredAgencyItem[] = [
 ];
 
 let info = structuredClone(OPERATOR_BUSINESS_MOCK);
-let financials: OperatorFinancialSettingsRead = structuredClone(
+let financials: TOperatorFinanceInfoBackend = structuredClone(
 	OPERATOR_FINANCIAL_MOCK
 );
-let documents: OperatorFilesModel[] = structuredClone(
+let documents: TOperatorFile[] = structuredClone(
 	OPERATOR_BUSINESS_DOCUMENTS_MOCK
 );
 let partnered = new Map(
 	PARTNERED_SEED.map((item) => [item.agency_id, structuredClone(item)])
 );
-let operators = new Map<string, OperatorModel>([
+let operators = new Map<string, TOperatorModelBackend>([
 	[
 		info.operator_id,
 		{ id: info.operator_id, name: info.business_name ?? "Operator" }
@@ -80,7 +83,9 @@ const operatorIds = createMockIdSequence("e220", 1);
 
 export const getOperatorInfo = () => info;
 
-export const updateOperatorInfo = (update: OperatorInfoUpdate) => {
+export const updateOperatorInfo = (
+	update: TOperatorBusinessInfoUpdateBackend
+) => {
 	for (const [key, value] of Object.entries(update)) {
 		if (value !== undefined) Object.assign(info, { [key]: value });
 	}
@@ -97,7 +102,7 @@ export const setOperatorLogo = (hasLogo: boolean) => {
 export const getOperatorFinancials = () => financials;
 
 export const updateOperatorFinancials = (
-	update: OperatorFinancialSettingsUpdate
+	update: TOperatorFinanceInfoBackendUpdate
 ) => {
 	for (const [key, value] of Object.entries(update)) {
 		if (value === undefined) continue;
@@ -161,7 +166,7 @@ export const getPartneredAgency = (agencyId: string) => partnered.get(agencyId);
 /** Карточка агентства для оператора; для каталога собирается из строки списка */
 export const getAgencyInfoForOperator = (
 	agencyId: string
-): AgencyInfoModel | undefined => {
+): TAgencyBusinessInfoBackend | undefined => {
 	if (agencyId === AGENCY_BUSINESS_MOCK.agency_id)
 		return AGENCY_BUSINESS_MOCK;
 
@@ -195,7 +200,7 @@ export const getAgencyInfoForOperator = (
 interface IInviteAgency {
 	email: string;
 	name?: string | null;
-	info?: Partial<AgencyInfoModel> | null;
+	info?: Partial<TAgencyBusinessInfoBackend> | null;
 }
 
 export const inviteAgency = ({
@@ -204,7 +209,7 @@ export const inviteAgency = ({
 	info: agencyInfo
 }: IInviteAgency) => {
 	const agencyId = agencyIds.next();
-	const item: PartneredAgencyItem = {
+	const item: TPartneredAgencyItemBackend = {
 		agency_id: agencyId,
 		name: name ?? agencyInfo?.business_name ?? email,
 		invited_email: email,
@@ -226,7 +231,7 @@ export const inviteAgency = ({
 
 export const setAgencyDiscount = (
 	agencyId: string,
-	discount: PartneredAgencyItem["discount"]
+	discount: TPartneredAgencyItemBackend["discount"]
 ) => {
 	const item = partnered.get(agencyId);
 	if (!item) return undefined;

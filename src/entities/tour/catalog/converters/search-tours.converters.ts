@@ -4,7 +4,7 @@ import type { TTourSearchLocationQuery } from "@/shared/config";
 import { parseStoredLocalDate } from "@/shared/lib";
 import { formatDateToISO } from "@/shared/utils";
 
-import type { TSearchTours } from "../schema";
+import type { TSearchTours } from "../types";
 import { ENUM_LOCATION_SUGGEST_KIND } from "../types/location-suggest.types";
 
 import { mapSearchQueryToLocationSuggest } from "./location-suggest.converters";

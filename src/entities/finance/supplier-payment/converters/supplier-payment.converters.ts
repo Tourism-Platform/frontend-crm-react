@@ -1,22 +1,24 @@
-import {
-	type OPERATOR_SUPPLIER_PAYMENT_PATHS,
-	type SupplierPaymentFile,
-	type SupplierPaymentListRowOutput,
-	SupplierPaymentStatus
-} from "@/shared/api";
 import { formatDate, parseDecimalSafe } from "@/shared/utils";
 
 import { currencyConverter } from "@/entities/commission";
+import {
+	eventBoardTypeMapper,
+	eventKindMapper
+} from "@/entities/tour/itinerary";
 
 import { SUPPLIER_PAYMENT_NO_DATA } from "../constants";
 import { getSupplierPaymentMockDisplay } from "../mock/supplier-payment.mock-display";
 import {
 	ENUM_SUPPLIER_PAYMENT_STATUS,
+	ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND,
 	type ISupplierPayment,
 	type ISupplierPaymentFilters,
 	type ISupplierPaymentPaginatedResponse,
 	type TSupplierPaymentBackend,
+	type TSupplierPaymentFileBackend,
+	type TSupplierPaymentListQueryBackend,
 	type TSupplierPaymentListResponseInput,
+	type TSupplierPaymentListRowOutputBackend,
 	type TSupplierPaymentStatusCounts,
 	type TUpdateSupplierPaymentBackend
 } from "../types";
@@ -27,7 +29,7 @@ const parseAmount = (value: string | number): number =>
 	parseDecimalSafe(value).toNumber();
 
 const mapFilesToMetadata = (
-	files: SupplierPaymentFile[]
+	files: TSupplierPaymentFileBackend[]
 ): ISupplierPayment["files"] => {
 	if (files.length === 0) {
 		return undefined;
@@ -47,6 +49,7 @@ export const mapSupplierPaymentToFrontend = (
 ): ISupplierPayment => {
 	const display = getSupplierPaymentMockDisplay(data.payment_id);
 	const uiStatus = supplierPaymentStatusConverter.from(data.status);
+	const kind = eventKindMapper.from(data.event_typ);
 
 	return {
 		id: data.payment_id,
@@ -55,6 +58,8 @@ export const mapSupplierPaymentToFrontend = (
 		component:
 			display?.component ?? data.event_name ?? SUPPLIER_PAYMENT_NO_DATA,
 		type: display?.type ?? data.event_typ ?? SUPPLIER_PAYMENT_NO_DATA,
+		eventKind: kind ?? null,
+		eventType: eventBoardTypeMapper.to(kind) ?? null,
 		supplier:
 			display?.supplier ?? data.supplier_name ?? SUPPLIER_PAYMENT_NO_DATA,
 		dateCreated: data.paid_at ? formatDate(data.paid_at) : "",
@@ -116,20 +121,21 @@ const mapStatusCounts = (
 	return {
 		[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED]:
 			raw[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED] ??
-			raw[SupplierPaymentStatus.Paid] ??
+			raw[ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED] ??
 			0,
 		[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED]:
 			raw[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED] ??
-			raw[SupplierPaymentStatus.NotPaid] ??
+			raw[ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED] ??
 			0
 	};
 };
 
 export const mapSupplierPaymentListItemToFrontend = (
-	data: SupplierPaymentListRowOutput
+	data: TSupplierPaymentListRowOutputBackend
 ): ISupplierPayment => {
 	const display = getSupplierPaymentMockDisplay(data.payment_id);
 	const uiStatus = supplierPaymentStatusConverter.from(data.status);
+	const kind = eventKindMapper.from(data.event_typ);
 
 	return {
 		id: data.payment_id,
@@ -138,6 +144,8 @@ export const mapSupplierPaymentListItemToFrontend = (
 		component:
 			display?.component ?? data.event_name ?? SUPPLIER_PAYMENT_NO_DATA,
 		type: display?.type ?? data.event_typ ?? SUPPLIER_PAYMENT_NO_DATA,
+		eventKind: kind ?? null,
+		eventType: eventBoardTypeMapper.to(kind) ?? null,
 		supplier:
 			display?.supplier ?? data.supplier_name ?? SUPPLIER_PAYMENT_NO_DATA,
 		dateCreated: data.paid_at ? formatDate(data.paid_at) : "",
@@ -173,7 +181,7 @@ export const mapSupplierPaymentListToPaginated = (
 
 export const mapSupplierPaymentFiltersToBackend = (
 	filters: ISupplierPaymentFilters
-): typeof OPERATOR_SUPPLIER_PAYMENT_PATHS.listSupplierPayments._types.query => {
+): TSupplierPaymentListQueryBackend => {
 	const search = filters.search.trim();
 
 	return {

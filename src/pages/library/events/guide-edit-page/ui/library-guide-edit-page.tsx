@@ -68,8 +68,7 @@ export const LibraryGuideEditPage: FC = () => {
 		data: isCreate
 			? undefined
 			: (libraryEvent as TGuideEditSchema | undefined),
-		recordKey: `${libraryId}:${supplyId ?? "main"}`,
-		currentDetails: libraryTemplate?.event.details
+		recordKey: `${libraryId}:${supplyId ?? "main"}`
 	});
 
 	useEffect(() => {

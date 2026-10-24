@@ -1,12 +1,12 @@
-import {
-	type BookingFinancialsResponse,
-	type BookingReconciliationRowOutput,
-	Currency,
-	EventTypes,
-	type EventVarianceResponse
-} from "@/shared/api/generated/Api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import { ENUM_EVENT_BACKEND } from "@/entities/tour/itinerary/types/event-backend-enum.types";
 
-import type { TReconciliationListBackend } from "../types";
+import type {
+	TBookingFinancialsResponseBackend,
+	TBookingReconciliationRowOutputBackend,
+	TEventVarianceResponseBackend,
+	TReconciliationListBackend
+} from "../types";
 
 import {
 	buildLinkedEventUuid,
@@ -14,7 +14,8 @@ import {
 } from "./reconciliation.mock.constants";
 import { createReconciliationMocks } from "./reconciliation.mock.factory";
 
-const rows: BookingReconciliationRowOutput[] = createReconciliationMocks();
+const rows: TBookingReconciliationRowOutputBackend[] =
+	createReconciliationMocks();
 
 export interface IListReconciliationsQuery {
 	status: string | null;
@@ -29,7 +30,7 @@ const filterRows = ({
 }: Pick<
 	IListReconciliationsQuery,
 	"status" | "q"
->): BookingReconciliationRowOutput[] => {
+>): TBookingReconciliationRowOutputBackend[] => {
 	let filtered = [...rows];
 
 	if (status) {
@@ -51,9 +52,9 @@ const filterRows = ({
 };
 
 const sumField = (
-	items: BookingReconciliationRowOutput[],
+	items: TBookingReconciliationRowOutputBackend[],
 	key: keyof Pick<
-		BookingReconciliationRowOutput,
+		TBookingReconciliationRowOutputBackend,
 		| "revenue_accrued"
 		| "revenue_settled"
 		| "receivable"
@@ -69,7 +70,7 @@ const sumField = (
 };
 
 const computeTotals = (
-	items: BookingReconciliationRowOutput[]
+	items: TBookingReconciliationRowOutputBackend[]
 ): TReconciliationListBackend["totals"] => ({
 	revenue_accrued: sumField(items, "revenue_accrued"),
 	revenue_settled: sumField(items, "revenue_settled"),
@@ -94,7 +95,7 @@ export const listReconciliationsFromUrl = (
 
 	return {
 		total_count: filtered.length,
-		currency: Currency.USD,
+		currency: ENUM_CURRENCY_BACKEND.USD,
 		totals: computeTotals(filtered),
 		data
 	};
@@ -103,8 +104,8 @@ export const listReconciliationsFromUrl = (
 const toAmount = (value: number): string => value.toFixed(2);
 
 const buildFinancials = (
-	row: BookingReconciliationRowOutput
-): BookingFinancialsResponse => ({
+	row: TBookingReconciliationRowOutputBackend
+): TBookingFinancialsResponseBackend => ({
 	booking_id: row.booking_id,
 	order_number: row.order_number,
 	currency: row.currency,
@@ -122,9 +123,9 @@ const buildFinancials = (
 });
 
 const buildVariance = (
-	row: BookingReconciliationRowOutput,
+	row: TBookingReconciliationRowOutputBackend,
 	index: number
-): EventVarianceResponse => {
+): TEventVarianceResponseBackend => {
 	const plannedCost = Number(row.planned_cost);
 	const costAccrued = Number(row.cost_accrued);
 	const costSettled = Number(row.cost_settled);
@@ -147,7 +148,7 @@ const buildVariance = (
 			event_id: buildLinkedEventUuid(index * 2 + 1),
 			payment_id: paymentIdHotel,
 			event_name: "Hotel Accommodation",
-			event_typ: EventTypes.Housing,
+			event_typ: ENUM_EVENT_BACKEND.HOUSING,
 			date: row.date,
 			planned_min: toAmount(hotelPlanned * 0.9),
 			planned_max: toAmount(hotelPlanned),
@@ -160,7 +161,7 @@ const buildVariance = (
 			event_id: buildLinkedEventUuid(index * 2 + 2),
 			payment_id: paymentIdTransport,
 			event_name: "Transportation",
-			event_typ: EventTypes.Transfer,
+			event_typ: ENUM_EVENT_BACKEND.TRANSFER,
 			date: row.date,
 			planned_min: toAmount(transportPlanned * 0.9),
 			planned_max: toAmount(transportPlanned),
@@ -186,23 +187,24 @@ const buildVariance = (
 
 export const RECONCILIATION_FINANCIALS_MAP: Record<
 	string,
-	BookingFinancialsResponse
+	TBookingFinancialsResponseBackend
 > = Object.fromEntries(
 	rows.map((row) => [row.booking_id, buildFinancials(row)])
 );
 
 export const RECONCILIATION_VARIANCE_MAP: Record<
 	string,
-	EventVarianceResponse
+	TEventVarianceResponseBackend
 > = Object.fromEntries(
 	rows.map((row, index) => [row.booking_id, buildVariance(row, index)])
 );
 
 export const getReconciliationFinancials = (
 	bookingId: string
-): BookingFinancialsResponse | undefined =>
+): TBookingFinancialsResponseBackend | undefined =>
 	RECONCILIATION_FINANCIALS_MAP[bookingId];
 
 export const getReconciliationVariance = (
 	bookingId: string
-): EventVarianceResponse | undefined => RECONCILIATION_VARIANCE_MAP[bookingId];
+): TEventVarianceResponseBackend | undefined =>
+	RECONCILIATION_VARIANCE_MAP[bookingId];

@@ -1,10 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { TourCatalogSort } from "@/shared/api";
-
 import { buildCatalogQueryString } from "../lib/build-catalog-query";
 import { parseCatalogQuery } from "../lib/parse-catalog-query";
-import { ENUM_CATALOG_SORT } from "../types";
+import { ENUM_CATALOG_SORT, ENUM_TOUR_CATALOG_SORT_BACKEND } from "../types";
 
 import {
 	mapCatalogFiltersToCatalogQuery,
@@ -27,7 +25,7 @@ describe("catalog sort", () => {
 				...BASE,
 				sort: ENUM_CATALOG_SORT.DURATION_DESC
 			})
-		).toMatchObject({ sort: TourCatalogSort.DurationDesc });
+		).toMatchObject({ sort: ENUM_TOUR_CATALOG_SORT_BACKEND.DURATION_DESC });
 	});
 
 	it("round-trips sort through the URL", () => {

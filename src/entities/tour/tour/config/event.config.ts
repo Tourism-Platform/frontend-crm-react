@@ -184,3 +184,22 @@ export const EVENT_TYPE_TO_TABS: Record<string, readonly string[]> = {
 		ENUM_INFORMATION_EDIT_TAB.MEDIA
 	]
 };
+
+/** Шаблон пути редактора события; для альтернативы внутри multiply option — путь опции */
+export const getEventPath = (
+	eventType: string,
+	isOption: boolean
+): TTourEventPath | undefined =>
+	isOption
+		? EVENT_TYPE_TO_OPTION_PATH[eventType]
+		: EVENT_TYPE_TO_PATH[eventType];
+
+export const getEventTabs = (eventType: ENUM_EVENT_TYPE): readonly string[] =>
+	EVENT_TYPE_TO_TABS[eventType] ?? [];
+
+export const getEventIcon = (
+	eventType: ENUM_EVENT_TYPE
+): ITemplateItem["icon"] => EVENT_METADATA[eventType]?.icon ?? InfoCircleIcon;
+
+export const getEventTextColor = (eventType: ENUM_EVENT_TYPE): string =>
+	EVENT_METADATA[eventType]?.color_text ?? "text-muted-foreground";

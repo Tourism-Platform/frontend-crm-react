@@ -1,4 +1,4 @@
-import type { TDateRange, TSearchTours } from "../schema/search-tours.schema";
+import type { TDateRange, TSearchTours } from "../types";
 import type { IRecentSearch, IRecentSearchBackend } from "../types";
 import { ENUM_LOCATION_SUGGEST_KIND } from "../types/location-suggest.types";
 

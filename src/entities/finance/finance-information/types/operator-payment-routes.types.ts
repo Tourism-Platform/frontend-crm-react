@@ -1,4 +1,8 @@
+import { z } from "zod";
+
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
+import type { OPERATOR_PAYMENT_SETTINGS_SCHEMA } from "../schema";
 
 export const ENUM_FORM_OPERATOR_PAYMENT_SETTINGS = {
 	METHOD_TYPE: "method_type",
@@ -48,3 +52,7 @@ export type TOperatorPaymentRoute = {
 	methodType: ENUM_PAYMENT_ROUTE_METHODS_TYPE;
 	details: TClassicSwiftDetails | TWiseDetails;
 };
+
+export type TOperatorPayoutDetailsSchema = z.infer<
+	typeof OPERATOR_PAYMENT_SETTINGS_SCHEMA
+>;

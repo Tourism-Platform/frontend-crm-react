@@ -1,5 +1,8 @@
+import type { z } from "zod";
+
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { TRANSPORTATION_PRICING_SCHEMA } from "../../schema/transportation/pricing.schema";
 import type { IFeeFormRow } from "../fee.types";
 
 export const ENUM_TRANSPORTATION_PRICING_INVOICING = {
@@ -114,3 +117,7 @@ export interface ITransportationPerCarCategoryExpenses {
 	typ: typeof ENUM_TRANSPORTATION_EXPENSE_TYP.PER_CAR_CATEGORY;
 	[ENUM_TRANSPORTATION_PER_CAR_EXPENSES_FIELD.CARS]: ITransportationPerCarByClassPriceRow[];
 }
+
+export type TTransportationPricingSchema = z.infer<
+	typeof TRANSPORTATION_PRICING_SCHEMA
+>;

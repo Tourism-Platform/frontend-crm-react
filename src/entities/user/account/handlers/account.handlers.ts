@@ -2,9 +2,7 @@ import { HttpResponse } from "msw";
 
 import {
 	ACCOUNT_PATHS,
-	AccountType,
 	PROFILE_INFO_PATHS,
-	UserRoles,
 	createMockHandler,
 	mockNoContent,
 	mockUnauthorized,
@@ -12,14 +10,19 @@ import {
 } from "@/shared/api";
 
 import { getMockSessionAccount } from "@/entities/auth/mock";
+import { ENUM_USER_ROLES_BACKEND } from "@/entities/staff/types/staff-backend-enum.types";
 
 import {
 	getAccountProfile,
 	setAccountPhoto,
 	updateAccountProfile
 } from "../mock/account.store";
+import { ENUM_ACCOUNT_TYPE_BACKEND } from "../types";
 
-const AGENCY_ROLES: string[] = [UserRoles.AgencyAdmin, UserRoles.AgencyStaff];
+const AGENCY_ROLES: string[] = [
+	ENUM_USER_ROLES_BACKEND.AGENCY_ADMIN,
+	ENUM_USER_ROLES_BACKEND.AGENCY_STAFF
+];
 
 /** Профиль вошедшего пользователя; null — нет сессии */
 const getSessionProfile = () => {
@@ -70,8 +73,8 @@ export const accountHandlers = [
 
 		return HttpResponse.json({
 			account_type: AGENCY_ROLES.includes(account.role)
-				? AccountType.TourAgency
-				: AccountType.TourOperator
+				? ENUM_ACCOUNT_TYPE_BACKEND.TOUR_AGENCY
+				: ENUM_ACCOUNT_TYPE_BACKEND.TOUR_OPERATOR
 		});
 	})
 ];

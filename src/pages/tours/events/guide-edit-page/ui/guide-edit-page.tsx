@@ -25,7 +25,7 @@ export const GuideEditPage: FC = () => {
 	});
 
 	// Saves on change (debounced), keeps the form in sync with the server.
-	const autosave = useEventAutosave(ENUM_EVENT.GUIDE, form, edit);
+	const autosave = useEventAutosave(form, edit);
 
 	useEffect(() => {
 		if (edit.isError) {

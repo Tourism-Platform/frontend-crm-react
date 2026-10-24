@@ -1,26 +1,25 @@
-import {
-	type InvoiceDetailResponse,
-	type InvoiceListItem,
-	type InvoiceListResponse,
-	InvoiceStatus
-} from "@/shared/api";
 import { formatDate } from "@/shared/utils";
 
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
 import { INVOICE_NO_DATA } from "../constants";
-import type {
-	IGenerateInvoiceDocument,
-	IGenerateInvoiceDocumentBackend,
-	IInvoice,
-	IInvoiceDetail,
-	IInvoiceFilters,
-	IInvoicePaginatedResponse,
-	TInvoiceStatusCounts
+import {
+	ENUM_INVOICE_STATUS_BACKEND,
+	type ENUM_INVOICE_STATUS_BACKEND_TYPE,
+	type IGenerateInvoiceDocument,
+	type IGenerateInvoiceDocumentBackend,
+	type IInvoice,
+	type IInvoiceDetail,
+	type IInvoiceFilters,
+	type IInvoicePaginatedResponse,
+	type TInvoiceDetailResponseBackend,
+	type TInvoiceListItemBackend,
+	type TInvoiceListResponseBackend,
+	type TInvoiceStatusCounts
 } from "../types";
 
-type TInvoiceListResponseInput = InvoiceListResponse & {
-	status_counts?: Partial<Record<InvoiceStatus, number>>;
+type TInvoiceListResponseInput = TInvoiceListResponseBackend & {
+	status_counts?: Partial<Record<ENUM_INVOICE_STATUS_BACKEND_TYPE, number>>;
 };
 
 const parseAmount = (value: string | number): number => {
@@ -50,26 +49,26 @@ const emptyBookingInfo = () => ({
 });
 
 const emptyStatusCounts = (): TInvoiceStatusCounts =>
-	Object.values(InvoiceStatus).reduce((acc, status) => {
+	Object.values(ENUM_INVOICE_STATUS_BACKEND).reduce((acc, status) => {
 		acc[status] = 0;
 		return acc;
 	}, {} as TInvoiceStatusCounts);
 
 const mapStatusCounts = (
-	counts?: Partial<Record<InvoiceStatus, number>>
+	counts?: Partial<Record<ENUM_INVOICE_STATUS_BACKEND_TYPE, number>>
 ): TInvoiceStatusCounts => {
 	if (!counts) {
 		return emptyStatusCounts();
 	}
 
-	return Object.values(InvoiceStatus).reduce((acc, status) => {
+	return Object.values(ENUM_INVOICE_STATUS_BACKEND).reduce((acc, status) => {
 		acc[status] = counts[status] ?? 0;
 		return acc;
 	}, {} as TInvoiceStatusCounts);
 };
 
 export const mapInvoiceListItemToFrontend = (
-	data: InvoiceListItem
+	data: TInvoiceListItemBackend
 ): IInvoice => ({
 	id: data.id,
 	paymentId: data.invoice_number,
@@ -82,7 +81,7 @@ export const mapInvoiceListItemToFrontend = (
 });
 
 export const mapInvoiceDetailToFrontend = (
-	data: InvoiceDetailResponse
+	data: TInvoiceDetailResponseBackend
 ): IInvoiceDetail => ({
 	id: data.id,
 	paymentId: data.invoice_number,
@@ -101,8 +100,9 @@ export const mapInvoiceDetailToFrontend = (
 	file: undefined
 });
 
-export const mapInvoiceListToFrontend = (data: InvoiceListItem[]): IInvoice[] =>
-	data.map(mapInvoiceListItemToFrontend);
+export const mapInvoiceListToFrontend = (
+	data: TInvoiceListItemBackend[]
+): IInvoice[] => data.map(mapInvoiceListItemToFrontend);
 
 export const mapInvoicePaginatedToFrontend = (
 	response: TInvoiceListResponseInput

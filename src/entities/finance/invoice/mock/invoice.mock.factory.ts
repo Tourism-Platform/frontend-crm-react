@@ -1,4 +1,7 @@
-import { type InvoiceDetailResponse, type InvoiceListItem } from "@/shared/api";
+import type {
+	TInvoiceDetailResponseBackend,
+	TInvoiceListItemBackend
+} from "../types";
 
 import {
 	MOCK_INVOICE_DEFAULTS,
@@ -36,13 +39,13 @@ const buildAmounts = (statusIndex: number, invoiceIndex: number) => {
 };
 
 export interface IInvoiceMockBundle {
-	listItems: InvoiceListItem[];
-	detailsById: Map<string, InvoiceDetailResponse>;
+	listItems: TInvoiceListItemBackend[];
+	detailsById: Map<string, TInvoiceDetailResponseBackend>;
 }
 
 export const createInvoiceMocks = (): IInvoiceMockBundle => {
-	const listItems: InvoiceListItem[] = [];
-	const detailsById = new Map<string, InvoiceDetailResponse>();
+	const listItems: TInvoiceListItemBackend[] = [];
+	const detailsById = new Map<string, TInvoiceDetailResponseBackend>();
 
 	INVOICE_STATUS_SEED.forEach((row, statusIndex) => {
 		for (
@@ -64,7 +67,7 @@ export const createInvoiceMocks = (): IInvoiceMockBundle => {
 					(statusIndex + invoiceIndex - 1) % MOCK_ORDER_NUMBERS.length
 				];
 			// !!! TODO: add counterparty_name
-			const listItem: InvoiceListItem = {
+			const listItem: TInvoiceListItemBackend = {
 				id,
 				booking_id,
 				status: row.status,
@@ -78,7 +81,7 @@ export const createInvoiceMocks = (): IInvoiceMockBundle => {
 				order_number
 			};
 
-			const detail: InvoiceDetailResponse = {
+			const detail: TInvoiceDetailResponseBackend = {
 				id,
 				invoice_number,
 				booking_id,

@@ -1,11 +1,6 @@
-import {
-	BreakdownLineKind,
-	ExpenseType,
-	type MonetaryValueSchema,
-	PricingWarning
-} from "@/shared/api";
 import { createEnumMapper, formatToDollars } from "@/shared/utils";
 
+import type { TMonetaryValueBackend } from "@/entities/supplier/types/supplier-money-backend.types";
 import {
 	ENUM_BREAKDOWN_LEG,
 	ENUM_BREAKDOWN_LINE_KIND,
@@ -21,59 +16,69 @@ import {
 } from "@/entities/tour/tour/types/pricing-breakdown.types";
 import type { ITourReviewItem } from "@/entities/tour/tour/types/tour-review.interface";
 
-import type {
-	TBreakdownLineBackend,
-	TBreakdownSpreadBackend,
-	TPricingWarningBackend
+import {
+	ENUM_BREAKDOWN_LINE_KIND_BACKEND,
+	type ENUM_BREAKDOWN_LINE_KIND_BACKEND_TYPE,
+	ENUM_EXPENSE_TYPE_BACKEND,
+	type ENUM_EXPENSE_TYPE_BACKEND_TYPE,
+	ENUM_PRICING_WARNING_BACKEND,
+	type ENUM_PRICING_WARNING_BACKEND_TYPE,
+	type TBreakdownLineBackend,
+	type TBreakdownSpreadBackend,
+	type TPricingWarningBackend
 } from "../types";
 
 const MAP_BREAKDOWN_LINE_KIND: Partial<
-	Record<BreakdownLineKind, ENUM_BREAKDOWN_LINE_KIND_TYPE>
+	Record<ENUM_BREAKDOWN_LINE_KIND_BACKEND_TYPE, ENUM_BREAKDOWN_LINE_KIND_TYPE>
 > = {
-	[BreakdownLineKind.Unit]: ENUM_BREAKDOWN_LINE_KIND.UNIT,
-	[BreakdownLineKind.ExtraCost]: ENUM_BREAKDOWN_LINE_KIND.EXTRA_COST,
-	[BreakdownLineKind.Surcharge]: ENUM_BREAKDOWN_LINE_KIND.SURCHARGE
+	[ENUM_BREAKDOWN_LINE_KIND_BACKEND.UNIT]: ENUM_BREAKDOWN_LINE_KIND.UNIT,
+	[ENUM_BREAKDOWN_LINE_KIND_BACKEND.EXTRA_COST]:
+		ENUM_BREAKDOWN_LINE_KIND.EXTRA_COST,
+	[ENUM_BREAKDOWN_LINE_KIND_BACKEND.SURCHARGE]:
+		ENUM_BREAKDOWN_LINE_KIND.SURCHARGE
 };
 
 export const breakdownLineKindMapper = createEnumMapper<
-	BreakdownLineKind,
+	ENUM_BREAKDOWN_LINE_KIND_BACKEND_TYPE,
 	ENUM_BREAKDOWN_LINE_KIND_TYPE
 >(MAP_BREAKDOWN_LINE_KIND);
 
 const MAP_BREAKDOWN_PRICING: Partial<
-	Record<ExpenseType, ENUM_BREAKDOWN_PRICING_TYPE>
+	Record<ENUM_EXPENSE_TYPE_BACKEND_TYPE, ENUM_BREAKDOWN_PRICING_TYPE>
 > = {
-	[ExpenseType.Fixed]: ENUM_BREAKDOWN_PRICING.FIXED,
-	[ExpenseType.PerPerson]: ENUM_BREAKDOWN_PRICING.PER_PERSON,
-	[ExpenseType.PerGroup]: ENUM_BREAKDOWN_PRICING.PER_GROUP,
-	[ExpenseType.PerDuration]: ENUM_BREAKDOWN_PRICING.PER_DURATION
+	[ENUM_EXPENSE_TYPE_BACKEND.FIXED]: ENUM_BREAKDOWN_PRICING.FIXED,
+	[ENUM_EXPENSE_TYPE_BACKEND.PER_PERSON]: ENUM_BREAKDOWN_PRICING.PER_PERSON,
+	[ENUM_EXPENSE_TYPE_BACKEND.PER_GROUP]: ENUM_BREAKDOWN_PRICING.PER_GROUP,
+	[ENUM_EXPENSE_TYPE_BACKEND.PER_DURATION]:
+		ENUM_BREAKDOWN_PRICING.PER_DURATION
 };
 
 export const breakdownPricingMapper = createEnumMapper<
-	ExpenseType,
+	ENUM_EXPENSE_TYPE_BACKEND_TYPE,
 	ENUM_BREAKDOWN_PRICING_TYPE
 >(MAP_BREAKDOWN_PRICING);
 
 const MAP_PRICING_WARNING: Partial<
-	Record<PricingWarning, ENUM_PRICING_WARNING_TYPE>
+	Record<ENUM_PRICING_WARNING_BACKEND_TYPE, ENUM_PRICING_WARNING_TYPE>
 > = {
-	[PricingWarning.FlatChargeOnMultiNightStay]:
+	[ENUM_PRICING_WARNING_BACKEND.FLAT_CHARGE_ON_MULTI_NIGHT_STAY]:
 		ENUM_PRICING_WARNING.FLAT_CHARGE_ON_MULTI_NIGHT_STAY,
-	[PricingWarning.FlatChargeOnMultiDayGuide]:
+	[ENUM_PRICING_WARNING_BACKEND.FLAT_CHARGE_ON_MULTI_DAY_GUIDE]:
 		ENUM_PRICING_WARNING.FLAT_CHARGE_ON_MULTI_DAY_GUIDE,
-	[PricingWarning.FixedChargeOnSightseeing]:
+	[ENUM_PRICING_WARNING_BACKEND.FIXED_CHARGE_ON_SIGHTSEEING]:
 		ENUM_PRICING_WARNING.FIXED_CHARGE_ON_SIGHTSEEING,
-	[PricingWarning.EmptySupply]: ENUM_PRICING_WARNING.EMPTY_SUPPLY,
-	[PricingWarning.ZeroCost]: ENUM_PRICING_WARNING.ZERO_COST
+	[ENUM_PRICING_WARNING_BACKEND.EMPTY_SUPPLY]:
+		ENUM_PRICING_WARNING.EMPTY_SUPPLY,
+	[ENUM_PRICING_WARNING_BACKEND.ZERO_COST]: ENUM_PRICING_WARNING.ZERO_COST
 };
 
 export const pricingWarningMapper = createEnumMapper<
-	PricingWarning,
+	ENUM_PRICING_WARNING_BACKEND_TYPE,
 	ENUM_PRICING_WARNING_TYPE
 >(MAP_PRICING_WARNING);
 
 export const mapPricingMoneyToFrontend = (
-	backend: MonetaryValueSchema
+	backend: TMonetaryValueBackend
 ): IPricingMoney => ({
 	val: backend.val,
 	currency: backend.currency

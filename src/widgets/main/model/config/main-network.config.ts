@@ -1,4 +1,25 @@
 import type { IMainNetworkBeamItem } from "../types/main-config.types";
+import type { TRoadmapPhase } from "../types/main-i18n.types";
+
+/** Бейдж фазы роадмапа */
+export const ROADMAP_BADGE_VARIANT_CLASS: Record<
+	TRoadmapPhase["badgeVariant"],
+	string
+> = {
+	now: "bg-emerald-500/10 text-emerald-600",
+	soon: "bg-amber-500/10 text-amber-600",
+	future: "bg-violet-500/10 text-violet-600"
+};
+
+/** Баннер фазы роадмапа */
+export const ROADMAP_BANNER_VARIANT_CLASS: Record<
+	TRoadmapPhase["badgeVariant"],
+	string
+> = {
+	now: "bg-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.3)]",
+	soon: "bg-amber-500 text-white shadow-[0_4px_12px_rgba(245,158,11,0.3)]",
+	future: "bg-violet-600 text-white shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
+};
 
 export const MAIN_PAGE_ASSETS_PATH = "/assets/main-page";
 

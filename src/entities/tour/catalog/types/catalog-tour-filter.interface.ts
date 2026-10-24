@@ -1,5 +1,3 @@
-import type { LanguageCode } from "@/shared/api";
-
 import type { ENUM_LANGUAGES_TYPE } from "../../landing";
 import type { ENUM_TOUR_CATEGORY_TYPE } from "../../tour";
 
@@ -11,7 +9,8 @@ export interface ICatalogTourFilters {
 	page: number;
 	limit: number;
 	sort?: ENUM_CATALOG_SORT_TYPE;
-	readLang?: LanguageCode;
+	/** Локаль i18next как есть (i18n.language) — в backend переводит converter */
+	readLang?: string;
 	filters?: IFilter;
 }
 

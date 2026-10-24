@@ -1,4 +1,4 @@
-import type { Permissions } from "@/shared/api";
+import { Permissions } from "@/shared/api";
 import type { TAssertNever } from "@/shared/types";
 
 export const ENUM_PERMISSION = {
@@ -69,3 +69,66 @@ export type ENUM_PERMISSION_TYPE =
 export type TPermissionsCoverage = TAssertNever<
 	Exclude<`${Permissions}`, ENUM_PERMISSION_TYPE>
 >;
+
+export const ENUM_PERMISSION_BACKEND = {
+	TOUR_READ: Permissions.TourRead,
+	TOUR_CREATE: Permissions.TourCreate,
+	TOUR_UPDATE: Permissions.TourUpdate,
+	TOUR_DELETE: Permissions.TourDelete,
+	TOUR_PUBLISH: Permissions.TourPublish,
+	TOUR_ARCHIVE: Permissions.TourArchive,
+	TOUR_OPTION_WRITE: Permissions.TourOptionWrite,
+	TOUR_EVENT_WRITE: Permissions.TourEventWrite,
+	TOUR_EVENT_OVERRIDE_WRITE: Permissions.TourEventOverrideWrite,
+	TOUR_EVENT_LIBRARY_READ: Permissions.TourEventLibraryRead,
+	TOUR_EVENT_LIBRARY_WRITE: Permissions.TourEventLibraryWrite,
+	TOUR_GALLERY_WRITE: Permissions.TourGalleryWrite,
+	TOUR_LANDING_WRITE: Permissions.TourLandingWrite,
+	TOUR_SCHEDULE_WRITE: Permissions.TourScheduleWrite,
+	TOUR_FINANCE_READ: Permissions.TourFinanceRead,
+	TOUR_FINANCE_WRITE: Permissions.TourFinanceWrite,
+	CATALOG_READ: Permissions.CatalogRead,
+	BOOKING_READ: Permissions.BookingRead,
+	BOOKING_WRITE: Permissions.BookingWrite,
+	BOOKING_CANCEL: Permissions.BookingCancel,
+	BOOKING_TRANSITION: Permissions.BookingTransition,
+	BOOKING_FINANCE_READ: Permissions.BookingFinanceRead,
+	BOOKING_PAX_WRITE: Permissions.BookingPaxWrite,
+	BOOKING_REVISION_WRITE: Permissions.BookingRevisionWrite,
+	BOOKING_EVENT_OVERRIDE_WRITE: Permissions.BookingEventOverrideWrite,
+	BOOKING_PAYMENT_READ: Permissions.BookingPaymentRead,
+	BOOKING_PAYMENT_WRITE: Permissions.BookingPaymentWrite,
+	BOOKING_PAYMENT_CONFIRM: Permissions.BookingPaymentConfirm,
+	BOOKING_AVAILABILITY_WRITE: Permissions.BookingAvailabilityWrite,
+	BOOKING_VOUCHER_WRITE: Permissions.BookingVoucherWrite,
+	BOOKING_RECONCILIATION_READ: Permissions.BookingReconciliationRead,
+	INVOICE_READ: Permissions.InvoiceRead,
+	INVOICE_WRITE: Permissions.InvoiceWrite,
+	INVOICE_PAYMENT_WRITE: Permissions.InvoicePaymentWrite,
+	LEDGER_READ: Permissions.LedgerRead,
+	SUPPLIER_READ: Permissions.SupplierRead,
+	SUPPLIER_WRITE: Permissions.SupplierWrite,
+	OPERATOR_INFO_READ: Permissions.OperatorInfoRead,
+	OPERATOR_INFO_WRITE: Permissions.OperatorInfoWrite,
+	OPERATOR_DELETE: Permissions.OperatorDelete,
+	OPERATOR_FINANCIALS_READ: Permissions.OperatorFinancialsRead,
+	OPERATOR_FINANCIALS_WRITE: Permissions.OperatorFinancialsWrite,
+	OPERATOR_FILES_READ: Permissions.OperatorFilesRead,
+	OPERATOR_FILES_WRITE: Permissions.OperatorFilesWrite,
+	OPERATOR_AGENCIES_READ: Permissions.OperatorAgenciesRead,
+	OPERATOR_AGENCIES_WRITE: Permissions.OperatorAgenciesWrite,
+	FX_RATE_READ: Permissions.FxRateRead,
+	SUPPLIER_PAYMENT_READ: Permissions.SupplierPaymentRead,
+	SUPPLIER_PAYMENT_WRITE: Permissions.SupplierPaymentWrite,
+	PAYMENT_ROUTE_READ: Permissions.PaymentRouteRead,
+	PAYMENT_ROUTE_WRITE: Permissions.PaymentRouteWrite,
+	AGENCY_INFO_READ: Permissions.AgencyInfoRead,
+	AGENCY_INFO_WRITE: Permissions.AgencyInfoWrite,
+	STAFF_READ: Permissions.StaffRead,
+	STAFF_MANAGE: Permissions.StaffManage,
+	AUDIT_READ: Permissions.AuditRead,
+	TASK_READ: Permissions.TaskRead,
+	TASK_RETRY: Permissions.TaskRetry
+} as const;
+
+export type ENUM_PERMISSION_BACKEND_TYPE = Permissions;

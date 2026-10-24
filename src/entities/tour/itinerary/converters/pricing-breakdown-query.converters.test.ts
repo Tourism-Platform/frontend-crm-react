@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import { mapPricingBreakdownQueryToBackend } from "./pricing-review.converters";
 
@@ -21,11 +21,15 @@ describe("mapPricingBreakdownQueryToBackend", () => {
 		expect(
 			mapPricingBreakdownQueryToBackend({
 				...BASE,
-				currency: Currency.USD,
+				currency: ENUM_CURRENCY_BACKEND.USD,
 				date: "2026-11-01",
 				pax: 12
 			})
-		).toEqual({ currency: Currency.USD, date: "2026-11-01", pax: 12 });
+		).toEqual({
+			currency: ENUM_CURRENCY_BACKEND.USD,
+			date: "2026-11-01",
+			pax: 12
+		});
 	});
 
 	it("drops non-positive pax", () => {

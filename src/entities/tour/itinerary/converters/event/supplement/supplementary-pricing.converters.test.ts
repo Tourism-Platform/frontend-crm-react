@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { Currency } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	ENUM_FORM_SUPPLEMENT_ITEMS,
@@ -65,7 +65,8 @@ describe("mapItemsAndPricingToBackend", () => {
 							description: null
 						}
 					],
-					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD
+					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.USD
 				})
 			)
 		).toEqual([
@@ -73,12 +74,15 @@ describe("mapItemsAndPricingToBackend", () => {
 				name: "Extra",
 				expenses: {
 					typ: "fixed",
-					cost: { val: 250, currency: Currency.USD },
+					cost: { val: 250, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: [
 						{
 							name: null,
 							description: null,
-							cost: { val: 20, currency: Currency.USD }
+							cost: {
+								val: 20,
+								currency: ENUM_CURRENCY_BACKEND.USD
+							}
 						}
 					],
 					markup: null
@@ -96,7 +100,8 @@ describe("mapItemsAndPricingToBackend", () => {
 						ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 250,
-					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD,
+					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.USD,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_SUPPLEMENT_MARKUP_TYP.FIXED,
 						value: "30"
@@ -108,11 +113,11 @@ describe("mapItemsAndPricingToBackend", () => {
 				name: "Extra",
 				expenses: {
 					typ: "fixed",
-					cost: { val: 250, currency: Currency.USD },
+					cost: { val: 250, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: null,
 					markup: {
 						typ: "fixed",
-						cost: { val: 30, currency: Currency.USD }
+						cost: { val: 30, currency: ENUM_CURRENCY_BACKEND.USD }
 					}
 				}
 			}
@@ -124,7 +129,8 @@ describe("mapItemsAndPricingToBackend", () => {
 			mapItemsAndPricingToBackend(
 				items,
 				basePricing({
-					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD
+					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.USD
 				})
 			)
 		).toEqual([{ name: "Extra", expenses: null }]);
@@ -146,7 +152,8 @@ describe("mapItemsAndPricingToBackend", () => {
 							description: null
 						}
 					],
-					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.EUR
+					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.EUR
 				})
 			)
 		).toEqual([
@@ -154,12 +161,18 @@ describe("mapItemsAndPricingToBackend", () => {
 				name: "Extra",
 				expenses: {
 					typ: "per_person",
-					cost_per_person: { val: 80, currency: Currency.EUR },
+					cost_per_person: {
+						val: 80,
+						currency: ENUM_CURRENCY_BACKEND.EUR
+					},
 					fees: [
 						{
 							name: null,
 							description: null,
-							cost: { val: 5, currency: Currency.EUR }
+							cost: {
+								val: 5,
+								currency: ENUM_CURRENCY_BACKEND.EUR
+							}
 						}
 					],
 					markup: null
@@ -176,7 +189,8 @@ describe("mapItemsAndPricingToBackend", () => {
 					[ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE]:
 						ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 15,
-					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.EUR,
+					[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+						ENUM_CURRENCY_BACKEND.EUR,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
 					[ENUM_SUPPLEMENT_PRICING_FIELD.MARKUP]: {
 						typ: ENUM_SUPPLEMENT_MARKUP_TYP.PERCENTAGE,
@@ -189,7 +203,10 @@ describe("mapItemsAndPricingToBackend", () => {
 				name: "Extra",
 				expenses: {
 					typ: "per_person",
-					cost_per_person: { val: 15, currency: Currency.EUR },
+					cost_per_person: {
+						val: 15,
+						currency: ENUM_CURRENCY_BACKEND.EUR
+					},
 					fees: null,
 					markup: { typ: "percentage", percentage: 0.08 }
 				}
@@ -218,7 +235,7 @@ describe("mapItemsAndPricingToBackend", () => {
 									}
 								],
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]:
-									Currency.USD,
+									ENUM_CURRENCY_BACKEND.USD,
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: null
 							}
 						]
@@ -230,12 +247,15 @@ describe("mapItemsAndPricingToBackend", () => {
 				name: "Extra",
 				expenses: {
 					typ: "fixed",
-					cost: { val: 150, currency: Currency.USD },
+					cost: { val: 150, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: [
 						{
 							name: null,
 							description: null,
-							cost: { val: 10, currency: Currency.USD }
+							cost: {
+								val: 10,
+								currency: ENUM_CURRENCY_BACKEND.USD
+							}
 						}
 					],
 					markup: null
@@ -265,7 +285,7 @@ describe("mapItemsAndPricingToBackend", () => {
 									}
 								],
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]:
-									Currency.USD,
+									ENUM_CURRENCY_BACKEND.USD,
 								[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: null
 							}
 						]
@@ -285,7 +305,8 @@ describe("mapItemsAndPricingToBackend", () => {
 				[ENUM_SUPPLEMENT_PRICING_FIELD.FEES]: [
 					{ name: null, cost: 50, currency: "USD", description: null }
 				],
-				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD,
+				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD,
 				[ENUM_SUPPLEMENT_PRICING_FIELD.EXPENSES]: {
 					typ: ENUM_SUPPLEMENT_PRICING_TYPE.PER_ITEM,
 					[ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD.ITEMS]: [
@@ -293,7 +314,7 @@ describe("mapItemsAndPricingToBackend", () => {
 							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.COST]: 40,
 							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.FEES]: [],
 							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.CURRENCY]:
-								Currency.USD,
+								ENUM_CURRENCY_BACKEND.USD,
 							[ENUM_SUPPLEMENT_PRICE_ROW_FIELD.MARKUP]: null
 						}
 					]
@@ -303,7 +324,7 @@ describe("mapItemsAndPricingToBackend", () => {
 
 		expect(result[0]?.expenses).toMatchObject({
 			typ: "fixed",
-			cost: { val: 40, currency: Currency.USD }
+			cost: { val: 40, currency: ENUM_CURRENCY_BACKEND.USD }
 		});
 		expect(result[0]?.expenses).not.toMatchObject({
 			cost: { val: 999 }
@@ -319,18 +340,24 @@ describe("mapPricingFromBackend", () => {
 					name: "Extra",
 					expenses: {
 						typ: "fixed",
-						cost: { val: 30, currency: Currency.USD },
+						cost: { val: 30, currency: ENUM_CURRENCY_BACKEND.USD },
 						fees: [
 							{
 								name: null,
 								description: null,
-								cost: { val: 5, currency: Currency.USD }
+								cost: {
+									val: 5,
+									currency: ENUM_CURRENCY_BACKEND.USD
+								}
 							}
 						],
 						extra_costs: [],
 						markup: {
 							typ: "fixed",
-							cost: { val: 5, currency: Currency.USD }
+							cost: {
+								val: 5,
+								currency: ENUM_CURRENCY_BACKEND.USD
+							}
 						}
 					}
 				}
@@ -339,7 +366,7 @@ describe("mapPricingFromBackend", () => {
 			pricing_type: ENUM_SUPPLEMENT_PRICING_TYPE.FLAT_RATE,
 			total_price: 30,
 			fees: [{ name: null, cost: 5, currency: "USD", description: null }],
-			currency: Currency.USD,
+			currency: ENUM_CURRENCY_BACKEND.USD,
 			add_margin_separately: true,
 			markup: { typ: ENUM_SUPPLEMENT_MARKUP_TYP.FIXED, value: "5" }
 		});
@@ -352,12 +379,18 @@ describe("mapPricingFromBackend", () => {
 					name: "Extra",
 					expenses: {
 						typ: "per_person",
-						cost_per_person: { val: 15, currency: Currency.EUR },
+						cost_per_person: {
+							val: 15,
+							currency: ENUM_CURRENCY_BACKEND.EUR
+						},
 						fees: [
 							{
 								name: null,
 								description: null,
-								cost: { val: 2, currency: Currency.EUR }
+								cost: {
+									val: 2,
+									currency: ENUM_CURRENCY_BACKEND.EUR
+								}
 							}
 						],
 						extra_costs: [],
@@ -369,7 +402,7 @@ describe("mapPricingFromBackend", () => {
 			pricing_type: ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON,
 			total_price: 15,
 			fees: [{ name: null, cost: 2, currency: "EUR", description: null }],
-			currency: Currency.EUR,
+			currency: ENUM_CURRENCY_BACKEND.EUR,
 			add_margin_separately: false
 		});
 	});
@@ -381,12 +414,15 @@ describe("mapPricingFromBackend", () => {
 					name: "A",
 					expenses: {
 						typ: "fixed",
-						cost: { val: 10, currency: Currency.USD },
+						cost: { val: 10, currency: ENUM_CURRENCY_BACKEND.USD },
 						fees: [
 							{
 								name: null,
 								description: null,
-								cost: { val: 1, currency: Currency.USD }
+								cost: {
+									val: 1,
+									currency: ENUM_CURRENCY_BACKEND.USD
+								}
 							}
 						],
 						extra_costs: [],
@@ -397,7 +433,7 @@ describe("mapPricingFromBackend", () => {
 					name: "B",
 					expenses: {
 						typ: "fixed",
-						cost: { val: 20, currency: Currency.USD },
+						cost: { val: 20, currency: ENUM_CURRENCY_BACKEND.USD },
 						fees: null,
 						extra_costs: [],
 						markup: null
@@ -419,13 +455,13 @@ describe("mapPricingFromBackend", () => {
 								description: null
 							}
 						],
-						currency: Currency.USD,
+						currency: ENUM_CURRENCY_BACKEND.USD,
 						markup: null
 					},
 					{
 						cost: 20,
 						fees: [],
-						currency: Currency.USD,
+						currency: ENUM_CURRENCY_BACKEND.USD,
 						markup: null
 					}
 				]
@@ -445,7 +481,8 @@ describe("supplement whole price (fe6.4 §14: items are summed)", () => {
 			twoItems,
 			basePricing({
 				[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 30,
-				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD
+				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD
 			})
 		);
 
@@ -454,7 +491,7 @@ describe("supplement whole price (fe6.4 §14: items are summed)", () => {
 				name: "Water",
 				expenses: expect.objectContaining({
 					typ: "fixed",
-					cost: { val: 30, currency: Currency.USD }
+					cost: { val: 30, currency: ENUM_CURRENCY_BACKEND.USD }
 				})
 			}),
 			{ name: "Juice", expenses: null }
@@ -468,7 +505,8 @@ describe("supplement whole price (fe6.4 §14: items are summed)", () => {
 				[ENUM_SUPPLEMENT_PRICING_FIELD.PRICING_TYPE]:
 					ENUM_SUPPLEMENT_PRICING_TYPE.PER_PERSON,
 				[ENUM_SUPPLEMENT_PRICING_FIELD.TOTAL_PRICE]: 12,
-				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]: Currency.USD
+				[ENUM_SUPPLEMENT_PRICING_FIELD.CURRENCY]:
+					ENUM_CURRENCY_BACKEND.USD
 			})
 		);
 
@@ -484,7 +522,7 @@ describe("supplement whole price (fe6.4 §14: items are summed)", () => {
 					name: "Water",
 					expenses: {
 						typ: "fixed",
-						cost: { val: 30, currency: Currency.USD }
+						cost: { val: 30, currency: ENUM_CURRENCY_BACKEND.USD }
 					}
 				},
 				{ name: "Juice", expenses: null }
@@ -497,14 +535,14 @@ describe("supplement whole price (fe6.4 §14: items are summed)", () => {
 					name: "Water",
 					expenses: {
 						typ: "fixed",
-						cost: { val: 30, currency: Currency.USD }
+						cost: { val: 30, currency: ENUM_CURRENCY_BACKEND.USD }
 					}
 				},
 				{
 					name: "Juice",
 					expenses: {
 						typ: "fixed",
-						cost: { val: 30, currency: Currency.USD }
+						cost: { val: 30, currency: ENUM_CURRENCY_BACKEND.USD }
 					}
 				}
 			]

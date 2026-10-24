@@ -69,8 +69,7 @@ export const LibraryFlightEditPage: FC = () => {
 		data: isCreate
 			? undefined
 			: (libraryEvent as TFlightEditSchema | undefined),
-		recordKey: `${libraryId}:${supplyId ?? "main"}`,
-		currentDetails: libraryTemplate?.event.details
+		recordKey: `${libraryId}:${supplyId ?? "main"}`
 	});
 
 	useEffect(() => {

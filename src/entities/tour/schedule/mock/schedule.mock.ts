@@ -1,20 +1,21 @@
-import type {
-	ExcludedDateModel,
-	FixedDateModel,
-	RecurrenceDateModel,
-	SeasonalityCommissionModel,
-	TourScheduleModel
-} from "@/shared/api";
 import { createMockId } from "@/shared/api";
 
 import { TOURS_MOCK } from "@/entities/tour/tour/mock/tour.mock";
 
+import type {
+	TExcludedDateBackend,
+	TFixedDateBackend,
+	TRecurrenceRuleBackend,
+	TSeasonalityCommissionBackend,
+	TTourScheduleBackend
+} from "../types";
+
 export interface IScheduleMockState {
-	schedule: TourScheduleModel;
-	fixed_dates: FixedDateModel[];
-	excluded_dates: ExcludedDateModel[];
-	recurrence_rules: RecurrenceDateModel[];
-	commissions: SeasonalityCommissionModel[];
+	schedule: TTourScheduleBackend;
+	fixed_dates: TFixedDateBackend[];
+	excluded_dates: TExcludedDateBackend[];
+	recurrence_rules: TRecurrenceRuleBackend[];
+	commissions: TSeasonalityCommissionBackend[];
 }
 
 const SATURDAY = 5;

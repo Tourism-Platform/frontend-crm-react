@@ -1,20 +1,19 @@
+import { createMockIdSequence, matchesQuery, omitKeys } from "@/shared/api";
+
 import {
-	type PermissionGroupRead,
-	type Permissions,
-	type StaffInvite,
-	type StaffRead,
-	StaffStatus,
-	type StaffUpdate,
-	UserRoles,
-	createMockIdSequence,
-	matchesQuery,
-	omitKeys
-} from "@/shared/api";
+	type ENUM_PERMISSION_BACKEND_TYPE,
+	ENUM_STAFF_STATUS_BACKEND,
+	ENUM_USER_ROLES_BACKEND,
+	type TPermissionGroupReadBackend,
+	type TStaffInviteBackend,
+	type TStaffReadBackend,
+	type TStaffUpdateBackend
+} from "../types";
 
 import { PERMISSION_GROUPS_MOCK, STAFF_MOCK } from "./staff.mock";
 
-interface IStaffMember extends StaffRead {
-	permissions: Permissions[];
+interface IStaffMember extends TStaffReadBackend {
+	permissions: ENUM_PERMISSION_BACKEND_TYPE[];
 	groupIds: string[];
 }
 
@@ -44,7 +43,7 @@ const groupIds = createMockIdSequence(
 	PERMISSION_GROUPS_MOCK.length + 1
 );
 
-const toStaffRead = (member: IStaffMember): StaffRead =>
+const toStaffRead = (member: IStaffMember): TStaffReadBackend =>
 	omitKeys(member, ["permissions", "groupIds"]);
 
 export const listStaff = (q: string | null, statuses: string[]) =>
@@ -64,14 +63,14 @@ export const listStaff = (q: string | null, statuses: string[]) =>
 export const hasStaffEmail = (email: string) =>
 	[...staffStore.values()].some((member) => member.email === email);
 
-export const inviteStaff = (body: StaffInvite) => {
+export const inviteStaff = (body: TStaffInviteBackend) => {
 	const member: IStaffMember = {
 		user_id: staffIds.next(),
 		first_name: body.first_name,
 		last_name: body.last_name,
 		email: body.email,
-		role: UserRoles.OperatorStaff,
-		status: StaffStatus.Pending,
+		role: ENUM_USER_ROLES_BACKEND.OPERATOR_STAFF,
+		status: ENUM_STAFF_STATUS_BACKEND.PENDING,
 		commission_percent: null,
 		permissions: body.permissions ?? [],
 		groupIds: body.group_ids ?? []
@@ -83,7 +82,7 @@ export const inviteStaff = (body: StaffInvite) => {
 	};
 };
 
-export const updateStaff = (userId: string, body: StaffUpdate) => {
+export const updateStaff = (userId: string, body: TStaffUpdateBackend) => {
 	const member = staffStore.get(userId);
 	if (!member) return undefined;
 	for (const [key, value] of Object.entries(body)) {
@@ -111,7 +110,7 @@ export const getStaffPermissions = (userId: string) => {
 
 export const replaceStaffAccess = (
 	userId: string,
-	permissions: Permissions[],
+	permissions: ENUM_PERMISSION_BACKEND_TYPE[],
 	groups: string[]
 ) => {
 	const member = staffStore.get(userId);
@@ -125,9 +124,9 @@ export const listPermissionGroups = () => [...groupStore.values()];
 
 export const createPermissionGroup = (
 	name: string,
-	permissions: Permissions[]
+	permissions: ENUM_PERMISSION_BACKEND_TYPE[]
 ) => {
-	const group: PermissionGroupRead = {
+	const group: TPermissionGroupReadBackend = {
 		id: groupIds.next(),
 		name,
 		permissions
@@ -139,7 +138,7 @@ export const createPermissionGroup = (
 export const updatePermissionGroup = (
 	groupId: string,
 	name: string | null | undefined,
-	permissions: Permissions[]
+	permissions: ENUM_PERMISSION_BACKEND_TYPE[]
 ) => {
 	const group = groupStore.get(groupId);
 	if (!group) return undefined;

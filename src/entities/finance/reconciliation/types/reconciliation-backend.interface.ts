@@ -1,3 +1,8 @@
+import type {
+	BookingFinancialsResponse,
+	BookingReconciliationRowOutput,
+	EventVarianceResponse
+} from "@/shared/api";
 import type { BOOKING_ORDER_OPERATOR_PATHS } from "@/shared/api/generated/paths/booking-order-operator.paths";
 import type { BOOKING_RECONCILIATION_PATHS } from "@/shared/api/generated/paths/booking-reconciliation.paths";
 
@@ -22,3 +27,7 @@ export type TBookingVarianceBackend = ReturnType<
 
 export type TEventVarianceLineBackend =
 	TBookingVarianceBackend["events"][number];
+export type TBookingReconciliationRowOutputBackend =
+	BookingReconciliationRowOutput;
+export type TBookingFinancialsResponseBackend = BookingFinancialsResponse;
+export type TEventVarianceResponseBackend = EventVarianceResponse;

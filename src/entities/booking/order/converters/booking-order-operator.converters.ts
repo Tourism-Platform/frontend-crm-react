@@ -9,7 +9,7 @@ import type {
 } from "../types";
 
 import { bookingTourTypeMapper } from "./booking-tour-type.convert";
-import { orderStatusMapper } from "./order-status.convert";
+import { orderStatusMapper } from "./order-status.converters";
 
 const mapOrderTourInfo = (
 	tour: TOperatorOrderDetailBackend["tour"]

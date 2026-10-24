@@ -1,3 +1,7 @@
+import type { z } from "zod";
+
+import type { FLIGHT_PRICING_SCHEMA } from "../../schema/flight/pricing.schema";
+
 export const ENUM_FLIGHT_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
 	PART_OF_PACKAGE: "part_of_package"
@@ -40,3 +44,5 @@ export interface IFlightPriceRowMarkup {
 	typ: ENUM_FLIGHT_MARKUP_TYP_TYPE;
 	value: string;
 }
+
+export type TFlightPricingSchema = z.infer<typeof FLIGHT_PRICING_SCHEMA>;

@@ -9,7 +9,6 @@ import {
 	useListAttachmentsQuery,
 	useRemoveAttachmentMutation
 } from "../api";
-import { mapAttachmentToFileMetadata } from "../converters";
 
 type TUsePaymentAttachmentsParams = {
 	paymentId: string;
@@ -42,7 +41,7 @@ export const usePaymentAttachments = ({
 
 	useEffect(() => {
 		if (attachments) {
-			setInitialFiles(attachments.map(mapAttachmentToFileMetadata));
+			setInitialFiles(attachments);
 		}
 	}, [attachments]);
 
@@ -66,9 +65,7 @@ export const usePaymentAttachments = ({
 
 	const removeFile = useCallback(
 		async (fileId: string) => {
-			const isExisting = attachments?.some(
-				(file) => file.file_id === fileId
-			);
+			const isExisting = attachments?.some((file) => file.id === fileId);
 			if (!isExisting) return;
 
 			setLoadingId(fileId);

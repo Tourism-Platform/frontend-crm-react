@@ -1,6 +1,6 @@
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config/languages";
 
-import type { ENUM_EVENT_BACKEND_TYPE } from "./event-backend-enum.types";
+import type { ENUM_EVENT_KIND_TYPE } from "./event-enum.types";
 import type { TOverrideProductFormValues } from "./event-override-form.types";
 
 /**
@@ -17,7 +17,7 @@ export interface ISetOptionOverride {
 	eventOptionId: string;
 	/** Pool member id — `details.pool[i].id`. */
 	supplyId: string;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
+	eventKind: ENUM_EVENT_KIND_TYPE;
 	data: TOverrideProductFormValues;
 	language?: ENUM_LANGUAGES_TYPE;
 }

@@ -1,4 +1,5 @@
-import { Currency } from "../../../../shared/api/generated/Api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+
 import { OPERATOR_PAYMENT_ROUTES_PATHS } from "../../../../shared/api/generated/paths";
 
 export type TReceivingPaymentsSeedItem =
@@ -7,7 +8,7 @@ export type TReceivingPaymentsSeedItem =
 export const RECEIVING_PAYMENTS_SEED: readonly TReceivingPaymentsSeedItem[] = [
 	{
 		internal_label: "Main EUR account",
-		currency: Currency.EUR,
+		currency: ENUM_CURRENCY_BACKEND.EUR,
 		note: "Primary SWIFT route for EU clients",
 		details: {
 			typ: "classic_swift",
@@ -19,7 +20,7 @@ export const RECEIVING_PAYMENTS_SEED: readonly TReceivingPaymentsSeedItem[] = [
 	},
 	{
 		internal_label: "USD SWIFT",
-		currency: Currency.USD,
+		currency: ENUM_CURRENCY_BACKEND.USD,
 		note: null,
 		details: {
 			typ: "classic_swift",
@@ -31,7 +32,7 @@ export const RECEIVING_PAYMENTS_SEED: readonly TReceivingPaymentsSeedItem[] = [
 	},
 	{
 		internal_label: "Wise payments",
-		currency: Currency.USD,
+		currency: ENUM_CURRENCY_BACKEND.USD,
 		note: "Online payment link",
 		details: {
 			typ: "custom",

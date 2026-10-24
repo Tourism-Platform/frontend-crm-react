@@ -1,0 +1,31 @@
+import { createEnumMapper } from "@/shared/utils";
+
+import {
+	ENUM_EVENT,
+	ENUM_EVENT_KIND,
+	type ENUM_EVENT_KIND_TYPE,
+	type ENUM_EVENT_TYPE
+} from "../types";
+
+/**
+ * Вид события → тип карточки на борде: flight/train/bus — одна карточка FLIGHT.
+ * `from` берёт последний ключ с этим значением, поэтому FLIGHT стоит после
+ * TRAIN и BUS: тип борда FLIGHT по умолчанию создаётся как flight.
+ */
+const MAP_EVENT_KIND_TO_BOARD: Record<ENUM_EVENT_KIND_TYPE, ENUM_EVENT_TYPE> = {
+	[ENUM_EVENT_KIND.TRAIN]: ENUM_EVENT.FLIGHT,
+	[ENUM_EVENT_KIND.BUS]: ENUM_EVENT.FLIGHT,
+	[ENUM_EVENT_KIND.FLIGHT]: ENUM_EVENT.FLIGHT,
+	[ENUM_EVENT_KIND.TRANSFER]: ENUM_EVENT.TRANSPORTATION,
+	[ENUM_EVENT_KIND.HOUSING]: ENUM_EVENT.ACCOMMODATION,
+	[ENUM_EVENT_KIND.ACTIVITY]: ENUM_EVENT.ACTIVITY,
+	[ENUM_EVENT_KIND.REF]: ENUM_EVENT.INFO,
+	[ENUM_EVENT_KIND.GUIDE]: ENUM_EVENT.GUIDE,
+	[ENUM_EVENT_KIND.SUPPLEMENTARY]: ENUM_EVENT.SUPPLEMENT,
+	[ENUM_EVENT_KIND.OPTIONS]: ENUM_EVENT.MULTIPLY_OPTION
+};
+
+export const eventBoardTypeMapper = createEnumMapper<
+	ENUM_EVENT_KIND_TYPE,
+	ENUM_EVENT_TYPE
+>(MAP_EVENT_KIND_TO_BOARD);

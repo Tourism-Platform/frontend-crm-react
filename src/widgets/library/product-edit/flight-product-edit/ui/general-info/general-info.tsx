@@ -13,9 +13,9 @@ import {
 
 import {
 	ENUM_FORM_FLIGHT_PRODUCT,
-	ENUM_FORM_FLIGHT_SECTION
+	ENUM_FORM_FLIGHT_SECTION,
+	emptyFlightHopFormRow
 } from "@/entities/supplier";
-import { emptyHopFormRow } from "@/entities/supplier/converters/flight";
 
 import { FLIGHT_PRODUCT_NAME_FIELD, type TSlotProps } from "../../model";
 import { FlightHopRow } from "../flight-hop-row";
@@ -64,7 +64,7 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 				<Button
 					type="button"
 					variant="outline"
-					onClick={() => append(emptyHopFormRow())}
+					onClick={() => append(emptyFlightHopFormRow())}
 				>
 					<PlusIcon className="mr-1 h-4 w-4" />
 					{t("form.general.flights.buttons.add")}

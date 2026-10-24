@@ -1,6 +1,7 @@
-import { EventTypes, type SupplierPaymentResponse } from "@/shared/api";
-
 import { bookingOrderListItems } from "@/entities/booking/order/mock/booking-order.store";
+import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types/event-backend-enum.types";
+
+import type { TSupplierPaymentBackend } from "../types";
 
 import { registerSupplierPaymentMockDisplay } from "./supplier-payment.mock-display";
 import {
@@ -18,12 +19,12 @@ export interface ISupplierPaymentMockDisplay {
 }
 
 export interface ISupplierPaymentMockBundle {
-	payments: SupplierPaymentResponse[];
+	payments: TSupplierPaymentBackend[];
 	displayById: Map<string, ISupplierPaymentMockDisplay>;
 }
 
 export const createSupplierPaymentMocks = (): ISupplierPaymentMockBundle => {
-	const payments: SupplierPaymentResponse[] = [];
+	const payments: TSupplierPaymentBackend[] = [];
 	const displayById = new Map<string, ISupplierPaymentMockDisplay>();
 
 	SUPPLIER_PAYMENT_SEED.forEach((row, index) => {
@@ -36,7 +37,7 @@ export const createSupplierPaymentMocks = (): ISupplierPaymentMockBundle => {
 		payments.push({
 			order_number: booking.order_number ?? "",
 			event_name: row.component,
-			event_typ: row.type as EventTypes,
+			event_typ: row.type as ENUM_EVENT_BACKEND_TYPE,
 			supplier_name: row.supplier,
 			payment_id: id,
 			operator_id: MOCK_SUPPLIER_PAYMENT_DEFAULTS.operator_id,

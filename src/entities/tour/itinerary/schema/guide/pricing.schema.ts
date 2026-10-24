@@ -141,5 +141,3 @@ export const GUIDE_PRICING_SCHEMA = z
 			return;
 		}
 	});
-
-export type TGuidePricingSchema = z.infer<typeof GUIDE_PRICING_SCHEMA>;

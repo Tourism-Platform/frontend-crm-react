@@ -13,3 +13,5 @@ export * from "./preview-option-backend.types";
 export * from "./preview-option-media.types";
 export * from "./preview-tour-schedule.types";
 export * from "./preview-tour-query.types";
+export * from "./preview-tour-backend-enum.types";
+export * from "./preview-option-pub-backend.types";

@@ -9,7 +9,6 @@ import {
 } from "@/entities/tour/itinerary";
 
 import {
-	getEventLibraryFilterKey,
 	mapEventLibraryCopyQueryToBackend,
 	mapEventLibraryCopyToBackend,
 	mapEventLibraryCreateToBackend,
@@ -21,6 +20,7 @@ import {
 	mapLibraryPoolAddToBackend,
 	mapLibraryPoolRemoveToBackend
 } from "../converters";
+import { getEventLibraryFilterKey } from "../lib";
 import type {
 	IEventLibraryCopy,
 	IEventLibraryCreate,

@@ -1,7 +1,6 @@
-import type { UserProfileUpdate } from "@/shared/api";
 import { mockImageUrl } from "@/shared/api";
 
-import type { TAccountBackend } from "../types";
+import type { TAccountBackend, TUpdateAccountBackend } from "../types";
 
 import { ACCOUNT_MOCK, AGENCY_ACCOUNT_MOCK } from "./account.mock";
 
@@ -17,7 +16,7 @@ export const getAccountProfile = (userId: string) => accountStore.get(userId);
 
 export const updateAccountProfile = (
 	userId: string,
-	update: UserProfileUpdate
+	update: TUpdateAccountBackend
 ): TAccountBackend | undefined => {
 	const profile = accountStore.get(userId);
 	if (!profile) return undefined;

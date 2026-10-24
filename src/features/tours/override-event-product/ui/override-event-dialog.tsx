@@ -26,11 +26,9 @@ import {
 } from "@/shared/ui";
 
 import {
-	type ENUM_EVENT_BACKEND_TYPE,
+	type ENUM_EVENT_KIND_TYPE,
 	ENUM_FLIGHT_PRICING_TYPE,
 	ENUM_FORM_OVERRIDE_PRODUCT,
-	type IOverrideUnitOption,
-	type TEventOverrideInputBackend,
 	type TOverridePerUnitPricing,
 	type TOverrideProductForm,
 	type TOverrideProductFormValues
@@ -51,10 +49,9 @@ import { OverrideUnitDetails } from "./override-unit-details";
 interface IOverrideEventDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	eventTyp: ENUM_EVENT_BACKEND_TYPE;
-	initialOverride?: TEventOverrideInputBackend | null;
-	/** Units the per-unit arm can reprice — from the pool member's spec. */
-	units: IOverrideUnitOption[];
+	eventKind: ENUM_EVENT_KIND_TYPE;
+	/** Values the form opens with: the current override over the spec units. */
+	initialValues: TOverrideProductFormValues;
 	/** Backend pricing key of the per-unit arm for this event type. */
 	perUnitArm: TOverridePerUnitPricing;
 	isSubmitting?: boolean;
@@ -64,9 +61,8 @@ interface IOverrideEventDialogProps {
 export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 	open,
 	onOpenChange,
-	eventTyp,
-	initialOverride,
-	units,
+	eventKind,
+	initialValues,
 	perUnitArm,
 	isSubmitting,
 	onConfirm
@@ -85,9 +81,8 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 		handleAddMarginSeparatelyChange
 	} = useOverrideEventDialog({
 		open,
-		eventTyp,
-		initialOverride,
-		units,
+		eventKind,
+		initialValues,
 		perUnitArm,
 		onConfirm
 	});

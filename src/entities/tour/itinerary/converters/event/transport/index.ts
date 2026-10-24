@@ -1,7 +1,9 @@
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
-import type { TEventDetailsBackend } from "../../../types/event-backend.types";
-import type { TTourEventUpdateBackend } from "../../../types/event-backend.types";
+import type {
+	TEventDetailsBackend,
+	TTourEventUpdateBackend
+} from "../../../types/event-backend.types";
 import {
 	ENUM_FLIGHT_TRANSPORT_TYPE,
 	type ENUM_FLIGHT_TRANSPORT_TYPE_TYPE
@@ -32,7 +34,6 @@ export {
 } from "./train.converters";
 export * from "./flight-details.helpers";
 export * from "./flight-pricing.converters";
-export * from "./flight-transport-type.converters";
 export * from "./train-details.helpers";
 export * from "./bus-details.helpers";
 export * from "./route-override.converters";

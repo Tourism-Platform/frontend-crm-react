@@ -3,7 +3,6 @@ import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 
-import { InfoCircleIcon } from "@/shared/assets";
 import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
 import {
@@ -17,11 +16,11 @@ import {
 
 import {
 	type ENUM_EVENT_TYPE,
-	EVENT_METADATA,
-	EVENT_TYPE_TO_OPTION_PATH,
-	EVENT_TYPE_TO_PATH,
-	EVENT_TYPE_TO_TABS,
-	type ITourEvent
+	type ITourEvent,
+	getEventIcon,
+	getEventPath,
+	getEventTabs,
+	getEventTextColor
 } from "@/entities/tour";
 
 import { useActiveSection } from "../../../../model/use-active-section";
@@ -54,14 +53,11 @@ const NavEventNode: FC<INavEventNodeProps> = ({
 	const isOnPath = isCurrent || (!!children && params.eventId === eventId);
 	const [open, setOpen] = useAutoOpen(isOnPath);
 
-	const path = eventOptionId
-		? EVENT_TYPE_TO_OPTION_PATH[eventType]
-		: EVENT_TYPE_TO_PATH[eventType];
-	const tabs = EVENT_TYPE_TO_TABS[eventType] ?? [];
+	const path = getEventPath(eventType, !!eventOptionId);
+	const tabs = getEventTabs(eventType);
 	const activeTab = useActiveSection(tabs, isCurrent);
 
-	const meta = EVENT_METADATA[eventType];
-	const Icon = meta?.icon ?? InfoCircleIcon;
+	const Icon = getEventIcon(eventType);
 
 	// Unknown event types have no route; links are not rendered for them.
 	const eventHref = path
@@ -76,12 +72,7 @@ const NavEventNode: FC<INavEventNodeProps> = ({
 	const rowContent = (
 		<>
 			<span className="flex shrink-0">
-				<Icon
-					className={cn(
-						"size-4",
-						meta?.color_text ?? "text-muted-foreground"
-					)}
-				/>
+				<Icon className={cn("size-4", getEventTextColor(eventType))} />
 			</span>
 			<span className="flex-1 truncate text-left">
 				{title || t("event_nav.untitled")}

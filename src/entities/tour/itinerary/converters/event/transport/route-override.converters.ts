@@ -1,16 +1,20 @@
 import {
-	type RouteOverrideInput,
-	RouteOverrideInputTypEnum,
-	type RouteOverrideOutput,
-	RouteOverrideOutputTypEnum
-} from "@/shared/api";
+	ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND,
+	type ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND_TYPE,
+	ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND,
+	type ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND_TYPE,
+	type TRouteOverrideInputBackend,
+	type TRouteOverrideOutputBackend
+} from "../../../types";
 
 const ROUTE_OVERRIDE_TYP_TO_INPUT: Record<
-	RouteOverrideOutputTypEnum,
-	RouteOverrideInputTypEnum
+	ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND_TYPE,
+	ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND_TYPE
 > = {
-	[RouteOverrideOutputTypEnum.Train]: RouteOverrideInputTypEnum.Train,
-	[RouteOverrideOutputTypEnum.Flight]: RouteOverrideInputTypEnum.Flight
+	[ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND.TRAIN]:
+		ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.TRAIN,
+	[ENUM_ROUTE_OVERRIDE_OUTPUT_TYP_BACKEND.FLIGHT]:
+		ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.FLIGHT
 };
 
 /**
@@ -20,8 +24,8 @@ const ROUTE_OVERRIDE_TYP_TO_INPUT: Record<
  * `whole` charge and `per_fare` fare rows.
  */
 export const mapRouteOverrideFromBackend = (
-	override?: RouteOverrideOutput | null
-): RouteOverrideInput | null => {
+	override?: TRouteOverrideOutputBackend | null
+): TRouteOverrideInputBackend | null => {
 	if (!override) {
 		return null;
 	}

@@ -1,5 +1,7 @@
-import { ApplyAvailabilityInput } from "@/shared/api/generated/Api";
-
+import {
+	ENUM_APPLY_AVAILABILITY_INPUT_BACKEND,
+	type ENUM_APPLY_AVAILABILITY_INPUT_BACKEND_TYPE
+} from "../types";
 import {
 	ENUM_AVAILABILITY_STATUS,
 	type ENUM_AVAILABILITY_STATUS_TYPE
@@ -7,18 +9,18 @@ import {
 
 export const getNextAvailabilityApplyStatus = (
 	current?: ENUM_AVAILABILITY_STATUS_TYPE
-): ApplyAvailabilityInput | null => {
+): ENUM_APPLY_AVAILABILITY_INPUT_BACKEND_TYPE | null => {
 	switch (current) {
 		case undefined:
 		case ENUM_AVAILABILITY_STATUS.PENDING:
-			return ApplyAvailabilityInput.Available;
+			return ENUM_APPLY_AVAILABILITY_INPUT_BACKEND.AVAILABLE;
 		case ENUM_AVAILABILITY_STATUS.AVAILABLE:
-			return ApplyAvailabilityInput.Selected;
+			return ENUM_APPLY_AVAILABILITY_INPUT_BACKEND.SELECTED;
 		case ENUM_AVAILABILITY_STATUS.UNAVAILABLE:
-			return ApplyAvailabilityInput.Available;
+			return ENUM_APPLY_AVAILABILITY_INPUT_BACKEND.AVAILABLE;
 		// Backend may deselect siblings in multi-option; allow re-select via API.
 		case ENUM_AVAILABILITY_STATUS.DESELECTED:
-			return ApplyAvailabilityInput.Selected;
+			return ENUM_APPLY_AVAILABILITY_INPUT_BACKEND.SELECTED;
 		case ENUM_AVAILABILITY_STATUS.SELECTED:
 			return null;
 		default:

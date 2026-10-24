@@ -1,9 +1,7 @@
 import {
 	BOOKING_PASSENGER_FILES_PATHS,
 	BOOKING_PASSENGER_PATHS,
-	ENUM_API_TAGS,
-	type PaxCreate,
-	type PaxUpdate
+	ENUM_API_TAGS
 } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
@@ -14,6 +12,8 @@ import type {
 	IUploadPassengerPassportRequest,
 	TAddPassengerResponseBackend,
 	TBookingPaxListBackendResponce,
+	TPaxCreateBackend,
+	TPaxUpdateBackend,
 	TUploadPassengerPassportResponse
 } from "../types";
 
@@ -31,7 +31,7 @@ export const bookingPaxApi = authApi.injectEndpoints({
 		}),
 		addPassengerInfo: builder.mutation<
 			TAddPassengerResponseBackend,
-			{ id: string; data: PaxCreate }
+			{ id: string; data: TPaxCreateBackend }
 		>({
 			query: ({ id, data }) => ({
 				...BOOKING_PASSENGER_PATHS.addPassengerInfo(id),
@@ -43,7 +43,7 @@ export const bookingPaxApi = authApi.injectEndpoints({
 		}),
 		updatePassengerInfo: builder.mutation<
 			TAddPassengerResponseBackend,
-			{ bookingId: string; paxId: string; data: PaxUpdate }
+			{ bookingId: string; paxId: string; data: TPaxUpdateBackend }
 		>({
 			query: ({ bookingId, paxId, data }) => ({
 				...BOOKING_PASSENGER_PATHS.updatePassengerInfo(

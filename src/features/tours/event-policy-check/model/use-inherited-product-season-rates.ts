@@ -4,8 +4,6 @@ import {
 	useGetTourEventQuery
 } from "@/entities/tour";
 
-import { mapSeasonRatesFromHousingDetails } from "./map-season-rates-from-details";
-
 export const useInheritedProductSeasonRates = () => {
 	const { tourId, optionId, eventId, eventOptionId, mode } =
 		useEventEditIds();
@@ -25,8 +23,7 @@ export const useInheritedProductSeasonRates = () => {
 	);
 
 	return {
-		// The mapper itself guards on product supply + per-room spec.
-		rows: mapSeasonRatesFromHousingDetails(event?.details),
+		rows: event?.productSeasonRates ?? [],
 		isLoading,
 		isError
 	};

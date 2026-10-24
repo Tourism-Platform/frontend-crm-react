@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { CustomField, LoaderButton, withErrorBoundary } from "@/shared/ui";
 
-import { ENUM_EVENT_BACKEND } from "@/entities/tour";
+import { ENUM_EVENT_KIND } from "@/entities/tour";
 
 import { EventPoolControls, type TEventPoolUiProps } from "@/features/tours";
 
@@ -28,7 +28,7 @@ const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 					form={form}
 					variant={poolVariant}
 					onSelect={onPoolSelect}
-					eventTyp={ENUM_EVENT_BACKEND.REF}
+					eventKind={ENUM_EVENT_KIND.REF}
 				/>
 				<div className="grid grid-cols-4 gap-x-4 gap-y-1">
 					{INFORMATION_DATA_LIST().map(({ key, ...item }) => (

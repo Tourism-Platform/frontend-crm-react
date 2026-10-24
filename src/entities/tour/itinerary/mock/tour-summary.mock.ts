@@ -1,27 +1,24 @@
 import {
-	type ActivityDetailsOutput,
-	BreakdownLineKind,
-	ExpenseType,
-	type FlightDetailsOutput,
-	type GeneralVenueOutput,
-	GeneralVenueOutputSubTypEnum,
-	type HousingDetailsOutput,
-	PricingWarning,
-	type TransferDetailsOutput
-} from "@/shared/api";
-
-import {
 	MOCK_EVENT_IDS,
 	MOCK_TOUR_ID,
 	MOCK_TOUR_OPTION_ID
 } from "@/entities/booking/order/mock/booking-order.mock.constants";
+import { ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND } from "@/entities/supplier/types/supplier-backend-enum.types";
 
 import {
+	ENUM_BREAKDOWN_LINE_KIND_BACKEND,
 	ENUM_EVENT_BACKEND,
+	ENUM_EXPENSE_TYPE_BACKEND,
+	ENUM_PRICING_WARNING_BACKEND,
+	type TActivityDetailsBackend,
 	type TBreakdownLineBackend,
+	type TFlightDetailsOutputBackend,
+	type TGeneralVenueOutputBackend,
 	type TGetPricingBreakdownBackendResponse,
+	type THousingDetailsOutputBackend,
 	type TTourMinMaxCostBackend,
-	type TTourSummaryEventBackend
+	type TTourSummaryEventBackend,
+	type TTransferDetailsBackend
 } from "../types";
 
 const costRange = (min: number, max: number): TTourMinMaxCostBackend => ({
@@ -44,10 +41,10 @@ const breakdownLine = (
 	overrides: Partial<TBreakdownLineBackend> &
 		Pick<TBreakdownLineBackend, "label" | "unit_cost" | "cost" | "markup">
 ): TBreakdownLineBackend => ({
-	kind: BreakdownLineKind.Unit,
+	kind: ENUM_BREAKDOWN_LINE_KIND_BACKEND.UNIT,
 	unit_id: null,
 	supply_id: null,
-	pricing: ExpenseType.Fixed,
+	pricing: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 	rate: null,
 	quantity: 1,
 	pax: null,
@@ -57,7 +54,7 @@ const breakdownLine = (
 	...overrides
 });
 
-const flightDetails = (): FlightDetailsOutput => ({
+const flightDetails = (): TFlightDetailsOutputBackend => ({
 	plan: {},
 	pool: inlinePool({
 		pricing: "whole" as const,
@@ -75,7 +72,7 @@ const flightDetails = (): FlightDetailsOutput => ({
 	})
 });
 
-const housingDetails = (): HousingDetailsOutput => ({
+const housingDetails = (): THousingDetailsOutputBackend => ({
 	plan: {},
 	pool: inlinePool({
 		pricing: "per_room" as const,
@@ -90,18 +87,18 @@ const housingDetails = (): HousingDetailsOutput => ({
 	})
 });
 
-const activityDetails = (): ActivityDetailsOutput => ({
+const activityDetails = (): TActivityDetailsBackend => ({
 	plan: {},
 	pool: inlinePool({
-		sub_typ: GeneralVenueOutputSubTypEnum.Sightseeing,
+		sub_typ: ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.SIGHTSEEING,
 		images: [],
 		name: null,
 		location: null,
 		offerings: []
-	} as { sub_typ: "sightseeing" } & GeneralVenueOutput)
+	} as { sub_typ: "sightseeing" } & TGeneralVenueOutputBackend)
 });
 
-const transferDetails = (): TransferDetailsOutput => ({
+const transferDetails = (): TTransferDetailsBackend => ({
 	plan: { typ: null, departure: null, arrival: null },
 	pool: inlinePool({
 		pricing: "whole" as const,
@@ -195,8 +192,8 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 				breakdownLine({
 					label: "Standard / double",
 					unit_id: "room_standard",
-					pricing: ExpenseType.PerDuration,
-					rate: ExpenseType.Fixed,
+					pricing: ENUM_EXPENSE_TYPE_BACKEND.PER_DURATION,
+					rate: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 					quantity: 2,
 					duration: 2,
 					unit_cost: { val: 200 },
@@ -208,8 +205,8 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 				breakdownLine({
 					label: "Deluxe / double",
 					unit_id: "room_deluxe",
-					pricing: ExpenseType.PerDuration,
-					rate: ExpenseType.Fixed,
+					pricing: ENUM_EXPENSE_TYPE_BACKEND.PER_DURATION,
+					rate: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 					quantity: 2,
 					duration: 2,
 					unit_cost: { val: 300 },
@@ -243,7 +240,7 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 				breakdownLine({
 					label: "Экскурсия / en",
 					unit_id: "offering_en",
-					pricing: ExpenseType.Fixed,
+					pricing: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 					pax: null,
 					unit_cost: { val: 250 },
 					cost: { val: 250 },
@@ -254,14 +251,14 @@ const MOCK_EVENTS: TTourSummaryEventBackend[] = [
 				breakdownLine({
 					label: "Экскурсия / en",
 					unit_id: "offering_en",
-					pricing: ExpenseType.Fixed,
+					pricing: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 					unit_cost: { val: 300 },
 					cost: { val: 300 },
 					markup: { val: 50 }
 				})
 			]
 		},
-		warnings: [PricingWarning.FixedChargeOnSightseeing]
+		warnings: [ENUM_PRICING_WARNING_BACKEND.FIXED_CHARGE_ON_SIGHTSEEING]
 	},
 	{
 		typ: "package_bill",

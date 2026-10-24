@@ -1,8 +1,8 @@
 import {
-	type TRevisionPoolMemberNewBackend,
 	useAddRevisionPoolMemberMutation,
 	useRemoveRevisionPoolMemberMutation
 } from "@/entities/booking";
+import type { TAddPoolMemberIntent } from "@/entities/tour";
 
 interface IUseRevisionEventPoolMutationsArgs {
 	bookingId: string;
@@ -18,8 +18,8 @@ export const useRevisionEventPoolMutations = ({
 	const [addMember, addState] = useAddRevisionPoolMemberMutation();
 	const [removeMember, removeState] = useRemoveRevisionPoolMemberMutation();
 
-	const add = (data: TRevisionPoolMemberNewBackend) =>
-		addMember({ bookingId, eventId, optionIndex, data }).unwrap();
+	const add = (intent: TAddPoolMemberIntent) =>
+		addMember({ bookingId, eventId, optionIndex, intent }).unwrap();
 
 	const remove = (supplyId: string) =>
 		removeMember({ bookingId, eventId, optionIndex, supplyId }).unwrap();

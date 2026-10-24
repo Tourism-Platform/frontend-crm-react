@@ -4,6 +4,7 @@ export * from "./constants";
 export * from "./converters";
 export * from "./hooks";
 export * from "./lib/merge-tour-review-with-availability";
+export * from "./lib/traveller-pax";
 export * from "./mock";
 export * from "./ui";
 export * from "./utils/availability-readiness";

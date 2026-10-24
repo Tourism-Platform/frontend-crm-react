@@ -3,8 +3,8 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	ENUM_EVENT,
 	ENUM_EVENT_BACKEND,
-	type ENUM_EVENT_BACKEND_TYPE,
 	ENUM_EVENT_TRANSLATION,
+	ENUM_FORM_EVENT_PRODUCT,
 	type ENUM_EVENT_TRANSLATION_TYPE,
 	type ENUM_EVENT_TYPE,
 	type IEventOptionReorder,
@@ -15,6 +15,7 @@ import {
 	type ITourEvent,
 	type ITourEventCreate,
 	type ITourEventReorder,
+	type ITourEventUpdate,
 	type TAccommodationEditSchema,
 	type TActivityEditSchema,
 	type TEventDetailsBackend,
@@ -36,7 +37,6 @@ import {
 	type TTransportationEditSchema
 } from "../types";
 
-import { backendEventTypeMapper } from "./backend-event-type.converters";
 import {
 	mapAccommodationEventToForm,
 	mapAccommodationFormToUpdate,
@@ -57,10 +57,18 @@ import {
 	mapTransferFormToUpdate,
 	mapTransportFormToUpdate
 } from "./event";
+import { eventBoardTypeMapper } from "./event-board-type.converters";
+import { eventKindMapper } from "./event-kind.converters";
 import { mapBackendEventToTimeSubtitle } from "./event-time-range.converters";
 import { eventTranslationMapper } from "./event-translation.converters";
-import { eventTypeMapper } from "./event-type.converters";
+import { isEventBackendTyp } from "./event-type.converters";
+import { mapHousingSeasonRatesToFrontend } from "./event/accommodation/housing-season-rates.converters";
 import { mapEventDetailsWriteOrEmpty } from "./event/common/empty-event-details.converters";
+import {
+	type ISplitEventUpdate,
+	splitEventUpdate,
+	withIndividualPricing
+} from "./event/common/split-event-update.converters";
 
 /**
  * Slot read → board/list domain model.
@@ -99,7 +107,10 @@ export const mapAllEventsToFrontend = (
 		};
 	}
 
-	const backendTyp = slot.typ as ENUM_EVENT_BACKEND_TYPE;
+	if (!isEventBackendTyp(slot.typ)) {
+		throw new Error("Unexpected event typ");
+	}
+	const backendTyp = slot.typ;
 
 	return {
 		id: backend.id,
@@ -110,7 +121,8 @@ export const mapAllEventsToFrontend = (
 		day: slot.day,
 		position: slot.position,
 		eventType:
-			backendEventTypeMapper.to(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
+			eventBoardTypeMapper.to(eventKindMapper.from(backendTyp)) ||
+			ENUM_EVENT.TOUR_DETAILS,
 		backendTyp,
 		details: slot.details,
 		timeSubtitle: mapBackendEventToTimeSubtitle(slot),
@@ -207,17 +219,22 @@ export const mapGetTourEventToFrontend = (
 	backend: TTourEventBackendResponce,
 	eventOptionId?: string,
 	selectedSupplyId?: string
-): IGetTourEventResult => ({
-	form: eventOptionId
-		? mapEventOptionToFrontend(backend, eventOptionId, selectedSupplyId)
-		: mapEventToFrontend(backend, selectedSupplyId),
-	details: mapTourEventDetailsFromBackend(backend, eventOptionId),
-	eventOptionId:
-		backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS
-			? eventOptionId
-			: backend.event?.id,
-	response: backend
-});
+): IGetTourEventResult => {
+	const details = mapTourEventDetailsFromBackend(backend, eventOptionId);
+
+	return {
+		form: eventOptionId
+			? mapEventOptionToFrontend(backend, eventOptionId, selectedSupplyId)
+			: mapEventToFrontend(backend, selectedSupplyId),
+		details,
+		eventOptionId:
+			backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS
+				? eventOptionId
+				: backend.event?.id,
+		response: backend,
+		productSeasonRates: mapHousingSeasonRatesToFrontend(details)
+	};
+};
 
 export const mapEventUpdateToBackend = (
 	type: ENUM_EVENT_TYPE,
@@ -265,6 +282,37 @@ export const mapEventUpdateToBackend = (
 	throw new Error(`Unsupported event type for update: ${type}`);
 };
 
+/**
+ * Form → `PATCH O` (texts, package, plan) and `PATCH M` (the selected inline
+ * pool member). The member is built with individual pricing: a package lives
+ * on the option only, the supplier keeps its prices (fe6.4 §7).
+ */
+export const mapEventUpdatePartsToBackend = ({
+	type,
+	data,
+	language,
+	currentDetails
+}: Pick<
+	ITourEventUpdate,
+	"type" | "data" | "language" | "currentDetails"
+>): ISplitEventUpdate => {
+	const supplyId = (data as Record<string, unknown>)[
+		ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID
+	] as string | undefined;
+
+	return splitEventUpdate(
+		mapEventUpdateToBackend(type, data, language, currentDetails),
+		supplyId,
+		currentDetails,
+		mapEventUpdateToBackend(
+			type,
+			withIndividualPricing(data),
+			language,
+			currentDetails
+		)
+	);
+};
+
 export const mapEventReorderToBackend = (
 	frontend: ITourEventReorder
 ): TTourEventReorderBackend => ({
@@ -286,7 +334,9 @@ export const mapOptionReorderToBackend = (
 export const mapEventOptionCreateToBackend = (
 	frontend: ITourEventCreate
 ): TEventOptionBodyBackend => {
-	const typ = frontend.backendTyp ?? eventTypeMapper.to(frontend.eventType);
+	const typ =
+		frontend.backendTyp ??
+		eventKindMapper.to(eventBoardTypeMapper.from(frontend.eventType));
 	if (!typ || typ === ENUM_EVENT_BACKEND.OPTIONS) {
 		throw new Error(`Invalid option typ: ${String(typ)}`);
 	}
@@ -329,7 +379,9 @@ export const mapMoveToSingleResultToFrontend = (
 export const mapEventCreateToBackend = (
 	frontend: ITourEventCreate
 ): TTourEventCreateBackend => {
-	const typ = frontend.backendTyp ?? eventTypeMapper.to(frontend.eventType);
+	const typ =
+		frontend.backendTyp ??
+		eventKindMapper.to(eventBoardTypeMapper.from(frontend.eventType));
 	if (!typ) {
 		throw new Error(`Cannot resolve backend typ for ${frontend.eventType}`);
 	}

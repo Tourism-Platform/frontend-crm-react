@@ -2,7 +2,10 @@ import { ENUM_API_TAGS } from "@/shared/api";
 import { BOOKING_REVISION_PATHS } from "@/shared/api/generated/paths/booking-revision.paths";
 
 import { authApi } from "@/entities/auth/api/auth.api";
-import { mapEventOverrideToBackend } from "@/entities/tour";
+import {
+	mapAddPoolMemberToBackend,
+	mapEventOverrideToBackend
+} from "@/entities/tour";
 
 import {
 	mapRevisionEventCopyToBackend,
@@ -84,7 +87,7 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 				bookingId,
 				eventId,
 				supplyId,
-				eventTyp,
+				eventKind,
 				data,
 				optionIndex
 			}) => ({
@@ -94,7 +97,7 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 					supplyId
 				),
 				params: mapRevisionEventProductQueryToBackend(optionIndex),
-				body: mapEventOverrideToBackend(eventTyp, data)
+				body: mapEventOverrideToBackend(eventKind, data)
 			}),
 			invalidatesTags: (_result, _error, { bookingId }) =>
 				revisionInvalidation(bookingId)
@@ -118,10 +121,10 @@ export const bookingRevisionProductApi = authApi.injectEndpoints({
 			TRevisionPreviewBackend,
 			IAddRevisionPoolMember
 		>({
-			query: ({ bookingId, eventId, data, optionIndex }) => ({
+			query: ({ bookingId, eventId, intent, optionIndex }) => ({
 				...BOOKING_REVISION_PATHS.addPoolMember(bookingId, eventId),
 				params: mapRevisionEventProductQueryToBackend(optionIndex),
-				body: data
+				body: mapAddPoolMemberToBackend(intent)
 			}),
 			invalidatesTags: (_result, _error, { bookingId }) =>
 				revisionInvalidation(bookingId)

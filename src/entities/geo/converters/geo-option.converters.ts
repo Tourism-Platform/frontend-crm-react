@@ -1,12 +1,13 @@
-import type { GeoFeature } from "@/shared/api";
 import { formatGeoFeatureLabel } from "@/shared/utils/geo-display.utils";
 import { encodeGeoOptionValue } from "@/shared/utils/geo-option.utils";
 
-import type { TGeoOption } from "../types";
+import type { TGeoFeatureBackend, TGeoOption } from "../types";
 
 import { mapGeoFeatureToFrontend } from "./geo.converters";
 
-export const mapGeoFeatureToOption = (feature: GeoFeature): TGeoOption => ({
+export const mapGeoFeatureToOption = (
+	feature: TGeoFeatureBackend
+): TGeoOption => ({
 	label: formatGeoFeatureLabel(feature),
 	value: encodeGeoOptionValue(feature.lat, feature.long),
 	feature: {
@@ -15,5 +16,6 @@ export const mapGeoFeatureToOption = (feature: GeoFeature): TGeoOption => ({
 	}
 });
 
-export const mapGeoFeaturesToOptions = (features: GeoFeature[]): TGeoOption[] =>
-	features.map(mapGeoFeatureToOption);
+export const mapGeoFeaturesToOptions = (
+	features: TGeoFeatureBackend[]
+): TGeoOption[] => features.map(mapGeoFeatureToOption);

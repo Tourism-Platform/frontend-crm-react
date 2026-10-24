@@ -1,32 +1,28 @@
-import { EventTypes } from "@/shared/api";
-import { createEnumMapper } from "@/shared/utils";
+import {
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE,
+	ENUM_EVENT_KIND,
+	type ENUM_EVENT_TYPE
+} from "../types";
 
-import { ENUM_EVENT, type ENUM_EVENT_TYPE } from "../types";
+import { eventBoardTypeMapper } from "./event-board-type.converters";
+import { eventKindMapper } from "./event-kind.converters";
 
-const MAP_EVENT_TYPE_TO_BACKEND: Partial<Record<ENUM_EVENT_TYPE, EventTypes>> =
-	{
-		[ENUM_EVENT.FLIGHT]: EventTypes.Flight,
-		[ENUM_EVENT.TRANSPORTATION]: EventTypes.Transfer,
-		[ENUM_EVENT.ACCOMMODATION]: EventTypes.Housing,
-		[ENUM_EVENT.ACTIVITY]: EventTypes.Activity,
-		[ENUM_EVENT.INFO]: EventTypes.Ref,
-		[ENUM_EVENT.GUIDE]: EventTypes.Guide,
-		[ENUM_EVENT.SUPPLEMENT]: EventTypes.Supplementary,
-		[ENUM_EVENT.MULTIPLY_OPTION]: EventTypes.Options
-	};
-
-/** UI event kind ↔ generated backend `EventTypes`. */
-export const eventTypeMapper = createEnumMapper<ENUM_EVENT_TYPE, EventTypes>(
-	MAP_EVENT_TYPE_TO_BACKEND
-);
-
+/** Все backend `typ`, которые на борде показываются как `type` (FLIGHT → flight, train, bus). */
 export const mapEventTypeToBackendTyps = (
 	type: ENUM_EVENT_TYPE
-): EventTypes[] => {
-	if (type === ENUM_EVENT.FLIGHT) {
-		return [EventTypes.Flight, EventTypes.Train, EventTypes.Bus];
-	}
+): ENUM_EVENT_BACKEND_TYPE[] =>
+	eventKindMapper.toMany(
+		Object.values(ENUM_EVENT_KIND).filter(
+			(kind) => eventBoardTypeMapper.to(kind) === type
+		)
+	);
 
-	const typ = eventTypeMapper.to(type);
-	return typ ? [typ] : [];
-};
+const EVENT_BACKEND_TYP_VALUES = new Set<string>(
+	Object.values(ENUM_EVENT_BACKEND)
+);
+
+export const isEventBackendTyp = (
+	value: unknown
+): value is ENUM_EVENT_BACKEND_TYPE =>
+	typeof value === "string" && EVENT_BACKEND_TYP_VALUES.has(value);

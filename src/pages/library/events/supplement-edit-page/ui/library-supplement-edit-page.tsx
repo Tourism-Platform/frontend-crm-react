@@ -69,8 +69,7 @@ export const LibrarySupplementEditPage: FC = () => {
 		data: isCreate
 			? undefined
 			: (libraryEvent as TSupplementEditSchema | undefined),
-		recordKey: `${libraryId}:${supplyId ?? "main"}`,
-		currentDetails: libraryTemplate?.event.details
+		recordKey: `${libraryId}:${supplyId ?? "main"}`
 	});
 
 	useEffect(() => {

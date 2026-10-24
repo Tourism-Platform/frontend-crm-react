@@ -1,10 +1,10 @@
-import { Currency } from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 export const MOCK_OPERATOR_ID = "00000000-0000-4000-8000-000000000010";
 
 export const MOCK_PAYMENT_DEFAULTS = {
 	operator_id: MOCK_OPERATOR_ID,
-	currency: Currency.USD
+	currency: ENUM_CURRENCY_BACKEND.USD
 } as const;
 
 export const buildPaymentUuid = (index: number): string => {

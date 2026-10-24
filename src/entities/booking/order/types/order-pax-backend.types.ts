@@ -7,6 +7,8 @@ import type {
 	PaxWithFiles
 } from "@/shared/api";
 
+import type { ENUM_GENDER_OPTIONS_TYPE } from "./gender.types";
+
 export type TBookingPaxBackend = PaxWithFiles;
 
 export type TPaxCreateBackend = PaxCreate;
@@ -41,7 +43,7 @@ export interface IBookingPax {
 	bookingId: string;
 	name: string;
 	surname: string;
-	gender: TBookingPaxBackend["gender"];
+	gender: ENUM_GENDER_OPTIONS_TYPE;
 	nationality: string;
 	dateOfBirth: string;
 	passportNum: string;

@@ -1,29 +1,30 @@
 import {
 	ENUM_EVENT,
 	ENUM_EVENT_BACKEND,
-	type ENUM_EVENT_BACKEND_TYPE,
-	type IEventOptionReorder,
 	type ITourEventOption,
 	type TMultiEventDetailBackend,
 	type TMultiplyOptionEditSchema,
 	type TTourEventBackendResponce
 } from "../../../types";
-import { backendEventTypeMapper } from "../../backend-event-type.converters";
+import { eventBoardTypeMapper } from "../../event-board-type.converters";
+import { eventKindMapper } from "../../event-kind.converters";
 import { mapBackendEventToTimeSubtitle } from "../../event-time-range.converters";
+import { isEventBackendTyp } from "../../event-type.converters";
 
 export const mapMultiplyOptionDetailToOption = (
 	detail: TMultiEventDetailBackend
 ): ITourEventOption | null => {
-	if (!detail.id) return null;
+	if (!detail.id || !isEventBackendTyp(detail.typ)) return null;
 
-	const backendTyp = detail.typ as ENUM_EVENT_BACKEND_TYPE;
+	const backendTyp = detail.typ;
 
 	return {
 		id: detail.id,
 		name: detail.name || "",
 		description: detail.description || "",
 		eventType:
-			backendEventTypeMapper.to(backendTyp) || ENUM_EVENT.TOUR_DETAILS,
+			eventBoardTypeMapper.to(eventKindMapper.from(backendTyp)) ||
+			ENUM_EVENT.TOUR_DETAILS,
 		backendTyp,
 		details: detail.details,
 		timeSubtitle: mapBackendEventToTimeSubtitle(detail)
@@ -50,31 +51,4 @@ export const mapMultiplyOptionEventToForm = (
 		position: event.position,
 		options
 	};
-};
-
-/**
- * Reorder payload — the current option row IDs in the new order.
- * Contract 3.1: `order` is `string[]` of event option ids, not indices.
- */
-export const mapMultiplyOptionReorderToBackend = (
-	currentOptions: Pick<ITourEventOption, "id">[]
-): IEventOptionReorder => ({
-	order: currentOptions.map((option) => option.id)
-});
-
-export const hasMultiplyOptionsOrderChanged = (
-	originalOptions: Pick<ITourEventOption, "id">[],
-	currentOptions: Pick<ITourEventOption, "id">[]
-): boolean =>
-	originalOptions.length !== currentOptions.length ||
-	originalOptions.some(
-		(option, index) => option.id !== currentOptions[index]?.id
-	);
-
-export const getRemovedMultiplyOptions = (
-	originalOptions: Pick<ITourEventOption, "id">[],
-	currentOptions: Pick<ITourEventOption, "id">[]
-): Pick<ITourEventOption, "id">[] => {
-	const currentIds = new Set(currentOptions.map((option) => option.id));
-	return originalOptions.filter((option) => !currentIds.has(option.id));
 };

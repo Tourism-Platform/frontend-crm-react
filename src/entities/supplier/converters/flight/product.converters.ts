@@ -1,7 +1,4 @@
-import type {
-	FixedChargeInput,
-	PerPersonChargeInput
-} from "@/shared/api/generated/Api";
+import type { TPerPersonChargeInputBackend } from "@/entities/tour/itinerary/types/commission-backend.types";
 
 import {
 	ENUM_FLIGHT_PRICING,
@@ -14,6 +11,7 @@ import {
 	type IFlightVariant,
 	type IFlightVariantWrite,
 	type TCreateFlightProductBackend,
+	type TFixedChargeInputBackend,
 	type TFlightLegInputBackend,
 	type TFlightLegReadBackend,
 	type TFlightProductReadBackend,
@@ -81,7 +79,7 @@ export const mapFlightHopFromBackend = (
 
 export const mapFlightVariantChargeToBackend = (
 	data: TFlightVariantCharge
-): FixedChargeInput | PerPersonChargeInput => {
+): TFixedChargeInputBackend | TPerPersonChargeInputBackend => {
 	const fees = mapSupplierFeesToBackend(data.fees);
 	const markup = mapSupplierChargeMarkupToBackend(data.markup);
 

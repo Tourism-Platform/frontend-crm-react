@@ -1,5 +1,8 @@
+import type { z } from "zod";
+
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { GUIDE_PRICING_SCHEMA } from "../../schema/guide/pricing.schema";
 import type { IFeeFormRow } from "../fee.types";
 
 export const ENUM_GUIDE_PRICING_INVOICING = {
@@ -115,4 +118,4 @@ export interface IGuidePerGuideCategoryExpenses {
 	[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: IGuidePerGuideByLanguagePriceRow[];
 }
 
-export type { TGuidePricingSchema } from "../../schema/guide/pricing.schema";
+export type TGuidePricingSchema = z.infer<typeof GUIDE_PRICING_SCHEMA>;

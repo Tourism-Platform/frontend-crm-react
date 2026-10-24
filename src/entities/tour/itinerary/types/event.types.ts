@@ -1,6 +1,9 @@
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
-import type { TAccommodationEditSchema } from "./accommodation";
+import type {
+	IProductSeasonRateRow,
+	TAccommodationEditSchema
+} from "./accommodation";
 import type { TActivityEditSchema } from "./activity";
 import type { ENUM_EVENT_BACKEND_TYPE } from "./event-backend-enum.types";
 import type {
@@ -126,6 +129,8 @@ export interface IGetTourEventResult {
 	eventOptionId?: string;
 	/** Original slot read — used to remap the form onto another pool member. */
 	response: TTourEventBackendResponce;
+	/** Сезонные цены продукта (housing с per-room) — для policy-check */
+	productSeasonRates: IProductSeasonRateRow[];
 }
 
 export type TTourEventUpdate = Partial<

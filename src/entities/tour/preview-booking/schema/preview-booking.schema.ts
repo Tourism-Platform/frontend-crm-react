@@ -1,10 +1,13 @@
 import { z } from "zod";
 
-import { Gender } from "@/shared/api";
 import { type TPreviewBookingPageKeys, i18nKey } from "@/shared/config";
 import { isValidCountryCode } from "@/shared/lib/countries";
 
-import { hasTravellerPassportFile } from "@/entities/booking/order/converters/booking-pax.converters";
+import { hasTravellerPassportFile } from "@/entities/booking/order/lib/traveller-pax";
+import {
+	ENUM_GENDER_OPTIONS,
+	type ENUM_GENDER_OPTIONS_TYPE
+} from "@/entities/booking/order/types/gender.types";
 
 import { ENUM_LANGUAGES, type ENUM_LANGUAGES_TYPE } from "../../landing";
 import { ENUM_FORM_PREVIEW_BOOKING } from "../types";
@@ -24,7 +27,7 @@ const isTravellerFieldsComplete = (traveller: {
 	pax_id?: string;
 	first_name?: string;
 	last_name?: string;
-	gender?: Gender;
+	gender?: ENUM_GENDER_OPTIONS_TYPE;
 	nationality?: string;
 	date_of_birth?: Date;
 	passport_number?: string;
@@ -58,7 +61,9 @@ export const TRAVELLER_DETAILS_SCHEMA = z
 		[ENUM_FORM_PREVIEW_BOOKING.PAX_ID]: z.string().optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.FIRST_NAME]: z.string().optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.LAST_NAME]: z.string().optional(),
-		[ENUM_FORM_PREVIEW_BOOKING.GENDER]: z.nativeEnum(Gender).optional(),
+		[ENUM_FORM_PREVIEW_BOOKING.GENDER]: z
+			.enum([ENUM_GENDER_OPTIONS.MALE, ENUM_GENDER_OPTIONS.FEMALE])
+			.optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.DATE_OF_BIRTH]: z.coerce.date().optional(),
 		[ENUM_FORM_PREVIEW_BOOKING.NATIONALITY]: nationalitySchema,
 		[ENUM_FORM_PREVIEW_BOOKING.PASSPORT_NUMBER]: z.string().optional(),

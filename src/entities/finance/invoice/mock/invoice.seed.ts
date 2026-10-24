@@ -1,17 +1,20 @@
-import { InvoiceStatus } from "../../../../shared/api/generated/Api";
+import {
+	ENUM_INVOICE_STATUS_BACKEND,
+	type ENUM_INVOICE_STATUS_BACKEND_TYPE
+} from "../types";
 
 export type TInvoiceStatusSeedItem = {
-	status: InvoiceStatus;
+	status: ENUM_INVOICE_STATUS_BACKEND_TYPE;
 	label: string;
 };
 
 export const INVOICE_STATUS_SEED: readonly TInvoiceStatusSeedItem[] = [
-	{ status: InvoiceStatus.Draft, label: "DRF" },
-	{ status: InvoiceStatus.Sent, label: "SNT" },
-	{ status: InvoiceStatus.Partial, label: "PRT" },
-	{ status: InvoiceStatus.Paid, label: "PAID" },
-	{ status: InvoiceStatus.Overdue, label: "OVD" },
-	{ status: InvoiceStatus.Cancelled, label: "CNL" }
+	{ status: ENUM_INVOICE_STATUS_BACKEND.DRAFT, label: "DRF" },
+	{ status: ENUM_INVOICE_STATUS_BACKEND.SENT, label: "SNT" },
+	{ status: ENUM_INVOICE_STATUS_BACKEND.PARTIAL, label: "PRT" },
+	{ status: ENUM_INVOICE_STATUS_BACKEND.PAID, label: "PAID" },
+	{ status: ENUM_INVOICE_STATUS_BACKEND.OVERDUE, label: "OVD" },
+	{ status: ENUM_INVOICE_STATUS_BACKEND.CANCELLED, label: "CNL" }
 ] as const;
 
 /** How many invoices to generate per status row. */

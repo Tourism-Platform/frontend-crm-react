@@ -1,16 +1,17 @@
-import {
-	GeneralVenueOutputSubTypEnum,
-	HousingRoomTypes,
-	type SupplierModel,
-	SupplierType,
-	VehicleBodyType,
-	createMockId,
-	mockImageUrl
-} from "@/shared/api";
+import { createMockId, mockImageUrl } from "@/shared/api";
 
 import { MOCK_TOUR_OPERATOR_ID } from "@/entities/tour/tour/mock/tour.mock";
 
-import type { TSupplierProductReadBackend } from "../types";
+import {
+	ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND,
+	type ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND_TYPE,
+	ENUM_HOUSING_ROOM_TYPES_BACKEND,
+	ENUM_SUPPLIER_TYPE_BACKEND,
+	type ENUM_SUPPLIER_TYPE_BACKEND_TYPE,
+	ENUM_VEHICLE_BODY_TYPE_BACKEND,
+	type TSupplierBackend,
+	type TSupplierProductReadBackend
+} from "../types";
 
 import { fixedChargeMock, perPersonChargeMock } from "./supplier-charge.mock";
 
@@ -20,18 +21,24 @@ export const buildSupplierProductId = (index: number) =>
 export const buildSupplierVariantId = (index: number) =>
 	createMockId("c120", index);
 
-const SUPPLIER_SEED: [string, SupplierType[]][] = [
-	["Hyatt Regency Tashkent", [SupplierType.Hotel]],
-	["Silk Road Hotels", [SupplierType.Hotel]],
-	["Uzbekistan Airways", [SupplierType.Flight]],
-	["Afrosiyob Railways", [SupplierType.Train]],
-	["Samarkand Transfers", [SupplierType.Transfer, SupplierType.Bus]],
-	["Registan Museum", [SupplierType.Museum, SupplierType.Activity]],
-	["Bukhara Food Tours", [SupplierType.Activity]],
-	["Khiva Coach Lines", [SupplierType.Bus]]
+const SUPPLIER_SEED: [string, ENUM_SUPPLIER_TYPE_BACKEND_TYPE[]][] = [
+	["Hyatt Regency Tashkent", [ENUM_SUPPLIER_TYPE_BACKEND.HOTEL]],
+	["Silk Road Hotels", [ENUM_SUPPLIER_TYPE_BACKEND.HOTEL]],
+	["Uzbekistan Airways", [ENUM_SUPPLIER_TYPE_BACKEND.FLIGHT]],
+	["Afrosiyob Railways", [ENUM_SUPPLIER_TYPE_BACKEND.TRAIN]],
+	[
+		"Samarkand Transfers",
+		[ENUM_SUPPLIER_TYPE_BACKEND.TRANSFER, ENUM_SUPPLIER_TYPE_BACKEND.BUS]
+	],
+	[
+		"Registan Museum",
+		[ENUM_SUPPLIER_TYPE_BACKEND.MUSEUM, ENUM_SUPPLIER_TYPE_BACKEND.ACTIVITY]
+	],
+	["Bukhara Food Tours", [ENUM_SUPPLIER_TYPE_BACKEND.ACTIVITY]],
+	["Khiva Coach Lines", [ENUM_SUPPLIER_TYPE_BACKEND.BUS]]
 ];
 
-export const SUPPLIERS_MOCK: SupplierModel[] = SUPPLIER_SEED.map(
+export const SUPPLIERS_MOCK: TSupplierBackend[] = SUPPLIER_SEED.map(
 	([brandName, types], index) => ({
 		id: buildSupplierId(index + 1),
 		operator_id: MOCK_TOUR_OPERATOR_ID,
@@ -48,7 +55,11 @@ export const SUPPLIERS_MOCK: SupplierModel[] = SUPPLIER_SEED.map(
 let variantIndex = 0;
 const nextVariantId = () => buildSupplierVariantId(++variantIndex);
 
-const productBase = (index: number, supplier: SupplierModel, name: string) => ({
+const productBase = (
+	index: number,
+	supplier: TSupplierBackend,
+	name: string
+) => ({
 	id: buildSupplierProductId(index),
 	supplier_id: supplier.id,
 	supplier_name: supplier.brand_name,
@@ -59,7 +70,7 @@ const productBase = (index: number, supplier: SupplierModel, name: string) => ({
 
 const hotelProduct = (
 	index: number,
-	supplier: SupplierModel,
+	supplier: TSupplierBackend,
 	name: string,
 	stars: number
 ): TSupplierProductReadBackend => ({
@@ -82,7 +93,7 @@ const hotelProduct = (
 					{
 						id: nextVariantId(),
 						images: [],
-						typ: HousingRoomTypes.Double,
+						typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 						pax: 2,
 						name: "Standard double",
 						description: null,
@@ -94,7 +105,7 @@ const hotelProduct = (
 					{
 						id: nextVariantId(),
 						images: [],
-						typ: HousingRoomTypes.Single,
+						typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.SINGLE,
 						pax: 1,
 						name: "Standard single",
 						description: null,
@@ -111,9 +122,9 @@ const hotelProduct = (
 
 const activityProduct = (
 	index: number,
-	supplier: SupplierModel,
+	supplier: TSupplierBackend,
 	name: string,
-	subTyp: GeneralVenueOutputSubTypEnum
+	subTyp: ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND_TYPE
 ): TSupplierProductReadBackend =>
 	({
 		...productBase(index, supplier, name),
@@ -140,7 +151,7 @@ const activityProduct = (
 
 const flightProduct = (
 	index: number,
-	supplier: SupplierModel,
+	supplier: TSupplierBackend,
 	name: string
 ): TSupplierProductReadBackend => ({
 	...productBase(index, supplier, name),
@@ -167,7 +178,7 @@ const flightProduct = (
 
 const trainProduct = (
 	index: number,
-	supplier: SupplierModel,
+	supplier: TSupplierBackend,
 	name: string
 ): TSupplierProductReadBackend => ({
 	...productBase(index, supplier, name),
@@ -194,7 +205,7 @@ const trainProduct = (
 
 const transferProduct = (
 	index: number,
-	supplier: SupplierModel,
+	supplier: TSupplierBackend,
 	name: string
 ): TSupplierProductReadBackend => ({
 	...productBase(index, supplier, name),
@@ -207,7 +218,7 @@ const transferProduct = (
 			{
 				id: nextVariantId(),
 				images: [],
-				body_type: VehicleBodyType.Sedan,
+				body_type: ENUM_VEHICLE_BODY_TYPE_BACKEND.SEDAN,
 				pax: 3,
 				name: "Chevrolet Malibu",
 				description: null,
@@ -216,7 +227,7 @@ const transferProduct = (
 			{
 				id: nextVariantId(),
 				images: [],
-				body_type: VehicleBodyType.Minivan,
+				body_type: ENUM_VEHICLE_BODY_TYPE_BACKEND.MINIVAN,
 				pax: 7,
 				name: "Hyundai Starex",
 				description: null,
@@ -228,7 +239,7 @@ const transferProduct = (
 
 const busProduct = (
 	index: number,
-	supplier: SupplierModel,
+	supplier: TSupplierBackend,
 	name: string
 ): TSupplierProductReadBackend => ({
 	...productBase(index, supplier, name),
@@ -241,7 +252,7 @@ const busProduct = (
 			{
 				id: nextVariantId(),
 				images: [],
-				body_type: VehicleBodyType.Coach,
+				body_type: ENUM_VEHICLE_BODY_TYPE_BACKEND.COACH,
 				pax: 45,
 				name: "Yutong coach",
 				description: null,
@@ -268,19 +279,19 @@ export const SUPPLIER_PRODUCTS_MOCK: TSupplierProductReadBackend[] = [
 		10,
 		museum,
 		"Registan ensemble tour",
-		GeneralVenueOutputSubTypEnum.Sightseeing
+		ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.SIGHTSEEING
 	),
 	activityProduct(
 		11,
 		food,
 		"Plov master class",
-		GeneralVenueOutputSubTypEnum.MasterClass
+		ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.MASTER_CLASS
 	),
 	activityProduct(
 		12,
 		food,
 		"Bukhara street food walk",
-		GeneralVenueOutputSubTypEnum.Outdoor
+		ENUM_GENERAL_VENUE_OUTPUT_SUB_TYP_BACKEND.OUTDOOR
 	),
 	busProduct(13, coach, "Khiva — Bukhara coach")
 ];

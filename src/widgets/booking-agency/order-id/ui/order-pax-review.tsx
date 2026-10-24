@@ -12,18 +12,12 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { type IPaxReviewDetail, type IPaxReviewItem } from "@/entities/booking";
 
-import { PAX_DETAILS_COLUMNS, PAX_REVIEW_COLUMNS } from "../model";
-
-const SUBTABLE_LAYOUT = {
-	rowBorder: true,
-	headerBackground: true,
-	showHeader: false
-};
-
-const MAIN_TABLE_LAYOUT = {
-	rowBorder: true,
-	headerBackground: false
-};
+import {
+	ORDER_SUBTABLE_LAYOUT,
+	ORDER_TABLE_LAYOUT,
+	PAX_DETAILS_COLUMNS,
+	PAX_REVIEW_COLUMNS
+} from "../model";
 
 const getRowCanExpandFn = (row: { original: IPaxReviewItem }) =>
 	row.original.items.length > 0;
@@ -38,7 +32,7 @@ const OrderPaxReviewSubTable = ({ items }: { items: IPaxReviewDetail[] }) => {
 				columns={columns}
 				showTopFilters={false}
 				showPagination={false}
-				tableLayout={SUBTABLE_LAYOUT}
+				tableLayout={ORDER_SUBTABLE_LAYOUT}
 			/>
 		</div>
 	);
@@ -73,7 +67,7 @@ const OrderPaxReviewBase = ({ items = [] }: IOrderPaxReviewProps) => {
 					data={items}
 					columns={columns}
 					getRowCanExpand={getRowCanExpandFn}
-					tableLayout={MAIN_TABLE_LAYOUT}
+					tableLayout={ORDER_TABLE_LAYOUT}
 					showTopFilters={false}
 				/>
 			</CardContent>

@@ -9,14 +9,7 @@ import {
 } from "@/shared/lib";
 import { useAutosaveToast } from "@/shared/ui";
 
-import {
-	type ENUM_EVENT_TYPE,
-	type TEventDetailsBackend,
-	type TTourEventUpdate,
-	type TUpdateEventLibraryBackend,
-	mapEventLibraryUpdateToBackend,
-	useUpdateEventLibraryBodyMutation
-} from "@/entities/tour";
+import { type ENUM_EVENT_TYPE, useEventLibraryAutosavePart } from "@/entities/tour";
 
 import { toEventFormPath } from "./to-event-form-path";
 
@@ -26,7 +19,6 @@ export interface ILibraryEventAutosaveEdit<T> {
 	enabled: boolean;
 	data: T | undefined;
 	recordKey: string | undefined;
-	currentDetails?: TEventDetailsBackend;
 }
 
 const ALL_SECTIONS = [
@@ -50,29 +42,20 @@ export const useLibraryEventAutosave = <T extends FieldValues>(
 	edit: ILibraryEventAutosaveEdit<T>
 ): IUseAutosaveResult => {
 	const { t, i18n } = useTranslation("common_events");
-	const [updateBody] = useUpdateEventLibraryBodyMutation();
 	const language = i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
+	const entry = useEventLibraryAutosavePart<T>({
+		type,
+		libraryId: edit.libraryId,
+		language,
+		enabled: edit.enabled
+	});
 
 	const autosave = useAutosave(form, {
 		enabled: edit.enabled,
 		server: { data: edit.data, recordKey: edit.recordKey },
 		// Field issues go under the fields; the toast reports the failure.
 		onError: (error) => mapApiErrorsToForm(error, form, toEventFormPath),
-		parts: [
-			{
-				key: "entry",
-				validate: ALL_SECTIONS as FieldPath<T>[],
-				build: (values): TUpdateEventLibraryBackend =>
-					mapEventLibraryUpdateToBackend(
-						type,
-						values as unknown as TTourEventUpdate,
-						language,
-						edit.currentDetails
-					),
-				save: (body: TUpdateEventLibraryBackend) =>
-					updateBody({ libraryId: edit.libraryId, body }).unwrap()
-			}
-		]
+		parts: [{ ...entry, validate: ALL_SECTIONS as FieldPath<T>[] }]
 	});
 
 	useAutosaveToast(autosave.status, t("autosave.error"));

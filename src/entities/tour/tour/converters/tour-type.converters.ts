@@ -1,14 +1,21 @@
-import { TourType } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
 
-import { ENUM_TOUR_TYPES, type ENUM_TOUR_TYPES_TYPE } from "../types";
+import {
+	ENUM_TOUR_TYPES,
+	type ENUM_TOUR_TYPES_TYPE,
+	ENUM_TOUR_TYPE_BACKEND,
+	type ENUM_TOUR_TYPE_BACKEND_TYPE
+} from "../types";
 
-const MAP_TOUR_TYPES: Partial<Record<ENUM_TOUR_TYPES_TYPE, TourType>> = {
+const MAP_TOUR_TYPES: Partial<
+	Record<ENUM_TOUR_TYPES_TYPE, ENUM_TOUR_TYPE_BACKEND_TYPE>
+> = {
 	//!!! Поправить типы
-	[ENUM_TOUR_TYPES.PRIVATE]: TourType.Custom,
-	[ENUM_TOUR_TYPES.GROUP]: TourType.Regular
+	[ENUM_TOUR_TYPES.PRIVATE]: ENUM_TOUR_TYPE_BACKEND.CUSTOM,
+	[ENUM_TOUR_TYPES.GROUP]: ENUM_TOUR_TYPE_BACKEND.REGULAR
 };
 
-export const tourTypeMapper = createEnumMapper<ENUM_TOUR_TYPES_TYPE, TourType>(
-	MAP_TOUR_TYPES
-);
+export const tourTypeMapper = createEnumMapper<
+	ENUM_TOUR_TYPES_TYPE,
+	ENUM_TOUR_TYPE_BACKEND_TYPE
+>(MAP_TOUR_TYPES);

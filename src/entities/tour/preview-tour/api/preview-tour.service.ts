@@ -1,11 +1,5 @@
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-import type {
-	LandingPageImageModel,
-	LandingPageResponse,
-	OperatorInfoModel,
-	TourMetaResponse
-} from "@/shared/api";
 import {
 	OPERATOR_PATHS,
 	TOUR_LANDING_PAGE_PATHS,
@@ -22,6 +16,9 @@ import type {
 	TGetPricingBreakdownBackendResponse,
 	TTourOptionBackend
 } from "@/entities/tour/itinerary";
+import type { TLandingImageBackend } from "@/entities/tour/landing/types/landing-image.types";
+import type { TTourBackend } from "@/entities/tour/tour/types/tour-backend.interface";
+import type { TOperatorBusinessInfoBackend } from "@/entities/user/operator/types/operator-business-backend.interface";
 
 import {
 	composeDraftLandingToPreview,
@@ -47,6 +44,7 @@ import type {
 	IPreviewTourQueryArgs,
 	IPreviewTourSchedule,
 	TGetPreviewTourBackendResponse,
+	TLandingPageResponseBackend,
 	TOptionDetailBackend,
 	TPreviewOperatorBackend,
 	TPreviewOptionsListBackendResponse,
@@ -136,7 +134,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			query: (tourId) => ({
 				...TOUR_PATHS.getTour(tourId)
 			}),
-			transformResponse: (response: TourMetaResponse) =>
+			transformResponse: (response: TTourBackend) =>
 				mapPreviewTourGeneralToFrontend(response)
 		}),
 		getDraftPreviewLanding: builder.query<
@@ -173,8 +171,8 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 
 				return {
 					data: composeDraftLandingToPreview(
-						landingResult.data as LandingPageResponse,
-						(imagesResult.data as LandingPageImageModel[]) ?? []
+						landingResult.data as TLandingPageResponseBackend,
+						(imagesResult.data as TLandingImageBackend[]) ?? []
 					)
 				};
 			}
@@ -269,7 +267,7 @@ export const tourPreviewTourApi = authApi.injectEndpoints({
 			query: () => ({
 				...OPERATOR_PATHS.getOperatorInfo
 			}),
-			transformResponse: (response: OperatorInfoModel) =>
+			transformResponse: (response: TOperatorBusinessInfoBackend) =>
 				mapDraftOperatorToFrontend(response)
 		})
 	})

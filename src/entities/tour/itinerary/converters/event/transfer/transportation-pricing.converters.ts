@@ -1,9 +1,12 @@
-import { Currency, VehicleBodyType } from "@/shared/api";
-
 import {
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
 } from "@/entities/commission";
+import {
+	ENUM_CURRENCY_BACKEND,
+	type ENUM_CURRENCY_BACKEND_TYPE
+} from "@/entities/commission/types/currency.types";
+import { ENUM_VEHICLE_BODY_TYPE_BACKEND } from "@/entities/supplier/types/supplier-backend-enum.types";
 
 import {
 	ENUM_FORM_CARS,
@@ -48,7 +51,7 @@ import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
  * (the enum map is total), but `PricedCarInput` / `CategorisedCarInput` /
  * `Car` require both — contract gap bridged with documented defaults.
  */
-const DEFAULT_CAR_BODY_TYPE = VehicleBodyType.Sedan;
+const DEFAULT_CAR_BODY_TYPE = ENUM_VEHICLE_BODY_TYPE_BACKEND.SEDAN;
 
 /**
  * Write-side car node. The id is always echoed — a car without one is a new
@@ -208,13 +211,13 @@ const alignPerCarByClassPriceRows = (
 const mapAmountToFixedExpense = (
 	amount: number | null,
 	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined
-): { val: number; currency: Currency } | undefined => {
+): { val: number; currency: ENUM_CURRENCY_BACKEND_TYPE } | undefined => {
 	if (amount == null || !Number.isFinite(amount) || !amount || !currency) {
 		return undefined;
 	}
 	return {
 		val: amount,
-		currency: currencyConverter.to(currency) ?? Currency.USD
+		currency: currencyConverter.to(currency) ?? ENUM_CURRENCY_BACKEND.USD
 	};
 };
 
@@ -235,7 +238,8 @@ const mapMarkupToBackend = (
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency) ?? Currency.USD
+			currency:
+				currencyConverter.to(rowCurrency) ?? ENUM_CURRENCY_BACKEND.USD
 		}
 	};
 };
@@ -667,7 +671,7 @@ export const mapTransportationPricingToBackend = (
 
 	const cost = {
 		val: totalPrice,
-		currency: currencyConverter.to(currency) ?? Currency.USD
+		currency: currencyConverter.to(currency) ?? ENUM_CURRENCY_BACKEND.USD
 	};
 	const markup = mapMarkupToBackend(
 		pricing[ENUM_TRANSPORTATION_PRICING_FIELD.MARKUP] ?? null,

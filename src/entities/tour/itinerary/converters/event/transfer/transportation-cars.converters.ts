@@ -1,11 +1,13 @@
-import type { TransferDetailsOutput } from "@/shared/api";
-
-import { ENUM_FORM_CARS, type TCarsSchema } from "../../../types";
+import {
+	ENUM_FORM_CARS,
+	type TCarsSchema,
+	type TTransferDetailsBackend
+} from "../../../types";
 
 import { vehicleBodyTypeConverter } from "./vehicle-body-type.converters";
 
 /** Read-side transfer spec (`pool[].spec`, contract 6). */
-type TTransferSpecOutput = TransferDetailsOutput["pool"][number]["spec"];
+type TTransferSpecOutput = TTransferDetailsBackend["pool"][number]["spec"];
 
 /**
  * Cars section of the form, read from the pool member `spec` (3.1). Every spec

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency, RouteOverrideInputTypEnum } from "@/shared/api";
-
 import { ENUM_CURRENCY_OPTIONS } from "@/entities/commission";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
-import { ENUM_EVENT_BACKEND } from "../../../types/event-backend-enum.types";
+import { ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND } from "../../../types";
+import { ENUM_EVENT_KIND } from "../../../types/event-enum.types";
 import {
 	ENUM_FORM_OVERRIDE_PRODUCT as ENUM_FORM,
 	ENUM_OVERRIDE_PRICING_ARM,
@@ -20,7 +20,7 @@ import { type IOverrideUnitOption } from "./event-override-units.helpers";
 
 const FIXED_CHARGE = {
 	typ: "fixed" as const,
-	cost: { val: 95, currency: Currency.USD },
+	cost: { val: 95, currency: ENUM_CURRENCY_BACKEND.USD },
 	fees: null,
 	extra_costs: [],
 	markup: null
@@ -34,7 +34,7 @@ const UNITS: IOverrideUnitOption[] = [
 describe("mapEventOverrideToForm", () => {
 	it("builds defaults with an empty row per spec unit", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.TRAIN,
+			ENUM_EVENT_KIND.TRAIN,
 			null,
 			UNITS
 		);
@@ -50,7 +50,7 @@ describe("mapEventOverrideToForm", () => {
 
 	it("reads the housing whole arm (policy + base charge)", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.HOUSING,
+			ENUM_EVENT_KIND.HOUSING,
 			{
 				typ: "housing",
 				policy: {
@@ -78,9 +78,9 @@ describe("mapEventOverrideToForm", () => {
 
 	it("reads the route per_fare arm into unit rows", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.TRAIN,
+			ENUM_EVENT_KIND.TRAIN,
 			{
-				typ: RouteOverrideInputTypEnum.Train,
+				typ: ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.TRAIN,
 				rates: {
 					pricing: "per_fare",
 					fares: [{ fare_id: "unit-2", charge: FIXED_CHARGE }]
@@ -102,7 +102,7 @@ describe("mapEventOverrideToForm", () => {
 
 	it("reads the transfer per_car_category arm", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.TRANSFER,
+			ENUM_EVENT_KIND.TRANSFER,
 			{
 				typ: "transfer",
 				rates: {
@@ -121,7 +121,7 @@ describe("mapEventOverrideToForm", () => {
 
 	it("activity always lands on the offerings arm", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.ACTIVITY,
+			ENUM_EVENT_KIND.ACTIVITY,
 			null,
 			UNITS
 		);
@@ -131,7 +131,7 @@ describe("mapEventOverrideToForm", () => {
 		);
 
 		const filled = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.ACTIVITY,
+			ENUM_EVENT_KIND.ACTIVITY,
 			{
 				typ: "activity",
 				rates: {
@@ -151,7 +151,7 @@ describe("mapEventOverrideToForm", () => {
 describe("mapEventOverrideToBackend", () => {
 	it("builds the housing whole arm with policy", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.HOUSING,
+			ENUM_EVENT_KIND.HOUSING,
 			null,
 			[]
 		);
@@ -159,10 +159,7 @@ describe("mapEventOverrideToBackend", () => {
 		values[ENUM_FORM.CHECK_IN_FROM] = "09:00";
 		values[ENUM_FORM.CHECK_OUT_UNTIL] = "11:00";
 
-		const body = mapEventOverrideToBackend(
-			ENUM_EVENT_BACKEND.HOUSING,
-			values
-		);
+		const body = mapEventOverrideToBackend(ENUM_EVENT_KIND.HOUSING, values);
 
 		expect(body).toEqual({
 			typ: "housing",
@@ -177,7 +174,7 @@ describe("mapEventOverrideToBackend", () => {
 				price: {
 					base: {
 						typ: "fixed",
-						cost: { val: 120, currency: Currency.USD },
+						cost: { val: 120, currency: ENUM_CURRENCY_BACKEND.USD },
 						fees: null,
 						extra_costs: [],
 						markup: null
@@ -190,20 +187,17 @@ describe("mapEventOverrideToBackend", () => {
 
 	it("builds the route per_fare arm and skips empty rows", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.TRAIN,
+			ENUM_EVENT_KIND.TRAIN,
 			null,
 			UNITS
 		);
 		values[ENUM_FORM.PRICING_ARM] = ENUM_OVERRIDE_PRICING_ARM.PER_FARE;
 		values[ENUM_FORM.UNITS][1].total_price = 75;
 
-		const body = mapEventOverrideToBackend(
-			ENUM_EVENT_BACKEND.TRAIN,
-			values
-		);
+		const body = mapEventOverrideToBackend(ENUM_EVENT_KIND.TRAIN, values);
 
 		expect(body).toEqual({
-			typ: RouteOverrideInputTypEnum.Train,
+			typ: ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.TRAIN,
 			rates: {
 				pricing: "per_fare",
 				fares: [
@@ -211,7 +205,10 @@ describe("mapEventOverrideToBackend", () => {
 						fare_id: "unit-2",
 						charge: {
 							typ: "fixed",
-							cost: { val: 75, currency: Currency.USD },
+							cost: {
+								val: 75,
+								currency: ENUM_CURRENCY_BACKEND.USD
+							},
 							fees: null,
 							extra_costs: [],
 							markup: null
@@ -224,7 +221,7 @@ describe("mapEventOverrideToBackend", () => {
 
 	it("builds per-person fare charges when the row says so", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.FLIGHT,
+			ENUM_EVENT_KIND.FLIGHT,
 			null,
 			UNITS
 		);
@@ -233,13 +230,10 @@ describe("mapEventOverrideToBackend", () => {
 			ENUM_OVERRIDE_UNIT_CHARGE.PER_PERSON;
 		values[ENUM_FORM.UNITS][0].total_price = 30;
 
-		const body = mapEventOverrideToBackend(
-			ENUM_EVENT_BACKEND.FLIGHT,
-			values
-		);
+		const body = mapEventOverrideToBackend(ENUM_EVENT_KIND.FLIGHT, values);
 
 		expect(body).toMatchObject({
-			typ: RouteOverrideInputTypEnum.Flight,
+			typ: ENUM_ROUTE_OVERRIDE_INPUT_TYP_BACKEND.FLIGHT,
 			rates: {
 				pricing: "per_fare",
 				fares: [
@@ -247,7 +241,10 @@ describe("mapEventOverrideToBackend", () => {
 						fare_id: "unit-1",
 						charge: {
 							typ: "per_person",
-							cost_per_person: { val: 30, currency: Currency.USD }
+							cost_per_person: {
+								val: 30,
+								currency: ENUM_CURRENCY_BACKEND.USD
+							}
 						}
 					}
 				]
@@ -256,15 +253,11 @@ describe("mapEventOverrideToBackend", () => {
 	});
 
 	it("builds the bus per_vehicle arm with fixed charges only", () => {
-		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.BUS,
-			null,
-			UNITS
-		);
+		const values = mapEventOverrideToForm(ENUM_EVENT_KIND.BUS, null, UNITS);
 		values[ENUM_FORM.PRICING_ARM] = ENUM_OVERRIDE_PRICING_ARM.PER_VEHICLE;
 		values[ENUM_FORM.UNITS][0].total_price = 50;
 
-		const body = mapEventOverrideToBackend(ENUM_EVENT_BACKEND.BUS, values);
+		const body = mapEventOverrideToBackend(ENUM_EVENT_KIND.BUS, values);
 
 		expect(body).toMatchObject({
 			typ: "bus",
@@ -277,7 +270,7 @@ describe("mapEventOverrideToBackend", () => {
 
 	it("builds the transfer per_car arm", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.TRANSFER,
+			ENUM_EVENT_KIND.TRANSFER,
 			null,
 			UNITS
 		);
@@ -285,7 +278,7 @@ describe("mapEventOverrideToBackend", () => {
 		values[ENUM_FORM.UNITS][1].total_price = 40;
 
 		const body = mapEventOverrideToBackend(
-			ENUM_EVENT_BACKEND.TRANSFER,
+			ENUM_EVENT_KIND.TRANSFER,
 			values
 		);
 
@@ -300,14 +293,14 @@ describe("mapEventOverrideToBackend", () => {
 
 	it("builds the activity offerings arm", () => {
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.ACTIVITY,
+			ENUM_EVENT_KIND.ACTIVITY,
 			null,
 			UNITS
 		);
 		values[ENUM_FORM.UNITS][0].total_price = 15;
 
 		const body = mapEventOverrideToBackend(
-			ENUM_EVENT_BACKEND.ACTIVITY,
+			ENUM_EVENT_KIND.ACTIVITY,
 			values
 		);
 
@@ -340,14 +333,11 @@ describe("mapEventOverrideToBackend", () => {
 		};
 
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.HOUSING,
+			ENUM_EVENT_KIND.HOUSING,
 			source,
 			UNITS
 		);
-		const body = mapEventOverrideToBackend(
-			ENUM_EVENT_BACKEND.HOUSING,
-			values
-		);
+		const body = mapEventOverrideToBackend(ENUM_EVENT_KIND.HOUSING, values);
 
 		expect(body).toEqual({
 			typ: "housing",
@@ -378,14 +368,14 @@ describe("mapEventOverrideToBackend", () => {
 					...FIXED_CHARGE,
 					markup: {
 						typ: "fixed" as const,
-						cost: { val: 25, currency: Currency.USD }
+						cost: { val: 25, currency: ENUM_CURRENCY_BACKEND.USD }
 					}
 				}
 			}
 		};
 
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.BUS,
+			ENUM_EVENT_KIND.BUS,
 			source,
 			UNITS
 		);
@@ -396,9 +386,9 @@ describe("mapEventOverrideToBackend", () => {
 			value: "25"
 		});
 
-		expect(
-			mapEventOverrideToBackend(ENUM_EVENT_BACKEND.BUS, values)
-		).toEqual(source);
+		expect(mapEventOverrideToBackend(ENUM_EVENT_KIND.BUS, values)).toEqual(
+			source
+		);
 	});
 
 	it("round-trips a percentage markup on a unit row", () => {
@@ -421,7 +411,7 @@ describe("mapEventOverrideToBackend", () => {
 		};
 
 		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.ACTIVITY,
+			ENUM_EVENT_KIND.ACTIVITY,
 			source,
 			UNITS
 		);
@@ -434,7 +424,7 @@ describe("mapEventOverrideToBackend", () => {
 		expect(values[ENUM_FORM.UNITS][1].markup).toBeNull();
 
 		const body = mapEventOverrideToBackend(
-			ENUM_EVENT_BACKEND.ACTIVITY,
+			ENUM_EVENT_KIND.ACTIVITY,
 			values
 		);
 
@@ -442,11 +432,7 @@ describe("mapEventOverrideToBackend", () => {
 	});
 
 	it("sends markup null when the margin flag is off", () => {
-		const values = mapEventOverrideToForm(
-			ENUM_EVENT_BACKEND.BUS,
-			null,
-			UNITS
-		);
+		const values = mapEventOverrideToForm(ENUM_EVENT_KIND.BUS, null, UNITS);
 		values[ENUM_FORM.TOTAL_PRICE] = 80;
 		values[ENUM_FORM.ADD_MARGIN_SEPARATELY] = false;
 		values[ENUM_FORM.MARKUP] = {
@@ -454,7 +440,7 @@ describe("mapEventOverrideToBackend", () => {
 			value: "15"
 		};
 
-		const body = mapEventOverrideToBackend(ENUM_EVENT_BACKEND.BUS, values);
+		const body = mapEventOverrideToBackend(ENUM_EVENT_KIND.BUS, values);
 
 		expect(body).toMatchObject({
 			typ: "bus",

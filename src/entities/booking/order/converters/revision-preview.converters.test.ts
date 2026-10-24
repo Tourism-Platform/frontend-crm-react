@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { BreakdownLineKind, ExpenseType, PricingWarning } from "@/shared/api";
-
+import {
+	ENUM_BREAKDOWN_LINE_KIND_BACKEND,
+	ENUM_EXPENSE_TYPE_BACKEND,
+	ENUM_PRICING_WARNING_BACKEND
+} from "@/entities/tour/itinerary/types/itinerary-backend-enum.types";
 import {
 	ENUM_BREAKDOWN_LINE_KIND,
 	ENUM_PRICING_WARNING
@@ -19,11 +22,11 @@ describe("mapRevisionPreviewBreakdownToFrontend", () => {
 					event_id: "event_1",
 					lines: [
 						{
-							kind: BreakdownLineKind.Unit,
+							kind: ENUM_BREAKDOWN_LINE_KIND_BACKEND.UNIT,
 							label: "Economy",
 							unit_id: "fare_1",
 							supply_id: null,
-							pricing: ExpenseType.Fixed,
+							pricing: ENUM_EXPENSE_TYPE_BACKEND.FIXED,
 							rate: null,
 							unit_cost: { val: 100 },
 							quantity: 1,
@@ -35,7 +38,7 @@ describe("mapRevisionPreviewBreakdownToFrontend", () => {
 							markup: { val: 10 }
 						}
 					],
-					warnings: [PricingWarning.ZeroCost]
+					warnings: [ENUM_PRICING_WARNING_BACKEND.ZERO_COST]
 				}
 			]
 		} as TRevisionPreviewBackend;

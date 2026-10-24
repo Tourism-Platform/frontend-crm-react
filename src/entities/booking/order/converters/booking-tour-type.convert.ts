@@ -1,5 +1,9 @@
-import { TourType } from "@/shared/api";
 import { createEnumMapper } from "@/shared/utils";
+
+import {
+	ENUM_TOUR_TYPE_BACKEND,
+	type ENUM_TOUR_TYPE_BACKEND_TYPE
+} from "@/entities/tour/tour/types/tour-backend-enum.types";
 
 import {
 	ENUM_ORDER_TYPE_OPTIONS,
@@ -7,14 +11,14 @@ import {
 } from "../types";
 
 const MAP_BOOKING_TOUR_TYPE: Partial<
-	Record<ENUM_ORDER_TYPE_OPTIONS_TYPE, TourType>
+	Record<ENUM_ORDER_TYPE_OPTIONS_TYPE, ENUM_TOUR_TYPE_BACKEND_TYPE>
 > = {
-	[ENUM_ORDER_TYPE_OPTIONS.REGULAR]: TourType.Regular,
-	[ENUM_ORDER_TYPE_OPTIONS.VIP]: TourType.Custom,
-	[ENUM_ORDER_TYPE_OPTIONS.GROUP]: TourType.Regular
+	[ENUM_ORDER_TYPE_OPTIONS.REGULAR]: ENUM_TOUR_TYPE_BACKEND.REGULAR,
+	[ENUM_ORDER_TYPE_OPTIONS.VIP]: ENUM_TOUR_TYPE_BACKEND.CUSTOM,
+	[ENUM_ORDER_TYPE_OPTIONS.GROUP]: ENUM_TOUR_TYPE_BACKEND.REGULAR
 };
 
 export const bookingTourTypeMapper = createEnumMapper<
 	ENUM_ORDER_TYPE_OPTIONS_TYPE,
-	TourType
+	ENUM_TOUR_TYPE_BACKEND_TYPE
 >(MAP_BOOKING_TOUR_TYPE);

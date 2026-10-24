@@ -79,5 +79,3 @@ export const PACKAGE_EDIT_SCHEMA = z
 			});
 		}
 	});
-
-export type TPackageEditSchema = z.infer<typeof PACKAGE_EDIT_SCHEMA>;

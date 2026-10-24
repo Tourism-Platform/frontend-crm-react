@@ -1,14 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import {
-	type ActivityDetailsOutput,
-	Currency,
-	type HousingDetailsOutput,
-	HousingRoomTypes,
-	type InformationDetailsOutput
-} from "@/shared/api";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import { ENUM_HOUSING_ROOM_TYPES_BACKEND } from "@/entities/supplier/types/supplier-backend-enum.types";
 
-import { ENUM_EVENT_BACKEND } from "../../../types";
+import {
+	ENUM_EVENT_BACKEND,
+	type TActivityDetailsBackend,
+	type THousingDetailsOutputBackend,
+	type TInformationDetailsOutputBackend
+} from "../../../types";
 
 import { mapEventDetailsReadToWrite } from "./details-read-to-write.converters";
 
@@ -16,7 +16,7 @@ const IMAGE = { image_path: "/img/1.png", is_primary: true };
 
 const FIXED_CHARGE = {
 	typ: "fixed" as const,
-	cost: { val: 100, currency: Currency.USD },
+	cost: { val: 100, currency: ENUM_CURRENCY_BACKEND.USD },
 	fees: null,
 	extra_costs: [],
 	markup: null
@@ -26,7 +26,7 @@ const MEMBER_ID = "11111111-1111-1111-1111-111111111111";
 
 describe("mapEventDetailsReadToWrite — product supply", () => {
 	it("echoes pool id and keeps only { source, product_id, scope }", () => {
-		const details: HousingDetailsOutput = {
+		const details: THousingDetailsOutputBackend = {
 			plan: { duration: 2, check_in: null, check_out: null },
 			pool: [
 				{
@@ -85,7 +85,7 @@ describe("mapEventDetailsReadToWrite — product supply", () => {
 	});
 
 	it("echoes an information member without a spec", () => {
-		const details: InformationDetailsOutput = {
+		const details: TInformationDetailsOutputBackend = {
 			plan: {},
 			pool: [
 				{
@@ -116,7 +116,7 @@ describe("mapEventDetailsReadToWrite — product supply", () => {
 
 describe("mapEventDetailsReadToWrite — inline supply", () => {
 	it("moves the read spec into the member supply and strips images", () => {
-		const details: HousingDetailsOutput = {
+		const details: THousingDetailsOutputBackend = {
 			plan: { duration: null, check_in: null, check_out: null },
 			pool: [
 				{
@@ -140,7 +140,7 @@ describe("mapEventDetailsReadToWrite — inline supply", () => {
 									{
 										id: "room-1",
 										images: [IMAGE],
-										typ: HousingRoomTypes.Double,
+										typ: ENUM_HOUSING_ROOM_TYPES_BACKEND.DOUBLE,
 										pax: 2,
 										name: "Std",
 										description: null,
@@ -189,7 +189,7 @@ describe("mapEventDetailsReadToWrite — inline supply", () => {
 	});
 
 	it("strips menu item images from activity food spec", () => {
-		const details: ActivityDetailsOutput = {
+		const details: TActivityDetailsBackend = {
 			plan: { start_time: null, end_time: null },
 			pool: [
 				{

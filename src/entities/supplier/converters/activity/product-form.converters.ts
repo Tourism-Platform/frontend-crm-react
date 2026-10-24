@@ -1,10 +1,11 @@
-import { LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
+
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 
 import {
 	ENUM_ACTIVITY_SUB_TYPE,
@@ -36,7 +37,7 @@ const mapGeneralFormToDetails = (
 	name: values[ENUM_FORM.NAME],
 	location: mapGeoFormToBackendLocation(
 		values[ENUM_FORM.LOCATION],
-		languageCodeMapper.to(language) ?? LanguageCode.En
+		languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH
 	)
 });
 

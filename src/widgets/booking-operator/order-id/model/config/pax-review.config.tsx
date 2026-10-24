@@ -50,7 +50,8 @@ export const PAX_REVIEW_COLUMNS = (
 		{
 			accessorKey: "gender",
 			header: t("pax_information.table.gender"),
-			cell: ({ row }) => t(GENDER_LABELS[row.original.gender])
+			cell: ({ row }) =>
+				t(GENDER_LABELS[row.original.gender], { ns: "options" })
 		},
 		{
 			accessorKey: "nationality",

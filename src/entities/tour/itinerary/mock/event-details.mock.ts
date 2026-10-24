@@ -1,10 +1,14 @@
-import type { MultiEventReadOutput, TourEventResponse } from "@/shared/api";
 import { createMockIdSequence } from "@/shared/api";
 
 import { findProduct } from "@/entities/supplier/mock/supplier.store";
 
+import type {
+	TMultiEventReadBackend,
+	TTourEventBackendResponce
+} from "../types";
+
 /** Одна опция события (элемент multi-события или сама single-опция) */
-export type TEventOptionMock = MultiEventReadOutput["details"][number];
+export type TEventOptionMock = TMultiEventReadBackend["details"][number];
 export type TEventOptionTyp = TEventOptionMock["typ"];
 export type TPoolMemberMock = TEventOptionMock["details"]["pool"][number];
 
@@ -197,14 +201,16 @@ export const cloneEventOption = (
 
 /** Опции события: у single — сама опция, у multi — список */
 export const getEventOptions = (
-	event: TourEventResponse
+	event: TTourEventBackendResponce
 ): TEventOptionMock[] =>
 	event.event.typ === "options"
 		? event.event.details
 		: [event.event as unknown as TEventOptionMock];
 
-export const findEventOption = (event: TourEventResponse, optionId: string) =>
-	getEventOptions(event).find((option) => option.id === optionId);
+export const findEventOption = (
+	event: TTourEventBackendResponce,
+	optionId: string
+) => getEventOptions(event).find((option) => option.id === optionId);
 
 /** Узел spec по id (комната, машина) — для картинок узлов */
 export const findSpecNode = (

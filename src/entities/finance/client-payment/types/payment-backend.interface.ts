@@ -1,5 +1,10 @@
-import type { CLIENT_PAYMENT_PATHS, ClientPaymentResponse } from "@/shared/api";
-import type { ClientPaymentUpdate } from "@/shared/api";
+import type {
+	CLIENT_PAYMENT_PATHS,
+	ClientPaymentFile,
+	ClientPaymentListResponse,
+	ClientPaymentResponse,
+	ClientPaymentUpdate
+} from "@/shared/api";
 
 export type TPaymentBackend = ClientPaymentResponse;
 
@@ -14,3 +19,8 @@ export type TCreatePaymentBackend =
 	typeof CLIENT_PAYMENT_PATHS.createPayment._types.body;
 
 export type TUpdatePaymentBackend = ClientPaymentUpdate;
+export type TClientPaymentFileBackend = ClientPaymentFile;
+export type TClientPaymentListResponseBackend = ClientPaymentListResponse;
+
+export type TPaymentListQueryBackend =
+	typeof CLIENT_PAYMENT_PATHS.listPayments._types.query;

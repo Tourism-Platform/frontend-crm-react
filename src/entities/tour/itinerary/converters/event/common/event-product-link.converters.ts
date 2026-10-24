@@ -1,19 +1,21 @@
-import { DetachKeep, LanguageCode } from "@/shared/api/generated/Api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config/languages";
 import { languageCodeMapper } from "@/shared/converters";
 
-import type {
-	IEventProductDetach,
-	IEventProductLink,
-	IEventProductRelink,
-	IEventProductScopeUpdate,
-	TEventProductDetachBackend,
-	TEventProductLinkBackend,
-	TEventProductReadLangQueryBackend,
-	TEventProductRelinkBackend,
-	TEventProductScope,
-	TEventProductScopeBackend,
-	TEventProductScopeBodyBackend
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
+import {
+	ENUM_DETACH_KEEP_BACKEND,
+	type IEventProductDetach,
+	type IEventProductLink,
+	type IEventProductRelink,
+	type IEventProductScopeUpdate,
+	type TEventProductDetachBackend,
+	type TEventProductLinkBackend,
+	type TEventProductReadLangQueryBackend,
+	type TEventProductRelinkBackend,
+	type TEventProductScope,
+	type TEventProductScopeBackend,
+	type TEventProductScopeBodyBackend
 } from "../../../types";
 
 /**
@@ -57,8 +59,8 @@ export const mapEventProductLinkToBackend = (
 });
 
 const DETACH_KEEP_TO_BACKEND = {
-	spec: DetachKeep.Spec,
-	nothing: DetachKeep.Nothing
+	spec: ENUM_DETACH_KEEP_BACKEND.SPEC,
+	nothing: ENUM_DETACH_KEEP_BACKEND.NOTHING
 } as const;
 
 /** Detach body (required): `{ keep, drop_override? }`. */
@@ -101,6 +103,7 @@ export const mapEventReadLangQueryToBackend = (
 	}
 
 	return {
-		read_lang: languageCodeMapper.to(language) ?? LanguageCode.En
+		read_lang:
+			languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH
 	};
 };

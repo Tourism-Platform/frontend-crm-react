@@ -4,7 +4,6 @@ import {
 	currencyConverter
 } from "@/entities/commission";
 
-import type { TPackageEditSchema } from "../schema/package.schema";
 import {
 	ENUM_PACKAGE_FIELD,
 	ENUM_PACKAGE_MARKUP_TYP,
@@ -13,6 +12,7 @@ import {
 	type ITourPackage,
 	type ITourPackageListItem,
 	type TPackageCreateBackend,
+	type TPackageEditSchema,
 	type TPackageUpdateBackend,
 	type TTourPackageBackend
 } from "../types";

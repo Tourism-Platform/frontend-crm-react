@@ -1,11 +1,11 @@
-import { currencyConverter } from "@/entities/commission/converters/currency.coverters";
+import { currencyConverter } from "@/entities/commission";
 
-import type {
-	ISupplierFeeFormRow,
-	TSupplierFeeBackend,
-	TSupplierFeeInputBackend
+import {
+	ENUM_SUPPLIER_FEE_FIELD,
+	type ISupplierFeeFormRow,
+	type TSupplierFeeBackend,
+	type TSupplierFeeInputBackend
 } from "../types";
-import { ENUM_SUPPLIER_FEE_FIELD } from "../types";
 
 export const mapSupplierFeeFromBackend = (
 	fee: TSupplierFeeBackend

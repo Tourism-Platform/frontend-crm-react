@@ -23,3 +23,4 @@ export * from "./supplier-product-backend.types";
 export * from "./supplier-product.types";
 export * from "./supplier-product-image-backend.types";
 export * from "./supplier-product-image.types";
+export * from "./supplier-backend-enum.types";

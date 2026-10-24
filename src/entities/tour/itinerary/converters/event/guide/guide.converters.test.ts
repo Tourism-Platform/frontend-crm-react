@@ -1,9 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { Currency, GuideType, LanguageCode } from "@/shared/api";
-import type { GuideDetailsOutput, GuideSpecInput } from "@/shared/api";
-
-import { ENUM_LANGUAGES } from "@/entities/tour/landing/types/languages.types";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
+import {
+	ENUM_LANGUAGES,
+	ENUM_LANGUAGES_BACKEND
+} from "@/entities/tour/landing/types/languages.types";
 
 import { DEFAULT_GUIDE_UP_TO_PAX } from "../../../config";
 import {
@@ -19,7 +20,10 @@ import {
 	ENUM_GUIDE_PRICING_INVOICING,
 	ENUM_GUIDE_PRICING_TYPE,
 	ENUM_GUIDE_TYPE,
-	type TGuideEditSchema
+	ENUM_GUIDE_TYPE_BACKEND,
+	type TGuideDetailsBackend,
+	type TGuideEditSchema,
+	type TGuideSpecInputBackend
 } from "../../../types";
 import { ENUM_EVENT_BACKEND } from "../../../types/event-backend-enum.types";
 
@@ -79,12 +83,12 @@ const baseForm = (
 	...overrides
 });
 
-type TGuideSpec = NonNullable<GuideDetailsOutput["pool"][number]["spec"]>;
+type TGuideSpec = NonNullable<TGuideDetailsBackend["pool"][number]["spec"]>;
 
 const guideReadDetails = (
 	spec: TGuideSpec,
-	plan: GuideDetailsOutput["plan"] = {}
-): GuideDetailsOutput => ({
+	plan: TGuideDetailsBackend["plan"] = {}
+): TGuideDetailsBackend => ({
 	plan,
 	pool: [
 		{
@@ -96,7 +100,7 @@ const guideReadDetails = (
 	]
 });
 
-const inlineGuidePool = (spec: GuideSpecInput) => [
+const inlineGuidePool = (spec: TGuideSpecInputBackend) => [
 	{ supply: { source: "inline" as const, spec } }
 ];
 
@@ -106,7 +110,9 @@ describe("mapGuidesFromBackend", () => {
 			guideReadDetails(
 				{
 					name: null,
-					typ_tiers: [{ up_to_pax: 15, typ: GuideType.Route }],
+					typ_tiers: [
+						{ up_to_pax: 15, typ: ENUM_GUIDE_TYPE_BACKEND.ROUTE }
+					],
 					categories: []
 				},
 				{ duration: 2 }
@@ -140,8 +146,8 @@ describe("mapGuidesFromBackend", () => {
 				{
 					name: null,
 					typ_tiers: [
-						{ up_to_pax: 10, typ: GuideType.Local },
-						{ up_to_pax: 20, typ: GuideType.Route }
+						{ up_to_pax: 10, typ: ENUM_GUIDE_TYPE_BACKEND.LOCAL },
+						{ up_to_pax: 20, typ: ENUM_GUIDE_TYPE_BACKEND.ROUTE }
 					],
 					categories: []
 				},
@@ -172,7 +178,7 @@ describe("mapGuideFormToUpdate", () => {
 				typ_tiers: [
 					{
 						up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-						typ: GuideType.Local
+						typ: ENUM_GUIDE_TYPE_BACKEND.LOCAL
 					}
 				]
 			})
@@ -201,7 +207,7 @@ describe("mapGuideFormToUpdate", () => {
 				typ_tiers: [
 					{
 						up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-						typ: GuideType.Route
+						typ: ENUM_GUIDE_TYPE_BACKEND.ROUTE
 					}
 				]
 			})
@@ -230,8 +236,8 @@ describe("mapGuideFormToUpdate", () => {
 			guideReadDetails({
 				name: null,
 				typ_tiers: [
-					{ up_to_pax: 10, typ: GuideType.Local },
-					{ up_to_pax: 20, typ: GuideType.Route }
+					{ up_to_pax: 10, typ: ENUM_GUIDE_TYPE_BACKEND.LOCAL },
+					{ up_to_pax: 20, typ: ENUM_GUIDE_TYPE_BACKEND.ROUTE }
 				],
 				categories: []
 			})
@@ -241,8 +247,8 @@ describe("mapGuideFormToUpdate", () => {
 			plan: { duration: 2 },
 			pool: inlineGuidePool({
 				typ_tiers: [
-					{ up_to_pax: 10, typ: GuideType.Local },
-					{ up_to_pax: 20, typ: GuideType.Route }
+					{ up_to_pax: 10, typ: ENUM_GUIDE_TYPE_BACKEND.LOCAL },
+					{ up_to_pax: 20, typ: ENUM_GUIDE_TYPE_BACKEND.ROUTE }
 				]
 			})
 		});
@@ -292,7 +298,7 @@ describe("mapGuideFormToUpdate", () => {
 					typ_tiers: [
 						{
 							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							typ: GuideType.Local
+							typ: ENUM_GUIDE_TYPE_BACKEND.LOCAL
 						}
 					]
 				})
@@ -341,7 +347,7 @@ describe("mapGuideFormToUpdate", () => {
 				typ_tiers: [
 					{
 						up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-						typ: GuideType.Local
+						typ: ENUM_GUIDE_TYPE_BACKEND.LOCAL
 					}
 				],
 				categories: [
@@ -355,7 +361,7 @@ describe("mapGuideFormToUpdate", () => {
 										up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
 										cost: {
 											val: 120,
-											currency: Currency.USD
+											currency: ENUM_CURRENCY_BACKEND.USD
 										}
 									}
 								]
@@ -436,7 +442,7 @@ describe("mapGuideFormToUpdate", () => {
 				: undefined
 		).toEqual([
 			{
-				lang: LanguageCode.En,
+				lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 				expenses: {
 					typ: "per_duration",
 					rate: {
@@ -444,7 +450,10 @@ describe("mapGuideFormToUpdate", () => {
 						tiers: [
 							{
 								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-								cost: { val: 120, currency: Currency.USD }
+								cost: {
+									val: 120,
+									currency: ENUM_CURRENCY_BACKEND.USD
+								}
 							}
 						]
 					},
@@ -452,14 +461,17 @@ describe("mapGuideFormToUpdate", () => {
 						{
 							name: null,
 							description: null,
-							cost: { val: 10, currency: Currency.USD }
+							cost: {
+								val: 10,
+								currency: ENUM_CURRENCY_BACKEND.USD
+							}
 						}
 					],
 					markup: { typ: "percentage", percentage: 0.1 }
 				}
 			},
 			{
-				lang: LanguageCode.Ru,
+				lang: ENUM_LANGUAGES_BACKEND.RUSSIAN,
 				expenses: {
 					typ: "per_duration",
 					rate: {
@@ -467,7 +479,10 @@ describe("mapGuideFormToUpdate", () => {
 						tiers: [
 							{
 								up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-								cost: { val: 150, currency: Currency.EUR }
+								cost: {
+									val: 150,
+									currency: ENUM_CURRENCY_BACKEND.EUR
+								}
 							}
 						]
 					},
@@ -486,7 +501,7 @@ describe("mapGuidePricingFromBackend", () => {
 				typ_tiers: [],
 				categories: [
 					{
-						lang: LanguageCode.En,
+						lang: ENUM_LANGUAGES_BACKEND.ENGLISH,
 						expenses: {
 							typ: "per_duration",
 							rate: {
@@ -496,7 +511,7 @@ describe("mapGuidePricingFromBackend", () => {
 										up_to_pax: 15,
 										cost: {
 											val: 120,
-											currency: Currency.USD
+											currency: ENUM_CURRENCY_BACKEND.USD
 										}
 									}
 								]
@@ -505,7 +520,10 @@ describe("mapGuidePricingFromBackend", () => {
 								{
 									name: null,
 									description: null,
-									cost: { val: 5, currency: Currency.USD }
+									cost: {
+										val: 5,
+										currency: ENUM_CURRENCY_BACKEND.USD
+									}
 								}
 							],
 							extra_costs: [],
@@ -513,7 +531,7 @@ describe("mapGuidePricingFromBackend", () => {
 						}
 					},
 					{
-						lang: LanguageCode.Ru,
+						lang: ENUM_LANGUAGES_BACKEND.RUSSIAN,
 						expenses: {
 							typ: "per_duration",
 							rate: {
@@ -523,7 +541,7 @@ describe("mapGuidePricingFromBackend", () => {
 										up_to_pax: 15,
 										cost: {
 											val: 150,
-											currency: Currency.EUR
+											currency: ENUM_CURRENCY_BACKEND.EUR
 										}
 									}
 								]
@@ -600,14 +618,14 @@ describe("mapGuidePricingFromBackend", () => {
 										up_to_pax: 10,
 										cost: {
 											val: 100,
-											currency: Currency.USD
+											currency: ENUM_CURRENCY_BACKEND.USD
 										}
 									},
 									{
 										up_to_pax: 20,
 										cost: {
 											val: 200,
-											currency: Currency.USD
+											currency: ENUM_CURRENCY_BACKEND.USD
 										}
 									}
 								]
@@ -701,7 +719,7 @@ describe("guide converters round-trip", () => {
 		expect(write.pool?.[0]?.supply?.source).toBe("inline");
 		if (write.pool?.[0]?.supply?.source === "inline") {
 			expect(write.pool[0].supply.spec?.typ_tiers?.[0]?.typ).toBe(
-				GuideType.Local
+				ENUM_GUIDE_TYPE_BACKEND.LOCAL
 			);
 			expect(write.pool[0].supply.spec?.categories).toHaveLength(1);
 		}

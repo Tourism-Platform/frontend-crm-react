@@ -1,11 +1,11 @@
-import type { GuideDetailsWrite } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
-import { ENUM_EVENT_BACKEND } from "../../../types";
 import {
+	ENUM_EVENT_BACKEND,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_GUIDE_FORM_SECTION,
 	type TEventDetailsBackend,
+	type TGuideDetailsWriteBackend,
 	type TGuideEditSchema,
 	type TGuideSingleEventBackend,
 	type TTourEventBackendResponce,
@@ -84,7 +84,7 @@ export const mapGuideFormToUpdate = (
 		...(categories !== undefined && categories.length > 0 && { categories })
 	};
 
-	const details: GuideDetailsWrite = {
+	const details: TGuideDetailsWriteBackend = {
 		...(guidesList !== undefined && {
 			plan: { duration: mapGuidesDurationToBackend(guidesList) }
 		}),
@@ -93,7 +93,7 @@ export const mapGuideFormToUpdate = (
 			currentDetails,
 			undefined,
 			{ source: "inline", spec: inlineSpec }
-		) as GuideDetailsWrite["pool"]
+		) as TGuideDetailsWriteBackend["pool"]
 	};
 
 	return {

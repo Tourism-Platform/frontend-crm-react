@@ -7,32 +7,11 @@ import { formatToDollars } from "@/shared/utils";
 
 import { type IReconciliationTotals } from "@/entities/finance";
 
+import { RECONCILIATION_KPI_CARDS } from "../model";
+
 interface IReconciliationHeaderProps {
 	totals?: IReconciliationTotals;
 }
-
-type TTotalKey = keyof IReconciliationTotals;
-
-interface IKpiCard {
-	primaryKey: TTotalKey;
-	secondary: readonly TTotalKey[];
-}
-
-const KPI_CARDS = [
-	{
-		primaryKey: "receivable",
-		secondary: ["revenueAccrued", "revenueSettled"]
-	},
-	{
-		primaryKey: "payable",
-		secondary: ["costAccrued", "costSettled"]
-	},
-	{
-		primaryKey: "settledProfit",
-		secondary: ["accrualProfit"]
-		// tone: "profit"
-	}
-] satisfies readonly IKpiCard[];
 
 export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 	totals
@@ -44,7 +23,7 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 			<h1 className="text-3xl">{t("page_name")}</h1>
 
 			<div className="grid grid-cols-3 gap-6">
-				{KPI_CARDS.map(({ primaryKey, secondary }) => {
+				{RECONCILIATION_KPI_CARDS.map(({ primaryKey, secondary }) => {
 					const primaryValue = totals?.[primaryKey] ?? 0;
 					const isProfit = primaryKey === "settledProfit";
 

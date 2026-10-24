@@ -1,9 +1,9 @@
-import type { MenuItem } from "@/shared/api/generated/Api";
+import type { TActivityMenuItemBackend } from "@/entities/tour/itinerary/types/activity/menu-backend.types";
 
 import { ENUM_FORM_ACTIVITY_MENU, type IActivityMenuItem } from "../../types";
 
 export const mapActivityMenuItemFromBackend = (
-	item: MenuItem
+	item: TActivityMenuItemBackend
 ): IActivityMenuItem => ({
 	...(item.id ? { [ENUM_FORM_ACTIVITY_MENU.ID]: item.id } : {}),
 	[ENUM_FORM_ACTIVITY_MENU.NAME]: item.name ?? "",
@@ -11,12 +11,12 @@ export const mapActivityMenuItemFromBackend = (
 });
 
 export const mapActivityMenuFromBackend = (
-	menu?: MenuItem[] | null
+	menu?: TActivityMenuItemBackend[] | null
 ): IActivityMenuItem[] => (menu ?? []).map(mapActivityMenuItemFromBackend);
 
 export const mapActivityMenuItemToBackend = (
 	item: IActivityMenuItem
-): MenuItem => ({
+): TActivityMenuItemBackend => ({
 	...(item[ENUM_FORM_ACTIVITY_MENU.ID]
 		? { id: item[ENUM_FORM_ACTIVITY_MENU.ID] }
 		: {}),
@@ -26,7 +26,7 @@ export const mapActivityMenuItemToBackend = (
 
 export const mapActivityMenuToBackend = (
 	menu?: IActivityMenuItem[] | null
-): MenuItem[] | undefined => {
+): TActivityMenuItemBackend[] | undefined => {
 	if (!menu) {
 		return undefined;
 	}

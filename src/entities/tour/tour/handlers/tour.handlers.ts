@@ -1,13 +1,9 @@
 import { HttpResponse } from "msw";
 
 import {
-	Currency,
 	TOUR_FINANCIAL_PATHS,
 	TOUR_PATHS,
 	TRANSLATIONS_PATHS,
-	type TourListSortField,
-	type TourStatisticsResponse,
-	TourStatus,
 	createMockHandler,
 	mockImageUrl,
 	mockNoContent,
@@ -15,6 +11,8 @@ import {
 	mockValidationError,
 	toListResponse
 } from "@/shared/api";
+
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	createTour,
@@ -28,13 +26,21 @@ import {
 	setTourStatus,
 	updateTour
 } from "../mock/tour.store";
+import {
+	type ENUM_TOUR_LIST_SORT_FIELD_BACKEND_TYPE,
+	ENUM_TOUR_STATUS_BACKEND,
+	type ENUM_TOUR_STATUS_BACKEND_TYPE,
+	type TTourStatisticsResponseBackend
+} from "../types";
 
 const TOUR_NOT_FOUND = "Tour not found";
 
 const money = (value: number) => value.toFixed(2);
 
 /** Детерминированная статистика по туру: зависит только от его позиции */
-const buildTourStatistics = (tourId: string): TourStatisticsResponse => {
+const buildTourStatistics = (
+	tourId: string
+): TTourStatisticsResponseBackend => {
 	const seed = getAllTours().findIndex((tour) => tour.id === tourId) + 1;
 	const orders = seed * 3;
 	const revenue = orders * 1250;
@@ -58,7 +64,7 @@ const buildTourStatistics = (tourId: string): TourStatisticsResponse => {
 		cost_settled: money(cost * 0.4),
 		payable: money(cost * 0.2),
 		settled_profit: money(revenue * 0.5 - cost * 0.4),
-		currency: Currency.USD
+		currency: ENUM_CURRENCY_BACKEND.USD
 	};
 };
 
@@ -72,7 +78,7 @@ const withTour = (
 
 const statusHandler = (
 	endpoint: { url: string; method: string },
-	status: TourStatus
+	status: ENUM_TOUR_STATUS_BACKEND_TYPE
 ) =>
 	createMockHandler(endpoint, ({ params }) =>
 		withTour(params.tourId, (tourId) =>
@@ -88,7 +94,9 @@ export const tourHandlers = [
 					q: query.get("q"),
 					status: query.get("status"),
 					typ: query.get("typ"),
-					sortBy: query.get("sort_by") as TourListSortField | null,
+					sortBy: query.get(
+						"sort_by"
+					) as ENUM_TOUR_LIST_SORT_FIELD_BACKEND_TYPE | null,
 					desc: query.get("desc") === "true"
 				}),
 				query
@@ -106,7 +114,8 @@ export const tourHandlers = [
 		HttpResponse.json(
 			getAllTours().filter(
 				(tour) =>
-					tour.days === 1 && tour.status === TourStatus.Published
+					tour.days === 1 &&
+					tour.status === ENUM_TOUR_STATUS_BACKEND.PUBLISHED
 			)
 		)
 	),
@@ -133,9 +142,18 @@ export const tourHandlers = [
 		withTour(params.tourId, () => HttpResponse.json([]))
 	),
 
-	statusHandler(TOUR_PATHS.publishTour(":tourId"), TourStatus.Published),
-	statusHandler(TOUR_PATHS.archiveTour(":tourId"), TourStatus.Archived),
-	statusHandler(TOUR_PATHS.unarchiveTour(":tourId"), TourStatus.Draft),
+	statusHandler(
+		TOUR_PATHS.publishTour(":tourId"),
+		ENUM_TOUR_STATUS_BACKEND.PUBLISHED
+	),
+	statusHandler(
+		TOUR_PATHS.archiveTour(":tourId"),
+		ENUM_TOUR_STATUS_BACKEND.ARCHIVED
+	),
+	statusHandler(
+		TOUR_PATHS.unarchiveTour(":tourId"),
+		ENUM_TOUR_STATUS_BACKEND.DRAFT
+	),
 
 	createMockHandler(
 		TOUR_PATHS.refreshTourProjection(":tourId"),

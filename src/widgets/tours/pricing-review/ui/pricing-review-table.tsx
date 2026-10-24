@@ -9,18 +9,17 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { type ITourReviewItem, TOUR_PACKAGE_CREATE_ID } from "@/entities/tour";
 
-import { PRICING_REVIEW_COLUMNS, filterReviewItemsByName } from "../model";
+import {
+	PRICING_REVIEW_COLUMNS,
+	PRICING_REVIEW_TABLE_LAYOUT,
+	filterReviewItemsByName
+} from "../model";
 
 interface IPricingReviewTableProps {
 	items: ITourReviewItem[];
 	tourId: string;
 	optionId: string;
 }
-
-const TABLE_LAYOUT = {
-	rowBorder: true,
-	headerBackground: false
-};
 
 const getSubRowsFn = (row: ITourReviewItem) => row.subRows;
 
@@ -85,7 +84,7 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 					columns={columns}
 					getSubRows={getSubRowsFn}
 					actions={actionsJsx}
-					tableLayout={TABLE_LAYOUT}
+					tableLayout={PRICING_REVIEW_TABLE_LAYOUT}
 					showPagination={false}
 					pagination={pagination}
 					showStatusFilter={false}

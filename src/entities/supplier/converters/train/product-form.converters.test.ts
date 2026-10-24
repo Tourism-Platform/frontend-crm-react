@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
-import { LanguageCode } from "@/shared/api";
 import { ENUM_LANGUAGES } from "@/shared/config";
 
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
+
+import { emptyTrainHopFormRow } from "../../lib/hop-form-row";
+
 import {
-	emptyHopFormRow,
 	mapTrainProductGeneralToCreate,
 	mapTrainProductToGeneralForm
 } from "./product-form.converters";
@@ -44,7 +46,7 @@ describe("mapTrainProductGeneralToCreate", () => {
 			lat: 41.29,
 			long: 69.28,
 			city: "Tashkent",
-			lang: LanguageCode.En
+			lang: ENUM_LANGUAGES_BACKEND.ENGLISH
 		});
 	});
 
@@ -71,7 +73,7 @@ describe("mapTrainProductToGeneralForm", () => {
 	it("maps product to empty form when product is missing", () => {
 		expect(mapTrainProductToGeneralForm(null)).toEqual({
 			name: "",
-			hops: [emptyHopFormRow()]
+			hops: [emptyTrainHopFormRow()]
 		});
 	});
 });

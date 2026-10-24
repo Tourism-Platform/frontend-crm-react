@@ -81,8 +81,7 @@ export const LibraryTransferEditPage: FC = () => {
 		data: isCreate
 			? undefined
 			: (libraryEvent as TTransportationEditSchema | undefined),
-		recordKey: `${libraryId}:${supplyId ?? "main"}`,
-		currentDetails: libraryTemplate?.event.details
+		recordKey: `${libraryId}:${supplyId ?? "main"}`
 	});
 
 	useEffect(() => {

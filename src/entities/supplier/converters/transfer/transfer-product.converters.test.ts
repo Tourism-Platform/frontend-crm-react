@@ -1,13 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { Currency, VehicleBodyType } from "@/shared/api";
-
 import { DEFAULT_EVENT_CURRENCY } from "@/entities/commission";
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 
 import {
 	ENUM_SUPPLIER_VARIANT_CHARGE,
 	ENUM_TRANSFER_PRICING,
-	ENUM_VEHICLE_BODY_TYPE
+	ENUM_VEHICLE_BODY_TYPE,
+	ENUM_VEHICLE_BODY_TYPE_BACKEND
 } from "../../types";
 
 import {
@@ -21,13 +21,13 @@ describe("mapTransferVariantFromBackend", () => {
 			mapTransferVariantFromBackend({
 				id: "v1",
 				name: "Sedan",
-				body_type: VehicleBodyType.Sedan,
+				body_type: ENUM_VEHICLE_BODY_TYPE_BACKEND.SEDAN,
 				pax: 3,
 				description: null,
 				images: [],
 				charge: {
 					typ: "fixed",
-					cost: { val: 40, currency: Currency.USD },
+					cost: { val: 40, currency: ENUM_CURRENCY_BACKEND.USD },
 					fees: null,
 					extra_costs: [],
 					markup: null
@@ -49,7 +49,7 @@ describe("mapTransferVariantFromBackend", () => {
 			mapTransferVariantFromBackend({
 				id: "v1",
 				name: "Sedan",
-				body_type: VehicleBodyType.Sedan,
+				body_type: ENUM_VEHICLE_BODY_TYPE_BACKEND.SEDAN,
 				pax: 3,
 				description: null,
 				images: [],
@@ -61,7 +61,7 @@ describe("mapTransferVariantFromBackend", () => {
 							typ: "fixed",
 							cost: {
 								val: 30,
-								currency: Currency.USD
+								currency: ENUM_CURRENCY_BACKEND.USD
 							},
 							fees: null,
 							extra_costs: [],

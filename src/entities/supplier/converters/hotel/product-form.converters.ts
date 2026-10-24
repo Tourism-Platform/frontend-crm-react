@@ -1,10 +1,14 @@
-import { LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
 	mapBackendLocationToGeoForm,
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
+
+import {
+	ENUM_LANGUAGES_BACKEND,
+	type ENUM_LANGUAGES_BACKEND_TYPE
+} from "@/entities/tour/landing/types/languages.types";
 
 import {
 	ENUM_FORM_HOTEL_PRODUCT,
@@ -20,8 +24,10 @@ import {
 import { hotelAmenityConverter } from "./amenity.converters";
 import { mapHotelPolicyToBackend } from "./policy.converters";
 
-const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
-	languageCodeMapper.to(language) ?? LanguageCode.En;
+const resolveLang = (
+	language?: ENUM_LANGUAGES_TYPE
+): ENUM_LANGUAGES_BACKEND_TYPE =>
+	languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 
 export const mapHotelProductToGeneralForm = (
 	product?: IHotelProduct | null
@@ -52,7 +58,7 @@ const buildPolicyFromForm = (
 export const mapGeneralFormToDetailsBackend = (
 	values: THotelProductGeneralSchema,
 	existing: IHotelProduct | null | undefined,
-	lang: LanguageCode
+	lang: ENUM_LANGUAGES_BACKEND_TYPE
 ): THotelProductDetailsBackend => {
 	const base = {
 		name: values[ENUM_FORM_HOTEL_PRODUCT.NAME],

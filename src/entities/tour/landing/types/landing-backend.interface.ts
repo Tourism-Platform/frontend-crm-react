@@ -1,5 +1,6 @@
 import type {
 	LandingPagePubSchema,
+	LandingPageUpdate,
 	TOUR_LANDING_PAGE_PATHS
 } from "@/shared/api";
 
@@ -28,3 +29,4 @@ export type TListLandingImagesBackendResponse = ReturnType<
 export type TUpdateLandingImageBackendBody = ReturnType<
 	typeof TOUR_LANDING_PAGE_PATHS.updateLandingPage
 >["_types"]["body"];
+export type TLandingPageUpdateBackend = LandingPageUpdate;

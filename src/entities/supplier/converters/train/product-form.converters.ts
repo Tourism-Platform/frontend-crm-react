@@ -1,4 +1,3 @@
-import { LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
@@ -7,6 +6,12 @@ import {
 } from "@/shared/converters";
 import type { TGeoFormValue } from "@/shared/types/geo-form.types";
 
+import {
+	ENUM_LANGUAGES_BACKEND,
+	type ENUM_LANGUAGES_BACKEND_TYPE
+} from "@/entities/tour/landing/types/languages.types";
+
+import { emptyTrainHopFormRow } from "../../lib/hop-form-row";
 import {
 	ENUM_FORM_TRAIN_PRODUCT as ENUM_FORM,
 	ENUM_FORM_TRAIN_HOP as ENUM_HOP,
@@ -23,13 +28,10 @@ import {
 
 import { mapTrainVariantChargeToBackend } from "./product.converters";
 
-const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
-	languageCodeMapper.to(language) ?? LanguageCode.En;
-
-export const emptyHopFormRow = (): TTrainHopFormSchema => ({
-	[ENUM_HOP.DEPARTURE_STATION]: null,
-	[ENUM_HOP.ARRIVAL_STATION]: null
-});
+const resolveLang = (
+	language?: ENUM_LANGUAGES_TYPE
+): ENUM_LANGUAGES_BACKEND_TYPE =>
+	languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 
 const mapHopDomainToForm = (hop: ITrainHop): TTrainHopFormSchema => ({
 	[ENUM_HOP.DEPARTURE_STATION]: mapBackendLocationToGeoForm(
@@ -46,19 +48,19 @@ export const mapTrainProductToGeneralForm = (
 	[ENUM_FORM.NAME]: product?.name ?? "",
 	[ENUM_FORM.HOPS]: product?.hops?.length
 		? product.hops.map(mapHopDomainToForm)
-		: [emptyHopFormRow()]
+		: [emptyTrainHopFormRow()]
 });
 
 const mapHopPointToBackend = (
 	location: TGeoFormValue | null | undefined,
-	lang: LanguageCode
+	lang: ENUM_LANGUAGES_BACKEND_TYPE
 ): TTrainLegInputBackend["departure"] => ({
 	location: mapGeoFormToBackendLocation(location, lang)
 });
 
 const mapHopFormToBackend = (
 	hop: TTrainHopFormSchema,
-	lang: LanguageCode
+	lang: ENUM_LANGUAGES_BACKEND_TYPE
 ): TTrainLegInputBackend => ({
 	departure: mapHopPointToBackend(hop[ENUM_HOP.DEPARTURE_STATION], lang),
 	arrival: mapHopPointToBackend(hop[ENUM_HOP.ARRIVAL_STATION], lang)

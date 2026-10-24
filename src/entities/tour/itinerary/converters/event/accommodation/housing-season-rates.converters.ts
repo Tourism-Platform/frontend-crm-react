@@ -1,21 +1,17 @@
-import type { RoomSeasonOutput } from "@/shared/api";
+import { mapHotelRoomChargeFromBackend } from "@/entities/supplier";
+import type { IHotelRoomRate } from "@/entities/supplier/types/hotel/rooms.types";
 
+import type {
+	IProductSeasonRateRow,
+	TEventDetailsBackend,
+	TRoomSeasonOutputBackend
+} from "../../../types";
 import {
-	type IHotelRoomRate,
-	mapHotelRoomChargeFromBackend
-} from "@/entities/supplier";
-import {
-	type TEventDetailsBackend,
 	getPoolMember,
 	isProductPoolMember
-} from "@/entities/tour";
+} from "../common/event-pool.helpers";
 
-export interface IProductSeasonRateRow {
-	roomLabel: string;
-	rates: IHotelRoomRate[];
-}
-
-const mapSeasonToRate = (season: RoomSeasonOutput): IHotelRoomRate => ({
+const mapSeasonToRate = (season: TRoomSeasonOutputBackend): IHotelRoomRate => ({
 	fromDate: season.from_date,
 	toDate: season.to_date,
 	expenses: mapHotelRoomChargeFromBackend(season.charge)
@@ -27,7 +23,7 @@ const mapSeasonToRate = (season: RoomSeasonOutput): IHotelRoomRate => ({
  * Contract 6: the pool member `spec` is already scoped by the backend — read the
  * scoped per-room spec directly, never re-filter units by scope here.
  */
-export const mapSeasonRatesFromHousingDetails = (
+export const mapHousingSeasonRatesToFrontend = (
 	details: TEventDetailsBackend | undefined
 ): IProductSeasonRateRow[] => {
 	const member = getPoolMember(details);

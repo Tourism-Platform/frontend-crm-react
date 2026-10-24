@@ -1,8 +1,9 @@
 import {
 	ENUM_EVENT,
-	type ENUM_EVENT_BACKEND_TYPE,
 	type ITourEventCreate,
-	backendEventTypeMapper,
+	eventBoardTypeMapper,
+	eventKindMapper,
+	isEventBackendTyp,
 	mapEventDetailsReadToWrite
 } from "@/entities/tour/itinerary";
 
@@ -27,7 +28,10 @@ export const mapLibraryTemplateToCreateEvent = (
 	position: number
 ): ITourEventCreate => {
 	const event = template.event;
-	const backendTyp = event.typ as ENUM_EVENT_BACKEND_TYPE;
+	if (!isEventBackendTyp(event.typ)) {
+		throw new Error("Unexpected event typ");
+	}
+	const backendTyp = event.typ;
 
 	return {
 		name: event.name ?? "",
@@ -35,7 +39,8 @@ export const mapLibraryTemplateToCreateEvent = (
 		day,
 		position,
 		eventType:
-			backendEventTypeMapper.to(backendTyp) ?? ENUM_EVENT.TRANSPORTATION,
+			eventBoardTypeMapper.to(eventKindMapper.from(backendTyp)) ??
+			ENUM_EVENT.TRANSPORTATION,
 		backendTyp,
 		details: mapEventDetailsReadToWrite(backendTyp, event.details)
 	};

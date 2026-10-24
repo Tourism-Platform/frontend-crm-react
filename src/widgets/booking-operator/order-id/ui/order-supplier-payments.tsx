@@ -20,18 +20,13 @@ import {
 	useGetSupplierPaymentsQuery
 } from "@/entities/finance";
 
-import { SUPPLIER_PAYMENTS_COLUMNS } from "../model";
+import { ORDER_TABLE_LAYOUT, SUPPLIER_PAYMENTS_COLUMNS } from "../model";
 
 import { SelectionProgress } from "./selection-progress";
 
 interface IOrderSupplierPaymentsProps {
 	bookingId: string;
 }
-
-const TABLE_LAYOUT = {
-	rowBorder: true,
-	headerBackground: false
-};
 
 const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 	bookingId
@@ -144,7 +139,7 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 					showTopFilters
 					showStatusFilter={false}
 					showVisibilityFilter
-					tableLayout={TABLE_LAYOUT}
+					tableLayout={ORDER_TABLE_LAYOUT}
 				/>
 			</CardContent>
 		</Card>

@@ -5,7 +5,7 @@ import { useDebounce } from "@/shared/hooks";
 import type { ENUM_EVENT_TYPE } from "@/entities/tour/itinerary";
 
 import { useListEventLibraryInfiniteQuery } from "../api";
-import { getEventLibraryFilterKey } from "../converters";
+import { getEventLibraryFilterKey } from "../lib";
 import type { IEventLibraryItem } from "../types";
 
 const DEFAULT_LIMIT = 20;

@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 
-import { TourListSortField, TourType } from "@/shared/api";
+import {
+	ENUM_TOUR_LIST_SORT,
+	ENUM_TOUR_LIST_SORT_FIELD_BACKEND,
+	ENUM_TOUR_TYPES,
+	ENUM_TOUR_TYPE_BACKEND
+} from "../types";
 
-import { ENUM_TOUR_LIST_SORT, ENUM_TOUR_TYPES } from "../types";
-
-import { mapTourFiltersToBackend } from "./tour-common.converts";
+import { mapTourFiltersToBackend } from "./tour-common.converters";
 
 const BASE = { page: 1, limit: 10, search: "", status: [] };
 
@@ -23,12 +26,15 @@ describe("mapTourFiltersToBackend", () => {
 				...BASE,
 				sort: ENUM_TOUR_LIST_SORT.TITLE_DESC
 			})
-		).toMatchObject({ sort_by: TourListSortField.Title, desc: true });
+		).toMatchObject({
+			sort_by: ENUM_TOUR_LIST_SORT_FIELD_BACKEND.TITLE,
+			desc: true
+		});
 	});
 
 	it("maps tour type", () => {
 		expect(
 			mapTourFiltersToBackend({ ...BASE, type: ENUM_TOUR_TYPES.GROUP })
-		).toMatchObject({ typ: TourType.Regular });
+		).toMatchObject({ typ: ENUM_TOUR_TYPE_BACKEND.REGULAR });
 	});
 });

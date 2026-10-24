@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { LoaderButton, withErrorBoundary } from "@/shared/ui";
 
-import { ENUM_EVENT_BACKEND } from "@/entities/tour";
+import { ENUM_EVENT_KIND } from "@/entities/tour";
 
 import { EventPoolControls, type TEventPoolUiProps } from "@/features/tours";
 
@@ -26,7 +26,7 @@ const ItemsInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 				form={form}
 				variant={poolVariant}
 				onSelect={onPoolSelect}
-				eventTyp={ENUM_EVENT_BACKEND.SUPPLEMENTARY}
+				eventKind={ENUM_EVENT_KIND.SUPPLEMENTARY}
 			/>
 			<ItemsDetails form={form} />
 

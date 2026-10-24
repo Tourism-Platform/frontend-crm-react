@@ -110,7 +110,3 @@ export const OPERATOR_PAYMENT_SETTINGS_SCHEMA = z.discriminatedUnion(
 	ENUM_FORM_OPERATOR_PAYMENT_SETTINGS.METHOD_TYPE,
 	[baseSchema.merge(classicSwiftSchema), baseSchema.merge(wiseSchema)]
 );
-
-export type TOperatorPayoutDetailsSchema = z.infer<
-	typeof OPERATOR_PAYMENT_SETTINGS_SCHEMA
->;

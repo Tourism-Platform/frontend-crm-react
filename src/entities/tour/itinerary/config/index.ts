@@ -1,4 +1,5 @@
-export * from "./event-backend-type.config";
+export * from "./event-kind.config";
+export * from "./flight-transport-type.config";
 export * from "./transfer-type.config";
 export * from "./vehicle-body-type.config";
 export * from "./housing-room-type.config";

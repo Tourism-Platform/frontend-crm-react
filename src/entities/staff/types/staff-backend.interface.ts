@@ -2,7 +2,10 @@ import {
 	OPERATOR_STAFF_PATHS,
 	PERMISSIONS_PATHS,
 	PERMISSION_GROUPS_PATHS,
-	type StaffRead
+	type PermissionGroupRead,
+	type StaffInvite,
+	type StaffRead,
+	type StaffUpdate
 } from "@/shared/api";
 
 export type TListStaffBackendResponse =
@@ -40,3 +43,6 @@ export type TPermissionCatalogBackend =
 
 export type TPermissionGroupListBackend =
 	typeof PERMISSION_GROUPS_PATHS.listPermissionGroups._types.response;
+export type TPermissionGroupReadBackend = PermissionGroupRead;
+export type TStaffInviteBackend = StaffInvite;
+export type TStaffUpdateBackend = StaffUpdate;

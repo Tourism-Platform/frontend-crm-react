@@ -1,19 +1,20 @@
-import type { HousingDetailsOutput } from "@/shared/api";
 import { mapBackendLocationToGeoForm } from "@/shared/converters";
 
 import {
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_ROOMS,
 	ENUM_HOUSING_SOURCE,
+	type THousingDetailsOutputBackend,
 	type TRoomsSchema
 } from "../../../types";
 import { accommodationAmenityConverter } from "../accommodation";
 
-import type {
-	TEventPoolMemberBackend,
-	TProductPoolMemberBackend
+import {
+	type TEventPoolMemberBackend,
+	type TProductPoolMemberBackend,
+	getPoolMember,
+	isProductPoolMember
 } from "./event-pool.helpers";
-import { getPoolMember, isProductPoolMember } from "./event-pool.helpers";
 
 type TProductScope = TProductPoolMemberBackend["supply"]["scope"];
 
@@ -52,7 +53,7 @@ export const mapInheritedProductLinkToForm = (
  * the backend already returns SCOPED. Never re-filter by scope here.
  */
 export const mapInheritedHousingProductSnapshotToForm = (
-	details: HousingDetailsOutput,
+	details: THousingDetailsOutputBackend,
 	supplyId?: string | null
 ): {
 	property: ReturnType<typeof mapBackendLocationToGeoForm>;

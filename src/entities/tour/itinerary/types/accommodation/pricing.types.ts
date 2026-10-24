@@ -1,5 +1,8 @@
+import type { z } from "zod";
+
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
+import type { ACCOMMODATION_PRICING_SCHEMA } from "../../schema/accommodation/pricing.schema";
 import type { IFeeFormRow } from "../fee.types";
 
 export const ENUM_ACCOMMODATION_PRICING_INVOICING = {
@@ -125,3 +128,7 @@ export interface IAccommodationPerRoomCategoryExpenses {
 	typ: typeof ENUM_ACCOMMODATION_EXPENSE_TYP.PER_ROOM_CATEGORY;
 	[ENUM_ACCOMMODATION_PER_ROOM_EXPENSES_FIELD.ROOMS]: IAccommodationPerRoomByClassPriceRow[];
 }
+
+export type TAccommodationPricingSchema = z.infer<
+	typeof ACCOMMODATION_PRICING_SCHEMA
+>;

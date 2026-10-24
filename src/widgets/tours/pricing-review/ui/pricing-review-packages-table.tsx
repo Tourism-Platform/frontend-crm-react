@@ -11,17 +11,15 @@ import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { TOUR_PACKAGE_CREATE_ID, useListPackagesQuery } from "@/entities/tour";
 
-import { PRICING_REVIEW_PACKAGE_COLUMNS } from "../model";
+import {
+	PRICING_REVIEW_PACKAGE_COLUMNS,
+	PRICING_REVIEW_TABLE_LAYOUT
+} from "../model";
 
 interface IPricingReviewPackagesTableProps {
 	tourId: string;
 	optionId: string;
 }
-
-const TABLE_LAYOUT = {
-	rowBorder: true,
-	headerBackground: false
-};
 
 const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 	tourId,
@@ -100,7 +98,7 @@ const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 					actions={actionsJsx}
 					isLoading={isLoading || isFetching}
 					loadingMode="skeleton"
-					tableLayout={TABLE_LAYOUT}
+					tableLayout={PRICING_REVIEW_TABLE_LAYOUT}
 					showPagination={false}
 					pagination={pagination}
 					showStatusFilter={false}

@@ -116,5 +116,3 @@ export const ACTIVITY_PRICING_SCHEMA = z
 
 		validateFlatOrPerPersonPricing(data, ctx);
 	});
-
-export type TActivityPricingSchema = z.infer<typeof ACTIVITY_PRICING_SCHEMA>;

@@ -1,7 +1,8 @@
 import { LanguageCode } from "@/shared/api/generated/Api";
 import {
 	ENUM_LANGUAGES,
-	type ENUM_LANGUAGES_TYPE
+	type ENUM_LANGUAGES_TYPE,
+	i18nLanguageMapper
 } from "@/shared/config/languages";
 import { createEnumMapper } from "@/shared/utils";
 
@@ -37,3 +38,12 @@ export const mapOrderLangQueryToBackend = (
 
 	return { lang: languageCodeMapper.to(language) ?? LanguageCode.En };
 };
+
+/**
+ * Локаль i18next (`i18n.language`) → `LanguageCode`.
+ * UI передаёт локаль как есть; обе ступени (локаль → язык приложения → код бэка) — только здесь.
+ */
+export const mapLocaleToLanguageCode = (locale?: string): LanguageCode =>
+	languageCodeMapper.to(
+		(locale && i18nLanguageMapper.to(locale)) || ENUM_LANGUAGES.EN
+	) ?? LanguageCode.En;

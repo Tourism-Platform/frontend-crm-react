@@ -1,11 +1,10 @@
-import type { SupplementaryDetailsWrite } from "@/shared/api";
-
 import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_SUPPLEMENT_FORM_SECTION as ENUM_FORM_SECTION,
 	type TEventDetailsBackend,
 	type TSupplementEditSchema,
+	type TSupplementaryDetailsWriteBackend,
 	type TSupplementarySingleEventBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
@@ -66,13 +65,13 @@ export const mapSupplementaryFormToUpdate = (
 		})
 	};
 
-	const details: SupplementaryDetailsWrite = {
+	const details: TSupplementaryDetailsWriteBackend = {
 		pool: mapInlinePoolWrite(
 			ENUM_EVENT_BACKEND.SUPPLEMENTARY,
 			currentDetails,
 			undefined,
 			{ source: "inline", spec: inlineSpec }
-		) as SupplementaryDetailsWrite["pool"]
+		) as TSupplementaryDetailsWriteBackend["pool"]
 	};
 
 	return {

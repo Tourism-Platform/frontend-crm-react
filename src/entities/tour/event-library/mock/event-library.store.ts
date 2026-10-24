@@ -1,7 +1,3 @@
-import type {
-	EventLibraryResponse,
-	TourEventLibraryImageModel
-} from "@/shared/api";
 import {
 	createMockId,
 	createMockIdSequence,
@@ -17,8 +13,13 @@ import {
 } from "@/entities/tour/itinerary/mock/event-details.mock";
 import { TOUR_EVENTS_MOCK } from "@/entities/tour/itinerary/mock/itinerary.mock";
 
+import type {
+	TEventLibraryImageBackend,
+	TEventLibraryItemBackend
+} from "../types";
+
 /** Шаблоны: по одному событию каждого типа из маршрута первой опции */
-const LIBRARY_SEED: EventLibraryResponse[] = (() => {
+const LIBRARY_SEED: TEventLibraryItemBackend[] = (() => {
 	const seen = new Set<string>();
 	const templates: TEventOptionMock[] = [];
 
@@ -47,14 +48,14 @@ const LIBRARY_SEED: EventLibraryResponse[] = (() => {
 			},
 			image_paths: [imagePath],
 			primary_image_path: imagePath
-		} as EventLibraryResponse;
+		} as TEventLibraryItemBackend;
 	});
 })();
 
 const createLibraryStore = () =>
 	new Map(LIBRARY_SEED.map((item) => [item.id, structuredClone(item)]));
 const createImageStore = () =>
-	new Map<string, TourEventLibraryImageModel[]>(
+	new Map<string, TEventLibraryImageBackend[]>(
 		LIBRARY_SEED.map((item, index) => [
 			item.id,
 			item.image_paths.map((imagePath) => ({
@@ -95,7 +96,7 @@ const saveLibraryEvent = (
 		event: option,
 		image_paths: [],
 		primary_image_path: null
-	} as unknown as EventLibraryResponse;
+	} as unknown as TEventLibraryItemBackend;
 	libraryStore.set(item.id, item);
 	imageStore.set(item.id, []);
 	return item;
@@ -114,7 +115,7 @@ export const updateLibraryEvent = (libraryId: string, body: unknown) => {
 	item.event = normalizeEventOption(
 		body,
 		item.event.id
-	) as EventLibraryResponse["event"];
+	) as TEventLibraryItemBackend["event"];
 	return item;
 };
 
@@ -123,7 +124,7 @@ export const deleteLibraryEvent = (libraryId: string) => {
 	return libraryStore.delete(libraryId);
 };
 
-const syncImages = (item: EventLibraryResponse) => {
+const syncImages = (item: TEventLibraryItemBackend) => {
 	const images = imageStore.get(item.id) ?? [];
 	item.image_paths = images.map((image) => image.image_path);
 	item.primary_image_path =
@@ -133,7 +134,10 @@ const syncImages = (item: EventLibraryResponse) => {
 export const listLibraryImages = (libraryId: string) =>
 	imageStore.get(libraryId) ?? [];
 
-export const addLibraryImages = (item: EventLibraryResponse, count: number) => {
+export const addLibraryImages = (
+	item: TEventLibraryItemBackend,
+	count: number
+) => {
 	const images = imageStore.get(item.id) ?? [];
 	const hadImages = images.length > 0;
 	const created = Array.from({ length: Math.max(count, 1) }, (_, index) => {
@@ -152,7 +156,7 @@ export const addLibraryImages = (item: EventLibraryResponse, count: number) => {
 };
 
 export const deleteLibraryImage = (
-	item: EventLibraryResponse,
+	item: TEventLibraryItemBackend,
 	imageId: string
 ) => {
 	const images = imageStore.get(item.id) ?? [];
@@ -166,7 +170,7 @@ export const deleteLibraryImage = (
 };
 
 export const setPrimaryLibraryImage = (
-	item: EventLibraryResponse,
+	item: TEventLibraryItemBackend,
 	imageId: string
 ) => {
 	const images = imageStore.get(item.id) ?? [];

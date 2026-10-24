@@ -1,10 +1,7 @@
 import { HttpResponse } from "msw";
 
 import {
-	type PublicTourCatalogSchemaOutput,
-	SuggestKind,
 	TOUR_CATALOG_PATHS,
-	TourCatalogSort,
 	createMockHandler,
 	getQueryList,
 	matchesQuery,
@@ -17,22 +14,29 @@ import {
 	listPublishedTours,
 	toCatalogTour
 } from "../mock";
+import {
+	ENUM_SUGGEST_KIND_BACKEND,
+	ENUM_TOUR_CATALOG_SORT_BACKEND,
+	type ENUM_TOUR_CATALOG_SORT_BACKEND_TYPE,
+	type TPublicTourCatalogSchemaOutputBackend
+} from "../types";
 
-const pricePerPerson = (tour: PublicTourCatalogSchemaOutput) =>
+const pricePerPerson = (tour: TPublicTourCatalogSchemaOutputBackend) =>
 	tour.price_per_person?.min ?? 0;
 
 const SORTERS: Record<
-	TourCatalogSort,
+	ENUM_TOUR_CATALOG_SORT_BACKEND_TYPE,
 	(
-		a: PublicTourCatalogSchemaOutput,
-		b: PublicTourCatalogSchemaOutput
+		a: TPublicTourCatalogSchemaOutputBackend,
+		b: TPublicTourCatalogSchemaOutputBackend
 	) => number
 > = {
-	[TourCatalogSort.PriceAsc]: (a, b) => pricePerPerson(a) - pricePerPerson(b),
-	[TourCatalogSort.PriceDesc]: (a, b) =>
+	[ENUM_TOUR_CATALOG_SORT_BACKEND.PRICE_ASC]: (a, b) =>
+		pricePerPerson(a) - pricePerPerson(b),
+	[ENUM_TOUR_CATALOG_SORT_BACKEND.PRICE_DESC]: (a, b) =>
 		pricePerPerson(b) - pricePerPerson(a),
-	[TourCatalogSort.DurationAsc]: (a, b) => a.days - b.days,
-	[TourCatalogSort.DurationDesc]: (a, b) => b.days - a.days
+	[ENUM_TOUR_CATALOG_SORT_BACKEND.DURATION_ASC]: (a, b) => a.days - b.days,
+	[ENUM_TOUR_CATALOG_SORT_BACKEND.DURATION_DESC]: (a, b) => b.days - a.days
 };
 
 const listCatalog = (query: URLSearchParams) => {
@@ -42,7 +46,9 @@ const listCatalog = (query: URLSearchParams) => {
 	const languages = getQueryList(query, "tour_lang");
 	const daysMin = Number(query.get("duration_days_min") ?? 0);
 	const daysMax = Number(query.get("duration_days_max") ?? Infinity);
-	const sort = query.get("sort") as TourCatalogSort | null;
+	const sort = query.get(
+		"sort"
+	) as ENUM_TOUR_CATALOG_SORT_BACKEND_TYPE | null;
 
 	const tours = listPublishedTours()
 		.filter((tour) => {
@@ -97,17 +103,17 @@ export const tourCatalogHandlers = [
 		const suggestions = [
 			...unique(routes.map(([city]) => city)).map((city) => ({
 				value: city,
-				kind: SuggestKind.City,
+				kind: ENUM_SUGGEST_KIND_BACKEND.CITY,
 				city
 			})),
 			...unique(routes.map(([, country]) => country)).map((country) => ({
 				value: country,
-				kind: SuggestKind.Country,
+				kind: ENUM_SUGGEST_KIND_BACKEND.COUNTRY,
 				city: null
 			})),
 			...CATALOG_PLACES_MOCK.map(([place, city]) => ({
 				value: place,
-				kind: SuggestKind.Place,
+				kind: ENUM_SUGGEST_KIND_BACKEND.PLACE,
 				city
 			}))
 		].filter((item) => matchesQuery(q, item.value));

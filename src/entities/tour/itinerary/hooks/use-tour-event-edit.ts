@@ -3,7 +3,11 @@ import { useState } from "react";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 
-import { useGetTourEventQuery, useUpdateOptionMutation } from "../api";
+import {
+	useEventAutosaveParts,
+	useGetTourEventQuery,
+	useUpdateOptionMutation
+} from "../api";
 import {
 	ENUM_EVENT_MODE,
 	type ENUM_EVENT_TYPE,
@@ -58,6 +62,15 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 		}).unwrap();
 	};
 
+	const getAutosaveParts = useEventAutosaveParts<T>({
+		type,
+		tourId,
+		optionId,
+		eventId,
+		eventOptionId: resolvedEventOptionId,
+		details: data?.details
+	});
+
 	return {
 		data: data?.form as T | undefined,
 		details: data?.details,
@@ -70,6 +83,7 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 		selectPoolMember: setSupplyId,
 		isError,
 		isLoading: isUpdateLoading,
-		update
+		update,
+		getAutosaveParts
 	};
 };

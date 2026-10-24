@@ -1,15 +1,11 @@
 import type {
-	ActivityOverrideInput,
-	ActivityOverrideOutput
-} from "@/shared/api";
+	TActivityOverrideInputBackend,
+	TActivityOverrideOutputBackend
+} from "../../../types";
 
-/**
- * Activity override READ (contract 6): Output → Input. Activity prices only
- * per offering — there is no whole arm.
- */
 export const mapActivityOverrideFromBackend = (
-	override?: ActivityOverrideOutput | null
-): ActivityOverrideInput | null => {
+	override?: TActivityOverrideOutputBackend | null
+): TActivityOverrideInputBackend | null => {
 	if (!override) {
 		return null;
 	}

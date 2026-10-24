@@ -1,4 +1,3 @@
-import { LanguageCode } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	languageCodeMapper,
@@ -6,6 +5,12 @@ import {
 	mapGeoFormToBackendLocation
 } from "@/shared/converters";
 
+import {
+	ENUM_LANGUAGES_BACKEND,
+	type ENUM_LANGUAGES_BACKEND_TYPE
+} from "@/entities/tour/landing/types/languages.types";
+
+import { emptyFlightHopFormRow } from "../../lib/hop-form-row";
 import {
 	ENUM_FLIGHT_PRICING,
 	ENUM_FORM_FLIGHT_PRODUCT as ENUM_FORM,
@@ -22,8 +27,10 @@ import {
 
 import { mapFlightVariantChargeToBackend } from "./product.converters";
 
-const resolveLang = (language?: ENUM_LANGUAGES_TYPE): LanguageCode =>
-	languageCodeMapper.to(language) ?? LanguageCode.En;
+const resolveLang = (
+	language?: ENUM_LANGUAGES_TYPE
+): ENUM_LANGUAGES_BACKEND_TYPE =>
+	languageCodeMapper.to(language) ?? ENUM_LANGUAGES_BACKEND.ENGLISH;
 
 const emptyToNull = (value: string): string | null => {
 	const trimmed = value.trim();
@@ -36,17 +43,6 @@ const parseFlightNumber = (value: string): number | null => {
 	const parsed = Number(trimmed);
 	return Number.isFinite(parsed) ? parsed : null;
 };
-
-export const emptyHopFormRow = (): TFlightHopFormSchema => ({
-	[ENUM_HOP.AIRLINE_CODE]: "",
-	[ENUM_HOP.FLIGHT_NUMBER]: "",
-	[ENUM_HOP.DEPARTURE_AIRPORT_CODE]: "",
-	[ENUM_HOP.ARRIVAL_AIRPORT_CODE]: "",
-	[ENUM_HOP.DEPARTURE_LOCATION]: null,
-	[ENUM_HOP.ARRIVAL_LOCATION]: null,
-	[ENUM_HOP.DEPARTURE_TERMINAL]: "",
-	[ENUM_HOP.DEPARTURE_GATE]: ""
-});
 
 const mapHopDomainToForm = (hop: IFlightHop): TFlightHopFormSchema => ({
 	[ENUM_HOP.AIRLINE_CODE]: hop.airlineCode ?? "",
@@ -70,12 +66,12 @@ export const mapFlightProductToGeneralForm = (
 	[ENUM_FORM.NAME]: product?.name ?? "",
 	[ENUM_FORM.HOPS]: product?.hops?.length
 		? product.hops.map(mapHopDomainToForm)
-		: [emptyHopFormRow()]
+		: [emptyFlightHopFormRow()]
 });
 
 const mapHopFormToBackend = (
 	hop: TFlightHopFormSchema,
-	lang: LanguageCode
+	lang: ENUM_LANGUAGES_BACKEND_TYPE
 ): TFlightLegInputBackend => ({
 	airline_code:
 		emptyToNull(hop[ENUM_HOP.AIRLINE_CODE] ?? "")?.toUpperCase() ?? null,

@@ -7,3 +7,4 @@ export * from "./staff-access.interface";
 export * from "./staff-backend.interface";
 export * from "./staff-invite-form.types";
 export * from "./staff-edit-form.types";
+export * from "./staff-backend-enum.types";

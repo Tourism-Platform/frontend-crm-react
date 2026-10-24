@@ -1,21 +1,18 @@
-import type { SupplierPaymentListRowOutput } from "@/shared/api/generated/Api";
-
-import { supplierPaymentStatusConverter } from "../converters/supplier-payment-status.converter";
-import { ENUM_SUPPLIER_PAYMENT_STATUS } from "../types";
-import type {
-	TSupplierPaymentBackend,
-	TSupplierPaymentListResponseInput,
-	TSupplierPaymentStatusCounts,
-	TUpdateSupplierPaymentBackend
+import {
+	ENUM_SUPPLIER_PAYMENT_STATUS,
+	ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND,
+	type TSupplierPaymentBackend,
+	type TSupplierPaymentListResponseInput,
+	type TSupplierPaymentListRowOutputBackend,
+	type TSupplierPaymentStatusCounts,
+	type TUpdateSupplierPaymentBackend
 } from "../types";
 
 import { getSupplierPaymentMockDisplay } from "./supplier-payment.mock-display";
 import { MOCK_RECEIPT_URL } from "./supplier-payment.mock.constants";
 import { createSupplierPaymentMocks } from "./supplier-payment.mock.factory";
 
-const CONFIRMED_STATUS = supplierPaymentStatusConverter.to(
-	ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
-)!;
+const CONFIRMED_STATUS = ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED;
 
 const { payments: seedPayments } = createSupplierPaymentMocks();
 
@@ -92,9 +89,7 @@ const computeStatusCounts = (
 	};
 
 	for (const item of items) {
-		const uiStatus = supplierPaymentStatusConverter.from(item.status);
-
-		if (uiStatus === ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED) {
+		if (item.status === CONFIRMED_STATUS) {
 			counts[ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED] += 1;
 		} else {
 			counts[ENUM_SUPPLIER_PAYMENT_STATUS.RECORDED] += 1;
@@ -106,7 +101,7 @@ const computeStatusCounts = (
 
 const toListRow = (
 	payment: TSupplierPaymentBackend
-): SupplierPaymentListRowOutput => ({
+): TSupplierPaymentListRowOutputBackend => ({
 	payment_id: payment.payment_id,
 	booking_id: payment.booking_id,
 	order_number: payment.order_number,
@@ -175,9 +170,7 @@ export const updateSupplierPaymentInStore = (
 		note: patch.note !== undefined ? patch.note : current.note,
 		status: patch.status ?? current.status,
 		paid_at:
-			patch.status != null &&
-			supplierPaymentStatusConverter.from(patch.status) ===
-				ENUM_SUPPLIER_PAYMENT_STATUS.CONFIRMED
+			patch.status === CONFIRMED_STATUS
 				? new Date().toISOString()
 				: current.paid_at
 	};

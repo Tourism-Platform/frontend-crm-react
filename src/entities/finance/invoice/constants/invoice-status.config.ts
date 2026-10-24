@@ -1,28 +1,31 @@
-import { InvoiceStatus } from "@/shared/api";
 import { type TOptionsKeys } from "@/shared/config";
 
-import type { ENUM_INVOICE_STATUS_TYPE } from "../types";
+import {
+	ENUM_INVOICE_STATUS_BACKEND,
+	type ENUM_INVOICE_STATUS_TYPE
+} from "../types";
 
 export const INVOICE_STATUS_LABELS: Record<
 	ENUM_INVOICE_STATUS_TYPE,
 	TOptionsKeys
 > = {
-	[InvoiceStatus.Draft]: "finance.invoice.statuses.draft",
-	[InvoiceStatus.Sent]: "finance.invoice.statuses.sent",
-	[InvoiceStatus.Partial]: "finance.invoice.statuses.partial",
-	[InvoiceStatus.Paid]: "finance.invoice.statuses.paid",
-	[InvoiceStatus.Overdue]: "finance.invoice.statuses.overdue",
-	[InvoiceStatus.Cancelled]: "finance.invoice.statuses.cancelled"
+	[ENUM_INVOICE_STATUS_BACKEND.DRAFT]: "finance.invoice.statuses.draft",
+	[ENUM_INVOICE_STATUS_BACKEND.SENT]: "finance.invoice.statuses.sent",
+	[ENUM_INVOICE_STATUS_BACKEND.PARTIAL]: "finance.invoice.statuses.partial",
+	[ENUM_INVOICE_STATUS_BACKEND.PAID]: "finance.invoice.statuses.paid",
+	[ENUM_INVOICE_STATUS_BACKEND.OVERDUE]: "finance.invoice.statuses.overdue",
+	[ENUM_INVOICE_STATUS_BACKEND.CANCELLED]:
+		"finance.invoice.statuses.cancelled"
 };
 
 export const INVOICE_STATUS_VARIANTS: Record<
 	ENUM_INVOICE_STATUS_TYPE,
 	"default" | "green" | "red" | "yellow"
 > = {
-	[InvoiceStatus.Draft]: "default",
-	[InvoiceStatus.Sent]: "default",
-	[InvoiceStatus.Partial]: "yellow",
-	[InvoiceStatus.Paid]: "green",
-	[InvoiceStatus.Overdue]: "red",
-	[InvoiceStatus.Cancelled]: "default"
+	[ENUM_INVOICE_STATUS_BACKEND.DRAFT]: "default",
+	[ENUM_INVOICE_STATUS_BACKEND.SENT]: "default",
+	[ENUM_INVOICE_STATUS_BACKEND.PARTIAL]: "yellow",
+	[ENUM_INVOICE_STATUS_BACKEND.PAID]: "green",
+	[ENUM_INVOICE_STATUS_BACKEND.OVERDUE]: "red",
+	[ENUM_INVOICE_STATUS_BACKEND.CANCELLED]: "default"
 };

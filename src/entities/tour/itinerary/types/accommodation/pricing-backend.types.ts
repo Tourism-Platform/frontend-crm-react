@@ -3,6 +3,7 @@ import type {
 	PerRoomHotelInput,
 	PerRoomHotelOutput,
 	PricedRoomOutput,
+	RoomSeasonOutput,
 	StayRateInput,
 	StayRateOutput,
 	WholeHotelInput,
@@ -43,3 +44,5 @@ export type THousingSpecInputBackend = HousingInlineSupplyNew["spec"];
 
 /** Read-side per-room base charge (`PricedRoomOutput.rate.base`). */
 export type THousingRoomBaseChargeBackend = PricedRoomOutput["rate"]["base"];
+
+export type TRoomSeasonOutputBackend = RoomSeasonOutput;
