@@ -18,7 +18,6 @@ import {
 	useCreateEventLibraryMutation,
 	useGetEventLibraryQuery,
 	useGetEventLibraryRawQuery,
-	useGetEventLibraryTemplateQuery,
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
 
@@ -58,10 +57,6 @@ export const LibraryAccommodationEditPage: FC = () => {
 				skip: !libraryId || isCreate || !libraryItem || !isExpectedType
 			}
 		)
-	);
-	const { data: libraryTemplate } = useGetEventLibraryTemplateQuery(
-		libraryId,
-		{ skip: !libraryId || isCreate }
 	);
 
 	const [createEventLibrary, { isLoading: isCreateLoading }] =
@@ -124,8 +119,7 @@ export const LibraryAccommodationEditPage: FC = () => {
 				libraryId,
 				type: ENUM_EVENT.ACCOMMODATION,
 				language,
-				data,
-				currentDetails: libraryTemplate?.event.details
+				data
 			}).unwrap();
 			toast.success(t("toasts.update.success"));
 		} catch (error) {

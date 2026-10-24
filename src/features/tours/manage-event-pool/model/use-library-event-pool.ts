@@ -12,34 +12,14 @@ export const useLibraryEventPool = (libraryId: string) => {
 	});
 	const [patch, patchState] = usePatchEventLibraryPoolMutation();
 
-	const add = async (intent: TAddPoolMemberIntent) => {
-		if (!template) {
-			throw new Error("Library event is not loaded");
-		}
+	const add = (intent: TAddPoolMemberIntent) =>
+		patch({ libraryId, action: "add", intent }).unwrap();
 
-		return patch({
-			libraryId,
-			action: "add",
-			template,
-			intent
-		}).unwrap();
-	};
-
-	const remove = async (supplyId: string) => {
-		if (!template) {
-			throw new Error("Library event is not loaded");
-		}
-
-		return patch({
-			libraryId,
-			action: "remove",
-			template,
-			supplyId
-		}).unwrap();
-	};
+	const remove = (supplyId: string) =>
+		patch({ libraryId, action: "remove", supplyId }).unwrap();
 
 	return {
-		template,
+		members: template?.pool ?? [],
 		add,
 		remove,
 		isLoading: patchState.isLoading

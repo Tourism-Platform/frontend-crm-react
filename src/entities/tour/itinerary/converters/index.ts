@@ -20,6 +20,7 @@ export * from "./event/accommodation/housing-room-type.converters";
 export * from "./event/accommodation/housing-source.converters";
 export * from "./event/accommodation/housing-details.helpers";
 export * from "./event/common/event-pool.helpers";
+export * from "./event/common/event-pool-members.converters";
 export * from "./event/common/details-read-to-write.converters";
 export * from "./event/common/split-event-update.converters";
 export * from "./event/common/empty-event-details.converters";

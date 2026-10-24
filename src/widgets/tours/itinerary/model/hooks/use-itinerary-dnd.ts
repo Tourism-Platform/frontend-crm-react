@@ -14,7 +14,6 @@ import {
 import {
 	type IEventLibraryItem,
 	type ITemplateItem,
-	mapLibraryTemplateToCreateEvent,
 	useAddOptionMutation,
 	useCopyEventLibraryMutation,
 	useCopyTourEventMutation,
@@ -362,14 +361,20 @@ export const useItineraryDnd = ({
 					);
 
 					try {
-						const template = await getEventLibraryTemplate(
+						const { createEvent } = await getEventLibraryTemplate(
 							action.templateId
 						).unwrap();
-						const data = mapLibraryTemplateToCreateEvent(
-							template,
-							action.day,
-							action.position
-						);
+						// Not a board event type: nothing to add, the toast reports it.
+						if (!createEvent) {
+							throw new Error(
+								`Library entry ${action.templateId} is not a board event`
+							);
+						}
+						const data = {
+							...createEvent,
+							day: action.day,
+							position: action.position
+						};
 						const parentEvent = await addEventOption({
 							tourId,
 							optionId: activeOption,

@@ -93,3 +93,12 @@ export type TOverrideProductFormValues = {
 	[ENUM_FORM_OVERRIDE_PRODUCT.ADD_MARGIN_SEPARATELY]: boolean;
 	[ENUM_FORM_OVERRIDE_PRODUCT.MARKUP]: IFlightPriceRowMarkup | null;
 };
+
+/** Backend pricing key of the per-unit arm, derived from the spec shape. */
+export type TOverridePerUnitPricing =
+	| "per_room"
+	| "per_fare"
+	| "per_vehicle"
+	| "per_car"
+	| "per_car_category"
+	| "offerings";

@@ -3,7 +3,9 @@ import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import type {
 	ENUM_EVENT_TYPE,
-	TEventDetailsBackend,
+	IEventPoolMemberSummary,
+	ITourEventCreate,
+	TAddPoolMemberIntent,
 	TTourEventUpdate
 } from "@/entities/tour/itinerary";
 
@@ -37,9 +39,24 @@ export interface IEventLibraryUpdate {
 	data: TTourEventUpdate;
 	/** Язык UI — конвертируется в LanguageCode при save */
 	language?: ENUM_LANGUAGES_TYPE;
-	/** Current READ details — library PATCH always echoes the full pool. */
-	currentDetails?: TEventDetailsBackend;
 }
+
+/** A tour event made from a library entry; day/position come from the drop target. */
+export type TEventLibraryCreateEvent = Omit<
+	ITourEventCreate,
+	"day" | "position"
+>;
+
+/** Library entry as the event pages and the itinerary board use it. */
+export interface IEventLibraryTemplate {
+	pool: IEventPoolMemberSummary[];
+	/** Null when the entry typ is not a board event type. */
+	createEvent: TEventLibraryCreateEvent | null;
+}
+
+export type TEventLibraryPoolPatch =
+	| { libraryId: string; action: "add"; intent: TAddPoolMemberIntent }
+	| { libraryId: string; action: "remove"; supplyId: string };
 
 export interface IEventLibraryCreate {
 	type: ENUM_EVENT_TYPE;

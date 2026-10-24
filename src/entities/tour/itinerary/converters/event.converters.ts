@@ -4,9 +4,9 @@ import {
 	ENUM_EVENT,
 	ENUM_EVENT_BACKEND,
 	ENUM_EVENT_TRANSLATION,
-	ENUM_FORM_EVENT_PRODUCT,
 	type ENUM_EVENT_TRANSLATION_TYPE,
 	type ENUM_EVENT_TYPE,
+	ENUM_FORM_EVENT_PRODUCT,
 	type IEventOptionReorder,
 	type IGetTourEventResult,
 	type IMoveEventToMulti,
@@ -64,6 +64,7 @@ import { eventTranslationMapper } from "./event-translation.converters";
 import { isEventBackendTyp } from "./event-type.converters";
 import { mapHousingSeasonRatesToFrontend } from "./event/accommodation/housing-season-rates.converters";
 import { mapEventDetailsWriteOrEmpty } from "./event/common/empty-event-details.converters";
+import { mapEventPoolMembersToFrontend } from "./event/common/event-pool-members.converters";
 import {
 	type ISplitEventUpdate,
 	splitEventUpdate,
@@ -197,6 +198,21 @@ export const mapEventOptionToFrontend = (
 	return mapEventToFrontend(asResponse, selectedSupplyId);
 };
 
+/** The option row the edit page addresses: the event itself, or one alternative. */
+const findAddressedOptionRow = (
+	backend: TTourEventBackendResponce,
+	eventOptionId?: string
+): { typ: string; details: TEventDetailsBackend } | undefined => {
+	if (backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS) {
+		if (!eventOptionId) return undefined;
+		return (backend.event.details ?? []).find(
+			(detail: TMultiEventDetailBackend) => detail.id === eventOptionId
+		);
+	}
+
+	return backend.event ?? undefined;
+};
+
 /**
  * Typed READ details of the addressed option row —
  * `{ plan, pool: [{ id, is_main, supply, spec }] }`; never send back as a WRITE body.
@@ -204,34 +220,26 @@ export const mapEventOptionToFrontend = (
 export const mapTourEventDetailsFromBackend = (
 	backend: TTourEventBackendResponce,
 	eventOptionId?: string
-): TEventDetailsBackend | undefined => {
-	if (backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS) {
-		if (!eventOptionId) return undefined;
-		return (backend.event.details ?? []).find(
-			(detail: TMultiEventDetailBackend) => detail.id === eventOptionId
-		)?.details;
-	}
-
-	return backend.event?.details;
-};
+): TEventDetailsBackend | undefined =>
+	findAddressedOptionRow(backend, eventOptionId)?.details;
 
 export const mapGetTourEventToFrontend = (
 	backend: TTourEventBackendResponce,
 	eventOptionId?: string,
 	selectedSupplyId?: string
 ): IGetTourEventResult => {
-	const details = mapTourEventDetailsFromBackend(backend, eventOptionId);
+	const row = findAddressedOptionRow(backend, eventOptionId);
+	const details = row?.details;
 
 	return {
 		form: eventOptionId
 			? mapEventOptionToFrontend(backend, eventOptionId, selectedSupplyId)
 			: mapEventToFrontend(backend, selectedSupplyId),
-		details,
 		eventOptionId:
 			backend.event?.typ === ENUM_EVENT_BACKEND.OPTIONS
 				? eventOptionId
 				: backend.event?.id,
-		response: backend,
+		pool: row ? mapEventPoolMembersToFrontend(row.typ, details) : [],
 		productSeasonRates: mapHousingSeasonRatesToFrontend(details)
 	};
 };
@@ -287,15 +295,14 @@ export const mapEventUpdateToBackend = (
  * pool member). The member is built with individual pricing: a package lives
  * on the option only, the supplier keeps its prices (fe6.4 §7).
  */
-export const mapEventUpdatePartsToBackend = ({
-	type,
-	data,
-	language,
-	currentDetails
-}: Pick<
-	ITourEventUpdate,
-	"type" | "data" | "language" | "currentDetails"
->): ISplitEventUpdate => {
+export const mapEventUpdatePartsToBackend = (
+	{
+		type,
+		data,
+		language
+	}: Pick<ITourEventUpdate, "type" | "data" | "language">,
+	currentDetails?: TEventDetailsBackend
+): ISplitEventUpdate => {
 	const supplyId = (data as Record<string, unknown>)[
 		ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID
 	] as string | undefined;

@@ -2,15 +2,16 @@ import type { FieldValues } from "react-hook-form";
 
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
-import type { ENUM_EVENT_TYPE, TTourEventUpdate } from "@/entities/tour/itinerary";
+import type {
+	ENUM_EVENT_TYPE,
+	TTourEventUpdate
+} from "@/entities/tour/itinerary";
 
 import { mapEventLibraryUpdateToBackend } from "../converters";
 import type { TEventLibraryAutosavePart } from "../types";
 
-import {
-	useGetEventLibraryTemplateQuery,
-	useUpdateEventLibraryBodyMutation
-} from "./event-library.service";
+import { useGetEventLibraryReadQuery } from "./event-library-read.service";
+import { useUpdateEventLibraryBodyMutation } from "./event-library.service";
 
 interface IUseEventLibraryAutosavePartParams {
 	type: ENUM_EVENT_TYPE;
@@ -22,7 +23,7 @@ interface IUseEventLibraryAutosavePartParams {
 
 /**
  * Autosave part of a library entry, built at the API boundary. The current
- * pool is read from the entry template and echoed into the body (the library
+ * pool is read from the entry READ and echoed into the body (the library
  * has no member route).
  */
 export const useEventLibraryAutosavePart = <T extends FieldValues>({
@@ -31,7 +32,7 @@ export const useEventLibraryAutosavePart = <T extends FieldValues>({
 	language,
 	enabled
 }: IUseEventLibraryAutosavePartParams): TEventLibraryAutosavePart<T> => {
-	const { data: template } = useGetEventLibraryTemplateQuery(libraryId, {
+	const { data: read } = useGetEventLibraryReadQuery(libraryId, {
 		skip: !libraryId || !enabled
 	});
 	const [updateBody] = useUpdateEventLibraryBodyMutation();
@@ -43,7 +44,7 @@ export const useEventLibraryAutosavePart = <T extends FieldValues>({
 				type,
 				values as unknown as TTourEventUpdate,
 				language,
-				template?.event.details
+				read?.event.details
 			),
 		save: (body) => updateBody({ libraryId, body }).unwrap()
 	};

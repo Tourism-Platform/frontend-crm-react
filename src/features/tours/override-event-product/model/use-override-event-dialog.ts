@@ -19,7 +19,8 @@ import {
 interface IUseOverrideEventDialogParams {
 	open: boolean;
 	eventKind: ENUM_EVENT_KIND_TYPE;
-	initialValues: TOverrideProductFormValues;
+	/** Undefined until the event is loaded. */
+	initialValues?: TOverrideProductFormValues;
 	perUnitArm: TOverridePerUnitPricing;
 	onConfirm: (values: TOverrideProductFormValues) => void | Promise<void>;
 }
@@ -36,7 +37,7 @@ export const useOverrideEventDialog = ({
 	});
 
 	useEffect(() => {
-		if (!open) {
+		if (!open || !initialValues) {
 			return;
 		}
 

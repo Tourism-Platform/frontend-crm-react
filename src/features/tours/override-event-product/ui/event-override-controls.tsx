@@ -1,4 +1,4 @@
-import { type FC, useMemo, useState } from "react";
+import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -8,8 +8,7 @@ import {
 	type ENUM_EVENT_KIND_TYPE,
 	ENUM_EVENT_MODE,
 	type TOverrideProductFormValues,
-	getOverridePerUnitPricing,
-	mapEventOverrideDetailsToForm,
+	selectPoolMember,
 	useEventEditIds,
 	useGetTourEventQuery
 } from "@/entities/tour";
@@ -51,14 +50,14 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 		{ skip: !isInherited || !tourId || !optionId || !eventId }
 	);
 
-	const initialValues = useMemo(
-		() => mapEventOverrideDetailsToForm(eventKind, event?.details, supplyId),
-		[eventKind, event?.details, supplyId]
-	);
-	const perUnitArm = getPerUnitArm(
-		eventKind,
-		getOverridePerUnitPricing(event?.details, supplyId)
-	);
+	const pool = event?.pool ?? [];
+	// A given supply is matched exactly: never open another member's spec.
+	const draft = (
+		supplyId
+			? pool.find((member) => member.id === supplyId)
+			: selectPoolMember(pool)
+	)?.override;
+	const perUnitArm = getPerUnitArm(eventKind, draft?.perUnitPricing ?? null);
 
 	if (!isInherited) {
 		return null;
@@ -93,7 +92,8 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 					type="button"
 					variant="outline"
 					onClick={() => setDialogOpen(true)}
-					disabled={isLoading}
+					// No draft while the event loads or the member is not in the pool.
+					disabled={isLoading || !draft}
 					isLoading={isLoading}
 					label={
 						hasOverride
@@ -122,7 +122,7 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 				open={dialogOpen}
 				onOpenChange={setDialogOpen}
 				eventKind={eventKind}
-				initialValues={initialValues}
+				initialValues={draft?.initialValues}
 				perUnitArm={perUnitArm}
 				isSubmitting={isLoading}
 				onConfirm={handleConfirmSet}

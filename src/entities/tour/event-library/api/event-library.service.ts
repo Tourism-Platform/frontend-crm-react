@@ -1,12 +1,15 @@
+import type {
+	BaseQueryApi,
+	FetchArgs,
+	FetchBaseQueryError
+} from "@reduxjs/toolkit/query";
+
 import { ENUM_API_TAGS, TOUR_EVENT_LIBRARY_PATHS } from "@/shared/api";
 import { type IPaginationResponse } from "@/shared/types";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 import type { TTourEvent } from "@/entities/tour/itinerary";
-import {
-	type TAddPoolMemberIntent,
-	mapAddPoolMemberToBackend
-} from "@/entities/tour/itinerary";
+import { mapAddPoolMemberToBackend } from "@/entities/tour/itinerary";
 
 import {
 	mapEventLibraryCopyQueryToBackend,
@@ -15,6 +18,7 @@ import {
 	mapEventLibraryFiltersToBackend,
 	mapEventLibraryItemToFrontend,
 	mapEventLibraryListToFrontend,
+	mapEventLibraryTemplateToFrontend,
 	mapEventLibraryToForm,
 	mapEventLibraryUpdateToBackend,
 	mapLibraryPoolAddToBackend,
@@ -27,11 +31,38 @@ import type {
 	IEventLibraryFilters,
 	IEventLibraryInfiniteResponse,
 	IEventLibraryItem,
+	IEventLibraryTemplate,
 	IEventLibraryUpdate,
 	TEventLibraryItemBackend,
 	TEventLibraryListBackendResponse,
+	TEventLibraryPoolPatch,
 	TUpdateEventLibraryBackend
 } from "../types";
+
+import { readEventLibrary } from "./event-library-read.service";
+
+/** PATCH of the whole entry built from its current READ. */
+const patchEventLibrary = async (
+	{ dispatch }: BaseQueryApi,
+	baseQuery: (arg: FetchArgs) => unknown,
+	libraryId: string,
+	toBody: (current: TEventLibraryItemBackend) => TUpdateEventLibraryBackend
+) => {
+	const read = await readEventLibrary(dispatch, libraryId);
+	if (read.error) return { error: read.error };
+
+	const result = (await baseQuery({
+		...TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent(libraryId),
+		body: toBody(read.data)
+	})) as { data?: unknown; error?: FetchBaseQueryError };
+	if (result.error) return { error: result.error };
+
+	return {
+		data: mapEventLibraryItemToFrontend(
+			result.data as TEventLibraryItemBackend
+		)
+	};
+};
 
 export const eventLibraryApi = authApi.injectEndpoints({
 	endpoints: (builder) => ({
@@ -93,12 +124,14 @@ export const eventLibraryApi = authApi.injectEndpoints({
 				currentArg?.limit !== previousArg?.limit,
 			providesTags: [ENUM_API_TAGS.EVENT_LIBRARY]
 		}),
+		// The entry views below share one READ: requests of one render dedupe.
 		getEventLibrary: builder.query<IEventLibraryItem, string>({
-			query: (libraryId) => ({
-				...TOUR_EVENT_LIBRARY_PATHS.getLibraryEvent(libraryId)
-			}),
-			transformResponse: (response: TEventLibraryItemBackend) =>
-				mapEventLibraryItemToFrontend(response),
+			async queryFn(libraryId, { dispatch }) {
+				const read = await readEventLibrary(dispatch, libraryId, true);
+				if (read.error) return { error: read.error };
+
+				return { data: mapEventLibraryItemToFrontend(read.data) };
+			},
 			providesTags: (_result, _error, libraryId) => [
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
 			]
@@ -107,27 +140,24 @@ export const eventLibraryApi = authApi.injectEndpoints({
 			TTourEvent,
 			{ libraryId: string; supplyId?: string }
 		>({
-			query: ({ libraryId }) => ({
-				...TOUR_EVENT_LIBRARY_PATHS.getLibraryEvent(libraryId)
-			}),
-			transformResponse: (
-				response: TEventLibraryItemBackend,
-				_meta,
-				arg
-			) => mapEventLibraryToForm(response, arg.supplyId),
+			async queryFn({ libraryId, supplyId }, { dispatch }) {
+				const read = await readEventLibrary(dispatch, libraryId, true);
+				if (read.error) return { error: read.error };
+
+				return { data: mapEventLibraryToForm(read.data, supplyId) };
+			},
 			providesTags: (_result, _error, { libraryId }) => [
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
 			]
 		}),
-		/** Full library item for create-from-template (backend shape, not form). */
-		getEventLibraryTemplate: builder.query<
-			TEventLibraryItemBackend,
-			string
-		>({
-			query: (libraryId) => ({
-				...TOUR_EVENT_LIBRARY_PATHS.getLibraryEvent(libraryId)
-			}),
-			transformResponse: (response: TEventLibraryItemBackend) => response,
+		/** Library entry pool and the tour event made from it. */
+		getEventLibraryTemplate: builder.query<IEventLibraryTemplate, string>({
+			async queryFn(libraryId, { dispatch }) {
+				const read = await readEventLibrary(dispatch, libraryId, true);
+				if (read.error) return { error: read.error };
+
+				return { data: mapEventLibraryTemplateToFrontend(read.data) };
+			},
 			providesTags: (_result, _error, libraryId) => [
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
 			]
@@ -161,17 +191,21 @@ export const eventLibraryApi = authApi.injectEndpoints({
 			IEventLibraryItem,
 			IEventLibraryUpdate
 		>({
-			query: ({ libraryId, type, data, language, currentDetails }) => ({
-				...TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent(libraryId),
-				body: mapEventLibraryUpdateToBackend(
-					type,
-					data,
-					language,
-					currentDetails
-				)
-			}),
-			transformResponse: (response: TEventLibraryItemBackend) =>
-				mapEventLibraryItemToFrontend(response),
+			// The library PATCH writes the whole entry: the current pool is echoed.
+			queryFn: (
+				{ libraryId, type, data, language },
+				api,
+				_extra,
+				baseQuery
+			) =>
+				patchEventLibrary(api, baseQuery, libraryId, (current) =>
+					mapEventLibraryUpdateToBackend(
+						type,
+						data,
+						language,
+						current.event.details
+					)
+				),
 			invalidatesTags: (_result, _error, { libraryId }) => [
 				ENUM_API_TAGS.EVENT_LIBRARY,
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }
@@ -195,34 +229,17 @@ export const eventLibraryApi = authApi.injectEndpoints({
 		}),
 		patchEventLibraryPool: builder.mutation<
 			IEventLibraryItem,
-			| {
-					libraryId: string;
-					action: "add";
-					template: TEventLibraryItemBackend;
-					intent: TAddPoolMemberIntent;
-			  }
-			| {
-					libraryId: string;
-					action: "remove";
-					template: TEventLibraryItemBackend;
-					supplyId: string;
-			  }
+			TEventLibraryPoolPatch
 		>({
-			query: (arg) => ({
-				...TOUR_EVENT_LIBRARY_PATHS.updateLibraryEvent(arg.libraryId),
-				body:
+			queryFn: (arg, api, _extra, baseQuery) =>
+				patchEventLibrary(api, baseQuery, arg.libraryId, (current) =>
 					arg.action === "add"
 						? mapLibraryPoolAddToBackend(
-								arg.template,
+								current,
 								mapAddPoolMemberToBackend(arg.intent)
 							)
-						: mapLibraryPoolRemoveToBackend(
-								arg.template,
-								arg.supplyId
-							)
-			}),
-			transformResponse: (response: TEventLibraryItemBackend) =>
-				mapEventLibraryItemToFrontend(response),
+						: mapLibraryPoolRemoveToBackend(current, arg.supplyId)
+				),
 			invalidatesTags: (_result, _error, { libraryId }) => [
 				ENUM_API_TAGS.EVENT_LIBRARY,
 				{ type: ENUM_API_TAGS.EVENT_LIBRARY, id: libraryId }

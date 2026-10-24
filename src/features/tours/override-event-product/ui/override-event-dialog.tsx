@@ -51,7 +51,7 @@ interface IOverrideEventDialogProps {
 	onOpenChange: (open: boolean) => void;
 	eventKind: ENUM_EVENT_KIND_TYPE;
 	/** Values the form opens with: the current override over the spec units. */
-	initialValues: TOverrideProductFormValues;
+	initialValues?: TOverrideProductFormValues;
 	/** Backend pricing key of the per-unit arm for this event type. */
 	perUnitArm: TOverridePerUnitPricing;
 	isSubmitting?: boolean;

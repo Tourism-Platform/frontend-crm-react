@@ -1,4 +1,7 @@
-import type { TEventDetailsBackend } from "../../../types";
+import type {
+	TEventDetailsBackend,
+	TOverridePerUnitPricing
+} from "../../../types";
 
 import { getPoolMember } from "./event-pool.helpers";
 
@@ -6,15 +9,6 @@ export interface IOverrideUnitOption {
 	id: string;
 	label: string;
 }
-
-/** Backend pricing key of the per-unit arm, derived from the spec shape. */
-export type TOverridePerUnitPricing =
-	| "per_room"
-	| "per_fare"
-	| "per_vehicle"
-	| "per_car"
-	| "per_car_category"
-	| "offerings";
 
 const toUnitOption = (unit: {
 	id?: string;

@@ -1,6 +1,6 @@
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
-import { ENUM_API_TAGS, TOUR_EVENTS_PATHS } from "@/shared/api";
+import { TOUR_EVENTS_PATHS } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
 
@@ -25,6 +25,7 @@ import {
 	mapMoveToSingleResultToFrontend,
 	mapOptionReorderToBackend,
 	mapSupplierPolicyWarningListToFrontend,
+	mapTourEventDetailsFromBackend,
 	splitEventUpdate
 } from "../converters";
 import type {
@@ -62,50 +63,21 @@ import type {
 	TTourEventUpdateBackend
 } from "../types";
 
+import { readTourEvent } from "./event-read.service";
+import {
+	eventDetailTag,
+	eventsTag,
+	policyEventTag,
+	policyInvalidation,
+	policyOptionTag,
+	pricingTag
+} from "./event-tags";
+
 type TBaseQuery = (arg: {
 	url: string;
 	method?: string;
 	body?: unknown;
 }) => Promise<{ data?: unknown; error?: FetchBaseQueryError }>;
-
-const eventsTag = (tourId: string, optionId: string) => ({
-	type: ENUM_API_TAGS.TOURS_EVENTS,
-	id: `${tourId}-${optionId}`
-});
-
-const eventDetailTag = (
-	tourId: string,
-	optionId: string,
-	eventId: string,
-	eventOptionId?: string
-) => ({
-	type: ENUM_API_TAGS.TOURS_EVENTS,
-	id: `${tourId}-${optionId}-${eventId}-${eventOptionId || ""}`
-});
-
-const pricingTag = (tourId: string, optionId: string) => ({
-	type: ENUM_API_TAGS.TOURS_PRICING_SUMMARY,
-	id: `${tourId}:${optionId}`
-});
-
-const policyEventTag = (tourId: string, optionId: string, eventId: string) => ({
-	type: ENUM_API_TAGS.TOUR_POLICY_CHECK,
-	id: `${tourId}-${optionId}-${eventId}`
-});
-
-const policyOptionTag = (tourId: string, optionId: string) => ({
-	type: ENUM_API_TAGS.TOUR_POLICY_CHECK,
-	id: `${tourId}-${optionId}`
-});
-
-const policyInvalidation = (
-	tourId: string,
-	optionId: string,
-	eventId: string
-) => [
-	policyEventTag(tourId, optionId, eventId),
-	policyOptionTag(tourId, optionId)
-];
 
 /**
  * Unified option-level event API (contract 3.1).
@@ -165,19 +137,19 @@ export const tourEventApi = authApi.injectEndpoints({
 				supplyId?: string;
 			}
 		>({
-			query: ({ tourId, optionId, eventId }) => ({
-				...TOUR_EVENTS_PATHS.getTourEvent(tourId, optionId, eventId)
-			}),
-			transformResponse: (
-				response: TTourEventBackendResponce,
-				_meta,
-				arg
-			) =>
-				mapGetTourEventToFrontend(
-					response,
-					arg.eventOptionId,
-					arg.supplyId
-				),
+			// One request: the READ lands in the internal cache updates echo from.
+			async queryFn(arg, { dispatch }) {
+				const read = await readTourEvent(dispatch, arg, true);
+				if (read.error) return { error: read.error };
+
+				return {
+					data: mapGetTourEventToFrontend(
+						read.data,
+						arg.eventOptionId,
+						arg.supplyId
+					)
+				};
+			},
 			providesTags: (
 				_result,
 				_error,
@@ -277,12 +249,21 @@ export const tourEventApi = authApi.injectEndpoints({
 		updateOption: builder.mutation<ITourEvent, ITourEventUpdate>({
 			async queryFn(
 				{ tourId, optionId, eventId, eventOptionId, ...update },
-				_api,
+				{ dispatch },
 				_extraOptions,
 				baseQuery
 			) {
 				const query = baseQuery as TBaseQuery;
-				const { option, member } = mapEventUpdatePartsToBackend(update);
+				const read = await readTourEvent(dispatch, {
+					tourId,
+					optionId,
+					eventId
+				});
+				if (read.error) return { error: read.error };
+				const { option, member } = mapEventUpdatePartsToBackend(
+					update,
+					mapTourEventDetailsFromBackend(read.data, eventOptionId)
+				);
 
 				const optionResult = await query({
 					...TOUR_EVENTS_PATHS.updateOption(

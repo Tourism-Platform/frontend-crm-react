@@ -2,11 +2,14 @@ import type { FieldValues } from "react-hook-form";
 
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
-import { mapEventUpdatePartsToBackend } from "../converters";
+import {
+	mapEventUpdatePartsToBackend,
+	mapTourEventDetailsFromBackend
+} from "../converters";
 import type {
 	ENUM_EVENT_TYPE,
 	IEventAutosaveParts,
-	TEventDetailsBackend,
+	TTourEventBackendResponce,
 	TTourEventUpdate
 } from "../types";
 
@@ -22,8 +25,8 @@ interface IUseEventAutosavePartsParams {
 	eventId: string;
 	/** Nothing is built until the option row id is resolved. */
 	eventOptionId?: string;
-	/** Current READ details — the member route echoes the supplier from it. */
-	details?: TEventDetailsBackend;
+	/** Current slot READ — the member route echoes the supplier from it. */
+	read?: TTourEventBackendResponce;
 }
 
 /**
@@ -36,39 +39,48 @@ export const useEventAutosaveParts = <T extends FieldValues>({
 	optionId,
 	eventId,
 	eventOptionId,
-	details
+	read
 }: IUseEventAutosavePartsParams) => {
 	const [updateEventOption] = useUpdateEventOptionMutation();
 	const [updateEventPoolMember] = useUpdateEventPoolMemberMutation();
 
 	return (language?: ENUM_LANGUAGES_TYPE): IEventAutosaveParts<T> => {
+		if (!eventOptionId) {
+			const idle = {
+				build: () => undefined,
+				save: async () => undefined
+			};
+			return {
+				option: { key: "option", ...idle },
+				member: { key: "member", ...idle }
+			};
+		}
+
+		const details = read
+			? mapTourEventDetailsFromBackend(read, eventOptionId)
+			: undefined;
 		const build = (values: T) =>
-			eventOptionId
-				? mapEventUpdatePartsToBackend({
-						type,
-						data: values as TTourEventUpdate,
-						language,
-						currentDetails: details
-					})
-				: undefined;
-		const target = {
-			tourId,
-			optionId,
-			eventId,
-			eventOptionId: eventOptionId!
-		};
+			mapEventUpdatePartsToBackend(
+				{ type, data: values as TTourEventUpdate, language },
+				details
+			);
+		const target = { tourId, optionId, eventId, eventOptionId };
 
 		return {
 			option: {
 				key: "option",
-				build: (values) => build(values)?.option,
+				build: (values) => build(values).option,
 				save: (body) => updateEventOption({ ...target, body }).unwrap()
 			},
 			member: {
 				key: "member",
-				build: (values) => build(values)?.member,
+				build: (values) => build(values).member,
 				save: ({ supplyId, body }) =>
-					updateEventPoolMember({ ...target, supplyId, body }).unwrap()
+					updateEventPoolMember({
+						...target,
+						supplyId,
+						body
+					}).unwrap()
 			}
 		};
 	};

@@ -22,7 +22,9 @@ export interface IEventAutosaveEdit<T extends FieldValues> {
 	data: T | undefined;
 	eventOptionId?: string;
 	recordKey?: string;
-	getAutosaveParts: (language?: ENUM_LANGUAGES_TYPE) => IEventAutosaveParts<T>;
+	getAutosaveParts: (
+		language?: ENUM_LANGUAGES_TYPE
+	) => IEventAutosaveParts<T>;
 }
 
 /** Sections the option part depends on (texts and plan). */

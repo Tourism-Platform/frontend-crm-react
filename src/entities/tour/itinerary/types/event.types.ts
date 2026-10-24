@@ -9,11 +9,11 @@ import type { ENUM_EVENT_BACKEND_TYPE } from "./event-backend-enum.types";
 import type {
 	TEventDetailsBackend,
 	TEventDetailsWriteBackend,
-	TTourEventBackendResponce,
 	TTourEventMemberUpdateBackend,
 	TTourEventOptionUpdateBackend
 } from "./event-backend.types";
 import type { ENUM_EVENT_TYPE } from "./event-enum.types";
+import type { IEventPoolMember } from "./event-pool.types";
 import type { ENUM_EVENT_TRANSLATION_TYPE } from "./event-translation.types";
 import type { TFlightEditSchema } from "./flight";
 import type { TGuideEditSchema } from "./guide";
@@ -87,8 +87,6 @@ export interface ITourEventUpdate {
 	data: TTourEventUpdate;
 	/** Язык UI — конвертируется в LanguageCode при save */
 	language?: ENUM_LANGUAGES_TYPE;
-	/** Current READ details — used to echo pool ids on inline spec save. */
-	currentDetails?: TEventDetailsBackend;
 }
 
 interface IEventOptionTarget {
@@ -120,15 +118,12 @@ export type TTourEvent =
 	| TGuideEditSchema
 	| TMultiplyOptionEditSchema;
 
-/** Result of getTourEvent: form values + raw backend READ details for supply/override reads. */
+/** Result of getTourEvent: form values and pool members of the addressed option row. */
 export interface IGetTourEventResult {
 	form: TTourEvent;
-	/** READ details of the addressed option row (`{ plan, pool }`). */
-	details: TEventDetailsBackend | undefined;
+	pool: IEventPoolMember[];
 	/** Resolved option row id — URL param for multi, `event.id` for single. */
 	eventOptionId?: string;
-	/** Original slot read — used to remap the form onto another pool member. */
-	response: TTourEventBackendResponce;
 	/** Сезонные цены продукта (housing с per-room) — для policy-check */
 	productSeasonRates: IProductSeasonRateRow[];
 }

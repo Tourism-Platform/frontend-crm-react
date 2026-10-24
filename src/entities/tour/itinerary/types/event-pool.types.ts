@@ -2,6 +2,10 @@ import type { TOUR_EVENTS_PATHS } from "@/shared/api";
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config/languages";
 
 import type { ENUM_EVENT_KIND_TYPE } from "./event-enum.types";
+import type {
+	TOverridePerUnitPricing,
+	TOverrideProductFormValues
+} from "./event-override-form.types";
 import type { IEventProductLink } from "./event-product-link.types";
 
 export interface IEventPoolMemberSummary {
@@ -10,6 +14,19 @@ export interface IEventPoolMemberSummary {
 	isMain: boolean;
 	/** Linked supplier product (not an inline spec). */
 	isProduct: boolean;
+}
+
+/** What the override dialog of a pool member opens with. */
+export interface IEventOverrideDraft {
+	/** The current override (if any) over the units of the member spec. */
+	initialValues: TOverrideProductFormValues;
+	/** Per-unit arm of the spec; null when the member has no spec. */
+	perUnitPricing: TOverridePerUnitPricing | null;
+}
+
+/** Pool member on the event edit page. */
+export interface IEventPoolMember extends IEventPoolMemberSummary {
+	override: IEventOverrideDraft;
 }
 
 export type TEventPoolMemberNewBackend = ReturnType<

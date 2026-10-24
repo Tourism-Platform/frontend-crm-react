@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import {
 	ENUM_EVENT_MODE,
 	LIBRARY_EVENT_CREATE_ID,
-	mapEventPoolToSummary,
 	useEventEditIds,
 	useGetTourEventQuery
 } from "@/entities/tour";
@@ -39,11 +38,10 @@ export const useEventPoolMembers = (variant: ENUM_EVENT_POOL_VARIANT_TYPE) => {
 	);
 	const tourMutations = useEventPoolMutations();
 
-	const details =
+	const members =
 		variant === ENUM_EVENT_POOL_VARIANT.LIBRARY
-			? libraryPool.template?.event.details
-			: tourQuery.data?.details;
-	const members = mapEventPoolToSummary(details);
+			? libraryPool.members
+			: (tourQuery.data?.pool ?? []);
 
 	return {
 		members,

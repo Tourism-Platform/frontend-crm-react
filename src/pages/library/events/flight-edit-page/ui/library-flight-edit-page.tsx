@@ -21,7 +21,6 @@ import {
 	type TFlightEditSchema,
 	useCreateEventLibraryMutation,
 	useGetEventLibraryRawQuery,
-	useGetEventLibraryTemplateQuery,
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
 
@@ -47,10 +46,6 @@ export const LibraryFlightEditPage: FC = () => {
 				{ skip: !libraryId || isCreate }
 			)
 		);
-	const { data: libraryTemplate } = useGetEventLibraryTemplateQuery(
-		libraryId,
-		{ skip: !libraryId || isCreate }
-	);
 
 	const [createEventLibrary, { isLoading: isCreateLoading }] =
 		useCreateEventLibraryMutation();
@@ -113,8 +108,7 @@ export const LibraryFlightEditPage: FC = () => {
 				libraryId,
 				type: ENUM_EVENT.FLIGHT,
 				language,
-				data,
-				currentDetails: libraryTemplate?.event.details
+				data
 			}).unwrap();
 			toast.success(t("toasts.update.success"));
 		} catch (error) {

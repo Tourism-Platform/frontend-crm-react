@@ -29,6 +29,7 @@ import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE
 } from "../../../types/event-backend-enum.types";
+import type { TEventDetailsBackend } from "../../../types/event-backend.types";
 import type { ENUM_EVENT_KIND_TYPE } from "../../../types/event-enum.types";
 import type { TEventOverrideInputBackend } from "../../../types/event-override-backend.types";
 import {
@@ -47,13 +48,11 @@ import {
 } from "../../../types/flight/pricing.types";
 import { eventKindMapper } from "../../event-kind.converters";
 
-import type { TEventDetailsBackend } from "../../../types/event-backend.types";
-
-import { mapEventOverrideFromDetails } from "./event-override.converters";
 import {
 	type IOverrideUnitOption,
 	getOverrideUnitOptions
 } from "./event-override-units.helpers";
+import { mapEventOverrideFromDetails } from "./event-override.converters";
 import { mapFeesFromBackend, mapFeesToBackend } from "./fees.converters";
 
 /** Structural view over every charge shape the override arms carry. */

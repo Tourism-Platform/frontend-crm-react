@@ -8,6 +8,7 @@ import {
 	useGetTourEventQuery,
 	useUpdateOptionMutation
 } from "../api";
+import { useGetTourEventReadQuery } from "../api/event-read.service";
 import {
 	ENUM_EVENT_MODE,
 	type ENUM_EVENT_TYPE,
@@ -23,6 +24,7 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 	const { tourId, optionId, eventId, eventOptionId, mode } =
 		useEventEditIds();
 	const [supplyId, setSupplyId] = useState<string | undefined>();
+	const skip = !tourId || !optionId || !eventId;
 
 	const eventQuery = useGetTourEventQuery(
 		{
@@ -32,9 +34,14 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 			supplyId,
 			...(mode === ENUM_EVENT_MODE.MULTI && { eventOptionId })
 		},
-		{ skip: !tourId || !optionId || !eventId }
+		{ skip }
 	);
 	const { data, isRealError: isError } = useOptionalResourceQuery(eventQuery);
+	// Same request as `getTourEvent`: keeps the READ cached for the bodies.
+	const { data: read } = useGetTourEventReadQuery(
+		{ tourId, optionId, eventId },
+		{ skip }
+	);
 
 	const [updateOption, { isLoading: isUpdateLoading }] =
 		useUpdateOptionMutation();
@@ -57,8 +64,7 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 			eventOptionId: resolvedEventOptionId,
 			type,
 			language,
-			data: formData,
-			currentDetails: data?.details
+			data: formData
 		}).unwrap();
 	};
 
@@ -68,12 +74,11 @@ export const useTourEventEdit = <T extends TTourEvent = TTourEvent>(
 		optionId,
 		eventId,
 		eventOptionId: resolvedEventOptionId,
-		details: data?.details
+		read
 	});
 
 	return {
 		data: data?.form as T | undefined,
-		details: data?.details,
 		eventOptionId: resolvedEventOptionId,
 		/** Edited record identity (option row + pool member); a new key is a new autosave baseline. */
 		recordKey: resolvedEventOptionId

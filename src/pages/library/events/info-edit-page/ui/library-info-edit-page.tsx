@@ -21,7 +21,6 @@ import {
 	type TInfoEditSchema,
 	useCreateEventLibraryMutation,
 	useGetEventLibraryRawQuery,
-	useGetEventLibraryTemplateQuery,
 	useUpdateEventLibraryMutation
 } from "@/entities/tour";
 
@@ -46,10 +45,6 @@ export const LibraryInfoEditPage: FC = () => {
 				{ skip: !libraryId || isCreate }
 			)
 		);
-	const { data: libraryTemplate } = useGetEventLibraryTemplateQuery(
-		libraryId,
-		{ skip: !libraryId || isCreate }
-	);
 
 	const [createEventLibrary, { isLoading: isCreateLoading }] =
 		useCreateEventLibraryMutation();
@@ -111,8 +106,7 @@ export const LibraryInfoEditPage: FC = () => {
 				libraryId,
 				type: ENUM_EVENT.INFO,
 				language,
-				data,
-				currentDetails: libraryTemplate?.event.details
+				data
 			}).unwrap();
 			toast.success(t("toasts.update.success"));
 		} catch (error) {

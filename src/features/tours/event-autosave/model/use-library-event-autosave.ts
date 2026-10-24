@@ -9,7 +9,10 @@ import {
 } from "@/shared/lib";
 import { useAutosaveToast } from "@/shared/ui";
 
-import { type ENUM_EVENT_TYPE, useEventLibraryAutosavePart } from "@/entities/tour";
+import {
+	type ENUM_EVENT_TYPE,
+	useEventLibraryAutosavePart
+} from "@/entities/tour";
 
 import { toEventFormPath } from "./to-event-form-path";
 
