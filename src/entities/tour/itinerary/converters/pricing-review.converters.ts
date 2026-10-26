@@ -215,5 +215,6 @@ export const mapPricingBreakdownQueryToBackend = (
 ): TGetPricingBreakdownBackendQuery => ({
 	...(args.currency && { currency: args.currency }),
 	...(args.date && { date: args.date }),
-	...(args.pax != null && args.pax > 0 && { pax: args.pax })
+	...(args.pax != null && args.pax > 0 && { pax: args.pax }),
+	...(args.asOf && { as_of: args.asOf })
 });

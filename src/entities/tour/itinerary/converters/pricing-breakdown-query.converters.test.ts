@@ -32,6 +32,12 @@ describe("mapPricingBreakdownQueryToBackend", () => {
 		});
 	});
 
+	it("maps asOf to as_of", () => {
+		expect(
+			mapPricingBreakdownQueryToBackend({ ...BASE, asOf: "2026-10-01" })
+		).toEqual({ as_of: "2026-10-01" });
+	});
+
 	it("drops non-positive pax", () => {
 		expect(
 			mapPricingBreakdownQueryToBackend({ ...BASE, pax: 0 })

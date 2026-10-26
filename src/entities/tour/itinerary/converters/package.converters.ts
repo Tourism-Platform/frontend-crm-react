@@ -9,8 +9,10 @@ import {
 	ENUM_PACKAGE_MARKUP_TYP,
 	ENUM_PACKAGE_PRICING_TYPE,
 	type IPackageFormMarkup,
+	type IPackageListArgs,
 	type ITourPackage,
 	type ITourPackageListItem,
+	type TListPackagesBackendQuery,
 	type TPackageCreateBackend,
 	type TPackageEditSchema,
 	type TPackageUpdateBackend,
@@ -68,6 +70,12 @@ export const getEmptyPackageForm = (): TPackageEditSchema => ({
 	[ENUM_PACKAGE_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
 	[ENUM_PACKAGE_FIELD.MARKUP]: null,
 	[ENUM_PACKAGE_FIELD.SUPPLIER_ID]: ""
+});
+
+export const mapPackagesQueryToBackend = (
+	args: IPackageListArgs
+): TListPackagesBackendQuery => ({
+	...(args.search?.trim() && { q: args.search.trim() })
 });
 
 export const mapPackageToListItem = (

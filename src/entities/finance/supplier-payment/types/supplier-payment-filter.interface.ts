@@ -1,7 +1,8 @@
 import type { ENUM_SUPPLIER_PAYMENT_STATUS_TYPE } from "./supplier-payment-status.types";
 
 export const ENUM_SUPPLIER_PAYMENT_FILTER = {
-	SUPPLIER_ID: "supplierId"
+	SUPPLIER_ID: "supplierId",
+	EVENT_ID: "eventId"
 } as const;
 
 export interface ISupplierPaymentFilters {
@@ -11,4 +12,5 @@ export interface ISupplierPaymentFilters {
 	page: number;
 	limit: number;
 	supplierId?: string;
+	eventId?: string;
 }

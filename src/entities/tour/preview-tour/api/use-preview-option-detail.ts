@@ -3,6 +3,8 @@ import { useMemo } from "react";
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useCurrentLanguage } from "@/shared/hooks";
 
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
 import { enrichOptionDetailTitle } from "../converters";
 import type { IOptionDetail, IPreviewOptionCard } from "../types";
 
@@ -16,6 +18,7 @@ import {
 interface IUsePreviewOptionDetailArgs {
 	tourId: string;
 	optionId: string;
+	currency: ENUM_CURRENCY_OPTIONS_TYPE;
 	isDraft?: boolean;
 	skip?: boolean;
 	optionsList?: IPreviewOptionCard[];
@@ -24,6 +27,7 @@ interface IUsePreviewOptionDetailArgs {
 export const usePreviewOptionDetail = ({
 	tourId,
 	optionId,
+	currency,
 	isDraft = false,
 	skip = false,
 	optionsList: optionsListProp
@@ -32,22 +36,27 @@ export const usePreviewOptionDetail = ({
 	const language = useCurrentLanguage();
 
 	const publicQuery = useGetPreviewOptionQuery(
-		{ tourId, optionId, language },
+		{ tourId, optionId, language, currency },
 		{ skip: shouldSkip || isDraft }
 	);
 
 	const draftQuery = useGetDraftPreviewOptionQuery(
-		{ tourId, optionId, language },
+		{ tourId, optionId, language, currency },
 		{ skip: shouldSkip || !isDraft }
 	);
 
 	const { data: publicOptionsList } = useGetPreviewTourOptionsQuery(
-		{ page: 1, limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS, tourId },
+		{
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS,
+			tourId,
+			currency
+		},
 		{ skip: shouldSkip || isDraft || Boolean(optionsListProp) }
 	);
 
 	const { data: draftOptionsList } = useGetDraftPreviewOptionsQuery(
-		{ tourId, language },
+		{ tourId, language, currency },
 		{
 			skip: shouldSkip || !isDraft || Boolean(optionsListProp)
 		}

@@ -3,6 +3,8 @@ import { useMemo } from "react";
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useCurrentLanguage, useOptionalResourceQuery } from "@/shared/hooks";
 
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
 import type {
 	IOptionDetail,
 	IPreviewOptionCard,
@@ -23,6 +25,7 @@ import { usePreviewOptionDetail } from "./use-preview-option-detail";
 interface IUsePreviewTourPageDataArgs {
 	tourId: string;
 	isDraft: boolean;
+	currency: ENUM_CURRENCY_OPTIONS_TYPE;
 }
 
 interface IUsePreviewTourPageDataResult {
@@ -38,7 +41,8 @@ interface IUsePreviewTourPageDataResult {
 
 export const usePreviewTourPageData = ({
 	tourId,
-	isDraft
+	isDraft,
+	currency
 }: IUsePreviewTourPageDataArgs): IUsePreviewTourPageDataResult => {
 	const skipPublic = !tourId || isDraft;
 	const skipDraft = !tourId || !isDraft;
@@ -64,11 +68,16 @@ export const usePreviewTourPageData = ({
 	});
 
 	const publicOptions = useGetPreviewTourOptionsQuery(
-		{ page: 1, limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS, tourId },
+		{
+			page: 1,
+			limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS,
+			tourId,
+			currency
+		},
 		{ skip: skipPublic }
 	);
 	const draftOptions = useGetDraftPreviewOptionsQuery(
-		{ tourId, language },
+		{ tourId, language, currency },
 		{
 			skip: skipDraft
 		}
@@ -94,6 +103,7 @@ export const usePreviewTourPageData = ({
 		usePreviewOptionDetail({
 			tourId,
 			optionId: singleOption?.id ?? "",
+			currency,
 			isDraft,
 			skip: !singleOption,
 			optionsList: options

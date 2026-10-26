@@ -193,6 +193,7 @@ export const mapSupplierPaymentFiltersToBackend = (
 				: undefined,
 		...(filters.bookingId ? { booking_id: filters.bookingId } : {}),
 		...(filters.supplierId && { supplier_id: filters.supplierId }),
+		...(filters.eventId && { event_id: filters.eventId }),
 		...(search ? { q: search } : {})
 	};
 };

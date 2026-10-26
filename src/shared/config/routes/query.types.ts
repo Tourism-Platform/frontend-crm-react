@@ -6,3 +6,8 @@ export type TTourSearchLocationQuery = {
 	checkIn?: string;
 	checkOut?: string;
 };
+
+/** URL wire-format: preview tour/option pages (price currency) */
+export type TPreviewTourQuery = {
+	currency?: string;
+};

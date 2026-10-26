@@ -7,3 +7,8 @@ export interface IOrderTourReviewItem extends ITourReviewItem {
 	availability?: IBookingEventAvailability;
 	subRows?: IOrderTourReviewItem[];
 }
+
+export interface IBookingEventOption {
+	value: string;
+	label: string;
+}

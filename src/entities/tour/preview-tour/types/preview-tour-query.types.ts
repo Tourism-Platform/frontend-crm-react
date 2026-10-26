@@ -9,12 +9,25 @@ export interface IPreviewTourQueryArgs {
 	language: ENUM_LANGUAGES_TYPE;
 }
 
-export interface IPreviewOptionsListArgs extends IPaginationRequest {
+/** Валюта цен — тоже часть ключа кэша */
+export interface IPreviewCurrencyQueryArgs {
+	currency?: ENUM_CURRENCY_OPTIONS_TYPE;
+}
+
+export interface IPreviewOptionsListArgs
+	extends IPaginationRequest,
+		IPreviewCurrencyQueryArgs {
 	tourId: string;
 	/** Валюта отображения цен; без неё бэк отдаёт USD */
 	currency?: ENUM_CURRENCY_OPTIONS_TYPE;
 }
 
-export interface IPreviewOptionQueryArgs extends IPreviewTourQueryArgs {
+export interface IPreviewDraftOptionsQueryArgs
+	extends IPreviewTourQueryArgs,
+		IPreviewCurrencyQueryArgs {}
+
+export interface IPreviewOptionQueryArgs
+	extends IPreviewTourQueryArgs,
+		IPreviewCurrencyQueryArgs {
 	optionId: string;
 }

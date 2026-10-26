@@ -1,5 +1,7 @@
 import { useCurrentLanguage, useOptionalResourceQuery } from "@/shared/hooks";
 
+import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
+
 import type { IOptionDetail, IPreviewTourGeneral } from "../types";
 
 import {
@@ -12,6 +14,7 @@ interface IUsePreviewOptionPageDataArgs {
 	tourId: string;
 	optionId: string;
 	isDraft: boolean;
+	currency: ENUM_CURRENCY_OPTIONS_TYPE;
 }
 
 interface IUsePreviewOptionPageDataResult {
@@ -24,7 +27,8 @@ interface IUsePreviewOptionPageDataResult {
 export const usePreviewOptionPageData = ({
 	tourId,
 	optionId,
-	isDraft
+	isDraft,
+	currency
 }: IUsePreviewOptionPageDataArgs): IUsePreviewOptionPageDataResult => {
 	const skipPublic = !tourId || isDraft;
 	const skipDraft = !tourId || !isDraft;
@@ -48,6 +52,7 @@ export const usePreviewOptionPageData = ({
 		usePreviewOptionDetail({
 			tourId,
 			optionId,
+			currency,
 			isDraft,
 			skip: !tourId || !optionId
 		})

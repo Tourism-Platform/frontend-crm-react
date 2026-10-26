@@ -2,7 +2,10 @@ import { TEMP_LIST_TOTAL } from "@/shared/config";
 import type { IPaginationResponse } from "@/shared/types";
 import { formatMoney } from "@/shared/utils";
 
-import { currencyConverter } from "@/entities/commission";
+import {
+	type ENUM_CURRENCY_OPTIONS_TYPE,
+	currencyConverter
+} from "@/entities/commission";
 import {
 	ENUM_EVENT_BACKEND,
 	type ENUM_EVENT_BACKEND_TYPE
@@ -139,12 +142,18 @@ const mapPreviewOptionPreviewToFrontend = (
 		: ""
 });
 
+export const mapPreviewCurrencyQueryToBackend = (
+	currency?: ENUM_CURRENCY_OPTIONS_TYPE
+): Pick<TPreviewOptionsListBackendQuery, "currency"> => ({
+	...(currency && { currency: currencyConverter.to(currency) })
+});
+
 export const mapPreviewOptionsQueryToBackend = (
 	args: IPreviewOptionsListArgs
 ): TPreviewOptionsListBackendQuery => ({
 	...(args.page > 1 && { skip: (args.page - 1) * args.limit }),
 	...(args.limit && { limit: args.limit }),
-	...(args.currency && { currency: currencyConverter.to(args.currency) })
+	...mapPreviewCurrencyQueryToBackend(args.currency)
 });
 
 export const mapPreviewOptionsPaginatedToFrontend = (

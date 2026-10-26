@@ -12,7 +12,7 @@ import {
 	usePreviewOptionPageData
 } from "@/entities/tour/preview-tour";
 
-import { useIsDraftPreview } from "../../model/hooks";
+import { useIsDraftPreview, usePreviewCurrency } from "../../model/hooks";
 import {
 	type TPricingAccommodationRow,
 	groupPricingEvents
@@ -118,10 +118,12 @@ const PricingBase: FC<IPricingProps> = ({ optionData: optionDataProp }) => {
 		optionId: string;
 	}>();
 	const isDraftPreview = useIsDraftPreview();
+	const { currency } = usePreviewCurrency();
 	const { optionDetail } = usePreviewOptionPageData({
 		tourId,
 		optionId,
-		isDraft: isDraftPreview
+		isDraft: isDraftPreview,
+		currency
 	});
 	const optionData = optionDataProp ?? optionDetail;
 	const groups = groupPricingEvents(optionData?.days);

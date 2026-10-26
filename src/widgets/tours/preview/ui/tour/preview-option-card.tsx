@@ -17,7 +17,11 @@ import {
 
 import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 
-import { buildPreviewOptionPath, useIsDraftPreview } from "../../model";
+import {
+	buildPreviewOptionPath,
+	useIsDraftPreview,
+	usePreviewCurrency
+} from "../../model";
 
 interface IPreviewOptionCardProps {
 	option: IPreviewOptionCard;
@@ -30,12 +34,17 @@ export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
 	const navigate = useNavigate();
 	const { tourId = "" } = useParams<{ tourId: string }>();
 	const isDraftPreview = useIsDraftPreview();
+	const { currency } = usePreviewCurrency();
 	const { isLoaded, isLoading, isError, onLoad, onError } = useImageStatus(
 		option.image
 	);
 
 	const handleNavigate = () => {
-		navigate(buildPreviewOptionPath(tourId, option.id, isDraftPreview));
+		navigate(
+			buildPreviewOptionPath(tourId, option.id, isDraftPreview, {
+				currency
+			})
+		);
 	};
 
 	return (
