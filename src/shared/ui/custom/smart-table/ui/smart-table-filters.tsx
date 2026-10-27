@@ -1,7 +1,7 @@
 "use client";
 
 import { type Table } from "@tanstack/react-table";
-import { useCallback, useMemo, useRef } from "react";
+import { type ReactNode, useCallback, useMemo, useRef } from "react";
 
 import type { TViewModeType } from "../model";
 
@@ -26,6 +26,7 @@ interface SmartTableFiltersProps<TData extends object> {
 	currentView?: TViewModeType;
 	searchKey?: keyof TData;
 	statusKey?: keyof TData;
+	trailing?: ReactNode;
 }
 
 export function SmartTableFilters<TData extends object>({
@@ -46,11 +47,15 @@ export function SmartTableFilters<TData extends object>({
 	statusOptions,
 	currentView = "table",
 	searchKey,
-	statusKey = "status" as keyof TData
+	statusKey = "status" as keyof TData,
+	trailing
 }: SmartTableFiltersProps<TData>) {
 	const inputRef = useRef<HTMLInputElement>(null);
 
-	const statusColumn = table.getColumn(statusKey as string);
+	// getColumn логирует ошибку для несуществующей колонки, а колонки статуса может не быть
+	const statusColumn = table
+		.getAllLeafColumns()
+		.find((column) => column.id === statusKey);
 	const facetedValues = statusColumn?.getFacetedUniqueValues();
 
 	const uniqueStatusValues = useMemo(() => {
@@ -65,9 +70,7 @@ export function SmartTableFilters<TData extends object>({
 
 	const handleStatusChange = useCallback(
 		(checked: boolean, value: string) => {
-			const filterValue = table
-				.getColumn(statusKey as string)
-				?.getFilterValue() as string[];
+			const filterValue = statusColumn?.getFilterValue() as string[];
 			const newFilterValue = filterValue ? [...filterValue] : [];
 
 			if (checked) {
@@ -79,13 +82,11 @@ export function SmartTableFilters<TData extends object>({
 				}
 			}
 
-			table
-				.getColumn(statusKey as string)
-				?.setFilterValue(
-					newFilterValue.length ? newFilterValue : undefined
-				);
+			statusColumn?.setFilterValue(
+				newFilterValue.length ? newFilterValue : undefined
+			);
 		},
-		[table, statusKey]
+		[statusColumn]
 	);
 
 	return (
@@ -111,6 +112,7 @@ export function SmartTableFilters<TData extends object>({
 			statusOptions={statusOptions}
 			currentView={currentView}
 			searchKey={searchKey}
+			trailing={trailing}
 		/>
 	);
 }

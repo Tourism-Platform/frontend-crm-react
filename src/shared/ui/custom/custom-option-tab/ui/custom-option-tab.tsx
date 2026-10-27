@@ -68,10 +68,23 @@ export const CustomOptionTabs = React.forwardRef<
 ));
 CustomOptionTabs.displayName = "CustomOptionTabs";
 
+type TCustomOptionTabsListProps = React.ComponentPropsWithoutRef<
+	typeof TabsList
+> & {
+	/**
+	 * equal — индикатор равной ширины (табы одинаковой ширины в grid).
+	 * measured — индикатор по реальному размеру/позиции активного таба
+	 * (табы произвольной ширины, например в горизонтальной карусели).
+	 */
+	indicator?: "equal" | "measured";
+};
+
+type TMeasuredIndicator = { left: number; width: number } | null;
+
 export const CustomOptionTabsList = React.forwardRef<
 	React.ComponentRef<typeof TabsList>,
-	React.ComponentPropsWithoutRef<typeof TabsList>
->(({ className, children, style, ...props }, ref) => {
+	TCustomOptionTabsListProps
+>(({ className, children, style, indicator = "equal", ...props }, ref) => {
 	const activeValue = React.useContext(TabsValueContext);
 	const triggers = collectTabTriggers(children);
 	const tabValues = triggers.map((trigger) => trigger.value);
@@ -80,10 +93,47 @@ export const CustomOptionTabsList = React.forwardRef<
 		tabCount > 0 &&
 		triggers.every((trigger) => isDefaultTriggerVariant(trigger.variant));
 	const activeIndex = Math.max(0, tabValues.indexOf(activeValue ?? ""));
+	const isMeasured = indicator === "measured";
+
+	const listRef = React.useRef<React.ComponentRef<typeof TabsList>>(null);
+	const [measured, setMeasured] = React.useState<TMeasuredIndicator>(null);
+
+	const setRefs = React.useCallback(
+		(node: React.ComponentRef<typeof TabsList> | null) => {
+			listRef.current = node;
+			if (typeof ref === "function") ref(node);
+			else if (ref) ref.current = node;
+		},
+		[ref]
+	);
+
+	React.useLayoutEffect(() => {
+		const list = listRef.current;
+		if (!isMeasured || !hasSlidingIndicator || !list) return;
+
+		const update = () => {
+			const activeTrigger = list.querySelector<HTMLElement>(
+				'[role="tab"][data-state="active"]'
+			);
+			setMeasured(
+				activeTrigger
+					? {
+							left: activeTrigger.offsetLeft,
+							width: activeTrigger.offsetWidth
+						}
+					: null
+			);
+		};
+
+		update();
+		const observer = new ResizeObserver(update);
+		observer.observe(list);
+		return () => observer.disconnect();
+	}, [isMeasured, hasSlidingIndicator, activeValue, tabCount]);
 
 	return (
 		<TabsList
-			ref={ref}
+			ref={setRefs}
 			className={cn(
 				"grid bg-transparent",
 				hasSlidingIndicator &&
@@ -93,16 +143,29 @@ export const CustomOptionTabsList = React.forwardRef<
 			style={style}
 			{...props}
 		>
-			{hasSlidingIndicator && (
-				<span
-					aria-hidden
-					className="pointer-events-none absolute top-0.5 left-0.5 z-0 h-[calc(100%-0.25rem)] rounded-md bg-primary shadow-xs transition-transform duration-250 ease-out"
-					style={{
-						width: `calc((100% - 0.25rem) / ${tabCount})`,
-						transform: `translateX(calc(${activeIndex} * 100%))`
-					}}
-				/>
-			)}
+			{hasSlidingIndicator &&
+				(isMeasured ? (
+					<span
+						aria-hidden
+						className={cn(
+							"pointer-events-none absolute top-0.5 left-0 z-0 h-[calc(100%-0.25rem)] rounded-md bg-primary shadow-xs transition-[transform,width] duration-250 ease-out",
+							!measured && "opacity-0"
+						)}
+						style={{
+							width: measured?.width ?? 0,
+							transform: `translateX(${measured?.left ?? 0}px)`
+						}}
+					/>
+				) : (
+					<span
+						aria-hidden
+						className="pointer-events-none absolute top-0.5 left-0.5 z-0 h-[calc(100%-0.25rem)] rounded-md bg-primary shadow-xs transition-transform duration-250 ease-out"
+						style={{
+							width: `calc((100% - 0.25rem) / ${tabCount})`,
+							transform: `translateX(calc(${activeIndex} * 100%))`
+						}}
+					/>
+				))}
 			{children}
 		</TabsList>
 	);

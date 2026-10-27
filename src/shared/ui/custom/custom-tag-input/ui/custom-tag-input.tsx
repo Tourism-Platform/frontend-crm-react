@@ -18,6 +18,13 @@ export interface CustomTagInputProps {
 	className?: string;
 	badgeVariant?: BadgeVariant;
 	badgeSize?: BadgeSize;
+	/** Вариант бейджа для конкретного тега — например, подсветить невалидные */
+	getTagVariant?: (tag: string) => BadgeVariant;
+	/** Приводит список после каждого изменения: разбиение, регистр, дубли */
+	normalizeValue?: (value: string[]) => string[];
+	/** Клавиши, завершающие ввод тега (по умолчанию Enter и запятая) */
+	delimiterList?: string[];
+	addTagsOnBlur?: boolean;
 }
 
 export const CustomTagInput: FC<CustomTagInputProps> = ({
@@ -27,7 +34,11 @@ export const CustomTagInput: FC<CustomTagInputProps> = ({
 	disabled,
 	className,
 	badgeVariant = "secondary",
-	badgeSize = "md"
+	badgeSize = "md",
+	getTagVariant,
+	normalizeValue,
+	delimiterList,
+	addTagsOnBlur
 }) => {
 	const id = useId();
 	const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
@@ -46,7 +57,9 @@ export const CustomTagInput: FC<CustomTagInputProps> = ({
 				setTags={(newTags) => {
 					const next =
 						typeof newTags === "function" ? newTags(tags) : newTags;
-					onChange?.(next.map((tag) => tag.text));
+					const texts = next.map((tag) => tag.text);
+
+					onChange?.(normalizeValue ? normalizeValue(texts) : texts);
 				}}
 				activeTagIndex={activeTagIndex}
 				setActiveTagIndex={setActiveTagIndex}
@@ -54,10 +67,12 @@ export const CustomTagInput: FC<CustomTagInputProps> = ({
 				disabled={disabled}
 				inlineTags={false}
 				inputFieldPosition="top"
+				delimiterList={delimiterList}
+				addTagsOnBlur={addTagsOnBlur}
 				customTagRenderer={(tag, isActive) => (
 					<Badge
 						key={tag.id}
-						variant={badgeVariant}
+						variant={getTagVariant?.(tag.text) ?? badgeVariant}
 						size={badgeSize}
 						className={cn(
 							"pl-3 pr-8 text-sm relative",

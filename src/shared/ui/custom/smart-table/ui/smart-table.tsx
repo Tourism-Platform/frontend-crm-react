@@ -213,7 +213,7 @@ function SmartTableInner<TData extends object>({
 			{
 				type: "table" as const,
 				component: (
-					<DataGridContainer>
+					<DataGridContainer className="custom-scrollbar">
 						{tableLayout?.columnsDraggable ||
 						tableLayout?.rowsDraggable ? (
 							<DataGridTableDnD />
@@ -242,6 +242,27 @@ function SmartTableInner<TData extends object>({
 	const [currentView, setCurrentView] =
 		useState<TViewModeType>(defaultViewMode);
 
+	// Actions и переключатель вида — в конце группы контролов,
+	// чтобы переноситься вместе с поиском и фильтрами
+	const trailing =
+		actions || useViewMode ? (
+			<>
+				{actions}
+				{useViewMode && (
+					<CustomOptionTabsList className="h-9 shrink-0 grid-cols-2 gap-2">
+						{VIEW_CONFIG.map((item) => (
+							<CustomOptionTabsTrigger
+								key={item.type}
+								value={item.type}
+							>
+								{item.icon}
+							</CustomOptionTabsTrigger>
+						))}
+					</CustomOptionTabsList>
+				)}
+			</>
+		) : null;
+
 	return (
 		<DataGrid
 			table={table}
@@ -261,56 +282,40 @@ function SmartTableInner<TData extends object>({
 						showTopFilters ||
 						actions ||
 						useViewMode) && (
-						<div
-							className={`grid-cols-[1fr_auto] items-center gap-3 ${!!actions || useViewMode ? "grid" : "block"}`}
-						>
-							{/* <div className="flex items-center gap-3"> */}
-							<div className="grid gap-3 grid-cols-[1fr_max-content]">
-								{topChildren}
-								{showTopFilters && (
-									<SmartTableFilters
-										id={id}
-										table={table}
-										showSearchFilter={showSearchFilter}
-										showStatusFilter={showStatusFilter}
-										showVisibilityFilter={
-											showVisibilityFilter
-										}
-										showStatusTabsFilter={
-											showStatusTabsFilter
-										}
-										statusTabs={statusTabs}
-										activeStatusTab={activeStatusTab}
-										onStatusTabChange={onStatusTabChange}
-										search={search}
-										onSearchChange={onSearchChange}
-										minSearchLength={minSearchLength}
-										status={status}
-										onStatusChange={onStatusChange}
-										statusOptions={statusOptions}
-										currentView={currentView}
-										searchKey={searchKey}
-										statusKey={statusKey}
-									/>
-								)}
-							</div>
-							<div
-								className={`flex gap-3 h-full ${!!actions || useViewMode ? "flex" : "hidden"}`}
-							>
-								{actions}
-								{useViewMode && (
-									<CustomOptionTabsList className="grid-cols-2 gap-2">
-										{VIEW_CONFIG.map((item) => (
-											<CustomOptionTabsTrigger
-												key={item.type}
-												value={item.type}
-											>
-												{item.icon}
-											</CustomOptionTabsTrigger>
-										))}
-									</CustomOptionTabsList>
-								)}
-							</div>
+						// Плоский flex-wrap: если табы и контролы не помещаются в строку,
+						// контролы (вместе с actions и переключателем вида) переносятся,
+						// а табы при нехватке ширины листаются свайпом
+						<div className="flex flex-wrap items-center gap-3">
+							{topChildren}
+							{showTopFilters ? (
+								<SmartTableFilters
+									id={id}
+									table={table}
+									showSearchFilter={showSearchFilter}
+									showStatusFilter={showStatusFilter}
+									showVisibilityFilter={showVisibilityFilter}
+									showStatusTabsFilter={showStatusTabsFilter}
+									statusTabs={statusTabs}
+									activeStatusTab={activeStatusTab}
+									onStatusTabChange={onStatusTabChange}
+									search={search}
+									onSearchChange={onSearchChange}
+									minSearchLength={minSearchLength}
+									status={status}
+									onStatusChange={onStatusChange}
+									statusOptions={statusOptions}
+									currentView={currentView}
+									searchKey={searchKey}
+									statusKey={statusKey}
+									trailing={trailing}
+								/>
+							) : (
+								trailing && (
+									<div className="ml-auto flex shrink-0 items-center gap-3">
+										{trailing}
+									</div>
+								)
+							)}
 						</div>
 					)}
 

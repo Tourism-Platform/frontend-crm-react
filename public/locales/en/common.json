@@ -10,11 +10,13 @@
 		"cancel": "Cancel"
 	},
 	"actions": {
-		"show_more": "Show more"
+		"show_more": "Show more",
+		"retry": "Retry"
 	},
 	"clipboard": {
 		"copied": "Copied to clipboard",
-		"copy_failed": "Failed to copy"
+		"copy_failed": "Failed to copy",
+		"copy": "Copy"
 	},
 	"empty_state": {
 		"title": "Nothing here yet",
@@ -24,7 +26,6 @@
 		"title": "Something went wrong",
 		"description": "We couldn't load the data. Please try again later"
 	},
-
 	"upload_files": {
 		"title": "Upload files",
 		"empty": "No files attached",
@@ -90,5 +91,8 @@
 			"from": "Min",
 			"to": "Max"
 		}
+	},
+	"loading_state": {
+		"label": "Loading…"
 	}
 }

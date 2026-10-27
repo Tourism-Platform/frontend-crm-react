@@ -2,17 +2,29 @@ import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LeafIcon } from "@/shared/assets/icons";
+import { cn } from "@/shared/lib";
 
 type TEmptyStateProps = {
 	title?: string;
 	description?: string;
+	className?: string;
 };
 
-export const EmptyState: FC<TEmptyStateProps> = ({ title, description }) => {
+/** Пустой результат — та же высота, что у LoadingState / ErrorState */
+export const EmptyState: FC<TEmptyStateProps> = ({
+	title,
+	description,
+	className
+}) => {
 	const { t } = useTranslation("common");
 
 	return (
-		<div className="flex flex-col items-center justify-center h-[260px] text-center p-8">
+		<div
+			className={cn(
+				"flex min-h-[260px] flex-1 flex-col items-center justify-center p-8 text-center",
+				className
+			)}
+		>
 			<div className="flex items-center justify-center w-12 h-12 rounded-full mb-4">
 				<LeafIcon className="w-10 h-10" />
 			</div>

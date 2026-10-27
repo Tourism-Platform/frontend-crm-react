@@ -1,5 +1,5 @@
 import type { Table } from "@tanstack/react-table";
-import { type RefObject } from "react";
+import { type ReactNode, type RefObject } from "react";
 
 import { SearchFilter } from "./search-filter";
 import { StatusFilter } from "./status-filter";
@@ -15,6 +15,8 @@ interface IFiltersProps<TData extends object> extends IShowFilters {
 	handleStatusChange: (checked: boolean, value: string) => void;
 	currentView?: "table" | "cards";
 	searchKey?: keyof TData;
+	/** Элементы в конце группы контролов (actions, переключатель вида) */
+	trailing?: ReactNode;
 }
 
 export interface IShowFilters {
@@ -54,37 +56,49 @@ export const Filters = <TData extends object>({
 	onStatusChange,
 	statusOptions,
 	currentView = "table",
-	searchKey
+	searchKey,
+	trailing
 }: IFiltersProps<TData>) => {
+	const showTabs =
+		(currentView === "cards" || showStatusTabsFilter) &&
+		Boolean(statusTabs?.length);
+	/** Серверный фильтр (onStatusChange) от вида не зависит; фасетный — по колонке, только в таблице */
+	const showStatus =
+		(currentView === "table" || Boolean(onStatusChange)) &&
+		!showStatusTabsFilter &&
+		showStatusFilter;
+	const showVisibility = currentView === "table" && showVisibilityFilter;
+	const hasControls =
+		showSearchFilter || showStatus || showVisibility || Boolean(trailing);
+
+	// Фрагмент: табы и контролы — прямые элементы flex-wrap тулбара SmartTable.
+	// Если вместе не помещаются, контролы (вместе с trailing) уходят на новую строку.
 	return (
-		<div className="flex justify-between gap-3 w-full">
+		<>
 			{/* Status tabs filter - только для режима карточек */}
-			{(currentView === "cards" || showStatusTabsFilter) &&
-				statusTabs &&
-				statusTabs.length > 0 && (
-					<StatusTabsFilter
-						statusTabs={statusTabs}
-						activeStatusTab={activeStatusTab}
-						onStatusTabChange={onStatusTabChange}
-					/>
-				)}
-			<div className="flex items-center gap-3">
-				{/* Filter by name or email */}
-				{showSearchFilter && (
-					<SearchFilter<TData>
-						id={id}
-						inputRef={inputRef}
-						table={table}
-						search={search}
-						onSearchChange={onSearchChange}
-						minSearchLength={minSearchLength}
-						searchKey={searchKey}
-					/>
-				)}
-				{/* Filter by status - только для режима таблицы */}
-				{currentView === "table" &&
-					!showStatusTabsFilter &&
-					showStatusFilter && (
+			{showTabs && statusTabs && (
+				<StatusTabsFilter
+					statusTabs={statusTabs}
+					activeStatusTab={activeStatusTab}
+					onStatusTabChange={onStatusTabChange}
+				/>
+			)}
+			{hasControls && (
+				<div className="flex min-w-0 grow flex-wrap items-center justify-end gap-3">
+					{/* Filter by name or email */}
+					{showSearchFilter && (
+						<SearchFilter<TData>
+							id={id}
+							inputRef={inputRef}
+							table={table}
+							search={search}
+							onSearchChange={onSearchChange}
+							minSearchLength={minSearchLength}
+							searchKey={searchKey}
+						/>
+					)}
+					{/* Filter by status - только для режима таблицы */}
+					{showStatus && (
 						<StatusFilter
 							id={id}
 							selectedStatuses={
@@ -109,11 +123,14 @@ export const Filters = <TData extends object>({
 							statusOptions={statusOptions}
 						/>
 					)}
-				{/* Toggle columns visibility */}
-				{currentView === "table" && showVisibilityFilter && (
-					<VisibilityFilter<TData> table={table} />
-				)}
-			</div>
-		</div>
+					{/* Toggle columns visibility */}
+					{showVisibility && (
+						<VisibilityFilter<TData> table={table} />
+					)}
+					{/* Actions и переключатель вида — переносятся вместе с фильтрами */}
+					{trailing}
+				</div>
+			)}
+		</>
 	);
 };

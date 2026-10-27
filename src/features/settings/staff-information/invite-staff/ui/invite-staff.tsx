@@ -37,8 +37,8 @@ export const InviteStaff: FC = () => {
 	const { t } = useTranslation("staff_information_page");
 	const [createStaff, { isLoading }] = useCreateStaffMutation();
 	const copy = useCopyToClipboard({
-		successMessage: t("invite.form.toasts.copied"),
-		errorMessage: t("invite.form.toasts.copy_failed")
+		success: t("invite.form.toasts.copied"),
+		error: t("invite.form.toasts.copy_failed")
 	});
 
 	const form = useForm<TInviteStaffSchema>({
@@ -78,7 +78,8 @@ export const InviteStaff: FC = () => {
 	}
 
 	const handleCopy = async () => {
-		await copy(form.getValues(ENUM_FORM_INVITE_STAFF.PASSWORD) ?? "");
+		const password = form.getValues(ENUM_FORM_INVITE_STAFF.PASSWORD);
+		if (password) await copy(password);
 	};
 
 	return (

@@ -69,12 +69,12 @@ export const SearchFilter = <TData extends object>({
 	]);
 
 	return (
-		<div className="relative">
+		<div className="relative min-w-0 flex-1 basis-60 lg:max-w-sm">
 			<Input
 				id={`${id}-input`}
 				ref={inputRef}
 				className={cn(
-					"peer min-w-60 ps-9",
+					"peer w-full ps-9",
 					Boolean(localSearch) && "pe-9"
 				)}
 				value={localSearch}

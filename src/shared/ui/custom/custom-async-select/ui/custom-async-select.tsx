@@ -43,6 +43,7 @@ export type TCustomAsyncSelectProps = {
 	/** Approx. item height used to prefetch N items before the end */
 	loadMoreThreshold?: number;
 	renderOption?: (option: TAsyncSelectOption) => ReactNode;
+	/** Строки в разметке опций (px-2 py-1.5 как у кнопки) — и при первой загрузке, и при подгрузке */
 	renderSkeleton?: () => ReactNode;
 };
 
@@ -50,13 +51,13 @@ const DEFAULT_SKELETON_COUNT = 5;
 const DEFAULT_LOAD_MORE_THRESHOLD = 3;
 const APPROX_OPTION_HEIGHT_PX = 36;
 
-const DefaultSkeleton = () => (
-	<div className="flex flex-col gap-1 p-1">
-		{Array.from({ length: DEFAULT_SKELETON_COUNT }).map((_, index) => (
-			<Skeleton key={index} className="h-8 w-full" />
-		))}
-	</div>
-);
+/** Строка — как кнопка опции: те же отступы и высота строки text-sm */
+const DefaultSkeleton = ({ count }: { count: number }) =>
+	Array.from({ length: count }).map((_, index) => (
+		<div key={index} className="px-2 py-1.5">
+			<Skeleton className="w-full text-sm">&nbsp;</Skeleton>
+		</div>
+	));
 
 export const CustomAsyncSelect = forwardRef<
 	HTMLDivElement,
@@ -89,7 +90,10 @@ export const CustomAsyncSelect = forwardRef<
 			useState<TAsyncSelectOption | null>(null);
 		const anchorRef = useRef<HTMLDivElement>(null);
 		const [popoverWidth, setPopoverWidth] = useState<number>();
-		const loadMoreRef = useRef<HTMLLIElement | null>(null);
+		/** State, а не ref: сентинел монтируется позже открытия поповера, эффект должен это увидеть */
+		const [loadMoreNode, setLoadMoreNode] = useState<HTMLLIElement | null>(
+			null
+		);
 		const loadMoreLockedRef = useRef(false);
 		const isLoadingRef = useRef(isLoading);
 		const isLoadingMoreRef = useRef(isLoadingMore);
@@ -105,8 +109,14 @@ export const CustomAsyncSelect = forwardRef<
 		);
 
 		useEffect(() => {
+			/** Тот же выбор в новом массиве опций — без нового state, иначе цикл рендеров */
 			if (selectedFromOptions) {
-				setCachedSelected(selectedFromOptions);
+				setCachedSelected((prev) =>
+					prev?.value === selectedFromOptions.value &&
+					prev.label === selectedFromOptions.label
+						? prev
+						: selectedFromOptions
+				);
 			}
 		}, [selectedFromOptions]);
 
@@ -140,18 +150,22 @@ export const CustomAsyncSelect = forwardRef<
 			}
 		}, [open, updatePopoverWidth]);
 
+		/**
+		 * Новые опции тоже снимают блокировку: страница из кеша RTK приходит
+		 * без isLoadingMore, и без этого подгрузка останавливается навсегда
+		 */
 		useEffect(() => {
 			if (!isLoadingMore) {
 				loadMoreLockedRef.current = false;
 			}
-		}, [isLoadingMore]);
+		}, [isLoadingMore, options.length]);
 
 		useEffect(() => {
 			if (!open || !hasMore || !onLoadMore) {
 				return;
 			}
 
-			const node = loadMoreRef.current;
+			const node = loadMoreNode;
 			if (!node) {
 				return;
 			}
@@ -210,7 +224,8 @@ export const CustomAsyncSelect = forwardRef<
 			onLoadMore,
 			isLoadingMore,
 			options.length,
-			loadMoreThreshold
+			loadMoreThreshold,
+			loadMoreNode
 		]);
 
 		const handleInputChange = (val: string) => {
@@ -277,9 +292,15 @@ export const CustomAsyncSelect = forwardRef<
 					onOpenAutoFocus={(e) => e.preventDefault()}
 					onCloseAutoFocus={(e) => e.preventDefault()}
 				>
-					{showInitialLoading
-						? (renderSkeleton?.() ?? <DefaultSkeleton />)
-						: null}
+					{showInitialLoading ? (
+						<div className="flex flex-col gap-0.5 p-0.5 pr-3">
+							{renderSkeleton?.() ?? (
+								<DefaultSkeleton
+									count={DEFAULT_SKELETON_COUNT}
+								/>
+							)}
+						</div>
+					) : null}
 					{showEmpty ? (
 						<p className="py-6 text-center text-sm text-muted-foreground">
 							{emptyText}
@@ -309,15 +330,17 @@ export const CustomAsyncSelect = forwardRef<
 								))}
 								{hasMore ? (
 									<li
-										ref={loadMoreRef}
+										ref={setLoadMoreNode}
 										className="h-px"
 										aria-hidden
 									/>
 								) : null}
 								{isLoadingMore ? (
-									<li className="px-2 py-1.5">
+									<li className="flex flex-col gap-0.5">
 										{renderSkeleton?.() ?? (
-											<Skeleton className="h-8 w-full" />
+											<DefaultSkeleton
+												count={DEFAULT_SKELETON_COUNT}
+											/>
 										)}
 									</li>
 								) : null}

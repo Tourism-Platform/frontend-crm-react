@@ -1,6 +1,6 @@
 import { parseDate, parseTime } from "@internationalized/date";
 import type { TFunction } from "i18next";
-import type { ComponentProps, FC } from "react";
+import type { ComponentProps, FC, ReactNode, RefObject } from "react";
 import type { DateValue, TimeValue } from "react-aria-components";
 import type { Control } from "react-hook-form";
 
@@ -11,6 +11,7 @@ import type {
 	CustomAutocompleteProps,
 	CustomCountrySelectProps,
 	CustomGeoSelectProps,
+	ICustomCheckboxGroupProps,
 	ICustomUploadFilesProps,
 	RatingButtonSize,
 	RatingButtonVariant,
@@ -20,6 +21,7 @@ import {
 	CustomAsyncSelect,
 	CustomAutocomplete,
 	CustomCalendarRange,
+	CustomCheckboxGroup,
 	CustomCountrySelect,
 	CustomGeoSelect,
 	CustomTagInput,
@@ -27,6 +29,7 @@ import {
 	DatePickerInput,
 	type DatePickerInputProps,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -46,6 +49,7 @@ import {
 	type TimePickerInputProps
 } from "@/shared/ui";
 import { CustomEditor } from "@/shared/ui/custom/custom-editor";
+import { CustomSlider } from "@/shared/ui/custom/custom-slider";
 import { DatePicker } from "@/shared/ui/date-picker";
 import { PhoneInput } from "@/shared/ui/shadcn-ui/phone-input";
 
@@ -68,7 +72,9 @@ export type CustomFieldVariant =
 	| "dateRange"
 	| "datePicker"
 	| "switch"
-	| "rating";
+	| "rating"
+	| "slider"
+	| "checkboxGroup";
 type BaseFieldProps = {
 	control: Control<any>;
 	name: string;
@@ -78,6 +84,8 @@ type BaseFieldProps = {
 	disabled?: boolean;
 	externalError?: string;
 	hideLabel?: boolean;
+	/** Содержимое справа от подписи — счётчик, подсказка */
+	labelAside?: ReactNode;
 	/** Пишется в RHF через FormField/Controller при регистрации поля */
 	defaultValue?: unknown;
 };
@@ -98,6 +106,10 @@ type TextareaFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "textarea">;
 	placeholder: string;
 	rows?: number;
+	/** Классы самого textarea (className уходит на FormItem) */
+	inputClassName?: string;
+	/** Доступ к DOM-элементу — например, для работы с выделением */
+	inputRef?: RefObject<HTMLTextAreaElement | null>;
 };
 
 type TimeFieldVariant = BaseFieldProps & {
@@ -131,7 +143,15 @@ type TagsFieldVariant = BaseFieldProps & {
 	placeholder?: string;
 	badgeVariant?: BadgeVariant;
 	badgeSize?: BadgeSize;
+	getTagVariant?: (tag: string) => BadgeVariant;
+	normalizeValue?: (value: string[]) => string[];
+	delimiterList?: string[];
+	addTagsOnBlur?: boolean;
 };
+
+type CheckboxGroupFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "checkboxGroup">;
+} & Omit<ICustomCheckboxGroupProps, "value" | "onChange">;
 
 type UploadFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "upload">;
@@ -176,6 +196,13 @@ type RatingFieldVariant = BaseFieldProps & {
 	previewOnHover?: boolean;
 };
 
+type SliderFieldVariant = BaseFieldProps & {
+	fieldType: Extract<CustomFieldVariant, "slider">;
+	min?: number;
+	max?: number;
+	femaleLabel: string;
+};
+
 type CustomFieldProps =
 	| TextFieldVariant
 	| PasswordFieldVariant
@@ -195,7 +222,12 @@ type CustomFieldProps =
 	| DateRangeFieldVariant
 	| DatePickerFieldVariant
 	| SwitchFieldVariant
-	| RatingFieldVariant;
+	| RatingFieldVariant
+	| SliderFieldVariant
+	| CheckboxGroupFieldVariant;
+
+/** Собственные пропсы варианта — без общих полей формы (control, name, t и т. д.) */
+type TVariantRest<V> = Omit<V, keyof BaseFieldProps | "fieldType">;
 
 // helpers
 const toDateValue = (v: unknown): DateValue | null => {
@@ -226,6 +258,7 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 		fieldType,
 		externalError,
 		hideLabel,
+		labelAside,
 		defaultValue,
 		...rest
 	} = props;
@@ -233,11 +266,17 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 	const renderInput = (field: any) => {
 		switch (fieldType) {
 			case "input":
+			default:
 				return (
 					<Input
 						{...rest}
 						placeholder={t(props.placeholder)}
 						{...field}
+						value={
+							props.type === "number"
+								? (field.value ?? "")
+								: field.value
+						}
 						onChange={(event) => {
 							if (props.type === "number") {
 								const value = event.target.valueAsNumber;
@@ -267,15 +306,26 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						{...field}
 					/>
 				);
-			case "textarea":
+			case "textarea": {
+				const { inputClassName, inputRef, ...textareaRest } =
+					rest as Omit<
+						TextareaFieldVariant,
+						keyof BaseFieldProps | "fieldType"
+					>;
+
 				return (
 					<Textarea
-						{...rest}
-						className="resize-none h-32"
+						{...textareaRest}
+						className={cn("resize-none h-32", inputClassName)}
 						placeholder={t(props.placeholder)}
 						{...field}
+						ref={(element) => {
+							field.ref(element);
+							if (inputRef) inputRef.current = element;
+						}}
 					/>
 				);
+			}
 			case "time": {
 				const timeRest = rest as Omit<
 					TimePickerInputProps,
@@ -357,29 +407,51 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						disabled={props.disabled}
 						badgeVariant={props.badgeVariant}
 						badgeSize={props.badgeSize}
+						getTagVariant={props.getTagVariant}
+						normalizeValue={props.normalizeValue}
+						delimiterList={props.delimiterList}
+						addTagsOnBlur={props.addTagsOnBlur}
+					/>
+				);
+			case "checkboxGroup":
+				return (
+					<CustomCheckboxGroup
+						options={props.options}
+						toggle={props.toggle}
+						appearance={props.appearance}
+						disabled={props.disabled}
+						value={Array.isArray(field.value) ? field.value : []}
+						onChange={field.onChange}
 					/>
 				);
 			case "upload":
+				/** CustomUploadFilesField сам вызывает useController — ему нужны control и name */
 				return (
 					<CustomUploadFilesField
 						{...props}
 						readOnly={props.readOnly || props.disabled}
 					/>
 				);
-			case "autocomplete":
+			case "autocomplete": {
+				const autocompleteRest =
+					rest as TVariantRest<AutocompleteFieldVariant>;
+
 				return (
 					<CustomAutocomplete
-						{...props}
+						{...autocompleteRest}
 						placeholder={t(props.placeholder)}
 						emptyText={t(props.emptyText)}
 						value={field.value}
 						onChange={field.onChange}
 					/>
 				);
-			case "country":
+			}
+			case "country": {
+				const countryRest = rest as TVariantRest<CountryFieldVariant>;
+
 				return (
 					<CustomCountrySelect
-						{...props}
+						{...countryRest}
 						placeholder={
 							props.placeholder ? t(props.placeholder) : undefined
 						}
@@ -390,20 +462,27 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						onChange={field.onChange}
 					/>
 				);
-			case "geo":
+			}
+			case "geo": {
+				const geoRest = rest as TVariantRest<GeoFieldVariant>;
+
 				return (
 					<CustomGeoSelect
-						{...props}
+						{...geoRest}
 						placeholder={t(props.placeholder)}
 						emptyText={t(props.emptyText)}
 						value={field.value ?? null}
 						onChange={field.onChange}
 					/>
 				);
-			case "asyncSelect":
+			}
+			case "asyncSelect": {
+				const asyncSelectRest =
+					rest as TVariantRest<AsyncSelectFieldVariant>;
+
 				return (
 					<CustomAsyncSelect
-						{...props}
+						{...asyncSelectRest}
 						placeholder={
 							props.placeholder ? t(props.placeholder) : undefined
 						}
@@ -414,19 +493,22 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 						onChange={(value) => field.onChange(value || null)}
 					/>
 				);
-			case "dateRange":
+			}
+			case "dateRange": {
+				const dateRangeRest =
+					rest as TVariantRest<DateRangeFieldVariant>;
+
 				return (
 					<CustomCalendarRange
-						{...props}
+						{...dateRangeRest}
 						placeholder={t(props.placeholder)}
 						{...field}
 					/>
 				);
+			}
 			case "datePicker": {
 				const value = field.value as
-					| { from?: Date; to?: Date }
-					| null
-					| undefined;
+					{ from?: Date; to?: Date } | null | undefined;
 
 				return (
 					<DatePicker
@@ -466,25 +548,23 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 					</Rating>
 				);
 			}
-
-			default:
+			case "slider": {
 				return (
-					<Input
-						{...rest}
-						placeholder={t(props.placeholder)}
-						{...field}
-						onChange={(event) => {
-							if (props.type === "number") {
-								const value = event.target.valueAsNumber;
-								field.onChange(
-									Number.isFinite(value) ? value : null
-								);
-							} else {
-								field.onChange(event);
-							}
-						}}
+					<CustomSlider
+						min={props.min}
+						max={props.max}
+						disabled={props.disabled}
+						value={
+							typeof field.value === "number"
+								? field.value
+								: props.min
+						}
+						onChange={field.onChange}
+						startLabel={label ? t(label) : ""}
+						endLabel={t(props.femaleLabel)}
 					/>
 				);
+			}
 		}
 	};
 
@@ -500,13 +580,20 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				render={({ field }) => (
 					<FormItem
 						className={cn(
-							"flex items-center justify-between gap-4",
+							"flex flex-row items-center justify-between gap-4",
 							className
 						)}
 					>
-						<FormLabel className="cursor-pointer">
-							{t(label)}
-						</FormLabel>
+						<div className="flex flex-col gap-1">
+							<FormLabel className="cursor-pointer">
+								{t(label)}
+							</FormLabel>
+							{props.description ? (
+								<FormDescription>
+									{t(props.description)}
+								</FormDescription>
+							) : null}
+						</div>
 						<FormControl>{renderInput(field)}</FormControl>
 					</FormItem>
 				)}
@@ -523,8 +610,17 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				<FormItem
 					className={cn("relative", !hideLabel && "mb-5", className)}
 				>
-					{label && !hideLabel ? (
-						<FormLabel className="ml-1">{t(label)}:</FormLabel>
+					{label && !hideLabel && fieldType !== "slider" ? (
+						labelAside ? (
+							<div className="flex items-baseline justify-between gap-3">
+								<FormLabel className="ml-1">
+									{t(label)}:
+								</FormLabel>
+								{labelAside}
+							</div>
+						) : (
+							<FormLabel className="ml-1">{t(label)}:</FormLabel>
+						)
 					) : null}
 					<FormControl>{renderInput(field)}</FormControl>
 					<FormMessage

@@ -6,6 +6,7 @@ export default mergeConfig(
 	viteConfig,
 	defineConfig({
 		test: {
+			setupFiles: ["./src/app/test/setup.ts"],
 			// Фейковые хосты: незамоканный запрос падает, а не уходит на бэкенд
 			env: {
 				VITE_API_URL: "http://api.test",

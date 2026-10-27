@@ -14,11 +14,11 @@ import type {
 	TGeoFormValue
 } from "@/shared/types/geo-form.types";
 import {
+	CustomScroll,
 	Input,
 	Popover,
 	PopoverAnchor,
-	PopoverContent,
-	ScrollArea
+	PopoverContent
 } from "@/shared/ui";
 import { encodeGeoOptionValue } from "@/shared/utils/geo-option.utils";
 
@@ -151,7 +151,7 @@ export const CustomGeoSelect: FC<CustomGeoSelectProps> = ({
 					</p>
 				) : null}
 				{showOptions ? (
-					<ScrollArea className="h-60 w-full">
+					<CustomScroll className="h-60 w-full">
 						<ul className="flex flex-col gap-0.5 p-0.5 pr-3">
 							{options.map((option) => (
 								<li key={option.value}>
@@ -168,7 +168,7 @@ export const CustomGeoSelect: FC<CustomGeoSelectProps> = ({
 								</li>
 							))}
 						</ul>
-					</ScrollArea>
+					</CustomScroll>
 				) : null}
 			</PopoverContent>
 		</Popover>

@@ -29,6 +29,27 @@
 
 }
 
+/* тонкий скроллбар: CustomScroll, SmartTable */
+@utility custom-scrollbar {
+	scrollbar-width: thin;
+	scrollbar-color: var(--border) transparent;
+
+	&::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+	&::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 9999px;
+		background: color-mix(in oklab, var(--border) 60%, transparent);
+	}
+	&:hover::-webkit-scrollbar-thumb {
+		background: var(--border);
+	}
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

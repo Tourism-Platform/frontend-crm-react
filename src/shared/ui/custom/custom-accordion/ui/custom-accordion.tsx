@@ -11,9 +11,9 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 	Checkbox,
+	CustomScroll,
 	Label,
-	LoaderButton,
-	ScrollArea
+	LoaderButton
 } from "@/shared/ui";
 
 import { type IAccordionItem } from "../model";
@@ -63,17 +63,12 @@ export const CustomAccordion: FC<ICustomAccordionProps> = memo(
 						</div>
 					</AccordionTrigger>
 					<AccordionContent>
-						<ScrollArea
-							className={cn(
-								"w-full",
-								items.length > length || hasMore
-									? "max-h-[var(--radix-scroll-area-height)]"
-									: "h-auto"
-							)}
+						<CustomScroll
+							className="w-full"
 							style={
-								{
-									"--radix-scroll-area-height": `${(length + 1) * 36}px`
-								} as React.CSSProperties
+								items.length > length || hasMore
+									? { maxHeight: `${(length + 1) * 36}px` }
+									: undefined
 							}
 						>
 							<div className="flex flex-col gap-3 pr-4">
@@ -134,7 +129,7 @@ export const CustomAccordion: FC<ICustomAccordionProps> = memo(
 										/>
 									)}
 							</div>
-						</ScrollArea>
+						</CustomScroll>
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
