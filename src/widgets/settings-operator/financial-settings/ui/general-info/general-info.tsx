@@ -112,7 +112,7 @@ const GeneralInfoBase: FC = () => {
 					</Fragment>
 				))}
 
-				<div>
+				<div className="flex justify-end mt-6">
 					<LoaderButton
 						type="submit"
 						disabled={isLoading}

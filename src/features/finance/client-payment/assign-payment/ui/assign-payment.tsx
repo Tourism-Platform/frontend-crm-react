@@ -113,7 +113,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
 						<CustomScroll className="space-y-6 px-6 py-4">
-							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+							<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 								{FORM_ASSIGN_PAYMENT_LIST.map(
 									({ key, disabled, ...item }) => (
 										<CustomField

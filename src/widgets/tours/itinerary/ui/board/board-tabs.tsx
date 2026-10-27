@@ -49,7 +49,7 @@ export const BoardTabs: FC<IBoardTabsProps> = ({
 	};
 
 	return (
-		<div className="px-4 py-2 flex items-center gap-2">
+		<div className="px-4 py-2 flex items-center gap-2 overflow-x-auto">
 			<CustomOptionTabs
 				defaultValue={activeOption}
 				value={activeOption}

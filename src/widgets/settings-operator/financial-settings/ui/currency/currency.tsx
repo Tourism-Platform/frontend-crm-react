@@ -114,7 +114,7 @@ const CurrencyBase: FC = () => {
 								control={control}
 								name={key}
 								t={t}
-								className="w-48"
+								className="w-full sm:w-72"
 								{...item}
 							/>
 						))}

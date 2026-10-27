@@ -43,7 +43,7 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 	const { pageIndex, pageSize } = table.getState().pagination;
 
 	return (
-		<div className="flex items-center justify-between gap-8">
+		<div className="grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-3 lg:grid-cols-[auto_1fr_auto] lg:gap-x-8">
 			{/* Results per page */}
 			<div className="flex items-center gap-3">
 				<Label
@@ -52,6 +52,7 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 				>
 					{t("table.pagination")}
 				</Label>
+
 				<Select
 					value={pageSize.toString()}
 					onValueChange={(value) => {
@@ -64,6 +65,7 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 					>
 						<SelectValue placeholder="Select number of results" />
 					</SelectTrigger>
+
 					<SelectContent className="[&_*[role=option]]:ps-2 [&_*[role=option]]:pe-8 [&_*[role=option]>span]:start-auto [&_*[role=option]>span]:end-2">
 						{[5, 10, 25, 50, 100].map((size) => (
 							<SelectItem key={size} value={size.toString()}>
@@ -75,10 +77,10 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 			</div>
 
 			{/* Page number information */}
-			<div className="text-muted-foreground flex grow justify-end text-sm whitespace-nowrap">
+			<div className="col-span-2 row-start-2 flex justify-center text-muted-foreground text-sm whitespace-nowrap lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:justify-end">
 				<p aria-live="polite">
 					<span className="text-foreground font-medium">
-						{pageIndex * pageSize + 1}-
+						{recordCount === 0 ? 0 : pageIndex * pageSize + 1}-
 						{Math.min((pageIndex + 1) * pageSize, recordCount)}
 					</span>{" "}
 					of{" "}
@@ -89,7 +91,7 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 			</div>
 
 			{/* Pagination buttons */}
-			<div>
+			<div className="col-start-2 row-start-1 justify-self-end lg:col-start-3">
 				<Pagination>
 					<PaginationContent className="gap-1">
 						{/* First page button */}
@@ -108,6 +110,7 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 								/>
 							</Button>
 						</PaginationItem>
+
 						{/* Previous page button */}
 						<PaginationItem>
 							<Button
@@ -121,6 +124,7 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 								<ChevronLeftIcon size={16} aria-hidden="true" />
 							</Button>
 						</PaginationItem>
+
 						{/* Next page button */}
 						<PaginationItem>
 							<Button
@@ -137,6 +141,7 @@ export const SmartTablePagination: FC<SmartTablePaginationProps> = ({
 								/>
 							</Button>
 						</PaginationItem>
+
 						{/* Last page button */}
 						<PaginationItem>
 							<Button

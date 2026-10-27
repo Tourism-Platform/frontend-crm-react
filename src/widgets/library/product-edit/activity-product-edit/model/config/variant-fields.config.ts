@@ -14,7 +14,7 @@ export const ACTIVITY_VARIANT_FIELDS_LIST = (): TForm[] => [
 		fieldType: "input",
 		label: "form.variants.fields.name.label",
 		placeholder: "form.variants.fields.name.placeholder",
-		className: "col-span-3"
+		className: "sm:col-span-3"
 	},
 	{
 		key: ENUM_FORM.CHARGE_TYP,

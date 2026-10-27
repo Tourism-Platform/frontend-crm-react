@@ -31,9 +31,7 @@ const ActivityProductImagesBase: FC<TSlotProps> = ({
 
 	return (
 		<div className="grid gap-6">
-			<h3 className="text-base font-medium">
-				{t("form.images.product_title")}
-			</h3>
+			<h3 className="text-lg">{t("form.images.product_title")}</h3>
 			<CustomUploadImages
 				items={productUpload.items}
 				onAdd={productUpload.handleAdd}
@@ -41,7 +39,7 @@ const ActivityProductImagesBase: FC<TSlotProps> = ({
 				onReorder={productUpload.handleReorder}
 				maxFiles={10}
 			/>
-			<div className="flex justify-end">
+			<div className="flex justify-end mt-6">
 				<LoaderButton
 					size="lg"
 					type="button"

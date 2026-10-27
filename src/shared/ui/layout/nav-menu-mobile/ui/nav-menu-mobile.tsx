@@ -1,25 +1,30 @@
-import type { FC } from "react";
+import { type FC, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 import {
 	Button,
-	NavigationMenu,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
+	NAV_RICH_ROW_CLASSNAME,
+	NavRichItem,
 	Popover,
 	PopoverContent,
-	PopoverTrigger
+	PopoverTrigger,
+	Separator
 } from "@/shared/ui";
 
-import type { INavMobileItemBase } from "../model";
+import type { INavItemBase } from "../../nav-menu";
 
 interface INavMenuMobileProps {
-	navItems: INavMobileItemBase[];
+	navItems: INavItemBase[];
 }
 
 export const NavMenuMobile: FC<INavMenuMobileProps> = ({ navItems }) => {
+	const { t } = useTranslation("header");
+	const [open, setOpen] = useState(false);
+	const close = () => setOpen(false);
+
 	return (
-		<Popover>
+		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
 					className="group size-8 md:hidden"
@@ -53,62 +58,49 @@ export const NavMenuMobile: FC<INavMenuMobileProps> = ({ navItems }) => {
 					</svg>
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent align="start" className="w-64 p-1 md:hidden">
-				<NavigationMenu className="max-w-none *:w-full">
-					<NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-						{navItems.map((link, index) => (
-							<NavigationMenuItem key={index} className="w-full">
-								{link.submenu ? (
-									<>
-										<div className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
-											{link.label}
-										</div>
-										<ul>
-											{link?.items?.map(
-												(item, itemIndex) => (
-													<li key={itemIndex}>
-														<NavigationMenuLink
-															href={item.href}
-															className="py-1.5"
-														>
-															{item.label}
-														</NavigationMenuLink>
-													</li>
-												)
-											)}
-										</ul>
-									</>
-								) : (
-									<NavigationMenuLink
-										href={link.href}
-										className="py-1.5"
-									>
-										{link.label}
-									</NavigationMenuLink>
-								)}
-								{/* Add separator between different types of items */}
-								{index < navItems.length - 1 &&
-									// Show separator if:
-									// 1. One is submenu and one is simple link OR
-									// 2. Both are submenus but with different types
-									((!link.submenu &&
-										navItems[index + 1].submenu) ||
-										(link.submenu &&
-											!navItems[index + 1].submenu) ||
-										(link.submenu &&
-											navItems[index + 1].submenu &&
-											link.type !==
-												navItems[index + 1].type)) && (
-										<div
-											role="separator"
-											aria-orientation="horizontal"
-											className="bg-border -mx-1 my-1 h-px w-full"
-										/>
-									)}
-							</NavigationMenuItem>
-						))}
-					</NavigationMenuList>
-				</NavigationMenu>
+			<PopoverContent align="start" className="w-72 p-2 md:hidden">
+				{navItems.map((link, index) => (
+					<div key={link.label}>
+						{index > 0 && <Separator className="my-1" />}
+						{link.submenu ? (
+							<>
+								<p className="px-3 py-1.5 text-[11px] font-semibold tracking-wider text-muted-foreground uppercase">
+									{t(link.label)}
+								</p>
+								<ul className="flex flex-col gap-0.5">
+									{link.items?.map((item) => (
+										<li key={item.href}>
+											<Link
+												to={item.href}
+												className={
+													NAV_RICH_ROW_CLASSNAME
+												}
+												onClick={close}
+											>
+												<NavRichItem
+													icon={item.icon}
+													title={t(item.label)}
+													description={
+														item.description &&
+														t(item.description)
+													}
+												/>
+											</Link>
+										</li>
+									))}
+								</ul>
+							</>
+						) : (
+							<Link
+								to={link.href || "#"}
+								className={NAV_RICH_ROW_CLASSNAME}
+								onClick={close}
+							>
+								<NavRichItem title={t(link.label)} />
+							</Link>
+						)}
+					</div>
+				))}
 			</PopoverContent>
 		</Popover>
 	);

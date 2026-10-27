@@ -18,14 +18,12 @@ export const PersonalDetails: FC<IPersonalDetailsProps> = ({ form }) => {
 	return (
 		<div className="space-y-5">
 			<div>
-				<h3 className="text-base font-semibold">
-					{t("menu.edit.form.details.title")}
-				</h3>
+				<h3 className="text-lg">{t("menu.edit.form.details.title")}</h3>
 				<p className="text-sm text-muted-foreground">
 					{t("menu.edit.form.details.description")}
 				</p>
 			</div>
-			<div className="grid grid-cols-2 gap-x-6">
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 				{PERSONAL_DETAILS_LIST().map(({ key, ...item }) => (
 					<CustomField
 						key={key}

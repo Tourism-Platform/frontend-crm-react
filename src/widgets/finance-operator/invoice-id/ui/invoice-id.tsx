@@ -42,7 +42,7 @@ export const InvoiceId: FC = () => {
 	}
 
 	return (
-		<div className="flex flex-col gap-6">
+		<div className="flex flex-1 flex-col gap-5">
 			<InvoiceHeader
 				invoiceId={invoice.id}
 				paymentId={invoice.paymentId}
@@ -53,7 +53,7 @@ export const InvoiceId: FC = () => {
 
 			<InvoicePaymentTable invoice={invoice} />
 
-			<div className="grid grid-cols-2 gap-6">
+			<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 				<InvoiceInfoCard
 					title={t("billing.title")}
 					items={getBillingItems(invoice, t, booking)}

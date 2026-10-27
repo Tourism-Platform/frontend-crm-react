@@ -105,12 +105,12 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 	return (
 		<div className="grid gap-5">
 			<div className="grid gap-2">
-				<div className="flex items-center justify-between">
+				<div className="flex flex-wrap items-center justify-between gap-3">
 					<div className="flex flex-col gap-3">
-						<h1 className="text-3xl">
+						<h1 className="md:text-3xl text-2xl">
 							<CopyableValue value={orderNumber} kind="number" />
 						</h1>
-						<div className="flex items-center gap-4">
+						<div className="flex flex-wrap items-center gap-4">
 							<div className="flex items-center gap-2">
 								<span className="text-sm font-medium">
 									{t("header.order_status")}:
@@ -159,7 +159,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					</div>
 					{status === ENUM_ORDER_STATUS.NEW && nextStatusButton}
 					{status === ENUM_ORDER_STATUS.IN_PROCESSING && (
-						<div className="flex gap-3">
+						<div className="flex flex-wrap gap-2">
 							<Button variant="slate">
 								{t("buttons.export")}
 							</Button>
@@ -172,7 +172,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 						</div>
 					)}
 					{status === ENUM_ORDER_STATUS.BOOKING && (
-						<div className="flex gap-3">
+						<div className="flex flex-wrap gap-2">
 							<Button variant="slate">
 								{t("buttons.export")}
 							</Button>
@@ -181,7 +181,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 						</div>
 					)}
 					{status === ENUM_ORDER_STATUS.IN_PROGRESS && (
-						<div className="flex gap-3">
+						<div className="flex flex-wrap gap-2">
 							<Button variant="slate">
 								{t("buttons.export")}
 							</Button>

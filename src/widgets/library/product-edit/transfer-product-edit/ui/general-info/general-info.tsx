@@ -17,7 +17,7 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 
 	return (
 		<div className="grid gap-4">
-			<div className="grid gap-x-4 gap-y-1 grid-cols-2">
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 				{TRANSFER_PRODUCT_NAME_FIELD.map(({ key, ...item }) => (
 					<CustomField
 						key={key}
@@ -28,7 +28,7 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 					/>
 				))}
 			</div>
-			<div className="flex justify-end">
+			<div className="flex justify-end mt-6">
 				<LoaderButton
 					type="button"
 					onClick={onSubmit}

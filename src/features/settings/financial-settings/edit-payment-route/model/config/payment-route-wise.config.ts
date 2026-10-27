@@ -26,6 +26,6 @@ export const FORM_EDIT_PAYMENT_ROUTE_WISE_LIST = (): TForm[] => [
 			"payment_settings.form.modal.fields.payment_link.placeholder",
 		key: ENUM_FORM_OPERATOR_PAYMENT_SETTINGS.PAYMENT_LINK,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

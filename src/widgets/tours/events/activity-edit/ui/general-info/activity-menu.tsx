@@ -34,11 +34,9 @@ const ActivityMenuBase: FC<IActivityMenuProps> = ({ form }) => {
 	}
 
 	return (
-		<div className="grid gap-4 col-span-4">
+		<div className="grid gap-4 sm:col-span-2 lg:col-span-4">
 			<div className="flex items-center justify-between">
-				<h3 className="text-lg font-medium">
-					{t("form.general.menu.title")}
-				</h3>
+				<h3 className="text-lg">{t("form.general.menu.title")}</h3>
 				<Button
 					type="button"
 					variant="outline"
@@ -56,7 +54,7 @@ const ActivityMenuBase: FC<IActivityMenuProps> = ({ form }) => {
 			{fields.map((field, index) => (
 				<div
 					key={field.id}
-					className="grid grid-cols-[1fr_1fr_auto] gap-3 items-start"
+					className="grid grid-cols-1 gap-3 items-start sm:grid-cols-[1fr_1fr_auto]"
 				>
 					<CustomField
 						control={form.control}

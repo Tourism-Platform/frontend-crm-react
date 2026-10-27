@@ -42,6 +42,6 @@ export const INFORMATION_DATA_LIST = (
 		placeholder: "form.general.info.form.fields.description.placeholder",
 		key: ENUM_FORM_INFORMATION.DESCRIPTION,
 		fieldType: "editor",
-		className: "col-span-4"
+		className: "sm:col-span-2 lg:col-span-4"
 	}
 ];

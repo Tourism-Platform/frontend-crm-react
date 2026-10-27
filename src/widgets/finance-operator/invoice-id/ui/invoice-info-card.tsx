@@ -1,6 +1,6 @@
 import { type FC } from "react";
 
-import { Card, CardContent, CardHeader } from "@/shared/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
 
 import { type IInfoItem } from "../model";
 
@@ -15,8 +15,8 @@ export const InvoiceInfoCard: FC<IInvoiceInfoCardProps> = ({
 }) => {
 	return (
 		<Card className="gap-2">
-			<CardHeader className="text-lg font-semibold block">
-				{title}
+			<CardHeader>
+				<CardTitle className="text-lg font-semibold">{title}</CardTitle>
 			</CardHeader>
 			<CardContent className="grid grid-flow-row gap-1.5 text-xs font-medium text-md">
 				{items.map((item, index) => (

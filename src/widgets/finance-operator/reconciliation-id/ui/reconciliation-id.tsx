@@ -40,7 +40,7 @@ export const ReconciliationId: FC = () => {
 	}
 
 	return (
-		<div className="flex flex-col gap-8">
+		<div className="flex flex-1 flex-col gap-5">
 			<ReconciliationHeader
 				orderId={financials.orderId}
 				variance={variance?.varianceTotal ?? 0}

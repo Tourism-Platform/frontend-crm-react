@@ -195,7 +195,7 @@ const LandingBase: FC = () => {
 	);
 
 	return (
-		<section className="flex flex-col gap-6 container">
+		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>

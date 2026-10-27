@@ -102,7 +102,7 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 					<Form {...form}>
 						<form className="flex min-h-0 flex-1 flex-col">
 							<CustomScroll className="space-y-6 px-6 py-4">
-								<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+								<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 									{FORM_OPEN_RECONCILIATION_LIST.map(
 										({ key, ...item }) => (
 											<CustomField

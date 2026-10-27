@@ -25,7 +25,7 @@ export const TRAIN_DATA_LIST = ({
 			"form.general.flights.form.train.fields.carrier.placeholder",
 		key: ENUM_FORM_TRAIN.CARRIER,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.train.fields.train_number.label",
@@ -33,7 +33,7 @@ export const TRAIN_DATA_LIST = ({
 			"form.general.flights.form.train.fields.train_number.placeholder",
 		key: ENUM_FORM_TRAIN.TRAIN_NUMBER,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.train.fields.departure_station.label",
@@ -43,7 +43,7 @@ export const TRAIN_DATA_LIST = ({
 			"form.general.flights.form.train.fields.departure_station.empty",
 		key: ENUM_FORM_TRAIN.DEPARTURE_STATION,
 		fieldType: "geo",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		icon: MapPin,
 		...departure
 	},
@@ -55,7 +55,7 @@ export const TRAIN_DATA_LIST = ({
 			"form.general.flights.form.train.fields.arrival_station.empty",
 		key: ENUM_FORM_TRAIN.ARRIVAL_STATION,
 		fieldType: "geo",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		icon: MapPin,
 		...arrival
 	},

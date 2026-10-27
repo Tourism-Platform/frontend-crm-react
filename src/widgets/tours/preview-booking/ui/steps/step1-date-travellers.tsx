@@ -78,7 +78,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 			{!!availableLanguages.length && (
 				<Card>
 					<CardHeader>
-						<CardTitle className="text-lg">
+						<CardTitle className="text-lg font-semibold">
 							{t("step_1.language.title")}
 						</CardTitle>
 						<CardDescription>
@@ -142,7 +142,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-lg">
+					<CardTitle className="text-lg font-semibold">
 						{t("step_1.start_date.title")}
 					</CardTitle>
 					<CardDescription>
@@ -197,7 +197,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-lg">
+					<CardTitle className="text-lg font-semibold">
 						{t("step_1.travellers.title")}
 					</CardTitle>
 					<CardDescription>
@@ -268,7 +268,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 
 			<Card>
 				<CardHeader>
-					<CardTitle className="text-lg">
+					<CardTitle className="text-lg font-semibold">
 						{t("step_1.options.title")}
 					</CardTitle>
 					<CardDescription>

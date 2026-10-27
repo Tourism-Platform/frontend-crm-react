@@ -36,7 +36,7 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 
 	return (
 		<Form {...form}>
-			<section className="flex flex-col gap-6" onBlur={onBlur}>
+			<section className="flex flex-1 flex-col gap-5" onBlur={onBlur}>
 				<EventTitleInput
 					control={form.control}
 					icon={UsersIcon}

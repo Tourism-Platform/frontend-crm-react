@@ -37,8 +37,8 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 	}
 
 	return (
-		<div className="flex justify-between items-center w-full">
-			<h1 className="text-3xl">
+		<div className="flex flex-wrap items-center justify-between gap-3">
+			<h1 className="md:text-3xl text-2xl">
 				<CopyableValue value={orderId} kind="number" />
 			</h1>
 			<Badge

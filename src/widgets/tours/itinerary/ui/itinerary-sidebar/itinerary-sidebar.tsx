@@ -38,7 +38,7 @@ const ItinerarySidebarBase: FC<IItinerarySidebarProps> = ({
 		<>
 			<Card
 				className={cn(
-					"flex h-full min-h-0 shrink-0 flex-col gap-0 overflow-hidden rounded-none py-0 transition-all duration-300",
+					"flex h-full min-h-0 shrink-0 flex-col gap-0 overflow-hidden rounded-none py-0 transition-all duration-300 max-md:hidden",
 					sidebarOpen ? "w-80" : "w-12"
 				)}
 			>

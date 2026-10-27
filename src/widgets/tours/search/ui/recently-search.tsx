@@ -30,10 +30,8 @@ const RecentlySearchBase: FC<IRecentlySearchProps> = ({ onSelect }) => {
 
 	return (
 		<section className="flex flex-col gap-4">
-			<h2 className="text-xl font-semibold">
-				{t("recently_search.title")}
-			</h2>
-			<div className="grid grid-cols-5 gap-5">
+			<h2 className="text-xl">{t("recently_search.title")}</h2>
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
 				{isLoading
 					? [...Array(5)].map((_, i) => (
 							<RecentSearchCardSkeleton key={i} />

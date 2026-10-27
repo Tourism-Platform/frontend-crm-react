@@ -78,9 +78,7 @@ const OptionsDetailsBase: FC<IOptionsDetailsProps> = ({
 
 	return (
 		<div className="grid gap-4">
-			<h3 className="text-lg font-medium">
-				{t("general.options.title")}
-			</h3>
+			<h3 className="text-lg">{t("general.options.title")}</h3>
 			<DndContext
 				sensors={sensors}
 				collisionDetection={closestCenter}

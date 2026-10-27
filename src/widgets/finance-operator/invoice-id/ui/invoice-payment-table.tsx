@@ -27,7 +27,7 @@ const InvoicePaymentTableBase: FC<IInvoicePaymentTableProps> = ({
 
 	return (
 		<Card className="gap-4">
-			<CardHeader className="flex gap-8 text-md">
+			<CardHeader className="flex flex-wrap gap-x-8 gap-y-2 text-md">
 				<div className="flex gap-2">
 					<span className="font-semibold">
 						{t("payment_table.summary.total_invoiced")}:

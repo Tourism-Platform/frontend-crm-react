@@ -32,9 +32,9 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 	return (
 		<div className="grid gap-5">
 			<div className="grid gap-2">
-				<div className="flex items-center justify-between">
+				<div className="flex flex-wrap items-center justify-between gap-3">
 					<div className="flex items-center gap-3">
-						<h1 className="text-3xl">
+						<h1 className="md:text-3xl text-2xl">
 							<CopyableValue value={paymentId} kind="number" />
 						</h1>
 						<Badge
@@ -51,7 +51,7 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 						fileName={paymentId}
 					/>
 				</div>
-				<div className="flex gap-4 text-sm text-muted-foreground font-medium">
+				<div className="flex flex-wrap gap-4 text-sm text-muted-foreground font-medium">
 					<span>
 						{t("header.issue_date", { ns: "invoice_id_page" })}:{" "}
 						{issueDate}

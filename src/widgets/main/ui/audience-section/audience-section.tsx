@@ -48,7 +48,7 @@ export const AudienceSection: FC<IAudienceSectionProps> = ({
 			/>
 
 			<div className="mx-auto mb-10 flex justify-center">
-				<div className="inline-flex rounded-full border bg-muted p-1">
+				<div className="inline-flex max-w-full rounded-full border bg-muted p-1">
 					{tabs.map((tab) => {
 						const Icon = AUDIENCE_TAB_ICONS[tab.id];
 						const isActive = activeTab === tab.id;
@@ -58,7 +58,7 @@ export const AudienceSection: FC<IAudienceSectionProps> = ({
 								key={tab.id}
 								type="button"
 								className={cn(
-									"inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition cursor-pointer sm:px-5",
+									"inline-flex min-w-0 items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold transition cursor-pointer sm:px-5",
 									isActive
 										? "bg-primary text-primary-foreground shadow-sm"
 										: "text-muted-foreground hover:text-foreground"

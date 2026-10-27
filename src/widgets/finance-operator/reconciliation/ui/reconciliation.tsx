@@ -73,7 +73,7 @@ const ReconciliationBase: FC = () => {
 					label="filters.tour.label"
 					placeholder="filters.tour.placeholder"
 					emptyText="filters.tour.empty"
-					className="w-72"
+					className="w-full sm:w-72"
 					options={tours.options}
 					onQueryChange={tours.setQuery}
 					onLoadMore={tours.loadMore}

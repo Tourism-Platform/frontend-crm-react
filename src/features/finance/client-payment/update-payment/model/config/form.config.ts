@@ -20,6 +20,6 @@ export const FORM_UPDATE_PAYMENT_LIST: TUpdatePaymentForm[] = [
 		placeholder: "menu.update.form.fields.note.placeholder",
 		key: ENUM_FORM_UPDATE_PAYMENT.NOTE,
 		fieldType: "textarea",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

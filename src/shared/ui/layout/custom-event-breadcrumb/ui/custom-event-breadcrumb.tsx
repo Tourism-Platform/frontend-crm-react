@@ -20,7 +20,7 @@ export const CustomEventBreadcrumb: FC = () => {
 	const itineraryHref = buildRoute(ENUM_PATH.TOURS.ITINERARY, { tourId });
 
 	return (
-		<div className="px-0">
+		<div className="sticky top-16 z-10 flex py-3 md:py-5 shrink-0 items-center px-4">
 			<BreadcrumbPills
 				items={[
 					{

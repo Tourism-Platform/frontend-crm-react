@@ -51,7 +51,7 @@ const RecentActivityLogBase: FC = () => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className="text-xl font-normal">
+				<CardTitle className="text-lg font-semibold">
 					{t("recent_activity.title")}
 				</CardTitle>
 			</CardHeader>

@@ -30,6 +30,6 @@ export const CARS_DATA_LIST = (): TForm[] => [
 		placeholder: "form.cars.description.description.placeholder",
 		key: ENUM_FORM_TRANSFER_CARS.DESCRIPTION,
 		fieldType: "editor",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

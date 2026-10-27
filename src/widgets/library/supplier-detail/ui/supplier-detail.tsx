@@ -22,9 +22,9 @@ const SupplierDetailBase: FC<ISupplierDetailProps> = ({ supplierId }) => {
 	useSetBreadcrumbLabels([supplier?.brandName]);
 
 	return (
-		<section className="flex flex-col gap-6">
+		<section className="flex flex-1 flex-col gap-5">
 			<div className="flex flex-col gap-2">
-				<h1 className="text-3xl">{t("page_name")}</h1>
+				<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			</div>
 
 			<SupplierForm supplierId={supplierId} />

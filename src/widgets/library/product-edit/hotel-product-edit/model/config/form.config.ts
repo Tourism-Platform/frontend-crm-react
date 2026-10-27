@@ -18,7 +18,7 @@ export const FORM_HOTEL_PRODUCT_GENERAL_LIST = (
 		fieldType: "input",
 		label: "form.general.fields.name.label",
 		placeholder: "form.general.fields.name.placeholder",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		key: ENUM_FORM.LOCATION,

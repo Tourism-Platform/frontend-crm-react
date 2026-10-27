@@ -99,7 +99,7 @@ const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 					supplyId={supplyId}
 					onAfterChange={handleOverrideChange}
 				/>
-				<div className="grid grid-cols-4 gap-x-4 gap-y-1">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2 lg:grid-cols-4">
 					{EVENT_DATA_LIST(geoProps).map(({ key, ...item }) => (
 						<CustomField
 							key={key}

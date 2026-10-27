@@ -15,7 +15,7 @@ export const CustomBreadcrumb: FC = () => {
 	if (!items) return null;
 
 	return (
-		<div className="flex items-center gap-2 px-4">
+		<div className="sticky top-16 z-10 flex py-3 md:py-5 shrink-0 items-center px-4">
 			<BreadcrumbPills
 				items={items.map((item) => ({
 					key: item.key,

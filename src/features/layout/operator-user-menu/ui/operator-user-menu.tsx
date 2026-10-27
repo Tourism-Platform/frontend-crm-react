@@ -66,7 +66,7 @@ export const OperatorUserMenu: FC = () => {
 					</Avatar>
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className="min-w-96 p-2" align="end">
+			<DropdownMenuContent className="min-w-72 p-2" align="end">
 				<DropdownMenuLabel className="flex items-center gap-3 px-3 py-2">
 					<Avatar className="size-10">
 						<AvatarImage

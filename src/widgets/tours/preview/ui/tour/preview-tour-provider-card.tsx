@@ -52,7 +52,7 @@ const PreviewTourProviderCardBase: FC = () => {
 	}, [isPreviewError, t]);
 
 	return (
-		<Card className="w-[400px] shrink-0 relative overflow-hidden">
+		<Card className="w-full lg:w-[400px] shrink-0 relative overflow-hidden">
 			<div className="absolute top-0 left-0 w-full h-30 bg-blue-100" />
 			<CardContent className="flex flex-col gap-4 pt-10">
 				<div className="relative z-10 h-26 w-26 overflow-hidden rounded-full border-4 border-background bg-muted">

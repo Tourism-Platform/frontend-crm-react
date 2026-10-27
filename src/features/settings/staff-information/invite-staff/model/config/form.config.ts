@@ -22,14 +22,14 @@ export const FORM_INVITE_STAFF_LIST = (): TForm[] => [
 		placeholder: "invite.form.fields.email.placeholder",
 		key: ENUM_FORM_INVITE_STAFF.EMAIL,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "invite.form.fields.password.label",
 		placeholder: "invite.form.fields.password.placeholder",
 		key: ENUM_FORM_INVITE_STAFF.PASSWORD,
 		fieldType: "password",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "invite.form.fields.permissions.label",
@@ -38,6 +38,6 @@ export const FORM_INVITE_STAFF_LIST = (): TForm[] => [
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(PERMISSION_LABELS),
 		badgeVariant: "secondary",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

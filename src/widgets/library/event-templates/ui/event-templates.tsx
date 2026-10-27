@@ -101,10 +101,10 @@ const EventTemplatesBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="text-3xl">{t("page_name")}</h1>
+			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent>
-					<h2 className="text-lg font-medium mb-4">
+					<h2 className="mb-4 text-lg font-semibold">
 						{t("templates_title")}
 					</h2>
 					<SmartTable

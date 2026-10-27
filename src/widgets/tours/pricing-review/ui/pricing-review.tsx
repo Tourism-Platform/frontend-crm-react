@@ -60,7 +60,7 @@ const PricingReviewBase: FC = () => {
 		(isSummaryFetching && !pricingReview)
 	) {
 		return (
-			<section className="flex flex-col gap-6 container">
+			<section className="flex flex-1 flex-col gap-5">
 				<ConnectedTourHeader
 					title={t("page_name")}
 					actions={actionsJsx}
@@ -72,7 +72,7 @@ const PricingReviewBase: FC = () => {
 
 	if (isOptionsRealError || isSummaryRealError) {
 		return (
-			<section className="flex flex-col gap-6 container">
+			<section className="flex flex-1 flex-col gap-5">
 				<ConnectedTourHeader
 					title={t("page_name")}
 					actions={actionsJsx}
@@ -94,7 +94,7 @@ const PricingReviewBase: FC = () => {
 		!pricingReview
 	) {
 		return (
-			<section className="flex flex-col gap-6 container">
+			<section className="flex flex-1 flex-col gap-5">
 				<ConnectedTourHeader
 					title={t("page_name")}
 					actions={actionsJsx}
@@ -105,7 +105,7 @@ const PricingReviewBase: FC = () => {
 	}
 
 	return (
-		<section className="flex flex-col gap-6 container">
+		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 
 			<PricingReviewTabs

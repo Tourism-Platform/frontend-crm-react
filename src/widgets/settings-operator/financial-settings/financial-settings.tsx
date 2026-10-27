@@ -15,7 +15,7 @@ const FinancialSettingsBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="text-3xl">{t("page_name")}</h1>
+			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex gap-5 flex-col max-w-5xl">
 					<CustomQueryTabs

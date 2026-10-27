@@ -29,7 +29,7 @@ export const RoomCard: FC<IRoomCardProps> = ({
 	const { t } = useTranslation("accommodation_edit_page");
 	return (
 		<Card className="relative">
-			<CardHeader className="flex items-center justify-between">
+			<CardHeader className="flex flex-wrap items-center justify-between gap-3">
 				{t("form.rooms.details.room_item", { index: index + 1 })}
 			</CardHeader>
 			<CardContent className="grid gap-1">
@@ -38,7 +38,7 @@ export const RoomCard: FC<IRoomCardProps> = ({
 						<RoomMenu onRemove={onRemove} />
 					</div>
 				) : null}
-				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 					{ROOM_DATA_LIST.map(({ key, ...item }) => (
 						<CustomField
 							key={key}

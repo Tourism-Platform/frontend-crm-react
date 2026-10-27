@@ -18,9 +18,7 @@ const PreviewTourAdditionalInfoBase: FC<IPreviewTourAdditionalInfoProps> = ({
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h2 className="text-xl font-semibold">
-				{t("sections.additional_info.title")}
-			</h2>
+			<h2 className="text-xl">{t("sections.additional_info.title")}</h2>
 			<Previewer text={data.additional_info} />
 		</div>
 	);

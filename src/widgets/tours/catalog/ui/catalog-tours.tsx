@@ -37,12 +37,12 @@ const CatalogToursBase: FC = () => {
 	} = useCatalogTours();
 
 	return (
-		<section className="grid gap-12">
+		<section className="flex gap-5 flex-col">
 			<SearchToursBar
 				form={locationForm}
 				onSubmit={applyLocationBarSubmit}
 			/>
-			<div className="grid grid-cols-[minmax(280px,400px)_minmax(0,1fr)] gap-6">
+			<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(280px,400px)_minmax(0,1fr)]">
 				<CatalogToursSidebar form={methods} onReset={handleReset} />
 				<div className="flex min-w-0 flex-col gap-12">
 					<div className="flex flex-col gap-4">

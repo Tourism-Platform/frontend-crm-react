@@ -20,7 +20,7 @@ export const GENERAL_FORM_LIST = ({
 		placeholder: "general.form.fields.tourTitle.placeholder",
 		key: ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_TITLE,
 		fieldType: "input",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		disabled: true
 	},
 	{
@@ -70,7 +70,7 @@ export const GENERAL_FORM_LIST = ({
 		key: ENUM_TOUR_SETTINGS_GENERAL_FORM.TOUR_CATEGORIES,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(TOUR_CATEGORY_LABELS),
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		badgeVariant: "secondary"
 	},
 	{
@@ -79,7 +79,7 @@ export const GENERAL_FORM_LIST = ({
 		key: ENUM_TOUR_SETTINGS_GENERAL_FORM.LANGUAGES,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(LANGUAGES_LABELS),
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		badgeVariant: "secondary"
 	}
 ];

@@ -20,7 +20,7 @@ const PreviewTourHeroBase: FC<IPreviewTourHeroProps> = ({ tour }) => {
 
 	return (
 		<div className="flex flex-col gap-4 self-center">
-			<h1 className="text-3xl font-bold">{tour.tourTitle}</h1>
+			<h1 className="md:text-3xl text-2xl">{tour.tourTitle}</h1>
 			<div className="flex items-center gap-6 text-sm text-muted-foreground">
 				{heroData.map((item, idx) => (
 					<span key={idx} className="flex items-center gap-1.5">

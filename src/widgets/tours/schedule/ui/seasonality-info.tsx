@@ -74,9 +74,9 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 	return (
 		<Form {...form}>
 			<form className="grid gap-4">
-				<div className="flex items-center  col-span-2 justify-between">
+				<div className="flex flex-wrap items-center col-span-2 justify-between gap-3">
 					<div className="grid grid-cols-2 font-medium gap-5">
-						<p className="w-[350px]">
+						<p className="sm:w-[350px]">
 							{t("seasonality.period.label")}
 						</p>
 						<p>{t("seasonality.percent.label")}</p>
@@ -120,7 +120,7 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 						return (
 							<div
 								key={item.id}
-								className="flex items-center gap-3  "
+								className="flex items-center gap-3"
 							>
 								<div className="grid grid-cols-2 gap-5">
 									<CustomField

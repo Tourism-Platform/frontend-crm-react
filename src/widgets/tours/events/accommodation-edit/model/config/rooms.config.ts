@@ -14,6 +14,6 @@ export const ROOM_DATA_LIST: TForm[] = [
 		placeholder: "form.rooms.details.form.fields.description.placeholder",
 		key: ENUM_FORM_ROOMS.DESCRIPTION,
 		fieldType: "editor",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

@@ -59,8 +59,10 @@ const OrderPaxReviewBase = ({ items = [] }: IOrderPaxReviewProps) => {
 
 	return (
 		<Card>
-			<CardHeader className="text-lg font-semibold">
-				<CardTitle>{t("pax_information.title")}</CardTitle>
+			<CardHeader>
+				<CardTitle className="text-lg font-semibold">
+					{t("pax_information.title")}
+				</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<SmartTable

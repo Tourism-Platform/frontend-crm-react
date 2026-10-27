@@ -122,11 +122,11 @@ const ScheduleBase: FC = () => {
 	}, [calendarRange.from, calendarRange.to, patternDraft, recurrenceRules]);
 
 	return (
-		<section className="flex flex-col gap-6 container">
+		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Card>
 				<CardContent className="grid gap-12">
-					<div className="flex justify-between gap-6 items-center">
+					<div className="flex flex-wrap items-center justify-between gap-4">
 						<CustomOptionTabs
 							defaultValue={DATES_TYPE_LIST[0].value}
 							value={activeTab}

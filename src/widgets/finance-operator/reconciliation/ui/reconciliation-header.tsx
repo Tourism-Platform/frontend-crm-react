@@ -20,9 +20,9 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 
 	return (
 		<div className="flex flex-col gap-5">
-			<h1 className="text-3xl">{t("page_name")}</h1>
+			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 
-			<div className="grid grid-cols-3 gap-6">
+			<div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
 				{RECONCILIATION_KPI_CARDS.map(({ primaryKey, secondary }) => {
 					const primaryValue = totals?.[primaryKey] ?? 0;
 					const isProfit = primaryKey === "settledProfit";

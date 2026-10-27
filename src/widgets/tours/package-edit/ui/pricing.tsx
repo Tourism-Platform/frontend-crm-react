@@ -85,7 +85,7 @@ const PackagePricingBase: FC<TPackagePricingProps> = ({
 							)
 						}
 					>
-						<CustomOptionTabsList className="grid grid-cols-2 w-70">
+						<CustomOptionTabsList className="grid grid-cols-2 w-full sm:w-70">
 							{pricingTabs.map(({ type, label }) => (
 								<CustomOptionTabsTrigger
 									key={type}

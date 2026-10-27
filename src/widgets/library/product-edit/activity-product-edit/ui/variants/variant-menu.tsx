@@ -39,11 +39,9 @@ const VariantMenuBase: FC<IVariantMenuProps> = ({ form, index }) => {
 	}
 
 	return (
-		<div className="grid gap-4 col-span-3">
+		<div className="grid gap-4 sm:col-span-3">
 			<div className="flex items-center justify-between">
-				<h3 className="text-lg font-medium">
-					{t("form.variants.menu.title")}
-				</h3>
+				<h3 className="text-lg">{t("form.variants.menu.title")}</h3>
 				<Button
 					type="button"
 					variant="outline"
@@ -61,7 +59,7 @@ const VariantMenuBase: FC<IVariantMenuProps> = ({ form, index }) => {
 			{fields.map((field, menuIndex) => (
 				<div
 					key={field.id}
-					className="grid grid-cols-[1fr_1fr_auto] gap-3 items-start"
+					className="grid grid-cols-1 gap-3 items-start sm:grid-cols-[1fr_1fr_auto]"
 				>
 					{ACTIVITY_VARIANT_MENU_FIELDS_LIST().map(
 						({ key, ...item }) => (

@@ -84,7 +84,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 		<div className="flex w-full flex-col gap-6">
 			<Card>
 				<CardHeader className="border-b max-sm:has-data-[slot=card-action]:grid-cols-1">
-					<CardTitle className="text-lg">
+					<CardTitle className="text-lg font-semibold">
 						{t("step_2.title")}
 					</CardTitle>
 					<CardDescription>{t("step_2.description")}</CardDescription>

@@ -38,7 +38,7 @@ const RoomsDetailsBase: FC<IRoomsDetailsProps> = ({
 
 	return (
 		<div className="grid gap-6">
-			<div className="flex items-center justify-between gap-4">
+			<div className="flex flex-wrap items-center justify-between gap-4">
 				<h2 className="text-xl">{t("form.rooms.details.title")}</h2>
 				<CreateProductVariant
 					supplierId={supplierId}

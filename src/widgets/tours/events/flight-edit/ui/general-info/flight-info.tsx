@@ -145,7 +145,7 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 						)
 					}
 				>
-					<CustomOptionTabsList className="grid-cols-3 gap-5">
+					<CustomOptionTabsList className="grid grid-cols-3 gap-5">
 						{FLIGHT_TRANSPORT_TYPE_TABS_LIST.map((item) => (
 							<CustomOptionTabsTrigger
 								key={item.type}

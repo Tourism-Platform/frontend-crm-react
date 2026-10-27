@@ -1,3 +1,4 @@
+import { LogIn } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -29,17 +30,15 @@ export const HeaderDefault: FC = () => {
 						<PublicNavMenu items={PUBLIC_NAV_ITEMS} />
 					</div>
 				</div>
-				<div className="grid grid-cols-[auto_auto_1fr] items-center gap-2">
+				<div className="flex items-center gap-2">
 					<ThemeToggle />
 					<LanguageToggle />
-					<div className="grid grid-cols-2 gap-2">
-						<Button variant="outline" size="sm" asChild>
-							<Link to={authPath}>{t("public.sign_in")}</Link>
-						</Button>
-						<Button size="sm" asChild>
-							<Link to={authPath}>{t("public.get_started")}</Link>
-						</Button>
-					</div>
+					<Button size="sm" asChild>
+						<Link to={authPath}>
+							<LogIn />
+							{t("public.sign_in")}
+						</Link>
+					</Button>
 				</div>
 			</div>
 		</header>

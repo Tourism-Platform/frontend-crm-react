@@ -12,7 +12,7 @@ export const FORM_NEW_PAYMENT_ROUTE_SWIFT_LIST = (): TForm[] => [
 			"payment_settings.form.modal.fields.account_name_iban.placeholder",
 		key: ENUM_FORM_OPERATOR_PAYMENT_SETTINGS.ACCOUNT_NAME_IBAN,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "payment_settings.form.modal.fields.swift_bic.label",

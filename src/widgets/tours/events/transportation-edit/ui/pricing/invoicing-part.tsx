@@ -35,7 +35,7 @@ const InvoicingPartBase: FC<TSlotProps> = ({ form }) => {
 	return (
 		<div className="grid gap-1">
 			<h3 className="text-lg">{t("form.pricing.form.package.title")}</h3>
-			<div className="grid grid-cols-2 mb-8 items-end gap-5">
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2 mb-8 items-end">
 				<CustomField
 					control={form.control}
 					name={`${ENUM_FORM_SECTION.PRICING}.${ENUM_TRANSPORTATION_PRICING_FIELD.PACKAGE_ID}`}

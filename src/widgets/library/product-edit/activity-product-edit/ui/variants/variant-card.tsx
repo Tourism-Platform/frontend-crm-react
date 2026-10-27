@@ -42,7 +42,7 @@ export const VariantCard: FC<IVariantCardProps> = ({
 
 	return (
 		<Card className="relative">
-			<CardHeader className="flex items-center justify-between">
+			<CardHeader className="flex flex-wrap items-center justify-between gap-3">
 				<div className="grid gap-1">
 					{variantName ? (
 						<p>{variantName}</p>
@@ -62,7 +62,7 @@ export const VariantCard: FC<IVariantCardProps> = ({
 						variantName={variantName}
 					/>
 				</div>
-				<div className="grid grid-cols-3 gap-x-4 gap-y-1">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-3">
 					{variantFields.map(({ key, ...item }) => (
 						<CustomField
 							key={key}
@@ -72,7 +72,7 @@ export const VariantCard: FC<IVariantCardProps> = ({
 							{...item}
 						/>
 					))}
-					<div className="col-span-3">
+					<div className="sm:col-span-3">
 						<FeeLinesField
 							control={form.control}
 							name={`${ENUM_FORM_ACTIVITY_SECTION.VARIANTS}.${ENUM_FORM_ACTIVITY_VARIANTS.VARIANTS_LIST}.${index}.${ENUM_FORM_ACTIVITY_VARIANT.FEES}`}

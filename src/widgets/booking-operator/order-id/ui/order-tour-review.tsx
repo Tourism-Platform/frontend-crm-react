@@ -112,14 +112,14 @@ const OrderTourReviewBase = ({
 				)}
 
 				{summary && (
-					<div className="grid w-fit grid-cols-[auto_1px_auto_1px_auto] items-center gap-8">
+					<div className="grid grid-cols-1 items-center gap-4 sm:w-fit sm:grid-cols-[auto_1px_auto_1px_auto] sm:gap-8">
 						{summary.map((item, index) => (
 							<Fragment key={item.label}>
 								<TourSummaryColumn {...item} />
 								{index < summary.length - 1 && (
 									<Separator
 										orientation="vertical"
-										className="h-14"
+										className="h-14 max-sm:hidden"
 									/>
 								)}
 							</Fragment>

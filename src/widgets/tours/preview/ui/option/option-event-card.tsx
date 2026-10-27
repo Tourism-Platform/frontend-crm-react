@@ -27,11 +27,11 @@ const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 	);
 
 	return (
-		<div className="grid grid-cols-2 gap-0 bg-card rounded-xl border overflow-hidden shadow-sm">
+		<div className="grid grid-cols-1 gap-0 bg-card rounded-xl border overflow-hidden shadow-sm md:grid-cols-2">
 			<div
 				className={cn(
 					"flex flex-col gap-4 p-6",
-					isReversed ? "order-2" : "order-1"
+					isReversed ? "md:order-2" : "md:order-1"
 				)}
 			>
 				<div className="flex items-center gap-3">
@@ -105,7 +105,7 @@ const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
 			<div
 				className={cn(
 					"relative aspect-[4/3] overflow-hidden",
-					isReversed ? "order-1" : "order-2",
+					isReversed ? "md:order-1" : "md:order-2",
 					!cardImage && "bg-muted"
 				)}
 			>

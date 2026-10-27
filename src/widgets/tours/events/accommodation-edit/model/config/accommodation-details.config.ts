@@ -14,7 +14,7 @@ export const ACCOMMODATION_DETAILS_LIST = (): TForm[] => [
 		key: ENUM_FORM_ACCOMMODATION.AMENITIES,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(ACCOMMODATION_AMENITIES_LABELS),
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		badgeVariant: "secondary",
 		badgeSize: "lg"
 	},
@@ -23,6 +23,6 @@ export const ACCOMMODATION_DETAILS_LIST = (): TForm[] => [
 		placeholder: "form.general.details.form.fields.description.placeholder",
 		key: ENUM_FORM_ACCOMMODATION.DESCRIPTION,
 		fieldType: "editor",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

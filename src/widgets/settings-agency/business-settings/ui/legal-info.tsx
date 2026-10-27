@@ -17,7 +17,7 @@ const LegalInfoBase: FC<ILegalInfoProps> = ({ form }) => {
 	return (
 		<div className="flex gap-5 flex-col">
 			<h2 className="text-xl">{t("form.legal.title")}</h2>
-			<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 				{LEGAL_BUSINESS_DATA_LIST().map(({ key, ...item }) => (
 					<CustomField
 						key={key}

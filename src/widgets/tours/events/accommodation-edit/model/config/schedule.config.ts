@@ -17,7 +17,7 @@ export const SCHEDULE_LIST = (
 		type: "number",
 		min: 1,
 		step: "1",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.schedule.form.fields.check_in_time.label",

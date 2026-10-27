@@ -30,7 +30,7 @@ export const TRANSPORTATION_DATA_LIST = ({
 		key: ENUM_FORM_TRANSPORTATION.TRANSFER_TYPE,
 		fieldType: "select",
 		options: useValueToTranslateLabel(TRANSFER_TYPE_LABELS),
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.details.form.fields.meet_point.label",
@@ -38,7 +38,7 @@ export const TRANSPORTATION_DATA_LIST = ({
 		emptyText: "form.general.details.form.fields.meet_point.empty",
 		key: ENUM_FORM_TRANSPORTATION.MEET_POINT,
 		fieldType: "geo",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		icon: MapPin,
 		...meetPoint
 	},
@@ -48,7 +48,7 @@ export const TRANSPORTATION_DATA_LIST = ({
 		emptyText: "form.general.details.form.fields.end_point.empty",
 		key: ENUM_FORM_TRANSPORTATION.END_POINT,
 		fieldType: "geo",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		icon: MapPin,
 		...endPoint
 	},
@@ -58,7 +58,7 @@ export const TRANSPORTATION_DATA_LIST = ({
 			"form.general.details.form.fields.departure_date.placeholder",
 		key: ENUM_FORM_TRANSPORTATION.DEPARTURE_DATE,
 		fieldType: "date",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.details.form.fields.arrival_date.label",
@@ -66,7 +66,7 @@ export const TRANSPORTATION_DATA_LIST = ({
 			"form.general.details.form.fields.arrival_date.placeholder",
 		key: ENUM_FORM_TRANSPORTATION.ARRIVAL_DATE,
 		fieldType: "date",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.details.form.fields.departure_time.label",

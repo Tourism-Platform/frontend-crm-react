@@ -64,10 +64,10 @@ const BusProductEditBase: FC<IBusProductEditProps> = ({
 
 	return (
 		<Form {...form}>
-			<section className="flex flex-col gap-6">
+			<section className="flex flex-1 flex-col gap-5">
 				<div className="flex flex-wrap items-center justify-between gap-3">
 					<div className="flex flex-col gap-2">
-						<h1 className="text-2xl font-semibold">
+						<h1 className="md:text-3xl text-2xl">
 							{product?.name || t("page_name")}
 						</h1>
 					</div>

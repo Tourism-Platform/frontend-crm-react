@@ -24,7 +24,7 @@ export const CarsCard: FC<ICarsCardProps> = ({ form, index, onRemove }) => {
 
 	return (
 		<Card className="relative">
-			<CardHeader className="flex items-center justify-between">
+			<CardHeader className="flex flex-wrap items-center justify-between gap-3">
 				{t("form.cars.details.car_item", { index: index + 1 })}
 			</CardHeader>
 			<CardContent>
@@ -32,7 +32,7 @@ export const CarsCard: FC<ICarsCardProps> = ({ form, index, onRemove }) => {
 					<CarsMenu onRemove={onRemove} />
 				</div>
 
-				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 					{CARS_DATA_LIST().map(({ key, ...item }) => (
 						<CustomField
 							key={key}

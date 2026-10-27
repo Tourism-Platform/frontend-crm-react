@@ -25,7 +25,7 @@ export const BUS_DATA_LIST = ({
 			"form.general.flights.form.bus.fields.bus_company.placeholder",
 		key: ENUM_FORM_BUS.BUS_COMPANY,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.bus.fields.bus_number.label",
@@ -33,7 +33,7 @@ export const BUS_DATA_LIST = ({
 			"form.general.flights.form.bus.fields.bus_number.placeholder",
 		key: ENUM_FORM_BUS.BUS_NUMBER,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.bus.fields.departure_point.label",
@@ -42,7 +42,7 @@ export const BUS_DATA_LIST = ({
 		emptyText: "form.general.flights.form.bus.fields.departure_point.empty",
 		key: ENUM_FORM_BUS.DEPARTURE_POINT,
 		fieldType: "geo",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		icon: MapPin,
 		...departure
 	},
@@ -53,7 +53,7 @@ export const BUS_DATA_LIST = ({
 		emptyText: "form.general.flights.form.bus.fields.arrival_point.empty",
 		key: ENUM_FORM_BUS.ARRIVAL_POINT,
 		fieldType: "geo",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		icon: MapPin,
 		...arrival
 	},

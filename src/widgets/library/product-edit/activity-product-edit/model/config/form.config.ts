@@ -16,7 +16,7 @@ export const ACTIVITY_PRODUCT_GENERAL_LIST = (geo: TGeoFieldProps): TForm[] => [
 		fieldType: "input",
 		label: "form.general.fields.name.label",
 		placeholder: "form.general.fields.name.placeholder",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		key: ENUM_FORM.LOCATION,

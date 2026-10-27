@@ -30,7 +30,7 @@ import {
 import { ItineraryLoadingSkeleton } from "./ui/itinerary-loading-skeleton";
 
 const itineraryShellClassName =
-	"flex h-[calc(100dvh-70px-2.5rem)] min-h-0 -mb-30 flex-col gap-6 overflow-hidden";
+	"flex h-[calc(100dvh-70px-1.5rem)] min-h-0 -mb-30 flex-col gap-6 overflow-hidden";
 
 const ItineraryBase: FC = () => {
 	const { t } = useTranslation("tour_itinerary_page");

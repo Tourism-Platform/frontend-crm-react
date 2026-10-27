@@ -14,7 +14,7 @@ export const FLY_DATA_LIST = (
 			"form.general.flights.form.fly.fields.airline_code.placeholder",
 		key: ENUM_FORM_FLIGHT.AIRLINE_CODE,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.fly.fields.flight_number.label",
@@ -22,7 +22,7 @@ export const FLY_DATA_LIST = (
 			"form.general.flights.form.fly.fields.flight_number.placeholder",
 		key: ENUM_FORM_FLIGHT.FLIGHT_NUMBER,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.fly.fields.departure_airport_code.label",
@@ -30,7 +30,7 @@ export const FLY_DATA_LIST = (
 			"form.general.flights.form.fly.fields.departure_airport_code.placeholder",
 		key: ENUM_FORM_FLIGHT.DEPARTURE_AIRPORT_CODE,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.fly.fields.arrival_airport_code.label",
@@ -38,7 +38,7 @@ export const FLY_DATA_LIST = (
 			"form.general.flights.form.fly.fields.arrival_airport_code.placeholder",
 		key: ENUM_FORM_FLIGHT.ARRIVAL_AIRPORT_CODE,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.flights.form.fly.fields.departure_time.label",

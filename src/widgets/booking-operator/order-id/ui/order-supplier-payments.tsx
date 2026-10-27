@@ -153,7 +153,7 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 							t={t}
 							placeholder="supplier_payments.filters.event.placeholder"
 							emptyText="supplier_payments.filters.event.empty"
-							className="w-[32rem]"
+							className="w-full sm:w-[32rem]"
 							options={eventOptions}
 						/>
 						<Button

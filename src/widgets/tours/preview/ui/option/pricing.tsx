@@ -135,7 +135,7 @@ const PricingBase: FC<IPricingProps> = ({ optionData: optionDataProp }) => {
 
 	return (
 		<div className="flex flex-col w-full py-2">
-			<h2 className="text-2xl font-bold mb-6">{t("pricing.title")}</h2>
+			<h2 className="text-xl mb-6">{t("pricing.title")}</h2>
 
 			<div className="flex items-end justify-between gap-4 mb-2">
 				<span className="text-sm text-muted-foreground">
@@ -153,9 +153,7 @@ const PricingBase: FC<IPricingProps> = ({ optionData: optionDataProp }) => {
 				groups.activity.length > 0 ||
 				groups.transportation.length > 0) && (
 				<>
-					<h3 className="text-xl font-bold mb-2">
-						{t("pricing.details")}
-					</h3>
+					<h3 className="text-lg mb-2">{t("pricing.details")}</h3>
 					<p className="text-sm text-muted-foreground mb-4">
 						{t("pricing.details_hint")}
 					</p>

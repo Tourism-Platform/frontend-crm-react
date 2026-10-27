@@ -81,8 +81,8 @@ const PreviewTourBase: FC = () => {
 	}
 
 	return (
-		<section className="flex flex-col gap-8 container pb-12 max-w-6xl mx-auto relative">
-			<div className="flex items-center justify-between gap-4">
+		<section className="flex flex-1 flex-col gap-5 w-full max-w-6xl mx-auto relative">
+			<div className="flex flex-wrap items-center justify-between gap-4">
 				{isDraftPreview ? (
 					<Button variant="ghost" size="sm" disabled>
 						<ArrowLeft className="w-4 h-4" />
@@ -99,7 +99,7 @@ const PreviewTourBase: FC = () => {
 				<PreviewCurrencySelect />
 			</div>
 
-			<div className="grid grid-cols-[1fr_auto] gap-8 items-start">
+			<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
 				<PreviewTourHero tour={tourData} />
 				<PreviewTourProviderCard />
 			</div>

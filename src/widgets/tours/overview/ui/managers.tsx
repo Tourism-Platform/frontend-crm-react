@@ -8,7 +8,7 @@ const ManagersBase: FC = () => {
 	return (
 		<Card>
 			<CardContent className="grid gap-3">
-				<h3 className="text-xl">{t("managers.title")}</h3>
+				<h3 className="text-lg">{t("managers.title")}</h3>
 				<div className="grid gap-2">
 					{/* {MANAGERS_MOCK.map((manager) => (
 						<ManagerCard key={manager?.email} card={manager} />

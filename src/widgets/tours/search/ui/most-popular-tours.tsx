@@ -39,9 +39,7 @@ const MostPopularToursBase: FC = () => {
 
 	return (
 		<div className="grid gap-7">
-			<h2 className="text-2xl font-semibold">
-				{t("popular_tours.title")}
-			</h2>
+			<h2 className="text-xl">{t("popular_tours.title")}</h2>
 			<div>
 				<Carousel
 					opts={{
@@ -54,7 +52,7 @@ const MostPopularToursBase: FC = () => {
 							? Array.from({ length: 4 }).map((_, index) => (
 									<CarouselItem
 										key={`skeleton-${index}`}
-										className="basis-1/4"
+										className="basis-full sm:basis-1/2 lg:basis-1/4"
 									>
 										<CatalogTourCardSkeleton />
 									</CarouselItem>
@@ -62,7 +60,7 @@ const MostPopularToursBase: FC = () => {
 							: tours.map((tour, index) => (
 									<CarouselItem
 										key={tour.id || index}
-										className="basis-1/4"
+										className="basis-full sm:basis-1/2 lg:basis-1/4"
 									>
 										<CatalogTourCard data={tour} />
 									</CarouselItem>

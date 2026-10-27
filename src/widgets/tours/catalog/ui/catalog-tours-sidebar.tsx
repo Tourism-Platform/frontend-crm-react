@@ -22,8 +22,8 @@ export const CatalogToursSidebar: FC<TCatalogToursSidebarProps> = ({
 	return (
 		<aside className="flex flex-col gap-4">
 			<Card>
-				<CardHeader className="flex items-center justify-between ">
-					<CardTitle className="text-xl font-semibold">
+				<CardHeader className="flex flex-wrap items-center justify-between gap-3">
+					<CardTitle className="text-lg font-semibold">
 						{t("filters.title")}
 					</CardTitle>
 					<Button

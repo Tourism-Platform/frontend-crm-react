@@ -21,7 +21,7 @@ export const PreviewOptionsCardsBase: FC<IPreviewOptionsCardsProps> = ({
 	return (
 		<div className="flex flex-col gap-6">
 			<div>
-				<h3 className="text-2xl font-bold mb-2">
+				<h3 className="text-xl mb-2">
 					{t("sections.itinerary.title")}
 				</h3>
 				<p className="text-sm text-muted-foreground">

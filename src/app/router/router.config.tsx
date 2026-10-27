@@ -7,7 +7,7 @@ import {
 	type IRouting
 } from "@/shared/config";
 
-import { ToursOperatorLayout } from "@/widgets/layouts";
+import { DefaultAgencyLayout, DefaultOperatorLayout } from "@/widgets/layouts";
 
 // Lazy loading страниц для корректной работы Suspense
 const LoginPage = React.lazy(() =>
@@ -503,56 +503,56 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		component: ToursPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.ROOT,
 		component: CatalogToursPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR,
 		component: PreviewTourPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION,
 		component: PreviewOptionPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.CATALOG.BOOKING,
 		component: PreviewBookingPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.SEARCH,
 		component: SearchToursPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_AGENCY,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultAgencyLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.DRAFT_PREVIEW,
 		component: PreviewTourPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.DRAFT_PREVIEW_OPTION,
 		component: PreviewOptionPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
-		layout_cascade: [ToursOperatorLayout]
+		layout_cascade: [DefaultOperatorLayout]
 	},
 	{
 		path: ENUM_PATH.TOURS.OVERVIEW,
@@ -963,6 +963,7 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 		path: ENUM_PATH.NOT_FOUND,
 		component: NotFoundPage,
 		auth: ENUM_AUTH.PRIVATE,
-		layout: ENUM_LAYOUT.ROOT_OPERATOR
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		layout_cascade: [DefaultOperatorLayout]
 	}
 ];

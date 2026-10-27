@@ -41,9 +41,7 @@ const HotelProductImagesBase: FC<TSlotProps> = ({
 	return (
 		<div className="grid gap-8">
 			<div className="grid gap-4">
-				<h3 className="text-base font-medium">
-					{t("form.images.product_title")}
-				</h3>
+				<h3 className="text-lg">{t("form.images.product_title")}</h3>
 				<CustomUploadImages
 					items={productUpload.items}
 					onAdd={productUpload.handleAdd}
@@ -51,7 +49,7 @@ const HotelProductImagesBase: FC<TSlotProps> = ({
 					onReorder={productUpload.handleReorder}
 					maxFiles={10}
 				/>
-				<div className="flex justify-end">
+				<div className="flex justify-end mt-6">
 					<LoaderButton
 						size="lg"
 						type="button"
@@ -65,9 +63,7 @@ const HotelProductImagesBase: FC<TSlotProps> = ({
 
 			{roomsWithId.length ? (
 				<div className="grid gap-4">
-					<h3 className="text-base font-medium">
-						{t("form.images.node_title")}
-					</h3>
+					<h3 className="text-lg">{t("form.images.node_title")}</h3>
 					<SelectPicker
 						options={roomsWithId.map((room) => ({
 							value: `${room.variantId}:${room.roomId}`,
@@ -84,7 +80,7 @@ const HotelProductImagesBase: FC<TSlotProps> = ({
 						onReorder={nodeUpload.handleReorder}
 						maxFiles={5}
 					/>
-					<div className="flex justify-end">
+					<div className="flex justify-end mt-6">
 						<LoaderButton
 							size="lg"
 							type="button"

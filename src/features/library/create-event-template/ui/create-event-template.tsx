@@ -32,7 +32,7 @@ export const CreateEventTemplate: FC = () => {
 					{t("new_template.button")}
 				</Button>
 			</DialogTrigger>
-			<DialogContent className="min-w-[680px]">
+			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[52rem]">
 				<DialogHeader>
 					<DialogTitle>{t("create.title")}</DialogTitle>
 					<DialogDescription>
@@ -40,7 +40,7 @@ export const CreateEventTemplate: FC = () => {
 					</DialogDescription>
 				</DialogHeader>
 				<Separator />
-				<div className="grid grid-cols-2 auto-rows-fr gap-3 py-2">
+				<div className="grid grid-cols-1 auto-rows-fr gap-3 py-2 sm:grid-cols-2">
 					{CREATE_EVENT_TEMPLATE_OPTIONS.map((option) => (
 						<Link
 							key={option.type}

@@ -20,6 +20,6 @@ export const FORM_ASSIGN_PAYMENT_LIST: TForm[] = [
 		placeholder: "menu.assign.form.fields.note.placeholder",
 		key: ENUM_FORM_ASSIGN_PAYMENT.NOTE,
 		fieldType: "textarea",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

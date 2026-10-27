@@ -78,7 +78,7 @@ const TaxSettingsBase: FC = () => {
 				className="flex flex-col gap-8"
 			>
 				<div className="flex flex-col gap-6">
-					<div className="flex justify-between gap-6 items-center">
+					<div className="flex flex-wrap items-center justify-between gap-4">
 						<div className="flex flex-col gap-2">
 							<h2 className="text-xl">
 								{t("tax_settings.form.fields.vat.label")}
@@ -104,7 +104,7 @@ const TaxSettingsBase: FC = () => {
 				</div>
 				<Separator />
 				<div className="flex flex-col gap-6">
-					<div className="flex justify-between gap-6 items-center">
+					<div className="flex flex-wrap items-center justify-between gap-4">
 						<div className="flex flex-col gap-2">
 							<h2 className="text-xl">
 								{t("tax_settings.form.fields.profit_tax.label")}
@@ -131,7 +131,7 @@ const TaxSettingsBase: FC = () => {
 					/>
 				</div>
 
-				<div>
+				<div className="flex justify-end mt-6">
 					<LoaderButton
 						type="submit"
 						disabled={isLoading}

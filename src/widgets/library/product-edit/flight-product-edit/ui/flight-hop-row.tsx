@@ -56,7 +56,7 @@ export const FlightHopRow: FC<IFlightHopRowProps> = ({
 				<div className="absolute top-0 right-0">
 					<RowRemoveMenu onRemove={onRemove} />
 				</div>
-				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 					{FLIGHT_HOP_FIELDS_LIST({
 						departure: departureGeo,
 						arrival: arrivalGeo

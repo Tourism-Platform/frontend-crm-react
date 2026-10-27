@@ -4,7 +4,7 @@ import { Card, CardContent, Skeleton } from "@/shared/ui";
 
 export const RecentSearchCardSkeleton: FC = () => {
 	return (
-		<Card className="min-w-[200px]">
+		<Card>
 			<CardContent className="grid grid-cols-[min-content_1fr] gap-5">
 				<div className="flex items-center">
 					<Skeleton className="size-5 shrink-0 rounded-md" />

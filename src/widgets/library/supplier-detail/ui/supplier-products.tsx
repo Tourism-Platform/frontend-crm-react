@@ -90,7 +90,7 @@ const SupplierProductsBase: FC<ISupplierProductsProps> = ({ supplierId }) => {
 	return (
 		<Card>
 			<CardContent>
-				<h2 className="mb-4 text-lg font-medium">
+				<h2 className="mb-4 text-lg font-semibold">
 					{t("products_title")}
 				</h2>
 				<SmartTable

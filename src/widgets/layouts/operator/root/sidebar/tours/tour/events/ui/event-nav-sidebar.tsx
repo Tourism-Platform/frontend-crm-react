@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronRightCircleIcon } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
@@ -11,12 +11,11 @@ import {
 	SidebarContent,
 	SidebarGroup,
 	SidebarGroupLabel,
-	SidebarHeader,
+	SidebarLogo,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarRail,
-	SidebarTrigger,
 	useSidebar
 } from "@/shared/ui";
 
@@ -34,42 +33,29 @@ export const EventNavSidebar: FC = () => {
 
 	return (
 		<Sidebar collapsible="icon">
-			<SidebarTrigger
-				className="absolute top-2 right-2 z-30"
-				icon={
-					<ChevronRightCircleIcon
-						size={20}
-						className="group-data-[state=expanded]:rotate-180 transition-transform duration-200 ease-linear text-muted-foreground"
-					/>
-				}
-			/>
-			<SidebarHeader className="pt-10 group-data-[state=expanded]:pt-5 transition-[padding] duration-200 ease-linear">
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton
-							tooltip={backLabel}
-							size="lg"
-							asChild
-							className="h-auto min-h-12 py-2"
+			<SidebarLogo>
+				<SidebarMenuItem>
+					<SidebarMenuButton
+						tooltip={backLabel}
+						size="lg"
+						asChild
+						className="h-auto min-h-12 py-2"
+					>
+						<Link
+							to={buildRoute(ENUM_PATH.TOURS.ITINERARY, {
+								tourId
+							})}
 						>
-							<Link
-								to={buildRoute(ENUM_PATH.TOURS.ITINERARY, {
-									tourId
-								})}
-							>
-								<NavRichItem
-									icon={<ArrowLeft />}
-									title={backLabel}
-									iconOnly={
-										state === "collapsed" && !isMobile
-									}
-									className="items-center"
-								/>
-							</Link>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
-			</SidebarHeader>
+							<NavRichItem
+								icon={<ArrowLeft />}
+								title={backLabel}
+								iconOnly={state === "collapsed" && !isMobile}
+								className="items-center"
+							/>
+						</Link>
+					</SidebarMenuButton>
+				</SidebarMenuItem>
+			</SidebarLogo>
 			<SidebarContent className="overflow-hidden">
 				<CustomScroll className="flex min-h-0 flex-1 flex-col gap-2 group-data-[collapsible=icon]:overflow-hidden">
 					<SidebarGroup>

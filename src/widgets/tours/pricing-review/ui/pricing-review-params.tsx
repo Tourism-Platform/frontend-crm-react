@@ -30,7 +30,7 @@ export const PricingReviewParams: FC<IPricingReviewParamsProps> = ({
 								control={form.control}
 								name={key}
 								t={t}
-								className="w-60"
+								className="w-full sm:w-72"
 								{...item}
 							/>
 						))}

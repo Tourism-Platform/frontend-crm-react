@@ -180,7 +180,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="flex max-h-[90vh] w-full flex-col gap-0 p-0 sm:max-w-4xl">
+			<DialogContent className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-[52rem]">
 				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>
 						{t("override_product.dialog.title")}
@@ -261,7 +261,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 						{showPolicy ? (
 							<>
 								<Separator />
-								<div className="grid w-full grid-cols-2 gap-4">
+								<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 									{FORM_OVERRIDE_POLICY_LIST.map(
 										({ key, ...item }) => (
 											<CustomField

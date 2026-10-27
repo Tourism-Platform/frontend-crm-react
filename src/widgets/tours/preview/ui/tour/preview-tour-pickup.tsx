@@ -25,9 +25,7 @@ const PreviewTourPickupBase: FC<IPreviewTourPickupProps> = ({ data }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h2 className="text-xl font-semibold">
-				{t("sections.meeting_pickup.title")}
-			</h2>
+			<h2 className="text-xl">{t("sections.meeting_pickup.title")}</h2>
 
 			<div className="flex flex-wrap gap-2">
 				{data.pickup_type.map((type) => {

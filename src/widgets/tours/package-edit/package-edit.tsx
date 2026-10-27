@@ -28,7 +28,7 @@ export const PackageEdit: FC<IPackageEditProps> = ({
 
 	return (
 		<Form {...form}>
-			<section className="flex flex-col gap-6">
+			<section className="flex flex-1 flex-col gap-5">
 				<EventTitleInput
 					control={form.control}
 					icon={BoxOutlineIcon}

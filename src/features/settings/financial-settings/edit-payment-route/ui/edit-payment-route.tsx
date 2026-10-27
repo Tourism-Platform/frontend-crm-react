@@ -118,7 +118,7 @@ export const EditPaymentRoute: FC<IEditPaymentRouteProps> = ({
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
-				className="flex max-h-[90vh] flex-col gap-0 p-0 min-w-[700px]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-[52rem]"
 			>
 				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>
@@ -134,7 +134,7 @@ export const EditPaymentRoute: FC<IEditPaymentRouteProps> = ({
 						className="flex min-h-0 flex-1 flex-col"
 					>
 						<CustomScroll className="space-y-6 px-6 py-4">
-							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+							<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 								{FORM_EDIT_PAYMENT_ROUTE_COMMON_LIST().map(
 									({ key, ...item }) => (
 										<CustomField
@@ -147,7 +147,7 @@ export const EditPaymentRoute: FC<IEditPaymentRouteProps> = ({
 									)
 								)}
 
-								<Separator className="col-span-2 mb-4" />
+								<Separator className="sm:col-span-2 mb-4" />
 
 								{methodType ===
 									ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT &&
@@ -179,7 +179,7 @@ export const EditPaymentRoute: FC<IEditPaymentRouteProps> = ({
 									label="payment_settings.form.modal.fields.note.label"
 									placeholder="payment_settings.form.modal.fields.note.placeholder"
 									fieldType="textarea"
-									className="col-span-2"
+									className="sm:col-span-2"
 									t={t}
 								/>
 							</div>

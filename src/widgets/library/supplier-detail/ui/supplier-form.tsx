@@ -95,7 +95,7 @@ const SupplierFormBase: FC<ISupplierFormProps> = ({ supplierId }) => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="space-y-6"
 					>
-						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+						<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 							{FORM_SUPPLIER_DETAIL_LIST().map(
 								({ key, ...item }) => (
 									<CustomField
@@ -108,7 +108,7 @@ const SupplierFormBase: FC<ISupplierFormProps> = ({ supplierId }) => {
 								)
 							)}
 						</div>
-						<div className="flex justify-end">
+						<div className="flex justify-end mt-6">
 							<LoaderButton
 								size="lg"
 								isLoading={isSaving}

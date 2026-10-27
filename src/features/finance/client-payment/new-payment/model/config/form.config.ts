@@ -23,13 +23,13 @@ export const FORM_NEW_PAYMENT_LIST = (): TCreatePaymentForm[] => [
 		placeholder: "new_payment.form.fields.note.placeholder",
 		key: ENUM_FORM_NEW_PAYMENT.NOTE,
 		fieldType: "textarea",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "new_payment.form.fields.files.label",
 		key: ENUM_FORM_NEW_PAYMENT.FILES,
 		fieldType: "upload",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		showAllRemoveButton: false,
 		showTopTitle: false,
 		maxFiles: 1

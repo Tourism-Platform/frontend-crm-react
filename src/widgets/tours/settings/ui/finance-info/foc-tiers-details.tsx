@@ -48,9 +48,9 @@ const FocTiersDetailsBase: FC<IFocTiersDetailsProps> = ({ form }) => {
 				{t("finance.form.fields.foc.title")}
 			</h2>
 
-			<div className="flex items-center col-span-2 justify-between">
+			<div className="flex flex-wrap items-center col-span-2 justify-between gap-3">
 				<div className="grid grid-cols-2 font-medium gap-5">
-					<p className="w-[350px]">
+					<p className="sm:w-[350px]">
 						{t("finance.form.fields.foc.minPax.label")}
 					</p>
 					<p>{t("finance.form.fields.foc.free.label")}</p>
@@ -72,7 +72,7 @@ const FocTiersDetailsBase: FC<IFocTiersDetailsProps> = ({ form }) => {
 									hideLabel
 									className={
 										key === ENUM_FOC_TIER_FIELD.MIN_PAX
-											? "mb-0 w-[350px]"
+											? "mb-0 sm:w-[350px]"
 											: "mb-0"
 									}
 									t={t}

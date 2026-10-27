@@ -12,6 +12,6 @@ export const ACCESS_LIST = (): TForm[] => [
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(PERMISSION_LABELS),
 		badgeVariant: "secondary",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

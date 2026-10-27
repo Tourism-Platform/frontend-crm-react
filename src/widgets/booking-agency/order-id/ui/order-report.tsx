@@ -19,7 +19,9 @@ const OrderReportBase: FC<IOrderReportProps> = ({ report }) => {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>{t("report.title")}</CardTitle>
+				<CardTitle className="text-lg font-semibold">
+					{t("report.title")}
+				</CardTitle>
 			</CardHeader>
 			<CardContent className="min-h-[200px]">
 				<p className="whitespace-pre-wrap">{report}</p>

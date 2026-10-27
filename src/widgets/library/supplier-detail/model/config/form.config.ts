@@ -8,7 +8,7 @@ export const FORM_SUPPLIER_DETAIL_LIST = (): TForm[] => [
 		placeholder: "fields.brandName.placeholder",
 		key: ENUM_FORM.BRAND_NAME,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "fields.legalName.label",

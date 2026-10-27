@@ -17,10 +17,10 @@ const AddressInfoBase: FC<IAddressInfoProps> = ({ form }) => {
 	return (
 		<div className="flex gap-5 flex-col">
 			<h2 className="text-xl">{t("form.address.title")}</h2>
-			<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 				{ADDRESS_BUSINESS_DATA_LIST.map(({ key, ...item }, index) => (
 					<CustomField
-						className={index === 0 ? "col-span-2" : ""}
+						className={index === 0 ? "sm:col-span-2" : ""}
 						key={key}
 						control={form?.control}
 						name={key}

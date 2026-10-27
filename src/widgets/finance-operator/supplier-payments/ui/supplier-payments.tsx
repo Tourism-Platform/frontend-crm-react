@@ -129,7 +129,7 @@ const SupplierPaymentsBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="text-3xl">{t("page_name")}</h1>
+			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex flex-col gap-4">
 					<StatusCounts
@@ -149,7 +149,7 @@ const SupplierPaymentsBase: FC = () => {
 								label="filters.supplier.label"
 								placeholder="filters.supplier.placeholder"
 								emptyText="filters.supplier.empty"
-								className="w-[32rem]"
+								className="w-full sm:w-[32rem]"
 								options={suppliers.options}
 								onQueryChange={suppliers.setQuery}
 								onLoadMore={suppliers.loadMore}

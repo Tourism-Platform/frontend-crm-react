@@ -20,7 +20,7 @@ export const PricingReviewTabs: FC<IPricingReviewTabsProps> = ({
 	onChange
 }) => {
 	return (
-		<div className="flex items-center gap-2">
+		<div className="flex items-center gap-2 overflow-x-auto">
 			<CustomOptionTabs value={activeId} onValueChange={onChange}>
 				<CustomOptionTabsList className="grid grid-flow-col">
 					{options.map((option) => (

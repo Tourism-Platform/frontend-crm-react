@@ -74,12 +74,12 @@ const ActivityLogBase: FC = () => {
 	);
 
 	return (
-		<section className="flex flex-col gap-6 container">
+		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 
 			<Card>
-				<CardHeader className="flex justify-between items-center">
-					<CardTitle className="text-xl font-normal">
+				<CardHeader className="flex flex-wrap items-center justify-between gap-3">
+					<CardTitle className="text-lg font-semibold">
 						{t("content.title")}
 					</CardTitle>
 					<Button variant="outline">{t("actions.export")}</Button>

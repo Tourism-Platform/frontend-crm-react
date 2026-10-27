@@ -45,9 +45,7 @@ const TranslationsInfoBase: FC = () => {
 	return (
 		<div className="flex flex-col gap-3">
 			<div className="flex flex-col gap-1">
-				<h3 className="text-base font-medium">
-					{t("general.translations.title")}
-				</h3>
+				<h3 className="text-lg">{t("general.translations.title")}</h3>
 				<p className="text-sm text-muted-foreground">
 					{t("general.translations.description")}
 				</p>

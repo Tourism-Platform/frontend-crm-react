@@ -37,7 +37,7 @@ export const FareCard: FC<IFareCardProps> = ({
 
 	return (
 		<Card className="relative">
-			<CardHeader className="flex items-center justify-between">
+			<CardHeader className="flex flex-wrap items-center justify-between gap-3">
 				<div className="grid gap-1">
 					<p>
 						{t("form.fares.details.fare_item", {
@@ -61,7 +61,7 @@ export const FareCard: FC<IFareCardProps> = ({
 					/>
 				</div>
 
-				<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 					{FARES_DATA_LIST().map(({ key, ...item }) => (
 						<CustomField
 							key={key}

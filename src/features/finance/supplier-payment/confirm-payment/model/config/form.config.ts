@@ -9,7 +9,7 @@ export const FORM_CONFIRM_PAYMENT_LIST: TForm[] = [
 		key: ENUM_FORM_CONFIRM_PAYMENT.ORDER_ID,
 		fieldType: "input",
 		disabled: true,
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.fields.amount.label",
@@ -30,6 +30,6 @@ export const FORM_CONFIRM_PAYMENT_LIST: TForm[] = [
 		placeholder: "form.fields.note.placeholder",
 		key: ENUM_FORM_CONFIRM_PAYMENT.NOTE,
 		fieldType: "textarea",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

@@ -17,7 +17,7 @@ const ScheduleBase: FC<IScheduleProps> = ({ form }) => {
 	return (
 		<div className="grid gap-5">
 			<h2 className="text-xl">{t("form.general.schedule.title")}</h2>
-			<div className="grid grid-cols-4 gap-x-4 gap-y-1">
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2 lg:grid-cols-4">
 				{SCHEDULE_LIST().map(({ key, ...item }, index) => (
 					<Fragment key={key}>
 						<CustomField
@@ -27,7 +27,9 @@ const ScheduleBase: FC<IScheduleProps> = ({ form }) => {
 							t={t}
 							{...item}
 						/>
-						{index === 0 && <div className="col-span-2" />}
+						{index === 0 && (
+							<div className="hidden lg:block lg:col-span-2" />
+						)}
 					</Fragment>
 				))}
 			</div>

@@ -123,7 +123,7 @@ const FinanceInfoBase: FC = () => {
 					/>
 				</div>
 				<FocTiersDetails form={form} />
-				<div className="col-span-2 flex justify-end">
+				<div className="col-span-2 flex justify-end mt-6">
 					<LoaderButton
 						type="submit"
 						disabled={isSaving || isTourLoading}

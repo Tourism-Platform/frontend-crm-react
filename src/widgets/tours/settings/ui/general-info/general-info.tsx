@@ -105,7 +105,7 @@ const GeneralInfoBase: FC = () => {
 					className="flex flex-col gap-6"
 				>
 					<h2 className="text-xl">{t("general.title")}</h2>
-					<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+					<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 						{GENERAL_FORM_LIST({ defaultValues: tour }).map(
 							({ key, ...item }) => {
 								if (
@@ -143,7 +143,7 @@ const GeneralInfoBase: FC = () => {
 												<CustomField
 													fieldType="asyncSelect"
 													control={form.control}
-													className="col-span-2"
+													className="sm:col-span-2"
 													name={
 														ENUM_TOUR_SETTINGS_GENERAL_FORM.AGENCY_ID
 													}

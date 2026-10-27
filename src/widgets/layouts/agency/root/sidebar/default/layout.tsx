@@ -1,5 +1,14 @@
 import type { PropsWithChildren } from "react";
 
+import { HeaderAgency } from "../../../ui";
+
 export const DefaultAgencyLayout = ({ children }: PropsWithChildren) => {
-	return <div className="container mx-auto pt-12 pb-30">{children}</div>;
+	return (
+		<>
+			<HeaderAgency />
+			<div className="container mx-auto px-5 mt-6 mb-30 h-full">
+				{children}
+			</div>
+		</>
+	);
 };

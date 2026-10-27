@@ -14,7 +14,7 @@ export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 		placeholder: "create.form.fields.tourTitle.placeholder",
 		key: ENUM_FORM.TOUR_TITLE,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "create.form.fields.tourType.label",
@@ -62,7 +62,7 @@ export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 		key: ENUM_FORM.TOUR_CATEGORIES,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(TOUR_CATEGORY_LABELS),
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		badgeVariant: "secondary"
 	},
 	{
@@ -71,7 +71,7 @@ export const FORM_CREATE_TOUR_LIST = (): TForm[] => [
 		key: ENUM_FORM.LANGUAGES,
 		fieldType: "multiselect",
 		options: useValueToTranslateLabel(LANGUAGES_LABELS),
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		badgeVariant: "secondary"
 	}
 ];

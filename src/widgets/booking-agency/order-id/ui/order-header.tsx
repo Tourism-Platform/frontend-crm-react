@@ -41,12 +41,12 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 	return (
 		<div className="grid gap-5">
 			<div className="grid gap-2">
-				<div className="flex items-center justify-between">
+				<div className="flex flex-wrap items-center justify-between gap-3">
 					<div className="flex flex-col gap-3">
-						<h1 className="text-3xl">
+						<h1 className="md:text-3xl text-2xl">
 							<CopyableValue value={orderNumber} kind="number" />
 						</h1>
-						<div className="flex items-center gap-4">
+						<div className="flex flex-wrap items-center gap-4">
 							<div className="flex items-center gap-2">
 								<span className="text-sm font-medium">
 									{t("header.order_status")}:

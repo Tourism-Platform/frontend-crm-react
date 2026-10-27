@@ -27,7 +27,7 @@ const ReconciliationSupplierPaymentsBase: FC<
 
 	return (
 		<Card>
-			<CardHeader className="block">
+			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("table.title")}
 				</CardTitle>

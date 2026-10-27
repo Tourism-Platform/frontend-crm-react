@@ -111,7 +111,7 @@ export const EditStaff: FC<IEditStaffProps> = ({
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
-			<DialogContent className="flex max-h-[90vh] flex-col gap-0 p-0 min-w-[750px]">
+			<DialogContent className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-[52rem]">
 				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("menu.edit.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">

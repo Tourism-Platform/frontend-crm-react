@@ -8,6 +8,6 @@ export const FARES_DATA_LIST = (): TForm[] => [
 		placeholder: "form.fares.details.form.fields.name.placeholder",
 		key: ENUM_FORM_TRAIN_FARES.NAME,
 		fieldType: "input",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	}
 ];

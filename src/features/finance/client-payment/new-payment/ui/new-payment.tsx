@@ -82,7 +82,7 @@ export const NewPayment: FC = () => {
 						className="flex min-h-0 flex-1 flex-col"
 					>
 						<CustomScroll className="space-y-6 px-6 py-4">
-							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+							<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 								<CustomField
 									fieldType="asyncSelect"
 									control={form.control}
@@ -91,7 +91,7 @@ export const NewPayment: FC = () => {
 									label="new_payment.form.fields.orderId.label"
 									placeholder="new_payment.form.fields.orderId.placeholder"
 									emptyText="new_payment.form.fields.orderId.empty"
-									className="col-span-2"
+									className="sm:col-span-2"
 									options={orders.options}
 									onQueryChange={orders.setQuery}
 									onLoadMore={orders.loadMore}

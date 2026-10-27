@@ -38,7 +38,7 @@ export const OrderId: FC = () => {
 	}
 
 	return (
-		<div className="flex flex-col gap-8 text-foreground">
+		<div className="flex flex-1 flex-col gap-5">
 			{isOrderLoading || !order ? (
 				<OrderHeaderSkeleton />
 			) : (
@@ -54,7 +54,7 @@ export const OrderId: FC = () => {
 			{isOrderLoading || !order ? (
 				<OrderInfoCardsSkeleton />
 			) : (
-				<div className="grid grid-cols-2 gap-6">
+				<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 					<OrderInfoCard
 						title={t("order_info.title")}
 						items={orderItems}

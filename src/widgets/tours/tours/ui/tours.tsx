@@ -69,7 +69,7 @@ const ToursBase: FC = () => {
 						control={control}
 						name={key}
 						t={t}
-						className="w-60"
+						className="w-full sm:w-72"
 						{...item}
 					/>
 				))}
@@ -168,7 +168,7 @@ const ToursBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="text-3xl">{t("page_name")}</h1>
+			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex flex-col gap-4">
 					{filtersJsx}

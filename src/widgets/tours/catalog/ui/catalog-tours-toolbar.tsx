@@ -50,7 +50,7 @@ export const CatalogToursToolbar: FC<TCatalogToursToolbarProps> = ({
 					onChange={onLocalSearchChange}
 				/>
 				<SelectPicker
-					className="w-56"
+					className="w-full sm:w-72"
 					options={sortOptions}
 					value={sort}
 					onChange={onSortChange}

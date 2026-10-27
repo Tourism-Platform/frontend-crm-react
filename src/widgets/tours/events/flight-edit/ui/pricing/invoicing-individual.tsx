@@ -70,7 +70,7 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 						);
 					}}
 				>
-					<CustomOptionTabsList className="grid grid-cols-2 w-70">
+					<CustomOptionTabsList className="grid grid-cols-2 w-full sm:w-70">
 						{pricingTabs.map((tab) => (
 							<CustomOptionTabsTrigger
 								key={tab.type}

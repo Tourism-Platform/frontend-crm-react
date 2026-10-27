@@ -16,7 +16,7 @@ const AdditionalInfoBase: FC<IAdditionalInfoProps> = ({ form }) => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h3 className="text-lg ">{t("form.additional_info.title")}</h3>
+			<h3 className="text-lg">{t("form.additional_info.title")}</h3>
 			<p className="text-sm text-muted-foreground">
 				{t("form.additional_info.description")}
 			</p>

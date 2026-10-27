@@ -16,11 +16,9 @@ const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
 	if (!data) return null;
 
 	return (
-		<div className="grid grid-cols-2 gap-6">
+		<div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
 			<div>
-				<h3 className="text-xl font-semibold mb-4">
-					{t("sections.included.title")}
-				</h3>
+				<h3 className="text-lg mb-4">{t("sections.included.title")}</h3>
 				<ul className="flex flex-col gap-2">
 					{data.included.map((item) => {
 						return (
@@ -33,7 +31,7 @@ const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
 				</ul>
 			</div>
 			<div>
-				<h3 className="text-xl font-semibold mb-4">
+				<h3 className="text-lg mb-4">
 					{t("sections.not_included.title")}
 				</h3>
 				<ul className="flex flex-col gap-2">

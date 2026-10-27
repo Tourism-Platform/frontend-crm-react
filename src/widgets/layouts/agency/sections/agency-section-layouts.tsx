@@ -5,29 +5,26 @@ import {
 	AGENCY_SETTINGS_SIDEBAR_LIST
 } from "@/shared/config";
 import { useSectionI18nPreload } from "@/shared/hooks";
+import { CustomSidebar } from "@/shared/ui";
 
-import { BookingAgencyLayout } from "../root/sidebar/booking/layout";
 import { SideBarAgencyLayout } from "../root/sidebar/layout";
-import { SettingsAgencyLayout } from "../root/sidebar/settings/layout";
 
 export const BookingAgencySectionLayout = () => {
 	useSectionI18nPreload("booking-agency");
 
 	return (
-		<SideBarAgencyLayout items={AGENCY_BOOKING_SIDEBAR_LIST}>
-			<BookingAgencyLayout>
-				<Outlet />
-			</BookingAgencyLayout>
+		<SideBarAgencyLayout
+			sidebar={<CustomSidebar items={AGENCY_BOOKING_SIDEBAR_LIST} />}
+		>
+			<Outlet />
 		</SideBarAgencyLayout>
 	);
 };
 
 export const SettingsAgencySectionLayout = () => (
-	<SideBarAgencyLayout items={AGENCY_SETTINGS_SIDEBAR_LIST}>
-		<SettingsAgencyLayout>
-			<Outlet />
-		</SettingsAgencyLayout>
+	<SideBarAgencyLayout
+		sidebar={<CustomSidebar items={AGENCY_SETTINGS_SIDEBAR_LIST} />}
+	>
+		<Outlet />
 	</SideBarAgencyLayout>
 );
-
-export { SettingsAgencyLayout };

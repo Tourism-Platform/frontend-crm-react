@@ -22,7 +22,7 @@ export const EVENT_DATA_LIST = (
 		key: ENUM_FORM_ACTIVITY.ACTIVITY_SUBTYPE,
 		options: useValueToTranslateLabel(ACTIVITY_TYPE_LABELS),
 		fieldType: "select",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.general.details.form.fields.location.label",
@@ -30,7 +30,7 @@ export const EVENT_DATA_LIST = (
 		emptyText: "form.general.details.form.fields.location.empty",
 		key: ENUM_FORM_ACTIVITY.LOCATION,
 		fieldType: "geo",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		icon: MapPin,
 		...geo
 	},
@@ -71,6 +71,6 @@ export const EVENT_DATA_LIST = (
 		placeholder: "form.general.description.placeholder",
 		key: ENUM_FORM_ACTIVITY.DESCRIPTION,
 		fieldType: "editor",
-		className: "col-span-4"
+		className: "sm:col-span-2 lg:col-span-4"
 	}
 ];

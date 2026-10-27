@@ -19,13 +19,13 @@ export const FORM_OPEN_RECONCILIATION_LIST: TForm[] = [
 		placeholder: "form.fields.note.placeholder",
 		key: ENUM_FORM_OPEN_RECONCILIATION.NOTE,
 		fieldType: "textarea",
-		className: "col-span-2"
+		className: "sm:col-span-2"
 	},
 	{
 		label: "form.fields.files.label",
 		key: ENUM_FORM_OPEN_RECONCILIATION.FILES,
 		fieldType: "upload",
-		className: "col-span-2",
+		className: "sm:col-span-2",
 		showAllRemoveButton: false,
 		showTopTitle: false,
 		maxFiles: 2

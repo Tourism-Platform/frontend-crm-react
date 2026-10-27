@@ -26,9 +26,9 @@ export const TourHeader: FC<ITourHeaderProps> = memo(
 		isLoading
 	}) => {
 		return (
-			<div className="flex justify-between items-start w-full">
+			<div className="flex flex-wrap items-center justify-between gap-3">
 				<div className="flex flex-col gap-2">
-					<h1 className="text-2xl flex items-center gap-2">
+					<h1 className="md:text-3xl text-2xl flex items-center gap-2">
 						{pageName}:{" "}
 						{isLoading ? (
 							<Skeleton className="h-7 w-64" />
@@ -36,7 +36,7 @@ export const TourHeader: FC<ITourHeaderProps> = memo(
 							tourTitle
 						)}
 					</h1>
-					<div className="flex items-center gap-4">
+					<div className="flex flex-wrap items-center gap-4">
 						{isLoading ? (
 							<Skeleton className="h-5 w-15" />
 						) : (
@@ -46,7 +46,7 @@ export const TourHeader: FC<ITourHeaderProps> = memo(
 								</Badge>
 							)
 						)}
-						<div className="flex gap-4 items-center text-muted-foreground">
+						<div className="flex flex-wrap gap-4 items-center text-muted-foreground">
 							{(duration || isLoading) && (
 								<div className="flex gap-2 items-center">
 									<ClockOutlineIcon className="h-4" />
@@ -71,7 +71,7 @@ export const TourHeader: FC<ITourHeaderProps> = memo(
 					</div>
 				</div>
 				{actions && !isLoading && (
-					<div className="flex gap-2">{actions}</div>
+					<div className="flex flex-wrap gap-2">{actions}</div>
 				)}
 			</div>
 		);

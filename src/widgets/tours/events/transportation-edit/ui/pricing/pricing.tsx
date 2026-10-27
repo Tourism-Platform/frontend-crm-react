@@ -80,7 +80,7 @@ const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 							}
 							className="gap-4"
 						>
-							<CustomOptionTabsList className="grid-cols-2 w-70">
+							<CustomOptionTabsList className="grid grid-cols-2 w-full sm:w-70">
 								{PRICING_TABS_LIST.map((item) => (
 									<CustomOptionTabsTrigger
 										key={item.type}

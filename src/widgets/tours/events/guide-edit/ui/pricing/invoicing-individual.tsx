@@ -72,7 +72,7 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 											"form.pricing.form.pricing_details.title"
 										)}
 									</h3>
-									<div className="grid grid-cols-3 gap-5">
+									<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-3">
 										{tab.priceDetailsList.map(
 											({ key, ...item }) => (
 												<CustomField

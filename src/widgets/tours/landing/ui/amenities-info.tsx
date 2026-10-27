@@ -16,7 +16,7 @@ const AmenitiesInfoBase: FC<IAmenitiesInfoProps> = ({ form }) => {
 
 	return (
 		<div className="flex flex-col gap-6">
-			<h3 className="text-lg ">{t("form.amenities.title")}</h3>
+			<h3 className="text-lg">{t("form.amenities.title")}</h3>
 			<p className="text-sm text-muted-foreground">
 				{t("form.amenities.description")}
 			</p>
