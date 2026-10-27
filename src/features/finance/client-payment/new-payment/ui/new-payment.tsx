@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -17,8 +18,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
-	LoaderButton,
-	Separator
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -68,58 +68,61 @@ export const NewPayment: FC = () => {
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
-				className="sm:max-w-[52rem]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-[52rem]"
 			>
-				<DialogHeader>
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("new_payment.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
 						{t("new_payment.form.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 					>
-						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							<CustomField
-								fieldType="asyncSelect"
-								control={form.control}
-								name={ENUM_FORM_NEW_PAYMENT.ORDER_ID}
-								t={t}
-								label="new_payment.form.fields.orderId.label"
-								placeholder="new_payment.form.fields.orderId.placeholder"
-								emptyText="new_payment.form.fields.orderId.empty"
-								className="col-span-2"
-								options={orders.options}
-								onQueryChange={orders.setQuery}
-								onLoadMore={orders.loadMore}
-								hasMore={orders.hasMore}
-								isLoading={orders.isLoading}
-								isLoadingMore={orders.isLoadingMore}
-								renderOption={(option) => (
-									<BookingOrderOptionCard
-										option={
-											option as TBookingOrderSelectOption
-										}
-									/>
-								)}
-								renderSkeleton={() => (
-									<BookingOrderOptionCardSkeleton />
-								)}
-							/>
-							{FORM_NEW_PAYMENT_LIST().map(({ key, ...item }) => (
+						<CustomScroll className="space-y-6 px-6 py-4">
+							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
 								<CustomField
-									key={key}
+									fieldType="asyncSelect"
 									control={form.control}
-									name={key}
+									name={ENUM_FORM_NEW_PAYMENT.ORDER_ID}
 									t={t}
-									{...item}
+									label="new_payment.form.fields.orderId.label"
+									placeholder="new_payment.form.fields.orderId.placeholder"
+									emptyText="new_payment.form.fields.orderId.empty"
+									className="col-span-2"
+									options={orders.options}
+									onQueryChange={orders.setQuery}
+									onLoadMore={orders.loadMore}
+									hasMore={orders.hasMore}
+									isLoading={orders.isLoading}
+									isLoadingMore={orders.isLoadingMore}
+									renderOption={(option) => (
+										<BookingOrderOptionCard
+											option={
+												option as TBookingOrderSelectOption
+											}
+										/>
+									)}
+									renderSkeleton={() => (
+										<BookingOrderOptionCardSkeleton />
+									)}
 								/>
-							))}
-						</div>
-						<DialogFooter>
+								{FORM_NEW_PAYMENT_LIST().map(
+									({ key, ...item }) => (
+										<CustomField
+											key={key}
+											control={form.control}
+											name={key}
+											t={t}
+											{...item}
+										/>
+									)
+								)}
+							</div>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild>
 								<Button
 									type="reset"

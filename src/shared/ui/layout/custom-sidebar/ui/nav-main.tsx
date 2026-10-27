@@ -10,6 +10,7 @@ import {
 	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuButton,
+	SidebarMenuItem,
 	useSidebar
 } from "@/shared/ui";
 
@@ -29,9 +30,12 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 	return (
 		<>
 			{items.map((item) => (
-				<SidebarGroup key={item.title}>
+				<SidebarGroup
+					key={item.title}
+					className="group-data-[collapsible=icon]:px-0"
+				>
 					<SidebarGroupLabel>{t(item?.title)}</SidebarGroupLabel>
-					<SidebarMenu>
+					<SidebarMenu className="group-data-[collapsible=icon]:items-center">
 						{item?.menu?.map((subItem) => {
 							const match = matchPath(
 								subItem.path,
@@ -44,28 +48,30 @@ export const NavMain: FC<INavMainProps> = ({ items }) => {
 									{ tourId: tourId }
 								);
 							return (
-								<SidebarMenuButton
-									tooltip={t(subItem?.label)}
-									key={subItem?.label}
-									size="lg"
-									isActive={!!match}
-									asChild
-									className={cn(
-										"h-auto min-h-12 items-start py-2 cursor-pointer"
-									)}
-								>
-									<Link to={toPath}>
-										<NavRichItem
-											icon={subItem.icon}
-											title={t(subItem.label)}
-											description={
-												subItem.description &&
-												t(subItem.description)
-											}
-											iconOnly={iconOnly}
-										/>
-									</Link>
-								</SidebarMenuButton>
+								<SidebarMenuItem key={subItem?.label}>
+									<SidebarMenuButton
+										tooltip={t(subItem?.label)}
+										size="lg"
+										isActive={!!match}
+										asChild
+										className={cn(
+											"h-auto min-h-12 items-start py-2 cursor-pointer",
+											"group-data-[collapsible=icon]:min-h-0 group-data-[collapsible=icon]:items-center group-data-[collapsible=icon]:justify-center"
+										)}
+									>
+										<Link to={toPath}>
+											<NavRichItem
+												icon={subItem.icon}
+												title={t(subItem.label)}
+												description={
+													subItem.description &&
+													t(subItem.description)
+												}
+												iconOnly={iconOnly}
+											/>
+										</Link>
+									</SidebarMenuButton>
+								</SidebarMenuItem>
 							);
 						})}
 					</SidebarMenu>

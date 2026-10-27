@@ -3,6 +3,7 @@ import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
+import { CustomScroll } from "@/shared/ui";
 import {
 	Sheet,
 	SheetContent,
@@ -34,9 +35,9 @@ const DetailSheetPanel: FC<IDetailSheetPanelProps> = ({ source }) => (
 			</SheetDescription>
 		</SheetHeader>
 
-		<div className="flex-1 overflow-y-auto px-6 pb-6">
+		<CustomScroll className="flex-1 px-6 pb-6">
 			<OptionEventSheetBody sheet={source.sheet} />
-		</div>
+		</CustomScroll>
 	</SheetContent>
 );
 

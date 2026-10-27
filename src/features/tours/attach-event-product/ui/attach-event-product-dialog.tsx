@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -12,8 +13,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	Form,
-	LoaderButton,
-	Separator
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -62,8 +62,8 @@ export const AttachEventProductDialog: FC<IAttachEventProductDialogProps> = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="flex min-h-[36rem] flex-col gap-4 sm:max-w-[52rem]">
-				<DialogHeader>
+			<DialogContent className="flex h-[min(36rem,90vh)] flex-col gap-0 p-0 sm:max-w-[52rem]">
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>
 						{t("attach_product.dialog.title")}
 					</DialogTitle>
@@ -71,48 +71,49 @@ export const AttachEventProductDialog: FC<IAttachEventProductDialogProps> = ({
 						{t("attach_product.dialog.description")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="flex flex-1 flex-col space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 					>
-						<CustomField
-							fieldType="asyncSelect"
-							control={form.control}
-							name={ENUM_FORM_ATTACH_PRODUCT.PRODUCT_ID}
-							t={t}
-							label="attach_product.dialog.fields.product.label"
-							placeholder="attach_product.dialog.fields.product.placeholder"
-							emptyText="attach_product.dialog.fields.product.empty"
-							options={products.options}
-							onQueryChange={products.setQuery}
-							onLoadMore={products.loadMore}
-							hasMore={products.hasMore}
-							isLoading={products.isLoading}
-							isLoadingMore={products.isLoadingMore}
-							renderOption={(option) => (
-								<SupplierProductOptionCard
-									option={
-										option as TSupplierProductSelectOption
-									}
-								/>
-							)}
-							renderSkeleton={() => (
-								<SupplierProductOptionCardSkeleton />
-							)}
-						/>
-						{selectedProduct ? (
+						<CustomScroll className="flex flex-1 flex-col space-y-6 px-6 py-4">
 							<CustomField
-								key={variantKey}
+								fieldType="asyncSelect"
 								control={form.control}
-								name={variantKey}
+								name={ENUM_FORM_ATTACH_PRODUCT.PRODUCT_ID}
 								t={t}
-								{...variantItem}
+								label="attach_product.dialog.fields.product.label"
+								placeholder="attach_product.dialog.fields.product.placeholder"
+								emptyText="attach_product.dialog.fields.product.empty"
+								options={products.options}
+								onQueryChange={products.setQuery}
+								onLoadMore={products.loadMore}
+								hasMore={products.hasMore}
+								isLoading={products.isLoading}
+								isLoadingMore={products.isLoadingMore}
+								renderOption={(option) => (
+									<SupplierProductOptionCard
+										option={
+											option as TSupplierProductSelectOption
+										}
+									/>
+								)}
+								renderSkeleton={() => (
+									<SupplierProductOptionCardSkeleton />
+								)}
 							/>
-						) : null}
-						<DialogFooter className="mt-auto">
+							{selectedProduct ? (
+								<CustomField
+									key={variantKey}
+									control={form.control}
+									name={variantKey}
+									t={t}
+									{...variantItem}
+								/>
+							) : null}
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild>
 								<Button
 									type="reset"

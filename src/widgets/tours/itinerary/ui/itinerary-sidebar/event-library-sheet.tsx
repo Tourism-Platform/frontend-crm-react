@@ -2,9 +2,9 @@ import { type FC, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
+	CustomScroll,
 	Input,
 	MultipleSelector,
-	ScrollArea,
 	Sheet,
 	SheetContent,
 	SheetDescription,
@@ -129,7 +129,7 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 					/>
 				</SheetHeader>
 
-				<ScrollArea className="min-h-0 flex-1">
+				<CustomScroll className="min-h-0 flex-1">
 					<div className="space-y-2 px-6 py-4">
 						{isLoading ? (
 							<DraggableLibraryItemsSkeleton />
@@ -153,7 +153,7 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 							</div>
 						) : null}
 					</div>
-				</ScrollArea>
+				</CustomScroll>
 			</SheetContent>
 		</Sheet>
 	);

@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -69,9 +70,9 @@ export const NewPaymentRoute: FC = () => {
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
-				className="min-w-[700px]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 min-w-[700px]"
 			>
-				<DialogHeader>
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>
 						{t("payment_settings.form.modal.title")}
 					</DialogTitle>
@@ -79,61 +80,63 @@ export const NewPaymentRoute: FC = () => {
 						{t("payment_settings.form.modal.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 					>
-						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_NEW_PAYMENT_ROUTE_COMMON_LIST().map(
-								({ key, ...item }) => (
-									<CustomField
-										key={key}
-										control={form.control}
-										name={key}
-										t={t}
-										{...item}
-									/>
-								)
-							)}
+						<CustomScroll className="space-y-6 px-6 py-4">
+							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+								{FORM_NEW_PAYMENT_ROUTE_COMMON_LIST().map(
+									({ key, ...item }) => (
+										<CustomField
+											key={key}
+											control={form.control}
+											name={key}
+											t={t}
+											{...item}
+										/>
+									)
+								)}
 
-							<Separator className="col-span-2 mb-4" />
+								<Separator className="col-span-2 mb-4" />
 
-							{methodType ===
-								ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT &&
-								swiftFields.map(({ key, ...item }) => (
-									<CustomField
-										key={key}
-										control={form.control}
-										name={key}
-										t={t}
-										{...item}
-									/>
-								))}
+								{methodType ===
+									ENUM_PAYMENT_ROUTE_METHODS.CLASSIC_SWIFT &&
+									swiftFields.map(({ key, ...item }) => (
+										<CustomField
+											key={key}
+											control={form.control}
+											name={key}
+											t={t}
+											{...item}
+										/>
+									))}
 
-							{methodType === ENUM_PAYMENT_ROUTE_METHODS.WISE &&
-								wiseFields.map(({ key, ...item }) => (
-									<CustomField
-										key={key}
-										control={form.control}
-										name={key}
-										t={t}
-										{...item}
-									/>
-								))}
+								{methodType ===
+									ENUM_PAYMENT_ROUTE_METHODS.WISE &&
+									wiseFields.map(({ key, ...item }) => (
+										<CustomField
+											key={key}
+											control={form.control}
+											name={key}
+											t={t}
+											{...item}
+										/>
+									))}
 
-							<CustomField
-								control={form.control}
-								name="note"
-								label="payment_settings.form.modal.fields.note.label"
-								placeholder="payment_settings.form.modal.fields.note.placeholder"
-								fieldType="textarea"
-								className="col-span-2"
-								t={t}
-							/>
-						</div>
-						<DialogFooter>
+								<CustomField
+									control={form.control}
+									name="note"
+									label="payment_settings.form.modal.fields.note.label"
+									placeholder="payment_settings.form.modal.fields.note.placeholder"
+									fieldType="textarea"
+									className="col-span-2"
+									t={t}
+								/>
+							</div>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild onClick={() => setOpen(false)}>
 								<Button
 									type="reset"

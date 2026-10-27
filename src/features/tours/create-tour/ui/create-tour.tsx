@@ -9,6 +9,7 @@ import {
 	Button,
 	CustomField,
 	CustomRangeField,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -18,8 +19,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
-	LoaderButton,
-	Separator
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -102,96 +102,113 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
-				className="min-w-[700px]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 min-w-[700px]"
 			>
-				<DialogHeader>
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("create.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
 						{t("create.form.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 					>
-						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_CREATE_TOUR_LIST().map(({ key, ...item }) => {
-								if (
-									key === ENUM_FORM.DURATION ||
-									key === ENUM_FORM.AGE_REQUIRES
-								) {
-									return (
-										<CustomRangeField
-											key={key}
-											control={form.control}
-											name={key}
-											label={`create.form.fields.${key}.label`}
-											placeholder_left={`create.form.fields.${key}.placeholder_left`}
-											placeholder_right={`create.form.fields.${key}.placeholder_right`}
-											t={t}
-										/>
-									);
-								}
+						<CustomScroll className="space-y-6 px-6 py-4">
+							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+								{FORM_CREATE_TOUR_LIST().map(
+									({ key, ...item }) => {
+										if (
+											key === ENUM_FORM.DURATION ||
+											key === ENUM_FORM.AGE_REQUIRES
+										) {
+											return (
+												<CustomRangeField
+													key={key}
+													control={form.control}
+													name={key}
+													label={`create.form.fields.${key}.label`}
+													placeholder_left={`create.form.fields.${key}.placeholder_left`}
+													placeholder_right={`create.form.fields.${key}.placeholder_right`}
+													t={t}
+												/>
+											);
+										}
 
-								if (key === ENUM_FORM.GROUP_SIZE) {
-									return (
-										<Fragment key={key}>
+										if (key === ENUM_FORM.GROUP_SIZE) {
+											return (
+												<Fragment key={key}>
+													<CustomField
+														control={form.control}
+														name={key}
+														t={t}
+														{...item}
+													/>
+													{isPrivateTour ? (
+														<CustomField
+															fieldType="asyncSelect"
+															control={
+																form.control
+															}
+															className="col-span-2"
+															name={
+																ENUM_FORM.AGENCY_ID
+															}
+															t={t}
+															label="create.form.fields.agencyId.label"
+															placeholder="create.form.fields.agencyId.placeholder"
+															emptyText="create.form.fields.agencyId.empty"
+															options={
+																agency.options
+															}
+															onQueryChange={
+																agency.setQuery
+															}
+															onLoadMore={
+																agency.loadMore
+															}
+															hasMore={
+																agency.hasMore
+															}
+															isLoading={
+																agency.isLoading
+															}
+															isLoadingMore={
+																agency.isLoadingMore
+															}
+															renderOption={(
+																option
+															) => (
+																<AgencyOptionCard
+																	option={
+																		option as TAgencySelectOption
+																	}
+																/>
+															)}
+															renderSkeleton={() => (
+																<AgencyOptionCardSkeleton />
+															)}
+														/>
+													) : null}
+												</Fragment>
+											);
+										}
+
+										return (
 											<CustomField
+												key={key}
 												control={form.control}
 												name={key}
 												t={t}
 												{...item}
 											/>
-											{isPrivateTour ? (
-												<CustomField
-													fieldType="asyncSelect"
-													control={form.control}
-													className="col-span-2"
-													name={ENUM_FORM.AGENCY_ID}
-													t={t}
-													label="create.form.fields.agencyId.label"
-													placeholder="create.form.fields.agencyId.placeholder"
-													emptyText="create.form.fields.agencyId.empty"
-													options={agency.options}
-													onQueryChange={
-														agency.setQuery
-													}
-													onLoadMore={agency.loadMore}
-													hasMore={agency.hasMore}
-													isLoading={agency.isLoading}
-													isLoadingMore={
-														agency.isLoadingMore
-													}
-													renderOption={(option) => (
-														<AgencyOptionCard
-															option={
-																option as TAgencySelectOption
-															}
-														/>
-													)}
-													renderSkeleton={() => (
-														<AgencyOptionCardSkeleton />
-													)}
-												/>
-											) : null}
-										</Fragment>
-									);
-								}
-
-								return (
-									<CustomField
-										key={key}
-										control={form.control}
-										name={key}
-										t={t}
-										{...item}
-									/>
-								);
-							})}
-						</div>
-						<DialogFooter>
+										);
+									}
+								)}
+							</div>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild onClick={() => setOpen(false)}>
 								<Button
 									type="reset"

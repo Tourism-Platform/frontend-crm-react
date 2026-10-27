@@ -6,6 +6,7 @@ import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Button,
+	CustomScroll,
 	CustomSelectableCard,
 	Dialog,
 	DialogClose,
@@ -15,8 +16,6 @@ import {
 	DialogHeader,
 	DialogTitle,
 	LoaderButton,
-	ScrollArea,
-	Separator,
 	Skeleton
 } from "@/shared/ui";
 
@@ -126,9 +125,9 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 			<Dialog open={open} onOpenChange={handleOpenChange}>
 				<DialogContent
 					onCloseBtn={() => handleOpenChange(false)}
-					className="sm:max-w-[52rem]"
+					className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-[52rem]"
 				>
-					<DialogHeader>
+					<DialogHeader className="border-b px-6 py-4">
 						<DialogTitle>
 							{t("send_invoice_modal.title")}
 						</DialogTitle>
@@ -136,10 +135,9 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 							{t("send_invoice_modal.description")}
 						</DialogDescription>
 					</DialogHeader>
-					<Separator />
-					<div className="space-y-6">
-						<ScrollArea className="h-72 w-full">
-							<div className="flex flex-col gap-2 p-4">
+					<div className="flex min-h-0 flex-1 flex-col">
+						<CustomScroll className="flex-1">
+							<div className="flex flex-col gap-2 px-6 py-4">
 								{isLoading &&
 									Array.from({ length: 3 }).map(
 										(_, index) => (
@@ -179,8 +177,8 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 										</CustomSelectableCard>
 									))}
 							</div>
-						</ScrollArea>
-						<DialogFooter>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild>
 								<Button
 									type="button"

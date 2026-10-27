@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	CustomUploadFiles,
 	Dialog,
 	DialogClose,
@@ -17,8 +18,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
-	LoaderButton,
-	Separator
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -93,50 +93,51 @@ export const UpdatePayment: FC<IUpdatePaymentProps> = ({
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
-				className="sm:max-w-[52rem]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-[52rem]"
 			>
-				<DialogHeader>
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("menu.update.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
 						{t("menu.update.form.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
 					<form
-						className="space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 						onSubmit={form.handleSubmit(onSubmit)}
 					>
-						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_UPDATE_PAYMENT_LIST.map(
-								({ key, disabled, ...item }) => (
-									<CustomField
-										key={key}
-										control={form.control}
-										name={key}
-										t={t}
-										{...item}
-										disabled={disabled}
-									/>
-								)
-							)}
-						</div>
-						<div className="flex flex-col gap-2">
-							<p className="ml-1 text-sm font-medium">
-								{t("menu.update.form.fields.files.label")}:
-							</p>
-							<CustomUploadFiles
-								initialFiles={initialFiles}
-								maxFiles={1}
-								onFilesAdded={addFiles}
-								onFileRemove={removeFile}
-								isLoading={isAttachmentsLoading}
-								loadingId={loadingId}
-								showAllRemoveButton={false}
-								showTopTitle={false}
-							/>
-						</div>
-						<DialogFooter>
+						<CustomScroll className="space-y-6 px-6 py-4">
+							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+								{FORM_UPDATE_PAYMENT_LIST.map(
+									({ key, disabled, ...item }) => (
+										<CustomField
+											key={key}
+											control={form.control}
+											name={key}
+											t={t}
+											{...item}
+											disabled={disabled}
+										/>
+									)
+								)}
+							</div>
+							<div className="flex flex-col gap-2">
+								<p className="ml-1 text-sm font-medium">
+									{t("menu.update.form.fields.files.label")}:
+								</p>
+								<CustomUploadFiles
+									initialFiles={initialFiles}
+									maxFiles={1}
+									onFilesAdded={addFiles}
+									onFileRemove={removeFile}
+									isLoading={isAttachmentsLoading}
+									loadingId={loadingId}
+									showAllRemoveButton={false}
+									showTopTitle={false}
+								/>
+							</div>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild>
 								<Button
 									variant="outline"

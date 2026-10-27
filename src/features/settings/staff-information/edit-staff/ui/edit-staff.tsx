@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import {
 	Button,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -15,8 +16,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
-	LoaderButton,
-	Separator
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -111,22 +111,26 @@ export const EditStaff: FC<IEditStaffProps> = ({
 			<DialogTrigger asChild className={className}>
 				{trigger}
 			</DialogTrigger>
-			<DialogContent className="min-w-[750px]">
-				<DialogHeader>
+			<DialogContent className="flex max-h-[90vh] flex-col gap-0 p-0 min-w-[750px]">
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("menu.edit.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
 						{t("menu.edit.form.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
-						<div>
-							<PersonalDetails form={form} />
-							<Access form={form} />
-							<Commission form={form} />
-						</div>
-						<DialogFooter>
+					<form
+						className="flex min-h-0 flex-1 flex-col"
+						onSubmit={form.handleSubmit(onSubmit)}
+					>
+						<CustomScroll className="px-6 py-4">
+							<div>
+								<PersonalDetails form={form} />
+								<Access form={form} />
+								<Commission form={form} />
+							</div>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild>
 								<Button
 									type="reset"

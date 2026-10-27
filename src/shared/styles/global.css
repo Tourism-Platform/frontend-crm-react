@@ -54,6 +54,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* скролл страницы работает, но скроллбар не виден */
+  html {
+    scrollbar-width: none;
+  }
+  html::-webkit-scrollbar {
+    display: none;
+  }
   body {
     @apply bg-background text-foreground;
      font-family: 'Exo 2', system-ui, sans-serif;

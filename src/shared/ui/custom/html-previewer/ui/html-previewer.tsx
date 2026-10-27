@@ -56,7 +56,7 @@ export const HtmlPreviewer: FC<IHtmlPreviewerProps> = ({
 	return (
 		<div
 			className={cn(
-				"rounded-md border border-border overflow-auto max-h-[600px]",
+				"rounded-md border border-border overflow-auto custom-scrollbar max-h-[600px]",
 				className
 			)}
 		>

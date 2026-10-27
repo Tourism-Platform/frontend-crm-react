@@ -12,6 +12,7 @@ import {
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -179,8 +180,8 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="max-h-[calc(100%-2rem)] w-full overflow-y-auto sm:max-w-4xl">
-				<DialogHeader>
+			<DialogContent className="flex max-h-[90vh] w-full flex-col gap-0 p-0 sm:max-w-4xl">
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>
 						{t("override_product.dialog.title")}
 					</DialogTitle>
@@ -190,7 +191,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 				</DialogHeader>
 
 				<Form {...form}>
-					<div className="grid gap-5">
+					<CustomScroll className="grid flex-1 gap-5 px-6 py-4">
 						{showArmSelector ? (
 							<div className="grid gap-1">
 								<h3 className="text-lg">
@@ -275,10 +276,10 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 								</div>
 							</>
 						) : null}
-					</div>
+					</CustomScroll>
 				</Form>
 
-				<DialogFooter>
+				<DialogFooter className="border-t px-6 py-4">
 					<DialogClose asChild>
 						<Button
 							type="button"

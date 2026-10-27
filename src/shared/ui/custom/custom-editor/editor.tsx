@@ -6,6 +6,8 @@ import { type ControllerRenderProps, type FieldValues } from "react-hook-form";
 
 import { cn } from "@/shared/lib";
 
+import { CustomScroll } from "../custom-scroll";
+
 import { MenuBar } from "./ui";
 
 export interface ICustomEditorProps<T extends FieldValues>
@@ -36,7 +38,7 @@ export const CustomEditor = <T extends FieldValues>({
 
 		editorProps: {
 			attributes: {
-				class: "flex-1 overflow-auto min-h-[290px] p-4 rounded-t-lg [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 w-full   [&_h1]:text-4xl [&_h1]:font-bold  [&_h2]:text-3xl [&_h2]:font-semibold    [&_h3]:text-2xl [&_h3]:font-semibold  [&_h4]:text-xl [&_h4]:font-semibold"
+				class: "flex-1 overflow-auto custom-scrollbar min-h-[290px] p-4 rounded-t-lg [&_ul]:list-disc [&_ul]:ml-4 [&_ol]:list-decimal [&_ol]:ml-4 w-full   [&_h1]:text-4xl [&_h1]:font-bold  [&_h2]:text-3xl [&_h2]:font-semibold    [&_h3]:text-2xl [&_h3]:font-semibold  [&_h4]:text-xl [&_h4]:font-semibold"
 			}
 		},
 
@@ -75,9 +77,9 @@ export const CustomEditor = <T extends FieldValues>({
 			)}
 			{...props}
 		>
-			<div className="flex-1 overflow-auto">
+			<CustomScroll className="flex-1">
 				<EditorContent editor={editor} />
-			</div>
+			</CustomScroll>
 
 			<MenuBar editor={editor} />
 		</div>

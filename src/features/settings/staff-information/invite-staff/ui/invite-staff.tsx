@@ -9,6 +9,7 @@ import { useCopyToClipboard } from "@/shared/hooks";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -18,8 +19,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
-	LoaderButton,
-	Separator
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -89,74 +89,75 @@ export const InviteStaff: FC = () => {
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => handleOpenChange(false)}
-				className="min-w-[700px]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 min-w-[700px]"
 			>
-				<DialogHeader>
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("invite.form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
 						{t("invite.form.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 					>
-						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_INVITE_STAFF_LIST().map(
-								({ key, ...item }) => {
-									if (
-										key ===
-											ENUM_FORM_INVITE_STAFF.PASSWORD &&
-										isPasswordLocked
-									) {
-										return (
-											<div
-												key={key}
-												className="col-span-2 flex items-end gap-2"
-											>
-												<CustomField
-													control={form.control}
-													name={key}
-													t={t}
-													label="invite.form.fields.password.label"
-													placeholder="invite.form.fields.password.placeholder"
-													fieldType="input"
-													readOnly
-													className="min-w-0 flex-1"
-												/>
-												<Button
-													type="button"
-													variant="outline"
-													size="icon"
-													className="mb-5"
-													onClick={handleCopy}
+						<CustomScroll className="space-y-6 px-6 py-4">
+							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+								{FORM_INVITE_STAFF_LIST().map(
+									({ key, ...item }) => {
+										if (
+											key ===
+												ENUM_FORM_INVITE_STAFF.PASSWORD &&
+											isPasswordLocked
+										) {
+											return (
+												<div
+													key={key}
+													className="col-span-2 flex items-end gap-2"
 												>
-													<Copy className="size-4" />
-													<span className="sr-only">
-														{t(
-															"invite.form.generated.copy"
-														)}
-													</span>
-												</Button>
-											</div>
+													<CustomField
+														control={form.control}
+														name={key}
+														t={t}
+														label="invite.form.fields.password.label"
+														placeholder="invite.form.fields.password.placeholder"
+														fieldType="input"
+														readOnly
+														className="min-w-0 flex-1"
+													/>
+													<Button
+														type="button"
+														variant="outline"
+														size="icon"
+														className="mb-5"
+														onClick={handleCopy}
+													>
+														<Copy className="size-4" />
+														<span className="sr-only">
+															{t(
+																"invite.form.generated.copy"
+															)}
+														</span>
+													</Button>
+												</div>
+											);
+										}
+
+										return (
+											<CustomField
+												key={key}
+												control={form.control}
+												name={key}
+												t={t}
+												{...item}
+											/>
 										);
 									}
-
-									return (
-										<CustomField
-											key={key}
-											control={form.control}
-											name={key}
-											t={t}
-											{...item}
-										/>
-									);
-								}
-							)}
-						</div>
-						<DialogFooter>
+								)}
+							</div>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose
 								asChild
 								onClick={() => handleOpenChange(false)}

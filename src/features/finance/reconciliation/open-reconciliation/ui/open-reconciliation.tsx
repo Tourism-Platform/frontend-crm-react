@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -14,7 +15,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 	Form,
-	Separator,
 	Skeleton
 } from "@/shared/ui";
 
@@ -84,15 +84,14 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
-				className="sm:max-w-[52rem]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-[52rem]"
 			>
-				<DialogHeader>
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("form.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
 						{t("form.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				{isFormLoading ? (
 					<div className="space-y-4 py-4">
 						<Skeleton className="h-10 w-full" />
@@ -101,22 +100,24 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 					</div>
 				) : (
 					<Form {...form}>
-						<form className="space-y-6">
-							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-								{FORM_OPEN_RECONCILIATION_LIST.map(
-									({ key, ...item }) => (
-										<CustomField
-											key={key}
-											control={form?.control}
-											name={key}
-											t={t}
-											disabled
-											{...item}
-										/>
-									)
-								)}
-							</div>
-							<DialogFooter>
+						<form className="flex min-h-0 flex-1 flex-col">
+							<CustomScroll className="space-y-6 px-6 py-4">
+								<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+									{FORM_OPEN_RECONCILIATION_LIST.map(
+										({ key, ...item }) => (
+											<CustomField
+												key={key}
+												control={form?.control}
+												name={key}
+												t={t}
+												disabled
+												{...item}
+											/>
+										)
+									)}
+								</div>
+							</CustomScroll>
+							<DialogFooter className="border-t px-6 py-4">
 								<DialogClose asChild>
 									<Button
 										variant="outline"

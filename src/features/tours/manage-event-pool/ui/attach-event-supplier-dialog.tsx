@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -15,8 +16,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	Form,
-	LoaderButton,
-	Separator
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -101,8 +101,8 @@ export const AttachEventSupplierDialog: FC<IAttachEventSupplierDialogProps> = ({
 
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
-			<DialogContent className="flex min-h-[36rem] flex-col gap-4 sm:max-w-[52rem]">
-				<DialogHeader>
+			<DialogContent className="flex h-[min(36rem,90vh)] flex-col gap-0 p-0 sm:max-w-[52rem]">
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>
 						{t("pool.attach_supplier.dialog.title")}
 					</DialogTitle>
@@ -110,36 +110,37 @@ export const AttachEventSupplierDialog: FC<IAttachEventSupplierDialogProps> = ({
 						{t("pool.attach_supplier.dialog.description")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="flex flex-1 flex-col space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 					>
-						<CustomField
-							fieldType="asyncSelect"
-							control={form.control}
-							name={ENUM_FORM_ATTACH_SUPPLIER.SUPPLIER_ID}
-							t={t}
-							label="pool.attach_supplier.dialog.fields.supplier.label"
-							placeholder="pool.attach_supplier.dialog.fields.supplier.placeholder"
-							emptyText="pool.attach_supplier.dialog.fields.supplier.empty"
-							options={suppliers.options}
-							onQueryChange={suppliers.setQuery}
-							onLoadMore={suppliers.loadMore}
-							hasMore={suppliers.hasMore}
-							isLoading={suppliers.isLoading}
-							isLoadingMore={suppliers.isLoadingMore}
-							renderOption={(option) => (
-								<SupplierOptionCard
-									option={option as TSupplierSelectOption}
-								/>
-							)}
-							renderSkeleton={() => (
-								<SupplierOptionCardSkeleton />
-							)}
-						/>
-						<DialogFooter className="mt-auto">
+						<CustomScroll className="flex flex-1 flex-col space-y-6 px-6 py-4">
+							<CustomField
+								fieldType="asyncSelect"
+								control={form.control}
+								name={ENUM_FORM_ATTACH_SUPPLIER.SUPPLIER_ID}
+								t={t}
+								label="pool.attach_supplier.dialog.fields.supplier.label"
+								placeholder="pool.attach_supplier.dialog.fields.supplier.placeholder"
+								emptyText="pool.attach_supplier.dialog.fields.supplier.empty"
+								options={suppliers.options}
+								onQueryChange={suppliers.setQuery}
+								onLoadMore={suppliers.loadMore}
+								hasMore={suppliers.hasMore}
+								isLoading={suppliers.isLoading}
+								isLoadingMore={suppliers.isLoadingMore}
+								renderOption={(option) => (
+									<SupplierOptionCard
+										option={option as TSupplierSelectOption}
+									/>
+								)}
+								renderSkeleton={() => (
+									<SupplierOptionCardSkeleton />
+								)}
+							/>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild>
 								<Button
 									type="reset"

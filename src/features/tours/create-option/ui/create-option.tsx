@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import {
 	Button,
 	CustomField,
+	CustomScroll,
 	CustomUploadImages,
 	Dialog,
 	DialogClose,
@@ -19,7 +20,6 @@ import {
 	DialogTrigger,
 	Form,
 	LoaderButton,
-	Separator,
 	type TUploadImageItem
 } from "@/shared/ui";
 
@@ -104,73 +104,80 @@ export const CreateOption: FC<ICreateOptionProps> = ({ tourId }) => {
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
-				className="min-w-[700px]"
+				className="flex max-h-[90vh] flex-col gap-0 p-0 min-w-[700px]"
 			>
-				<DialogHeader>
+				<DialogHeader className="border-b px-6 py-4">
 					<DialogTitle>{t("option.form.modal.title")}</DialogTitle>
 					<DialogDescription className="sr-only">
 						{t("option.form.modal.title")}
 					</DialogDescription>
 				</DialogHeader>
-				<Separator />
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-6"
+						className="flex min-h-0 flex-1 flex-col"
 					>
-						<div className="grid grid-cols-2 gap-x-4 gap-y-1">
-							{FORM_NEW_OPTION_LIST.map(({ key, ...item }) => (
-								<CustomField
-									key={key}
-									control={form.control}
-									name={key}
-									t={t}
-									{...item}
-								/>
-							))}
+						<CustomScroll className="space-y-6 px-6 py-4">
+							<div className="grid grid-cols-2 gap-x-4 gap-y-1">
+								{FORM_NEW_OPTION_LIST.map(
+									({ key, ...item }) => (
+										<CustomField
+											key={key}
+											control={form.control}
+											name={key}
+											t={t}
+											{...item}
+										/>
+									)
+								)}
 
-							<div className="col-span-2 flex flex-col gap-2">
-								<p className="text-sm font-medium">
-									{t("option.form.modal.fields.cover.label")}
-								</p>
-								<CustomUploadImages
-									items={coverItems}
-									maxFiles={1}
-									onAdd={(files) => {
-										const file = files[0];
-										if (!file) return;
-										coverFileRef.current = file;
-										setCoverItems([
-											{
-												kind: "pending",
-												tempId: `pending-${Date.now()}`,
-												file,
-												preview:
-													URL.createObjectURL(file)
-											}
-										]);
-									}}
-									onRemove={(id) => {
-										setCoverItems((prev) => {
-											const item = prev.find(
-												(i) =>
-													i.kind === "pending" &&
-													i.tempId === id
-											);
-											if (item?.kind === "pending") {
-												URL.revokeObjectURL(
-													item.preview
+								<div className="col-span-2 flex flex-col gap-2">
+									<p className="text-sm font-medium">
+										{t(
+											"option.form.modal.fields.cover.label"
+										)}
+									</p>
+									<CustomUploadImages
+										items={coverItems}
+										maxFiles={1}
+										onAdd={(files) => {
+											const file = files[0];
+											if (!file) return;
+											coverFileRef.current = file;
+											setCoverItems([
+												{
+													kind: "pending",
+													tempId: `pending-${Date.now()}`,
+													file,
+													preview:
+														URL.createObjectURL(
+															file
+														)
+												}
+											]);
+										}}
+										onRemove={(id) => {
+											setCoverItems((prev) => {
+												const item = prev.find(
+													(i) =>
+														i.kind === "pending" &&
+														i.tempId === id
 												);
-											}
-											coverFileRef.current = null;
-											return [];
-										});
-									}}
-									onReorder={setCoverItems}
-								/>
+												if (item?.kind === "pending") {
+													URL.revokeObjectURL(
+														item.preview
+													);
+												}
+												coverFileRef.current = null;
+												return [];
+											});
+										}}
+										onReorder={setCoverItems}
+									/>
+								</div>
 							</div>
-						</div>
-						<DialogFooter>
+						</CustomScroll>
+						<DialogFooter className="border-t px-6 py-4">
 							<DialogClose asChild onClick={() => setOpen(false)}>
 								<Button
 									type="reset"

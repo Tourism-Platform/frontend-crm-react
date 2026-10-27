@@ -13,11 +13,11 @@ import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import {
+	CustomScroll,
 	Input,
 	Popover,
 	PopoverAnchor,
-	PopoverContent,
-	ScrollArea
+	PopoverContent
 } from "@/shared/ui";
 
 import {
@@ -171,7 +171,7 @@ export const LocationSuggestSelect: FC<ILocationSuggestSelectProps> = ({
 					</p>
 				) : null}
 				{showOptions ? (
-					<ScrollArea className="h-64 w-full">
+					<CustomScroll className="h-64 w-full">
 						<ul className="flex flex-col gap-1.5 p-0.5 pr-2">
 							{options.map((option) => {
 								const kind = option.suggestion.kind;
@@ -215,7 +215,7 @@ export const LocationSuggestSelect: FC<ILocationSuggestSelectProps> = ({
 								);
 							})}
 						</ul>
-					</ScrollArea>
+					</CustomScroll>
 				) : null}
 			</PopoverContent>
 		</Popover>
