@@ -1,7 +1,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
 
-import { Badge, Skeleton } from "@/shared/ui";
+import { Badge, CopyableValue, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_STAFF_STATUS_OPTIONS_TYPE,
@@ -56,6 +56,9 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[200px]" />
 			},
 			accessorKey: "email",
+			cell: ({ row }) => (
+				<CopyableValue value={row.original.email} kind="email" />
+			),
 			size: 240
 		},
 		{

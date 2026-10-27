@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Badge, useSetBreadcrumbLabels } from "@/shared/ui";
+import { Badge, CopyableValue, useSetBreadcrumbLabels } from "@/shared/ui";
 
 import {
 	type ENUM_INVOICE_STATUS_TYPE,
@@ -34,7 +34,9 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 			<div className="grid gap-2">
 				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-3">
-						<h1 className="text-3xl">{paymentId}</h1>
+						<h1 className="text-3xl">
+							<CopyableValue value={paymentId} kind="number" />
+						</h1>
 						<Badge
 							variant={INVOICE_STATUS_VARIANTS[status]}
 							size="md"

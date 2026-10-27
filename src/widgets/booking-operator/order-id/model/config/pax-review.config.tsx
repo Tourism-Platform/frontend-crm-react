@@ -4,7 +4,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { getCountryLabel } from "@/shared/lib/countries";
-import { Button } from "@/shared/ui";
+import { Button, CopyableValue } from "@/shared/ui";
 
 import {
 	GENDER_LABELS,
@@ -64,7 +64,13 @@ export const PAX_REVIEW_COLUMNS = (
 		},
 		{
 			accessorKey: "passportNumber",
-			header: t("pax_information.table.passport_number")
+			header: t("pax_information.table.passport_number"),
+			cell: ({ row }) => (
+				<CopyableValue
+					value={row.original.passportNumber}
+					kind="number"
+				/>
+			)
 		},
 		{
 			accessorKey: "expiredDate",

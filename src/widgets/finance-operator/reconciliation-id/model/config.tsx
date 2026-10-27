@@ -2,6 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
 
 import { cn } from "@/shared/lib";
+import { CopyableValue } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import { type IEventVarianceLine } from "@/entities/finance";
@@ -22,7 +23,11 @@ export const COLUMNS = (
 			header: t("table.id"),
 			accessorKey: "eventId",
 			cell: ({ row }) => (
-				<div className="font-medium">{row.original.eventId}</div>
+				<CopyableValue
+					value={row.original.eventId}
+					kind="uuid"
+					className="font-medium"
+				/>
 			),
 			size: 120
 		},

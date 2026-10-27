@@ -10,6 +10,7 @@ import {
 	AvatarImage,
 	Badge,
 	Button,
+	CopyableValue,
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
@@ -112,7 +113,10 @@ export const OperatorUserMenu: FC = () => {
 							{isAuthAccountLoading ? (
 								<Skeleton className="size-4 w-1/2" />
 							) : (
-								authAccount?.email
+								<CopyableValue
+									value={authAccount?.email}
+									kind="email"
+								/>
 							)}
 						</span>
 					</div>

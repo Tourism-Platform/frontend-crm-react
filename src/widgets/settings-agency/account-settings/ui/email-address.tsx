@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Skeleton } from "@/shared/ui";
+import { CopyableValue, Skeleton } from "@/shared/ui";
 
 interface IEmailAddressProps {
 	email?: string;
@@ -16,7 +16,11 @@ export const EmailAddress: FC<IEmailAddressProps> = ({ email, isLoading }) => {
 			{isLoading ? (
 				<Skeleton className="h-6 w-64" />
 			) : (
-				<p className="text-base">{email}</p>
+				<CopyableValue
+					value={email}
+					kind="email"
+					className="self-start text-base"
+				/>
 			)}
 		</div>
 	);

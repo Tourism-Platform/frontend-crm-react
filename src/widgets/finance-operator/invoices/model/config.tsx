@@ -1,9 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Badge, Skeleton } from "@/shared/ui";
+import { Badge, CopyableValue, Skeleton } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import {
@@ -31,14 +30,14 @@ export const COLUMNS = (
 			},
 			accessorKey: "paymentId",
 			cell: ({ row }) => (
-				<Link
+				<CopyableValue
+					value={row.original.paymentId}
+					kind="number"
 					to={buildRoute(ENUM_PATH.FINANCE.INVOICE_ID, {
 						invoiceId: row.original.id
 					})}
-					className="font-medium text-primary hover:underline"
-				>
-					{row.getValue("paymentId")}
-				</Link>
+					className="font-medium text-primary"
+				/>
 			),
 			size: 160
 		},
@@ -53,18 +52,24 @@ export const COLUMNS = (
 				const { bookingId, orderId } = row.original;
 
 				if (!bookingId) {
-					return <div className="font-medium">{orderId}</div>;
+					return (
+						<CopyableValue
+							value={orderId}
+							kind="number"
+							className="font-medium"
+						/>
+					);
 				}
 
 				return (
-					<Link
+					<CopyableValue
+						value={orderId}
+						kind="number"
 						to={buildRoute(ENUM_PATH.OPERATOR.BOOKING.ORDER_ID, {
 							orderId: bookingId
 						})}
-						className="font-medium text-primary hover:underline"
-					>
-						{orderId}
-					</Link>
+						className="font-medium text-primary"
+					/>
 				);
 			},
 			size: 160

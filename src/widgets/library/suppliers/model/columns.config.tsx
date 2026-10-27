@@ -3,7 +3,7 @@ import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Badge, Skeleton } from "@/shared/ui";
+import { Badge, CopyableValue, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_SUPPLIER_TYPE_TYPE,
@@ -97,7 +97,7 @@ export const COLUMNS = (
 			},
 			accessorKey: "phone",
 			cell: ({ row }) => (
-				<span>{row.original.phone || t("table.empty")}</span>
+				<CopyableValue value={row.original.phone} kind="phone" />
 			),
 			size: 140
 		},

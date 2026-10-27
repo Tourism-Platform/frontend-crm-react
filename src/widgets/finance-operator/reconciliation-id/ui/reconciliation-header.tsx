@@ -1,6 +1,11 @@
 import { type FC } from "react";
 
-import { Badge, type BadgeVariant, useSetBreadcrumbLabels } from "@/shared/ui";
+import {
+	Badge,
+	type BadgeVariant,
+	CopyableValue,
+	useSetBreadcrumbLabels
+} from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 interface IReconciliationHeaderProps {
@@ -33,7 +38,9 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 
 	return (
 		<div className="flex justify-between items-center w-full">
-			<h1 className="text-3xl">{orderId}</h1>
+			<h1 className="text-3xl">
+				<CopyableValue value={orderId} kind="number" />
+			</h1>
 			<Badge
 				variant={variant}
 				className="text-lg px-4 py-1 flex items-center gap-1"

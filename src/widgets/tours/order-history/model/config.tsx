@@ -1,9 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Badge, Skeleton } from "@/shared/ui";
+import { Badge, CopyableValue, Skeleton } from "@/shared/ui";
 
 import {
 	BOOKING_CLIENT_TYPE_LABELS,
@@ -29,14 +28,14 @@ export const ORDER_HISTORY_COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[140px]" />
 			},
 			cell: ({ row }) => (
-				<Link
+				<CopyableValue
+					value={row.original.orderNumber ?? row.original.orderId}
+					kind="number"
 					to={buildRoute(ENUM_PATH.OPERATOR.BOOKING.ORDER_ID, {
 						orderId: row.original.orderId
 					})}
-					className="font-medium text-primary hover:underline"
-				>
-					{row.getValue("orderNumber") ?? row.original.orderId}
-				</Link>
+					className="font-medium text-primary"
+				/>
 			),
 			size: 140
 		},

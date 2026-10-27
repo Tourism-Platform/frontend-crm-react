@@ -1,10 +1,9 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Badge, Checkbox, Skeleton } from "@/shared/ui";
+import { Badge, Checkbox, CopyableValue, Skeleton } from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import { type ENUM_ORDER_STATUS_TYPE } from "@/entities/booking/order/types/order-status.types";
@@ -54,18 +53,24 @@ export const COLUMNS = (
 				const { bookingId, orderId } = row.original;
 
 				if (!bookingId) {
-					return <div className="font-medium">{orderId}</div>;
+					return (
+						<CopyableValue
+							value={orderId}
+							kind="number"
+							className="font-medium"
+						/>
+					);
 				}
 
 				return (
-					<Link
+					<CopyableValue
+						value={orderId}
+						kind="number"
 						to={buildRoute(ENUM_PATH.FINANCE.RECONCILIATION_ID, {
 							bookingId
 						})}
-						className="font-medium text-primary hover:underline"
-					>
-						{orderId}
-					</Link>
+						className="font-medium text-primary"
+					/>
 				);
 			},
 			size: 120

@@ -1,9 +1,8 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Badge, Checkbox, Skeleton } from "@/shared/ui";
+import { Badge, Checkbox, CopyableValue, Skeleton } from "@/shared/ui";
 import { formatCompactAmount } from "@/shared/utils";
 
 import {
@@ -54,7 +53,11 @@ export const COLUMNS = (
 			},
 			accessorKey: "paymentId",
 			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("paymentId")}</div>
+				<CopyableValue
+					value={row.original.paymentId}
+					kind="number"
+					className="font-medium"
+				/>
 			),
 			size: 160
 		},
@@ -69,18 +72,24 @@ export const COLUMNS = (
 				const { bookingId, orderId } = row.original;
 
 				if (!bookingId) {
-					return <div className="font-medium">{orderId}</div>;
+					return (
+						<CopyableValue
+							value={orderId}
+							kind="number"
+							className="font-medium"
+						/>
+					);
 				}
 
 				return (
-					<Link
+					<CopyableValue
+						value={orderId}
+						kind="number"
 						to={buildRoute(ENUM_PATH.OPERATOR.BOOKING.ORDER_ID, {
 							orderId: bookingId
 						})}
-						className="font-medium text-primary hover:underline"
-					>
-						{orderId}
-					</Link>
+						className="font-medium text-primary"
+					/>
 				);
 			},
 			size: 160

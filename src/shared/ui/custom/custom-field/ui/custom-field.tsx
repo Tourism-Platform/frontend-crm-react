@@ -508,7 +508,9 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 			}
 			case "datePicker": {
 				const value = field.value as
-					{ from?: Date; to?: Date } | null | undefined;
+					| { from?: Date; to?: Date }
+					| null
+					| undefined;
 
 				return (
 					<DatePicker

@@ -1,6 +1,12 @@
 import { type FC } from "react";
 
-import { Avatar, AvatarFallback, AvatarImage, Badge } from "@/shared/ui";
+import {
+	Avatar,
+	AvatarFallback,
+	AvatarImage,
+	Badge,
+	CopyableValue
+} from "@/shared/ui";
 
 import type { IManager } from "../types";
 
@@ -22,7 +28,9 @@ export const ManagerCard: FC<IManagerCardProps> = ({ card }) => {
 					<p className="text-sm">
 						{card?.first_name} {card?.last_name}
 					</p>
-					<p className="text-xs">{card?.email}</p>
+					<p className="text-xs">
+						<CopyableValue value={card?.email} kind="email" />
+					</p>
 				</div>
 			</div>
 			<Badge className="px-3 py-2">{card?.role}</Badge>

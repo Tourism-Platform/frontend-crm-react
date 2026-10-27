@@ -4,7 +4,12 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { cn } from "@/shared/lib";
-import { Badge, Button, useSetBreadcrumbLabels } from "@/shared/ui";
+import {
+	Badge,
+	Button,
+	CopyableValue,
+	useSetBreadcrumbLabels
+} from "@/shared/ui";
 
 import {
 	BOOKING_ORDER_STATUS_LABELS,
@@ -102,7 +107,9 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 			<div className="grid gap-2">
 				<div className="flex items-center justify-between">
 					<div className="flex flex-col gap-3">
-						<h1 className="text-3xl">{orderNumber}</h1>
+						<h1 className="text-3xl">
+							<CopyableValue value={orderNumber} kind="number" />
+						</h1>
 						<div className="flex items-center gap-4">
 							<div className="flex items-center gap-2">
 								<span className="text-sm font-medium">
