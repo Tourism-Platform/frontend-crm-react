@@ -15,7 +15,7 @@ import {
 
 import {
 	ENUM_FORM_LOGIN,
-	ENUM_LOGIN,
+	// ENUM_LOGIN,
 	FORM_LOGIN_LIST,
 	type TLoginSchema
 } from "../model";
@@ -66,6 +66,7 @@ const SignInFormBase: FC<ISignInFormProps> = ({ form, isLoading, error }) => {
 			/>
 			{/* <FieldSeparator>{t("form.sign_in.continue")}</FieldSeparator>
 			<GoogleLoginButton /> */}
+			{/* Регистрация временно скрыта, SignUpForm остаётся рабочим
 			<div className="text-center">
 				{t("form.sign_in.sign_up")}{" "}
 				<span
@@ -79,7 +80,7 @@ const SignInFormBase: FC<ISignInFormProps> = ({ form, isLoading, error }) => {
 				>
 					{t("form.buttons.sign_up")}
 				</span>
-			</div>
+			</div> */}
 		</div>
 	);
 };

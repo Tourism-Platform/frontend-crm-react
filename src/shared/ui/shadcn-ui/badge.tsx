@@ -17,17 +17,17 @@ const badgeVariants = cva(
 					"border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
 				outline:
 					"text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-				red: "bg-red-500/20 text-red-600 border-none rounded-sm",
-				green: "bg-green-500/20 text-green-600 border-none rounded-sm",
-				blue: "bg-blue-500/20 text-blue-600 border-none rounded-sm",
-				yellow: "bg-yellow-500/20 text-yellow-600 border-none rounded-sm",
-				orange: "bg-orange-500/20 text-orange-600 border-none rounded-sm",
-				cyan: "bg-cyan-500/20 text-cyan-600 border-none rounded-sm",
-				indigo: "bg-indigo-500/20 text-indigo-600 border-none rounded-sm",
-				violet: "bg-violet-500/20 text-violet-600 border-none rounded-sm",
+				red: "bg-red-500/20 text-red-600 border-red-500/30 rounded-sm",
+				green: "bg-green-500/20 text-green-600 border-green-500/30 rounded-sm",
+				blue: "bg-blue-500/20 text-blue-600 border-blue-500/30 rounded-sm",
+				yellow: "bg-yellow-500/20 text-yellow-600 border-yellow-500/30 rounded-sm",
+				orange: "bg-orange-500/20 text-orange-600 border-orange-500/30 rounded-sm",
+				cyan: "bg-cyan-500/20 text-cyan-600 border-cyan-500/30 rounded-sm",
+				indigo: "bg-indigo-500/20 text-indigo-600 border-indigo-500/30 rounded-sm",
+				violet: "bg-violet-500/20 text-violet-600 border-violet-500/30 rounded-sm",
 				emerald:
-					"bg-emerald-500/20 text-emerald-600 border-none rounded-sm",
-				sky: "bg-sky-500/20 text-sky-600 border-none rounded-sm",
+					"bg-emerald-500/20 text-emerald-600 border-emerald-500/30 rounded-sm",
+				sky: "bg-sky-500/20 text-sky-600 border-sky-500/30 rounded-sm",
 				black: "bg-foreground text-background border-none rounded-sm"
 			},
 			size: {

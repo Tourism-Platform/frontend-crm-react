@@ -11,7 +11,6 @@ export * from "./delete-option";
 export * from "./edit-option";
 export * from "./preview-tour";
 export * from "./publish-tour";
-export * from "./regenerate-translations";
 export * from "./search-tours-bar";
 export * from "./select-tour-package";
 export * from "./event-autosave";

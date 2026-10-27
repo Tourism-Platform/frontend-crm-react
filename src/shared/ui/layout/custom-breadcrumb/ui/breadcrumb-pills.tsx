@@ -21,10 +21,10 @@ export type TBreadcrumbPillItem = {
 
 const pillClassName = (isCurrent: boolean) =>
 	cn(
-		"inline-flex max-w-[220px] items-center truncate rounded-full border px-3 py-1 text-sm transition-colors",
+		"inline-flex max-w-[220px] items-center gap-1.5 truncate rounded-full border px-3 py-1 text-sm shadow-xs outline-none transition-[color,background-color,box-shadow,border-color] duration-150 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
 		isCurrent
-			? "border-2 border-foreground font-medium text-foreground"
-			: "border-border text-muted-foreground hover:text-foreground"
+			? "border-primary/30 bg-secondary font-medium text-primary shadow-sm shadow-primary/10 before:size-1.5 before:shrink-0 before:rounded-full before:bg-primary before:content-['']"
+			: "border-border bg-card text-muted-foreground hover:border-primary/40 hover:bg-accent hover:text-accent-foreground"
 	);
 
 type TBreadcrumbPillsProps = {
@@ -44,7 +44,7 @@ export const BreadcrumbPills: FC<TBreadcrumbPillsProps> = ({
 				{items.map((item, index) => (
 					<Fragment key={item.key}>
 						{index > 0 && (
-							<BreadcrumbSeparator className="[&>svg]:size-3.5 text-muted-foreground">
+							<BreadcrumbSeparator className="text-primary/40 [&>svg]:size-3.5">
 								<ChevronRight />
 							</BreadcrumbSeparator>
 						)}

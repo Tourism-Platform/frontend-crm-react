@@ -1,6 +1,7 @@
 export const ENUM_SETTINGS_TAB = {
 	GENERAL: "general",
-	FINANCE: "finance"
+	FINANCE: "finance",
+	TRANSLATIONS: "translations"
 } as const;
 
 export type ENUM_SETTINGS_TAB_TYPE =

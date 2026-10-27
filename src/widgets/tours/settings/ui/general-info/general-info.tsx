@@ -30,8 +30,6 @@ import {
 	useGetOperatorAgencyInfoByIdQuery
 } from "@/entities/user";
 
-import { RegenerateTranslationsButton } from "@/features/tours";
-
 import { GENERAL_FORM_LIST } from "../../model/config/general.config";
 
 const GeneralInfoBase: FC = () => {
@@ -215,7 +213,6 @@ const GeneralInfoBase: FC = () => {
 					</div>
 				</form>
 			</Form>
-			<RegenerateTranslationsButton tourId={tourId} />
 		</div>
 	);
 };

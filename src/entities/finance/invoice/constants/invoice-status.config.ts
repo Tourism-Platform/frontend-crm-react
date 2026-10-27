@@ -1,4 +1,5 @@
 import { type TOptionsKeys } from "@/shared/config";
+import type { BadgeVariant } from "@/shared/ui";
 
 import {
 	ENUM_INVOICE_STATUS_BACKEND,
@@ -20,12 +21,12 @@ export const INVOICE_STATUS_LABELS: Record<
 
 export const INVOICE_STATUS_VARIANTS: Record<
 	ENUM_INVOICE_STATUS_TYPE,
-	"default" | "green" | "red" | "yellow"
+	BadgeVariant
 > = {
-	[ENUM_INVOICE_STATUS_BACKEND.DRAFT]: "default",
-	[ENUM_INVOICE_STATUS_BACKEND.SENT]: "default",
+	[ENUM_INVOICE_STATUS_BACKEND.DRAFT]: "outline",
+	[ENUM_INVOICE_STATUS_BACKEND.SENT]: "blue",
 	[ENUM_INVOICE_STATUS_BACKEND.PARTIAL]: "yellow",
 	[ENUM_INVOICE_STATUS_BACKEND.PAID]: "green",
 	[ENUM_INVOICE_STATUS_BACKEND.OVERDUE]: "red",
-	[ENUM_INVOICE_STATUS_BACKEND.CANCELLED]: "default"
+	[ENUM_INVOICE_STATUS_BACKEND.CANCELLED]: "secondary"
 };

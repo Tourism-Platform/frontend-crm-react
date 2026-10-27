@@ -6,8 +6,9 @@ import { BreadcrumbLabelProvider } from "../model";
 
 import { CustomBreadcrumb } from "./custom-breadcrumb";
 
+// Прозрачная полоса: поверх контента видны только сами pills
 const stickyBarClassName = cn(
-	"py-3 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 sticky top-16 bg-background z-10"
+	"sticky top-16 z-10 flex shrink-0 items-center py-3 md:py-5"
 );
 
 export const SidebarSectionChrome: FC<PropsWithChildren> = ({ children }) => (

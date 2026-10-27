@@ -22,7 +22,12 @@ import {
 	RECONCILIATION_STATUS_LABELS,
 	useGetReconciliationsQuery
 } from "@/entities/finance";
-import { useTourSearchOptions } from "@/entities/tour";
+import {
+	type TTourSelectOption,
+	TourOptionCard,
+	TourOptionCardSkeleton,
+	useTourSearchOptions
+} from "@/entities/tour";
 
 import { COLUMNS, RECONCILIATION_FILTERS_LIST } from "../model";
 
@@ -75,6 +80,10 @@ const ReconciliationBase: FC = () => {
 					hasMore={tours.hasMore}
 					isLoading={tours.isLoading}
 					isLoadingMore={tours.isLoadingMore}
+					renderOption={(option) => (
+						<TourOptionCard option={option as TTourSelectOption} />
+					)}
+					renderSkeleton={() => <TourOptionCardSkeleton />}
 				/>
 				{RECONCILIATION_FILTERS_LIST.map(({ key, ...item }) => (
 					<CustomField

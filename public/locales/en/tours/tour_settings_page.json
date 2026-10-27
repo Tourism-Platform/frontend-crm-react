@@ -2,7 +2,8 @@
 	"page_name": "Settings of tour",
 	"tabs": {
 		"general": "General",
-		"finance": "Finance settings"
+		"finance": "Finance settings",
+		"translations": "Translations"
 	},
 	"general": {
 		"title": "General information",
@@ -122,8 +123,10 @@
 			"description": "Translates the landing page and itinerary into the tour languages. After changing languages, save the settings first, then run the translation.",
 			"actions": {
 				"regenerate": "Translate tour",
+				"regenerate_hint": "Translates only new and changed texts. Ready translations stay as they are.",
 				"regenerating": "Scheduling...",
-				"force": "Re-translate everything"
+				"force": "Re-translate everything",
+				"force_hint": "Translates the whole tour again. All existing translations, including ready ones, will be replaced."
 			},
 			"force": {
 				"confirm": {

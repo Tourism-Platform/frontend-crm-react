@@ -20,5 +20,6 @@ export * from "./custom-tag-input";
 export * from "./empty-state";
 export * from "./error-state";
 export * from "./loader-button";
+export * from "./status-counts";
 export * from "./confirm-dialog";
 export * from "./autosave-toast";

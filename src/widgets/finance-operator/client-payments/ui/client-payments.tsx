@@ -12,6 +12,7 @@ import {
 	CardContent,
 	CustomField,
 	Form,
+	StatusCounts,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -25,17 +26,17 @@ import {
 } from "@/entities/booking";
 import {
 	ENUM_PAYMENT_FILTER,
+	ENUM_PAYMENT_STATUS,
 	type ENUM_PAYMENT_STATUS_TYPE,
 	type IPaymentFilters,
 	PAYMENT_STATUS_LABELS,
+	PAYMENT_STATUS_VARIANTS,
 	useGetPaymentsQuery
 } from "@/entities/finance";
 
 import { NewPayment } from "@/features/finance";
 
 import { CLIENT_PAYMENTS_FILTERS_LIST, COLUMNS } from "../model";
-
-import { ClientPaymentsHeader } from "./client-payments-header";
 
 const ClientPaymentsBase: FC = () => {
 	const { t } = useTranslation(["client_payments_page", "options"]);
@@ -177,9 +178,15 @@ const ClientPaymentsBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<ClientPaymentsHeader statusCounts={statusCounts} />
+			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex flex-col gap-4">
+					<StatusCounts
+						statuses={Object.values(ENUM_PAYMENT_STATUS)}
+						labels={PAYMENT_STATUS_LABELS}
+						variants={PAYMENT_STATUS_VARIANTS}
+						counts={statusCounts}
+					/>
 					{filtersJsx}
 					<SmartTable
 						data={payments}

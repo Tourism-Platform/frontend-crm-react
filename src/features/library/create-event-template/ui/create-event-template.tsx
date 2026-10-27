@@ -1,3 +1,4 @@
+import { PlusIcon } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -26,7 +27,10 @@ export const CreateEventTemplate: FC = () => {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button>{t("new_template.button")}</Button>
+				<Button>
+					<PlusIcon className="mr-1 h-4 w-4" />
+					{t("new_template.button")}
+				</Button>
 			</DialogTrigger>
 			<DialogContent className="min-w-[680px]">
 				<DialogHeader>

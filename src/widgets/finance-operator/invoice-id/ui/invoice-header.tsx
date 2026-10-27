@@ -1,7 +1,6 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { cn } from "@/shared/lib";
 import { Badge, useSetBreadcrumbLabels } from "@/shared/ui";
 
 import {
@@ -34,11 +33,11 @@ export const InvoiceHeader: FC<IInvoiceHeaderProps> = ({
 		<div className="grid gap-5">
 			<div className="grid gap-2">
 				<div className="flex items-center justify-between">
-					<div className="flex gap-3">
+					<div className="flex items-center gap-3">
 						<h1 className="text-3xl">{paymentId}</h1>
 						<Badge
 							variant={INVOICE_STATUS_VARIANTS[status]}
-							className={cn("px-3 py-2 text-xs font-bold")}
+							size="md"
 						>
 							{t(INVOICE_STATUS_LABELS[status], {
 								ns: "options"

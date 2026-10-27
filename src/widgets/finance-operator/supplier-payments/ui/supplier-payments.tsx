@@ -12,6 +12,7 @@ import {
 	CardContent,
 	CustomField,
 	Form,
+	StatusCounts,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -19,9 +20,11 @@ import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
 	ENUM_SUPPLIER_PAYMENT_FILTER,
+	ENUM_SUPPLIER_PAYMENT_STATUS,
 	type ENUM_SUPPLIER_PAYMENT_STATUS_TYPE,
 	type ISupplierPaymentFilters,
 	SUPPLIER_PAYMENT_STATUS_LABELS,
+	SUPPLIER_PAYMENT_STATUS_VARIANTS,
 	useGetSupplierPaymentsQuery
 } from "@/entities/finance";
 import {
@@ -32,8 +35,6 @@ import {
 } from "@/entities/supplier";
 
 import { COLUMNS } from "../model";
-
-import { SupplierPaymentsHeader } from "./supplier-payments-header";
 
 const SupplierPaymentsBase: FC = () => {
 	const { t } = useTranslation("supplier_payments_page");
@@ -128,9 +129,15 @@ const SupplierPaymentsBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<SupplierPaymentsHeader statusCounts={statusCounts} />
+			<h1 className="text-3xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex flex-col gap-4">
+					<StatusCounts
+						statuses={Object.values(ENUM_SUPPLIER_PAYMENT_STATUS)}
+						labels={SUPPLIER_PAYMENT_STATUS_LABELS}
+						variants={SUPPLIER_PAYMENT_STATUS_VARIANTS}
+						counts={statusCounts}
+					/>
 					<Form {...form}>
 						<div className="flex flex-wrap items-center gap-4">
 							<CustomField

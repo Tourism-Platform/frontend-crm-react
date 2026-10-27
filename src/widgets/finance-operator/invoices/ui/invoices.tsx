@@ -4,20 +4,25 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	StatusCounts,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
+	ENUM_INVOICE_STATUS,
 	type ENUM_INVOICE_STATUS_TYPE,
 	type IInvoiceFilters,
 	INVOICE_STATUS_LABELS,
+	INVOICE_STATUS_VARIANTS,
 	useGetInvoicesQuery
 } from "@/entities/finance";
 
 import { COLUMNS } from "../model";
-
-import { InvoicesHeader } from "./invoices-header";
 
 const InvoicesBase: FC = () => {
 	const { t } = useTranslation(["invoices_page", "options"]);
@@ -90,10 +95,16 @@ const InvoicesBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<InvoicesHeader statusCounts={statusCounts} />
+			<h1 className="text-3xl">{t("page_name")}</h1>
 
 			<Card>
-				<CardContent>
+				<CardContent className="flex flex-col gap-4">
+					<StatusCounts
+						statuses={Object.values(ENUM_INVOICE_STATUS)}
+						labels={INVOICE_STATUS_LABELS}
+						variants={INVOICE_STATUS_VARIANTS}
+						counts={statusCounts}
+					/>
 					<SmartTable
 						data={data}
 						columns={columns}
