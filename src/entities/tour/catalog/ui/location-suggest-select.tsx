@@ -1,6 +1,5 @@
 import type { Icon } from "@solar-icons/react/lib/types";
 import { MapPointIcon } from "@solar-icons/react/outline";
-import { Loader2Icon } from "lucide-react";
 import {
 	type FC,
 	useCallback,
@@ -14,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/shared/lib";
 import {
 	CustomScroll,
+	DataState,
 	Input,
 	Popover,
 	PopoverAnchor,
@@ -89,11 +89,7 @@ export const LocationSuggestSelect: FC<ILocationSuggestSelectProps> = ({
 	}, [DefaultIcon, value?.kind]);
 
 	const showEmpty =
-		!isLoading &&
-		searchValue.trim().length >= minQueryLength &&
-		options.length === 0;
-
-	const showOptions = !isLoading && options.length > 0;
+		searchValue.trim().length >= minQueryLength && options.length === 0;
 
 	const updatePopoverWidth = useCallback(() => {
 		if (anchorRef.current) {
@@ -160,63 +156,68 @@ export const LocationSuggestSelect: FC<ILocationSuggestSelectProps> = ({
 				style={popoverWidth ? { width: popoverWidth } : undefined}
 				onOpenAutoFocus={(e) => e.preventDefault()}
 			>
-				{isLoading ? (
-					<div className="flex items-center justify-center py-6">
-						<Loader2Icon className="size-5 animate-spin" />
-					</div>
-				) : null}
-				{showEmpty ? (
-					<p className="py-6 text-center text-sm text-muted-foreground">
-						{emptyText}
-					</p>
-				) : null}
-				{showOptions ? (
-					<CustomScroll className="h-64 w-full">
-						<ul className="flex flex-col gap-1.5 p-0.5 pr-2">
-							{options.map((option) => {
-								const kind = option.suggestion.kind;
-								const KindIcon =
-									getLocationSuggestKindIcon(kind);
+				{/* Пусто — строка текста, а не EmptyState: список внутри поповера */}
+				<DataState
+					data={options}
+					isLoading={isLoading}
+					isEmpty={() => false}
+				>
+					{(options) =>
+						showEmpty ? (
+							<p className="py-6 text-center text-sm text-muted-foreground">
+								{emptyText}
+							</p>
+						) : options.length > 0 ? (
+							<CustomScroll className="h-64 w-full">
+								<ul className="flex flex-col gap-1.5 p-0.5 pr-2">
+									{options.map((option) => {
+										const kind = option.suggestion.kind;
+										const KindIcon =
+											getLocationSuggestKindIcon(kind);
 
-								return (
-									<li key={option.value}>
-										<button
-											type="button"
-											className="flex w-full items-center gap-3.5 rounded-md px-3 py-3 text-left transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none"
-											onMouseDown={(e) =>
-												e.preventDefault()
-											}
-											onClick={() => handleSelect(option)}
-										>
-											<span
-												className={cn(
-													"flex size-11 shrink-0 items-center justify-center rounded-lg",
-													getLocationSuggestKindBadgeClass(
-														kind
-													)
-												)}
-											>
-												<KindIcon className="size-5" />
-											</span>
-											<span className="min-w-0 flex-1">
-												<span className="block truncate text-base font-medium leading-snug">
-													{option.label}
-												</span>
-												<span className="block truncate text-sm text-muted-foreground">
-													{t(
-														LOCATION_SUGGEST_KIND_LABEL_KEYS[
-															kind
-														]
-													)}
-												</span>
-											</span>
-										</button>
-									</li>
-								);
-							})}
-						</ul>
-					</CustomScroll>
-				) : null}
+										return (
+											<li key={option.value}>
+												<button
+													type="button"
+													className="flex w-full items-center gap-3.5 rounded-md px-3 py-3 text-left transition-colors hover:bg-accent focus-visible:bg-accent focus-visible:outline-none"
+													onMouseDown={(e) =>
+														e.preventDefault()
+													}
+													onClick={() =>
+														handleSelect(option)
+													}
+												>
+													<span
+														className={cn(
+															"flex size-11 shrink-0 items-center justify-center rounded-lg",
+															getLocationSuggestKindBadgeClass(
+																kind
+															)
+														)}
+													>
+														<KindIcon className="size-5" />
+													</span>
+													<span className="min-w-0 flex-1">
+														<span className="block truncate text-base font-medium leading-snug">
+															{option.label}
+														</span>
+														<span className="block truncate text-sm text-muted-foreground">
+															{t(
+																LOCATION_SUGGEST_KIND_LABEL_KEYS[
+																	kind
+																]
+															)}
+														</span>
+													</span>
+												</button>
+											</li>
+										);
+									})}
+								</ul>
+							</CustomScroll>
+						) : null
+					}
+				</DataState>
 			</PopoverContent>
 		</Popover>
 	);

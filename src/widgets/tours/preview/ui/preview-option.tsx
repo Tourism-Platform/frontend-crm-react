@@ -1,10 +1,15 @@
-import { ArrowLeft, Loader } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
 import { toast } from "sonner";
 
-import { Button, CustomQueryTabs, withErrorBoundary } from "@/shared/ui";
+import {
+	Button,
+	CustomQueryTabs,
+	DataState,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import { usePreviewOptionPageData } from "@/entities/tour/preview-tour";
 
@@ -49,41 +54,48 @@ export const PreviewOptionBase: FC = () => {
 		}
 	}, [isError]);
 
-	if (isLoading) {
-		return (
-			<div className="flex justify-center items-center py-20">
-				<Loader className="h-8 w-8 animate-spin text-muted-foreground" />
-			</div>
-		);
-	}
-
 	return (
 		<section className="flex flex-1 flex-col gap-5 w-full max-w-6xl mx-auto relative">
-			<div className="flex flex-wrap items-center justify-between gap-4">
-				<Link
-					to={buildPreviewTourPath(tourId, isDraftPreview, {
-						currency
-					})}
-				>
-					<Button variant="ghost" size="sm">
-						<ArrowLeft className="w-4 h-4" />
-						{t("back")}
-					</Button>
-				</Link>
-				<PreviewCurrencySelect />
-			</div>
+			<DataState
+				variant="page"
+				data={tourData}
+				isLoading={isLoading}
+				isEmpty={() => false}
+			>
+				{(tourData) => (
+					<>
+						<div className="flex flex-wrap items-center justify-between gap-4">
+							<Link
+								to={buildPreviewTourPath(
+									tourId,
+									isDraftPreview,
+									{
+										currency
+									}
+								)}
+							>
+								<Button variant="ghost" size="sm">
+									<ArrowLeft className="w-4 h-4" />
+									{t("back")}
+								</Button>
+							</Link>
+							<PreviewCurrencySelect />
+						</div>
 
-			<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-				{tourData && <PreviewTourHero tour={tourData} />}
-				<PreviewTourProviderCard />
-			</div>
+						<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
+							<PreviewTourHero tour={tourData} />
+							<PreviewTourProviderCard />
+						</div>
 
-			<div className="flex flex-col mt-4">
-				<CustomQueryTabs
-					ns="preview_option_page"
-					tabs={PREVIEW_OPTION_TABS_LIST}
-				/>
-			</div>
+						<div className="flex flex-col mt-4">
+							<CustomQueryTabs
+								ns="preview_option_page"
+								tabs={PREVIEW_OPTION_TABS_LIST}
+							/>
+						</div>
+					</>
+				)}
+			</DataState>
 		</section>
 	);
 };

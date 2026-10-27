@@ -2,16 +2,13 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { DataState } from "@/shared/ui";
+
 import { ENUM_ORDER_STATUS } from "@/entities/booking";
 
 import { useOrderDetails } from "../model/hooks/use-order-details";
 
 import { OrderHeader } from "./order-header";
-import {
-	OrderHeaderSkeleton,
-	OrderInfoCardsSkeleton,
-	OrderSectionCardSkeleton
-} from "./order-id-skeleton";
 import { OrderInfoCard } from "./order-info-card";
 import { OrderNotFound } from "./order-not-found";
 import { OrderPaxReview } from "./order-pax-review";
@@ -39,49 +36,62 @@ export const OrderId: FC = () => {
 
 	return (
 		<div className="flex flex-1 flex-col gap-5">
-			{isOrderLoading || !order ? (
-				<OrderHeaderSkeleton />
-			) : (
-				<OrderHeader
-					orderNumber={order.orderNumber}
-					status={order.status}
-					invoiceStatus={order.invoiceStatus}
-				/>
-			)}
+			<DataState variant="page" data={order} isLoading={isOrderLoading}>
+				{(order) => {
+					const isCancelled =
+						order.status === ENUM_ORDER_STATUS.CANCELLED;
 
-			{order?.report && <OrderReport report={order.report} />}
+					return (
+						<>
+							<OrderHeader
+								orderNumber={order.orderNumber}
+								status={order.status}
+								invoiceStatus={order.invoiceStatus}
+							/>
 
-			{isOrderLoading || !order ? (
-				<OrderInfoCardsSkeleton />
-			) : (
-				<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-					<OrderInfoCard
-						title={t("order_info.title")}
-						items={orderItems}
-					/>
+							{order.report && (
+								<OrderReport report={order.report} />
+							)}
 
-					<OrderInfoCard
-						title={t("contact_info.title")}
-						items={contactItems}
-					/>
-				</div>
-			)}
+							<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+								<OrderInfoCard
+									title={t("order_info.title")}
+									items={orderItems}
+								/>
 
-			{order &&
-				order.status !== ENUM_ORDER_STATUS.CANCELLED &&
-				(isItineraryLoading ? (
-					<OrderSectionCardSkeleton />
-				) : (
-					<OrderTourReview items={tourReviewItems} />
-				))}
+								<OrderInfoCard
+									title={t("contact_info.title")}
+									items={contactItems}
+								/>
+							</div>
 
-			{order &&
-				order.status !== ENUM_ORDER_STATUS.CANCELLED &&
-				(isPaxLoading ? (
-					<OrderSectionCardSkeleton />
-				) : (
-					<OrderPaxReview items={paxDetails} />
-				))}
+							{!isCancelled && (
+								<DataState
+									data={tourReviewItems}
+									isLoading={isItineraryLoading}
+									isEmpty={() => false}
+								>
+									{(items) => (
+										<OrderTourReview items={items} />
+									)}
+								</DataState>
+							)}
+
+							{!isCancelled && (
+								<DataState
+									data={paxDetails}
+									isLoading={isPaxLoading}
+									isEmpty={() => false}
+								>
+									{(items) => (
+										<OrderPaxReview items={items} />
+									)}
+								</DataState>
+							)}
+						</>
+					);
+				}}
+			</DataState>
 		</div>
 	);
 };

@@ -2,16 +2,13 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
+import { DataState } from "@/shared/ui";
+
 import { ENUM_ORDER_STATUS } from "@/entities/booking";
 
 import { useOrderDetails } from "../model/hooks/use-order-details";
 
 import { OrderHeader } from "./order-header";
-import {
-	OrderHeaderSkeleton,
-	OrderInfoCardsSkeleton,
-	OrderSectionCardSkeleton
-} from "./order-id-skeleton";
 import { OrderInfoCard } from "./order-info-card";
 import { OrderNotFound } from "./order-not-found";
 import { OrderPaxReview } from "./order-pax-review";
@@ -41,72 +38,83 @@ export const OrderId: FC = () => {
 		return <OrderNotFound />;
 	}
 
-	const showSupplierPayments =
-		order &&
-		(order.status === ENUM_ORDER_STATUS.BOOKING ||
-			order.status === ENUM_ORDER_STATUS.IN_PROGRESS ||
-			order.status === ENUM_ORDER_STATUS.COMPLETED);
-
 	return (
 		<div className="flex flex-1 flex-col gap-5">
-			{isOrderLoading || !order ? (
-				<OrderHeaderSkeleton />
-			) : (
-				<OrderHeader
-					orderId={order.orderId}
-					orderNumber={order.orderNumber}
-					status={order.status}
-					invoiceStatus={order.invoiceStatus}
-					availability={availability}
-				/>
-			)}
+			<DataState variant="page" data={order} isLoading={isOrderLoading}>
+				{(order) => {
+					const isCancelled =
+						order.status === ENUM_ORDER_STATUS.CANCELLED;
+					const showSupplierPayments =
+						order.status === ENUM_ORDER_STATUS.BOOKING ||
+						order.status === ENUM_ORDER_STATUS.IN_PROGRESS ||
+						order.status === ENUM_ORDER_STATUS.COMPLETED;
 
-			{order?.report && <OrderReport report={order.report} />}
+					return (
+						<>
+							<OrderHeader
+								orderId={order.orderId}
+								orderNumber={order.orderNumber}
+								status={order.status}
+								invoiceStatus={order.invoiceStatus}
+								availability={availability}
+							/>
 
-			{isOrderLoading || !order ? (
-				<OrderInfoCardsSkeleton />
-			) : (
-				<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-					<OrderInfoCard
-						title={t("order_info.title")}
-						items={orderItems}
-					/>
+							{order.report && (
+								<OrderReport report={order.report} />
+							)}
 
-					<OrderInfoCard
-						title={t("contact_info.title")}
-						items={contactItems}
-					/>
-				</div>
-			)}
+							<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+								<OrderInfoCard
+									title={t("order_info.title")}
+									items={orderItems}
+								/>
 
-			{order &&
-				order.status !== ENUM_ORDER_STATUS.CANCELLED &&
-				(isItineraryLoading ? (
-					<OrderSectionCardSkeleton />
-				) : (
-					<OrderTourReview
-						bookingId={orderId || ""}
-						items={tourReviewItems}
-						financials={financials}
-						orderStatus={order.status}
-						availability={availability}
-					/>
-				))}
+								<OrderInfoCard
+									title={t("contact_info.title")}
+									items={contactItems}
+								/>
+							</div>
 
-			{showSupplierPayments && (
-				<OrderSupplierPayments
-					bookingId={orderId || ""}
-					eventOptions={eventOptions}
-				/>
-			)}
+							{!isCancelled && (
+								<DataState
+									data={tourReviewItems}
+									isLoading={isItineraryLoading}
+									isEmpty={() => false}
+								>
+									{(items) => (
+										<OrderTourReview
+											bookingId={orderId || ""}
+											items={items}
+											financials={financials}
+											orderStatus={order.status}
+											availability={availability}
+										/>
+									)}
+								</DataState>
+							)}
 
-			{order &&
-				order.status !== ENUM_ORDER_STATUS.CANCELLED &&
-				(isPaxLoading ? (
-					<OrderSectionCardSkeleton />
-				) : (
-					<OrderPaxReview items={paxDetails} />
-				))}
+							{showSupplierPayments && (
+								<OrderSupplierPayments
+									bookingId={orderId || ""}
+									eventOptions={eventOptions}
+								/>
+							)}
+
+							{!isCancelled && (
+								<DataState
+									data={paxDetails}
+									isLoading={isPaxLoading}
+									isEmpty={() => false}
+								>
+									{(items) => (
+										<OrderPaxReview items={items} />
+									)}
+								</DataState>
+							)}
+						</>
+					);
+				}}
+			</DataState>
 		</div>
 	);
 };

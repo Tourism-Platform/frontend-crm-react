@@ -3,7 +3,7 @@ import { type FC, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import { Separator, withErrorBoundary } from "@/shared/ui";
+import { DataState, Separator, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ConnectedTourHeader,
@@ -27,7 +27,6 @@ import {
 	DraggableTemplateItem,
 	ItinerarySidebar
 } from "./ui";
-import { ItineraryLoadingSkeleton } from "./ui/itinerary-loading-skeleton";
 
 const itineraryShellClassName =
 	"flex h-[calc(100dvh-70px-1.5rem)] min-h-0 -mb-30 flex-col gap-6 overflow-hidden";
@@ -94,86 +93,87 @@ const ItineraryBase: FC = () => {
 		[activeOption, tourId]
 	);
 
-	if (isLoading) {
-		return (
-			<section className={itineraryShellClassName}>
-				<ConnectedTourHeader
-					title={t("page_name")}
-					actions={actionsJsx}
-				/>
-				<ItineraryLoadingSkeleton />
-			</section>
-		);
-	}
-
 	return (
 		<section className={itineraryShellClassName}>
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
-			<DndContext
-				sensors={sensors}
-				collisionDetection={customCollisionDetection}
-				onDragStart={handleDragStart}
-				onDragOver={onDragOver}
-				onDragEnd={onDragEnd}
+			<DataState
+				variant="page"
+				data={options}
+				isLoading={isLoading}
+				isEmpty={() => false}
 			>
-				<div className="flex min-h-0 flex-1 flex-col">
-					<BoardTabs
-						tourId={tourId}
-						activeOption={activeOption}
-						setActiveOption={setActiveOption}
-						options={options}
-						onOptionDeleted={handleOptionDeleted}
-					/>
+				{() => (
+					<DndContext
+						sensors={sensors}
+						collisionDetection={customCollisionDetection}
+						onDragStart={handleDragStart}
+						onDragOver={onDragOver}
+						onDragEnd={onDragEnd}
+					>
+						<div className="flex min-h-0 flex-1 flex-col">
+							<BoardTabs
+								tourId={tourId}
+								activeOption={activeOption}
+								setActiveOption={setActiveOption}
+								options={options}
+								onOptionDeleted={handleOptionDeleted}
+							/>
 
-					<Separator />
+							<Separator />
 
-					<div className="flex min-h-0 flex-1 overflow-hidden">
-						<BoardColumns
-							data={currentData}
-							optionId={activeOption}
-							isLoading={isEventsLoading}
-							onRemoveItem={handleRemoveItem}
-							onDuplicateItem={handleDuplicateItem}
-							onSaveItemToLibrary={handleSaveItemToLibrary}
-						/>
-						<ItinerarySidebar
-							librarySheetOpen={librarySheetOpen}
-							onLibrarySheetOpenChange={setLibrarySheetOpen}
-						/>
-					</div>
+							<div className="flex min-h-0 flex-1 overflow-hidden">
+								<BoardColumns
+									data={currentData}
+									optionId={activeOption}
+									isLoading={isEventsLoading}
+									onRemoveItem={handleRemoveItem}
+									onDuplicateItem={handleDuplicateItem}
+									onSaveItemToLibrary={
+										handleSaveItemToLibrary
+									}
+								/>
+								<ItinerarySidebar
+									librarySheetOpen={librarySheetOpen}
+									onLibrarySheetOpenChange={
+										setLibrarySheetOpen
+									}
+								/>
+							</div>
 
-					<DragOverlay adjustScale={false}>
-						{!!activeDayItem && (
-							<DraggableDayItem
-								item={activeDayItem}
-								optionId={activeOption}
-								isOverlay
-							/>
-						)}
-						{!!activeTemplateItem && (
-							<DraggableTemplateItem
-								template={activeTemplateItem}
-								isOverlay
-							/>
-						)}
-						{!!activeLibraryItem && (
-							<DraggableLibraryItem
-								item={activeLibraryItem}
-								isOverlay
-							/>
-						)}
-						{!!activeColumn && (
-							<DayColumn
-								day={activeColumn}
-								items={currentData.days[activeColumn]}
-								isOverlay
-								optionId={activeOption}
-								onRemoveItem={handleRemoveItem}
-							/>
-						)}
-					</DragOverlay>
-				</div>
-			</DndContext>
+							<DragOverlay adjustScale={false}>
+								{!!activeDayItem && (
+									<DraggableDayItem
+										item={activeDayItem}
+										optionId={activeOption}
+										isOverlay
+									/>
+								)}
+								{!!activeTemplateItem && (
+									<DraggableTemplateItem
+										template={activeTemplateItem}
+										isOverlay
+									/>
+								)}
+								{!!activeLibraryItem && (
+									<DraggableLibraryItem
+										item={activeLibraryItem}
+										isOverlay
+									/>
+								)}
+								{!!activeColumn && (
+									<DayColumn
+										day={activeColumn}
+										items={currentData.days[activeColumn]}
+										isOverlay
+										optionId={activeOption}
+										onRemoveItem={handleRemoveItem}
+									/>
+								)}
+							</DragOverlay>
+						</div>
+					</DndContext>
+				)}
+			</DataState>
 		</section>
 	);
 };

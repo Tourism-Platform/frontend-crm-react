@@ -11,6 +11,7 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
+	DataState,
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -24,7 +25,6 @@ import {
 } from "@/features/tours";
 
 import { ActivityLogContent } from "./activity-log-content";
-import { ActivityLogSkeleton } from "./activity-log-skeleton";
 
 const ActivityLogBase: FC = () => {
 	const { tourId = "" } = useParams<{ tourId: string }>();
@@ -85,13 +85,13 @@ const ActivityLogBase: FC = () => {
 					<Button variant="outline">{t("actions.export")}</Button>
 				</CardHeader>
 				<CardContent className="flex flex-col gap-6">
-					{!isActivityLogLoading && (
-						<ActivityLogContent items={activities} />
-					)}
-
-					{(isFetching || isActivityLogLoading) && (
-						<ActivityLogSkeleton />
-					)}
+					{/* Догрузка страниц — на кнопке, список остаётся на месте */}
+					<DataState
+						data={activities}
+						isLoading={isActivityLogLoading}
+					>
+						{(items) => <ActivityLogContent items={items} />}
+					</DataState>
 
 					{hasMore && (
 						<div className="flex justify-center pb-4">

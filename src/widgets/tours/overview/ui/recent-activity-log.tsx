@@ -10,14 +10,11 @@ import {
 	CardContent,
 	CardHeader,
 	CardTitle,
+	DataState,
 	withErrorBoundary
 } from "@/shared/ui";
 
-import {
-	ActivityLogItem,
-	ActivityLogItemSkeleton,
-	useGetActivityLogQuery
-} from "@/entities/tour";
+import { ActivityLogItem, useGetActivityLogQuery } from "@/entities/tour";
 
 const RecentActivityLogBase: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
@@ -56,23 +53,19 @@ const RecentActivityLogBase: FC = () => {
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
-				{isActivityLoading ? (
-					<div className="grid gap-6">
-						{Array.from({ length: 5 }).map((_, index) => (
-							<ActivityLogItemSkeleton key={index} />
-						))}
-					</div>
-				) : (
-					<div>
-						{activities.map((item, index) => (
-							<ActivityLogItem
-								key={item.id}
-								item={item}
-								isLast={index === activities.length - 1}
-							/>
-						))}
-					</div>
-				)}
+				<DataState data={activities} isLoading={isActivityLoading}>
+					{(activities) => (
+						<div>
+							{activities.map((item, index) => (
+								<ActivityLogItem
+									key={item.id}
+									item={item}
+									isLast={index === activities.length - 1}
+								/>
+							))}
+						</div>
+					)}
+				</DataState>
 			</CardContent>
 		</Card>
 	);

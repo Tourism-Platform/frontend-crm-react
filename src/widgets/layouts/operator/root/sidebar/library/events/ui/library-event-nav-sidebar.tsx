@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { ENUM_PATH } from "@/shared/config";
 import {
 	CustomScroll,
+	DataState,
 	NavRichItem,
 	Sidebar,
 	SidebarContent,
@@ -85,27 +86,29 @@ export const LibraryEventNavSidebar: FC = () => {
 						<SidebarGroupLabel>
 							{t("event_nav.title")}
 						</SidebarGroupLabel>
-						<SidebarMenu>
-							{isLoading ? (
-								SKELETON_TITLE_WIDTHS.map((width, i) => (
-									<NavLibraryEventSkeleton
-										key={i}
-										width={width}
-									/>
-								))
-							) : items.length ? (
-								items.map((item) => (
-									<NavLibraryEvent
-										key={item.id}
-										item={item}
-									/>
-								))
-							) : (
-								<li className="px-2 py-1 text-xs text-muted-foreground">
-									{t("event_nav.empty")}
-								</li>
+						{/* Пусто — строка текста, а не EmptyState: узкий сайдбар */}
+						<DataState
+							data={items}
+							isLoading={isLoading}
+							isEmpty={() => false}
+						>
+							{(items) => (
+								<SidebarMenu>
+									{items.length ? (
+										items.map((item) => (
+											<NavLibraryEvent
+												key={item.id}
+												item={item}
+											/>
+										))
+									) : (
+										<li className="px-2 py-1 text-xs text-muted-foreground">
+											{t("event_nav.empty")}
+										</li>
+									)}
+								</SidebarMenu>
 							)}
-						</SidebarMenu>
+						</DataState>
 						{hasMore && !isLoading ? (
 							<div ref={loadMoreRef}>
 								{isLoadingMore ? (

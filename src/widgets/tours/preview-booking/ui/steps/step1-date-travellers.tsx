@@ -1,5 +1,5 @@
 import { isBefore, startOfToday } from "date-fns";
-import { Loader2, Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,8 @@ import {
 	CardTitle,
 	CustomOptionTabs,
 	CustomOptionTabsList,
-	CustomOptionTabsTrigger
+	CustomOptionTabsTrigger,
+	DataState
 } from "@/shared/ui";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -278,29 +279,31 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="flex flex-col gap-4">
-					{isOptionsLoading ? (
-						<div className="flex justify-center py-8">
-							<Loader2 className="size-6 animate-spin text-muted-foreground" />
-						</div>
-					) : (
-						<div className="flex flex-col gap-4">
-							{options.map((opt) => (
-								<PreviewBookingOptionCard
-									key={opt.id}
-									option={opt}
-									isSelected={selectedOptionId === opt.id}
-									disabled={isOptionLocked}
-									onSelect={(optionId) =>
-										form.setValue(
-											ENUM_FORM_PREVIEW_BOOKING.OPTION_ID,
-											optionId,
-											{ shouldValidate: true }
-										)
-									}
-								/>
-							))}
-						</div>
-					)}
+					<DataState
+						data={options}
+						isLoading={isOptionsLoading}
+						isEmpty={() => false}
+					>
+						{(options) => (
+							<div className="flex flex-col gap-4">
+								{options.map((opt) => (
+									<PreviewBookingOptionCard
+										key={opt.id}
+										option={opt}
+										isSelected={selectedOptionId === opt.id}
+										disabled={isOptionLocked}
+										onSelect={(optionId) =>
+											form.setValue(
+												ENUM_FORM_PREVIEW_BOOKING.OPTION_ID,
+												optionId,
+												{ shouldValidate: true }
+											)
+										}
+									/>
+								))}
+							</div>
+						)}
+					</DataState>
 
 					{form.formState.errors[
 						ENUM_FORM_PREVIEW_BOOKING.OPTION_ID

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import {
 	CustomScroll,
+	DataState,
 	Input,
 	MultipleSelector,
 	Sheet,
@@ -131,20 +132,27 @@ export const EventLibrarySheet: FC<IEventLibrarySheetProps> = ({
 
 				<CustomScroll className="min-h-0 flex-1">
 					<div className="space-y-2 px-6 py-4">
-						{isLoading ? (
-							<DraggableLibraryItemsSkeleton />
-						) : items.length === 0 ? (
-							<p className="text-sm text-muted-foreground">
-								{t("sidebar.event_library.empty")}
-							</p>
-						) : (
-							items.map((item) => (
-								<DraggableLibraryItem
-									key={item.id}
-									item={item}
-								/>
-							))
-						)}
+						{/* Пусто — строка текста, а не EmptyState: список внутри шторки */}
+						<DataState
+							data={items}
+							isLoading={isLoading}
+							isEmpty={() => false}
+						>
+							{(items) =>
+								items.length === 0 ? (
+									<p className="text-sm text-muted-foreground">
+										{t("sidebar.event_library.empty")}
+									</p>
+								) : (
+									items.map((item) => (
+										<DraggableLibraryItem
+											key={item.id}
+											item={item}
+										/>
+									))
+								)
+							}
+						</DataState>
 						{hasMore && !isLoading ? (
 							<div ref={loadMoreRef} className="space-y-2">
 								{isLoadingMore ? (

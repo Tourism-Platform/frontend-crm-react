@@ -1,11 +1,10 @@
 import { type FC, memo, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-import { withErrorBoundary } from "@/shared/ui";
+import { DataState, withErrorBoundary } from "@/shared/ui";
 
 import {
 	RecentSearchCard,
-	RecentSearchCardSkeleton,
 	useGetRecentlySearchedToursQuery
 } from "@/entities/tour";
 import { type IRecentSearch } from "@/entities/tour";
@@ -31,19 +30,19 @@ const RecentlySearchBase: FC<IRecentlySearchProps> = ({ onSelect }) => {
 	return (
 		<section className="flex flex-col gap-4">
 			<h2 className="text-xl">{t("recently_search.title")}</h2>
-			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-				{isLoading
-					? [...Array(5)].map((_, i) => (
-							<RecentSearchCardSkeleton key={i} />
-						))
-					: items.map((item) => (
+			<DataState data={items} isLoading={isLoading}>
+				{(items) => (
+					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+						{items.map((item) => (
 							<RecentSearchCard
 								key={item.id}
 								data={item}
 								onClick={() => handleSelect(item)}
 							/>
 						))}
-			</div>
+					</div>
+				)}
+			</DataState>
 		</section>
 	);
 };

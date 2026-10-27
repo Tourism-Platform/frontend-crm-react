@@ -8,6 +8,7 @@ import {
 	Button,
 	CustomScroll,
 	CustomSelectableCard,
+	DataState,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -15,8 +16,7 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-	LoaderButton,
-	Skeleton
+	LoaderButton
 } from "@/shared/ui";
 
 import {
@@ -138,44 +138,39 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 					<div className="flex min-h-0 flex-1 flex-col">
 						<CustomScroll className="flex-1">
 							<div className="flex flex-col gap-2 px-6 py-4">
-								{isLoading &&
-									Array.from({ length: 3 }).map(
-										(_, index) => (
-											<Skeleton
-												key={index}
-												className="h-14 w-full rounded-xl"
-											/>
+								<DataState
+									data={routes}
+									isLoading={isLoading}
+									isError={isError}
+									error={{
+										description: t(
+											"send_invoice_modal.load_error"
 										)
-									)}
-								{!isLoading && isError && (
-									<p className="text-sm text-muted-foreground">
-										{t("send_invoice_modal.load_error")}
-									</p>
-								)}
-								{!isLoading &&
-									!isError &&
-									routes.length === 0 && (
-										<p className="text-sm text-muted-foreground">
-											{t("send_invoice_modal.empty")}
-										</p>
-									)}
-								{!isLoading &&
-									!isError &&
-									routes.map((route) => (
-										<CustomSelectableCard
-											key={route.id}
-											selected={
-												selectedRouteId === route.id
-											}
-											onSelect={() =>
-												setSelectedRouteId(route.id)
-											}
-										>
-											<PaymentRouteSelectCard
-												route={route}
-											/>
-										</CustomSelectableCard>
-									))}
+									}}
+									empty={{
+										description: t(
+											"send_invoice_modal.empty"
+										)
+									}}
+								>
+									{(routes) =>
+										routes.map((route) => (
+											<CustomSelectableCard
+												key={route.id}
+												selected={
+													selectedRouteId === route.id
+												}
+												onSelect={() =>
+													setSelectedRouteId(route.id)
+												}
+											>
+												<PaymentRouteSelectCard
+													route={route}
+												/>
+											</CustomSelectableCard>
+										))
+									}
+								</DataState>
 							</div>
 						</CustomScroll>
 						<DialogFooter className="border-t px-6 py-4">

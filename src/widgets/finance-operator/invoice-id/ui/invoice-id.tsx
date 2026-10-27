@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
 import { useCurrentLanguage } from "@/shared/hooks";
+import { DataState } from "@/shared/ui";
 
 import { useGetOperatorBookingOrderQuery } from "@/entities/booking";
 import { useGetInvoiceByIdQuery } from "@/entities/finance";
@@ -10,7 +11,6 @@ import { useGetInvoiceByIdQuery } from "@/entities/finance";
 import { getBillingItems, getBookingItems } from "../model";
 
 import { InvoiceHeader } from "./invoice-header";
-import { InvoiceIdSkeleton } from "./invoice-id-skeleton";
 import { InvoiceInfoCard } from "./invoice-info-card";
 import { InvoiceNotFound } from "./invoice-not-found";
 import { InvoicePaymentTable } from "./invoice-payment-table";
@@ -33,37 +33,41 @@ export const InvoiceId: FC = () => {
 			{ skip: !bookingId }
 		);
 
-	if (isInvoiceLoading || (!!bookingId && isBookingLoading)) {
-		return <InvoiceIdSkeleton />;
-	}
+	const isLoading = isInvoiceLoading || (!!bookingId && isBookingLoading);
 
-	if (isInvoiceError || !invoice) {
+	if (!isLoading && (isInvoiceError || !invoice)) {
 		return <InvoiceNotFound />;
 	}
 
 	return (
 		<div className="flex flex-1 flex-col gap-5">
-			<InvoiceHeader
-				invoiceId={invoice.id}
-				paymentId={invoice.paymentId}
-				status={invoice.status}
-				issueDate={invoice.issueDate}
-				dueDate={invoice.dueDate}
-			/>
+			<DataState variant="page" data={invoice} isLoading={isLoading}>
+				{(invoice) => (
+					<>
+						<InvoiceHeader
+							invoiceId={invoice.id}
+							paymentId={invoice.paymentId}
+							status={invoice.status}
+							issueDate={invoice.issueDate}
+							dueDate={invoice.dueDate}
+						/>
 
-			<InvoicePaymentTable invoice={invoice} />
+						<InvoicePaymentTable invoice={invoice} />
 
-			<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-				<InvoiceInfoCard
-					title={t("billing.title")}
-					items={getBillingItems(invoice, t, booking)}
-				/>
+						<div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+							<InvoiceInfoCard
+								title={t("billing.title")}
+								items={getBillingItems(invoice, t, booking)}
+							/>
 
-				<InvoiceInfoCard
-					title={t("booking.title")}
-					items={getBookingItems(invoice, t, booking)}
-				/>
-			</div>
+							<InvoiceInfoCard
+								title={t("booking.title")}
+								items={getBookingItems(invoice, t, booking)}
+							/>
+						</div>
+					</>
+				)}
+			</DataState>
 		</div>
 	);
 };

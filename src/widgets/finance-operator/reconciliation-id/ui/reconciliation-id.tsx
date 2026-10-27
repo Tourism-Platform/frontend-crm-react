@@ -1,13 +1,14 @@
 import { type FC } from "react";
 import { useParams } from "react-router-dom";
 
+import { DataState } from "@/shared/ui";
+
 import {
 	useGetOperatorOrderFinancialsQuery,
 	useGetOperatorOrderVarianceQuery
 } from "@/entities/finance";
 
 import { ReconciliationHeader } from "./reconciliation-header";
-import { ReconciliationIdSkeleton } from "./reconciliation-id-skeleton";
 import { ReconciliationNotFound } from "./reconciliation-not-found";
 import { ReconciliationStats } from "./reconciliation-stats";
 import { ReconciliationSupplierPayments } from "./reconciliation-supplier-payments";
@@ -31,27 +32,33 @@ export const ReconciliationId: FC = () => {
 		skip: !bookingId
 	});
 
-	if (isFinancialsLoading) {
-		return <ReconciliationIdSkeleton />;
-	}
-
-	if (isFinancialsError || !financials) {
+	if (!isFinancialsLoading && (isFinancialsError || !financials)) {
 		return <ReconciliationNotFound />;
 	}
 
 	return (
 		<div className="flex flex-1 flex-col gap-5">
-			<ReconciliationHeader
-				orderId={financials.orderId}
-				variance={variance?.varianceTotal ?? 0}
-			/>
+			<DataState
+				variant="page"
+				data={financials}
+				isLoading={isFinancialsLoading}
+			>
+				{(financials) => (
+					<>
+						<ReconciliationHeader
+							orderId={financials.orderId}
+							variance={variance?.varianceTotal ?? 0}
+						/>
 
-			<ReconciliationStats data={financials} />
+						<ReconciliationStats data={financials} />
 
-			<ReconciliationSupplierPayments
-				data={variance?.events ?? []}
-				isLoading={isVarianceLoading || isVarianceFetching}
-			/>
+						<ReconciliationSupplierPayments
+							data={variance?.events ?? []}
+							isLoading={isVarianceLoading || isVarianceFetching}
+						/>
+					</>
+				)}
+			</DataState>
 		</div>
 	);
 };

@@ -2,13 +2,7 @@ import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 
-import {
-	CustomQueryTabs,
-	EmptyState,
-	ErrorState,
-	PageLoader,
-	withErrorBoundary
-} from "@/shared/ui";
+import { CustomQueryTabs, DataState, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ConnectedTourHeader,
@@ -54,81 +48,57 @@ const PricingReviewBase: FC = () => {
 		[]
 	);
 
-	if (
-		isOptionsLoading ||
-		isSummaryLoading ||
-		(isSummaryFetching && !pricingReview)
-	) {
-		return (
-			<section className="flex flex-1 flex-col gap-5">
-				<ConnectedTourHeader
-					title={t("page_name")}
-					actions={actionsJsx}
-				/>
-				<PageLoader />
-			</section>
-		);
-	}
-
-	if (isOptionsRealError || isSummaryRealError) {
-		return (
-			<section className="flex flex-1 flex-col gap-5">
-				<ConnectedTourHeader
-					title={t("page_name")}
-					actions={actionsJsx}
-				/>
-				<ErrorState
-					{...(isSummaryNoFxRate && {
-						title: t("errors.no_fx_rate.title"),
-						description: t("errors.no_fx_rate.description")
-					})}
-				/>
-			</section>
-		);
-	}
-
-	if (
-		isOptionsNotFound ||
-		!hasOptions ||
-		isSummaryNotFound ||
-		!pricingReview
-	) {
-		return (
-			<section className="flex flex-1 flex-col gap-5">
-				<ConnectedTourHeader
-					title={t("page_name")}
-					actions={actionsJsx}
-				/>
-				<EmptyState />
-			</section>
-		);
-	}
-
 	return (
 		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 
-			<PricingReviewTabs
-				options={options}
-				activeId={activeOptionId}
-				onChange={setActiveOptionId}
-			/>
+			<DataState
+				variant="page"
+				data={pricingReview}
+				isLoading={
+					isOptionsLoading ||
+					isSummaryLoading ||
+					(isSummaryFetching && !pricingReview)
+				}
+				isError={isOptionsRealError || isSummaryRealError}
+				isEmpty={() =>
+					isOptionsNotFound || !hasOptions || isSummaryNotFound
+				}
+				error={
+					isSummaryNoFxRate
+						? {
+								title: t("errors.no_fx_rate.title"),
+								description: t("errors.no_fx_rate.description")
+							}
+						: undefined
+				}
+			>
+				{(pricingReview) => (
+					<>
+						<PricingReviewTabs
+							options={options}
+							activeId={activeOptionId}
+							onChange={setActiveOptionId}
+						/>
 
-			<PricingReviewParams
-				form={paramsForm}
-				onReset={handleResetParams}
-			/>
+						<PricingReviewParams
+							form={paramsForm}
+							onReset={handleResetParams}
+						/>
 
-			<PricingReviewSummary summary={pricingReview.summary} />
-			<CustomQueryTabs
-				ns="tour_pricing_review_page"
-				tabs={PRICING_REVIEW_TABLE_TABS}
-				slotContext={{
-					tourId,
-					optionId: activeOptionId,
-					items: pricingReview.items
-				}}
-			/>
+						<PricingReviewSummary summary={pricingReview.summary} />
+						<CustomQueryTabs
+							ns="tour_pricing_review_page"
+							tabs={PRICING_REVIEW_TABLE_TABS}
+							slotContext={{
+								tourId,
+								optionId: activeOptionId,
+								items: pricingReview.items
+							}}
+						/>
+					</>
+				)}
+			</DataState>
 		</section>
 	);
 };

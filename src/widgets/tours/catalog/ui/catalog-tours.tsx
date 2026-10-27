@@ -18,7 +18,6 @@ const CatalogToursBase: FC = () => {
 		locationForm,
 		applyLocationBarSubmit,
 		page,
-		limit,
 		sort,
 		tours,
 		totalCount,
@@ -59,7 +58,6 @@ const CatalogToursBase: FC = () => {
 						<CatalogToursList
 							viewMode={viewMode}
 							tours={tours}
-							limit={limit}
 							isLoading={isLoading}
 						/>
 						<CatalogToursPagination

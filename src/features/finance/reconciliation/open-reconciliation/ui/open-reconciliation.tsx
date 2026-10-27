@@ -6,6 +6,7 @@ import {
 	Button,
 	CustomField,
 	CustomScroll,
+	DataState,
 	Dialog,
 	DialogClose,
 	DialogContent,
@@ -14,8 +15,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-	Form,
-	Skeleton
+	Form
 } from "@/shared/ui";
 
 import { useGetSupplierPaymentByIdQuery } from "@/entities/finance";
@@ -92,44 +92,44 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 						{t("form.title")}
 					</DialogDescription>
 				</DialogHeader>
-				{isFormLoading ? (
-					<div className="space-y-4 py-4">
-						<Skeleton className="h-10 w-full" />
-						<Skeleton className="h-10 w-full" />
-						<Skeleton className="h-24 w-full" />
-					</div>
-				) : (
-					<Form {...form}>
-						<form className="flex min-h-0 flex-1 flex-col">
-							<CustomScroll className="space-y-6 px-6 py-4">
-								<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
-									{FORM_OPEN_RECONCILIATION_LIST.map(
-										({ key, ...item }) => (
-											<CustomField
-												key={key}
-												control={form?.control}
-												name={key}
-												t={t}
-												disabled
-												{...item}
-											/>
-										)
-									)}
-								</div>
-							</CustomScroll>
-							<DialogFooter className="border-t px-6 py-4">
-								<DialogClose asChild>
-									<Button
-										variant="outline"
-										onClick={() => setOpen(false)}
-									>
-										{t("form.buttons.close")}
-									</Button>
-								</DialogClose>
-							</DialogFooter>
-						</form>
-					</Form>
-				)}
+				<DataState
+					data={payment}
+					isLoading={isFormLoading}
+					isEmpty={() => false}
+				>
+					{() => (
+						<Form {...form}>
+							<form className="flex min-h-0 flex-1 flex-col">
+								<CustomScroll className="space-y-6 px-6 py-4">
+									<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
+										{FORM_OPEN_RECONCILIATION_LIST.map(
+											({ key, ...item }) => (
+												<CustomField
+													key={key}
+													control={form?.control}
+													name={key}
+													t={t}
+													disabled
+													{...item}
+												/>
+											)
+										)}
+									</div>
+								</CustomScroll>
+								<DialogFooter className="border-t px-6 py-4">
+									<DialogClose asChild>
+										<Button
+											variant="outline"
+											onClick={() => setOpen(false)}
+										>
+											{t("form.buttons.close")}
+										</Button>
+									</DialogClose>
+								</DialogFooter>
+							</form>
+						</Form>
+					)}
+				</DataState>
 			</DialogContent>
 		</Dialog>
 	);

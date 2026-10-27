@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import {
 	CustomScroll,
+	DataState,
 	NavRichItem,
 	Sidebar,
 	SidebarContent,
@@ -22,7 +23,6 @@ import {
 import { useEventNavDays } from "../model/use-event-nav-days";
 
 import { NavDay } from "./nav-day";
-import { NavDaySkeleton } from "./nav-day-skeleton";
 
 export const EventNavSidebar: FC = () => {
 	const { t } = useTranslation("common_events");
@@ -62,18 +62,19 @@ export const EventNavSidebar: FC = () => {
 						<SidebarGroupLabel>
 							{t("event_nav.title")}
 						</SidebarGroupLabel>
-						<SidebarMenu>
-							{isLoading
-								? Array.from({ length: 3 }, (_, i) => (
-										<NavDaySkeleton
-											key={i}
-											eventsCount={i === 0 ? 3 : 0}
-										/>
-									))
-								: days.map((day) => (
+						<DataState
+							data={days}
+							isLoading={isLoading}
+							isEmpty={() => false}
+						>
+							{(days) => (
+								<SidebarMenu>
+									{days.map((day) => (
 										<NavDay key={day.day} day={day} />
 									))}
-						</SidebarMenu>
+								</SidebarMenu>
+							)}
+						</DataState>
 					</SidebarGroup>
 				</CustomScroll>
 			</SidebarContent>

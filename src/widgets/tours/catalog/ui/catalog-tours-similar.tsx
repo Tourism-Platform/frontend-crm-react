@@ -8,6 +8,7 @@ import {
 	AlertDescription,
 	AlertIcon,
 	AlertTitle,
+	DataState,
 	withErrorBoundary
 } from "@/shared/ui";
 import {
@@ -20,7 +21,6 @@ import {
 
 import {
 	CatalogTourCard,
-	CatalogTourCardSkeleton,
 	type ICatalogTourFilters,
 	useGetCatalogToursQuery
 } from "@/entities/tour";
@@ -54,19 +54,12 @@ const CatalogToursSimilarBase: FC<ICatalogToursSimilarProps> = ({ params }) => {
 				</AlertContent>
 			</Alert>
 
-			<div className="w-[calc(100%-24px)]">
-				<Carousel>
-					<CarouselContent className="pb-2">
-						{isLoading || isFetching
-							? Array.from({ length: 3 }).map((_, index) => (
-									<CarouselItem
-										key={`skeleton-${index}`}
-										className="basis-1/3 pl-5"
-									>
-										<CatalogTourCardSkeleton />
-									</CarouselItem>
-								))
-							: tours.map((tour, index) => (
+			<DataState data={tours} isLoading={isLoading || isFetching}>
+				{(tours) => (
+					<div className="w-[calc(100%-24px)]">
+						<Carousel>
+							<CarouselContent className="pb-2">
+								{tours.map((tour, index) => (
 									<CarouselItem
 										key={index}
 										className="basis-1/3 pl-5"
@@ -74,11 +67,13 @@ const CatalogToursSimilarBase: FC<ICatalogToursSimilarProps> = ({ params }) => {
 										<CatalogTourCard data={tour} />
 									</CarouselItem>
 								))}
-					</CarouselContent>
-					<CarouselPrevious />
-					<CarouselNext />
-				</Carousel>
-			</div>
+							</CarouselContent>
+							<CarouselPrevious />
+							<CarouselNext />
+						</Carousel>
+					</div>
+				)}
+			</DataState>
 		</div>
 	);
 };

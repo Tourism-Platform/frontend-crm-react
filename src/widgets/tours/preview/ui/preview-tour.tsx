@@ -1,4 +1,4 @@
-import { ArrowLeft, Loader } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
@@ -12,6 +12,7 @@ import {
 	CustomOptionTabsContent,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
+	DataState,
 	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -72,83 +73,104 @@ const PreviewTourBase: FC = () => {
 		}
 	}, [singleOption, isOptionDetailError, t]);
 
-	if (isLoading) {
-		return (
-			<div className="flex justify-center items-center py-20">
-				<Loader className="h-8 w-8 animate-spin text-muted-foreground" />
-			</div>
-		);
-	}
-
 	return (
 		<section className="flex flex-1 flex-col gap-5 w-full max-w-6xl mx-auto relative">
-			<div className="flex flex-wrap items-center justify-between gap-4">
-				{isDraftPreview ? (
-					<Button variant="ghost" size="sm" disabled>
-						<ArrowLeft className="w-4 h-4" />
-						{t("back", { ns: "preview_tour_page" })}
-					</Button>
-				) : (
-					<Link to={ENUM_PATH.TOURS.CATALOG.ROOT}>
-						<Button variant="ghost" size="sm">
-							<ArrowLeft className="w-4 h-4" />
-							{t("back", { ns: "preview_tour_page" })}
-						</Button>
-					</Link>
-				)}
-				<PreviewCurrencySelect />
-			</div>
-
-			<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-				<PreviewTourHero tour={tourData} />
-				<PreviewTourProviderCard />
-			</div>
-
-			<div className="flex flex-col gap-8">
-				{singleOption ? (
-					<CustomOptionTabs
-						defaultValue={ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION}
-					>
-						<CustomOptionTabsList
-							className={cn("grid w-fit mb-4 grid-cols-3")}
-						>
-							{PREVIEW_TOUR_SINGLE_OPTION_TABS.map((item) => (
-								<CustomOptionTabsTrigger
-									key={item.type}
-									value={item.type}
-									variant="tongue"
-								>
-									{t(item.label)}
-								</CustomOptionTabsTrigger>
-							))}
-						</CustomOptionTabsList>
-						<Separator className="mb-6" />
-						{PREVIEW_TOUR_SINGLE_OPTION_TABS.map((item) => (
-							<CustomOptionTabsContent
-								key={item.type}
-								value={item.type}
-							>
-								{item.type ===
-								ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION ? (
-									<item.slot data={previewData} />
-								) : (
-									<item.slot optionData={optionDetail} />
-								)}
-							</CustomOptionTabsContent>
-						))}
-					</CustomOptionTabs>
-				) : (
+			<DataState
+				variant="page"
+				data={tourData}
+				isLoading={isLoading}
+				isEmpty={() => false}
+			>
+				{() => (
 					<>
-						<PreviewTourInformationSections data={previewData} />
-						{showOptionsCards && (
-							<>
-								<Separator />
-								<PreviewOptionsCards options={optionsData} />
-							</>
-						)}
+						<div className="flex flex-wrap items-center justify-between gap-4">
+							{isDraftPreview ? (
+								<Button variant="ghost" size="sm" disabled>
+									<ArrowLeft className="w-4 h-4" />
+									{t("back", { ns: "preview_tour_page" })}
+								</Button>
+							) : (
+								<Link to={ENUM_PATH.TOURS.CATALOG.ROOT}>
+									<Button variant="ghost" size="sm">
+										<ArrowLeft className="w-4 h-4" />
+										{t("back", { ns: "preview_tour_page" })}
+									</Button>
+								</Link>
+							)}
+							<PreviewCurrencySelect />
+						</div>
+
+						<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
+							<PreviewTourHero tour={tourData} />
+							<PreviewTourProviderCard />
+						</div>
+
+						<div className="flex flex-col gap-8">
+							{singleOption ? (
+								<CustomOptionTabs
+									defaultValue={
+										ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION
+									}
+								>
+									<CustomOptionTabsList
+										className={cn(
+											"grid w-fit mb-4 grid-cols-3"
+										)}
+									>
+										{PREVIEW_TOUR_SINGLE_OPTION_TABS.map(
+											(item) => (
+												<CustomOptionTabsTrigger
+													key={item.type}
+													value={item.type}
+													variant="tongue"
+												>
+													{t(item.label)}
+												</CustomOptionTabsTrigger>
+											)
+										)}
+									</CustomOptionTabsList>
+									<Separator className="mb-6" />
+									{PREVIEW_TOUR_SINGLE_OPTION_TABS.map(
+										(item) => (
+											<CustomOptionTabsContent
+												key={item.type}
+												value={item.type}
+											>
+												{item.type ===
+												ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION ? (
+													<item.slot
+														data={previewData}
+													/>
+												) : (
+													<item.slot
+														optionData={
+															optionDetail
+														}
+													/>
+												)}
+											</CustomOptionTabsContent>
+										)
+									)}
+								</CustomOptionTabs>
+							) : (
+								<>
+									<PreviewTourInformationSections
+										data={previewData}
+									/>
+									{showOptionsCards && (
+										<>
+											<Separator />
+											<PreviewOptionsCards
+												options={optionsData}
+											/>
+										</>
+									)}
+								</>
+							)}
+						</div>
 					</>
 				)}
-			</div>
+			</DataState>
 		</section>
 	);
 };
