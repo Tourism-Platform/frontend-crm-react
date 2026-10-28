@@ -82,21 +82,18 @@ const SupplierProductsBase: FC<ISupplierProductsProps> = ({ supplierId }) => {
 		[filters.page, filters.limit, setValue]
 	);
 
-	const actionsJsx = useMemo(
-		() => <CreateSupplierProduct supplierId={supplierId} />,
-		[supplierId]
-	);
-
 	return (
 		<Card>
-			<CardContent>
-				<h2 className="mb-4 text-lg font-semibold">
-					{t("products_title")}
-				</h2>
+			<CardContent className="flex flex-col gap-4">
+				<div className="flex flex-wrap items-center justify-between gap-4">
+					<h2 className="text-lg font-semibold">
+						{t("products_title")}
+					</h2>
+					<CreateSupplierProduct supplierId={supplierId} />
+				</div>
 				<SmartTable
 					data={products}
 					columns={columns}
-					actions={actionsJsx}
 					isLoading={isProductsLoading || isProductsFetching}
 					loadingMode="skeleton"
 					recordCount={totalCount}

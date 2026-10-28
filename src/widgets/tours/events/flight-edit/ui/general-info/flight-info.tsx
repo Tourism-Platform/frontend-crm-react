@@ -182,8 +182,8 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 							type="button"
 							onClick={handleAddFlight}
 						>
-							<p>{t("form.general.flights.buttons.add")}</p>
 							<PlusIcon />
+							<p>{t("form.general.flights.buttons.add")}</p>
 						</Button>
 					</div>
 				) : null}

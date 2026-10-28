@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Copy } from "lucide-react";
+import { Copy, PlusIcon } from "lucide-react";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -85,7 +85,10 @@ export const InviteStaff: FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
-				<Button>{t("invite.button")}</Button>
+				<Button>
+					<PlusIcon className="mr-1 h-4 w-4" />
+					{t("invite.button")}
+				</Button>
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => handleOpenChange(false)}

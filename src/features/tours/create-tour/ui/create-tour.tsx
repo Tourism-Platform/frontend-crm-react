@@ -96,8 +96,8 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button>
+					<PlusIcon className="mr-1 h-4 w-4" />
 					<p>{t("create.button")}</p>
-					<PlusIcon />
 				</Button>
 			</DialogTrigger>
 			<DialogContent

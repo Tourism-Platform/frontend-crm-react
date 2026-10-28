@@ -97,20 +97,20 @@ const EventTemplatesBase: FC = () => {
 		[setValue]
 	);
 
-	const actionsJsx = useMemo(() => <CreateEventTemplate />, []);
-
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
-				<CardContent>
-					<h2 className="mb-4 text-lg font-semibold">
-						{t("templates_title")}
-					</h2>
+				<CardContent className="flex flex-col gap-4">
+					<div className="flex flex-wrap items-center justify-between gap-4">
+						<h2 className="text-lg font-semibold">
+							{t("templates_title")}
+						</h2>
+						<CreateEventTemplate />
+					</div>
 					<SmartTable
 						data={templates}
 						columns={columns}
-						actions={actionsJsx}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
 						recordCount={totalCount}

@@ -69,8 +69,8 @@ const CarsDetailsBase: FC<ICarsDetailsProps> = ({ form }) => {
 						onClick={handleAddCar}
 						className="gap-2"
 					>
-						<p>{t("form.cars.details.form.buttons.add")}</p>
 						<PlusIcon className="h-4 w-4" />
+						<p>{t("form.cars.details.form.buttons.add")}</p>
 					</Button>
 				</div>
 			</div>

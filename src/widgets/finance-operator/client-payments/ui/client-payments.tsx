@@ -85,55 +85,6 @@ const ClientPaymentsBase: FC = () => {
 
 	const columns = useMemo(() => COLUMNS(t), [t]);
 
-	const actionsJsx = useMemo(() => <NewPayment />, []);
-
-	const filtersJsx = (
-		<Form {...form}>
-			<div className="flex flex-wrap items-center gap-4">
-				<CustomField
-					hideLabel
-					fieldType="asyncSelect"
-					control={control}
-					name={ENUM_PAYMENT_FILTER.BOOKING_ID}
-					t={t}
-					label="filters.booking.label"
-					placeholder="filters.booking.placeholder"
-					emptyText="filters.booking.empty"
-					className="w-full sm:w-72"
-					options={orders.options}
-					onQueryChange={orders.setQuery}
-					onLoadMore={orders.loadMore}
-					hasMore={orders.hasMore}
-					isLoading={orders.isLoading}
-					isLoadingMore={orders.isLoadingMore}
-					renderOption={(option) => (
-						<BookingOrderOptionCard
-							option={option as TBookingOrderSelectOption}
-						/>
-					)}
-					renderSkeleton={() => <BookingOrderOptionCardSkeleton />}
-				/>
-				{CLIENT_PAYMENTS_FILTERS_LIST.map(({ key, ...item }) => (
-					<CustomField
-						hideLabel
-						key={key}
-						control={control}
-						name={key}
-						t={t}
-						className="w-full sm:w-72"
-						{...item}
-					/>
-				))}
-				<Button
-					type="button"
-					variant="outline"
-					onClick={handleResetFilters}
-				>
-					{t("filters.reset")}
-				</Button>
-			</div>
-		</Form>
-	);
 	const paginationObj = useMemo(
 		() => ({
 			pageIndex: filters.page - 1,
@@ -181,17 +132,71 @@ const ClientPaymentsBase: FC = () => {
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex flex-col gap-4">
-					<StatusCounts
-						statuses={Object.values(ENUM_PAYMENT_STATUS)}
-						labels={PAYMENT_STATUS_LABELS}
-						variants={PAYMENT_STATUS_VARIANTS}
-						counts={statusCounts}
-					/>
-					{filtersJsx}
+					<div className="flex flex-wrap items-center justify-between gap-4">
+						<StatusCounts
+							statuses={Object.values(ENUM_PAYMENT_STATUS)}
+							labels={PAYMENT_STATUS_LABELS}
+							variants={PAYMENT_STATUS_VARIANTS}
+							counts={statusCounts}
+						/>
+						<NewPayment />
+					</div>
 					<SmartTable
 						data={payments}
 						columns={columns}
-						actions={actionsJsx}
+						topChildren={
+							<Form {...form}>
+								<div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+									<CustomField
+										hideLabel
+										fieldType="asyncSelect"
+										control={control}
+										name={ENUM_PAYMENT_FILTER.BOOKING_ID}
+										t={t}
+										label="filters.booking.label"
+										placeholder="filters.booking.placeholder"
+										emptyText="filters.booking.empty"
+										className="w-full sm:w-72"
+										options={orders.options}
+										onQueryChange={orders.setQuery}
+										onLoadMore={orders.loadMore}
+										hasMore={orders.hasMore}
+										isLoading={orders.isLoading}
+										isLoadingMore={orders.isLoadingMore}
+										renderOption={(option) => (
+											<BookingOrderOptionCard
+												option={
+													option as TBookingOrderSelectOption
+												}
+											/>
+										)}
+										renderSkeleton={() => (
+											<BookingOrderOptionCardSkeleton />
+										)}
+									/>
+									{CLIENT_PAYMENTS_FILTERS_LIST.map(
+										({ key, ...item }) => (
+											<CustomField
+												hideLabel
+												key={key}
+												control={control}
+												name={key}
+												t={t}
+												className="w-full sm:w-72"
+												{...item}
+											/>
+										)
+									)}
+									<Button
+										type="button"
+										variant="outline"
+										onClick={handleResetFilters}
+									>
+										{t("filters.reset")}
+									</Button>
+								</div>
+							</Form>
+						}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
 						recordCount={totalCount}

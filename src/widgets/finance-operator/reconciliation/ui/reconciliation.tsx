@@ -61,51 +61,6 @@ const ReconciliationBase: FC = () => {
 		setValue(ENUM_RECONCILIATION_FILTER.PAYABLE_ONLY, false);
 	}, [setValue]);
 
-	const filtersJsx = (
-		<Form {...form}>
-			<div className="flex flex-wrap items-center gap-4">
-				<CustomField
-					hideLabel
-					fieldType="asyncSelect"
-					control={control}
-					name={ENUM_RECONCILIATION_FILTER.TOUR_ID}
-					t={t}
-					label="filters.tour.label"
-					placeholder="filters.tour.placeholder"
-					emptyText="filters.tour.empty"
-					className="w-full sm:w-72"
-					options={tours.options}
-					onQueryChange={tours.setQuery}
-					onLoadMore={tours.loadMore}
-					hasMore={tours.hasMore}
-					isLoading={tours.isLoading}
-					isLoadingMore={tours.isLoadingMore}
-					renderOption={(option) => (
-						<TourOptionCard option={option as TTourSelectOption} />
-					)}
-					renderSkeleton={() => <TourOptionCardSkeleton />}
-				/>
-				{RECONCILIATION_FILTERS_LIST.map(({ key, ...item }) => (
-					<CustomField
-						hideLabel
-						key={key}
-						control={control}
-						name={key}
-						t={t}
-						{...item}
-					/>
-				))}
-				<Button
-					type="button"
-					variant="outline"
-					onClick={handleResetFilters}
-				>
-					{t("filters.reset")}
-				</Button>
-			</div>
-		</Form>
-	);
-
 	const {
 		data: reconciliationData,
 		isLoading,
@@ -173,7 +128,54 @@ const ReconciliationBase: FC = () => {
 
 			<Card>
 				<CardContent className="flex flex-col gap-4">
-					{filtersJsx}
+					<Form {...form}>
+						<div className="flex flex-wrap items-center gap-4">
+							<CustomField
+								hideLabel
+								fieldType="asyncSelect"
+								control={control}
+								name={ENUM_RECONCILIATION_FILTER.TOUR_ID}
+								t={t}
+								label="filters.tour.label"
+								placeholder="filters.tour.placeholder"
+								emptyText="filters.tour.empty"
+								className="w-full sm:w-72"
+								options={tours.options}
+								onQueryChange={tours.setQuery}
+								onLoadMore={tours.loadMore}
+								hasMore={tours.hasMore}
+								isLoading={tours.isLoading}
+								isLoadingMore={tours.isLoadingMore}
+								renderOption={(option) => (
+									<TourOptionCard
+										option={option as TTourSelectOption}
+									/>
+								)}
+								renderSkeleton={() => (
+									<TourOptionCardSkeleton />
+								)}
+							/>
+							{RECONCILIATION_FILTERS_LIST.map(
+								({ key, ...item }) => (
+									<CustomField
+										hideLabel
+										key={key}
+										control={control}
+										name={key}
+										t={t}
+										{...item}
+									/>
+								)
+							)}
+							<Button
+								type="button"
+								variant="outline"
+								onClick={handleResetFilters}
+							>
+								{t("filters.reset")}
+							</Button>
+						</div>
+					</Form>
 					<SmartTable
 						data={data}
 						columns={columns}

@@ -97,17 +97,17 @@ const StaffInformationBase: FC = () => {
 		[setValue]
 	);
 
-	const actionsJsx = useMemo(() => <InviteStaff />, []);
-
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
-				<CardContent>
+				<CardContent className="flex flex-col gap-4">
+					<div className="flex justify-end">
+						<InviteStaff />
+					</div>
 					<SmartTable
 						data={users}
 						columns={columns}
-						actions={actionsJsx}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"
 						recordCount={totalCount}

@@ -70,8 +70,8 @@ const RoomsDetailsBase: FC<IRoomsProps> = ({ form }) => {
 							onClick={handleAddRoom}
 							className="gap-2"
 						>
-							<p>{t("form.rooms.details.form.buttons.add")}</p>
 							<PlusIcon className="h-4 w-4" />
+							<p>{t("form.rooms.details.form.buttons.add")}</p>
 						</Button>
 					</div>
 				) : null}

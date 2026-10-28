@@ -59,31 +59,6 @@ const ToursBase: FC = () => {
 		setValue(ENUM_TOUR_FILTER.TYPE, undefined);
 	}, [setValue]);
 
-	const filtersJsx = (
-		<Form {...form}>
-			<div className="flex flex-wrap items-center gap-4">
-				{filtersList.map(({ key, ...item }) => (
-					<CustomField
-						hideLabel
-						key={key}
-						control={control}
-						name={key}
-						t={t}
-						className="w-full sm:w-72"
-						{...item}
-					/>
-				))}
-				<Button
-					type="button"
-					variant="outline"
-					onClick={handleResetFilters}
-				>
-					{t("filters.reset")}
-				</Button>
-			</div>
-		</Form>
-	);
-
 	const {
 		data: toursData,
 		isLoading,
@@ -157,7 +132,6 @@ const ToursBase: FC = () => {
 	// Переводим тексты табов
 	const translatedStatusTabs = useValueToTranslateLabel(TOUR_STATUS_LABELS);
 
-	const actionsJsx = <CreateTour />;
 	const paginationObj = useMemo(
 		() => ({
 			pageIndex: filters.page - 1,
@@ -171,7 +145,31 @@ const ToursBase: FC = () => {
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 			<Card>
 				<CardContent className="flex flex-col gap-4">
-					{filtersJsx}
+					<div className="flex flex-wrap items-center justify-between gap-4">
+						<Form {...form}>
+							<div className="flex w-full flex-wrap items-center gap-4 sm:w-auto">
+								{filtersList.map(({ key, ...item }) => (
+									<CustomField
+										hideLabel
+										key={key}
+										control={control}
+										name={key}
+										t={t}
+										className="w-full sm:w-72"
+										{...item}
+									/>
+								))}
+								<Button
+									type="button"
+									variant="outline"
+									onClick={handleResetFilters}
+								>
+									{t("filters.reset")}
+								</Button>
+							</div>
+						</Form>
+						<CreateTour />
+					</div>
 					<SmartTable
 						columns={columns}
 						data={tours}
@@ -194,7 +192,6 @@ const ToursBase: FC = () => {
 						activeStatusTab={activeTab}
 						onStatusTabChange={handleStatusTabChange}
 						showStatusTabsFilter={true}
-						actions={actionsJsx}
 					/>
 				</CardContent>
 			</Card>

@@ -66,8 +66,8 @@ const ItemsDetailsBase: FC<IItemsDetailsProps> = ({ form }) => {
 						onClick={handleAddItem}
 						className="gap-2"
 					>
-						<p>{t("form.items.details.form.buttons.add")}</p>
 						<PlusIcon className="h-4 w-4" />
+						<p>{t("form.items.details.form.buttons.add")}</p>
 					</Button>
 				</div>
 			</div>
