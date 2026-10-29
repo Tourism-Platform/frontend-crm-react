@@ -12,7 +12,8 @@ export const ENUM_PATH = {
 			STAFF_INFORMATION: "/operator/settings/staff-information",
 			FINANCIAL_SETTINGS: "/operator/settings/financial-settings",
 			TOUR_SETTINGS: "/operator/settings/tour-settings",
-			TAGS: "/operator/settings/tags"
+			TAGS: "/operator/settings/tags",
+			AUDIT_LOG: "/operator/settings/audit-log"
 		},
 		BOOKING: {
 			ROOT: "/operator/booking",
@@ -97,7 +98,8 @@ export const ENUM_PATH = {
 		CLIENT_PAYMENTS: "/finance/client-payments",
 		SUPPLIER_PAYMENTS: "/finance/supplier-payments",
 		RECONCILIATION: "/finance/reconciliation",
-		RECONCILIATION_ID: "/finance/reconciliation/:bookingId"
+		RECONCILIATION_ID: "/finance/reconciliation/:bookingId",
+		LEDGER: "/finance/ledger"
 	},
 	LIBRARY: {
 		ROOT: "/library",

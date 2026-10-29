@@ -25,7 +25,9 @@
 					"tour": "Tour settings",
 					"tour_description": "Defaults for tours",
 					"tags": "Tags",
-					"tags_description": "Labels and categories"
+					"tags_description": "Labels and categories",
+					"audit_log": "Audit log",
+					"audit_log_description": "Who did what and when"
 				}
 			}
 		},
@@ -84,7 +86,9 @@
 					"supplier_payments": "Supplier payments",
 					"supplier_payments_description": "Pay suppliers",
 					"reconciliation": "Reconciliation",
-					"reconciliation_description": "Reconcile balances"
+					"reconciliation_description": "Reconcile balances",
+					"ledger": "Ledger",
+					"ledger_description": "Entries, debtors and creditors"
 				}
 			}
 		},

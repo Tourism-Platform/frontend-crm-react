@@ -15,6 +15,7 @@ import { OrderPaxReview } from "./order-pax-review";
 import { OrderReport } from "./order-report";
 import { OrderSupplierPayments } from "./order-supplier-payments";
 import { OrderTourReview } from "./order-tour-review";
+import { OrderVoucher } from "./order-voucher";
 
 export const OrderId: FC = () => {
 	const { orderId } = useParams<{ orderId: string }>();
@@ -94,10 +95,13 @@ export const OrderId: FC = () => {
 							)}
 
 							{showSupplierPayments && (
-								<OrderSupplierPayments
-									bookingId={orderId || ""}
-									eventOptions={eventOptions}
-								/>
+								<>
+									<OrderSupplierPayments
+										bookingId={orderId || ""}
+										eventOptions={eventOptions}
+									/>
+									<OrderVoucher bookingId={orderId || ""} />
+								</>
 							)}
 
 							{!isCancelled && (

@@ -2,7 +2,8 @@ import {
 	BillListIcon,
 	CardReceiveIcon,
 	CardSearchIcon,
-	CardSendIcon
+	CardSendIcon,
+	ClipboardListIcon
 } from "@solar-icons/react/outline";
 
 import type { ISidebarMenu } from "@/shared/ui";
@@ -40,6 +41,12 @@ export const FINANCE_SIDEBAR_LIST: ISidebarMenu[] = [
 					"operator.finance.general.menu.reconciliation_description",
 				path: ENUM_PATH.FINANCE.RECONCILIATION,
 				icon: <CardSearchIcon />
+			},
+			{
+				label: "operator.finance.general.menu.ledger",
+				description: "operator.finance.general.menu.ledger_description",
+				path: ENUM_PATH.FINANCE.LEDGER,
+				icon: <ClipboardListIcon />
 			}
 		]
 	}

@@ -8,13 +8,17 @@ import {
 	type ENUM_INVOICE_STATUS_BACKEND_TYPE,
 	type IGenerateInvoiceDocument,
 	type IGenerateInvoiceDocumentBackend,
+	type IGenerateInvoiceRequest,
 	type IInvoice,
 	type IInvoiceDetail,
 	type IInvoiceFilters,
 	type IInvoicePaginatedResponse,
+	type IRecordInvoicePaymentRequest,
 	type TInvoiceDetailResponseBackend,
+	type TInvoiceGenerateBackend,
 	type TInvoiceListItemBackend,
 	type TInvoiceListResponseBackend,
+	type TInvoicePaymentCreateBackend,
 	type TInvoiceStatusCounts
 } from "../types";
 
@@ -117,6 +121,20 @@ export const mapInvoiceFiltersToBackend = (filters: IInvoiceFilters) => ({
 	limit: filters.limit,
 	q: filters.search.trim() || undefined,
 	statuses: filters.status.length > 0 ? filters.status : undefined
+});
+
+export const mapGenerateInvoiceToBackend = (
+	data: IGenerateInvoiceRequest
+): TInvoiceGenerateBackend => ({
+	booking_id: data.bookingId,
+	payment_route_id: data.paymentRouteId
+});
+
+export const mapInvoicePaymentToBackend = (
+	data: IRecordInvoicePaymentRequest
+): TInvoicePaymentCreateBackend => ({
+	amount: data.amount,
+	method: data.method
 });
 
 export const mapGenerateInvoiceDocumentToFrontend = (

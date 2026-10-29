@@ -1,15 +1,18 @@
+import { auditHandlers } from "@/entities/audit/handlers";
 import { authHandlers } from "@/entities/auth/handlers";
 import {
 	bookingAvailabilityHandlers,
 	bookingOrderHandlers,
 	bookingPaxHandlers,
-	bookingRevisionHandlers
+	bookingRevisionHandlers,
+	bookingVoucherHandlers
 } from "@/entities/booking/order/handlers";
 import { fxRateHandlers } from "@/entities/commission/handlers";
 import { financeClientPaymentHandlers } from "@/entities/finance/client-payment/handlers/payment.handlers";
 import { operatorPaymentRoutesHandlers } from "@/entities/finance/finance-information/handlers";
 import { invoiceDocumentHandlers } from "@/entities/finance/invoice/handlers/invoice-document.handlers";
 import { financeInvoiceHandlers } from "@/entities/finance/invoice/handlers/invoice.handlers";
+import { ledgerHandlers } from "@/entities/finance/ledger/handlers";
 import { financeReconciliationHandler } from "@/entities/finance/reconciliation/handlers/reconciliation.handlers";
 import { financeSupplierPaymentHandlers } from "@/entities/finance/supplier-payment/handlers/supplier-payment.handlers";
 import { geoHandlers } from "@/entities/geo/handlers";
@@ -47,6 +50,8 @@ export const handlers = [
 	...invoiceDocumentHandlers,
 	...financeClientPaymentHandlers,
 	...financeReconciliationHandler,
+	...ledgerHandlers,
+	...auditHandlers,
 	...tourHandlers,
 	...tourLandingHandlers,
 	...tourActivityLogHandlers,
@@ -63,6 +68,7 @@ export const handlers = [
 	...bookingPaxHandlers,
 	...bookingAvailabilityHandlers,
 	...bookingRevisionHandlers,
+	...bookingVoucherHandlers,
 	...geoHandlers,
 	// `/operator/:id` перекрывает `/operator/fx-rate` и т.п. — после конкретных путей
 	...operatorByIdHandlers,

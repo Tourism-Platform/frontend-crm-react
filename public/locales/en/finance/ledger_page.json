@@ -1,0 +1,53 @@
+{
+	"page_name": "Ledger",
+	"tabs": {
+		"entries": "Entries",
+		"debtors": "Debtors",
+		"creditors": "Creditors"
+	},
+	"entries": {
+		"filters": {
+			"type": {
+				"label": "Entry type",
+				"placeholder": "Entry type"
+			},
+			"flow": {
+				"label": "Flow",
+				"placeholder": "Flow"
+			},
+			"source": {
+				"label": "Source",
+				"placeholder": "Source"
+			},
+			"reset": "Reset"
+		},
+		"table": {
+			"occurred_at": "Date",
+			"order": "Order",
+			"type": "Type",
+			"payer": "Payer",
+			"payee": "Payee",
+			"flow": "Flow",
+			"source": "Source",
+			"amount": "Amount",
+			"note": "Note"
+		}
+	},
+	"balances": {
+		"total_outstanding": {
+			"debtors": "Total owed to us",
+			"creditors": "Total we owe"
+		},
+		"table": {
+			"party": "Counterparty",
+			"billed": "Billed",
+			"paid": "Paid",
+			"outstanding": "Outstanding"
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load ledger"
+		}
+	}
+}

@@ -5,6 +5,7 @@ import {
 	CardReceiveIcon,
 	CardSearchIcon,
 	CardSendIcon,
+	ClipboardListIcon,
 	MapPointWaveIcon,
 	NotebookIcon,
 	Routing2Icon
@@ -65,6 +66,12 @@ export const NAV_ITEMS_LIST: INavItemBase[] = [
 				label: "operator.finance.menu.reconciliation",
 				description: "operator.finance.menu.reconciliation_description",
 				icon: <CardSearchIcon />
+			},
+			{
+				href: ENUM_PATH.FINANCE.LEDGER,
+				label: "operator.finance.menu.ledger",
+				description: "operator.finance.menu.ledger_description",
+				icon: <ClipboardListIcon />
 			}
 		]
 	},

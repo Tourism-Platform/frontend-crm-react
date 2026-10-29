@@ -3,6 +3,8 @@ export * from "./tour-option-form.types";
 export * from "./option-backend.types";
 export * from "./pricing-review.types";
 export * from "./pricing-review-backend.types";
+export * from "./price-matrix.types";
+export * from "./price-matrix-backend.types";
 export * from "./commission-backend.types";
 export * from "./fee.types";
 export * from "./fee-backend.types";

@@ -1,0 +1,53 @@
+{
+	"page_name": "Леджер",
+	"tabs": {
+		"entries": "Проводки",
+		"debtors": "Должники",
+		"creditors": "Кредиторы"
+	},
+	"entries": {
+		"filters": {
+			"type": {
+				"label": "Тип проводки",
+				"placeholder": "Тип проводки"
+			},
+			"flow": {
+				"label": "Направление",
+				"placeholder": "Направление"
+			},
+			"source": {
+				"label": "Источник",
+				"placeholder": "Источник"
+			},
+			"reset": "Сбросить"
+		},
+		"table": {
+			"occurred_at": "Дата",
+			"order": "Заказ",
+			"type": "Тип",
+			"payer": "Плательщик",
+			"payee": "Получатель",
+			"flow": "Направление",
+			"source": "Источник",
+			"amount": "Сумма",
+			"note": "Примечание"
+		}
+	},
+	"balances": {
+		"total_outstanding": {
+			"debtors": "Всего должны нам",
+			"creditors": "Всего должны мы"
+		},
+		"table": {
+			"party": "Контрагент",
+			"billed": "Начислено",
+			"paid": "Оплачено",
+			"outstanding": "Задолженность"
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Не удалось загрузить леджер"
+		}
+	}
+}

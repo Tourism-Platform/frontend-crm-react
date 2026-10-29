@@ -32,6 +32,14 @@ export const operatorPaymentRoutesApi = authApi.injectEndpoints({
 			) => mapPaymentRoutesPaginatedToFrontend(response),
 			providesTags: [ENUM_API_TAGS.OPERATOR.PAYMENT_ROUTES]
 		}),
+		getPaymentRoute: builder.query<TOperatorPaymentRoute, string>({
+			query: (id) => ({
+				...OPERATOR_PAYMENT_ROUTES_PATHS.getPaymentRoute(id)
+			}),
+			transformResponse: (response: TOperatorPaymentRouteBackend) =>
+				mapOperatorPaymentRouteToFrontend(response),
+			providesTags: [ENUM_API_TAGS.OPERATOR.PAYMENT_ROUTES]
+		}),
 		createPaymentRoute: builder.mutation<
 			TOperatorPaymentRoute,
 			TOperatorPayoutDetailsSchema
@@ -67,6 +75,7 @@ export const operatorPaymentRoutesApi = authApi.injectEndpoints({
 
 export const {
 	useGetPaymentRoutesQuery,
+	useGetPaymentRouteQuery,
 	useCreatePaymentRouteMutation,
 	useUpdatePaymentRouteMutation,
 	useDeletePaymentRouteMutation

@@ -60,7 +60,7 @@ const isPackageBillable = (
 	item: TTourSummaryEventBackend
 ): item is TPackageBillableBackend => item.typ === "package_bill";
 
-const mapMinMaxCostToRange = (
+export const mapMinMaxCostToRange = (
 	cost: TTourMinMaxCostBackend
 ): ITourSummaryRange => ({
 	from: cost.min.val,

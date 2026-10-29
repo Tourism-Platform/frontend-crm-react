@@ -25,7 +25,9 @@
 					"tour": "Настройки туров",
 					"tour_description": "Значения по умолчанию",
 					"tags": "Теги",
-					"tags_description": "Метки и категории"
+					"tags_description": "Метки и категории",
+					"audit_log": "Журнал аудита",
+					"audit_log_description": "Кто, что и когда делал"
 				}
 			}
 		},
@@ -84,7 +86,9 @@
 					"supplier_payments": "Платежи поставщикам",
 					"supplier_payments_description": "Оплата поставщикам",
 					"reconciliation": "Сверка",
-					"reconciliation_description": "Сверка балансов"
+					"reconciliation_description": "Сверка балансов",
+					"ledger": "Леджер",
+					"ledger_description": "Проводки, должники и кредиторы"
 				}
 			}
 		},

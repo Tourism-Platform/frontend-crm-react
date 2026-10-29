@@ -6,6 +6,7 @@ import {
 	mockNotFound
 } from "@/shared/api";
 
+import { ENUM_CURRENCY_BACKEND } from "@/entities/commission/types/currency.types";
 import { getTour } from "@/entities/tour/tour/mock/tour.store";
 
 import { getTourOption, listTourEvents } from "../mock/itinerary.store";
@@ -13,6 +14,7 @@ import {
 	ENUM_BREAKDOWN_LINE_KIND_BACKEND,
 	ENUM_EXPENSE_TYPE_BACKEND,
 	type TBreakdownLineBackend,
+	type TGetPriceMatrixBackendResponse,
 	type TGetPricingBreakdownBackendResponse,
 	type TTourEventBackendResponce,
 	type TTourSummaryEventBackend
@@ -68,6 +70,28 @@ const toBillable = (
 	} as TTourSummaryEventBackend;
 };
 
+/** Себестоимость группы фиксирована, наценка 10%, цена на человека — выручка / pax */
+const toMatrixFigures = (groupCost: number, paxFrom: number, paxTo: number) => {
+	const profit = Math.round(groupCost * 0.1);
+	const revenue = groupCost + profit;
+
+	return {
+		cost: range(groupCost, groupCost),
+		profit: range(profit, profit),
+		revenue: range(revenue, revenue),
+		per_person: range(
+			Math.round(revenue / paxTo),
+			Math.round(revenue / paxFrom)
+		)
+	};
+};
+
+const parseBrackets = (value: string | null) =>
+	(value ?? "")
+		.split(",")
+		.map((pair) => pair.split("-").map(Number))
+		.filter(([from, to]) => from > 0 && to >= from);
+
 export const pricingReviewHandlers = [
 	createMockHandler(
 		TOUR_OPTION_PATHS.getPricingBreakdown(":tourId", ":optionId"),
@@ -105,6 +129,53 @@ export const pricingReviewHandlers = [
 				)
 			};
 			return HttpResponse.json(response);
+		}
+	),
+	createMockHandler(
+		TOUR_OPTION_PATHS.getPriceMatrix(":tourId", ":optionId"),
+		({ params, query }) => {
+			const tourId = String(params.tourId);
+			const optionId = String(params.optionId);
+			if (!getTourOption(tourId, optionId)) {
+				return mockNotFound("Tour option not found");
+			}
+
+			const groupCost = listTourEvents(optionId)
+				.map(toBillable)
+				.reduce((sum, event) => sum + event.cost.max.val, 0);
+			const currency = (query.get("currency") ??
+				ENUM_CURRENCY_BACKEND.USD) as TGetPriceMatrixBackendResponse["currency"];
+			const brackets = parseBrackets(query.get("brackets"));
+
+			if (brackets.length) {
+				return HttpResponse.json<TGetPriceMatrixBackendResponse>({
+					typ: "per_range",
+					currency,
+					brackets: brackets.map(([from, to]) => ({
+						pax_from: from,
+						pax_to: to,
+						binding_pax: from,
+						...toMatrixFigures(groupCost, from, to)
+					}))
+				});
+			}
+
+			const paxFrom = Number(query.get("pax_from")) || 1;
+			const paxTo =
+				Number(query.get("pax_to")) ||
+				(getTour(tourId)?.group_size ?? 10);
+
+			return HttpResponse.json<TGetPriceMatrixBackendResponse>({
+				typ: "per_pax",
+				currency,
+				rows: Array.from(
+					{ length: Math.max(paxTo - paxFrom + 1, 0) },
+					(_, index) => {
+						const pax = paxFrom + index;
+						return { pax, ...toMatrixFigures(groupCost, pax, pax) };
+					}
+				)
+			});
 		}
 	)
 ];

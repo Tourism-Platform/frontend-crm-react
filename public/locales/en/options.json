@@ -266,6 +266,14 @@
 				"paid": "Paid",
 				"overdue": "Overdue",
 				"cancelled": "Cancelled"
+			},
+			"payment_methods": {
+				"bank": "Bank transfer",
+				"wire": "Wire",
+				"check": "Check",
+				"cash": "Cash",
+				"credit_card": "Credit card",
+				"other": "Other"
 			}
 		},
 		"client_payment": {
@@ -289,6 +297,29 @@
 		"payment_methods": {
 			"classic_swift": "Classic SWIFT",
 			"wise": "WISE"
+		},
+		"ledger": {
+			"types": {
+				"accrual": "Accrual",
+				"settlement": "Settlement"
+			},
+			"flows": {
+				"inbound": "Inbound",
+				"outbound": "Outbound"
+			},
+			"sources": {
+				"invoice": "Invoice",
+				"client_payment": "Client payment",
+				"invoice_payment": "Invoice payment",
+				"supplier_payment": "Supplier payment",
+				"manual": "Manual"
+			},
+			"parties": {
+				"user": "Tourist",
+				"agency": "Agency",
+				"supplier": "Supplier",
+				"operator": "Operator"
+			}
 		}
 	},
 	"booking": {

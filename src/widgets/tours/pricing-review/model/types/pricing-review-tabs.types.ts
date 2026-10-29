@@ -2,7 +2,8 @@ import type { ITourReviewItem } from "@/entities/tour";
 
 export const ENUM_PRICING_REVIEW_TABLE_TAB = {
 	EVENTS: "events",
-	PACKAGES: "packages"
+	PACKAGES: "packages",
+	MATRIX: "matrix"
 } as const;
 
 export type ENUM_PRICING_REVIEW_TABLE_TAB_TYPE =

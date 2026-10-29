@@ -3,7 +3,8 @@
 	"tabs": {
 		"add": "Add option",
 		"events": "Events",
-		"packages": "Tour packages"
+		"packages": "Tour packages",
+		"matrix": "Price matrix"
 	},
 	"params": {
 		"date": {
@@ -65,6 +66,9 @@
 	"toasts": {
 		"load": {
 			"error": "Failed to load packages"
+		},
+		"matrix_load": {
+			"error": "Failed to load price matrix"
 		}
 	},
 	"errors": {
@@ -72,5 +76,12 @@
 			"title": "Pricing is unavailable",
 			"description": "The Central Bank exchange rate for one of the tour currencies is not published yet. Try again later."
 		}
+	},
+	"matrix": {
+		"pax": "Pax",
+		"cost": "Cost (incl. fees)",
+		"profit": "Profit",
+		"revenue": "Revenue",
+		"per_person": "Per person"
 	}
 }

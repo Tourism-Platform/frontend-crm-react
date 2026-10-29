@@ -3,6 +3,7 @@ import {
 	Buildings2Icon,
 	DollarMinimalisticIcon,
 	GlobalIcon,
+	HistoryIcon,
 	KeySquare2Icon,
 	SettingsIcon,
 	TagIcon,
@@ -73,6 +74,13 @@ export const OPERATOR_USER_MENU_LIST: IUserMenu[] = [
 				description: "operator.settings.business.menu.tags_description",
 				path: ENUM_PATH.OPERATOR.SETTINGS.TAGS,
 				icon: <TagIcon />
+			},
+			{
+				label: "operator.settings.business.menu.audit_log",
+				description:
+					"operator.settings.business.menu.audit_log_description",
+				path: ENUM_PATH.OPERATOR.SETTINGS.AUDIT_LOG,
+				icon: <HistoryIcon />
 			}
 		]
 	}

@@ -8,7 +8,11 @@
 		"back": "Back",
 		"export": "Export",
 		"exporting": "Exporting",
-		"export_error": "Failed to download invoice PDF"
+		"export_error": "Failed to download invoice PDF",
+		"upload_pdf": "Upload PDF",
+		"uploading_pdf": "Uploading",
+		"upload_pdf_success": "Invoice PDF uploaded",
+		"upload_pdf_error": "Failed to upload invoice PDF"
 	},
 	"header": {
 		"issue_date": "Issue date",
@@ -51,6 +55,41 @@
 			"dates": "Dates",
 			"duration": "Duration",
 			"duration_value": "{{days}} days / {{nights}} nights"
+		}
+	},
+	"record_payment": {
+		"button": "Record payment",
+		"form": {
+			"title": "Record invoice payment",
+			"fields": {
+				"amount": {
+					"label": "Amount",
+					"placeholder": "Enter amount"
+				},
+				"method": {
+					"label": "Payment method",
+					"placeholder": "Select method"
+				}
+			},
+			"errors": {
+				"amount": {
+					"required": "Enter the amount",
+					"min": "Amount must be greater than 0"
+				},
+				"method": {
+					"required": "Select a payment method"
+				}
+			},
+			"buttons": {
+				"cancel": "Cancel",
+				"save": "Save",
+				"saving": "Saving"
+			},
+			"toasts": {
+				"success": "Payment recorded",
+				"error": "Failed to record payment",
+				"no_fx_rate": "No bank FX rate is available yet for the payment route currency"
+			}
 		}
 	}
 }

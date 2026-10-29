@@ -1,0 +1,16 @@
+{
+	"page_name": "Audit log",
+	"table": {
+		"created_at": "Date",
+		"user": "User",
+		"role": "Role",
+		"request": "Request",
+		"permission": "Permission",
+		"status": "Status"
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load audit log"
+		}
+	}
+}

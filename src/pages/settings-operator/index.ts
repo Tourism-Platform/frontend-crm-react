@@ -6,3 +6,4 @@ export * from "./staff-information-page";
 export * from "./financial-settings-page";
 export * from "./tour-settings-page";
 export * from "./tags-page";
+export * from "./audit-log-page";

@@ -5,3 +5,4 @@ export * from "./booking-order-operator.service";
 export * from "./booking-pax.service";
 export * from "./booking-availability.service";
 export * from "./booking-revision-product.service";
+export * from "./booking-voucher.service";

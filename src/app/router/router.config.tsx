@@ -55,6 +55,11 @@ const OperatorStaffInformationPage = React.lazy(() =>
 		"@/pages/settings-operator/staff-information-page/ui/staff-information-page"
 	).then((m) => ({ default: m.StaffInformationPage }))
 );
+const OperatorAuditLogPage = React.lazy(() =>
+	import("@/pages/settings-operator/audit-log-page/ui/audit-log-page").then(
+		(m) => ({ default: m.AuditLogPage })
+	)
+);
 const OperatorTagsPage = React.lazy(() =>
 	import("@/pages/settings-operator/tags-page/ui/tags-page").then((m) => ({
 		default: m.TagsPage
@@ -265,6 +270,11 @@ const SupplierPaymentsPage = React.lazy(() =>
 		"@/pages/finance/supplier-payments-page/ui/supplier-payments-page"
 	).then((m) => ({ default: m.SupplierPaymentsPage }))
 );
+const LedgerPage = React.lazy(() =>
+	import("@/pages/finance/ledger-page/ui/ledger-page").then((m) => ({
+		default: m.LedgerPage
+	}))
+);
 const ReconciliationPage = React.lazy(() =>
 	import("@/pages/finance/reconciliation-page/ui/reconciliation-page").then(
 		(m) => ({ default: m.ReconciliationPage })
@@ -441,6 +451,13 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.OPERATOR.SETTINGS.STAFF_INFORMATION,
 		component: OperatorStaffInformationPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "settings-operator"
+	},
+	{
+		path: ENUM_PATH.OPERATOR.SETTINGS.AUDIT_LOG,
+		component: OperatorAuditLogPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		section: "settings-operator"
@@ -817,6 +834,13 @@ export const ALL_APP_ROUTES_LIST: IRouting[] = [
 	{
 		path: ENUM_PATH.FINANCE.SUPPLIER_PAYMENTS,
 		component: SupplierPaymentsPage,
+		auth: ENUM_AUTH.PRIVATE,
+		layout: ENUM_LAYOUT.ROOT_OPERATOR,
+		section: "finance"
+	},
+	{
+		path: ENUM_PATH.FINANCE.LEDGER,
+		component: LedgerPage,
 		auth: ENUM_AUTH.PRIVATE,
 		layout: ENUM_LAYOUT.ROOT_OPERATOR,
 		section: "finance"

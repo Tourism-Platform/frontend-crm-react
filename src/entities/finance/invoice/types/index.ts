@@ -5,3 +5,4 @@ export * from "./invoice-details.interface";
 export * from "./invoice-document-backend.interface";
 export * from "./invoice-document.interface";
 export * from "./invoice-backend-enum.types";
+export * from "./invoice-actions.interface";

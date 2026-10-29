@@ -18,7 +18,8 @@
 		"empty": "No payment routes configured",
 		"load_error": "Failed to load payment routes",
 		"confirm_success": "Invoice sent successfully",
-		"confirm_error": "Failed to send invoice"
+		"confirm_error": "Failed to send invoice",
+		"no_fx_rate_error": "No bank FX rate is available yet for the payment route currency"
 	},
 	"header": {
 		"order_status": "Order status",
@@ -161,6 +162,22 @@
 			"type": "Type",
 			"detail": "Detail",
 			"items": "Items"
+		}
+	},
+	"voucher": {
+		"title": "Voucher",
+		"toasts": {
+			"load": {
+				"error": "Failed to load voucher"
+			},
+			"upload": {
+				"success": "Voucher uploaded",
+				"error": "Failed to upload voucher"
+			},
+			"delete": {
+				"success": "Voucher deleted",
+				"error": "Failed to delete voucher"
+			}
 		}
 	}
 }

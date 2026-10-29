@@ -266,6 +266,14 @@
 				"paid": "Оплачен",
 				"overdue": "Просрочен",
 				"cancelled": "Отменён"
+			},
+			"payment_methods": {
+				"bank": "Банковский перевод",
+				"wire": "Wire-перевод",
+				"check": "Чек",
+				"cash": "Наличные",
+				"credit_card": "Банковская карта",
+				"other": "Другое"
 			}
 		},
 		"client_payment": {
@@ -289,6 +297,29 @@
 		"payment_methods": {
 			"classic_swift": "Классический SWIFT",
 			"wise": "WISE"
+		},
+		"ledger": {
+			"types": {
+				"accrual": "Начисление",
+				"settlement": "Оплата"
+			},
+			"flows": {
+				"inbound": "Входящий",
+				"outbound": "Исходящий"
+			},
+			"sources": {
+				"invoice": "Счёт",
+				"client_payment": "Оплата клиента",
+				"invoice_payment": "Оплата счёта",
+				"supplier_payment": "Оплата поставщику",
+				"manual": "Вручную"
+			},
+			"parties": {
+				"user": "Турист",
+				"agency": "Агентство",
+				"supplier": "Поставщик",
+				"operator": "Оператор"
+			}
 		}
 	},
 	"booking": {

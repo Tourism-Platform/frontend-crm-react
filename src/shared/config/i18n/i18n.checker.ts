@@ -4,6 +4,7 @@ import common_ru from "../../../../public/locales/ru/common.json";
 import client_payments_page_ru from "../../../../public/locales/ru/finance/client_payments_page.json";
 import invoice_id_page_ru from "../../../../public/locales/ru/finance/invoice_id_page.json";
 import invoices_page_ru from "../../../../public/locales/ru/finance/invoices_page.json";
+import ledger_page_ru from "../../../../public/locales/ru/finance/ledger_page.json";
 import reconciliation_id_page_ru from "../../../../public/locales/ru/finance/reconciliation_id_page.json";
 import reconciliation_page_ru from "../../../../public/locales/ru/finance/reconciliation_page.json";
 import supplier_payments_page_ru from "../../../../public/locales/ru/finance/supplier_payments_page.json";
@@ -23,6 +24,7 @@ import main_ru from "../../../../public/locales/ru/main.json";
 import not_found_page_ru from "../../../../public/locales/ru/not_found_page.json";
 import options_ru from "../../../../public/locales/ru/options.json";
 import account_settings_page_ru from "../../../../public/locales/ru/settings/account_settings_page.json";
+import audit_log_page_ru from "../../../../public/locales/ru/settings/audit_log_page.json";
 import business_settings_page_ru from "../../../../public/locales/ru/settings/business_settings_page.json";
 import financial_settings_page_ru from "../../../../public/locales/ru/settings/financial_settings_page.json";
 import financial_settings_page_operator_ru from "../../../../public/locales/ru/settings/financial_settings_page_operator.json";
@@ -122,6 +124,8 @@ export const RU_TRANSLATION_CHECKER: TResources = {
 	reconciliation_id_page: reconciliation_id_page_ru,
 	reconciliation_page: reconciliation_page_ru,
 	supplier_payments_page: supplier_payments_page_ru,
+	ledger_page: ledger_page_ru,
+	audit_log_page: audit_log_page_ru,
 	financial_settings_page: financial_settings_page_ru,
 	financial_settings_page_operator: financial_settings_page_operator_ru
 };

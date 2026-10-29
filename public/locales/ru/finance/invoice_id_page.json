@@ -8,7 +8,11 @@
 		"back": "Назад",
 		"export": "Экспорт",
 		"exporting": "Экспорт",
-		"export_error": "Не удалось скачать PDF счёта"
+		"export_error": "Не удалось скачать PDF счёта",
+		"upload_pdf": "Загрузить PDF",
+		"uploading_pdf": "Загрузка",
+		"upload_pdf_success": "PDF счёта загружен",
+		"upload_pdf_error": "Не удалось загрузить PDF счёта"
 	},
 	"header": {
 		"issue_date": "Дата выставления",
@@ -51,6 +55,41 @@
 			"dates": "Даты",
 			"duration": "Продолжительность",
 			"duration_value": "{{days}} дн. / {{nights}} ноч."
+		}
+	},
+	"record_payment": {
+		"button": "Внести оплату",
+		"form": {
+			"title": "Оплата по счёту",
+			"fields": {
+				"amount": {
+					"label": "Сумма",
+					"placeholder": "Введите сумму"
+				},
+				"method": {
+					"label": "Способ оплаты",
+					"placeholder": "Выберите способ"
+				}
+			},
+			"errors": {
+				"amount": {
+					"required": "Введите сумму",
+					"min": "Сумма должна быть больше 0"
+				},
+				"method": {
+					"required": "Выберите способ оплаты"
+				}
+			},
+			"buttons": {
+				"cancel": "Отмена",
+				"save": "Сохранить",
+				"saving": "Сохранение"
+			},
+			"toasts": {
+				"success": "Оплата внесена",
+				"error": "Не удалось внести оплату",
+				"no_fx_rate": "Курс ЦБ для валюты маршрута оплаты ещё не опубликован"
+			}
 		}
 	}
 }

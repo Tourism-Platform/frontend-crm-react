@@ -79,7 +79,10 @@ export const clientPaymentApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TPaymentBackend) =>
 				mapPaymentToFrontend(response),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
+			invalidatesTags: [
+				ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS,
+				ENUM_API_TAGS.FINANCE_LEDGER
+			]
 		}),
 		getPaymentById: builder.query<IPayment, string>({
 			query: (id) => ({
@@ -95,7 +98,10 @@ export const clientPaymentApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TPaymentBackend) =>
 				mapPaymentToFrontend(response),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
+			invalidatesTags: [
+				ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS,
+				ENUM_API_TAGS.FINANCE_LEDGER
+			]
 		}),
 		listAttachments: builder.query<TFileMetadata[], string>({
 			query: (paymentId) => ({
@@ -150,7 +156,10 @@ export const clientPaymentApi = authApi.injectEndpoints({
 			query: (id) => ({
 				...CLIENT_PAYMENT_PATHS.deletePayment(id)
 			}),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS]
+			invalidatesTags: [
+				ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS,
+				ENUM_API_TAGS.FINANCE_LEDGER
+			]
 		})
 	})
 });

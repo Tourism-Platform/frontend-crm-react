@@ -51,7 +51,10 @@ export const supplierPaymentApi = authApi.injectEndpoints({
 			}),
 			transformResponse: (response: TSupplierPaymentBackend) =>
 				mapSupplierPaymentToFrontend(response),
-			invalidatesTags: [ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS]
+			invalidatesTags: [
+				ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS,
+				ENUM_API_TAGS.FINANCE_LEDGER
+			]
 		}),
 		uploadSupplierPaymentReceipt: builder.mutation<
 			ISupplierPayment,

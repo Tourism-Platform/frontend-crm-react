@@ -6,6 +6,7 @@ import type common from "../../../../public/locales/en/common.json";
 import type client_payments_page from "../../../../public/locales/en/finance/client_payments_page.json";
 import type invoice_id_page from "../../../../public/locales/en/finance/invoice_id_page.json";
 import type invoices_page from "../../../../public/locales/en/finance/invoices_page.json";
+import type ledger_page from "../../../../public/locales/en/finance/ledger_page.json";
 import type reconciliation_id_page from "../../../../public/locales/en/finance/reconciliation_id_page.json";
 import type reconciliation_page from "../../../../public/locales/en/finance/reconciliation_page.json";
 import type supplier_payments_page from "../../../../public/locales/en/finance/supplier_payments_page.json";
@@ -25,6 +26,7 @@ import type main from "../../../../public/locales/en/main.json";
 import type not_found_page from "../../../../public/locales/en/not_found_page.json";
 import type options from "../../../../public/locales/en/options.json";
 import type account_settings_page from "../../../../public/locales/en/settings/account_settings_page.json";
+import type audit_log_page from "../../../../public/locales/en/settings/audit_log_page.json";
 import type business_settings_page from "../../../../public/locales/en/settings/business_settings_page.json";
 import type financial_settings_page from "../../../../public/locales/en/settings/financial_settings_page.json";
 import type financial_settings_page_operator from "../../../../public/locales/en/settings/financial_settings_page_operator.json";
@@ -67,6 +69,8 @@ export type TSecurityPage = typeof security_page;
 export type TAccountSettingsPage = typeof account_settings_page;
 export type TBusinessSettingsPage = typeof business_settings_page;
 export type TStaffInformationPage = typeof staff_information_page;
+export type TAuditLogPage = typeof audit_log_page;
+export type TLedgerPage = typeof ledger_page;
 export type TClientPaymentsPage = typeof client_payments_page;
 export type TInvoicesPage = typeof invoices_page;
 export type TInvoiceIdPage = typeof invoice_id_page;
@@ -131,6 +135,8 @@ export type TResources = {
 	invoices_page: TInvoicesPage;
 	invoice_id_page: TInvoiceIdPage;
 	supplier_payments_page: TSupplierPaymentsPage;
+	ledger_page: TLedgerPage;
+	audit_log_page: TAuditLogPage;
 	reconciliation_page: TReconciliationPage;
 	reconciliation_id_page: TReconciliationIdPage;
 	financial_settings_page: TFinancialSettingsPage;
@@ -191,6 +197,8 @@ export const NS = [
 	"invoices_page",
 	"invoice_id_page",
 	"supplier_payments_page",
+	"ledger_page",
+	"audit_log_page",
 	"reconciliation_page",
 	"reconciliation_id_page",
 	"financial_settings_page",
@@ -250,6 +258,8 @@ export type TClientPaymentsPageKeys = TNestedKeyOf<TClientPaymentsPage>;
 export type TInvoicesPageKeys = TNestedKeyOf<TInvoicesPage>;
 export type TInvoiceIdPageKeys = TNestedKeyOf<TInvoiceIdPage>;
 export type TSupplierPaymentsPageKeys = TNestedKeyOf<TSupplierPaymentsPage>;
+export type TLedgerPageKeys = TNestedKeyOf<TLedgerPage>;
+export type TAuditLogPageKeys = TNestedKeyOf<TAuditLogPage>;
 export type TReconciliationPageKeys = TNestedKeyOf<TReconciliationPage>;
 export type TReconciliationIdPageKeys = TNestedKeyOf<TReconciliationIdPage>;
 export type TFinancialSettingsPageKeys = TNestedKeyOf<TFinancialSettingsPage>;

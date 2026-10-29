@@ -1,5 +1,6 @@
 import { type IQueryTab } from "@/shared/ui";
 
+import { PricingReviewMatrixTable } from "../../ui/pricing-review-matrix-table";
 import { PricingReviewPackagesTable } from "../../ui/pricing-review-packages-table";
 import { PricingReviewTable } from "../../ui/pricing-review-table";
 import {
@@ -35,9 +36,19 @@ type TPricingReviewPackagesTab = IQueryTab<
 	TPricingReviewPackagesTabExtra
 >;
 
+type TPricingReviewMatrixTab = IQueryTab<
+	typeof ENUM_PRICING_REVIEW_TABLE_TAB.MATRIX,
+	"tour_pricing_review_page",
+	string,
+	never,
+	IPricingReviewSlotContext,
+	TPricingReviewPackagesTabExtra
+>;
+
 export const PRICING_REVIEW_TABLE_TABS: (
 	| TPricingReviewEventsTab
 	| TPricingReviewPackagesTab
+	| TPricingReviewMatrixTab
 )[] = [
 	{
 		type: ENUM_PRICING_REVIEW_TABLE_TAB.EVENTS,
@@ -53,6 +64,15 @@ export const PRICING_REVIEW_TABLE_TABS: (
 		type: ENUM_PRICING_REVIEW_TABLE_TAB.PACKAGES,
 		label: "tabs.packages",
 		slot: PricingReviewPackagesTable,
+		getSlotProps: ({ tourId, optionId }) => ({
+			tourId,
+			optionId
+		})
+	},
+	{
+		type: ENUM_PRICING_REVIEW_TABLE_TAB.MATRIX,
+		label: "tabs.matrix",
+		slot: PricingReviewMatrixTable,
 		getSlotProps: ({ tourId, optionId }) => ({
 			tourId,
 			optionId

@@ -3,8 +3,10 @@ import { resetBookingPaxStore } from "@/entities/booking/order/mock/booking-orde
 import { resetBookingOrderStore } from "@/entities/booking/order/mock/booking-order.store";
 import { resetBookingPriceStore } from "@/entities/booking/order/mock/booking-price.store";
 import { resetBookingSnapshotStore } from "@/entities/booking/order/mock/booking-snapshot.store";
+import { resetBookingVoucherStore } from "@/entities/booking/order/mock/booking-voucher.store";
 import { resetClientPaymentsForTests } from "@/entities/finance/client-payment/mock/payment.store";
 import { resetPaymentRoutesStore } from "@/entities/finance/finance-information/mock/operator-payment-routes.mock";
+import { resetInvoiceStore } from "@/entities/finance/invoice/mock/invoice.store";
 import { resetStaffStore } from "@/entities/staff/mock/staff.store";
 import { resetSupplierStore } from "@/entities/supplier/mock/supplier.store";
 import { resetEventLibraryStore } from "@/entities/tour/event-library/mock/event-library.store";
@@ -34,5 +36,7 @@ export const resetMockStores = () => {
 	resetBookingPriceStore();
 	resetBookingPaxStore();
 	resetBookingSnapshotStore();
+	resetBookingVoucherStore();
 	resetClientPaymentsForTests();
+	resetInvoiceStore();
 };

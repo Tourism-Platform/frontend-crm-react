@@ -43,6 +43,18 @@ export const operatorPaymentRoutesHandlers = [
 		}
 	),
 	createMockHandler(
+		OPERATOR_PAYMENT_ROUTES_PATHS.getPaymentRoute(":routeId"),
+		({ params }) => {
+			const route = findPaymentRouteInStore(String(params.routeId));
+
+			if (!route) {
+				return new HttpResponse(null, { status: 404 });
+			}
+
+			return HttpResponse.json(route);
+		}
+	),
+	createMockHandler(
 		OPERATOR_PAYMENT_ROUTES_PATHS.updatePaymentRoute(":routeId"),
 		({ params, body }) => {
 			const patch = body as TOperatorPaymentRouteUpdateBackend;

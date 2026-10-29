@@ -50,6 +50,7 @@ export const InvoiceId: FC = () => {
 							status={invoice.status}
 							issueDate={invoice.issueDate}
 							dueDate={invoice.dueDate}
+							remainingAmount={invoice.remainingAmount}
 						/>
 
 						<InvoicePaymentTable invoice={invoice} />

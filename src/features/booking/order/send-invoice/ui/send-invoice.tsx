@@ -2,6 +2,7 @@ import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { isNoFxRateError } from "@/shared/api";
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
@@ -28,6 +29,7 @@ import {
 } from "@/entities/booking";
 import {
 	PaymentRouteSelectCard,
+	useGenerateInvoiceMutation,
 	useGetPaymentRoutesQuery
 } from "@/entities/finance";
 
@@ -60,8 +62,11 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 	);
 	const routes = routesPage?.data ?? [];
 
-	const [updateBookingStatus, { isLoading: isConfirming }] =
+	const [generateInvoice, { isLoading: isGenerating }] =
+		useGenerateInvoiceMutation();
+	const [updateBookingStatus, { isLoading: isUpdatingStatus }] =
 		useUpdateBookingStatusMutation();
+	const isConfirming = isGenerating || isUpdatingStatus;
 
 	useEffect(() => {
 		if (isError) {
@@ -89,14 +94,23 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 		if (!selectedRouteId || !transitionGate.allowed) return;
 
 		try {
+			await generateInvoice({
+				bookingId: orderId,
+				paymentRouteId: selectedRouteId
+			}).unwrap();
 			await updateBookingStatus({
 				id: orderId,
 				status: ENUM_ORDER_STATUS.BOOKING
 			}).unwrap();
 			toast.success(t("send_invoice_modal.confirm_success"));
 			handleOpenChange(false);
-		} catch {
-			toast.error(t("send_invoice_modal.confirm_error"));
+		} catch (error) {
+			// 422 — нет курса ЦБ для валюты маршрута оплаты
+			toast.error(
+				isNoFxRateError(error)
+					? t("send_invoice_modal.no_fx_rate_error")
+					: t("send_invoice_modal.confirm_error")
+			);
 		}
 	};
 

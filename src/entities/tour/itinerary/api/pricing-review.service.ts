@@ -3,12 +3,17 @@ import { ENUM_API_TAGS, TOUR_OPTION_PATHS } from "@/shared/api";
 import { authApi } from "@/entities/auth/api/auth.api";
 
 import {
+	mapPriceMatrixQueryToBackend,
+	mapPriceMatrixToFrontend,
 	mapPricingBreakdownQueryToBackend,
 	mapPricingBreakdownToFrontend
 } from "../converters";
 import type {
+	IPriceMatrix,
+	IPriceMatrixArgs,
 	IPricingBreakdownArgs,
 	ITourPricingReview,
+	TGetPriceMatrixBackendResponse,
 	TGetPricingBreakdownBackendResponse
 } from "../types";
 
@@ -34,8 +39,23 @@ export const tourPricingReviewApi = authApi.injectEndpoints({
 					id: `${tourId}:${optionId}`
 				}
 			]
+		}),
+		getPriceMatrix: builder.query<IPriceMatrix, IPriceMatrixArgs>({
+			query: (args) => ({
+				...TOUR_OPTION_PATHS.getPriceMatrix(args.tourId, args.optionId),
+				params: mapPriceMatrixQueryToBackend(args)
+			}),
+			transformResponse: (response: TGetPriceMatrixBackendResponse) =>
+				mapPriceMatrixToFrontend(response),
+			providesTags: (_result, _error, { tourId, optionId }) => [
+				{
+					type: ENUM_API_TAGS.TOURS_PRICING_SUMMARY,
+					id: `${tourId}:${optionId}`
+				}
+			]
 		})
 	})
 });
 
-export const { useGetPricingBreakdownQuery } = tourPricingReviewApi;
+export const { useGetPricingBreakdownQuery, useGetPriceMatrixQuery } =
+	tourPricingReviewApi;
