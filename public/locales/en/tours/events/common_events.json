@@ -369,6 +369,45 @@
 			}
 		}
 	},
+	"extra_costs": {
+		"title": "Guide extra costs",
+		"hint": "Guide meals, lodging, travel. They price on the same days and group size and fall under the markup.",
+		"add": "Add cost",
+		"unsupported": "This format is not editable here and is kept as is",
+		"modes": {
+			"trip": "Whole engagement",
+			"per_day": "Per day",
+			"per_person": "Per person",
+			"per_person_day": "Per person per day"
+		},
+		"fields": {
+			"name": {
+				"label": "Name",
+				"placeholder": "e.g. guide meals",
+				"errors": {
+					"required": "Enter a name up to 255 characters"
+				}
+			},
+			"mode": {
+				"label": "Priced",
+				"placeholder": "Choose"
+			},
+			"cost": {
+				"label": "Amount",
+				"placeholder": "0",
+				"errors": {
+					"required": "Enter the amount"
+				}
+			},
+			"currency": {
+				"label": "Currency",
+				"placeholder": "Choose currency",
+				"errors": {
+					"required": "Choose a currency"
+				}
+			}
+		}
+	},
 	"copy": {
 		"duplicate": "Duplicate",
 		"toasts": {

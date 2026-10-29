@@ -1,9 +1,6 @@
 import type { z } from "zod";
 
-import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
-
 import type { GUIDE_PRICING_SCHEMA } from "../../schema/guide/pricing.schema";
-import type { IFeeFormRow } from "../fee.types";
 
 export const ENUM_GUIDE_PRICING_INVOICING = {
 	INDIVIDUAL: "individual",
@@ -13,21 +10,7 @@ export const ENUM_GUIDE_PRICING_INVOICING = {
 export type ENUM_GUIDE_PRICING_INVOICING_TYPE =
 	(typeof ENUM_GUIDE_PRICING_INVOICING)[keyof typeof ENUM_GUIDE_PRICING_INVOICING];
 
-export const ENUM_GUIDE_PRICING_TYPE = {
-	PER_GUIDE: "per_guide"
-} as const;
-
-export type ENUM_GUIDE_PRICING_TYPE_TYPE =
-	(typeof ENUM_GUIDE_PRICING_TYPE)[keyof typeof ENUM_GUIDE_PRICING_TYPE];
-
-export const ENUM_GUIDE_EXPENSE_TYP = {
-	PER_GUIDE: "per_guide",
-	PER_GUIDE_CATEGORY: "per_guide_category"
-} as const;
-
-export type ENUM_GUIDE_EXPENSE_TYP_TYPE =
-	(typeof ENUM_GUIDE_EXPENSE_TYP)[keyof typeof ENUM_GUIDE_EXPENSE_TYP];
-
+/** `GuideByLanguageCategory.expenses.typ`: flat for the engagement or per day. */
 export const ENUM_GUIDE_CHARGE = {
 	FIXED: "fixed",
 	PER_DURATION: "per_duration"
@@ -44,12 +27,23 @@ export const ENUM_GUIDE_MARKUP_TYP = {
 export type ENUM_GUIDE_MARKUP_TYP_TYPE =
 	(typeof ENUM_GUIDE_MARKUP_TYP)[keyof typeof ENUM_GUIDE_MARKUP_TYP];
 
+/**
+ * One price matrix for every language of the pool member: charge mode,
+ * currency, group-size bounds, fees, markup and extra costs are shared,
+ * each row holds one language's price per column (fe6.6 §10).
+ */
 export const ENUM_GUIDE_PRICING_FIELD = {
 	INVOICING: "invoicing",
-	PRICING_TYPE: "pricing_type",
-	PRICE_BY_LANGUAGE: "price_by_language",
 	ADD_MARGIN_SEPARATELY: "add_margin_separately",
-	EXPENSES: "expenses",
+	CHARGE_TYP: "charge_typ",
+	CURRENCY: "currency",
+	BOUNDS: "bounds",
+	ROWS: "rows",
+	FEES: "fees",
+	MARKUP: "markup",
+	EXTRA_COSTS: "extra_costs",
+	/** Read only: the stored categories did not share one shape. */
+	IS_LEGACY_SHAPE: "is_legacy_shape",
 	PACKAGE_ID: "package_id"
 } as const;
 
@@ -57,65 +51,40 @@ export type ENUM_GUIDE_PRICING_FIELD_TYPE =
 	(typeof ENUM_GUIDE_PRICING_FIELD)[keyof typeof ENUM_GUIDE_PRICING_FIELD];
 
 export const ENUM_GUIDE_PRICE_ROW_FIELD = {
-	CHARGE_TYP: "charge_typ",
-	COST: "cost",
-	FEES: "fees",
-	CURRENCY: "currency",
-	MARKUP: "markup"
+	LANG: "lang",
+	COSTS: "costs"
 } as const;
 
 export type ENUM_GUIDE_PRICE_ROW_FIELD_TYPE =
 	(typeof ENUM_GUIDE_PRICE_ROW_FIELD)[keyof typeof ENUM_GUIDE_PRICE_ROW_FIELD];
 
-export const ENUM_GUIDE_CATEGORY_ROW_FIELD = {
-	LANG: "lang",
-	CHARGE_TYP: ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP,
-	COST: ENUM_GUIDE_PRICE_ROW_FIELD.COST,
-	FEES: ENUM_GUIDE_PRICE_ROW_FIELD.FEES,
-	CURRENCY: ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY,
-	MARKUP: ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP
+export const ENUM_GUIDE_PRICE_BOUND_FIELD = {
+	UP_TO_PAX: "up_to_pax"
 } as const;
 
-export type ENUM_GUIDE_CATEGORY_ROW_FIELD_TYPE =
-	(typeof ENUM_GUIDE_CATEGORY_ROW_FIELD)[keyof typeof ENUM_GUIDE_CATEGORY_ROW_FIELD];
+export type ENUM_GUIDE_PRICE_BOUND_FIELD_TYPE =
+	(typeof ENUM_GUIDE_PRICE_BOUND_FIELD)[keyof typeof ENUM_GUIDE_PRICE_BOUND_FIELD];
 
-export const ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD = {
-	GUIDES: "guides",
-	CATEGORIES: "categories"
-} as const;
+/** Row language for `lang: null` — the fallback price of any tour language. */
+export const GUIDE_ANY_LANGUAGE = "any";
 
-export type ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD_TYPE =
-	(typeof ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD)[keyof typeof ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD];
+/** Bounds plus the open-ended last column. */
+export const GUIDE_MAX_PRICE_COLUMNS = 10;
 
 export interface IGuidePriceRowMarkup {
 	typ: ENUM_GUIDE_MARKUP_TYP_TYPE;
 	value: string;
 }
 
-export interface IGuidePerGuidePriceRow {
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE_TYPE;
-	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: number | null;
-	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: IFeeFormRow[];
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]?: ENUM_CURRENCY_OPTIONS_TYPE;
-	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: IGuidePriceRowMarkup | null;
+/** Column `i` covers previous bound + 1 .. `up_to_pax`; the last column has no bound. */
+export interface IGuidePriceBound {
+	[ENUM_GUIDE_PRICE_BOUND_FIELD.UP_TO_PAX]: number | null;
 }
 
-export interface IGuideCategoryPriceRow extends IGuidePerGuidePriceRow {
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: string;
-}
-
-export interface IGuidePerGuideExpenses {
-	typ: typeof ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE;
-	[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: IGuidePerGuidePriceRow[];
-}
-
-export interface IGuidePerGuideByLanguagePriceRow {
-	[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]: IGuideCategoryPriceRow[];
-}
-
-export interface IGuidePerGuideCategoryExpenses {
-	typ: typeof ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE_CATEGORY;
-	[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: IGuidePerGuideByLanguagePriceRow[];
+/** One `GuideByLanguageCategory`; with the flat charge only `costs[0]` counts. */
+export interface IGuidePriceRow {
+	[ENUM_GUIDE_PRICE_ROW_FIELD.LANG]: string;
+	[ENUM_GUIDE_PRICE_ROW_FIELD.COSTS]: (number | null)[];
 }
 
 export type TGuidePricingSchema = z.infer<typeof GUIDE_PRICING_SCHEMA>;

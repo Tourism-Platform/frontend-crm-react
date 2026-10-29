@@ -9,15 +9,6 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const PERMISSION_GROUPS_PATHS = {
-	createPermissionGroup: {
-		url: "/auth/permission/group",
-		method: "POST",
-		_types: {} as {
-			body: PermissionGroupCreate;
-			query: void;
-			response: PermissionGroupRead;
-		}
-	} as const,
 	listPermissionGroups: {
 		url: "/auth/permission/group/all",
 		method: "GET",
@@ -25,6 +16,15 @@ export const PERMISSION_GROUPS_PATHS = {
 			body: void;
 			query: void;
 			response: PermissionGroupListResponse;
+		}
+	} as const,
+	createPermissionGroup: {
+		url: "/auth/permission/group",
+		method: "POST",
+		_types: {} as {
+			body: PermissionGroupCreate;
+			query: void;
+			response: PermissionGroupRead;
 		}
 	} as const,
 	updatePermissionGroup: (groupId: string) =>

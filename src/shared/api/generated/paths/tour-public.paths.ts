@@ -23,26 +23,6 @@ export const TOUR_PUBLIC_PATHS = {
 				response: TourMetaResponse;
 			}
 		}) as const,
-	getPublicLandingPage: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/public/landing`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: { read_lang?: LanguageCode };
-				response: LandingPagePubSchema;
-			}
-		}) as const,
-	getPublicOperatorPreview: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/public/operator`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: OperatorPreviewPubSchema;
-			}
-		}) as const,
 	listPublicTourOptions: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/public/option/all`,
@@ -61,6 +41,26 @@ export const TOUR_PUBLIC_PATHS = {
 				body: void;
 				query: { currency?: Currency; read_lang?: LanguageCode };
 				response: TourOptionPublicResponse;
+			}
+		}) as const,
+	getPublicLandingPage: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/public/landing`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { read_lang?: LanguageCode };
+				response: LandingPagePubSchema;
+			}
+		}) as const,
+	getPublicOperatorPreview: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/public/operator`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: OperatorPreviewPubSchema;
 			}
 		}) as const,
 	getPublicTourSchedule: (tourId: string) =>

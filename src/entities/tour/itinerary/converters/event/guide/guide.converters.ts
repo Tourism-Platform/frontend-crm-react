@@ -3,11 +3,14 @@ import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 import {
 	ENUM_EVENT_BACKEND,
 	ENUM_FORM_EVENT_PRODUCT,
+	ENUM_FORM_GUIDES,
 	ENUM_GUIDE_FORM_SECTION,
 	type TEventDetailsBackend,
+	type TGuideDetailsBackend,
 	type TGuideDetailsWriteBackend,
 	type TGuideEditSchema,
 	type TGuideSingleEventBackend,
+	type TGuideSpecInputBackend,
 	type TTourEventBackendResponce,
 	type TTourEventUpdateBackend
 } from "../../../types";
@@ -23,7 +26,6 @@ import {
 	mapGuidePricingFromBackend
 } from "./guide-pricing.converters";
 import {
-	mapGuidesDurationToBackend,
 	mapGuidesFromBackend,
 	mapGuidesTypTiersToBackend
 } from "./guides.converters";
@@ -37,20 +39,18 @@ export const mapGuideEventToForm = (
 	const event = data?.event as TGuideEvent;
 	const details = event?.details;
 	const supplyId = getPoolMember(details, selectedSupplyId)?.id;
-	const guides = mapGuidesFromBackend(details, selectedSupplyId);
 
 	return {
 		[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID]: supplyId,
 		[ENUM_GUIDE_FORM_SECTION.NAME]: event?.name || "",
 		[ENUM_GUIDE_FORM_SECTION.DAY]: event.day,
 		[ENUM_GUIDE_FORM_SECTION.POSITION]: event.position,
-		[ENUM_GUIDE_FORM_SECTION.GUIDES]: guides,
+		[ENUM_GUIDE_FORM_SECTION.GUIDES]: mapGuidesFromBackend(
+			details,
+			selectedSupplyId
+		),
 		[ENUM_GUIDE_FORM_SECTION.PRICING]: applyEventPackageIdToPricing(
-			mapGuidePricingFromBackend(
-				details,
-				guides.guides_list,
-				selectedSupplyId
-			),
+			mapGuidePricingFromBackend(details, selectedSupplyId),
 			event.package_id
 		)
 	};
@@ -61,37 +61,39 @@ export const mapGuideFormToUpdate = (
 	_language?: ENUM_LANGUAGES_TYPE,
 	currentDetails?: TEventDetailsBackend
 ): TTourEventUpdateBackend => {
-	const guidesList = frontend.guides?.guides_list;
+	const guides = frontend.guides;
 	const pricing = frontend.pricing;
-	const categories =
-		pricing !== undefined
-			? mapGuideCategoriesToBackend(pricing, guidesList?.length ?? 0)
-			: undefined;
+	const supplyId = frontend[ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID];
 
 	// Contract 3.1: `details` is required on a guide update — the duration
 	// is the `plan`, the guide's own spec sits inside the inline `supply`.
-	// Empty categories stay omitted — [] would wipe prices on the backend.
-	const currentSpec = getPoolMember(currentDetails)?.spec;
-	const currentTiers =
-		currentSpec && "typ_tiers" in currentSpec
-			? currentSpec.typ_tiers
-			: undefined;
+	// The member spec is replaced whole: what the form does not hold is
+	// echoed from the member being edited.
+	const currentSpec = getPoolMember(
+		currentDetails as TGuideDetailsBackend | undefined,
+		supplyId
+	)?.spec;
 
-	const inlineSpec = {
-		...(guidesList !== undefined && {
-			typ_tiers: mapGuidesTypTiersToBackend(guidesList, currentTiers)
-		}),
-		...(categories !== undefined && categories.length > 0 && { categories })
+	const inlineSpec: TGuideSpecInputBackend = {
+		name: currentSpec?.name ?? null,
+		typ_tiers:
+			guides !== undefined
+				? mapGuidesTypTiersToBackend(guides[ENUM_FORM_GUIDES.TYP_TIERS])
+				: (currentSpec?.typ_tiers ?? []),
+		categories:
+			pricing !== undefined
+				? mapGuideCategoriesToBackend(pricing)
+				: (currentSpec?.categories ?? [])
 	};
 
 	const details: TGuideDetailsWriteBackend = {
-		...(guidesList !== undefined && {
-			plan: { duration: mapGuidesDurationToBackend(guidesList) }
+		...(guides !== undefined && {
+			plan: { duration: guides[ENUM_FORM_GUIDES.DURATION_DAYS] }
 		}),
 		pool: mapInlinePoolWrite(
 			ENUM_EVENT_BACKEND.GUIDE,
 			currentDetails,
-			undefined,
+			supplyId,
 			{ source: "inline", spec: inlineSpec }
 		) as TGuideDetailsWriteBackend["pool"]
 	};

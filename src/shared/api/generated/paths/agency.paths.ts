@@ -21,36 +21,6 @@ export const AGENCY_PATHS = {
 			response: AgencyModel;
 		}
 	} as const,
-	listAgencyDocuments: {
-		url: "/agency/me/documents",
-		method: "GET",
-		_types: {} as {
-			body: void;
-			query: { skip?: number; limit?: number };
-			response: AgencyFilesModel[];
-		}
-	} as const,
-	addAgencyDocuments: {
-		url: "/agency/me/documents",
-		method: "POST",
-		_types: {} as {
-			body: BodyAddAgencyDocumentsAgencyMeDocumentsPost;
-			query: void;
-			response: AgencyFilesModel[];
-		}
-	} as const,
-	getAgencyDocumentUrl: (fileId: string) =>
-		({
-			url: `/agency/me/documents/${fileId}`,
-			method: "GET",
-			_types: {} as { body: void; query: void; response: void }
-		}) as const,
-	removeAgencyDocument: (fileId: string) =>
-		({
-			url: `/agency/me/documents/${fileId}`,
-			method: "DELETE",
-			_types: {} as { body: void; query: void; response: void }
-		}) as const,
 	getAgencyInfo: {
 		url: "/agency/me/info",
 		method: "GET",
@@ -83,5 +53,35 @@ export const AGENCY_PATHS = {
 		url: "/agency/me/logo",
 		method: "DELETE",
 		_types: {} as { body: void; query: void; response: void }
-	} as const
+	} as const,
+	listAgencyDocuments: {
+		url: "/agency/me/documents",
+		method: "GET",
+		_types: {} as {
+			body: void;
+			query: { skip?: number; limit?: number };
+			response: AgencyFilesModel[];
+		}
+	} as const,
+	addAgencyDocuments: {
+		url: "/agency/me/documents",
+		method: "POST",
+		_types: {} as {
+			body: BodyAddAgencyDocumentsAgencyMeDocumentsPost;
+			query: void;
+			response: AgencyFilesModel[];
+		}
+	} as const,
+	getAgencyDocumentUrl: (fileId: string) =>
+		({
+			url: `/agency/me/documents/${fileId}`,
+			method: "GET",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	removeAgencyDocument: (fileId: string) =>
+		({
+			url: `/agency/me/documents/${fileId}`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const
 } as const;

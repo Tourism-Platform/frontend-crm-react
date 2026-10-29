@@ -9,20 +9,6 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const ADMIN_PATHS = {
-	rebuildLocationProjection: {
-		url: "/admin/location/rebuild",
-		method: "POST",
-		_types: {} as { body: void; query: void; response: void }
-	} as const,
-	createUser: {
-		url: "/admin/user",
-		method: "POST",
-		_types: {} as {
-			body: AuthUserIn;
-			query: { role?: UserRoles };
-			response: AdminUserView;
-		}
-	} as const,
 	getAllUsers: {
 		url: "/admin/user/all",
 		method: "GET",
@@ -53,5 +39,19 @@ export const ADMIN_PATHS = {
 			url: `/admin/user/${id}`,
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
-		}) as const
+		}) as const,
+	createUser: {
+		url: "/admin/user",
+		method: "POST",
+		_types: {} as {
+			body: AuthUserIn;
+			query: { role?: UserRoles };
+			response: AdminUserView;
+		}
+	} as const,
+	rebuildLocationProjection: {
+		url: "/admin/location/rebuild",
+		method: "POST",
+		_types: {} as { body: void; query: void; response: void }
+	} as const
 } as const;

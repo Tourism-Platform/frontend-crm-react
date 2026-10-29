@@ -1,6 +1,7 @@
 {
 	"markup_errors": {
-		"percentage_range": "Margin must be greater than 0% and less than 100%"
+		"percentage_range": "Margin must be greater than 0% and less than 100%",
+		"fixed_min": "Margin must be a number not less than 0"
 	},
 	"input": {
 		"title": {
@@ -56,17 +57,25 @@
 			},
 			"details": {
 				"title": "Guide details",
-				"guide_item": "Guide {{index}}",
 				"form": {
+					"fields": {
+						"duration_days": {
+							"label": "Duration (days)",
+							"placeholder": "e.g. 8.5",
+							"errors": {
+								"required": "Duration is required"
+							}
+						}
+					}
+				},
+				"typ_tiers": {
+					"title": "Guide type by group size",
+					"hint": "Each step covers groups up to its size; the last step covers any larger group",
+					"empty": "No steps yet",
 					"buttons": {
-						"add": "Add guide"
+						"add": "Add step"
 					},
 					"fields": {
-						"guides_list": {
-							"errors": {
-								"min": "Add at least one guide"
-							}
-						},
 						"guide_type": {
 							"label": "Guide type",
 							"placeholder": "Choose guide type",
@@ -74,11 +83,12 @@
 								"required": "Guide type is required"
 							}
 						},
-						"duration_days": {
-							"label": "Duration (days)",
-							"placeholder": "e.g. 8.5",
+						"up_to_pax": {
+							"label": "Up to (pax)",
+							"placeholder": "e.g. 10",
 							"errors": {
-								"required": "Duration is required"
+								"required": "Whole, 1+",
+								"order": "Above previous"
 							}
 						}
 					}
@@ -104,12 +114,6 @@
 					"part_of_package": "Part of package"
 				}
 			},
-			"pricing_type": {
-				"title": "How is this activity priced?",
-				"tabs": {
-					"per_guide": "Per guide"
-				}
-			},
 			"form": {
 				"package": {
 					"title": "Package",
@@ -126,63 +130,72 @@
 						"create": "Create"
 					}
 				},
-				"pricing_details": {
-					"title": "Pricing details"
-				},
-				"per_guide": {
-					"empty_guides": "Add at least one guide on the Guides tab",
+				"matrix": {
+					"title": "Prices by language",
+					"empty": "No languages yet",
+					"legacy_banner": "Languages were priced in different ways. They are brought to one scheme: check the values, saving will overwrite them.",
+					"fixed_multi_day_hint": "The whole-engagement price is not multiplied by days: for {{count}} days it covers the entire trip.",
+					"hint": {
+						"per_duration": "Price per day. Each column covers groups up to its size; the last one covers any larger group. A language without prices is kept as known but not priced yet.",
+						"fixed": "One amount for the whole engagement, whatever the group size."
+					},
 					"checkboxes": {
-						"price_by_language": "Price based on language",
 						"add_margin_separately": "Add margin to this component separately"
 					},
-					"table": {
-						"language": "Language",
-						"cost": "Cost",
-						"fees": "Fees",
-						"currency": "Currency"
+					"columns": {
+						"lang": "Language",
+						"trip": "Whole engagement",
+						"any_size": "Any group",
+						"above": "Over {{pax}} pax"
 					},
 					"buttons": {
-						"add_language": "Add language"
+						"add_language": "Add language",
+						"add_column": "Add step",
+						"remove_column": "Remove step"
 					},
 					"fields": {
-						"language": {
-							"placeholder": "Choose language",
-							"errors": {
-								"required": "Language is required"
-							}
-						},
-						"categories": {
-							"errors": {
-								"min": "Add at least one language"
-							}
-						},
-						"total_cost": {
-							"label": "Cost",
-							"placeholder": "Enter..."
-						},
 						"charge_typ": {
 							"label": "Charge mode",
-							"placeholder": "Select charge mode",
-							"options": {
-								"fixed": "Per engagement",
-								"per_duration": "Per day"
+							"placeholder": "Select charge mode"
+						},
+						"currency": {
+							"label": "Currency",
+							"placeholder": "Choose",
+							"errors": {
+								"required": "Choose a currency"
 							}
 						},
-						"taxes_fees": {
-							"label": "Fees",
-							"placeholder": "Enter..."
+						"lang": {
+							"label": "Language",
+							"placeholder": "Choose language",
+							"any": "Any language",
+							"errors": {
+								"required": "Choose a language",
+								"duplicate": "Already priced"
+							}
+						},
+						"up_to_pax": {
+							"label": "Up to (pax)",
+							"placeholder": "up to … pax",
+							"errors": {
+								"required": "Whole, 1+",
+								"order": "Above previous",
+								"max": "No more than 10 steps"
+							}
+						},
+						"cost": {
+							"label": "Cost",
+							"placeholder": "0",
+							"errors": {
+								"required": "Required",
+								"order": "Below previous"
+							}
 						},
 						"markup": {
 							"value": {
 								"label": "Unique margin",
-								"placeholder": "Enter...",
-								"errors": {
-									"required": "Margin is required"
-								}
+								"placeholder": "Enter..."
 							}
-						},
-						"currency": {
-							"placeholder": "Choose"
 						}
 					}
 				}

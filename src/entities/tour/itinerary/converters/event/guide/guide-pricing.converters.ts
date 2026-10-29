@@ -1,87 +1,87 @@
 import {
+	DEFAULT_EVENT_CURRENCY,
 	type ENUM_CURRENCY_OPTIONS_TYPE,
 	currencyConverter
 } from "@/entities/commission";
 import { languageMapper } from "@/entities/tour/landing";
-import { ENUM_LANGUAGES } from "@/entities/tour/landing/types/languages.types";
+import type { ENUM_LANGUAGES_TYPE } from "@/entities/tour/landing/types/languages.types";
 
-import { DEFAULT_GUIDE_UP_TO_PAX } from "../../../config";
 import {
-	ENUM_FORM_GUIDES,
-	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_CHARGE,
-	ENUM_GUIDE_EXPENSE_TYP,
 	ENUM_GUIDE_MARKUP_TYP,
-	ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD,
+	ENUM_GUIDE_PRICE_BOUND_FIELD,
 	ENUM_GUIDE_PRICE_ROW_FIELD,
 	ENUM_GUIDE_PRICING_FIELD,
 	ENUM_GUIDE_PRICING_INVOICING,
-	ENUM_GUIDE_PRICING_TYPE,
-	type IFeeFormRow,
-	type IGuideCategoryPriceRow,
-	type IGuidePerGuideByLanguagePriceRow,
-	type IGuidePerGuideCategoryExpenses,
-	type IGuidePerGuideExpenses,
-	type IGuidePerGuidePriceRow,
+	GUIDE_ANY_LANGUAGE,
+	type IGuidePriceRow,
 	type IGuidePriceRowMarkup,
 	type TCommissionMarkupBackend,
 	type TCommissionMarkupInputBackend,
-	type TDurationChargeBackend,
-	type TFixedChargeBackend,
 	type TGuideByLanguageCategoryBackend,
 	type TGuideByLanguageCategoryInputBackend,
 	type TGuideCategoryChargeInputBackend,
 	type TGuideDetailsBackend,
 	type TGuidePricingSchema,
-	type TGuidesSchema
+	type TPerGroupTierInputBackend
 } from "../../../types";
 import { getPoolMember } from "../common/event-pool.helpers";
+import {
+	mapExtraCostsFromBackend,
+	mapExtraCostsToBackend
+} from "../common/extra-costs.converters";
 import {
 	mapFeesFromBackend,
 	mapFeesToBackend
 } from "../common/fees.converters";
 
 import {
-	mapGuideGroupTiersFromBackend,
-	mapGuideGroupTiersToBackend
+	getGuideColumnPax,
+	getGuideTierCostAt,
+	mapGuidePriceBoundsFromBackend,
+	mapGuidePriceTiersToBackend
 } from "./guide-group-tiers.converters";
 
-type TGuidesList = TGuidesSchema[typeof ENUM_FORM_GUIDES.GUIDES_LIST];
+type TMoneyInput = TPerGroupTierInputBackend["cost"];
+type TCharge = NonNullable<TGuideByLanguageCategoryBackend["expenses"]>;
 
-type TGuideChargeBackend = TFixedChargeBackend | TDurationChargeBackend;
-
-const createEmptyPerGuidePriceRow = (): IGuidePerGuidePriceRow => ({
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
+export const createEmptyGuidePriceRow = (columns: number): IGuidePriceRow => ({
+	[ENUM_GUIDE_PRICE_ROW_FIELD.LANG]: "",
+	[ENUM_GUIDE_PRICE_ROW_FIELD.COSTS]: Array.from(
+		{ length: columns },
+		() => null
+	)
 });
 
-const createEmptyCategoryRow = (): IGuideCategoryPriceRow => ({
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: "",
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: [],
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: undefined,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
+export const getDefaultGuidePricing = (): TGuidePricingSchema => ({
+	[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
+		ENUM_GUIDE_PRICING_INVOICING.INDIVIDUAL,
+	[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: false,
+	[ENUM_GUIDE_PRICING_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
+	[ENUM_GUIDE_PRICING_FIELD.CURRENCY]: DEFAULT_EVENT_CURRENCY,
+	[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: [],
+	[ENUM_GUIDE_PRICING_FIELD.ROWS]: [],
+	[ENUM_GUIDE_PRICING_FIELD.FEES]: [],
+	[ENUM_GUIDE_PRICING_FIELD.MARKUP]: null,
+	[ENUM_GUIDE_PRICING_FIELD.EXTRA_COSTS]: [],
+	[ENUM_GUIDE_PRICING_FIELD.IS_LEGACY_SHAPE]: false,
+	[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
 });
 
-const createEmptyPerGuideByLanguagePriceRow =
-	(): IGuidePerGuideByLanguagePriceRow => ({
-		[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]: [
-			createEmptyCategoryRow()
-		]
-	});
+const PERCENT_PRECISION = 10_000;
 
 const mapMarkupFromBackend = (
 	markup?: TCommissionMarkupBackend | null
 ): IGuidePriceRowMarkup | null => {
 	if (!markup) return null;
 	if (markup.typ === "percentage") {
+		// 0.07 * 100 is 7.000000000000001 in floating point.
+		const percent =
+			Math.round((markup.percentage ?? 0) * 100 * PERCENT_PRECISION) /
+			PERCENT_PRECISION;
 		return {
 			typ: ENUM_GUIDE_MARKUP_TYP.PERCENTAGE,
-			value: String((markup.percentage ?? 0) * 100)
+			value: String(percent)
 		};
 	}
 	return {
@@ -90,143 +90,126 @@ const mapMarkupFromBackend = (
 	};
 };
 
-const mapChargeToPriceFields = (
-	expenses?: TGuideChargeBackend | null
-): Pick<
-	IGuidePerGuidePriceRow,
-	| typeof ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP
-	| typeof ENUM_GUIDE_PRICE_ROW_FIELD.COST
-	| typeof ENUM_GUIDE_PRICE_ROW_FIELD.FEES
-	| typeof ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY
-	| typeof ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP
-> => {
-	if (!expenses) {
+const getChargeCurrency = (charge: TCharge) => {
+	if (charge.typ === "fixed") return charge.cost?.currency;
+	const rate = charge.rate;
+	if (rate.typ === "per_group") return rate.tiers[0]?.cost?.currency;
+	if (rate.typ === "per_person") return rate.cost_per_person?.currency;
+	return rate.cost?.currency;
+};
+
+const getChargeBounds = (charge: TCharge): number[] =>
+	charge.typ === "per_duration" && charge.rate.typ === "per_group"
+		? mapGuidePriceBoundsFromBackend(charge.rate.tiers)
+		: [];
+
+/** What the charge costs a group of `pax` per its own unit (day or trip). */
+const getChargeCostAt = (charge: TCharge, pax: number): number | null => {
+	if (charge.typ === "fixed") return charge.cost?.val ?? null;
+	const rate = charge.rate;
+	if (rate.typ === "per_group") return getGuideTierCostAt(rate.tiers, pax);
+	if (rate.typ === "per_person") return rate.cost_per_person?.val ?? null;
+	return rate.cost?.val ?? null;
+};
+
+/** Everything a category carries beside its own price, for the shape check. */
+const getChargeShape = (charge: TCharge) =>
+	JSON.stringify([
+		charge.typ,
+		getChargeCurrency(charge),
+		getChargeBounds(charge),
+		mapFeesFromBackend(charge.fees),
+		mapMarkupFromBackend(charge.markup),
+		mapExtraCostsFromBackend(charge.extra_costs)
+	]);
+
+const mapLangFromBackend = (
+	lang: TGuideByLanguageCategoryBackend["lang"]
+): string =>
+	lang == null ? GUIDE_ANY_LANGUAGE : (languageMapper.from(lang) ?? "");
+
+const isPerPersonRate = (charge: TCharge) =>
+	charge.typ === "per_duration" && charge.rate.typ === "per_person";
+
+export const mapGuidePricingFromBackend = (
+	details?: TGuideDetailsBackend | null,
+	supplyId?: string | null
+): TGuidePricingSchema => {
+	// Contract 6: language categories live on the pool member `spec`.
+	const categories = getPoolMember(details, supplyId)?.spec?.categories ?? [];
+	const defaults = getDefaultGuidePricing();
+	const template = categories.find((category) => category.expenses)?.expenses;
+
+	if (!template) {
 		return {
-			[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
-				ENUM_GUIDE_CHARGE.PER_DURATION,
-			[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
-			[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
-			[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
-			[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
+			...defaults,
+			[ENUM_GUIDE_PRICING_FIELD.ROWS]: categories.map((category) => ({
+				...createEmptyGuidePriceRow(1),
+				[ENUM_GUIDE_PRICE_ROW_FIELD.LANG]: mapLangFromBackend(
+					category.lang
+				)
+			}))
 		};
 	}
 
-	const fees = mapFeesFromBackend(expenses.fees);
-	const markup = mapMarkupFromBackend(expenses.markup);
+	// One matrix for every language: the first priced category sets the
+	// shared mode, currency, bounds, fees, markup and extra costs.
+	const bounds = getChargeBounds(template);
+	const columns = template.typ === "per_duration" ? bounds.length + 1 : 1;
+	const templateShape = getChargeShape(template);
+	const markup = mapMarkupFromBackend(template.markup);
 
-	if (expenses.typ === "per_duration" || "rate" in expenses) {
-		const duration = expenses as TDurationChargeBackend;
-		const rate = duration.rate;
-		if (rate && "tiers" in rate) {
-			const tierFields = mapGuideGroupTiersFromBackend(rate.tiers);
-			return {
-				[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
-					ENUM_GUIDE_CHARGE.PER_DURATION,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: tierFields.cost,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: fees,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: tierFields.currency,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: markup
-			};
-		}
-		if (rate && "cost" in rate) {
-			return {
-				[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
-					ENUM_GUIDE_CHARGE.PER_DURATION,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: rate.cost?.val ?? null,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: fees,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: currencyConverter.from(
-					rate.cost?.currency
-				),
-				[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: markup
-			};
-		}
-		return {
-			[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]:
-				ENUM_GUIDE_CHARGE.PER_DURATION,
-			[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
-			[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: fees,
-			[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
-			[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: markup
-		};
-	}
-
-	const fixed = expenses as TFixedChargeBackend;
-	return {
-		[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.FIXED,
-		[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: fixed.cost?.val ?? null,
-		[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: fees,
-		[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: currencyConverter.from(
-			fixed.cost?.currency
-		),
-		[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: markup
-	};
-};
-
-const mapCategoryRowFromBackend = (
-	category: TGuideByLanguageCategoryBackend
-): IGuideCategoryPriceRow => {
-	const priceFields = mapChargeToPriceFields(category.expenses);
-
-	return {
-		[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]:
-			languageMapper.from(category.lang) ?? "",
-		...priceFields
-	};
-};
-
-const alignPerGuidePriceRows = (
-	guidesListLength: number,
-	existing: IGuidePerGuidePriceRow[] = [],
-	apiRows?: TGuideByLanguageCategoryBackend[] | null
-): IGuidePerGuidePriceRow[] =>
-	Array.from({ length: guidesListLength }, (_, index) => {
-		if (existing[index]) {
-			return existing[index];
-		}
-		const apiRow = apiRows?.[index];
-		if (apiRow) {
-			return mapChargeToPriceFields(apiRow.expenses);
-		}
-		return createEmptyPerGuidePriceRow();
-	});
-
-const alignPerGuideByLanguagePriceRows = (
-	guidesListLength: number,
-	existing: IGuidePerGuideByLanguagePriceRow[] = [],
-	apiCategories?: TGuideByLanguageCategoryBackend[] | null
-): IGuidePerGuideByLanguagePriceRow[] => {
-	if (guidesListLength <= 0) {
-		return [];
-	}
-
-	if (existing.length === guidesListLength) {
-		return existing;
-	}
-
-	// Language categories belong to guide slot 0 — guides.length ≠ languages.length.
-	if (apiCategories?.length && existing.length === 0) {
-		const primary: IGuidePerGuideByLanguagePriceRow = {
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]: apiCategories.map(
-				mapCategoryRowFromBackend
+	const rows = categories.map(
+		(category): IGuidePriceRow => ({
+			[ENUM_GUIDE_PRICE_ROW_FIELD.LANG]: mapLangFromBackend(
+				category.lang
+			),
+			[ENUM_GUIDE_PRICE_ROW_FIELD.COSTS]: Array.from(
+				{ length: columns },
+				(_, column) =>
+					category.expenses
+						? getChargeCostAt(
+								category.expenses,
+								getGuideColumnPax(bounds, column)
+							)
+						: null
 			)
-		};
+		})
+	);
 
-		return Array.from({ length: guidesListLength }, (_, index) =>
-			index === 0 ? primary : createEmptyPerGuideByLanguagePriceRow()
-		);
-	}
+	const isLegacyShape = categories.some(
+		({ expenses }) =>
+			!!expenses &&
+			(isPerPersonRate(expenses) ||
+				getChargeShape(expenses) !== templateShape)
+	);
 
-	return Array.from({ length: guidesListLength }, (_, index) => {
-		if (existing[index]) {
-			return existing[index];
-		}
-		return createEmptyPerGuideByLanguagePriceRow();
-	});
+	return {
+		...defaults,
+		[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: !!markup?.value,
+		[ENUM_GUIDE_PRICING_FIELD.CHARGE_TYP]:
+			template.typ === "fixed"
+				? ENUM_GUIDE_CHARGE.FIXED
+				: ENUM_GUIDE_CHARGE.PER_DURATION,
+		[ENUM_GUIDE_PRICING_FIELD.CURRENCY]:
+			currencyConverter.from(getChargeCurrency(template)) ??
+			defaults[ENUM_GUIDE_PRICING_FIELD.CURRENCY],
+		[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: bounds.map((upToPax) => ({
+			[ENUM_GUIDE_PRICE_BOUND_FIELD.UP_TO_PAX]: upToPax
+		})),
+		[ENUM_GUIDE_PRICING_FIELD.ROWS]: rows,
+		[ENUM_GUIDE_PRICING_FIELD.FEES]: mapFeesFromBackend(template.fees),
+		[ENUM_GUIDE_PRICING_FIELD.MARKUP]: markup,
+		[ENUM_GUIDE_PRICING_FIELD.EXTRA_COSTS]: mapExtraCostsFromBackend(
+			template.extra_costs
+		),
+		[ENUM_GUIDE_PRICING_FIELD.IS_LEGACY_SHAPE]: isLegacyShape
+	};
 };
 
 const mapMarkupToBackend = (
 	markup: IGuidePriceRowMarkup | null,
-	rowCurrency: ENUM_CURRENCY_OPTIONS_TYPE | undefined,
+	currency: ENUM_CURRENCY_OPTIONS_TYPE | undefined,
 	addMarginSeparately: boolean
 ): TCommissionMarkupInputBackend | null => {
 	if (!addMarginSeparately || !markup?.value) return null;
@@ -236,297 +219,82 @@ const mapMarkupToBackend = (
 			percentage: Number(markup.value) / 100
 		};
 	}
-	if (!rowCurrency) return null;
+	if (!currency) return null;
 	return {
 		typ: "fixed",
 		cost: {
 			val: Number(markup.value),
-			currency: currencyConverter.to(rowCurrency)!
+			currency: currencyConverter.to(currency)!
 		}
 	};
 };
 
-const applyMarkupToPerGuideExpenses = (
-	expenses: IGuidePerGuideExpenses | IGuidePerGuideCategoryExpenses,
-	addMarginSeparately: boolean
-): IGuidePerGuideExpenses | IGuidePerGuideCategoryExpenses => {
-	if (addMarginSeparately) {
-		return expenses;
-	}
-
-	if (expenses.typ === ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE) {
-		return {
-			...expenses,
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: expenses[
-				ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES
-			].map((guide) => ({
-				...guide,
-				[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
-			}))
-		};
-	}
-
-	return {
-		...expenses,
-		[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: expenses[
-			ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES
-		].map((guide) => ({
-			...guide,
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]: guide[
-				ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES
-			].map((category) => ({
-				...category,
-				[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
-			}))
-		}))
-	};
-};
-
-const hasAnyMarkup = (
-	rows: {
-		[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: IGuidePriceRowMarkup | null;
-	}[]
-) => rows.some((row) => row[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]?.value);
-
-const toFiniteNumber = (value: unknown): number | null => {
-	if (value == null || value === "") return null;
-	const parsed = typeof value === "number" ? value : Number(value);
-	return Number.isFinite(parsed) ? parsed : null;
-};
-
-const hasFeeRows = (fees: IFeeFormRow[] | undefined): boolean =>
-	(fees ?? []).some(
-		(fee) => fee.cost != null && Number.isFinite(fee.cost) && fee.cost !== 0
-	);
-
-const mapRowToBackendCategory = (
-	row: IGuidePerGuidePriceRow | IGuideCategoryPriceRow,
-	addMargin: boolean,
-	lang?: string
-): TGuideByLanguageCategoryInputBackend | null => {
-	const rowCurrency = row[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY];
-	const cost = toFiniteNumber(row[ENUM_GUIDE_PRICE_ROW_FIELD.COST]);
-	const feesRows = row[ENUM_GUIDE_PRICE_ROW_FIELD.FEES] ?? [];
-	const hasCost = cost != null && cost !== 0;
-	const hasFees = hasFeeRows(feesRows);
-
-	const langCode =
-		"lang" in row && row.lang
-			? languageMapper.to(row.lang as typeof ENUM_LANGUAGES.ENGLISH)
-			: lang
-				? languageMapper.to(lang as typeof ENUM_LANGUAGES.ENGLISH)
-				: undefined;
-
-	const markup = mapMarkupToBackend(
-		row[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP],
-		rowCurrency,
-		addMargin
-	);
-
-	if (!langCode && !hasCost && !hasFees && !markup) {
-		return null;
-	}
-
-	const tiers = mapGuideGroupTiersToBackend(
-		hasCost ? (cost as number) : 0,
-		rowCurrency
-	);
-
-	const chargeTyp =
-		row[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP] ??
-		ENUM_GUIDE_CHARGE.PER_DURATION;
-
-	let expenses: TGuideCategoryChargeInputBackend | undefined;
-	if (hasCost || hasFees || markup) {
-		if (chargeTyp === ENUM_GUIDE_CHARGE.FIXED) {
-			const fixed: Extract<
-				TGuideCategoryChargeInputBackend,
-				{ typ: "fixed" }
-			> = {
-				typ: "fixed",
-				cost: {
-					val: hasCost ? (cost as number) : 0,
-					...(rowCurrency && {
-						currency: currencyConverter.to(rowCurrency)!
-					})
-				},
-				fees: mapFeesToBackend(feesRows),
-				...(markup && { markup })
-			};
-			expenses = fixed;
-		} else {
-			const perDuration: Extract<
-				TGuideCategoryChargeInputBackend,
-				{ typ: "per_duration" }
-			> = {
-				typ: "per_duration",
-				rate: {
-					typ: "per_group",
-					tiers: tiers ?? [
-						{
-							up_to_pax: DEFAULT_GUIDE_UP_TO_PAX,
-							cost: { val: 0 }
-						}
-					]
-				},
-				fees: mapFeesToBackend(feesRows),
-				...(markup && { markup })
-			};
-			expenses = perDuration;
-		}
-	}
-
-	return {
-		...(langCode && { lang: langCode }),
-		...(expenses && { expenses })
-	};
-};
-
-export const alignGuidePerGuideExpenses = (options: {
-	priceByLanguage: boolean;
-	guidesListLength: number;
-	current?: TGuidePricingSchema["expenses"] | null;
-	addMarginSeparately?: boolean;
-}): IGuidePerGuideExpenses | IGuidePerGuideCategoryExpenses => {
-	const { priceByLanguage, guidesListLength, current, addMarginSeparately } =
-		options;
-
-	let aligned: IGuidePerGuideExpenses | IGuidePerGuideCategoryExpenses;
-
-	if (priceByLanguage) {
-		const existing =
-			current?.typ === ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE_CATEGORY
-				? current[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]
-				: [];
-
-		aligned = {
-			typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE_CATEGORY,
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]:
-				alignPerGuideByLanguagePriceRows(guidesListLength, existing)
-		};
-	} else {
-		const existing =
-			current?.typ === ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE
-				? current[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]
-				: [];
-
-		aligned = {
-			typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]:
-				alignPerGuidePriceRows(guidesListLength, existing)
-		};
-	}
-
-	if (addMarginSeparately === undefined) {
-		return aligned;
-	}
-
-	return applyMarkupToPerGuideExpenses(aligned, addMarginSeparately);
-};
-
-export const getDefaultGuidePricing = (
-	guidesList: TGuidesList = []
-): TGuidePricingSchema => ({
-	[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
-		ENUM_GUIDE_PRICING_INVOICING.INDIVIDUAL,
-	[ENUM_GUIDE_PRICING_FIELD.PRICING_TYPE]: ENUM_GUIDE_PRICING_TYPE.PER_GUIDE,
-	[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: true,
-	[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: false,
-	[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: alignGuidePerGuideExpenses({
-		priceByLanguage: true,
-		guidesListLength: guidesList.length
-	}),
-	[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
-});
-
-export const mapGuidePricingFromBackend = (
-	details?: TGuideDetailsBackend | null,
-	guidesList: TGuidesList = [],
-	supplyId?: string | null
-): TGuidePricingSchema => {
-	// Contract 6: language categories live on the pool member `spec`.
-	const categories = getPoolMember(details, supplyId)?.spec?.categories ?? [];
-	const defaults = getDefaultGuidePricing(guidesList);
-
-	if (!categories.length) {
-		return defaults;
-	}
-
-	const hasMultipleCategories = categories.length > 1;
-	const priceByLanguage =
-		hasMultipleCategories ||
-		Boolean(categories[0]?.lang && categories.length >= 1);
-
-	if (priceByLanguage) {
-		const guides = alignPerGuideByLanguagePriceRows(
-			Math.max(guidesList.length, 1),
-			[],
-			categories
-		);
-		const flatCategories = guides.flatMap(
-			(guide) => guide[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]
-		);
-
-		return {
-			...defaults,
-			[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: true,
-			[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]:
-				hasAnyMarkup(flatCategories),
-			[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: {
-				typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE_CATEGORY,
-				[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: guides
-			}
-		};
-	}
-
-	const guides = alignPerGuidePriceRows(
-		Math.max(guidesList.length, 1),
-		[],
-		categories
-	);
-
-	return {
-		...defaults,
-		[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: false,
-		[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: hasAnyMarkup(guides),
-		[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: {
-			typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: guides
-		}
-	};
-};
-
+/** Every row becomes one category; all of them share the matrix settings. */
 export const mapGuideCategoriesToBackend = (
-	pricing?: TGuidePricingSchema,
-	guidesListLength = 0
+	pricing: TGuidePricingSchema
 ): TGuideByLanguageCategoryInputBackend[] => {
-	if (
-		!pricing ||
-		pricing.invoicing !== ENUM_GUIDE_PRICING_INVOICING.INDIVIDUAL ||
-		pricing.pricing_type !== ENUM_GUIDE_PRICING_TYPE.PER_GUIDE
-	) {
-		return [];
-	}
+	const currency = pricing[ENUM_GUIDE_PRICING_FIELD.CURRENCY];
+	const bounds = pricing[ENUM_GUIDE_PRICING_FIELD.BOUNDS];
+	const isPerDuration =
+		pricing[ENUM_GUIDE_PRICING_FIELD.CHARGE_TYP] ===
+		ENUM_GUIDE_CHARGE.PER_DURATION;
+	const columns = isPerDuration ? bounds.length + 1 : 1;
 
-	const addMargin = pricing.add_margin_separately;
-	const aligned = alignGuidePerGuideExpenses({
-		priceByLanguage: pricing.price_by_language,
-		guidesListLength,
-		current: pricing.expenses
+	// Currency always goes out: the backend would default it to USD.
+	const toMoney = (val: number): TMoneyInput => ({
+		val,
+		...(currency && { currency: currencyConverter.to(currency)! })
 	});
+	const markup = mapMarkupToBackend(
+		pricing[ENUM_GUIDE_PRICING_FIELD.MARKUP],
+		currency,
+		pricing[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]
+	);
+	const shared = {
+		fees: mapFeesToBackend(pricing[ENUM_GUIDE_PRICING_FIELD.FEES]),
+		extra_costs: mapExtraCostsToBackend(
+			pricing[ENUM_GUIDE_PRICING_FIELD.EXTRA_COSTS]
+		),
+		...(markup && { markup })
+	};
 
-	if (aligned.typ === ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE_CATEGORY) {
-		return aligned[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES].flatMap(
-			(guide) =>
-				guide[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]
-					.map((category) =>
-						mapRowToBackendCategory(category, addMargin)
-					)
-					.filter((category) => category !== null)
+	const mapRow = (
+		row: IGuidePriceRow
+	): TGuideByLanguageCategoryInputBackend[] => {
+		const rowLang = row[ENUM_GUIDE_PRICE_ROW_FIELD.LANG];
+		const lang =
+			rowLang === GUIDE_ANY_LANGUAGE
+				? null
+				: (languageMapper.to(rowLang as ENUM_LANGUAGES_TYPE) ?? null);
+		const costs = Array.from(
+			{ length: columns },
+			(_, column) => row[ENUM_GUIDE_PRICE_ROW_FIELD.COSTS][column] ?? null
 		);
-	}
+		const hasPrice = costs.some((cost) => cost !== null);
 
-	return aligned[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]
-		.map((row) => mapRowToBackendCategory(row, addMargin))
-		.filter((category) => category !== null);
+		// A language without a price stays listed (fe6.6 §2); a priceless
+		// fallback says nothing.
+		if (!hasPrice) {
+			return lang ? [{ lang, expenses: null }] : [];
+		}
+
+		const expenses: TGuideCategoryChargeInputBackend = isPerDuration
+			? {
+					typ: "per_duration",
+					rate: {
+						typ: "per_group",
+						tiers: mapGuidePriceTiersToBackend(
+							bounds,
+							costs,
+							toMoney
+						)
+					},
+					...shared
+				}
+			: { typ: "fixed", cost: toMoney(costs[0] ?? 0), ...shared };
+
+		return [{ lang, expenses }];
+	};
+
+	return pricing[ENUM_GUIDE_PRICING_FIELD.ROWS].flatMap(mapRow);
 };

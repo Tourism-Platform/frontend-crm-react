@@ -6,6 +6,8 @@ export * from "./pricing-review-backend.types";
 export * from "./commission-backend.types";
 export * from "./fee.types";
 export * from "./fee-backend.types";
+export * from "./extra-cost.types";
+export * from "./extra-cost-backend.types";
 export * from "./event.types";
 export * from "./event-product-link.types";
 export * from "./event-pool.types";

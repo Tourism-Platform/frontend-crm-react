@@ -57,32 +57,6 @@ export const BOOKING_ORDER_PATHS = {
 			response: BookingQuoteResponse;
 		}
 	} as const,
-	updateBookingOrder: (bookingId: string) =>
-		({
-			url: `/booking/order/${bookingId}`,
-			method: "PATCH",
-			_types: {} as {
-				body: BookingUpdate;
-				query: void;
-				response: BookingOrderResponse;
-			}
-		}) as const,
-	deleteBookingOrder: (bookingId: string) =>
-		({
-			url: `/booking/order/${bookingId}`,
-			method: "DELETE",
-			_types: {} as { body: void; query: void; response: void }
-		}) as const,
-	cancelBooking: (bookingId: string) =>
-		({
-			url: `/booking/order/${bookingId}/cancel`,
-			method: "POST",
-			_types: {} as {
-				body: BookingCancel;
-				query: void;
-				response: BookingOrderResponse;
-			}
-		}) as const,
 	getBookingItinerary: (bookingId: string) =>
 		({
 			url: `/booking/order/${bookingId}/itinerary`,
@@ -109,6 +83,32 @@ export const BOOKING_ORDER_PATHS = {
 			method: "PATCH",
 			_types: {} as {
 				body: void;
+				query: void;
+				response: BookingOrderResponse;
+			}
+		}) as const,
+	updateBookingOrder: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}`,
+			method: "PATCH",
+			_types: {} as {
+				body: BookingUpdate;
+				query: void;
+				response: BookingOrderResponse;
+			}
+		}) as const,
+	deleteBookingOrder: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	cancelBooking: (bookingId: string) =>
+		({
+			url: `/booking/order/${bookingId}/cancel`,
+			method: "POST",
+			_types: {} as {
+				body: BookingCancel;
 				query: void;
 				response: BookingOrderResponse;
 			}

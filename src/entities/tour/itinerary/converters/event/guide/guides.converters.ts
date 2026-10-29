@@ -1,8 +1,6 @@
-import { DEFAULT_GUIDE_UP_TO_PAX } from "../../../config";
 import {
 	ENUM_FORM_GUIDES,
 	ENUM_GUIDE_TYPE,
-	type TGuideByLanguageCategoryBackend,
 	type TGuideDetailsBackend,
 	type TGuideTypeTierBackend,
 	type TGuidesSchema
@@ -11,56 +9,33 @@ import { getPoolMember } from "../common/event-pool.helpers";
 
 import { guideTypeMapper } from "./guide-type.converters";
 
-type TGuidesList = TGuidesSchema[typeof ENUM_FORM_GUIDES.GUIDES_LIST];
-
-export const getDefaultGuidesList = (): TGuidesList => [
-	{
-		[ENUM_FORM_GUIDES.GUIDE_TYPE]: ENUM_GUIDE_TYPE.LOCAL,
-		[ENUM_FORM_GUIDES.DURATION_DAYS]: 1
-	}
-];
+type TGuideTypTiers = TGuidesSchema[typeof ENUM_FORM_GUIDES.TYP_TIERS];
 
 export const mapGuidesFromBackend = (
 	details?: TGuideDetailsBackend | null,
 	supplyId?: string | null
 ): TGuidesSchema => {
 	const spec = getPoolMember(details, supplyId)?.spec;
-	const duration = details?.plan?.duration ?? 1;
 
 	return {
-		[ENUM_FORM_GUIDES.GUIDES_LIST]: (spec?.typ_tiers ?? []).map((tier) => ({
+		// A new guide starts at one day; a stored plan without one stays empty.
+		[ENUM_FORM_GUIDES.DURATION_DAYS]: details
+			? (details.plan?.duration ?? null)
+			: 1,
+		[ENUM_FORM_GUIDES.TYP_TIERS]: (spec?.typ_tiers ?? []).map((tier) => ({
 			[ENUM_FORM_GUIDES.GUIDE_TYPE]:
 				guideTypeMapper.from(tier.typ) ?? ENUM_GUIDE_TYPE.LOCAL,
-			[ENUM_FORM_GUIDES.DURATION_DAYS]: duration
+			[ENUM_FORM_GUIDES.UP_TO_PAX]: tier.up_to_pax
 		}))
 	};
 };
 
-export const guidesDurationFromList = (
-	guidesList: TGuidesList = []
-): number | null => {
-	const duration = guidesList[0]?.[ENUM_FORM_GUIDES.DURATION_DAYS];
-	return duration != null && Number.isFinite(duration) ? duration : null;
-};
-
-export const mapGuidesDurationToBackend = guidesDurationFromList;
-
 export const mapGuidesTypTiersToBackend = (
-	guidesList: TGuidesList = [],
-	currentTiers?: TGuideTypeTierBackend[]
-): TGuideTypeTierBackend[] | undefined => {
-	const tiers = guidesList.flatMap((row, index) => {
+	typTiers: TGuideTypTiers = []
+): TGuideTypeTierBackend[] =>
+	typTiers.flatMap((row) => {
 		const typ = guideTypeMapper.to(row[ENUM_FORM_GUIDES.GUIDE_TYPE]);
-		if (!typ) return [];
-		return [
-			{
-				up_to_pax:
-					currentTiers?.[index]?.up_to_pax ?? DEFAULT_GUIDE_UP_TO_PAX,
-				typ
-			}
-		];
+		const upToPax = row[ENUM_FORM_GUIDES.UP_TO_PAX];
+		if (!typ || upToPax == null) return [];
+		return [{ typ, up_to_pax: upToPax }];
 	});
-	return tiers.length ? tiers : undefined;
-};
-
-export type { TGuideByLanguageCategoryBackend };

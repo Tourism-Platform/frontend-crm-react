@@ -45,16 +45,6 @@ export const INVOICE_PATHS = {
 				response: InvoiceDetailResponse;
 			}
 		}) as const,
-	recordInvoicePayment: (invoiceId: string) =>
-		({
-			url: `/invoice/${invoiceId}/payment`,
-			method: "POST",
-			_types: {} as {
-				body: InvoicePaymentCreate;
-				query: void;
-				response: InvoiceDetailResponse;
-			}
-		}) as const,
 	getInvoicePdf: (invoiceId: string) =>
 		({
 			url: `/invoice/${invoiceId}/pdf`,
@@ -71,6 +61,16 @@ export const INVOICE_PATHS = {
 			method: "POST",
 			_types: {} as {
 				body: BodyUploadInvoicePdfInvoiceInvoiceIdPdfPost;
+				query: void;
+				response: InvoiceDetailResponse;
+			}
+		}) as const,
+	recordInvoicePayment: (invoiceId: string) =>
+		({
+			url: `/invoice/${invoiceId}/payment`,
+			method: "POST",
+			_types: {} as {
+				body: InvoicePaymentCreate;
 				query: void;
 				response: InvoiceDetailResponse;
 			}

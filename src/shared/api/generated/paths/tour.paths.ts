@@ -76,9 +76,49 @@ export const TOUR_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
+	validateTour: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/validate`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: PublishBlockSchema[];
+			}
+		}) as const,
+	publishTour: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/publish`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
+		}) as const,
 	archiveTour: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/archive`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
+		}) as const,
+	unarchiveTour: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/unarchive`,
+			method: "POST",
+			_types: {} as {
+				body: void;
+				query: void;
+				response: TourMetaResponse;
+			}
+		}) as const,
+	refreshTourProjection: (tourId: string) =>
+		({
+			url: `/tour/${tourId}/refresh`,
 			method: "POST",
 			_types: {} as {
 				body: void;
@@ -102,26 +142,6 @@ export const TOUR_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
-	publishTour: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/publish`,
-			method: "POST",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: TourMetaResponse;
-			}
-		}) as const,
-	refreshTourProjection: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/refresh`,
-			method: "POST",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: TourMetaResponse;
-			}
-		}) as const,
 	getTourStatistics: (tourId: string) =>
 		({
 			url: `/tour/${tourId}/statistics`,
@@ -130,26 +150,6 @@ export const TOUR_PATHS = {
 				body: void;
 				query: void;
 				response: TourStatisticsResponse;
-			}
-		}) as const,
-	unarchiveTour: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/unarchive`,
-			method: "POST",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: TourMetaResponse;
-			}
-		}) as const,
-	validateTour: (tourId: string) =>
-		({
-			url: `/tour/${tourId}/validate`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: void;
-				response: PublishBlockSchema[];
 			}
 		}) as const
 } as const;

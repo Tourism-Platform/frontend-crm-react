@@ -601,6 +601,7 @@ export interface ActivityDetailsOutput {
  * pictures. A pool of venues publishes the one the card is built on.
  */
 export interface ActivityDetailsPubSchemaOutput {
+	start_time: TimeSchema | null;
 	end_time: TimeSchema | null;
 	/** Spec */
 	spec:
@@ -643,7 +644,6 @@ export interface ActivityDetailsPubSchemaOutput {
 				  } & GeneralActivityPubSchemaOutput)
 		  )
 		| null;
-	start_time: TimeSchema | null;
 }
 
 /**
@@ -672,17 +672,15 @@ export interface ActivityDetailsWrite {
 /** ActivityEvent */
 export interface ActivityEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** A visit as a create takes it: the tour's plan and the venues that host it. */
-	details: ActivityDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -690,42 +688,56 @@ export interface ActivityEvent {
 	 * @default "activity"
 	 */
 	typ: "activity";
+	/** A visit as a create takes it: the tour's plan and the venues that host it. */
+	details: ActivityDetailsWrite;
 }
 
 /** ActivityEventPubRead */
 export interface ActivityEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
-	details: ActivityDetailsPubSchemaOutput | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
 	/**
 	 * Typ
 	 * @default "activity"
 	 */
 	typ: "activity";
+	details: ActivityDetailsPubSchemaOutput | null;
 }
 
 /** ActivityEventTypeRead */
 export interface ActivityEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ: "activity";
 	/** A visit as it reads. */
 	details: ActivityDetailsOutput;
 	/**
@@ -734,39 +746,20 @@ export interface ActivityEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ: "activity";
 }
 
 /** ActivityEventUpdate */
 export interface ActivityEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of a visit an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: ActivityDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -774,6 +767,13 @@ export interface ActivityEventUpdate {
 	 * @default "activity"
 	 */
 	typ: "activity";
+	/**
+	 * The half of a visit an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: ActivityDetailsUpdate;
 }
 
 /**
@@ -786,6 +786,8 @@ export interface ActivityInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * What the venue sells.
@@ -827,8 +829,6 @@ export interface ActivityInlineSupplyNew {
 		| ({
 				sub_typ: "wellness";
 		  } & GeneralVenueInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -847,6 +847,14 @@ export interface ActivityMemberOutput {
 	 * @default false
 	 */
 	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & ActivityProductSupplyOutput);
 	/**
 	 * Spec
 	 * What the venue sells.
@@ -888,14 +896,6 @@ export interface ActivityMemberOutput {
 		| ({
 				sub_typ: "wellness";
 		  } & GeneralVenueOutput);
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & ActivityProductSupplyOutput);
 }
 
 /**
@@ -928,6 +928,8 @@ export interface ActivityMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * What the venue sells.
@@ -969,8 +971,6 @@ export interface ActivityMemberUpdate {
 		| ({
 				sub_typ: "wellness";
 		  } & GeneralVenueInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "activity";
 }
@@ -998,13 +998,13 @@ export interface ActivityMemberWrite {
  * A price this tour negotiated with a venue, replacing the offering's own.
  */
 export interface ActivityOverrideInput {
-	/** The offerings this tour repriced, each named once. */
-	rates: OfferingChargesOverrideInput;
 	/**
 	 * Typ
 	 * @default "activity"
 	 */
 	typ: "activity";
+	/** The offerings this tour repriced, each named once. */
+	rates: OfferingChargesOverrideInput;
 }
 
 /**
@@ -1012,17 +1012,22 @@ export interface ActivityOverrideInput {
  * A price this tour negotiated with a venue, replacing the offering's own.
  */
 export interface ActivityOverrideOutput {
-	/** The offerings this tour repriced, each named once. */
-	rates: OfferingChargesOverrideOutput;
 	/**
 	 * Typ
 	 * @default "activity"
 	 */
 	typ: "activity";
+	/** The offerings this tour repriced, each named once. */
+	rates: OfferingChargesOverrideOutput;
 }
 
 /** ActivityProductCreate */
 export interface ActivityProductCreate {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ: "activity";
 	/**
 	 * A venue as a create takes it: its facts, what it sells and the offerings
 	 * it opens with. An offering names no arm of its own — a venue prices one way
@@ -1032,11 +1037,6 @@ export interface ActivityProductCreate {
 	 * offering to a venue that already stands.
 	 */
 	details: ActivityProductCreateDetails;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ: "activity";
 }
 
 /**
@@ -1049,6 +1049,12 @@ export interface ActivityProductCreate {
  * offering to a venue that already stands.
  */
 export interface ActivityProductCreateDetails {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	sub_typ: ActivityType;
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/**
@@ -1058,12 +1064,6 @@ export interface ActivityProductCreateDetails {
 	name: string;
 	/** Offerings */
 	offerings?: ActivityVariantWrite[];
-	sub_typ: ActivityType;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ?: "activity";
 }
 
 /**
@@ -1073,6 +1073,12 @@ export interface ActivityProductCreateDetails {
  * so its name is required where a spec's is not.
  */
 export interface ActivityProductDetails {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	sub_typ: ActivityType;
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/**
@@ -1080,12 +1086,6 @@ export interface ActivityProductDetails {
 	 * @maxLength 255
 	 */
 	name: string;
-	sub_typ: ActivityType;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ?: "activity";
 }
 
 /** ActivityProductRead */
@@ -1095,12 +1095,24 @@ export interface ActivityProductReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Paths */
-	image_paths: string[];
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/** Name */
 	name: string;
+	/** Image Paths */
+	image_paths: string[];
 	/** Primary Image Path */
 	primary_image_path: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ: "activity";
 	/**
 	 * Spec
 	 * What the venue sells.
@@ -1142,18 +1154,6 @@ export interface ActivityProductReadOutput {
 		| ({
 				sub_typ: "wellness";
 		  } & GeneralVenueOutput);
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name: string | null;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ: "activity";
 }
 
 /**
@@ -1161,12 +1161,18 @@ export interface ActivityProductReadOutput {
  * A visit to a supplier's venue.
  */
 export interface ActivityProductSupplyOutput {
-	override: ActivityOverrideOutput | null;
+	/**
+	 * Source
+	 * @default "product"
+	 */
+	source: "product";
 	/**
 	 * Product Id
 	 * @format uuid
 	 */
 	product_id: string;
+	/** Who a linked product is bought from, resolved on read. */
+	supplier: SupplierRef;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -1178,23 +1184,17 @@ export interface ActivityProductSupplyOutput {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
-	/**
-	 * Source
-	 * @default "product"
-	 */
-	source: "product";
-	/** Who a linked product is bought from, resolved on read. */
-	supplier: SupplierRef;
+	override: ActivityOverrideOutput | null;
 }
 
 /** ActivityProductUpdate */
 export interface ActivityProductUpdate {
-	details?: ActivityProductDetails | null;
 	/**
 	 * Typ
 	 * @default "activity"
 	 */
 	typ: "activity";
+	details?: ActivityProductDetails | null;
 }
 
 /** ActivitySingleEvent */
@@ -1206,40 +1206,40 @@ export interface ActivitySingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/** A visit as a create takes it: the tour's plan and the venues that host it. */
-	details: ActivityDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "activity"
 	 */
 	typ: "activity";
+	/** A visit as a create takes it: the tour's plan and the venues that host it. */
+	details: ActivityDetailsWrite;
 }
 
 /** ActivitySingleEventRead */
@@ -1251,10 +1251,38 @@ export interface ActivitySingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ: "activity";
 	/** A visit as it reads. */
 	details: ActivityDetailsOutput;
 	/**
@@ -1263,34 +1291,6 @@ export interface ActivitySingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ: "activity";
 }
 
 /**
@@ -1301,6 +1301,16 @@ export interface ActivitySingleEventReadOutput {
  * venue.
  */
 export interface ActivityVariantWrite {
+	/**
+	 * Typ
+	 * @default "activity"
+	 */
+	typ?: "activity";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -1314,35 +1324,25 @@ export interface ActivityVariantWrite {
 		  } & PerPersonChargeInput);
 	/** Menu */
 	menu?: MenuItem[];
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/**
-	 * Typ
-	 * @default "activity"
-	 */
-	typ?: "activity";
 }
 
 /** AdminUserView */
 export interface AdminUserView {
-	/** Agency Id */
-	agency_id: string | null;
-	/** Email */
-	email: string;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Operator Id */
-	operator_id: string | null;
-	/** Picture */
-	picture: string | null;
+	/** Email */
+	email: string;
 	/** Role */
 	role: string;
+	/** Picture */
+	picture: string | null;
+	/** Operator Id */
+	operator_id: string | null;
+	/** Agency Id */
+	agency_id: string | null;
 }
 
 /** AgencyDiscountUpdate */
@@ -1363,91 +1363,91 @@ export interface AgencyDiscountUpdate {
 /** AgencyFilesModel */
 export interface AgencyFilesModel {
 	/**
-	 * Agency Id
-	 * @format uuid
-	 */
-	agency_id: string;
-	/** File Name */
-	file_name: string;
-	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agency_id: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** AgencyInfoModel */
 export interface AgencyInfoModel {
-	/** Address Line */
-	address_line: string | null;
-	/**
-	 * Agency Id
-	 * @format uuid
-	 */
-	agency_id: string;
-	/** Business Name */
-	business_name: string | null;
-	/** City */
-	city: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Person */
-	contact_person: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
-	/** Contact Position */
-	contact_position: string | null;
-	/** Country */
-	country: string | null;
-	/** Description */
-	description: string | null;
-	/** Director Name */
-	director_name: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Legal Name */
-	legal_name: string | null;
+	/**
+	 * Agency Id
+	 * @format uuid
+	 */
+	agency_id: string;
 	/** Logo Path */
 	logo_path: string | null;
-	/** Tax Id */
-	tax_id: string | null;
+	/** Description */
+	description: string | null;
+	/** Business Name */
+	business_name: string | null;
 	/** Website Url */
 	website_url: string | null;
+	/** Legal Name */
+	legal_name: string | null;
+	/** Director Name */
+	director_name: string | null;
+	/** Tax Id */
+	tax_id: string | null;
+	/** Contact Person */
+	contact_person: string | null;
+	/** Contact Position */
+	contact_position: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
+	/** Address Line */
+	address_line: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
 }
 
 /** AgencyInfoUpdate */
 export interface AgencyInfoUpdate {
-	/** Address Line */
-	address_line?: string | null;
-	/** Business Name */
-	business_name?: string | null;
-	/** City */
-	city?: string | null;
-	/** Contact Email */
-	contact_email?: string | null;
-	/** Contact Person */
-	contact_person?: string | null;
-	/** Contact Phone */
-	contact_phone?: string | null;
-	/** Contact Position */
-	contact_position?: string | null;
-	/** Country */
-	country?: string | null;
 	/** Description */
 	description?: string | null;
-	/** Director Name */
-	director_name?: string | null;
-	/** Legal Name */
-	legal_name?: string | null;
-	/** Tax Id */
-	tax_id?: string | null;
+	/** Business Name */
+	business_name?: string | null;
 	/** Website Url */
 	website_url?: string | null;
+	/** Legal Name */
+	legal_name?: string | null;
+	/** Director Name */
+	director_name?: string | null;
+	/** Tax Id */
+	tax_id?: string | null;
+	/** Contact Person */
+	contact_person?: string | null;
+	/** Contact Position */
+	contact_position?: string | null;
+	/** Contact Email */
+	contact_email?: string | null;
+	/** Contact Phone */
+	contact_phone?: string | null;
+	/** Address Line */
+	address_line?: string | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
 }
 
 /**
@@ -1467,50 +1467,50 @@ export interface AgencyInvite {
 	 * @maxLength 255
 	 */
 	email: string;
-	info?: AgencyInfoUpdate | null;
-	/** Name */
-	name?: string | null;
 	/** Password */
 	password?: string | null;
+	/** Name */
+	name?: string | null;
+	info?: AgencyInfoUpdate | null;
 }
 
 /** AgencyListItem */
 export interface AgencyListItem {
-	/** Business Name */
-	business_name: string | null;
-	/** City */
-	city: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Person */
-	contact_person: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
-	/** Country */
-	country: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Legal Name */
-	legal_name: string | null;
-	/** Logo Url */
-	logo_url: string | null;
 	/** Name */
 	name: string;
+	/** Business Name */
+	business_name: string | null;
+	/** Legal Name */
+	legal_name: string | null;
+	/** Contact Person */
+	contact_person: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
 	/** Tax Id */
 	tax_id: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
 	/** Website Url */
 	website_url: string | null;
+	/** Logo Url */
+	logo_url: string | null;
 }
 
 /** AgencyListResponse */
 export interface AgencyListResponse {
-	/** Data */
-	data: AgencyListItem[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: AgencyListItem[];
 }
 
 /** AgencyModel */
@@ -1562,45 +1562,45 @@ export interface AttachBody {
 
 /** AuditLogListResponse */
 export interface AuditLogListResponse {
-	/** Data */
-	data: AuditLogRead[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: AuditLogRead[];
 }
 
 /** AuditLogRead */
 export interface AuditLogRead {
-	/** Agency Id */
-	agency_id: string | null;
-	/**
-	 * Created At
-	 * @format date-time
-	 */
-	created_at: string;
-	/** Display Name */
-	display_name: string | null;
-	/** Email */
-	email: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Method */
-	method: string;
-	/** Operator Id */
-	operator_id: string | null;
-	/** Path */
-	path: string;
-	permission: Permissions | null;
-	role: UserRoles;
-	/** Status Code */
-	status_code: number;
 	/**
 	 * User Id
 	 * @format uuid
 	 */
 	user_id: string;
+	/** Email */
+	email: string | null;
+	/** Display Name */
+	display_name: string | null;
+	role: UserRoles;
+	/** Operator Id */
+	operator_id: string | null;
+	/** Agency Id */
+	agency_id: string | null;
+	/** Method */
+	method: string;
+	/** Path */
+	path: string;
+	permission: Permissions | null;
+	/** Status Code */
+	status_code: number;
+	/**
+	 * Created At
+	 * @format date-time
+	 */
+	created_at: string;
 }
 
 /** AuthUserIn */
@@ -1620,29 +1620,29 @@ export interface AuthUserIn {
 
 /** AuthUserProfileModel */
 export interface AuthUserProfileModel {
-	default_currency: Currency;
-	/** First Name */
-	first_name: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Last Name */
-	last_name: string | null;
-	/** Location */
-	location: string | null;
-	/** Phone Number */
-	phone_number: string | null;
-	/** Profile Picture Path */
-	profile_picture_path: string | null;
-	/** Title */
-	title: string | null;
 	/**
 	 * User Id
 	 * @format uuid
 	 */
 	user_id: string;
+	/** First Name */
+	first_name: string | null;
+	/** Last Name */
+	last_name: string | null;
+	/** Title */
+	title: string | null;
+	/** Phone Number */
+	phone_number: string | null;
+	/** Location */
+	location: string | null;
+	/** Profile Picture Path */
+	profile_picture_path: string | null;
+	default_currency: Currency;
 }
 
 /** AvailabilityApply */
@@ -1710,23 +1710,23 @@ export interface BodyAddLogoSupplierSupplierIdLogoPost {
 /** Body_create_payment_booking_payment_post */
 export interface BodyCreatePaymentBookingPaymentPost {
 	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	booking_id: string;
+	/**
 	 * Amount Uzs
 	 * @exclusiveMin 0
 	 */
 	amount_uzs: number;
 	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	booking_id: string;
-	currency?: Currency | null;
-	/** Exchange Rate */
-	exchange_rate?: number | null;
-	/**
 	 * File
 	 * @format binary
 	 */
 	file: File;
+	currency?: Currency | null;
+	/** Exchange Rate */
+	exchange_rate?: number | null;
 	/** Note */
 	note?: string | null;
 }
@@ -1838,29 +1838,34 @@ export interface BookingCancel {
 
 /** BookingCreate */
 export interface BookingCreate {
-	/** Comment */
-	comment?: string | null;
-	/**
-	 * Date
-	 * @format date
-	 */
-	date: string;
-	/** @default "en" */
-	lang?: LanguageCode;
-	/**
-	 * Pax
-	 * @exclusiveMin 0
-	 */
-	pax: number;
 	/**
 	 * Tour Option Id
 	 * @format uuid
 	 */
 	tour_option_id: string;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/**
+	 * Pax
+	 * @exclusiveMin 0
+	 */
+	pax: number;
+	/** Comment */
+	comment?: string | null;
+	/** @default "en" */
+	lang?: LanguageCode;
 }
 
 /** BookingEventAvailabilityResponse */
 export interface BookingEventAvailabilityResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
 	/**
 	 * Booking Id
 	 * @format uuid
@@ -1871,17 +1876,12 @@ export interface BookingEventAvailabilityResponse {
 	 * @format uuid
 	 */
 	event_id: string;
-	/** Event Name */
-	event_name: string | null;
-	event_typ: EventTypes | null;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
 	/** Option Index */
 	option_index: number;
 	status: AvailabilityStatus;
+	/** Event Name */
+	event_name: string | null;
+	event_typ: EventTypes | null;
 }
 
 /**
@@ -1890,14 +1890,14 @@ export interface BookingEventAvailabilityResponse {
  * the board only needs to show a paperclip and whether it is complete.
  */
 export interface BookingFilesPresent {
-	/** Client Payment Proofs */
-	client_payment_proofs: number;
+	/** Voucher */
+	voucher: boolean;
 	/** Invoice Pdf */
 	invoice_pdf: boolean;
 	/** Supplier Receipts */
 	supplier_receipts: number;
-	/** Voucher */
-	voucher: boolean;
+	/** Client Payment Proofs */
+	client_payment_proofs: number;
 }
 
 /**
@@ -1922,33 +1922,18 @@ export interface BookingFilesPresent {
  */
 export interface BookingFinancialsResponse {
 	/**
-	 * Accrual Profit
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	accrual_profit: string;
-	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	booking_id: string;
-	/**
-	 * Cost Accrued
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	cost_accrued: string;
-	/**
-	 * Cost Settled
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	cost_settled: string;
-	currency: Currency;
 	/** Order Number */
 	order_number: string;
+	currency: Currency;
 	/**
-	 * Payable
+	 * Planned Revenue
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	payable: string;
+	planned_revenue: string;
 	/**
 	 * Planned Cost
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -1960,16 +1945,6 @@ export interface BookingFinancialsResponse {
 	 */
 	planned_profit: string;
 	/**
-	 * Planned Revenue
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	planned_revenue: string;
-	/**
-	 * Receivable
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	receivable: string;
-	/**
 	 * Revenue Accrued
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
@@ -1979,6 +1954,31 @@ export interface BookingFinancialsResponse {
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	revenue_settled: string;
+	/**
+	 * Receivable
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	receivable: string;
+	/**
+	 * Cost Accrued
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	cost_accrued: string;
+	/**
+	 * Cost Settled
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	cost_settled: string;
+	/**
+	 * Payable
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	payable: string;
+	/**
+	 * Accrual Profit
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	accrual_profit: string;
 	/**
 	 * Settled Profit
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -1993,6 +1993,8 @@ export interface BookingItineraryResponse {
 	 * @format uuid
 	 */
 	booking_id: string;
+	/** Order Number */
+	order_number: string;
 	display_lang: LanguageCode;
 	/** Events */
 	events: (
@@ -2021,8 +2023,6 @@ export interface BookingItineraryResponse {
 		  )
 		| MultiEventPubOutput
 	)[];
-	/** Order Number */
-	order_number: string;
 }
 
 /**
@@ -2033,6 +2033,16 @@ export interface BookingItineraryResponse {
  * snapshot at creation.
  */
 export interface BookingOrderClientDetail {
+	order: BookingOrderResponse;
+	tour: OrderTourInfo;
+	/**
+	 * Who to contact about this booking — the operator running the tour. Joined
+	 * into the listing rather than fetched per row so an agency or tourist can reach
+	 * the right person without a follow-up call per booking. Every field but ``id``
+	 * and ``name`` lives on ``operator_info``, which an operator may not have filled
+	 * in yet.
+	 */
+	operator: OrderOperatorInfo;
 	/**
 	 * Discount
 	 * The markup calculation strategy.
@@ -2047,16 +2057,6 @@ export interface BookingOrderClientDetail {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Who to contact about this booking — the operator running the tour. Joined
-	 * into the listing rather than fetched per row so an agency or tourist can reach
-	 * the right person without a follow-up call per booking. Every field but ``id``
-	 * and ``name`` lives on ``operator_info``, which an operator may not have filled
-	 * in yet.
-	 */
-	operator: OrderOperatorInfo;
-	order: BookingOrderResponse;
-	tour: OrderTourInfo;
 }
 
 /**
@@ -2065,32 +2065,43 @@ export interface BookingOrderClientDetail {
  * ``agency`` / ``user`` is set, mirroring the booking's owner column.
  */
 export interface BookingOrderDetail {
-	agency: OrderAgencyInfo | null;
 	order: BookingOrderResponse;
 	tour: OrderTourInfo;
+	agency: OrderAgencyInfo | null;
 	user: OrderUserInfo | null;
 }
 
 /** BookingOrderListResponse */
 export interface BookingOrderListResponse {
-	/** Data */
-	data: BookingOrderRow[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: BookingOrderRow[];
 }
 
 /** BookingOrderResponse */
 export interface BookingOrderResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
 	/** Agency Id */
 	agency_id: string | null;
-	/** Agreed Price */
-	agreed_price: string | null;
-	/** Cancellation Reason */
-	cancellation_reason: string | null;
-	/** Cancelled At */
-	cancelled_at: string | null;
-	/** Comment */
-	comment: string | null;
+	/** User Id */
+	user_id: string | null;
+	/**
+	 * Operator Id
+	 * @format uuid
+	 */
+	operator_id: string;
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/** Snapshot Id */
+	snapshot_id: string | null;
 	/**
 	 * Date
 	 * @format date
@@ -2101,60 +2112,58 @@ export interface BookingOrderResponse {
 	 * @format date
 	 */
 	end_date: string;
-	/** Fx Rate Applied */
-	fx_rate_applied: string | null;
-	/** Fx Rate Id */
-	fx_rate_id: string | null;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/**
-	 * Operator Id
-	 * @format uuid
-	 */
-	operator_id: string;
-	/** Order Number */
-	order_number: string;
+	/** Pax */
+	pax: number;
+	status: BookingStatus;
 	/**
 	 * Paid Amount
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	paid_amount: string;
 	paid_currency: Currency;
-	/** Pax */
-	pax: number;
-	/** Snapshot Id */
-	snapshot_id: string | null;
-	status: BookingStatus;
 	/**
 	 * Tour Amount
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	tour_amount: string;
 	tour_currency: Currency;
-	/**
-	 * Tour Option Id
-	 * @format uuid
-	 */
-	tour_option_id: string;
-	/** User Id */
-	user_id: string | null;
+	/** Fx Rate Id */
+	fx_rate_id: string | null;
+	/** Fx Rate Applied */
+	fx_rate_applied: string | null;
+	/** Agreed Price */
+	agreed_price: string | null;
+	/** Cancelled At */
+	cancelled_at: string | null;
+	/** Cancellation Reason */
+	cancellation_reason: string | null;
+	/** Comment */
+	comment: string | null;
 	/** Voucher Path */
 	voucher_path: string | null;
+	/** Order Number */
+	order_number: string;
 }
 
 /** BookingOrderRow */
 export interface BookingOrderRow {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Order Number
+	 * @default ""
+	 */
+	order_number: string;
 	/** Client Name */
 	client_name: string;
 	client_type: BookingClientType;
-	/**
-	 * Created At
-	 * @format date-time
-	 */
-	created_at: string;
+	/** Tour Name */
+	tour_name: string | null;
+	tour_type: TourType;
+	status: BookingStatus;
 	/**
 	 * Date
 	 * @format date
@@ -2166,10 +2175,12 @@ export interface BookingOrderRow {
 	 */
 	end_date: string;
 	/**
-	 * Id
-	 * @format uuid
+	 * Created At
+	 * @format date-time
 	 */
-	id: string;
+	created_at: string;
+	/** Pax */
+	pax: number;
 	/**
 	 * Who to contact about this booking — the operator running the tour. Joined
 	 * into the listing rather than fetched per row so an agency or tourist can reach
@@ -2178,68 +2189,57 @@ export interface BookingOrderRow {
 	 * in yet.
 	 */
 	operator: OrderOperatorInfo;
-	/**
-	 * Order Number
-	 * @default ""
-	 */
-	order_number: string;
-	/** Pax */
-	pax: number;
-	status: BookingStatus;
-	/** Tour Name */
-	tour_name: string | null;
-	tour_type: TourType;
 }
 
 /** BookingPaxFilesModel */
 export interface BookingPaxFilesModel {
 	/**
-	 * Booking Pax Id
-	 * @format uuid
-	 */
-	booking_pax_id: string;
-	/** File Name */
-	file_name: string;
-	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/**
+	 * Booking Pax Id
+	 * @format uuid
+	 */
+	booking_pax_id: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** BookingPaxModel */
 export interface BookingPaxModel {
 	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	booking_id: string;
-	/** Comment */
-	comment: string | null;
+	/** Full Name */
+	full_name: string;
+	gender: Gender;
+	/** Nationality */
+	nationality: string;
 	/**
 	 * Date Of Birth
 	 * @format date
 	 */
 	date_of_birth: string;
+	/** Passport Number */
+	passport_number: string;
 	/**
 	 * Expired Date
 	 * @format date
 	 */
 	expired_date: string;
-	/** Full Name */
-	full_name: string;
-	gender: Gender;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Nationality */
-	nationality: string;
-	/** Passport Number */
-	passport_number: string;
+	/** Comment */
+	comment: string | null;
 }
 
 /**
@@ -2255,16 +2255,16 @@ export interface BookingPaxPriceResponse {
 	 * @format uuid
 	 */
 	booking_id: string;
-	currency: Currency;
-	/** Display Currencies */
-	display_currencies: Currency[];
 	/** Pax */
 	pax: number;
+	currency: Currency;
 	/**
 	 * Total Min Price
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	total_min_price: string;
+	/** Display Currencies */
+	display_currencies: Currency[];
 }
 
 /**
@@ -2276,36 +2276,34 @@ export interface BookingPaxPriceResponse {
  * Check: GET /booking/order/quote, POST /booking/order
  */
 export interface BookingQuoteResponse {
-	currency: Currency;
-	/**
-	 * Date
-	 * @format date
-	 */
-	date: string;
-	/** Display Currencies */
-	display_currencies: Currency[];
-	lang: LanguageCode;
-	/** Pax */
-	pax: number;
-	/**
-	 * Total Min Price
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	total_min_price: string;
 	/**
 	 * Tour Option Id
 	 * @format uuid
 	 */
 	tour_option_id: string;
+	/**
+	 * Date
+	 * @format date
+	 */
+	date: string;
+	/** Pax */
+	pax: number;
+	lang: LanguageCode;
+	currency: Currency;
+	/**
+	 * Total Min Price
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	total_min_price: string;
+	/** Display Currencies */
+	display_currencies: Currency[];
 }
 
 /** BookingReconciliationListResponse */
 export interface BookingReconciliationListResponse {
-	currency: Currency;
-	/** Data */
-	data: BookingReconciliationRowOutput[];
 	/** Total Count */
 	total_count: number;
+	currency: Currency;
 	/**
 	 * Grand totals across the *whole filtered set*, not just the page.
 	 *
@@ -2314,6 +2312,8 @@ export interface BookingReconciliationListResponse {
 	 * silently covered only the current page would be worse than no number.
 	 */
 	totals: ReconciliationTotalsOutput;
+	/** Data */
+	data: BookingReconciliationRowOutput[];
 }
 
 /**
@@ -2331,35 +2331,14 @@ export interface BookingReconciliationListResponse {
  */
 export interface BookingReconciliationRowOutput {
 	/**
-	 * Accrual Profit
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	accrual_profit: string;
-	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	booking_id: string;
-	/** Client Name */
-	client_name: string;
-	client_payments: ClientPaymentTally;
-	client_type: BookingClientType;
-	/**
-	 * Cost Accrued
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	cost_accrued: string;
-	/**
-	 * Cost Settled
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	cost_settled: string;
-	/**
-	 * Created At
-	 * @format date-time
-	 */
-	created_at: string;
-	currency: Currency;
+	/** Order Number */
+	order_number: string;
+	status: BookingStatus;
+	status_label: BookingStatusLabel;
 	/**
 	 * Date
 	 * @format date
@@ -2371,23 +2350,24 @@ export interface BookingReconciliationRowOutput {
 	 */
 	end_date: string;
 	/**
-	 * Which documents this order already has, without exposing storage keys —
-	 * the board only needs to show a paperclip and whether it is complete.
+	 * Created At
+	 * @format date-time
 	 */
-	files: BookingFilesPresent;
-	/** Invoice Id */
-	invoice_id: string | null;
-	/** Invoice Number */
-	invoice_number: string | null;
-	/** Order Number */
-	order_number: string;
+	created_at: string;
 	/** Pax */
 	pax: number;
+	/** Tour Name */
+	tour_name: string | null;
+	tour_type: TourType;
+	/** Client Name */
+	client_name: string;
+	client_type: BookingClientType;
+	currency: Currency;
 	/**
-	 * Payable
+	 * Planned Revenue
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	payable: string;
+	planned_revenue: string;
 	/**
 	 * Planned Cost
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -2399,16 +2379,6 @@ export interface BookingReconciliationRowOutput {
 	 */
 	planned_profit: string;
 	/**
-	 * Planned Revenue
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	planned_revenue: string;
-	/**
-	 * Receivable
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	receivable: string;
-	/**
 	 * Revenue Accrued
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
@@ -2419,36 +2389,66 @@ export interface BookingReconciliationRowOutput {
 	 */
 	revenue_settled: string;
 	/**
+	 * Receivable
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	receivable: string;
+	/**
+	 * Cost Accrued
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	cost_accrued: string;
+	/**
+	 * Cost Settled
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	cost_settled: string;
+	/**
+	 * Payable
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	payable: string;
+	/**
+	 * Accrual Profit
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	accrual_profit: string;
+	/**
 	 * Settled Profit
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	settled_profit: string;
-	status: BookingStatus;
-	status_label: BookingStatusLabel;
+	/**
+	 * Variance
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	variance: string;
+	/** Invoice Id */
+	invoice_id: string | null;
+	/** Invoice Number */
+	invoice_number: string | null;
+	/**
+	 * Which documents this order already has, without exposing storage keys —
+	 * the board only needs to show a paperclip and whether it is complete.
+	 */
+	files: BookingFilesPresent;
 	/**
 	 * Counts behind the payable figure, so a row explains itself: how many
 	 * event lines exist, how many are settled, and how many are still filed under
 	 * no supplier at all.
 	 */
 	supplier_lines: SupplierLineTally;
-	/** Tour Name */
-	tour_name: string | null;
-	tour_type: TourType;
-	/**
-	 * Variance
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	variance: string;
+	client_payments: ClientPaymentTally;
 }
 
 /** BookingUpdate */
 export interface BookingUpdate {
-	/** Comment */
-	comment?: string | null;
 	/** Date */
 	date?: string | null;
 	/** Pax */
 	pax?: number | null;
+	/** Comment */
+	comment?: string | null;
 }
 
 /**
@@ -2469,69 +2469,18 @@ export interface BookingUpdate {
  */
 export interface BreakdownLineSchemaOutput {
 	/**
-	 * Monetary value pair.
-	 *
-	 * Conversion happens inside the schema but takes an explicit ``FxContext``
-	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
-	 * ``return self``; cross-currency requires a matching entry in
-	 * ``fx.rates`` and applies ``val * rate``.
-	 *
-	 * Arithmetic operators stay same-currency-only on purpose: event calc
-	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
-	 * so same-currency is always satisfied and the guards catch anything that
-	 * slips through.
-	 */
-	cost: MonetaryValueSchema;
-	/** Duration */
-	duration: number | null;
-	/**
-	 * Monetary value pair.
-	 *
-	 * Conversion happens inside the schema but takes an explicit ``FxContext``
-	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
-	 * ``return self``; cross-currency requires a matching entry in
-	 * ``fx.rates`` and applies ``val * rate``.
-	 *
-	 * Arithmetic operators stay same-currency-only on purpose: event calc
-	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
-	 * so same-currency is always satisfied and the guards catch anything that
-	 * slips through.
-	 */
-	fee: MonetaryValueSchema;
-	/** Fx Rate */
-	fx_rate: string | null;
-	/**
 	 * What one line of an event's bill is: the priced unit itself, a named
 	 * extra cost riding inside the charge, or a supplier surcharge on top of it.
 	 */
 	kind: BreakdownLineKind;
 	/** Label */
 	label: string | null;
-	/**
-	 * Monetary value pair.
-	 *
-	 * Conversion happens inside the schema but takes an explicit ``FxContext``
-	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
-	 * ``return self``; cross-currency requires a matching entry in
-	 * ``fx.rates`` and applies ``val * rate``.
-	 *
-	 * Arithmetic operators stay same-currency-only on purpose: event calc
-	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
-	 * so same-currency is always satisfied and the guards catch anything that
-	 * slips through.
-	 */
-	markup: MonetaryValueSchema;
-	/** Pax */
-	pax: number | null;
-	pricing: ExpenseType | null;
-	/**
-	 * Quantity
-	 * @default 1
-	 */
-	quantity: number;
-	rate: ExpenseType | null;
+	/** Unit Id */
+	unit_id: string | null;
 	/** Supply Id */
 	supply_id: string | null;
+	pricing: ExpenseType | null;
+	rate: ExpenseType | null;
 	/**
 	 * Monetary value pair.
 	 *
@@ -2546,8 +2495,59 @@ export interface BreakdownLineSchemaOutput {
 	 * slips through.
 	 */
 	unit_cost: MonetaryValueSchema;
-	/** Unit Id */
-	unit_id: string | null;
+	/**
+	 * Quantity
+	 * @default 1
+	 */
+	quantity: number;
+	/** Pax */
+	pax: number | null;
+	/** Duration */
+	duration: number | null;
+	/** Fx Rate */
+	fx_rate: string | null;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	cost: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	fee: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	markup: MonetaryValueSchema;
 }
 
 /**
@@ -2556,10 +2556,10 @@ export interface BreakdownLineSchemaOutput {
  * and what the dearest one does.
  */
 export interface BreakdownSpreadSchemaOutput {
-	/** Max */
-	max: BreakdownLineSchemaOutput[];
 	/** Min */
 	min: BreakdownLineSchemaOutput[];
+	/** Max */
+	max: BreakdownLineSchemaOutput[];
 }
 
 /**
@@ -2623,20 +2623,15 @@ export interface BusDetailsWrite {
 /** BusEvent */
 export interface BusEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A coach run as a create takes it: the tour's plan and the coach suppliers that
-	 * drive it.
-	 */
-	details: BusDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -2644,42 +2639,59 @@ export interface BusEvent {
 	 * @default "bus"
 	 */
 	typ: "bus";
+	/**
+	 * A coach run as a create takes it: the tour's plan and the coach suppliers that
+	 * drive it.
+	 */
+	details: BusDetailsWrite;
 }
 
 /** BusEventPubRead */
 export interface BusEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
-	details: BusDetailPubSchemaOutput | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
 	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ: "bus";
+	details: BusDetailPubSchemaOutput | null;
 }
 
 /** BusEventTypeRead */
 export interface BusEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
 	/** A coach run as it reads. */
 	details: BusDetailsOutput;
 	/**
@@ -2688,39 +2700,20 @@ export interface BusEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ: "bus";
 }
 
 /** BusEventUpdate */
 export interface BusEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of a coach run an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: BusDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -2728,6 +2721,13 @@ export interface BusEventUpdate {
 	 * @default "bus"
 	 */
 	typ: "bus";
+	/**
+	 * The half of a coach run an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: BusDetailsUpdate;
 }
 
 /**
@@ -2740,6 +2740,8 @@ export interface BusInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the fleet prices a run.
@@ -2751,8 +2753,6 @@ export interface BusInlineSupplyNew {
 		| ({
 				pricing: "whole";
 		  } & WholeFleetInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -2761,10 +2761,10 @@ export interface BusInlineSupplyNew {
  * the tour's own statement, since a coach drives wherever the tour says.
  */
 export interface BusLegInput {
-	/** Details of the arrival. */
-	arrival?: BusPointInput | null;
 	/** Details of the departure. */
 	departure?: BusPointInput | null;
+	/** Details of the arrival. */
+	arrival?: BusPointInput | null;
 }
 
 /**
@@ -2773,10 +2773,10 @@ export interface BusLegInput {
  * the tour's own statement, since a coach drives wherever the tour says.
  */
 export interface BusLegOutput {
-	/** Details of the arrival. */
-	arrival: BusPointOutput | null;
 	/** Details of the departure. */
 	departure: BusPointOutput | null;
+	/** Details of the arrival. */
+	arrival: BusPointOutput | null;
 }
 
 /**
@@ -2795,6 +2795,14 @@ export interface BusMemberOutput {
 	 * @default false
 	 */
 	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & BusProductSupplyOutput);
 	/**
 	 * Spec
 	 * How the fleet prices a run.
@@ -2806,14 +2814,6 @@ export interface BusMemberOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeFleetOutput);
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & BusProductSupplyOutput);
 }
 
 /**
@@ -2846,6 +2846,8 @@ export interface BusMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the fleet prices a run.
@@ -2857,8 +2859,6 @@ export interface BusMemberUpdate {
 		| ({
 				pricing: "whole";
 		  } & WholeFleetInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "bus";
 }
@@ -2887,6 +2887,11 @@ export interface BusMemberWrite {
  */
 export interface BusOverrideInput {
 	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
+	/**
 	 * Rates
 	 * The arm the fleet prices in.
 	 */
@@ -2897,11 +2902,6 @@ export interface BusOverrideInput {
 		| ({
 				pricing: "whole";
 		  } & WholeFleetChargeOverrideInput);
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ: "bus";
 }
 
 /**
@@ -2909,6 +2909,11 @@ export interface BusOverrideInput {
  * A price this tour negotiated for a coach run, replacing the fleet's own.
  */
 export interface BusOverrideOutput {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
 	/**
 	 * Rates
 	 * The arm the fleet prices in.
@@ -2920,11 +2925,6 @@ export interface BusOverrideOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeFleetChargeOverrideOutput);
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ: "bus";
 }
 
 /**
@@ -2932,10 +2932,10 @@ export interface BusOverrideOutput {
  * Where a coach leg leaves from or arrives at, and when.
  */
 export interface BusPointInput {
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -2943,14 +2943,19 @@ export interface BusPointInput {
  * Where a coach leg leaves from or arrives at, and when.
  */
 export interface BusPointOutput {
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** The time of an event */
 	time: TimeSchema | null;
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** BusProductCreate */
 export interface BusProductCreate {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
 	/**
 	 * Details
 	 * How the fleet prices a run.
@@ -2962,11 +2967,6 @@ export interface BusProductCreate {
 		| ({
 				pricing: "whole";
 		  } & WholeFleetCreate);
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ: "bus";
 }
 
 /** BusProductRead */
@@ -2976,12 +2976,24 @@ export interface BusProductReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Paths */
-	image_paths: string[];
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/** Name */
 	name: string;
+	/** Image Paths */
+	image_paths: string[];
 	/** Primary Image Path */
 	primary_image_path: string | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
 	/**
 	 * Spec
 	 * How the fleet prices a run.
@@ -2993,18 +3005,6 @@ export interface BusProductReadOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeFleetOutput);
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name: string | null;
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ: "bus";
 }
 
 /**
@@ -3012,12 +3012,18 @@ export interface BusProductReadOutput {
  * A run driven by a supplier's coach fleet.
  */
 export interface BusProductSupplyOutput {
-	override: BusOverrideOutput | null;
+	/**
+	 * Source
+	 * @default "product"
+	 */
+	source: "product";
 	/**
 	 * Product Id
 	 * @format uuid
 	 */
 	product_id: string;
+	/** Who a linked product is bought from, resolved on read. */
+	supplier: SupplierRef;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -3029,17 +3035,16 @@ export interface BusProductSupplyOutput {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
-	/**
-	 * Source
-	 * @default "product"
-	 */
-	source: "product";
-	/** Who a linked product is bought from, resolved on read. */
-	supplier: SupplierRef;
+	override: BusOverrideOutput | null;
 }
 
 /** BusProductUpdate */
 export interface BusProductUpdate {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
 	/**
 	 * Details
 	 * How the fleet prices a run.
@@ -3054,11 +3059,6 @@ export interface BusProductUpdate {
 				  } & WholeBusDetails)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ: "bus";
 }
 
 /**
@@ -3090,43 +3090,43 @@ export interface BusSingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A coach run as a create takes it: the tour's plan and the coach suppliers that
-	 * drive it.
-	 */
-	details: BusDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ: "bus";
+	/**
+	 * A coach run as a create takes it: the tour's plan and the coach suppliers that
+	 * drive it.
+	 */
+	details: BusDetailsWrite;
 }
 
 /** BusSingleEventRead */
@@ -3138,10 +3138,38 @@ export interface BusSingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ: "bus";
 	/** A coach run as it reads. */
 	details: BusDetailsOutput;
 	/**
@@ -3150,34 +3178,6 @@ export interface BusSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ: "bus";
 }
 
 /**
@@ -3199,9 +3199,6 @@ export interface BusSpecPubSchemaOutput {
  * update to keep the car's pictures.
  */
 export interface Car {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -3213,14 +3210,17 @@ export interface Car {
 	 * @maxItems 5
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /**
@@ -3272,13 +3272,13 @@ export interface CarChargeOverrideOutput {
  * What one car of a category costs once the fleet charges by car.
  */
 export interface CarChargeSwitch {
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
 	/**
 	 * Variant Id
 	 * @format uuid
 	 */
 	variant_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -3287,15 +3287,15 @@ export interface CarChargeSwitch {
  */
 export interface CarChargesOverrideInput {
 	/**
-	 * Cars
-	 * @minItems 1
-	 */
-	cars: CarChargeOverrideInput[];
-	/**
 	 * Pricing
 	 * @default "per_car"
 	 */
 	pricing: "per_car";
+	/**
+	 * Cars
+	 * @minItems 1
+	 */
+	cars: CarChargeOverrideInput[];
 }
 
 /**
@@ -3304,15 +3304,15 @@ export interface CarChargesOverrideInput {
  */
 export interface CarChargesOverrideOutput {
 	/**
-	 * Cars
-	 * @minItems 1
-	 */
-	cars: CarChargeOverrideOutput[];
-	/**
 	 * Pricing
 	 * @default "per_car"
 	 */
 	pricing: "per_car";
+	/**
+	 * Cars
+	 * @minItems 1
+	 */
+	cars: CarChargeOverrideOutput[];
 }
 
 /**
@@ -3323,17 +3323,17 @@ export interface CarChargesOverrideOutput {
  */
 export interface CarPriceInput {
 	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/**
 	 * Category Id
 	 * @format uuid
 	 */
 	category_id: string;
 	/** A fixed cost together with its own fee and markup. */
 	charge: FixedChargeInput;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id?: string;
 }
 
 /**
@@ -3344,17 +3344,17 @@ export interface CarPriceInput {
  */
 export interface CarPriceOutput {
 	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
 	 * Category Id
 	 * @format uuid
 	 */
 	category_id: string;
 	/** A fixed cost together with its own fee and markup. */
 	charge: FixedChargeOutput;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
 }
 
 /**
@@ -3363,13 +3363,13 @@ export interface CarPriceOutput {
  * it replaces, by its ``id``.
  */
 export interface CarPriceChargeOverrideInput {
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
 	/**
 	 * Price Id
 	 * @format uuid
 	 */
 	price_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -3378,13 +3378,13 @@ export interface CarPriceChargeOverrideInput {
  * it replaces, by its ``id``.
  */
 export interface CarPriceChargeOverrideOutput {
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeOutput;
 	/**
 	 * Price Id
 	 * @format uuid
 	 */
 	price_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeOutput;
 }
 
 /**
@@ -3393,15 +3393,15 @@ export interface CarPriceChargeOverrideOutput {
  */
 export interface CarPriceChargesOverrideInput {
 	/**
-	 * Prices
-	 * @minItems 1
-	 */
-	prices: CarPriceChargeOverrideInput[];
-	/**
 	 * Pricing
 	 * @default "per_car_category"
 	 */
 	pricing: "per_car_category";
+	/**
+	 * Prices
+	 * @minItems 1
+	 */
+	prices: CarPriceChargeOverrideInput[];
 }
 
 /**
@@ -3410,15 +3410,15 @@ export interface CarPriceChargesOverrideInput {
  */
 export interface CarPriceChargesOverrideOutput {
 	/**
-	 * Prices
-	 * @minItems 1
-	 */
-	prices: CarPriceChargeOverrideOutput[];
-	/**
 	 * Pricing
 	 * @default "per_car_category"
 	 */
 	pricing: "per_car_category";
+	/**
+	 * Prices
+	 * @minItems 1
+	 */
+	prices: CarPriceChargeOverrideOutput[];
 }
 
 /**
@@ -3427,17 +3427,17 @@ export interface CarPriceChargesOverrideOutput {
  */
 export interface CarPriceSwitch {
 	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variant_id: string;
+	/**
 	 * Category Id
 	 * @format uuid
 	 */
 	category_id: string;
 	/** A fixed cost together with its own fee and markup. */
 	charge: FixedChargeInput;
-	/**
-	 * Variant Id
-	 * @format uuid
-	 */
-	variant_id: string;
 }
 
 /**
@@ -3462,20 +3462,20 @@ export interface CarPriceWrite {
  * ``id``: the category is minted with the fleet.
  */
 export interface CarWrite {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
+	/** Description */
+	description?: string | null;
 }
 
 /** CatalogFiltersSchema */
@@ -3492,9 +3492,6 @@ export interface CatalogFiltersSchema {
  * price in and in none of the others.
  */
 export interface CategorisedCarInput {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -3506,14 +3503,17 @@ export interface CategorisedCarInput {
 	 * @maxItems 5
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 	/** Prices */
 	prices?: CarPriceInput[];
 }
@@ -3524,9 +3524,6 @@ export interface CategorisedCarInput {
  * price in and in none of the others.
  */
 export interface CategorisedCarOutput {
-	body_type: VehicleBodyType;
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -3538,14 +3535,17 @@ export interface CategorisedCarOutput {
 	 * @maxItems 5
 	 */
 	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
 	/** Prices */
 	prices: CarPriceOutput[];
 }
@@ -3557,20 +3557,20 @@ export interface CategorisedCarOutput {
  * until it is.
  */
 export interface CategorisedCarWrite {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
+	/** Description */
+	description?: string | null;
 	/** Prices */
 	prices?: CarPriceWrite[];
 }
@@ -3629,20 +3629,15 @@ export interface CategoryWrite {
 /** ClassicSwiftDetails */
 export interface ClassicSwiftDetails {
 	/**
+	 * Typ
+	 * @default "classic_swift"
+	 */
+	typ: "classic_swift";
+	/**
 	 * Account Name Iban
 	 * @maxLength 64
 	 */
 	account_name_iban: string;
-	/**
-	 * Bank Address
-	 * @maxLength 512
-	 */
-	bank_address: string;
-	/**
-	 * Bank Name
-	 * @maxLength 255
-	 */
-	bank_name: string;
 	/**
 	 * Swift Bic
 	 * @minLength 8
@@ -3650,10 +3645,15 @@ export interface ClassicSwiftDetails {
 	 */
 	swift_bic: string;
 	/**
-	 * Typ
-	 * @default "classic_swift"
+	 * Bank Name
+	 * @maxLength 255
 	 */
-	typ: "classic_swift";
+	bank_name: string;
+	/**
+	 * Bank Address
+	 * @maxLength 512
+	 */
+	bank_address: string;
 }
 
 /**
@@ -3672,10 +3672,10 @@ export interface ClientPaymentFile {
 
 /** ClientPaymentListResponse */
 export interface ClientPaymentListResponse {
-	/** Data */
-	data: ClientPaymentResponse[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: ClientPaymentResponse[];
 }
 
 /**
@@ -3687,51 +3687,51 @@ export interface ClientPaymentListResponse {
  * unconfirmed receipt has no pinned rate yet.
  */
 export interface ClientPaymentResponse {
-	/** Amount */
-	amount: number;
-	/** Attachment Count */
-	attachment_count: number;
-	/** Base Amount */
-	base_amount: string | null;
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	booking_id: string;
-	/** Client Name */
-	client_name: string;
-	/** Created At */
-	created_at: string | null;
-	currency: Currency;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Note */
-	note: string | null;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	booking_id: string;
+	/** Order Number */
+	order_number: string;
 	/**
 	 * Operator Id
 	 * @format uuid
 	 */
 	operator_id: string;
-	/** Order Number */
-	order_number: string;
-	/** Rate */
-	rate: string | null;
-	status: ClientPaymentStatus;
+	/** Client Name */
+	client_name: string;
 	/** Tour Name */
 	tour_name: string | null;
+	/** Amount */
+	amount: number;
+	currency: Currency;
+	/** Rate */
+	rate: string | null;
+	/** Base Amount */
+	base_amount: string | null;
+	status: ClientPaymentStatus;
+	/** Note */
+	note: string | null;
+	/** Attachment Count */
+	attachment_count: number;
+	/** Created At */
+	created_at: string | null;
 	/** Updated At */
 	updated_at: string | null;
 }
 
 /** ClientPaymentTally */
 export interface ClientPaymentTally {
-	/** Confirmed */
-	confirmed: number;
 	/** Recorded */
 	recorded: number;
+	/** Confirmed */
+	confirmed: number;
 	/** Unconfirmed */
 	unconfirmed: number;
 }
@@ -3746,16 +3746,16 @@ export interface ClientPaymentUpdate {
 
 /** CounterpartyBalanceListResponse */
 export interface CounterpartyBalanceListResponse {
-	currency: Currency;
-	/** Data */
-	data: CounterpartyBalanceResponseOutput[];
 	/** Total Count */
 	total_count: number;
+	currency: Currency;
 	/**
 	 * Total Outstanding
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	total_outstanding: string;
+	/** Data */
+	data: CounterpartyBalanceResponseOutput[];
 }
 
 /**
@@ -3768,31 +3768,31 @@ export interface CounterpartyBalanceListResponse {
  */
 export interface CounterpartyBalanceResponseOutput {
 	/**
-	 * Billed
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	billed: string;
-	currency: Currency;
-	/**
-	 * Outstanding
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	outstanding: string;
-	/**
-	 * Paid
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	paid: string;
-	/** Party Id */
-	party_id: string | null;
-	/** Party Name */
-	party_name: string | null;
-	/**
 	 * One end of an entry. ``OPERATOR`` is a party like any other, not an
 	 * implied centre — that is what lets a future entry record an agency paying a
 	 * supplier directly, with the operator's books merely observing it.
 	 */
 	party_typ: LedgerParty;
+	/** Party Id */
+	party_id: string | null;
+	/** Party Name */
+	party_name: string | null;
+	/**
+	 * Billed
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	billed: string;
+	/**
+	 * Paid
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	paid: string;
+	/**
+	 * Outstanding
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	outstanding: string;
+	currency: Currency;
 }
 
 /** CreateAgencySchema */
@@ -3804,7 +3804,6 @@ export interface CreateAgencySchema {
 /** CreateFinancialSchema */
 export interface CreateFinancialSchema {
 	currency_type: Currency;
-	foc?: FocPolicy | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -3819,17 +3818,18 @@ export interface CreateFinancialSchema {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc?: FocPolicy | null;
 }
 
 /** CustomDetails */
 export interface CustomDetails {
-	/** Items */
-	items: KeyValItem[];
 	/**
 	 * Typ
 	 * @default "custom"
 	 */
 	typ: "custom";
+	/** Items */
+	items: KeyValItem[];
 }
 
 /**
@@ -3840,16 +3840,16 @@ export interface CustomDetails {
  */
 export interface DetachBody {
 	/**
-	 * Drop Override
-	 * @default false
-	 */
-	drop_override?: boolean;
-	/**
 	 * What a detached event keeps of the product it left. SPEC copies the
 	 * resolved spec in as its own; NOTHING leaves the event empty for the operator
 	 * to state.
 	 */
 	keep: DetachKeep;
+	/**
+	 * Drop Override
+	 * @default false
+	 */
+	drop_override?: boolean;
 }
 
 /**
@@ -3858,26 +3858,10 @@ export interface DetachBody {
  */
 export interface DurationChargeInput {
 	/**
-	 * Extra Costs
-	 * Named cost lines inside this charge, covered by its markup.
+	 * Typ
+	 * @default "per_duration"
 	 */
-	extra_costs?: ExtraCostInput[];
-	/** Fees */
-	fees?: FeeInput[] | null;
-	/**
-	 * Markup
-	 * The markup calculation strategy.
-	 */
-	markup?:
-		| (
-				| ({
-						typ: "fixed";
-				  } & FixedExpenseInput)
-				| ({
-						typ: "percentage";
-				  } & PercentageMarkup)
-		  )
-		| null;
+	typ: "per_duration";
 	/**
 	 * Rate
 	 * How one unit of the duration is priced.
@@ -3892,11 +3876,27 @@ export interface DurationChargeInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonExpenseInput);
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
-	 * Typ
-	 * @default "per_duration"
+	 * Extra Costs
+	 * Named cost lines inside this charge, covered by its markup.
 	 */
-	typ: "per_duration";
+	extra_costs?: ExtraCostInput[];
+	/**
+	 * Markup
+	 * The markup calculation strategy.
+	 */
+	markup?:
+		| (
+				| ({
+						typ: "fixed";
+				  } & FixedExpenseInput)
+				| ({
+						typ: "percentage";
+				  } & PercentageMarkup)
+		  )
+		| null;
 }
 
 /**
@@ -3905,12 +3905,31 @@ export interface DurationChargeInput {
  */
 export interface DurationChargeOutput {
 	/**
+	 * Typ
+	 * @default "per_duration"
+	 */
+	typ: "per_duration";
+	/**
+	 * Rate
+	 * How one unit of the duration is priced.
+	 */
+	rate:
+		| ({
+				typ: "fixed";
+		  } & FixedExpenseOutput)
+		| ({
+				typ: "per_group";
+		  } & PerGroupExpenseOutput)
+		| ({
+				typ: "per_person";
+		  } & PerPersonExpenseOutput);
+	/** Fees */
+	fees: FeeOutput[] | null;
+	/**
 	 * Extra Costs
 	 * Named cost lines inside this charge, covered by its markup.
 	 */
 	extra_costs: ExtraCostOutput[];
-	/** Fees */
-	fees: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -3925,25 +3944,6 @@ export interface DurationChargeOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Rate
-	 * How one unit of the duration is priced.
-	 */
-	rate:
-		| ({
-				typ: "fixed";
-		  } & FixedExpenseOutput)
-		| ({
-				typ: "per_group";
-		  } & PerGroupExpenseOutput)
-		| ({
-				typ: "per_person";
-		  } & PerPersonExpenseOutput);
-	/**
-	 * Typ
-	 * @default "per_duration"
-	 */
-	typ: "per_duration";
 }
 
 /**
@@ -3954,6 +3954,11 @@ export interface DurationChargeOutput {
  * gate insists on one wherever this strategy is allowed.
  */
 export interface DurationExpenseInput {
+	/**
+	 * Typ
+	 * @default "per_duration"
+	 */
+	typ: "per_duration";
 	/**
 	 * Rate
 	 * How one unit of the duration is priced.
@@ -3968,11 +3973,6 @@ export interface DurationExpenseInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonExpenseInput);
-	/**
-	 * Typ
-	 * @default "per_duration"
-	 */
-	typ: "per_duration";
 }
 
 /**
@@ -3983,6 +3983,11 @@ export interface DurationExpenseInput {
  * gate insists on one wherever this strategy is allowed.
  */
 export interface DurationExpenseOutput {
+	/**
+	 * Typ
+	 * @default "per_duration"
+	 */
+	typ: "per_duration";
 	/**
 	 * Rate
 	 * How one unit of the duration is priced.
@@ -3997,11 +4002,6 @@ export interface DurationExpenseOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonExpenseOutput);
-	/**
-	 * Typ
-	 * @default "per_duration"
-	 */
-	typ: "per_duration";
 }
 
 /**
@@ -4013,8 +4013,8 @@ export type Empty = object;
 
 /** EmptyDetailsPub */
 export interface EmptyDetailsPub {
-	end_time: TimeSchema | null;
 	start_time: TimeSchema | null;
+	end_time: TimeSchema | null;
 }
 
 /**
@@ -4044,18 +4044,18 @@ export interface EventBreakdownSchemaOutput {
  * pins and overrides, its pictures.
  */
 export interface EventCopyFromEvent {
-	/**
-	 * Day
-	 * Day the copy lands on; the source's day.
-	 */
-	day?: number | null;
+	/** Kind */
+	kind: "event";
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	event_id: string;
-	/** Kind */
-	kind: "event";
+	/**
+	 * Day
+	 * Day the copy lands on; the source's day.
+	 */
+	day?: number | null;
 	/**
 	 * Position
 	 * Position within the day, clamped to append; right after the source on its own day, the end of any other day.
@@ -4069,17 +4069,6 @@ export interface EventCopyFromEvent {
  * pool with pins, its pictures onto the slot.
  */
 export interface EventCopyFromLibrary {
-	/**
-	 * Day
-	 * Day the copy lands on
-	 * @min 1
-	 */
-	day: number;
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
 	/** Kind */
 	kind: "library";
 	/**
@@ -4088,11 +4077,22 @@ export interface EventCopyFromLibrary {
 	 */
 	library_id: string;
 	/**
+	 * Day
+	 * Day the copy lands on
+	 * @min 1
+	 */
+	day: number;
+	/**
 	 * Position
 	 * Position within the day, clamped to append
 	 * @min 0
 	 */
 	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
 }
 
 /** EventCopySchema */
@@ -4122,19 +4122,17 @@ export interface EventCopySchema {
  * ``None``.
  */
 export interface EventEditOpOutput {
-	/** Actor Id */
-	actor_id: string | null;
-	/** Actor Name */
-	actor_name: string | null;
+	op: EditOp;
+	/** Seq */
+	seq: number;
 	/**
 	 * At
 	 * @format date-time
 	 */
 	at: string;
+	/** Target Id */
+	target_id: string | null;
 	event: OrderTourEventSchemaOutput | null;
-	op: EditOp;
-	/** Option Index */
-	option_index: number | null;
 	/** Override */
 	override:
 		| (
@@ -4158,30 +4156,32 @@ export interface EventEditOpOutput {
 				  } & TransferOverrideOutput)
 		  )
 		| null;
-	/** Seq */
-	seq: number;
+	/** Option Index */
+	option_index: number | null;
 	/** Supply Id */
 	supply_id: string | null;
-	/** Target Id */
-	target_id: string | null;
+	/** Actor Id */
+	actor_id: string | null;
+	/** Actor Name */
+	actor_name: string | null;
 }
 
 /** EventImageModel */
 export interface EventImageModel {
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Path */
-	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
 }
 
 /**
@@ -4222,14 +4222,19 @@ export interface EventImageSchema {
 
 /** EventLibraryListResponse */
 export interface EventLibraryListResponse {
-	/** Data */
-	data: EventLibraryResponse[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: EventLibraryResponse[];
 }
 
 /** EventLibraryResponse */
 export interface EventLibraryResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
 	/** Event */
 	event:
 		| ({
@@ -4259,11 +4264,6 @@ export interface EventLibraryResponse {
 		| ({
 				typ: "transfer";
 		  } & TransferEventTypeReadOutput);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
 	/** Image Paths */
 	image_paths: string[];
 	/** Primary Image Path */
@@ -4279,6 +4279,11 @@ export interface EventLibraryResponse {
  * - ``/tour/{id}/option/{id}/pricing-breakdown`` for the quote these appear in
  */
 export interface EventLineOutput {
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
 	/** Event */
 	event:
 		| (
@@ -4311,11 +4316,6 @@ export interface EventLineOutput {
 				  } & TransferSingleEventReadOutput)
 		  )
 		| MultiEventReadOutput;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
 }
 
 /** EventOptionalSchema */
@@ -4361,45 +4361,45 @@ export interface EventReorderSchema {
  */
 export interface EventVarianceLineOutput {
 	/**
-	 * Accrued
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 * Event Id
+	 * @format uuid
 	 */
-	accrued: string;
+	event_id: string;
+	/** Payment Id */
+	payment_id: string | null;
+	/** Event Name */
+	event_name: string | null;
+	event_typ: EventTypes | null;
 	/**
 	 * Date
 	 * @format date
 	 */
 	date: string;
 	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
-	/** Event Name */
-	event_name: string | null;
-	event_typ: EventTypes | null;
-	/**
-	 * Payable
+	 * Planned Min
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	payable: string;
-	/** Payment Id */
-	payment_id: string | null;
+	planned_min: string;
 	/**
 	 * Planned Max
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	planned_max: string;
 	/**
-	 * Planned Min
+	 * Accrued
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	planned_min: string;
+	accrued: string;
 	/**
 	 * Settled
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	settled: string;
+	/**
+	 * Payable
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	payable: string;
 	/**
 	 * Variance
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -4410,30 +4410,28 @@ export interface EventVarianceLineOutput {
 /** EventVarianceResponse */
 export interface EventVarianceResponse {
 	/**
-	 * Accrued Total
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	accrued_total: string;
-	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	booking_id: string;
-	currency: Currency;
-	/** Events */
-	events: EventVarianceLineOutput[];
 	/** Order Number */
 	order_number: string;
+	currency: Currency;
+	/**
+	 * Planned Total Min
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	planned_total_min: string;
 	/**
 	 * Planned Total Max
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	planned_total_max: string;
 	/**
-	 * Planned Total Min
+	 * Accrued Total
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	planned_total_min: string;
+	accrued_total: string;
 	/**
 	 * Settled Total
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -4444,6 +4442,8 @@ export interface EventVarianceResponse {
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	variance_total: string;
+	/** Events */
+	events: EventVarianceLineOutput[];
 }
 
 /** ExcludedDateCreate */
@@ -4501,6 +4501,11 @@ export interface ExcludedDatesBulkDelete {
  */
 export interface ExtraCostInput {
 	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
 	 * Expense
 	 * How this line prices.
 	 */
@@ -4514,11 +4519,6 @@ export interface ExtraCostInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonExpenseInput);
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
 }
 
 /**
@@ -4529,6 +4529,11 @@ export interface ExtraCostInput {
  * the charge covers.
  */
 export interface ExtraCostOutput {
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 	/**
 	 * Expense
 	 * How this line prices.
@@ -4543,11 +4548,6 @@ export interface ExtraCostOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonExpenseOutput);
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
 }
 
 /**
@@ -4572,6 +4572,11 @@ export interface Fare {
  */
 export interface FareChargeOverrideInput {
 	/**
+	 * Fare Id
+	 * @format uuid
+	 */
+	fare_id: string;
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -4582,11 +4587,6 @@ export interface FareChargeOverrideInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Fare Id
-	 * @format uuid
-	 */
-	fare_id: string;
 }
 
 /**
@@ -4594,6 +4594,11 @@ export interface FareChargeOverrideInput {
  * What one fare class costs this tour.
  */
 export interface FareChargeOverrideOutput {
+	/**
+	 * Fare Id
+	 * @format uuid
+	 */
+	fare_id: string;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -4605,11 +4610,6 @@ export interface FareChargeOverrideOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Fare Id
-	 * @format uuid
-	 */
-	fare_id: string;
 }
 
 /**
@@ -4617,6 +4617,11 @@ export interface FareChargeOverrideOutput {
  * What a seat in one fare class costs once the route charges by fare.
  */
 export interface FareChargeSwitch {
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variant_id: string;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -4628,11 +4633,6 @@ export interface FareChargeSwitch {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Variant Id
-	 * @format uuid
-	 */
-	variant_id: string;
 }
 
 /**
@@ -4641,15 +4641,15 @@ export interface FareChargeSwitch {
  */
 export interface FareChargesOverrideInput {
 	/**
-	 * Fares
-	 * @minItems 1
-	 */
-	fares: FareChargeOverrideInput[];
-	/**
 	 * Pricing
 	 * @default "per_fare"
 	 */
 	pricing: "per_fare";
+	/**
+	 * Fares
+	 * @minItems 1
+	 */
+	fares: FareChargeOverrideInput[];
 }
 
 /**
@@ -4658,15 +4658,15 @@ export interface FareChargesOverrideInput {
  */
 export interface FareChargesOverrideOutput {
 	/**
-	 * Fares
-	 * @minItems 1
-	 */
-	fares: FareChargeOverrideOutput[];
-	/**
 	 * Pricing
 	 * @default "per_fare"
 	 */
 	pricing: "per_fare";
+	/**
+	 * Fares
+	 * @minItems 1
+	 */
+	fares: FareChargeOverrideOutput[];
 }
 
 /**
@@ -4676,6 +4676,11 @@ export interface FareChargesOverrideOutput {
  */
 export interface FareCreate {
 	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -4686,11 +4691,6 @@ export interface FareCreate {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
 }
 
 /**
@@ -4699,11 +4699,11 @@ export interface FareCreate {
  * bookkeeping, never agency-facing. A fee carries no fee of its own.
  */
 export interface FeeInput {
+	/** Name */
+	name?: string | null;
 	cost?: MonetaryValueSchema | null;
 	/** Description */
 	description?: string | null;
-	/** Name */
-	name?: string | null;
 }
 
 /**
@@ -4712,11 +4712,11 @@ export interface FeeInput {
  * bookkeeping, never agency-facing. A fee carries no fee of its own.
  */
 export interface FeeOutput {
+	/** Name */
+	name: string | null;
 	cost: MonetaryValueSchema | null;
 	/** Description */
 	description: string | null;
-	/** Name */
-	name: string | null;
 }
 
 /**
@@ -4724,6 +4724,11 @@ export interface FeeOutput {
  * A fixed cost together with its own fee and markup.
  */
 export interface FixedChargeInput {
+	/**
+	 * Typ
+	 * @default "fixed"
+	 */
+	typ: "fixed";
 	/**
 	 * Monetary value pair.
 	 *
@@ -4738,13 +4743,13 @@ export interface FixedChargeInput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Extra Costs
 	 * Named cost lines inside this charge, covered by its markup.
 	 */
 	extra_costs?: ExtraCostInput[];
-	/** Fees */
-	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -4759,11 +4764,6 @@ export interface FixedChargeInput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "fixed"
-	 */
-	typ: "fixed";
 }
 
 /**
@@ -4771,6 +4771,11 @@ export interface FixedChargeInput {
  * A fixed cost together with its own fee and markup.
  */
 export interface FixedChargeOutput {
+	/**
+	 * Typ
+	 * @default "fixed"
+	 */
+	typ: "fixed";
 	/**
 	 * Monetary value pair.
 	 *
@@ -4785,13 +4790,13 @@ export interface FixedChargeOutput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
+	/** Fees */
+	fees: FeeOutput[] | null;
 	/**
 	 * Extra Costs
 	 * Named cost lines inside this charge, covered by its markup.
 	 */
 	extra_costs: ExtraCostOutput[];
-	/** Fees */
-	fees: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -4806,11 +4811,6 @@ export interface FixedChargeOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "fixed"
-	 */
-	typ: "fixed";
 }
 
 /** FixedDateCreate */
@@ -4865,6 +4865,11 @@ export interface FixedDatesBulkDelete {
  */
 export interface FixedExpenseInput {
 	/**
+	 * Typ
+	 * @default "fixed"
+	 */
+	typ: "fixed";
+	/**
 	 * Monetary value pair.
 	 *
 	 * Conversion happens inside the schema but takes an explicit ``FxContext``
@@ -4878,11 +4883,6 @@ export interface FixedExpenseInput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
-	/**
-	 * Typ
-	 * @default "fixed"
-	 */
-	typ: "fixed";
 }
 
 /**
@@ -4891,6 +4891,11 @@ export interface FixedExpenseInput {
  */
 export interface FixedExpenseOutput {
 	/**
+	 * Typ
+	 * @default "fixed"
+	 */
+	typ: "fixed";
+	/**
 	 * Monetary value pair.
 	 *
 	 * Conversion happens inside the schema but takes an explicit ``FxContext``
@@ -4904,11 +4909,6 @@ export interface FixedExpenseOutput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
-	/**
-	 * Typ
-	 * @default "fixed"
-	 */
-	typ: "fixed";
 }
 
 /**
@@ -4981,20 +4981,15 @@ export interface FlightDetailsWrite {
 /** FlightEvent */
 export interface FlightEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * An air leg as a create takes it: the tour's plan and the air suppliers that
-	 * fly it.
-	 */
-	details: FlightDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -5002,42 +4997,59 @@ export interface FlightEvent {
 	 * @default "flight"
 	 */
 	typ: "flight";
+	/**
+	 * An air leg as a create takes it: the tour's plan and the air suppliers that
+	 * fly it.
+	 */
+	details: FlightDetailsWrite;
 }
 
 /** FlightEventPubRead */
 export interface FlightEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
-	details: FlightDetailsPubSchemaOutput | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
 	/**
 	 * Typ
 	 * @default "flight"
 	 */
 	typ: "flight";
+	details: FlightDetailsPubSchemaOutput | null;
 }
 
 /** FlightEventTypeRead */
 export interface FlightEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ: "flight";
 	/** An air leg as it reads. */
 	details: FlightDetailsOutput;
 	/**
@@ -5046,39 +5058,20 @@ export interface FlightEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ: "flight";
 }
 
 /** FlightEventUpdate */
 export interface FlightEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of an air leg an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: FlightDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -5086,6 +5079,13 @@ export interface FlightEventUpdate {
 	 * @default "flight"
 	 */
 	typ: "flight";
+	/**
+	 * The half of an air leg an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: FlightDetailsUpdate;
 }
 
 /**
@@ -5099,36 +5099,36 @@ export interface FlightEventUpdate {
 export interface FlightHopPubSchemaOutput {
 	/** Airline Code */
 	airline_code: string | null;
-	/** Amenities */
-	amenities: AmenitiesTypes[];
-	/** Arrival Airport Code */
-	arrival_airport_code: string | null;
-	/** Arrival Date */
-	arrival_date: string | null;
-	/** Arrival Location */
-	arrival_location:
-		| LocationOutSchema
-		| LocationRefSchema
-		| LocationInSchema
-		| null;
-	arrival_time: TimeSchema | null;
+	/** Flight Number */
+	flight_number: number | null;
 	/** Departure Airport Code */
 	departure_airport_code: string | null;
-	/** Departure Date */
-	departure_date: string | null;
-	/** Departure Gate */
-	departure_gate: string | null;
+	/** Arrival Airport Code */
+	arrival_airport_code: string | null;
 	/** Departure Location */
 	departure_location:
 		| LocationOutSchema
 		| LocationRefSchema
 		| LocationInSchema
 		| null;
+	/** Arrival Location */
+	arrival_location:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
 	/** Departure Terminal */
 	departure_terminal: string | null;
+	/** Departure Gate */
+	departure_gate: string | null;
+	/** Amenities */
+	amenities: AmenitiesTypes[];
 	departure_time: TimeSchema | null;
-	/** Flight Number */
-	flight_number: number | null;
+	arrival_time: TimeSchema | null;
+	/** Departure Date */
+	departure_date: string | null;
+	/** Arrival Date */
+	arrival_date: string | null;
 }
 
 /**
@@ -5141,6 +5141,8 @@ export interface FlightInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -5152,8 +5154,6 @@ export interface FlightInlineSupplyNew {
 		| ({
 				pricing: "whole";
 		  } & WholeFlightRouteInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -5171,33 +5171,28 @@ export interface FlightLegInput {
 	 */
 	airline_code?: string | null;
 	/**
-	 * Amenities
-	 * Amenities available on this flight.
+	 * Flight Number
+	 * Flight number (1–4 digits)
 	 */
-	amenities?: AmenitiesTypes[];
-	/**
-	 * Arrival Airport Code
-	 * Arrival airport IATA code (3 uppercase letters)
-	 */
-	arrival_airport_code?: string | null;
-	/** Arrival Location */
-	arrival_location?:
-		| LocationOutSchema
-		| LocationRefSchema
-		| LocationInSchema
-		| null;
+	flight_number?: number | null;
 	/**
 	 * Departure Airport Code
 	 * Departure airport IATA code (3 uppercase letters)
 	 */
 	departure_airport_code?: string | null;
 	/**
-	 * Departure Gate
-	 * Departure gate (e.g., 'A12', 'B3')
+	 * Arrival Airport Code
+	 * Arrival airport IATA code (3 uppercase letters)
 	 */
-	departure_gate?: string | null;
+	arrival_airport_code?: string | null;
 	/** Departure Location */
 	departure_location?:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/** Arrival Location */
+	arrival_location?:
 		| LocationOutSchema
 		| LocationRefSchema
 		| LocationInSchema
@@ -5208,10 +5203,15 @@ export interface FlightLegInput {
 	 */
 	departure_terminal?: string | null;
 	/**
-	 * Flight Number
-	 * Flight number (1–4 digits)
+	 * Departure Gate
+	 * Departure gate (e.g., 'A12', 'B3')
 	 */
-	flight_number?: number | null;
+	departure_gate?: string | null;
+	/**
+	 * Amenities
+	 * Amenities available on this flight.
+	 */
+	amenities?: AmenitiesTypes[];
 }
 
 /**
@@ -5229,33 +5229,28 @@ export interface FlightLegOutput {
 	 */
 	airline_code: string | null;
 	/**
-	 * Amenities
-	 * Amenities available on this flight.
+	 * Flight Number
+	 * Flight number (1–4 digits)
 	 */
-	amenities: AmenitiesTypes[];
-	/**
-	 * Arrival Airport Code
-	 * Arrival airport IATA code (3 uppercase letters)
-	 */
-	arrival_airport_code: string | null;
-	/** Arrival Location */
-	arrival_location:
-		| LocationOutSchema
-		| LocationRefSchema
-		| LocationInSchema
-		| null;
+	flight_number: number | null;
 	/**
 	 * Departure Airport Code
 	 * Departure airport IATA code (3 uppercase letters)
 	 */
 	departure_airport_code: string | null;
 	/**
-	 * Departure Gate
-	 * Departure gate (e.g., 'A12', 'B3')
+	 * Arrival Airport Code
+	 * Arrival airport IATA code (3 uppercase letters)
 	 */
-	departure_gate: string | null;
+	arrival_airport_code: string | null;
 	/** Departure Location */
 	departure_location:
+		| LocationOutSchema
+		| LocationRefSchema
+		| LocationInSchema
+		| null;
+	/** Arrival Location */
+	arrival_location:
 		| LocationOutSchema
 		| LocationRefSchema
 		| LocationInSchema
@@ -5266,10 +5261,15 @@ export interface FlightLegOutput {
 	 */
 	departure_terminal: string | null;
 	/**
-	 * Flight Number
-	 * Flight number (1–4 digits)
+	 * Departure Gate
+	 * Departure gate (e.g., 'A12', 'B3')
 	 */
-	flight_number: number | null;
+	departure_gate: string | null;
+	/**
+	 * Amenities
+	 * Amenities available on this flight.
+	 */
+	amenities: AmenitiesTypes[];
 }
 
 /**
@@ -5288,6 +5288,14 @@ export interface FlightMemberOutput {
 	 * @default false
 	 */
 	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & RouteProductSupplyOutput);
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -5299,14 +5307,6 @@ export interface FlightMemberOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeFlightRouteOutput);
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & RouteProductSupplyOutput);
 }
 
 /**
@@ -5339,6 +5339,8 @@ export interface FlightMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -5350,8 +5352,6 @@ export interface FlightMemberUpdate {
 		| ({
 				pricing: "whole";
 		  } & WholeFlightRouteInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "flight";
 }
@@ -5377,6 +5377,11 @@ export interface FlightMemberWrite {
 /** FlightProductCreate */
 export interface FlightProductCreate {
 	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ: "flight";
+	/**
 	 * Details
 	 * How the route prices a leg.
 	 */
@@ -5387,11 +5392,6 @@ export interface FlightProductCreate {
 		| ({
 				pricing: "whole";
 		  } & WholeFlightCreate);
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ: "flight";
 }
 
 /** FlightProductRead */
@@ -5401,12 +5401,24 @@ export interface FlightProductReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Paths */
-	image_paths: string[];
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/** Name */
 	name: string;
+	/** Image Paths */
+	image_paths: string[];
 	/** Primary Image Path */
 	primary_image_path: string | null;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ: "flight";
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -5418,22 +5430,15 @@ export interface FlightProductReadOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeFlightRouteOutput);
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name: string | null;
+}
+
+/** FlightProductUpdate */
+export interface FlightProductUpdate {
 	/**
 	 * Typ
 	 * @default "flight"
 	 */
 	typ: "flight";
-}
-
-/** FlightProductUpdate */
-export interface FlightProductUpdate {
 	/**
 	 * Details
 	 * How the route prices a leg.
@@ -5448,11 +5453,6 @@ export interface FlightProductUpdate {
 				  } & WholeFlightDetails)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ: "flight";
 }
 
 /** FlightSingleEvent */
@@ -5464,43 +5464,43 @@ export interface FlightSingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * An air leg as a create takes it: the tour's plan and the air suppliers that
-	 * fly it.
-	 */
-	details: FlightDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "flight"
 	 */
 	typ: "flight";
+	/**
+	 * An air leg as a create takes it: the tour's plan and the air suppliers that
+	 * fly it.
+	 */
+	details: FlightDetailsWrite;
 }
 
 /** FlightSingleEventRead */
@@ -5512,10 +5512,38 @@ export interface FlightSingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ: "flight";
 	/** An air leg as it reads. */
 	details: FlightDetailsOutput;
 	/**
@@ -5524,34 +5552,6 @@ export interface FlightSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ: "flight";
 }
 
 /**
@@ -5587,17 +5587,17 @@ export interface FocPolicy {
  */
 export interface FocTier {
 	/**
-	 * Free
-	 * Max free pax granted above the base.
-	 * @min 1
-	 */
-	free: number;
-	/**
 	 * Min Pax
 	 * Paying base; free pax count from here up.
 	 * @min 1
 	 */
 	min_pax: number;
+	/**
+	 * Free
+	 * Max free pax granted above the base.
+	 * @min 1
+	 */
+	free: number;
 }
 
 /**
@@ -5606,22 +5606,22 @@ export interface FocTier {
  * serves.
  */
 export interface FoodActivityPubSchemaOutput {
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/**
 	 * Name
 	 * The venue's own name
 	 */
 	name: string | null;
-	/** Offerings */
-	offerings: FoodOfferingPubSchemaOutput[];
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Typ
 	 * @default "food"
 	 */
 	typ: "food";
+	/** Offerings */
+	offerings: FoodOfferingPubSchemaOutput[];
 }
 
 /**
@@ -5631,6 +5631,13 @@ export interface FoodActivityPubSchemaOutput {
  * minted here.
  */
 export interface FoodOfferingInput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/** Name */
+	name?: string | null;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -5642,15 +5649,8 @@ export interface FoodOfferingInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id?: string;
 	/** Menu */
 	menu?: MenuItem[];
-	/** Name */
-	name?: string | null;
 }
 
 /**
@@ -5660,6 +5660,13 @@ export interface FoodOfferingInput {
  * minted here.
  */
 export interface FoodOfferingOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string | null;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -5671,15 +5678,8 @@ export interface FoodOfferingOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
 	/** Menu */
 	menu: MenuItem[];
-	/** Name */
-	name: string | null;
 }
 
 /**
@@ -5689,10 +5689,10 @@ export interface FoodOfferingOutput {
  * read off a supplier names each of its own.
  */
 export interface FoodOfferingPubSchemaOutput {
-	/** Menu */
-	menu: MenuItemPubSchema[];
 	/** Name */
 	name: string | null;
+	/** Menu */
+	menu: MenuItemPubSchema[];
 }
 
 /**
@@ -5705,17 +5705,17 @@ export interface FoodVenueInput {
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name?: string | null;
-	/** Offerings */
-	offerings?: FoodOfferingInput[];
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/**
 	 * Sub Typ
 	 * @default "food"
 	 */
 	sub_typ: "food";
+	/** Offerings */
+	offerings?: FoodOfferingInput[];
 }
 
 /**
@@ -5728,34 +5728,33 @@ export interface FoodVenueOutput {
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name: string | null;
-	/** Offerings */
-	offerings: FoodOfferingOutput[];
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/**
 	 * Sub Typ
 	 * @default "food"
 	 */
 	sub_typ: "food";
+	/** Offerings */
+	offerings: FoodOfferingOutput[];
 }
 
 /** FrozenFxRate */
 export interface FrozenFxRateOutput {
 	from_currency: Currency;
+	to_currency: Currency;
 	/**
 	 * Rate
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	rate: string;
-	to_currency: Currency;
 }
 
 /** FrozenTourFin */
 export interface FrozenTourFinOutput {
 	currency_type: Currency;
-	foc: FocPolicy | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -5770,37 +5769,38 @@ export interface FrozenTourFinOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc: FocPolicy | null;
 }
 
 /** FrozenTourMeta */
 export interface FrozenTourMeta {
-	/** Age From */
-	age_from: number | null;
-	/** Age To */
-	age_to: number | null;
-	/** Categories */
-	categories: TourCategory[];
-	/** Cover Image Path */
-	cover_image_path: string | null;
-	/** Days */
-	days: number;
-	/** Duration Hours */
-	duration_hours: number | null;
-	/** Group Size */
-	group_size: number;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Nights */
-	nights: number;
-	/** Slug */
-	slug: string | null;
-	status: TourStatus;
 	/** Title */
 	title: string | null;
+	/** Slug */
+	slug: string | null;
+	/** Cover Image Path */
+	cover_image_path: string | null;
+	/** Group Size */
+	group_size: number;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours: number | null;
+	/** Age From */
+	age_from: number | null;
+	/** Age To */
+	age_to: number | null;
 	typ: TourType;
+	status: TourStatus;
+	/** Categories */
+	categories: TourCategory[];
 }
 
 /**
@@ -5810,15 +5810,17 @@ export interface FrozenTourMeta {
  * never change this booking.
  */
 export interface FrozenTourOptionOutput {
-	/** Cover Image Path */
-	cover_image_path: string | null;
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Cover Image Path */
+	cover_image_path: string | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -5833,24 +5835,22 @@ export interface FrozenTourOptionOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Name */
-	name: string | null;
 }
 
 /** FullScheduleSchema */
 export interface FullScheduleSchema {
-	/** Excluded Dates */
-	excluded_dates: ExcludedDateModel[];
+	schedule: TourScheduleModel;
 	/** Fixed Dates */
 	fixed_dates: FixedDateModel[];
+	/** Excluded Dates */
+	excluded_dates: ExcludedDateModel[];
+	/** Recurrence Rules */
+	recurrence_rules: RecurrenceDateModel[];
 	/**
 	 * Occurrences
 	 * Materialised bookable dates (fixed ∪ recurrence) − excluded, within the requested window.
 	 */
 	occurrences: string[];
-	/** Recurrence Rules */
-	recurrence_rules: RecurrenceDateModel[];
-	schedule: TourScheduleModel;
 	/**
 	 * Window From
 	 * @format date
@@ -5873,12 +5873,13 @@ export interface FullScheduleSchema {
  *     GET /fx/operator/rate
  */
 export interface FxReferenceRateModel {
-	currency: Currency;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	source: FxSource;
+	currency: Currency;
 	/**
 	 * Rate
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -5889,7 +5890,6 @@ export interface FxReferenceRateModel {
 	 * @format date
 	 */
 	rate_date: string;
-	source: FxSource;
 }
 
 /**
@@ -5912,15 +5912,15 @@ export interface FxSyncRead {
  * ``ActivityType`` is added here, or given its own arm once it has a payload.
  */
 export interface GeneralActivityPubSchemaOutput {
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/**
 	 * Name
 	 * The venue's own name
 	 */
 	name: string | null;
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Typ
 	 * @default "other"
@@ -5939,14 +5939,14 @@ export interface GeneralVenueInput {
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name?: string | null;
-	/** Offerings */
-	offerings?: TicketedOfferingInput[];
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Sub Typ */
 	sub_typ: GeneralVenueInputSubTypEnum;
+	/** Offerings */
+	offerings?: TicketedOfferingInput[];
 }
 
 /**
@@ -5960,14 +5960,14 @@ export interface GeneralVenueOutput {
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name: string | null;
-	/** Offerings */
-	offerings: TicketedOfferingOutput[];
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Sub Typ */
 	sub_typ: GeneralVenueOutputSubTypEnum;
+	/** Offerings */
+	offerings: TicketedOfferingOutput[];
 }
 
 /**
@@ -5975,26 +5975,26 @@ export interface GeneralVenueOutput {
  * Provider-neutral geocoded place.
  */
 export interface GeoFeature {
-	/** City */
-	city: string | null;
-	/** Country */
-	country: string | null;
-	/** Country Code */
-	country_code: string | null;
-	/** Housenumber */
-	housenumber: string | null;
 	/** Lat */
 	lat: number;
 	/** Long */
 	long: number;
 	/** Name */
 	name: string | null;
+	/** City */
+	city: string | null;
+	/** Street */
+	street: string | null;
+	/** Housenumber */
+	housenumber: string | null;
 	/** Postcode */
 	postcode: string | null;
 	/** State */
 	state: string | null;
-	/** Street */
-	street: string | null;
+	/** Country */
+	country: string | null;
+	/** Country Code */
+	country_code: string | null;
 }
 
 /**
@@ -6004,6 +6004,12 @@ export interface GeoFeature {
  */
 export interface GroupSizeTierInput {
 	/**
+	 * Up To Pax
+	 * Inclusive upper headcount bound.
+	 * @min 1
+	 */
+	up_to_pax: number;
+	/**
 	 * Monetary value pair.
 	 *
 	 * Conversion happens inside the schema but takes an explicit ``FxContext``
@@ -6017,12 +6023,6 @@ export interface GroupSizeTierInput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
-	/**
-	 * Up To Pax
-	 * Inclusive upper headcount bound.
-	 * @min 1
-	 */
-	up_to_pax: number;
 }
 
 /**
@@ -6032,6 +6032,12 @@ export interface GroupSizeTierInput {
  */
 export interface GroupSizeTierOutput {
 	/**
+	 * Up To Pax
+	 * Inclusive upper headcount bound.
+	 * @min 1
+	 */
+	up_to_pax: number;
+	/**
 	 * Monetary value pair.
 	 *
 	 * Conversion happens inside the schema but takes an explicit ``FxContext``
@@ -6045,12 +6051,6 @@ export interface GroupSizeTierOutput {
 	 * slips through.
 	 */
 	cost: MonetaryValueSchema;
-	/**
-	 * Up To Pax
-	 * Inclusive upper headcount bound.
-	 * @min 1
-	 */
-	up_to_pax: number;
 }
 
 /** GroupTemplate */
@@ -6067,6 +6067,7 @@ export interface GroupTemplate {
  * ``DurationCharge`` — its ``rate`` is where the group-size tiers live.
  */
 export interface GuideByLanguageCategoryInput {
+	lang?: LanguageCode | null;
 	/**
 	 * Expenses
 	 * As a whole, or per unit of the event's own length.
@@ -6081,7 +6082,6 @@ export interface GuideByLanguageCategoryInput {
 				  } & DurationChargeInput)
 		  )
 		| null;
-	lang?: LanguageCode | null;
 }
 
 /**
@@ -6090,6 +6090,7 @@ export interface GuideByLanguageCategoryInput {
  * ``DurationCharge`` — its ``rate`` is where the group-size tiers live.
  */
 export interface GuideByLanguageCategoryOutput {
+	lang: LanguageCode | null;
 	/**
 	 * Expenses
 	 * As a whole, or per unit of the event's own length.
@@ -6104,7 +6105,6 @@ export interface GuideByLanguageCategoryOutput {
 				  } & DurationChargeOutput)
 		  )
 		| null;
-	lang: LanguageCode | null;
 }
 
 /**
@@ -6148,20 +6148,15 @@ export interface GuideDetailsWrite {
 /** GuideEvent */
 export interface GuideEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A guide as a create takes it: the tour's plan and the guide suppliers that
-	 * staff it.
-	 */
-	details: GuideDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -6169,15 +6164,32 @@ export interface GuideEvent {
 	 * @default "guide"
 	 */
 	typ: "guide";
+	/**
+	 * A guide as a create takes it: the tour's plan and the guide suppliers that
+	 * staff it.
+	 */
+	details: GuideDetailsWrite;
 }
 
 /** GuideEventTypeRead */
 export interface GuideEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "guide"
+	 */
+	typ: "guide";
 	/** A guide as it reads. */
 	details: GuideDetailsOutput;
 	/**
@@ -6186,39 +6198,20 @@ export interface GuideEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "guide"
-	 */
-	typ: "guide";
 }
 
 /** GuideEventUpdate */
 export interface GuideEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of a guide an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: GuideDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -6226,6 +6219,13 @@ export interface GuideEventUpdate {
 	 * @default "guide"
 	 */
 	typ: "guide";
+	/**
+	 * The half of a guide an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: GuideDetailsUpdate;
 }
 
 /**
@@ -6239,13 +6239,13 @@ export interface GuideInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * A guide as the event states it. No supplier product backs a guide, so the
 	 * spec is always the tour's own.
 	 */
 	spec: GuideSpecInput;
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -6265,15 +6265,15 @@ export interface GuideMemberOutput {
 	 */
 	is_main: boolean;
 	/**
-	 * A guide as the event states it. No supplier product backs a guide, so the
-	 * spec is always the tour's own.
-	 */
-	spec: GuideSpecOutput;
-	/**
 	 * An event that states its own spec: nothing is linked, so the only thing
 	 * left to name is the supplier it is bought from.
 	 */
 	supply: InlineSupply;
+	/**
+	 * A guide as the event states it. No supplier product backs a guide, so the
+	 * spec is always the tour's own.
+	 */
+	spec: GuideSpecOutput;
 }
 
 /**
@@ -6303,13 +6303,13 @@ export interface GuideMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * A guide as the event states it. No supplier product backs a guide, so the
 	 * spec is always the tour's own.
 	 */
 	spec: GuideSpecInput;
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "guide";
 }
@@ -6350,43 +6350,43 @@ export interface GuideSingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A guide as a create takes it: the tour's plan and the guide suppliers that
-	 * staff it.
-	 */
-	details: GuideDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "guide"
 	 */
 	typ: "guide";
+	/**
+	 * A guide as a create takes it: the tour's plan and the guide suppliers that
+	 * staff it.
+	 */
+	details: GuideDetailsWrite;
 }
 
 /** GuideSingleEventRead */
@@ -6398,10 +6398,38 @@ export interface GuideSingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "guide"
+	 */
+	typ: "guide";
 	/** A guide as it reads. */
 	details: GuideDetailsOutput;
 	/**
@@ -6410,34 +6438,6 @@ export interface GuideSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "guide"
-	 */
-	typ: "guide";
 }
 
 /**
@@ -6446,8 +6446,6 @@ export interface GuideSingleEventReadOutput {
  * spec is always the tour's own.
  */
 export interface GuideSpecInput {
-	/** Categories */
-	categories?: GuideByLanguageCategoryInput[];
 	/** Name */
 	name?: string | null;
 	/**
@@ -6455,6 +6453,8 @@ export interface GuideSpecInput {
 	 * Guide kind stepped by group size; the last tier is open-ended.
 	 */
 	typ_tiers?: GuideTypeTier[];
+	/** Categories */
+	categories?: GuideByLanguageCategoryInput[];
 }
 
 /**
@@ -6463,8 +6463,6 @@ export interface GuideSpecInput {
  * spec is always the tour's own.
  */
 export interface GuideSpecOutput {
-	/** Categories */
-	categories: GuideByLanguageCategoryOutput[];
 	/** Name */
 	name: string | null;
 	/**
@@ -6472,6 +6470,8 @@ export interface GuideSpecOutput {
 	 * Guide kind stepped by group size; the last tier is open-ended.
 	 */
 	typ_tiers: GuideTypeTier[];
+	/** Categories */
+	categories: GuideByLanguageCategoryOutput[];
 }
 
 /**
@@ -6480,13 +6480,13 @@ export interface GuideSpecOutput {
  * previous tier's bound + 1 up to ``up_to_pax`` inclusive.
  */
 export interface GuideTypeTier {
-	typ: GuideType;
 	/**
 	 * Up To Pax
 	 * Inclusive upper headcount bound.
 	 * @min 1
 	 */
 	up_to_pax: number;
+	typ: GuideType;
 }
 
 /** HTTPValidationError */
@@ -6503,6 +6503,11 @@ export interface HTTPValidationError {
  * wrong one means the product is wrong, not the tour.
  */
 export interface HotelOverrideInput {
+	/**
+	 * Typ
+	 * @default "housing"
+	 */
+	typ: "housing";
 	policy?: HotelPolicySchemaInput | null;
 	/**
 	 * Rates
@@ -6518,11 +6523,6 @@ export interface HotelOverrideInput {
 				  } & WholePriceOverrideInput)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "housing"
-	 */
-	typ: "housing";
 }
 
 /**
@@ -6533,6 +6533,11 @@ export interface HotelOverrideInput {
  * wrong one means the product is wrong, not the tour.
  */
 export interface HotelOverrideOutput {
+	/**
+	 * Typ
+	 * @default "housing"
+	 */
+	typ: "housing";
 	policy: HotelPolicySchemaOutput | null;
 	/**
 	 * Rates
@@ -6548,11 +6553,6 @@ export interface HotelOverrideOutput {
 				  } & WholePriceOverrideOutput)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "housing"
-	 */
-	typ: "housing";
 }
 
 /**
@@ -6590,6 +6590,11 @@ export interface HotelPolicySchemaOutput {
 /** HotelProductCreate */
 export interface HotelProductCreate {
 	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ: "hotel";
+	/**
 	 * Details
 	 * Where the hotel's price sits.
 	 */
@@ -6600,11 +6605,6 @@ export interface HotelProductCreate {
 		| ({
 				pricing: "whole";
 		  } & WholeHotelCreate);
-	/**
-	 * Typ
-	 * @default "hotel"
-	 */
-	typ: "hotel";
 }
 
 /** HotelProductRead */
@@ -6614,12 +6614,24 @@ export interface HotelProductReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Paths */
-	image_paths: string[];
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/** Name */
 	name: string;
+	/** Image Paths */
+	image_paths: string[];
 	/** Primary Image Path */
 	primary_image_path: string | null;
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ: "hotel";
 	/**
 	 * Spec
 	 * Where the hotel's price sits.
@@ -6631,18 +6643,6 @@ export interface HotelProductReadOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeHotelOutput);
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name: string | null;
-	/**
-	 * Typ
-	 * @default "hotel"
-	 */
-	typ: "hotel";
 }
 
 /**
@@ -6651,12 +6651,18 @@ export interface HotelProductReadOutput {
  * what it negotiated away from the hotel's terms.
  */
 export interface HotelProductSupplyOutput {
-	override: HotelOverrideOutput | null;
+	/**
+	 * Source
+	 * @default "product"
+	 */
+	source: "product";
 	/**
 	 * Product Id
 	 * @format uuid
 	 */
 	product_id: string;
+	/** Who a linked product is bought from, resolved on read. */
+	supplier: SupplierRef;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -6668,13 +6674,7 @@ export interface HotelProductSupplyOutput {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
-	/**
-	 * Source
-	 * @default "product"
-	 */
-	source: "product";
-	/** Who a linked product is bought from, resolved on read. */
-	supplier: SupplierRef;
+	override: HotelOverrideOutput | null;
 }
 
 /**
@@ -6682,6 +6682,11 @@ export interface HotelProductSupplyOutput {
  * Partial update; ``details`` replaces the whole object rather than merging.
  */
 export interface HotelProductUpdate {
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ: "hotel";
 	/**
 	 * Details
 	 * Where the hotel's price sits.
@@ -6696,11 +6701,6 @@ export interface HotelProductUpdate {
 				  } & WholeHotelDetails)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "hotel"
-	 */
-	typ: "hotel";
 }
 
 /**
@@ -6726,10 +6726,10 @@ export interface HousingDetailsOutput {
  * what they are promised to stay in.
  */
 export interface HousingDetailsPubSchemaOutput {
-	check_in: TimeSchema | null;
-	check_out: TimeSchema | null;
 	/** Duration */
 	duration: number | null;
+	check_in: TimeSchema | null;
+	check_out: TimeSchema | null;
 	spec: HousingSpecPubSchemaOutput | null;
 }
 
@@ -6766,20 +6766,15 @@ export interface HousingDetailsWrite {
 /** HousingEvent */
 export interface HousingEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A stay as a create takes it: the tour's plan and the hotels that together fill
-	 * it.
-	 */
-	details: HousingDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -6787,42 +6782,59 @@ export interface HousingEvent {
 	 * @default "housing"
 	 */
 	typ: "housing";
+	/**
+	 * A stay as a create takes it: the tour's plan and the hotels that together fill
+	 * it.
+	 */
+	details: HousingDetailsWrite;
 }
 
 /** HousingEventPubRead */
 export interface HousingEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
-	details: HousingDetailsPubSchemaOutput | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
 	/**
 	 * Typ
 	 * @default "housing"
 	 */
 	typ: "housing";
+	details: HousingDetailsPubSchemaOutput | null;
 }
 
 /** HousingEventTypeRead */
 export interface HousingEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "housing"
+	 */
+	typ: "housing";
 	/** A stay as it reads: the tour's plan and the hotels that together fill it. */
 	details: HousingDetailsOutput;
 	/**
@@ -6831,39 +6843,20 @@ export interface HousingEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "housing"
-	 */
-	typ: "housing";
 }
 
 /** HousingEventUpdate */
 export interface HousingEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of a stay an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: HousingDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -6871,6 +6864,13 @@ export interface HousingEventUpdate {
 	 * @default "housing"
 	 */
 	typ: "housing";
+	/**
+	 * The half of a stay an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: HousingDetailsUpdate;
 }
 
 /**
@@ -6883,6 +6883,8 @@ export interface HousingInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * Where the hotel's price sits.
@@ -6894,8 +6896,6 @@ export interface HousingInlineSupplyNew {
 		| ({
 				pricing: "whole";
 		  } & WholeHotelInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -6915,6 +6915,14 @@ export interface HousingMemberOutput {
 	 * @default false
 	 */
 	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & HotelProductSupplyOutput);
 	/**
 	 * Spec
 	 * Where the hotel's price sits.
@@ -6926,14 +6934,6 @@ export interface HousingMemberOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeHotelOutput);
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & HotelProductSupplyOutput);
 }
 
 /**
@@ -6966,6 +6966,8 @@ export interface HousingMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * Where the hotel's price sits.
@@ -6977,8 +6979,6 @@ export interface HousingMemberUpdate {
 		| ({
 				pricing: "whole";
 		  } & WholeHotelInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "housing";
 }
@@ -7007,15 +7007,15 @@ export interface HousingMemberWrite {
  * room states ``typ``/``pax``, a per-room one states ``name``/``description``.
  */
 export interface HousingRoomPubSchema {
+	typ: HousingRoomTypes | null;
+	/** Pax */
+	pax: number | null;
+	/** Name */
+	name: string | null;
 	/** Description */
 	description: string | null;
 	/** Images */
 	images: EventImagePubSchema[];
-	/** Name */
-	name: string | null;
-	/** Pax */
-	pax: number | null;
-	typ: HousingRoomTypes | null;
 }
 
 /** HousingSingleEvent */
@@ -7027,43 +7027,43 @@ export interface HousingSingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A stay as a create takes it: the tour's plan and the hotels that together fill
-	 * it.
-	 */
-	details: HousingDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "housing"
 	 */
 	typ: "housing";
+	/**
+	 * A stay as a create takes it: the tour's plan and the hotels that together fill
+	 * it.
+	 */
+	details: HousingDetailsWrite;
 }
 
 /** HousingSingleEventRead */
@@ -7075,10 +7075,38 @@ export interface HousingSingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "housing"
+	 */
+	typ: "housing";
 	/** A stay as it reads: the tour's plan and the hotels that together fill it. */
 	details: HousingDetailsOutput;
 	/**
@@ -7087,34 +7115,6 @@ export interface HousingSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "housing"
-	 */
-	typ: "housing";
 }
 
 /**
@@ -7130,14 +7130,14 @@ export interface HousingSingleEventReadOutput {
  * offer, without the names each hotel gives them.
  */
 export interface HousingSpecPubSchemaOutput {
-	/** Amenities */
-	amenities: AmenitiesTypes[];
-	/** Rooms */
-	rooms: HousingRoomPubSchema[];
 	/** Stars */
 	stars: number | null;
 	/** Typs */
 	typs: HotelKind[];
+	/** Amenities */
+	amenities: AmenitiesTypes[];
+	/** Rooms */
+	rooms: HousingRoomPubSchema[];
 }
 
 /**
@@ -7181,20 +7181,15 @@ export interface InformationDetailsWrite {
 /** InformationEvent */
 export interface InformationEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * An information entry as a create takes it. No product supplies one, so a
-	 * create that leaves the pool out gets a single member naming no supplier.
-	 */
-	details?: InformationDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -7202,42 +7197,59 @@ export interface InformationEvent {
 	 * @default "ref"
 	 */
 	typ: "ref";
+	/**
+	 * An information entry as a create takes it. No product supplies one, so a
+	 * create that leaves the pool out gets a single member naming no supplier.
+	 */
+	details?: InformationDetailsWrite;
 }
 
 /** InformationEventPubRead */
 export interface InformationEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
-	details: EmptyDetailsPub | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
 	/**
 	 * Typ
 	 * @default "ref"
 	 */
 	typ: "ref";
+	details: EmptyDetailsPub | null;
 }
 
 /** InformationEventTypeRead */
 export interface InformationEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "ref"
+	 */
+	typ: "ref";
 	/** An information entry as it reads. */
 	details: InformationDetailsOutput;
 	/**
@@ -7246,39 +7258,20 @@ export interface InformationEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "ref"
-	 */
-	typ: "ref";
 }
 
 /** InformationEventUpdate */
 export interface InformationEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of an information entry an alternative update writes: its
-	 * hours, replaced whole.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details?: InformationDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -7286,6 +7279,13 @@ export interface InformationEventUpdate {
 	 * @default "ref"
 	 */
 	typ: "ref";
+	/**
+	 * The half of an information entry an alternative update writes: its
+	 * hours, replaced whole.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details?: InformationDetailsUpdate;
 }
 
 /**
@@ -7299,13 +7299,13 @@ export interface InformationInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * The half a type states nothing in: a supplementary entry's plan, an
 	 * information entry's spec.
 	 */
 	spec?: Empty;
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -7325,15 +7325,15 @@ export interface InformationMember {
 	 */
 	is_main: boolean;
 	/**
-	 * The half a type states nothing in: a supplementary entry's plan, an
-	 * information entry's spec.
-	 */
-	spec: Empty;
-	/**
 	 * An event that states its own spec: nothing is linked, so the only thing
 	 * left to name is the supplier it is bought from.
 	 */
 	supply: InlineSupply;
+	/**
+	 * The half a type states nothing in: a supplementary entry's plan, an
+	 * information entry's spec.
+	 */
+	spec: Empty;
 }
 
 /**
@@ -7363,13 +7363,13 @@ export interface InformationMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * The half a type states nothing in: a supplementary entry's plan, an
 	 * information entry's spec.
 	 */
 	spec?: Empty;
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "ref";
 }
@@ -7398,43 +7398,43 @@ export interface InformationSingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * An information entry as a create takes it. No product supplies one, so a
-	 * create that leaves the pool out gets a single member naming no supplier.
-	 */
-	details?: InformationDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "ref"
 	 */
 	typ: "ref";
+	/**
+	 * An information entry as a create takes it. No product supplies one, so a
+	 * create that leaves the pool out gets a single member naming no supplier.
+	 */
+	details?: InformationDetailsWrite;
 }
 
 /** InformationSingleEventRead */
@@ -7446,10 +7446,38 @@ export interface InformationSingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "ref"
+	 */
+	typ: "ref";
 	/** An information entry as it reads. */
 	details: InformationDetailsOutput;
 	/**
@@ -7458,34 +7486,6 @@ export interface InformationSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "ref"
-	 */
-	typ: "ref";
 }
 
 /**
@@ -7506,35 +7506,42 @@ export interface InlineSupply {
 /** InvoiceDetailResponse */
 export interface InvoiceDetailResponse {
 	/**
-	 * Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	amount: string;
-	/**
-	 * Balance
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	balance: string;
-	/** Booking Id */
-	booking_id: string | null;
-	/** Currency */
-	currency: string;
-	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
 	/** Invoice Number */
 	invoice_number: string;
-	/** Issued At */
-	issued_at: string | null;
+	/** Booking Id */
+	booking_id: string | null;
 	/** Order Number */
 	order_number: string | null;
+	typ: InvoiceType;
+	status: InvoiceStatus;
+	/**
+	 * Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	amount: string;
+	/** Currency */
+	currency: string;
+	/**
+	 * Total
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	total: string;
 	/**
 	 * Paid Amount
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	paid_amount: string;
+	/**
+	 * Balance
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	balance: string;
+	/** Issued At */
+	issued_at: string | null;
 	/** Payment Details */
 	payment_details:
 		| (
@@ -7546,13 +7553,6 @@ export interface InvoiceDetailResponse {
 				  } & CustomDetails)
 		  )
 		| null;
-	status: InvoiceStatus;
-	/**
-	 * Total
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	total: string;
-	typ: InvoiceType;
 }
 
 /** InvoiceGenerate */
@@ -7571,37 +7571,37 @@ export interface InvoiceGenerate {
 
 /** InvoiceListItem */
 export interface InvoiceListItem {
-	/** Booking Id */
-	booking_id: string | null;
-	/** Counterparty Name */
-	counterparty_name: string | null;
-	/** Currency */
-	currency: string;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Invoice Number */
-	invoice_number: string;
-	/** Issue Date */
-	issue_date: string | null;
-	/** Order Number */
-	order_number: string | null;
-	/** Paid Amount */
-	paid_amount: number;
+	/** Booking Id */
+	booking_id: string | null;
+	typ: InvoiceType;
 	status: InvoiceStatus;
 	/** Total Amount */
 	total_amount: number;
-	typ: InvoiceType;
+	/** Paid Amount */
+	paid_amount: number;
+	/** Currency */
+	currency: string;
+	/** Issue Date */
+	issue_date: string | null;
+	/** Counterparty Name */
+	counterparty_name: string | null;
+	/** Invoice Number */
+	invoice_number: string;
+	/** Order Number */
+	order_number: string | null;
 }
 
 /** InvoiceListResponse */
 export interface InvoiceListResponse {
-	/** Data */
-	data: InvoiceListItem[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: InvoiceListItem[];
 }
 
 /** InvoicePaymentCreate */
@@ -7629,11 +7629,11 @@ export interface InvoicePdfResponse {
  * view and the catalog listing.
  */
 export interface JourneyPointPubSchemaOutput {
-	/** Date */
-	date: string | null;
+	time: TimeSchema | null;
 	/** Location */
 	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	time: TimeSchema | null;
+	/** Date */
+	date: string | null;
 }
 
 /** KeyValItem */
@@ -7646,15 +7646,15 @@ export interface KeyValItem {
 
 /** LandingPageImageModel */
 export interface LandingPageImageModel {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Path */
-	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
 	/**
 	 * Landing Page Id
 	 * @format uuid
@@ -7677,46 +7677,54 @@ export interface LandingPageImagePubSchema {
 
 /** LandingPagePubSchema */
 export interface LandingPagePubSchema {
-	/** Additional Information */
-	additional_information: string | null;
-	/** Amenities Included */
-	amenities_included: string[];
-	/** Amenities Not Included */
-	amenities_not_included: string[];
-	/** Cancellation Policy */
-	cancellation_policy: string | null;
-	/** Description */
-	description: string | null;
-	/** Images */
-	images: LandingPageImagePubSchema[];
-	/** Languages */
-	languages: LanguageCode[];
+	/** Title */
+	title: string | null;
 	/** Overview */
 	overview: string | null;
+	/** Description */
+	description: string | null;
 	/** Overview Description */
 	overview_description: string | null;
 	/** Pickup Description */
 	pickup_description: string | null;
-	/** Pickup Type */
-	pickup_type: PickupType[];
-	/** Title */
-	title: string | null;
-}
-
-/** LandingPageResponse */
-export interface LandingPageResponse {
 	/** Additional Information */
 	additional_information: string | null;
+	/** Cancellation Policy */
+	cancellation_policy: string | null;
+	/** Languages */
+	languages: LanguageCode[];
+	/** Pickup Type */
+	pickup_type: PickupType[];
 	/** Amenities Included */
 	amenities_included: string[];
 	/** Amenities Not Included */
 	amenities_not_included: string[];
-	/** Cancellation Policy */
-	cancellation_policy: string | null;
-	/** Created At */
-	created_at: string | null;
+	/** Images */
+	images: LandingPageImagePubSchema[];
+}
+
+/** LandingPageResponse */
+export interface LandingPageResponse {
+	/** Title */
+	title: string | null;
+	/** Overview */
+	overview: string | null;
 	/** Description */
 	description: string | null;
+	/** Overview Description */
+	overview_description: string | null;
+	/** Pickup Description */
+	pickup_description: string | null;
+	/** Cancellation Policy */
+	cancellation_policy: string | null;
+	/** Additional Information */
+	additional_information: string | null;
+	/** Pickup Type */
+	pickup_type: PickupType[];
+	/** Amenities Included */
+	amenities_included: string[];
+	/** Amenities Not Included */
+	amenities_not_included: string[];
 	/**
 	 * Id
 	 * @format uuid
@@ -7724,50 +7732,42 @@ export interface LandingPageResponse {
 	id: string;
 	/** Languages */
 	languages: LanguageCode[];
-	/** Overview */
-	overview: string | null;
-	/** Overview Description */
-	overview_description: string | null;
-	/** Pickup Description */
-	pickup_description: string | null;
-	/** Pickup Type */
-	pickup_type: PickupType[];
-	/** Title */
-	title: string | null;
+	/** Created At */
+	created_at: string | null;
 	/** Updated At */
 	updated_at: string | null;
 }
 
 /** LandingPageUpdate */
 export interface LandingPageUpdate {
-	/** Additional Information */
-	additional_information?: string | null;
-	/** Amenities Included */
-	amenities_included?: string[] | null;
-	/** Amenities Not Included */
-	amenities_not_included?: string[] | null;
-	/** Cancellation Policy */
-	cancellation_policy?: string | null;
-	/** Description */
-	description?: string | null;
+	/** Title */
+	title?: string | null;
 	/** Overview */
 	overview?: string | null;
+	/** Description */
+	description?: string | null;
 	/** Overview Description */
 	overview_description?: string | null;
 	/** Pickup Description */
 	pickup_description?: string | null;
+	/** Cancellation Policy */
+	cancellation_policy?: string | null;
+	/** Additional Information */
+	additional_information?: string | null;
 	/** Pickup Type */
 	pickup_type?: PickupType[] | null;
-	/** Title */
-	title?: string | null;
+	/** Amenities Included */
+	amenities_included?: string[] | null;
+	/** Amenities Not Included */
+	amenities_not_included?: string[] | null;
 }
 
 /** LedgerEntryListResponse */
 export interface LedgerEntryListResponse {
-	/** Data */
-	data: LedgerEntryResponseOutput[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: LedgerEntryResponseOutput[];
 }
 
 /**
@@ -7778,68 +7778,21 @@ export interface LedgerEntryListResponse {
  */
 export interface LedgerEntryResponseOutput {
 	/**
-	 * Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	amount: string;
-	/**
-	 * Base Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	base_amount: string;
-	/** Booking Id */
-	booking_id: string | null;
-	currency: Currency;
-	flow: LedgerFlow | null;
-	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Note */
-	note: string | null;
-	/**
-	 * Occurred At
-	 * @format date-time
-	 */
-	occurred_at: string;
 	/**
 	 * Operator Id
 	 * @format uuid
 	 */
 	operator_id: string;
+	/** Booking Id */
+	booking_id: string | null;
 	/** Order Number */
 	order_number: string | null;
-	/** Payee Id */
-	payee_id: string | null;
-	/**
-	 * One end of an entry. ``OPERATOR`` is a party like any other, not an
-	 * implied centre — that is what lets a future entry record an agency paying a
-	 * supplier directly, with the operator's books merely observing it.
-	 */
-	payee_typ: LedgerParty;
-	/** Payer Id */
-	payer_id: string | null;
-	/**
-	 * One end of an entry. ``OPERATOR`` is a party like any other, not an
-	 * implied centre — that is what lets a future entry record an agency paying a
-	 * supplier directly, with the operator's books merely observing it.
-	 */
-	payer_typ: LedgerParty;
-	/**
-	 * Rate
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	rate: string;
 	/** Snapshot Event Id */
 	snapshot_event_id: string | null;
-	/**
-	 * Which rail produced the entry. Bank, card and SWIFT rails append their
-	 * own members here; the posting contract does not change.
-	 */
-	source: LedgerSource;
-	/** Source Id */
-	source_id: string | null;
 	/**
 	 * ``ACCRUAL`` is what was agreed and is now owed; ``SETTLEMENT`` is cash
 	 * that actually moved. Debt is the difference between the two.
@@ -7849,6 +7802,53 @@ export interface LedgerEntryResponseOutput {
 	 * paid in three instalments posts three of them.
 	 */
 	typ: LedgerEntryType;
+	/**
+	 * One end of an entry. ``OPERATOR`` is a party like any other, not an
+	 * implied centre — that is what lets a future entry record an agency paying a
+	 * supplier directly, with the operator's books merely observing it.
+	 */
+	payer_typ: LedgerParty;
+	/** Payer Id */
+	payer_id: string | null;
+	/**
+	 * One end of an entry. ``OPERATOR`` is a party like any other, not an
+	 * implied centre — that is what lets a future entry record an agency paying a
+	 * supplier directly, with the operator's books merely observing it.
+	 */
+	payee_typ: LedgerParty;
+	/** Payee Id */
+	payee_id: string | null;
+	flow: LedgerFlow | null;
+	/**
+	 * Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	amount: string;
+	currency: Currency;
+	/**
+	 * Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	rate: string;
+	/**
+	 * Base Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	base_amount: string;
+	/**
+	 * Which rail produced the entry. Bank, card and SWIFT rails append their
+	 * own members here; the posting contract does not change.
+	 */
+	source: LedgerSource;
+	/** Source Id */
+	source_id: string | null;
+	/**
+	 * Occurred At
+	 * @format date-time
+	 */
+	occurred_at: string;
+	/** Note */
+	note: string | null;
 }
 
 /**
@@ -7857,24 +7857,24 @@ export interface LedgerEntryResponseOutput {
  * pins, and the slot's pictures.
  */
 export interface LibraryCopyFromEvent {
-	/**
-	 * Event Option Id
-	 * The alternative: ``event.id`` on a single event, ``event.details[].id`` on a choice.
-	 * @format uuid
-	 */
-	event_option_id: string;
 	/** Kind */
 	kind: "event";
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tour_id: string;
 	/**
 	 * Option Id
 	 * @format uuid
 	 */
 	option_id: string;
 	/**
-	 * Tour Id
+	 * Event Option Id
+	 * The alternative: ``event.id`` on a single event, ``event.details[].id`` on a choice.
 	 * @format uuid
 	 */
-	tour_id: string;
+	event_option_id: string;
 }
 
 /**
@@ -7923,16 +7923,16 @@ export interface LocationInSchema {
 
 /** LocationOutSchema */
 export interface LocationOutSchema {
-	/** Address */
-	address?: string | null;
-	/** City */
-	city?: string | null;
 	/**
 	 * Id
 	 * Stored location id; send it back to reuse this location.
 	 */
 	id?: string | null;
 	lang: LanguageCode;
+	/** City */
+	city?: string | null;
+	/** Address */
+	address?: string | null;
 	/**
 	 * Lat
 	 * The latitude of the location in decimal degrees (-90 to 90).
@@ -7965,30 +7965,30 @@ export interface LocationRefSchema {
 
 /** LocationSuggestionSchema */
 export interface LocationSuggestionSchema {
-	/** City */
-	city: string | null;
-	kind: SuggestKind;
 	/** Value */
 	value: string;
+	kind: SuggestKind;
+	/** City */
+	city: string | null;
 }
 
 /** MeSchema */
 export interface MeSchema {
-	/** Agency Id */
-	agency_id: string | null;
-	/** Email */
-	email: string;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Operator Id */
-	operator_id: string | null;
-	/** Picture */
-	picture: string | null;
+	/** Email */
+	email: string;
 	/** Role */
 	role: string;
+	/** Picture */
+	picture: string | null;
+	/** Agency Id */
+	agency_id: string | null;
+	/** Operator Id */
+	operator_id: string | null;
 }
 
 /**
@@ -7997,8 +7997,6 @@ export interface MeSchema {
  * on update to keep the item's pictures.
  */
 export interface MenuItem {
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -8012,6 +8010,8 @@ export interface MenuItem {
 	images?: NodeImageSchema[];
 	/** Name */
 	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /**
@@ -8019,12 +8019,12 @@ export interface MenuItem {
  * One dish on a food offering's menu, photos kept.
  */
 export interface MenuItemPubSchema {
+	/** Name */
+	name: string | null;
 	/** Description */
 	description: string | null;
 	/** Images */
 	images: EventImagePubSchema[];
-	/** Name */
-	name: string | null;
 }
 
 /**
@@ -8042,23 +8042,18 @@ export interface MenuItemPubSchema {
  * slips through.
  */
 export interface MonetaryValueSchema {
-	/** @default "USD" */
-	currency?: Currency;
 	/**
 	 * Val
 	 * The total monetary value.
 	 * @min 0
 	 */
 	val: number;
+	/** @default "USD" */
+	currency?: Currency;
 }
 
 /** MoveToMultiResult */
 export interface MoveToMultiResult {
-	/**
-	 * Removed Event Id
-	 * @format uuid
-	 */
-	removed_event_id: string;
 	/**
 	 * One event slot as the operator reads it: the slot's ids, its payload and
 	 * the state of its translation. The slot's pictures are ``event.images``.
@@ -8069,6 +8064,11 @@ export interface MoveToMultiResult {
 	 * - ``GET /tour/{tour_id}/event/{event_id}/images/all``
 	 */
 	target_event: TourEventResponse;
+	/**
+	 * Removed Event Id
+	 * @format uuid
+	 */
+	removed_event_id: string;
 }
 
 /** MoveToMultiSchema */
@@ -8113,6 +8113,24 @@ export interface MultiEvent {
 	 * @min 1
 	 */
 	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/** Typ */
+	typ: "options";
 	/** Details */
 	details?:
 		| (
@@ -8145,37 +8163,32 @@ export interface MultiEvent {
 				  } & TransferEvent)
 		  )[]
 		| null;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/** Typ */
-	typ: "options";
 }
 
 /** MultiEventPub */
 export interface MultiEventPubOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
+	/**
+	 * Typ
+	 * @default "options"
+	 */
+	typ: "options";
 	/** Details */
 	details: (
 		| ({
@@ -8200,19 +8213,6 @@ export interface MultiEventPubOutput {
 				typ: "transfer";
 		  } & TransferEventPubReadOutput)
 	)[];
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
-	/**
-	 * Typ
-	 * @default "options"
-	 */
-	typ: "options";
 }
 
 /**
@@ -8227,6 +8227,24 @@ export interface MultiEventReadOutput {
 	 * @min 1
 	 */
 	day: number;
+	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/** Typ */
+	typ: "options";
 	/** Details */
 	details: (
 		| ({
@@ -8257,43 +8275,25 @@ export interface MultiEventReadOutput {
 				typ: "transfer";
 		  } & TransferEventTypeReadOutput)
 	)[];
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/** Typ */
-	typ: "options";
 }
 
 /** MyAccountRead */
 export interface MyAccountRead {
-	default_currency: Currency;
 	/** Email */
 	email: string;
 	/** First Name */
 	first_name: string | null;
 	/** Last Name */
 	last_name: string | null;
-	/** Location */
-	location: string | null;
-	/** Phone Number */
-	phone_number: string | null;
-	/** Profile Picture Path */
-	profile_picture_path: string | null;
 	/** Title */
 	title: string | null;
+	/** Phone Number */
+	phone_number: string | null;
+	/** Location */
+	location: string | null;
+	/** Profile Picture Path */
+	profile_picture_path: string | null;
+	default_currency: Currency;
 }
 
 /**
@@ -8321,6 +8321,11 @@ export interface NodeImageSchema {
  */
 export interface OfferingChargeOverrideInput {
 	/**
+	 * Offering Id
+	 * @format uuid
+	 */
+	offering_id: string;
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -8331,11 +8336,6 @@ export interface OfferingChargeOverrideInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Offering Id
-	 * @format uuid
-	 */
-	offering_id: string;
 }
 
 /**
@@ -8343,6 +8343,11 @@ export interface OfferingChargeOverrideInput {
  * What one offering costs this tour.
  */
 export interface OfferingChargeOverrideOutput {
+	/**
+	 * Offering Id
+	 * @format uuid
+	 */
+	offering_id: string;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -8354,11 +8359,6 @@ export interface OfferingChargeOverrideOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Offering Id
-	 * @format uuid
-	 */
-	offering_id: string;
 }
 
 /**
@@ -8399,22 +8399,22 @@ export interface OfferingChargesOverrideOutput {
  */
 export interface OnlyVariants {
 	/**
-	 * Categories
-	 * Car categories the event takes across every car in scope.
-	 */
-	categories?: string[];
-	/** Ids */
-	ids?: string[];
-	/**
 	 * Typ
 	 * @default "only"
 	 */
 	typ: "only";
+	/** Ids */
+	ids?: string[];
 	/**
 	 * Units
 	 * Rooms of the pinned hotel categories the event takes.
 	 */
 	units?: string[];
+	/**
+	 * Categories
+	 * Car categories the event takes across every car in scope.
+	 */
+	categories?: string[];
 }
 
 /** OperatorCreateSchema */
@@ -8425,8 +8425,6 @@ export interface OperatorCreateSchema {
 
 /** OperatorFilesModel */
 export interface OperatorFilesModel {
-	/** File Name */
-	file_name: string;
 	/**
 	 * Id
 	 * @format uuid
@@ -8439,13 +8437,27 @@ export interface OperatorFilesModel {
 	operator_id: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** OperatorFinancialSettingsRead */
 export interface OperatorFinancialSettingsRead {
-	/** Accepted Currencies */
-	accepted_currencies: Currency[];
 	default_currency: Currency;
+	/** Vat Enabled */
+	vat_enabled: boolean;
+	/**
+	 * Vat Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	vat_rate: string;
+	/** Profit Tax Enabled */
+	profit_tax_enabled: boolean;
+	/**
+	 * Profit Tax Rate
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	profit_tax_rate: string;
 	/**
 	 * Default Markup
 	 * The markup calculation strategy.
@@ -8471,35 +8483,36 @@ export interface OperatorFinancialSettingsRead {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	/** Accepted Currencies */
+	accepted_currencies: Currency[];
 	/**
 	 * Fx Margin
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	fx_margin: string;
-	/** Profit Tax Enabled */
-	profit_tax_enabled: boolean;
-	/**
-	 * Profit Tax Rate
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	profit_tax_rate: string;
-	/** Vat Enabled */
-	vat_enabled: boolean;
-	/**
-	 * Vat Rate
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	vat_rate: string;
 }
 
 /** OperatorFinancialSettingsUpdate */
 export interface OperatorFinancialSettingsUpdate {
+	default_currency?: Currency | null;
 	/**
 	 * Accepted Currencies
 	 * Currencies the operator holds accounts in. Every price, payment and payment route must use one of them; default_currency must be one of them.
 	 */
 	accepted_currencies?: Currency[] | null;
-	default_currency?: Currency | null;
+	/**
+	 * Fx Margin
+	 * Share every currency conversion is pushed in the operator's favour, e.g. 0.02 for 2%.
+	 */
+	fx_margin?: number | string | null;
+	/** Vat Enabled */
+	vat_enabled?: boolean | null;
+	/** Vat Rate */
+	vat_rate?: number | string | null;
+	/** Profit Tax Enabled */
+	profit_tax_enabled?: boolean | null;
+	/** Profit Tax Rate */
+	profit_tax_rate?: number | string | null;
 	/**
 	 * Default Markup
 	 * The markup calculation strategy.
@@ -8528,19 +8541,6 @@ export interface OperatorFinancialSettingsUpdate {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Fx Margin
-	 * Share every currency conversion is pushed in the operator's favour, e.g. 0.02 for 2%.
-	 */
-	fx_margin?: number | string | null;
-	/** Profit Tax Enabled */
-	profit_tax_enabled?: boolean | null;
-	/** Profit Tax Rate */
-	profit_tax_rate?: number | string | null;
-	/** Vat Enabled */
-	vat_enabled?: boolean | null;
-	/** Vat Rate */
-	vat_rate?: number | string | null;
 }
 
 /**
@@ -8550,93 +8550,93 @@ export interface OperatorFinancialSettingsUpdate {
  */
 export interface OperatorFxRateReadOutput {
 	from_currency: Currency;
+	to_currency: Currency;
 	/**
 	 * Rate
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	rate: string;
-	/** Rate Date */
-	rate_date: string | null;
 	/**
 	 * Rate With Margin
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	rate_with_margin: string;
-	to_currency: Currency;
+	/** Rate Date */
+	rate_date: string | null;
 }
 
 /** OperatorInfoModel */
 export interface OperatorInfoModel {
-	/** Address Line */
-	address_line: string | null;
-	/** Business Name */
-	business_name: string | null;
-	/** City */
-	city: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Person */
-	contact_person: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
-	/** Contact Position */
-	contact_position: string | null;
-	/** Country */
-	country: string | null;
-	/** Default Language */
-	default_language: string;
-	/** Description */
-	description: string | null;
-	/** Director Name */
-	director_name: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Legal Name */
-	legal_name: string | null;
-	/** Logo Path */
-	logo_path: string | null;
 	/**
 	 * Operator Id
 	 * @format uuid
 	 */
 	operator_id: string;
-	/** Tax Id */
-	tax_id: string | null;
+	/** Logo Path */
+	logo_path: string | null;
+	/** Description */
+	description: string | null;
+	/** Default Language */
+	default_language: string;
+	/** Business Name */
+	business_name: string | null;
 	/** Website Url */
 	website_url: string | null;
+	/** Legal Name */
+	legal_name: string | null;
+	/** Director Name */
+	director_name: string | null;
+	/** Tax Id */
+	tax_id: string | null;
+	/** Contact Person */
+	contact_person: string | null;
+	/** Contact Position */
+	contact_position: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
+	/** Address Line */
+	address_line: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
 }
 
 /** OperatorInfoUpdate */
 export interface OperatorInfoUpdate {
-	/** Address Line */
-	address_line?: string | null;
-	/** Business Name */
-	business_name?: string | null;
-	/** City */
-	city?: string | null;
-	/** Contact Email */
-	contact_email?: string | null;
-	/** Contact Person */
-	contact_person?: string | null;
-	/** Contact Phone */
-	contact_phone?: string | null;
-	/** Contact Position */
-	contact_position?: string | null;
-	/** Country */
-	country?: string | null;
 	/** Description */
 	description?: string | null;
-	/** Director Name */
-	director_name?: string | null;
-	/** Legal Name */
-	legal_name?: string | null;
-	/** Tax Id */
-	tax_id?: string | null;
+	/** Business Name */
+	business_name?: string | null;
 	/** Website Url */
 	website_url?: string | null;
+	/** Legal Name */
+	legal_name?: string | null;
+	/** Director Name */
+	director_name?: string | null;
+	/** Tax Id */
+	tax_id?: string | null;
+	/** Contact Person */
+	contact_person?: string | null;
+	/** Contact Position */
+	contact_position?: string | null;
+	/** Contact Email */
+	contact_email?: string | null;
+	/** Contact Phone */
+	contact_phone?: string | null;
+	/** Address Line */
+	address_line?: string | null;
+	/** City */
+	city?: string | null;
+	/** Country */
+	country?: string | null;
 }
 
 /**
@@ -8656,15 +8656,13 @@ export interface OperatorInfoUpdate {
  * at the booking level instead — and when the event is DESELECTED.
  */
 export interface OperatorItineraryEventOutput {
-	availability: AvailabilityStatus | null;
-	/** Billed Via Package Id */
-	billed_via_package_id: string | null;
 	/**
-	 * An event's bill on each leg of a quote: what the cheapest resolution books
-	 * and what the dearest one does.
+	 * Event Id
+	 * @format uuid
 	 */
-	breakdown: BreakdownSpreadSchemaOutput;
-	cost: TourMinMaxCostSchemaOutput;
+	event_id: string;
+	/** Tour Option Id */
+	tour_option_id: string | null;
 	/**
 	 * Date
 	 * @format date
@@ -8702,18 +8700,20 @@ export interface OperatorItineraryEventOutput {
 				  } & TransferSingleEventReadOutput)
 		  )
 		| MultiEventReadOutput;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
-	fees: TourMinMaxCostSchemaOutput;
-	guide_typ: GuideType | null;
-	markup: TourMinMaxCostSchemaOutput;
+	availability: AvailabilityStatus | null;
 	/** Selected Option Index */
 	selected_option_index: number | null;
-	/** Tour Option Id */
-	tour_option_id: string | null;
+	guide_typ: GuideType | null;
+	/** Billed Via Package Id */
+	billed_via_package_id: string | null;
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+	/**
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
+	 */
+	breakdown: BreakdownSpreadSchemaOutput;
 	/** Warnings */
 	warnings: PricingWarning[];
 }
@@ -8725,20 +8725,20 @@ export interface OperatorItineraryEventOutput {
  */
 export interface OperatorItineraryPackageOutput {
 	/**
-	 * An event's bill on each leg of a quote: what the cheapest resolution books
-	 * and what the dearest one does.
-	 */
-	breakdown: BreakdownSpreadSchemaOutput;
-	cost: TourMinMaxCostSchemaOutput;
-	fees: TourMinMaxCostSchemaOutput;
-	markup: TourMinMaxCostSchemaOutput;
-	/** Name */
-	name: string;
-	/**
 	 * Package Id
 	 * @format uuid
 	 */
 	package_id: string;
+	/** Name */
+	name: string;
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+	/**
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
+	 */
+	breakdown: BreakdownSpreadSchemaOutput;
 }
 
 /**
@@ -8759,24 +8759,24 @@ export interface OperatorItineraryResponse {
 	 * @format uuid
 	 */
 	booking_id: string;
-	cost: TourMinMaxCostSchemaOutput;
-	currency: Currency;
+	/** Order Number */
+	order_number: string;
 	/**
 	 * Date
 	 * @format date
 	 */
 	date: string;
+	/** Pax */
+	pax: number;
+	currency: Currency;
 	display_lang: LanguageCode;
 	/** Events */
 	events: OperatorItineraryEventOutput[];
-	fees: TourMinMaxCostSchemaOutput;
-	markup: TourMinMaxCostSchemaOutput;
-	/** Order Number */
-	order_number: string;
 	/** Packages */
 	packages: OperatorItineraryPackageOutput[];
-	/** Pax */
-	pax: number;
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
 	total: TourMinMaxCostSchemaOutput;
 }
 
@@ -8793,7 +8793,21 @@ export interface OperatorModel {
 
 /** OperatorPaymentRouteModel */
 export interface OperatorPaymentRouteModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Operator Id
+	 * @format uuid
+	 */
+	operator_id: string;
+	/** Internal Label */
+	internal_label: string;
 	currency: Currency;
+	/** Note */
+	note: string | null;
 	/** Details */
 	details:
 		| ({
@@ -8802,47 +8816,33 @@ export interface OperatorPaymentRouteModel {
 		| ({
 				typ: "custom";
 		  } & CustomDetails);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Internal Label */
-	internal_label: string;
-	/** Note */
-	note: string | null;
-	/**
-	 * Operator Id
-	 * @format uuid
-	 */
-	operator_id: string;
 }
 
 /** OperatorPreviewPubSchema */
 export interface OperatorPreviewPubSchema {
-	/** Address Line */
-	address_line: string | null;
-	/** Business Name */
-	business_name: string | null;
-	/** City */
-	city: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
-	/** Country */
-	country: string | null;
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Logo Url */
-	logo_url: string | null;
+	/** Business Name */
+	business_name: string | null;
+	/** Description */
+	description: string | null;
 	/** Website Url */
 	website_url: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
+	/** Address Line */
+	address_line: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
+	/** Logo Url */
+	logo_url: string | null;
 }
 
 /** OptionReorderSchema */
@@ -8857,41 +8857,41 @@ export interface OptionReorderSchema {
 
 /** OrderAgencyInfo */
 export interface OrderAgencyInfo {
-	/** Address Line */
-	address_line: string | null;
-	/** Business Name */
-	business_name: string | null;
-	/** City */
-	city: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Person */
-	contact_person: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
-	/** Contact Position */
-	contact_position: string | null;
-	/** Country */
-	country: string | null;
-	/** Description */
-	description: string | null;
-	/** Director Name */
-	director_name: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Legal Name */
-	legal_name: string | null;
-	/** Logo Url */
-	logo_url: string | null;
 	/** Name */
 	name: string;
+	/** Business Name */
+	business_name: string | null;
+	/** Legal Name */
+	legal_name: string | null;
+	/** Director Name */
+	director_name: string | null;
+	/** Contact Person */
+	contact_person: string | null;
+	/** Contact Position */
+	contact_position: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
 	/** Tax Id */
 	tax_id: string | null;
+	/** Address Line */
+	address_line: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
 	/** Website Url */
 	website_url: string | null;
+	/** Description */
+	description: string | null;
+	/** Logo Url */
+	logo_url: string | null;
 }
 
 /**
@@ -8903,27 +8903,27 @@ export interface OrderAgencyInfo {
  * in yet.
  */
 export interface OrderOperatorInfo {
-	/** Business Name */
-	business_name: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Person */
-	contact_person: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
-	/** Contact Position */
-	contact_position: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Logo Url */
-	logo_url: string | null;
 	/** Name */
 	name: string;
+	/** Business Name */
+	business_name: string | null;
+	/** Contact Person */
+	contact_person: string | null;
+	/** Contact Position */
+	contact_position: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
 	/** Website Url */
 	website_url: string | null;
+	/** Logo Url */
+	logo_url: string | null;
 }
 
 /**
@@ -8934,6 +8934,13 @@ export interface OrderOperatorInfo {
  * surface stays free of this booking concern.
  */
 export interface OrderTourEventSchemaOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Tour Option Id */
+	tour_option_id: string | null;
 	/** Event */
 	event:
 		| (
@@ -8966,50 +8973,43 @@ export interface OrderTourEventSchemaOutput {
 				  } & TransferSingleEventReadOutput)
 		  )
 		| MultiEventReadOutput;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Origin Event Id */
-	origin_event_id: string | null;
-	/** Tour Option Id */
-	tour_option_id: string | null;
 	/** @default "source" */
 	translation: TranslationState;
+	/** Origin Event Id */
+	origin_event_id: string | null;
 }
 
 /** OrderTourInfo */
 export interface OrderTourInfo {
-	/** Days */
-	days: number;
-	/** Duration Hours */
-	duration_hours: number | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Nights */
-	nights: number;
-	/** Route */
-	route: string[];
 	/** Title */
 	title: string | null;
 	typ: TourType;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours: number | null;
+	/** Route */
+	route: string[];
 }
 
 /** OrderUserInfo */
 export interface OrderUserInfo {
-	/** Email */
-	email: string;
-	/** First Name */
-	first_name: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/** Email */
+	email: string;
+	/** First Name */
+	first_name: string | null;
 	/** Last Name */
 	last_name: string | null;
 	/** Phone Number */
@@ -9031,15 +9031,10 @@ export interface OrderUserInfo {
  */
 export interface PackageBillableOutput {
 	/**
-	 * An event's bill on each leg of a quote: what the cheapest resolution books
-	 * and what the dearest one does.
+	 * Typ
+	 * @default "package_bill"
 	 */
-	breakdown: BreakdownSpreadSchemaOutput;
-	cost: TourMinMaxCostSchemaOutput;
-	/** Events */
-	events: EventLineOutput[];
-	fees: TourMinMaxCostSchemaOutput;
-	markup: TourMinMaxCostSchemaOutput;
+	typ: "package_bill";
 	/**
 	 * Identity of the package a summary line bills through.
 	 *
@@ -9048,11 +9043,16 @@ export interface PackageBillableOutput {
 	 * - ``/tour/{tour_id}/{option_id}/package/{package_id}`` for the package itself
 	 */
 	package: PackageRef;
+	/** Events */
+	events: EventLineOutput[];
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
 	/**
-	 * Typ
-	 * @default "package_bill"
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
 	 */
-	typ: "package_bill";
+	breakdown: BreakdownSpreadSchemaOutput;
 }
 
 /**
@@ -9062,6 +9062,8 @@ export interface PackageBillableOutput {
  * package bills zero, which the publish gate refuses.
  */
 export interface PackageCreate {
+	/** Name */
+	name: string;
 	/**
 	 * Expenses
 	 * The expense calculation strategy.
@@ -9092,8 +9094,6 @@ export interface PackageCreate {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Name */
-	name: string;
 	/** Supplier Id */
 	supplier_id?: string | null;
 }
@@ -9122,6 +9122,8 @@ export interface PackageRef {
  * clears it. ``name`` is the one column that cannot be cleared.
  */
 export interface PackageUpdate {
+	/** Name */
+	name?: string | null;
 	/**
 	 * Expenses
 	 * The expense calculation strategy.
@@ -9152,8 +9154,6 @@ export interface PackageUpdate {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Name */
-	name?: string | null;
 	/** Supplier Id */
 	supplier_id?: string | null;
 }
@@ -9165,18 +9165,17 @@ export interface PartneredAgencyItem {
 	 * @format uuid
 	 */
 	agency_id: string;
-	/** Business Name */
-	business_name: string | null;
-	/** City */
-	city: string | null;
-	/** Contact Email */
-	contact_email: string | null;
-	/** Contact Person */
-	contact_person: string | null;
-	/** Contact Phone */
-	contact_phone: string | null;
-	/** Country */
-	country: string | null;
+	/** Name */
+	name: string;
+	/** Invited Email */
+	invited_email: string;
+	/** Invited User Id */
+	invited_user_id: string | null;
+	/**
+	 * Partnered At
+	 * @format date-time
+	 */
+	partnered_at: string;
 	/**
 	 * Discount
 	 * The markup calculation strategy.
@@ -9191,29 +9190,30 @@ export interface PartneredAgencyItem {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Invited Email */
-	invited_email: string;
-	/** Invited User Id */
-	invited_user_id: string | null;
-	/** Logo Url */
-	logo_url: string | null;
-	/** Name */
-	name: string;
-	/**
-	 * Partnered At
-	 * @format date-time
-	 */
-	partnered_at: string;
+	/** Business Name */
+	business_name: string | null;
+	/** Contact Person */
+	contact_person: string | null;
+	/** Contact Email */
+	contact_email: string | null;
+	/** Contact Phone */
+	contact_phone: string | null;
+	/** City */
+	city: string | null;
+	/** Country */
+	country: string | null;
 	/** Website Url */
 	website_url: string | null;
+	/** Logo Url */
+	logo_url: string | null;
 }
 
 /** PartneredAgencyListResponse */
 export interface PartneredAgencyListResponse {
-	/** Data */
-	data: PartneredAgencyItem[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: PartneredAgencyItem[];
 }
 
 /** PasswordChangeIn */
@@ -9234,18 +9234,6 @@ export interface PasswordChangeIn {
 
 /** PaxCreate */
 export interface PaxCreate {
-	/** Comment */
-	comment?: string | null;
-	/**
-	 * Date Of Birth
-	 * @format date
-	 */
-	date_of_birth: string;
-	/**
-	 * Expired Date
-	 * @format date
-	 */
-	expired_date: string;
 	/**
 	 * Full Name
 	 * @maxLength 255
@@ -9255,21 +9243,33 @@ export interface PaxCreate {
 	/** Nationality */
 	nationality: string;
 	/**
+	 * Date Of Birth
+	 * @format date
+	 */
+	date_of_birth: string;
+	/**
 	 * Passport Number
 	 * @maxLength 50
 	 */
 	passport_number: string;
+	/**
+	 * Expired Date
+	 * @format date
+	 */
+	expired_date: string;
+	/** Comment */
+	comment?: string | null;
 }
 
 /** PaxFileRef */
 export interface PaxFileRef {
-	/** File Name */
-	file_name: string;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** PaxListResponse */
@@ -9282,28 +9282,50 @@ export interface PaxListResponse {
 
 /** PaxUpdate */
 export interface PaxUpdate {
-	/** Comment */
-	comment?: string | null;
-	/** Date Of Birth */
-	date_of_birth?: string | null;
-	/** Expired Date */
-	expired_date?: string | null;
 	/** Full Name */
 	full_name?: string | null;
 	gender?: Gender | null;
 	/** Nationality */
 	nationality?: string | null;
+	/** Date Of Birth */
+	date_of_birth?: string | null;
 	/** Passport Number */
 	passport_number?: string | null;
+	/** Expired Date */
+	expired_date?: string | null;
+	/** Comment */
+	comment?: string | null;
 }
 
 /** PaxWithFiles */
 export interface PaxWithFiles {
 	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	booking_id: string;
+	/** Full Name */
+	full_name: string;
+	gender: Gender;
+	/** Nationality */
+	nationality: string;
+	/**
+	 * Date Of Birth
+	 * @format date
+	 */
+	date_of_birth: string;
+	/** Passport Number */
+	passport_number: string;
+	/**
+	 * Expired Date
+	 * @format date
+	 */
+	expired_date: string;
 	/** Comment */
 	comment: string | null;
 	/**
@@ -9312,39 +9334,24 @@ export interface PaxWithFiles {
 	 */
 	created_at: string;
 	/**
-	 * Date Of Birth
-	 * @format date
-	 */
-	date_of_birth: string;
-	/**
-	 * Expired Date
-	 * @format date
-	 */
-	expired_date: string;
-	/** Files */
-	files: PaxFileRef[];
-	/** Full Name */
-	full_name: string;
-	gender: Gender;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Nationality */
-	nationality: string;
-	/** Passport Number */
-	passport_number: string;
-	/**
 	 * Updated At
 	 * @format date-time
 	 */
 	updated_at: string;
+	/** Files */
+	files: PaxFileRef[];
 }
 
 /** PaymentRouteCreate */
 export interface PaymentRouteCreate {
+	/**
+	 * Internal Label
+	 * @maxLength 255
+	 */
+	internal_label: string;
 	currency: Currency;
+	/** Note */
+	note?: string | null;
 	/** Details */
 	details:
 		| ({
@@ -9353,18 +9360,15 @@ export interface PaymentRouteCreate {
 		| ({
 				typ: "custom";
 		  } & CustomDetails);
-	/**
-	 * Internal Label
-	 * @maxLength 255
-	 */
-	internal_label: string;
-	/** Note */
-	note?: string | null;
 }
 
 /** PaymentRouteUpdate */
 export interface PaymentRouteUpdate {
+	/** Internal Label */
+	internal_label?: string | null;
 	currency?: Currency | null;
+	/** Note */
+	note?: string | null;
 	/** Details */
 	details?:
 		| (
@@ -9376,10 +9380,6 @@ export interface PaymentRouteUpdate {
 				  } & CustomDetails)
 		  )
 		| null;
-	/** Internal Label */
-	internal_label?: string | null;
-	/** Note */
-	note?: string | null;
 }
 
 /**
@@ -9389,22 +9389,22 @@ export interface PaymentRouteUpdate {
  * dearest category bound the spread.
  */
 export interface PerCarCategoryTransferInput {
-	/** Cars */
-	cars?: CategorisedCarInput[];
-	/** Categories */
-	categories?: CarCategory[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
 	/**
 	 * Pricing
 	 * @default "per_car_category"
 	 */
 	pricing: "per_car_category";
+	/** Name */
+	name?: string | null;
+	/** Categories */
+	categories?: CarCategory[];
+	/** Cars */
+	cars?: CategorisedCarInput[];
 }
 
 /**
@@ -9414,22 +9414,22 @@ export interface PerCarCategoryTransferInput {
  * dearest category bound the spread.
  */
 export interface PerCarCategoryTransferOutput {
-	/** Cars */
-	cars: CategorisedCarOutput[];
-	/** Categories */
-	categories: CarCategory[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
 	/**
 	 * Pricing
 	 * @default "per_car_category"
 	 */
 	pricing: "per_car_category";
+	/** Name */
+	name: string | null;
+	/** Categories */
+	categories: CarCategory[];
+	/** Cars */
+	cars: CategorisedCarOutput[];
 }
 
 /**
@@ -9443,22 +9443,22 @@ export interface PerCarCategoryTransferOutput {
  * car to a fleet that already stands.
  */
 export interface PerCarCategoryTransferCreate {
-	/** Cars */
-	cars?: CategorisedCarWrite[];
-	/** Categories */
-	categories: CarCategory[];
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_car_category";
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
+	/** Pricing */
+	pricing: "per_car_category";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** Categories */
+	categories: CarCategory[];
+	/** Cars */
+	cars?: CategorisedCarWrite[];
 }
 
 /**
@@ -9469,20 +9469,20 @@ export interface PerCarCategoryTransferCreate {
  * its cars have in it.
  */
 export interface PerCarCategoryTransferDetails {
-	/** Categories */
-	categories: CarCategory[];
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_car_category";
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
+	/** Pricing */
+	pricing: "per_car_category";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** Categories */
+	categories: CarCategory[];
 }
 
 /**
@@ -9492,29 +9492,29 @@ export interface PerCarCategoryTransferDetails {
  * long as its category is sent back.
  */
 export interface PerCarCategoryTransferVariantWrite {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
-	/** Prices */
-	prices?: CarPriceWrite[];
-	/** Pricing */
-	pricing: "per_car_category";
+	/** Description */
+	description?: string | null;
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
+	/** Pricing */
+	pricing: "per_car_category";
+	/** Prices */
+	prices?: CarPriceWrite[];
 }
 
 /**
@@ -9522,20 +9522,20 @@ export interface PerCarCategoryTransferVariantWrite {
  * A fleet priced by the car: a group pays for the cars it fills.
  */
 export interface PerCarTransferInput {
-	/** Cars */
-	cars?: PricedCarInput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
 	/**
 	 * Pricing
 	 * @default "per_car"
 	 */
 	pricing: "per_car";
+	/** Name */
+	name?: string | null;
+	/** Cars */
+	cars?: PricedCarInput[];
 }
 
 /**
@@ -9543,20 +9543,20 @@ export interface PerCarTransferInput {
  * A fleet priced by the car: a group pays for the cars it fills.
  */
 export interface PerCarTransferOutput {
-	/** Cars */
-	cars: PricedCarOutput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
 	/**
 	 * Pricing
 	 * @default "per_car"
 	 */
 	pricing: "per_car";
+	/** Name */
+	name: string | null;
+	/** Cars */
+	cars: PricedCarOutput[];
 }
 
 /**
@@ -9568,20 +9568,20 @@ export interface PerCarTransferOutput {
  * car category to a fleet that already stands.
  */
 export interface PerCarTransferCreate {
-	/** Cars */
-	cars?: PricedCarWrite[];
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_car";
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
+	/** Pricing */
+	pricing: "per_car";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** Cars */
+	cars?: PricedCarWrite[];
 }
 
 /**
@@ -9590,44 +9590,44 @@ export interface PerCarTransferCreate {
  */
 export interface PerCarTransferDetails {
 	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_car";
-	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
-}
-
-/** PerCarTransferVariantWrite */
-export interface PerCarTransferVariantWrite {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-	/** Description */
-	description?: string | null;
+	/** Pricing */
+	pricing: "per_car";
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+}
+
+/** PerCarTransferVariantWrite */
+export interface PerCarTransferVariantWrite {
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
-	/** Pricing */
-	pricing: "per_car";
+	/** Description */
+	description?: string | null;
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
+	/** Pricing */
+	pricing: "per_car";
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -9636,8 +9636,13 @@ export interface PerCarTransferVariantWrite {
  * the fare classes it opens with.
  */
 export interface PerFareFlightCreate {
-	/** Fares */
-	fares?: FareCreate[];
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Pricing */
+	pricing: "per_fare";
 	/** Legs */
 	legs?: FlightLegInput[];
 	/**
@@ -9645,13 +9650,8 @@ export interface PerFareFlightCreate {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "per_fare";
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ?: "flight";
+	/** Fares */
+	fares?: FareCreate[];
 }
 
 /**
@@ -9659,6 +9659,13 @@ export interface PerFareFlightCreate {
  * An air route priced by fare as the API takes it.
  */
 export interface PerFareFlightDetails {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Pricing */
+	pricing: "per_fare";
 	/** Legs */
 	legs?: FlightLegInput[];
 	/**
@@ -9666,13 +9673,6 @@ export interface PerFareFlightDetails {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "per_fare";
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ?: "flight";
 }
 
 /**
@@ -9680,22 +9680,22 @@ export interface PerFareFlightDetails {
  * An air route priced by the fare class a group is booked into.
  */
 export interface PerFareFlightRouteInput {
-	/** Fares */
-	fares?: PricedFareInput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Legs */
-	legs?: FlightLegInput[];
-	/** Name */
-	name?: string | null;
 	/**
 	 * Pricing
 	 * @default "per_fare"
 	 */
 	pricing: "per_fare";
+	/** Name */
+	name?: string | null;
+	/** Legs */
+	legs?: FlightLegInput[];
+	/** Fares */
+	fares?: PricedFareInput[];
 }
 
 /**
@@ -9703,26 +9703,38 @@ export interface PerFareFlightRouteInput {
  * An air route priced by the fare class a group is booked into.
  */
 export interface PerFareFlightRouteOutput {
-	/** Fares */
-	fares: PricedFareOutput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Legs */
-	legs: FlightLegOutput[];
-	/** Name */
-	name: string | null;
 	/**
 	 * Pricing
 	 * @default "per_fare"
 	 */
 	pricing: "per_fare";
+	/** Name */
+	name: string | null;
+	/** Legs */
+	legs: FlightLegOutput[];
+	/** Fares */
+	fares: PricedFareOutput[];
 }
 
 /** PerFareFlightVariantWrite */
 export interface PerFareFlightVariantWrite {
+	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Pricing */
+	pricing: "per_fare";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -9734,18 +9746,6 @@ export interface PerFareFlightVariantWrite {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_fare";
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ?: "flight";
 }
 
 /**
@@ -9757,8 +9757,13 @@ export interface PerFareFlightVariantWrite {
  * fare to a route that already stands.
  */
 export interface PerFareTrainCreate {
-	/** Fares */
-	fares?: FareCreate[];
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Pricing */
+	pricing: "per_fare";
 	/** Legs */
 	legs?: TrainLegInput[];
 	/**
@@ -9766,13 +9771,8 @@ export interface PerFareTrainCreate {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "per_fare";
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ?: "train";
+	/** Fares */
+	fares?: FareCreate[];
 }
 
 /**
@@ -9781,6 +9781,13 @@ export interface PerFareTrainCreate {
  * name that lands on the ``name`` column.
  */
 export interface PerFareTrainDetails {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Pricing */
+	pricing: "per_fare";
 	/** Legs */
 	legs?: TrainLegInput[];
 	/**
@@ -9788,13 +9795,6 @@ export interface PerFareTrainDetails {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "per_fare";
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ?: "train";
 }
 
 /**
@@ -9802,22 +9802,22 @@ export interface PerFareTrainDetails {
  * A rail route priced by the fare class a group is booked into.
  */
 export interface PerFareTrainRouteInput {
-	/** Fares */
-	fares?: PricedFareInput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Legs */
-	legs?: TrainLegInput[];
-	/** Name */
-	name?: string | null;
 	/**
 	 * Pricing
 	 * @default "per_fare"
 	 */
 	pricing: "per_fare";
+	/** Name */
+	name?: string | null;
+	/** Legs */
+	legs?: TrainLegInput[];
+	/** Fares */
+	fares?: PricedFareInput[];
 }
 
 /**
@@ -9825,26 +9825,38 @@ export interface PerFareTrainRouteInput {
  * A rail route priced by the fare class a group is booked into.
  */
 export interface PerFareTrainRouteOutput {
-	/** Fares */
-	fares: PricedFareOutput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Legs */
-	legs: TrainLegOutput[];
-	/** Name */
-	name: string | null;
 	/**
 	 * Pricing
 	 * @default "per_fare"
 	 */
 	pricing: "per_fare";
+	/** Name */
+	name: string | null;
+	/** Legs */
+	legs: TrainLegOutput[];
+	/** Fares */
+	fares: PricedFareOutput[];
 }
 
 /** PerFareTrainVariantWrite */
 export interface PerFareTrainVariantWrite {
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Pricing */
+	pricing: "per_fare";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -9856,18 +9868,6 @@ export interface PerFareTrainVariantWrite {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_fare";
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ?: "train";
 }
 
 /**
@@ -9883,15 +9883,15 @@ export interface PerFareTrainVariantWrite {
  */
 export interface PerGroupExpenseInput {
 	/**
-	 * Tiers
-	 * @minItems 1
-	 */
-	tiers: GroupSizeTierInput[];
-	/**
 	 * Typ
 	 * @default "per_group"
 	 */
 	typ: "per_group";
+	/**
+	 * Tiers
+	 * @minItems 1
+	 */
+	tiers: GroupSizeTierInput[];
 }
 
 /**
@@ -9907,15 +9907,15 @@ export interface PerGroupExpenseInput {
  */
 export interface PerGroupExpenseOutput {
 	/**
-	 * Tiers
-	 * @minItems 1
-	 */
-	tiers: GroupSizeTierOutput[];
-	/**
 	 * Typ
 	 * @default "per_group"
 	 */
 	typ: "per_group";
+	/**
+	 * Tiers
+	 * @minItems 1
+	 */
+	tiers: GroupSizeTierOutput[];
 }
 
 /**
@@ -9923,14 +9923,14 @@ export interface PerGroupExpenseOutput {
  * The price curve of one option: a row per headcount asked for.
  */
 export interface PerPaxPriceMatrixSchemaOutput {
-	currency: Currency;
-	/** Rows */
-	rows: PriceMatrixRowSchemaOutput[];
 	/**
 	 * Typ
 	 * @default "per_pax"
 	 */
 	typ: "per_pax";
+	currency: Currency;
+	/** Rows */
+	rows: PriceMatrixRowSchemaOutput[];
 }
 
 /**
@@ -9938,6 +9938,11 @@ export interface PerPaxPriceMatrixSchemaOutput {
  * A per-person cost together with its own fee and markup.
  */
 export interface PerPersonChargeInput {
+	/**
+	 * Typ
+	 * @default "per_person"
+	 */
+	typ: "per_person";
 	/**
 	 * Monetary value pair.
 	 *
@@ -9952,13 +9957,13 @@ export interface PerPersonChargeInput {
 	 * slips through.
 	 */
 	cost_per_person: MonetaryValueSchema;
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Extra Costs
 	 * Named cost lines inside this charge, covered by its markup.
 	 */
 	extra_costs?: ExtraCostInput[];
-	/** Fees */
-	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -9973,11 +9978,6 @@ export interface PerPersonChargeInput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "per_person"
-	 */
-	typ: "per_person";
 }
 
 /**
@@ -9985,6 +9985,11 @@ export interface PerPersonChargeInput {
  * A per-person cost together with its own fee and markup.
  */
 export interface PerPersonChargeOutput {
+	/**
+	 * Typ
+	 * @default "per_person"
+	 */
+	typ: "per_person";
 	/**
 	 * Monetary value pair.
 	 *
@@ -9999,13 +10004,13 @@ export interface PerPersonChargeOutput {
 	 * slips through.
 	 */
 	cost_per_person: MonetaryValueSchema;
+	/** Fees */
+	fees: FeeOutput[] | null;
 	/**
 	 * Extra Costs
 	 * Named cost lines inside this charge, covered by its markup.
 	 */
 	extra_costs: ExtraCostOutput[];
-	/** Fees */
-	fees: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -10020,11 +10025,6 @@ export interface PerPersonChargeOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "per_person"
-	 */
-	typ: "per_person";
 }
 
 /**
@@ -10033,6 +10033,11 @@ export interface PerPersonChargeOutput {
  */
 export interface PerPersonExpenseInput {
 	/**
+	 * Typ
+	 * @default "per_person"
+	 */
+	typ: "per_person";
+	/**
 	 * Monetary value pair.
 	 *
 	 * Conversion happens inside the schema but takes an explicit ``FxContext``
@@ -10046,11 +10051,6 @@ export interface PerPersonExpenseInput {
 	 * slips through.
 	 */
 	cost_per_person: MonetaryValueSchema;
-	/**
-	 * Typ
-	 * @default "per_person"
-	 */
-	typ: "per_person";
 }
 
 /**
@@ -10059,6 +10059,11 @@ export interface PerPersonExpenseInput {
  */
 export interface PerPersonExpenseOutput {
 	/**
+	 * Typ
+	 * @default "per_person"
+	 */
+	typ: "per_person";
+	/**
 	 * Monetary value pair.
 	 *
 	 * Conversion happens inside the schema but takes an explicit ``FxContext``
@@ -10072,11 +10077,6 @@ export interface PerPersonExpenseOutput {
 	 * slips through.
 	 */
 	cost_per_person: MonetaryValueSchema;
-	/**
-	 * Typ
-	 * @default "per_person"
-	 */
-	typ: "per_person";
 }
 
 /**
@@ -10084,14 +10084,14 @@ export interface PerPersonExpenseOutput {
  * The price sheet of one option: a line per group-size bracket asked for.
  */
 export interface PerRangePriceMatrixSchemaOutput {
-	/** Brackets */
-	brackets: PriceMatrixBracketSchemaOutput[];
-	currency: Currency;
 	/**
 	 * Typ
 	 * @default "per_range"
 	 */
 	typ: "per_range";
+	currency: Currency;
+	/** Brackets */
+	brackets: PriceMatrixBracketSchemaOutput[];
 }
 
 /**
@@ -10102,26 +10102,15 @@ export interface PerRangePriceMatrixSchemaOutput {
  * ``per_person`` per head.
  */
 export interface PerRoomHotelInput {
-	/** Amenities */
-	amenities?: AmenitiesTypes[];
-	/** Categories */
-	categories?: PricedCategoryInput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name?: string | null;
-	/** Check-in and check-out hours and the bands billed outside them. */
-	policy?: HotelPolicySchemaInput | null;
-	/**
-	 * Pricing
-	 * @default "per_room"
-	 */
-	pricing: "per_room";
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Stars */
 	stars?: number | null;
 	/**
@@ -10129,6 +10118,17 @@ export interface PerRoomHotelInput {
 	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
 	typs?: HotelKind[];
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
+	/** Check-in and check-out hours and the bands billed outside them. */
+	policy?: HotelPolicySchemaInput | null;
+	/**
+	 * Pricing
+	 * @default "per_room"
+	 */
+	pricing: "per_room";
+	/** Categories */
+	categories?: PricedCategoryInput[];
 }
 
 /**
@@ -10139,26 +10139,15 @@ export interface PerRoomHotelInput {
  * ``per_person`` per head.
  */
 export interface PerRoomHotelOutput {
-	/** Amenities */
-	amenities: AmenitiesTypes[];
-	/** Categories */
-	categories: PricedCategoryOutput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name: string | null;
-	/** Check-in and check-out hours and the bands billed outside them. */
-	policy: HotelPolicySchemaOutput | null;
-	/**
-	 * Pricing
-	 * @default "per_room"
-	 */
-	pricing: "per_room";
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Stars */
 	stars: number | null;
 	/**
@@ -10166,6 +10155,17 @@ export interface PerRoomHotelOutput {
 	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
 	typs: HotelKind[];
+	/** Amenities */
+	amenities: AmenitiesTypes[];
+	/** Check-in and check-out hours and the bands billed outside them. */
+	policy: HotelPolicySchemaOutput | null;
+	/**
+	 * Pricing
+	 * @default "per_room"
+	 */
+	pricing: "per_room";
+	/** Categories */
+	categories: PricedCategoryOutput[];
 }
 
 /**
@@ -10177,33 +10177,33 @@ export interface PerRoomHotelOutput {
  * category to a hotel that already stands.
  */
 export interface PerRoomHotelCreate {
-	/** Amenities */
-	amenities?: AmenitiesTypes[];
-	/** Categories */
-	categories?: PricedCategoryWrite[];
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Check-in and check-out hours and the bands billed outside them. */
-	policy?: HotelPolicySchemaInput | null;
-	/** Pricing */
-	pricing: "per_room";
-	/** Stars */
-	stars?: number | null;
 	/**
 	 * Typ
 	 * @default "hotel"
 	 */
 	typ?: "hotel";
+	/** Pricing */
+	pricing: "per_room";
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
 	/**
 	 * Typs
 	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
 	typs?: HotelKind[];
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
+	/** Check-in and check-out hours and the bands billed outside them. */
+	policy?: HotelPolicySchemaInput | null;
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** Categories */
+	categories?: PricedCategoryWrite[];
 }
 
 /**
@@ -10213,31 +10213,31 @@ export interface PerRoomHotelCreate {
  * than drafting them, so its name is required where a spec's is not.
  */
 export interface PerRoomHotelDetails {
-	/** Amenities */
-	amenities?: AmenitiesTypes[];
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
-	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Check-in and check-out hours and the bands billed outside them. */
-	policy?: HotelPolicySchemaInput | null;
-	/** Pricing */
-	pricing: "per_room";
-	/** Stars */
-	stars?: number | null;
 	/**
 	 * Typ
 	 * @default "hotel"
 	 */
 	typ?: "hotel";
+	/** Pricing */
+	pricing: "per_room";
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
 	/**
 	 * Typs
 	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
 	typs?: HotelKind[];
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
+	/** Check-in and check-out hours and the bands billed outside them. */
+	policy?: HotelPolicySchemaInput | null;
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 }
 
 /**
@@ -10247,19 +10247,19 @@ export interface PerRoomHotelDetails {
  */
 export interface PerRoomHotelVariantWrite {
 	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_room";
-	/** Rooms */
-	rooms?: PricedRoomWrite[];
-	/**
 	 * Typ
 	 * @default "hotel"
 	 */
 	typ?: "hotel";
+	/** Pricing */
+	pricing: "per_room";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** Rooms */
+	rooms?: PricedRoomWrite[];
 }
 
 /**
@@ -10269,44 +10269,44 @@ export interface PerRoomHotelVariantWrite {
  */
 export interface PerVehicleBusDetails {
 	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_vehicle";
-	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ?: "bus";
-}
-
-/** PerVehicleBusVariantWrite */
-export interface PerVehicleBusVariantWrite {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-	/** Description */
-	description?: string | null;
+	/** Pricing */
+	pricing: "per_vehicle";
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+}
+
+/** PerVehicleBusVariantWrite */
+export interface PerVehicleBusVariantWrite {
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
-	/** Pricing */
-	pricing: "per_vehicle";
+	/** Description */
+	description?: string | null;
 	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ?: "bus";
+	/** Pricing */
+	pricing: "per_vehicle";
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -10319,13 +10319,13 @@ export interface PerVehicleFleetInput {
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
 	/**
 	 * Pricing
 	 * @default "per_vehicle"
 	 */
 	pricing: "per_vehicle";
+	/** Name */
+	name?: string | null;
 	/** Vehicles */
 	vehicles?: PricedVehicleInput[];
 }
@@ -10340,13 +10340,13 @@ export interface PerVehicleFleetOutput {
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
 	/**
 	 * Pricing
 	 * @default "per_vehicle"
 	 */
 	pricing: "per_vehicle";
+	/** Name */
+	name: string | null;
 	/** Vehicles */
 	vehicles: PricedVehicleOutput[];
 }
@@ -10361,17 +10361,17 @@ export interface PerVehicleFleetOutput {
  */
 export interface PerVehicleFleetCreate {
 	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "per_vehicle";
-	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ?: "bus";
+	/** Pricing */
+	pricing: "per_vehicle";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 	/** Vehicles */
 	vehicles?: PricedVehicleWrite[];
 }
@@ -10381,6 +10381,8 @@ export interface PerVehicleFleetCreate {
  * Adds a percentage on top of a base cost.
  */
 export interface PercentageMarkup {
+	/** Typ */
+	typ: "percentage";
 	/**
 	 * Percentage
 	 * e.g., 0.15 for 15%
@@ -10388,8 +10390,6 @@ export interface PercentageMarkup {
 	 * @exclusiveMax 1
 	 */
 	percentage: number;
-	/** Typ */
-	typ: "percentage";
 }
 
 /**
@@ -10399,6 +10399,8 @@ export interface PercentageMarkup {
  * markup stays under the whole; a surcharge may reach it.
  */
 export interface PercentageSurcharge {
+	/** Typ */
+	typ: "percentage";
 	/**
 	 * Percentage
 	 * e.g., 0.5 for half a night, 1.0 for a whole
@@ -10406,16 +10408,14 @@ export interface PercentageSurcharge {
 	 * @max 1
 	 */
 	percentage: number;
-	/** Typ */
-	typ: "percentage";
 }
 
 /** PermissionCatalog */
 export interface PermissionCatalog {
-	/** Default Groups */
-	default_groups: GroupTemplate[];
 	/** Permissions */
 	permissions: Permissions[];
+	/** Default Groups */
+	default_groups: GroupTemplate[];
 }
 
 /** PermissionGroupCreate */
@@ -10482,16 +10482,16 @@ export interface PlainFareCreate {
  * - ``/tour/{id}/option/{id}/price-matrix?brackets=`` for the brackets
  */
 export interface PriceMatrixBracketSchemaOutput {
-	/** Binding Pax */
-	binding_pax: number;
-	cost: TourMinMaxCostSchemaOutput;
 	/** Pax From */
 	pax_from: number;
 	/** Pax To */
 	pax_to: number;
-	per_person: TourMinMaxCostSchemaOutput;
+	/** Binding Pax */
+	binding_pax: number;
+	cost: TourMinMaxCostSchemaOutput;
 	profit: TourMinMaxCostSchemaOutput;
 	revenue: TourMinMaxCostSchemaOutput;
+	per_person: TourMinMaxCostSchemaOutput;
 }
 
 /**
@@ -10507,19 +10507,19 @@ export interface PriceMatrixBracketSchemaOutput {
  * - ``/tour/{id}/option/{id}/pricing-breakdown?pax=`` for what one row books
  */
 export interface PriceMatrixRowSchemaOutput {
-	cost: TourMinMaxCostSchemaOutput;
 	/** Pax */
 	pax: number;
-	per_person: TourMinMaxCostSchemaOutput;
+	cost: TourMinMaxCostSchemaOutput;
 	profit: TourMinMaxCostSchemaOutput;
 	revenue: TourMinMaxCostSchemaOutput;
+	per_person: TourMinMaxCostSchemaOutput;
 }
 
 /** PriceRangeSchema */
 export interface PriceRangeSchema {
-	currency: Currency | null;
 	/** Min */
 	min: number | null;
+	currency: Currency | null;
 }
 
 /**
@@ -10527,11 +10527,6 @@ export interface PriceRangeSchema {
  * A car of a per-car fleet: what one of these costs for the leg.
  */
 export interface PricedCarInput {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -10543,14 +10538,19 @@ export interface PricedCarInput {
 	 * @maxItems 5
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -10558,11 +10558,6 @@ export interface PricedCarInput {
  * A car of a per-car fleet: what one of these costs for the leg.
  */
 export interface PricedCarOutput {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeOutput;
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -10574,14 +10569,19 @@ export interface PricedCarOutput {
 	 * @maxItems 5
 	 */
 	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeOutput;
 }
 
 /**
@@ -10590,22 +10590,22 @@ export interface PricedCarOutput {
  * these costs for the leg.
  */
 export interface PricedCarWrite {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
+	/** Description */
+	description?: string | null;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -10663,6 +10663,13 @@ export interface PricedCategoryWrite {
  */
 export interface PricedFareInput {
 	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/** Name */
+	name?: string | null;
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -10673,13 +10680,6 @@ export interface PricedFareInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id?: string;
-	/** Name */
-	name?: string | null;
 }
 
 /**
@@ -10687,6 +10687,13 @@ export interface PricedFareInput {
  * One fare class of a per-fare route: what a seat in it costs.
  */
 export interface PricedFareOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string | null;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -10698,13 +10705,6 @@ export interface PricedFareOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Name */
-	name: string | null;
 }
 
 /**
@@ -10712,8 +10712,6 @@ export interface PricedFareOutput {
  * A room of a per-room hotel: what a group pays for filling this room.
  */
 export interface PricedRoomInput {
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -10725,21 +10723,23 @@ export interface PricedRoomInput {
 	 * @maxItems 5
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
+	typ: HousingRoomTypes;
 	/**
 	 * Pax
 	 * Heads this room sleeps.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 	/**
 	 * What one room costs: the base charge plus the seasons that replace it. A
 	 * dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	rate: RoomRateInput;
-	typ: HousingRoomTypes;
 }
 
 /**
@@ -10747,8 +10747,6 @@ export interface PricedRoomInput {
  * A room of a per-room hotel: what a group pays for filling this room.
  */
 export interface PricedRoomOutput {
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -10760,21 +10758,23 @@ export interface PricedRoomOutput {
 	 * @maxItems 5
 	 */
 	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
+	typ: HousingRoomTypes;
 	/**
 	 * Pax
 	 * Heads this room sleeps.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
 	/**
 	 * What one room costs: the base charge plus the seasons that replace it. A
 	 * dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	rate: RoomRateOutput;
-	typ: HousingRoomTypes;
 }
 
 /**
@@ -10783,23 +10783,23 @@ export interface PricedRoomOutput {
  * filling it, and no ``id`` — the room is minted with the hotel.
  */
 export interface PricedRoomCreate {
-	/** Description */
-	description?: string | null;
-	/** Name */
-	name?: string | null;
+	typ: HousingRoomTypes;
 	/**
 	 * Pax
 	 * Heads this room sleeps.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 	/**
 	 * What one room costs: the base charge plus the seasons that replace it. A
 	 * dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	rate: RoomRateInput;
-	typ: HousingRoomTypes;
 }
 
 /**
@@ -10808,25 +10808,25 @@ export interface PricedRoomCreate {
  * stored room and its pictures; a room sent without one is a new room.
  */
 export interface PricedRoomWrite {
-	/** Description */
-	description?: string | null;
-	/** Id */
-	id?: string | null;
-	/** Name */
-	name?: string | null;
+	typ: HousingRoomTypes;
 	/**
 	 * Pax
 	 * Heads this room sleeps.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Id */
+	id?: string | null;
 	/**
 	 * What one room costs: the base charge plus the seasons that replace it. A
 	 * dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	rate: RoomRateInput;
-	typ: HousingRoomTypes;
 }
 
 /**
@@ -10834,11 +10834,6 @@ export interface PricedRoomWrite {
  * A vehicle of a per-vehicle fleet: what one of these costs.
  */
 export interface PricedVehicleInput {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -10850,14 +10845,19 @@ export interface PricedVehicleInput {
 	 * @maxItems 5
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -10865,11 +10865,6 @@ export interface PricedVehicleInput {
  * A vehicle of a per-vehicle fleet: what one of these costs.
  */
 export interface PricedVehicleOutput {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeOutput;
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -10881,14 +10876,19 @@ export interface PricedVehicleOutput {
 	 * @maxItems 5
 	 */
 	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeOutput;
 }
 
 /**
@@ -10897,22 +10897,22 @@ export interface PricedVehicleOutput {
  * one of these costs.
  */
 export interface PricedVehicleWrite {
-	body_type: VehicleBodyType;
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
+	/** Description */
+	description?: string | null;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -10931,19 +10931,6 @@ export interface PricedVehicleWrite {
  * - ``/tour/{id}/public/option/all`` for the agency-facing per-person spread
  */
 export interface PricingBreakdownResponse {
-	estimated_cost: TourMinMaxCostSchemaOutput;
-	estimated_profit: TourMinMaxCostSchemaOutput;
-	estimated_revenue: TourMinMaxCostSchemaOutput;
-	estimated_revenue_per_person: TourMinMaxCostSchemaOutput;
-	/** Events */
-	events: (
-		| ({
-				typ: "individual_bill";
-		  } & StandaloneBillableOutput)
-		| ({
-				typ: "package_bill";
-		  } & PackageBillableOutput)
-	)[];
 	/**
 	 * Id
 	 * @format uuid
@@ -10954,6 +10941,19 @@ export interface PricingBreakdownResponse {
 	 * ``group_size_min`` (1 when unset), ``max`` its ``group_size``.
 	 */
 	pax: TourMinMaxPaxSchema;
+	/** Events */
+	events: (
+		| ({
+				typ: "individual_bill";
+		  } & StandaloneBillableOutput)
+		| ({
+				typ: "package_bill";
+		  } & PackageBillableOutput)
+	)[];
+	estimated_cost: TourMinMaxCostSchemaOutput;
+	estimated_profit: TourMinMaxCostSchemaOutput;
+	estimated_revenue: TourMinMaxCostSchemaOutput;
+	estimated_revenue_per_person: TourMinMaxCostSchemaOutput;
 }
 
 /**
@@ -10985,6 +10985,18 @@ export interface PricingFinancialsOutput {
  */
 export interface PricingPackageOutput {
 	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Name
+	 * @default ""
+	 */
+	name: string;
+	/** Supplier Id */
+	supplier_id: string | null;
+	/**
 	 * Expenses
 	 * The expense calculation strategy.
 	 */
@@ -11001,11 +11013,6 @@ export interface PricingPackageOutput {
 	/** Fees */
 	fees: FeeOutput[] | null;
 	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/**
 	 * Markup
 	 * The markup calculation strategy.
 	 */
@@ -11019,13 +11026,6 @@ export interface PricingPackageOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/**
-	 * Name
-	 * @default ""
-	 */
-	name: string;
-	/** Supplier Id */
-	supplier_id: string | null;
 }
 
 /**
@@ -11035,6 +11035,13 @@ export interface PricingPackageOutput {
  * whether it deviates from what the product asks.
  */
 export interface ProductLinkRead {
+	/** Tour Id */
+	tour_id: string | null;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	option_id: string;
 	/**
 	 * Event Id
 	 * @format uuid
@@ -11046,12 +11053,10 @@ export interface ProductLinkRead {
 	 */
 	event_option_id: string;
 	/**
-	 * Option Id
+	 * Supply Id
 	 * @format uuid
 	 */
-	option_id: string;
-	/** Overridden */
-	overridden: boolean;
+	supply_id: string;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -11063,13 +11068,8 @@ export interface ProductLinkRead {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supply_id: string;
-	/** Tour Id */
-	tour_id: string | null;
+	/** Overridden */
+	overridden: boolean;
 }
 
 /**
@@ -11079,6 +11079,11 @@ export interface ProductLinkRead {
  * read; a negotiated deviation is set through its own route.
  */
 export interface ProductSupplyNew {
+	/**
+	 * Source
+	 * @default "product"
+	 */
+	source: "product";
 	/**
 	 * Product Id
 	 * @format uuid
@@ -11095,37 +11100,60 @@ export interface ProductSupplyNew {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
-	/**
-	 * Source
-	 * @default "product"
-	 */
-	source: "product";
 }
 
 /** PublicTourCatalogListResponse */
 export interface PublicTourCatalogListResponse {
-	/** Data */
-	data: PublicTourCatalogSchemaOutput[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: PublicTourCatalogSchemaOutput[];
 }
 
 /** PublicTourCatalogSchema */
 export interface PublicTourCatalogSchemaOutput {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tour_id: string;
+	/** Slug */
+	slug: string | null;
+	/** Title */
+	title: string | null;
+	/** Cover Image Url */
+	cover_image_url: string | null;
+	/** Description */
+	description: string | null;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours: number | null;
 	/** Age From */
 	age_from: number | null;
 	/** Age To */
 	age_to: number | null;
+	/** Group Size */
+	group_size: number;
+	/** Group Size Min */
+	group_size_min: number | null;
 	/** Categories */
 	categories: TourCategory[];
+	tour_type: TourType;
+	/** Landing Photos */
+	landing_photos: string[];
 	/** Cities */
 	cities: string[];
-	/** Cover Image Url */
-	cover_image_url: string | null;
-	/** Days */
-	days: number;
-	/** Description */
-	description: string | null;
+	/** Languages */
+	languages: LanguageCode[];
+	price_range: PriceRangeSchema | null;
+	price_per_person: PriceRangeSchema | null;
+	/** Option Count */
+	option_count: number | null;
+	public_price_range: PriceRangeSchema | null;
+	public_price_per_person: PriceRangeSchema | null;
 	/**
 	 * Discount
 	 * The markup calculation strategy.
@@ -11140,34 +11168,6 @@ export interface PublicTourCatalogSchemaOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Duration Hours */
-	duration_hours: number | null;
-	/** Group Size */
-	group_size: number;
-	/** Group Size Min */
-	group_size_min: number | null;
-	/** Landing Photos */
-	landing_photos: string[];
-	/** Languages */
-	languages: LanguageCode[];
-	/** Nights */
-	nights: number;
-	/** Option Count */
-	option_count: number | null;
-	price_per_person: PriceRangeSchema | null;
-	price_range: PriceRangeSchema | null;
-	public_price_per_person: PriceRangeSchema | null;
-	public_price_range: PriceRangeSchema | null;
-	/** Slug */
-	slug: string | null;
-	/** Title */
-	title: string | null;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tour_id: string;
-	tour_type: TourType;
 }
 
 /**
@@ -11183,18 +11183,21 @@ export interface PublicTourCatalogSchemaOutput {
  * event; single events carry no separate option handle.
  *
  * ``path`` walks the event payload down to the offending input, list positions
- * included — ``["details", "hop", 1, "arrival_time"]``. It is relative to the
- * event, or to the alternative when ``option_id`` is set, so it addresses the
- * same form the client already renders. The last segment names what is missing,
- * so it need not resolve: an unpriced guide language reads
- * ``["details", "categories", "en"]``, keyed by language rather than position
- * because the row does not exist yet.
+ * included — ``["details", "pool", 0, "spec", "legs", 1, "arrival_location"]``.
+ * It is relative to the event, or to the alternative when ``option_id`` is set,
+ * so it addresses the same form the client already renders. The last segment
+ * names what is missing, so it need not resolve: an unpriced guide language
+ * reads ``["details", "pool", 0, "spec", "categories", "en"]``, keyed by
+ * language rather than position because the row may not exist yet.
  *
  * Check: POST /tour/{tour_id}/publish
  */
 export interface PublishBlockSchema {
-	/** Detail */
-	detail: string;
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
 	/**
 	 * Event Id
 	 * @format uuid
@@ -11204,11 +11207,8 @@ export interface PublishBlockSchema {
 	option_id: string | null;
 	/** Path */
 	path: (string | number)[];
-	/**
-	 * Tour Option Id
-	 * @format uuid
-	 */
-	tour_option_id: string;
+	/** Detail */
+	detail: string;
 }
 
 /**
@@ -11221,10 +11221,20 @@ export interface PublishBlockSchema {
  */
 export interface ReconciliationTotalsOutput {
 	/**
-	 * Accrual Profit
+	 * Revenue Accrued
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	accrual_profit: string;
+	revenue_accrued: string;
+	/**
+	 * Revenue Settled
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	revenue_settled: string;
+	/**
+	 * Receivable
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	receivable: string;
 	/**
 	 * Cost Accrued
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -11241,31 +11251,19 @@ export interface ReconciliationTotalsOutput {
 	 */
 	payable: string;
 	/**
-	 * Receivable
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	receivable: string;
-	/**
-	 * Revenue Accrued
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	revenue_accrued: string;
-	/**
-	 * Revenue Settled
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	revenue_settled: string;
-	/**
 	 * Settled Profit
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	settled_profit: string;
+	/**
+	 * Accrual Profit
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	accrual_profit: string;
 }
 
 /** RecurrenceDateModel */
 export interface RecurrenceDateModel {
-	/** Day */
-	day: number | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -11276,6 +11274,8 @@ export interface RecurrenceDateModel {
 	 * @format uuid
 	 */
 	schedule_id: string;
+	/** Day */
+	day: number | null;
 	/** Valid From */
 	valid_from: string | null;
 	/** Valid Until */
@@ -11312,11 +11312,6 @@ export interface RecurrenceRulesBulkCreate {
  */
 export interface RelinkBody {
 	/**
-	 * Drop Override
-	 * @default false
-	 */
-	drop_override?: boolean;
-	/**
 	 * Product Id
 	 * @format uuid
 	 */
@@ -11332,6 +11327,11 @@ export interface RelinkBody {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
+	/**
+	 * Drop Override
+	 * @default false
+	 */
+	drop_override?: boolean;
 }
 
 /**
@@ -11340,13 +11340,13 @@ export interface RelinkBody {
  * the booking froze its own events.
  */
 export interface RevisionCopyFromEvent {
+	/** Kind */
+	kind: "event";
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	event_id: string;
-	/** Kind */
-	kind: "event";
 }
 
 /**
@@ -11354,13 +11354,13 @@ export interface RevisionCopyFromEvent {
  * Duplicate an event of the booking's revised snapshot.
  */
 export interface RevisionCopyFromRevision {
+	/** Kind */
+	kind: "revision";
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	event_id: string;
-	/** Kind */
-	kind: "revision";
 }
 
 /** RevisionCopySchema */
@@ -11389,14 +11389,14 @@ export interface RevisionCopySchema {
  * - ``/booking/operator/{id}/itinerary`` for the same bills beside cost columns
  */
 export interface RevisionPreview {
-	/** Breakdown */
-	breakdown: EventBreakdownSchemaOutput[];
+	/** Pure-Pydantic snapshot of everything a booking's price depends on, frozen at creation. */
+	snapshot: TourSnapshotSchemaOutput;
 	/** Cost */
 	cost: string | null;
 	/** Revenue */
 	revenue: string | null;
-	/** Pure-Pydantic snapshot of everything a booking's price depends on, frozen at creation. */
-	snapshot: TourSnapshotSchemaOutput;
+	/** Breakdown */
+	breakdown: EventBreakdownSchemaOutput[];
 }
 
 /**
@@ -11406,8 +11406,6 @@ export interface RevisionPreview {
  * ``id`` on update to keep the room's pictures.
  */
 export interface Room {
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -11419,15 +11417,17 @@ export interface Room {
 	 * @maxItems 5
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
+	typ: HousingRoomTypes;
 	/**
 	 * Pax
 	 * Heads this room sleeps.
 	 * @min 1
 	 */
 	pax: number;
-	typ: HousingRoomTypes;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /**
@@ -11437,17 +11437,17 @@ export interface Room {
  * one back to keep a stored room and its pictures.
  */
 export interface RoomCreate {
-	/** Description */
-	description?: string | null;
-	/** Name */
-	name?: string | null;
+	typ: HousingRoomTypes;
 	/**
 	 * Pax
 	 * Heads this room sleeps.
 	 * @min 1
 	 */
 	pax: number;
-	typ: HousingRoomTypes;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /**
@@ -11459,13 +11459,13 @@ export interface RoomCreate {
  * twice per head.
  */
 export interface RoomNightChargeInput {
+	/** Fees */
+	fees?: FeeInput[] | null;
 	/**
 	 * Extra Costs
 	 * Named cost lines inside this charge, covered by its markup.
 	 */
 	extra_costs?: ExtraCostInput[];
-	/** Fees */
-	fees?: FeeInput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -11480,13 +11480,13 @@ export interface RoomNightChargeInput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** A simple fixed cost, ignores all context. */
-	rate: FixedExpenseInput;
 	/**
 	 * Typ
 	 * @default "per_duration"
 	 */
 	typ: "per_duration";
+	/** A simple fixed cost, ignores all context. */
+	rate: FixedExpenseInput;
 }
 
 /**
@@ -11498,13 +11498,13 @@ export interface RoomNightChargeInput {
  * twice per head.
  */
 export interface RoomNightChargeOutput {
+	/** Fees */
+	fees: FeeOutput[] | null;
 	/**
 	 * Extra Costs
 	 * Named cost lines inside this charge, covered by its markup.
 	 */
 	extra_costs: ExtraCostOutput[];
-	/** Fees */
-	fees: FeeOutput[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -11519,13 +11519,13 @@ export interface RoomNightChargeOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** A simple fixed cost, ignores all context. */
-	rate: FixedExpenseOutput;
 	/**
 	 * Typ
 	 * @default "per_duration"
 	 */
 	typ: "per_duration";
+	/** A simple fixed cost, ignores all context. */
+	rate: FixedExpenseOutput;
 }
 
 /**
@@ -11584,16 +11584,16 @@ export interface RoomRateOutput {
  */
 export interface RoomRateOverrideInput {
 	/**
+	 * Room Id
+	 * @format uuid
+	 */
+	room_id: string;
+	/**
 	 * What one room costs: the base charge plus the seasons that replace it. A
 	 * dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	rate: RoomRateInput;
-	/**
-	 * Room Id
-	 * @format uuid
-	 */
-	room_id: string;
 }
 
 /**
@@ -11602,16 +11602,16 @@ export interface RoomRateOverrideInput {
  */
 export interface RoomRateOverrideOutput {
 	/**
+	 * Room Id
+	 * @format uuid
+	 */
+	room_id: string;
+	/**
 	 * What one room costs: the base charge plus the seasons that replace it. A
 	 * dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	rate: RoomRateOutput;
-	/**
-	 * Room Id
-	 * @format uuid
-	 */
-	room_id: string;
 }
 
 /**
@@ -11620,16 +11620,16 @@ export interface RoomRateOverrideOutput {
  */
 export interface RoomRateSwitch {
 	/**
+	 * Room Id
+	 * @format uuid
+	 */
+	room_id: string;
+	/**
 	 * What one room costs: the base charge plus the seasons that replace it. A
 	 * dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	rate: RoomRateInput;
-	/**
-	 * Room Id
-	 * @format uuid
-	 */
-	room_id: string;
 }
 
 /**
@@ -11673,6 +11673,16 @@ export interface RoomRatesOverrideOutput {
  */
 export interface RoomSeasonInput {
 	/**
+	 * From Date
+	 * @format date
+	 */
+	from_date: string;
+	/**
+	 * To Date
+	 * @format date
+	 */
+	to_date: string;
+	/**
 	 * Charge
 	 * As a whole stay, or per night of it.
 	 */
@@ -11683,6 +11693,14 @@ export interface RoomSeasonInput {
 		| ({
 				typ: "per_duration";
 		  } & RoomNightChargeInput);
+}
+
+/**
+ * RoomSeason
+ * What a room costs for a stay checking in inside one season. Dates are
+ * inclusive and absolute — a hotel's rate sheet is re-entered per year.
+ */
+export interface RoomSeasonOutput {
 	/**
 	 * From Date
 	 * @format date
@@ -11693,14 +11711,6 @@ export interface RoomSeasonInput {
 	 * @format date
 	 */
 	to_date: string;
-}
-
-/**
- * RoomSeason
- * What a room costs for a stay checking in inside one season. Dates are
- * inclusive and absolute — a hotel's rate sheet is re-entered per year.
- */
-export interface RoomSeasonOutput {
 	/**
 	 * Charge
 	 * As a whole stay, or per night of it.
@@ -11712,16 +11722,6 @@ export interface RoomSeasonOutput {
 		| ({
 				typ: "per_duration";
 		  } & RoomNightChargeOutput);
-	/**
-	 * From Date
-	 * @format date
-	 */
-	from_date: string;
-	/**
-	 * To Date
-	 * @format date
-	 */
-	to_date: string;
 }
 
 /**
@@ -11730,19 +11730,19 @@ export interface RoomSeasonOutput {
  * stored room and its pictures; a room sent without one is a new room.
  */
 export interface RoomWrite {
-	/** Description */
-	description?: string | null;
-	/** Id */
-	id?: string | null;
-	/** Name */
-	name?: string | null;
+	typ: HousingRoomTypes;
 	/**
 	 * Pax
 	 * Heads this room sleeps.
 	 * @min 1
 	 */
 	pax: number;
-	typ: HousingRoomTypes;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
+	/** Id */
+	id?: string | null;
 }
 
 /**
@@ -11750,6 +11750,8 @@ export interface RoomWrite {
  * A fare this tour negotiated, replacing the route's own.
  */
 export interface RouteOverrideInput {
+	/** Typ */
+	typ: RouteOverrideInputTypEnum;
 	/**
 	 * Rates
 	 * The arm the route prices in.
@@ -11761,8 +11763,6 @@ export interface RouteOverrideInput {
 		| ({
 				pricing: "whole";
 		  } & WholeRouteChargeOverrideInput);
-	/** Typ */
-	typ: RouteOverrideInputTypEnum;
 }
 
 /**
@@ -11770,6 +11770,8 @@ export interface RouteOverrideInput {
  * A fare this tour negotiated, replacing the route's own.
  */
 export interface RouteOverrideOutput {
+	/** Typ */
+	typ: RouteOverrideOutputTypEnum;
 	/**
 	 * Rates
 	 * The arm the route prices in.
@@ -11781,8 +11783,6 @@ export interface RouteOverrideOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeRouteChargeOverrideOutput);
-	/** Typ */
-	typ: RouteOverrideOutputTypEnum;
 }
 
 /**
@@ -11790,12 +11790,18 @@ export interface RouteOverrideOutput {
  * A leg read off a supplier's rail or air route.
  */
 export interface RouteProductSupplyOutput {
-	override: RouteOverrideOutput | null;
+	/**
+	 * Source
+	 * @default "product"
+	 */
+	source: "product";
 	/**
 	 * Product Id
 	 * @format uuid
 	 */
 	product_id: string;
+	/** Who a linked product is bought from, resolved on read. */
+	supplier: SupplierRef;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -11807,13 +11813,7 @@ export interface RouteProductSupplyOutput {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
-	/**
-	 * Source
-	 * @default "product"
-	 */
-	source: "product";
-	/** Who a linked product is bought from, resolved on read. */
-	supplier: SupplierRef;
+	override: RouteOverrideOutput | null;
 }
 
 /**
@@ -11826,10 +11826,10 @@ export interface RouteProductSupplyOutput {
  * carry no ids to align a per-leg list against.
  */
 export interface Schedule {
-	/** When this tour arrives, whatever the route says */
-	arrival_time?: TimeSchema | null;
 	/** When this tour leaves, whatever the route says */
 	departure_time?: TimeSchema | null;
+	/** When this tour arrives, whatever the route says */
+	arrival_time?: TimeSchema | null;
 }
 
 /**
@@ -11839,11 +11839,6 @@ export interface Schedule {
  * ``drop_stray_overrides`` says to drop it.
  */
 export interface ScopeBody {
-	/**
-	 * Drop Stray Overrides
-	 * @default false
-	 */
-	drop_stray_overrides?: boolean;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -11855,6 +11850,11 @@ export interface ScopeBody {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
+	/**
+	 * Drop Stray Overrides
+	 * @default false
+	 */
+	drop_stray_overrides?: boolean;
 }
 
 /** SeasonalityCommissionCreate */
@@ -11878,8 +11878,6 @@ export interface SeasonalityCommissionCreate {
 
 /** SeasonalityCommissionModel */
 export interface SeasonalityCommissionModel {
-	/** Commission */
-	commission: number;
 	/**
 	 * Id
 	 * @format uuid
@@ -11890,6 +11888,8 @@ export interface SeasonalityCommissionModel {
 	 * @format uuid
 	 */
 	schedule_id: string;
+	/** Commission */
+	commission: number;
 	/**
 	 * Valid From
 	 * @format date
@@ -11935,10 +11935,10 @@ export interface SitemapEntrySchema {
 
 /** StaffAccessReplace */
 export interface StaffAccessReplace {
-	/** Group Ids */
-	group_ids: string[];
 	/** Permissions */
 	permissions: Permissions[];
+	/** Group Ids */
+	group_ids: string[];
 }
 
 /** StaffInvite */
@@ -11954,8 +11954,6 @@ export interface StaffInvite {
 	 * @maxLength 255
 	 */
 	first_name: string;
-	/** Group Ids */
-	group_ids?: string[];
 	/**
 	 * Last Name
 	 * @maxLength 255
@@ -11965,76 +11963,78 @@ export interface StaffInvite {
 	password?: string | null;
 	/** Permissions */
 	permissions?: Permissions[];
+	/** Group Ids */
+	group_ids?: string[];
 }
 
 /** StaffInviteResult */
 export interface StaffInviteResult {
-	/** Commission Percent */
-	commission_percent: number | null;
-	/** Email */
-	email: string;
-	/** First Name */
-	first_name: string | null;
-	/** Generated Password */
-	generated_password: string | null;
-	/** Last Name */
-	last_name: string | null;
-	role: UserRoles;
-	status: StaffStatus;
 	/**
 	 * User Id
 	 * @format uuid
 	 */
 	user_id: string;
+	/** First Name */
+	first_name: string | null;
+	/** Last Name */
+	last_name: string | null;
+	/** Email */
+	email: string;
+	role: UserRoles;
+	status: StaffStatus;
+	/** Commission Percent */
+	commission_percent: number | null;
+	/** Generated Password */
+	generated_password: string | null;
 }
 
 /** StaffListResponse */
 export interface StaffListResponse {
-	/** Data */
-	data: StaffRead[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: StaffRead[];
 }
 
 /** StaffPermissionsRead */
 export interface StaffPermissionsRead {
 	/** Direct */
 	direct: Permissions[];
-	/** Effective */
-	effective: Permissions[];
 	/** Group Ids */
 	group_ids: string[];
+	/** Effective */
+	effective: Permissions[];
 }
 
 /** StaffRead */
 export interface StaffRead {
-	/** Commission Percent */
-	commission_percent: number | null;
-	/** Email */
-	email: string;
-	/** First Name */
-	first_name: string | null;
-	/** Last Name */
-	last_name: string | null;
-	role: UserRoles;
-	status: StaffStatus;
 	/**
 	 * User Id
 	 * @format uuid
 	 */
 	user_id: string;
+	/** First Name */
+	first_name: string | null;
+	/** Last Name */
+	last_name: string | null;
+	/** Email */
+	email: string;
+	role: UserRoles;
+	status: StaffStatus;
+	/** Commission Percent */
+	commission_percent: number | null;
 }
 
 /** StaffUpdate */
 export interface StaffUpdate {
-	/** Commission Percent */
-	commission_percent?: number | null;
 	/** First Name */
 	first_name?: string | null;
 	/** Last Name */
 	last_name?: string | null;
 	/** Status */
 	status?: StaffUpdateStatusEnum | null;
+	/** Commission Percent */
+	commission_percent?: number | null;
 }
 
 /**
@@ -12049,11 +12049,10 @@ export interface StaffUpdate {
  */
 export interface StandaloneBillableOutput {
 	/**
-	 * An event's bill on each leg of a quote: what the cheapest resolution books
-	 * and what the dearest one does.
+	 * Event Id
+	 * @format uuid
 	 */
-	breakdown: BreakdownSpreadSchemaOutput;
-	cost: TourMinMaxCostSchemaOutput;
+	event_id: string;
 	/** Event */
 	event:
 		| (
@@ -12087,17 +12086,18 @@ export interface StandaloneBillableOutput {
 		  )
 		| MultiEventReadOutput;
 	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
-	fees: TourMinMaxCostSchemaOutput;
-	markup: TourMinMaxCostSchemaOutput;
-	/**
 	 * Typ
 	 * @default "individual_bill"
 	 */
 	typ: "individual_bill";
+	cost: TourMinMaxCostSchemaOutput;
+	markup: TourMinMaxCostSchemaOutput;
+	fees: TourMinMaxCostSchemaOutput;
+	/**
+	 * An event's bill on each leg of a quote: what the cheapest resolution books
+	 * and what the dearest one does.
+	 */
+	breakdown: BreakdownSpreadSchemaOutput;
 	/** Warnings */
 	warnings: PricingWarning[];
 }
@@ -12108,13 +12108,13 @@ export interface StandaloneBillableOutput {
  * whoever supplies the hotel.
  */
 export interface Stay {
-	check_in?: TimeSchema | null;
-	check_out?: TimeSchema | null;
 	/**
 	 * Duration
 	 * Length of stay
 	 */
 	duration?: number | null;
+	check_in?: TimeSchema | null;
+	check_out?: TimeSchema | null;
 }
 
 /**
@@ -12180,6 +12180,16 @@ export interface StayRateOutput {
  */
 export interface StaySeasonInput {
 	/**
+	 * From Date
+	 * @format date
+	 */
+	from_date: string;
+	/**
+	 * To Date
+	 * @format date
+	 */
+	to_date: string;
+	/**
 	 * Charge
 	 * As a whole, per head, or per unit of the stay's own length.
 	 */
@@ -12193,6 +12203,14 @@ export interface StaySeasonInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
+}
+
+/**
+ * StaySeason
+ * What a whole stay costs when it checks in inside one season. Dates are
+ * inclusive and absolute — a hotel's rate sheet is re-entered per year.
+ */
+export interface StaySeasonOutput {
 	/**
 	 * From Date
 	 * @format date
@@ -12203,14 +12221,6 @@ export interface StaySeasonInput {
 	 * @format date
 	 */
 	to_date: string;
-}
-
-/**
- * StaySeason
- * What a whole stay costs when it checks in inside one season. Dates are
- * inclusive and absolute — a hotel's rate sheet is re-entered per year.
- */
-export interface StaySeasonOutput {
 	/**
 	 * Charge
 	 * As a whole, per head, or per unit of the stay's own length.
@@ -12225,16 +12235,6 @@ export interface StaySeasonOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * From Date
-	 * @format date
-	 */
-	from_date: string;
-	/**
-	 * To Date
-	 * @format date
-	 */
-	to_date: string;
 }
 
 /**
@@ -12287,20 +12287,15 @@ export interface SupplementaryDetailsWrite {
 /** SupplementaryEvent */
 export interface SupplementaryEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * Supplementary lines as a create takes them: the tour's plan and the suppliers
-	 * that bill them.
-	 */
-	details: SupplementaryDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -12308,15 +12303,32 @@ export interface SupplementaryEvent {
 	 * @default "supplementary"
 	 */
 	typ: "supplementary";
+	/**
+	 * Supplementary lines as a create takes them: the tour's plan and the suppliers
+	 * that bill them.
+	 */
+	details: SupplementaryDetailsWrite;
 }
 
 /** SupplementaryEventTypeRead */
 export interface SupplementaryEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "supplementary"
+	 */
+	typ: "supplementary";
 	/** Supplementary lines as they read. */
 	details: SupplementaryDetailsOutput;
 	/**
@@ -12325,39 +12337,20 @@ export interface SupplementaryEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "supplementary"
-	 */
-	typ: "supplementary";
 }
 
 /** SupplementaryEventUpdate */
 export interface SupplementaryEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of supplementary lines an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: SupplementaryDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -12365,6 +12358,13 @@ export interface SupplementaryEventUpdate {
 	 * @default "supplementary"
 	 */
 	typ: "supplementary";
+	/**
+	 * The half of supplementary lines an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: SupplementaryDetailsUpdate;
 }
 
 /**
@@ -12377,14 +12377,16 @@ export interface SupplementaryInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source?: "inline";
-	/** Whatever else the tour bills for, each line carrying its own charge. */
-	spec: SupplementarySpecInput;
 	/** Supplier Id */
 	supplier_id?: string | null;
+	/** Whatever else the tour bills for, each line carrying its own charge. */
+	spec: SupplementarySpecInput;
 }
 
 /** SupplementaryItem */
 export interface SupplementaryItemInput {
+	/** Name */
+	name?: string | null;
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -12399,12 +12401,12 @@ export interface SupplementaryItemInput {
 				  } & PerPersonChargeInput)
 		  )
 		| null;
-	/** Name */
-	name?: string | null;
 }
 
 /** SupplementaryItem */
 export interface SupplementaryItemOutput {
+	/** Name */
+	name: string | null;
 	/**
 	 * Expenses
 	 * The charge calculation strategy.
@@ -12419,8 +12421,6 @@ export interface SupplementaryItemOutput {
 				  } & PerPersonChargeOutput)
 		  )
 		| null;
-	/** Name */
-	name: string | null;
 }
 
 /**
@@ -12439,13 +12439,13 @@ export interface SupplementaryMemberOutput {
 	 * @default false
 	 */
 	is_main: boolean;
-	/** Whatever else the tour bills for, each line carrying its own charge. */
-	spec: SupplementarySpecOutput;
 	/**
 	 * An event that states its own spec: nothing is linked, so the only thing
 	 * left to name is the supplier it is bought from.
 	 */
 	supply: InlineSupply;
+	/** Whatever else the tour bills for, each line carrying its own charge. */
+	spec: SupplementarySpecOutput;
 }
 
 /**
@@ -12472,10 +12472,10 @@ export interface SupplementaryMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
-	/** Whatever else the tour bills for, each line carrying its own charge. */
-	spec: SupplementarySpecInput;
 	/** Supplier Id */
 	supplier_id?: string | null;
+	/** Whatever else the tour bills for, each line carrying its own charge. */
+	spec: SupplementarySpecInput;
 	/** Typ */
 	typ: "supplementary";
 }
@@ -12501,43 +12501,43 @@ export interface SupplementarySingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * Supplementary lines as a create takes them: the tour's plan and the suppliers
-	 * that bill them.
-	 */
-	details: SupplementaryDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "supplementary"
 	 */
 	typ: "supplementary";
+	/**
+	 * Supplementary lines as a create takes them: the tour's plan and the suppliers
+	 * that bill them.
+	 */
+	details: SupplementaryDetailsWrite;
 }
 
 /** SupplementarySingleEventRead */
@@ -12549,10 +12549,38 @@ export interface SupplementarySingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "supplementary"
+	 */
+	typ: "supplementary";
 	/** Supplementary lines as they read. */
 	details: SupplementaryDetailsOutput;
 	/**
@@ -12561,34 +12589,6 @@ export interface SupplementarySingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "supplementary"
-	 */
-	typ: "supplementary";
 }
 
 /**
@@ -12638,52 +12638,52 @@ export interface SupplierCreateSchema {
  * no supplier at all.
  */
 export interface SupplierLineTally {
-	/** Paid */
-	paid: number;
 	/** Total */
 	total: number;
-	/** Unassigned Supplier */
-	unassigned_supplier: number;
+	/** Paid */
+	paid: number;
 	/** Unpaid */
 	unpaid: number;
+	/** Unassigned Supplier */
+	unassigned_supplier: number;
 	/** Unpriced */
 	unpriced: number;
 }
 
 /** SupplierListResponse */
 export interface SupplierListResponse {
-	/** Data */
-	data: SupplierModel[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: SupplierModel[];
 }
 
 /** SupplierModel */
 export interface SupplierModel {
-	/** Brand Name */
-	brand_name: string;
-	/** Deleted At */
-	deleted_at: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Legal Name */
-	legal_name: string | null;
-	/** Logo Path */
-	logo_path: string | null;
 	/**
 	 * Operator Id
 	 * @format uuid
 	 */
 	operator_id: string;
+	/** Brand Name */
+	brand_name: string;
+	/** Legal Name */
+	legal_name: string | null;
 	/** Phone */
 	phone: string | null;
-	/** Supplier Types */
-	supplier_types: SupplierType[];
 	/** Website */
 	website: string | null;
+	/** Logo Path */
+	logo_path: string | null;
+	/** Supplier Types */
+	supplier_types: SupplierType[];
+	/** Deleted At */
+	deleted_at: string | null;
 }
 
 /**
@@ -12697,18 +12697,18 @@ export interface SupplierPaymentFile {
 	 * @format uuid
 	 */
 	file_id: string;
-	/** File Name */
-	file_name: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string;
 }
 
 /** SupplierPaymentListResponse */
 export interface SupplierPaymentListResponse {
-	/** Data */
-	data: SupplierPaymentListRowOutput[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: SupplierPaymentListRowOutput[];
 }
 
 /**
@@ -12726,21 +12726,17 @@ export interface SupplierPaymentListResponse {
  */
 export interface SupplierPaymentListRowOutput {
 	/**
-	 * Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 * Payment Id
+	 * @format uuid
 	 */
-	amount: string;
-	/**
-	 * Base Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	base_amount: string;
+	payment_id: string;
 	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	booking_id: string;
-	currency: Currency;
+	/** Order Number */
+	order_number: string;
 	/**
 	 * Event Id
 	 * @format uuid
@@ -12749,22 +12745,26 @@ export interface SupplierPaymentListRowOutput {
 	/** Event Name */
 	event_name: string | null;
 	event_typ: EventTypes | null;
-	/** Order Number */
-	order_number: string;
-	/** Paid At */
-	paid_at: string | null;
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	payment_id: string;
-	/** Receipt Count */
-	receipt_count: number;
-	status: SupplierPaymentStatus;
 	/** Supplier Id */
 	supplier_id: string | null;
 	/** Supplier Name */
 	supplier_name: string | null;
+	/**
+	 * Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	amount: string;
+	currency: Currency;
+	/**
+	 * Base Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	base_amount: string;
+	/** Receipt Count */
+	receipt_count: number;
+	status: SupplierPaymentStatus;
+	/** Paid At */
+	paid_at: string | null;
 }
 
 /**
@@ -12775,21 +12775,22 @@ export interface SupplierPaymentListRowOutput {
  */
 export interface SupplierPaymentResponse {
 	/**
-	 * Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 * Payment Id
+	 * @format uuid
 	 */
-	amount: string;
+	payment_id: string;
 	/**
-	 * Base Amount
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 * Operator Id
+	 * @format uuid
 	 */
-	base_amount: string;
+	operator_id: string;
 	/**
 	 * Booking Id
 	 * @format uuid
 	 */
 	booking_id: string;
-	currency: Currency;
+	/** Order Number */
+	order_number: string;
 	/**
 	 * Event Id
 	 * @format uuid
@@ -12798,34 +12799,33 @@ export interface SupplierPaymentResponse {
 	/** Event Name */
 	event_name: string | null;
 	event_typ: EventTypes | null;
-	/** Files */
-	files: SupplierPaymentFile[];
-	/** Note */
-	note: string | null;
+	/** Supplier Id */
+	supplier_id: string | null;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/**
-	 * Operator Id
-	 * @format uuid
+	 * Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	operator_id: string;
-	/** Order Number */
-	order_number: string;
-	/** Paid At */
-	paid_at: string | null;
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	payment_id: string;
+	amount: string;
+	currency: Currency;
 	/**
 	 * Rate
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	rate: string;
+	/**
+	 * Base Amount
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	base_amount: string;
+	/** Files */
+	files: SupplierPaymentFile[];
+	/** Note */
+	note: string | null;
 	status: SupplierPaymentStatus;
-	/** Supplier Id */
-	supplier_id: string | null;
-	/** Supplier Name */
-	supplier_name: string | null;
+	/** Paid At */
+	paid_at: string | null;
 }
 
 /**
@@ -12837,14 +12837,14 @@ export interface SupplierPaymentResponse {
  * become PAID once a confirmation ``file`` is attached (enforced in service).
  */
 export interface SupplierPaymentUpdate {
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/** Amount */
 	amount?: number | string | null;
 	currency?: Currency | null;
 	/** Note */
 	note?: string | null;
 	status?: SupplierPaymentStatus | null;
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -12858,8 +12858,8 @@ export interface SupplierPaymentUpdate {
 export interface SupplierPolicyBandInput {
 	/** From Time */
 	from_time?: string | null;
-	/** Note */
-	note?: string | null;
+	/** To Time */
+	to_time?: string | null;
 	/**
 	 * Surcharge
 	 * The surcharge calculation strategy.
@@ -12874,8 +12874,8 @@ export interface SupplierPolicyBandInput {
 				  } & PercentageSurcharge)
 		  )
 		| null;
-	/** To Time */
-	to_time?: string | null;
+	/** Note */
+	note?: string | null;
 }
 
 /**
@@ -12889,8 +12889,8 @@ export interface SupplierPolicyBandInput {
 export interface SupplierPolicyBandOutput {
 	/** From Time */
 	from_time: string | null;
-	/** Note */
-	note: string | null;
+	/** To Time */
+	to_time: string | null;
 	/**
 	 * Surcharge
 	 * The surcharge calculation strategy.
@@ -12905,8 +12905,8 @@ export interface SupplierPolicyBandOutput {
 				  } & PercentageSurcharge)
 		  )
 		| null;
-	/** To Time */
-	to_time: string | null;
+	/** Note */
+	note: string | null;
 }
 
 /**
@@ -12922,6 +12922,25 @@ export interface SupplierPolicyBandOutput {
  */
 export interface SupplierPolicyWarningSchemaOutput {
 	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	event_id: string;
+	/** Option Id */
+	option_id: string | null;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string;
+	/**
 	 * What a supplier policy caught on an event. Advisory, never a publish
 	 * block: the operator is the authority on their own contract, so a warning
 	 * reports the conflict and the charge to expect and leaves the call to them.
@@ -12929,13 +12948,10 @@ export interface SupplierPolicyWarningSchemaOutput {
 	 * Check: GET /tour/{tour_id}/{option_id}/event/policy-check
 	 */
 	code: SupplierPolicyWarning;
+	/** Path */
+	path: (string | number)[];
 	/** Detail */
 	detail: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	event_id: string;
 	/**
 	 * Expected Surcharge
 	 * The surcharge calculation strategy.
@@ -12950,35 +12966,19 @@ export interface SupplierPolicyWarningSchemaOutput {
 				  } & PercentageSurcharge)
 		  )
 		| null;
-	/** Option Id */
-	option_id: string | null;
-	/** Path */
-	path: (string | number)[];
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name: string;
-	/**
-	 * Tour Option Id
-	 * @format uuid
-	 */
-	tour_option_id: string;
 }
 
 /** SupplierProductImageModel */
 export interface SupplierProductImageModel {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Path */
-	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
 	/**
 	 * Product Id
 	 * @format uuid
@@ -12988,6 +12988,8 @@ export interface SupplierProductImageModel {
 
 /** SupplierProductListResponse */
 export interface SupplierProductListResponse {
+	/** Total Count */
+	total_count: number;
 	/** Data */
 	data: (
 		| ({
@@ -13009,8 +13011,6 @@ export interface SupplierProductListResponse {
 				typ: "transfer";
 		  } & TransferProductReadOutput)
 	)[];
-	/** Total Count */
-	total_count: number;
 }
 
 /**
@@ -13035,22 +13035,18 @@ export interface SupplierRef {
  */
 export interface SupplierSearchHit {
 	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/**
 	 * What one ``GET /supplier/search`` hit names. Declared in rank order: on
 	 * a tied score the supplier lists before its product, the product before its
 	 * variant.
 	 */
 	kind: SearchKind;
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
 	/** Name */
 	name: string;
-	/** Product Id */
-	product_id: string | null;
-	/** Product Name */
-	product_name: string | null;
 	/**
 	 * Supplier Id
 	 * @format uuid
@@ -13058,6 +13054,10 @@ export interface SupplierSearchHit {
 	supplier_id: string;
 	/** Supplier Name */
 	supplier_name: string;
+	/** Product Id */
+	product_id: string | null;
+	/** Product Name */
+	product_name: string | null;
 	typ: SupplierType | null;
 }
 
@@ -13085,6 +13085,13 @@ export interface SupplierUpdateSchema {
  */
 export interface TicketedOfferingInput {
 	/**
+	 * Id
+	 * @format uuid
+	 */
+	id?: string;
+	/** Name */
+	name?: string | null;
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -13095,13 +13102,6 @@ export interface TicketedOfferingInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id?: string;
-	/** Name */
-	name?: string | null;
 }
 
 /**
@@ -13110,6 +13110,13 @@ export interface TicketedOfferingInput {
  * and what it costs.
  */
 export interface TicketedOfferingOutput {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Name */
+	name: string | null;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -13121,13 +13128,6 @@ export interface TicketedOfferingOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Name */
-	name: string | null;
 }
 
 /** TimeSchema */
@@ -13150,10 +13150,10 @@ export interface TimeSchema {
  * When the group is somewhere: an activity's hours, an information entry's.
  */
 export interface Times {
-	/** Event end time */
-	end_time?: TimeSchema | null;
 	/** Event start time */
 	start_time?: TimeSchema | null;
+	/** Event end time */
+	end_time?: TimeSchema | null;
 }
 
 /**
@@ -13162,12 +13162,12 @@ export interface Times {
  * category of the fleet is priced here.
  */
 export interface ToPerCar {
-	/** Cars */
-	cars: CarChargeSwitch[];
-	/** To */
-	to: "per_car";
 	/** Typ */
 	typ: "transfer";
+	/** To */
+	to: "per_car";
+	/** Cars */
+	cars: CarChargeSwitch[];
 }
 
 /**
@@ -13178,14 +13178,14 @@ export interface ToPerCar {
  * in none until it is.
  */
 export interface ToPerCarCategory {
+	/** Typ */
+	typ: "transfer";
+	/** To */
+	to: "per_car_category";
 	/** Categories */
 	categories: CarCategory[];
 	/** Prices */
 	prices: CarPriceSwitch[];
-	/** To */
-	to: "per_car_category";
-	/** Typ */
-	typ: "transfer";
 }
 
 /**
@@ -13194,12 +13194,12 @@ export interface ToPerCarCategory {
  * into: every fare of the route is priced here.
  */
 export interface ToPerFare {
-	/** Fares */
-	fares: FareChargeSwitch[];
-	/** To */
-	to: "per_fare";
 	/** Typ */
 	typ: ToPerFareTypEnum;
+	/** To */
+	to: "per_fare";
+	/** Fares */
+	fares: FareChargeSwitch[];
 }
 
 /**
@@ -13208,12 +13208,12 @@ export interface ToPerFare {
  * its own rate, so every one of them is priced here.
  */
 export interface ToPerRoom {
-	/** Rooms */
-	rooms: RoomRateSwitch[];
-	/** To */
-	to: "per_room";
 	/** Typ */
 	typ: "hotel";
+	/** To */
+	to: "per_room";
+	/** Rooms */
+	rooms: RoomRateSwitch[];
 }
 
 /**
@@ -13222,10 +13222,10 @@ export interface ToPerRoom {
  * vehicle category of the fleet is priced here.
  */
 export interface ToPerVehicle {
-	/** To */
-	to: "per_vehicle";
 	/** Typ */
 	typ: "bus";
+	/** To */
+	to: "per_vehicle";
 	/** Vehicles */
 	vehicles: VehicleChargeSwitch[];
 }
@@ -13236,6 +13236,10 @@ export interface ToPerVehicle {
  * fleet and its vehicles keep none.
  */
 export interface ToWholeFleet {
+	/** Typ */
+	typ: "bus";
+	/** To */
+	to: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -13247,10 +13251,6 @@ export interface ToWholeFleet {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** To */
-	to: "whole";
-	/** Typ */
-	typ: "bus";
 }
 
 /**
@@ -13259,16 +13259,16 @@ export interface ToWholeFleet {
  * fills: the rooms keep none.
  */
 export interface ToWholeHotel {
+	/** Typ */
+	typ: "hotel";
+	/** To */
+	to: "whole";
 	/**
 	 * What a whole stay costs: the base charge plus the seasons that replace
 	 * it. A dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	price: StayRateInput;
-	/** To */
-	to: "whole";
-	/** Typ */
-	typ: "hotel";
 }
 
 /**
@@ -13277,6 +13277,10 @@ export interface ToWholeHotel {
  * onto the route and its fares keep none.
  */
 export interface ToWholeRoute {
+	/** Typ */
+	typ: ToWholeRouteTypEnum;
+	/** To */
+	to: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -13288,10 +13292,6 @@ export interface ToWholeRoute {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** To */
-	to: "whole";
-	/** Typ */
-	typ: ToWholeRouteTypEnum;
 }
 
 /**
@@ -13300,6 +13300,10 @@ export interface ToWholeRoute {
  * the fleet and its cars keep none.
  */
 export interface ToWholeTransfer {
+	/** Typ */
+	typ: "transfer";
+	/** To */
+	to: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -13311,23 +13315,19 @@ export interface ToWholeTransfer {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** To */
-	to: "whole";
-	/** Typ */
-	typ: "transfer";
 }
 
 /** TourEventLibraryImageModel */
 export interface TourEventLibraryImageModel {
+	/** Image Path */
+	image_path: string;
+	/** Is Primary */
+	is_primary: boolean;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Path */
-	image_path: string;
-	/** Is Primary */
-	is_primary: boolean;
 	/**
 	 * Library Id
 	 * @format uuid
@@ -13346,6 +13346,13 @@ export interface TourEventLibraryImageModel {
  * - ``GET /tour/{tour_id}/event/{event_id}/images/all``
  */
 export interface TourEventResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/** Tour Option Id */
+	tour_option_id: string | null;
 	/** Event */
 	event:
 		| (
@@ -13378,26 +13385,20 @@ export interface TourEventResponse {
 				  } & TransferSingleEventReadOutput)
 		  )
 		| MultiEventReadOutput;
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/** Tour Option Id */
-	tour_option_id: string | null;
 	/** @default "source" */
 	translation: TranslationState;
 }
 
 /** TourFinSettingsModel */
 export interface TourFinSettingsModel {
-	currency_type: Currency;
-	foc: FocPolicy | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
+	/** Tour Meta Id */
+	tour_meta_id: string | null;
+	currency_type: Currency;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -13412,36 +13413,43 @@ export interface TourFinSettingsModel {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Tour Meta Id */
-	tour_meta_id: string | null;
+	foc: FocPolicy | null;
 }
 
 /** TourListResponse */
 export interface TourListResponse {
-	/** Data */
-	data: TourMetaResponse[];
 	/** Total Count */
 	total_count: number;
+	/** Data */
+	data: TourMetaResponse[];
 }
 
 /** TourMetaCreateSchema */
 export interface TourMetaCreateSchema {
-	/** Age From */
-	age_from?: number | null;
-	/** Age To */
-	age_to?: number | null;
-	/** Agency Id */
-	agency_id?: string | null;
-	/** Categories */
-	categories?: TourCategory[];
+	/**
+	 * Title
+	 * @minLength 1
+	 * @maxLength 255
+	 */
+	title: string;
 	/**
 	 * Days
 	 * @min 1
 	 * @default 1
 	 */
 	days?: number;
+	/**
+	 * Nights
+	 * @min 0
+	 * @default 0
+	 */
+	nights?: number;
 	/** Duration Hours */
 	duration_hours?: number | null;
+	/** Age From */
+	age_from?: number | null;
+	/** Age To */
+	age_to?: number | null;
 	/**
 	 * Group Size
 	 * @min 1
@@ -13450,25 +13458,17 @@ export interface TourMetaCreateSchema {
 	group_size?: number;
 	/** Group Size Min */
 	group_size_min?: number | null;
+	/** @default "regular" */
+	typ?: TourType;
+	/** Agency Id */
+	agency_id?: string | null;
+	/** Categories */
+	categories?: TourCategory[];
 	/**
 	 * Languages
 	 * @minItems 1
 	 */
 	languages?: LanguageCode[];
-	/**
-	 * Nights
-	 * @min 0
-	 * @default 0
-	 */
-	nights?: number;
-	/**
-	 * Title
-	 * @minLength 1
-	 * @maxLength 255
-	 */
-	title: string;
-	/** @default "regular" */
-	typ?: TourType;
 }
 
 /**
@@ -13478,40 +13478,21 @@ export interface TourMetaCreateSchema {
  * ``tour_meta.name`` now reads ``landing_page.title`` through this shape.
  */
 export interface TourMetaResponse {
-	/** Age From */
-	age_from: number | null;
-	/** Age To */
-	age_to: number | null;
-	/** Agency Id */
-	agency_id: string | null;
-	/** Categories */
-	categories: TourCategory[];
-	/** Cover Image Path */
-	cover_image_path: string | null;
-	/**
-	 * Created At
-	 * @format date-time
-	 */
-	created_at: string;
-	/** Days */
-	days: number;
-	/** Duration Hours */
-	duration_hours: number | null;
-	/** Group Size */
-	group_size: number;
-	/** Group Size Min */
-	group_size_min: number | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Landing Id */
-	landing_id: string | null;
-	/** Languages */
-	languages: LanguageCode[];
-	/** Nights */
-	nights: number;
+	/**
+	 * Created At
+	 * @format date-time
+	 */
+	created_at: string;
+	/**
+	 * Updated At
+	 * @format date-time
+	 */
+	updated_at: string;
 	/**
 	 * Operator Id
 	 * @format uuid
@@ -13519,17 +13500,36 @@ export interface TourMetaResponse {
 	operator_id: string;
 	/** Schedule Id */
 	schedule_id: string | null;
-	/** Slug */
-	slug: string | null;
-	status: TourStatus;
+	/** Agency Id */
+	agency_id: string | null;
+	/** Landing Id */
+	landing_id: string | null;
 	/** Title */
 	title: string | null;
+	/** Slug */
+	slug: string | null;
+	/** Cover Image Path */
+	cover_image_path: string | null;
+	/** Group Size */
+	group_size: number;
+	/** Group Size Min */
+	group_size_min: number | null;
+	/** Days */
+	days: number;
+	/** Nights */
+	nights: number;
+	/** Duration Hours */
+	duration_hours: number | null;
+	/** Age From */
+	age_from: number | null;
+	/** Age To */
+	age_to: number | null;
 	typ: TourType;
-	/**
-	 * Updated At
-	 * @format date-time
-	 */
-	updated_at: string;
+	status: TourStatus;
+	/** Categories */
+	categories: TourCategory[];
+	/** Languages */
+	languages: LanguageCode[];
 }
 
 /**
@@ -13539,27 +13539,27 @@ export interface TourMetaResponse {
  * the per-operator uniqueness check and the translation re-run hang off.
  */
 export interface TourMetaUpdateSchema {
+	typ?: TourType | null;
+	/** Agency Id */
+	agency_id?: string | null;
+	/** Days */
+	days?: number | null;
+	/** Nights */
+	nights?: number | null;
+	/** Duration Hours */
+	duration_hours?: number | null;
 	/** Age From */
 	age_from?: number | null;
 	/** Age To */
 	age_to?: number | null;
-	/** Agency Id */
-	agency_id?: string | null;
-	/** Categories */
-	categories?: TourCategory[] | null;
-	/** Days */
-	days?: number | null;
-	/** Duration Hours */
-	duration_hours?: number | null;
 	/** Group Size */
 	group_size?: number | null;
 	/** Group Size Min */
 	group_size_min?: number | null;
+	/** Categories */
+	categories?: TourCategory[] | null;
 	/** Languages */
 	languages?: LanguageCode[] | null;
-	/** Nights */
-	nights?: number | null;
-	typ?: TourType | null;
 }
 
 /** TourMinMaxCostSchema */
@@ -13577,7 +13577,7 @@ export interface TourMinMaxCostSchemaOutput {
 	 * so same-currency is always satisfied and the guards catch anything that
 	 * slips through.
 	 */
-	max: MonetaryValueSchema;
+	min: MonetaryValueSchema;
 	/**
 	 * Monetary value pair.
 	 *
@@ -13591,7 +13591,7 @@ export interface TourMinMaxCostSchemaOutput {
 	 * so same-currency is always satisfied and the guards catch anything that
 	 * slips through.
 	 */
-	min: MonetaryValueSchema;
+	max: MonetaryValueSchema;
 }
 
 /**
@@ -13600,35 +13600,37 @@ export interface TourMinMaxCostSchemaOutput {
  * ``group_size_min`` (1 when unset), ``max`` its ``group_size``.
  */
 export interface TourMinMaxPaxSchema {
-	/** Max */
-	max: number;
 	/** Min */
 	min: number;
+	/** Max */
+	max: number;
 }
 
 /** TourOptionCreateSchema */
 export interface TourOptionCreateSchema {
-	/** Description */
-	description?: string | null;
 	/** Name */
 	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /** TourOptionModel */
 export interface TourOptionModel {
-	/** Cover Image Path */
-	cover_image_path: string | null;
-	/** Deleted At */
-	deleted_at: string | null;
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-	/** Languages */
-	languages: LanguageCode[] | null;
+	/** Tour Meta Id */
+	tour_meta_id: string | null;
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Cover Image Path */
+	cover_image_path: string | null;
+	/** Deleted At */
+	deleted_at: string | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -13643,18 +13645,12 @@ export interface TourOptionModel {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Name */
-	name: string | null;
-	/** Tour Meta Id */
-	tour_meta_id: string | null;
+	/** Languages */
+	languages: LanguageCode[] | null;
 }
 
 /** TourOptionPreviewSchema */
 export interface TourOptionPreviewSchemaOutput {
-	/** Cover Image Path */
-	cover_image_path: string | null;
-	/** Description */
-	description: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -13662,20 +13658,10 @@ export interface TourOptionPreviewSchemaOutput {
 	id: string;
 	/** Name */
 	name: string | null;
-	/**
-	 * Monetary value pair.
-	 *
-	 * Conversion happens inside the schema but takes an explicit ``FxContext``
-	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
-	 * ``return self``; cross-currency requires a matching entry in
-	 * ``fx.rates`` and applies ``val * rate``.
-	 *
-	 * Arithmetic operators stay same-currency-only on purpose: event calc
-	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
-	 * so same-currency is always satisfied and the guards catch anything that
-	 * slips through.
-	 */
-	price_per_person: MonetaryValueSchema;
+	/** Description */
+	description: string | null;
+	/** Cover Image Path */
+	cover_image_path: string | null;
 	/**
 	 * Monetary value pair.
 	 *
@@ -13690,10 +13676,29 @@ export interface TourOptionPreviewSchemaOutput {
 	 * slips through.
 	 */
 	total_price: MonetaryValueSchema;
+	/**
+	 * Monetary value pair.
+	 *
+	 * Conversion happens inside the schema but takes an explicit ``FxContext``
+	 * — no module-level rate singleton. Same-currency ``convert`` is a cheap
+	 * ``return self``; cross-currency requires a matching entry in
+	 * ``fx.rates`` and applies ``val * rate``.
+	 *
+	 * Arithmetic operators stay same-currency-only on purpose: event calc
+	 * normalizes every leaf to ``fx.target`` via ``convert`` before summing,
+	 * so same-currency is always satisfied and the guards catch anything that
+	 * slips through.
+	 */
+	price_per_person: MonetaryValueSchema;
 }
 
 /** TourOptionPublicResponse */
 export interface TourOptionPublicResponse {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
 	/** Events */
 	events: (
 		| (
@@ -13722,11 +13727,6 @@ export interface TourOptionPublicResponse {
 		| MultiEventPubOutput
 	)[];
 	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/**
 	 * Monetary value pair.
 	 *
 	 * Conversion happens inside the schema but takes an explicit ``FxContext``
@@ -13750,10 +13750,10 @@ export interface TourOptionPublicResponse {
  * Check: PATCH /tour/{tour_id}/option/{option_id}
  */
 export interface TourOptionUpdateSchema {
+	/** Name */
+	name?: string | null;
 	/** Description */
 	description?: string | null;
-	/** Languages */
-	languages?: LanguageCode[] | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -13768,12 +13768,26 @@ export interface TourOptionUpdateSchema {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Name */
-	name?: string | null;
+	/** Languages */
+	languages?: LanguageCode[] | null;
 }
 
 /** TourPackageModel */
 export interface TourPackageModel {
+	/**
+	 * Id
+	 * @format uuid
+	 */
+	id: string;
+	/**
+	 * Tour Option Id
+	 * @format uuid
+	 */
+	tour_option_id: string;
+	/** Supplier Id */
+	supplier_id: string | null;
+	/** Name */
+	name: string;
 	/**
 	 * Expenses
 	 * The expense calculation strategy.
@@ -13791,11 +13805,6 @@ export interface TourPackageModel {
 	/** Fees */
 	fees: FeeOutput[] | null;
 	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
-	/**
 	 * Markup
 	 * The markup calculation strategy.
 	 */
@@ -13809,27 +13818,18 @@ export interface TourPackageModel {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** Name */
-	name: string;
-	/** Supplier Id */
-	supplier_id: string | null;
-	/**
-	 * Tour Option Id
-	 * @format uuid
-	 */
-	tour_option_id: string;
 }
 
 /** TourRegenerateResponse */
 export interface TourRegenerateResponse {
+	/** Scheduled */
+	scheduled: boolean;
+	/** Landing */
+	landing: boolean;
 	/** Events Scheduled */
 	events_scheduled: number;
 	/** Events Skipped */
 	events_skipped: number;
-	/** Landing */
-	landing: boolean;
-	/** Scheduled */
-	scheduled: boolean;
 	/** Target Languages */
 	target_languages: number;
 }
@@ -13882,24 +13882,24 @@ export interface TourScheduleUpdate {
  * on demand.
  */
 export interface TourSlugResolutionSchema {
-	landing: LandingPagePubSchema;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tour_id: string;
+	/** Slug */
+	slug: string;
+	/** Moved */
+	moved: boolean;
 	/**
 	 * ``tour_meta`` joined to its landing page, which owns the tour title. The
 	 * tour row itself carries no text — every reader that used to select
 	 * ``tour_meta.name`` now reads ``landing_page.title`` through this shape.
 	 */
 	meta: TourMetaResponse;
-	/** Moved */
-	moved: boolean;
+	landing: LandingPagePubSchema;
 	/** Options */
 	options: TourOptionPreviewSchemaOutput[];
-	/** Slug */
-	slug: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tour_id: string;
 }
 
 /**
@@ -13907,6 +13907,30 @@ export interface TourSlugResolutionSchema {
  * Pure-Pydantic snapshot of everything a booking's price depends on, frozen at creation.
  */
 export interface TourSnapshotSchemaOutput {
+	tour_meta: FrozenTourMeta;
+	/**
+	 * ``markup`` is the option-level override frozen at booking time; snapshot
+	 * pricing resolves it before the tour-level markup, so later option edits
+	 * never change this booking.
+	 */
+	tour_option: FrozenTourOptionOutput;
+	tour_financial_settings: FrozenTourFinOutput | null;
+	/** Events */
+	events: OrderTourEventSchemaOutput[];
+	/** @default "en" */
+	display_lang: LanguageCode;
+	/** Events Localized */
+	events_localized: OrderTourEventSchemaOutput[] | null;
+	/** Packages */
+	packages: PricingPackageOutput[];
+	operator_financials: PricingFinancialsOutput | null;
+	/** Fx Rates */
+	fx_rates: FrozenFxRateOutput[];
+	/**
+	 * Fx Margin
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	fx_margin: string;
 	/**
 	 * Agency Discount
 	 * The markup calculation strategy.
@@ -13921,30 +13945,6 @@ export interface TourSnapshotSchemaOutput {
 				  } & PercentageMarkup)
 		  )
 		| null;
-	/** @default "en" */
-	display_lang: LanguageCode;
-	/** Events */
-	events: OrderTourEventSchemaOutput[];
-	/** Events Localized */
-	events_localized: OrderTourEventSchemaOutput[] | null;
-	/**
-	 * Fx Margin
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	fx_margin: string;
-	/** Fx Rates */
-	fx_rates: FrozenFxRateOutput[];
-	operator_financials: PricingFinancialsOutput | null;
-	/** Packages */
-	packages: PricingPackageOutput[];
-	tour_financial_settings: FrozenTourFinOutput | null;
-	tour_meta: FrozenTourMeta;
-	/**
-	 * ``markup`` is the option-level override frozen at booking time; snapshot
-	 * pricing resolves it before the tour-level markup, so later option edits
-	 * never change this booking.
-	 */
-	tour_option: FrozenTourOptionOutput;
 }
 
 /**
@@ -13990,41 +13990,31 @@ export interface TourSnapshotSchemaOutput {
  */
 export interface TourStatisticsResponse {
 	/**
+	 * Total Orders
+	 * @default 0
+	 */
+	total_orders: number;
+	/**
 	 * Completed
 	 * @default 0
 	 */
 	completed: number;
-	/**
-	 * Confirmed Revenue
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	confirmed_revenue: string;
-	/**
-	 * Cost Accrued
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	cost_accrued: string;
-	/**
-	 * Cost Settled
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	cost_settled: string;
-	/** @default "USD" */
-	currency: Currency;
 	/**
 	 * In Progress
 	 * @default 0
 	 */
 	in_progress: number;
 	/**
-	 * Payable
+	 * Tourists
+	 * @default 0
+	 */
+	tourists: number;
+	/**
+	 * Planned Revenue
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	payable: string;
+	planned_revenue: string;
 	/**
 	 * Planned Cost
 	 * @default "0"
@@ -14038,11 +14028,11 @@ export interface TourStatisticsResponse {
 	 */
 	planned_profit: string;
 	/**
-	 * Planned Revenue
+	 * Confirmed Revenue
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
-	planned_revenue: string;
+	confirmed_revenue: string;
 	/**
 	 * Real Cost
 	 * @default "0"
@@ -14056,12 +14046,6 @@ export interface TourStatisticsResponse {
 	 */
 	real_profit: string;
 	/**
-	 * Receivable
-	 * @default "0"
-	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
-	 */
-	receivable: string;
-	/**
 	 * Revenue Accrued
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
@@ -14074,21 +14058,37 @@ export interface TourStatisticsResponse {
 	 */
 	revenue_settled: string;
 	/**
+	 * Receivable
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	receivable: string;
+	/**
+	 * Cost Accrued
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	cost_accrued: string;
+	/**
+	 * Cost Settled
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	cost_settled: string;
+	/**
+	 * Payable
+	 * @default "0"
+	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
+	 */
+	payable: string;
+	/**
 	 * Settled Profit
 	 * @default "0"
 	 * @pattern ^(?!^[-+.]*$)[+-]?0*\d*\.?\d*$
 	 */
 	settled_profit: string;
-	/**
-	 * Total Orders
-	 * @default 0
-	 */
-	total_orders: number;
-	/**
-	 * Tourists
-	 * @default 0
-	 */
-	tourists: number;
+	/** @default "USD" */
+	currency: Currency;
 }
 
 /**
@@ -14161,20 +14161,15 @@ export interface TrainDetailsWrite {
 /** TrainEvent */
 export interface TrainEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A rail leg as a create takes it: the tour's plan and the rail suppliers that
-	 * run it.
-	 */
-	details: TrainDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -14182,42 +14177,59 @@ export interface TrainEvent {
 	 * @default "train"
 	 */
 	typ: "train";
+	/**
+	 * A rail leg as a create takes it: the tour's plan and the rail suppliers that
+	 * run it.
+	 */
+	details: TrainDetailsWrite;
 }
 
 /** TrainEventPubRead */
 export interface TrainEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
-	details: TrainDetailPubSchemaOutput | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
 	/**
 	 * Typ
 	 * @default "train"
 	 */
 	typ: "train";
+	details: TrainDetailPubSchemaOutput | null;
 }
 
 /** TrainEventTypeRead */
 export interface TrainEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ: "train";
 	/** A rail leg as it reads. */
 	details: TrainDetailsOutput;
 	/**
@@ -14226,39 +14238,20 @@ export interface TrainEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ: "train";
 }
 
 /** TrainEventUpdate */
 export interface TrainEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of a rail leg an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: TrainDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -14266,6 +14259,13 @@ export interface TrainEventUpdate {
 	 * @default "train"
 	 */
 	typ: "train";
+	/**
+	 * The half of a rail leg an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: TrainDetailsUpdate;
 }
 
 /**
@@ -14278,6 +14278,8 @@ export interface TrainInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -14289,8 +14291,6 @@ export interface TrainInlineSupplyNew {
 		| ({
 				pricing: "whole";
 		  } & WholeTrainRouteInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -14298,10 +14298,10 @@ export interface TrainInlineSupplyNew {
  * One leg of a rail route — its two stations and nothing else.
  */
 export interface TrainLegInput {
-	/** Where the leg arrives. */
-	arrival?: TrainStopInput | null;
 	/** Where the leg leaves from. */
 	departure?: TrainStopInput | null;
+	/** Where the leg arrives. */
+	arrival?: TrainStopInput | null;
 }
 
 /**
@@ -14309,10 +14309,10 @@ export interface TrainLegInput {
  * One leg of a rail route — its two stations and nothing else.
  */
 export interface TrainLegOutput {
-	/** Where the leg arrives. */
-	arrival: TrainStopOutput | null;
 	/** Where the leg leaves from. */
 	departure: TrainStopOutput | null;
+	/** Where the leg arrives. */
+	arrival: TrainStopOutput | null;
 }
 
 /**
@@ -14331,6 +14331,14 @@ export interface TrainMemberOutput {
 	 * @default false
 	 */
 	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & RouteProductSupplyOutput);
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -14342,14 +14350,6 @@ export interface TrainMemberOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeTrainRouteOutput);
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & RouteProductSupplyOutput);
 }
 
 /**
@@ -14382,6 +14382,8 @@ export interface TrainMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -14393,8 +14395,6 @@ export interface TrainMemberUpdate {
 		| ({
 				pricing: "whole";
 		  } & WholeTrainRouteInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "train";
 }
@@ -14420,6 +14420,11 @@ export interface TrainMemberWrite {
 /** TrainProductCreate */
 export interface TrainProductCreate {
 	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ: "train";
+	/**
 	 * Details
 	 * How the route prices a leg.
 	 */
@@ -14430,11 +14435,6 @@ export interface TrainProductCreate {
 		| ({
 				pricing: "whole";
 		  } & WholeTrainCreate);
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ: "train";
 }
 
 /** TrainProductRead */
@@ -14444,12 +14444,24 @@ export interface TrainProductReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Paths */
-	image_paths: string[];
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/** Name */
 	name: string;
+	/** Image Paths */
+	image_paths: string[];
 	/** Primary Image Path */
 	primary_image_path: string | null;
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ: "train";
 	/**
 	 * Spec
 	 * How the route prices a leg.
@@ -14461,22 +14473,15 @@ export interface TrainProductReadOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeTrainRouteOutput);
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name: string | null;
+}
+
+/** TrainProductUpdate */
+export interface TrainProductUpdate {
 	/**
 	 * Typ
 	 * @default "train"
 	 */
 	typ: "train";
-}
-
-/** TrainProductUpdate */
-export interface TrainProductUpdate {
 	/**
 	 * Details
 	 * How the route prices a leg.
@@ -14491,11 +14496,6 @@ export interface TrainProductUpdate {
 				  } & WholeTrainDetails)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ: "train";
 }
 
 /** TrainSingleEvent */
@@ -14507,43 +14507,43 @@ export interface TrainSingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A rail leg as a create takes it: the tour's plan and the rail suppliers that
-	 * run it.
-	 */
-	details: TrainDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "train"
 	 */
 	typ: "train";
+	/**
+	 * A rail leg as a create takes it: the tour's plan and the rail suppliers that
+	 * run it.
+	 */
+	details: TrainDetailsWrite;
 }
 
 /** TrainSingleEventRead */
@@ -14555,10 +14555,38 @@ export interface TrainSingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ: "train";
 	/** A rail leg as it reads. */
 	details: TrainDetailsOutput;
 	/**
@@ -14567,34 +14595,6 @@ export interface TrainSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ: "train";
 }
 
 /**
@@ -14647,15 +14647,15 @@ export interface TransferCarCategoryPubSchema {
  * the class.
  */
 export interface TransferCarPubSchema {
-	/** Categories */
-	categories: TransferCarCategoryPubSchema[];
-	/** Description */
-	description: string | null;
 	/** Name */
 	name: string | null;
+	typ: VehicleBodyType | null;
 	/** Pax */
 	pax: number | null;
-	typ: VehicleBodyType | null;
+	/** Description */
+	description: string | null;
+	/** Categories */
+	categories: TransferCarCategoryPubSchema[];
 }
 
 /**
@@ -14681,16 +14681,7 @@ export interface TransferDetailsOutput {
  * leaves from and arrives at, and what it is driven in.
  */
 export interface TransferDetailsPubSchemaOutput {
-	/**
-	 * One end of a transport leg: where, at what hour, on what date.
-	 *
-	 * ``date`` is read-only and filled by the backend only. A tour template stays
-	 * reusable across every departure, so it states ``day`` + ``time``; the
-	 * concrete date is resolved from a booking's anchor date and is never accepted
-	 * from a client. Stays null on surfaces with no anchor date — the public tour
-	 * view and the catalog listing.
-	 */
-	arrival: JourneyPointPubSchemaOutput;
+	typ: TransferTypes | null;
 	/**
 	 * One end of a transport leg: where, at what hour, on what date.
 	 *
@@ -14701,8 +14692,17 @@ export interface TransferDetailsPubSchemaOutput {
 	 * view and the catalog listing.
 	 */
 	departure: JourneyPointPubSchemaOutput;
+	/**
+	 * One end of a transport leg: where, at what hour, on what date.
+	 *
+	 * ``date`` is read-only and filled by the backend only. A tour template stays
+	 * reusable across every departure, so it states ``day`` + ``time``; the
+	 * concrete date is resolved from a booking's anchor date and is never accepted
+	 * from a client. Stays null on surfaces with no anchor date — the public tour
+	 * view and the catalog listing.
+	 */
+	arrival: JourneyPointPubSchemaOutput;
 	spec: TransferSpecPubSchemaOutput | null;
-	typ: TransferTypes | null;
 }
 
 /**
@@ -14738,20 +14738,15 @@ export interface TransferDetailsWrite {
 /** TransferEvent */
 export interface TransferEvent {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A ride as a create takes it: the tour's plan and the car suppliers that drive
-	 * it.
-	 */
-	details: TransferDetailsWrite;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -14759,42 +14754,59 @@ export interface TransferEvent {
 	 * @default "transfer"
 	 */
 	typ: "transfer";
+	/**
+	 * A ride as a create takes it: the tour's plan and the car suppliers that drive
+	 * it.
+	 */
+	details: TransferDetailsWrite;
 }
 
 /** TransferEventPubRead */
 export interface TransferEventPubReadOutput {
+	/** Name */
+	name: string | null;
+	/** Description */
+	description: string | null;
+	/** Day */
+	day: number | null;
+	/** Position */
+	position: number | null;
+	/** Is Optional */
+	is_optional: boolean | null;
+	/** Images */
+	images: EventImagePubSchema[];
 	/**
 	 * Date
 	 * Calendar date this event falls on, computed as the booking's departure date plus ``day - 1``. Null in the catalogue, where a template tour has no departure date to anchor against.
 	 */
 	date: string | null;
-	/** Day */
-	day: number | null;
-	/** Description */
-	description: string | null;
-	details: TransferDetailsPubSchemaOutput | null;
-	/** Images */
-	images: EventImagePubSchema[];
-	/** Is Optional */
-	is_optional: boolean | null;
-	/** Name */
-	name: string | null;
-	/** Position */
-	position: number | null;
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ: "transfer";
+	details: TransferDetailsPubSchemaOutput | null;
 }
 
 /** TransferEventTypeRead */
 export interface TransferEventTypeReadOutput {
 	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
 	/** A ride as it reads. */
 	details: TransferDetailsOutput;
 	/**
@@ -14803,39 +14815,20 @@ export interface TransferEventTypeReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ: "transfer";
 }
 
 /** TransferEventUpdate */
 export interface TransferEventUpdate {
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * The half of a ride an alternative update writes: the tour's plan,
-	 * replaced whole. Its pool is written member by member.
-	 *
-	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
-	 */
-	details: TransferDetailsUpdate;
-	/**
 	 * Name
 	 * Event's name
 	 */
 	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
 	/** Package Id */
 	package_id?: string | null;
 	/**
@@ -14843,6 +14836,13 @@ export interface TransferEventUpdate {
 	 * @default "transfer"
 	 */
 	typ: "transfer";
+	/**
+	 * The half of a ride an alternative update writes: the tour's plan,
+	 * replaced whole. Its pool is written member by member.
+	 *
+	 * Check: ``PATCH /tour/{tour_id}/{option_id}/event/{event_id}/option/{event_option_id}/pool/{supply_id}``
+	 */
+	details: TransferDetailsUpdate;
 }
 
 /**
@@ -14855,6 +14855,8 @@ export interface TransferInlineSupplyNew {
 	 * @default "inline"
 	 */
 	source: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the fleet prices a leg.
@@ -14869,8 +14871,6 @@ export interface TransferInlineSupplyNew {
 		| ({
 				pricing: "whole";
 		  } & WholeTransferInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 }
 
 /**
@@ -14879,11 +14879,11 @@ export interface TransferInlineSupplyNew {
  * whoever drives it.
  */
 export interface TransferLegInput {
-	/** Details of the arrival. */
-	arrival?: TransferPointInput | null;
+	typ?: TransferTypes | null;
 	/** Details of the departure. */
 	departure?: TransferPointInput | null;
-	typ?: TransferTypes | null;
+	/** Details of the arrival. */
+	arrival?: TransferPointInput | null;
 }
 
 /**
@@ -14892,11 +14892,11 @@ export interface TransferLegInput {
  * whoever drives it.
  */
 export interface TransferLegOutput {
-	/** Details of the arrival. */
-	arrival: TransferPointOutput | null;
+	typ: TransferTypes | null;
 	/** Details of the departure. */
 	departure: TransferPointOutput | null;
-	typ: TransferTypes | null;
+	/** Details of the arrival. */
+	arrival: TransferPointOutput | null;
 }
 
 /**
@@ -14915,6 +14915,14 @@ export interface TransferMemberOutput {
 	 * @default false
 	 */
 	is_main: boolean;
+	/** Supply */
+	supply:
+		| ({
+				source: "inline";
+		  } & InlineSupply)
+		| ({
+				source: "product";
+		  } & TransferProductSupplyOutput);
 	/**
 	 * Spec
 	 * How the fleet prices a leg.
@@ -14929,14 +14937,6 @@ export interface TransferMemberOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeTransferOutput);
-	/** Supply */
-	supply:
-		| ({
-				source: "inline";
-		  } & InlineSupply)
-		| ({
-				source: "product";
-		  } & TransferProductSupplyOutput);
 }
 
 /**
@@ -14969,6 +14969,8 @@ export interface TransferMemberUpdate {
 	 * @default "inline"
 	 */
 	source?: "inline";
+	/** Supplier Id */
+	supplier_id?: string | null;
 	/**
 	 * Spec
 	 * How the fleet prices a leg.
@@ -14983,8 +14985,6 @@ export interface TransferMemberUpdate {
 		| ({
 				pricing: "whole";
 		  } & WholeTransferInput);
-	/** Supplier Id */
-	supplier_id?: string | null;
 	/** Typ */
 	typ: "transfer";
 }
@@ -15013,6 +15013,11 @@ export interface TransferMemberWrite {
  */
 export interface TransferOverrideInput {
 	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
+	/**
 	 * Rates
 	 * The arm the fleet prices in.
 	 */
@@ -15026,11 +15031,6 @@ export interface TransferOverrideInput {
 		| ({
 				pricing: "whole";
 		  } & WholeTransferChargeOverrideInput);
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ: "transfer";
 }
 
 /**
@@ -15038,6 +15038,11 @@ export interface TransferOverrideInput {
  * A price this tour negotiated for a ride, replacing the fleet's own.
  */
 export interface TransferOverrideOutput {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
 	/**
 	 * Rates
 	 * The arm the fleet prices in.
@@ -15052,11 +15057,6 @@ export interface TransferOverrideOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeTransferChargeOverrideOutput);
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ: "transfer";
 }
 
 /**
@@ -15064,10 +15064,10 @@ export interface TransferOverrideOutput {
  * Where a transfer leg leaves from or arrives at, and when.
  */
 export interface TransferPointInput {
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** The time of an event */
 	time?: TimeSchema | null;
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /**
@@ -15075,14 +15075,19 @@ export interface TransferPointInput {
  * Where a transfer leg leaves from or arrives at, and when.
  */
 export interface TransferPointOutput {
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** The time of an event */
 	time: TimeSchema | null;
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 }
 
 /** TransferProductCreate */
 export interface TransferProductCreate {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
 	/**
 	 * Details
 	 * How the fleet prices a leg.
@@ -15097,11 +15102,6 @@ export interface TransferProductCreate {
 		| ({
 				pricing: "whole";
 		  } & WholeTransferCreate);
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ: "transfer";
 }
 
 /** TransferProductRead */
@@ -15111,12 +15111,24 @@ export interface TransferProductReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/** Image Paths */
-	image_paths: string[];
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplier_id: string;
+	/** Supplier Name */
+	supplier_name: string | null;
 	/** Name */
 	name: string;
+	/** Image Paths */
+	image_paths: string[];
 	/** Primary Image Path */
 	primary_image_path: string | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
 	/**
 	 * Spec
 	 * How the fleet prices a leg.
@@ -15131,18 +15143,6 @@ export interface TransferProductReadOutput {
 		| ({
 				pricing: "whole";
 		  } & WholeTransferOutput);
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplier_id: string;
-	/** Supplier Name */
-	supplier_name: string | null;
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ: "transfer";
 }
 
 /**
@@ -15150,12 +15150,18 @@ export interface TransferProductReadOutput {
  * A ride driven by a supplier's transfer fleet.
  */
 export interface TransferProductSupplyOutput {
-	override: TransferOverrideOutput | null;
+	/**
+	 * Source
+	 * @default "product"
+	 */
+	source: "product";
 	/**
 	 * Product Id
 	 * @format uuid
 	 */
 	product_id: string;
+	/** Who a linked product is bought from, resolved on read. */
+	supplier: SupplierRef;
 	/**
 	 * Scope
 	 * How much of the product the event takes.
@@ -15167,17 +15173,16 @@ export interface TransferProductSupplyOutput {
 		| ({
 				typ: "only";
 		  } & OnlyVariants);
-	/**
-	 * Source
-	 * @default "product"
-	 */
-	source: "product";
-	/** Who a linked product is bought from, resolved on read. */
-	supplier: SupplierRef;
+	override: TransferOverrideOutput | null;
 }
 
 /** TransferProductUpdate */
 export interface TransferProductUpdate {
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
 	/**
 	 * Details
 	 * How the fleet prices a leg.
@@ -15195,11 +15200,6 @@ export interface TransferProductUpdate {
 				  } & WholeTransferDetails)
 		  )
 		| null;
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ: "transfer";
 }
 
 /** TransferSingleEvent */
@@ -15211,43 +15211,43 @@ export interface TransferSingleEvent {
 	 */
 	day: number;
 	/**
-	 * Description
-	 * Event's description
-	 */
-	description?: string | null;
-	/**
-	 * A ride as a create takes it: the tour's plan and the car suppliers that drive
-	 * it.
-	 */
-	details: TransferDetailsWrite;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images?: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional?: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name?: string | null;
-	/** Package Id */
-	package_id?: string | null;
-	/**
 	 * Position
 	 * Event's order number in a tour
 	 * @min 0
 	 */
 	position: number;
 	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional?: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images?: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name?: string | null;
+	/**
+	 * Description
+	 * Event's description
+	 */
+	description?: string | null;
+	/** Package Id */
+	package_id?: string | null;
+	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ: "transfer";
+	/**
+	 * A ride as a create takes it: the tour's plan and the car suppliers that drive
+	 * it.
+	 */
+	details: TransferDetailsWrite;
 }
 
 /** TransferSingleEventRead */
@@ -15259,10 +15259,38 @@ export interface TransferSingleEventReadOutput {
 	 */
 	day: number;
 	/**
+	 * Position
+	 * Event's order number in a tour
+	 * @min 0
+	 */
+	position: number;
+	/**
+	 * Is Optional
+	 * @default false
+	 */
+	is_optional: boolean;
+	/**
+	 * Images
+	 * Images of the event slot, primary first; populated on read, ignored on write.
+	 */
+	images: EventImageSchema[];
+	/**
+	 * Name
+	 * Event's name
+	 */
+	name: string | null;
+	/**
 	 * Description
 	 * Event's description
 	 */
 	description: string | null;
+	/** Package Id */
+	package_id: string | null;
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ: "transfer";
 	/** A ride as it reads. */
 	details: TransferDetailsOutput;
 	/**
@@ -15271,34 +15299,6 @@ export interface TransferSingleEventReadOutput {
 	 * @format uuid
 	 */
 	id: string;
-	/**
-	 * Images
-	 * Images of the event slot, primary first; populated on read, ignored on write.
-	 */
-	images: EventImageSchema[];
-	/**
-	 * Is Optional
-	 * @default false
-	 */
-	is_optional: boolean;
-	/**
-	 * Name
-	 * Event's name
-	 */
-	name: string | null;
-	/** Package Id */
-	package_id: string | null;
-	/**
-	 * Position
-	 * Event's order number in a tour
-	 * @min 0
-	 */
-	position: number;
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ: "transfer";
 }
 
 /**
@@ -15328,7 +15328,7 @@ export interface TransportHopPubSchemaOutput {
 	 * from a client. Stays null on surfaces with no anchor date — the public tour
 	 * view and the catalog listing.
 	 */
-	arrival: JourneyPointPubSchemaOutput;
+	departure: JourneyPointPubSchemaOutput;
 	/**
 	 * One end of a transport leg: where, at what hour, on what date.
 	 *
@@ -15338,13 +15338,12 @@ export interface TransportHopPubSchemaOutput {
 	 * from a client. Stays null on surfaces with no anchor date — the public tour
 	 * view and the catalog listing.
 	 */
-	departure: JourneyPointPubSchemaOutput;
+	arrival: JourneyPointPubSchemaOutput;
 }
 
 /** UpdateFinancialSchema */
 export interface UpdateFinancialSchema {
 	currency_type?: Currency | null;
-	foc?: FocPolicy | null;
 	/**
 	 * Markup
 	 * The markup calculation strategy.
@@ -15359,6 +15358,7 @@ export interface UpdateFinancialSchema {
 				  } & PercentageMarkup)
 		  )
 		| null;
+	foc?: FocPolicy | null;
 }
 
 /** UpdateUserSchema */
@@ -15368,17 +15368,17 @@ export interface UpdateUserSchema {
 
 /** UserProfileUpdate */
 export interface UserProfileUpdate {
-	default_currency?: Currency | null;
 	/** First Name */
 	first_name?: string | null;
 	/** Last Name */
 	last_name?: string | null;
-	/** Location */
-	location?: string | null;
-	/** Phone Number */
-	phone_number?: string | null;
 	/** Title */
 	title?: string | null;
+	/** Phone Number */
+	phone_number?: string | null;
+	/** Location */
+	location?: string | null;
+	default_currency?: Currency | null;
 }
 
 /** ValidationError */
@@ -15404,6 +15404,11 @@ export interface ValidationError {
  * - ``PATCH /supplier/{supplier_id}/product/{product_id}/variant/{variant_id}``
  */
 export interface VariantCreated {
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variant_id: string;
 	/** Product */
 	product:
 		| ({
@@ -15424,11 +15429,6 @@ export interface VariantCreated {
 		| ({
 				typ: "transfer";
 		  } & TransferProductReadOutput);
-	/**
-	 * Variant Id
-	 * @format uuid
-	 */
-	variant_id: string;
 }
 
 /**
@@ -15438,9 +15438,6 @@ export interface VariantCreated {
  * ``id`` on update to keep the vehicle's pictures.
  */
 export interface Vehicle {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Id
 	 * @format uuid
@@ -15452,14 +15449,17 @@ export interface Vehicle {
 	 * @maxItems 5
 	 */
 	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats a group is packed into.
 	 * @min 1
 	 */
 	pax: number;
+	/** Name */
+	name?: string | null;
+	/** Description */
+	description?: string | null;
 }
 
 /**
@@ -15467,13 +15467,13 @@ export interface Vehicle {
  * What one coach costs this tour.
  */
 export interface VehicleChargeOverrideInput {
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
 	/**
 	 * Vehicle Id
 	 * @format uuid
 	 */
 	vehicle_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -15481,13 +15481,13 @@ export interface VehicleChargeOverrideInput {
  * What one coach costs this tour.
  */
 export interface VehicleChargeOverrideOutput {
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeOutput;
 	/**
 	 * Vehicle Id
 	 * @format uuid
 	 */
 	vehicle_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeOutput;
 }
 
 /**
@@ -15495,13 +15495,13 @@ export interface VehicleChargeOverrideOutput {
  * What one vehicle of a category costs once the fleet charges by vehicle.
  */
 export interface VehicleChargeSwitch {
-	/** A fixed cost together with its own fee and markup. */
-	charge: FixedChargeInput;
 	/**
 	 * Variant Id
 	 * @format uuid
 	 */
 	variant_id: string;
+	/** A fixed cost together with its own fee and markup. */
+	charge: FixedChargeInput;
 }
 
 /**
@@ -15544,13 +15544,13 @@ export interface VehicleChargesOverrideOutput {
  * empty — they are one fleet's — and the price never crosses.
  */
 export interface VehiclePubSchema {
-	/** Description */
-	description: string | null;
 	/** Name */
 	name: string | null;
+	typ: VehicleBodyType | null;
 	/** Pax */
 	pax: number | null;
-	typ: VehicleBodyType | null;
+	/** Description */
+	description: string | null;
 }
 
 /**
@@ -15560,20 +15560,20 @@ export interface VehiclePubSchema {
  * charge. No ``id``: the category is minted with the fleet.
  */
 export interface VehicleWrite {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
+	/** Description */
+	description?: string | null;
 }
 
 /** VoucherResponse */
@@ -15583,12 +15583,12 @@ export interface VoucherResponse {
 	 * @format uuid
 	 */
 	booking_id: string;
-	/** File Name */
-	file_name: string | null;
 	/** Order Number */
 	order_number: string;
 	/** Url */
 	url: string;
+	/** File Name */
+	file_name: string | null;
 }
 
 /**
@@ -15596,6 +15596,13 @@ export interface VoucherResponse {
  * A coach fleet sold whole as the API takes it.
  */
 export interface WholeBusDetails {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/** Pricing */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -15612,38 +15619,31 @@ export interface WholeBusDetails {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ?: "bus";
 }
 
 /** WholeBusVariantWrite */
 export interface WholeBusVariantWrite {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
-	/** Pricing */
-	pricing: "whole";
+	/** Description */
+	description?: string | null;
 	/**
 	 * Typ
 	 * @default "bus"
 	 */
 	typ?: "bus";
+	/** Pricing */
+	pricing: "whole";
 }
 
 /**
@@ -15653,6 +15653,18 @@ export interface WholeBusVariantWrite {
  */
 export interface WholeFleetInput {
 	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images?: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name?: string | null;
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -15663,18 +15675,6 @@ export interface WholeFleetInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 	/** Vehicles */
 	vehicles?: Vehicle[];
 }
@@ -15686,6 +15686,18 @@ export interface WholeFleetInput {
  */
 export interface WholeFleetOutput {
 	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name: string | null;
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -15696,18 +15708,6 @@ export interface WholeFleetOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 	/** Vehicles */
 	vehicles: Vehicle[];
 }
@@ -15717,6 +15717,11 @@ export interface WholeFleetOutput {
  * What a run taken whole costs this tour, replacing the fleet's own charge.
  */
 export interface WholeFleetChargeOverrideInput {
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -15728,11 +15733,6 @@ export interface WholeFleetChargeOverrideInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -15740,6 +15740,11 @@ export interface WholeFleetChargeOverrideInput {
  * What a run taken whole costs this tour, replacing the fleet's own charge.
  */
 export interface WholeFleetChargeOverrideOutput {
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -15751,11 +15756,6 @@ export interface WholeFleetChargeOverrideOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -15764,6 +15764,13 @@ export interface WholeFleetChargeOverrideOutput {
  * and the vehicle categories it takes, none of them priced.
  */
 export interface WholeFleetCreate {
+	/**
+	 * Typ
+	 * @default "bus"
+	 */
+	typ?: "bus";
+	/** Pricing */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -15780,13 +15787,6 @@ export interface WholeFleetCreate {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "bus"
-	 */
-	typ?: "bus";
 	/** Vehicles */
 	vehicles?: VehicleWrite[];
 }
@@ -15798,6 +15798,15 @@ export interface WholeFleetCreate {
  */
 export interface WholeFlightCreate {
 	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Pricing */
+	pricing: "whole";
+	/** Legs */
+	legs?: FlightLegInput[];
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -15808,22 +15817,13 @@ export interface WholeFlightCreate {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** Fares */
-	fares?: PlainFareCreate[];
-	/** Legs */
-	legs?: FlightLegInput[];
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ?: "flight";
+	/** Fares */
+	fares?: PlainFareCreate[];
 }
 
 /**
@@ -15832,6 +15832,15 @@ export interface WholeFlightCreate {
  */
 export interface WholeFlightDetails {
 	/**
+	 * Typ
+	 * @default "flight"
+	 */
+	typ?: "flight";
+	/** Pricing */
+	pricing: "whole";
+	/** Legs */
+	legs?: FlightLegInput[];
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -15842,20 +15851,11 @@ export interface WholeFlightDetails {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** Legs */
-	legs?: FlightLegInput[];
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "flight"
-	 */
-	typ?: "flight";
 }
 
 /**
@@ -15864,6 +15864,20 @@ export interface WholeFlightDetails {
  * what the group flies in.
  */
 export interface WholeFlightRouteInput {
+	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images?: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name?: string | null;
+	/** Legs */
+	legs?: FlightLegInput[];
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -15877,20 +15891,6 @@ export interface WholeFlightRouteInput {
 		  } & PerPersonChargeInput);
 	/** Fares */
 	fares?: Fare[];
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images?: NodeImageSchema[];
-	/** Legs */
-	legs?: FlightLegInput[];
-	/** Name */
-	name?: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -15899,6 +15899,20 @@ export interface WholeFlightRouteInput {
  * what the group flies in.
  */
 export interface WholeFlightRouteOutput {
+	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name: string | null;
+	/** Legs */
+	legs: FlightLegOutput[];
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -15912,36 +15926,22 @@ export interface WholeFlightRouteOutput {
 		  } & PerPersonChargeOutput);
 	/** Fares */
 	fares: Fare[];
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images: NodeImageSchema[];
-	/** Legs */
-	legs: FlightLegOutput[];
-	/** Name */
-	name: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /** WholeFlightVariantWrite */
 export interface WholeFlightVariantWrite {
 	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
 	 * Typ
 	 * @default "flight"
 	 */
 	typ?: "flight";
+	/** Pricing */
+	pricing: "whole";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 }
 
 /**
@@ -15952,32 +15952,15 @@ export interface WholeFlightVariantWrite {
  * ``per_person`` per head.
  */
 export interface WholeHotelInput {
-	/** Amenities */
-	amenities?: AmenitiesTypes[];
-	/** Categories */
-	categories?: CategoryInput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images?: NodeImageSchema[];
-	/** Location */
-	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name?: string | null;
-	/** Check-in and check-out hours and the bands billed outside them. */
-	policy?: HotelPolicySchemaInput | null;
-	/**
-	 * What a whole stay costs: the base charge plus the seasons that replace
-	 * it. A dated stay pays the season containing its check-in, else the base; an
-	 * undated one may still land on the base or on any season not yet ended.
-	 */
-	price: StayRateInput;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
+	/** Location */
+	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Stars */
 	stars?: number | null;
 	/**
@@ -15985,6 +15968,23 @@ export interface WholeHotelInput {
 	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
 	typs?: HotelKind[];
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
+	/** Check-in and check-out hours and the bands billed outside them. */
+	policy?: HotelPolicySchemaInput | null;
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/**
+	 * What a whole stay costs: the base charge plus the seasons that replace
+	 * it. A dated stay pays the season containing its check-in, else the base; an
+	 * undated one may still land on the base or on any season not yet ended.
+	 */
+	price: StayRateInput;
+	/** Categories */
+	categories?: CategoryInput[];
 }
 
 /**
@@ -15995,32 +15995,15 @@ export interface WholeHotelInput {
  * ``per_person`` per head.
  */
 export interface WholeHotelOutput {
-	/** Amenities */
-	amenities: AmenitiesTypes[];
-	/** Categories */
-	categories: CategoryOutput[];
 	/**
 	 * Images
 	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
 	 */
 	images: NodeImageSchema[];
-	/** Location */
-	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Name */
 	name: string | null;
-	/** Check-in and check-out hours and the bands billed outside them. */
-	policy: HotelPolicySchemaOutput | null;
-	/**
-	 * What a whole stay costs: the base charge plus the seasons that replace
-	 * it. A dated stay pays the season containing its check-in, else the base; an
-	 * undated one may still land on the base or on any season not yet ended.
-	 */
-	price: StayRateOutput;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
+	/** Location */
+	location: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
 	/** Stars */
 	stars: number | null;
 	/**
@@ -16028,6 +16011,23 @@ export interface WholeHotelOutput {
 	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
 	typs: HotelKind[];
+	/** Amenities */
+	amenities: AmenitiesTypes[];
+	/** Check-in and check-out hours and the bands billed outside them. */
+	policy: HotelPolicySchemaOutput | null;
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/**
+	 * What a whole stay costs: the base charge plus the seasons that replace
+	 * it. A dated stay pays the season containing its check-in, else the base; an
+	 * undated one may still land on the base or on any season not yet ended.
+	 */
+	price: StayRateOutput;
+	/** Categories */
+	categories: CategoryOutput[];
 }
 
 /**
@@ -16040,17 +16040,24 @@ export interface WholeHotelOutput {
  * category to a hotel that already stands.
  */
 export interface WholeHotelCreate {
-	/** Amenities */
-	amenities?: AmenitiesTypes[];
-	/** Categories */
-	categories?: CategoryWrite[];
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Pricing */
+	pricing: "whole";
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
 	/**
-	 * Name
-	 * @maxLength 255
+	 * Typs
+	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
-	name: string;
+	typs?: HotelKind[];
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
 	/** Check-in and check-out hours and the bands billed outside them. */
 	policy?: HotelPolicySchemaInput | null;
 	/**
@@ -16059,20 +16066,13 @@ export interface WholeHotelCreate {
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	price: StayRateInput;
-	/** Pricing */
-	pricing: "whole";
-	/** Stars */
-	stars?: number | null;
 	/**
-	 * Typ
-	 * @default "hotel"
+	 * Name
+	 * @maxLength 255
 	 */
-	typ?: "hotel";
-	/**
-	 * Typs
-	 * What kind of place this is — a hotel, a yurt camp, a villa.
-	 */
-	typs?: HotelKind[];
+	name: string;
+	/** Categories */
+	categories?: CategoryWrite[];
 }
 
 /**
@@ -16080,15 +16080,24 @@ export interface WholeHotelCreate {
  * A hotel sold whole as the API takes it.
  */
 export interface WholeHotelDetails {
-	/** Amenities */
-	amenities?: AmenitiesTypes[];
+	/**
+	 * Typ
+	 * @default "hotel"
+	 */
+	typ?: "hotel";
+	/** Pricing */
+	pricing: "whole";
 	/** Location */
 	location?: LocationOutSchema | LocationRefSchema | LocationInSchema | null;
+	/** Stars */
+	stars?: number | null;
 	/**
-	 * Name
-	 * @maxLength 255
+	 * Typs
+	 * What kind of place this is — a hotel, a yurt camp, a villa.
 	 */
-	name: string;
+	typs?: HotelKind[];
+	/** Amenities */
+	amenities?: AmenitiesTypes[];
 	/** Check-in and check-out hours and the bands billed outside them. */
 	policy?: HotelPolicySchemaInput | null;
 	/**
@@ -16097,20 +16106,11 @@ export interface WholeHotelDetails {
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	price: StayRateInput;
-	/** Pricing */
-	pricing: "whole";
-	/** Stars */
-	stars?: number | null;
 	/**
-	 * Typ
-	 * @default "hotel"
+	 * Name
+	 * @maxLength 255
 	 */
-	typ?: "hotel";
-	/**
-	 * Typs
-	 * What kind of place this is — a hotel, a yurt camp, a villa.
-	 */
-	typs?: HotelKind[];
+	name: string;
 }
 
 /**
@@ -16120,19 +16120,19 @@ export interface WholeHotelDetails {
  */
 export interface WholeHotelVariantWrite {
 	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/** Rooms */
-	rooms?: RoomWrite[];
-	/**
 	 * Typ
 	 * @default "hotel"
 	 */
 	typ?: "hotel";
+	/** Pricing */
+	pricing: "whole";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
+	/** Rooms */
+	rooms?: RoomWrite[];
 }
 
 /**
@@ -16141,16 +16141,16 @@ export interface WholeHotelVariantWrite {
  */
 export interface WholePriceOverrideInput {
 	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/**
 	 * What a whole stay costs: the base charge plus the seasons that replace
 	 * it. A dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	price: StayRateInput;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -16159,16 +16159,16 @@ export interface WholePriceOverrideInput {
  */
 export interface WholePriceOverrideOutput {
 	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/**
 	 * What a whole stay costs: the base charge plus the seasons that replace
 	 * it. A dated stay pays the season containing its check-in, else the base; an
 	 * undated one may still land on the base or on any season not yet ended.
 	 */
 	price: StayRateOutput;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -16176,6 +16176,11 @@ export interface WholePriceOverrideOutput {
  * What a leg taken whole costs this tour, replacing the route's own charge.
  */
 export interface WholeRouteChargeOverrideInput {
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -16187,11 +16192,6 @@ export interface WholeRouteChargeOverrideInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -16199,6 +16199,11 @@ export interface WholeRouteChargeOverrideInput {
  * What a leg taken whole costs this tour, replacing the route's own charge.
  */
 export interface WholeRouteChargeOverrideOutput {
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -16210,11 +16215,6 @@ export interface WholeRouteChargeOverrideOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -16224,6 +16224,15 @@ export interface WholeRouteChargeOverrideOutput {
  */
 export interface WholeTrainCreate {
 	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Pricing */
+	pricing: "whole";
+	/** Legs */
+	legs?: TrainLegInput[];
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -16234,22 +16243,13 @@ export interface WholeTrainCreate {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** Fares */
-	fares?: PlainFareCreate[];
-	/** Legs */
-	legs?: TrainLegInput[];
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ?: "train";
+	/** Fares */
+	fares?: PlainFareCreate[];
 }
 
 /**
@@ -16258,6 +16258,15 @@ export interface WholeTrainCreate {
  */
 export interface WholeTrainDetails {
 	/**
+	 * Typ
+	 * @default "train"
+	 */
+	typ?: "train";
+	/** Pricing */
+	pricing: "whole";
+	/** Legs */
+	legs?: TrainLegInput[];
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -16268,20 +16277,11 @@ export interface WholeTrainDetails {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** Legs */
-	legs?: TrainLegInput[];
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "train"
-	 */
-	typ?: "train";
 }
 
 /**
@@ -16291,6 +16291,22 @@ export interface WholeTrainDetails {
  */
 export interface WholeTrainRouteInput {
 	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images?: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name?: string | null;
+	/** Legs */
+	legs?: TrainLegInput[];
+	/** Fares */
+	fares?: Fare[];
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -16301,22 +16317,6 @@ export interface WholeTrainRouteInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/** Fares */
-	fares?: Fare[];
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images?: NodeImageSchema[];
-	/** Legs */
-	legs?: TrainLegInput[];
-	/** Name */
-	name?: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -16326,6 +16326,22 @@ export interface WholeTrainRouteInput {
  */
 export interface WholeTrainRouteOutput {
 	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name: string | null;
+	/** Legs */
+	legs: TrainLegOutput[];
+	/** Fares */
+	fares: Fare[];
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -16336,38 +16352,22 @@ export interface WholeTrainRouteOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/** Fares */
-	fares: Fare[];
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images: NodeImageSchema[];
-	/** Legs */
-	legs: TrainLegOutput[];
-	/** Name */
-	name: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /** WholeTrainVariantWrite */
 export interface WholeTrainVariantWrite {
 	/**
-	 * Name
-	 * @maxLength 255
-	 */
-	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
 	 * Typ
 	 * @default "train"
 	 */
 	typ?: "train";
+	/** Pricing */
+	pricing: "whole";
+	/**
+	 * Name
+	 * @maxLength 255
+	 */
+	name: string;
 }
 
 /**
@@ -16376,8 +16376,18 @@ export interface WholeTrainVariantWrite {
  * what the group rides in.
  */
 export interface WholeTransferInput {
-	/** Cars */
-	cars?: Car[];
+	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images?: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name?: string | null;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -16389,18 +16399,8 @@ export interface WholeTransferInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images?: NodeImageSchema[];
-	/** Name */
-	name?: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
+	/** Cars */
+	cars?: Car[];
 }
 
 /**
@@ -16409,8 +16409,18 @@ export interface WholeTransferInput {
  * what the group rides in.
  */
 export interface WholeTransferOutput {
-	/** Cars */
-	cars: Car[];
+	/**
+	 * Images
+	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
+	 */
+	images: NodeImageSchema[];
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
+	/** Name */
+	name: string | null;
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -16422,18 +16432,8 @@ export interface WholeTransferOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Images
-	 * Pictures of what the spec describes, primary first; server-owned — ignored on write, filled from the product's gallery.
-	 */
-	images: NodeImageSchema[];
-	/** Name */
-	name: string | null;
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
+	/** Cars */
+	cars: Car[];
 }
 
 /**
@@ -16441,6 +16441,11 @@ export interface WholeTransferOutput {
  * What a ride taken whole costs this tour, replacing the fleet's own charge.
  */
 export interface WholeTransferChargeOverrideInput {
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -16452,11 +16457,6 @@ export interface WholeTransferChargeOverrideInput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeInput);
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -16464,6 +16464,11 @@ export interface WholeTransferChargeOverrideInput {
  * What a ride taken whole costs this tour, replacing the fleet's own charge.
  */
 export interface WholeTransferChargeOverrideOutput {
+	/**
+	 * Pricing
+	 * @default "whole"
+	 */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -16475,11 +16480,6 @@ export interface WholeTransferChargeOverrideOutput {
 		| ({
 				typ: "per_person";
 		  } & PerPersonChargeOutput);
-	/**
-	 * Pricing
-	 * @default "whole"
-	 */
-	pricing: "whole";
 }
 
 /**
@@ -16488,8 +16488,13 @@ export interface WholeTransferChargeOverrideOutput {
  * leg and the car categories it takes, none of them priced.
  */
 export interface WholeTransferCreate {
-	/** Cars */
-	cars?: CarWrite[];
+	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/** Pricing */
+	pricing: "whole";
 	/**
 	 * Charge
 	 * The charge calculation strategy.
@@ -16506,13 +16511,8 @@ export interface WholeTransferCreate {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ?: "transfer";
+	/** Cars */
+	cars?: CarWrite[];
 }
 
 /**
@@ -16522,6 +16522,13 @@ export interface WholeTransferCreate {
  */
 export interface WholeTransferDetails {
 	/**
+	 * Typ
+	 * @default "transfer"
+	 */
+	typ?: "transfer";
+	/** Pricing */
+	pricing: "whole";
+	/**
 	 * Charge
 	 * The charge calculation strategy.
 	 */
@@ -16537,38 +16544,31 @@ export interface WholeTransferDetails {
 	 * @maxLength 255
 	 */
 	name: string;
-	/** Pricing */
-	pricing: "whole";
-	/**
-	 * Typ
-	 * @default "transfer"
-	 */
-	typ?: "transfer";
 }
 
 /** WholeTransferVariantWrite */
 export interface WholeTransferVariantWrite {
-	body_type: VehicleBodyType;
-	/** Description */
-	description?: string | null;
 	/**
 	 * Name
 	 * @maxLength 255
 	 */
 	name: string;
+	body_type: VehicleBodyType;
 	/**
 	 * Pax
 	 * Seats; what the bin-packer fills a group with.
 	 * @min 1
 	 */
 	pax: number;
-	/** Pricing */
-	pricing: "whole";
+	/** Description */
+	description?: string | null;
 	/**
 	 * Typ
 	 * @default "transfer"
 	 */
 	typ?: "transfer";
+	/** Pricing */
+	pricing: "whole";
 }
 
 /**
@@ -16648,11 +16648,6 @@ export enum ToWholeRouteTypEnum {
 	Flight = "flight"
 }
 
-export interface CreateUserAdminUserPostParams {
-	/** @default "authenticated_user" */
-	role?: UserRoles;
-}
-
 export interface GetAllUsersAdminUserAllGetParams {
 	/**
 	 * Skip
@@ -16667,14 +16662,6 @@ export interface GetAllUsersAdminUserAllGetParams {
 	 * @default 10
 	 */
 	limit?: number;
-}
-
-export interface DeleteUserAdminUserIdDeleteParams {
-	/**
-	 * Id
-	 * @format uuid
-	 */
-	id: string;
 }
 
 export interface GetUserAdminUserIdGetParams {
@@ -16693,76 +16680,17 @@ export interface UpdateUserAdminUserIdPatchParams {
 	id: string;
 }
 
-export interface ListAgencyDocumentsAgencyMeDocumentsGetParams {
+export interface DeleteUserAdminUserIdDeleteParams {
 	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface RemoveAgencyDocumentAgencyMeDocumentsFileIdDeleteParams {
-	/**
-	 * File Id
+	 * Id
 	 * @format uuid
 	 */
-	fileId: string;
+	id: string;
 }
 
-export interface GetAgencyDocumentUrlAgencyMeDocumentsFileIdGetParams {
-	/**
-	 * File Id
-	 * @format uuid
-	 */
-	fileId: string;
-}
-
-export interface ListAllAuditAuditAdminAllGetParams {
-	/** User Id */
-	user_id?: string | null;
-	/** Operator Id */
-	operator_id?: string | null;
-	/** Agency Id */
-	agency_id?: string | null;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface ListOrgAuditAuditAllGetParams {
-	/** User Id */
-	user_id?: string | null;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
+export interface CreateUserAdminUserPostParams {
+	/** @default "authenticated_user" */
+	role?: UserRoles;
 }
 
 export interface GoogleLoginAuthGoogleLoginGetParams {
@@ -16770,43 +16698,78 @@ export interface GoogleLoginAuthGoogleLoginGetParams {
 	next?: string | null;
 }
 
-export interface DeletePermissionGroupAuthPermissionGroupGroupIdDeleteParams {
+export interface ListSitemapTourSlugSitemapGetParams {
 	/**
-	 * Group Id
-	 * @format uuid
+	 * Skip
+	 * @min 0
+	 * @default 0
 	 */
-	groupId: string;
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 50000
+	 * @default 50000
+	 */
+	limit?: number;
 }
 
-export interface UpdatePermissionGroupAuthPermissionGroupGroupIdPatchParams {
-	/**
-	 * Group Id
-	 * @format uuid
-	 */
-	groupId: string;
-}
-
-export interface GetAgencyBookingOrderBookingOrderAgencyBookingIdGetParams {
+export interface ResolveTourSlugTourSlugSlugGetParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
+	/** @default "USD" */
+	currency?: Currency;
 	/**
-	 * Booking Id
-	 * @format uuid
+	 * Slug
+	 * @minLength 1
+	 * @maxLength 136
+	 * @pattern ^[a-z0-9-]+$
 	 */
-	bookingId: string;
+	slug: string;
 }
 
-export interface ListMyBookingsBookingOrderMyGetParams {
-	/** Booking Status */
-	booking_status?: BookingStatus | null;
-	/** Tour Id */
-	tour_id?: string | null;
+export interface SuggestLocationsTourCatalogSuggestGetParams {
+	/**
+	 * Q
+	 * @minLength 1
+	 * @maxLength 128
+	 */
+	q: string;
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 20
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListFiltersTourCatalogFiltersGetParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+}
+
+export interface ListPublicCatalogTourCatalogPublicGetParams {
+	/** Sort */
+	sort?: TourCatalogSort | null;
 	/** Q */
 	q?: string | null;
-	/** Date From */
-	date_from?: string | null;
-	/** Date To */
-	date_to?: string | null;
+	/** Categories */
+	categories?: TourCategory[] | null;
+	/** Duration Days Min */
+	duration_days_min?: number | null;
+	/** Duration Days Max */
+	duration_days_max?: number | null;
+	/** City */
+	city?: string[] | null;
+	/** Country */
+	country?: string[] | null;
+	/** Tour Lang */
+	tour_lang?: LanguageCode[] | null;
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
 	 * Skip
 	 * @min 0
@@ -16822,161 +16785,113 @@ export interface ListMyBookingsBookingOrderMyGetParams {
 	limit?: number;
 }
 
-export interface GetOperatorBookingOrderBookingOrderOperatorBookingIdGetParams {
+export interface ListAgencyCatalogTourCatalogAgencyGetParams {
+	/** Sort */
+	sort?: TourCatalogSort | null;
+	/** Q */
+	q?: string | null;
+	/** Categories */
+	categories?: TourCategory[] | null;
+	/** Duration Days Min */
+	duration_days_min?: number | null;
+	/** Duration Days Max */
+	duration_days_max?: number | null;
+	/** City */
+	city?: string[] | null;
+	/** Country */
+	country?: string[] | null;
+	/** Tour Lang */
+	tour_lang?: LanguageCode[] | null;
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
 	/**
-	 * Booking Id
-	 * @format uuid
+	 * Skip
+	 * @min 0
+	 * @default 0
 	 */
-	bookingId: string;
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
 }
 
-export interface ListBookingAvailabilityBookingOrderOperatorBookingIdAvailabilityGetParams {
+export interface GetPricingBreakdownTourTourIdOptionOptionIdPricingBreakdownGetParams {
+	/** @default "USD" */
+	currency?: Currency;
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
-	 * Booking Id
-	 * @format uuid
+	 * As Of
+	 * Preview the template spread as of this date.
 	 */
-	bookingId: string;
-}
-
-export interface DeclineBookingBookingOrderOperatorBookingIdDeclinePostParams {
+	as_of?: string | null;
 	/**
-	 * Booking Id
-	 * @format uuid
+	 * Pax
+	 * Price both legs at this one headcount instead of the tour's group-size range — what a price-matrix row books.
 	 */
-	bookingId: string;
-}
-
-export interface ApplyEventAvailabilityBookingOrderOperatorBookingIdEventsEventIdOptionsOptionIndexAvailabilityPatchParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/** Option Index */
-	optionIndex: number;
-}
-
-export interface GetOperatorOrderFinancialsBookingOrderOperatorBookingIdFinancialsGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface GetOperatorBookingItineraryBookingOrderOperatorBookingIdItineraryGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface TransitionBookingStatusBookingOrderOperatorBookingIdStatusTransitionPatchParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	transition: BookingTransition;
-}
-
-export interface GetOperatorOrderVarianceBookingOrderOperatorBookingIdVarianceGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface RemoveFileBookingOrderPaxFileFileIdDeleteParams {
-	/**
-	 * File Id
-	 * @format uuid
-	 */
-	fileId: string;
-}
-
-export interface GetFileBinaryBookingOrderPaxFileFileIdGetParams {
-	/**
-	 * File Id
-	 * @format uuid
-	 */
-	fileId: string;
-}
-
-export interface GetBookingQuoteBookingOrderQuoteGetParams {
-	/**
-	 * Tour Option Id
-	 * @format uuid
-	 */
-	tour_option_id: string;
+	pax?: number | null;
 	/**
 	 * Date
-	 * @format date
+	 * Tour day 1; pins date-ranged supplier rates.
 	 */
-	date: string;
+	date?: string | null;
 	/**
-	 * Pax
-	 * @min 1
-	 */
-	pax: number;
-	/** @default "en" */
-	lang?: LanguageCode;
-	/** Currency */
-	currency?: Currency | null;
-}
-
-export interface GetUserBookingOrderBookingOrderUserBookingIdGetParams {
-	/** @default "en" */
-	lang?: LanguageCode;
-	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
-}
-
-export interface DeleteBookingOrderBookingOrderBookingIdDeleteParams {
+	tourId: string;
 	/**
-	 * Booking Id
+	 * Option Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	optionId: string;
 }
 
-export interface UpdateBookingOrderBookingOrderBookingIdPatchParams {
+export interface GetPriceMatrixTourTourIdOptionOptionIdPriceMatrixGetParams {
+	/** @default "USD" */
+	currency?: Currency;
 	/**
-	 * Booking Id
+	 * Pax From
+	 * First headcount; the tour's group_size_min or 1.
+	 */
+	pax_from?: number | null;
+	/**
+	 * Pax To
+	 * Last headcount; the tour's group_size.
+	 */
+	pax_to?: number | null;
+	/**
+	 * Brackets
+	 * Comma-separated from-to pairs, e.g. 1-1,2-3,4-6. Given, the matrix is cut per bracket and pax_from/pax_to are ignored.
+	 */
+	brackets?: string | null;
+	/**
+	 * Date
+	 * Tour day 1; pins date-ranged supplier rates.
+	 */
+	date?: string | null;
+	/**
+	 * As Of
+	 * Preview the template spread as of this date.
+	 */
+	as_of?: string | null;
+	/**
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
-}
-
-export interface CancelBookingBookingOrderBookingIdCancelPostParams {
+	tourId: string;
 	/**
-	 * Booking Id
+	 * Option Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	optionId: string;
 }
 
-export interface GetBookingItineraryBookingOrderBookingIdItineraryGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface ListPassengerInfoBookingOrderBookingIdPaxGetParams {
+export interface ListAllTourOptionsTourTourIdOptionAllGetParams {
 	/**
 	 * Skip
 	 * @min 0
@@ -16991,198 +16906,133 @@ export interface ListPassengerInfoBookingOrderBookingIdPaxGetParams {
 	 */
 	limit?: number;
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
 }
 
-export interface AddPassengerInfoBookingOrderBookingIdPaxPostParams {
+/** Payload */
+export type CreateTourOptionTourTourIdOptionCreatePostPayload =
+	TourOptionCreateSchema | null;
+
+export interface CreateTourOptionTourTourIdOptionCreatePostParams {
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
 }
 
-export interface DeletePassengerInfoBookingOrderBookingIdPaxPaxIdDeleteParams {
+export interface UpdateTourOptionTourTourIdOptionOptionIdPatchParams {
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
 	/**
-	 * Pax Id
+	 * Option Id
 	 * @format uuid
 	 */
-	paxId: string;
+	optionId: string;
 }
 
-export interface UpdatePassengerInfoBookingOrderBookingIdPaxPaxIdPatchParams {
+export interface DeleteOptionTourTourIdOptionOptionIdDeleteParams {
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
 	/**
-	 * Pax Id
+	 * Option Id
 	 * @format uuid
 	 */
-	paxId: string;
+	optionId: string;
 }
 
-export interface UploadPassengerPassportBookingOrderBookingIdPaxPaxIdPassportPostParams {
+export interface UploadOptionCoverTourTourIdOptionOptionIdCoverPostParams {
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
 	/**
-	 * Pax Id
+	 * Option Id
 	 * @format uuid
 	 */
-	paxId: string;
+	optionId: string;
 }
 
-export interface GetBookingPriceBookingOrderBookingIdPriceGetParams {
+export interface DeleteOptionCoverTourTourIdOptionOptionIdCoverDeleteParams {
 	/**
-	 * Pax
-	 * @min 1
-	 */
-	pax: number;
-	/** Currency */
-	currency?: Currency | null;
-	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 }
 
-export interface SubmitBookingOrderBookingOrderBookingIdSubmitPatchParams {
+export interface GetTourFinancialsTourTourIdFinanceGetParams {
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
 }
 
-export interface ListPaymentsBookingPaymentGetParams {
+export interface CreateTourFinancialsTourTourIdFinancePostParams {
 	/**
-	 * Skip
-	 * @default 0
+	 * Tour Id
+	 * @format uuid
 	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @default 100
-	 */
-	limit?: number;
-	/** Status */
-	status?: ClientPaymentStatus | null;
-	/** Booking Id */
-	booking_id?: string | null;
-	/** Created From */
-	created_from?: string | null;
-	/** Created To */
-	created_to?: string | null;
-	/** Q */
-	q?: string | null;
+	tourId: string;
 }
 
-export interface DeletePaymentBookingPaymentPaymentIdDeleteParams {
+export interface UpdateTourFinancialsTourTourIdFinancePatchParams {
 	/**
-	 * Payment Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	paymentId: string;
+	tourId: string;
 }
 
-export interface GetPaymentBookingPaymentPaymentIdGetParams {
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	paymentId: string;
-}
+/** Event */
+export type CreateLibraryEventTourEventLibraryPostPayload =
+	| ({
+			typ: "ref";
+	  } & InformationEvent)
+	| ({
+			typ: "bus";
+	  } & BusEvent)
+	| ({
+			typ: "train";
+	  } & TrainEvent)
+	| ({
+			typ: "transfer";
+	  } & TransferEvent)
+	| ({
+			typ: "activity";
+	  } & ActivityEvent)
+	| ({
+			typ: "housing";
+	  } & HousingEvent)
+	| ({
+			typ: "flight";
+	  } & FlightEvent)
+	| ({
+			typ: "guide";
+	  } & GuideEvent)
+	| ({
+			typ: "supplementary";
+	  } & SupplementaryEvent);
 
-export interface UpdatePaymentBookingPaymentPaymentIdPatchParams {
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	paymentId: string;
-}
-
-export interface ListAttachmentsBookingPaymentPaymentIdAttachmentGetParams {
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	paymentId: string;
-}
-
-export interface AddAttachmentBookingPaymentPaymentIdAttachmentPostParams {
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	paymentId: string;
-}
-
-export interface RemoveAttachmentBookingPaymentPaymentIdAttachmentFileIdDeleteParams {
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	paymentId: string;
-	/**
-	 * File Id
-	 * @format uuid
-	 */
-	fileId: string;
-}
-
-export interface DownloadAttachmentBookingPaymentPaymentIdAttachmentFileIdGetParams {
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	paymentId: string;
-	/**
-	 * File Id
-	 * @format uuid
-	 */
-	fileId: string;
-}
-
-export interface ConfirmPaymentBookingPaymentPaymentIdConfirmPostParams {
-	/**
-	 * Payment Id
-	 * @format uuid
-	 */
-	paymentId: string;
-}
-
-export interface ListBookingReconciliationBookingReconciliationGetParams {
-	/** Status */
-	status?: BookingStatus | null;
-	/** Tour Id */
-	tour_id?: string | null;
-	/** Date From */
-	date_from?: string | null;
-	/** Date To */
-	date_to?: string | null;
-	/**
-	 * Outstanding Only
-	 * @default false
-	 */
-	outstanding_only?: boolean;
-	/**
-	 * Payable Only
-	 * @default false
-	 */
-	payable_only?: boolean;
+export interface ListLibraryEventsTourEventLibraryGetParams {
+	/** Typ */
+	typ?: EventTypes[] | null;
 	/** Q */
 	q?: string | null;
 	/**
@@ -17200,23 +17050,247 @@ export interface ListBookingReconciliationBookingReconciliationGetParams {
 	limit?: number;
 }
 
-export interface ListEditsBookingRevisionBookingIdEditsGetParams {
+export enum CopyLibraryEventTourEventLibraryCopyPostDetailEnum {
+	LibraryEventNotFound = "Library event not found",
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour",
+	EventOptionNotFound = "Event option not found"
+}
+
+export interface CopyLibraryEventTourEventLibraryCopyPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+}
+
+export interface GetLibraryEventTourEventLibraryLibraryIdGetParams {
 	/**
-	 * Booking Id
+	 * Library Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	libraryId: string;
 }
 
 /** Event */
-export type AddEventBookingRevisionBookingIdEventPostPayload =
+export type UpdateLibraryEventTourEventLibraryLibraryIdPatchPayload =
+	| ({
+			typ: "ref";
+	  } & InformationEvent)
+	| ({
+			typ: "bus";
+	  } & BusEvent)
+	| ({
+			typ: "train";
+	  } & TrainEvent)
+	| ({
+			typ: "transfer";
+	  } & TransferEvent)
+	| ({
+			typ: "activity";
+	  } & ActivityEvent)
+	| ({
+			typ: "housing";
+	  } & HousingEvent)
+	| ({
+			typ: "flight";
+	  } & FlightEvent)
+	| ({
+			typ: "guide";
+	  } & GuideEvent)
+	| ({
+			typ: "supplementary";
+	  } & SupplementaryEvent);
+
+export interface UpdateLibraryEventTourEventLibraryLibraryIdPatchParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface DeleteLibraryEventTourEventLibraryLibraryIdDeleteParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface UploadLibraryImagesTourEventLibraryLibraryIdImagesPostParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface ListLibraryImagesTourEventLibraryLibraryIdImagesAllGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+}
+
+export interface DeleteLibraryImageTourEventLibraryLibraryIdImagesImageIdDeleteParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface SetPrimaryLibraryImageTourEventLibraryLibraryIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Library Id
+	 * @format uuid
+	 */
+	libraryId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum2 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum2 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetParams {
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum {
+	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum3 {
+	SupplierNotFound = "Supplier not found",
+	SupplierProductNotFound = "Supplier product not found",
+	PackageNotFound = "Package not found"
+}
+
+export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+/** Event */
+export type CreateEventTourTourIdOptionIdEventCreatePostPayload =
 	| (
+			| ({
+					typ: "ref";
+			  } & InformationSingleEvent)
+			| ({
+					typ: "bus";
+			  } & BusSingleEvent)
+			| ({
+					typ: "train";
+			  } & TrainSingleEvent)
+			| ({
+					typ: "transfer";
+			  } & TransferSingleEvent)
 			| ({
 					typ: "activity";
 			  } & ActivitySingleEvent)
 			| ({
-					typ: "bus";
-			  } & BusSingleEvent)
+					typ: "housing";
+			  } & HousingSingleEvent)
 			| ({
 					typ: "flight";
 			  } & FlightSingleEvent)
@@ -17224,55 +17298,172 @@ export type AddEventBookingRevisionBookingIdEventPostPayload =
 					typ: "guide";
 			  } & GuideSingleEvent)
 			| ({
-					typ: "housing";
-			  } & HousingSingleEvent)
-			| ({
-					typ: "ref";
-			  } & InformationSingleEvent)
-			| ({
 					typ: "supplementary";
 			  } & SupplementarySingleEvent)
-			| ({
-					typ: "train";
-			  } & TrainSingleEvent)
-			| ({
-					typ: "transfer";
-			  } & TransferSingleEvent)
 	  )
 	| MultiEvent;
 
-export interface AddEventBookingRevisionBookingIdEventPostParams {
+export interface CreateEventTourTourIdOptionIdEventCreatePostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
-}
-
-export enum CopyEventBookingRevisionBookingIdEventCopyPostDetailEnum {
-	NoSuchEventOnTheBookedTourOption = "No such event on the booked tour option",
-	NoSuchEventInThisBookingsSnapshot = "No such event in this booking's snapshot"
-}
-
-export enum CopyEventBookingRevisionBookingIdEventCopyPostDetailEnum1 {
-	EventsCanOnlyBeRevisedWhileTheBookingIsInProcessing = "Events can only be revised while the booking is in processing",
-	BookingHasNoSnapshotToRevise = "Booking has no snapshot to revise"
-}
-
-export interface CopyEventBookingRevisionBookingIdEventCopyPostParams {
+	tourId: string;
 	/**
-	 * Booking Id
+	 * Option Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	optionId: string;
 }
 
-export interface RemoveEventBookingRevisionBookingIdEventEventIdDeleteParams {
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum2 {
+	LibraryEventNotFound = "Library event not found"
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum4 {
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+export interface CopyEventTourTourIdOptionIdEventCopyPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
+export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum2 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface ListTourEventsTourTourIdOptionIdEventItineraryGetParams {
+	/** Day */
+	day?: number | null;
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/** Limit */
+	limit?: number | null;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum2 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface GetTourEventTourTourIdOptionIdEventEventIdGetParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum2 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 	/**
 	 * Event Id
 	 * @format uuid
@@ -17280,114 +17471,173 @@ export interface RemoveEventBookingRevisionBookingIdEventEventIdDeleteParams {
 	eventId: string;
 }
 
-/** Event */
-export type UpdateEventBookingRevisionBookingIdEventEventIdPatchPayload =
-	| (
-			| ({
-					typ: "activity";
-			  } & ActivitySingleEvent)
-			| ({
-					typ: "bus";
-			  } & BusSingleEvent)
-			| ({
-					typ: "flight";
-			  } & FlightSingleEvent)
-			| ({
-					typ: "guide";
-			  } & GuideSingleEvent)
-			| ({
-					typ: "housing";
-			  } & HousingSingleEvent)
-			| ({
-					typ: "ref";
-			  } & InformationSingleEvent)
-			| ({
-					typ: "supplementary";
-			  } & SupplementarySingleEvent)
-			| ({
-					typ: "train";
-			  } & TrainSingleEvent)
-			| ({
-					typ: "transfer";
-			  } & TransferSingleEvent)
-	  )
-	| MultiEvent;
+export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
 
-export interface UpdateEventBookingRevisionBookingIdEventEventIdPatchParams {
+export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum2 {
+	NotFound = "Not found"
+}
+
+export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface ValidateEventTourTourIdOptionIdEventEventIdValidateGetParams {
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum {
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	SupplierNotFound = "Supplier not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
 }
 
 /** Member */
-export type AddPoolMemberBookingRevisionBookingIdEventEventIdPoolPostPayload =
-	| ({
-			typ: "activity";
-	  } & ActivityMemberNew)
-	| ({
-			typ: "bus";
-	  } & BusMemberNew)
-	| ({
-			typ: "flight";
-	  } & FlightMemberNew)
-	| ({
-			typ: "guide";
-	  } & GuideMemberNew)
-	| ({
-			typ: "housing";
-	  } & HousingMemberNew)
-	| ({
-			typ: "ref";
-	  } & InformationMemberNew)
-	| ({
-			typ: "supplementary";
-	  } & SupplementaryMemberNew)
-	| ({
-			typ: "train";
-	  } & TrainMemberNew)
-	| ({
-			typ: "transfer";
-	  } & TransferMemberNew);
+export type AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostPayload =
 
-export interface AddPoolMemberBookingRevisionBookingIdEventEventIdPoolPostParams {
-	/** Event Option Id */
-	event_option_id?: string | null;
-	/** Option Index */
-	option_index?: number | null;
+		| ({
+				typ: "housing";
+		  } & HousingMemberNew)
+		| ({
+				typ: "train";
+		  } & TrainMemberNew)
+		| ({
+				typ: "flight";
+		  } & FlightMemberNew)
+		| ({
+				typ: "bus";
+		  } & BusMemberNew)
+		| ({
+				typ: "transfer";
+		  } & TransferMemberNew)
+		| ({
+				typ: "activity";
+		  } & ActivityMemberNew)
+		| ({
+				typ: "ref";
+		  } & InformationMemberNew)
+		| ({
+				typ: "guide";
+		  } & GuideMemberNew)
+		| ({
+				typ: "supplementary";
+		  } & SupplementaryMemberNew);
+
+export interface AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
 }
 
-export interface RemovePoolMemberBookingRevisionBookingIdEventEventIdPoolSupplyIdDeleteParams {
-	/** Event Option Id */
-	event_option_id?: string | null;
-	/** Option Index */
-	option_index?: number | null;
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum {
+	CannotRemoveTheLastSupplierOfAnOptionsPool = "Cannot remove the last supplier of an option's pool"
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found"
+}
+
+export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
 	/**
 	 * Supply Id
 	 * @format uuid
@@ -17395,40 +17645,170 @@ export interface RemovePoolMemberBookingRevisionBookingIdEventEventIdPoolSupplyI
 	supplyId: string;
 }
 
-export interface ClearPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverrideDeleteParams {
-	/** Event Option Id */
-	event_option_id?: string | null;
-	/** Option Index */
-	option_index?: number | null;
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum {
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierNotFound = "Supplier not found"
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum4 {
+	PoolMemberReadsASupplierProductDetachItToStateItsOwnSpec = "Pool member reads a supplier product; detach it to state its own spec"
+}
+
+export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum5 {
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+/** Member */
+export type UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchPayload =
+
+		| ({
+				typ: "housing";
+		  } & HousingMemberUpdate)
+		| ({
+				typ: "train";
+		  } & TrainMemberUpdate)
+		| ({
+				typ: "flight";
+		  } & FlightMemberUpdate)
+		| ({
+				typ: "bus";
+		  } & BusMemberUpdate)
+		| ({
+				typ: "transfer";
+		  } & TransferMemberUpdate)
+		| ({
+				typ: "activity";
+		  } & ActivityMemberUpdate)
+		| ({
+				typ: "ref";
+		  } & InformationMemberUpdate)
+		| ({
+				typ: "guide";
+		  } & GuideMemberUpdate)
+		| ({
+				typ: "supplementary";
+		  } & SupplementaryMemberUpdate);
+
+export interface UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
 	/**
-	 * Booking Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	bookingId: string;
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
 	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
 	 * Supply Id
 	 * @format uuid
 	 */
 	supplyId: string;
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum2 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found"
+}
+
+export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum2 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum3 {
+	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
+	OverrideTypeMustMatchTheEventsType = "Override type must match the event's type",
+	OverridePricesByAnArmTheSupplierProductDoesNotPriceBy = "Override prices by an arm the supplier product does not price by"
+}
+
+export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum4 {
+	OverridePricesAUnitTheEventsScopeDoesNotTake = "Override prices a unit the event's scope does not take"
 }
 
 /** Override */
-export type SetPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverridePatchPayload =
+export type SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchPayload =
 
-		| ({
-				typ: "activity";
-		  } & ActivityOverrideInput)
-		| ({
-				typ: "bus";
-		  } & BusOverrideInput)
-		| ({
-				typ: "flight";
-		  } & RouteOverrideInput)
 		| ({
 				typ: "housing";
 		  } & HotelOverrideInput)
@@ -17436,220 +17816,1417 @@ export type SetPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyI
 				typ: "train";
 		  } & RouteOverrideInput)
 		| ({
+				typ: "flight";
+		  } & RouteOverrideInput)
+		| ({
+				typ: "bus";
+		  } & BusOverrideInput)
+		| ({
 				typ: "transfer";
-		  } & TransferOverrideInput);
+		  } & TransferOverrideInput)
+		| ({
+				typ: "activity";
+		  } & ActivityOverrideInput);
 
-export interface SetPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverridePatchParams {
-	/** Event Option Id */
-	event_option_id?: string | null;
-	/** Option Index */
-	option_index?: number | null;
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export interface ClearPoolMemberProductBookingRevisionBookingIdEventEventIdPoolSupplyIdProductDeleteParams {
-	/** Event Option Id */
-	event_option_id?: string | null;
-	/** Option Index */
-	option_index?: number | null;
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export interface SetPoolMemberProductBookingRevisionBookingIdEventEventIdPoolSupplyIdProductPatchParams {
-	/** Event Option Id */
-	event_option_id?: string | null;
-	/** Option Index */
-	option_index?: number | null;
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export interface PreviewBookingRevisionBookingIdPreviewGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface DeleteVoucherBookingVoucherBookingIdDeleteParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface GetVoucherBookingVoucherBookingIdGetParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface UploadVoucherBookingVoucherBookingIdPostParams {
-	/**
-	 * Booking Id
-	 * @format uuid
-	 */
-	bookingId: string;
-}
-
-export interface ReverseGeoReverseGetParams {
-	/**
-	 * Lat
-	 * @min -90
-	 * @max 90
-	 */
-	lat: number;
-	/**
-	 * Long
-	 * @min -180
-	 * @max 180
-	 */
-	long: number;
+export interface SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchParams {
 	/** @default "en" */
-	lang?: LanguageCode;
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum2 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum3 {
+	EventReadsFromNoSupplierProduct = "Event reads from no supplier product"
+}
+
+export interface ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum {
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum4 {
+	EventAlreadyReadsFromASupplierProductRelinkItInstead = "Event already reads from a supplier product; relink it instead"
+}
+
+export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
+}
+
+export interface AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum {
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum4 {
+	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
+	EventCarriesANegotiatedOverrideSayToDropItToMoveTheLink = "Event carries a negotiated override; say to drop it to move the link"
+}
+
+export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
+}
+
+export interface RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum2 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum3 {
+	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
+	ScopeWouldStrandANegotiatedOverrideOnUnitsItLeavesOut = "Scope would strand a negotiated override on units it leaves out"
+}
+
+export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum4 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
+}
+
+export interface ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum2 {
+	EventOptionNotFound = "Event option not found",
+	PoolMemberNotFound = "Pool member not found",
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum3 {
+	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
+	EventCarriesANegotiatedOverrideSayToDropItToMoveTheLink = "Event carries a negotiated override; say to drop it to move the link"
+}
+
+export interface DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+	/**
+	 * Supply Id
+	 * @format uuid
+	 */
+	supplyId: string;
+}
+
+export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum {
+	BadRequest = "Bad Request"
+}
+
+export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum3 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface ReorderEventTourTourIdOptionIdEventEventIdReorderPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum2 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum3 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum {
+	EventIsNotAMultipleOptionEventNothingToReorder = "Event is not a multiple-option event; nothing to reorder",
+	OrderMustNameEachOfTheEventsOptionsExactlyOnce = "Order must name each of the event's options exactly once"
+}
+
+export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum3 {
+	NotFound = "Not found",
+	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
+}
+
+export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum {
+	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum3 {
+	SupplierNotFound = "Supplier not found",
+	SupplierProductNotFound = "Supplier product not found",
+	PackageNotFound = "Package not found"
+}
+
+export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+/** Option */
+export type AddOptionTourTourIdOptionIdEventEventIdOptionPostPayload =
+	| ({
+			typ: "ref";
+	  } & InformationEvent)
+	| ({
+			typ: "bus";
+	  } & BusEvent)
+	| ({
+			typ: "train";
+	  } & TrainEvent)
+	| ({
+			typ: "transfer";
+	  } & TransferEvent)
+	| ({
+			typ: "activity";
+	  } & ActivityEvent)
+	| ({
+			typ: "housing";
+	  } & HousingEvent)
+	| ({
+			typ: "flight";
+	  } & FlightEvent)
+	| ({
+			typ: "guide";
+	  } & GuideEvent)
+	| ({
+			typ: "supplementary";
+	  } & SupplementaryEvent);
+
+export interface AddOptionTourTourIdOptionIdEventEventIdOptionPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum {
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
+}
+
+export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	PackageNotFound = "Package not found"
+}
+
+export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum4 {
+	OptionTypeChangesThroughRetype = "Option type changes through retype"
+}
+
+/** Option */
+export type UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchPayload =
+
+		| ({
+				typ: "ref";
+		  } & InformationEventUpdate)
+		| ({
+				typ: "bus";
+		  } & BusEventUpdate)
+		| ({
+				typ: "train";
+		  } & TrainEventUpdate)
+		| ({
+				typ: "transfer";
+		  } & TransferEventUpdate)
+		| ({
+				typ: "activity";
+		  } & ActivityEventUpdate)
+		| ({
+				typ: "housing";
+		  } & HousingEventUpdate)
+		| ({
+				typ: "flight";
+		  } & FlightEventUpdate)
+		| ({
+				typ: "guide";
+		  } & GuideEventUpdate)
+		| ({
+				typ: "supplementary";
+		  } & SupplementaryEventUpdate);
+
+export interface UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum {
+	CannotDeleteTheLastRemainingOptionOfAnEvent = "Cannot delete the last remaining option of an event"
+}
+
+export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum3 {
+	EventOptionNotFound = "Event option not found"
+}
+
+export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export interface DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum {
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
+	OptionAlreadyHasThisTypeUpdateItInPlace = "Option already has this type; update it in place",
+	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
+	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum3 {
+	EventOptionNotFound = "Event option not found",
+	SupplierNotFound = "Supplier not found",
+	SupplierProductNotFound = "Supplier product not found",
+	PackageNotFound = "Package not found"
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum5 {
+	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
+	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
+	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
+	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
+	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+}
+
+/** Option */
+export type RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostPayload =
+
+		| ({
+				typ: "ref";
+		  } & InformationEvent)
+		| ({
+				typ: "bus";
+		  } & BusEvent)
+		| ({
+				typ: "train";
+		  } & TrainEvent)
+		| ({
+				typ: "transfer";
+		  } & TransferEvent)
+		| ({
+				typ: "activity";
+		  } & ActivityEvent)
+		| ({
+				typ: "housing";
+		  } & HousingEvent)
+		| ({
+				typ: "flight";
+		  } & FlightEvent)
+		| ({
+				typ: "guide";
+		  } & GuideEvent)
+		| ({
+				typ: "supplementary";
+		  } & SupplementaryEvent);
+
+export interface RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum {
+	EventIsNotAMultipleOptionEventNothingToReorder = "Event is not a multiple-option event; nothing to reorder"
+}
+
+export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum3 {
+	EventOptionNotFound = "Event option not found"
+}
+
+export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+/** Move */
+export type MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostPayload =
+	EventReorderSchema | null;
+
+export interface MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Event Option Id
+	 * @format uuid
+	 */
+	eventOptionId: string;
+}
+
+export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum {
+	CannotMoveAnEventIntoItself = "Cannot move an event into itself",
+	EventIsNotASingleOptionEvent = "Event is not a single-option event",
+	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
+}
+
+export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum1 {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum2 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum3 {
+	MoveTargetEventNotFound = "Move target event not found"
+}
+
+export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum4 {
+	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
+}
+
+/** Move */
+export type MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostPayload =
+	MoveToMultiSchema | null;
+
+export interface MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Target Event Id
+	 * @format uuid
+	 */
+	targetEventId: string;
+}
+
+export interface UploadEventImagesTourTourIdEventEventIdImagesPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+}
+
+export interface ListEventImagesTourTourIdEventEventIdImagesAllGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
 	/**
 	 * Limit
 	 * @min 1
-	 * @max 10
-	 * @default 1
+	 * @max 100
+	 * @default 10
 	 */
 	limit?: number;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
 }
 
-export interface SearchGeoSearchGetParams {
+export interface DeleteEventImageTourTourIdEventEventIdImagesImageIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface UpdateEventImageTourTourIdEventEventIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface UploadEventNodeImagesTourTourIdEventEventIdNodeNodeIdImagesPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+}
+
+export interface DeleteEventNodeImageTourTourIdEventEventIdNodeNodeIdImagesImageIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface SetPrimaryEventNodeImageTourTourIdEventEventIdNodeNodeIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/**
+	 * Node Id
+	 * @format uuid
+	 */
+	nodeId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface GetTourCommissionsTourTourIdSeasonalityGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface CreateTourSeasonCommissionTourTourIdSeasonalityCreatePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UpdateTourCommissionsTourTourIdSeasonalityUpdateCommissionIdPatchParams {
+	/**
+	 * Commission Id
+	 * @format uuid
+	 */
+	commissionId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface RemoveCommissionTourTourIdSeasonalityRemoveCommissionIdDeleteParams {
+	/**
+	 * Commission Id
+	 * @format uuid
+	 */
+	commissionId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetTourScheduleTourTourIdScheduleGetParams {
+	/** From */
+	from?: string | null;
+	/** To */
+	to?: string | null;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UpdateTourScheduleTourTourIdSchedulePatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface AddFixedDateTourTourIdScheduleDatePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface BulkAddFixedDatesTourTourIdScheduleDateBulkPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface BulkRemoveFixedDatesTourTourIdScheduleDateBulkDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface RemoveFixedDateTourTourIdScheduleDateDateIdDeleteParams {
+	/**
+	 * Date Id
+	 * @format uuid
+	 */
+	dateId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface AddExcludedDateTourTourIdScheduleExcludePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface BulkAddExcludedDatesTourTourIdScheduleExcludeBulkPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface BulkRemoveExcludedDatesTourTourIdScheduleExcludeBulkDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface RemoveExcludedDateTourTourIdScheduleExcludeDateIdDeleteParams {
+	/**
+	 * Date Id
+	 * @format uuid
+	 */
+	dateId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface AddRecurrenceRuleTourTourIdScheduleRulePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface BulkAddRecurrenceRulesTourTourIdScheduleRuleBulkPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface RemoveRecurrenceRuleTourTourIdScheduleRuleRuleIdDeleteParams {
+	/**
+	 * Rule Id
+	 * @format uuid
+	 */
+	ruleId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetLandingPageTourTourIdLandingGetParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UpdateLandingPageTourTourIdLandingPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UploadLandingImagesTourTourIdLandingImagesPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ListLandingImagesTourTourIdLandingImagesGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface DeleteLandingImageTourTourIdLandingImagesImageIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface SetPrimaryLandingImageTourTourIdLandingImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export interface GetTourTourTourIdPublicGetParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ListPublicTourOptionsTourTourIdPublicOptionAllGetParams {
+	/** @default "USD" */
+	currency?: Currency;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdItineraryGetParams {
+	/** @default "USD" */
+	currency?: Currency;
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
+export interface GetPublicLandingPageTourTourIdPublicLandingGetParams {
+	/** @default "en" */
+	read_lang?: LanguageCode;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetPublicOperatorPreviewTourTourIdPublicOperatorGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetPublicTourScheduleTourTourIdPublicScheduleGetParams {
+	/** From */
+	from?: string | null;
+	/** To */
+	to?: string | null;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface CreatePackageTourTourIdOptionIdPackagePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+}
+
+export interface ListPackagesTourTourIdOptionIdPackageGetParams {
 	/**
 	 * Q
-	 * @minLength 1
-	 * @maxLength 200
+	 * Filter by package name
 	 */
-	q: string;
-	/** @default "en" */
-	lang?: LanguageCode;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 50
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface ListMyInvoicesInvoiceGetParams {
-	/** Statuses */
-	statuses?: InvoiceStatus[] | null;
-	/** Q */
 	q?: string | null;
 	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface GetInvoiceInvoiceInvoiceIdGetParams {
-	/**
-	 * Invoice Id
+	 * Option Id
 	 * @format uuid
 	 */
-	invoiceId: string;
-}
-
-export interface RecordInvoicePaymentInvoiceInvoiceIdPaymentPostParams {
+	optionId: string;
 	/**
-	 * Invoice Id
+	 * Tour Id
 	 * @format uuid
 	 */
-	invoiceId: string;
+	tourId: string;
 }
 
-export interface GetInvoicePdfInvoiceInvoiceIdPdfGetParams {
+export interface GetPackageTourTourIdOptionIdPackagePackageIdGetParams {
 	/**
-	 * Invoice Id
+	 * Option Id
 	 * @format uuid
 	 */
-	invoiceId: string;
-}
-
-export interface UploadInvoicePdfInvoiceInvoiceIdPdfPostParams {
+	optionId: string;
 	/**
-	 * Invoice Id
+	 * Package Id
 	 * @format uuid
 	 */
-	invoiceId: string;
+	packageId: string;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
 }
 
-export interface ListLedgerEntriesLedgerOperatorGetParams {
-	/** Booking Id */
-	booking_id?: string | null;
-	/** Party Typ */
-	party_typ?: LedgerParty | null;
-	/** Party Id */
-	party_id?: string | null;
-	/** Flow */
-	flow?: LedgerFlow | null;
+export interface UpdatePackageTourTourIdOptionIdPackagePackageIdPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Package Id
+	 * @format uuid
+	 */
+	packageId: string;
+}
+
+export interface DeletePackageTourTourIdOptionIdPackagePackageIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+	/**
+	 * Option Id
+	 * @format uuid
+	 */
+	optionId: string;
+	/**
+	 * Package Id
+	 * @format uuid
+	 */
+	packageId: string;
+}
+
+export interface ListToursTourGetParams {
+	/**
+	 * Desc
+	 * @default true
+	 */
+	desc?: boolean;
+	/** Status */
+	status?: TourStatus | null;
 	/** Typ */
-	typ?: LedgerEntryType | null;
-	/** Source */
-	source?: LedgerSource | null;
-	/** Occurred From */
-	occurred_from?: string | null;
-	/** Occurred To */
-	occurred_to?: string | null;
+	typ?: TourType | null;
 	/** Q */
 	q?: string | null;
+	/** @default "created_at" */
+	sort_by?: TourListSortField;
 	/**
 	 * Skip
 	 * @min 0
@@ -17665,7 +19242,7 @@ export interface ListLedgerEntriesLedgerOperatorGetParams {
 	limit?: number;
 }
 
-export interface ListCreditorsLedgerOperatorCreditorsGetParams {
+export interface ListOneDayToursTourOneDayGetParams {
 	/**
 	 * Skip
 	 * @min 0
@@ -17681,7 +19258,142 @@ export interface ListCreditorsLedgerOperatorCreditorsGetParams {
 	limit?: number;
 }
 
-export interface ListDebtorsLedgerOperatorDebtorsGetParams {
+export interface GetTourTourTourIdGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UpdateTourTourTourIdPatchParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface DeleteTourTourTourIdDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ValidateTourTourTourIdValidateGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface PublishTourTourTourIdPublishPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ArchiveTourTourTourIdArchivePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UnarchiveTourTourTourIdUnarchivePostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface RefreshTourProjectionTourTourIdRefreshPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface UploadTourCoverTourTourIdCoverPostParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface DeleteTourCoverTourTourIdCoverDeleteParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface GetTourStatisticsTourTourIdStatisticsGetParams {
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface RegenerateTourTranslationsTourComputedI18NTourTourIdRegeneratePostParams {
+	/**
+	 * Force
+	 * @default false
+	 */
+	force?: boolean;
+	/**
+	 * Tour Id
+	 * @format uuid
+	 */
+	tourId: string;
+}
+
+export interface ListFilesOperatorMeFilesGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface GetFileUrlOperatorMeFilesFileIdGetParams {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface RemoveFileOperatorMeFilesFileIdDeleteParams {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface ListPartneredAgenciesOperatorAgenciesPartneredGetParams {
+	/** Q */
+	q?: string | null;
 	/**
 	 * Skip
 	 * @min 0
@@ -17715,25 +19427,7 @@ export interface ListAgenciesOperatorAgenciesAllGetParams {
 	limit?: number;
 }
 
-export interface ListPartneredAgenciesOperatorAgenciesPartneredGetParams {
-	/** Q */
-	q?: string | null;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface DeleteAgencyDiscountOperatorAgenciesAgencyIdDiscountDeleteParams {
+export interface GetAgencyInfoByIdOperatorAgenciesAgencyIdInfoGetParams {
 	/**
 	 * Agency Id
 	 * @format uuid
@@ -17749,84 +19443,12 @@ export interface SetAgencyDiscountOperatorAgenciesAgencyIdDiscountPatchParams {
 	agencyId: string;
 }
 
-export interface GetAgencyInfoByIdOperatorAgenciesAgencyIdInfoGetParams {
+export interface DeleteAgencyDiscountOperatorAgenciesAgencyIdDiscountDeleteParams {
 	/**
 	 * Agency Id
 	 * @format uuid
 	 */
 	agencyId: string;
-}
-
-export interface ListFilesOperatorMeFilesGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface RemoveFileOperatorMeFilesFileIdDeleteParams {
-	/**
-	 * File Id
-	 * @format uuid
-	 */
-	fileId: string;
-}
-
-export interface GetFileUrlOperatorMeFilesFileIdGetParams {
-	/**
-	 * File Id
-	 * @format uuid
-	 */
-	fileId: string;
-}
-
-export interface ListPaymentRoutesOperatorPaymentRoutesGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface DeletePaymentRouteOperatorPaymentRoutesRouteIdDeleteParams {
-	/**
-	 * Route Id
-	 * @format uuid
-	 */
-	routeId: string;
-}
-
-export interface GetPaymentRouteOperatorPaymentRoutesRouteIdGetParams {
-	/**
-	 * Route Id
-	 * @format uuid
-	 */
-	routeId: string;
-}
-
-export interface UpdatePaymentRouteOperatorPaymentRoutesRouteIdPatchParams {
-	/**
-	 * Route Id
-	 * @format uuid
-	 */
-	routeId: string;
 }
 
 export interface ListStaffOperatorStaffAllGetParams {
@@ -17849,7 +19471,7 @@ export interface ListStaffOperatorStaffAllGetParams {
 	limit?: number;
 }
 
-export interface DeleteStaffMemberOperatorStaffUserIdDeleteParams {
+export interface UpdateStaffMemberOperatorStaffUserIdPatchParams {
 	/**
 	 * User Id
 	 * @format uuid
@@ -17857,7 +19479,7 @@ export interface DeleteStaffMemberOperatorStaffUserIdDeleteParams {
 	userId: string;
 }
 
-export interface UpdateStaffMemberOperatorStaffUserIdPatchParams {
+export interface DeleteStaffMemberOperatorStaffUserIdDeleteParams {
 	/**
 	 * User Id
 	 * @format uuid
@@ -17944,7 +19566,47 @@ export interface RemoveReceiptOperatorSupplierPaymentPaymentIdReceiptFileIdDelet
 	fileId: string;
 }
 
-export interface DeleteOperatorOperatorIdDeleteParams {
+export interface ListPaymentRoutesOperatorPaymentRoutesGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface GetPaymentRouteOperatorPaymentRoutesRouteIdGetParams {
+	/**
+	 * Route Id
+	 * @format uuid
+	 */
+	routeId: string;
+}
+
+export interface UpdatePaymentRouteOperatorPaymentRoutesRouteIdPatchParams {
+	/**
+	 * Route Id
+	 * @format uuid
+	 */
+	routeId: string;
+}
+
+export interface DeletePaymentRouteOperatorPaymentRoutesRouteIdDeleteParams {
+	/**
+	 * Route Id
+	 * @format uuid
+	 */
+	routeId: string;
+}
+
+export interface UdpateOperatorOperatorIdPatchParams {
 	/**
 	 * Id
 	 * @format uuid
@@ -17960,29 +19622,12 @@ export interface GetOperatorOperatorIdGetParams {
 	id: string;
 }
 
-export interface UdpateOperatorOperatorIdPatchParams {
+export interface DeleteOperatorOperatorIdDeleteParams {
 	/**
 	 * Id
 	 * @format uuid
 	 */
 	id: string;
-}
-
-export interface ListSuppliersSupplierGetParams {
-	/**
-	 * Skip
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @default 100
-	 */
-	limit?: number;
-	/** Supplier Type */
-	supplier_type?: SupplierType | null;
-	/** Q */
-	q?: string | null;
 }
 
 export enum ListAllProductsSupplierProductGetDetailEnum {
@@ -18016,65 +19661,41 @@ export interface ListAllProductsSupplierProductGetParams {
 	limit?: number;
 }
 
-export interface SearchSupplierSearchGetParams {
-	/**
-	 * Q
-	 * @minLength 1
-	 * @maxLength 128
-	 */
-	q: string;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 50
-	 * @default 10
-	 */
-	limit?: number;
-	/** Typ */
-	typ?: SupplierType | null;
+export enum CreateProductSupplierSupplierIdProductPostDetailEnum {
+	AuthenticationRequired = "Authentication required."
 }
 
-export interface DeleteSupplierSupplierSupplierIdDeleteParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
+export enum CreateProductSupplierSupplierIdProductPostDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export interface GetSupplierSupplierSupplierIdGetParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
+export enum CreateProductSupplierSupplierIdProductPostDetailEnum2 {
+	NotFound = "Not found"
 }
 
-export interface UpdateSupplierSupplierSupplierIdPatchParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-}
+/** Payload */
+export type CreateProductSupplierSupplierIdProductPostPayload =
+	| ({
+			typ: "hotel";
+	  } & HotelProductCreate)
+	| ({
+			typ: "train";
+	  } & TrainProductCreate)
+	| ({
+			typ: "flight";
+	  } & FlightProductCreate)
+	| ({
+			typ: "bus";
+	  } & BusProductCreate)
+	| ({
+			typ: "transfer";
+	  } & TransferProductCreate)
+	| ({
+			typ: "activity";
+	  } & ActivityProductCreate);
 
-export interface DeleteLogoSupplierSupplierIdLogoDeleteParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-}
-
-export interface GetLogoSupplierSupplierIdLogoGetParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-}
-
-export interface AddLogoSupplierSupplierIdLogoPostParams {
+export interface CreateProductSupplierSupplierIdProductPostParams {
 	/**
 	 * Supplier Id
 	 * @format uuid
@@ -18114,78 +19735,6 @@ export interface ListSupplierProductsSupplierSupplierIdProductGetParams {
 	 * @format uuid
 	 */
 	supplierId: string;
-}
-
-export enum CreateProductSupplierSupplierIdProductPostDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum CreateProductSupplierSupplierIdProductPostDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum CreateProductSupplierSupplierIdProductPostDetailEnum2 {
-	NotFound = "Not found"
-}
-
-/** Payload */
-export type CreateProductSupplierSupplierIdProductPostPayload =
-	| ({
-			typ: "activity";
-	  } & ActivityProductCreate)
-	| ({
-			typ: "bus";
-	  } & BusProductCreate)
-	| ({
-			typ: "flight";
-	  } & FlightProductCreate)
-	| ({
-			typ: "hotel";
-	  } & HotelProductCreate)
-	| ({
-			typ: "train";
-	  } & TrainProductCreate)
-	| ({
-			typ: "transfer";
-	  } & TransferProductCreate);
-
-export interface CreateProductSupplierSupplierIdProductPostParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-}
-
-export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum2 {
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum3 {
-	SupplierProductIsReferencedByTourEvents = "Supplier product is referenced by tour events"
-}
-
-export interface DeleteProductSupplierSupplierIdProductProductIdDeleteParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-	/**
-	 * Product Id
-	 * @format uuid
-	 */
-	productId: string;
 }
 
 export enum GetProductSupplierSupplierIdProductProductIdGetDetailEnum {
@@ -18240,23 +19789,23 @@ export enum UpdateProductSupplierSupplierIdProductProductIdPatchDetailEnum4 {
 /** Payload */
 export type UpdateProductSupplierSupplierIdProductProductIdPatchPayload =
 	| ({
-			typ: "activity";
-	  } & ActivityProductUpdate)
-	| ({
-			typ: "bus";
-	  } & BusProductUpdate)
-	| ({
-			typ: "flight";
-	  } & FlightProductUpdate)
-	| ({
 			typ: "hotel";
 	  } & HotelProductUpdate)
 	| ({
 			typ: "train";
 	  } & TrainProductUpdate)
 	| ({
+			typ: "flight";
+	  } & FlightProductUpdate)
+	| ({
+			typ: "bus";
+	  } & BusProductUpdate)
+	| ({
 			typ: "transfer";
-	  } & TransferProductUpdate);
+	  } & TransferProductUpdate)
+	| ({
+			typ: "activity";
+	  } & ActivityProductUpdate);
 
 export interface UpdateProductSupplierSupplierIdProductProductIdPatchParams {
 	/**
@@ -18271,16 +19820,24 @@ export interface UpdateProductSupplierSupplierIdProductProductIdPatchParams {
 	productId: string;
 }
 
-export enum UploadProductImagesSupplierSupplierIdProductProductIdImagesPostDetailEnum {
+export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum {
 	AuthenticationRequired = "Authentication required."
 }
 
-export enum UploadProductImagesSupplierSupplierIdProductProductIdImagesPostDetailEnum1 {
+export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum1 {
 	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
 	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
 }
 
-export interface UploadProductImagesSupplierSupplierIdProductProductIdImagesPostParams {
+export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum2 {
+	SupplierProductNotFound = "Supplier product not found"
+}
+
+export enum DeleteProductSupplierSupplierIdProductProductIdDeleteDetailEnum3 {
+	SupplierProductIsReferencedByTourEvents = "Supplier product is referenced by tour events"
+}
+
+export interface DeleteProductSupplierSupplierIdProductProductIdDeleteParams {
 	/**
 	 * Supplier Id
 	 * @format uuid
@@ -18291,95 +19848,6 @@ export interface UploadProductImagesSupplierSupplierIdProductProductIdImagesPost
 	 * @format uuid
 	 */
 	productId: string;
-}
-
-export enum ListProductImagesSupplierSupplierIdProductProductIdImagesAllGetDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum ListProductImagesSupplierSupplierIdProductProductIdImagesAllGetDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export interface ListProductImagesSupplierSupplierIdProductProductIdImagesAllGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-	/**
-	 * Product Id
-	 * @format uuid
-	 */
-	productId: string;
-}
-
-export enum DeleteProductImageSupplierSupplierIdProductProductIdImagesImageIdDeleteDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum DeleteProductImageSupplierSupplierIdProductProductIdImagesImageIdDeleteDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export interface DeleteProductImageSupplierSupplierIdProductProductIdImagesImageIdDeleteParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-	/**
-	 * Product Id
-	 * @format uuid
-	 */
-	productId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export enum SetPrimaryProductImageSupplierSupplierIdProductProductIdImagesImageIdSetPrimaryPatchDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum SetPrimaryProductImageSupplierSupplierIdProductProductIdImagesImageIdSetPrimaryPatchDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export interface SetPrimaryProductImageSupplierSupplierIdProductProductIdImagesImageIdSetPrimaryPatchParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-	/**
-	 * Product Id
-	 * @format uuid
-	 */
-	productId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
 }
 
 export enum ListProductLinksSupplierSupplierIdProductProductIdLinksGetDetailEnum {
@@ -18551,11 +20019,11 @@ export type CreateVariantSupplierSupplierIdProductProductIdVariantPostPayload =
 					pricing: "per_car";
 			  } & PerCarTransferVariantWrite)
 			| ({
-					pricing: "per_car_category";
-			  } & PerCarCategoryTransferVariantWrite)
-			| ({
 					pricing: "whole";
 			  } & WholeTransferVariantWrite)
+			| ({
+					pricing: "per_car_category";
+			  } & PerCarCategoryTransferVariantWrite)
 	  )
 	| ActivityVariantWrite;
 
@@ -18570,42 +20038,6 @@ export interface CreateVariantSupplierSupplierIdProductProductIdVariantPostParam
 	 * @format uuid
 	 */
 	productId: string;
-}
-
-export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum2 {
-	SupplierProductNotFound = "Supplier product not found",
-	SupplierProductVariantNotFound = "Supplier product variant not found"
-}
-
-export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum3 {
-	SupplierProductVariantIsReferencedByTourEvents = "Supplier product variant is referenced by tour events"
-}
-
-export interface DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteParams {
-	/**
-	 * Supplier Id
-	 * @format uuid
-	 */
-	supplierId: string;
-	/**
-	 * Product Id
-	 * @format uuid
-	 */
-	productId: string;
-	/**
-	 * Variant Id
-	 * @format uuid
-	 */
-	variantId: string;
 }
 
 export enum UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatchDetailEnum {
@@ -18675,11 +20107,11 @@ export type UpdateVariantSupplierSupplierIdProductProductIdVariantVariantIdPatch
 						pricing: "per_car";
 				  } & PerCarTransferVariantWrite)
 				| ({
-						pricing: "per_car_category";
-				  } & PerCarCategoryTransferVariantWrite)
-				| ({
 						pricing: "whole";
 				  } & WholeTransferVariantWrite)
+				| ({
+						pricing: "per_car_category";
+				  } & PerCarCategoryTransferVariantWrite)
 		  )
 		| ActivityVariantWrite;
 
@@ -18699,6 +20131,153 @@ export interface UpdateVariantSupplierSupplierIdProductProductIdVariantVariantId
 	 * @format uuid
 	 */
 	variantId: string;
+}
+
+export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum2 {
+	SupplierProductNotFound = "Supplier product not found",
+	SupplierProductVariantNotFound = "Supplier product variant not found"
+}
+
+export enum DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteDetailEnum3 {
+	SupplierProductVariantIsReferencedByTourEvents = "Supplier product variant is referenced by tour events"
+}
+
+export interface DeleteVariantSupplierSupplierIdProductProductIdVariantVariantIdDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Variant Id
+	 * @format uuid
+	 */
+	variantId: string;
+}
+
+export enum UploadProductImagesSupplierSupplierIdProductProductIdImagesPostDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum UploadProductImagesSupplierSupplierIdProductProductIdImagesPostDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export interface UploadProductImagesSupplierSupplierIdProductProductIdImagesPostParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+export enum ListProductImagesSupplierSupplierIdProductProductIdImagesAllGetDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum ListProductImagesSupplierSupplierIdProductProductIdImagesAllGetDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export interface ListProductImagesSupplierSupplierIdProductProductIdImagesAllGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+}
+
+export enum DeleteProductImageSupplierSupplierIdProductProductIdImagesImageIdDeleteDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum DeleteProductImageSupplierSupplierIdProductProductIdImagesImageIdDeleteDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export interface DeleteProductImageSupplierSupplierIdProductProductIdImagesImageIdDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
+}
+
+export enum SetPrimaryProductImageSupplierSupplierIdProductProductIdImagesImageIdSetPrimaryPatchDetailEnum {
+	AuthenticationRequired = "Authentication required."
+}
+
+export enum SetPrimaryProductImageSupplierSupplierIdProductProductIdImagesImageIdSetPrimaryPatchDetailEnum1 {
+	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
+	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
+}
+
+export interface SetPrimaryProductImageSupplierSupplierIdProductProductIdImagesImageIdSetPrimaryPatchParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+	/**
+	 * Product Id
+	 * @format uuid
+	 */
+	productId: string;
+	/**
+	 * Image Id
+	 * @format uuid
+	 */
+	imageId: string;
 }
 
 export enum UploadNodeImagesSupplierSupplierIdProductProductIdVariantVariantIdNodeNodeIdImagesPostDetailEnum {
@@ -18807,144 +20386,226 @@ export interface SetPrimaryNodeImageRouteSupplierSupplierIdProductProductIdVaria
 	imageId: string;
 }
 
-export interface ListToursTourGetParams {
-	/**
-	 * Desc
-	 * @default true
-	 */
-	desc?: boolean;
-	/** Status */
-	status?: TourStatus | null;
-	/** Typ */
-	typ?: TourType | null;
-	/** Q */
-	q?: string | null;
-	/** @default "created_at" */
-	sort_by?: TourListSortField;
+export interface ListSuppliersSupplierGetParams {
 	/**
 	 * Skip
-	 * @min 0
 	 * @default 0
 	 */
 	skip?: number;
 	/**
 	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
+	 * @default 100
 	 */
 	limit?: number;
-}
-
-export interface ListAgencyCatalogTourCatalogAgencyGetParams {
-	/** Sort */
-	sort?: TourCatalogSort | null;
+	/** Supplier Type */
+	supplier_type?: SupplierType | null;
 	/** Q */
 	q?: string | null;
-	/** Categories */
-	categories?: TourCategory[] | null;
-	/** Duration Days Min */
-	duration_days_min?: number | null;
-	/** Duration Days Max */
-	duration_days_max?: number | null;
-	/** City */
-	city?: string[] | null;
-	/** Country */
-	country?: string[] | null;
-	/** Tour Lang */
-	tour_lang?: LanguageCode[] | null;
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
 }
 
-export interface ListFiltersTourCatalogFiltersGetParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-}
-
-export interface ListPublicCatalogTourCatalogPublicGetParams {
-	/** Sort */
-	sort?: TourCatalogSort | null;
-	/** Q */
-	q?: string | null;
-	/** Categories */
-	categories?: TourCategory[] | null;
-	/** Duration Days Min */
-	duration_days_min?: number | null;
-	/** Duration Days Max */
-	duration_days_max?: number | null;
-	/** City */
-	city?: string[] | null;
-	/** Country */
-	country?: string[] | null;
-	/** Tour Lang */
-	tour_lang?: LanguageCode[] | null;
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface SuggestLocationsTourCatalogSuggestGetParams {
+export interface SearchSupplierSearchGetParams {
 	/**
 	 * Q
 	 * @minLength 1
 	 * @maxLength 128
 	 */
 	q: string;
-	/** @default "en" */
-	read_lang?: LanguageCode;
 	/**
 	 * Limit
 	 * @min 1
-	 * @max 20
+	 * @max 50
+	 * @default 10
+	 */
+	limit?: number;
+	/** Typ */
+	typ?: SupplierType | null;
+}
+
+export interface GetSupplierSupplierSupplierIdGetParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface UpdateSupplierSupplierSupplierIdPatchParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface DeleteSupplierSupplierSupplierIdDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface GetLogoSupplierSupplierIdLogoGetParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface AddLogoSupplierSupplierIdLogoPostParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface DeleteLogoSupplierSupplierIdLogoDeleteParams {
+	/**
+	 * Supplier Id
+	 * @format uuid
+	 */
+	supplierId: string;
+}
+
+export interface ListAgencyDocumentsAgencyMeDocumentsGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
 	 * @default 10
 	 */
 	limit?: number;
 }
 
-export interface RegenerateTourTranslationsTourComputedI18NTourTourIdRegeneratePostParams {
+export interface GetAgencyDocumentUrlAgencyMeDocumentsFileIdGetParams {
 	/**
-	 * Force
-	 * @default false
-	 */
-	force?: boolean;
-	/**
-	 * Tour Id
+	 * File Id
 	 * @format uuid
 	 */
-	tourId: string;
+	fileId: string;
 }
 
-export interface ListLibraryEventsTourEventLibraryGetParams {
-	/** Typ */
-	typ?: EventTypes[] | null;
+export interface RemoveAgencyDocumentAgencyMeDocumentsFileIdDeleteParams {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface ListBookingAvailabilityBookingOrderOperatorBookingIdAvailabilityGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface ApplyEventAvailabilityBookingOrderOperatorBookingIdEventsEventIdOptionsOptionIndexAvailabilityPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	/**
+	 * Event Id
+	 * @format uuid
+	 */
+	eventId: string;
+	/** Option Index */
+	optionIndex: number;
+}
+
+export interface GetUserBookingOrderBookingOrderUserBookingIdGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetAgencyBookingOrderBookingOrderAgencyBookingIdGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetOperatorBookingOrderBookingOrderOperatorBookingIdGetParams {
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetOperatorOrderFinancialsBookingOrderOperatorBookingIdFinancialsGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetOperatorOrderVarianceBookingOrderOperatorBookingIdVarianceGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface GetOperatorBookingItineraryBookingOrderOperatorBookingIdItineraryGetParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface TransitionBookingStatusBookingOrderOperatorBookingIdStatusTransitionPatchParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+	transition: BookingTransition;
+}
+
+export interface DeclineBookingBookingOrderOperatorBookingIdDeclinePostParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+export interface ListMyBookingsBookingOrderMyGetParams {
+	/** Booking Status */
+	booking_status?: BookingStatus | null;
+	/** Tour Id */
+	tour_id?: string | null;
 	/** Q */
 	q?: string | null;
+	/** Date From */
+	date_from?: string | null;
+	/** Date To */
+	date_to?: string | null;
 	/**
 	 * Skip
 	 * @min 0
@@ -18960,1019 +20621,104 @@ export interface ListLibraryEventsTourEventLibraryGetParams {
 	limit?: number;
 }
 
-/** Event */
-export type CreateLibraryEventTourEventLibraryPostPayload =
-	| ({
-			typ: "activity";
-	  } & ActivityEvent)
-	| ({
-			typ: "bus";
-	  } & BusEvent)
-	| ({
-			typ: "flight";
-	  } & FlightEvent)
-	| ({
-			typ: "guide";
-	  } & GuideEvent)
-	| ({
-			typ: "housing";
-	  } & HousingEvent)
-	| ({
-			typ: "ref";
-	  } & InformationEvent)
-	| ({
-			typ: "supplementary";
-	  } & SupplementaryEvent)
-	| ({
-			typ: "train";
-	  } & TrainEvent)
-	| ({
-			typ: "transfer";
-	  } & TransferEvent);
-
-export enum CopyLibraryEventTourEventLibraryCopyPostDetailEnum {
-	LibraryEventNotFound = "Library event not found",
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour",
-	EventOptionNotFound = "Event option not found"
-}
-
-export interface CopyLibraryEventTourEventLibraryCopyPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-}
-
-export interface DeleteLibraryEventTourEventLibraryLibraryIdDeleteParams {
+export interface GetBookingQuoteBookingOrderQuoteGetParams {
 	/**
-	 * Library Id
+	 * Tour Option Id
 	 * @format uuid
 	 */
-	libraryId: string;
-}
-
-export interface GetLibraryEventTourEventLibraryLibraryIdGetParams {
-	/**
-	 * Library Id
-	 * @format uuid
-	 */
-	libraryId: string;
-}
-
-/** Event */
-export type UpdateLibraryEventTourEventLibraryLibraryIdPatchPayload =
-	| ({
-			typ: "activity";
-	  } & ActivityEvent)
-	| ({
-			typ: "bus";
-	  } & BusEvent)
-	| ({
-			typ: "flight";
-	  } & FlightEvent)
-	| ({
-			typ: "guide";
-	  } & GuideEvent)
-	| ({
-			typ: "housing";
-	  } & HousingEvent)
-	| ({
-			typ: "ref";
-	  } & InformationEvent)
-	| ({
-			typ: "supplementary";
-	  } & SupplementaryEvent)
-	| ({
-			typ: "train";
-	  } & TrainEvent)
-	| ({
-			typ: "transfer";
-	  } & TransferEvent);
-
-export interface UpdateLibraryEventTourEventLibraryLibraryIdPatchParams {
-	/**
-	 * Library Id
-	 * @format uuid
-	 */
-	libraryId: string;
-}
-
-export interface UploadLibraryImagesTourEventLibraryLibraryIdImagesPostParams {
-	/**
-	 * Library Id
-	 * @format uuid
-	 */
-	libraryId: string;
-}
-
-export interface ListLibraryImagesTourEventLibraryLibraryIdImagesAllGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-	/**
-	 * Library Id
-	 * @format uuid
-	 */
-	libraryId: string;
-}
-
-export interface DeleteLibraryImageTourEventLibraryLibraryIdImagesImageIdDeleteParams {
-	/**
-	 * Library Id
-	 * @format uuid
-	 */
-	libraryId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface SetPrimaryLibraryImageTourEventLibraryLibraryIdImagesImageIdSetPrimaryPatchParams {
-	/**
-	 * Library Id
-	 * @format uuid
-	 */
-	libraryId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface ListOneDayToursTourOneDayGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-}
-
-export interface ListSitemapTourSlugSitemapGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 50000
-	 * @default 50000
-	 */
-	limit?: number;
-}
-
-export interface ResolveTourSlugTourSlugSlugGetParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/** @default "USD" */
-	currency?: Currency;
-	/**
-	 * Slug
-	 * @minLength 1
-	 * @maxLength 136
-	 * @pattern ^[a-z0-9-]+$
-	 */
-	slug: string;
-}
-
-export interface DeleteTourTourTourIdDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetTourTourTourIdGetParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UpdateTourTourTourIdPatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface ArchiveTourTourTourIdArchivePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface DeleteTourCoverTourTourIdCoverDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UploadTourCoverTourTourIdCoverPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UploadEventImagesTourTourIdEventEventIdImagesPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-}
-
-export interface ListEventImagesTourTourIdEventEventIdImagesAllGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-}
-
-export interface DeleteEventImageTourTourIdEventEventIdImagesImageIdDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface UpdateEventImageTourTourIdEventEventIdImagesImageIdSetPrimaryPatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface UploadEventNodeImagesTourTourIdEventEventIdNodeNodeIdImagesPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Node Id
-	 * @format uuid
-	 */
-	nodeId: string;
-}
-
-export interface DeleteEventNodeImageTourTourIdEventEventIdNodeNodeIdImagesImageIdDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Node Id
-	 * @format uuid
-	 */
-	nodeId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface SetPrimaryEventNodeImageTourTourIdEventEventIdNodeNodeIdImagesImageIdSetPrimaryPatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Node Id
-	 * @format uuid
-	 */
-	nodeId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface GetTourFinancialsTourTourIdFinanceGetParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UpdateTourFinancialsTourTourIdFinancePatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface CreateTourFinancialsTourTourIdFinancePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetLandingPageTourTourIdLandingGetParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UpdateLandingPageTourTourIdLandingPatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface ListLandingImagesTourTourIdLandingImagesGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UploadLandingImagesTourTourIdLandingImagesPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface DeleteLandingImageTourTourIdLandingImagesImageIdDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface SetPrimaryLandingImageTourTourIdLandingImagesImageIdSetPrimaryPatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Image Id
-	 * @format uuid
-	 */
-	imageId: string;
-}
-
-export interface ListAllTourOptionsTourTourIdOptionAllGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
-	 * @min 1
-	 * @max 100
-	 * @default 10
-	 */
-	limit?: number;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-/** Payload */
-export type CreateTourOptionTourTourIdOptionCreatePostPayload =
-	TourOptionCreateSchema | null;
-
-export interface CreateTourOptionTourTourIdOptionCreatePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface DeleteOptionTourTourIdOptionOptionIdDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export interface UpdateTourOptionTourTourIdOptionOptionIdPatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export interface DeleteOptionCoverTourTourIdOptionOptionIdCoverDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export interface UploadOptionCoverTourTourIdOptionOptionIdCoverPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export interface GetPriceMatrixTourTourIdOptionOptionIdPriceMatrixGetParams {
-	/** @default "USD" */
-	currency?: Currency;
-	/**
-	 * Pax From
-	 * First headcount; the tour's group_size_min or 1.
-	 */
-	pax_from?: number | null;
-	/**
-	 * Pax To
-	 * Last headcount; the tour's group_size.
-	 */
-	pax_to?: number | null;
-	/**
-	 * Brackets
-	 * Comma-separated from-to pairs, e.g. 1-1,2-3,4-6. Given, the matrix is cut per bracket and pax_from/pax_to are ignored.
-	 */
-	brackets?: string | null;
+	tour_option_id: string;
 	/**
 	 * Date
-	 * Tour day 1; pins date-ranged supplier rates.
+	 * @format date
 	 */
-	date?: string | null;
-	/**
-	 * As Of
-	 * Preview the template spread as of this date.
-	 */
-	as_of?: string | null;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export interface GetPricingBreakdownTourTourIdOptionOptionIdPricingBreakdownGetParams {
-	/** @default "USD" */
-	currency?: Currency;
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * As Of
-	 * Preview the template spread as of this date.
-	 */
-	as_of?: string | null;
+	date: string;
 	/**
 	 * Pax
-	 * Price both legs at this one headcount instead of the tour's group-size range — what a price-matrix row books.
-	 */
-	pax?: number | null;
-	/**
-	 * Date
-	 * Tour day 1; pins date-ranged supplier rates.
-	 */
-	date?: string | null;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export interface GetTourTourTourIdPublicGetParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetPublicLandingPageTourTourIdPublicLandingGetParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetPublicOperatorPreviewTourTourIdPublicOperatorGetParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface ListPublicTourOptionsTourTourIdPublicOptionAllGetParams {
-	/** @default "USD" */
-	currency?: Currency;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
 	 * @min 1
-	 * @max 100
-	 * @default 10
 	 */
-	limit?: number;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetPublicTourOptionTourTourIdPublicOptionOptionIdItineraryGetParams {
-	/** @default "USD" */
-	currency?: Currency;
+	pax: number;
 	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	lang?: LanguageCode;
+	/** Currency */
+	currency?: Currency | null;
 }
 
-export interface GetPublicTourScheduleTourTourIdPublicScheduleGetParams {
-	/** From */
-	from?: string | null;
-	/** To */
-	to?: string | null;
+export interface GetBookingItineraryBookingOrderBookingIdItineraryGetParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
+	bookingId: string;
 }
 
-export interface PublishTourTourTourIdPublishPostParams {
+export interface GetBookingPriceBookingOrderBookingIdPriceGetParams {
 	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface RefreshTourProjectionTourTourIdRefreshPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetTourScheduleTourTourIdScheduleGetParams {
-	/** From */
-	from?: string | null;
-	/** To */
-	to?: string | null;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UpdateTourScheduleTourTourIdSchedulePatchParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface AddFixedDateTourTourIdScheduleDatePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface BulkRemoveFixedDatesTourTourIdScheduleDateBulkDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface BulkAddFixedDatesTourTourIdScheduleDateBulkPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface RemoveFixedDateTourTourIdScheduleDateDateIdDeleteParams {
-	/**
-	 * Date Id
-	 * @format uuid
-	 */
-	dateId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface AddExcludedDateTourTourIdScheduleExcludePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface BulkRemoveExcludedDatesTourTourIdScheduleExcludeBulkDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface BulkAddExcludedDatesTourTourIdScheduleExcludeBulkPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface RemoveExcludedDateTourTourIdScheduleExcludeDateIdDeleteParams {
-	/**
-	 * Date Id
-	 * @format uuid
-	 */
-	dateId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface AddRecurrenceRuleTourTourIdScheduleRulePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface BulkAddRecurrenceRulesTourTourIdScheduleRuleBulkPostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface RemoveRecurrenceRuleTourTourIdScheduleRuleRuleIdDeleteParams {
-	/**
-	 * Rule Id
-	 * @format uuid
-	 */
-	ruleId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetTourCommissionsTourTourIdSeasonalityGetParams {
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/**
-	 * Limit
+	 * Pax
 	 * @min 1
-	 * @max 100
-	 * @default 10
 	 */
-	limit?: number;
+	pax: number;
+	/** Currency */
+	currency?: Currency | null;
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
+	bookingId: string;
 }
 
-export interface CreateTourSeasonCommissionTourTourIdSeasonalityCreatePostParams {
+export interface SubmitBookingOrderBookingOrderBookingIdSubmitPatchParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
+	bookingId: string;
 }
 
-export interface RemoveCommissionTourTourIdSeasonalityRemoveCommissionIdDeleteParams {
+export interface UpdateBookingOrderBookingOrderBookingIdPatchParams {
 	/**
-	 * Commission Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	commissionId: string;
+	bookingId: string;
+}
+
+export interface DeleteBookingOrderBookingOrderBookingIdDeleteParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
+	bookingId: string;
 }
 
-export interface UpdateTourCommissionsTourTourIdSeasonalityUpdateCommissionIdPatchParams {
+export interface CancelBookingBookingOrderBookingIdCancelPostParams {
 	/**
-	 * Commission Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	commissionId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface GetTourStatisticsTourTourIdStatisticsGetParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface UnarchiveTourTourTourIdUnarchivePostParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export interface ValidateTourTourTourIdValidateGetParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum2 {
-	LibraryEventNotFound = "Library event not found"
-}
-
-export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export enum CopyEventTourTourIdOptionIdEventCopyPostDetailEnum4 {
-	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
-}
-
-export interface CopyEventTourTourIdOptionIdEventCopyPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum {
-	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
-	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
-}
-
-export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum3 {
-	SupplierNotFound = "Supplier not found",
-	SupplierProductNotFound = "Supplier product not found",
-	PackageNotFound = "Package not found"
-}
-
-export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export enum CreateEventTourTourIdOptionIdEventCreatePostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
-	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
+	bookingId: string;
 }
 
 /** Event */
-export type CreateEventTourTourIdOptionIdEventCreatePostPayload =
+export type AddEventBookingRevisionBookingIdEventPostPayload =
 	| (
+			| ({
+					typ: "ref";
+			  } & InformationSingleEvent)
+			| ({
+					typ: "bus";
+			  } & BusSingleEvent)
+			| ({
+					typ: "train";
+			  } & TrainSingleEvent)
+			| ({
+					typ: "transfer";
+			  } & TransferSingleEvent)
 			| ({
 					typ: "activity";
 			  } & ActivitySingleEvent)
 			| ({
-					typ: "bus";
-			  } & BusSingleEvent)
+					typ: "housing";
+			  } & HousingSingleEvent)
 			| ({
 					typ: "flight";
 			  } & FlightSingleEvent)
@@ -19980,141 +20726,58 @@ export type CreateEventTourTourIdOptionIdEventCreatePostPayload =
 					typ: "guide";
 			  } & GuideSingleEvent)
 			| ({
-					typ: "housing";
-			  } & HousingSingleEvent)
+					typ: "supplementary";
+			  } & SupplementarySingleEvent)
+	  )
+	| MultiEvent;
+
+export interface AddEventBookingRevisionBookingIdEventPostParams {
+	/**
+	 * Booking Id
+	 * @format uuid
+	 */
+	bookingId: string;
+}
+
+/** Event */
+export type UpdateEventBookingRevisionBookingIdEventEventIdPatchPayload =
+	| (
 			| ({
 					typ: "ref";
 			  } & InformationSingleEvent)
 			| ({
-					typ: "supplementary";
-			  } & SupplementarySingleEvent)
+					typ: "bus";
+			  } & BusSingleEvent)
 			| ({
 					typ: "train";
 			  } & TrainSingleEvent)
 			| ({
 					typ: "transfer";
 			  } & TransferSingleEvent)
+			| ({
+					typ: "activity";
+			  } & ActivitySingleEvent)
+			| ({
+					typ: "housing";
+			  } & HousingSingleEvent)
+			| ({
+					typ: "flight";
+			  } & FlightSingleEvent)
+			| ({
+					typ: "guide";
+			  } & GuideSingleEvent)
+			| ({
+					typ: "supplementary";
+			  } & SupplementarySingleEvent)
 	  )
 	| MultiEvent;
 
-export interface CreateEventTourTourIdOptionIdEventCreatePostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface UpdateEventBookingRevisionBookingIdEventEventIdPatchParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-}
-
-export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum2 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum ListTourEventsTourTourIdOptionIdEventItineraryGetDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface ListTourEventsTourTourIdOptionIdEventItineraryGetParams {
-	/** Day */
-	day?: number | null;
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Skip
-	 * @min 0
-	 * @default 0
-	 */
-	skip?: number;
-	/** Limit */
-	limit?: number | null;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum2 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface PolicyCheckOptionTourTourIdOptionIdEventPolicyCheckGetParams {
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-}
-
-export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum2 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum DeleteTourEventTourTourIdOptionIdEventEventIdDeleteDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
@@ -20122,485 +20785,99 @@ export interface DeleteTourEventTourTourIdOptionIdEventEventIdDeleteParams {
 	eventId: string;
 }
 
-export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum2 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum GetTourEventTourTourIdOptionIdEventEventIdGetDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface GetTourEventTourTourIdOptionIdEventEventIdGetParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface RemoveEventBookingRevisionBookingIdEventEventIdDeleteParams {
 	/**
-	 * Option Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
+}
+
+export enum CopyEventBookingRevisionBookingIdEventCopyPostDetailEnum {
+	NoSuchEventOnTheBookedTourOption = "No such event on the booked tour option",
+	NoSuchEventInThisBookingsSnapshot = "No such event in this booking's snapshot"
+}
+
+export enum CopyEventBookingRevisionBookingIdEventCopyPostDetailEnum1 {
+	EventsCanOnlyBeRevisedWhileTheBookingIsInProcessing = "Events can only be revised while the booking is in processing",
+	BookingHasNoSnapshotToRevise = "Booking has no snapshot to revise"
+}
+
+export interface CopyEventBookingRevisionBookingIdEventCopyPostParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
+	bookingId: string;
 }
 
-export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum {
-	CannotMoveAnEventIntoItself = "Cannot move an event into itself",
-	EventIsNotASingleOptionEvent = "Event is not a single-option event",
-	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
-}
-
-export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum3 {
-	MoveTargetEventNotFound = "Move target event not found"
-}
-
-export enum MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-/** Move */
-export type MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostPayload =
-	MoveToMultiSchema | null;
-
-export interface MoveEventToMultiTourTourIdOptionIdEventEventIdMoveToMultiTargetEventIdPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Target Event Id
-	 * @format uuid
-	 */
-	targetEventId: string;
-}
-
-export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum {
-	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
-	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
-	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
-}
-
-export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum3 {
-	SupplierNotFound = "Supplier not found",
-	SupplierProductNotFound = "Supplier product not found",
-	PackageNotFound = "Package not found"
-}
-
-export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export enum AddOptionTourTourIdOptionIdEventEventIdOptionPostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
-	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
-}
-
-/** Option */
-export type AddOptionTourTourIdOptionIdEventEventIdOptionPostPayload =
-	| ({
-			typ: "activity";
-	  } & ActivityEvent)
-	| ({
-			typ: "bus";
-	  } & BusEvent)
-	| ({
-			typ: "flight";
-	  } & FlightEvent)
-	| ({
-			typ: "guide";
-	  } & GuideEvent)
+/** Member */
+export type AddPoolMemberBookingRevisionBookingIdEventEventIdPoolPostPayload =
 	| ({
 			typ: "housing";
-	  } & HousingEvent)
-	| ({
-			typ: "ref";
-	  } & InformationEvent)
-	| ({
-			typ: "supplementary";
-	  } & SupplementaryEvent)
+	  } & HousingMemberNew)
 	| ({
 			typ: "train";
-	  } & TrainEvent)
+	  } & TrainMemberNew)
+	| ({
+			typ: "flight";
+	  } & FlightMemberNew)
+	| ({
+			typ: "bus";
+	  } & BusMemberNew)
 	| ({
 			typ: "transfer";
-	  } & TransferEvent);
+	  } & TransferMemberNew)
+	| ({
+			typ: "activity";
+	  } & ActivityMemberNew)
+	| ({
+			typ: "ref";
+	  } & InformationMemberNew)
+	| ({
+			typ: "guide";
+	  } & GuideMemberNew)
+	| ({
+			typ: "supplementary";
+	  } & SupplementaryMemberNew);
 
-export interface AddOptionTourTourIdOptionIdEventEventIdOptionPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface AddPoolMemberBookingRevisionBookingIdEventEventIdPoolPostParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-}
-
-export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum {
-	CannotDeleteTheLastRemainingOptionOfAnEvent = "Cannot delete the last remaining option of an event"
-}
-
-export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum3 {
-	EventOptionNotFound = "Event option not found"
-}
-
-export enum DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface DeleteOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdDeleteParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
+}
+
+export interface RemovePoolMemberBookingRevisionBookingIdEventEventIdPoolSupplyIdDeleteParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
 	/**
-	 * Event Option Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	eventOptionId: string;
-}
-
-export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum {
-	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
-}
-
-export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum3 {
-	EventOptionNotFound = "Event option not found",
-	PackageNotFound = "Package not found"
-}
-
-export enum UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchDetailEnum4 {
-	OptionTypeChangesThroughRetype = "Option type changes through retype"
-}
-
-/** Option */
-export type UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchPayload =
-
-		| ({
-				typ: "activity";
-		  } & ActivityEventUpdate)
-		| ({
-				typ: "bus";
-		  } & BusEventUpdate)
-		| ({
-				typ: "flight";
-		  } & FlightEventUpdate)
-		| ({
-				typ: "guide";
-		  } & GuideEventUpdate)
-		| ({
-				typ: "housing";
-		  } & HousingEventUpdate)
-		| ({
-				typ: "ref";
-		  } & InformationEventUpdate)
-		| ({
-				typ: "supplementary";
-		  } & SupplementaryEventUpdate)
-		| ({
-				typ: "train";
-		  } & TrainEventUpdate)
-		| ({
-				typ: "transfer";
-		  } & TransferEventUpdate);
-
-export interface UpdateOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdPatchParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-}
-
-export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum {
-	EventIsNotAMultipleOptionEventNothingToReorder = "Event is not a multiple-option event; nothing to reorder"
-}
-
-export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum3 {
-	EventOptionNotFound = "Event option not found"
-}
-
-export enum MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-/** Move */
-export type MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostPayload =
-	EventReorderSchema | null;
-
-export interface MoveOptionToSingleTourTourIdOptionIdEventEventIdOptionEventOptionIdMoveToSinglePostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-}
-
-export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum {
-	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
-	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
-}
-
-export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum3 {
-	EventOptionNotFound = "Event option not found",
-	SupplierNotFound = "Supplier not found",
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export enum AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
-}
-
-/** Member */
-export type AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostPayload =
-
-		| ({
-				typ: "activity";
-		  } & ActivityMemberNew)
-		| ({
-				typ: "bus";
-		  } & BusMemberNew)
-		| ({
-				typ: "flight";
-		  } & FlightMemberNew)
-		| ({
-				typ: "guide";
-		  } & GuideMemberNew)
-		| ({
-				typ: "housing";
-		  } & HousingMemberNew)
-		| ({
-				typ: "ref";
-		  } & InformationMemberNew)
-		| ({
-				typ: "supplementary";
-		  } & SupplementaryMemberNew)
-		| ({
-				typ: "train";
-		  } & TrainMemberNew)
-		| ({
-				typ: "transfer";
-		  } & TransferMemberNew);
-
-export interface AddPoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-}
-
-export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum {
-	CannotRemoveTheLastSupplierOfAnOptionsPool = "Cannot remove the last supplier of an option's pool"
-}
-
-export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum3 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found"
-}
-
-export enum RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDeleteParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
 	/**
 	 * Supply Id
 	 * @format uuid
@@ -20608,87 +20885,21 @@ export interface RemovePoolMemberTourTourIdOptionIdEventEventIdOptionEventOption
 	supplyId: string;
 }
 
-export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum {
-	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options"
-}
-
-export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum3 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found",
-	SupplierNotFound = "Supplier not found"
-}
-
-export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum4 {
-	PoolMemberReadsASupplierProductDetachItToStateItsOwnSpec = "Pool member reads a supplier product; detach it to state its own spec"
-}
-
-export enum UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchDetailEnum5 {
-	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
-}
-
-/** Member */
-export type UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchPayload =
-
-		| ({
-				typ: "activity";
-		  } & ActivityMemberUpdate)
-		| ({
-				typ: "bus";
-		  } & BusMemberUpdate)
-		| ({
-				typ: "flight";
-		  } & FlightMemberUpdate)
-		| ({
-				typ: "guide";
-		  } & GuideMemberUpdate)
-		| ({
-				typ: "housing";
-		  } & HousingMemberUpdate)
-		| ({
-				typ: "ref";
-		  } & InformationMemberUpdate)
-		| ({
-				typ: "supplementary";
-		  } & SupplementaryMemberUpdate)
-		| ({
-				typ: "train";
-		  } & TrainMemberUpdate)
-		| ({
-				typ: "transfer";
-		  } & TransferMemberUpdate);
-
-export interface UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdPatchParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface SetPoolMemberProductBookingRevisionBookingIdEventEventIdPoolSupplyIdProductPatchParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
 	/**
 	 * Supply Id
 	 * @format uuid
@@ -20696,59 +20907,21 @@ export interface UpdatePoolMemberTourTourIdOptionIdEventEventIdOptionEventOption
 	supplyId: string;
 }
 
-export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum {
-	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
-}
-
-export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum3 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found",
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum4 {
-	EventAlreadyReadsFromASupplierProductRelinkItInstead = "Event already reads from a supplier product; relink it instead"
-}
-
-export enum AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
-}
-
-export interface AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdAttachPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface ClearPoolMemberProductBookingRevisionBookingIdEventEventIdPoolSupplyIdProductDeleteParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
 	/**
 	 * Supply Id
 	 * @format uuid
@@ -20756,190 +20929,25 @@ export interface AttachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEven
 	supplyId: string;
 }
 
-export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum2 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found",
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostDetailEnum3 {
-	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
-	EventCarriesANegotiatedOverrideSayToDropItToMoveTheLink = "Event carries a negotiated override; say to drop it to move the link"
-}
-
-export interface DetachPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdDetachPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface ListEditsBookingRevisionBookingIdEditsGetParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
+	bookingId: string;
+}
+
+export interface PreviewBookingRevisionBookingIdPreviewGetParams {
 	/**
-	 * Option Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum2 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found"
-}
-
-export enum SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface SetPoolMemberMainTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdMainPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum2 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found",
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteDetailEnum3 {
-	EventReadsFromNoSupplierProduct = "Event reads from no supplier product"
-}
-
-export interface ClearPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverrideDeleteParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum2 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found",
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum3 {
-	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
-	OverrideTypeMustMatchTheEventsType = "Override type must match the event's type",
-	OverridePricesByAnArmTheSupplierProductDoesNotPriceBy = "Override prices by an arm the supplier product does not price by"
-}
-
-export enum SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchDetailEnum4 {
-	OverridePricesAUnitTheEventsScopeDoesNotTake = "Override prices a unit the event's scope does not take"
+	bookingId: string;
 }
 
 /** Override */
-export type SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchPayload =
+export type SetPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverridePatchPayload =
 
-		| ({
-				typ: "activity";
-		  } & ActivityOverrideInput)
-		| ({
-				typ: "bus";
-		  } & BusOverrideInput)
-		| ({
-				typ: "flight";
-		  } & RouteOverrideInput)
 		| ({
 				typ: "housing";
 		  } & HotelOverrideInput)
@@ -20947,523 +20955,515 @@ export type SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOption
 				typ: "train";
 		  } & RouteOverrideInput)
 		| ({
-				typ: "transfer";
-		  } & TransferOverrideInput);
-
-export interface SetPoolMemberOverrideTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdOverridePatchParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum {
-	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
-}
-
-export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum3 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found",
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum4 {
-	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
-	EventCarriesANegotiatedOverrideSayToDropItToMoveTheLink = "Event carries a negotiated override; say to drop it to move the link"
-}
-
-export enum RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
-}
-
-export interface RelinkPoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdRelinkPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum2 {
-	EventOptionNotFound = "Event option not found",
-	PoolMemberNotFound = "Pool member not found",
-	SupplierProductNotFound = "Supplier product not found"
-}
-
-export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum3 {
-	EventReadsFromNoSupplierProduct = "Event reads from no supplier product",
-	ScopeWouldStrandANegotiatedOverrideOnUnitsItLeavesOut = "Scope would strand a negotiated override on units it leaves out"
-}
-
-export enum ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchDetailEnum4 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories"
-}
-
-export interface ScopePoolMemberProductTourTourIdOptionIdEventEventIdOptionEventOptionIdPoolSupplyIdScopePatchParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-	/**
-	 * Event Option Id
-	 * @format uuid
-	 */
-	eventOptionId: string;
-	/**
-	 * Supply Id
-	 * @format uuid
-	 */
-	supplyId: string;
-}
-
-export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum {
-	OptionTypeMustMatchTheEventsOtherOptions = "Option type must match the event's other options",
-	OptionAlreadyHasThisTypeUpdateItInPlace = "Option already has this type; update it in place",
-	ANewOptionStatesWhereItsSupplyComesFrom = "A new option states where its supply comes from",
-	SupplierProductTypeCannotServeThisEventType = "Supplier product type cannot serve this event type"
-}
-
-export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum3 {
-	EventOptionNotFound = "Event option not found",
-	SupplierNotFound = "Supplier not found",
-	SupplierProductNotFound = "Supplier product not found",
-	PackageNotFound = "Package not found"
-}
-
-export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export enum RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostDetailEnum5 {
-	ScopeNamesVariantsTheSupplierProductDoesNotHave = "Scope names variants the supplier product does not have",
-	ScopeNamesRoomsOutsideTheHotelCategoriesItPins = "Scope names rooms outside the hotel categories it pins",
-	ScopeNamesCarCategoriesTheSupplierProductDoesNotDeclare = "Scope names car categories the supplier product does not declare",
-	OnlyAHotelNarrowsToRoomsAndOnlyAFleetPricedByCategoryNarrowsToCarCategories = "Only a hotel narrows to rooms and only a fleet priced by category narrows to car categories",
-	EveryGuideEventMustPriceEveryTourLanguageAddTheMissingGuidePricesOrNarrowTheToursLanguages = "Every guide event must price every tour language; add the missing guide prices or narrow the tour's languages"
-}
-
-/** Option */
-export type RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostPayload =
-
-		| ({
-				typ: "activity";
-		  } & ActivityEvent)
+				typ: "flight";
+		  } & RouteOverrideInput)
 		| ({
 				typ: "bus";
-		  } & BusEvent)
-		| ({
-				typ: "flight";
-		  } & FlightEvent)
-		| ({
-				typ: "guide";
-		  } & GuideEvent)
-		| ({
-				typ: "housing";
-		  } & HousingEvent)
-		| ({
-				typ: "ref";
-		  } & InformationEvent)
-		| ({
-				typ: "supplementary";
-		  } & SupplementaryEvent)
-		| ({
-				typ: "train";
-		  } & TrainEvent)
+		  } & BusOverrideInput)
 		| ({
 				typ: "transfer";
-		  } & TransferEvent);
+		  } & TransferOverrideInput)
+		| ({
+				typ: "activity";
+		  } & ActivityOverrideInput);
 
-export interface RetypeOptionTourTourIdOptionIdEventEventIdOptionEventOptionIdRetypePostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface SetPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverridePatchParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
 	/**
-	 * Event Option Id
+	 * Supply Id
 	 * @format uuid
 	 */
-	eventOptionId: string;
+	supplyId: string;
 }
 
-export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum2 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface SetEventOptionalTourTourIdOptionIdEventEventIdOptionalPatchParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface ClearPoolMemberOverrideBookingRevisionBookingIdEventEventIdPoolSupplyIdOverrideDeleteParams {
+	/** Event Option Id */
+	event_option_id?: string | null;
+	/** Option Index */
+	option_index?: number | null;
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
-}
-
-export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum2 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface PolicyCheckEventTourTourIdOptionIdEventEventIdPolicyCheckGetParams {
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 	/**
 	 * Event Id
 	 * @format uuid
 	 */
 	eventId: string;
 	/**
-	 * Tour Id
+	 * Supply Id
 	 * @format uuid
 	 */
-	tourId: string;
+	supplyId: string;
 }
 
-export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum {
-	BadRequest = "Bad Request"
-}
-
-export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum3 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum ReorderEventTourTourIdOptionIdEventEventIdReorderPostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface ReorderEventTourTourIdOptionIdEventEventIdReorderPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+export interface AddPassengerInfoBookingOrderBookingIdPaxPostParams {
 	/**
-	 * Option Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	optionId: string;
+	bookingId: string;
+}
+
+export interface ListPassengerInfoBookingOrderBookingIdPaxGetParams {
 	/**
-	 * Event Id
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+	/**
+	 * Booking Id
 	 * @format uuid
 	 */
-	eventId: string;
+	bookingId: string;
+}
+
+export interface UpdatePassengerInfoBookingOrderBookingIdPaxPaxIdPatchParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-}
-
-export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum {
-	EventIsNotAMultipleOptionEventNothingToReorder = "Event is not a multiple-option event; nothing to reorder",
-	OrderMustNameEachOfTheEventsOptionsExactlyOnce = "Order must name each of the event's options exactly once"
-}
-
-export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum1 {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum2 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum3 {
-	NotFound = "Not found",
-	TourOptionNotFoundForThisTour = "Tour option not found for this tour"
-}
-
-export enum ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostDetailEnum4 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface ReorderEventOptionsTourTourIdOptionIdEventEventIdReorderOptionsPostParams {
-	/** @default "en" */
-	read_lang?: LanguageCode;
+	bookingId: string;
 	/**
-	 * Option Id
+	 * Pax Id
 	 * @format uuid
 	 */
-	optionId: string;
+	paxId: string;
+}
+
+export interface DeletePassengerInfoBookingOrderBookingIdPaxPaxIdDeleteParams {
 	/**
-	 * Event Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	eventId: string;
+	bookingId: string;
 	/**
-	 * Tour Id
+	 * Pax Id
 	 * @format uuid
 	 */
-	tourId: string;
+	paxId: string;
 }
 
-export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum {
-	AuthenticationRequired = "Authentication required."
-}
-
-export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum1 {
-	AuthorizationFailedUserHasNoAccess = "Authorization failed. User has no access.",
-	AuthorizationFailedMissingRequiredPermission = "Authorization failed. Missing required permission."
-}
-
-export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum2 {
-	NotFound = "Not found"
-}
-
-export enum ValidateEventTourTourIdOptionIdEventEventIdValidateGetDetailEnum3 {
-	ArchivedToursAreImmutableNothingRelatedToTheTourCanChange = "Archived tours are immutable; nothing related to the tour can change"
-}
-
-export interface ValidateEventTourTourIdOptionIdEventEventIdValidateGetParams {
+export interface UploadPassengerPassportBookingOrderBookingIdPaxPaxIdPassportPostParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
+	bookingId: string;
 	/**
-	 * Option Id
+	 * Pax Id
 	 * @format uuid
 	 */
-	optionId: string;
-	/**
-	 * Event Id
-	 * @format uuid
-	 */
-	eventId: string;
+	paxId: string;
 }
 
-export interface ListPackagesTourTourIdOptionIdPackageGetParams {
+export interface GetFileBinaryBookingOrderPaxFileFileIdGetParams {
 	/**
-	 * Q
-	 * Filter by package name
+	 * File Id
+	 * @format uuid
 	 */
+	fileId: string;
+}
+
+export interface RemoveFileBookingOrderPaxFileFileIdDeleteParams {
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface ListPaymentsBookingPaymentGetParams {
+	/**
+	 * Skip
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @default 100
+	 */
+	limit?: number;
+	/** Status */
+	status?: ClientPaymentStatus | null;
+	/** Booking Id */
+	booking_id?: string | null;
+	/** Created From */
+	created_from?: string | null;
+	/** Created To */
+	created_to?: string | null;
+	/** Q */
+	q?: string | null;
+}
+
+export interface GetPaymentBookingPaymentPaymentIdGetParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface UpdatePaymentBookingPaymentPaymentIdPatchParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface DeletePaymentBookingPaymentPaymentIdDeleteParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface ConfirmPaymentBookingPaymentPaymentIdConfirmPostParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface ListAttachmentsBookingPaymentPaymentIdAttachmentGetParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface AddAttachmentBookingPaymentPaymentIdAttachmentPostParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+}
+
+export interface DownloadAttachmentBookingPaymentPaymentIdAttachmentFileIdGetParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface RemoveAttachmentBookingPaymentPaymentIdAttachmentFileIdDeleteParams {
+	/**
+	 * Payment Id
+	 * @format uuid
+	 */
+	paymentId: string;
+	/**
+	 * File Id
+	 * @format uuid
+	 */
+	fileId: string;
+}
+
+export interface ListBookingReconciliationBookingReconciliationGetParams {
+	/** Status */
+	status?: BookingStatus | null;
+	/** Tour Id */
+	tour_id?: string | null;
+	/** Date From */
+	date_from?: string | null;
+	/** Date To */
+	date_to?: string | null;
+	/**
+	 * Outstanding Only
+	 * @default false
+	 */
+	outstanding_only?: boolean;
+	/**
+	 * Payable Only
+	 * @default false
+	 */
+	payable_only?: boolean;
+	/** Q */
 	q?: string | null;
 	/**
-	 * Option Id
-	 * @format uuid
+	 * Skip
+	 * @min 0
+	 * @default 0
 	 */
-	optionId: string;
+	skip?: number;
 	/**
-	 * Tour Id
-	 * @format uuid
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
 	 */
-	tourId: string;
+	limit?: number;
 }
 
-export interface CreatePackageTourTourIdOptionIdPackagePostParams {
+export interface UploadVoucherBookingVoucherBookingIdPostParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
+	bookingId: string;
 }
 
-export interface DeletePackageTourTourIdOptionIdPackagePackageIdDeleteParams {
+export interface GetVoucherBookingVoucherBookingIdGetParams {
 	/**
-	 * Tour Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	tourId: string;
-	/**
-	 * Option Id
-	 * @format uuid
-	 */
-	optionId: string;
-	/**
-	 * Package Id
-	 * @format uuid
-	 */
-	packageId: string;
+	bookingId: string;
 }
 
-export interface GetPackageTourTourIdOptionIdPackagePackageIdGetParams {
+export interface DeleteVoucherBookingVoucherBookingIdDeleteParams {
 	/**
-	 * Option Id
+	 * Booking Id
 	 * @format uuid
 	 */
-	optionId: string;
-	/**
-	 * Package Id
-	 * @format uuid
-	 */
-	packageId: string;
-	/**
-	 * Tour Id
-	 * @format uuid
-	 */
-	tourId: string;
+	bookingId: string;
 }
 
-export interface UpdatePackageTourTourIdOptionIdPackagePackageIdPatchParams {
+export interface ListMyInvoicesInvoiceGetParams {
+	/** Statuses */
+	statuses?: InvoiceStatus[] | null;
+	/** Q */
+	q?: string | null;
 	/**
-	 * Tour Id
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface GetInvoiceInvoiceInvoiceIdGetParams {
+	/**
+	 * Invoice Id
 	 * @format uuid
 	 */
-	tourId: string;
+	invoiceId: string;
+}
+
+export interface UploadInvoicePdfInvoiceInvoiceIdPdfPostParams {
 	/**
-	 * Option Id
+	 * Invoice Id
 	 * @format uuid
 	 */
-	optionId: string;
+	invoiceId: string;
+}
+
+export interface GetInvoicePdfInvoiceInvoiceIdPdfGetParams {
 	/**
-	 * Package Id
+	 * Invoice Id
 	 * @format uuid
 	 */
-	packageId: string;
+	invoiceId: string;
+}
+
+export interface RecordInvoicePaymentInvoiceInvoiceIdPaymentPostParams {
+	/**
+	 * Invoice Id
+	 * @format uuid
+	 */
+	invoiceId: string;
+}
+
+export interface ListLedgerEntriesLedgerOperatorGetParams {
+	/** Booking Id */
+	booking_id?: string | null;
+	/** Party Typ */
+	party_typ?: LedgerParty | null;
+	/** Party Id */
+	party_id?: string | null;
+	/** Flow */
+	flow?: LedgerFlow | null;
+	/** Typ */
+	typ?: LedgerEntryType | null;
+	/** Source */
+	source?: LedgerSource | null;
+	/** Occurred From */
+	occurred_from?: string | null;
+	/** Occurred To */
+	occurred_to?: string | null;
+	/** Q */
+	q?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListDebtorsLedgerOperatorDebtorsGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListCreditorsLedgerOperatorCreditorsGetParams {
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface SearchGeoSearchGetParams {
+	/**
+	 * Q
+	 * @minLength 1
+	 * @maxLength 200
+	 */
+	q: string;
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 50
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ReverseGeoReverseGetParams {
+	/**
+	 * Lat
+	 * @min -90
+	 * @max 90
+	 */
+	lat: number;
+	/**
+	 * Long
+	 * @min -180
+	 * @max 180
+	 */
+	long: number;
+	/** @default "en" */
+	lang?: LanguageCode;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 10
+	 * @default 1
+	 */
+	limit?: number;
+}
+
+export interface ListOrgAuditAuditAllGetParams {
+	/** User Id */
+	user_id?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface ListAllAuditAuditAdminAllGetParams {
+	/** User Id */
+	user_id?: string | null;
+	/** Operator Id */
+	operator_id?: string | null;
+	/** Agency Id */
+	agency_id?: string | null;
+	/**
+	 * Skip
+	 * @min 0
+	 * @default 0
+	 */
+	skip?: number;
+	/**
+	 * Limit
+	 * @min 1
+	 * @max 100
+	 * @default 10
+	 */
+	limit?: number;
+}
+
+export interface UpdatePermissionGroupAuthPermissionGroupGroupIdPatchParams {
+	/**
+	 * Group Id
+	 * @format uuid
+	 */
+	groupId: string;
+}
+
+export interface DeletePermissionGroupAuthPermissionGroupGroupIdDeleteParams {
+	/**
+	 * Group Id
+	 * @format uuid
+	 */
+	groupId: string;
 }

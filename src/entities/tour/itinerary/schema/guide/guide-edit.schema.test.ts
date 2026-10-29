@@ -1,17 +1,19 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
+	ENUM_EXTRA_COST_FIELD,
 	ENUM_FORM_GUIDES,
-	ENUM_GUIDE_CATEGORY_ROW_FIELD,
 	ENUM_GUIDE_CHARGE,
-	ENUM_GUIDE_EXPENSE_TYP,
 	ENUM_GUIDE_FORM_SECTION,
-	ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD,
+	ENUM_GUIDE_MARKUP_TYP,
+	ENUM_GUIDE_PRICE_BOUND_FIELD,
 	ENUM_GUIDE_PRICE_ROW_FIELD,
 	ENUM_GUIDE_PRICING_FIELD,
 	ENUM_GUIDE_PRICING_INVOICING,
-	ENUM_GUIDE_PRICING_TYPE,
-	ENUM_GUIDE_TYPE
+	ENUM_GUIDE_TYPE,
+	GUIDE_ANY_LANGUAGE,
+	GUIDE_MAX_PRICE_COLUMNS,
+	createEmptyExtraCostRow
 } from "../../types";
 
 import { GUIDE_EDIT_SCHEMA } from "./guide-edit.schema";
@@ -26,279 +28,266 @@ vi.mock("@/shared/config", async () => {
 	};
 });
 
-/** Mirrors empty row from alignGuidePerGuideExpenses / createEmptyCategoryRow */
-const emptyCategoryRow = () => ({
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.LANG]: "",
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.COST]: null,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.FEES]: [],
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.CURRENCY]: undefined,
-	[ENUM_GUIDE_CATEGORY_ROW_FIELD.MARKUP]: null
+const priceRow = (lang: string, costs: (number | null)[]) => ({
+	[ENUM_GUIDE_PRICE_ROW_FIELD.LANG]: lang,
+	[ENUM_GUIDE_PRICE_ROW_FIELD.COSTS]: costs
 });
 
-/** Mirrors empty row from alignGuidePerGuideExpenses / createEmptyPerGuidePriceRow */
-const emptyPerGuideRow = () => ({
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: null,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.FEES]: [],
-	[ENUM_GUIDE_PRICE_ROW_FIELD.CURRENCY]: undefined,
-	[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: null
-});
-
-const syncedPriceByLanguageExpenses = (guidesCount: number) => ({
-	typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE_CATEGORY,
-	[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: Array.from(
-		{ length: guidesCount },
-		() => ({
-			[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.CATEGORIES]: [
-				emptyCategoryRow()
-			]
-		})
-	)
-});
-
-const syncedPerGuideExpenses = (guidesCount: number) => ({
-	typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
-	[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: Array.from(
-		{ length: guidesCount },
-		() => emptyPerGuideRow()
-	)
-});
-
-const validGuide = (overrides?: {
-	guide_type?: (typeof ENUM_GUIDE_TYPE)[keyof typeof ENUM_GUIDE_TYPE];
-	duration_days?: number;
-}) => ({
-	[ENUM_FORM_GUIDES.GUIDE_TYPE]: ENUM_GUIDE_TYPE.LOCAL,
-	[ENUM_FORM_GUIDES.DURATION_DAYS]: 1,
-	...overrides
-});
+const bounds = (...upToPax: (number | null)[]) =>
+	upToPax.map((value) => ({
+		[ENUM_GUIDE_PRICE_BOUND_FIELD.UP_TO_PAX]: value
+	}));
 
 const basePricing = (overrides: Record<string, unknown> = {}) => ({
 	[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
 		ENUM_GUIDE_PRICING_INVOICING.INDIVIDUAL,
-	[ENUM_GUIDE_PRICING_FIELD.PRICING_TYPE]: ENUM_GUIDE_PRICING_TYPE.PER_GUIDE,
-	[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: false,
 	[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: false,
-	[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: null,
+	[ENUM_GUIDE_PRICING_FIELD.CHARGE_TYP]: ENUM_GUIDE_CHARGE.PER_DURATION,
+	[ENUM_GUIDE_PRICING_FIELD.CURRENCY]: "USD",
+	[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: [],
+	[ENUM_GUIDE_PRICING_FIELD.ROWS]: [],
+	[ENUM_GUIDE_PRICING_FIELD.FEES]: [],
+	[ENUM_GUIDE_PRICING_FIELD.MARKUP]: null,
+	[ENUM_GUIDE_PRICING_FIELD.EXTRA_COSTS]: [],
+	[ENUM_GUIDE_PRICING_FIELD.IS_LEGACY_SHAPE]: false,
 	[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: "",
 	...overrides
 });
 
-const buildGuideEditForm = (options: {
-	guidesList: ReturnType<typeof validGuide>[];
-	pricing?: Record<string, unknown>;
-}) => ({
-	[ENUM_GUIDE_FORM_SECTION.GUIDES]: {
-		[ENUM_FORM_GUIDES.GUIDES_LIST]: options.guidesList
-	},
-	[ENUM_GUIDE_FORM_SECTION.PRICING]: options.pricing ?? basePricing(),
-	[ENUM_GUIDE_FORM_SECTION.NAME]: "Guide event",
-	[ENUM_GUIDE_FORM_SECTION.DAY]: 1,
-	[ENUM_GUIDE_FORM_SECTION.POSITION]: 0
+const typTier = (upToPax: number | null) => ({
+	[ENUM_FORM_GUIDES.GUIDE_TYPE]: ENUM_GUIDE_TYPE.LOCAL,
+	[ENUM_FORM_GUIDES.UP_TO_PAX]: upToPax
 });
 
+const baseGuides = (overrides: Record<string, unknown> = {}) => ({
+	[ENUM_FORM_GUIDES.DURATION_DAYS]: 1,
+	[ENUM_FORM_GUIDES.TYP_TIERS]: [typTier(10)],
+	...overrides
+});
+
+const issuePaths = (result: {
+	success: boolean;
+	error?: { issues: { path: PropertyKey[] }[] };
+}) => (result.error?.issues ?? []).map((issue) => issue.path.join("."));
+
 describe("GUIDES_SCHEMA", () => {
-	it("fails when guides_list is empty", () => {
-		const result = GUIDES_SCHEMA.safeParse({
-			[ENUM_FORM_GUIDES.GUIDES_LIST]: []
-		});
-
-		expect(result.success).toBe(false);
+	it("passes with valid duration and tiers", () => {
+		expect(GUIDES_SCHEMA.safeParse(baseGuides()).success).toBe(true);
 	});
 
-	it("fails when duration_days is not positive", () => {
-		const result = GUIDES_SCHEMA.safeParse({
-			[ENUM_FORM_GUIDES.GUIDES_LIST]: [validGuide({ duration_days: 0 })]
-		});
-
-		expect(result.success).toBe(false);
+	it("allows no typ tiers", () => {
+		expect(
+			GUIDES_SCHEMA.safeParse(
+				baseGuides({ [ENUM_FORM_GUIDES.TYP_TIERS]: [] })
+			).success
+		).toBe(true);
 	});
 
-	it("passes with a valid guide", () => {
-		const result = GUIDES_SCHEMA.safeParse({
-			[ENUM_FORM_GUIDES.GUIDES_LIST]: [validGuide()]
-		});
+	it("fails when duration_days is not positive or missing", () => {
+		expect(
+			GUIDES_SCHEMA.safeParse(
+				baseGuides({ [ENUM_FORM_GUIDES.DURATION_DAYS]: 0 })
+			).success
+		).toBe(false);
+		expect(
+			issuePaths(
+				GUIDES_SCHEMA.safeParse(
+					baseGuides({ [ENUM_FORM_GUIDES.DURATION_DAYS]: null })
+				)
+			)
+		).toEqual(["duration_days"]);
+	});
 
-		expect(result.success).toBe(true);
+	it("requires a tier bound", () => {
+		const result = GUIDES_SCHEMA.safeParse(
+			baseGuides({ [ENUM_FORM_GUIDES.TYP_TIERS]: [typTier(null)] })
+		);
+		expect(issuePaths(result)).toEqual(["typ_tiers.0.up_to_pax"]);
+	});
+
+	it("requires tier bounds to strictly grow", () => {
+		const result = GUIDES_SCHEMA.safeParse(
+			baseGuides({
+				[ENUM_FORM_GUIDES.TYP_TIERS]: [typTier(10), typTier(10)]
+			})
+		);
+		expect(issuePaths(result)).toEqual(["typ_tiers.1.up_to_pax"]);
 	});
 });
 
 describe("GUIDE_PRICING_SCHEMA", () => {
-	it("skips expenses validation when invoicing is not individual", () => {
-		const result = GUIDE_PRICING_SCHEMA.safeParse(
-			basePricing({
-				[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
-					ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE,
-				[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]:
-					"11111111-1111-1111-1111-111111111111",
-				[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: null
-			})
-		);
-
-		expect(result.success).toBe(true);
-	});
-
 	it("requires package_id when invoicing is part of package", () => {
 		const result = GUIDE_PRICING_SCHEMA.safeParse(
 			basePricing({
 				[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
-					ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE,
-				[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: ""
+					ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE
 			})
 		);
-
-		expect(result.success).toBe(false);
+		expect(issuePaths(result)).toEqual(["package_id"]);
 	});
 
-	it("allows empty language category after sync", () => {
-		const result = GUIDE_PRICING_SCHEMA.safeParse(
-			basePricing({
-				[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: true,
-				[ENUM_GUIDE_PRICING_FIELD.EXPENSES]:
-					syncedPriceByLanguageExpenses(1)
-			})
-		);
-
-		expect(result.success).toBe(true);
-	});
-
-	it("allows null expenses for individual/per_guide", () => {
-		const result = GUIDE_PRICING_SCHEMA.safeParse(basePricing());
-
-		expect(result.success).toBe(true);
-	});
-
-	it("fails when markup is set without value and add_margin_separately is on", () => {
-		const result = GUIDE_PRICING_SCHEMA.safeParse(
-			basePricing({
-				[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
-				[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: {
-					typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
-					[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
-						{
-							...emptyPerGuideRow(),
-							[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: -1,
-							[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: {
-								typ: "fixed",
-								value: ""
-							}
-						}
+	it("passes a full matrix and a language without prices", () => {
+		expect(
+			GUIDE_PRICING_SCHEMA.safeParse(
+				basePricing({
+					[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: bounds(6, 15),
+					[ENUM_GUIDE_PRICING_FIELD.ROWS]: [
+						priceRow("english", [40, 60, 80]),
+						priceRow("russian", [null, null, null]),
+						priceRow(GUIDE_ANY_LANGUAGE, [30, 30, 30])
 					]
+				})
+			).success
+		).toBe(true);
+	});
+
+	it("requires a language and rejects one priced twice, the fallback too", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.ROWS]: [
+					priceRow("", [10]),
+					priceRow(GUIDE_ANY_LANGUAGE, [10]),
+					priceRow(GUIDE_ANY_LANGUAGE, [10])
+				]
+			})
+		);
+		expect(issuePaths(result)).toEqual(["rows.0.lang", "rows.2.lang"]);
+	});
+
+	it("rejects a partly priced row and a price dropping with the group", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: bounds(6, 15),
+				[ENUM_GUIDE_PRICING_FIELD.ROWS]: [
+					priceRow("english", [40, null, 80]),
+					priceRow("russian", [40, 30, 50])
+				]
+			})
+		);
+		expect(issuePaths(result)).toEqual([
+			"rows.0.costs.1",
+			"rows.1.costs.1"
+		]);
+	});
+
+	it("requires whole, strictly growing bounds", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: bounds(10, 10, null, 2.5)
+			})
+		);
+		expect(issuePaths(result)).toEqual([
+			"bounds.1.up_to_pax",
+			"bounds.2.up_to_pax",
+			"bounds.3.up_to_pax"
+		]);
+	});
+
+	it("caps the number of columns", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: bounds(
+					...Array.from(
+						{ length: GUIDE_MAX_PRICE_COLUMNS },
+						(_, index) => index + 1
+					)
+				)
+			})
+		);
+		expect(issuePaths(result)).toEqual(["bounds"]);
+	});
+
+	it("ignores bounds and later columns for the whole-engagement charge", () => {
+		expect(
+			GUIDE_PRICING_SCHEMA.safeParse(
+				basePricing({
+					[ENUM_GUIDE_PRICING_FIELD.CHARGE_TYP]:
+						ENUM_GUIDE_CHARGE.FIXED,
+					[ENUM_GUIDE_PRICING_FIELD.BOUNDS]: bounds(null),
+					[ENUM_GUIDE_PRICING_FIELD.ROWS]: [
+						priceRow("english", [300, null])
+					]
+				})
+			).success
+		).toBe(true);
+	});
+
+	it("requires a currency once something is priced", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.CURRENCY]: undefined,
+				[ENUM_GUIDE_PRICING_FIELD.ROWS]: [priceRow("english", [50])]
+			})
+		);
+		expect(issuePaths(result)).toEqual(["currency"]);
+	});
+
+	it("requires a named, priced extra cost", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.EXTRA_COSTS]: [
+					{
+						...createEmptyExtraCostRow(),
+						[ENUM_EXTRA_COST_FIELD.NAME]: "  "
+					}
+				]
+			})
+		);
+		expect(issuePaths(result)).toEqual([
+			"extra_costs.0.name",
+			"extra_costs.0.cost"
+		]);
+	});
+
+	it("skips matrix checks when invoicing is part of package", () => {
+		expect(
+			GUIDE_PRICING_SCHEMA.safeParse(
+				basePricing({
+					[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
+						ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE,
+					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]: "pkg-1",
+					[ENUM_GUIDE_PRICING_FIELD.ROWS]: [priceRow("", [10])]
+				})
+			).success
+		).toBe(true);
+	});
+
+	it("rejects a percentage markup out of range", () => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.MARKUP]: {
+					typ: ENUM_GUIDE_MARKUP_TYP.PERCENTAGE,
+					value: "150"
 				}
 			})
 		);
+		expect(issuePaths(result)).toEqual(["markup.value"]);
+	});
 
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			expect(result.error.issues[0]?.path[0]).toBe(
-				ENUM_GUIDE_PRICING_FIELD.EXPENSES
-			);
-		}
+	it.each(["-5", "abc"])("rejects a fixed markup of %s", (value) => {
+		const result = GUIDE_PRICING_SCHEMA.safeParse(
+			basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.MARKUP]: {
+					typ: ENUM_GUIDE_MARKUP_TYP.FIXED,
+					value
+				}
+			})
+		);
+		expect(issuePaths(result)).toEqual(["markup.value"]);
 	});
 });
 
-describe("GUIDE_EDIT_SCHEMA — add guide must not force pricing", () => {
-	it("passes when guides are valid and pricing is package (no expenses)", () => {
-		const result = GUIDE_EDIT_SCHEMA.safeParse(
-			buildGuideEditForm({
-				guidesList: [validGuide()],
-				pricing: basePricing({
-					[ENUM_GUIDE_PRICING_FIELD.INVOICING]:
-						ENUM_GUIDE_PRICING_INVOICING.PART_OF_PACKAGE,
-					[ENUM_GUIDE_PRICING_FIELD.PACKAGE_ID]:
-						"11111111-1111-1111-1111-111111111111"
-				})
-			})
-		);
-
-		expect(result.success).toBe(true);
-	});
-
-	it("reports pricing section (not guides) when markup value is missing", () => {
-		const result = GUIDE_EDIT_SCHEMA.safeParse(
-			buildGuideEditForm({
-				guidesList: [validGuide()],
-				pricing: basePricing({
-					[ENUM_GUIDE_PRICING_FIELD.ADD_MARGIN_SEPARATELY]: true,
-					[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: {
-						typ: ENUM_GUIDE_EXPENSE_TYP.PER_GUIDE,
-						[ENUM_GUIDE_PER_GUIDE_EXPENSES_FIELD.GUIDES]: [
-							{
-								...emptyPerGuideRow(),
-								[ENUM_GUIDE_PRICE_ROW_FIELD.COST]: -1,
-								[ENUM_GUIDE_PRICE_ROW_FIELD.MARKUP]: {
-									typ: "percentage",
-									value: "   "
-								}
-							}
-						]
-					}
-				})
-			})
-		);
-
-		expect(result.success).toBe(false);
-		if (!result.success) {
-			const sectionKeys = result.error.issues.map(
-				(issue) => issue.path[0]
-			);
-			expect(sectionKeys).toContain(ENUM_GUIDE_FORM_SECTION.PRICING);
-			expect(sectionKeys).not.toContain(ENUM_GUIDE_FORM_SECTION.GUIDES);
-		}
-	});
-
-	it("allows adding a second guide with auto-synced empty price-by-language rows", () => {
-		const guidesList = [
-			validGuide(),
-			validGuide({
-				guide_type: ENUM_GUIDE_TYPE.ACCOMPANYING,
-				duration_days: 2
-			})
-		];
-
-		const result = GUIDE_EDIT_SCHEMA.safeParse(
-			buildGuideEditForm({
-				guidesList,
-				pricing: basePricing({
-					[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: true,
-					[ENUM_GUIDE_PRICING_FIELD.EXPENSES]:
-						syncedPriceByLanguageExpenses(guidesList.length)
-				})
-			})
-		);
-
-		expect(result.success).toBe(true);
-	});
-
-	it("allows empty per-guide expense rows after sync (no price_by_language)", () => {
-		const guidesList = [validGuide(), validGuide({ duration_days: 3 })];
-
-		const result = GUIDE_EDIT_SCHEMA.safeParse(
-			buildGuideEditForm({
-				guidesList,
-				pricing: basePricing({
-					[ENUM_GUIDE_PRICING_FIELD.PRICE_BY_LANGUAGE]: false,
-					[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: syncedPerGuideExpenses(
-						guidesList.length
-					)
-				})
-			})
-		);
-
-		expect(result.success).toBe(true);
-	});
-
-	it("allows valid guides with individual/per_guide and null expenses", () => {
-		const result = GUIDE_EDIT_SCHEMA.safeParse(
-			buildGuideEditForm({
-				guidesList: [validGuide(), validGuide({ duration_days: 2 })],
-				pricing: basePricing({
-					[ENUM_GUIDE_PRICING_FIELD.EXPENSES]: null
-				})
-			})
-		);
-
-		expect(result.success).toBe(true);
+describe("GUIDE_EDIT_SCHEMA", () => {
+	it("reports the pricing section, not guides, for a pricing error", () => {
+		const result = GUIDE_EDIT_SCHEMA.safeParse({
+			[ENUM_GUIDE_FORM_SECTION.GUIDES]: baseGuides(),
+			[ENUM_GUIDE_FORM_SECTION.PRICING]: basePricing({
+				[ENUM_GUIDE_PRICING_FIELD.ROWS]: [priceRow("", [])]
+			}),
+			[ENUM_GUIDE_FORM_SECTION.NAME]: "Guide event",
+			[ENUM_GUIDE_FORM_SECTION.DAY]: 1,
+			[ENUM_GUIDE_FORM_SECTION.POSITION]: 0
+		});
+		expect(issuePaths(result)).toEqual(["pricing.rows.0.lang"]);
 	});
 });

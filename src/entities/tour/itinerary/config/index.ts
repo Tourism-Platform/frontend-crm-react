@@ -7,4 +7,3 @@ export * from "./activity-type.config";
 export * from "./accommodation-amenities.config";
 export * from "./guide-type.config";
 export * from "./guide-charge.config";
-export * from "./guide-tiers.config";

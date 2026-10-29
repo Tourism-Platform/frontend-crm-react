@@ -10,6 +10,7 @@ export * from "./event-kind.converters";
 export * from "./event-board-type.converters";
 export * from "./event-translation.converters";
 export * from "./event/common/fees.converters";
+export * from "./event/common/extra-costs.converters";
 export * from "./event/transfer/transfer-type.converters";
 export * from "./event/transfer/transportation-pricing.converters";
 export * from "./event/accommodation/accommodation-amenity.converters";

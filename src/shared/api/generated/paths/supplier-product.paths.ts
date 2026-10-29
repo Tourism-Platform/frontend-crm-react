@@ -148,46 +148,6 @@ export const SUPPLIER_PRODUCT_PATHS = {
 			method: "DELETE",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
-	uploadProductImages: (supplierId: string, productId: string) =>
-		({
-			url: `/supplier/${supplierId}/product/${productId}/images`,
-			method: "POST",
-			_types: {} as {
-				body: BodyUploadProductImagesSupplierSupplierIdProductProductIdImagesPost;
-				query: void;
-				response: SupplierProductImageModel[];
-			}
-		}) as const,
-	listProductImages: (supplierId: string, productId: string) =>
-		({
-			url: `/supplier/${supplierId}/product/${productId}/images/all`,
-			method: "GET",
-			_types: {} as {
-				body: void;
-				query: { skip?: number; limit?: number };
-				response: SupplierProductImageModel[];
-			}
-		}) as const,
-	deleteProductImage: (
-		supplierId: string,
-		productId: string,
-		imageId: string
-	) =>
-		({
-			url: `/supplier/${supplierId}/product/${productId}/images/${imageId}`,
-			method: "DELETE",
-			_types: {} as { body: void; query: void; response: void }
-		}) as const,
-	setPrimaryProductImage: (
-		supplierId: string,
-		productId: string,
-		imageId: string
-	) =>
-		({
-			url: `/supplier/${supplierId}/product/${productId}/images/${imageId}/set-primary`,
-			method: "PATCH",
-			_types: {} as { body: void; query: void; response: void }
-		}) as const,
 	listProductLinks: (supplierId: string, productId: string) =>
 		({
 			url: `/supplier/${supplierId}/product/${productId}/links`,
@@ -277,6 +237,46 @@ export const SUPPLIER_PRODUCT_PATHS = {
 		({
 			url: `/supplier/${supplierId}/product/${productId}/variant/${variantId}`,
 			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	uploadProductImages: (supplierId: string, productId: string) =>
+		({
+			url: `/supplier/${supplierId}/product/${productId}/images`,
+			method: "POST",
+			_types: {} as {
+				body: BodyUploadProductImagesSupplierSupplierIdProductProductIdImagesPost;
+				query: void;
+				response: SupplierProductImageModel[];
+			}
+		}) as const,
+	listProductImages: (supplierId: string, productId: string) =>
+		({
+			url: `/supplier/${supplierId}/product/${productId}/images/all`,
+			method: "GET",
+			_types: {} as {
+				body: void;
+				query: { skip?: number; limit?: number };
+				response: SupplierProductImageModel[];
+			}
+		}) as const,
+	deleteProductImage: (
+		supplierId: string,
+		productId: string,
+		imageId: string
+	) =>
+		({
+			url: `/supplier/${supplierId}/product/${productId}/images/${imageId}`,
+			method: "DELETE",
+			_types: {} as { body: void; query: void; response: void }
+		}) as const,
+	setPrimaryProductImage: (
+		supplierId: string,
+		productId: string,
+		imageId: string
+	) =>
+		({
+			url: `/supplier/${supplierId}/product/${productId}/images/${imageId}/set-primary`,
+			method: "PATCH",
 			_types: {} as { body: void; query: void; response: void }
 		}) as const,
 	uploadNodeImages: (

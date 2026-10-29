@@ -6,7 +6,7 @@ export const BOOKING_PASSENGER_FILES_PATHS = {
 		({
 			url: `/booking/order/pax/file/${fileId}`,
 			method: "GET",
-			_types: {} as { body: void; query: void; response: string }
+			_types: {} as { body: void; query: void; response: void }
 		}) as const,
 	removeFile: (fileId: string) =>
 		({

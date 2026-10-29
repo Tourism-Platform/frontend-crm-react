@@ -11,25 +11,13 @@ import type {
 // Сгенерировано скриптом scripts/generate-api-paths.ts
 
 export const TOUR_CATALOG_PATHS = {
-	listAgencyCatalog: {
-		url: "/tour/catalog/agency",
+	suggestLocations: {
+		url: "/tour/catalog/suggest",
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: {
-				sort?: TourCatalogSort | null;
-				q?: string | null;
-				categories?: TourCategory[] | null;
-				duration_days_min?: number | null;
-				duration_days_max?: number | null;
-				city?: string[] | null;
-				country?: string[] | null;
-				tour_lang?: LanguageCode[] | null;
-				read_lang?: LanguageCode;
-				skip?: number;
-				limit?: number;
-			};
-			response: PublicTourCatalogListResponse;
+			query: { q: string; read_lang?: LanguageCode; limit?: number };
+			response: LocationSuggestionSchema[];
 		}
 	} as const,
 	listFilters: {
@@ -62,13 +50,25 @@ export const TOUR_CATALOG_PATHS = {
 			response: PublicTourCatalogListResponse;
 		}
 	} as const,
-	suggestLocations: {
-		url: "/tour/catalog/suggest",
+	listAgencyCatalog: {
+		url: "/tour/catalog/agency",
 		method: "GET",
 		_types: {} as {
 			body: void;
-			query: { q: string; read_lang?: LanguageCode; limit?: number };
-			response: LocationSuggestionSchema[];
+			query: {
+				sort?: TourCatalogSort | null;
+				q?: string | null;
+				categories?: TourCategory[] | null;
+				duration_days_min?: number | null;
+				duration_days_max?: number | null;
+				city?: string[] | null;
+				country?: string[] | null;
+				tour_lang?: LanguageCode[] | null;
+				read_lang?: LanguageCode;
+				skip?: number;
+				limit?: number;
+			};
+			response: PublicTourCatalogListResponse;
 		}
 	} as const
 } as const;
