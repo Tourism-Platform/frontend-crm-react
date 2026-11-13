@@ -23,7 +23,7 @@ export const useInheritedProductSeasonRates = () => {
 	);
 
 	return {
-		rows: event?.productSeasonRates ?? [],
+		rates: event?.productSeasonRates ?? [],
 		isLoading,
 		isError
 	};

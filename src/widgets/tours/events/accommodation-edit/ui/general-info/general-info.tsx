@@ -26,7 +26,6 @@ import {
 	EventPolicyWarnings,
 	EventPoolControls,
 	EventProductLinkControls,
-	InheritedProductSeasonRates,
 	type TEventPoolUiProps
 } from "@/features/tours";
 
@@ -107,7 +106,6 @@ const GeneralInfoBase: FC<TSlotProps & TEventPoolUiProps> = ({
 					supplyId={supplyId}
 					onAfterChange={handleOverrideChange}
 				/>
-				{isInherited ? <InheritedProductSeasonRates /> : null}
 			</div>
 			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
 				{PROPERTIES_LIST(geoProps).map(({ key, ...item }) => (

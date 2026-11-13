@@ -6,11 +6,13 @@ import { useTranslation } from "react-i18next";
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
+import { useValueToTranslateLabel } from "@/shared/utils";
 
 import {
 	ENUM_OPERATOR_CURRENCY_RATE_FILTER,
 	type IOperatorCurrencyRateFilters,
-	filterOperatorCurrencyRates,
+	OPERATOR_CURRENCY_RATE_SCOPE_LABELS,
+	paginateOperatorCurrencyRates,
 	pickCurrencyOptions,
 	useGetOperatorCurrencyRatesQuery
 } from "@/entities/commission";
@@ -32,42 +34,61 @@ const CurrencyBase: FC = () => {
 	const { watch, setValue, control } = form;
 
 	const filters = watch();
-	const { fromCurrency } = filters;
+	const { fromCurrency, toCurrency, scope } = filters;
 
 	// Новый фильтр — снова с первой страницы
 	useEffect(() => {
 		setValue("page", 1);
-	}, [fromCurrency, setValue]);
+	}, [fromCurrency, toCurrency, scope, setValue]);
 
 	const handleResetFilters = useCallback(() => {
 		setValue(ENUM_OPERATOR_CURRENCY_RATE_FILTER.FROM_CURRENCY, undefined);
+		setValue(ENUM_OPERATOR_CURRENCY_RATE_FILTER.TO_CURRENCY, undefined);
+		setValue(ENUM_OPERATOR_CURRENCY_RATE_FILTER.SCOPE, undefined);
 	}, [setValue]);
 
+	// Фильтры — на бэке; без фильтров аргумент `{}` — тот же кеш, что у allCurrencyRates
 	const {
 		data: currencyRates,
 		isLoading,
 		isFetching
-	} = useGetOperatorCurrencyRatesQuery();
+	} = useGetOperatorCurrencyRatesQuery({
+		...(fromCurrency && { fromCurrency: [fromCurrency] }),
+		...(toCurrency && { toCurrency: [toCurrency] }),
+		...(scope && { scope })
+	});
+	// Опции валют — из полного списка, иначе после выбора останется одна валюта
+	const { data: allCurrencyRates } = useGetOperatorCurrencyRatesQuery({});
+	const scopeOptions = useValueToTranslateLabel(
+		OPERATOR_CURRENCY_RATE_SCOPE_LABELS
+	);
 
-	// Бэк отдаёт весь список — фильтр и пагинация на клиенте
+	// Пагинации на бэке нет — страница на клиенте
 	const { data: currencyRatesData, total: totalCount } = useMemo(
 		() =>
-			filterOperatorCurrencyRates(currencyRates ?? [], {
+			paginateOperatorCurrencyRates(currencyRates ?? [], {
 				page: filters.page,
-				limit: filters.limit,
-				fromCurrency
+				limit: filters.limit
 			}),
-		[currencyRates, filters.page, filters.limit, fromCurrency]
+		[currencyRates, filters.page, filters.limit]
 	);
 
 	const filtersList = useMemo(
 		() =>
-			CURRENCY_RATE_FILTERS_LIST(
-				pickCurrencyOptions(
-					(currencyRates ?? []).map((rate) => rate.from_currency)
-				)
-			),
-		[currencyRates]
+			CURRENCY_RATE_FILTERS_LIST({
+				[ENUM_OPERATOR_CURRENCY_RATE_FILTER.FROM_CURRENCY]:
+					pickCurrencyOptions(
+						(allCurrencyRates ?? []).map(
+							(rate) => rate.from_currency
+						)
+					),
+				[ENUM_OPERATOR_CURRENCY_RATE_FILTER.TO_CURRENCY]:
+					pickCurrencyOptions(
+						(allCurrencyRates ?? []).map((rate) => rate.to_currency)
+					),
+				[ENUM_OPERATOR_CURRENCY_RATE_FILTER.SCOPE]: scopeOptions
+			}),
+		[allCurrencyRates, scopeOptions]
 	);
 
 	const columns = useMemo(() => OPERATOR_CURRENCY_RATE_COLUMNS(t), [t]);
@@ -106,7 +127,7 @@ const CurrencyBase: FC = () => {
 					{t("currency.currency_rate.description")}
 				</p>
 				<Form {...form}>
-					<div className="flex flex-wrap items-center gap-4">
+					<div className="flex flex-wrap items-center gap-3">
 						{filtersList.map(({ key, ...item }) => (
 							<CustomField
 								hideLabel
@@ -114,7 +135,7 @@ const CurrencyBase: FC = () => {
 								control={control}
 								name={key}
 								t={t}
-								className="w-full sm:w-72"
+								className="w-full sm:w-52"
 								{...item}
 							/>
 						))}

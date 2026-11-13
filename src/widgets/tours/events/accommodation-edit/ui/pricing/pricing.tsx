@@ -18,6 +18,8 @@ import {
 	useEventEditIds
 } from "@/entities/tour";
 
+import { InheritedProductSeasonRates } from "@/features/tours";
+
 import { useIsInheritedProduct } from "../../../model/use-is-inherited-product";
 import { InheritedLockBanner } from "../../../ui/inherited-lock-banner";
 import {
@@ -123,6 +125,7 @@ const PricingBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 					</div>
 				) : null}
 			</div>
+			{isInherited ? <InheritedProductSeasonRates /> : null}
 		</div>
 	);
 };

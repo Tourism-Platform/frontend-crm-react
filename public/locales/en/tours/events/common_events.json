@@ -257,15 +257,29 @@
 		"title": "Seasonal product rates",
 		"empty": "No seasonal rates on this product",
 		"range": "{{from}} – {{to}}",
+		"table": {
+			"room": "Room",
+			"period": "Period",
+			"price": "Price",
+			"fees": "Fees and extra costs"
+		},
+		"filters": {
+			"all": "All"
+		},
 		"charge": {
-			"label": "Charge type",
-			"fixed": "Whole stay",
-			"per_duration": "Per night"
+			"fixed": "whole stay",
+			"per_duration": "per night"
+		},
+		"extra_cost_modes": {
+			"trip": "whole stay",
+			"per_day": "per night",
+			"per_person": "per person",
+			"per_person_day": "per person per night"
 		},
 		"fees": {
-			"title": "Fees",
-			"empty": "No fees",
-			"line": "{{name}}: {{amount}}"
+			"title": "Fee",
+			"line": "{{name}}: {{amount}}",
+			"line_mode": "{{name}}: {{amount}} {{mode}}"
 		}
 	},
 	"revision": {

@@ -258,6 +258,12 @@
 		}
 	},
 	"finance": {
+		"currencyRates": {
+			"scopes": {
+				"all": "Все валюты",
+				"accepted": "Только принимаемые"
+			}
+		},
 		"invoice": {
 			"statuses": {
 				"draft": "Черновик",

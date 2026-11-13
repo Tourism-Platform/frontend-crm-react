@@ -258,6 +258,12 @@
 		}
 	},
 	"finance": {
+		"currencyRates": {
+			"scopes": {
+				"all": "All currencies",
+				"accepted": "Accepted only"
+			}
+		},
 		"invoice": {
 			"statuses": {
 				"draft": "Draft",

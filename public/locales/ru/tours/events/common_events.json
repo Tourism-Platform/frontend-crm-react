@@ -259,15 +259,29 @@
 		"title": "Сезонные тарифы продукта",
 		"empty": "У продукта нет сезонных тарифов",
 		"range": "{{from}} – {{to}}",
+		"table": {
+			"room": "Номер",
+			"period": "Период",
+			"price": "Цена",
+			"fees": "Сборы и доп. расходы"
+		},
+		"filters": {
+			"all": "Все"
+		},
 		"charge": {
-			"label": "Тип начисления",
-			"fixed": "За весь срок",
-			"per_duration": "За ночь"
+			"fixed": "за весь срок",
+			"per_duration": "за ночь"
+		},
+		"extra_cost_modes": {
+			"trip": "за весь срок",
+			"per_day": "за ночь",
+			"per_person": "за человека",
+			"per_person_day": "за человека за ночь"
 		},
 		"fees": {
-			"title": "Сборы",
-			"empty": "Без сборов",
-			"line": "{{name}}: {{amount}}"
+			"title": "Сбор",
+			"line": "{{name}}: {{amount}}",
+			"line_mode": "{{name}}: {{amount}} {{mode}}"
 		}
 	},
 	"revision": {

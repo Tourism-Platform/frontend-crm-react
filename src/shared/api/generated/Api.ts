@@ -396,6 +396,16 @@ export enum FxSource {
 }
 
 /**
+ * FxRateScope
+ * Which currencies a rate listing walks: every supported currency, or only
+ * the operator's accepted ones.
+ */
+export enum FxRateScope {
+	All = "all",
+	Accepted = "accepted"
+}
+
+/**
  * ExpenseType
  * Enumeration for different types of commissions.
  */
@@ -8545,8 +8555,8 @@ export interface OperatorFinancialSettingsUpdate {
 
 /**
  * OperatorFxRateRead
- * One accepted currency against the operator's base currency: the bank's
- * rate and the rate a client is charged at once the margin is on.
+ * One currency pair: the bank's rate and the rate a client is charged at
+ * once the margin is on.
  */
 export interface OperatorFxRateReadOutput {
 	from_currency: Currency;
@@ -21466,4 +21476,17 @@ export interface DeletePermissionGroupAuthPermissionGroupGroupIdDeleteParams {
 	 * @format uuid
 	 */
 	groupId: string;
+}
+
+export interface ListOperatorRatesFxOperatorRateGetParams {
+	/** From Currency */
+	from_currency?: Currency[] | null;
+	/** To Currency */
+	to_currency?: Currency[] | null;
+	/**
+	 * Which currencies a rate listing walks: every supported currency, or only
+	 * the operator's accepted ones.
+	 * @default "all"
+	 */
+	scope?: FxRateScope;
 }

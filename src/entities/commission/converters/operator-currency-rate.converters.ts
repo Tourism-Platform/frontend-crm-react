@@ -1,11 +1,12 @@
-import type { IPaginationResponse } from "@/shared/types";
+import type { IPaginationRequest, IPaginationResponse } from "@/shared/types";
 
 import type {
 	IOperatorCurrencyRate,
-	IOperatorCurrencyRateFilters
+	IOperatorCurrencyRateQuery
 } from "../types";
 import type {
 	TOperatorCurrencyRateBackend,
+	TOperatorCurrencyRateQuery,
 	TOperatorCurrencyRateResponse
 } from "../types/operator-currency-rate-backend.interface";
 
@@ -26,18 +27,27 @@ export const mapOperatorCurrencyRateListToFrontend = (
 	data: TOperatorCurrencyRateResponse
 ): IOperatorCurrencyRate[] => data.map(mapOperatorCurrencyRateToFrontend);
 
-/** Бэк отдаёт весь список без фильтров и пагинации — считаем на клиенте */
-export const filterOperatorCurrencyRates = (
+export const mapOperatorCurrencyRateQueryToBackend = (
+	query: IOperatorCurrencyRateQuery
+): TOperatorCurrencyRateQuery => ({
+	...(!!query.fromCurrency?.length && {
+		from_currency: currencyConverter.toMany(query.fromCurrency)
+	}),
+	...(!!query.toCurrency?.length && {
+		to_currency: currencyConverter.toMany(query.toCurrency)
+	}),
+	...(query.scope && { scope: query.scope })
+});
+
+/** Бэк фильтрует по валютам, но не пагинирует — страницу режем на клиенте */
+export const paginateOperatorCurrencyRates = (
 	rates: IOperatorCurrencyRate[],
-	{ page, limit, fromCurrency }: IOperatorCurrencyRateFilters
+	{ page, limit }: IPaginationRequest
 ): IPaginationResponse<IOperatorCurrencyRate> => {
-	const filtered = rates.filter(
-		(rate) => !fromCurrency || rate.from_currency === fromCurrency
-	);
 	const start = (page - 1) * limit;
 
 	return {
-		data: filtered.slice(start, start + limit),
-		total: filtered.length
+		data: rates.slice(start, start + limit),
+		total: rates.length
 	};
 };

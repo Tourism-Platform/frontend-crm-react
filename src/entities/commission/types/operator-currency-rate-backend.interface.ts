@@ -5,3 +5,6 @@ export type TOperatorCurrencyRateResponse =
 
 export type TOperatorCurrencyRateBackend =
 	TOperatorCurrencyRateResponse[number];
+
+export type TOperatorCurrencyRateQuery =
+	typeof FX_PATHS.listOperatorRates._types.query;

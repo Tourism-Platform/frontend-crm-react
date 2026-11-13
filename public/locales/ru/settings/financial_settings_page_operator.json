@@ -242,6 +242,14 @@
 				"label": "Из валюты",
 				"placeholder": "Из: любая валюта"
 			},
+			"to_currency": {
+				"label": "В валюту",
+				"placeholder": "В: любая валюта"
+			},
+			"scope": {
+				"label": "Охват валют",
+				"placeholder": "Охват: все валюты"
+			},
 			"reset": "Сбросить фильтры"
 		},
 		"currency_rate": {

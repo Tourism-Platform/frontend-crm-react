@@ -1,7 +1,7 @@
 import type { ENUM_LANGUAGES_TYPE } from "@/shared/config";
 
 import type {
-	IProductSeasonRateRow,
+	IProductSeasonRate,
 	TAccommodationEditSchema
 } from "./accommodation";
 import type { TActivityEditSchema } from "./activity";
@@ -125,7 +125,7 @@ export interface IGetTourEventResult {
 	/** Resolved option row id — URL param for multi, `event.id` for single. */
 	eventOptionId?: string;
 	/** Сезонные цены продукта (housing с per-room) — для policy-check */
-	productSeasonRates: IProductSeasonRateRow[];
+	productSeasonRates: IProductSeasonRate[];
 }
 
 export type TTourEventUpdate = Partial<

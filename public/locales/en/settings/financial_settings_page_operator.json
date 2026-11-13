@@ -242,6 +242,14 @@
 				"label": "From currency",
 				"placeholder": "From: any currency"
 			},
+			"to_currency": {
+				"label": "To currency",
+				"placeholder": "To: any currency"
+			},
+			"scope": {
+				"label": "Currency scope",
+				"placeholder": "Scope: all currencies"
+			},
 			"reset": "Reset filters"
 		},
 		"currency_rate": {

@@ -6,11 +6,11 @@ import { ProductSeasonRates } from "./product-season-rates";
 
 /** Сезонные цены продукта, к которому привязано событие (данные берёт сам) */
 export const InheritedProductSeasonRates: FC = () => {
-	const { rows, isLoading } = useInheritedProductSeasonRates();
+	const { rates, isLoading } = useInheritedProductSeasonRates();
 
-	if (isLoading || !rows.length) {
+	if (isLoading || !rates.length) {
 		return null;
 	}
 
-	return <ProductSeasonRates rows={rows} />;
+	return <ProductSeasonRates rates={rates} />;
 };
