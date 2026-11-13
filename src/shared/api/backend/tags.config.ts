@@ -34,3 +34,11 @@ export const ENUM_API_TAGS = {
 	SUPPLIERS: "Suppliers",
 	SUPPLIER_PRODUCTS: "Supplier Products"
 } as const;
+
+const { OPERATOR, ...ROOT_API_TAGS } = ENUM_API_TAGS;
+
+/** tagTypes для createApi: все теги, включая вложенные OPERATOR.* — без ручных списков */
+export const API_TAG_TYPES = [
+	...Object.values(ROOT_API_TAGS),
+	...Object.values(OPERATOR)
+];

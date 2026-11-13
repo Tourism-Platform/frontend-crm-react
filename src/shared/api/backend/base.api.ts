@@ -12,7 +12,7 @@ import { serializeParams } from "@/shared/helpers";
 
 import { sessionExpired } from "@/entities/auth/model/session-expired.action";
 
-import { ENUM_API_TAGS } from "./tags.config";
+import { API_TAG_TYPES } from "./tags.config";
 
 const SESSION_EXPIRED_401_URLS = new Set<string>([
 	AUTH_PATHS.getMyAccount.url,
@@ -49,27 +49,5 @@ export const baseApi = createApi({
 	baseQuery: baseQueryWithAuthGuard,
 	reducerPath: "baseApi",
 	endpoints: () => ({}),
-	tagTypes: [
-		ENUM_API_TAGS.USER,
-		ENUM_API_TAGS.AUTH_ACCOUNT,
-		ENUM_API_TAGS.BUSINESS,
-		ENUM_API_TAGS.COMMISSION,
-		ENUM_API_TAGS.TOURS,
-		ENUM_API_TAGS.FINANCE_RECONCILIATIONS,
-		ENUM_API_TAGS.FINANCE_INVOICES,
-		ENUM_API_TAGS.FINANCE_CLIENT_PAYMENTS,
-		ENUM_API_TAGS.FINANCE_SUPPLIER_PAYMENTS,
-		ENUM_API_TAGS.TOUR_ACTIVITY_LOG,
-		ENUM_API_TAGS.BOOKING_ORDERS,
-		ENUM_API_TAGS.BOOKING_REVISION,
-		ENUM_API_TAGS.TOURS_CATALOG,
-		ENUM_API_TAGS.TOURS_EVENTS,
-		ENUM_API_TAGS.TOUR_POLICY_CHECK,
-		ENUM_API_TAGS.EVENT_LIBRARY,
-		ENUM_API_TAGS.LANDING_IMAGES,
-		ENUM_API_TAGS.EVENT_IMAGES,
-		ENUM_API_TAGS.EVENT_LIBRARY_IMAGES,
-		ENUM_API_TAGS.SUPPLIERS,
-		ENUM_API_TAGS.SUPPLIER_PRODUCTS
-	]
+	tagTypes: API_TAG_TYPES
 });

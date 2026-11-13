@@ -1,3 +1,5 @@
+// @vitest-environment node
+// generateHTML из @tiptap/html (серверная сборка) работает только без DOM
 import { describe, expect, it } from "vitest";
 
 import { tiptapToHtml } from "./tiptap-to-html";

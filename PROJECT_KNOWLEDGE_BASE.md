@@ -125,6 +125,12 @@
   - `'@typescript-eslint/naming-convention'`: Enforces `I`/`T`/`ENUM_` prefixes.
 - **Filename Convention**: `kebab-case` maps to resource type (e.g., `user.service.ts`).
 
+## 11.1. Testing, CI & Monitoring
+
+- **Testing & CI**: Vitest (jsdom, per-file MSW via `setupMswServer`, `trackRequests`), Playwright smoke on MSW, CI jobs — see [docs/testing.md](docs/testing.md).
+- **Errors & Monitoring**: post-deploy reload (`vite:preloadError`), `sessionExpired` full sign-out, `monitoring` port over Sentry — see [docs/errors-monitoring.md](docs/errors-monitoring.md).
+- **MSW mocks**: see [docs/msw-mocks.md](docs/msw-mocks.md).
+
 ## 12. Project Invariants
 
 - ✅ **Strict FSD Compliance**: No bypassing layer rules.

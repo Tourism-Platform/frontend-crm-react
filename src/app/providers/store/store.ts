@@ -3,8 +3,11 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { baseApi, documentGeneratorApi } from "@/shared/api";
 
 import { authApi } from "@/entities/auth/api/auth.api";
+import { authMonitoringListener } from "@/entities/auth/model/auth-monitoring.listener";
 import { authSessionListener } from "@/entities/auth/model/auth-session.listener";
 import { userSlice } from "@/entities/user";
+
+import { apiErrorMonitoringMiddleware } from "./api-error-monitoring.middleware";
 
 const rootReducer = combineReducers({
 	[baseApi.reducerPath]: baseApi.reducer,
@@ -18,11 +21,15 @@ export const setupStore = () => {
 		reducer: rootReducer,
 		middleware: (getDefaultMiddleware) =>
 			getDefaultMiddleware()
-				.prepend(authSessionListener.middleware)
+				.prepend(
+					authSessionListener.middleware,
+					authMonitoringListener.middleware
+				)
 				.concat(
 					baseApi.middleware,
 					authApi.middleware,
-					documentGeneratorApi.middleware
+					documentGeneratorApi.middleware,
+					apiErrorMonitoringMiddleware
 				)
 	});
 };

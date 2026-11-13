@@ -1,0 +1,124 @@
+name: CI
+
+# Проверки качества и тесты. Сборка образа (docker-build.yml) и деплой
+# (deploy-dispatch.yml → tour-deploy) работают независимо от этого workflow
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+# Новый пуш в ту же ветку/PR отменяет устаревший прогон
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
+
+# Job'ы идут на разных раннерах параллельно: Vitest и Playwright не делят CPU и порты.
+# Секреты не нужны: фиктивные VITE_* заданы в vitest.config.ts и playwright.config.ts,
+# Sentry в тестах выключен, без SENTRY_AUTH_TOKEN плагин source maps отключён
+jobs:
+    quality:
+        name: Types, lint, format
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: TypeScript
+              run: npx tsc -b
+
+            - name: ESLint
+              run: npm run lint
+
+            - name: Prettier
+              run: npm run format:check
+
+    unit:
+        name: Vitest
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Unit, integration and component tests
+              run: npm test
+
+    e2e:
+        name: Playwright
+        runs-on: ubuntu-latest
+        timeout-minutes: 20
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+                  cache: npm
+
+            - name: Install dependencies
+              run: npm ci
+
+            # Браузер — той версии, что требует установленный @playwright/test
+            - name: Get Playwright version
+              id: playwright
+              run: echo "version=$(node -p "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+
+            - name: Cache Playwright browsers
+              id: playwright-cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/ms-playwright
+                  key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}
+
+            # Тесты идут в headless — полный Chromium не нужен
+            - name: Install Playwright browser
+              if: steps.playwright-cache.outputs.cache-hit != 'true'
+              run: npx playwright install --with-deps --only-shell chromium
+
+            # Системные библиотеки в кеш не входят — ставим их отдельно
+            - name: Install Playwright system dependencies
+              if: steps.playwright-cache.outputs.cache-hit == 'true'
+              run: npx playwright install-deps chromium
+
+            - name: E2E tests
+              run: npm run test:e2e
+
+            # Отчёт и trace — только при падении; данные в них из моков MSW, секретов нет
+            - name: Upload Playwright report
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: |
+                      playwright-report/
+                      test-results/
+                  retention-days: 7

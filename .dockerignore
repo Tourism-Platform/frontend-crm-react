@@ -4,17 +4,24 @@ dist/
 .github/
 .cursor/
 .vscode/
+.idea/
+.DS_Store
 
 .env
 .env.*
 !.env.example
+*.local
 
 *.log
 stats.html
-agent.md
-PROJECT_KNOWLEDGE_BASE.md
-README.md
-README copy.md
+coverage/
+playwright-report/
+test-results/
+.playwright-mcp/
+
+# Заметки и документация — в сборке не нужны
+*.md
+docs/
 
 Dockerfile
 docker-compose.yml

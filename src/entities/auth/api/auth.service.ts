@@ -63,7 +63,12 @@ export const AuthService = baseApi.injectEndpoints({
 				return fetchAuthAccount(baseQuery);
 			},
 			async onQueryStarted(_, { dispatch, queryFulfilled }) {
-				const { data: account } = await queryFulfilled;
+				// Ошибка входа доходит до формы через unwrap() и состояние мутации;
+				// здесь только эффекты успеха — без catch rejection был бы необработанным
+				const result = await queryFulfilled.catch(() => null);
+				if (!result) return;
+
+				const { data: account } = result;
 				resetAllApiState(dispatch);
 				// Аккаунт уже получен — ProtectedRoute редиректит сразу, без повторного /me
 				dispatch(
@@ -84,7 +89,11 @@ export const AuthService = baseApi.injectEndpoints({
 				...AUTH_PATHS.logoutUser
 			}),
 			async onQueryStarted(_, { dispatch, queryFulfilled }) {
-				await queryFulfilled;
+				// Ошибка выхода — у вызывающего через unwrap(); кэш сбрасываем только при успехе.
+				// Без catch rejection необработанный: слушатель sessionExpired зовёт выход, когда /auth/logout уже 401
+				const result = await queryFulfilled.catch(() => null);
+				if (!result) return;
+
 				resetAllApiState(dispatch);
 			}
 		}),

@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1
+# ^ BuildKit: нужен для --mount=type=secret (токен Sentry не попадает в слои)
+
 # Stage 1: Build
 FROM node:22-alpine AS builder
 
@@ -10,17 +13,25 @@ RUN npm ci
 # Копирование исходного кода
 COPY . .
 
-# Проброс переменных окружения для Vite (встраиваются в бандл при сборке)
+# Build args (Vite вшивает VITE_* в бандл на этапе сборки). ARG виден в RUN как
+# переменная окружения, поэтому ENV не нужен: значения не остаются в слоях.
+# Всё VITE_* попадает в JS-бандл и публично — настоящих секретов здесь быть не должно
 ARG VITE_API_URL
 ARG VITE_ENABLE_MSW=false
 ARG VITE_APP_ENV=prod
+# Мониторинг: DSN публичный, release = тег образа из деплоя
+ARG VITE_SENTRY_DSN
+ARG VITE_APP_RELEASE
+# Не секреты: куда грузить source maps (сам токен — только через --secret)
+ARG SENTRY_ORG
+ARG SENTRY_PROJECT
 
-ENV VITE_API_URL=$VITE_API_URL
-ENV VITE_ENABLE_MSW=$VITE_ENABLE_MSW
-ENV VITE_APP_ENV=$VITE_APP_ENV
-
-# Собираем только Vite (без lint/format — они для CI отдельно)
-RUN npx vite build
+# Тайпчек и сборка (lint/format/тесты — в CI отдельно).
+# Токен Sentry монтируется только на время этого RUN и не остаётся в образе;
+# без секрета плагин выключен и source maps не генерируются.
+RUN --mount=type=secret,id=sentry_token \
+	export SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_token 2>/dev/null || true)" && \
+	npx tsc -b && npx vite build
 
 # Stage 2: Production Server (Nginx)
 FROM nginx:alpine

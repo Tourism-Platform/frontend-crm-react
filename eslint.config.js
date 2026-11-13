@@ -54,6 +54,10 @@ const RESTRICT = {
     group: ['@/shared/api', '@/shared/api/**'],
     message: 'Converters must not import shared/api. Use T*Backend / ENUM_*_BACKEND from ../types (shared: @/shared/types).',
   },
+  sentry: {
+    group: ['@sentry/*'],
+    message: 'Use monitoring from @/shared/lib — Sentry SDK is only allowed in src/shared/lib/monitoring',
+  },
 }
 
 const RAW_API_PATHS = ['@/shared/api', '@/shared/api/generated'].map((name) => ({
@@ -62,12 +66,13 @@ const RAW_API_PATHS = ['@/shared/api', '@/shared/api/generated'].map((name) => (
   message: RAW_API_MESSAGE,
 }))
 
-const restrictImports = (groups, { rawApi = true } = {}) => ({
+// sentry добавляется во все зоны: SDK импортирует только адаптер src/shared/lib/monitoring
+const restrictImports = (groups, { rawApi = true, sentry = true } = {}) => ({
   'no-restricted-imports': [
     'error',
     {
       ...(rawApi && { paths: RAW_API_PATHS }),
-      patterns: groups.map((key) => RESTRICT[key]),
+      patterns: [...groups, ...(sentry ? ['sentry'] : [])].map((key) => RESTRICT[key]),
     },
   ],
 })
@@ -83,13 +88,13 @@ const UI_FILES = [
 const TEST_FILES = ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}']
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules', 'scripts']),
+  globalIgnores(['dist', 'node_modules', 'scripts', 'coverage', 'playwright-report', 'test-results', 'public/mockServiceWorker.js']),
 
 
   // Основная конфигурация для исходного кода
   {
     files: ['**/*.{ts,tsx}'],
-    ignores: ['**/*.config.{ts,js}', 'vite.config.ts', 'tailwind.config.ts'],
+    ignores: ['**/*.config.{ts,js}', 'vite.config.ts', 'tailwind.config.ts', 'e2e/**'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
@@ -281,6 +286,8 @@ export default defineConfig([
         { type: 'shared', pattern: 'src/shared/**/*' },
       ],
       'boundaries/ignore': [
+        // тестовая инфраструктура (setup, track-requests) — как и сами тесты
+        'src/app/test/**',
         '**/*.test.{ts,tsx}',
         '**/*.spec.{ts,tsx}',
         '**/*.stories.{ts,tsx}',
@@ -341,6 +348,12 @@ export default defineConfig([
     rules: restrictImports(['entityConverters', 'sharedConverters', 'mapperNames'], { rawApi: false }),
   },
 
+  // мониторинг: единственное место, где разрешён Sentry SDK
+  {
+    files: ['src/shared/lib/monitoring/**/*.{ts,tsx}'],
+    rules: restrictImports(['entityConverters', 'sharedConverters', 'mapperNames', 'rawApiFile', 'paths', 'pathNames'], { sentry: false }),
+  },
+
   // тесты могут звать converters напрямую, но сырые Api.ts — нет
   {
     files: TEST_FILES,
@@ -380,6 +393,25 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/naming-convention': 'off',
       '@typescript-eslint/no-explicit-any': 'off', 
+    },
+  },
+
+  // e2e (Playwright): Node-окружение, свой tsconfig
+  {
+    files: ['e2e/**/*.ts'],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.node,
+      parser: tseslint.parser,
+      parserOptions: {
+        project: './tsconfig.e2e.json',
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    plugins: { unicorn },
+    rules: {
+      'unicorn/filename-case': ['error', { case: 'kebabCase' }],
     },
   },
 

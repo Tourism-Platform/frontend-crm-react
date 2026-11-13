@@ -1,7 +1,6 @@
-// @vitest-environment jsdom
 import { DndContext } from "@dnd-kit/core";
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 import type { IOptionData } from "../../model";
 
@@ -21,8 +20,6 @@ vi.mock("../droppable-day-container", () => ({
 		<div data-testid={`day-container-${day}`} />
 	)
 }));
-
-afterEach(cleanup);
 
 const data: IOptionData = {
 	tripDetails: [],

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { ENUM_LAYOUT } from "@/shared/config";
+import { wrapCreateBrowserRouter } from "@/shared/lib";
 
 import {
 	RootAgencyLayout,
@@ -12,7 +13,7 @@ import {
 import { buildLayoutRoutes } from "./build-nested-routes";
 import { ALL_APP_ROUTES_LIST } from "./router.config";
 
-export const router = createBrowserRouter(
+export const router = wrapCreateBrowserRouter(createBrowserRouter)(
 	[
 		{
 			element: <RootPublicLayout />,

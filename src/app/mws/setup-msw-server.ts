@@ -13,6 +13,8 @@ export const setupMswServer = () => {
 
 	afterEach(() => {
 		server.resetHandlers();
+		// resetHandlers не трогает подписки на события (trackRequests)
+		server.events.removeAllListeners();
 		resetMockStores();
 	});
 

@@ -1,10 +1,7 @@
-// @vitest-environment jsdom
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
 import { CustomScroll } from "./custom-scroll";
-
-afterEach(cleanup);
 
 const renderScroll = (props: Parameters<typeof CustomScroll>[0] = {}) => {
 	render(
