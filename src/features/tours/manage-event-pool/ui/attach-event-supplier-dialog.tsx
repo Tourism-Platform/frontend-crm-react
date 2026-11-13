@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LinkMinimalisticIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -157,6 +158,7 @@ export const AttachEventSupplierDialog: FC<IAttachEventSupplierDialogProps> = ({
 								loadingLabel={t(
 									"pool.attach_supplier.dialog.confirming"
 								)}
+								icon={<LinkMinimalisticIcon />}
 							/>
 						</DialogFooter>
 					</form>

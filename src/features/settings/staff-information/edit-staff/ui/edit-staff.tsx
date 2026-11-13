@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import React, { type FC, type ReactNode, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -146,6 +147,7 @@ export const EditStaff: FC<IEditStaffProps> = ({
 								loadingLabel={t(
 									"menu.edit.form.buttons.saving"
 								)}
+								icon={<DisketteIcon />}
 							/>
 						</DialogFooter>
 					</form>

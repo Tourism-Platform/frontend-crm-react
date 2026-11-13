@@ -119,9 +119,6 @@ export const CustomAccordion: FC<ICustomAccordionProps> = memo(
 											disabled={isLoading}
 											isLoading={isLoading}
 											label={t("actions.show_more")}
-											loadingLabel={t(
-												"actions.show_more"
-											)}
 											onClick={(e) => {
 												e.stopPropagation();
 												onLoadMore?.();

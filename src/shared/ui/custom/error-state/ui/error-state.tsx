@@ -1,10 +1,10 @@
-import { RotateCcwIcon } from "lucide-react";
+import { RestartIcon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ErrorCloudIcon } from "@/shared/assets/icons";
 import { cn } from "@/shared/lib";
-import { Button } from "@/shared/ui/shadcn-ui/button";
+import { LoaderButton } from "@/shared/ui/custom/loader-button";
 
 type TErrorStateProps = {
 	title?: string;
@@ -41,16 +41,15 @@ export const ErrorState: FC<TErrorStateProps> = ({
 				{description ?? t("error_state.description")}
 			</p>
 			{onRetry ? (
-				<Button
+				<LoaderButton
 					type="button"
 					variant="outline"
 					size="sm"
 					className="mt-4"
 					onClick={onRetry}
-				>
-					<RotateCcwIcon aria-hidden="true" />
-					{t("actions.retry")}
-				</Button>
+					icon={<RestartIcon />}
+					label={t("actions.retry")}
+				/>
 			) : null}
 		</div>
 	);

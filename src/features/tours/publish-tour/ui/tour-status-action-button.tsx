@@ -1,8 +1,7 @@
-import { Loader } from "lucide-react";
 import { type FC } from "react";
 import { useParams } from "react-router-dom";
 
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 import { ENUM_TOUR_STATUS, useGetTourGeneralQuery } from "@/entities/tour";
 
@@ -17,11 +16,7 @@ export const TourStatusActionButton: FC = () => {
 	});
 
 	if (!tourId || isLoading) {
-		return (
-			<Button disabled>
-				<Loader className="h-4 w-4 animate-spin" />
-			</Button>
-		);
+		return <LoaderButton type="button" isLoading />;
 	}
 
 	switch (tour?.status) {

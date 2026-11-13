@@ -1,3 +1,4 @@
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import React, { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -87,6 +88,7 @@ export const DeleteSupplierProduct: FC<IDeleteSupplierProductProps> = ({
 						isLoading={isLoading}
 						label={t(keys.confirm)}
 						loadingLabel={t(keys.confirming)}
+						icon={<TrashBinTrashIcon />}
 					/>
 				</DialogFooter>
 			</DialogContent>

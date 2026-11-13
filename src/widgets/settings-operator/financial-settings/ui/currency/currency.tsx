@@ -1,10 +1,16 @@
+import { RestartIcon } from "@solar-icons/react/outline";
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
 import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
-import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
+import {
+	CustomField,
+	Form,
+	LoaderButton,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -139,13 +145,13 @@ const CurrencyBase: FC = () => {
 								{...item}
 							/>
 						))}
-						<Button
+						<LoaderButton
 							type="button"
 							variant="outline"
 							onClick={handleResetFilters}
-						>
-							{t("currency.filters.reset")}
-						</Button>
+							icon={<RestartIcon />}
+							label={t("currency.filters.reset")}
+						/>
 					</div>
 				</Form>
 			</div>

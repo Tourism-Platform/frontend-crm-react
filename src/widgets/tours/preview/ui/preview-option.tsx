@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { AltArrowLeftIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
@@ -75,7 +75,7 @@ export const PreviewOptionBase: FC = () => {
 								)}
 							>
 								<Button variant="ghost" size="sm">
-									<ArrowLeft className="w-4 h-4" />
+									<AltArrowLeftIcon className="w-4 h-4" />
 									{t("back")}
 								</Button>
 							</Link>

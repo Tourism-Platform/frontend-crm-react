@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -61,10 +61,10 @@ export const NewPayment: FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					{t("new_payment.button")}
-				</Button>
+				<LoaderButton
+					icon={<AddIcon />}
+					label={t("new_payment.button")}
+				/>
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
@@ -138,6 +138,7 @@ export const NewPayment: FC = () => {
 								loadingLabel={t(
 									"new_payment.form.buttons.saving"
 								)}
+								icon={<AddIcon />}
 							/>
 						</DialogFooter>
 					</form>

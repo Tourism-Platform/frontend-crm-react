@@ -1,10 +1,20 @@
-import { Check, Loader2, Save, Trash } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import {
+	CheckCircleIcon,
+	DisketteIcon,
+	TrashBinTrashIcon
+} from "@solar-icons/react/outline";
 import { type FC, useEffect, useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
-import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
+import {
+	CustomField,
+	Form,
+	LoaderButton,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import { useGetSeasonalityQuery } from "@/entities/tour";
 
@@ -81,17 +91,16 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 						</p>
 						<p>{t("seasonality.percent.label")}</p>
 					</div>
-					<Button
+					<LoaderButton
 						type="button"
-						variant="outline"
 						onClick={() =>
 							append({
 								period: { from: undefined, to: undefined }
 							})
 						}
-					>
-						{t("seasonality.buttons.add")}
-					</Button>
+						icon={<AddIcon />}
+						label={t("seasonality.buttons.add")}
+					/>
 				</div>
 
 				<div className="col-span-2 flex flex-col gap-4">
@@ -142,11 +151,11 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 										t={t}
 									/>
 								</div>
-								<Button
+								<LoaderButton
 									type="button"
 									variant="outline"
-									size={"icon"}
-									disabled={pendingSaveIndex === index}
+									size="icon"
+									isLoading={pendingSaveIndex === index}
 									aria-label={
 										isPersisted
 											? t(
@@ -155,29 +164,23 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 											: t("seasonality.buttons.save_rule")
 									}
 									onClick={() => handleSave(index)}
-								>
-									{pendingSaveIndex === index ? (
-										<Loader2 className="h-4 w-4 animate-spin" />
-									) : isPersisted ? (
-										<Check className="text-green-600" />
-									) : (
-										<Save className="text-muted-foreground" />
-									)}
-								</Button>
+									icon={
+										isPersisted ? (
+											<CheckCircleIcon />
+										) : (
+											<DisketteIcon />
+										)
+									}
+								/>
 
-								<Button
+								<LoaderButton
 									type="button"
-									variant="destructive"
-									size={"icon"}
-									disabled={pendingRemoveIndex === index}
+									variant="destructive_outline"
+									size="icon"
+									isLoading={pendingRemoveIndex === index}
 									onClick={() => handleRemove(index)}
-								>
-									{pendingRemoveIndex === index ? (
-										<Loader2 className="h-4 w-4 animate-spin" />
-									) : (
-										<Trash />
-									)}
-								</Button>
+									icon={<TrashBinTrashIcon />}
+								/>
 							</div>
 						);
 					})}

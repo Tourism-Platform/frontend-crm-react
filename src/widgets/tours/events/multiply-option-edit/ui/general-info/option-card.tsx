@@ -1,7 +1,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { MenuDotsIcon } from "@solar-icons/react/outline";
 import { cva } from "class-variance-authority";
-import { GripVertical, MoreHorizontal } from "lucide-react";
+import { GripVertical } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -158,7 +159,7 @@ export const OptionCard: FC<IOptionCardProps> = ({
 											size="icon"
 											className="hover:!bg-transparent !text-muted-foreground"
 										>
-											<MoreHorizontal />
+											<MenuDotsIcon />
 										</Button>
 									</DropdownMenuTrigger>
 									<DropdownMenuContent align="end">

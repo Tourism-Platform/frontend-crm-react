@@ -1,3 +1,4 @@
+import { RestartIcon } from "@solar-icons/react/outline";
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
 import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -5,11 +6,11 @@ import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import {
-	Button,
 	Card,
 	CardContent,
 	CustomField,
 	Form,
+	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -167,13 +168,13 @@ const ReconciliationBase: FC = () => {
 									/>
 								)
 							)}
-							<Button
+							<LoaderButton
 								type="button"
 								variant="outline"
 								onClick={handleResetFilters}
-							>
-								{t("filters.reset")}
-							</Button>
+								icon={<RestartIcon />}
+								label={t("filters.reset")}
+							/>
 						</div>
 					</Form>
 					<SmartTable

@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC, Fragment, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -209,6 +210,7 @@ const GeneralInfoBase: FC = () => {
 									? t("general.form.buttons.loading")
 									: t("general.form.buttons.saving")
 							}
+							icon={<DisketteIcon />}
 						/>
 					</div>
 				</form>

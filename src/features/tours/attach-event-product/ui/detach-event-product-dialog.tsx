@@ -1,3 +1,4 @@
+import { UnlinkIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -133,6 +134,8 @@ export const DetachEventProductDialog: FC<IDetachEventProductDialogProps> = ({
 						loadingLabel={t(
 							"attach_product.detach_dialog.confirming"
 						)}
+						variant="destructive"
+						icon={<UnlinkIcon />}
 					/>
 				</AlertDialogFooter>
 			</AlertDialogContent>

@@ -1,4 +1,7 @@
-import { LockIcon, ShieldWarningIcon } from "@solar-icons/react/outline";
+import {
+	LockKeyholeMinimalisticIcon,
+	ShieldWarningIcon
+} from "@solar-icons/react/outline";
 import { type FC } from "react";
 
 import {
@@ -26,18 +29,19 @@ export const InheritedLockBanner: FC<IInheritedLockBannerProps> = ({
 
 	return (
 		<Alert
-			variant={isOverride ? "warning" : "secondary"}
+			variant={isOverride ? "warning" : "primary"}
 			appearance="light"
-			size="sm"
 			role="status"
 		>
 			<AlertIcon>
-				{isOverride ? <ShieldWarningIcon /> : <LockIcon />}
+				{isOverride ? (
+					<ShieldWarningIcon />
+				) : (
+					<LockKeyholeMinimalisticIcon />
+				)}
 			</AlertIcon>
-			<AlertContent className="space-y-0.5">
-				<AlertTitle className="mb-0 text-sm font-medium">
-					{title}
-				</AlertTitle>
+			<AlertContent className="space-y-1">
+				<AlertTitle>{title}</AlertTitle>
 				{description ? (
 					<AlertDescription className="text-muted-foreground">
 						{description}

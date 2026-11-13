@@ -1,12 +1,12 @@
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
 	Accordion,
-	Button,
 	CustomCollapsibleListToolbar,
+	LoaderButton,
 	useCollapsibleList,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -88,15 +88,13 @@ const ItemsDetailsBase: FC<IItemsDetailsProps> = ({ form }) => {
 				) : null}
 
 				<div>
-					<Button
-						variant="outline"
+					<LoaderButton
 						type="button"
 						onClick={handleAddItem}
 						className="gap-2"
-					>
-						<PlusIcon className="h-4 w-4" />
-						<p>{t("form.items.details.form.buttons.add")}</p>
-					</Button>
+						icon={<AddIcon />}
+						label={t("form.items.details.form.buttons.add")}
+					/>
 				</div>
 			</div>
 		</div>

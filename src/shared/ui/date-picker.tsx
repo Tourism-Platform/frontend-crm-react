@@ -1,6 +1,10 @@
 "use client";
 
-import { Calendar as CalendarIcon } from "lucide-react";
+import {
+	CalendarIcon,
+	CheckCircleIcon,
+	RestartIcon
+} from "@solar-icons/react/outline";
 import { useEffect, useState } from "react";
 import { type DateRange } from "react-day-picker";
 import { useTranslation } from "react-i18next";
@@ -8,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/shared/ui";
 import { Calendar } from "@/shared/ui";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui/custom/loader-button";
 
 interface IDatePickerProps {
 	from?: Date;
@@ -80,12 +85,19 @@ export const DatePicker = ({ from, to, onChange }: IDatePickerProps) => {
 					numberOfMonths={2}
 				/>
 				<div className="flex items-center justify-end gap-1.5 border-t border-border p-3">
-					<Button variant="outline" onClick={handleReset}>
-						{t("date_picker.buttons.reset")}
-					</Button>
-					<Button onClick={handleApply}>
-						{t("date_picker.buttons.apply")}
-					</Button>
+					<LoaderButton
+						variant="outline"
+						onClick={handleReset}
+						type="button"
+						icon={<RestartIcon />}
+						label={t("date_picker.buttons.reset")}
+					/>
+					<LoaderButton
+						onClick={handleApply}
+						type="button"
+						icon={<CheckCircleIcon />}
+						label={t("date_picker.buttons.apply")}
+					/>
 				</div>
 			</PopoverContent>
 		</Popover>

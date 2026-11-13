@@ -1,3 +1,4 @@
+import { LinkMinimalisticIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -130,6 +131,7 @@ export const AttachEventProductDialog: FC<IAttachEventProductDialogProps> = ({
 								loadingLabel={t(
 									"attach_product.dialog.confirming"
 								)}
+								icon={<LinkMinimalisticIcon />}
 							/>
 						</DialogFooter>
 					</form>

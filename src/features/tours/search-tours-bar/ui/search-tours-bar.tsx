@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MapPointIcon } from "@solar-icons/react/outline";
-import { Search } from "lucide-react";
+import { MagnifierIcon, MapPointIcon } from "@solar-icons/react/outline";
 import { type FC, useMemo } from "react";
 import {
 	Controller,
@@ -18,11 +17,11 @@ import {
 	i18nLanguageMapper
 } from "@/shared/config";
 import {
-	Button,
 	Card,
 	CardContent,
 	CustomField,
 	Form,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -132,14 +131,13 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 							className="mb-0"
 						/>
 
-						<Button
+						<LoaderButton
 							type="submit"
 							size="lg"
 							className="h-12 gap-2 rounded-xl px-6 text-base font-semibold shadow-sm sm:min-w-40"
-						>
-							{t("search.form.buttons.search")}
-							<Search className="size-5" />
-						</Button>
+							icon={<MagnifierIcon />}
+							label={t("search.form.buttons.search")}
+						/>
 					</form>
 				</Form>
 			</CardContent>

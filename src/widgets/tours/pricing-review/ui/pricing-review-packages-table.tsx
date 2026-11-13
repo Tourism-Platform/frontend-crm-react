@@ -1,5 +1,5 @@
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type PaginationState } from "@tanstack/react-table";
-import { PlusIcon } from "lucide-react";
 import { type FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -74,7 +74,7 @@ const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 						packageId: TOUR_PACKAGE_CREATE_ID
 					})}
 				>
-					<PlusIcon className="mr-1 h-4 w-4" />
+					<AddIcon />
 					{t("table.buttons.create_package")}
 				</Link>
 			</Button>

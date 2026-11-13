@@ -1,4 +1,5 @@
-import { Compass, MoveLeft } from "lucide-react";
+import { AltArrowLeftIcon, HomeIcon } from "@solar-icons/react/outline";
+import { Compass } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -44,10 +45,11 @@ export const NotFound: FC = () => {
 
 			<div className="flex flex-col gap-4 sm:flex-row">
 				<Button onClick={handleGoHome} size="lg">
+					<HomeIcon />
 					{t("buttons.home")}
 				</Button>
 				<Button variant="outline" size="lg" onClick={handleGoBack}>
-					<MoveLeft className="mr-2 h-4 w-4" />
+					<AltArrowLeftIcon className="mr-2 h-4 w-4" />
 					{t("buttons.back")}
 				</Button>
 			</div>

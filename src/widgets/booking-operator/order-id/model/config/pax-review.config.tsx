@@ -1,6 +1,9 @@
+import {
+	AltArrowDownIcon,
+	AltArrowRightIcon
+} from "@solar-icons/react/outline";
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { getCountryLabel } from "@/shared/lib/countries";
@@ -31,9 +34,9 @@ export const PAX_REVIEW_COLUMNS = (
 						size="icon"
 					>
 						{getIsExpanded() ? (
-							<ChevronDown className="size-4 text-muted-foreground" />
+							<AltArrowDownIcon className="size-4 text-muted-foreground" />
 						) : (
-							<ChevronRight className="size-4 text-muted-foreground" />
+							<AltArrowRightIcon className="size-4 text-muted-foreground" />
 						)}
 					</Button>
 				) : null;

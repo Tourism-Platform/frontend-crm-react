@@ -1,3 +1,5 @@
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -59,6 +61,7 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 							: t("form.general.buttons.save")
 					}
 					loadingLabel={t("form.general.buttons.saving")}
+					icon={isCreate ? <AddIcon /> : <DisketteIcon />}
 				/>
 			</div>
 		</div>

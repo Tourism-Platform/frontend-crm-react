@@ -1,8 +1,9 @@
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Badge, Button } from "@/shared/ui";
+import { Badge, LoaderButton } from "@/shared/ui";
 
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
 import {
@@ -27,8 +28,6 @@ interface IEventPoolListProps {
 	canRemove: boolean;
 	isBusy: boolean;
 	isAdding?: boolean;
-	isRemoving?: boolean;
-	isSettingMain?: boolean;
 	eventKind: ENUM_EVENT_KIND_TYPE;
 	supplierTyp?: ENUM_SUPPLIER_TYPE_TYPE;
 	onSelect: (supplyId: string | undefined) => void;
@@ -44,8 +43,6 @@ export const EventPoolList = ({
 	canRemove,
 	isBusy,
 	isAdding,
-	isRemoving,
-	isSettingMain,
 	eventKind,
 	supplierTyp,
 	onSelect,
@@ -64,15 +61,14 @@ export const EventPoolList = ({
 		<div className="grid gap-3">
 			<div className="flex flex-wrap items-center justify-between gap-2">
 				<h3 className="text-sm font-medium">{t("pool.list")}</h3>
-				<Button
+				<LoaderButton
 					type="button"
-					variant="outline"
 					size="sm"
 					onClick={() => setAddOpen(true)}
 					disabled={isBusy}
-				>
-					{t("pool.add.title")}
-				</Button>
+					icon={<AddIcon />}
+					label={t("pool.add.title")}
+				/>
 			</div>
 
 			<ul className="grid gap-2">
@@ -113,14 +109,14 @@ export const EventPoolList = ({
 										<SetEventPoolMemberMainButton
 											supplyId={member.id}
 											isMain={isMain}
-											isLoading={isSettingMain}
+											isLoading={isBusy}
 											onSetMain={onSetMain}
 										/>
 									) : null}
 									<RemoveEventPoolMemberButton
 										supplyId={member.id}
 										disabled={!canRemove}
-										isLoading={isRemoving}
+										isLoading={isBusy}
 										onRemove={onRemove}
 									/>
 								</div>

@@ -1,4 +1,8 @@
-import { Loader, TrashIcon } from "lucide-react";
+import {
+	GalleryAddIcon,
+	GalleryEditIcon,
+	TrashBinTrashIcon
+} from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -8,7 +12,6 @@ import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-	Button,
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -105,10 +108,13 @@ const SupplierLogoInfoBase: FC<ISupplierLogoInfoProps> = ({
 									? t("logo.buttons.change")
 									: t("logo.buttons.add")
 							}
-							loadingLabel={
-								hasLogo
-									? t("logo.buttons.change")
-									: t("logo.buttons.add")
+							variant={hasLogo ? "secondary" : "default"}
+							icon={
+								hasLogo ? (
+									<GalleryEditIcon />
+								) : (
+									<GalleryAddIcon />
+								)
 							}
 						/>
 						<input
@@ -119,19 +125,15 @@ const SupplierLogoInfoBase: FC<ISupplierLogoInfoProps> = ({
 						/>
 					</div>
 					{hasLogo ? (
-						<Button
+						<LoaderButton
 							type="button"
-							variant="outline"
+							variant="destructive_outline"
 							size="icon"
 							onClick={handleRemove}
 							disabled={isUploading || isDeleting}
-						>
-							{isDeleting ? (
-								<Loader className="h-4 w-4 animate-spin" />
-							) : (
-								<TrashIcon className="h-4 w-4" />
-							)}
-						</Button>
+							isLoading={isDeleting}
+							icon={<TrashBinTrashIcon />}
+						/>
 					) : null}
 				</div>
 			</div>

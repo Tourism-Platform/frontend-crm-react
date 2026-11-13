@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { AltArrowLeftIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router";
@@ -86,13 +86,13 @@ const PreviewTourBase: FC = () => {
 						<div className="flex flex-wrap items-center justify-between gap-4">
 							{isDraftPreview ? (
 								<Button variant="ghost" size="sm" disabled>
-									<ArrowLeft className="w-4 h-4" />
+									<AltArrowLeftIcon className="w-4 h-4" />
 									{t("back", { ns: "preview_tour_page" })}
 								</Button>
 							) : (
 								<Link to={ENUM_PATH.TOURS.CATALOG.ROOT}>
 									<Button variant="ghost" size="sm">
-										<ArrowLeft className="w-4 h-4" />
+										<AltArrowLeftIcon className="w-4 h-4" />
 										{t("back", { ns: "preview_tour_page" })}
 									</Button>
 								</Link>

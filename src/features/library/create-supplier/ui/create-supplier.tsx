@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -69,10 +69,11 @@ export const CreateSupplier: FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button type="button">
-					<PlusIcon className="mr-1 h-4 w-4" />
-					<p>{t("new_supplier.button")}</p>
-				</Button>
+				<LoaderButton
+					type="button"
+					icon={<AddIcon />}
+					label={t("new_supplier.button")}
+				/>
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
@@ -114,6 +115,7 @@ export const CreateSupplier: FC = () => {
 								isLoading={isLoading}
 								label={t("create.buttons.save")}
 								loadingLabel={t("create.buttons.saving")}
+								icon={<AddIcon />}
 							/>
 						</DialogFooter>
 					</form>

@@ -1,5 +1,6 @@
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { MinusIcon } from "@solar-icons/react/bold/minus";
 import { isBefore, startOfToday } from "date-fns";
-import { Minus, Plus } from "lucide-react";
 import { type FC, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -230,7 +231,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 									)
 								}
 							>
-								<Minus className="size-4" />
+								<MinusIcon className="size-4" />
 							</Button>
 							<span className="w-4 text-center font-medium">
 								{count}
@@ -249,7 +250,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 									)
 								}
 							>
-								<Plus className="size-4" />
+								<AddIcon className="size-4" />
 							</Button>
 						</div>
 					</div>

@@ -1,4 +1,4 @@
-import { XIcon } from "lucide-react";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 
 import type { TFileWithPreview } from "@/shared/hooks";
@@ -57,13 +57,13 @@ export const FileCard: FC<IFileCardProps> = ({
 					<Button
 						size="icon"
 						type="button"
-						variant="ghost"
-						className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
+						variant="destructive_outline"
+						className="size-8"
 						onClick={() => onRemove(file.id)}
 						aria-label="Remove file"
 						disabled={isFileLoading}
 					>
-						<XIcon className="size-4" aria-hidden="true" />
+						<TrashBinTrashIcon />
 					</Button>
 				)}
 			</div>

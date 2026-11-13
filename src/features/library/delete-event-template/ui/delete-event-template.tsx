@@ -1,3 +1,4 @@
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import React, { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -76,6 +77,7 @@ export const DeleteEventTemplate: FC<IDeleteEventTemplateProps> = ({
 						isLoading={isLoading}
 						label={t("menu.delete.form.buttons.confirm")}
 						loadingLabel={t("menu.delete.form.buttons.confirming")}
+						icon={<TrashBinTrashIcon />}
 					/>
 				</DialogFooter>
 			</DialogContent>

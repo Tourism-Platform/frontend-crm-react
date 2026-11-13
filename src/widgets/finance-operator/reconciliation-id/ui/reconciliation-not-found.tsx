@@ -1,3 +1,4 @@
+import { AltArrowLeftIcon } from "@solar-icons/react/outline";
 import { FileSearch } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -25,6 +26,7 @@ export const ReconciliationNotFound: FC = () => {
 
 			<Button variant="outline" size="sm" asChild>
 				<Link to={ENUM_PATH.FINANCE.RECONCILIATION}>
+					<AltArrowLeftIcon />
 					{t("buttons.back")}
 				</Link>
 			</Button>

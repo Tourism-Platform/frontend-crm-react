@@ -1,4 +1,5 @@
-import { Plus, Trash2 } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { useMemo } from "react";
 import {
 	type Control,
@@ -9,7 +10,7 @@ import {
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField } from "@/shared/ui";
+import { Button, CustomField, LoaderButton } from "@/shared/ui";
 
 import { useAcceptedCurrencyOptions } from "@/entities/finance";
 import {
@@ -150,27 +151,25 @@ export const ExtraCostsField = <T extends FieldValues>({
 						)}
 						<Button
 							type="button"
-							variant="destructive"
+							variant="destructive_outline"
 							size="icon"
 							className="shrink-0"
 							onClick={() => remove(index)}
 							disabled={disabled}
 						>
-							<Trash2 className="h-4 w-4" />
+							<TrashBinTrashIcon />
 						</Button>
 					</div>
 				);
 			})}
-			<Button
+			<LoaderButton
 				type="button"
-				variant="outline"
 				className="w-fit"
 				onClick={() => append(createEmptyExtraCostRow() as never)}
 				disabled={disabled}
-			>
-				<Plus className="mr-2 h-4 w-4" />
-				{t("extra_costs.add")}
-			</Button>
+				icon={<AddIcon />}
+				label={t("extra_costs.add")}
+			/>
 		</div>
 	);
 };

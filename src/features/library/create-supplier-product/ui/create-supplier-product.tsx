@@ -1,17 +1,17 @@
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { buildRoute } from "@/shared/config";
 import {
-	Button,
 	Dialog,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -33,10 +33,11 @@ export const CreateSupplierProduct: FC<ICreateSupplierProductProps> = ({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button type="button" variant="outline">
-					<PlusIcon className="mr-1 h-4 w-4" />
-					<p>{t("products.new_product.button")}</p>
-				</Button>
+				<LoaderButton
+					type="button"
+					icon={<AddIcon />}
+					label={t("products.new_product.button")}
+				/>
 			</DialogTrigger>
 			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[52rem]">
 				<DialogHeader>

@@ -1,9 +1,15 @@
-import { Plus, Trash2 } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
+import {
+	Button,
+	CustomField,
+	LoaderButton,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ENUM_ACTIVITY_SUB_TYPE,
@@ -42,19 +48,17 @@ const VariantMenuBase: FC<IVariantMenuProps> = ({ form, index }) => {
 		<div className="grid gap-4 sm:col-span-3">
 			<div className="flex items-center justify-between">
 				<h3 className="text-lg">{t("form.variants.menu.title")}</h3>
-				<Button
+				<LoaderButton
 					type="button"
-					variant="outline"
 					onClick={() =>
 						append({
 							[ENUM_FORM_ACTIVITY_MENU.NAME]: "",
 							[ENUM_FORM_ACTIVITY_MENU.DESCRIPTION]: ""
 						})
 					}
-				>
-					<Plus className="mr-2 h-4 w-4" />
-					{t("form.variants.menu.buttons.add")}
-				</Button>
+					icon={<AddIcon />}
+					label={t("form.variants.menu.buttons.add")}
+				/>
 			</div>
 			{fields.map((field, menuIndex) => (
 				<div
@@ -74,12 +78,12 @@ const VariantMenuBase: FC<IVariantMenuProps> = ({ form, index }) => {
 					)}
 					<Button
 						type="button"
-						variant="destructive"
+						variant="destructive_outline"
 						size="icon"
 						className="mt-7"
 						onClick={() => remove(menuIndex)}
 					>
-						<Trash2 className="h-4 w-4" />
+						<TrashBinTrashIcon />
 					</Button>
 				</div>
 			))}

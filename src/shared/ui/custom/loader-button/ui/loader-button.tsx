@@ -6,8 +6,10 @@ import { Button } from "@/shared/ui/shadcn-ui/button";
 
 type TLoaderButtonProps = Omit<ComponentProps<typeof Button>, "type"> & {
 	isLoading?: boolean;
-	label: string;
-	loadingLabel: string;
+	/** Без подписи — кнопка-иконка: обязателен `aria-label` */
+	label?: string;
+	/** Подпись во время загрузки; по умолчанию — `label` */
+	loadingLabel?: string;
 	/** Иконка слева от текста, на время загрузки заменяется лоадером */
 	icon?: ReactNode;
 	type?: ComponentProps<typeof Button>["type"];
@@ -21,9 +23,19 @@ export const LoaderButton: FC<TLoaderButtonProps> = ({
 	disabled,
 	type = "submit",
 	...props
-}) => (
-	<Button type={type} disabled={disabled ?? isLoading} {...props}>
-		{isLoading ? <DotsRing className="!h-[20px] !w-[20px]" /> : icon}
-		{isLoading ? <TextDots>{loadingLabel}</TextDots> : <span>{label}</span>}
-	</Button>
-);
+}) => {
+	const text = isLoading ? (loadingLabel ?? label) : label;
+
+	return (
+		<Button type={type} disabled={disabled ?? isLoading} {...props}>
+			{isLoading ? <DotsRing className="!h-[20px] !w-[20px]" /> : icon}
+			{text ? (
+				isLoading ? (
+					<TextDots>{text}</TextDots>
+				) : (
+					<span>{text}</span>
+				)
+			) : null}
+		</Button>
+	);
+};

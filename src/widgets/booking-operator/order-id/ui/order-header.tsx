@@ -1,4 +1,8 @@
-import { Loader2 } from "lucide-react";
+import {
+	AltArrowRightIcon,
+	ExportIcon,
+	FileSendIcon
+} from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -6,8 +10,8 @@ import { toast } from "sonner";
 import { cn } from "@/shared/lib";
 import {
 	Badge,
-	Button,
 	CopyableValue,
+	LoaderButton,
 	useSetBreadcrumbLabels
 } from "@/shared/ui";
 
@@ -77,19 +81,18 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 		status === ENUM_ORDER_STATUS.IN_PROGRESS;
 
 	const nextStatusButton = nextStatus && nextButtonKey && (
-		<Button
+		<LoaderButton
+			type="button"
 			onClick={handleNextStatus}
 			disabled={isNextStatusDisabled}
+			isLoading={isUpdatingStatus}
 			title={
 				!transitionGate.allowed
 					? transitionGate.reasons.join("; ")
 					: undefined
 			}
-		>
-			{isUpdatingStatus && (
-				<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-			)}
-			{t(nextButtonKey, {
+			icon={<AltArrowRightIcon />}
+			label={t(nextButtonKey, {
 				defaultValue:
 					status === ENUM_ORDER_STATUS.NEW
 						? "Accept"
@@ -99,7 +102,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 								? "Start"
 								: "Complete"
 			})}
-		</Button>
+		/>
 	);
 
 	return (
@@ -160,9 +163,11 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					{status === ENUM_ORDER_STATUS.NEW && nextStatusButton}
 					{status === ENUM_ORDER_STATUS.IN_PROCESSING && (
 						<div className="flex flex-wrap gap-2">
-							<Button variant="slate">
-								{t("buttons.export")}
-							</Button>
+							<LoaderButton
+								variant="outline"
+								icon={<ExportIcon />}
+								label={t("buttons.export")}
+							/>
 							<SendInvoice
 								orderId={orderId}
 								orderStatus={status}
@@ -173,23 +178,34 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					)}
 					{status === ENUM_ORDER_STATUS.BOOKING && (
 						<div className="flex flex-wrap gap-2">
-							<Button variant="slate">
-								{t("buttons.export")}
-							</Button>
-							<Button>{t("buttons.send")}</Button>
+							<LoaderButton
+								variant="outline"
+								icon={<ExportIcon />}
+								label={t("buttons.export")}
+							/>
+							<LoaderButton
+								icon={<FileSendIcon />}
+								label={t("buttons.send")}
+							/>
 							{nextStatusButton}
 						</div>
 					)}
 					{status === ENUM_ORDER_STATUS.IN_PROGRESS && (
 						<div className="flex flex-wrap gap-2">
-							<Button variant="slate">
-								{t("buttons.export")}
-							</Button>
+							<LoaderButton
+								variant="outline"
+								icon={<ExportIcon />}
+								label={t("buttons.export")}
+							/>
 							{nextStatusButton}
 						</div>
 					)}
 					{status === ENUM_ORDER_STATUS.COMPLETED && (
-						<Button variant="slate">{t("buttons.export")}</Button>
+						<LoaderButton
+							variant="outline"
+							icon={<ExportIcon />}
+							label={t("buttons.export")}
+						/>
 					)}
 				</div>
 			</div>

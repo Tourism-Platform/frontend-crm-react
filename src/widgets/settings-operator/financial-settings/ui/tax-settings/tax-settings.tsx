@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -142,6 +143,7 @@ const TaxSettingsBase: FC = () => {
 								? t("tax_settings.form.buttons.loading")
 								: t("tax_settings.form.buttons.saving")
 						}
+						icon={<DisketteIcon />}
 					/>
 				</div>
 			</form>

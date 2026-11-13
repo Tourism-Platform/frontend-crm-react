@@ -1,4 +1,4 @@
-import { MoreHorizontal } from "lucide-react";
+import { MenuDotsIcon, TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -64,7 +64,7 @@ export const VariantsMenu: FC<IVariantsMenuProps> = ({
 						type="button"
 						className="hover:!bg-transparent !text-muted-foreground"
 					>
-						<MoreHorizontal />
+						<MenuDotsIcon />
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
@@ -101,6 +101,7 @@ export const VariantsMenu: FC<IVariantsMenuProps> = ({
 							loadingLabel={t(
 								"form.variants.delete_dialog.confirming"
 							)}
+							icon={<TrashBinTrashIcon />}
 						/>
 					</DialogFooter>
 				</DialogContent>

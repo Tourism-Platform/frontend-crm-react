@@ -1,3 +1,4 @@
+import { EyeIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -15,7 +16,8 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
-	Form
+	Form,
+	LoaderButton
 } from "@/shared/ui";
 
 import { useGetSupplierPaymentByIdQuery } from "@/entities/finance";
@@ -73,14 +75,14 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button
+				<LoaderButton
 					variant="outline"
 					size="sm"
 					className="w-full"
 					disabled={!canOpen}
-				>
-					{t("table.menu.open")}
-				</Button>
+					icon={<EyeIcon />}
+					label={t("table.menu.open")}
+				/>
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}

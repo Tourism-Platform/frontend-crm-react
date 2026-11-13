@@ -1,3 +1,4 @@
+import { AltArrowLeftIcon, DisketteIcon } from "@solar-icons/react/outline";
 import { type FC, Fragment } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -200,6 +201,7 @@ const PackagePricingBase: FC<TPackagePricingProps> = ({
 					{backToEventHref ? (
 						<Button variant="outline" asChild>
 							<Link to={backToEventHref}>
+								<AltArrowLeftIcon />
 								{t("form.buttons.back_to_event")}
 							</Link>
 						</Button>
@@ -210,6 +212,7 @@ const PackagePricingBase: FC<TPackagePricingProps> = ({
 						isLoading={isLoading}
 						label={t("form.buttons.save")}
 						loadingLabel={t("form.buttons.saving")}
+						icon={<DisketteIcon />}
 					/>
 				</div>
 			</div>

@@ -1,5 +1,4 @@
-import { GalleryIcon } from "@solar-icons/react/outline";
-import { ArrowRight } from "lucide-react";
+import { GalleryIcon, TicketIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
@@ -7,9 +6,9 @@ import { useNavigate, useParams } from "react-router";
 import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import {
-	Button,
 	Card,
 	CardContent,
+	LoaderButton,
 	Previewer,
 	Skeleton,
 	withErrorBoundary
@@ -116,14 +115,13 @@ export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
 							</p>
 						</div>
 
-						<Button
+						<LoaderButton
 							type="button"
 							onClick={handleNavigate}
 							className="shrink-0"
-						>
-							{t("sections.itinerary.card.book_package")}
-							<ArrowRight className="size-4" />
-						</Button>
+							icon={<TicketIcon />}
+							label={t("sections.itinerary.card.book_package")}
+						/>
 					</div>
 				</div>
 			</CardContent>

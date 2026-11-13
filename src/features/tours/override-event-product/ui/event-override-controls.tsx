@@ -1,8 +1,9 @@
+import { PenIcon, RestartIcon, TagPriceIcon } from "@solar-icons/react/outline";
 import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button, LoaderButton } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 import {
 	type ENUM_EVENT_KIND_TYPE,
@@ -90,7 +91,7 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 			<div className="flex flex-wrap gap-2">
 				<LoaderButton
 					type="button"
-					variant="outline"
+					variant="secondary"
 					onClick={() => setDialogOpen(true)}
 					// No draft while the event loads or the member is not in the pool.
 					disabled={isLoading || !draft}
@@ -100,21 +101,17 @@ export const EventOverrideControls: FC<IEventOverrideControlsProps> = ({
 							? t("override_product.buttons.edit")
 							: t("override_product.buttons.set")
 					}
-					loadingLabel={
-						hasOverride
-							? t("override_product.buttons.edit")
-							: t("override_product.buttons.set")
-					}
+					icon={hasOverride ? <PenIcon /> : <TagPriceIcon />}
 				/>
 				{hasOverride ? (
-					<Button
+					<LoaderButton
 						type="button"
-						variant="outline"
+						variant="destructive_outline"
 						onClick={() => setClearOpen(true)}
 						disabled={isLoading}
-					>
-						{t("override_product.buttons.clear")}
-					</Button>
+						icon={<RestartIcon />}
+						label={t("override_product.buttons.clear")}
+					/>
 				) : null}
 			</div>
 

@@ -1,11 +1,12 @@
+import { DownloadMinimalisticIcon } from "@solar-icons/react/outline";
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { DownloadIcon, FileText, Loader2Icon } from "lucide-react";
+import { FileText } from "lucide-react";
 import type { FC } from "react";
 import { toast } from "sonner";
 
 import { useDownloadFile } from "@/shared/hooks";
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 import {
 	type IPaxReviewDetail,
@@ -36,21 +37,17 @@ const PaxPassportDownloadButton: FC<TPaxPassportDownloadButtonProps> = ({
 	const isBusy = isDownloading || isFetching;
 
 	return (
-		<Button
+		<LoaderButton
 			size="icon"
 			type="button"
 			variant="ghost"
 			className="size-8 shrink-0 text-muted-foreground hover:bg-muted hover:text-foreground rounded-full"
 			onClick={handleDownload}
 			disabled={isBusy || !fileId}
+			isLoading={isBusy}
 			aria-label="Download passport"
-		>
-			{isBusy ? (
-				<Loader2Icon className="size-4 animate-spin" aria-hidden />
-			) : (
-				<DownloadIcon className="size-4" aria-hidden />
-			)}
-		</Button>
+			icon={<DownloadMinimalisticIcon />}
+		/>
 	);
 };
 

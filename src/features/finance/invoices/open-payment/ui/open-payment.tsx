@@ -1,9 +1,10 @@
+import { EyeIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import type { IDownloadFile } from "@/shared/hooks";
 import { useDownloadFile } from "@/shared/hooks";
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 interface IOpenPaymentProps {
 	file?: IDownloadFile;
@@ -26,15 +27,15 @@ export const OpenPayment: FC<IOpenPaymentProps> = ({ file }) => {
 
 	return (
 		<div className="text-right">
-			<Button
+			<LoaderButton
 				variant="outline"
 				size="sm"
 				className="h-8 py-0 rounded px-4 text-xs font-medium border-gray-200"
 				onClick={handleOpen}
 				disabled={isDownloading}
-			>
-				{t("payment_table.table.fields.open")}
-			</Button>
+				icon={<EyeIcon />}
+				label={t("payment_table.table.fields.open")}
+			/>
 		</div>
 	);
 };

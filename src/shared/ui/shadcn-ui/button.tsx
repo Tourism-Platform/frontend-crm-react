@@ -15,18 +15,15 @@ const buttonVariants = cva(
 					"bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
 				outline:
 					"border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+				destructive_outline:
+					"border border-destructive/40 bg-background text-destructive shadow-xs hover:bg-destructive/10 hover:text-destructive focus-visible:ring-destructive/20 dark:bg-input/30 dark:hover:bg-destructive/20",
 				outlineActive:
 					"border text-primary bg-primary/10 hover:bg-accent border-primary",
 				secondary:
 					"bg-secondary text-secondary-foreground hover:bg-secondary/80",
 				ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 				link: "text-primary underline-offset-4 hover:underline",
-				dim: "text-muted-foreground hover:text-foreground data-[state=open]:text-foreground",
-				slate: "bg-slate-500 text-white hover:bg-slate-600",
-				green_outline:
-					"border-green-500 text-white bg-green-500/20 text-green-600 border",
-				cyan_outline:
-					"border-cyan-500 text-white bg-cyan-500/20 text-cyan-600 border"
+				dim: "text-muted-foreground hover:text-foreground data-[state=open]:text-foreground"
 			},
 			mode: {
 				default:

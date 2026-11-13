@@ -1,3 +1,4 @@
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -57,6 +58,7 @@ const HotelProductImagesBase: FC<TSlotProps> = ({
 						isLoading={productUpload.isLoading}
 						label={t("form.images.buttons.save")}
 						loadingLabel={t("form.images.buttons.saving")}
+						icon={<DisketteIcon />}
 					/>
 				</div>
 			</div>
@@ -88,6 +90,7 @@ const HotelProductImagesBase: FC<TSlotProps> = ({
 							isLoading={nodeUpload.isLoading}
 							label={t("form.images.buttons.save")}
 							loadingLabel={t("form.images.buttons.saving")}
+							icon={<DisketteIcon />}
 						/>
 					</div>
 				</div>

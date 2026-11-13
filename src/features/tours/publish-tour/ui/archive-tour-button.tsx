@@ -1,3 +1,4 @@
+import { ArchiveDownIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -27,12 +28,13 @@ export const ArchiveTourButton: FC<IArchiveTourButtonProps> = ({ tourId }) => {
 	return (
 		<LoaderButton
 			type="button"
-			variant="slate"
+			variant="outline"
 			onClick={handleArchive}
 			isLoading={isLoading}
 			disabled={!tourId}
 			label={t("actions.archive")}
 			loadingLabel={t("actions.archiving")}
+			icon={<ArchiveDownIcon />}
 		/>
 	);
 };

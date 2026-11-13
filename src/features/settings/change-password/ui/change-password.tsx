@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { DisketteIcon, PasswordIcon } from "@solar-icons/react/outline";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -60,7 +61,11 @@ export const ChangePassword: FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>{t("change_password")}</Button>
+				<LoaderButton
+					variant="secondary"
+					icon={<PasswordIcon />}
+					label={t("change_password")}
+				/>
 			</DialogTrigger>
 			<DialogContent onCloseBtn={handleClose}>
 				<DialogHeader>
@@ -107,6 +112,7 @@ export const ChangePassword: FC = () => {
 								isLoading={isLoading}
 								label={t("form.buttons.save")}
 								loadingLabel={t("form.buttons.saving")}
+								icon={<DisketteIcon />}
 							/>
 						</DialogFooter>
 					</form>

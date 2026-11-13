@@ -1,7 +1,11 @@
+import {
+	AltArrowLeftIcon,
+	AltArrowRightIcon
+} from "@solar-icons/react/outline";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "@/shared/ui";
+import { Button, LoaderButton } from "@/shared/ui";
 
 type TCatalogToursPaginationProps = {
 	page: number;
@@ -28,14 +32,14 @@ export const CatalogToursPagination: FC<TCatalogToursPaginationProps> = ({
 
 	return (
 		<div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-3">
-			<Button
+			<LoaderButton
 				variant="outline"
 				size="sm"
 				disabled={page <= 1 || isBusy}
 				onClick={onPrev}
-			>
-				{t("pagination.prev")}
-			</Button>
+				icon={<AltArrowLeftIcon />}
+				label={t("pagination.prev")}
+			/>
 			<span className="truncate text-center text-xs text-muted-foreground sm:text-sm">
 				{t("pagination.page", {
 					page,
@@ -49,6 +53,7 @@ export const CatalogToursPagination: FC<TCatalogToursPaginationProps> = ({
 				onClick={onNext}
 			>
 				{t("pagination.next")}
+				<AltArrowRightIcon />
 			</Button>
 		</div>
 	);

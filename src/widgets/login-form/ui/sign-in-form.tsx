@@ -1,5 +1,6 @@
 import { type SerializedError } from "@reduxjs/toolkit";
 import { type FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { Login3Icon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -63,6 +64,7 @@ const SignInFormBase: FC<ISignInFormProps> = ({ form, isLoading, error }) => {
 				disabled={isLoading}
 				label={t("form.buttons.sign_in")}
 				loadingLabel={t("form.buttons.sign_in")}
+				icon={<Login3Icon />}
 			/>
 			{/* <FieldSeparator>{t("form.sign_in.continue")}</FieldSeparator>
 			<GoogleLoginButton /> */}

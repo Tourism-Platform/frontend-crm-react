@@ -1,3 +1,4 @@
+import { RestartIcon, TranslationIcon } from "@solar-icons/react/outline";
 import { LanguagesIcon, RefreshCwIcon } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -64,7 +65,7 @@ const TranslationsInfoBase: FC = () => {
 						onClick={() => run(false)}
 						isLoading={isLoading && !isForcing}
 						disabled={!tourId || isLoading}
-						icon={<LanguagesIcon className="h-4 w-4" />}
+						icon={<TranslationIcon />}
 						label={t("general.translations.actions.regenerate")}
 						loadingLabel={t(
 							"general.translations.actions.regenerating"
@@ -80,12 +81,12 @@ const TranslationsInfoBase: FC = () => {
 					</div>
 					<LoaderButton
 						type="button"
-						variant="outline"
-						className="self-start border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
+						variant="destructive_outline"
+						className="self-start"
 						onClick={handleForce}
 						isLoading={isForcing}
 						disabled={!tourId || isLoading}
-						icon={<RefreshCwIcon className="h-4 w-4" />}
+						icon={<RestartIcon />}
 						label={t("general.translations.actions.force")}
 						loadingLabel={t(
 							"general.translations.actions.regenerating"

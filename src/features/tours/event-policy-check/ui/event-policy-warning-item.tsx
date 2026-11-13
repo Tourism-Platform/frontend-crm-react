@@ -49,14 +49,13 @@ export const EventPolicyWarningItem: FC<IEventPolicyWarningItemProps> = ({
 		<Alert
 			variant={hasSurcharge ? "warning" : "secondary"}
 			appearance="light"
-			size="sm"
 			role="status"
 		>
 			<AlertIcon>
 				<ShieldWarningIcon />
 			</AlertIcon>
-			<AlertContent className="space-y-0.5">
-				<AlertTitle className="mb-0 text-sm font-medium">
+			<AlertContent className="space-y-1">
+				<AlertTitle>
 					{t(POLICY_WARNING_TITLE_KEYS[warning.code])}
 				</AlertTitle>
 				<AlertDescription className="text-muted-foreground">

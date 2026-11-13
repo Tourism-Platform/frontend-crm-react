@@ -1,3 +1,4 @@
+import { GlobalIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -34,12 +35,12 @@ export const PublishTourButton: FC<IPublishTourButtonProps> = ({ tourId }) => {
 	return (
 		<LoaderButton
 			type="button"
-			variant="default"
 			onClick={handlePublish}
 			isLoading={isLoading}
 			disabled={!tourId}
 			label={t("actions.publish")}
 			loadingLabel={t("actions.publishing")}
+			icon={<GlobalIcon />}
 		/>
 	);
 };

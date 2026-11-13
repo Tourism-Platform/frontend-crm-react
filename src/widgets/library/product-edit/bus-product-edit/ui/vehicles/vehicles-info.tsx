@@ -1,3 +1,4 @@
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -42,6 +43,7 @@ const VehiclesInfoBase: FC<TSlotProps> = ({
 					isLoading={isLoading}
 					label={t("form.vehicles.buttons.save")}
 					loadingLabel={t("form.vehicles.buttons.saving")}
+					icon={<DisketteIcon />}
 				/>
 			</div>
 		</div>

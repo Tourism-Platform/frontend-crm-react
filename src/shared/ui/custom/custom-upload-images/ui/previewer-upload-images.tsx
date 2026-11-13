@@ -1,6 +1,9 @@
 "use client";
 
-import { XIcon, ZoomInIcon } from "lucide-react";
+import {
+	CloseCircleIcon,
+	MagnifierZoomInIcon
+} from "@solar-icons/react/outline";
 import { type FC, type ReactNode, useState } from "react";
 
 import { cn } from "@/shared/lib";
@@ -57,7 +60,7 @@ export const PreviewImageCard: FC<IPreviewImageCardProps> = ({
 						size="icon"
 						className="size-7"
 					>
-						<ZoomInIcon className="h-3.5 w-3.5" />
+						<MagnifierZoomInIcon className="h-3.5 w-3.5" />
 					</Button>
 				)}
 				{overlay}
@@ -98,7 +101,7 @@ export const UploadImagesLightbox: FC<IUploadImagesLightboxProps> = ({
 					size="icon"
 					className="absolute end-2 top-2 size-7"
 				>
-					<XIcon className="h-4 w-4" />
+					<CloseCircleIcon className="h-4 w-4" />
 				</Button>
 			</div>
 		</div>

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Copy, PlusIcon } from "lucide-react";
+import { CopyIcon, UserPlusRoundedIcon } from "@solar-icons/react/outline";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -85,10 +85,10 @@ export const InviteStaff: FC = () => {
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
-				<Button>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					{t("invite.button")}
-				</Button>
+				<LoaderButton
+					icon={<UserPlusRoundedIcon />}
+					label={t("invite.button")}
+				/>
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => handleOpenChange(false)}
@@ -136,7 +136,7 @@ export const InviteStaff: FC = () => {
 														className="mb-5"
 														onClick={handleCopy}
 													>
-														<Copy className="size-4" />
+														<CopyIcon className="size-4" />
 														<span className="sr-only">
 															{t(
 																"invite.form.generated.copy"
@@ -173,6 +173,7 @@ export const InviteStaff: FC = () => {
 								isLoading={isLoading}
 								label={t("invite.form.buttons.save")}
 								loadingLabel={t("invite.form.buttons.saving")}
+								icon={<UserPlusRoundedIcon />}
 							/>
 						</DialogFooter>
 					</form>

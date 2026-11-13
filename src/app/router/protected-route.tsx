@@ -1,3 +1,4 @@
+import { DangerCircleIcon, RestartIcon } from "@solar-icons/react/outline";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 
@@ -14,8 +15,9 @@ import {
 	Alert,
 	AlertContent,
 	AlertDescription,
+	AlertIcon,
 	AlertTitle,
-	Button,
+	LoaderButton,
 	SuspenseLoader
 } from "@/shared/ui";
 
@@ -31,23 +33,26 @@ const SessionCheckError = ({ onRetry }: { onRetry: () => void }) => {
 		<div className="flex min-h-[50vh] items-center justify-center p-6">
 			<Alert
 				variant="destructive"
-				appearance="outline"
+				appearance="light"
 				className="max-w-md"
 			>
-				<AlertContent>
+				<AlertIcon>
+					<DangerCircleIcon />
+				</AlertIcon>
+				<AlertContent className="space-y-1">
 					<AlertTitle>{t("session_check_error.title")}</AlertTitle>
-					<AlertDescription>
+					<AlertDescription className="text-muted-foreground">
 						{t("session_check_error.description")}
 					</AlertDescription>
 				</AlertContent>
-				<Button
+				<LoaderButton
 					type="button"
 					variant="outline"
 					size="sm"
 					onClick={onRetry}
-				>
-					{t("session_check_error.retry")}
-				</Button>
+					icon={<RestartIcon />}
+					label={t("session_check_error.retry")}
+				/>
 			</Alert>
 		</div>
 	);

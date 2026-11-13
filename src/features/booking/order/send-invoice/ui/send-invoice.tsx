@@ -1,3 +1,4 @@
+import { CheckCircleIcon, FileSendIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -124,7 +125,7 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 
 	return (
 		<>
-			<Button
+			<LoaderButton
 				onClick={() => setOpen(true)}
 				disabled={!transitionGate.allowed}
 				title={
@@ -132,9 +133,9 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 						? transitionGate.reasons.join("; ")
 						: undefined
 				}
-			>
-				{t("buttons.send_invoice")}
-			</Button>
+				icon={<FileSendIcon />}
+				label={t("buttons.send_invoice")}
+			/>
 
 			<Dialog open={open} onOpenChange={handleOpenChange}>
 				<DialogContent
@@ -206,6 +207,7 @@ export const SendInvoice: FC<ISendInvoiceProps> = ({
 								loadingLabel={t(
 									"send_invoice_modal.confirming"
 								)}
+								icon={<CheckCircleIcon />}
 							/>
 						</DialogFooter>
 					</div>

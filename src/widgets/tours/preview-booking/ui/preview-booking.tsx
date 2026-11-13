@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { AltArrowLeftIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { FormProvider } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,7 +7,7 @@ import { generatePath, useNavigate, useParams } from "react-router";
 import { ENUM_PATH } from "@/shared/config/routes/routes.config";
 import { useIsMobile } from "@/shared/hooks";
 import {
-	Button,
+	LoaderButton,
 	Stepper,
 	StepperIndicator,
 	StepperItem,
@@ -93,7 +93,7 @@ const PreviewBookingBase: FC = () => {
 		<FormProvider {...form}>
 			<div className="w-full py-8">
 				{currentStep < PREVIEW_BOOKING_LAST_STEP && (
-					<Button
+					<LoaderButton
 						type="button"
 						variant="ghost"
 						size="sm"
@@ -106,10 +106,9 @@ const PreviewBookingBase: FC = () => {
 								)
 							)
 						}
-					>
-						<ArrowLeft className="h-4 w-4" />
-						{t("back_to_tour")}
-					</Button>
+						icon={<AltArrowLeftIcon />}
+						label={t("back_to_tour")}
+					/>
 				)}
 
 				<div

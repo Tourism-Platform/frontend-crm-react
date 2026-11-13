@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -204,6 +205,7 @@ export const EditPaymentRoute: FC<IEditPaymentRouteProps> = ({
 								loadingLabel={t(
 									"payment_settings.form.modal.buttons.saving"
 								)}
+								icon={<DisketteIcon />}
 							/>
 						</DialogFooter>
 					</form>

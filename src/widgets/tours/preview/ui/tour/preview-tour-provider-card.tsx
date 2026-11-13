@@ -1,4 +1,4 @@
-import { UserIcon } from "@solar-icons/react/outline";
+import { TicketIcon, UserIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { generatePath, useNavigate, useParams } from "react-router";
@@ -8,9 +8,9 @@ import { ENUM_PATH } from "@/shared/config";
 import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import {
-	Button,
 	Card,
 	CardContent,
+	LoaderButton,
 	Skeleton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -107,9 +107,13 @@ const PreviewTourProviderCardBase: FC = () => {
 					))}
 				</div>
 
-				<Button onClick={handleBooking} disabled={isDraftPreview}>
-					{t("book_now")}{" "}
-				</Button>
+				<LoaderButton
+					type="button"
+					onClick={handleBooking}
+					disabled={isDraftPreview}
+					icon={<TicketIcon />}
+					label={t("book_now")}
+				/>
 			</CardContent>
 		</Card>
 	);

@@ -1,8 +1,8 @@
-import { CopyIcon } from "lucide-react";
+import { CopyIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 import { useRevisionEventCopy } from "../model";
 
@@ -22,15 +22,13 @@ export const RevisionEventDuplicateButton: FC<
 	}
 
 	return (
-		<Button
+		<LoaderButton
 			type="button"
-			variant="outline"
 			size="sm"
 			disabled={isLoading}
 			onClick={() => void duplicate(eventId).catch(() => undefined)}
-		>
-			<CopyIcon className="size-4" aria-hidden="true" />
-			{t("copy.duplicate")}
-		</Button>
+			icon={<CopyIcon />}
+			label={t("copy.duplicate")}
+		/>
 	);
 };

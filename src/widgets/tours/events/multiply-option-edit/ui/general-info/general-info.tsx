@@ -1,8 +1,9 @@
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, withErrorBoundary } from "@/shared/ui";
+import { LoaderButton, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_FORM_MULTIPLY_OPTION,
@@ -51,15 +52,16 @@ const GeneralInfoBase: FC<TSlotProps> = ({ form, onSubmit, isLoading }) => {
 			{/* <Separator />
 			<DescriptionInfo form={form} /> */}
 			<div className="flex justify-end mt-6">
-				<Button
+				<LoaderButton
 					type="button"
 					disabled={isLoading}
 					onClick={() => {
 						void onSubmit();
 					}}
-				>
-					{t("general.buttons.save")}
-				</Button>
+					isLoading={isLoading}
+					icon={<DisketteIcon />}
+					label={t("general.buttons.save")}
+				/>
 			</div>
 		</div>
 	);

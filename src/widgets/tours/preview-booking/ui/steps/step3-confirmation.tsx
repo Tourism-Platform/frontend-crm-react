@@ -1,5 +1,6 @@
+import { CheckCircleIcon, CopyIcon } from "@solar-icons/react/outline";
 import { format } from "date-fns";
-import { Check, Copy } from "lucide-react";
+import { Check } from "lucide-react";
 import { type FC, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -119,9 +120,9 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 							onClick={handleCopy}
 						>
 							{copied ? (
-								<Check className="size-3 text-emerald-500" />
+								<CheckCircleIcon className="size-3 text-emerald-500" />
 							) : (
-								<Copy className="size-3 text-muted-foreground" />
+								<CopyIcon className="size-3 text-muted-foreground" />
 							)}
 						</Button>
 					</div>

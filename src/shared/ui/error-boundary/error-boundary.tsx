@@ -1,8 +1,8 @@
-import { RefreshCw } from "lucide-react";
+import { RefreshIcon } from "@solar-icons/react/outline";
 import type { ErrorInfo, ReactNode } from "react";
 import { Component } from "react";
 
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui/custom/loader-button";
 
 interface IProps {
 	children?: ReactNode;
@@ -31,15 +31,14 @@ const DefaultErrorUI = ({ error }: { error: Error | null }) => {
 					{error.stack}
 				</pre>
 			)}
-			<Button
+			<LoaderButton
 				variant="outline"
 				size="sm"
 				onClick={() => window.location.reload()}
-				className="flex items-center gap-2"
-			>
-				<RefreshCw className="h-4 w-4" />
-				Обновить
-			</Button>
+				type="button"
+				icon={<RefreshIcon />}
+				label="Обновить"
+			/>
 		</div>
 	);
 };

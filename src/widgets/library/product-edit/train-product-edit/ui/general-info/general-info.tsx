@@ -1,15 +1,11 @@
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { ENUM_LANGUAGES, i18nLanguageMapper } from "@/shared/config";
-import {
-	Button,
-	CustomField,
-	LoaderButton,
-	withErrorBoundary
-} from "@/shared/ui";
+import { CustomField, LoaderButton, withErrorBoundary } from "@/shared/ui";
 
 import {
 	ENUM_FORM_TRAIN_PRODUCT,
@@ -61,14 +57,12 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 			</div>
 
 			<div className="flex flex-wrap justify-between gap-3">
-				<Button
+				<LoaderButton
 					type="button"
-					variant="outline"
 					onClick={() => append(emptyTrainHopFormRow())}
-				>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					{t("form.general.flights.buttons.add")}
-				</Button>
+					icon={<AddIcon />}
+					label={t("form.general.flights.buttons.add")}
+				/>
 				<LoaderButton
 					type="button"
 					onClick={onSubmit}
@@ -80,6 +74,7 @@ const GeneralInfoBase: FC<TSlotProps> = ({
 							: t("form.general.buttons.save")
 					}
 					loadingLabel={t("form.general.buttons.saving")}
+					icon={isCreate ? <AddIcon /> : <DisketteIcon />}
 				/>
 			</div>
 		</div>

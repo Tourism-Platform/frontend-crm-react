@@ -1,9 +1,15 @@
-import { Trash } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, withErrorBoundary } from "@/shared/ui";
+import {
+	Button,
+	CustomField,
+	LoaderButton,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
 	ENUM_FOC_TIER_FIELD,
@@ -55,9 +61,12 @@ const FocTiersDetailsBase: FC<IFocTiersDetailsProps> = ({ form }) => {
 					</p>
 					<p>{t("finance.form.fields.foc.free.label")}</p>
 				</div>
-				<Button type="button" variant="outline" onClick={handleAddTier}>
-					{t("finance.form.buttons.addFocTier")}
-				</Button>
+				<LoaderButton
+					type="button"
+					onClick={handleAddTier}
+					icon={<AddIcon />}
+					label={t("finance.form.buttons.addFocTier")}
+				/>
 			</div>
 
 			<div className="col-span-2 flex flex-col gap-4">
@@ -82,12 +91,12 @@ const FocTiersDetailsBase: FC<IFocTiersDetailsProps> = ({ form }) => {
 						</div>
 						<Button
 							type="button"
-							variant="destructive"
+							variant="destructive_outline"
 							size="icon"
 							aria-label={t("finance.form.buttons.removeFocTier")}
 							onClick={() => handleRemoveTier(index)}
 						>
-							<Trash />
+							<TrashBinTrashIcon />
 						</Button>
 					</div>
 				))}

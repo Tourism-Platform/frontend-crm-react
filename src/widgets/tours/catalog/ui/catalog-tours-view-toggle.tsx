@@ -1,4 +1,4 @@
-import { LayoutGrid, StretchHorizontal } from "lucide-react";
+import { ListIcon, Widget4Icon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +26,7 @@ export const CatalogToursViewToggle: FC<TCatalogToursViewToggleProps> = ({
 				aria-label={t("view.grid")}
 				onClick={() => onViewModeChange("grid")}
 			>
-				<LayoutGrid className="size-4" />
+				<Widget4Icon className="size-4" />
 			</Button>
 			<Button
 				type="button"
@@ -35,7 +35,7 @@ export const CatalogToursViewToggle: FC<TCatalogToursViewToggleProps> = ({
 				aria-label={t("view.list")}
 				onClick={() => onViewModeChange("list")}
 			>
-				<StretchHorizontal className="size-4" />
+				<ListIcon className="size-4" />
 			</Button>
 		</div>
 	);

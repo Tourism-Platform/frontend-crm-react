@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -69,10 +69,12 @@ export const CreateProductVariant: FC<TCreateProductVariantProps> = (props) => {
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
-				<Button type="button" variant="outline" size="sm">
-					<PlusIcon className="mr-1 h-4 w-4" />
-					<p>{t("form.variants.add")}</p>
-				</Button>
+				<LoaderButton
+					type="button"
+					size="sm"
+					icon={<AddIcon />}
+					label={t("form.variants.add")}
+				/>
 			</DialogTrigger>
 			<DialogContent className="max-w-[450px]">
 				<DialogHeader>
@@ -111,6 +113,7 @@ export const CreateProductVariant: FC<TCreateProductVariantProps> = (props) => {
 								loadingLabel={t(
 									"form.variants.create_dialog.confirming"
 								)}
+								icon={<AddIcon />}
 							/>
 						</DialogFooter>
 					</form>

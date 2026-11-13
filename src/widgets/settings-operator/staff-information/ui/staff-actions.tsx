@@ -1,4 +1,4 @@
-import { EllipsisIcon } from "lucide-react";
+import { MenuDotsIcon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +33,7 @@ export const StaffActions: FC<IStaffActionsProps> = ({ user }) => {
 						className="shadow-none"
 						aria-label="Actions"
 					>
-						<EllipsisIcon size={16} aria-hidden="true" />
+						<MenuDotsIcon size={16} aria-hidden="true" />
 					</Button>
 				</div>
 			</DropdownMenuTrigger>

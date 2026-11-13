@@ -1,8 +1,10 @@
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Badge, Button } from "@/shared/ui";
+import { Badge, LoaderButton } from "@/shared/ui";
 
 import type { IEventPoolMemberSummary } from "@/entities/tour";
 import { type ENUM_EVENT_KIND_TYPE } from "@/entities/tour";
@@ -80,26 +82,25 @@ export const RevisionEventPoolControls: FC<IRevisionEventPoolControlsProps> = ({
 							</Badge>
 						) : null}
 					</div>
-					<Button
+					<LoaderButton
 						type="button"
-						variant="outline"
+						variant="destructive_outline"
 						size="sm"
 						onClick={() => handleRemove(member.id)}
 						disabled={pool.length <= 1 || isLoading}
-					>
-						{t("pool.remove")}
-					</Button>
+						icon={<TrashBinTrashIcon />}
+						label={t("pool.remove")}
+					/>
 				</div>
 			))}
-			<Button
+			<LoaderButton
 				type="button"
-				variant="outline"
 				size="sm"
 				onClick={handleAdd}
 				disabled={isAdding || isLoading}
-			>
-				{t("pool.add.title")}
-			</Button>
+				icon={<AddIcon />}
+				label={t("pool.add.title")}
+			/>
 		</div>
 	);
 };

@@ -1,3 +1,4 @@
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC, type ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -84,6 +85,7 @@ export const DeletePaymentRoute: FC<IDeletePaymentRouteProps> = ({
 						loadingLabel={t(
 							"payment_settings.form.delete.buttons.confirming"
 						)}
+						icon={<TrashBinTrashIcon />}
 					/>
 				</DialogFooter>
 			</DialogContent>

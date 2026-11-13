@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC, useMemo } from "react";
 import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -78,11 +78,11 @@ export const GuidePriceMatrixRow: FC<IGuidePriceMatrixRowProps> = ({
 			))}
 			<Button
 				type="button"
-				variant="destructive"
+				variant="destructive_outline"
 				size="icon"
 				onClick={onRemove}
 			>
-				<Trash2 className="h-4 w-4" />
+				<TrashBinTrashIcon />
 			</Button>
 		</div>
 	);

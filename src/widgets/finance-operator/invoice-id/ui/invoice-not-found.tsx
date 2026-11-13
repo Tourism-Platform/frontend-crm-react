@@ -1,3 +1,4 @@
+import { AltArrowLeftIcon } from "@solar-icons/react/outline";
 import { FileSearch } from "lucide-react";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
@@ -24,7 +25,10 @@ export const InvoiceNotFound: FC = () => {
 			</div>
 
 			<Button variant="outline" size="sm" asChild>
-				<Link to={ENUM_PATH.FINANCE.INVOICES}>{t("buttons.back")}</Link>
+				<Link to={ENUM_PATH.FINANCE.INVOICES}>
+					<AltArrowLeftIcon />
+					{t("buttons.back")}
+				</Link>
 			</Button>
 		</div>
 	);

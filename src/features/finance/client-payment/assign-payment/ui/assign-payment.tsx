@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CheckCircleIcon } from "@solar-icons/react/outline";
 import { type FC, type ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -165,6 +166,7 @@ export const AssignPayment: FC<IAssignPaymentProps> = ({
 									loadingLabel={t(
 										"menu.assign.form.buttons.saving"
 									)}
+									icon={<CheckCircleIcon />}
 								/>
 							)}
 						</DialogFooter>

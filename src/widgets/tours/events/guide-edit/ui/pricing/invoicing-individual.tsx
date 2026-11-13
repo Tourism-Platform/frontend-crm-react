@@ -1,9 +1,8 @@
-import { ShieldWarningIcon } from "@solar-icons/react/outline";
+import { DangerTriangleIcon, InfoCircleIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { InfoCircleIcon } from "@/shared/assets";
 import {
 	Alert,
 	AlertContent,
@@ -107,14 +106,9 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 			</div>
 
 			{isLegacyShape ? (
-				<Alert
-					variant="warning"
-					appearance="light"
-					size="sm"
-					role="status"
-				>
+				<Alert variant="warning" appearance="light" role="status">
 					<AlertIcon>
-						<ShieldWarningIcon />
+						<DangerTriangleIcon />
 					</AlertIcon>
 					<AlertContent>
 						<AlertDescription>
@@ -127,12 +121,7 @@ const InvoicingIndividualBase: FC<TSlotProps> = ({ form }) => {
 			<GuidePriceMatrix form={form} />
 
 			{isFlatOnMultiDay ? (
-				<Alert
-					variant="info"
-					appearance="light"
-					size="sm"
-					role="status"
-				>
+				<Alert variant="primary" appearance="light" role="status">
 					<AlertIcon>
 						<InfoCircleIcon />
 					</AlertIcon>

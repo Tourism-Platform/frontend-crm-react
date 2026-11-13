@@ -1,4 +1,4 @@
-import { ChevronLeft } from "lucide-react";
+import { AltArrowLeftIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -22,7 +22,7 @@ const TourNotFoundBase: FC = () => {
 					className="text-primary"
 				>
 					<Link to={ENUM_PATH.TOURS.ROOT}>
-						<ChevronLeft className="mr-2 h-4 w-4" />
+						<AltArrowLeftIcon />
 						{t("buttons.back")}
 					</Link>
 				</Button>

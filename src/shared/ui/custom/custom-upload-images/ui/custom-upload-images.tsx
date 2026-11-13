@@ -15,7 +15,11 @@ import {
 	useSortable
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Loader2, Star, Trash2, Upload, ZoomInIcon } from "lucide-react";
+import {
+	MagnifierZoomInIcon,
+	TrashBinTrashIcon
+} from "@solar-icons/react/outline";
+import { Loader2, Star, Upload } from "lucide-react";
 import { type FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -127,7 +131,7 @@ const SortableCard: FC<ISortableCardProps> = ({
 					size="icon"
 					className="size-7"
 				>
-					<ZoomInIcon className="h-3.5 w-3.5" />
+					<MagnifierZoomInIcon className="h-3.5 w-3.5" />
 				</Button>
 
 				<Button
@@ -136,11 +140,11 @@ const SortableCard: FC<ISortableCardProps> = ({
 						e.stopPropagation();
 						onRemove(id);
 					}}
-					variant="secondary"
+					variant="destructive_outline"
 					size="icon"
 					className="size-7"
 				>
-					<Trash2 className="h-3.5 w-3.5" />
+					<TrashBinTrashIcon className="h-3.5 w-3.5" />
 				</Button>
 			</div>
 

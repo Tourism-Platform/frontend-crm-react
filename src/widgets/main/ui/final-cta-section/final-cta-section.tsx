@@ -1,4 +1,7 @@
-import { Building2, Users } from "lucide-react";
+import {
+	Buildings2Icon,
+	UsersGroupRoundedIcon
+} from "@solar-icons/react/outline";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +36,7 @@ export const FinalCtaSection: FC<IFinalCtaSectionProps> = ({
 							size="lg"
 							onClick={() => onAudienceCta("operator")}
 						>
-							<Building2 className="size-4" />
+							<Buildings2Icon className="size-4" />
 							{t("cta.buttons.operator")}
 						</Button>
 						<Button
@@ -41,7 +44,7 @@ export const FinalCtaSection: FC<IFinalCtaSectionProps> = ({
 							variant="outline"
 							onClick={onNavigateCta}
 						>
-							<Users className="size-4" />
+							<UsersGroupRoundedIcon className="size-4" />
 							{t("cta.buttons.agency")}
 						</Button>
 					</div>

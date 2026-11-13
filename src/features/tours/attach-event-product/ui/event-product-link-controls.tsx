@@ -1,8 +1,13 @@
+import {
+	LinkMinimalisticIcon,
+	TransferHorizontalIcon,
+	UnlinkIcon
+} from "@solar-icons/react/outline";
 import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button, LoaderButton } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 import type { ENUM_SUPPLIER_TYPE_TYPE } from "@/entities/supplier";
 import type { IEventProductDetach, IEventProductLink } from "@/entities/tour";
@@ -85,30 +90,30 @@ export const EventProductLinkControls: FC<IEventProductLinkControlsProps> = ({
 				{!isLinked ? (
 					<LoaderButton
 						type="button"
-						variant="outline"
 						onClick={() => setOpen(true)}
 						isLoading={isLoading}
 						label={t("attach_product.buttons.attach")}
 						loadingLabel={t("attach_product.buttons.attaching")}
+						icon={<LinkMinimalisticIcon />}
 					/>
 				) : (
 					<>
-						<Button
+						<LoaderButton
 							type="button"
-							variant="outline"
+							variant="secondary"
 							onClick={handleChangeClick}
 							disabled={isLoading}
-						>
-							{t("attach_product.buttons.change")}
-						</Button>
-						<Button
+							icon={<TransferHorizontalIcon />}
+							label={t("attach_product.buttons.change")}
+						/>
+						<LoaderButton
 							type="button"
-							variant="outline"
+							variant="destructive_outline"
 							onClick={() => setDetachOpen(true)}
 							disabled={isLoading}
-						>
-							{t("attach_product.buttons.detach")}
-						</Button>
+							icon={<UnlinkIcon />}
+							label={t("attach_product.buttons.detach")}
+						/>
 					</>
 				)}
 			</div>

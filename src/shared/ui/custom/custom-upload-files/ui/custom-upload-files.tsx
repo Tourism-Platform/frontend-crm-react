@@ -1,9 +1,8 @@
 import {
-	AlertCircleIcon,
-	FileIcon,
-	Trash2Icon,
-	UploadIcon
-} from "lucide-react";
+	TrashBinTrashIcon,
+	UploadMinimalisticIcon
+} from "@solar-icons/react/outline";
+import { AlertCircleIcon, FileIcon } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +12,7 @@ import {
 	useFileUpload
 } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui/custom/loader-button";
 
 import { FileCard } from "./file-card";
 
@@ -109,19 +108,15 @@ export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 									</h3>
 								)}
 								{showAllRemoveButton && (
-									<Button
-										variant="outline"
+									<LoaderButton
+										variant="destructive_outline"
 										size="sm"
 										type="button"
 										onClick={clearFiles}
 										disabled={isLoading}
-									>
-										<Trash2Icon
-											className="-ms-0.5 size-3.5 opacity-60"
-											aria-hidden="true"
-										/>
-										{t("upload_files.buttons.remove")}
-									</Button>
+										icon={<TrashBinTrashIcon />}
+										label={t("upload_files.buttons.remove")}
+									/>
 								)}
 							</div>
 						)}
@@ -139,18 +134,13 @@ export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 
 							{!readOnly && files.length < maxFiles && (
 								<div className="flex justify-end">
-									<Button
-										variant="outline"
+									<LoaderButton
 										type="button"
 										onClick={openFileDialog}
 										disabled={isLoading}
-									>
-										<UploadIcon
-											className="-ms-1 opacity-60"
-											aria-hidden="true"
-										/>
-										{t("upload_files.buttons.add")}
-									</Button>
+										icon={<UploadMinimalisticIcon />}
+										label={t("upload_files.buttons.add")}
+									/>
 								</div>
 							)}
 						</div>
@@ -176,19 +166,14 @@ export const CustomUploadFiles: FC<ICustomUploadFilesProps> = ({
 										maxSize: size
 									})}
 								</p>
-								<Button
-									variant="outline"
+								<LoaderButton
 									type="button"
 									className="mt-4"
 									onClick={openFileDialog}
 									disabled={isLoading}
-								>
-									<UploadIcon
-										className="-ms-1 opacity-60"
-										aria-hidden="true"
-									/>
-									{t("upload_files.buttons.select")}
-								</Button>
+									icon={<UploadMinimalisticIcon />}
+									label={t("upload_files.buttons.select")}
+								/>
 							</>
 						)}
 					</div>

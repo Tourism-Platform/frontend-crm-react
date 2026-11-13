@@ -1,4 +1,4 @@
-import { DownloadIcon } from "lucide-react";
+import { ExportIcon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -46,9 +46,10 @@ export const ExportInvoiceButton: FC<IExportInvoiceButtonProps> = ({
 			type="button"
 			onClick={handleExport}
 			isLoading={isBusy}
-			icon={<DownloadIcon className="h-4 w-4" />}
+			icon={<ExportIcon />}
 			label={t("buttons.export")}
 			loadingLabel={t("buttons.exporting")}
+			variant="outline"
 		/>
 	);
 };

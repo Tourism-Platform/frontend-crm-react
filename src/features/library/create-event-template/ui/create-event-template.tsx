@@ -1,17 +1,17 @@
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { buildRoute } from "@/shared/config";
 import {
-	Button,
 	Dialog,
 	DialogContent,
 	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
+	LoaderButton,
 	Separator
 } from "@/shared/ui";
 
@@ -27,10 +27,10 @@ export const CreateEventTemplate: FC = () => {
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					{t("new_template.button")}
-				</Button>
+				<LoaderButton
+					icon={<AddIcon />}
+					label={t("new_template.button")}
+				/>
 			</DialogTrigger>
 			<DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[52rem]">
 				<DialogHeader>

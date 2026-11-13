@@ -1,8 +1,15 @@
+import { RestartIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Card, CardContent, CustomField, Form } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CustomField,
+	Form,
+	LoaderButton
+} from "@/shared/ui";
 
 import { type IPricingBreakdownParams } from "@/entities/tour";
 
@@ -34,14 +41,14 @@ export const PricingReviewParams: FC<IPricingReviewParamsProps> = ({
 								{...item}
 							/>
 						))}
-						<Button
+						<LoaderButton
 							type="button"
 							variant="outline"
 							className="mb-5"
 							onClick={onReset}
-						>
-							{t("params.reset")}
-						</Button>
+							icon={<RestartIcon />}
+							label={t("params.reset")}
+						/>
 					</div>
 				</Form>
 			</CardContent>

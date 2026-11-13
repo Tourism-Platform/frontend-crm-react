@@ -1,4 +1,10 @@
-import { CheckCircle2, Plus, Trash2 } from "lucide-react";
+import {
+	AltArrowDownIcon,
+	AltArrowUpIcon,
+	TrashBinTrashIcon,
+	UserPlusRoundedIcon
+} from "@solar-icons/react/outline";
+import { CheckCircle2 } from "lucide-react";
 import { type FC, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -13,7 +19,8 @@ import {
 	CardHeader,
 	CardTitle,
 	CustomField,
-	DataState
+	DataState,
+	LoaderButton
 } from "@/shared/ui";
 import {
 	Accordion,
@@ -92,7 +99,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 							</CardDescription>
 							{fields.length > 0 && (
 								<CardAction className="flex flex-wrap gap-2 max-sm:col-span-1 max-sm:col-start-1 max-sm:row-span-1 max-sm:row-start-auto max-sm:mt-2 max-sm:justify-self-start">
-									<Button
+									<LoaderButton
 										type="button"
 										variant="outline"
 										size="sm"
@@ -101,17 +108,17 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 												fields.map((_, index) => index)
 											)
 										}
-									>
-										{t("step_2.show_all")}
-									</Button>
-									<Button
+										icon={<AltArrowDownIcon />}
+										label={t("step_2.show_all")}
+									/>
+									<LoaderButton
 										type="button"
 										variant="outline"
 										size="sm"
 										onClick={() => setOpenIndexes([])}
-									>
-										{t("step_2.hide_all")}
-									</Button>
+										icon={<AltArrowUpIcon />}
+										label={t("step_2.hide_all")}
+									/>
 								</CardAction>
 							)}
 						</CardHeader>
@@ -178,7 +185,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 												</AccordionTrigger>
 												<Button
 													type="button"
-													variant="ghost"
+													variant="destructive_outline"
 													size="icon"
 													className="size-8 shrink-0 text-muted-foreground hover:text-destructive"
 													disabled={isLoading}
@@ -186,7 +193,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 														onRemoveTraveller(index)
 													}
 												>
-													<Trash2 className="size-4" />
+													<TrashBinTrashIcon />
 												</Button>
 											</div>
 											<AccordionContent className="px-1 pt-4 pb-4">
@@ -283,16 +290,14 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 							</Accordion>
 
 							{canAddTraveller && (
-								<Button
+								<LoaderButton
 									type="button"
-									variant="outline"
 									className="w-fit"
 									disabled={isLoading}
 									onClick={onAddTraveller}
-								>
-									<Plus className="mr-2 size-4" />
-									{t("step_2.add_traveller")}
-								</Button>
+									icon={<UserPlusRoundedIcon />}
+									label={t("step_2.add_traveller")}
+								/>
 							)}
 						</CardContent>
 					</Card>

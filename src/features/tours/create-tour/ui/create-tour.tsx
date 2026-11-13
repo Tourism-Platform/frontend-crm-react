@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC, Fragment, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -95,10 +95,7 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>
-					<PlusIcon className="mr-1 h-4 w-4" />
-					<p>{t("create.button")}</p>
-				</Button>
+				<LoaderButton icon={<AddIcon />} label={t("create.button")} />
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
@@ -222,6 +219,7 @@ export const CreateTour: FC<ICreateTourProps> = ({ onAdd }) => {
 								isLoading={isLoading}
 								label={t("create.form.buttons.save")}
 								loadingLabel={t("create.form.buttons.saving")}
+								icon={<AddIcon />}
 							/>
 						</DialogFooter>
 					</form>

@@ -1,4 +1,4 @@
-import { MoreHorizontal } from "lucide-react";
+import { MenuDotsIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -34,7 +34,7 @@ export const DraggableDayItemMenu: FC<IDraggableDayItemMenuProps> = ({
 					type="button"
 					className="hover:!bg-transparent !text-muted-foreground"
 				>
-					<MoreHorizontal />
+					<MenuDotsIcon />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

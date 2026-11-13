@@ -1,3 +1,4 @@
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC, Fragment } from "react";
 import { useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -295,6 +296,7 @@ export const OverrideEventDialog: FC<IOverrideEventDialogProps> = ({
 						isLoading={isSubmitting}
 						label={t("override_product.dialog.confirm")}
 						loadingLabel={t("override_product.dialog.confirming")}
+						icon={<DisketteIcon />}
 					/>
 				</DialogFooter>
 			</DialogContent>

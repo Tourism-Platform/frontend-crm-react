@@ -1,6 +1,9 @@
+import {
+	AltArrowDownIcon,
+	AltArrowRightIcon
+} from "@solar-icons/react/outline";
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { ChevronDown, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
@@ -209,9 +212,9 @@ export const PRICING_REVIEW_COLUMNS = (
 								className="shrink-0"
 							>
 								{getIsExpanded() ? (
-									<ChevronDown className="size-4 text-muted-foreground" />
+									<AltArrowDownIcon className="size-4 text-muted-foreground" />
 								) : (
-									<ChevronRight className="size-4 text-muted-foreground" />
+									<AltArrowRightIcon className="size-4 text-muted-foreground" />
 								)}
 							</Button>
 						) : (

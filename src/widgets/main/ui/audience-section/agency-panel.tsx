@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRightIcon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -96,7 +96,7 @@ export const AgencyPanel: FC = () => {
 
 				<Button size="lg" className="mt-8">
 					{t("agency.cta")}
-					<ArrowRight className="size-4" />
+					<ArrowRightIcon className="size-4" />
 				</Button>
 			</div>
 		</div>

@@ -54,11 +54,6 @@ export const useEventPoolMembers = (variant: ENUM_EVENT_POOL_VARIANT_TYPE) => {
 			variant === ENUM_EVENT_POOL_VARIANT.LIBRARY
 				? libraryPool.isLoading
 				: tourMutations.isAdding,
-		isRemoving:
-			variant === ENUM_EVENT_POOL_VARIANT.LIBRARY
-				? libraryPool.isLoading
-				: tourMutations.isRemoving,
-		isSettingMain: tourMutations.isSettingMain,
 		add:
 			variant === ENUM_EVENT_POOL_VARIANT.LIBRARY
 				? libraryPool.add

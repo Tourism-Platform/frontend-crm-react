@@ -1,15 +1,15 @@
-import { PlusIcon } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
 import React, { type FC } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
 	Accordion,
-	Button,
 	CustomCollapsibleListToolbar,
 	CustomOptionTabs,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
+	LoaderButton,
 	useCollapsibleList,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -204,14 +204,12 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 
 				{!isInherited ? (
 					<div>
-						<Button
-							variant="outline"
+						<LoaderButton
 							type="button"
 							onClick={handleAddFlight}
-						>
-							<PlusIcon />
-							<p>{t("form.general.flights.buttons.add")}</p>
-						</Button>
+							icon={<AddIcon />}
+							label={t("form.general.flights.buttons.add")}
+						/>
 					</div>
 				) : null}
 			</div>

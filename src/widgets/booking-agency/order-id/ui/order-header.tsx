@@ -1,11 +1,12 @@
+import { ExportIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import {
 	Badge,
-	Button,
 	CopyableValue,
+	LoaderButton,
 	useSetBreadcrumbLabels
 } from "@/shared/ui";
 
@@ -97,7 +98,11 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 						status === ENUM_ORDER_STATUS.COMPLETED ||
 						status === ENUM_ORDER_STATUS.BOOKING ||
 						status === ENUM_ORDER_STATUS.IN_PROCESSING) && (
-						<Button variant="slate">{t("buttons.export")}</Button>
+						<LoaderButton
+							variant="outline"
+							icon={<ExportIcon />}
+							label={t("buttons.export")}
+						/>
 					)}
 				</div>
 			</div>

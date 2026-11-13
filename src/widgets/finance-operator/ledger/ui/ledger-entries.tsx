@@ -1,3 +1,4 @@
+import { RestartIcon } from "@solar-icons/react/outline";
 import { type OnChangeFn, type PaginationState } from "@tanstack/react-table";
 import { type FC, useCallback, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -6,7 +7,12 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Button, CustomField, Form, withErrorBoundary } from "@/shared/ui";
+import {
+	CustomField,
+	Form,
+	LoaderButton,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -131,13 +137,13 @@ const LedgerEntriesBase: FC = () => {
 								{...item}
 							/>
 						))}
-						<Button
+						<LoaderButton
 							type="button"
 							variant="outline"
 							onClick={handleResetFilters}
-						>
-							{t("entries.filters.reset")}
-						</Button>
+							icon={<RestartIcon />}
+							label={t("entries.filters.reset")}
+						/>
 					</div>
 				</Form>
 			}

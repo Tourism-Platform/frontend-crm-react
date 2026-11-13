@@ -1,4 +1,4 @@
-import { UploadIcon } from "lucide-react";
+import { UploadMinimalisticIcon } from "@solar-icons/react/outline";
 import { type ChangeEvent, type FC, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -46,7 +46,7 @@ export const UploadInvoicePdfButton: FC<IUploadInvoicePdfButtonProps> = ({
 				variant="outline"
 				onClick={() => inputRef.current?.click()}
 				isLoading={isLoading}
-				icon={<UploadIcon className="h-4 w-4" />}
+				icon={<UploadMinimalisticIcon />}
 				label={t("buttons.upload_pdf")}
 				loadingLabel={t("buttons.uploading_pdf")}
 			/>

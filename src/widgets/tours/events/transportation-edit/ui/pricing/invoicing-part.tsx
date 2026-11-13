@@ -1,3 +1,4 @@
+import { AddIcon } from "@solar-icons/react/bold/add";
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -46,7 +47,7 @@ const InvoicingPartBase: FC<TSlotProps> = ({ form }) => {
 					t={t}
 				/>
 				<div className="flex justify-start">
-					<Button variant="outline" className="mb-5" asChild>
+					<Button className="mb-5" asChild>
 						<Link
 							to={buildPackageCreateRoute({
 								tourId,
@@ -56,6 +57,7 @@ const InvoicingPartBase: FC<TSlotProps> = ({ form }) => {
 								fromEventOptionId: eventOptionId || undefined
 							})}
 						>
+							<AddIcon />
 							{t("form.pricing.form.package.buttons.create")}
 						</Link>
 					</Button>

@@ -1,9 +1,10 @@
-import { Plus, X } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { MinusIcon } from "@solar-icons/react/bold/minus";
 import { type FC } from "react";
 import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField } from "@/shared/ui";
+import { Button, CustomField, LoaderButton } from "@/shared/ui";
 
 import {
 	ENUM_GUIDE_CHARGE,
@@ -147,14 +148,14 @@ export const GuidePriceMatrix: FC<IGuidePriceMatrixProps> = ({ form }) => {
 							{columns > 1 ? (
 								<Button
 									type="button"
-									variant="ghost"
+									variant="destructive_outline"
 									size="icon"
 									aria-label={t(
 										"form.pricing.form.matrix.buttons.remove_column"
 									)}
 									onClick={() => removeColumn(column)}
 								>
-									<X className="h-4 w-4" />
+									<MinusIcon />
 								</Button>
 							) : null}
 						</div>
@@ -181,27 +182,23 @@ export const GuidePriceMatrix: FC<IGuidePriceMatrixProps> = ({ form }) => {
 			) : null}
 
 			<div className="flex flex-wrap gap-3">
-				<Button
+				<LoaderButton
 					type="button"
-					variant="outline"
 					disabled={isEveryLangTaken}
 					onClick={() =>
 						rows.append(createEmptyGuidePriceRow(columns))
 					}
-				>
-					<Plus className="mr-2 h-4 w-4" />
-					{t("form.pricing.form.matrix.buttons.add_language")}
-				</Button>
+					icon={<AddIcon />}
+					label={t("form.pricing.form.matrix.buttons.add_language")}
+				/>
 				{isPerDuration ? (
-					<Button
+					<LoaderButton
 						type="button"
-						variant="outline"
 						disabled={columns >= GUIDE_MAX_PRICE_COLUMNS}
 						onClick={addColumn}
-					>
-						<Plus className="mr-2 h-4 w-4" />
-						{t("form.pricing.form.matrix.buttons.add_column")}
-					</Button>
+						icon={<AddIcon />}
+						label={t("form.pricing.form.matrix.buttons.add_column")}
+					/>
 				) : null}
 			</div>
 		</div>

@@ -132,7 +132,7 @@ export const AddEventPoolMemberDialog: FC<IAddEventPoolMemberDialogProps> = ({
 					<DialogFooter>
 						<Button
 							type="button"
-							variant="ghost"
+							variant="outline"
 							onClick={() => onOpenChange(false)}
 							disabled={isSubmitting}
 						>

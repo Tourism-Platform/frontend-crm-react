@@ -1,4 +1,4 @@
-import { LogIn } from "lucide-react";
+import { Login3Icon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -35,7 +35,7 @@ export const HeaderDefault: FC = () => {
 					<LanguageToggle />
 					<Button size="sm" asChild>
 						<Link to={authPath}>
-							<LogIn />
+							<Login3Icon />
 							{t("public.sign_in")}
 						</Link>
 					</Button>

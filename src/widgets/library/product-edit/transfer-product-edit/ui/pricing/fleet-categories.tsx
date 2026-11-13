@@ -1,9 +1,10 @@
-import { Plus, Trash2 } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC, Fragment } from "react";
 import { type UseFormReturn, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, CustomField, Separator } from "@/shared/ui";
+import { Button, CustomField, LoaderButton, Separator } from "@/shared/ui";
 
 import {
 	ENUM_FORM_TRANSFER_SECTION,
@@ -93,27 +94,25 @@ export const FleetCategories: FC<IFleetCategoriesProps> = ({
 							/>
 							<Button
 								type="button"
-								variant="destructive"
+								variant="destructive_outline"
 								size="icon"
 								onClick={() => handleRemove(index)}
 								disabled={fields.length <= 1}
 							>
-								<Trash2 className="h-4 w-4" />
+								<TrashBinTrashIcon />
 							</Button>
 						</div>
 						{index < fields.length - 1 ? <Separator /> : null}
 					</Fragment>
 				);
 			})}
-			<Button
+			<LoaderButton
 				type="button"
-				variant="outline"
 				className="w-fit"
 				onClick={handleAppend}
-			>
-				<Plus className="mr-2 h-4 w-4" />
-				{t("form.pricing.form.per_car.buttons.add_category")}
-			</Button>
+				icon={<AddIcon />}
+				label={t("form.pricing.form.per_car.buttons.add_category")}
+			/>
 		</div>
 	);
 };

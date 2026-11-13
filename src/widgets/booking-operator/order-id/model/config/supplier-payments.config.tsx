@@ -1,6 +1,9 @@
+import {
+	AltArrowDownIcon,
+	AltArrowRightIcon
+} from "@solar-icons/react/outline";
 import { type ColumnDef } from "@tanstack/react-table";
 import type { TFunction } from "i18next";
-import { ChevronDown, ChevronRight } from "lucide-react";
 
 import { cn } from "@/shared/lib";
 import { Badge, Button, Skeleton } from "@/shared/ui";
@@ -56,9 +59,9 @@ export const SUPPLIER_PAYMENTS_COLUMNS = (
 								className="shrink-0"
 							>
 								{getIsExpanded() ? (
-									<ChevronDown className="size-4 text-muted-foreground" />
+									<AltArrowDownIcon className="size-4 text-muted-foreground" />
 								) : (
-									<ChevronRight className="size-4 text-muted-foreground" />
+									<AltArrowRightIcon className="size-4 text-muted-foreground" />
 								)}
 							</Button>
 						) : (

@@ -1,4 +1,4 @@
-import { MoreHorizontal } from "lucide-react";
+import { MenuDotsIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 
 import {
@@ -23,7 +23,7 @@ export const RowRemoveMenu: FC<IRowRemoveMenuProps> = ({ onRemove }) => {
 					type="button"
 					className="hover:!bg-transparent !text-muted-foreground"
 				>
-					<MoreHorizontal />
+					<MenuDotsIcon />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

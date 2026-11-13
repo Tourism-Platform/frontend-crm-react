@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft } from "lucide-react";
+import { DangerCircleIcon, HomeIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -10,6 +10,7 @@ import {
 	Alert,
 	AlertContent,
 	AlertDescription,
+	AlertIcon,
 	AlertTitle,
 	Button,
 	Card,
@@ -87,7 +88,7 @@ const LoginFormBase: FC = () => {
 				asChild
 			>
 				<Link to={ENUM_PATH.MAIN}>
-					<ArrowLeft className="size-4" />
+					<HomeIcon />
 					{t("form.buttons.back_to_home")}
 				</Link>
 			</Button>
@@ -116,10 +117,13 @@ const LoginFormBase: FC = () => {
 				</div>
 
 				{isAccessDenied && (
-					<Alert variant="destructive" appearance="outline">
-						<AlertContent>
+					<Alert variant="destructive" appearance="light">
+						<AlertIcon>
+							<DangerCircleIcon />
+						</AlertIcon>
+						<AlertContent className="space-y-1">
 							<AlertTitle>{t("access_denied.title")}</AlertTitle>
-							<AlertDescription>
+							<AlertDescription className="text-muted-foreground">
 								{accessDeniedEmail
 									? t("access_denied.description", {
 											email: accessDeniedEmail

@@ -42,13 +42,13 @@ const CatalogToursSimilarBase: FC<ICatalogToursSimilarProps> = ({ params }) => {
 
 	return (
 		<div className="grid gap-10 ">
-			<Alert variant="warning" appearance="light" className="px-9 py-6">
+			<Alert variant="primary" appearance="light" role="status">
 				<AlertIcon>
 					<SerchFavoriteIcon />
 				</AlertIcon>
-				<AlertContent className="flex gap-2">
-					<AlertTitle className="mb-0">{t("alert.title")}</AlertTitle>
-					<AlertDescription>
+				<AlertContent className="space-y-1">
+					<AlertTitle>{t("alert.title")}</AlertTitle>
+					<AlertDescription className="text-muted-foreground">
 						{t("alert.description")}
 					</AlertDescription>
 				</AlertContent>

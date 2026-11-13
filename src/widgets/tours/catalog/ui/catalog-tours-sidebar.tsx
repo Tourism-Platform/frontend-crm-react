@@ -1,8 +1,15 @@
+import { RestartIcon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	LoaderButton
+} from "@/shared/ui";
 
 import type { ICatalogTourFilters } from "@/entities/tour";
 
@@ -26,13 +33,14 @@ export const CatalogToursSidebar: FC<TCatalogToursSidebarProps> = ({
 					<CardTitle className="text-lg font-semibold">
 						{t("filters.title")}
 					</CardTitle>
-					<Button
+					<LoaderButton
 						size="sm"
 						onClick={onReset}
 						className="h-auto bg-transparent p-0 text-destructive hover:bg-transparent"
-					>
-						{t("filters.buttons.reset")}
-					</Button>
+						variant="outline"
+						icon={<RestartIcon />}
+						label={t("filters.buttons.reset")}
+					/>
 				</CardHeader>
 				<CardContent>
 					<CatalogToursFilter form={form} />

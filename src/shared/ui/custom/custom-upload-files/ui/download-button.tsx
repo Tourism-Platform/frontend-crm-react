@@ -1,4 +1,4 @@
-import { DownloadIcon, Loader2Icon } from "lucide-react";
+import { DownloadMinimalisticIcon } from "@solar-icons/react/outline";
 import type { FC } from "react";
 
 import {
@@ -6,7 +6,7 @@ import {
 	type TFileWithPreview,
 	useDownloadFile
 } from "@/shared/hooks";
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui/custom/loader-button";
 
 interface IDownloadButtonProps {
 	file: TFileWithPreview;
@@ -29,7 +29,7 @@ export const DownloadButton: FC<IDownloadButtonProps> = ({
 	const isDisabled = disabled || isDownloading;
 
 	return (
-		<Button
+		<LoaderButton
 			size="icon"
 			type="button"
 			variant="ghost"
@@ -37,15 +37,8 @@ export const DownloadButton: FC<IDownloadButtonProps> = ({
 			onClick={handleDownload}
 			aria-label="Download file"
 			disabled={isDisabled}
-		>
-			{isDownloading ? (
-				<Loader2Icon
-					className="size-4 animate-spin"
-					aria-hidden="true"
-				/>
-			) : (
-				<DownloadIcon className="size-4" aria-hidden="true" />
-			)}
-		</Button>
+			isLoading={isDownloading}
+			icon={<DownloadMinimalisticIcon />}
+		/>
 	);
 };

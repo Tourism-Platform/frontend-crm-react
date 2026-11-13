@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Plus } from "lucide-react";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -96,10 +97,9 @@ export const CreateOption: FC<ICreateOptionProps> = ({ tourId }) => {
 				<Button
 					type="button"
 					size="icon"
-					variant="ghost"
 					aria-label={t("option.form.button")}
 				>
-					<Plus className="w-5 h-5 text-muted-foreground" />
+					<AddIcon />
 				</Button>
 			</DialogTrigger>
 			<DialogContent
@@ -197,6 +197,7 @@ export const CreateOption: FC<ICreateOptionProps> = ({ tourId }) => {
 								loadingLabel={t(
 									"option.form.modal.buttons.saving"
 								)}
+								icon={<DisketteIcon />}
 							/>
 						</DialogFooter>
 					</form>

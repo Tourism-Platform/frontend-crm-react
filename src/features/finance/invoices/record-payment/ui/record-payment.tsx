@@ -1,4 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AddIcon } from "@solar-icons/react/bold/add";
+import { DisketteIcon } from "@solar-icons/react/outline";
 import { type FC, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -97,7 +99,10 @@ export const RecordPayment: FC<IRecordPaymentProps> = ({
 	return (
 		<Dialog open={open} onOpenChange={handleOpenChange}>
 			<DialogTrigger asChild>
-				<Button>{t("record_payment.button")}</Button>
+				<LoaderButton
+					icon={<AddIcon />}
+					label={t("record_payment.button")}
+				/>
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
@@ -139,6 +144,7 @@ export const RecordPayment: FC<IRecordPaymentProps> = ({
 								loadingLabel={t(
 									"record_payment.form.buttons.saving"
 								)}
+								icon={<DisketteIcon />}
 							/>
 						</DialogFooter>
 					</form>

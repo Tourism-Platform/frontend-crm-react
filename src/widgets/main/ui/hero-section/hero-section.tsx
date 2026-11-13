@@ -1,4 +1,5 @@
-import { ArrowRight, Check } from "lucide-react";
+import { ArrowRightIcon } from "@solar-icons/react/outline";
+import { Check } from "lucide-react";
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -42,7 +43,7 @@ export const HeroSection: FC<IHeroSectionProps> = ({ onAudienceCta }) => {
 							onClick={() => onAudienceCta("operator")}
 						>
 							{t("hero.cta.operator")}
-							<ArrowRight className="size-4" />
+							<ArrowRightIcon className="size-4" />
 						</Button>
 						<Button
 							size="lg"
@@ -50,7 +51,7 @@ export const HeroSection: FC<IHeroSectionProps> = ({ onAudienceCta }) => {
 							onClick={() => onAudienceCta("agency")}
 						>
 							{t("hero.cta.agency")}
-							<ArrowRight className="size-4" />
+							<ArrowRightIcon className="size-4" />
 						</Button>
 					</div>
 

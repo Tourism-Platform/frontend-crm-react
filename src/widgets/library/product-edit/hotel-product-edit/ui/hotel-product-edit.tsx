@@ -1,4 +1,4 @@
-import { Trash2 } from "lucide-react";
+import { TrashBinTrashIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -7,11 +7,11 @@ import { useNavigate } from "react-router-dom";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
-	Button,
 	Card,
 	CardContent,
 	CustomQueryTabs,
 	Form,
+	LoaderButton,
 	useSetBreadcrumbLabels,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -78,10 +78,11 @@ const HotelProductEditBase: FC<IHotelProductEditProps> = ({
 							ns="hotel_product_edit_page"
 							onSuccess={() => navigate(supplierPath)}
 							trigger={
-								<Button variant="destructive">
-									<Trash2 className="mr-2 h-4 w-4" />
-									{t("menu.delete.button")}
-								</Button>
+								<LoaderButton
+									variant="destructive_outline"
+									icon={<TrashBinTrashIcon />}
+									label={t("menu.delete.button")}
+								/>
 							}
 						/>
 					) : null}

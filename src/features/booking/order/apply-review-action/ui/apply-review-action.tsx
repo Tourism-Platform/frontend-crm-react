@@ -1,8 +1,8 @@
-import { Check, CircleCheckBig, Loader2 } from "lucide-react";
+import { CheckCircleIcon } from "@solar-icons/react/outline";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import { Button } from "@/shared/ui";
+import { LoaderButton } from "@/shared/ui";
 
 import {
 	ENUM_AVAILABILITY_STATUS,
@@ -48,27 +48,19 @@ export const ApplyReviewAction = ({
 	}
 
 	return (
-		<Button
-			variant={isApplied ? "green_outline" : "cyan_outline"}
+		<LoaderButton
+			type="button"
+			variant={isApplied ? "secondary" : "default"}
 			onClick={handleApply}
 			disabled={isLoading || isApplied || !eventId || !nextStatus}
+			isLoading={isLoading}
 			className="min-w-24"
-		>
-			{isApplied ? (
-				<>
-					{t("tour_review.table.applied")}
-					<CircleCheckBig className="size-4" />
-				</>
-			) : (
-				<>
-					{t("tour_review.table.apply")}
-					{isLoading ? (
-						<Loader2 className="size-4 text-primary animate-spin" />
-					) : (
-						<Check className="size-4" />
-					)}
-				</>
-			)}
-		</Button>
+			icon={<CheckCircleIcon />}
+			label={
+				isApplied
+					? t("tour_review.table.applied")
+					: t("tour_review.table.apply")
+			}
+		/>
 	);
 };

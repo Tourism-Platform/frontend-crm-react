@@ -1,4 +1,8 @@
-import { Loader, TrashIcon } from "lucide-react";
+import {
+	GalleryAddIcon,
+	GalleryEditIcon,
+	TrashBinTrashIcon
+} from "@solar-icons/react/outline";
 import { type FC } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -9,7 +13,6 @@ import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
-	Button,
 	FormControl,
 	FormField,
 	FormItem,
@@ -120,11 +123,19 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 													? t("avatar.buttons.change")
 													: t("avatar.buttons.add")
 											}
-											loadingLabel={
+											variant={
 												field.value ||
 												files[0]?.file.name
-													? t("avatar.buttons.change")
-													: t("avatar.buttons.add")
+													? "secondary"
+													: "default"
+											}
+											icon={
+												field.value ||
+												files[0]?.file.name ? (
+													<GalleryEditIcon />
+												) : (
+													<GalleryAddIcon />
+												)
 											}
 										/>
 										<input
@@ -135,19 +146,15 @@ const AvatarInfoBase: FC<IAvatarInfoProps> = ({ form }) => {
 										/>
 									</div>
 									{(field.value || files[0]?.file.name) && (
-										<Button
+										<LoaderButton
 											type="button"
-											variant={"outline"}
-											size={"icon"}
+											variant="destructive_outline"
+											size="icon"
 											onClick={handleRemove}
 											disabled={isUploading || isDeleting}
-										>
-											{isDeleting ? (
-												<Loader className="h-4 w-4 animate-spin" />
-											) : (
-												<TrashIcon className="h-4 w-4" />
-											)}
-										</Button>
+											isLoading={isDeleting}
+											icon={<TrashBinTrashIcon />}
+										/>
 									)}
 								</div>
 							</div>

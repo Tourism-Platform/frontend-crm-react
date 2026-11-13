@@ -1,4 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+	CheckCircleIcon,
+	DisketteIcon,
+	EyeIcon
+} from "@solar-icons/react/outline";
 import { type FC, useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -191,15 +196,18 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button
+				<LoaderButton
+					type="button"
 					variant={isConfirmed ? "outline" : "default"}
 					size="sm"
 					className="w-full"
-				>
-					{isConfirmed
-						? t("table.menu.open")
-						: t("table.menu.confirm")}
-				</Button>
+					icon={isConfirmed ? <EyeIcon /> : <CheckCircleIcon />}
+					label={
+						isConfirmed
+							? t("table.menu.open")
+							: t("table.menu.confirm")
+					}
+				/>
 			</DialogTrigger>
 			<DialogContent
 				onCloseBtn={() => setOpen(false)}
@@ -269,6 +277,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 									isLoading={isLoading}
 									label={t("form.buttons.save")}
 									loadingLabel={t("form.buttons.saving")}
+									icon={<DisketteIcon />}
 								/>
 							)}
 						</DialogFooter>
