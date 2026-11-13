@@ -1,8 +1,8 @@
 import { type FC } from "react";
-import { type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, CardHeader, CustomField } from "@/shared/ui";
+import { CustomCollapsibleListItem, CustomField } from "@/shared/ui";
 
 import {
 	ENUM_FORM_SUPPLEMENT_ITEMS,
@@ -21,29 +21,33 @@ interface IItemsCardProps {
 
 export const ItemsCard: FC<IItemsCardProps> = ({ form, index, onRemove }) => {
 	const { t } = useTranslation("supplement_edit_page");
+	const itemPath =
+		`${ENUM_FORM_SECTION.ITEMS}.${ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST}.${index}` as const;
+	const name = useWatch({
+		control: form.control,
+		name: `${itemPath}.${ENUM_FORM_SUPPLEMENT_ITEMS.NAME}`
+	});
 
 	return (
-		<Card className="relative">
-			<CardHeader className="flex flex-wrap items-center justify-between gap-3">
-				{t("form.items.details.item", { index: index + 1 })}
-			</CardHeader>
-			<CardContent>
-				<div className="absolute top-0 right-0">
-					<ItemsMenu onRemove={onRemove} />
-				</div>
-
-				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
-					{ITEMS_DATA_LIST.map(({ key, ...item }) => (
-						<CustomField
-							key={key}
-							control={form?.control}
-							name={`${ENUM_FORM_SECTION.ITEMS}.${ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST}.${index}.${key}`}
-							t={t}
-							{...item}
-						/>
-					))}
-				</div>
-			</CardContent>
-		</Card>
+		<CustomCollapsibleListItem
+			value={String(index)}
+			control={form.control}
+			name={itemPath}
+			title={t("form.items.details.item", { index: index + 1 })}
+			description={name}
+			actions={<ItemsMenu onRemove={onRemove} />}
+		>
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
+				{ITEMS_DATA_LIST.map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={form?.control}
+						name={`${itemPath}.${key}`}
+						t={t}
+						{...item}
+					/>
+				))}
+			</div>
+		</CustomCollapsibleListItem>
 	);
 };

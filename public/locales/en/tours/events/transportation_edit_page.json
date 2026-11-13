@@ -155,6 +155,7 @@
 			"details": {
 				"title": "Car details",
 				"car_item": "Car {{index}}",
+				"pax_summary": "{{pax}} pax",
 				"form": {
 					"fields": {
 						"car_name": {

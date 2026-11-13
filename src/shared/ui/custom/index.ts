@@ -12,6 +12,7 @@ export * from "./custom-upload-images";
 export * from "./custom-upload-main-image";
 export * from "./custom-price-filter";
 export * from "./custom-accordion";
+export * from "./custom-collapsible-list";
 export * from "./custom-editor";
 export * from "./custom-input-select";
 export * from "./custom-scroll";

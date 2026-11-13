@@ -155,6 +155,7 @@
 			"details": {
 				"title": "Детали автомобилей",
 				"car_item": "Автомобиль {{index}}",
+				"pax_summary": "{{pax}} чел.",
 				"form": {
 					"fields": {
 						"car_name": {

@@ -11,7 +11,9 @@
 	},
 	"actions": {
 		"show_more": "Show more",
-		"retry": "Retry"
+		"retry": "Retry",
+		"expand_all": "Expand all",
+		"collapse_all": "Collapse all"
 	},
 	"clipboard": {
 		"copied": "Copied to clipboard",

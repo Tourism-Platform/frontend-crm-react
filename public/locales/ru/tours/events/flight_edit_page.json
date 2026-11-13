@@ -64,6 +64,7 @@
 			},
 			"flights": {
 				"title": "Тип транспорта",
+				"segment_item": "Сегмент {{index}}",
 				"tabs": {
 					"fly": "Самолет",
 					"train": "Поезд",

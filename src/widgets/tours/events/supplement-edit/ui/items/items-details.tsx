@@ -1,11 +1,18 @@
 import { PlusIcon } from "lucide-react";
 import { type FC } from "react";
-import { type UseFormReturn, useFieldArray } from "react-hook-form";
+import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button, withErrorBoundary } from "@/shared/ui";
+import {
+	Accordion,
+	Button,
+	CustomCollapsibleListToolbar,
+	useCollapsibleList,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
+	ENUM_FORM_EVENT_PRODUCT,
 	ENUM_FORM_SUPPLEMENT_ITEMS,
 	ENUM_SUPPLEMENT_PER_ITEM_EXPENSES_FIELD,
 	ENUM_SUPPLEMENT_PRICING_FIELD,
@@ -26,38 +33,59 @@ interface IItemsDetailsProps {
 
 const ItemsDetailsBase: FC<IItemsDetailsProps> = ({ form }) => {
 	const { t } = useTranslation("supplement_edit_page");
+	const supplyId = useWatch({
+		control: form.control,
+		name: ENUM_FORM_EVENT_PRODUCT.SUPPLY_ID
+	});
 
 	const { fields, append, remove } = useFieldArray({
 		control: form.control,
 		name: `${ENUM_FORM_SECTION.ITEMS}.${ENUM_FORM_SUPPLEMENT_ITEMS.ITEMS_LIST}`
 	});
+	const list = useCollapsibleList(fields.length, supplyId);
 
 	const handleAddItem = () => {
 		append({
 			[ENUM_FORM_SUPPLEMENT_ITEMS.NAME]: ""
 		});
+		list.openItem(fields.length);
+	};
+
+	const handleRemove = (index: number) => {
+		removeWithPriceRow(form, remove, ITEM_PRICE_ROWS_PATH, index);
+		list.removeItem(index);
 	};
 
 	return (
 		<div className="grid gap-6">
-			<h2 className="text-xl">{t("form.items.details.title")}</h2>
+			<div className="flex flex-wrap items-center justify-between gap-4">
+				<h2 className="text-xl">{t("form.items.details.title")}</h2>
+				{fields.length > 0 ? (
+					<CustomCollapsibleListToolbar
+						onExpandAll={list.expandAll}
+						onCollapseAll={list.collapseAll}
+					/>
+				) : null}
+			</div>
 
 			<div className="grid gap-4">
-				{fields.map((field, index) => (
-					<ItemsCard
-						key={field.id}
-						form={form}
-						index={index}
-						onRemove={() =>
-							removeWithPriceRow(
-								form,
-								remove,
-								ITEM_PRICE_ROWS_PATH,
-								index
-							)
-						}
-					/>
-				))}
+				{fields.length > 0 ? (
+					<Accordion
+						type="multiple"
+						value={list.value}
+						onValueChange={list.onValueChange}
+						className="grid gap-4"
+					>
+						{fields.map((field, index) => (
+							<ItemsCard
+								key={field.id}
+								form={form}
+								index={index}
+								onRemove={() => handleRemove(index)}
+							/>
+						))}
+					</Accordion>
+				) : null}
 
 				<div>
 					<Button

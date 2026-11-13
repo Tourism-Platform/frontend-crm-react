@@ -1,5 +1,5 @@
 import React, { type FC, useMemo } from "react";
-import type { UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -7,7 +7,7 @@ import {
 	type ENUM_LANGUAGES_TYPE,
 	i18nLanguageMapper
 } from "@/shared/config";
-import { Card, CardContent, CustomField } from "@/shared/ui";
+import { CustomCollapsibleListItem, CustomField } from "@/shared/ui";
 
 import {
 	useGeoFormFieldEnrichment,
@@ -23,7 +23,12 @@ import {
 	type TFlightEditSchema
 } from "@/entities/tour";
 
-import { BUS_DATA_LIST, FLY_DATA_LIST, TRAIN_DATA_LIST } from "../../model";
+import {
+	BUS_DATA_LIST,
+	FLY_DATA_LIST,
+	TRAIN_DATA_LIST,
+	getSegmentRoute
+} from "../../model";
 
 import { FlightMenu } from "./flight-menu";
 
@@ -74,6 +79,10 @@ export const FlightCard: FC<IFlightCardProps> = React.memo(
 			i18nLanguageMapper.to(i18n.language) ?? ENUM_LANGUAGES.EN;
 		const departureGeo = useGeoSearchFieldProps(language);
 		const arrivalGeo = useGeoSearchFieldProps(language);
+		const segmentPath =
+			`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}.${index}` as const;
+		// useWatch re-renders this memoized card itself; form.watch() would not.
+		const segment = useWatch({ control: form.control, name: segmentPath });
 
 		const data = form.watch();
 		const transportType = data?.general?.transport_type;
@@ -97,35 +106,44 @@ export const FlightCard: FC<IFlightCardProps> = React.memo(
 		}, [transportType, segmentGeo]);
 
 		return (
-			<Card className="relative">
-				<CardContent>
-					{!readOnly ? (
-						<div className="absolute top-0 right-0">
+			<>
+				{/* Outside the collapsible part: enrichment keeps working while collapsed. */}
+				{isGeoTransport && transportType && (
+					<TrainBusGeoEnrichment
+						form={form}
+						index={index}
+						transportType={transportType}
+						language={language}
+					/>
+				)}
+				<CustomCollapsibleListItem
+					value={String(index)}
+					control={form.control}
+					name={segmentPath}
+					title={t("form.general.flights.segment_item", {
+						index: index + 1
+					})}
+					description={getSegmentRoute(segment)}
+					actions={
+						!readOnly ? (
 							<FlightMenu onRemove={() => onRemove(index)} />
-						</div>
-					) : null}
-					{isGeoTransport && transportType && (
-						<TrainBusGeoEnrichment
-							form={form}
-							index={index}
-							transportType={transportType}
-							language={language}
-						/>
-					)}
+						) : null
+					}
+				>
 					<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2 lg:grid-cols-4">
 						{dataList.map(({ key, ...item }) => (
 							<CustomField
 								key={key}
 								control={form?.control}
-								name={`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}.${index}.${key}`}
+								name={`${segmentPath}.${key}`}
 								t={t}
 								disabled={readOnly}
 								{...item}
 							/>
 						))}
 					</div>
-				</CardContent>
-			</Card>
+				</CustomCollapsibleListItem>
+			</>
 		);
 	}
 );

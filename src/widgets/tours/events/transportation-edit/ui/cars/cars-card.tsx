@@ -1,12 +1,13 @@
 import { type FC } from "react";
-import { type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, CardHeader, CustomField } from "@/shared/ui";
+import { CustomCollapsibleListItem, CustomField } from "@/shared/ui";
 
 import {
 	ENUM_FORM_CARS,
-	type TTransportationEditSchema
+	type TTransportationEditSchema,
+	VEHICLE_BODY_TYPE_LABELS
 } from "@/entities/tour";
 
 import { CARS_DATA_LIST, ENUM_FORM_SECTION } from "../../model";
@@ -20,30 +21,46 @@ interface ICarsCardProps {
 }
 
 export const CarsCard: FC<ICarsCardProps> = ({ form, index, onRemove }) => {
-	const { t } = useTranslation("transportation_edit_page");
+	const { t } = useTranslation(["transportation_edit_page", "options"]);
+	const carPath =
+		`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}` as const;
+	const [carName, pax] = useWatch({
+		control: form.control,
+		name: [
+			`${carPath}.${ENUM_FORM_CARS.CAR_NAME}`,
+			`${carPath}.${ENUM_FORM_CARS.PAX}`
+		]
+	});
+
+	const description = [
+		carName
+			? t(VEHICLE_BODY_TYPE_LABELS[carName], { ns: "options" })
+			: null,
+		pax ? t("form.cars.details.pax_summary", { pax }) : null
+	]
+		.filter(Boolean)
+		.join(" · ");
 
 	return (
-		<Card className="relative">
-			<CardHeader className="flex flex-wrap items-center justify-between gap-3">
-				{t("form.cars.details.car_item", { index: index + 1 })}
-			</CardHeader>
-			<CardContent>
-				<div className="absolute top-0 right-0">
-					<CarsMenu onRemove={onRemove} />
-				</div>
-
-				<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
-					{CARS_DATA_LIST().map(({ key, ...item }) => (
-						<CustomField
-							key={key}
-							control={form?.control}
-							name={`${ENUM_FORM_SECTION.CARS}.${ENUM_FORM_CARS.CARS_LIST}.${index}.${key}`}
-							t={t}
-							{...item}
-						/>
-					))}
-				</div>
-			</CardContent>
-		</Card>
+		<CustomCollapsibleListItem
+			value={String(index)}
+			control={form.control}
+			name={carPath}
+			title={t("form.cars.details.car_item", { index: index + 1 })}
+			description={description}
+			actions={<CarsMenu onRemove={onRemove} />}
+		>
+			<div className="grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-2">
+				{CARS_DATA_LIST().map(({ key, ...item }) => (
+					<CustomField
+						key={key}
+						control={form?.control}
+						name={`${carPath}.${key}`}
+						t={t}
+						{...item}
+					/>
+				))}
+			</div>
+		</CustomCollapsibleListItem>
 	);
 };

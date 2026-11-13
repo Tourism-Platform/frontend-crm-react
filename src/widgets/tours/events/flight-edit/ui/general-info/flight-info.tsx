@@ -4,10 +4,13 @@ import { type UseFormReturn, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import {
+	Accordion,
 	Button,
+	CustomCollapsibleListToolbar,
 	CustomOptionTabs,
 	CustomOptionTabsList,
 	CustomOptionTabsTrigger,
+	useCollapsibleList,
 	withErrorBoundary
 } from "@/shared/ui";
 
@@ -67,11 +70,14 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 		control: form.control,
 		name: `${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}`
 	});
+	const list = useCollapsibleList(fields.length, supplyId);
+	const { removeItem } = list;
 
 	const formState = form.watch();
 
 	const handleAddFlight = () => {
 		append(createEmptyTransportSegment(formState?.general?.transport_type));
+		list.openItem(fields.length);
 	};
 
 	const handleTabChange = (value: ENUM_FLIGHT_TRANSPORT_TYPE_TYPE) => {
@@ -88,13 +94,16 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 			`${ENUM_FORM_SECTION.GENERAL}.${ENUM_FORM_FLIGHT.ROUTE}`,
 			[createEmptyTransportSegment(value)]
 		);
+		// The new type starts from one empty segment: open it to fill in.
+		list.reset([0]);
 	};
 
 	const handleRemoveFlight = React.useCallback(
 		(index: number) => {
 			remove(index);
+			removeItem(index);
 		},
-		[remove]
+		[remove, removeItem]
 	);
 
 	const handleOverrideChange = (next: boolean) => {
@@ -165,15 +174,33 @@ const FlightInfoBase: FC<IFlightInfoProps> = ({
 			</div>
 
 			<div className="grid gap-4">
-				{fields.map((field, index) => (
-					<FlightCard
-						key={field.id}
-						form={form}
-						index={index}
-						onRemove={handleRemoveFlight}
-						readOnly={isInherited}
-					/>
-				))}
+				{fields.length > 0 ? (
+					<>
+						<div className="flex justify-end">
+							<CustomCollapsibleListToolbar
+								onExpandAll={list.expandAll}
+								onCollapseAll={list.collapseAll}
+							/>
+						</div>
+
+						<Accordion
+							type="multiple"
+							value={list.value}
+							onValueChange={list.onValueChange}
+							className="grid gap-4"
+						>
+							{fields.map((field, index) => (
+								<FlightCard
+									key={field.id}
+									form={form}
+									index={index}
+									onRemove={handleRemoveFlight}
+									readOnly={isInherited}
+								/>
+							))}
+						</Accordion>
+					</>
+				) : null}
 
 				{!isInherited ? (
 					<div>
