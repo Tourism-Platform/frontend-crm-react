@@ -2,7 +2,11 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { useSetBreadcrumbLabels, withErrorBoundary } from "@/shared/ui";
+import {
+	CustomPageHeader,
+	useSetBreadcrumbLabels,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import { useGetSupplierQuery } from "@/entities/supplier";
 
@@ -23,9 +27,7 @@ const SupplierDetailBase: FC<ISupplierDetailProps> = ({ supplierId }) => {
 
 	return (
 		<section className="flex flex-1 flex-col gap-5">
-			<div className="flex flex-col gap-2">
-				<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
-			</div>
+			<CustomPageHeader title={t("page_name")} />
 
 			<SupplierForm supplierId={supplierId} />
 			<SupplierProducts supplierId={supplierId} />

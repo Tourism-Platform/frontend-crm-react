@@ -15,6 +15,16 @@ describe("resolveBreadcrumbTrail", () => {
 		});
 	});
 
+	it("resolves finance ledger", () => {
+		const result = resolveBreadcrumbTrail(ENUM_PATH.FINANCE.LEDGER);
+		expect(result).not.toBeNull();
+		expect(result!).toHaveLength(2);
+		expect(result![1]).toMatchObject({
+			labelKey: "operator.finance.general.menu.ledger",
+			isCurrent: true
+		});
+	});
+
 	it("resolves finance invoice detail with dynamic last crumb", () => {
 		const pathname =
 			"/finance/invoices/47eb0200-ec47-4e13-8548-9ec6647811f1";

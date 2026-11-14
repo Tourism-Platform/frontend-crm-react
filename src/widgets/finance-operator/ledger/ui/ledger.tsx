@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import {
 	Card,
 	CardContent,
+	CustomPageHeader,
 	CustomQueryTabs,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -15,7 +16,7 @@ const LedgerBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
+			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent className="flex gap-5 flex-col">
 					<CustomQueryTabs ns="ledger_page" tabs={LEDGER_TABS} />

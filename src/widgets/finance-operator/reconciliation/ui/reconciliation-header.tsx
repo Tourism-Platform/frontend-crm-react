@@ -2,7 +2,13 @@ import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
-import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	CustomPageHeader
+} from "@/shared/ui";
 import { formatToDollars } from "@/shared/utils";
 
 import { type IReconciliationTotals } from "@/entities/finance";
@@ -20,7 +26,7 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 
 	return (
 		<div className="flex flex-col gap-5">
-			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
+			<CustomPageHeader title={t("page_name")} />
 
 			<div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
 				{RECONCILIATION_KPI_CARDS.map(({ primaryKey, secondary }) => {

@@ -9,6 +9,7 @@ import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
+	CustomPageHeader,
 	GLASS_SURFACE,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -73,7 +74,7 @@ const AuditLogBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
+			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent>
 					<SmartTable

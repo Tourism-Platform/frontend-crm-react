@@ -9,6 +9,7 @@ import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Card,
 	CardContent,
+	CustomPageHeader,
 	CustomQueryTabs,
 	Form,
 	LoaderButton,
@@ -65,28 +66,26 @@ const TrainProductEditBase: FC<ITrainProductEditProps> = ({
 	return (
 		<Form {...form}>
 			<section className="flex flex-1 flex-col gap-5">
-				<div className="flex flex-wrap items-center justify-between gap-3">
-					<div className="flex flex-col gap-2">
-						<h1 className="md:text-3xl text-2xl">
-							{product?.name || t("page_name")}
-						</h1>
-					</div>
-					{!isCreate ? (
-						<DeleteSupplierProduct
-							supplierId={supplierId}
-							productId={productId}
-							ns="train_product_edit_page"
-							onSuccess={() => navigate(supplierPath)}
-							trigger={
-								<LoaderButton
-									variant="destructive_outline"
-									icon={<TrashBinTrashIcon />}
-									label={t("menu.delete.button")}
-								/>
-							}
-						/>
-					) : null}
-				</div>
+				<CustomPageHeader
+					title={product?.name || t("page_name")}
+					actions={
+						!isCreate ? (
+							<DeleteSupplierProduct
+								supplierId={supplierId}
+								productId={productId}
+								ns="train_product_edit_page"
+								onSuccess={() => navigate(supplierPath)}
+								trigger={
+									<LoaderButton
+										variant="destructive_outline"
+										icon={<TrashBinTrashIcon />}
+										label={t("menu.delete.button")}
+									/>
+								}
+							/>
+						) : null
+					}
+				/>
 				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs

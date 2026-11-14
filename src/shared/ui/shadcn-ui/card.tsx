@@ -5,12 +5,13 @@ import { cn } from "@/shared/lib";
 
 /**
  * Таблица на стекле — только контейнер таблицы (`data-slot="data-grid"`): шапка на приглушённой
- * подложке мелкими прописными, лёгкая «зебра», строка под курсором — акцентная подсветка и полоска
- * слева, цифры моноширинные; внутри стеклянной карточки — без своей заливки, тени и размытия
+ * подложке мелкими прописными, лёгкая «зебра», строка данных под курсором — акцентная подсветка и
+ * полоска слева (пустое состояние, спиннер и раскрытое содержимое — ячейка с `colspan` — без неё),
+ * цифры моноширинные; внутри стеклянной карточки — без своей заливки, тени и размытия
  * (второго слоя стекла нет)
  */
 const GLASS_TABLE_PARTS =
-	"data-[slot=data-grid]:[&_thead_tr]:bg-muted/70 data-[slot=data-grid]:[&_thead_th]:text-xs data-[slot=data-grid]:[&_thead_th]:font-semibold data-[slot=data-grid]:[&_thead_th]:uppercase data-[slot=data-grid]:[&_thead_th]:tracking-wider data-[slot=data-grid]:[&_tbody_tr]:transition-colors data-[slot=data-grid]:[&_tbody_tr:nth-child(even):not(:hover)]:bg-muted/30 data-[slot=data-grid]:[&_tbody_tr:hover]:bg-accent/60 data-[slot=data-grid]:[&_tbody_tr:hover>td:first-child]:shadow-[inset_3px_0_0_0_var(--primary)] data-[slot=data-grid]:[&_tbody_td]:tabular-nums data-[slot=data-grid]:in-data-[variant=glass]:bg-transparent data-[slot=data-grid]:in-data-[variant=glass]:shadow-none data-[slot=data-grid]:in-data-[variant=glass]:backdrop-blur-none dark:data-[slot=data-grid]:in-data-[variant=glass]:bg-transparent dark:data-[slot=data-grid]:in-data-[variant=glass]:shadow-none";
+	"data-[slot=data-grid]:[&_thead_tr]:bg-muted/70 data-[slot=data-grid]:[&_thead_th]:text-xs data-[slot=data-grid]:[&_thead_th]:font-semibold data-[slot=data-grid]:[&_thead_th]:uppercase data-[slot=data-grid]:[&_thead_th]:tracking-wider data-[slot=data-grid]:[&_tbody_tr]:transition-colors data-[slot=data-grid]:[&_tbody_tr:nth-child(even):not(:hover:not(:has(>td[colspan])))]:bg-muted/30 data-[slot=data-grid]:[&_tbody_tr:not(:has(>td[colspan])):hover]:bg-accent/60 data-[slot=data-grid]:[&_tbody_tr:not(:has(>td[colspan])):hover>td:first-child]:shadow-[inset_3px_0_0_0_var(--primary)] data-[slot=data-grid]:[&_tbody_td]:tabular-nums data-[slot=data-grid]:in-data-[variant=glass]:bg-transparent data-[slot=data-grid]:in-data-[variant=glass]:shadow-none data-[slot=data-grid]:in-data-[variant=glass]:backdrop-blur-none dark:data-[slot=data-grid]:in-data-[variant=glass]:bg-transparent dark:data-[slot=data-grid]:in-data-[variant=glass]:shadow-none";
 
 /**
  * Стекло (Blogix, D10): полупрозрачная заливка с размытием точечного фона, световая грань сверху.

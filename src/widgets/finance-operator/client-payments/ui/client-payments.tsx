@@ -12,6 +12,7 @@ import {
 	Card,
 	CardContent,
 	CustomField,
+	CustomPageHeader,
 	Form,
 	GLASS_SURFACE,
 	LoaderButton,
@@ -132,7 +133,7 @@ const ClientPaymentsBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
+			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
 					<div className="flex flex-wrap items-center justify-between gap-4">

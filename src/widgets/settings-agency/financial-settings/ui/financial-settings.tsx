@@ -1,7 +1,12 @@
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import {
+	Card,
+	CardContent,
+	CustomPageHeader,
+	withErrorBoundary
+} from "@/shared/ui";
 
 // import { useGetCommissionsQuery } from "@/entities/commission";
 
@@ -19,7 +24,7 @@ const FinancialSettingsBase: FC = () => {
 
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
+			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent className="flex gap-8 flex-col">
 					{/* <CommissionType

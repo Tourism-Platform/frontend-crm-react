@@ -32,3 +32,4 @@ export * from "./custom-slider";
 export * from "./data-state";
 export * from "./html-previewer";
 export * from "./loading-state";
+export * from "./custom-page-header";

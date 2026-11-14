@@ -9,6 +9,7 @@ import { useOptionalResourceQuery } from "@/shared/hooks";
 import {
 	Card,
 	CardContent,
+	CustomPageHeader,
 	Form,
 	LoaderButton,
 	Separator,
@@ -73,7 +74,7 @@ const AccountSettingsBase: FC = () => {
 	}
 	return (
 		<section className="flex gap-5 flex-col">
-			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
+			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent className="flex gap-5 flex-col max-w-5xl">
 					<Form {...form}>

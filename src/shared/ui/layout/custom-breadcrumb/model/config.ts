@@ -96,6 +96,13 @@ export const BREADCRUMB_TRAILS: TBreadcrumbTrail[] = [
 			}
 		]
 	},
+	{
+		pattern: ENUM_PATH.FINANCE.LEDGER,
+		crumbs: [
+			{ type: "i18n", key: "operator.finance.title" },
+			{ type: "i18n", key: "operator.finance.general.menu.ledger" }
+		]
+	},
 
 	// Booking — operator
 	{
