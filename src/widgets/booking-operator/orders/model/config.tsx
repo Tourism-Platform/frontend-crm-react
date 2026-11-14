@@ -106,7 +106,14 @@ export const COLUMNS = (
 				skeleton: <Skeleton className="h-4 w-[100px]" />
 			},
 			cell: ({ row }) => (
-				<div className="font-medium">{row.getValue("client")}</div>
+				<div className="min-w-0 w-full">
+					<span
+						title={row.original.client}
+						className="block truncate font-medium"
+					>
+						{row.getValue("client")}
+					</span>
+				</div>
 			),
 			size: 160
 		},

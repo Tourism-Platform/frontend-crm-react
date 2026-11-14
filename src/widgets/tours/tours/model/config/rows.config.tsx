@@ -11,7 +11,8 @@ import {
 	type ITourCard,
 	TOUR_STATUS_LABELS,
 	TOUR_STATUS_VARIANTS,
-	TOUR_TYPE_LABELS
+	TOUR_TYPE_LABELS,
+	TOUR_TYPE_VARIANTS
 } from "@/entities/tour";
 
 export const COLUMNS = (
@@ -89,9 +90,9 @@ export const COLUMNS = (
 			cell: ({ row }) => {
 				const type = row.getValue("type") as ENUM_TOUR_TYPES_TYPE;
 				return (
-					<div className="text-sm">
+					<Badge variant={TOUR_TYPE_VARIANTS[type]}>
 						{t(TOUR_TYPE_LABELS[type], { ns: "options" })}
-					</div>
+					</Badge>
 				);
 			},
 			size: 120

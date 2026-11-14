@@ -22,7 +22,8 @@ export const SideBarAgencyLayout = ({
 	return (
 		<SidebarProvider>
 			{sidebar}
-			<SidebarInset className="min-w-0">
+			{/* bg-transparent — иначе bg-background SidebarInset закроет PageBackdrop */}
+			<SidebarInset className="min-w-0 bg-transparent">
 				<HeaderAgency withSidebarTrigger />
 				<BreadcrumbLabelProvider>
 					{breadcrumb}

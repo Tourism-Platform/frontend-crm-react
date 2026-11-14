@@ -96,7 +96,7 @@ export const ORDER_HISTORY_COLUMNS = (
 			cell: ({ row }) => {
 				const order = row.original;
 				return (
-					<div className="whitespace-nowrap">
+					<div className="font-medium">
 						{order.dates.from} - {order.dates.to}
 					</div>
 				);

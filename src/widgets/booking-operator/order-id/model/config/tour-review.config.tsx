@@ -209,7 +209,7 @@ export const TOUR_REVIEW_COLUMNS = (
 						{warnings.map((warning) => (
 							<Tooltip key={warning}>
 								<TooltipTrigger asChild>
-									<Badge variant="yellow" size="sm">
+									<Badge variant="yellow">
 										{t(
 											`tour_review.table.warnings.${warning}`
 										)}

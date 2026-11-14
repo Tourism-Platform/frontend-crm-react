@@ -1,5 +1,4 @@
 import { bookingOrderListItems } from "@/entities/booking/order/mock/booking-order.store";
-import type { ENUM_EVENT_BACKEND_TYPE } from "@/entities/tour/itinerary/types/event-backend-enum.types";
 
 import type { TSupplierPaymentBackend } from "../types";
 
@@ -37,7 +36,7 @@ export const createSupplierPaymentMocks = (): ISupplierPaymentMockBundle => {
 		payments.push({
 			order_number: booking.order_number ?? "",
 			event_name: row.component,
-			event_typ: row.type as ENUM_EVENT_BACKEND_TYPE,
+			event_typ: row.type,
 			supplier_name: row.supplier,
 			payment_id: id,
 			operator_id: MOCK_SUPPLIER_PAYMENT_DEFAULTS.operator_id,

@@ -2,7 +2,9 @@ import { type FC } from "react";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
+import { cn } from "@/shared/lib";
 import {
+	GLASS_SURFACE,
 	LanguageToggle,
 	NavMenu,
 	NavMenuMobile,
@@ -24,7 +26,13 @@ export const HeaderAgency: FC<IHeaderAgencyProps> = ({
 	withSidebarTrigger = false
 }) => {
 	return (
-		<header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-card">
+		// Шапка-полоса: стекло без плавающей тени, линия снизу; под ней размывается прокручиваемое содержимое
+		<header
+			className={cn(
+				GLASS_SURFACE,
+				"sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-card/70 shadow-none dark:bg-card/85 dark:shadow-none"
+			)}
+		>
 			<div className="flex items-center gap-2 px-4">
 				{withSidebarTrigger ? (
 					<SidebarTrigger className="-ml-1" />

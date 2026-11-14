@@ -5,7 +5,13 @@ import { Link } from "react-router-dom";
 
 import { ENUM_PATH } from "@/shared/config";
 import { useAppSelector } from "@/shared/hooks";
-import { Button, LanguageToggle, ThemeToggle } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import {
+	Button,
+	GLASS_SURFACE,
+	LanguageToggle,
+	ThemeToggle
+} from "@/shared/ui";
 
 import logo from "./../../../../../../public/assets/logo.svg";
 import { PUBLIC_NAV_ITEMS } from "./model";
@@ -17,7 +23,13 @@ export const HeaderDefault: FC = () => {
 	const authPath = isAuth ? ENUM_PATH.TOURS.ROOT : ENUM_PATH.LOGIN;
 
 	return (
-		<header className="border-b px-4 md:px-4 sticky top-0 z-40 bg-card/75 shadow-black/6.5 backdrop-blur-xl">
+		// Шапка-полоса: стекло без плавающей тени, линия снизу; под ней размывается прокручиваемое содержимое
+		<header
+			className={cn(
+				GLASS_SURFACE,
+				"sticky top-0 z-40 border-b px-4 bg-card/70 shadow-none dark:bg-card/85 dark:shadow-none"
+			)}
+		>
 			<div className="flex h-16 items-center justify-between gap-4 max-w-6xl mx-auto">
 				<div className="flex items-center gap-2">
 					<div className="flex items-center gap-4">

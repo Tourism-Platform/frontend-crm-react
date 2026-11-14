@@ -114,7 +114,7 @@ const PricingWarningsCell = ({
 			{item.warnings.map((warning) => (
 				<Tooltip key={warning}>
 					<TooltipTrigger asChild>
-						<Badge variant="yellow" size="sm">
+						<Badge variant="yellow">
 							{t(`table.warnings.${warning}`)}
 						</Badge>
 					</TooltipTrigger>

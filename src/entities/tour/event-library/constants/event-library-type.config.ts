@@ -1,4 +1,5 @@
 import type { TOptionsKeys } from "@/shared/config";
+import type { BadgeVariant } from "@/shared/ui";
 
 import { ENUM_EVENT, type ENUM_EVENT_TYPE } from "@/entities/tour/itinerary";
 
@@ -23,4 +24,17 @@ export const EVENT_LIBRARY_TYPE_LABELS: Partial<
 	[ENUM_EVENT.INFO]: "event_library.types.info",
 	[ENUM_EVENT.SUPPLEMENT]: "event_library.types.supplement",
 	[ENUM_EVENT.GUIDE]: "event_library.types.guide"
+};
+
+/** Цвет бейджа типа — в тон типам поставщиков (`SUPPLIER_TYPE_BADGE`) */
+export const EVENT_LIBRARY_TYPE_VARIANTS: Partial<
+	Record<ENUM_EVENT_TYPE, BadgeVariant>
+> = {
+	[ENUM_EVENT.FLIGHT]: "blue",
+	[ENUM_EVENT.TRANSPORTATION]: "emerald",
+	[ENUM_EVENT.ACCOMMODATION]: "cyan",
+	[ENUM_EVENT.ACTIVITY]: "sky",
+	[ENUM_EVENT.INFO]: "secondary",
+	[ENUM_EVENT.SUPPLEMENT]: "yellow",
+	[ENUM_EVENT.GUIDE]: "orange"
 };

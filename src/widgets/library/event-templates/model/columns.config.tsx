@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 
 import { buildRoute } from "@/shared/config";
 import { cn } from "@/shared/lib";
-import { Skeleton } from "@/shared/ui";
+import { Badge, Skeleton } from "@/shared/ui";
 
 import {
 	type ENUM_EVENT_TYPE,
 	EVENT_LIBRARY_TYPE_LABELS,
+	EVENT_LIBRARY_TYPE_VARIANTS,
 	EVENT_METADATA,
 	type IEventLibraryItem,
 	mapEventTypeToLibraryEditPath
@@ -84,10 +85,13 @@ export const COLUMNS = (
 			cell: ({ row }) => {
 				const eventType = row.getValue("eventType") as ENUM_EVENT_TYPE;
 				const labelKey = EVENT_LIBRARY_TYPE_LABELS[eventType];
+				if (!labelKey) {
+					return <span>{eventType}</span>;
+				}
 				return (
-					<div className="font-medium">
-						{labelKey ? t(labelKey, { ns: "options" }) : eventType}
-					</div>
+					<Badge variant={EVENT_LIBRARY_TYPE_VARIANTS[eventType]}>
+						{t(labelKey, { ns: "options" })}
+					</Badge>
 				);
 			},
 			size: 160

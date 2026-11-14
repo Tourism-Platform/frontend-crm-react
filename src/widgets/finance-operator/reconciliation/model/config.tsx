@@ -98,7 +98,7 @@ export const COLUMNS = (
 					{formatToDollars(row.getValue("plannedRevenue"))}
 				</div>
 			),
-			size: 100
+			size: 160
 		},
 		{
 			header: t("table.revenueAccrued"),
@@ -114,7 +114,7 @@ export const COLUMNS = (
 					{formatToDollars(row.getValue("revenueAccrued"))}
 				</div>
 			),
-			size: 140
+			size: 160
 		},
 		{
 			header: t("table.plannedCost"),
@@ -130,7 +130,7 @@ export const COLUMNS = (
 					{formatToDollars(row.getValue("plannedCost"))}
 				</div>
 			),
-			size: 140
+			size: 160
 		},
 		{
 			header: t("table.costAccrued"),
@@ -146,7 +146,7 @@ export const COLUMNS = (
 					{formatToDollars(row.getValue("costAccrued"))}
 				</div>
 			),
-			size: 140
+			size: 160
 		},
 		{
 			header: t("table.variance"),

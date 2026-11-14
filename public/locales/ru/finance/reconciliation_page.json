@@ -13,9 +13,9 @@
 	"table": {
 		"orderId": "ID заказа",
 		"client": "Клиент",
-		"plannedRevenue": "План. доход",
+		"plannedRevenue": "Плановый доход",
 		"revenueAccrued": "Начисленный доход",
-		"plannedCost": "План. расход",
+		"plannedCost": "Плановый расход",
 		"costAccrued": "Начисленный расход",
 		"variance": "Разница",
 		"status": "Статус",

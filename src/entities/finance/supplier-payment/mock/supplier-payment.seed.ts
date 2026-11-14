@@ -1,4 +1,9 @@
 import {
+	ENUM_EVENT_BACKEND,
+	type ENUM_EVENT_BACKEND_TYPE
+} from "@/entities/tour/itinerary/types/event-backend-enum.types";
+
+import {
 	ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND,
 	type ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND_TYPE
 } from "../types";
@@ -9,7 +14,7 @@ export type TSupplierPaymentSeedItem = {
 	amount: number;
 	status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND_TYPE;
 	component: string;
-	type: string;
+	type: ENUM_EVENT_BACKEND_TYPE;
 	supplier: string;
 	manager: string;
 	note?: string;
@@ -22,7 +27,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 2100,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Flight from London to Ta...",
-		type: "Transportation (flight)",
+		type: ENUM_EVENT_BACKEND.FLIGHT,
 		supplier: "Aviakassa",
 		manager: "Madina T.",
 		file: MOCK_RECEIPT_URL,
@@ -32,7 +37,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 5600,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Hilton Hotel",
-		type: "Accommodation",
+		type: ENUM_EVENT_BACKEND.HOUSING,
 		supplier: '"LLC" Hilton',
 		manager: "Madina T."
 	},
@@ -40,7 +45,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 2100,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Meals",
-		type: "Package",
+		type: ENUM_EVENT_BACKEND.SUPPLEMENTARY,
 		supplier: "Aviakassa",
 		manager: "Madina T.",
 		paid_at: "2024-10-10T10:00:00Z"
@@ -49,7 +54,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 2100,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Hotel Uzbekistan",
-		type: "Accommodation",
+		type: ENUM_EVENT_BACKEND.HOUSING,
 		supplier: "-",
 		manager: "Madina T.",
 		paid_at: "2024-10-11T10:00:00Z"
@@ -58,7 +63,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 1100,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: 'Cafe "OSHKAND"',
-		type: "Activity",
+		type: ENUM_EVENT_BACKEND.ACTIVITY,
 		supplier: "-",
 		manager: "Madina T.",
 		paid_at: "2024-10-12T10:00:00Z"
@@ -67,7 +72,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 1100,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Disneyland",
-		type: "Activity",
+		type: ENUM_EVENT_BACKEND.ACTIVITY,
 		supplier: "-",
 		manager: "Madina T."
 	},
@@ -75,7 +80,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 2000,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Transfer Tour Day 1 + Din...",
-		type: "Transfer",
+		type: ENUM_EVENT_BACKEND.TRANSFER,
 		supplier: '"LLC" DARAUZ',
 		manager: "Madina T.",
 		paid_at: "2024-10-13T10:00:00Z"
@@ -84,7 +89,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 3200,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Grand Hotel Tashkent",
-		type: "Accommodation",
+		type: ENUM_EVENT_BACKEND.HOUSING,
 		supplier: "Grand Hotel",
 		manager: "Alex R."
 	},
@@ -92,7 +97,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 450,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Fast Train To Samarkand",
-		type: "Transportation (train)",
+		type: ENUM_EVENT_BACKEND.TRAIN,
 		supplier: "UzRailways",
 		manager: "Alex R.",
 		paid_at: "2024-10-16T14:30:00Z"
@@ -101,7 +106,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 150,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Local Guide Samarkand",
-		type: "Service",
+		type: ENUM_EVENT_BACKEND.GUIDE,
 		supplier: "Guide Services LLC",
 		manager: "Madina T."
 	},
@@ -109,7 +114,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 300,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Registan Entrance Fees",
-		type: "Activity",
+		type: ENUM_EVENT_BACKEND.ACTIVITY,
 		supplier: "Ministry of Culture",
 		manager: "Madina T.",
 		paid_at: "2024-10-18T12:00:00Z"
@@ -118,7 +123,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 2800,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Bukhara Boutique Hotel",
-		type: "Accommodation",
+		type: ENUM_EVENT_BACKEND.HOUSING,
 		supplier: "Old City Hotels",
 		manager: "Ivan S."
 	},
@@ -126,7 +131,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 1200,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Desert Safari",
-		type: "Activity",
+		type: ENUM_EVENT_BACKEND.ACTIVITY,
 		supplier: "Adventure Uzbekistan",
 		manager: "Ivan S."
 	},
@@ -134,7 +139,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 4500,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Flight Samarkand to Moscow",
-		type: "Transportation (flight)",
+		type: ENUM_EVENT_BACKEND.FLIGHT,
 		supplier: "Uzbekistan Airways",
 		manager: "Madina T.",
 		file: MOCK_RECEIPT_URL,
@@ -144,7 +149,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 200,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Vip Lounge Access",
-		type: "Service",
+		type: ENUM_EVENT_BACKEND.SUPPLEMENTARY,
 		supplier: "Airport Services",
 		manager: "Ivan S.",
 		paid_at: "2024-10-26T10:00:00Z"
@@ -153,7 +158,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 500,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Limousine Transfer",
-		type: "Transfer",
+		type: ENUM_EVENT_BACKEND.TRANSFER,
 		supplier: "Vip Cars",
 		manager: "Ivan S."
 	},
@@ -161,7 +166,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 350,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Wine Tasting Tour",
-		type: "Activity",
+		type: ENUM_EVENT_BACKEND.ACTIVITY,
 		supplier: "Vineyards LLC",
 		manager: "Alex R."
 	},
@@ -169,7 +174,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 6000,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Lotte Hotel",
-		type: "Accommodation",
+		type: ENUM_EVENT_BACKEND.HOUSING,
 		supplier: "Lotte Central",
 		manager: "Madina T.",
 		paid_at: "2024-10-30T10:00:00Z"
@@ -178,7 +183,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 1800,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.RECORDED,
 		component: "Catering Services Samarkand",
-		type: "Package",
+		type: ENUM_EVENT_BACKEND.SUPPLEMENTARY,
 		supplier: "Samarkand Catering",
 		manager: "Alex R."
 	},
@@ -186,7 +191,7 @@ export const SUPPLIER_PAYMENT_SEED: readonly TSupplierPaymentSeedItem[] = [
 		amount: 400,
 		status: ENUM_SUPPLIER_PAYMENT_STATUS_BACKEND.CONFIRMED,
 		component: "Folklore Show Samarkand",
-		type: "Activity",
+		type: ENUM_EVENT_BACKEND.ACTIVITY,
 		supplier: "Art Center",
 		manager: "Alex R.",
 		paid_at: "2024-11-02T19:00:00Z"

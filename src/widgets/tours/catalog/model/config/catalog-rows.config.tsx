@@ -3,11 +3,12 @@ import type { TFunction } from "i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Skeleton } from "@/shared/ui";
+import { Badge, Skeleton } from "@/shared/ui";
 import { formatMoney } from "@/shared/utils";
 
 import {
 	CATALOG_TOUR_TYPE_LABELS,
+	CATALOG_TOUR_TYPE_VARIANTS,
 	type ENUM_CATALOG_TOUR_TYPES_TYPE,
 	type ICatalogTourCard
 } from "@/entities/tour";
@@ -62,9 +63,9 @@ export const CATALOG_COLUMNS = (
 					"type"
 				) as ENUM_CATALOG_TOUR_TYPES_TYPE;
 				return (
-					<div className="text-sm">
+					<Badge variant={CATALOG_TOUR_TYPE_VARIANTS[type]}>
 						{t(CATALOG_TOUR_TYPE_LABELS[type], { ns: "options" })}
-					</div>
+					</Badge>
 				);
 			},
 			size: 120

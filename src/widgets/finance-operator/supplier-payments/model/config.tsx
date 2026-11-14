@@ -11,7 +11,10 @@ import {
 	SUPPLIER_PAYMENT_STATUS_LABELS,
 	SUPPLIER_PAYMENT_STATUS_VARIANTS
 } from "@/entities/finance";
-import { getEventKindLabelKey } from "@/entities/tour/itinerary";
+import {
+	EVENT_KIND_VARIANTS,
+	getEventKindLabelKey
+} from "@/entities/tour/itinerary";
 
 import { ConfirmPayment } from "@/features/finance";
 
@@ -120,14 +123,29 @@ export const COLUMNS = (
 			},
 			accessorKey: "type",
 			cell: ({ row }) => {
-				const labelKey = getEventKindLabelKey(row.original.eventKind);
-				const label = labelKey
-					? t(labelKey, { ns: "options" })
-					: (row.getValue("type") as string);
-
-				return <div className="font-medium">{label}</div>;
+				const { eventKind } = row.original;
+				const labelKey = getEventKindLabelKey(eventKind);
+				if (eventKind && labelKey) {
+					return (
+						<Badge variant={EVENT_KIND_VARIANTS[eventKind]}>
+							{t(labelKey, { ns: "options" })}
+						</Badge>
+					);
+				}
+				// event_typ пустой или не из EventTypes — текст как есть, обрезанный
+				const label = row.getValue("type") as string;
+				return (
+					<div className="min-w-0 w-full">
+						<span
+							title={label}
+							className="block truncate font-medium"
+						>
+							{label}
+						</span>
+					</div>
+				);
 			},
-			size: 100
+			size: 140
 		},
 		{
 			header: t("table.supplier"),
@@ -215,7 +233,7 @@ export const COLUMNS = (
 			meta: {
 				skeleton: <div className="size-9 rounded-md" />
 			},
-			size: 120,
+			size: 160,
 			enableHiding: false
 		}
 	];

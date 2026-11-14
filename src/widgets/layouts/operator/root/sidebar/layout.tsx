@@ -22,7 +22,8 @@ export const SideBarOperatorLayout = ({
 	return (
 		<SidebarProvider>
 			{sidebar}
-			<SidebarInset className="min-w-0">
+			{/* bg-transparent — иначе bg-background SidebarInset закроет PageBackdrop */}
+			<SidebarInset className="min-w-0 bg-transparent">
 				<HeaderOperator withSidebarTrigger />
 				<BreadcrumbLabelProvider>
 					{breadcrumb}

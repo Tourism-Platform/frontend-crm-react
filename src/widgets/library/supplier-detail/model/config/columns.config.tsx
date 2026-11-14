@@ -76,7 +76,7 @@ export const COLUMNS = (
 				}
 				const { variant, label } = SUPPLIER_TYPE_BADGE[typ];
 				return (
-					<Badge variant={variant} size="sm">
+					<Badge variant={variant}>
 						{t(label, { ns: "options" })}
 					</Badge>
 				);
