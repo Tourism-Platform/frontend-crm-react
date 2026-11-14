@@ -115,12 +115,12 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 					/>
 				)}
 
-				<Badge
-					variant={TOUR_STATUS_VARIANTS[card.status]}
-					className="absolute top-2 left-2 z-10"
-				>
-					{t(TOUR_STATUS_LABELS[card.status], { ns: "options" })}
-				</Badge>
+				{/* Подложка цвета карточки: полупрозрачный бейдж не сливается с картинкой */}
+				<div className="absolute top-2 left-2 z-10 flex rounded-sm bg-card">
+					<Badge variant={TOUR_STATUS_VARIANTS[card.status]}>
+						{t(TOUR_STATUS_LABELS[card.status], { ns: "options" })}
+					</Badge>
+				</div>
 				<div className="absolute top-2 right-2 z-10 flex max-w-[60%] justify-end">
 					<TourCardChips
 						mode="flags"
