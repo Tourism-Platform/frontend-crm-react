@@ -24,7 +24,7 @@ export const InvoiceNotFound: FC = () => {
 				</p>
 			</div>
 
-			<Button variant="outline" size="sm" asChild>
+			<Button variant="glass" size="sm" asChild>
 				<Link to={ENUM_PATH.FINANCE.INVOICES}>
 					<AltArrowLeftIcon />
 					{t("buttons.back")}

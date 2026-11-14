@@ -6,7 +6,7 @@ import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
 const ManagersBase: FC = () => {
 	const { t } = useTranslation("tour_overview_page");
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent className="grid gap-3">
 				<h3 className="text-lg">{t("managers.title")}</h3>
 				<div className="grid gap-2">

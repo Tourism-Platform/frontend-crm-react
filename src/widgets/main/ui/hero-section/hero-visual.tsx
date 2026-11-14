@@ -40,7 +40,7 @@ export const HeroVisual: FC<IHeroVisualProps> = ({ catalogImage }) => {
 				className="absolute left-0 top-[7.5rem] z-10 w-[300px]"
 				{...MAIN_HERO_FLOAT_ITEMS_LIST[0]}
 			>
-				<Card className={heroCardClass}>
+				<Card variant="glass" className={heroCardClass}>
 					<div className="relative h-28 overflow-hidden">
 						<img
 							src={catalogImage}
@@ -78,7 +78,7 @@ export const HeroVisual: FC<IHeroVisualProps> = ({ catalogImage }) => {
 				className="absolute bottom-0 right-0 z-10 w-[268px]"
 				{...MAIN_HERO_FLOAT_ITEMS_LIST[1]}
 			>
-				<Card className={heroCardClass}>
+				<Card variant="glass" className={heroCardClass}>
 					<CardContent className="p-4">
 						<p className="text-xs text-muted-foreground">
 							{t("hero.visual.stats.label")}

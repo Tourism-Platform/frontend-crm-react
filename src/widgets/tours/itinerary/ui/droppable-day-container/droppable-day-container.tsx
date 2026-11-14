@@ -59,6 +59,7 @@ const DroppableDayContainerBase: FC<IDroppableDayContainerProps> = ({
 
 	return (
 		<Card
+			variant="glass"
 			ref={setNodeRef}
 			className={cn(
 				"h-full min-h-0 gap-0 overflow-hidden rounded-lg pt-2 pb-0",

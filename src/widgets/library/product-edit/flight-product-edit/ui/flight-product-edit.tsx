@@ -87,7 +87,7 @@ const FlightProductEditBase: FC<IFlightProductEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs
 							ns="flight_product_edit_page"

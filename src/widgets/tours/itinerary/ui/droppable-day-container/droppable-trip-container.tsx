@@ -54,6 +54,7 @@ const DroppableTripContainerBase: FC<IDroppableTripContainerProps> = ({
 
 	return (
 		<Card
+			variant="glass"
 			ref={setNodeRef}
 			className={cn(
 				"space-y-2 min-h-[200px] rounded-lg p-3 border-2 border-dashed ",

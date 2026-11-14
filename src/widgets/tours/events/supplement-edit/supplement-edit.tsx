@@ -46,7 +46,7 @@ export const SupplementEdit: FC<ISupplementEditProps> = ({
 					placeholder={t("input.title.placeholder")}
 					className="bg-violet-600"
 				/>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="supplement_edit_page"

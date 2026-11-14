@@ -34,7 +34,7 @@ export const PackageEdit: FC<IPackageEditProps> = ({
 					icon={BoxOutlineIcon}
 					placeholder={t("input.title.placeholder")}
 				/>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs
 							ns="tour_package_edit_page"

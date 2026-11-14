@@ -83,7 +83,7 @@ const SupplierFormBase: FC<ISupplierFormProps> = ({ supplierId }) => {
 	}
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent className="space-y-6">
 				<SupplierLogoInfo
 					supplierId={supplierId}

@@ -43,7 +43,7 @@ export const GuideEdit: FC<IGuideEditProps> = ({
 					placeholder={t("input.title.placeholder")}
 					className="bg-orange-600"
 				/>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="guide_edit_page"

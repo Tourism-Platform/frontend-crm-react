@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
+	GLASS_SURFACE,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -26,7 +28,7 @@ const OrderTourReviewBase = ({ items }: IOrderTourReviewProps) => {
 	const columns = useMemo(() => TOUR_REVIEW_COLUMNS(t), [t]);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader className="gap-4">
 				<CardTitle className="text-lg font-semibold">
 					{t("tour_review.title")}
@@ -34,6 +36,7 @@ const OrderTourReviewBase = ({ items }: IOrderTourReviewProps) => {
 			</CardHeader>
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={items}
 					columns={columns}
 					getSubRows={getSubRowsFn}

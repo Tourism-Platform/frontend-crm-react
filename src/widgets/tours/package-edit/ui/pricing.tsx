@@ -199,7 +199,7 @@ const PackagePricingBase: FC<TPackagePricingProps> = ({
 					}
 				>
 					{backToEventHref ? (
-						<Button variant="outline" asChild>
+						<Button variant="glass" asChild>
 							<Link to={backToEventHref}>
 								<AltArrowLeftIcon />
 								{t("form.buttons.back_to_event")}

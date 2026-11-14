@@ -43,7 +43,7 @@ export const InformationEdit: FC<IInformationEditProps> = ({
 					placeholder={t("input.title.placeholder")}
 					className="bg-amber-600"
 				/>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="information_edit_page"

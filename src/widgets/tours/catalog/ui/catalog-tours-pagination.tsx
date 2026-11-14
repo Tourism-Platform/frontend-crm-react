@@ -33,7 +33,7 @@ export const CatalogToursPagination: FC<TCatalogToursPaginationProps> = ({
 	return (
 		<div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 sm:gap-3">
 			<LoaderButton
-				variant="outline"
+				variant="glass"
 				size="sm"
 				disabled={page <= 1 || isBusy}
 				onClick={onPrev}
@@ -47,7 +47,7 @@ export const CatalogToursPagination: FC<TCatalogToursPaginationProps> = ({
 				})}
 			</span>
 			<Button
-				variant="outline"
+				variant="glass"
 				size="sm"
 				disabled={page >= totalPages || isBusy}
 				onClick={onNext}

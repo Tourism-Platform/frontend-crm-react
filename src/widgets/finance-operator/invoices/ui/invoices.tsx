@@ -4,9 +4,11 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
+	GLASS_SURFACE,
 	StatusCounts,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -97,7 +99,7 @@ const InvoicesBase: FC = () => {
 		<section className="flex gap-5 flex-col">
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
 
-			<Card>
+			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
 					<StatusCounts
 						statuses={Object.values(ENUM_INVOICE_STATUS)}
@@ -106,6 +108,7 @@ const InvoicesBase: FC = () => {
 						counts={statusCounts}
 					/>
 					<SmartTable
+						TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 						data={data}
 						columns={columns}
 						isLoading={isLoading || isFetching}

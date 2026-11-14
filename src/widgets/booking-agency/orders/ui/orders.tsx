@@ -6,7 +6,13 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import {
+	Card,
+	CardContent,
+	GLASS_SURFACE,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -110,9 +116,10 @@ const OrdersBase: FC = () => {
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
-			<Card>
+			<Card variant="glass">
 				<CardContent>
 					<SmartTable
+						TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 						data={orders}
 						columns={columns}
 						recordCount={totalCount}

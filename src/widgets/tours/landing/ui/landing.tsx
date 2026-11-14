@@ -200,7 +200,7 @@ const LandingBase: FC = () => {
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
-					<Card>
+					<Card variant="glass">
 						<CardContent className="grid gap-6">
 							<PhotosInfo
 								tourId={tourId}

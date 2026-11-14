@@ -28,7 +28,7 @@ export const OpenPayment: FC<IOpenPaymentProps> = ({ file }) => {
 	return (
 		<div className="text-right">
 			<LoaderButton
-				variant="outline"
+				variant="glass"
 				size="sm"
 				className="h-8 py-0 rounded px-4 text-xs font-medium border-gray-200"
 				onClick={handleOpen}

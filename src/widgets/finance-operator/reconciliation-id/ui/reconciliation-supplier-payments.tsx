@@ -1,11 +1,13 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
+	GLASS_SURFACE,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -26,7 +28,7 @@ const ReconciliationSupplierPaymentsBase: FC<
 	const columns = useMemo(() => COLUMNS(t), [t]);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("table.title")}
@@ -34,6 +36,7 @@ const ReconciliationSupplierPaymentsBase: FC<
 			</CardHeader>
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={data}
 					columns={columns}
 					isLoading={isLoading}

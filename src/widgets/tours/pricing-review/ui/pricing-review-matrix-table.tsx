@@ -5,7 +5,13 @@ import { toast } from "sonner";
 
 import { isNoFxRateError } from "@/shared/api";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import {
+	Card,
+	CardContent,
+	GLASS_SURFACE,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { useGetPriceMatrixQuery } from "@/entities/tour";
@@ -62,9 +68,10 @@ const PricingReviewMatrixTableBase: FC<IPricingReviewMatrixTableProps> = ({
 	);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={rows}
 					columns={columns}
 					isLoading={isLoading || isFetching}

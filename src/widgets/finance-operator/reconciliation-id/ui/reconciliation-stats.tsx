@@ -26,7 +26,7 @@ const ReconciliationStatsBase: FC<IReconciliationStatsProps> = ({ data }) => {
 	return (
 		<div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
 			{stats.map((stat, index) => (
-				<Card key={index} className="gap-3">
+				<Card variant="glass" key={index} className="gap-3">
 					<CardHeader className="block">
 						<CardTitle className="text-lg font-medium text-muted-foreground">
 							{stat.label}

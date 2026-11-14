@@ -19,7 +19,7 @@ export const PreviewTourButton: FC = () => {
 
 	return (
 		<LoaderButton
-			variant="outline"
+			variant="glass"
 			onClick={handlePreview}
 			disabled={!tourId}
 			icon={<EyeIcon />}

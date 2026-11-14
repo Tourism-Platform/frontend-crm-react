@@ -153,7 +153,7 @@ const SeasonalityInfoBase: FC<ISeasonalityInfoProps> = ({ tourId }) => {
 								</div>
 								<LoaderButton
 									type="button"
-									variant="outline"
+									variant="glass"
 									size="icon"
 									isLoading={pendingSaveIndex === index}
 									aria-label={

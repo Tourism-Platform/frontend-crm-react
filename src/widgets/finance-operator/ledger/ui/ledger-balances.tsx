@@ -5,8 +5,9 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
+import { cn } from "@/shared/lib";
 import type { IPaginationRequest } from "@/shared/types";
-import { withErrorBoundary } from "@/shared/ui";
+import { GLASS_SURFACE, withErrorBoundary } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { formatMoney } from "@/shared/utils";
 
@@ -91,6 +92,7 @@ const LedgerBalancesBase: FC<ILedgerBalancesProps> = ({ kind }) => {
 				</div>
 			)}
 			<SmartTable
+				TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 				data={balances}
 				columns={columns}
 				isLoading={isLoading || isFetching}

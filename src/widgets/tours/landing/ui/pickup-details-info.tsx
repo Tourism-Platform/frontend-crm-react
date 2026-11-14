@@ -69,8 +69,8 @@ const PickupDetailsInfoBase: FC<IPickupDetailsInfoProps> = ({ form }) => {
 										pickupType.includes(
 											item.value as (typeof ENUM_PICKUP_TYPE)[keyof typeof ENUM_PICKUP_TYPE]
 										)
-											? "outlineActive"
-											: "outline"
+											? "glassActive"
+											: "glass"
 									}
 									onClick={() =>
 										handleSelect(

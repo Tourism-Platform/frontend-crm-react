@@ -88,7 +88,7 @@ const TransferProductEditBase: FC<ITransferProductEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs
 							ns="transfer_product_edit_page"

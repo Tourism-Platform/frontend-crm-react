@@ -92,7 +92,7 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 
 	return (
 		<div className="flex w-full flex-col items-center gap-8 py-4">
-			<Card className="w-full max-w-2xl">
+			<Card variant="glass" className="w-full max-w-2xl">
 				<CardHeader className="justify-items-center text-center">
 					<div className="mb-2 flex size-16 items-center justify-center rounded-full bg-emerald-500/10">
 						<Check className="size-8 text-emerald-500" />
@@ -245,7 +245,7 @@ export const Step3Confirmation: FC<IStep3Props> = ({
 				</Button>
 				<Button
 					type="button"
-					variant="outline"
+					variant="glass"
 					onClick={() => navigate(ENUM_PATH.TOURS.CATALOG.ROOT)}
 				>
 					{t("step_3.catalogue")}

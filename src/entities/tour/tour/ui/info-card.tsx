@@ -13,7 +13,7 @@ interface IInfoCardProps {
 export const InfoCard: FC<IInfoCardProps> = ({ label, value, isLoading }) => {
 	const { t } = useTranslation("tour_overview_page");
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent className="grid gap-3">
 				<p>{t(label)}:</p>
 				{isLoading ? (

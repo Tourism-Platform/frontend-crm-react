@@ -66,7 +66,7 @@ const ActivityEditBase: FC<IActivityEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="activity_edit_page"

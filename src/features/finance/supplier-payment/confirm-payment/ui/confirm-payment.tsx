@@ -198,7 +198,7 @@ export const ConfirmPayment: FC<IConfirmPaymentProps> = ({ payment }) => {
 			<DialogTrigger asChild>
 				<LoaderButton
 					type="button"
-					variant={isConfirmed ? "outline" : "default"}
+					variant={isConfirmed ? "glass" : "default"}
 					size="sm"
 					className="w-full"
 					icon={isConfirmed ? <EyeIcon /> : <CheckCircleIcon />}

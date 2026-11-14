@@ -28,7 +28,7 @@ export const CatalogToursSidebar: FC<TCatalogToursSidebarProps> = ({
 
 	return (
 		<aside className="flex flex-col gap-4">
-			<Card>
+			<Card variant="glass">
 				<CardHeader className="flex flex-wrap items-center justify-between gap-3">
 					<CardTitle className="text-lg font-semibold">
 						{t("filters.title")}
@@ -37,7 +37,7 @@ export const CatalogToursSidebar: FC<TCatalogToursSidebarProps> = ({
 						size="sm"
 						onClick={onReset}
 						className="h-auto bg-transparent p-0 text-destructive hover:bg-transparent"
-						variant="outline"
+						variant="glass"
 						icon={<RestartIcon />}
 						label={t("filters.buttons.reset")}
 					/>

@@ -30,7 +30,7 @@ export const UnarchiveTourButton: FC<IUnarchiveTourButtonProps> = ({
 	return (
 		<LoaderButton
 			type="button"
-			variant="outline"
+			variant="glass"
 			onClick={handleUnarchive}
 			isLoading={isLoading}
 			disabled={!tourId}

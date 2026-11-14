@@ -164,7 +164,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					{status === ENUM_ORDER_STATUS.IN_PROCESSING && (
 						<div className="flex flex-wrap gap-2">
 							<LoaderButton
-								variant="outline"
+								variant="glass"
 								icon={<ExportIcon />}
 								label={t("buttons.export")}
 							/>
@@ -179,7 +179,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					{status === ENUM_ORDER_STATUS.BOOKING && (
 						<div className="flex flex-wrap gap-2">
 							<LoaderButton
-								variant="outline"
+								variant="glass"
 								icon={<ExportIcon />}
 								label={t("buttons.export")}
 							/>
@@ -193,7 +193,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					{status === ENUM_ORDER_STATUS.IN_PROGRESS && (
 						<div className="flex flex-wrap gap-2">
 							<LoaderButton
-								variant="outline"
+								variant="glass"
 								icon={<ExportIcon />}
 								label={t("buttons.export")}
 							/>
@@ -202,7 +202,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 					)}
 					{status === ENUM_ORDER_STATUS.COMPLETED && (
 						<LoaderButton
-							variant="outline"
+							variant="glass"
 							icon={<ExportIcon />}
 							label={t("buttons.export")}
 						/>

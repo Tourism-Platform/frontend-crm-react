@@ -28,7 +28,11 @@ export const ReconciliationHeader: FC<IReconciliationHeaderProps> = ({
 					const isProfit = primaryKey === "settledProfit";
 
 					return (
-						<Card key={primaryKey} className="gap-3">
+						<Card
+							variant="glass"
+							key={primaryKey}
+							className="gap-3"
+						>
 							<CardHeader className="block">
 								<CardTitle className="text-lg font-medium text-muted-foreground">
 									{t(`totals.${primaryKey}`)}

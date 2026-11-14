@@ -98,7 +98,7 @@ const OrderVoucherBase: FC<IOrderVoucherProps> = ({ bookingId }) => {
 	);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("voucher.title")}

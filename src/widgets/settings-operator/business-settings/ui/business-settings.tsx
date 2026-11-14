@@ -72,7 +72,7 @@ const BusinessSettingsBase: FC = () => {
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
-			<Card>
+			<Card variant="glass">
 				<CardContent className="flex gap-5 flex-col max-w-5xl">
 					<Form {...form}>
 						<form

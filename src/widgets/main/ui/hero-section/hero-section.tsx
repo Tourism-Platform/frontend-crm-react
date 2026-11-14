@@ -47,7 +47,7 @@ export const HeroSection: FC<IHeroSectionProps> = ({ onAudienceCta }) => {
 						</Button>
 						<Button
 							size="lg"
-							variant="outline"
+							variant="glass"
 							onClick={() => onAudienceCta("agency")}
 						>
 							{t("hero.cta.agency")}

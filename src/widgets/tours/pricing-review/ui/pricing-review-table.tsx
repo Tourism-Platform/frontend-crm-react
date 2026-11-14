@@ -5,7 +5,14 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
-import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import {
+	Button,
+	Card,
+	CardContent,
+	GLASS_SURFACE,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { type ITourReviewItem, TOUR_PACKAGE_CREATE_ID } from "@/entities/tour";
@@ -80,9 +87,10 @@ const PricingReviewTableBase: FC<IPricingReviewTableProps> = ({
 	);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={filteredItems}
 					columns={columns}
 					getSubRows={getSubRowsFn}

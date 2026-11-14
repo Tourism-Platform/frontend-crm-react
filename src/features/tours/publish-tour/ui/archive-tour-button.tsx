@@ -28,7 +28,7 @@ export const ArchiveTourButton: FC<IArchiveTourButtonProps> = ({ tourId }) => {
 	return (
 		<LoaderButton
 			type="button"
-			variant="outline"
+			variant="glass"
 			onClick={handleArchive}
 			isLoading={isLoading}
 			disabled={!tourId}

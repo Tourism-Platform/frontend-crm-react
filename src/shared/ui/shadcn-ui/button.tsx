@@ -4,6 +4,8 @@ import * as React from "react";
 
 import { cn } from "@/shared/lib";
 
+import { GLASS_SURFACE } from "./card";
+
 const buttonVariants = cva(
 	"group/button cursor-pointer inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
 	{
@@ -21,6 +23,16 @@ const buttonVariants = cva(
 					"border text-primary bg-primary/10 hover:bg-accent border-primary",
 				secondary:
 					"bg-secondary text-secondary-foreground hover:bg-secondary/80",
+				/** Нейтральное действие поверх фона страницы — как `Card variant="glass"` (D10) */
+				glass: cn(
+					GLASS_SURFACE,
+					"border hover:bg-card dark:hover:bg-card"
+				),
+				/** Выбранная стеклянная кнопка — активная вкладка или фильтр */
+				glassActive: cn(
+					GLASS_SURFACE,
+					"border border-primary/40 bg-primary/10 text-primary hover:bg-primary/15 dark:border-primary/40 dark:bg-primary/15"
+				),
 				ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
 				link: "text-primary underline-offset-4 hover:underline",
 				dim: "text-muted-foreground hover:text-foreground data-[state=open]:text-foreground"

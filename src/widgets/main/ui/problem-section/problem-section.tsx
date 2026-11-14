@@ -30,7 +30,10 @@ export const ProblemSection: FC = () => {
 				subtitle={t("problem.subtitle")}
 			/>
 
-			<Card className="mx-auto max-w-5xl overflow-hidden p-0">
+			<Card
+				variant="glass"
+				className="mx-auto max-w-5xl overflow-hidden p-0"
+			>
 				<CardContent className="p-0">
 					<ProblemVisual />
 				</CardContent>

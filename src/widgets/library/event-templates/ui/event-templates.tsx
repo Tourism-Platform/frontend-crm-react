@@ -6,7 +6,13 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import {
+	Card,
+	CardContent,
+	GLASS_SURFACE,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -100,7 +106,7 @@ const EventTemplatesBase: FC = () => {
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
-			<Card>
+			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
 					<div className="flex flex-wrap items-center justify-between gap-4">
 						<h2 className="text-lg font-semibold">
@@ -109,6 +115,7 @@ const EventTemplatesBase: FC = () => {
 						<CreateEventTemplate />
 					</div>
 					<SmartTable
+						TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 						data={templates}
 						columns={columns}
 						isLoading={isLoading || isFetching}

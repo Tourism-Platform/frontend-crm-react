@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardAction,
@@ -13,6 +14,7 @@ import {
 	CardTitle,
 	CustomField,
 	Form,
+	GLASS_SURFACE,
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -124,7 +126,7 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 	);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("supplier_payments.title")}
@@ -159,7 +161,7 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 						/>
 						<LoaderButton
 							type="button"
-							variant="outline"
+							variant="glass"
 							onClick={handleResetFilters}
 							icon={<RestartIcon />}
 							label={t("supplier_payments.filters.reset")}
@@ -167,6 +169,7 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 					</div>
 				</Form>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={payments}
 					columns={columns}
 					isLoading={isLoading || isFetching}

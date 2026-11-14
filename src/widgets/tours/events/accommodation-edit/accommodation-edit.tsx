@@ -63,7 +63,7 @@ export const AccommodationEdit: FC<IAccommodationEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="accommodation_edit_page"

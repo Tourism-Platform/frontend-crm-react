@@ -22,7 +22,7 @@ const PricingReviewSummaryBase: FC<IPricingReviewSummaryProps> = ({
 	const { t } = useTranslation("tour_pricing_review_page");
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("overview.title")}

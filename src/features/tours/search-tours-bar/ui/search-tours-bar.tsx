@@ -76,7 +76,7 @@ export const SearchToursBar: FC<ISearchToursBarProps> = ({
 	};
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent className="px-4 sm:px-6">
 				<Form {...form}>
 					<form

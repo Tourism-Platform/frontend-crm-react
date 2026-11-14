@@ -77,12 +77,12 @@ const ActivityLogBase: FC = () => {
 		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
 
-			<Card>
+			<Card variant="glass">
 				<CardHeader className="flex flex-wrap items-center justify-between gap-3">
 					<CardTitle className="text-lg font-semibold">
 						{t("content.title")}
 					</CardTitle>
-					<Button variant="outline">{t("actions.export")}</Button>
+					<Button variant="glass">{t("actions.export")}</Button>
 				</CardHeader>
 				<CardContent className="flex flex-col gap-6">
 					{/* Догрузка страниц — на кнопке, список остаётся на месте */}
@@ -96,7 +96,7 @@ const ActivityLogBase: FC = () => {
 					{hasMore && (
 						<div className="flex justify-center pb-4">
 							<LoaderButton
-								variant="outline"
+								variant="glass"
 								type="button"
 								onClick={handleLoadMore}
 								disabled={isFetching || isActivityLogError}

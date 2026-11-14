@@ -122,7 +122,7 @@ export const PreviewBookingSidebar: FC<ISidebarProps> = ({
 	}
 
 	return (
-		<Card className="sticky top-24 w-full shrink-0">
+		<Card variant="glass" className="sticky top-24 w-full shrink-0">
 			<CardContent className="flex flex-col p-6">
 				<h3 className="mb-4 text-xs font-semibold tracking-widest text-muted-foreground uppercase">
 					{t("sidebar.title")}

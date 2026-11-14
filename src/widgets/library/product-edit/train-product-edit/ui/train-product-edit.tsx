@@ -87,7 +87,7 @@ const TrainProductEditBase: FC<ITrainProductEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs
 							ns="train_product_edit_page"

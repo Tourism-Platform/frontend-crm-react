@@ -49,6 +49,8 @@ export interface ISmartTableProps<TData extends object>
 	columns: ColumnDef<TData, unknown>[];
 	data: TData[];
 	recordCount?: number;
+	/** Классы контейнера таблицы — например, стекло (`GLASS_SURFACE`) поверх фона страницы */
+	TableClassName?: string;
 	actions?: ReactNode;
 	topChildren?: ReactNode;
 	statusTabs?: { label: string; value: string }[];

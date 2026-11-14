@@ -44,7 +44,7 @@ const BookingDetailsBase: FC<IBookingDetailsProps> = ({ form, className }) => {
 						)}
 					</span>
 				</div>
-				<Button variant={"outline"}>
+				<Button variant={"glass"}>
 					{t(
 						"form.pricing.form.booking_details.buttons.make_optional"
 					)}

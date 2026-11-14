@@ -88,7 +88,7 @@ const ActivityProductEditBase: FC<IActivityProductEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs
 							ns="activity_product_edit_page"

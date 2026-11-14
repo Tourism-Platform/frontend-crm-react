@@ -11,7 +11,7 @@ interface IOrderInfoCardProps {
 
 export const OrderInfoCard: FC<IOrderInfoCardProps> = ({ title, items }) => {
 	return (
-		<Card className="gap-2">
+		<Card variant="glass" className="gap-2">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">{title}</CardTitle>
 			</CardHeader>

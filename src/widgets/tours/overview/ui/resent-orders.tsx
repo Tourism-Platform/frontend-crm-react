@@ -6,11 +6,13 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
+	GLASS_SURFACE,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -68,7 +70,7 @@ const LastOrdersBase: FC = () => {
 		[filters.page, filters.limit]
 	);
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("recent_orders.title")}
@@ -76,6 +78,7 @@ const LastOrdersBase: FC = () => {
 			</CardHeader>
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={orders}
 					columns={columns}
 					isLoading={isLoading}

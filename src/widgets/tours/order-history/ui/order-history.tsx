@@ -7,7 +7,13 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import {
+	Card,
+	CardContent,
+	GLASS_SURFACE,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 import { useValueToTranslateLabel } from "@/shared/utils";
 
@@ -125,9 +131,10 @@ const OrderHistoryBase: FC = () => {
 	return (
 		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
-			<Card>
+			<Card variant="glass">
 				<CardContent>
 					<SmartTable
+						TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 						data={orders}
 						columns={columns}
 						isLoading={isLoading || isFetching}

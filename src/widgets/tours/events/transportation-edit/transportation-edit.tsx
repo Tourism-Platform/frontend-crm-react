@@ -63,7 +63,7 @@ export const TransportationEdit: FC<ITransportationEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="transportation_edit_page"

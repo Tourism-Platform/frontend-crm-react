@@ -7,9 +7,11 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
+import { cn } from "@/shared/lib";
 import {
 	CustomField,
 	Form,
+	GLASS_SURFACE,
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -121,6 +123,7 @@ const LedgerEntriesBase: FC = () => {
 
 	return (
 		<SmartTable
+			TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 			data={entries}
 			columns={columns}
 			topChildren={
@@ -139,7 +142,7 @@ const LedgerEntriesBase: FC = () => {
 						))}
 						<LoaderButton
 							type="button"
-							variant="outline"
+							variant="glass"
 							onClick={handleResetFilters}
 							icon={<RestartIcon />}
 							label={t("entries.filters.reset")}

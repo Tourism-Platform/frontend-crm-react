@@ -1,11 +1,13 @@
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CardHeader,
 	CardTitle,
+	GLASS_SURFACE,
 	withErrorBoundary
 } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
@@ -28,6 +30,7 @@ const OrderPaxReviewSubTable = ({ items }: { items: IPaxReviewDetail[] }) => {
 	return (
 		<div className="p-2">
 			<SmartTable
+				TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 				data={items}
 				columns={columns}
 				showTopFilters={false}
@@ -58,7 +61,7 @@ const OrderPaxReviewBase = ({ items = [] }: IOrderPaxReviewProps) => {
 	);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("pax_information.title")}
@@ -66,6 +69,7 @@ const OrderPaxReviewBase = ({ items = [] }: IOrderPaxReviewProps) => {
 			</CardHeader>
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={items}
 					columns={columns}
 					getRowCanExpand={getRowCanExpandFn}

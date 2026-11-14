@@ -7,7 +7,14 @@ import { toast } from "sonner";
 
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
-import { Button, Card, CardContent, withErrorBoundary } from "@/shared/ui";
+import { cn } from "@/shared/lib";
+import {
+	Button,
+	Card,
+	CardContent,
+	GLASS_SURFACE,
+	withErrorBoundary
+} from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import { TOUR_PACKAGE_CREATE_ID, useListPackagesQuery } from "@/entities/tour";
@@ -83,9 +90,10 @@ const PricingReviewPackagesTableBase: FC<IPricingReviewPackagesTableProps> = ({
 	);
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={packages}
 					columns={columns}
 					actions={actionsJsx}

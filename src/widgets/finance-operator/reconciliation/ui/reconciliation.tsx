@@ -5,11 +5,13 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CustomField,
 	Form,
+	GLASS_SURFACE,
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -127,7 +129,7 @@ const ReconciliationBase: FC = () => {
 		<section className="flex gap-5 flex-col">
 			<ReconciliationHeader totals={totals} />
 
-			<Card>
+			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
 					<Form {...form}>
 						<div className="flex flex-wrap items-center gap-4">
@@ -170,7 +172,7 @@ const ReconciliationBase: FC = () => {
 							)}
 							<LoaderButton
 								type="button"
-								variant="outline"
+								variant="glass"
 								onClick={handleResetFilters}
 								icon={<RestartIcon />}
 								label={t("filters.reset")}
@@ -178,6 +180,7 @@ const ReconciliationBase: FC = () => {
 						</div>
 					</Form>
 					<SmartTable
+						TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 						data={data}
 						columns={columns}
 						isLoading={isLoading || isFetching}

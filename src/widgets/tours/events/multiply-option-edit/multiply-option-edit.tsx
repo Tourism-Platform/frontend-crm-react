@@ -33,7 +33,7 @@ export const MultiplyOptionEdit: FC<IMultiplyOptionEditProps> = ({
 					placeholder={t("general.form.fields.title.placeholder")}
 					className="bg-zinc-700"
 				/>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="multiply_option_edit_page"

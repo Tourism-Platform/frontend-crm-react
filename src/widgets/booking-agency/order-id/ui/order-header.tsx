@@ -99,7 +99,7 @@ export const OrderHeader: FC<IOrderHeaderProps> = ({
 						status === ENUM_ORDER_STATUS.BOOKING ||
 						status === ENUM_ORDER_STATUS.IN_PROCESSING) && (
 						<LoaderButton
-							variant="outline"
+							variant="glass"
 							icon={<ExportIcon />}
 							label={t("buttons.export")}
 						/>

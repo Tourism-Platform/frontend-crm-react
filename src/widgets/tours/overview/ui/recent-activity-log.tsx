@@ -46,7 +46,7 @@ const RecentActivityLogBase: FC = () => {
 	const activities = data?.data ?? [];
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("recent_activity.title")}

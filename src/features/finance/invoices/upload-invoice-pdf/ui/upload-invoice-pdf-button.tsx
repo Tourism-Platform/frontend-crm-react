@@ -43,7 +43,7 @@ export const UploadInvoicePdfButton: FC<IUploadInvoicePdfButtonProps> = ({
 			/>
 			<LoaderButton
 				type="button"
-				variant="outline"
+				variant="glass"
 				onClick={() => inputRef.current?.click()}
 				isLoading={isLoading}
 				icon={<UploadMinimalisticIcon />}

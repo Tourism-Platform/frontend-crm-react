@@ -14,7 +14,7 @@ export const InvoiceInfoCard: FC<IInvoiceInfoCardProps> = ({
 	items
 }) => {
 	return (
-		<Card className="gap-2">
+		<Card variant="glass" className="gap-2">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">{title}</CardTitle>
 			</CardHeader>

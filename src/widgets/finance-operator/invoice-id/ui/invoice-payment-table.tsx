@@ -1,10 +1,12 @@
 import { type FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CardHeader,
+	GLASS_SURFACE,
 	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -26,7 +28,7 @@ const InvoicePaymentTableBase: FC<IInvoicePaymentTableProps> = ({
 	const columns = useMemo(() => COLUMNS(t), [t]);
 
 	return (
-		<Card className="gap-4">
+		<Card variant="glass" className="gap-4">
 			<CardHeader className="flex flex-wrap gap-x-8 gap-y-2 text-md">
 				<div className="flex gap-2">
 					<span className="font-semibold">
@@ -53,6 +55,7 @@ const InvoicePaymentTableBase: FC<IInvoicePaymentTableProps> = ({
 					{t("payment_table.table.title")}
 				</h2>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={invoice.payments}
 					columns={columns}
 					showTopFilters={false}

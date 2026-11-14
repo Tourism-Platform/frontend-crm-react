@@ -5,9 +5,11 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
+import { cn } from "@/shared/lib";
 import {
 	CustomField,
 	Form,
+	GLASS_SURFACE,
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -147,7 +149,7 @@ const CurrencyBase: FC = () => {
 						))}
 						<LoaderButton
 							type="button"
-							variant="outline"
+							variant="glass"
 							onClick={handleResetFilters}
 							icon={<RestartIcon />}
 							label={t("currency.filters.reset")}
@@ -163,6 +165,7 @@ const CurrencyBase: FC = () => {
 		<div className="flex flex-col gap-6">
 			<div className="flex gap-5 flex-col">
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={currencyRatesData}
 					recordCount={totalCount}
 					columns={columns}

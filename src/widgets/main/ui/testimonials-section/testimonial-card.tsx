@@ -15,7 +15,7 @@ export const TestimonialCard: FC<ITestimonialCardProps> = ({
 	name,
 	role
 }) => (
-	<Card className="flex h-full flex-col">
+	<Card variant="glass" className="flex h-full flex-col">
 		<CardHeader className="space-y-3">
 			<span className="w-fit rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
 				{tag}

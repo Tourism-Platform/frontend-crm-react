@@ -49,7 +49,7 @@ export const ExportInvoiceButton: FC<IExportInvoiceButtonProps> = ({
 			icon={<ExportIcon />}
 			label={t("buttons.export")}
 			loadingLabel={t("buttons.exporting")}
-			variant="outline"
+			variant="glass"
 		/>
 	);
 };

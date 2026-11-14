@@ -27,7 +27,7 @@ export const PricingReviewParams: FC<IPricingReviewParamsProps> = ({
 	const { t } = useTranslation("tour_pricing_review_page");
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardContent>
 				<Form {...form}>
 					<div className="flex flex-wrap items-end gap-4">
@@ -43,7 +43,7 @@ export const PricingReviewParams: FC<IPricingReviewParamsProps> = ({
 						))}
 						<LoaderButton
 							type="button"
-							variant="outline"
+							variant="glass"
 							className="mb-5"
 							onClick={onReset}
 							icon={<RestartIcon />}

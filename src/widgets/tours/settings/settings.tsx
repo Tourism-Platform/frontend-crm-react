@@ -50,7 +50,7 @@ const SettingsBase: FC = () => {
 	return (
 		<section className="flex flex-1 flex-col gap-5">
 			<ConnectedTourHeader title={t("page_name")} actions={actionsJsx} />
-			<Card>
+			<Card variant="glass">
 				<CardContent>
 					<CustomQueryTabs
 						ns="tour_settings_page"

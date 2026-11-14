@@ -87,7 +87,7 @@ const BusProductEditBase: FC<IBusProductEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs
 							ns="bus_product_edit_page"

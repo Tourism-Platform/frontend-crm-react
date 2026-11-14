@@ -1,12 +1,14 @@
 import { type FC, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardAction,
 	CardContent,
 	CardHeader,
 	CardTitle,
+	GLASS_SURFACE,
 	Separator,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -92,7 +94,7 @@ const OrderTourReviewBase = ({
 		selectionProgress.total > 0;
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader className="gap-4">
 				<CardTitle className="text-lg font-semibold">
 					{t("tour_review.title")}
@@ -129,6 +131,7 @@ const OrderTourReviewBase = ({
 			</CardHeader>
 			<CardContent>
 				<SmartTable
+					TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 					data={items}
 					columns={columns}
 					getSubRows={getSubRowsFn}

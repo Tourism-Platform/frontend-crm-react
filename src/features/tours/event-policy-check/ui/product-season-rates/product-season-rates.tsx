@@ -3,6 +3,8 @@ import { type FC, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
+import { cn } from "@/shared/lib";
+import { GLASS_SURFACE } from "@/shared/ui";
 import { SmartTable } from "@/shared/ui/custom/smart-table";
 
 import {
@@ -72,6 +74,7 @@ export const ProductSeasonRates: FC<IProductSeasonRatesProps> = ({ rates }) => {
 		<div className="grid gap-3">
 			<h3 className="text-lg">{t("product_seasons.title")}</h3>
 			<SmartTable
+				TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 				columns={columns}
 				data={pageRates}
 				recordCount={filteredRates.length}

@@ -76,7 +76,7 @@ export const OpenReconciliation: FC<IOpenReconciliationProps> = ({
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<LoaderButton
-					variant="outline"
+					variant="glass"
 					size="sm"
 					className="w-full"
 					disabled={!canOpen}

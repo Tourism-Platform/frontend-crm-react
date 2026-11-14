@@ -41,7 +41,7 @@ export const FinalCtaSection: FC<IFinalCtaSectionProps> = ({
 						</Button>
 						<Button
 							size="lg"
-							variant="outline"
+							variant="glass"
 							onClick={onNavigateCta}
 						>
 							<UsersGroupRoundedIcon className="size-4" />

@@ -49,6 +49,7 @@ function SmartTableInner<TData extends object>({
 	card: Card,
 	cardSkeleton: CardSkeleton,
 	CardsClassName,
+	TableClassName,
 	statusTabs,
 	activeStatusTab,
 	onStatusTabChange,
@@ -213,7 +214,9 @@ function SmartTableInner<TData extends object>({
 			{
 				type: "table" as const,
 				component: (
-					<DataGridContainer className="custom-scrollbar">
+					<DataGridContainer
+						className={cn("custom-scrollbar", TableClassName)}
+					>
 						{tableLayout?.columnsDraggable ||
 						tableLayout?.rowsDraggable ? (
 							<DataGridTableDnD />
@@ -234,6 +237,7 @@ function SmartTableInner<TData extends object>({
 			pagination.pageSize,
 			CardSkeleton,
 			data,
+			TableClassName,
 			tableLayout?.columnsDraggable,
 			tableLayout?.rowsDraggable
 		]

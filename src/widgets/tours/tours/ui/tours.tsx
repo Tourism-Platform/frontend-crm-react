@@ -7,11 +7,13 @@ import { toast } from "sonner";
 
 import { INTERSECTION_ELEMENTS } from "@/shared/config";
 import { useOptionalResourceQuery } from "@/shared/hooks";
+import { cn } from "@/shared/lib";
 import {
 	Card,
 	CardContent,
 	CustomField,
 	Form,
+	GLASS_SURFACE,
 	LoaderButton,
 	withErrorBoundary
 } from "@/shared/ui";
@@ -144,7 +146,7 @@ const ToursBase: FC = () => {
 	return (
 		<section className="flex gap-5 flex-col">
 			<h1 className="md:text-3xl text-2xl">{t("page_name")}</h1>
-			<Card>
+			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
 					<div className="flex flex-wrap items-center justify-between gap-4">
 						<Form {...form}>
@@ -162,7 +164,7 @@ const ToursBase: FC = () => {
 								))}
 								<LoaderButton
 									type="button"
-									variant="outline"
+									variant="glass"
 									onClick={handleResetFilters}
 									icon={<RestartIcon />}
 									label={t("filters.reset")}
@@ -172,6 +174,7 @@ const ToursBase: FC = () => {
 						<CreateTour />
 					</div>
 					<SmartTable
+						TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 						columns={columns}
 						data={tours}
 						recordCount={totalCount}

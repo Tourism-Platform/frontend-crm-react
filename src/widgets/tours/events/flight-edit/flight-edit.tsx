@@ -59,7 +59,7 @@ export const FlightEdit: FC<IFlightEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQuerySections
 							ns="flight_edit_page"

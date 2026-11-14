@@ -78,7 +78,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 	return (
 		<div className="flex w-full flex-col gap-6">
 			{!!availableLanguages.length && (
-				<Card>
+				<Card variant="glass">
 					<CardHeader>
 						<CardTitle className="text-lg font-semibold">
 							{t("step_1.language.title")}
@@ -142,7 +142,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 				</Card>
 			)}
 
-			<Card>
+			<Card variant="glass">
 				<CardHeader>
 					<CardTitle className="text-lg font-semibold">
 						{t("step_1.start_date.title")}
@@ -197,7 +197,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 				</CardContent>
 			</Card>
 
-			<Card>
+			<Card variant="glass">
 				<CardHeader>
 					<CardTitle className="text-lg font-semibold">
 						{t("step_1.travellers.title")}
@@ -219,7 +219,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 						<div className="flex items-center gap-4">
 							<Button
 								type="button"
-								variant="outline"
+								variant="glass"
 								size="icon"
 								className="size-8 rounded-full"
 								disabled={count <= 1}
@@ -238,7 +238,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 							</span>
 							<Button
 								type="button"
-								variant="outline"
+								variant="glass"
 								size="icon"
 								className="size-8 rounded-full"
 								disabled={count >= 20}
@@ -268,7 +268,7 @@ export const Step1DateTravellers: FC<IStep1Props> = ({
 				</CardContent>
 			</Card>
 
-			<Card>
+			<Card variant="glass">
 				<CardHeader>
 					<CardTitle className="text-lg font-semibold">
 						{t("step_1.options.title")}

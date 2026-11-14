@@ -87,7 +87,7 @@ const HotelProductEditBase: FC<IHotelProductEditProps> = ({
 						/>
 					) : null}
 				</div>
-				<Card>
+				<Card variant="glass">
 					<CardContent>
 						<CustomQueryTabs
 							ns="hotel_product_edit_page"

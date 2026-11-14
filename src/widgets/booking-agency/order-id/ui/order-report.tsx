@@ -17,7 +17,7 @@ const OrderReportBase: FC<IOrderReportProps> = ({ report }) => {
 	const { t } = useTranslation("order_id_page");
 
 	return (
-		<Card>
+		<Card variant="glass">
 			<CardHeader>
 				<CardTitle className="text-lg font-semibold">
 					{t("report.title")}

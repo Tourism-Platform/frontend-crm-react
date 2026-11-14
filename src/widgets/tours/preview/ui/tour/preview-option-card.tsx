@@ -47,7 +47,7 @@ export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
 	};
 
 	return (
-		<Card className="overflow-hidden py-0">
+		<Card variant="glass" className="overflow-hidden py-0">
 			<CardContent className="flex min-w-0 flex-col gap-0 p-0 md:flex-row md:items-stretch">
 				<div className="relative min-h-36 w-full shrink-0 overflow-hidden bg-muted md:w-1/3">
 					{!isLoaded && (

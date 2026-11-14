@@ -24,7 +24,7 @@ export const ReconciliationNotFound: FC = () => {
 				</p>
 			</div>
 
-			<Button variant="outline" size="sm" asChild>
+			<Button variant="glass" size="sm" asChild>
 				<Link to={ENUM_PATH.FINANCE.RECONCILIATION}>
 					<AltArrowLeftIcon />
 					{t("buttons.back")}

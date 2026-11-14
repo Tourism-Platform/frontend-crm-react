@@ -89,7 +89,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 		>
 			{() => (
 				<div className="flex w-full flex-col gap-6">
-					<Card>
+					<Card variant="glass">
 						<CardHeader className="border-b max-sm:has-data-[slot=card-action]:grid-cols-1">
 							<CardTitle className="text-lg font-semibold">
 								{t("step_2.title")}
@@ -101,7 +101,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 								<CardAction className="flex flex-wrap gap-2 max-sm:col-span-1 max-sm:col-start-1 max-sm:row-span-1 max-sm:row-start-auto max-sm:mt-2 max-sm:justify-self-start">
 									<LoaderButton
 										type="button"
-										variant="outline"
+										variant="glass"
 										size="sm"
 										onClick={() =>
 											setOpenIndexes(
@@ -113,7 +113,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 									/>
 									<LoaderButton
 										type="button"
-										variant="outline"
+										variant="glass"
 										size="sm"
 										onClick={() => setOpenIndexes([])}
 										icon={<AltArrowUpIcon />}
@@ -305,7 +305,7 @@ export const Step2TravellerDetails: FC<IStep2Props> = ({
 					<div className="flex justify-start">
 						<Button
 							type="button"
-							variant="outline"
+							variant="glass"
 							onClick={onPrev}
 							className="w-32"
 						>
