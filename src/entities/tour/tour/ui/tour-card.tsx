@@ -12,25 +12,17 @@ import { Link } from "react-router-dom";
 import { ENUM_PATH, buildRoute } from "@/shared/config";
 import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
-import {
-	Badge,
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-	Skeleton
-} from "@/shared/ui";
+import { Badge, Card, Skeleton } from "@/shared/ui";
 
 import { TOUR_CATEGORY_LABELS, TOUR_TYPE_LABELS } from "../config";
-import {
-	TOUR_STATUS_LABELS,
-	TOUR_STATUS_OVERLAY_CLASS,
-	TOUR_STATUS_VARIANTS
-} from "../constants";
+import { TOUR_STATUS_LABELS, TOUR_STATUS_VARIANTS } from "../constants";
 import type { ITourCard } from "../types";
+import { formatTourAge, formatTourGroup } from "../utils";
+
+import { TourCardChips } from "./tour-card-chips";
 
 const VISIBLE_CATEGORIES = 2;
-const VISIBLE_LANGUAGES = 5;
+const VISIBLE_LANGUAGES = 3;
 
 interface ITourCardProps {
 	data: ITourCard;
@@ -42,35 +34,20 @@ type TMetaItem = {
 	label: string;
 };
 
+/**
+ * Карточка сетки как витрина Blogix (D10): обложка со статусом, языками и категориями
+ * по углам, ниже — название и метрики сеткой 2 × 2. Без кнопок: переход на обзор
+ * тура — по названию
+ */
 export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 	const { isLoaded, isLoading, isError, onLoad, onError } = useImageStatus(
 		card.imageUrl
 	);
 	const { t } = useTranslation(["options", "tours_page"]);
 
-	const visibleCategories = card.categories.slice(0, VISIBLE_CATEGORIES);
-	const hiddenCategoriesCount = Math.max(
-		card.categories.length - VISIBLE_CATEGORIES,
-		0
+	const categoryLabels = card.categories.map((category) =>
+		t(TOUR_CATEGORY_LABELS[category], { ns: "options" })
 	);
-
-	const visibleLanguages = card.languages.slice(0, VISIBLE_LANGUAGES);
-	const hiddenLanguagesCount = Math.max(
-		card.languages.length - VISIBLE_LANGUAGES,
-		0
-	);
-
-	const groupLabel = t("card.group", {
-		ns: "tours_page",
-		min: card.groupSizeMin ?? 0,
-		max: card.groupSizeMax ?? 0
-	});
-
-	const ageLabel = t("card.age", {
-		ns: "tours_page",
-		from: card.ageFrom ?? 0,
-		to: card.ageTo ?? 0
-	});
 
 	const metaItems: TMetaItem[] = [
 		{
@@ -87,12 +64,18 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 		{
 			key: "group",
 			icon: <UsersGroupRoundedIcon className="size-3.5 shrink-0" />,
-			label: groupLabel
+			label: formatTourGroup(
+				card.groupSizeMin,
+				card.groupSizeMax,
+				(min, max) => t("card.group", { ns: "tours_page", min, max })
+			)
 		},
 		{
 			key: "age",
 			icon: <HeartPulseIcon className="size-3.5 shrink-0" />,
-			label: ageLabel
+			label: formatTourAge(card.ageFrom, card.ageTo, (from, to) =>
+				t("card.age", { ns: "tours_page", from, to })
+			)
 		},
 		{
 			key: "type",
@@ -102,16 +85,17 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 	];
 
 	return (
-		<Card className="relative h-full gap-0 overflow-hidden pt-0 pb-4">
-			<div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted">
+		<Card className="group/card h-full gap-0 overflow-hidden p-1.5 transition-shadow hover:shadow-md">
+			{/* Витрина: радиус = радиус карточки − отступ p-1.5, углы концентричны */}
+			<div className="relative isolate aspect-[4/3] shrink-0 overflow-hidden rounded-md bg-muted">
 				{!isLoaded && (
-					<div className="absolute inset-0 z-0 flex items-center justify-center">
+					<div className="absolute inset-0 flex items-center justify-center">
 						{isLoading && (
-							<Skeleton className="absolute inset-0 size-full" />
+							<Skeleton className="absolute inset-0 size-full rounded-none" />
 						)}
 						<GalleryIcon
 							className={cn(
-								"size-20 text-muted-foreground/40",
+								"size-16 text-muted-foreground/40",
 								isLoading &&
 									"animate-pulse text-muted-foreground/20"
 							)}
@@ -125,48 +109,37 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 						onLoad={onLoad}
 						onError={onError}
 						className={cn(
-							"absolute inset-0 size-full object-cover transition-opacity duration-500",
+							"absolute inset-0 size-full object-cover transition-[opacity,transform] duration-500 group-hover/card:scale-105 motion-reduce:transition-none",
 							isLoaded ? "opacity-100" : "opacity-0"
 						)}
 					/>
 				)}
-				<div className="absolute inset-x-0 bottom-0 z-10 h-20 bg-gradient-to-t from-black/55 to-transparent" />
-				<div className="absolute left-3 top-3 z-10">
-					<Badge
-						variant={TOUR_STATUS_VARIANTS[card.status]}
-						className={cn(
-							"border-0 shadow-sm",
-							TOUR_STATUS_OVERLAY_CLASS[card.status]
-						)}
-					>
-						{t(TOUR_STATUS_LABELS[card.status], { ns: "options" })}
-					</Badge>
+
+				<Badge
+					variant={TOUR_STATUS_VARIANTS[card.status]}
+					className="absolute top-2 left-2 z-10"
+				>
+					{t(TOUR_STATUS_LABELS[card.status], { ns: "options" })}
+				</Badge>
+				<div className="absolute top-2 right-2 z-10 flex max-w-[60%] justify-end">
+					<TourCardChips
+						mode="flags"
+						items={card.languages}
+						visible={VISIBLE_LANGUAGES}
+					/>
 				</div>
-				{!!card.languages.length && (
-					<div className="absolute bottom-3 left-3 z-10 flex flex-wrap gap-1">
-						{visibleLanguages.map((lang) => (
-							<Badge
-								key={lang}
-								variant="secondary"
-								className="bg-background/95 text-foreground shadow-sm backdrop-blur-sm"
-							>
-								{lang}
-							</Badge>
-						))}
-						{hiddenLanguagesCount > 0 && (
-							<Badge
-								variant="secondary"
-								className="bg-background/95 text-foreground shadow-sm backdrop-blur-sm"
-							>
-								+{hiddenLanguagesCount}
-							</Badge>
-						)}
-					</div>
-				)}
+				<div className="absolute right-2 bottom-2 left-2 z-10 flex">
+					<TourCardChips
+						mode="chips"
+						items={categoryLabels}
+						visible={VISIBLE_CATEGORIES}
+					/>
+				</div>
 			</div>
 
-			<CardHeader className="grid gap-2.5 pb-3 pt-4">
-				<CardTitle className="line-clamp-2 leading-snug">
+			{/* Текст слева: название, метрики */}
+			<div className="flex flex-1 flex-col gap-1 px-1.5 pt-3 pb-1.5">
+				<h3 className="line-clamp-2 text-sm leading-snug font-semibold">
 					<Link
 						className="transition-colors hover:text-primary hover:underline"
 						to={buildRoute(ENUM_PATH.TOURS.OVERVIEW, {
@@ -175,36 +148,20 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 					>
 						{card.title}
 					</Link>
-				</CardTitle>
-				{!!card.categories.length && (
-					<div className="flex flex-wrap gap-1">
-						{visibleCategories.map((category) => (
-							<Badge key={category} variant="outline">
-								{t(TOUR_CATEGORY_LABELS[category], {
-									ns: "options"
-								})}
-							</Badge>
-						))}
-						{hiddenCategoriesCount > 0 && (
-							<Badge variant="outline">
-								+{hiddenCategoriesCount}
-							</Badge>
-						)}
-					</div>
-				)}
-			</CardHeader>
-
-			<CardContent className="mt-auto grid grid-cols-2 gap-2">
-				{metaItems.map((item) => (
-					<div
-						key={item.key}
-						className="flex min-w-0 items-center gap-1.5 rounded-md bg-accent px-2.5 py-2 text-xs text-muted-foreground"
-					>
-						{item.icon}
-						<span className="truncate">{item.label}</span>
-					</div>
-				))}
-			</CardContent>
+				</h3>
+				<div className="mt-auto grid grid-cols-2 gap-x-3 gap-y-1.5 pt-2.5 text-xs text-muted-foreground tabular-nums">
+					{metaItems.map((item) => (
+						<span
+							key={item.key}
+							title={item.label}
+							className="flex min-w-0 items-center gap-1.5"
+						>
+							{item.icon}
+							<span className="truncate">{item.label}</span>
+						</span>
+					))}
+				</div>
+			</div>
 		</Card>
 	);
 };

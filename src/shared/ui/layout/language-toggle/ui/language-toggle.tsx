@@ -26,7 +26,8 @@ type TFlagComponent = (props: {
 	className?: string;
 }) => JSX.Element;
 
-function LocaleFlag({ code, title }: { code: string; title?: string }) {
+/** Флаг языка (код локали → флаг страны); также на карточках тура */
+export function LocaleFlag({ code, title }: { code: string; title?: string }) {
 	const country = mapLocaleToFlagCountry(code);
 	if (!hasFlag(country)) return null;
 

@@ -10,9 +10,12 @@
 	},
 	"table": {
 		"title": "Название",
-		"route": "Маршрут",
 		"type": "Тип",
-		"price": "Цена",
+		"duration": "Длительность",
+		"group": "Группа",
+		"age": "Возраст",
+		"languages": "Языки",
+		"categories": "Категории",
 		"status": "Статус"
 	},
 	"create": {

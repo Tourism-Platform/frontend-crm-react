@@ -1,4 +1,5 @@
 export * from "./tour-card";
+export * from "./tour-card-chips";
 export * from "./tour-card-skeleton";
 export * from "./info-card";
 export * from "./tour-header";

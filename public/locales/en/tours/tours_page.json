@@ -10,9 +10,12 @@
 	},
 	"table": {
 		"title": "Title",
-		"route": "Route",
 		"type": "Type",
-		"price": "Price",
+		"duration": "Duration",
+		"group": "Group",
+		"age": "Age",
+		"languages": "Languages",
+		"categories": "Categories",
 		"status": "Status"
 	},
 	"create": {
