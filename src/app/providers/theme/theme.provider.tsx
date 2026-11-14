@@ -15,6 +15,9 @@ export const ThemeProvider: React.FC<IThemeProviderProps> = ({ children }) => {
 	const toggleTheme = useCallback((): void => {
 		setTheme((prev) => {
 			const newTheme: TTheme = prev === "light" ? "dark" : "light";
+			// Класс — сразу: снимок View Transition (ThemeToggleCircular) берёт уже новую тему
+			document.documentElement.classList.remove("light", "dark");
+			document.documentElement.classList.add(newTheme);
 			storage.set("theme", newTheme);
 			return newTheme;
 		});

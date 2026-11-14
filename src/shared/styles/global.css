@@ -1,9 +1,9 @@
-@import '@fontsource/exo-2/400.css';
-@import '@fontsource/exo-2/400-italic.css';
-@import '@fontsource/exo-2/500.css';
-@import '@fontsource/exo-2/500-italic.css';
-@import '@fontsource/exo-2/700.css';
-@import '@fontsource/exo-2/700-italic.css';
+@import "@fontsource/exo-2/400.css";
+@import "@fontsource/exo-2/400-italic.css";
+@import "@fontsource/exo-2/500.css";
+@import "@fontsource/exo-2/500-italic.css";
+@import "@fontsource/exo-2/700.css";
+@import "@fontsource/exo-2/700-italic.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -14,19 +14,24 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
-  line-height: 1.5;
-  font-weight: 400;
+	/* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif; */
+	line-height: 1.5;
+	font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: var(--background);
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: var(--background);
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 
+	/* смена темы кругом — ThemeToggleCircular (D10) */
+	--transition-speed: 0.5s;
+	--transition-blur: 0px;
+	--x: 50%;
+	--y: 50%;
 }
 
 /* тонкий скроллбар: CustomScroll, SmartTable */
@@ -51,63 +56,116 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  /* скролл страницы работает, но скроллбар не виден */
-  html {
-    scrollbar-width: none;
-  }
-  html::-webkit-scrollbar {
-    display: none;
-  }
-  body {
-    @apply bg-background text-foreground;
-     font-family: 'Exo 2', system-ui, sans-serif;
-  }
-  #root {
-    min-height: 100%;
-    background: var(--background);
-  }
+	* {
+		@apply border-border outline-ring/50;
+	}
+	/* скролл страницы работает, но скроллбар не виден */
+	html {
+		scrollbar-width: none;
+	}
+	html::-webkit-scrollbar {
+		display: none;
+	}
+	body {
+		@apply bg-background text-foreground;
+		font-family: "Exo 2", system-ui, sans-serif;
+	}
+	#root {
+		min-height: 100%;
+		background: var(--background);
+	}
 }
 
 @keyframes hero-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, var(--float-y), 0);
-  }
+	0%,
+	100% {
+		transform: translate3d(0, 0, 0);
+	}
+	50% {
+		transform: translate3d(0, var(--float-y), 0);
+	}
 }
 
 @keyframes region-pin-pulse {
-  0% {
-    opacity: 0.7;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(2);
-  }
+	0% {
+		opacity: 0.7;
+		transform: scale(0.8);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(2);
+	}
 }
 
 @layer utilities {
-  .animate-hero-float {
-    animation: hero-float var(--float-duration, 5s) ease-in-out var(--float-delay, 0s)
-      infinite;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
+	.animate-hero-float {
+		animation: hero-float var(--float-duration, 5s) ease-in-out
+			var(--float-delay, 0s) infinite;
+		transform: translateZ(0);
+		backface-visibility: hidden;
+	}
 
-  .animate-region-pin-pulse {
-    animation: region-pin-pulse 2s ease-out infinite;
-  }
+	.animate-region-pin-pulse {
+		animation: region-pin-pulse 2s ease-out infinite;
+	}
 
-  @media (prefers-reduced-motion: reduce) {
-    .animate-hero-float,
-    .animate-region-pin-pulse {
-      animation: none;
-    }
-  }
+	@media (prefers-reduced-motion: reduce) {
+		.animate-hero-float,
+		.animate-region-pin-pulse {
+			animation: none;
+		}
+	}
+}
+
+/* смена темы кругом от точки клика — как в blogix-admin (D10) */
+@keyframes circle {
+	from {
+		clip-path: circle(0% at var(--x) var(--y));
+	}
+	to {
+		clip-path: circle(150% at var(--x) var(--y));
+	}
+}
+
+::view-transition-group(root) {
+	animation: none;
+	isolation: isolate;
+	overflow: hidden;
+}
+
+::view-transition-image-pair(root) {
+	isolation: isolate;
+	overflow: hidden;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	filter: blur(var(--transition-blur));
+	overflow: hidden;
+	backface-visibility: hidden;
+	contain: paint;
+}
+
+[data-theme-transition="to-dark"]::view-transition-old(root),
+[data-theme-transition="to-light"]::view-transition-old(root) {
+	animation: none;
+	z-index: -1;
+	mix-blend-mode: normal;
+}
+
+[data-theme-transition="to-dark"]::view-transition-new(root),
+[data-theme-transition="to-light"]::view-transition-new(root) {
+	animation: circle var(--transition-speed) ease-in-out both;
+	will-change: clip-path;
+	mix-blend-mode: normal;
+	z-index: 1;
+	transform: translateZ(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
 }
