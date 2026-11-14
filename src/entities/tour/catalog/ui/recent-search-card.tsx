@@ -15,10 +15,7 @@ export const RecentSearchCard: FC<IRecentSearchCardProps> = memo(
 	({ data, onClick }) => {
 		const { formatDateRange } = useFormatDateRange();
 		return (
-			<Card
-				className="cursor-pointer hover:shadow-md transition-shadow"
-				onClick={onClick}
-			>
+			<Card variant="glass" className="cursor-pointer" onClick={onClick}>
 				<CardContent className="gap-5 grid grid-cols-[min-content_1fr]">
 					<div className="flex items-center">
 						<MapPinIcon className="size-5" />

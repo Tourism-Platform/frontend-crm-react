@@ -108,7 +108,10 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 			})}
 			className="block h-full min-w-0"
 		>
-			<Card className="relative h-full min-w-0 gap-0 overflow-hidden pt-0 pb-4 transition-shadow hover:shadow-md">
+			<Card
+				variant="glass"
+				className="h-full min-w-0 gap-0 overflow-hidden pt-0 pb-4"
+			>
 				<div className="relative h-48 w-full shrink-0 overflow-hidden bg-muted">
 					{!isLoaded && (
 						<div className="absolute inset-0 z-0 flex items-center justify-center">

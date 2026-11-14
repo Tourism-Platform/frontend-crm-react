@@ -103,7 +103,10 @@ export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
 
 	return (
 		<Link to={tourHref} className={cn("block min-w-0", className)}>
-			<Card className="relative flex min-w-0 flex-row items-stretch gap-0 overflow-hidden py-0 transition-shadow hover:shadow-md">
+			<Card
+				variant="glass"
+				className="flex min-w-0 flex-row items-stretch gap-0 overflow-hidden py-0"
+			>
 				<div className="relative min-h-40 w-1/2 shrink-0 self-stretch overflow-hidden bg-muted md:w-1/3">
 					{!isLoaded && (
 						<div className="absolute inset-0 z-0 flex items-center justify-center">

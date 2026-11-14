@@ -79,7 +79,7 @@ export const NetworkSection: FC = () => {
 					onSelectPhase={selectPhase}
 				/>
 
-				<Card className="relative overflow-hidden rounded-2xl shadow-md">
+				<Card variant="glass" className="overflow-hidden rounded-2xl">
 					{activePhaseData.banner ? (
 						<span
 							className={cn(

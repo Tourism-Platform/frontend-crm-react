@@ -79,7 +79,7 @@ const LoginFormBase: FC = () => {
 	}
 
 	return (
-		<Card className="relative w-full max-w-md border-border/60 bg-card/80 shadow-xl backdrop-blur-sm">
+		<Card variant="glass" className="w-full max-w-md">
 			<Button
 				variant="ghost"
 				type="button"
