@@ -1,17 +1,29 @@
-import { Bed, Bus, Map } from "lucide-react";
-import { type FC, type ReactNode } from "react";
+import { TagPriceIcon } from "@solar-icons/react/outline";
+import {
+	type ComponentType,
+	type FC,
+	type ReactNode,
+	type SVGProps
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 
-import { PreviewerSimple, Separator, withErrorBoundary } from "@/shared/ui";
-import { Badge } from "@/shared/ui/shadcn-ui/badge";
+import {
+	Badge,
+	Card,
+	PreviewerSimple,
+	Skeleton,
+	withErrorBoundary
+} from "@/shared/ui";
 
 import {
+	ENUM_PREVIEW_OPTION_EVENT,
 	type IOptionDetail,
 	type TOptionSheetSource,
 	usePreviewOptionPageData
 } from "@/entities/tour/preview-tour";
 
+import { OPTION_EVENT_ICONS } from "../../model/config/option-event-icons.config";
 import { useIsDraftPreview, usePreviewCurrency } from "../../model/hooks";
 import {
 	type TPricingAccommodationRow,
@@ -24,52 +36,51 @@ interface IPricingProps {
 	optionData?: IOptionDetail;
 }
 
-const PricingEventItem: FC<{ source: TOptionSheetSource }> = ({ source }) => (
-	<li className="flex flex-col gap-1.5 py-3 border-b border-border/60 last:border-b-0 last:pb-0 first:pt-0">
-		<p className="text-sm font-medium">{source.title}</p>
-		{source.sheet.description ? (
+/** Позиция группы: название и описание слева, «Подробнее» справа */
+const PricingSource: FC<{ source: TOptionSheetSource }> = ({ source }) => (
+	<div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1.5">
+		<div className="flex min-w-0 flex-1 flex-col gap-1">
+			<p className="text-sm font-medium">{source.title}</p>
 			<PreviewerSimple
 				text={source.sheet.description}
 				lines={2}
 				className="text-sm text-muted-foreground"
 			/>
-		) : null}
+		</div>
 		<OptionEventDetailSheet source={source} />
-	</li>
+	</div>
 );
 
 const AccommodationRow: FC<{ row: TPricingAccommodationRow }> = ({ row }) => {
 	const { t } = useTranslation("preview_option_page");
 
 	if (row.kind === "single") {
-		return <PricingEventItem source={row.source} />;
+		return (
+			<li className="py-4">
+				<PricingSource source={row.source} />
+			</li>
+		);
 	}
 
 	return (
-		<li className="flex flex-col gap-2 py-3 border-b border-border/60 last:border-b-0 last:pb-0 first:pt-0">
-			<p className="text-xs text-muted-foreground">
-				{t("pricing.choice_of")}
-			</p>
-			<div className="flex flex-col gap-3">
+		<li className="py-4">
+			<div className="flex flex-col gap-3 rounded-lg bg-muted/40 p-4">
+				<span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+					{t("pricing.choice_of")}
+				</span>
 				{row.sources.map((source, index) => (
 					<div
 						key={`${source.title}-${index}`}
-						className="flex flex-col gap-1.5"
+						className="flex flex-col gap-3"
 					>
 						{index > 0 ? (
-							<span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+							<div className="flex items-center gap-3 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+								<span className="h-px flex-1 bg-border" />
 								{t("pricing.or")}
-							</span>
+								<span className="h-px flex-1 bg-border" />
+							</div>
 						) : null}
-						<p className="text-sm font-medium">{source.title}</p>
-						{source.sheet.description ? (
-							<PreviewerSimple
-								text={source.sheet.description}
-								lines={2}
-								className="text-sm text-muted-foreground"
-							/>
-						) : null}
-						<OptionEventDetailSheet source={source} />
+						<PricingSource source={source} />
 					</div>
 				))}
 			</div>
@@ -78,7 +89,7 @@ const AccommodationRow: FC<{ row: TPricingAccommodationRow }> = ({ row }) => {
 };
 
 interface IPricingGroupProps {
-	icon: ReactNode;
+	icon: ComponentType<SVGProps<SVGSVGElement>>;
 	title: string;
 	blurb: string;
 	count: number;
@@ -86,29 +97,29 @@ interface IPricingGroupProps {
 }
 
 const PricingGroup: FC<IPricingGroupProps> = ({
-	icon,
+	icon: GroupIcon,
 	title,
 	blurb,
 	count,
 	children
 }) => (
-	<section className="flex flex-col gap-4 py-6 border-b border-border last:border-b-0">
-		<div className="flex items-start gap-3">
-			<div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center shrink-0">
-				{icon}
-			</div>
-			<div className="flex flex-col gap-1 min-w-0">
-				<div className="flex items-center gap-2 flex-wrap">
-					<h4 className="font-semibold text-base">{title}</h4>
-					<Badge variant="black" size="sm">
+	<Card variant="glass" className="gap-0 py-0">
+		<div className="flex items-start gap-3 border-b border-border/60 px-5 py-4">
+			<span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+				<GroupIcon className="size-5" />
+			</span>
+			<div className="flex min-w-0 flex-col gap-0.5">
+				<div className="flex flex-wrap items-center gap-2">
+					<h4 className="text-base font-semibold">{title}</h4>
+					<Badge variant="secondary" className="tabular-nums">
 						{count}
 					</Badge>
 				</div>
 				<p className="text-sm text-muted-foreground">{blurb}</p>
 			</div>
 		</div>
-		<ul className="flex flex-col pl-[52px]">{children}</ul>
-	</section>
+		<ul className="divide-y divide-border/60 px-5">{children}</ul>
+	</Card>
 );
 
 const PricingBase: FC<IPricingProps> = ({ optionData: optionDataProp }) => {
@@ -119,13 +130,16 @@ const PricingBase: FC<IPricingProps> = ({ optionData: optionDataProp }) => {
 	}>();
 	const isDraftPreview = useIsDraftPreview();
 	const { currency } = usePreviewCurrency();
-	const { optionDetail } = usePreviewOptionPageData({
+	const { optionDetail, isOptionPriceLoading } = usePreviewOptionPageData({
 		tourId,
 		optionId,
 		isDraft: isDraftPreview,
 		currency
 	});
 	const optionData = optionDataProp ?? optionDetail;
+	// Цена за человека — из списка вариантов (`pricePerPerson`): в детальном ответе только итог за группу.
+	// С пропом (превью тура с одним вариантом) список уже передан — грузить нечего
+	const isPriceLoading = !optionDataProp && isOptionPriceLoading;
 	const groups = groupPricingEvents(optionData?.days);
 
 	const accommodationCount = groups.accommodation.reduce((sum, row) => {
@@ -134,82 +148,116 @@ const PricingBase: FC<IPricingProps> = ({ optionData: optionDataProp }) => {
 	}, 0);
 
 	return (
-		<div className="flex flex-col w-full py-2">
-			<h2 className="text-xl mb-6">{t("pricing.title")}</h2>
-
-			<div className="flex items-end justify-between gap-4 mb-2">
-				<span className="text-sm text-muted-foreground">
-					{t("pricing.total_price")}
-				</span>
-				<span className="font-bold text-2xl tracking-tight">
-					{optionData?.price ?? "—"}
-				</span>
-			</div>
-			<p className="text-sm text-muted-foreground mb-8">
-				{t("pricing.total_hint")}
-			</p>
+		<div className="flex w-full flex-col gap-6">
+			<Card
+				variant="glass"
+				className="flex-row flex-wrap items-center justify-between gap-4 p-5 sm:p-6"
+			>
+				<div className="flex min-w-0 items-center gap-3.5">
+					<span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+						<TagPriceIcon className="size-6" />
+					</span>
+					<div className="flex min-w-0 flex-col gap-0.5">
+						<h2 className="text-lg font-semibold">
+							{t("pricing.title")}
+						</h2>
+						<p className="text-sm text-muted-foreground">
+							{t("pricing.total_hint")}
+						</p>
+					</div>
+				</div>
+				<div className="flex flex-col items-end gap-0.5">
+					<span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+						{t("pricing.total_price")}
+					</span>
+					{/* text-2xl — строка 32 px, скелетон той же высоты */}
+					{isPriceLoading ? (
+						<Skeleton className="h-8 w-28" />
+					) : (
+						<span className="text-2xl font-bold tracking-tight text-primary tabular-nums">
+							{optionData?.pricePerPerson || "—"}
+						</span>
+					)}
+					<span className="text-xs text-muted-foreground">
+						{t("pricing.per_person")}
+					</span>
+				</div>
+			</Card>
 
 			{(accommodationCount > 0 ||
 				groups.activity.length > 0 ||
 				groups.transportation.length > 0) && (
-				<>
-					<h3 className="text-lg mb-2">{t("pricing.details")}</h3>
-					<p className="text-sm text-muted-foreground mb-4">
-						{t("pricing.details_hint")}
-					</p>
-					<Separator className="mb-2" />
-
-					<div className="flex flex-col">
-						{accommodationCount > 0 && (
-							<PricingGroup
-								icon={<Bed className="w-5 h-5 text-primary" />}
-								title={t("pricing.accomodation")}
-								blurb={t(
-									"pricing.sections.accommodation.blurb"
-								)}
-								count={accommodationCount}
-							>
-								{groups.accommodation.map((row, index) => (
-									<AccommodationRow key={index} row={row} />
-								))}
-							</PricingGroup>
-						)}
-
-						{groups.activity.length > 0 && (
-							<PricingGroup
-								icon={<Map className="w-5 h-5 text-primary" />}
-								title={t("pricing.activity")}
-								blurb={t("pricing.sections.activity.blurb")}
-								count={groups.activity.length}
-							>
-								{groups.activity.map((source, index) => (
-									<PricingEventItem
-										key={`${source.title}-${index}`}
-										source={source}
-									/>
-								))}
-							</PricingGroup>
-						)}
-
-						{groups.transportation.length > 0 && (
-							<PricingGroup
-								icon={<Bus className="w-5 h-5 text-primary" />}
-								title={t("pricing.transportation")}
-								blurb={t(
-									"pricing.sections.transportation.blurb"
-								)}
-								count={groups.transportation.length}
-							>
-								{groups.transportation.map((source, index) => (
-									<PricingEventItem
-										key={`${source.title}-${index}`}
-										source={source}
-									/>
-								))}
-							</PricingGroup>
-						)}
+				<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-1">
+						<h3 className="text-lg font-semibold">
+							{t("pricing.details")}
+						</h3>
+						<p className="text-sm text-muted-foreground">
+							{t("pricing.details_hint")}
+						</p>
 					</div>
-				</>
+
+					{accommodationCount > 0 && (
+						<PricingGroup
+							icon={
+								OPTION_EVENT_ICONS[
+									ENUM_PREVIEW_OPTION_EVENT.ACCOMMODATION
+								]
+							}
+							title={t("pricing.accomodation")}
+							blurb={t("pricing.sections.accommodation.blurb")}
+							count={accommodationCount}
+						>
+							{groups.accommodation.map((row, index) => (
+								<AccommodationRow key={index} row={row} />
+							))}
+						</PricingGroup>
+					)}
+
+					{groups.activity.length > 0 && (
+						<PricingGroup
+							icon={
+								OPTION_EVENT_ICONS[
+									ENUM_PREVIEW_OPTION_EVENT.ACTIVITY
+								]
+							}
+							title={t("pricing.activity")}
+							blurb={t("pricing.sections.activity.blurb")}
+							count={groups.activity.length}
+						>
+							{groups.activity.map((source, index) => (
+								<li
+									key={`${source.title}-${index}`}
+									className="py-4"
+								>
+									<PricingSource source={source} />
+								</li>
+							))}
+						</PricingGroup>
+					)}
+
+					{groups.transportation.length > 0 && (
+						<PricingGroup
+							icon={
+								OPTION_EVENT_ICONS[
+									ENUM_PREVIEW_OPTION_EVENT.TRANSPORTATION
+								]
+							}
+							title={t("pricing.transportation")}
+							blurb={t("pricing.sections.transportation.blurb")}
+							count={groups.transportation.length}
+						>
+							{groups.transportation.map((source, index) => (
+								<li
+									key={`${source.title}-${index}`}
+									className="py-4"
+								>
+									<PricingSource source={source} />
+								</li>
+							))}
+						</PricingGroup>
+					)}
+				</div>
 			)}
 		</div>
 	);

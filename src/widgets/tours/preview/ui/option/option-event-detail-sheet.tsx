@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { AltArrowRightIcon } from "@solar-icons/react/outline";
 import { type FC, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -54,12 +54,14 @@ const DetailSheetTrigger: FC<IDetailSheetTriggerProps> = ({ variant }) => {
 			<button
 				type="button"
 				className={cn(
-					"inline-flex items-center gap-1 text-primary hover:underline underline-offset-4 w-fit",
+					"inline-flex items-center gap-1 font-medium text-primary hover:underline underline-offset-4 w-fit",
 					isCompact ? "text-xs" : "text-sm"
 				)}
 			>
 				{t("sections.option.view_details")}
-				<ArrowRight className={isCompact ? "w-3 h-3" : "w-4 h-4"} />
+				<AltArrowRightIcon
+					className={isCompact ? "size-3" : "size-4"}
+				/>
 			</button>
 		</SheetTrigger>
 	);

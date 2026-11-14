@@ -40,7 +40,8 @@ export const useCatalogTours = () => {
 		applyLocationBarSubmit,
 		syncUrlFromFilters,
 		handleReset: handleUrlReset,
-		isHydratingRef
+		isHydratingRef,
+		searchResetKey
 	} = useCatalogUrlSync({
 		filtersForm: methods,
 		locationForm
@@ -178,6 +179,7 @@ export const useCatalogTours = () => {
 		totalPages,
 		isLoading,
 		handleSearchChange,
+		searchResetKey,
 		handleReset,
 		handleSortChange,
 		handlePrevPage,

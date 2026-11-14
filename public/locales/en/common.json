@@ -51,6 +51,11 @@
 			"title": "View",
 			"toggle": "Toggle columns"
 		},
+		"view_mode": {
+			"cards": "Cards",
+			"list": "List",
+			"table": "Table"
+		},
 		"pagination": "Rows per page",
 		"empty_state": {
 			"title": "No results found",

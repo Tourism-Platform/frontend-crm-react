@@ -7,25 +7,26 @@ import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import {
 	Card,
-	CardContent,
 	LoaderButton,
-	Previewer,
+	PreviewerSimple,
 	Skeleton,
 	withErrorBoundary
 } from "@/shared/ui";
 
 import type { IPreviewOptionCard } from "@/entities/tour/preview-tour";
 
-import {
-	buildPreviewOptionPath,
-	useIsDraftPreview,
-	usePreviewCurrency
-} from "../../model";
+// Прямые пути, не корень `model`: его `index` тянет конфиги вкладок, а те — `ui/tour` (цикл)
+import { useIsDraftPreview, usePreviewCurrency } from "../../model/hooks";
+import { buildPreviewOptionPath } from "../../model/lib/draft-preview";
 
 interface IPreviewOptionCardProps {
 	option: IPreviewOptionCard;
 }
 
+/**
+ * Карточка варианта как витрина каталога (`CatalogTourCard`): внутренний отступ `p-1.5`,
+ * обложка с концентричным радиусом; справа — название, описание до трёх строк и цена акцентом
+ */
 export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
 	option
 }) => {
@@ -47,84 +48,87 @@ export const PreviewOptionCardBase: FC<IPreviewOptionCardProps> = ({
 	};
 
 	return (
-		<Card variant="glass" className="overflow-hidden py-0">
-			<CardContent className="flex min-w-0 flex-col gap-0 p-0 md:flex-row md:items-stretch">
-				<div className="relative min-h-36 w-full shrink-0 overflow-hidden bg-muted md:w-1/3">
-					{!isLoaded && (
-						<div className="absolute inset-0 z-0 flex items-center justify-center">
-							{isLoading && (
-								<Skeleton className="absolute inset-0 size-full" />
-							)}
-							<GalleryIcon
-								className={cn(
-									"size-20 text-muted-foreground/40",
-									isLoading &&
-										"animate-pulse text-muted-foreground/20"
-								)}
-							/>
-						</div>
-					)}
-					{option.image && !isError && (
-						<img
-							src={option.image}
-							alt={option.title}
-							onLoad={onLoad}
-							onError={onError}
+		<Card
+			variant="glass"
+			className="group/card gap-0 overflow-hidden p-1.5 md:flex-row"
+		>
+			<div className="relative aspect-video shrink-0 overflow-hidden rounded-md bg-muted md:aspect-auto md:min-h-48 md:w-64">
+				{!isLoaded && (
+					<div className="absolute inset-0 flex items-center justify-center">
+						{isLoading && (
+							<Skeleton className="absolute inset-0 size-full" />
+						)}
+						<GalleryIcon
 							className={cn(
-								"absolute inset-0 size-full object-cover transition-opacity duration-500",
-								isLoaded ? "opacity-100" : "opacity-0"
+								"size-14 text-muted-foreground/40",
+								isLoading &&
+									"animate-pulse text-muted-foreground/20"
 							)}
 						/>
-					)}
+					</div>
+				)}
+				{option.image && !isError && (
+					<img
+						src={option.image}
+						alt={option.title}
+						onLoad={onLoad}
+						onError={onError}
+						className={cn(
+							"absolute inset-0 size-full object-cover transition-[opacity,transform] duration-500 group-hover/card:scale-105 motion-reduce:transition-none",
+							isLoaded ? "opacity-100" : "opacity-0"
+						)}
+					/>
+				)}
+			</div>
+
+			<div className="flex min-w-0 flex-1 flex-col gap-4 p-3 md:p-4">
+				<div className="flex min-w-0 flex-col gap-1.5">
+					<h3 className="line-clamp-2 text-base leading-snug font-semibold">
+						{option.title}
+					</h3>
+					<PreviewerSimple
+						text={option.description}
+						lines={3}
+						className="text-sm leading-relaxed text-muted-foreground"
+					/>
 				</div>
 
-				<div className="flex min-w-0 flex-1 flex-col gap-3 px-4 py-4">
-					<div className="flex min-w-0 flex-col gap-1.5">
-						<span className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base">
-							{option.title}
-						</span>
-						{!!option.description && (
-							<Previewer
-								text={option.description}
-								className="text-sm leading-relaxed text-muted-foreground"
-							/>
-						)}
-					</div>
-
-					<div className="mt-auto flex flex-wrap items-end justify-between gap-3 border-t pt-3">
-						<div>
-							<p className="mb-1 text-xs tracking-wider text-muted-foreground uppercase">
+				<div className="mt-auto flex flex-wrap items-end justify-between gap-3 border-t border-border/60 pt-3">
+					{/* Без цены (черновой вариант без расчёта) — только кнопка, как в шапке */}
+					{option.price ? (
+						<div className="flex flex-col gap-0.5">
+							<span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
 								{t("sections.itinerary.card.from")}
-							</p>
-							<p className="text-xl font-bold">
+							</span>
+							<span className="text-xl font-bold text-primary tabular-nums">
 								{option.price}{" "}
-								<span className="text-base font-normal">
+								<span className="text-sm font-normal text-muted-foreground">
 									{t("sections.itinerary.card.per_person")}
 								</span>
-							</p>
+							</span>
 							{option.totalPrice ? (
-								<p className="mt-1 text-sm text-muted-foreground">
+								<span className="text-sm text-muted-foreground">
 									{t("sections.itinerary.card.group_total")}:{" "}
-									<span className="font-medium text-foreground">
+									<span className="font-medium text-foreground tabular-nums">
 										{option.totalPrice}
 									</span>
-								</p>
+								</span>
 							) : null}
-							<p className="mt-1 text-xs text-muted-foreground">
+							<span className="text-xs text-muted-foreground">
 								{t("sections.itinerary.card.price_depends")}
-							</p>
+							</span>
 						</div>
+					) : null}
 
-						<LoaderButton
-							type="button"
-							onClick={handleNavigate}
-							className="shrink-0"
-							icon={<TicketIcon />}
-							label={t("sections.itinerary.card.book_package")}
-						/>
-					</div>
+					<LoaderButton
+						type="button"
+						onClick={handleNavigate}
+						className="ml-auto"
+						icon={<TicketIcon />}
+						label={t("sections.itinerary.card.book_package")}
+					/>
 				</div>
-			</CardContent>
+			</div>
 		</Card>
 	);
 };

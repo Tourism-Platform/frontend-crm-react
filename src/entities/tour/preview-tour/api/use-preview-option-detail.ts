@@ -5,7 +5,7 @@ import { useCurrentLanguage } from "@/shared/hooks";
 
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
-import { enrichOptionDetailTitle } from "../converters";
+import { enrichOptionDetailFromList } from "../converters";
 import type { IOptionDetail, IPreviewOptionCard } from "../types";
 
 import {
@@ -45,36 +45,43 @@ export const usePreviewOptionDetail = ({
 		{ skip: shouldSkip || !isDraft }
 	);
 
-	const { data: publicOptionsList } = useGetPreviewTourOptionsQuery(
-		{
-			page: 1,
-			limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS,
-			tourId,
-			currency
-		},
-		{ skip: shouldSkip || isDraft || Boolean(optionsListProp) }
-	);
+	const { data: publicOptionsList, isFetching: isPublicOptionsListFetching } =
+		useGetPreviewTourOptionsQuery(
+			{
+				page: 1,
+				limit: INTERSECTION_ELEMENTS.PUBLIC_TOUR_OPTIONS,
+				tourId,
+				currency
+			},
+			{ skip: shouldSkip || isDraft || Boolean(optionsListProp) }
+		);
 
-	const { data: draftOptionsList } = useGetDraftPreviewOptionsQuery(
-		{ tourId, language, currency },
-		{
-			skip: shouldSkip || !isDraft || Boolean(optionsListProp)
-		}
-	);
+	const { data: draftOptionsList, isFetching: isDraftOptionsListFetching } =
+		useGetDraftPreviewOptionsQuery(
+			{ tourId, language, currency },
+			{
+				skip: shouldSkip || !isDraft || Boolean(optionsListProp)
+			}
+		);
 
 	const query = isDraft ? draftQuery : publicQuery;
 	const optionsList =
 		optionsListProp ??
 		(isDraft ? draftOptionsList : publicOptionsList)?.data;
+	/** Список вариантов грузится (в т.ч. в новой валюте) — `pricePerPerson` ещё нет или устарела */
+	const isOptionsListFetching =
+		!optionsListProp &&
+		(isDraft ? isDraftOptionsListFetching : isPublicOptionsListFetching);
 
 	const data = useMemo((): IOptionDetail | undefined => {
 		if (!query.data) return undefined;
 
-		return enrichOptionDetailTitle(query.data, optionsList, optionId);
+		return enrichOptionDetailFromList(query.data, optionsList, optionId);
 	}, [query.data, optionsList, optionId]);
 
 	return {
 		...query,
-		data
+		data,
+		isOptionsListFetching
 	};
 };

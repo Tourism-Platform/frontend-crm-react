@@ -48,6 +48,7 @@
 	"pricing": {
 		"title": "Pricing Breakdown",
 		"total_price": "Total price",
+		"per_person": "per person",
 		"total_hint": "Per person · depends on dates and selected options",
 		"details": "What's included",
 		"details_hint": "Open “View details” to see what’s included",
@@ -66,6 +67,11 @@
 			"transportation": {
 				"blurb": "Transfers and intercity travel with no extras"
 			}
+		}
+	},
+	"toasts": {
+		"load": {
+			"error": "Failed to load preview data"
 		}
 	}
 }

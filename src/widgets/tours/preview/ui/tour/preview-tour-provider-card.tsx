@@ -1,27 +1,30 @@
-import { TicketIcon, UserIcon } from "@solar-icons/react/outline";
+import { UserIcon } from "@solar-icons/react/outline";
 import { type FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { generatePath, useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { toast } from "sonner";
 
-import { ENUM_PATH } from "@/shared/config";
 import { useImageStatus } from "@/shared/hooks";
 import { cn } from "@/shared/lib";
 import {
 	Card,
-	CardContent,
-	LoaderButton,
+	PreviewerSimple,
 	Skeleton,
 	withErrorBoundary
 } from "@/shared/ui";
 
 import { usePreviewOperatorData } from "@/entities/tour";
 
-import { PROVIDER_CONTACTS, useIsDraftPreview } from "../../model";
+// Прямые пути, не корень `model`: его `index` тянет конфиги вкладок, а те — `ui/tour` (цикл)
+import { PROVIDER_CONTACTS } from "../../model/config/provider.config";
+import { useIsDraftPreview } from "../../model/hooks";
 
+/**
+ * Организатор — колонка 1/3 рядом с шапкой тура: логотип, название, описание,
+ * контакты внизу. Бронирование — в панели цены шапки
+ */
 const PreviewTourProviderCardBase: FC = () => {
 	const { t } = useTranslation("preview_tour_page");
-	const navigate = useNavigate();
 	const { tourId = "" } = useParams<{ tourId: string }>();
 	const isDraftPreview = useIsDraftPreview();
 	const {
@@ -35,16 +38,6 @@ const PreviewTourProviderCardBase: FC = () => {
 		data?.logo
 	);
 
-	const handleBooking = () => {
-		if (isDraftPreview) return;
-
-		const path = generatePath(ENUM_PATH.TOURS.CATALOG.BOOKING, {
-			tourId,
-			bookingId: null
-		});
-		navigate(path);
-	};
-
 	useEffect(() => {
 		if (isPreviewError) {
 			toast.error(t("toasts.load.error"));
@@ -52,21 +45,17 @@ const PreviewTourProviderCardBase: FC = () => {
 	}, [isPreviewError, t]);
 
 	return (
-		<Card
-			variant="glass"
-			className="w-full lg:w-[400px] shrink-0 overflow-hidden"
-		>
-			<div className="absolute top-0 left-0 w-full h-30 bg-blue-100" />
-			<CardContent className="flex flex-col gap-4 pt-10">
-				<div className="relative z-10 h-26 w-26 overflow-hidden rounded-full border-4 border-background bg-muted">
+		<Card variant="glass" className="gap-4 px-6">
+			<div className="flex min-w-0 items-center gap-3.5">
+				<div className="relative size-12 shrink-0 overflow-hidden rounded-lg border bg-muted">
 					{!isLoaded && (
-						<div className="absolute inset-0 z-0 flex items-center justify-center">
+						<div className="absolute inset-0 flex items-center justify-center">
 							{isLoading && (
 								<Skeleton className="absolute inset-0 size-full" />
 							)}
 							<UserIcon
 								className={cn(
-									"size-10 text-muted-foreground/40",
+									"size-6 text-muted-foreground/40",
 									isLoading &&
 										"animate-pulse text-muted-foreground/20"
 								)}
@@ -86,38 +75,43 @@ const PreviewTourProviderCardBase: FC = () => {
 						/>
 					)}
 				</div>
-				<p className="text-xs text-muted-foreground">
-					{t("provider.title")}
-				</p>
-				<p className="font-semibold">
+				<div className="flex min-w-0 flex-1 flex-col gap-1">
+					<span className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
+						{t("provider.title")}
+					</span>
 					{isLoadingTourPreview ? (
-						<Skeleton className="h-6 w-1/2" />
+						<Skeleton className="h-5 w-2/3" />
 					) : (
-						data?.business_name
-					)}
-				</p>
-
-				<div className="flex flex-col gap-2 text-sm text-muted-foreground">
-					{providerData.map((item, index) => (
-						<span key={index} className="flex items-center gap-2">
-							<item.icon className="w-4 h-4" />
-							{isLoadingTourPreview ? (
-								<Skeleton className="h-5 w-1/2" />
-							) : (
-								item.value
-							)}
+						<span className="truncate font-semibold">
+							{data?.business_name}
 						</span>
-					))}
+					)}
 				</div>
+			</div>
 
-				<LoaderButton
-					type="button"
-					onClick={handleBooking}
-					disabled={isDraftPreview}
-					icon={<TicketIcon />}
-					label={t("book_now")}
-				/>
-			</CardContent>
+			<PreviewerSimple
+				text={data?.description}
+				lines={4}
+				className="text-sm leading-relaxed text-muted-foreground"
+			/>
+
+			<ul className="mt-auto flex flex-col gap-2.5 border-t border-border/60 pt-4 text-sm">
+				{providerData.map((item, index) => (
+					<li
+						key={index}
+						className="flex min-w-0 items-center gap-2.5"
+					>
+						<item.icon className="size-4 shrink-0 text-muted-foreground" />
+						{isLoadingTourPreview ? (
+							<Skeleton className="h-5 w-1/2" />
+						) : (
+							<span className="truncate" title={item.value}>
+								{item.value}
+							</span>
+						)}
+					</li>
+				))}
+			</ul>
 		</Card>
 	);
 };

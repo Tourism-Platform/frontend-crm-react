@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
 
@@ -31,6 +31,10 @@ export const useCatalogUrlSync = ({
 	const location = useLocation();
 	const navigate = useNavigate();
 	const isHydratingRef = useRef(false);
+	// Адрес меняет сам каталог (фильтры, страница, сортировка) — поле поиска не трогаем, иначе теряется фокус при вводе
+	const isOwnWriteRef = useRef(false);
+	// Ключ поля поиска SmartTable: смена сбрасывает введённый, но ещё не применённый текст
+	const [searchResetKey, setSearchResetKey] = useState(0);
 
 	const writeUrl = useCallback(
 		(query: ReturnType<typeof parseCatalogQuery>) => {
@@ -42,6 +46,7 @@ export const useCatalogUrlSync = ({
 
 			const route = buildCatalogRoute(query);
 
+			isOwnWriteRef.current = true;
 			navigate(route, { replace: true });
 		},
 		[location.search, navigate]
@@ -59,6 +64,13 @@ export const useCatalogUrlSync = ({
 
 		filtersForm.reset(nextFilters);
 		locationForm.reset(nextLocationBar);
+
+		// Внешний переход (ссылка «Каталог», назад в браузере) — поиск как в адресе, без недопечатанного текста
+		if (isOwnWriteRef.current) {
+			isOwnWriteRef.current = false;
+		} else {
+			setSearchResetKey((key) => key + 1);
+		}
 
 		window.setTimeout(() => {
 			isHydratingRef.current = false;
@@ -104,6 +116,7 @@ export const useCatalogUrlSync = ({
 
 		filtersForm.reset(DEFAULT_CATALOG_FILTERS);
 		locationForm.reset({ destination: null, dates: undefined });
+		setSearchResetKey((key) => key + 1);
 
 		navigate(ENUM_PATH.TOURS.CATALOG.ROOT, { replace: true });
 
@@ -116,6 +129,7 @@ export const useCatalogUrlSync = ({
 		applyLocationBarSubmit,
 		syncUrlFromFilters,
 		handleReset,
-		isHydratingRef
+		isHydratingRef,
+		searchResetKey
 	};
 };

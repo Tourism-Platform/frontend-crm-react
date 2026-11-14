@@ -27,6 +27,7 @@ import {
 	useMemo,
 	useState
 } from "react";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/shared/lib";
 import {
@@ -85,6 +86,7 @@ function SmartTableInner<TData extends object>({
 	search,
 	onSearchChange,
 	minSearchLength,
+	searchResetKey,
 	status,
 	onStatusChange,
 	statusOptions,
@@ -94,6 +96,7 @@ function SmartTableInner<TData extends object>({
 	statusKey,
 	...props
 }: TSmartTableProps<TData>) {
+	const { t } = useTranslation("common");
 	const id = useId();
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
@@ -232,7 +235,8 @@ function SmartTableInner<TData extends object>({
 									CardsClassName
 								)
 							),
-							icon: <LayoutGridIcon className="w-3 h-3" />
+							icon: <LayoutGridIcon className="w-3 h-3" />,
+							label: t("table.view_mode.cards")
 						}
 					]
 				: []),
@@ -245,7 +249,8 @@ function SmartTableInner<TData extends object>({
 								ListCardSkeleton,
 								cn("flex flex-col gap-3", ListClassName)
 							),
-							icon: <LayoutListIcon className="w-3 h-3" />
+							icon: <LayoutListIcon className="w-3 h-3" />,
+							label: t("table.view_mode.list")
 						}
 					]
 				: []),
@@ -263,7 +268,8 @@ function SmartTableInner<TData extends object>({
 						)}
 					</DataGridContainer>
 				),
-				icon: <StretchHorizontalIcon className="w-3 h-3" />
+				icon: <StretchHorizontalIcon className="w-3 h-3" />,
+				label: t("table.view_mode.table")
 			}
 		];
 	}, [
@@ -280,7 +286,8 @@ function SmartTableInner<TData extends object>({
 		data,
 		TableClassName,
 		tableLayout?.columnsDraggable,
-		tableLayout?.rowsDraggable
+		tableLayout?.rowsDraggable,
+		t
 	]);
 
 	const [currentView, setCurrentView] =
@@ -303,6 +310,8 @@ function SmartTableInner<TData extends object>({
 							<CustomOptionTabsTrigger
 								key={item.type}
 								value={item.type}
+								aria-label={item.label}
+								title={item.label}
 							>
 								{item.icon}
 							</CustomOptionTabsTrigger>
@@ -350,6 +359,7 @@ function SmartTableInner<TData extends object>({
 									search={search}
 									onSearchChange={onSearchChange}
 									minSearchLength={minSearchLength}
+									searchResetKey={searchResetKey}
 									status={status}
 									onStatusChange={onStatusChange}
 									statusOptions={statusOptions}

@@ -2,11 +2,17 @@ import { useCurrentLanguage, useOptionalResourceQuery } from "@/shared/hooks";
 
 import type { ENUM_CURRENCY_OPTIONS_TYPE } from "@/entities/commission";
 
-import type { IOptionDetail, IPreviewTourGeneral } from "../types";
+import type {
+	IOptionDetail,
+	IPreviewTourData,
+	IPreviewTourGeneral
+} from "../types";
 
 import {
+	useGetDraftPreviewLandingQuery,
 	useGetDraftPreviewTourGeneralQuery,
-	useGetPreviewTourGeneralQuery
+	useGetPreviewTourGeneralQuery,
+	useGetPreviewTourQuery
 } from "./preview-tour.service";
 import { usePreviewOptionDetail } from "./use-preview-option-detail";
 
@@ -19,7 +25,11 @@ interface IUsePreviewOptionPageDataArgs {
 
 interface IUsePreviewOptionPageDataResult {
 	tour?: IPreviewTourGeneral;
+	/** Лендинг тура — фото для галереи наверху превью варианта; кеш общий с превью тура */
+	landing?: IPreviewTourData;
 	optionDetail?: IOptionDetail;
+	/** Список вариантов ещё грузится — цены за человека (`optionDetail.pricePerPerson`) пока нет */
+	isOptionPriceLoading: boolean;
 	isLoading: boolean;
 	isError: boolean;
 }
@@ -34,6 +44,15 @@ export const usePreviewOptionPageData = ({
 	const skipDraft = !tourId || !isDraft;
 	const language = useCurrentLanguage();
 
+	const publicLanding = useGetPreviewTourQuery(
+		{ tourId, language },
+		{ skip: skipPublic }
+	);
+	const draftLanding = useGetDraftPreviewLandingQuery(
+		{ tourId, language },
+		{ skip: skipDraft }
+	);
+
 	const publicTour = useGetPreviewTourGeneralQuery(
 		{ tourId, language },
 		{
@@ -44,24 +63,34 @@ export const usePreviewOptionPageData = ({
 		skip: skipDraft
 	});
 
+	const landingQuery = useOptionalResourceQuery(
+		isDraft ? draftLanding : publicLanding
+	);
 	const tourQuery = useOptionalResourceQuery(
 		isDraft ? draftTour : publicTour
 	);
 
-	const optionDetailQuery = useOptionalResourceQuery(
-		usePreviewOptionDetail({
-			tourId,
-			optionId,
-			currency,
-			isDraft,
-			skip: !tourId || !optionId
-		})
-	);
+	const optionDetail = usePreviewOptionDetail({
+		tourId,
+		optionId,
+		currency,
+		isDraft,
+		skip: !tourId || !optionId
+	});
+	const optionDetailQuery = useOptionalResourceQuery(optionDetail);
 
 	return {
 		tour: tourQuery.data,
+		landing: landingQuery.data,
 		optionDetail: optionDetailQuery.data,
-		isLoading: tourQuery.isLoading || optionDetailQuery.isLoading,
-		isError: tourQuery.isRealError || optionDetailQuery.isRealError
+		isOptionPriceLoading: optionDetail.isOptionsListFetching,
+		isLoading:
+			landingQuery.isLoading ||
+			tourQuery.isLoading ||
+			optionDetailQuery.isLoading,
+		isError:
+			landingQuery.isRealError ||
+			tourQuery.isRealError ||
+			optionDetailQuery.isRealError
 	};
 };

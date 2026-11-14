@@ -20,6 +20,7 @@ interface SmartTableFiltersProps<TData extends object> {
 	search?: string;
 	onSearchChange?: (value: string) => void;
 	minSearchLength?: number;
+	searchResetKey?: string | number;
 	status?: string[];
 	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];
@@ -42,6 +43,7 @@ export function SmartTableFilters<TData extends object>({
 	search,
 	onSearchChange,
 	minSearchLength,
+	searchResetKey,
 	status: controlledStatus,
 	onStatusChange,
 	statusOptions,
@@ -107,6 +109,7 @@ export function SmartTableFilters<TData extends object>({
 			search={search}
 			onSearchChange={onSearchChange}
 			minSearchLength={minSearchLength}
+			searchResetKey={searchResetKey}
 			status={controlledStatus}
 			onStatusChange={onStatusChange}
 			statusOptions={statusOptions}

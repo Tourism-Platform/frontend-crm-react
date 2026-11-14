@@ -4,10 +4,12 @@ import type {
 } from "@/entities/tour";
 
 export interface IPreviewTourData {
-	// overview: string;
+	/** «Краткий обзор» лендинга — подзаголовок в шапке превью */
+	overview: string;
 	description: string;
+	/** «Подробный обзор» лендинга — в карточке «Обзор» под описанием */
+	overview_description: string;
 	images: string[];
-	cities: string[];
 	languages: ENUM_LANGUAGES_TYPE[];
 	included: string[];
 	not_included: string[];

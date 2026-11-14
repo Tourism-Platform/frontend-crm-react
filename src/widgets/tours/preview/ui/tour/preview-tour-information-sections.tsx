@@ -1,41 +1,35 @@
 import { type FC } from "react";
 
-import { Separator } from "@/shared/ui";
-
 import type { IPreviewTourData } from "@/entities/tour/preview-tour";
 
 import { PreviewTourAdditionalInfo } from "./preview-tour-additional-info";
 import { PreviewTourAmenities } from "./preview-tour-amenities";
 import { PreviewTourCancellation } from "./preview-tour-cancellation";
-import { PreviewTourMeta } from "./preview-tour-meta";
 import { PreviewTourOverview } from "./preview-tour-overview";
-import { PreviewTourPhotos } from "./preview-tour-photos";
 import { PreviewTourPickup } from "./preview-tour-pickup";
 
 interface IPreviewTourInformationSectionsProps {
 	data?: IPreviewTourData;
 }
 
+/**
+ * Разделы тура карточками; отмена и доп. информация — парой.
+ * Фото — галереей под шапкой страницы (`PreviewTourPhotos` в `PreviewTour` / `PreviewOption`)
+ */
 export const PreviewTourInformationSections: FC<
 	IPreviewTourInformationSectionsProps
 > = ({ data }) => {
 	if (!data) return null;
 
 	return (
-		<div className="flex flex-col gap-8">
-			<PreviewTourPhotos data={data} />
-			<Separator />
+		<div className="flex flex-col gap-6">
 			<PreviewTourOverview data={data} />
-			<Separator />
-			<PreviewTourMeta data={data} />
-			<Separator />
 			<PreviewTourAmenities data={data} />
-			<Separator />
 			<PreviewTourPickup data={data} />
-			<Separator />
-			<PreviewTourCancellation data={data} />
-			<Separator />
-			<PreviewTourAdditionalInfo data={data} />
+			<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+				<PreviewTourCancellation data={data} />
+				<PreviewTourAdditionalInfo data={data} />
+			</div>
 		</div>
 	);
 };

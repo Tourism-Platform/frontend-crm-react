@@ -12,10 +12,10 @@ const mapPreviewImagesToUrls = (
 export const mapPreviewTourToFrontend = (
 	backend: TPreviewTourBackend
 ): IPreviewTourData => ({
-	// overview: backend.overview || "",
+	overview: backend.overview || "",
 	description: backend.description || "",
+	overview_description: backend.overview_description || "",
 	images: mapPreviewImagesToUrls(backend.images ?? []),
-	cities: [],
 	languages: languageMapper.fromMany(backend.languages ?? []),
 	included: backend.amenities_included ?? [],
 	not_included: backend.amenities_not_included ?? [],

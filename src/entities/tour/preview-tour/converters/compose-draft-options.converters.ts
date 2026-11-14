@@ -37,6 +37,7 @@ export const mapDraftOptionCardToFrontend = (
 	title: option?.name ?? "",
 	description: option?.description ?? "",
 	price: mapDraftOptionPriceToFrontend(perPerson),
+	priceValue: perPerson?.min?.val ?? perPerson?.max?.val ?? null,
 	totalPrice: mapDraftOptionPriceToFrontend(groupTotal),
 	image: option?.cover_image_path
 		? toPublicImageUrl(option.cover_image_path)

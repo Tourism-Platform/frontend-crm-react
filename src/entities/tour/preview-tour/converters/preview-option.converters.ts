@@ -136,6 +136,7 @@ const mapPreviewOptionPreviewToFrontend = (
 	title: backend?.name ?? "",
 	description: backend?.description ?? "",
 	price: formatMonetaryPrice(backend?.price_per_person),
+	priceValue: backend?.price_per_person?.val ?? null,
 	totalPrice: formatMonetaryPrice(backend?.total_price),
 	image: backend?.cover_image_path
 		? toPublicImageUrl(backend.cover_image_path)
@@ -170,17 +171,23 @@ export const mapPreviewOptionToFrontend = (
 	id: backend?.id ?? "",
 	title,
 	price: formatMonetaryPrice(backend?.total_price),
+	pricePerPerson: "",
 	days: groupEventsIntoDays(backend?.events)
 });
 
-export const enrichOptionDetailTitle = (
+/** Название (если его нет) и цена за человека — из списка вариантов: в детальном ответе их нет */
+export const enrichOptionDetailFromList = (
 	detail: IOptionDetail,
 	list: IPreviewOptionCard[] | undefined,
 	optionId: string
 ): IOptionDetail => {
-	if (detail.title) return detail;
+	const card = list?.find((item) => item.id === optionId);
 
-	const name = list?.find((item) => item.id === optionId)?.title;
+	if (!card) return detail;
 
-	return name ? { ...detail, title: name } : detail;
+	return {
+		...detail,
+		title: detail.title || card.title,
+		pricePerPerson: card.price
+	};
 };

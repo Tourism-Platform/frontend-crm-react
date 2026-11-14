@@ -47,6 +47,8 @@ export interface ISmartTableFilters {
 	search?: string;
 	onSearchChange?: (value: string) => void;
 	minSearchLength?: number;
+	/** Смена значения пересоздаёт поле поиска: введённый, но ещё не применённый текст сбрасывается (например, по «Сбросить» фильтров) */
+	searchResetKey?: string | number;
 	status?: string[];
 	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];

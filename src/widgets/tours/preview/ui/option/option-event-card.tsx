@@ -1,127 +1,105 @@
+import { ClockCircleIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { cn } from "@/shared/lib";
-import { Previewer, withErrorBoundary } from "@/shared/ui";
+import { Card, PreviewerSimple, withErrorBoundary } from "@/shared/ui";
 
 import type { IOptionEvent } from "@/entities/tour/preview-tour";
 
+import { OPTION_EVENT_ICONS } from "../../model/config/option-event-icons.config";
+
 import { OptionEventDetailSheet } from "./option-event-detail-sheet";
-import { getOptionEventIcon } from "./option-event-icons";
 
 interface IOptionEventCardProps {
 	event: IOptionEvent;
-	index: number;
 }
 
-const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event, index }) => {
+/**
+ * Событие в ленте дня: узел с иконкой вида и компактная карточка — содержимое `<li>`
+ * из `OptionDaySection` (там же линия ленты; запасной блок `ErrorBoundary` остаётся внутри `<li>`).
+ * Фото — миниатюрой справа (на узком экране — сверху), только если оно есть
+ */
+const OptionEventCardBase: FC<IOptionEventCardProps> = ({ event }) => {
 	const { t } = useTranslation("preview_option_page");
 
+	const Icon = OPTION_EVENT_ICONS[event.type];
 	const isMultiply = Boolean(event.sub_options?.length);
-	const isReversed = index % 2 !== 0;
 	const cardImage = event.sheet.images[0];
 	const infoTimes =
 		event.sheet.extra.kind === "info" ? event.sheet.extra : null;
-	const hasInfoTimes = Boolean(
-		infoTimes && (infoTimes.startTime || infoTimes.endTime)
-	);
+	const timeRange = infoTimes
+		? [infoTimes.startTime, infoTimes.endTime].filter(Boolean).join(" – ")
+		: "";
 
 	return (
-		<div className="grid grid-cols-1 gap-0 bg-card rounded-xl border overflow-hidden shadow-sm md:grid-cols-2">
-			<div
-				className={cn(
-					"flex flex-col gap-4 p-6",
-					isReversed ? "md:order-2" : "md:order-1"
-				)}
-			>
-				<div className="flex items-center gap-3">
-					<div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center shrink-0">
-						{getOptionEventIcon(event.type)}
-					</div>
-					<h4 className="font-semibold">
-						{event.title}
-						{isMultiply && ` ${t("sections.option.one_of_them")}`}
-					</h4>
-				</div>
+		<>
+			<span className="flex size-10 shrink-0 items-center justify-center rounded-full border bg-card text-primary shadow-xs">
+				<Icon className="size-5" />
+			</span>
 
-				{hasInfoTimes && infoTimes && (
-					<div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-end text-sm">
-						<div>
-							<span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-								{t("sheet.start_time")}
-							</span>
-							<p className="font-medium mt-1">
-								{infoTimes.startTime || "—"}
-							</p>
-						</div>
-						<span className="text-xs text-primary pb-0.5">
-							{t("sheet.to")}
-						</span>
-						<div className="text-right">
-							<span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
-								{t("sheet.end_time")}
-							</span>
-							<p className="font-medium mt-1">
-								{infoTimes.endTime || "—"}
-							</p>
-						</div>
-					</div>
-				)}
-
-				<Previewer
-					text={event.description}
-					className={cn(
-						"text-sm text-muted-foreground leading-relaxed",
-						!isMultiply && "line-clamp-6"
-					)}
-				/>
-
-				{isMultiply ? (
-					<div className="flex flex-col gap-3">
-						{event.sub_options?.map((subOption) => (
-							<div
-								key={subOption.id}
-								className="border rounded-lg p-4 flex flex-col gap-2"
-							>
-								<h5 className="font-semibold text-sm">
-									{subOption.title}
-								</h5>
-								<Previewer
-									text={subOption.description}
-									className="text-xs text-muted-foreground line-clamp-3 leading-relaxed"
-								/>
-								<OptionEventDetailSheet
-									source={subOption}
-									variant="xs"
-								/>
-							</div>
-						))}
-					</div>
-				) : (
-					<OptionEventDetailSheet source={event} />
-				)}
-			</div>
-
-			<div
-				className={cn(
-					"relative aspect-[4/3] overflow-hidden",
-					isReversed ? "md:order-1" : "md:order-2",
-					!cardImage && "bg-muted"
-				)}
+			<Card
+				variant="glass"
+				className="min-w-0 flex-1 gap-4 p-4 sm:flex-row"
 			>
 				{cardImage?.imagePath ? (
-					<img
-						src={cardImage.imagePath}
-						alt={event.title}
-						className="absolute inset-0 h-full w-full object-cover"
-					/>
-				) : (
-					<div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
-						{getOptionEventIcon(event.type, "lg")}
+					<div className="relative aspect-video shrink-0 overflow-hidden rounded-lg bg-muted sm:order-last sm:aspect-[4/3] sm:w-44 sm:self-start">
+						<img
+							src={cardImage.imagePath}
+							alt={event.title}
+							className="absolute inset-0 size-full object-cover"
+						/>
 					</div>
-				)}
-			</div>
-		</div>
+				) : null}
+
+				<div className="flex min-w-0 flex-1 flex-col gap-2">
+					<div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-1.5">
+						<h4 className="leading-snug font-semibold">
+							{event.title}
+							{isMultiply &&
+								` ${t("sections.option.one_of_them")}`}
+						</h4>
+						{timeRange ? (
+							<span className="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground tabular-nums">
+								<ClockCircleIcon className="size-3.5" />
+								{timeRange}
+							</span>
+						) : null}
+					</div>
+
+					<PreviewerSimple
+						text={event.description}
+						lines={3}
+						className="text-sm leading-relaxed text-muted-foreground"
+					/>
+
+					{isMultiply ? (
+						<div className="grid grid-cols-1 gap-2 pt-1 sm:grid-cols-2">
+							{event.sub_options?.map((subOption) => (
+								<div
+									key={subOption.id}
+									className="flex min-w-0 flex-col gap-1.5 rounded-lg bg-muted/40 p-3"
+								>
+									<h5 className="text-sm font-semibold">
+										{subOption.title}
+									</h5>
+									<PreviewerSimple
+										text={subOption.description}
+										lines={2}
+										className="text-xs leading-relaxed text-muted-foreground"
+									/>
+									<OptionEventDetailSheet
+										source={subOption}
+										variant="xs"
+									/>
+								</div>
+							))}
+						</div>
+					) : (
+						<OptionEventDetailSheet source={event} />
+					)}
+				</div>
+			</Card>
+		</>
 	);
 };
 

@@ -1,8 +1,8 @@
-import { Check, X } from "lucide-react";
+import { CheckCircleIcon, CloseCircleIcon } from "@solar-icons/react/outline";
 import { type FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { withErrorBoundary } from "@/shared/ui";
+import { Card, withErrorBoundary } from "@/shared/ui";
 
 import { type IPreviewTourData } from "@/entities/tour";
 
@@ -10,41 +10,55 @@ interface IPreviewTourAmenitiesProps {
 	data?: IPreviewTourData;
 }
 
+/**
+ * Что включено и не включено — две карточки рядом. Отметки: включено — зелёные (`emerald-500`,
+ * токена «успех» в теме нет, так же в `preview-booking`), не включено — цвет ошибки темы
+ */
 const PreviewTourAmenitiesBase: FC<IPreviewTourAmenitiesProps> = ({ data }) => {
 	const { t } = useTranslation("preview_tour_page");
 
 	if (!data) return null;
 
 	return (
-		<div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-			<div>
-				<h3 className="text-lg mb-4">{t("sections.included.title")}</h3>
-				<ul className="flex flex-col gap-2">
-					{data.included.map((item) => {
-						return (
-							<li key={item} className="flex items-center gap-2">
-								<Check className="text-green-500 w-5 h-5 shrink-0" />
-								<span className="text-sm">{item}</span>
-							</li>
-						);
-					})}
+		<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+			<Card variant="glass" className="gap-4 px-6">
+				<h2 className="flex items-center gap-2.5 text-lg font-semibold">
+					<span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500">
+						<CheckCircleIcon className="size-5" />
+					</span>
+					{t("sections.included.title")}
+				</h2>
+				<ul className="flex flex-col gap-2.5">
+					{data.included.map((item) => (
+						<li
+							key={item}
+							className="flex items-start gap-2.5 text-sm"
+						>
+							<CheckCircleIcon className="mt-px size-4.5 shrink-0 text-emerald-500" />
+							{item}
+						</li>
+					))}
 				</ul>
-			</div>
-			<div>
-				<h3 className="text-lg mb-4">
+			</Card>
+			<Card variant="glass" className="gap-4 px-6">
+				<h2 className="flex items-center gap-2.5 text-lg font-semibold">
+					<span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-destructive/10 text-destructive">
+						<CloseCircleIcon className="size-5" />
+					</span>
 					{t("sections.not_included.title")}
-				</h3>
-				<ul className="flex flex-col gap-2">
-					{data.not_included.map((item) => {
-						return (
-							<li key={item} className="flex items-center gap-2">
-								<X className="text-red-500 w-5 h-5 shrink-0" />
-								<span className="text-sm">{item}</span>
-							</li>
-						);
-					})}
+				</h2>
+				<ul className="flex flex-col gap-2.5">
+					{data.not_included.map((item) => (
+						<li
+							key={item}
+							className="flex items-start gap-2.5 text-sm"
+						>
+							<CloseCircleIcon className="mt-px size-4.5 shrink-0 text-destructive" />
+							{item}
+						</li>
+					))}
 				</ul>
-			</div>
+			</Card>
 		</div>
 	);
 };

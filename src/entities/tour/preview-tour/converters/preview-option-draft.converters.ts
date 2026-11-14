@@ -191,5 +191,6 @@ export const mapDraftPreviewOptionToFrontend = (
 	id: backend?.id ?? "",
 	title,
 	price: mapDraftOptionPriceToFrontend(backend?.estimated_revenue_per_person),
+	pricePerPerson: "",
 	days: groupOperatorEventsIntoDays(backend?.events)
 });

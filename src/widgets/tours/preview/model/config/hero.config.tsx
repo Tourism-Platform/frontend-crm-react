@@ -1,10 +1,15 @@
+import type { Icon } from "@solar-icons/react/lib/types";
+import {
+	CalendarMarkIcon,
+	HeartPulseIcon,
+	UsersGroupTwoRoundedIcon
+} from "@solar-icons/react/outline";
 import type { TFunction } from "i18next";
-import { Calendar, Globe, type LucideIcon, Users } from "lucide-react";
 
 import type { IPreviewTourGeneral } from "@/entities/tour/preview-tour";
 
 export interface IHeroInfo {
-	icon: LucideIcon;
+	icon: Icon;
 	label: string;
 }
 
@@ -62,20 +67,26 @@ export const HERO_INFO = (
 
 	if (tour.duration?.from || tour.duration?.to) {
 		info.push({
-			icon: Calendar,
+			icon: CalendarMarkIcon,
 			label: formatDuration(tour.duration, t)
 		});
 	}
 
 	if (tour.groupSize) {
+		const persons = t("hero.group_size.persons", {
+			count: tour.groupSize
+		});
+		const hasMin =
+			tour.groupSizeMin != null && tour.groupSizeMin !== tour.groupSize;
+
 		info.push({
-			icon: Users,
-			label: t("hero.group_size.persons", { count: tour.groupSize })
+			icon: UsersGroupTwoRoundedIcon,
+			label: hasMin ? `${tour.groupSizeMin}–${persons}` : persons
 		});
 	}
 
 	info.push({
-		icon: Globe,
+		icon: HeartPulseIcon,
 		label: formatAgeRequires(tour.ageRequires, t)
 	});
 

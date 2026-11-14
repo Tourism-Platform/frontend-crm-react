@@ -5,7 +5,6 @@ import { Link, useParams } from "react-router";
 import { toast } from "sonner";
 
 import { ENUM_PATH } from "@/shared/config";
-import { cn } from "@/shared/lib";
 import {
 	Button,
 	CustomOptionTabs,
@@ -22,15 +21,16 @@ import { usePreviewTourPageData } from "@/entities/tour/preview-tour";
 import {
 	ENUM_PREVIEW_TOUR_TAB,
 	PREVIEW_TOUR_SINGLE_OPTION_TABS,
+	getCheapestOptionPrice,
 	useIsDraftPreview,
 	usePreviewCurrency
 } from "../model";
 
 import {
-	PreviewCurrencySelect,
 	PreviewOptionsCards,
 	PreviewTourHero,
 	PreviewTourInformationSections,
+	PreviewTourPhotos,
 	PreviewTourProviderCard
 } from "./tour";
 
@@ -74,7 +74,7 @@ const PreviewTourBase: FC = () => {
 	}, [singleOption, isOptionDetailError, t]);
 
 	return (
-		<section className="flex flex-1 flex-col gap-5 w-full max-w-6xl mx-auto relative">
+		<section className="flex flex-1 flex-col gap-6 w-full max-w-6xl mx-auto relative">
 			<DataState
 				variant="page"
 				data={tourData}
@@ -83,91 +83,89 @@ const PreviewTourBase: FC = () => {
 			>
 				{() => (
 					<>
-						<div className="flex flex-wrap items-center justify-between gap-4">
-							{isDraftPreview ? (
-								<Button variant="ghost" size="sm" disabled>
-									<AltArrowLeftIcon className="w-4 h-4" />
-									{t("back", { ns: "preview_tour_page" })}
-								</Button>
-							) : (
+						{isDraftPreview ? (
+							<Button
+								variant="glass"
+								size="sm"
+								className="self-start"
+								disabled
+							>
+								<AltArrowLeftIcon />
+								{t("back", { ns: "preview_tour_page" })}
+							</Button>
+						) : (
+							<Button
+								variant="glass"
+								size="sm"
+								className="self-start"
+								asChild
+							>
 								<Link to={ENUM_PATH.TOURS.CATALOG.ROOT}>
-									<Button variant="ghost" size="sm">
-										<AltArrowLeftIcon className="w-4 h-4" />
-										{t("back", { ns: "preview_tour_page" })}
-									</Button>
+									<AltArrowLeftIcon />
+									{t("back", { ns: "preview_tour_page" })}
 								</Link>
-							)}
-							<PreviewCurrencySelect />
-						</div>
+							</Button>
+						)}
 
-						<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-							<PreviewTourHero tour={tourData} />
+						{/* Сверху вниз: шапка тура (с валютой и ценой) и организатор 2 к 1, галерея, вкладки или разделы */}
+						<div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+							<PreviewTourHero
+								tour={tourData}
+								overview={previewData?.overview}
+								price={getCheapestOptionPrice(optionsData)}
+							/>
 							<PreviewTourProviderCard />
 						</div>
+						<PreviewTourPhotos data={previewData} />
 
-						<div className="flex flex-col gap-8">
-							{singleOption ? (
-								<CustomOptionTabs
-									defaultValue={
-										ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION
-									}
-								>
-									<CustomOptionTabsList
-										className={cn(
-											"grid w-fit mb-4 grid-cols-3"
-										)}
-									>
-										{PREVIEW_TOUR_SINGLE_OPTION_TABS.map(
-											(item) => (
-												<CustomOptionTabsTrigger
-													key={item.type}
-													value={item.type}
-													variant="tongue"
-												>
-													{t(item.label)}
-												</CustomOptionTabsTrigger>
-											)
-										)}
-									</CustomOptionTabsList>
-									<Separator className="mb-6" />
+						{singleOption ? (
+							<CustomOptionTabs
+								defaultValue={
+									ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION
+								}
+							>
+								<CustomOptionTabsList className="grid w-fit mb-4 grid-cols-3">
 									{PREVIEW_TOUR_SINGLE_OPTION_TABS.map(
 										(item) => (
-											<CustomOptionTabsContent
+											<CustomOptionTabsTrigger
 												key={item.type}
 												value={item.type}
+												variant="tongue"
 											>
-												{item.type ===
-												ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION ? (
-													<item.slot
-														data={previewData}
-													/>
-												) : (
-													<item.slot
-														optionData={
-															optionDetail
-														}
-													/>
-												)}
-											</CustomOptionTabsContent>
+												{t(item.label)}
+											</CustomOptionTabsTrigger>
 										)
 									)}
-								</CustomOptionTabs>
-							) : (
-								<>
-									<PreviewTourInformationSections
-										data={previewData}
-									/>
-									{showOptionsCards && (
-										<>
-											<Separator />
-											<PreviewOptionsCards
-												options={optionsData}
+								</CustomOptionTabsList>
+								<Separator className="mb-6" />
+								{PREVIEW_TOUR_SINGLE_OPTION_TABS.map((item) => (
+									<CustomOptionTabsContent
+										key={item.type}
+										value={item.type}
+									>
+										{item.type ===
+										ENUM_PREVIEW_TOUR_TAB.TOUR_INFORMATION ? (
+											<item.slot data={previewData} />
+										) : (
+											<item.slot
+												optionData={optionDetail}
 											/>
-										</>
-									)}
-								</>
-							)}
-						</div>
+										)}
+									</CustomOptionTabsContent>
+								))}
+							</CustomOptionTabs>
+						) : (
+							<>
+								<PreviewTourInformationSections
+									data={previewData}
+								/>
+								{showOptionsCards && (
+									<PreviewOptionsCards
+										options={optionsData}
+									/>
+								)}
+							</>
+						)}
 					</>
 				)}
 			</DataState>

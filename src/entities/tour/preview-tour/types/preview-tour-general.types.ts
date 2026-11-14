@@ -8,6 +8,8 @@ export interface IPreviewTourGeneral {
 	tourTitle: string;
 	tourType: ENUM_PREVIEW_TOUR_TYPES_TYPE;
 	groupSize: number;
+	/** Нижняя граница группы; `null` — задан только максимум */
+	groupSizeMin: number | null;
 	duration: {
 		from: number;
 		to: number;
@@ -17,4 +19,6 @@ export interface IPreviewTourGeneral {
 		to?: number | "";
 	};
 	tourCategories: ENUM_PREVIEW_TOUR_CATEGORY_TYPE[];
+	/** Языки тура (`TourMetaResponse.languages`) кодами для флагов (`EN`, `RU`) — как в каталоге */
+	languages: string[];
 }

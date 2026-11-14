@@ -8,5 +8,4 @@ export * from "./preview-tour-overview";
 export * from "./preview-tour-photos";
 export * from "./preview-tour-pickup";
 export * from "./preview-tour-provider-card";
-export * from "./preview-tour-meta";
 export * from "./preview-currency-select";

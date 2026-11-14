@@ -1,3 +1,4 @@
+import { ENUM_LANGUAGES_BACKEND } from "@/entities/tour/landing/types/languages.types";
 import {
 	ENUM_TOUR_CATEGORY_BACKEND,
 	ENUM_TOUR_STATUS_BACKEND,
@@ -14,11 +15,14 @@ export const PREVIEW_TOUR_GENERAL_MOCK = {
 	cover_image_path: "123",
 	duration_hours: 10,
 	typ: ENUM_TOUR_TYPE_BACKEND.REGULAR,
-	name: "Embark on an Unforgettable Archaeological Journey",
+	// Поле — `title` (`TourMetaResponse`), не `name`: иначе в публичном превью пустое название
+	title: "Embark on an Unforgettable Archaeological Journey",
 	group_size: 15,
+	group_size_min: 2,
 	days: 10,
 	nights: 10,
 	age_from: 18,
 	age_to: 65,
-	categories: [ENUM_TOUR_CATEGORY_BACKEND.ADVENTURE_OUTDOOR]
+	categories: [ENUM_TOUR_CATEGORY_BACKEND.ADVENTURE_OUTDOOR],
+	languages: [ENUM_LANGUAGES_BACKEND.ENGLISH, ENUM_LANGUAGES_BACKEND.RUSSIAN]
 };

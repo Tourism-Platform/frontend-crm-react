@@ -1,25 +1,30 @@
-import { type LucideIcon, Mail, MapPin, Phone } from "lucide-react";
+import type { Icon } from "@solar-icons/react/lib/types";
+import {
+	LetterIcon,
+	MapPointIcon,
+	PhoneIcon
+} from "@solar-icons/react/outline";
 
 import type { IPreviewOperator } from "@/entities/tour";
 
 export interface IProviderContact {
 	value: string;
-	icon: LucideIcon;
+	icon: Icon;
 }
 
 export const PROVIDER_CONTACTS = (
 	providerData?: IPreviewOperator
 ): IProviderContact[] => [
 	{
-		icon: Phone,
+		icon: PhoneIcon,
 		value: providerData?.phone ?? "--//--"
 	},
 	{
-		icon: Mail,
+		icon: LetterIcon,
 		value: providerData?.email ?? "--//--"
 	},
 	{
-		icon: MapPin,
+		icon: MapPointIcon,
 		value: providerData?.address ?? "--//--"
 	}
 	// {

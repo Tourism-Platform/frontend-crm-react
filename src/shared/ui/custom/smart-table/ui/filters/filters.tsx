@@ -30,6 +30,7 @@ export interface IShowFilters {
 	search?: string;
 	onSearchChange?: (value: string) => void;
 	minSearchLength?: number;
+	searchResetKey?: string | number;
 	status?: string[];
 	onStatusChange?: (value: string[]) => void;
 	statusOptions?: { label: string; value: string }[];
@@ -52,6 +53,7 @@ export const Filters = <TData extends object>({
 	search,
 	onSearchChange,
 	minSearchLength,
+	searchResetKey,
 	status: controlledStatus,
 	onStatusChange,
 	statusOptions,
@@ -90,6 +92,7 @@ export const Filters = <TData extends object>({
 					{/* Filter by name or email */}
 					{showSearchFilter && (
 						<SearchFilter<TData>
+							key={searchResetKey}
 							id={id}
 							inputRef={inputRef}
 							table={table}

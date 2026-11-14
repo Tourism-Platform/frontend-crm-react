@@ -17,9 +17,10 @@ export const composeDraftLandingToPreview = (
 	landing: TLandingPageResponseBackend,
 	images: TLandingImageBackend[]
 ): IPreviewTourData => ({
+	overview: landing.overview || "",
 	description: landing.description || "",
+	overview_description: landing.overview_description || "",
 	images: mapDraftLandingImagesToUrls(images),
-	cities: [],
 	languages: languageMapper.fromMany(landing.languages ?? []),
 	included: landing.amenities_included ?? [],
 	not_included: landing.amenities_not_included ?? [],

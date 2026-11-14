@@ -40,6 +40,7 @@ const CatalogToursBase: FC = () => {
 		totalPages,
 		isLoading,
 		handleSearchChange,
+		searchResetKey,
 		handleReset,
 		handleSortChange,
 		handlePrevPage,
@@ -86,6 +87,7 @@ const CatalogToursBase: FC = () => {
 							showStatusFilter={false}
 							search={search}
 							onSearchChange={handleSearchChange}
+							searchResetKey={searchResetKey}
 							topChildren={
 								<SelectPicker
 									className="w-full bg-card sm:w-72"

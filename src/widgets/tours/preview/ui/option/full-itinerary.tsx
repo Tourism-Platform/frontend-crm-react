@@ -28,22 +28,12 @@ export const FullItinerary: FC<IFullItineraryProps> = ({
 		currency
 	});
 	const optionData = optionDataProp ?? optionDetail;
-	let currentGlobalEventIndex = 0;
 
 	return (
-		<div className="flex flex-col w-full">
-			{optionData?.days?.map((day) => {
-				const sectionIndex = currentGlobalEventIndex;
-				currentGlobalEventIndex += day.events.length;
-
-				return (
-					<OptionDaySection
-						key={day.id}
-						day={day}
-						globalEventIndex={sectionIndex}
-					/>
-				);
-			})}
+		<div className="flex w-full flex-col gap-8">
+			{optionData?.days?.map((day) => (
+				<OptionDaySection key={day.id} day={day} />
+			))}
 		</div>
 	);
 };

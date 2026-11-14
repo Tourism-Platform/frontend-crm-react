@@ -21,8 +21,8 @@ import {
 } from "../model";
 
 import {
-	PreviewCurrencySelect,
 	PreviewTourHero,
+	PreviewTourPhotos,
 	PreviewTourProviderCard
 } from "./tour";
 
@@ -37,6 +37,9 @@ export const PreviewOptionBase: FC = () => {
 
 	const {
 		tour: tourData,
+		landing,
+		optionDetail,
+		isOptionPriceLoading,
 		isLoading: isPageLoading,
 		isError
 	} = usePreviewOptionPageData({
@@ -50,12 +53,12 @@ export const PreviewOptionBase: FC = () => {
 
 	useEffect(() => {
 		if (isError) {
-			toast.error("Failed to load tour data");
+			toast.error(t("toasts.load.error"));
 		}
-	}, [isError]);
+	}, [isError, t]);
 
 	return (
-		<section className="flex flex-1 flex-col gap-5 w-full max-w-6xl mx-auto relative">
+		<section className="flex flex-1 flex-col gap-6 w-full max-w-6xl mx-auto relative">
 			<DataState
 				variant="page"
 				data={tourData}
@@ -64,7 +67,12 @@ export const PreviewOptionBase: FC = () => {
 			>
 				{(tourData) => (
 					<>
-						<div className="flex flex-wrap items-center justify-between gap-4">
+						<Button
+							variant="glass"
+							size="sm"
+							className="self-start"
+							asChild
+						>
 							<Link
 								to={buildPreviewTourPath(
 									tourId,
@@ -74,25 +82,27 @@ export const PreviewOptionBase: FC = () => {
 									}
 								)}
 							>
-								<Button variant="ghost" size="sm">
-									<AltArrowLeftIcon className="w-4 h-4" />
-									{t("back")}
-								</Button>
+								<AltArrowLeftIcon />
+								{t("back")}
 							</Link>
-							<PreviewCurrencySelect />
-						</div>
+						</Button>
 
-						<div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_auto]">
-							<PreviewTourHero tour={tourData} />
+						{/* Как у превью тура: шапка тура (с валютой и ценой варианта) и организатор 2 к 1, галерея, вкладки */}
+						<div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+							<PreviewTourHero
+								tour={tourData}
+								overview={landing?.overview}
+								optionTitle={optionDetail?.title}
+								price={optionDetail?.pricePerPerson}
+								isPriceLoading={isOptionPriceLoading}
+							/>
 							<PreviewTourProviderCard />
 						</div>
-
-						<div className="flex flex-col mt-4">
-							<CustomQueryTabs
-								ns="preview_option_page"
-								tabs={PREVIEW_OPTION_TABS_LIST}
-							/>
-						</div>
+						<PreviewTourPhotos data={landing} />
+						<CustomQueryTabs
+							ns="preview_option_page"
+							tabs={PREVIEW_OPTION_TABS_LIST}
+						/>
 					</>
 				)}
 			</DataState>

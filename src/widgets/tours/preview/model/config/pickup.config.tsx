@@ -1,8 +1,14 @@
-import { Building, type LucideIcon, Plane } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
+
+import { HouseIcon, PlaneIcon } from "@/shared/assets";
 
 import { ENUM_PICKUP_TYPE, type ENUM_PICKUP_TYPE_TYPE } from "@/entities/tour";
 
-export const PICKUP_ICONS: Record<ENUM_PICKUP_TYPE_TYPE, LucideIcon> = {
-	[ENUM_PICKUP_TYPE.AIRPORT]: Plane,
-	[ENUM_PICKUP_TYPE.HOTEL]: Building
+/** Те же иконки, что у перелёта и проживания в ленте маршрута (`OPTION_EVENT_ICONS`) */
+export const PICKUP_ICONS: Record<
+	ENUM_PICKUP_TYPE_TYPE,
+	ComponentType<SVGProps<SVGSVGElement>>
+> = {
+	[ENUM_PICKUP_TYPE.AIRPORT]: PlaneIcon,
+	[ENUM_PICKUP_TYPE.HOTEL]: HouseIcon
 };
