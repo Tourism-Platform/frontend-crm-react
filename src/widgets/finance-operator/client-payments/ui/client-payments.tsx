@@ -56,6 +56,7 @@ const ClientPaymentsBase: FC = () => {
 
 	const filters = watch();
 	const { bookingId, createdRange } = filters;
+	const hasFilters = Boolean(bookingId || createdRange?.from);
 	const orders = useBookingOrderSearchOptions();
 
 	// Новый фильтр — снова с первой страницы
@@ -136,71 +137,72 @@ const ClientPaymentsBase: FC = () => {
 			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
-					<div className="flex flex-wrap items-center justify-between gap-4">
-						<StatusCounts
-							statuses={Object.values(ENUM_PAYMENT_STATUS)}
-							labels={PAYMENT_STATUS_LABELS}
-							variants={PAYMENT_STATUS_VARIANTS}
-							counts={statusCounts}
-						/>
-						<NewPayment />
-					</div>
+					<StatusCounts
+						statuses={Object.values(ENUM_PAYMENT_STATUS)}
+						labels={PAYMENT_STATUS_LABELS}
+						variants={PAYMENT_STATUS_VARIANTS}
+						counts={statusCounts}
+					/>
 					<SmartTable
 						TableClassName={cn(GLASS_SURFACE, "rounded-xl")}
 						data={payments}
 						columns={columns}
 						topChildren={
-							<Form {...form}>
-								<div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
-									<CustomField
-										hideLabel
-										fieldType="asyncSelect"
-										control={control}
-										name={ENUM_PAYMENT_FILTER.BOOKING_ID}
-										t={t}
-										label="filters.booking.label"
-										placeholder="filters.booking.placeholder"
-										emptyText="filters.booking.empty"
-										className="w-full sm:w-72"
-										options={orders.options}
-										onQueryChange={orders.setQuery}
-										onLoadMore={orders.loadMore}
-										hasMore={orders.hasMore}
-										isLoading={orders.isLoading}
-										isLoadingMore={orders.isLoadingMore}
-										renderOption={(option) => (
-											<BookingOrderOptionCard
-												option={
-													option as TBookingOrderSelectOption
-												}
-											/>
+							<div className="flex w-full flex-wrap items-end justify-between gap-4">
+								<Form {...form}>
+									<div className="flex w-full flex-wrap items-end gap-3 sm:w-auto">
+										<CustomField
+											fieldType="asyncSelect"
+											control={control}
+											name={
+												ENUM_PAYMENT_FILTER.BOOKING_ID
+											}
+											t={t}
+											label="filters.booking.label"
+											placeholder="filters.booking.placeholder"
+											emptyText="filters.booking.empty"
+											className="mb-0 w-full sm:w-72"
+											options={orders.options}
+											onQueryChange={orders.setQuery}
+											onLoadMore={orders.loadMore}
+											hasMore={orders.hasMore}
+											isLoading={orders.isLoading}
+											isLoadingMore={orders.isLoadingMore}
+											renderOption={(option) => (
+												<BookingOrderOptionCard
+													option={
+														option as TBookingOrderSelectOption
+													}
+												/>
+											)}
+											renderSkeleton={() => (
+												<BookingOrderOptionCardSkeleton />
+											)}
+										/>
+										{CLIENT_PAYMENTS_FILTERS_LIST.map(
+											({ key, ...item }) => (
+												<CustomField
+													key={key}
+													control={control}
+													name={key}
+													t={t}
+													className="mb-0 w-full sm:w-60"
+													{...item}
+												/>
+											)
 										)}
-										renderSkeleton={() => (
-											<BookingOrderOptionCardSkeleton />
-										)}
-									/>
-									{CLIENT_PAYMENTS_FILTERS_LIST.map(
-										({ key, ...item }) => (
-											<CustomField
-												hideLabel
-												key={key}
-												control={control}
-												name={key}
-												t={t}
-												className="w-full sm:w-72"
-												{...item}
-											/>
-										)
-									)}
-									<LoaderButton
-										type="button"
-										variant="glass"
-										onClick={handleResetFilters}
-										icon={<RestartIcon />}
-										label={t("filters.reset")}
-									/>
-								</div>
-							</Form>
+										<LoaderButton
+											type="button"
+											variant="glass"
+											onClick={handleResetFilters}
+											disabled={!hasFilters}
+											icon={<RestartIcon />}
+											label={t("filters.reset")}
+										/>
+									</div>
+								</Form>
+								<NewPayment />
+							</div>
 						}
 						isLoading={isLoading || isFetching}
 						loadingMode="skeleton"

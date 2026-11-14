@@ -9,15 +9,15 @@
 		"filters": {
 			"type": {
 				"label": "Тип проводки",
-				"placeholder": "Тип проводки"
+				"placeholder": "Любой тип"
 			},
 			"flow": {
 				"label": "Направление",
-				"placeholder": "Направление"
+				"placeholder": "Любое направление"
 			},
 			"source": {
 				"label": "Источник",
-				"placeholder": "Источник"
+				"placeholder": "Любой источник"
 			},
 			"reset": "Сбросить"
 		},

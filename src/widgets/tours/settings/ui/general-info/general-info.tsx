@@ -35,6 +35,8 @@ import { GENERAL_FORM_LIST } from "../../model/config/general.config";
 
 const GeneralInfoBase: FC = () => {
 	const { t } = useTranslation("tour_settings_page");
+	// Переводы AgencyOptionCard в выборе агентства — грузим вместе со страницей, иначе первое открытие списка уходит в Suspense
+	useTranslation("tours_page");
 	const { tourId = "" } = useParams<{ tourId: string }>();
 
 	const {

@@ -31,7 +31,7 @@
 		},
 		"period": {
 			"label": "Period",
-			"placeholder": "Select period"
+			"placeholder": "Any period"
 		},
 		"outstanding_only": {
 			"label": "Only with client debt"
@@ -39,6 +39,6 @@
 		"payable_only": {
 			"label": "Only payable to suppliers"
 		},
-		"reset": "Reset filters"
+		"reset": "Reset"
 	}
 }

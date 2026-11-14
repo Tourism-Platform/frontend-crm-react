@@ -51,6 +51,7 @@ const ToursBase: FC = () => {
 
 	const filters = watch();
 	const { sort, type } = filters;
+	const hasFilters = Boolean(sort || type);
 	const filtersList = TOURS_FILTERS_LIST();
 
 	// Новый фильтр или сортировка — снова с первой страницы
@@ -149,17 +150,16 @@ const ToursBase: FC = () => {
 			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
-					<div className="flex flex-wrap items-center justify-between gap-4">
+					<div className="flex flex-wrap items-end justify-between gap-4">
 						<Form {...form}>
-							<div className="flex w-full flex-wrap items-center gap-4 sm:w-auto">
+							<div className="flex w-full flex-wrap items-end gap-3 sm:w-auto">
 								{filtersList.map(({ key, ...item }) => (
 									<CustomField
-										hideLabel
 										key={key}
 										control={control}
 										name={key}
 										t={t}
-										className="w-full sm:w-72"
+										className="mb-0 w-full sm:w-60"
 										{...item}
 									/>
 								))}
@@ -167,6 +167,7 @@ const ToursBase: FC = () => {
 									type="button"
 									variant="glass"
 									onClick={handleResetFilters}
+									disabled={!hasFilters}
 									icon={<RestartIcon />}
 									label={t("filters.reset")}
 								/>

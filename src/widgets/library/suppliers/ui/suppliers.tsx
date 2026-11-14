@@ -118,10 +118,7 @@ const SuppliersBase: FC = () => {
 			<CustomPageHeader title={t("page_name")} />
 			<Card variant="glass">
 				<CardContent className="flex flex-col gap-4">
-					<div className="flex flex-wrap items-center justify-between gap-4">
-						<h2 className="text-lg font-semibold">
-							{t("suppliers_title")}
-						</h2>
+					<div className="flex justify-end">
 						<CreateSupplier />
 					</div>
 					<SmartTable

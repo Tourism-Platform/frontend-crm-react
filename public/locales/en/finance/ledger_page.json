@@ -9,15 +9,15 @@
 		"filters": {
 			"type": {
 				"label": "Entry type",
-				"placeholder": "Entry type"
+				"placeholder": "Any type"
 			},
 			"flow": {
 				"label": "Flow",
-				"placeholder": "Flow"
+				"placeholder": "Any flow"
 			},
 			"source": {
 				"label": "Source",
-				"placeholder": "Source"
+				"placeholder": "Any source"
 			},
 			"reset": "Reset"
 		},

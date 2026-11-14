@@ -73,6 +73,8 @@ const OrderTourReviewBase = ({
 	availability = []
 }: IOrderTourReviewProps) => {
 	const { t } = useTranslation("order_id_page");
+	// Переводы действий над событиями в строках таблицы — грузим вместе с блоком, иначе появление строк уходит в Suspense
+	useTranslation("common_events");
 
 	const summary = useMemo(
 		() => (financials ? getFinancialsStats(financials, t) : null),

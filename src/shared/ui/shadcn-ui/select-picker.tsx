@@ -20,6 +20,10 @@ export interface SelectPickerProps {
 	value?: string;
 	onChange?: (value: string) => void;
 	options: SelectPickerOption[];
+	/** Иконки по значению опции — в списке и в выбранном значении (`*_ICONS` из entity или виджета) */
+	optionIcons?: Partial<
+		Record<string, React.ComponentType<{ className?: string }>>
+	>;
 	placeholder?: string;
 	className?: string;
 	disabled?: boolean;
@@ -34,6 +38,7 @@ export const SelectPicker = React.forwardRef<
 			value,
 			onChange,
 			options,
+			optionIcons,
 			placeholder,
 			className,
 			disabled,
@@ -58,11 +63,22 @@ export const SelectPicker = React.forwardRef<
 					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent>
-					{options.map((option) => (
-						<SelectItem key={option.value} value={option.value}>
-							{option.label}
-						</SelectItem>
-					))}
+					{options.map((option) => {
+						const Icon = optionIcons?.[option.value];
+
+						return (
+							<SelectItem key={option.value} value={option.value}>
+								{Icon ? (
+									<span className="flex items-center gap-2">
+										<Icon className="size-4" />
+										{option.label}
+									</span>
+								) : (
+									option.label
+								)}
+							</SelectItem>
+						);
+					})}
 				</SelectContent>
 			</Select>
 		);

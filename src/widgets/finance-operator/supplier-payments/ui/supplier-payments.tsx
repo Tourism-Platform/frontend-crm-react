@@ -43,6 +43,8 @@ import { COLUMNS } from "../model";
 const SupplierPaymentsBase: FC = () => {
 	const { t } = useTranslation("supplier_payments_page");
 	const { t: tCols } = useTranslation(["supplier_payments_page", "options"]);
+	// Переводы SupplierOptionCard в фильтре — грузим вместе со страницей, иначе первое открытие списка уходит в Suspense
+	useTranslation("common_events");
 	const form = useForm<ISupplierPaymentFilters>({
 		defaultValues: {
 			page: 1,
@@ -148,9 +150,8 @@ const SupplierPaymentsBase: FC = () => {
 						columns={columns}
 						topChildren={
 							<Form {...form}>
-								<div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+								<div className="flex w-full flex-wrap items-end gap-3">
 									<CustomField
-										hideLabel
 										fieldType="asyncSelect"
 										control={control}
 										name={
@@ -160,7 +161,7 @@ const SupplierPaymentsBase: FC = () => {
 										label="filters.supplier.label"
 										placeholder="filters.supplier.placeholder"
 										emptyText="filters.supplier.empty"
-										className="w-full sm:w-[32rem]"
+										className="mb-0 w-full sm:w-72"
 										options={suppliers.options}
 										onQueryChange={suppliers.setQuery}
 										onLoadMore={suppliers.loadMore}
@@ -182,6 +183,7 @@ const SupplierPaymentsBase: FC = () => {
 										type="button"
 										variant="glass"
 										onClick={handleResetFilters}
+										disabled={!supplierId}
 										icon={<RestartIcon />}
 										label={t("filters.reset")}
 									/>

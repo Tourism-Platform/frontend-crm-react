@@ -158,6 +158,6 @@
 			"label": "Tour type",
 			"placeholder": "Any type"
 		},
-		"reset": "Reset filters"
+		"reset": "Reset"
 	}
 }

@@ -43,6 +43,7 @@ const LedgerEntriesBase: FC = () => {
 
 	const filters = watch();
 	const { type, flow, source } = filters;
+	const hasFilters = Boolean(type || flow || source);
 
 	const filterOptions = {
 		[ENUM_LEDGER_FILTER.TYPE]: useValueToTranslateLabel(
@@ -128,15 +129,14 @@ const LedgerEntriesBase: FC = () => {
 			columns={columns}
 			topChildren={
 				<Form {...form}>
-					<div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+					<div className="flex w-full flex-wrap items-end gap-3">
 						{filterFields.map(({ key, ...item }) => (
 							<CustomField
-								hideLabel
 								key={key}
 								control={control}
 								name={key}
 								t={t}
-								className="w-full sm:w-56"
+								className="mb-0 w-full sm:w-60"
 								{...item}
 							/>
 						))}
@@ -144,6 +144,7 @@ const LedgerEntriesBase: FC = () => {
 							type="button"
 							variant="glass"
 							onClick={handleResetFilters}
+							disabled={!hasFilters}
 							icon={<RestartIcon />}
 							label={t("entries.filters.reset")}
 						/>

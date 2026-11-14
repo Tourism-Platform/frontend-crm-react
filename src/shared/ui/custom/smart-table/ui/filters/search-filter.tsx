@@ -69,7 +69,7 @@ export const SearchFilter = <TData extends object>({
 	]);
 
 	return (
-		<div className="relative min-w-0 flex-1 basis-60 lg:max-w-sm">
+		<div className="relative min-w-0 flex-1 basis-60">
 			<Input
 				id={`${id}-input`}
 				ref={inputRef}

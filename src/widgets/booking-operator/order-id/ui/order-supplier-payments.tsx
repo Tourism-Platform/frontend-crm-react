@@ -42,6 +42,8 @@ const OrderSupplierPaymentsBase: FC<IOrderSupplierPaymentsProps> = ({
 	eventOptions
 }) => {
 	const { t } = useTranslation(["order_id_page", "options"]);
+	// Переводы ConfirmPayment в строках таблицы — грузим вместе с блоком, иначе появление строк уходит в Suspense
+	useTranslation("supplier_payments_page");
 
 	const form = useForm<ISupplierPaymentFilters>({
 		defaultValues: {

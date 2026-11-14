@@ -195,8 +195,8 @@
 		},
 		"created": {
 			"label": "Created",
-			"placeholder": "Select period"
+			"placeholder": "Any period"
 		},
-		"reset": "Reset filters"
+		"reset": "Reset"
 	}
 }

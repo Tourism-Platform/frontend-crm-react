@@ -14,6 +14,7 @@ import type {
 	RatingButtonSize,
 	RatingButtonVariant,
 	SelectPickerOption,
+	SelectPickerProps,
 	TAsyncSelectOption,
 	TCustomAsyncSelectProps
 } from "@/shared/ui";
@@ -64,6 +65,8 @@ type TFormOptional<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 type TFormSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: "select";
 	options: SelectPickerOption[];
+	/** Иконки опций по значению — `optionIcons` у `SelectPicker` */
+	optionIcons?: SelectPickerProps["optionIcons"];
 	placeholder?: L;
 	defaultValue?: string;
 };
