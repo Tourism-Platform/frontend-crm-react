@@ -11,6 +11,7 @@ import type {
 	CustomGeoSelectProps,
 	MultipleSelectorDisplayMode,
 	Option as MultipleSelectorOption,
+	MultipleSelectorProps,
 	RatingButtonSize,
 	RatingButtonVariant,
 	SelectPickerOption,
@@ -74,6 +75,8 @@ type TFormSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 type TFormMultiSelect<L = TGenericLabel, K = TGenericKey> = IFormBase<L, K> & {
 	fieldType: "multiselect";
 	options: MultipleSelectorOption[];
+	/** Иконки опций по значению — `optionIcons` у `MultipleSelector` */
+	optionIcons?: MultipleSelectorProps["optionIcons"];
 	placeholder?: string;
 	displayMode?: MultipleSelectorDisplayMode;
 	badgeVariant?: BadgeVariant;

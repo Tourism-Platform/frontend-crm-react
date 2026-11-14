@@ -1,4 +1,4 @@
-import { ENUM_PATH, INTERSECTION_ELEMENTS } from "@/shared/config";
+import { ENUM_PATH } from "@/shared/config";
 
 import { ENUM_CATALOG_QUERY_PARAM } from "../config/catalog-query.config";
 import type { TCatalogUrlQuery } from "../types/catalog-query.types";
@@ -58,10 +58,6 @@ export const buildCatalogQueryString = (query: TCatalogUrlQuery): string => {
 
 	if (query.page && query.page > DEFAULT_PAGE) {
 		searchParams.set(ENUM_CATALOG_QUERY_PARAM.PAGE, String(query.page));
-	}
-
-	if (query.limit && query.limit !== INTERSECTION_ELEMENTS.CATALOG_TOURS) {
-		searchParams.set(ENUM_CATALOG_QUERY_PARAM.LIMIT, String(query.limit));
 	}
 
 	if (query.sort) {

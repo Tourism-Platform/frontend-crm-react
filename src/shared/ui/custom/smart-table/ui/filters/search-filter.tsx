@@ -1,6 +1,6 @@
 import type { Table } from "@tanstack/react-table";
 import { CircleXIcon, ListFilterIcon } from "lucide-react";
-import { type RefObject, useEffect, useState } from "react";
+import { type RefObject, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useDebounce } from "@/shared/hooks";
@@ -36,15 +36,19 @@ export const SearchFilter = <TData extends object>({
 
 	const [localSearch, setLocalSearch] = useState(externalValue);
 	const debouncedSearch = useDebounce(localSearch, 500);
+	// Последнее внешнее значение: применение сравнивает с ним, но само его изменение поиск не применяет
+	const externalValueRef = useRef(externalValue);
 
 	// Sync local search with external value (e.g. if filters are reset from outside)
 	useEffect(() => {
+		externalValueRef.current = externalValue;
 		setLocalSearch(externalValue);
 	}, [externalValue]);
 
-	// Apply debounced search value to table or callback
+	// Применяем только новое значение после задержки: иначе смена внешнего значения
+	// (восстановление из адреса, сброс) вернула бы в родителя устаревший debouncedSearch
 	useEffect(() => {
-		if (debouncedSearch === externalValue) return;
+		if (debouncedSearch === externalValueRef.current) return;
 
 		const shouldApply =
 			debouncedSearch.length === 0 ||
@@ -59,14 +63,7 @@ export const SearchFilter = <TData extends object>({
 					?.setFilterValue(debouncedSearch);
 			}
 		}
-	}, [
-		debouncedSearch,
-		onSearchChange,
-		table,
-		externalValue,
-		searchKey,
-		minSearchLength
-	]);
+	}, [debouncedSearch, onSearchChange, table, searchKey, minSearchLength]);
 
 	return (
 		<div className="relative min-w-0 flex-1 basis-60">
@@ -74,7 +71,7 @@ export const SearchFilter = <TData extends object>({
 				id={`${id}-input`}
 				ref={inputRef}
 				className={cn(
-					"peer w-full ps-9",
+					"peer w-full bg-card ps-9 dark:bg-card",
 					Boolean(localSearch) && "pe-9"
 				)}
 				value={localSearch}

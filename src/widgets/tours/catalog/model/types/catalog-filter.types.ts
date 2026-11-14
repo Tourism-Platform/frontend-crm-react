@@ -1,27 +1,19 @@
-import type { LucideIcon } from "lucide-react";
-
 import type { TToursCatalogPageKeys } from "@/shared/config";
-import type { IAccordionItem } from "@/shared/ui/custom/custom-accordion/model/types";
+import type { TFormField } from "@/shared/types";
 
-import type { ICatalogTourFilters } from "@/entities/tour";
+/** Поля фильтров каталога — пути в форме `ICatalogTourFilters` */
+export const ENUM_CATALOG_FILTER = {
+	COUNTRY: "filters.country",
+	CITY: "filters.city",
+	DURATION: "filters.duration",
+	LANGUAGE: "filters.language",
+	CATEGORY: "filters.category"
+} as const;
 
-export type TCatalogFilterField = keyof NonNullable<
-	ICatalogTourFilters["filters"]
+export type ENUM_CATALOG_FILTER_TYPE =
+	(typeof ENUM_CATALOG_FILTER)[keyof typeof ENUM_CATALOG_FILTER];
+
+export type TCatalogFilterForm = TFormField<
+	TToursCatalogPageKeys,
+	ENUM_CATALOG_FILTER_TYPE
 >;
-
-export interface ICatalogFilterSectionConfig {
-	field: TCatalogFilterField;
-	titleKey: TToursCatalogPageKeys;
-	icon: LucideIcon;
-	/** Пункты приходят с бэка — пока грузятся, показываем скелетон */
-	isRemote?: boolean;
-}
-
-export interface ICatalogFilterSection {
-	id: TCatalogFilterField;
-	title: string;
-	icon: LucideIcon;
-	items: IAccordionItem[];
-	isLoading?: boolean;
-	onChange: (id: string, checked: boolean) => void;
-}

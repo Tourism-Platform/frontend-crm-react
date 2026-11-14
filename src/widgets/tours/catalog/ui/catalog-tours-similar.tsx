@@ -41,7 +41,7 @@ const CatalogToursSimilarBase: FC<ICatalogToursSimilarProps> = ({ params }) => {
 	const tours = useMemo(() => toursData?.data ?? [], [toursData]);
 
 	return (
-		<div className="grid gap-10 ">
+		<div className="grid grid-cols-1 gap-10">
 			<Alert variant="primary" appearance="light" role="status">
 				<AlertIcon>
 					<SerchFavoriteIcon />
@@ -58,7 +58,7 @@ const CatalogToursSimilarBase: FC<ICatalogToursSimilarProps> = ({ params }) => {
 				{(tours) => (
 					<div className="w-[calc(100%-24px)]">
 						<Carousel>
-							<CarouselContent className="pb-2">
+							<CarouselContent className="pb-10">
 								{tours.map((tour, index) => (
 									<CarouselItem
 										key={index}

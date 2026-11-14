@@ -13,8 +13,20 @@ import {
 	getSortedRowModel,
 	useReactTable
 } from "@tanstack/react-table";
-import { LayoutGridIcon, StretchHorizontalIcon } from "lucide-react";
-import { memo, useCallback, useEffect, useId, useMemo, useState } from "react";
+import {
+	LayoutGridIcon,
+	LayoutListIcon,
+	StretchHorizontalIcon
+} from "lucide-react";
+import {
+	type FC,
+	memo,
+	useCallback,
+	useEffect,
+	useId,
+	useMemo,
+	useState
+} from "react";
 
 import { cn } from "@/shared/lib";
 import {
@@ -33,6 +45,12 @@ import { EmptyState } from "./empty-state";
 import { SmartTableFilters } from "./smart-table-filters";
 import { SmartTablePagination } from "./smart-table-pagination";
 
+/** Колонки переключателя вида — по числу видов (карточки, список, таблица) */
+const VIEW_TABS_COLS: Record<number, string> = {
+	2: "grid-cols-2",
+	3: "grid-cols-3"
+};
+
 function SmartTableInner<TData extends object>({
 	columns,
 	data,
@@ -49,6 +67,9 @@ function SmartTableInner<TData extends object>({
 	card: Card,
 	cardSkeleton: CardSkeleton,
 	CardsClassName,
+	listCard: ListCard,
+	listCardSkeleton: ListCardSkeleton,
+	ListClassName,
 	TableClassName,
 	statusTabs,
 	activeStatusTab,
@@ -164,50 +185,67 @@ function SmartTableInner<TData extends object>({
 		}
 	}, [data.length, isLoading, recordCount, pagination.pageIndex, table]);
 
-	const VIEW_CONFIG = useMemo(
-		() => [
+	const VIEW_CONFIG = useMemo(() => {
+		// Карточки и длинные карточки: скелетоны при загрузке, пустое состояние без данных
+		const renderCards = (
+			Item: FC<{ data: TData }>,
+			ItemSkeleton: FC | undefined,
+			className: string
+		) => (
+			<div className={className}>
+				{isLoading && loadingMode === "skeleton" ? (
+					Array.from({ length: pagination.pageSize }).map((_, i) =>
+						ItemSkeleton ? (
+							<ItemSkeleton key={i} />
+						) : (
+							<div
+								key={i}
+								className="h-64 rounded-xl bg-muted animate-pulse"
+							/>
+						)
+					)
+				) : data.length > 0 ? (
+					data.map((item, index) => (
+						<Item
+							key={(item as { id?: string }).id || index}
+							data={item}
+						/>
+					))
+				) : (
+					<div className="col-span-full">
+						<EmptyState />
+					</div>
+				)}
+			</div>
+		);
+
+		return [
 			...(useViewMode && Card
 				? [
 						{
 							type: "cards" as const,
-							component: (
-								<div
-									className={cn(
-										"grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4",
-										CardsClassName
-									)}
-								>
-									{isLoading && loadingMode === "skeleton" ? (
-										Array.from({
-											length: pagination.pageSize
-										}).map((_, i) =>
-											CardSkeleton ? (
-												<CardSkeleton key={i} />
-											) : (
-												<div
-													key={i}
-													className="h-64 rounded-xl bg-muted animate-pulse"
-												/>
-											)
-										)
-									) : data.length > 0 ? (
-										data.map((item, index) => (
-											<Card
-												key={
-													(item as { id?: string })
-														.id || index
-												}
-												data={item}
-											/>
-										))
-									) : (
-										<div className="col-span-full">
-											<EmptyState />
-										</div>
-									)}
-								</div>
+							component: renderCards(
+								Card,
+								CardSkeleton,
+								cn(
+									"grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4",
+									CardsClassName
+								)
 							),
 							icon: <LayoutGridIcon className="w-3 h-3" />
+						}
+					]
+				: []),
+			...(useViewMode && ListCard
+				? [
+						{
+							type: "list" as const,
+							component: renderCards(
+								ListCard,
+								ListCardSkeleton,
+								cn("flex flex-col gap-3", ListClassName)
+							),
+							icon: <LayoutListIcon className="w-3 h-3" />
 						}
 					]
 				: []),
@@ -227,21 +265,23 @@ function SmartTableInner<TData extends object>({
 				),
 				icon: <StretchHorizontalIcon className="w-3 h-3" />
 			}
-		],
-		[
-			useViewMode,
-			Card,
-			CardsClassName,
-			isLoading,
-			loadingMode,
-			pagination.pageSize,
-			CardSkeleton,
-			data,
-			TableClassName,
-			tableLayout?.columnsDraggable,
-			tableLayout?.rowsDraggable
-		]
-	);
+		];
+	}, [
+		useViewMode,
+		Card,
+		CardsClassName,
+		ListCard,
+		ListCardSkeleton,
+		ListClassName,
+		isLoading,
+		loadingMode,
+		pagination.pageSize,
+		CardSkeleton,
+		data,
+		TableClassName,
+		tableLayout?.columnsDraggable,
+		tableLayout?.rowsDraggable
+	]);
 
 	const [currentView, setCurrentView] =
 		useState<TViewModeType>(defaultViewMode);
@@ -253,7 +293,12 @@ function SmartTableInner<TData extends object>({
 			<>
 				{actions}
 				{useViewMode && (
-					<CustomOptionTabsList className="h-9 shrink-0 grid-cols-2 gap-2">
+					<CustomOptionTabsList
+						className={cn(
+							"h-9 shrink-0 gap-2",
+							VIEW_TABS_COLS[VIEW_CONFIG.length]
+						)}
+					>
 						{VIEW_CONFIG.map((item) => (
 							<CustomOptionTabsTrigger
 								key={item.type}

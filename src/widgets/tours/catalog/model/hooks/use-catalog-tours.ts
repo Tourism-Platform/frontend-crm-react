@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useMemo } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -12,17 +12,12 @@ import {
 	useGetCatalogToursQuery
 } from "@/entities/tour";
 
-import {
-	DEFAULT_CATALOG_FILTERS,
-	type TCatalogViewMode
-} from "../config/catalog-tours.config";
+import { DEFAULT_CATALOG_FILTERS } from "../config/catalog-tours.config";
 
 import { useCatalogUrlSync } from "./use-catalog-url-sync";
 
 export const useCatalogTours = () => {
 	const { t, i18n } = useTranslation("tours_catalog_page");
-	const searchInputRef = useRef<HTMLInputElement>(null);
-	const [viewMode, setViewMode] = useState<TCatalogViewMode>("grid");
 
 	const readLang = i18n.language;
 
@@ -39,10 +34,7 @@ export const useCatalogTours = () => {
 
 	const { watch, setValue } = methods;
 	const formValues = watch();
-	const { search, page, limit, sort, filters: filterValues } = formValues;
-
-	const [localSearch, setLocalSearch] = useState(search);
-	const debouncedSearch = useDebounce(localSearch, 500);
+	const { search, page, limit, sort } = formValues;
 
 	const {
 		applyLocationBarSubmit,
@@ -51,26 +43,17 @@ export const useCatalogTours = () => {
 		isHydratingRef
 	} = useCatalogUrlSync({
 		filtersForm: methods,
-		locationForm,
-		setLocalSearch
+		locationForm
 	});
 
-	useEffect(() => {
-		setLocalSearch(search);
-	}, [search]);
-
-	useEffect(() => {
-		if (isHydratingRef.current) return;
-		if (debouncedSearch === search) return;
-
-		const shouldApply =
-			debouncedSearch.length === 0 || debouncedSearch.length >= 3;
-
-		if (shouldApply) {
-			setValue("search", debouncedSearch);
+	// Задержка и минимальная длина поиска — в SmartTable; новый поиск — с первой страницы
+	const handleSearchChange = useCallback(
+		(value: string) => {
+			setValue("search", value);
 			setValue("page", 1);
-		}
-	}, [debouncedSearch, isHydratingRef, search, setValue]);
+		},
+		[setValue]
+	);
 
 	// Новая сортировка — снова с первой страницы
 	useEffect(() => {
@@ -79,8 +62,27 @@ export const useCatalogTours = () => {
 		setValue("page", 1);
 	}, [sort, isHydratingRef, setValue]);
 
-	const debouncedSource = useMemo(() => filterValues, [filterValues]);
-	const debouncedFilters = useDebounce(debouncedSource, 500);
+	// Новый фильтр — снова с первой страницы; восстановление из адреса страницу не трогает
+	useEffect(
+		() =>
+			methods.subscribe({
+				name: "filters",
+				formState: { values: true },
+				callback: () => {
+					if (isHydratingRef.current) return;
+
+					setValue("page", 1);
+				}
+			}),
+		[methods, isHydratingRef, setValue]
+	);
+
+	// Поле фильтра пишет в `filters.*` на месте — `watch()` отдаёт тот же объект, useWatch — новую копию
+	const filterValues = useWatch({
+		control: methods.control,
+		name: "filters"
+	});
+	const debouncedFilters = useDebounce(filterValues, 500);
 
 	useEffect(() => {
 		if (isHydratingRef.current) return;
@@ -121,6 +123,13 @@ export const useCatalogTours = () => {
 	const totalCount = toursData?.total ?? 0;
 	const totalPages = Math.max(1, Math.ceil(totalCount / limit));
 	const isLoading = isLoadingTours || isFetchingTours;
+
+	// Страница из адреса за пределами выдачи (вписали руками) — на первую
+	useEffect(() => {
+		if (toursData && page > totalPages) {
+			setValue("page", 1);
+		}
+	}, [toursData, page, totalPages, setValue]);
 
 	const handleReset = useCallback(() => {
 		handleUrlReset();
@@ -168,11 +177,7 @@ export const useCatalogTours = () => {
 		totalCount,
 		totalPages,
 		isLoading,
-		viewMode,
-		setViewMode,
-		localSearch,
-		setLocalSearch,
-		searchInputRef,
+		handleSearchChange,
 		handleReset,
 		handleSortChange,
 		handlePrevPage,

@@ -16,16 +16,23 @@ import { cn } from "@/shared/lib";
 import { Badge, Card, PreviewerSimple, Skeleton } from "@/shared/ui";
 import { formatMoney } from "@/shared/utils";
 
-import { TOUR_CATEGORY_LABELS } from "../../tour";
-import { CATALOG_TOUR_TYPE_LABELS } from "../config";
+import {
+	TOUR_CATEGORY_LABELS,
+	TourCardChips,
+	formatTourAge,
+	formatTourGroup
+} from "../../tour";
+import {
+	CATALOG_TOUR_TYPE_LABELS,
+	CATALOG_TOUR_TYPE_VARIANTS
+} from "../config";
 import type { ICatalogTourCard } from "../types";
 
 const VISIBLE_CATEGORIES = 2;
-const VISIBLE_LANGUAGES = 5;
+const VISIBLE_LANGUAGES = 3;
 
 type TCatalogTourCardHorizontalProps = {
 	data: ICatalogTourCard;
-	className?: string;
 };
 
 type TMetaItem = {
@@ -34,40 +41,22 @@ type TMetaItem = {
 	label: string;
 };
 
+/**
+ * Длинная карточка списка — та же витрина, что у сетки (`CatalogTourCard`), обложка слева:
+ * на ней тип, языки и категории по углам; справа — цена, название, маршрут, описание и метрики.
+ * Ссылка на тур — название, растянутое на всю карточку; обложка клики пропускает, кроме чипов
+ */
 export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
-	data: tour,
-	className
+	data: tour
 }) => {
 	const { isLoaded, isLoading, isError, onLoad, onError } = useImageStatus(
 		tour.imageUrl
 	);
 	const { t } = useTranslation(["tours_catalog_page", "options"]);
 
-	const tourHref = buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
-		tourId: tour.id
-	});
-
-	const visibleCategories = tour.categories.slice(0, VISIBLE_CATEGORIES);
-	const hiddenCategoriesCount = Math.max(
-		tour.categories.length - VISIBLE_CATEGORIES,
-		0
+	const categoryLabels = tour.categories.map((category) =>
+		t(TOUR_CATEGORY_LABELS[category], { ns: "options" })
 	);
-
-	const visibleLanguages = tour.languages.slice(0, VISIBLE_LANGUAGES);
-	const hiddenLanguagesCount = Math.max(
-		tour.languages.length - VISIBLE_LANGUAGES,
-		0
-	);
-
-	const groupLabel = t("card.group", {
-		min: tour.groupSizeMin ?? 0,
-		max: tour.groupSizeMax ?? 0
-	});
-
-	const ageLabel = t("card.age", {
-		from: tour.ageFrom ?? 0,
-		to: tour.ageTo ?? 0
-	});
 
 	const metaItems: TMetaItem[] = [
 		{
@@ -83,12 +72,18 @@ export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
 		{
 			key: "group",
 			icon: <UsersGroupRoundedIcon className="size-3.5 shrink-0" />,
-			label: groupLabel
+			label: formatTourGroup(
+				tour.groupSizeMin,
+				tour.groupSizeMax,
+				(min, max) => t("card.group", { min, max })
+			)
 		},
 		{
 			key: "age",
 			icon: <HeartPulseIcon className="size-3.5 shrink-0" />,
-			label: ageLabel
+			label: formatTourAge(tour.ageFrom, tour.ageTo, (from, to) =>
+				t("card.age", { from, to })
+			)
 		},
 		{
 			key: "options",
@@ -102,133 +97,109 @@ export const CatalogTourCardHorizontal: FC<TCatalogTourCardHorizontalProps> = ({
 	});
 
 	return (
-		<Link to={tourHref} className={cn("block min-w-0", className)}>
-			<Card
-				variant="glass"
-				className="flex min-w-0 flex-row items-stretch gap-0 overflow-hidden py-0"
-			>
-				<div className="relative min-h-40 w-1/2 shrink-0 self-stretch overflow-hidden bg-muted md:w-1/3">
-					{!isLoaded && (
-						<div className="absolute inset-0 z-0 flex items-center justify-center">
-							{isLoading && (
-								<Skeleton className="absolute inset-0 size-full" />
-							)}
-							<GalleryIcon
-								className={cn(
-									"size-20 text-muted-foreground/40",
-									isLoading &&
-										"animate-pulse text-muted-foreground/20"
-								)}
-							/>
-						</div>
-					)}
-					{tour.imageUrl && !isError && (
-						<img
-							src={tour.imageUrl}
-							alt={tour.title}
-							onLoad={onLoad}
-							onError={onError}
+		<Card
+			variant="glass"
+			className="group/card min-w-0 flex-row gap-0 overflow-hidden p-1.5 transition-shadow duration-300 ease-out hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.9),0_16px_40px_-14px_hsl(211_30%_25%/0.35)] dark:hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.08),0_16px_40px_-12px_rgb(0_0_0/0.8)]"
+		>
+			{/* Витрина на всю высоту: радиус = радиус карточки − отступ p-1.5, углы концентричны */}
+			<div className="pointer-events-none relative isolate z-20 min-h-44 w-2/5 shrink-0 self-stretch overflow-hidden rounded-md bg-muted sm:w-1/3">
+				{!isLoaded && (
+					<div className="absolute inset-0 flex items-center justify-center">
+						{isLoading && (
+							<Skeleton className="absolute inset-0 size-full rounded-none" />
+						)}
+						<GalleryIcon
 							className={cn(
-								"absolute inset-0 size-full object-cover transition-opacity duration-500",
-								isLoaded ? "opacity-100" : "opacity-0"
+								"size-16 text-muted-foreground/40",
+								isLoading &&
+									"animate-pulse text-muted-foreground/20"
 							)}
 						/>
-					)}
-					<div className="absolute inset-x-0 bottom-0 z-10 h-14 bg-gradient-to-t from-black/55 to-transparent" />
-					<div className="absolute left-2 top-2 z-10">
-						<Badge className="border-0 bg-background/95 text-xs text-foreground shadow-sm backdrop-blur-sm">
+					</div>
+				)}
+				{tour.imageUrl && !isError && (
+					<img
+						src={tour.imageUrl}
+						alt={tour.title}
+						onLoad={onLoad}
+						onError={onError}
+						className={cn(
+							"absolute inset-0 size-full object-cover transition-[opacity,transform] duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none",
+							isLoaded ? "opacity-100" : "opacity-0"
+						)}
+					/>
+				)}
+
+				{/* Тип и языки — одной строкой; на узкой обложке флаги переносятся под тип, а не наезжают на него */}
+				<div className="absolute inset-x-2 top-2 z-10 flex flex-wrap items-start gap-1">
+					{/* Подложка цвета карточки: полупрозрачный бейдж не сливается с картинкой */}
+					<div className="flex rounded-sm bg-card">
+						<Badge variant={CATALOG_TOUR_TYPE_VARIANTS[tour.type]}>
 							{t(CATALOG_TOUR_TYPE_LABELS[tour.type], {
 								ns: "options"
 							})}
 						</Badge>
 					</div>
-					{!!tour.languages.length && (
-						<div className="absolute bottom-2 left-2 z-10 flex flex-wrap gap-1">
-							{visibleLanguages.map((lang) => (
-								<Badge
-									key={lang}
-									variant="secondary"
-									className="bg-background/95 text-xs text-foreground shadow-sm backdrop-blur-sm"
-								>
-									{lang}
-								</Badge>
-							))}
-							{hiddenLanguagesCount > 0 && (
-								<Badge
-									variant="secondary"
-									className="bg-background/95 text-xs text-foreground shadow-sm backdrop-blur-sm"
-								>
-									+{hiddenLanguagesCount}
-								</Badge>
-							)}
-						</div>
-					)}
+					<TourCardChips
+						mode="flags"
+						items={tour.languages}
+						visible={VISIBLE_LANGUAGES}
+						className="pointer-events-auto ml-auto"
+					/>
 				</div>
-
-				<div className="flex min-w-0 flex-1 flex-col gap-2 px-3 py-3 sm:gap-2.5 sm:px-4 sm:py-4">
-					<div className="flex min-w-0 flex-col gap-1.5">
-						<span className="line-clamp-2 text-sm font-semibold leading-snug sm:text-base">
-							{tour.title}
-						</span>
-						{!!tour.route.length && (
-							<div className="flex min-w-0 items-center gap-1 text-[11px] text-muted-foreground sm:text-xs">
-								<Routing2Icon className="size-3 shrink-0" />
-								<span className="truncate">
-									{tour.route.join(" → ")}
-								</span>
-							</div>
-						)}
-						{!!tour.categories.length && (
-							<div className="flex flex-wrap gap-1">
-								{visibleCategories.map((category) => (
-									<Badge
-										key={category}
-										variant="outline"
-										className="text-[10px] sm:text-xs"
-									>
-										{t(TOUR_CATEGORY_LABELS[category], {
-											ns: "options"
-										})}
-									</Badge>
-								))}
-								{hiddenCategoriesCount > 0 && (
-									<Badge
-										variant="outline"
-										className="text-[10px] sm:text-xs"
-									>
-										+{hiddenCategoriesCount}
-									</Badge>
-								)}
-							</div>
-						)}
-						{!!tour.description && (
-							<PreviewerSimple
-								text={tour.description}
-								lines={2}
-								className="text-[11px] text-muted-foreground sm:text-xs"
-							/>
-						)}
-					</div>
-
-					<div className="grid grid-cols-2 gap-1.5 sm:gap-2">
-						{metaItems.map((item) => (
-							<div
-								key={item.key}
-								className="flex min-w-0 items-center gap-1 rounded-md bg-accent px-2 py-1.5 text-[11px] text-muted-foreground sm:text-xs"
-							>
-								{item.icon}
-								<span className="truncate">{item.label}</span>
-							</div>
-						))}
-					</div>
-
-					<div className="mt-auto border-t pt-2.5">
-						<span className="text-sm font-semibold text-primary sm:text-base">
-							{t("card.price.from", { price: priceLabel })}
-						</span>
-					</div>
+				<div className="absolute right-2 bottom-2 left-2 z-10 flex">
+					<TourCardChips
+						mode="chips"
+						items={categoryLabels}
+						visible={VISIBLE_CATEGORIES}
+						className="pointer-events-auto"
+					/>
 				</div>
-			</Card>
-		</Link>
+			</div>
+
+			{/* Справа, как у товара: цена, название, маршрут, описание, метрики */}
+			<div className="flex min-w-0 flex-1 flex-col gap-1 px-3 py-1.5 sm:px-4">
+				<span className="truncate text-base font-semibold text-primary tabular-nums">
+					{t("card.price.from", { price: priceLabel })}
+				</span>
+				<h3 className="line-clamp-2 text-sm leading-snug font-semibold sm:text-base">
+					<Link
+						to={buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
+							tourId: tour.id
+						})}
+						className="transition-colors duration-300 ease-out outline-none after:absolute after:inset-0 after:z-10 group-hover/card:text-primary focus-visible:underline"
+					>
+						{tour.title}
+					</Link>
+				</h3>
+				{!!tour.route.length && (
+					<span className="flex min-w-0 items-center gap-1 text-xs text-muted-foreground">
+						<Routing2Icon className="size-3.5 shrink-0" />
+						<span className="truncate">
+							{tour.route.join(" → ")}
+						</span>
+					</span>
+				)}
+				{!!tour.description && (
+					<PreviewerSimple
+						text={tour.description}
+						lines={2}
+						className="pt-1 text-xs text-muted-foreground"
+					/>
+				)}
+				<div className="mt-auto grid grid-cols-2 gap-x-3 gap-y-1.5 pt-2.5 text-xs text-muted-foreground tabular-nums md:grid-cols-4">
+					{metaItems.map((item) => (
+						<span
+							key={item.key}
+							title={item.label}
+							className="flex min-w-0 items-center gap-1.5"
+						>
+							{item.icon}
+							<span className="truncate">{item.label}</span>
+						</span>
+					))}
+				</div>
+			</div>
+		</Card>
 	);
 };

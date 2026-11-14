@@ -5,7 +5,6 @@ export const ENUM_CATALOG_QUERY_PARAM = {
 	CHECK_IN: "checkIn",
 	CHECK_OUT: "checkOut",
 	PAGE: "page",
-	LIMIT: "limit",
 	SORT: "sort",
 	DURATION: "duration",
 	CATEGORY: "category",

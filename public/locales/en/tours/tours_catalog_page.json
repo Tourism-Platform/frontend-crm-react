@@ -20,6 +20,11 @@
 	"table": {
 		"title": "Title",
 		"route": "Route",
+		"duration": "Duration",
+		"group": "Group",
+		"age": "Age",
+		"languages": "Languages",
+		"categories": "Categories",
 		"type": "Type",
 		"price": "Price",
 		"status": "Status"
@@ -38,6 +43,13 @@
 			"duration": "Duration of the tour",
 			"language": "Language",
 			"category": "Category"
+		},
+		"placeholders": {
+			"country": "Select country",
+			"city": "Select city",
+			"duration": "Select duration",
+			"language": "Select language",
+			"category": "Select category"
 		},
 		"buttons": {
 			"reset": "Reset"

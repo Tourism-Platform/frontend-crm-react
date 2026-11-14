@@ -26,7 +26,8 @@ export const INTERSECTION_ELEMENTS = {
 	ITINERARY_LIBRARY_EVENTS: 100,
 	// туры
 	TOURS: 10,
-	CATALOG_TOURS: 10,
+	// своя пагинация каталога, не SmartTable — 12 = 4 полных ряда сетки по 3
+	CATALOG_TOURS: 12,
 	TOUR_ORDER_HISTORY: 10,
 	TOUR_RECENT_ORDERS: 5,
 	TOUR_RECENT_ACTIVITY: 5,

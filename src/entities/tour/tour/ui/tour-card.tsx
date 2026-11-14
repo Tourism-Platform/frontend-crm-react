@@ -85,7 +85,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 	];
 
 	return (
-		<Card className="group/card h-full gap-0 overflow-hidden p-1.5 transition-shadow hover:shadow-md">
+		<Card className="group/card h-full gap-0 overflow-hidden p-1.5 transition-shadow duration-300 ease-out hover:shadow-md">
 			{/* Витрина: радиус = радиус карточки − отступ p-1.5, углы концентричны */}
 			<div className="relative isolate aspect-[4/3] shrink-0 overflow-hidden rounded-md bg-muted">
 				{!isLoaded && (
@@ -109,7 +109,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 						onLoad={onLoad}
 						onError={onError}
 						className={cn(
-							"absolute inset-0 size-full object-cover transition-[opacity,transform] duration-500 group-hover/card:scale-105 motion-reduce:transition-none",
+							"absolute inset-0 size-full object-cover transition-[opacity,transform] duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none",
 							isLoaded ? "opacity-100" : "opacity-0"
 						)}
 					/>
@@ -141,7 +141,7 @@ export const TourCard: FC<ITourCardProps> = ({ data: card }) => {
 			<div className="flex flex-1 flex-col gap-1 px-1.5 pt-3 pb-1.5">
 				<h3 className="line-clamp-2 text-sm leading-snug font-semibold">
 					<Link
-						className="transition-colors hover:text-primary hover:underline"
+						className="transition-colors duration-300 ease-out hover:text-primary hover:underline"
 						to={buildRoute(ENUM_PATH.TOURS.OVERVIEW, {
 							tourId: card.id
 						})}

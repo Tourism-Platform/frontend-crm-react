@@ -1,33 +1,51 @@
-import { Clock, Globe, MapPin, Tag } from "lucide-react";
+import type { Option } from "@/shared/ui";
 
-import type { ICatalogFilterSectionConfig } from "../types";
+import {
+	ENUM_CATALOG_FILTER,
+	type ENUM_CATALOG_FILTER_TYPE,
+	type TCatalogFilterForm
+} from "../types";
 
-export const CATALOG_FILTER_SECTIONS: ICatalogFilterSectionConfig[] = [
+import { CATALOG_LANGUAGE_FLAGS } from "./catalog-language-flags.config";
+
+/** Фильтры каталога бейджами в поле, как параметры каталога blogix; страны и города — с бэка */
+export const FORM_CATALOG_FILTERS_LIST = (
+	options: Record<ENUM_CATALOG_FILTER_TYPE, Option[]>
+): TCatalogFilterForm[] => [
 	{
-		field: "country",
-		titleKey: "filters.fields.country",
-		icon: MapPin,
-		isRemote: true
+		key: ENUM_CATALOG_FILTER.COUNTRY,
+		label: "filters.fields.country",
+		placeholder: "filters.placeholders.country",
+		fieldType: "multiselect",
+		options: options[ENUM_CATALOG_FILTER.COUNTRY]
 	},
 	{
-		field: "city",
-		titleKey: "filters.fields.city",
-		icon: MapPin,
-		isRemote: true
+		key: ENUM_CATALOG_FILTER.CITY,
+		label: "filters.fields.city",
+		placeholder: "filters.placeholders.city",
+		fieldType: "multiselect",
+		options: options[ENUM_CATALOG_FILTER.CITY]
 	},
 	{
-		field: "duration",
-		titleKey: "filters.fields.duration",
-		icon: Clock
+		key: ENUM_CATALOG_FILTER.DURATION,
+		label: "filters.fields.duration",
+		placeholder: "filters.placeholders.duration",
+		fieldType: "multiselect",
+		options: options[ENUM_CATALOG_FILTER.DURATION]
 	},
 	{
-		field: "language",
-		titleKey: "filters.fields.language",
-		icon: Globe
+		key: ENUM_CATALOG_FILTER.LANGUAGE,
+		label: "filters.fields.language",
+		placeholder: "filters.placeholders.language",
+		fieldType: "multiselect",
+		options: options[ENUM_CATALOG_FILTER.LANGUAGE],
+		optionIcons: CATALOG_LANGUAGE_FLAGS
 	},
 	{
-		field: "category",
-		titleKey: "filters.fields.category",
-		icon: Tag
+		key: ENUM_CATALOG_FILTER.CATEGORY,
+		label: "filters.fields.category",
+		placeholder: "filters.placeholders.category",
+		fieldType: "multiselect",
+		options: options[ENUM_CATALOG_FILTER.CATEGORY]
 	}
 ];

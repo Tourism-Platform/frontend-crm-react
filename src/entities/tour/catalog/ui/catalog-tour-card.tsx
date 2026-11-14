@@ -98,7 +98,7 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 	return (
 		<Card
 			variant="glass"
-			className="group/card h-full min-w-0 gap-0 overflow-hidden p-1.5 transition-shadow hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.9),0_16px_40px_-14px_hsl(211_30%_25%/0.35)] dark:hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.08),0_16px_40px_-12px_rgb(0_0_0/0.8)]"
+			className="group/card h-full min-w-0 gap-0 overflow-hidden p-1.5 transition-shadow duration-300 ease-out hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.9),0_16px_40px_-14px_hsl(211_30%_25%/0.35)] dark:hover:shadow-[inset_0_1px_0_0_rgb(255_255_255/0.08),0_16px_40px_-12px_rgb(0_0_0/0.8)]"
 		>
 			{/* Витрина: радиус = радиус карточки − отступ p-1.5, углы концентричны */}
 			<div className="pointer-events-none relative isolate z-20 aspect-[4/3] shrink-0 overflow-hidden rounded-md bg-muted">
@@ -123,18 +123,20 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 						onLoad={onLoad}
 						onError={onError}
 						className={cn(
-							"absolute inset-0 size-full object-cover transition-[opacity,transform] duration-500 group-hover/card:scale-105 motion-reduce:transition-none",
+							"absolute inset-0 size-full object-cover transition-[opacity,transform] duration-700 ease-out group-hover/card:scale-105 motion-reduce:transition-none",
 							isLoaded ? "opacity-100" : "opacity-0"
 						)}
 					/>
 				)}
 
-				<Badge
-					variant={CATALOG_TOUR_TYPE_VARIANTS[tour.type]}
-					className="absolute top-2 left-2 z-10"
-				>
-					{t(CATALOG_TOUR_TYPE_LABELS[tour.type], { ns: "options" })}
-				</Badge>
+				{/* Подложка цвета карточки: полупрозрачный бейдж не сливается с картинкой */}
+				<div className="absolute top-2 left-2 z-10 flex rounded-sm bg-card">
+					<Badge variant={CATALOG_TOUR_TYPE_VARIANTS[tour.type]}>
+						{t(CATALOG_TOUR_TYPE_LABELS[tour.type], {
+							ns: "options"
+						})}
+					</Badge>
+				</div>
 				<div className="absolute top-2 right-2 z-10 flex max-w-[60%] justify-end">
 					<TourCardChips
 						mode="flags"
@@ -163,7 +165,7 @@ export const CatalogTourCard: FC<TCatalogTourCardProps> = ({ data: tour }) => {
 						to={buildRoute(ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR, {
 							tourId: tour.id
 						})}
-						className="transition-colors outline-none after:absolute after:inset-0 after:z-10 group-hover/card:text-primary focus-visible:underline"
+						className="transition-colors duration-300 ease-out outline-none after:absolute after:inset-0 after:z-10 group-hover/card:text-primary focus-visible:underline"
 					>
 						{tour.title}
 					</Link>

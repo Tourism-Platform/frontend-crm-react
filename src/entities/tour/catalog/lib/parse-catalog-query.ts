@@ -12,6 +12,20 @@ const parsePositiveInt = (value: string | null): number | undefined => {
 	return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 };
 
+/** Дата из адреса — только `YYYY-MM-DD` и существующий день; вписанное руками иначе отбрасывается */
+const parseIsoDate = (value: string | null): string | undefined => {
+	if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
+
+	const [year, month, day] = value.split("-").map(Number);
+	const date = new Date(year, month - 1, day);
+
+	return date.getFullYear() === year &&
+		date.getMonth() === month - 1 &&
+		date.getDate() === day
+		? value
+		: undefined;
+};
+
 export const parseCatalogQuery = (
 	search: string | URLSearchParams
 ): TCatalogUrlQuery => {
@@ -25,12 +39,14 @@ export const parseCatalogQuery = (
 		query.place = place;
 	}
 
-	const checkIn = params.get(ENUM_CATALOG_QUERY_PARAM.CHECK_IN);
+	const checkIn = parseIsoDate(params.get(ENUM_CATALOG_QUERY_PARAM.CHECK_IN));
 	if (checkIn) {
 		query.checkIn = checkIn;
 	}
 
-	const checkOut = params.get(ENUM_CATALOG_QUERY_PARAM.CHECK_OUT);
+	const checkOut = parseIsoDate(
+		params.get(ENUM_CATALOG_QUERY_PARAM.CHECK_OUT)
+	);
 	if (checkOut) {
 		query.checkOut = checkOut;
 	}
@@ -38,11 +54,6 @@ export const parseCatalogQuery = (
 	const page = parsePositiveInt(params.get(ENUM_CATALOG_QUERY_PARAM.PAGE));
 	if (page) {
 		query.page = page;
-	}
-
-	const limit = parsePositiveInt(params.get(ENUM_CATALOG_QUERY_PARAM.LIMIT));
-	if (limit) {
-		query.limit = limit;
 	}
 
 	const sort = params.get(ENUM_CATALOG_QUERY_PARAM.SORT);

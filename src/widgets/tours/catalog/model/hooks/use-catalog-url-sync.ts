@@ -22,13 +22,11 @@ import { DEFAULT_CATALOG_FILTERS } from "../config/catalog-tours.config";
 interface IUseCatalogUrlSyncParams {
 	filtersForm: UseFormReturn<ICatalogTourFilters>;
 	locationForm: UseFormReturn<TCatalogLocationBar>;
-	setLocalSearch: (value: string) => void;
 }
 
 export const useCatalogUrlSync = ({
 	filtersForm,
-	locationForm,
-	setLocalSearch
+	locationForm
 }: IUseCatalogUrlSyncParams) => {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -61,12 +59,11 @@ export const useCatalogUrlSync = ({
 
 		filtersForm.reset(nextFilters);
 		locationForm.reset(nextLocationBar);
-		setLocalSearch(query.place ?? "");
 
 		window.setTimeout(() => {
 			isHydratingRef.current = false;
 		}, 0);
-	}, [filtersForm, location.search, locationForm, setLocalSearch]);
+	}, [filtersForm, location.search, locationForm]);
 
 	useEffect(() => {
 		hydrateFromUrl();
@@ -107,14 +104,13 @@ export const useCatalogUrlSync = ({
 
 		filtersForm.reset(DEFAULT_CATALOG_FILTERS);
 		locationForm.reset({ destination: null, dates: undefined });
-		setLocalSearch("");
 
 		navigate(ENUM_PATH.TOURS.CATALOG.ROOT, { replace: true });
 
 		window.setTimeout(() => {
 			isHydratingRef.current = false;
 		}, 0);
-	}, [filtersForm, locationForm, navigate, setLocalSearch]);
+	}, [filtersForm, locationForm, navigate]);
 
 	return {
 		applyLocationBarSubmit,

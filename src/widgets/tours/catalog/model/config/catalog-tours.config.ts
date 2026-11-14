@@ -14,5 +14,3 @@ export const DEFAULT_CATALOG_FILTERS: ICatalogTourFilters = {
 		category: []
 	}
 };
-
-export type TCatalogViewMode = "grid" | "list";

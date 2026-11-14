@@ -13,7 +13,7 @@ interface IFiltersProps<TData extends object> extends IShowFilters {
 	selectedStatuses: string[];
 	uniqueStatusValues: string[];
 	handleStatusChange: (checked: boolean, value: string) => void;
-	currentView?: "table" | "cards";
+	currentView?: "table" | "cards" | "list";
 	searchKey?: keyof TData;
 	/** Элементы в конце группы контролов (actions, переключатель вида) */
 	trailing?: ReactNode;
@@ -60,7 +60,9 @@ export const Filters = <TData extends object>({
 	trailing
 }: IFiltersProps<TData>) => {
 	const showTabs =
-		(currentView === "cards" || showStatusTabsFilter) &&
+		(currentView === "cards" ||
+			currentView === "list" ||
+			showStatusTabsFilter) &&
 		Boolean(statusTabs?.length);
 	/** Серверный фильтр (onStatusChange) от вида не зависит; фасетный — по колонке, только в таблице */
 	const showStatus =

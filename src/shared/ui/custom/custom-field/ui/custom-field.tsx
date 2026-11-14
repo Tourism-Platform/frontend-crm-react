@@ -38,6 +38,7 @@ import {
 	MultipleSelector,
 	type MultipleSelectorDisplayMode,
 	type Option as MultipleSelectorOption,
+	type MultipleSelectorProps,
 	PasswordInput,
 	Rating,
 	RatingButton,
@@ -131,6 +132,7 @@ type EditorFieldVariant = BaseFieldProps & {
 type MultiselectFieldVariant = BaseFieldProps & {
 	fieldType: Extract<CustomFieldVariant, "multiselect">;
 	options: MultipleSelectorOption[];
+	optionIcons?: MultipleSelectorProps["optionIcons"];
 	placeholder?: string;
 	displayMode?: MultipleSelectorDisplayMode;
 	badgeVariant?: BadgeVariant;
@@ -378,6 +380,9 @@ export const CustomField: FC<CustomFieldProps> = (props) => {
 				return (
 					<MultipleSelector
 						defaultOptions={props.options}
+						// options синхронизируются при каждом изменении, defaultOptions — только при монтировании (асинхронные справочники)
+						options={props.options}
+						optionIcons={props.optionIcons}
 						placeholder={t(props.placeholder)}
 						value={props.options.filter(
 							(opt: MultipleSelectorOption) =>

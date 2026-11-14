@@ -78,7 +78,6 @@ export type TQueryParams = {
 	[ENUM_PATH.TOURS.SEARCH]: TTourSearchLocationQuery;
 	[ENUM_PATH.TOURS.CATALOG.ROOT]: {
 		page?: number;
-		limit?: number;
 	};
 	[ENUM_PATH.TOURS.CATALOG.PREVIEW_TOUR]: TPreviewTourQuery;
 	[ENUM_PATH.TOURS.CATALOG.PREVIEW_OPTION]: TPreviewTourQuery;

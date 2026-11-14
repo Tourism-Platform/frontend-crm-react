@@ -31,11 +31,15 @@ interface GroupOption {
 	[key: string]: Option[];
 }
 
-interface MultipleSelectorProps {
+export interface MultipleSelectorProps {
 	value?: Option[];
 	defaultOptions?: Option[];
 	/** manually controlled options */
 	options?: Option[];
+	/** Иконки по значению опции — в бейджах и в списке (`*_ICONS` из entity или виджета), как `optionIcons` у `SelectPicker` */
+	optionIcons?: Partial<
+		Record<string, React.ComponentType<{ className?: string }>>
+	>;
 	placeholder?: string;
 	/** Loading component. */
 	loadingIndicator?: React.ReactNode;
@@ -171,6 +175,7 @@ export const MultipleSelector = ({
 	placeholder,
 	defaultOptions: arrayDefaultOptions = [],
 	options: arrayOptions,
+	optionIcons,
 	delay,
 	onSearch,
 	onSearchSync,
@@ -199,6 +204,10 @@ export const MultipleSelector = ({
 	const [onScrollbar, setOnScrollbar] = React.useState(false);
 	const [isLoading, setIsLoading] = React.useState(false);
 	const dropdownRef = React.useRef<HTMLDivElement>(null);
+	const fieldRef = React.useRef<HTMLDivElement>(null);
+	const listRef = React.useRef<HTMLDivElement>(null);
+	/** Список открывается вверх, если снизу он не помещается, а сверху места больше */
+	const [side, setSide] = React.useState<"top" | "bottom">("bottom");
 
 	const [selected, setSelected] = React.useState<Option[]>(value || []);
 	const [options, setOptions] = React.useState<GroupOption>(
@@ -271,6 +280,17 @@ export const MultipleSelector = ({
 			document.removeEventListener("touchend", handleClickOutside);
 		};
 	}, [open, handleClickOutside]);
+
+	// Сторона — при открытии, до отрисовки: высота списка с отступом mt-2 / mb-2 против места под полем
+	React.useLayoutEffect(() => {
+		if (!open || !fieldRef.current || !listRef.current) return;
+
+		const field = fieldRef.current.getBoundingClientRect();
+		const spaceBelow = window.innerHeight - field.bottom;
+		const isFitBelow = spaceBelow >= listRef.current.offsetHeight + 8;
+
+		setSide(!isFitBelow && field.top > spaceBelow ? "top" : "bottom");
+	}, [open]);
 
 	useEffect(() => {
 		if (value) {
@@ -450,147 +470,159 @@ export const MultipleSelector = ({
 		>
 			{displayMode === "badge" && selected.length > 0 && (
 				<div className="flex flex-wrap gap-2 mb-2">
-					{selected.map((option) => (
-						<Badge
-							key={option.value}
-							variant={badgeVariant}
-							size={badgeSize}
-							onClick={() => handleUnselect(option)}
-							className="pl-3 pr-8 text-sm relative"
-						>
-							{option.label}
-							{!option.fixed && (
-								<button
-									aria-label="Remove"
-									className="flex items-center justify-center rounded-full text-current opacity-70 hover:opacity-100 transition-opacity cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 p-2"
-									onClick={() => handleUnselect(option)}
-									onMouseDown={(e) => {
-										e.preventDefault();
-										e.stopPropagation();
-									}}
-									type="button"
-								>
-									<XIcon aria-hidden="true" size={12} />
-								</button>
-							)}
-						</Badge>
-					))}
+					{selected.map((option) => {
+						const Icon = optionIcons?.[option.value];
+
+						return (
+							<Badge
+								key={option.value}
+								variant={badgeVariant}
+								size={badgeSize}
+								onClick={() => handleUnselect(option)}
+								className="pl-3 pr-8 text-sm relative"
+							>
+								{Icon && <Icon className="size-4" />}
+								{option.label}
+								{!option.fixed && (
+									<button
+										aria-label="Remove"
+										className="flex items-center justify-center rounded-full text-current opacity-70 hover:opacity-100 transition-opacity cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 p-2"
+										onClick={() => handleUnselect(option)}
+										onMouseDown={(e) => {
+											e.preventDefault();
+											e.stopPropagation();
+										}}
+										type="button"
+									>
+										<XIcon aria-hidden="true" size={12} />
+									</button>
+								)}
+							</Badge>
+						);
+					})}
 				</div>
 			)}
-			<div
-				className={cn(
-					"relative min-h-[36px] rounded-md border border-input text-sm outline-none transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 cursor-text p-1",
-					ariaInvalid &&
-						"border-destructive ring-destructive/20 dark:ring-destructive/40",
-					!hideClearAllButton && "pe-9",
-					className
-				)}
-				aria-invalid={ariaInvalid}
-				onClick={() => {
-					if (disabled) return;
-					inputRef?.current?.focus();
-				}}
-			>
-				<div className="flex flex-wrap gap-1 items-stretch">
-					{showBadgesInInput &&
-						selected.map((option) => {
-							return (
-								<Badge
-									key={option.value}
-									variant={badgeVariant}
-									size={badgeSize}
-									onClick={() => handleUnselect(option)}
-									className="pl-3 pr-8 text-sm relative"
-								>
-									{option.label}
-									{!option.fixed && (
-										<button
-											aria-label="Remove"
-											className="flex items-center justify-center rounded-full text-current opacity-70 hover:opacity-100 transition-opacity cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 p-2"
-											onClick={() =>
-												handleUnselect(option)
-											}
-											onMouseDown={(e) => {
-												e.preventDefault();
-												e.stopPropagation();
-											}}
-											type="button"
-										>
-											<XIcon
-												aria-hidden="true"
-												size={12}
-											/>
-										</button>
-									)}
-								</Badge>
-							);
-						})}
-					{/* Avoid having the "Search" Icon */}
-					<CommandPrimitive.Input
-						{...inputProps}
-						className={cn(
-							"flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground/70 disabled:cursor-not-allowed px-2 py-0.5",
-							hidePlaceholderWhenSelected && "w-full",
-							inputProps?.className
-						)}
-						disabled={disabled}
-						onBlur={(event) => {
-							if (!onScrollbar) {
-								setOpen(false);
-							}
-							inputProps?.onBlur?.(event);
-						}}
-						onFocus={(event) => {
-							setOpen(true);
-							if (triggerSearchOnFocus) {
-								onSearch?.(debouncedSearchTerm);
-							}
-							inputProps?.onFocus?.(event);
-						}}
-						onValueChange={(value) => {
-							setInputValue(value);
-							inputProps?.onValueChange?.(value);
-						}}
-						placeholder={
-							hidePlaceholderWhenSelected && selected.length !== 0
-								? ""
-								: displayMode !== "default" &&
-									  selected.length > 0
-									? t("multiselect.selected", {
-											selected: selected.length,
-											total: totalOptions
-										})
-									: placeholder
-						}
-						ref={inputRef}
-						value={inputValue}
-					/>
-					<button
-						aria-label="Clear all"
-						className={cn(
-							"absolute end-0 top-0 flex size-9 items-center justify-center rounded-md border border-transparent text-muted-foreground/80 outline-none transition-[color,box-shadow] hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
-							(hideClearAllButton ||
-								disabled ||
-								selected.length < 1 ||
-								selected.filter((s) => s.fixed).length ===
-									selected.length) &&
-								"hidden"
-						)}
-						onClick={() => {
-							setSelected(selected.filter((s) => s.fixed));
-							onChange?.(selected.filter((s) => s.fixed));
-						}}
-						type="button"
-					>
-						<XIcon aria-hidden="true" size={16} />
-					</button>
-				</div>
-			</div>
-
 			<div className="relative">
 				<div
+					ref={fieldRef}
 					className={cn(
-						"absolute top-2 z-50 w-full overflow-hidden rounded-md border border-input",
+						"relative min-h-[36px] rounded-md border border-input text-sm outline-none transition-[color,box-shadow] focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50 has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 cursor-text p-1",
+						ariaInvalid &&
+							"border-destructive ring-destructive/20 dark:ring-destructive/40",
+						!hideClearAllButton && "pe-9",
+						className
+					)}
+					aria-invalid={ariaInvalid}
+					onClick={() => {
+						if (disabled) return;
+						inputRef?.current?.focus();
+					}}
+				>
+					<div className="flex flex-wrap gap-1 items-stretch">
+						{showBadgesInInput &&
+							selected.map((option) => {
+								const Icon = optionIcons?.[option.value];
+
+								return (
+									<Badge
+										key={option.value}
+										variant={badgeVariant}
+										size={badgeSize}
+										onClick={() => handleUnselect(option)}
+										className="pl-3 pr-8 text-sm relative"
+									>
+										{Icon && <Icon className="size-4" />}
+										{option.label}
+										{!option.fixed && (
+											<button
+												aria-label="Remove"
+												className="flex items-center justify-center rounded-full text-current opacity-70 hover:opacity-100 transition-opacity cursor-pointer absolute end-0 top-1/2 -translate-y-1/2 p-2"
+												onClick={() =>
+													handleUnselect(option)
+												}
+												onMouseDown={(e) => {
+													e.preventDefault();
+													e.stopPropagation();
+												}}
+												type="button"
+											>
+												<XIcon
+													aria-hidden="true"
+													size={12}
+												/>
+											</button>
+										)}
+									</Badge>
+								);
+							})}
+						{/* Avoid having the "Search" Icon */}
+						<CommandPrimitive.Input
+							{...inputProps}
+							className={cn(
+								"flex-1 bg-transparent outline-hidden placeholder:text-muted-foreground/70 disabled:cursor-not-allowed px-2 py-0.5",
+								hidePlaceholderWhenSelected && "w-full",
+								inputProps?.className
+							)}
+							disabled={disabled}
+							onBlur={(event) => {
+								if (!onScrollbar) {
+									setOpen(false);
+								}
+								inputProps?.onBlur?.(event);
+							}}
+							onFocus={(event) => {
+								setOpen(true);
+								if (triggerSearchOnFocus) {
+									onSearch?.(debouncedSearchTerm);
+								}
+								inputProps?.onFocus?.(event);
+							}}
+							onValueChange={(value) => {
+								setInputValue(value);
+								inputProps?.onValueChange?.(value);
+							}}
+							placeholder={
+								hidePlaceholderWhenSelected &&
+								selected.length !== 0
+									? ""
+									: displayMode !== "default" &&
+										  selected.length > 0
+										? t("multiselect.selected", {
+												selected: selected.length,
+												total: totalOptions
+											})
+										: placeholder
+							}
+							ref={inputRef}
+							value={inputValue}
+						/>
+						<button
+							aria-label="Clear all"
+							className={cn(
+								"absolute end-0 top-0 flex size-9 items-center justify-center rounded-md border border-transparent text-muted-foreground/80 outline-none transition-[color,box-shadow] hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+								(hideClearAllButton ||
+									disabled ||
+									selected.length < 1 ||
+									selected.filter((s) => s.fixed).length ===
+										selected.length) &&
+									"hidden"
+							)}
+							onClick={() => {
+								setSelected(selected.filter((s) => s.fixed));
+								onChange?.(selected.filter((s) => s.fixed));
+							}}
+							type="button"
+						>
+							<XIcon aria-hidden="true" size={16} />
+						</button>
+					</div>
+				</div>
+
+				<div
+					ref={listRef}
+					className={cn(
+						"absolute z-50 w-full overflow-hidden rounded-md border border-input",
+						side === "top" ? "bottom-full mb-2" : "top-full mt-2",
 						"data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=open]:animate-in",
 						!open && "hidden"
 					)}
@@ -629,6 +661,11 @@ export const MultipleSelector = ({
 												key={key}
 											>
 												{dropdowns.map((option) => {
+													const Icon =
+														optionIcons?.[
+															option.value
+														];
+
 													return (
 														<CommandItem
 															className={cn(
@@ -672,7 +709,15 @@ export const MultipleSelector = ({
 																);
 															}}
 															value={option.value}
+															// Поиск — и по подписи: у опций из enum value — ключ (english), а виден перевод
+															keywords={[
+																option.label
+															]}
 														>
+															{/* text-current: CommandItem приглушает svg без text-*; иконка опции — в полную силу, как в SelectPicker */}
+															{Icon && (
+																<Icon className="size-4 text-current" />
+															)}
 															{option.label}
 														</CommandItem>
 													);

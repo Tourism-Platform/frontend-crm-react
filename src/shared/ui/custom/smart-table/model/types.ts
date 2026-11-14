@@ -7,7 +7,8 @@ import { type FC, type ReactNode } from "react";
 
 import { type DataGridProps } from "@/shared/ui/shadcn-ui/data-grid";
 
-export type TViewModeType = "table" | "cards";
+/** list — длинные карточки; есть только при переданном listCard */
+export type TViewModeType = "table" | "cards" | "list";
 
 export interface IViewModeBase {
 	useViewMode?: boolean;
@@ -19,12 +20,19 @@ export interface IViewModeEnabled<TData extends object> extends IViewModeBase {
 	useViewMode: true;
 	card: FC<{ data: TData }>;
 	CardsClassName?: string;
+	/** Длинная карточка — третий вид «список»; без неё вида нет */
+	listCard?: FC<{ data: TData }>;
+	listCardSkeleton?: FC;
+	ListClassName?: string;
 }
 
 export interface IViewModeDisabled extends IViewModeBase {
 	useViewMode?: false;
 	card?: never;
 	CardsClassName?: never;
+	listCard?: never;
+	listCardSkeleton?: never;
+	ListClassName?: never;
 }
 
 export type TViewMode<TData extends object> =

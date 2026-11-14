@@ -1,51 +1,12 @@
-import { RestartIcon } from "@solar-icons/react/outline";
-import type { FC } from "react";
-import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
+import type { FC, PropsWithChildren } from "react";
 
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle,
-	LoaderButton
-} from "@/shared/ui";
+import { Card, CardContent } from "@/shared/ui";
 
-import type { ICatalogTourFilters } from "@/entities/tour";
-
-import { CatalogToursFilter } from "./catalog-tours-filter";
-
-type TCatalogToursSidebarProps = {
-	form: UseFormReturn<ICatalogTourFilters>;
-	onReset: () => void;
-};
-
-export const CatalogToursSidebar: FC<TCatalogToursSidebarProps> = ({
-	form,
-	onReset
-}) => {
-	const { t } = useTranslation("tours_catalog_page");
-
+/** Фильтры в колонке слева — только с lg; липнут под шапкой (h-16) с отступом 1rem */
+export const CatalogToursSidebar: FC<PropsWithChildren> = ({ children }) => {
 	return (
-		<aside className="flex flex-col gap-4">
-			<Card variant="glass">
-				<CardHeader className="flex flex-wrap items-center justify-between gap-3">
-					<CardTitle className="text-lg font-semibold">
-						{t("filters.title")}
-					</CardTitle>
-					<LoaderButton
-						size="sm"
-						onClick={onReset}
-						className="h-auto bg-transparent p-0 text-destructive hover:bg-transparent"
-						variant="glass"
-						icon={<RestartIcon />}
-						label={t("filters.buttons.reset")}
-					/>
-				</CardHeader>
-				<CardContent>
-					<CatalogToursFilter form={form} />
-				</CardContent>
-			</Card>
-		</aside>
+		<Card variant="glass" className="sticky top-20 hidden lg:flex">
+			<CardContent>{children}</CardContent>
+		</Card>
 	);
 };

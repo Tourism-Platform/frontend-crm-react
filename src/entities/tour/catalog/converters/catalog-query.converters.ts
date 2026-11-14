@@ -1,21 +1,28 @@
 import { parseStoredLocalDate } from "@/shared/lib";
 import { formatDateToISO } from "@/shared/utils";
 
-import type { ENUM_LANGUAGES_TYPE } from "../../landing";
-import type { ENUM_TOUR_CATEGORY_TYPE } from "../../tour";
-import type { ENUM_CATALOG_DURATION_TYPE } from "../types/catalog-duration.types";
+import { ENUM_LANGUAGES } from "../../landing";
+import { ENUM_TOUR_CATEGORY } from "../../tour";
+import { ENUM_CATALOG_DURATION } from "../types/catalog-duration.types";
 import type {
 	TCatalogLocationBar,
 	TCatalogUrlQuery
 } from "../types/catalog-query.types";
-import type { ENUM_CATALOG_SORT_TYPE } from "../types/catalog-sort.types";
+import { ENUM_CATALOG_SORT } from "../types/catalog-sort.types";
 import type { ICatalogTourFilters } from "../types/catalog-tour-filter.interface";
 import { ENUM_LOCATION_SUGGEST_KIND } from "../types/location-suggest.types";
 
-const isCatalogDuration = (
-	value: string
-): value is ENUM_CATALOG_DURATION_TYPE =>
-	["half_day", "full_day", "multi_days"].includes(value);
+/** Из адреса — только значения enum'а; вписанные руками неверные отбрасываются */
+const pickEnumValues = <T extends string>(
+	values: string[] | undefined,
+	allowed: Record<string, T>
+): T[] => {
+	const allowedValues: string[] = Object.values(allowed);
+
+	return (values ?? []).filter((value): value is T =>
+		allowedValues.includes(value)
+	);
+};
 
 export const mapCatalogQueryToLocationBar = (
 	query: TCatalogUrlQuery
@@ -98,14 +105,13 @@ export const mapCatalogQueryToCatalogFilters = (
 	...defaults,
 	search: query.place ?? "",
 	page: query.page ?? defaults.page,
-	limit: query.limit ?? defaults.limit,
-	sort: query.sort as ENUM_CATALOG_SORT_TYPE | undefined,
+	sort: pickEnumValues(query.sort ? [query.sort] : [], ENUM_CATALOG_SORT)[0],
 	filters: {
 		country: query.country ?? [],
 		city: query.city ?? [],
-		duration: (query.duration ?? []).filter(isCatalogDuration),
-		language: (query.language ?? []) as ENUM_LANGUAGES_TYPE[],
-		category: (query.category ?? []) as ENUM_TOUR_CATEGORY_TYPE[]
+		duration: pickEnumValues(query.duration, ENUM_CATALOG_DURATION),
+		language: pickEnumValues(query.language, ENUM_LANGUAGES),
+		category: pickEnumValues(query.category, ENUM_TOUR_CATEGORY)
 	}
 });
 
@@ -114,7 +120,6 @@ export const mapCatalogFiltersToCatalogQuery = (
 ): TCatalogUrlQuery => {
 	const query: TCatalogUrlQuery = {
 		page: filters.page,
-		limit: filters.limit,
 		sort: filters.sort,
 		duration: filters.filters?.duration,
 		category: filters.filters?.category,
